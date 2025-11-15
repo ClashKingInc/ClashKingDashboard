@@ -121,24 +121,24 @@ export default function WarsPage() {
   };
 
   return (
-    <div className="p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-500/30">
-                <Swords className="h-8 w-8 text-red-500" />
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <Swords className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">War Management</h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                <h1 className="text-3xl font-bold text-foreground">War Management</h1>
+                <p className="text-muted-foreground mt-1">
                   Track statistics, configure reminders, and manage war logs
                 </p>
               </div>
             </div>
           </div>
-          <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800">
+          <Button className="bg-primary hover:bg-primary/90">
             <Download className="mr-2 h-4 w-4" />
             Export Data
           </Button>
@@ -163,7 +163,7 @@ export default function WarsPage() {
           {/* WAR STATISTICS TAB */}
           <TabsContent value="statistics" className="space-y-6">
             {/* Filters Card */}
-            <Card>
+            <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -276,11 +276,11 @@ export default function WarsPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-red-500">34</div>
-                    <Shield className="h-8 w-8 text-red-500/50" />
+                    <div className="text-3xl font-bold text-primary">34</div>
+                    <Shield className="h-8 w-8 text-primary/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    <span className="text-red-500">-8%</span> from last month
+                    <span className="text-primary">-8%</span> from last month
                   </p>
                 </CardContent>
               </Card>
@@ -318,7 +318,7 @@ export default function WarsPage() {
 
             {/* Charts Row 1 */}
             <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle>War Performance (Last 7 Days)</CardTitle>
                   <CardDescription>Daily wins, losses, and draws</CardDescription>
@@ -345,7 +345,7 @@ export default function WarsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle>Attack Success Rate by Town Hall</CardTitle>
                   <CardDescription>Success vs failed attacks per TH level</CardDescription>
@@ -374,7 +374,7 @@ export default function WarsPage() {
 
             {/* Charts Row 2 */}
             <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle>War Type Distribution</CardTitle>
                   <CardDescription>Breakdown of war types in the last 30 days</CardDescription>
@@ -408,7 +408,7 @@ export default function WarsPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle>Top Performers</CardTitle>
                   <CardDescription>Best warriors in the last 30 days</CardDescription>
@@ -419,14 +419,14 @@ export default function WarsPage() {
                       <div key={player.name} className="flex items-center gap-4">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
                           index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                          index === 1 ? 'bg-gray-400/20 text-gray-400' :
+                          index === 1 ? 'bg-gray-400/20 text-muted-foreground' :
                           index === 2 ? 'bg-orange-500/20 text-orange-500' :
                           'bg-gray-600/20 text-gray-500'
                         }`}>
                           {index + 1}
                         </div>
                         <div className="flex-1">
-                          <div className="font-medium text-white">{player.name}</div>
+                          <div className="font-medium text-foreground">{player.name}</div>
                           <div className="text-xs text-muted-foreground">
                             {player.attacks} attacks • {player.stars} stars
                           </div>
@@ -444,10 +444,10 @@ export default function WarsPage() {
 
           {/* WAR REMINDERS TAB */}
           <TabsContent value="reminders" className="space-y-6">
-            <Card>
+            <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Bell className="h-5 w-5 text-red-500" />
+                  <Bell className="h-5 w-5 text-primary" />
                   <div>
                     <CardTitle>War Reminders Configuration</CardTitle>
                     <CardDescription>
@@ -461,8 +461,8 @@ export default function WarsPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-lg text-white flex items-center gap-2">
-                        <Target className="h-5 w-5 text-red-500" />
+                      <h3 className="font-semibold text-lg text-foreground flex items-center gap-2">
+                        <Target className="h-5 w-5 text-primary" />
                         Random War
                       </h3>
                       <p className="text-sm text-muted-foreground">
@@ -481,7 +481,7 @@ export default function WarsPage() {
                   </div>
 
                   {reminders.randomWar.enabled && (
-                    <div className="ml-7 space-y-4 p-4 rounded-lg bg-gray-900/50 border border-gray-800">
+                    <div className="ml-7 space-y-4 p-4 rounded-lg bg-secondary/50 border border-border">
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="random-time">Reminder Time (hours before)</Label>
@@ -524,7 +524,7 @@ export default function WarsPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-lg text-white flex items-center gap-2">
+                      <h3 className="font-semibold text-lg text-foreground flex items-center gap-2">
                         <Users className="h-5 w-5 text-green-500" />
                         Friendly War
                       </h3>
@@ -544,7 +544,7 @@ export default function WarsPage() {
                   </div>
 
                   {reminders.friendlyWar.enabled && (
-                    <div className="ml-7 space-y-4 p-4 rounded-lg bg-gray-900/50 border border-gray-800">
+                    <div className="ml-7 space-y-4 p-4 rounded-lg bg-secondary/50 border border-border">
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="friendly-time">Reminder Time (hours before)</Label>
@@ -587,7 +587,7 @@ export default function WarsPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-semibold text-lg text-white flex items-center gap-2">
+                      <h3 className="font-semibold text-lg text-foreground flex items-center gap-2">
                         <Trophy className="h-5 w-5 text-yellow-500" />
                         Clan War League (CWL)
                       </h3>
@@ -607,7 +607,7 @@ export default function WarsPage() {
                   </div>
 
                   {reminders.cwl.enabled && (
-                    <div className="ml-7 space-y-4 p-4 rounded-lg bg-gray-900/50 border border-gray-800">
+                    <div className="ml-7 space-y-4 p-4 rounded-lg bg-secondary/50 border border-border">
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="cwl-time">Reminder Time (hours before)</Label>
@@ -649,7 +649,7 @@ export default function WarsPage() {
             {/* Save Button */}
             <div className="flex justify-end gap-4">
               <Button variant="outline">Reset to Default</Button>
-              <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800">
+              <Button className="bg-primary hover:bg-primary/90">
                 Save Reminder Settings
               </Button>
             </div>
@@ -657,10 +657,10 @@ export default function WarsPage() {
 
           {/* WAR LOGS TAB */}
           <TabsContent value="logs" className="space-y-6">
-            <Card>
+            <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Settings className="h-5 w-5 text-red-500" />
+                  <Settings className="h-5 w-5 text-primary" />
                   <div>
                     <CardTitle>War Logs Configuration</CardTitle>
                     <CardDescription>
@@ -714,7 +714,7 @@ export default function WarsPage() {
 
                     {/* Log Options */}
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-white">Log Details</h3>
+                      <h3 className="font-semibold text-foreground">Log Details</h3>
 
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
@@ -753,7 +753,7 @@ export default function WarsPage() {
 
                     {/* Notification Options */}
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-white">Notifications</h3>
+                      <h3 className="font-semibold text-foreground">Notifications</h3>
 
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
@@ -793,28 +793,28 @@ export default function WarsPage() {
                     {/* Preview */}
                     <div className="space-y-2">
                       <Label>Log Preview</Label>
-                      <div className="p-4 rounded-lg bg-gray-900 border border-gray-800">
+                      <div className="p-4 rounded-lg bg-secondary border border-border">
                         <div className="flex items-center gap-2 mb-3">
                           <div className="w-8 h-8 rounded bg-red-600 flex items-center justify-center">
-                            <Swords className="h-4 w-4 text-white" />
+                            <Swords className="h-4 w-4 text-foreground" />
                           </div>
                           <div>
-                            <div className="font-semibold text-white">War Result: Victory!</div>
-                            <div className="text-xs text-gray-400">Elite Warriors vs Enemy Clan</div>
+                            <div className="font-semibold text-foreground">War Result: Victory!</div>
+                            <div className="text-xs text-muted-foreground">Elite Warriors vs Enemy Clan</div>
                           </div>
                         </div>
                         <div className="space-y-1 text-sm">
                           <div className="flex justify-between">
-                            <span className="text-gray-400">Stars:</span>
-                            <span className="text-white font-medium">45 / 50</span>
+                            <span className="text-muted-foreground">Stars:</span>
+                            <span className="text-foreground font-medium">45 / 50</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-400">Destruction:</span>
-                            <span className="text-white font-medium">94.5%</span>
+                            <span className="text-muted-foreground">Destruction:</span>
+                            <span className="text-foreground font-medium">94.5%</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-gray-400">Attacks Used:</span>
-                            <span className="text-white font-medium">50 / 50</span>
+                            <span className="text-muted-foreground">Attacks Used:</span>
+                            <span className="text-foreground font-medium">50 / 50</span>
                           </div>
                         </div>
                       </div>
@@ -845,7 +845,7 @@ export default function WarsPage() {
             {/* Save Button */}
             <div className="flex justify-end gap-4">
               <Button variant="outline">Reset to Default</Button>
-              <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800">
+              <Button className="bg-primary hover:bg-primary/90">
                 Save War Logs Settings
               </Button>
             </div>
