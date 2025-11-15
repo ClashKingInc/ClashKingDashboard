@@ -1,0 +1,44 @@
+{
+  "HomePage": {
+    "title": "Le Bot Clash of Clans Ultime pour Discord",
+    "subtitle": "Gérez votre clan avec une automatisation puissante, des statistiques détaillées et une intégration Discord transparente",
+    "features": {
+      "title": "Fonctionnalités Puissantes pour la Gestion de Clan",
+      "automation": {
+        "title": "Automatisation des Rôles",
+        "description": "Vérifiez automatiquement les joueurs et attribuez des rôles en fonction de leur statut dans le jeu"
+      },
+      "stats": {
+        "title": "Statistiques des Joueurs",
+        "description": "Suivez les statistiques détaillées, la progression et l'activité des joueurs dans votre clan"
+      },
+      "leaderboards": {
+        "title": "Classements",
+        "description": "Générez des classements compétitifs pour comparer les performances des joueurs"
+      },
+      "war": {
+        "title": "Suivi des Guerres",
+        "description": "Surveillez les attaques, défenses et résultats de guerre en temps réel"
+      },
+      "reminders": {
+        "title": "Rappels & Alertes",
+        "description": "Ne manquez jamais les Jeux de Clan, les débuts de guerre ou les événements importants"
+      },
+      "customization": {
+        "title": "Personnalisation Complète",
+        "description": "Adaptez les paramètres, commandes et permissions du bot aux besoins de votre clan"
+      }
+    },
+    "cta": {
+      "dashboard": "Ouvrir le Tableau de Bord",
+      "invite": "Inviter sur Discord",
+      "docs": "Voir la Documentation"
+    },
+    "stats": {
+      "servers": "Serveurs",
+      "users": "Utilisateurs",
+      "clans": "Clans Suivis"
+    },
+    "trustedBy": "Approuvé par des milliers de communautés Clash of Clans dans le monde"
+  }
+}

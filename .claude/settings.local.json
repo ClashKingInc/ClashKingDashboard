@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --eslint)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(curl:*)",
+      "Bash(npm run build:*)",
+      "WebSearch",
+      "WebFetch(domain:ui.shadcn.com)",
+      "Bash(npm uninstall:*)",
+      "Bash(node --version)",
+      "Bash(npm --version:*)",
+      "Bash(npx next dev --turbopack)",
+      "Bash(pkill:*)",
+      "Bash(./node_modules/.bin/next dev --turbopack)",
+      "Bash(lsof:*)",
+      "Bash(npx next dev)",
+      "Bash(npx next dev:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(printenv:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

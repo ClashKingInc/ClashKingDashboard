@@ -1,0 +1,28 @@
+# Crowdin configuration for ClashKing Dashboard
+# https://crowdin.com/
+
+project_id: "your-project-id-here"
+
+# Source files configuration
+files:
+  - source: /messages/en.json
+    translation: /messages/%two_letters_code%.json
+
+# Preserve hierarchy for nested JSON keys
+preserve_hierarchy: true
+
+# Export options
+export_languages:
+  - fr
+  - es
+  - de
+  - pt
+  - it
+  - ru
+  - zh-CN
+  - ja
+  - ko
+
+# Translation settings
+update_option: "update_as_unapproved"
+commit_message: "[skip ci] New Crowdin translations"

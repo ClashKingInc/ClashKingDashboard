@@ -1,0 +1,44 @@
+{
+  "HomePage": {
+    "title": "The Ultimate Clash of Clans Bot for Discord",
+    "subtitle": "Manage your clan with powerful automation, detailed statistics, and seamless Discord integration",
+    "features": {
+      "title": "Powerful Features for Clan Management",
+      "automation": {
+        "title": "Role Automation",
+        "description": "Automatically verify players and assign roles based on their in-game status"
+      },
+      "stats": {
+        "title": "Player Statistics",
+        "description": "Track detailed player stats, progress, and activity across your clan"
+      },
+      "leaderboards": {
+        "title": "Leaderboards",
+        "description": "Generate competitive leaderboards to compare player performance"
+      },
+      "war": {
+        "title": "War Tracking",
+        "description": "Monitor war attacks, defenses, and results in real-time"
+      },
+      "reminders": {
+        "title": "Reminders & Alerts",
+        "description": "Never miss Clan Games, war starts, or important clan events"
+      },
+      "customization": {
+        "title": "Full Customization",
+        "description": "Tailor bot settings, commands, and permissions to your clan's needs"
+      }
+    },
+    "cta": {
+      "dashboard": "Open Dashboard",
+      "invite": "Invite to Discord",
+      "docs": "View Documentation"
+    },
+    "stats": {
+      "servers": "Servers",
+      "users": "Users",
+      "clans": "Clans Tracked"
+    },
+    "trustedBy": "Trusted by thousands of Clash of Clans communities worldwide"
+  }
+}
