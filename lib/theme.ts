@@ -1,33 +1,33 @@
 /**
  * ClashKing Dashboard Theme Configuration
  *
- * Couleurs et configuration de thème basées sur le branding ClashKing
+ * Colors and theme configuration based on ClashKing branding
  * Assets repository: https://github.com/ClashKingInc/ClashKingAssets
  */
 
 // ============================================================================
-// COULEURS BRANDING CLASHKING
+// CLASHKING BRANDING COLORS
 // ============================================================================
 
 /**
- * Couleurs principales extraites du logo ClashKing
+ * Main colors extracted from ClashKing logo
  * Source: /assets/logos/crown-red/ClashKing-crown.svg
  */
 export const clashKingColors = {
-  // Rouges principaux (du logo)
-  primary: '#D90709',      // Rouge vif principal
-  primaryDark: '#BF0000',  // Rouge foncé
-  primaryLight: '#FF1A1C', // Rouge clair pour les hovers
+  // Main reds (from logo)
+  primary: '#D90709',      // Main bright red
+  primaryDark: '#BF0000',  // Dark red
+  primaryLight: '#FF1A1C', // Light red for hovers
 
-  // Variantes de rouge pour les gradients
+  // Red variants for gradients
   red: {
     50: '#FFE5E5',
     100: '#FFCCCC',
     200: '#FF9999',
     300: '#FF6666',
     400: '#FF3333',
-    500: '#D90709',  // Couleur principale
-    600: '#BF0000',  // Couleur foncée
+    500: '#D90709',  // Main color
+    600: '#BF0000',  // Dark color
     700: '#990000',
     800: '#660000',
     900: '#330000',
@@ -35,32 +35,32 @@ export const clashKingColors = {
 } as const;
 
 // ============================================================================
-// LOGOS ET ASSETS
+// LOGOS AND ASSETS
 // ============================================================================
 
 /**
- * URLs des logos et assets ClashKing
+ * ClashKing logos and assets URLs
  * CDN: https://assets.clashk.ing
  */
 export const clashKingAssets = {
-  // Base URL du CDN
+  // CDN base URL
   baseUrl: 'https://assets.clashk.ing',
 
   logos: {
-    // LOGOS OFFICIELS (couronne + flèche) - À privilégier
-    // Utilisez ces logos pour le dashboard
+    // OFFICIAL LOGOS (crown + arrow) - Preferred
+    // Use these logos for the dashboard
     darkBg: 'https://assets.clashk.ing/logos/crown-arrow-dark-bg/ClashKing-1.svg',
     darkBgPng: 'https://assets.clashk.ing/logos/crown-arrow-dark-bg/ClashKing-1.png',
     whiteBg: 'https://assets.clashk.ing/logos/crown-arrow-white-bg/ClashKing-2.svg',
     whiteBgPng: 'https://assets.clashk.ing/logos/crown-arrow-white-bg/ClashKing-2.png',
 
-    // LOGOS AVEC TEXTE "ClashKing"
+    // LOGOS WITH "ClashKing" TEXT
     withTextDark: 'https://assets.clashk.ing/logos/crown-text-dark-bg/ClashKing-with-text-3.svg',
     withTextDarkPng: 'https://assets.clashk.ing/logos/crown-text-dark-bg/KTYEp1081709208tL7z4HA7BiA2MucfE08fgsIuKdtnuf37cwqzbdp9qpnj2j.png',
     withTextWhite: 'https://assets.clashk.ing/logos/crown-text-white-bg/ClashKing-with-text-2.svg',
     withTextWhitePng: 'https://assets.clashk.ing/logos/crown-text-white-bg/BqlEp974170917vB1qK0zunfANJCGi0W031dTksEq7KQ9LoXWMFk0u77unHJa.png',
 
-    // ICÔNES (couronne seule)
+    // ICONS (crown only)
     crownRed: 'https://assets.clashk.ing/logos/crown-red/ClashKing-crown.svg',
     iconBlack: 'https://assets.clashk.ing/logos/crown-black-arrow-white-bg/ClashKing-icon-black.svg',
     iconBlackPng: 'https://assets.clashk.ing/logos/crown-black-arrow-white-bg/Rl3Ep2541709222E0oUYaLObTdAOBkQ6MiAb16i3iq7ROnNlky4kqZQPS8Ku6.png',
@@ -74,7 +74,7 @@ export const clashKingAssets = {
     christmas: 'https://assets.clashk.ing/logos/bot-app-logo/christmas-logo.gif',
   },
 
-  // Icônes de jeu disponibles
+  // Available game icons
   icons: {
     // Clash Royale / Discord (Icon_DC_*)
     dc: {
@@ -103,7 +103,7 @@ export const clashKingAssets = {
       starEmpty: 'https://assets.clashk.ing/icons/Icon_BB_Star_Empty.png',
       starFilled: 'https://assets.clashk.ing/icons/Icon_BB_Star_Filled.png',
     },
-    // Icônes génériques
+    // Generic icons
     generic: {
       startFlag: 'https://assets.clashk.ing/icons/Icon_HV_Start_Flag.png',
       sword: 'https://assets.clashk.ing/icons/Icon_HV_Sword.png',
@@ -113,7 +113,7 @@ export const clashKingAssets = {
     },
   },
 
-  // Chemins vers les dossiers d'assets
+  // Paths to asset folders
   paths: {
     logos: 'https://assets.clashk.ing/logos',
     icons: 'https://assets.clashk.ing/icons',
@@ -128,48 +128,48 @@ export const clashKingAssets = {
 } as const;
 
 // ============================================================================
-// THEME DARK MODE (Style MEE6/Discord moderne)
+// DARK MODE THEME (MEE6/Discord modern style)
 // ============================================================================
 
 /**
- * Configuration du thème dark pour le dashboard
- * Inspiré des dashboards modernes (MEE6, Discord, etc.)
+ * Dark theme configuration for the dashboard
+ * Inspired by modern dashboards (MEE6, Discord, etc.)
  */
 export const darkTheme = {
   // Backgrounds
   background: {
-    primary: '#0F0F0F',      // Fond principal ultra sombre
-    secondary: '#1A1A1A',    // Cartes et éléments surélevés
-    tertiary: '#242424',     // Hovers et éléments interactifs
-    elevated: '#2D2D2D',     // Modals et dropdowns
-    hover: '#2F2F2F',        // États de hover
+    primary: '#0F0F0F',      // Ultra dark main background
+    secondary: '#1A1A1A',    // Cards and elevated elements
+    tertiary: '#242424',     // Hovers and interactive elements
+    elevated: '#2D2D2D',     // Modals and dropdowns
+    hover: '#2F2F2F',        // Hover states
   },
 
-  // Texte
+  // Text
   text: {
-    primary: '#FFFFFF',      // Texte principal
-    secondary: '#B3B3B3',    // Texte secondaire
-    tertiary: '#808080',     // Texte désactivé/placeholder
-    muted: '#666666',        // Texte très discret
-    link: '#5B9FFF',         // Liens
+    primary: '#FFFFFF',      // Primary text
+    secondary: '#B3B3B3',    // Secondary text
+    tertiary: '#808080',     // Disabled text/placeholder
+    muted: '#666666',        // Very subtle text
+    link: '#5B9FFF',         // Links
   },
 
-  // Bordures
+  // Borders
   border: {
-    primary: '#2D2D2D',      // Bordures principales
-    secondary: '#3D3D3D',    // Bordures secondaires
-    accent: '#4D4D4D',       // Bordures accentuées
+    primary: '#2D2D2D',      // Primary borders
+    secondary: '#3D3D3D',    // Secondary borders
+    accent: '#4D4D4D',       // Accented borders
   },
 
-  // États
+  // States
   state: {
-    success: '#3BA55D',      // Succès / Positif
-    warning: '#FAA81A',      // Avertissement
-    error: '#ED4245',        // Erreur
+    success: '#3BA55D',      // Success / Positive
+    warning: '#FAA81A',      // Warning
+    error: '#ED4245',        // Error
     info: '#5B9FFF',         // Information
   },
 
-  // Accents ClashKing
+  // ClashKing accents
   accent: {
     primary: clashKingColors.primary,
     primaryHover: clashKingColors.primaryLight,
@@ -179,15 +179,15 @@ export const darkTheme = {
 } as const;
 
 // ============================================================================
-// VARIABLES CSS
+// CSS VARIABLES
 // ============================================================================
 
 /**
- * Variables CSS à injecter dans le document
- * Utilisables avec var(--ck-primary), var(--bg-primary), etc.
+ * CSS variables to inject into the document
+ * Usable with var(--ck-primary), var(--bg-primary), etc.
  */
 export const cssVariables = {
-  // Couleurs ClashKing
+  // ClashKing colors
   '--ck-primary': clashKingColors.primary,
   '--ck-primary-dark': clashKingColors.primaryDark,
   '--ck-primary-light': clashKingColors.primaryLight,
@@ -199,25 +199,25 @@ export const cssVariables = {
   '--bg-elevated': darkTheme.background.elevated,
   '--bg-hover': darkTheme.background.hover,
 
-  // Texte
+  // Text
   '--text-primary': darkTheme.text.primary,
   '--text-secondary': darkTheme.text.secondary,
   '--text-tertiary': darkTheme.text.tertiary,
   '--text-muted': darkTheme.text.muted,
   '--text-link': darkTheme.text.link,
 
-  // Bordures
+  // Borders
   '--border-primary': darkTheme.border.primary,
   '--border-secondary': darkTheme.border.secondary,
   '--border-accent': darkTheme.border.accent,
 
-  // États
+  // States
   '--state-success': darkTheme.state.success,
   '--state-warning': darkTheme.state.warning,
   '--state-error': darkTheme.state.error,
   '--state-info': darkTheme.state.info,
 
-  // Spacing (optionnel)
+  // Spacing (optional)
   '--spacing-xs': '4px',
   '--spacing-sm': '8px',
   '--spacing-md': '16px',
@@ -247,7 +247,7 @@ export const cssVariables = {
 // ============================================================================
 
 /**
- * Applique les variables CSS au document
+ * Apply CSS variables to the document
  */
 export function applyThemeVariables(root: HTMLElement = document.documentElement) {
   Object.entries(cssVariables).forEach(([key, value]) => {
@@ -256,7 +256,7 @@ export function applyThemeVariables(root: HTMLElement = document.documentElement
 }
 
 /**
- * Génère un objet de style inline avec les variables CSS
+ * Generate inline styles object with CSS variables
  */
 export function getInlineStyles() {
   return Object.entries(cssVariables).reduce((acc, [key, value]) => {
@@ -266,7 +266,7 @@ export function getInlineStyles() {
 }
 
 /**
- * Crée une classe CSS avec toutes les variables
+ * Create CSS class with all variables
  */
 export function generateThemeCSS(): string {
   const variables = Object.entries(cssVariables)
@@ -277,7 +277,7 @@ export function generateThemeCSS(): string {
 }
 
 // ============================================================================
-// EXPORT PAR DÉFAUT
+// DEFAULT EXPORT
 // ============================================================================
 
 export const theme = {
