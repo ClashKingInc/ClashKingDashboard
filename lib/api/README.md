@@ -2,6 +2,10 @@
 
 Modular TypeScript client for the ClashKing Dashboard API.
 
+> **Note**: This is a comprehensive API client covering all 100+ endpoints of the ClashKing API.
+> The existing `lib/api-client.ts` (3 methods for auth only) is still available for basic authentication needs.
+> This client provides full coverage for players, clans, rosters, wars, servers, and more.
+
 ## Features
 
 - 🎯 **Modular Architecture** - Organized by domain (auth, players, clans, etc.)
@@ -22,7 +26,7 @@ import { createApiClient } from '@/lib/api';
 import { createApiClient } from '@/lib/api';
 
 // Create client instance
-const api = createApiClient('https://api.clashking.xyz', 'your-access-token');
+const api = createApiClient('https://api.clashk.ing', 'your-access-token');
 
 // Authentication
 const { data: user } = await api.auth.getCurrentUser();
@@ -65,7 +69,7 @@ You can also use individual clients for smaller bundle sizes:
 import { AuthClient } from '@/lib/api/clients/auth-client';
 import { ClanClient } from '@/lib/api/clients/clan-client';
 
-const config = { baseUrl: 'https://api.clashking.xyz', accessToken: 'token' };
+const config = { baseUrl: 'https://api.clashk.ing', accessToken: 'token' };
 
 const authClient = new AuthClient(config);
 const clanClient = new ClanClient(config);
@@ -171,29 +175,42 @@ lib/api/
     └── utility-client.ts      # Utility endpoints (17 methods)
 ```
 
-## Benefits of Modular Architecture
+## Comparison with Existing Client
 
-### Before (Monolithic - 2200+ lines)
+### `lib/api-client.ts` (Simple Auth Client)
 ```typescript
-// One massive file with everything
-import { ClashKingApiClient } from './api-client';
+import { apiClient } from '@/lib/api-client';
+
+// Only 3 auth methods available
+await apiClient.loginWithDiscord(code, verifier);
+await apiClient.getCurrentUser(token);
+await apiClient.refreshToken(refreshToken);
 ```
 
-### After (Modular - ~200 lines per file)
+### `lib/api/*` (Full Featured Client - 85+ methods)
 ```typescript
-// Import only what you need
 import { createApiClient } from '@/lib/api';
-import { AuthClient, ClanClient } from '@/lib/api';
-import type { ClanRanking } from '@/lib/api';
+
+const api = createApiClient('https://api.clashk.ing', token);
+
+// Full API coverage
+api.auth.*       // 11 authentication methods
+api.players.*    // 5 player methods
+api.clans.*      // 6 clan methods
+api.rosters.*    // 27 roster methods
+api.wars.*       // 6 war methods
+api.servers.*    // 7 server methods
+api.links.*      // 6 link methods
+api.utils.*      // 17 utility methods
 ```
 
-**Advantages:**
-- ✅ Easier to maintain and navigate
-- ✅ Better code organization
+**Advantages of Modular Architecture:**
+- ✅ Complete API coverage (100+ endpoints)
+- ✅ Organized by domain for easy navigation
 - ✅ Tree-shakeable for smaller bundles
 - ✅ Independent testing of each module
-- ✅ Clear separation of concerns
-- ✅ Easier to extend and add new features
+- ✅ Type-safe with full TypeScript support
+- ✅ Easy to extend and maintain
 
 ## Examples
 

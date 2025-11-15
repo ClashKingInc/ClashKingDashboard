@@ -2,7 +2,7 @@
  * ClashKing API Client - Main Export
  *
  * Modular TypeScript client for ClashKing Dashboard API
- * API Base: https://api.clashking.xyz
+ * API Base: https://api.clashk.ing
  */
 
 // Main client

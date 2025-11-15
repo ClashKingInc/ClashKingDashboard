@@ -1,6 +1,6 @@
 # ClashKing API - Endpoints Documentation
 
-**API Base URL:** `https://api.clashking.xyz`
+**API Base URL:** `https://api.clashk.ing`
 **Branch:** `feat/dashboard`
 **Version:** v2
 
@@ -1215,7 +1215,7 @@
 ## Usage Notes
 
 1. **Authentication:** Most endpoints require a Bearer token in the Authorization header
-2. **Base URL:** All endpoints are prefixed with the base URL (e.g., `https://api.clashking.xyz`)
+2. **Base URL:** All endpoints are prefixed with the base URL (e.g., `https://api.clashk.ing`)
 3. **Content Type:** All POST/PATCH requests expect `application/json`
 4. **Player Tags:** Should be properly formatted (with # symbol or URL-encoded as %23)
 5. **Clan Tags:** Should be properly formatted (with # symbol or URL-encoded as %23)
@@ -1229,7 +1229,7 @@
 import { createApiClient } from './lib/api-client';
 
 // Initialize client
-const client = createApiClient('https://api.clashking.xyz', 'your-access-token');
+const client = createApiClient('https://api.clashk.ing', 'your-access-token');
 
 // Example: Get current user
 const { data, error } = await client.getCurrentUser();
