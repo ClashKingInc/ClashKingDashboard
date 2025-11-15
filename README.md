@@ -7,7 +7,7 @@ A modern web dashboard for configuring ClashKing bot settings, built with Next.j
 - 🎨 **Modern UI** - Built with shadcn/ui components and TailwindCSS
 - 📱 **Responsive Design** - Fully responsive, works on mobile and desktop
 - 🔐 **Discord OAuth2** - Secure authentication with Discord
-- ⚙️ **MEE6-style Interface** - Familiar and intuitive settings management
+- ⚙️ **Modern Interface** - Familiar and intuitive settings management
 - 🚀 **Fast & Performant** - Built on Next.js 15 with App Router
 
 ## Project Structure
