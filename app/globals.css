@@ -1,27 +1,28 @@
 @import "tailwindcss";
 
 :root {
+  /* Light mode - minimal changes as we focus on dark mode */
   --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  --foreground: 0 0% 3.9%;
   --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card-foreground: 0 0% 3.9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --popover-foreground: 0 0% 3.9%;
+  --primary: 356 100% 43%; /* ClashKing Red: #D90709 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  --accent: 0 0% 96.1%;
+  --accent-foreground: 0 0% 9%;
   --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  --ring: 356 100% 43%;
   --radius: 0.5rem;
-  --chart-1: 12 76% 61%;
+  --chart-1: 356 100% 43%;
   --chart-2: 173 58% 39%;
   --chart-3: 197 37% 24%;
   --chart-4: 43 74% 66%;
@@ -29,30 +30,52 @@
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
-  --chart-1: 220 70% 50%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
+  /* ClashKing Dark Theme - MEE6 style */
+  /* Ultra dark backgrounds for depth */
+  --background: 0 0% 5.9%; /* #0F0F0F */
+  --foreground: 0 0% 100%; /* #FFFFFF */
+
+  /* Cards and elevated surfaces */
+  --card: 0 0% 10.2%; /* #1A1A1A */
+  --card-foreground: 0 0% 100%;
+
+  /* Popovers, dropdowns, modals */
+  --popover: 0 0% 17.6%; /* #2D2D2D */
+  --popover-foreground: 0 0% 100%;
+
+  /* ClashKing Primary Red */
+  --primary: 356 100% 43%; /* #D90709 */
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary interactive elements */
+  --secondary: 0 0% 14.1%; /* #242424 */
+  --secondary-foreground: 0 0% 100%;
+
+  /* Muted text and backgrounds */
+  --muted: 0 0% 14.1%; /* #242424 */
+  --muted-foreground: 0 0% 70%; /* #B3B3B3 */
+
+  /* Accent - hover states */
+  --accent: 0 0% 18.4%; /* #2F2F2F */
+  --accent-foreground: 0 0% 100%;
+
+  /* Destructive/Error states */
+  --destructive: 0 66% 57%; /* #ED4245 */
+  --destructive-foreground: 0 0% 100%;
+
+  /* Borders - subtle */
+  --border: 0 0% 17.6%; /* #2D2D2D */
+  --input: 0 0% 23.9%; /* #3D3D3D */
+
+  /* Focus rings */
+  --ring: 356 100% 43%; /* ClashKing Red */
+
+  /* Charts using ClashKing colors */
+  --chart-1: 356 100% 43%; /* Primary Red */
+  --chart-2: 220 62% 69%; /* Info Blue */
+  --chart-3: 142 71% 45%; /* Success Green */
+  --chart-4: 38 92% 50%; /* Warning Orange */
+  --chart-5: 356 100% 56%; /* Light Red */
 }
 
 @theme inline {
@@ -92,4 +115,71 @@
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* MEE6-style enhancements */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better focus visible states */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Card enhancements for MEE6 dark style */
+  .card-mee6 {
+    @apply bg-card border border-border rounded-lg shadow-sm;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .card-mee6:hover {
+    @apply border-border/60;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Subtle gradient backgrounds for headers */
+  .gradient-header {
+    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--secondary)) 100%);
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  /* ClashKing accent gradient */
+  .gradient-clashking {
+    background: linear-gradient(135deg, #BF0000 0%, #D90709 100%);
+  }
+
+  /* Glow effect for primary elements */
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(217, 7, 9, 0.3);
+  }
+
+  /* Custom scrollbar for dark theme */
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
 }
