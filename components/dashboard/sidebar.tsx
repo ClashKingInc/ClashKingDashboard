@@ -16,7 +16,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { darkTheme, clashKingColors } from "@/lib/theme";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 
 interface SidebarProps {
   guildId: string;
@@ -87,58 +87,27 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
   ];
 
   return (
-    <div
-      className="flex h-full w-64 flex-col border-r"
-      style={{
-        backgroundColor: darkTheme.background.secondary,
-        borderColor: darkTheme.border.primary,
-      }}
-    >
+    <div className="flex h-full w-64 flex-col bg-card border-r border-border">
       {/* Server Header */}
-      <div
-        className="p-4 border-b"
-        style={{
-          borderColor: darkTheme.border.primary,
-        }}
-      >
+      <div className="p-4 border-b border-border">
         <Link
           href="/servers"
           className="flex items-center gap-3 group transition-all duration-200"
         >
-          <Avatar
-            className="h-12 w-12 rounded-xl ring-2 transition-all group-hover:ring-4"
-            style={{
-              ringColor: darkTheme.border.secondary,
-            }}
-          >
+          <Avatar className="h-12 w-12 rounded-xl ring-2 ring-border transition-all group-hover:ring-4">
             <AvatarImage src={guildIcon} className="rounded-xl" />
-            <AvatarFallback
-              className="rounded-xl text-lg font-bold"
-              style={{
-                backgroundColor: darkTheme.background.tertiary,
-                color: clashKingColors.primary,
-              }}
-            >
+            <AvatarFallback className="rounded-xl text-lg font-bold bg-secondary text-primary">
               {guildName.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1">
-              <p
-                className="font-semibold text-base truncate"
-                style={{ color: darkTheme.text.primary }}
-              >
+              <p className="font-semibold text-base truncate text-foreground">
                 {guildName}
               </p>
-              <ChevronDown
-                className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity"
-                style={{ color: darkTheme.text.secondary }}
-              />
+              <ChevronDown className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity text-muted-foreground" />
             </div>
-            <p
-              className="text-xs mt-0.5"
-              style={{ color: darkTheme.text.tertiary }}
-            >
+            <p className="text-xs mt-0.5 text-muted-foreground">
               Dashboard Settings
             </p>
           </div>
@@ -155,35 +124,14 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
               href={item.href}
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 group relative overflow-hidden",
-                isActive ? "shadow-sm" : ""
+                isActive
+                  ? "bg-primary/10 text-primary shadow-sm"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
               )}
-              style={{
-                backgroundColor: isActive
-                  ? `${clashKingColors.primary}15`
-                  : 'transparent',
-                color: isActive
-                  ? clashKingColors.primary
-                  : darkTheme.text.secondary,
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = darkTheme.background.tertiary;
-                  e.currentTarget.style.color = darkTheme.text.primary;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = darkTheme.text.secondary;
-                }
-              }}
             >
               {/* Active indicator */}
               {isActive && (
-                <div
-                  className="absolute left-0 top-0 bottom-0 w-1 rounded-r"
-                  style={{ backgroundColor: clashKingColors.primary }}
-                />
+                <div className="absolute left-0 top-0 bottom-0 w-1 rounded-r bg-primary" />
               )}
 
               <item.icon
@@ -200,25 +148,19 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer - ClashKing Branding */}
-      <div
-        className="p-4 border-t"
-        style={{
-          borderColor: darkTheme.border.primary,
-          backgroundColor: darkTheme.background.primary,
-        }}
-      >
+      {/* Footer - ClashKing Branding & Theme Switcher */}
+      <div className="p-4 border-t border-border bg-background space-y-3">
+        {/* Theme Switcher */}
+        <div className="flex justify-center">
+          <ThemeSwitcher />
+        </div>
+
+        {/* Branding */}
         <div className="flex items-center justify-center gap-2">
-          <div
-            className="text-xs font-medium"
-            style={{ color: darkTheme.text.tertiary }}
-          >
+          <div className="text-xs font-medium text-muted-foreground">
             Powered by
           </div>
-          <div
-            className="text-xs font-bold"
-            style={{ color: clashKingColors.primary }}
-          >
+          <div className="text-xs font-bold text-primary">
             ClashKing
           </div>
         </div>
