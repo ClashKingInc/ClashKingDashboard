@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -26,59 +26,61 @@ interface SidebarProps {
 
 export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
   const pathname = usePathname();
+  const params = useParams();
+  const locale = params.locale || "en";
 
   const navigation = [
     {
       name: "Overview",
-      href: `/${guildId}`,
+      href: `/${locale}/dashboard/${guildId}`,
       icon: Home,
       description: "Dashboard home",
     },
     {
       name: "General Settings",
-      href: `/${guildId}/general`,
+      href: `/${locale}/dashboard/${guildId}/general`,
       icon: Settings,
       description: "Server configuration",
     },
     {
       name: "Clans",
-      href: `/${guildId}/clans`,
+      href: `/${locale}/dashboard/${guildId}/clans`,
       icon: Users,
       description: "Manage your clans",
     },
     {
       name: "Wars",
-      href: `/${guildId}/wars`,
+      href: `/${locale}/dashboard/${guildId}/wars`,
       icon: Swords,
       description: "War stats & reminders",
     },
     {
       name: "Logs",
-      href: `/${guildId}/logs`,
+      href: `/${locale}/dashboard/${guildId}/logs`,
       icon: ScrollText,
       description: "Webhook configuration",
     },
     {
       name: "Roles",
-      href: `/${guildId}/roles`,
+      href: `/${locale}/dashboard/${guildId}/roles`,
       icon: ShieldCheck,
       description: "Role automation",
     },
     {
       name: "Reminders",
-      href: `/${guildId}/reminders`,
+      href: `/${locale}/dashboard/${guildId}/reminders`,
       icon: Bell,
       description: "All reminder types",
     },
     {
       name: "Rosters",
-      href: `/${guildId}/rosters`,
+      href: `/${locale}/dashboard/${guildId}/rosters`,
       icon: ClipboardList,
       description: "Roster management",
     },
     {
       name: "Bans",
-      href: `/${guildId}/bans`,
+      href: `/${locale}/dashboard/${guildId}/bans`,
       icon: Ban,
       description: "Moderation tools",
     },
