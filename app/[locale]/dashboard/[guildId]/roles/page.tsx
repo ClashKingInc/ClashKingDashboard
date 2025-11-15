@@ -193,8 +193,8 @@ export default function RolesPage() {
   };
 
   return (
-    <div className="p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -203,8 +203,8 @@ export default function RolesPage() {
                 <Shield className="h-8 w-8 text-red-500" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Role Management</h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                <h1 className="text-3xl font-bold text-foreground">Role Management</h1>
+                <p className="text-muted-foreground mt-1">
                   Configure automatic role assignment based on player progress
                 </p>
               </div>
@@ -313,7 +313,7 @@ export default function RolesPage() {
           <TabsContent value="townhall" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-3">
               <div className="lg:col-span-2 space-y-6">
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -336,7 +336,7 @@ export default function RolesPage() {
                       <>
                         <div className="space-y-3">
                           {thRoles.roles.map((role, index) => (
-                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gray-900/50 border border-gray-800">
+                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border">
                               <div className="flex-shrink-0 w-20">
                                 <Label className="text-xs text-muted-foreground">Level</Label>
                                 <Select
@@ -416,7 +416,7 @@ export default function RolesPage() {
               </div>
 
               <div className="space-y-6">
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Town Hall Distribution</CardTitle>
                     <CardDescription>Current member breakdown</CardDescription>
@@ -450,7 +450,7 @@ export default function RolesPage() {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Quick Stats</CardTitle>
                   </CardHeader>
@@ -477,7 +477,7 @@ export default function RolesPage() {
           <TabsContent value="legend" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-3">
               <div className="lg:col-span-2">
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -500,7 +500,7 @@ export default function RolesPage() {
                       <>
                         <div className="space-y-3">
                           {legendRoles.roles.map((role, index) => (
-                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gray-900/50 border border-gray-800">
+                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border">
                               <div className="flex-shrink-0 w-32">
                                 <Label className="text-xs text-muted-foreground">Min Trophies</Label>
                                 <Input
@@ -570,7 +570,7 @@ export default function RolesPage() {
               </div>
 
               <div>
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Legend Statistics</CardTitle>
                     <CardDescription>Current season data</CardDescription>
@@ -583,11 +583,11 @@ export default function RolesPage() {
                       </div>
                       <div className="flex justify-between items-center p-3 rounded-lg bg-gray-900/50">
                         <span className="text-sm text-muted-foreground">Highest Trophy</span>
-                        <span className="text-lg font-bold text-white">5,843</span>
+                        <span className="text-lg font-bold text-foreground">5,843</span>
                       </div>
                       <div className="flex justify-between items-center p-3 rounded-lg bg-gray-900/50">
                         <span className="text-sm text-muted-foreground">Avg Trophies</span>
-                        <span className="text-lg font-bold text-white">5,234</span>
+                        <span className="text-lg font-bold text-foreground">5,234</span>
                       </div>
                     </div>
                   </CardContent>
@@ -600,7 +600,7 @@ export default function RolesPage() {
           <TabsContent value="achievement" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-3">
               <div className="lg:col-span-2 space-y-6">
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -623,7 +623,7 @@ export default function RolesPage() {
                       <>
                         <div className="space-y-3">
                           {achievementRoles.roles.map((role, index) => (
-                            <div key={index} className="p-4 rounded-lg bg-gray-900/50 border border-gray-800 space-y-3">
+                            <div key={index} className="p-4 rounded-lg bg-secondary/50 border border-border space-y-3">
                               <div className="flex items-center justify-between">
                                 <Input
                                   placeholder="Achievement Name"
@@ -704,7 +704,7 @@ export default function RolesPage() {
               </div>
 
               <div>
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Achievement Stats</CardTitle>
                     <CardDescription>Members with achievements</CardDescription>
@@ -735,7 +735,7 @@ export default function RolesPage() {
           <TabsContent value="family" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-3">
               <div className="lg:col-span-2 space-y-6">
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -793,7 +793,7 @@ export default function RolesPage() {
 
                         <div className="space-y-3">
                           {familyRoles.roles.map((role, index) => (
-                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gray-900/50 border border-gray-800">
+                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border">
                               <div className="flex-shrink-0 w-32">
                                 <Label className="text-xs text-muted-foreground">Clan Tag</Label>
                                 <Input
@@ -877,7 +877,7 @@ export default function RolesPage() {
               </div>
 
               <div>
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Clan Overview</CardTitle>
                     <CardDescription>Members per clan</CardDescription>
@@ -885,9 +885,9 @@ export default function RolesPage() {
                   <CardContent className="space-y-3">
                     <div className="space-y-2">
                       {familyRoles.roles.map((role, index) => (
-                        <div key={index} className="p-3 rounded-lg bg-gray-900/50 border border-gray-800">
+                        <div key={index} className="p-3 rounded-lg bg-secondary/50 border border-border">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="font-medium text-sm text-white">{role.roleName || "Unnamed Clan"}</span>
+                            <span className="font-medium text-sm text-foreground">{role.roleName || "Unnamed Clan"}</span>
                             <Badge variant="secondary">{Math.floor(Math.random() * 30 + 20)}</Badge>
                           </div>
                           <div className="text-xs text-muted-foreground font-mono">{role.clanTag || "No tag"}</div>
@@ -904,7 +904,7 @@ export default function RolesPage() {
           <TabsContent value="builder" className="space-y-6">
             <div className="grid gap-6 lg:grid-cols-3">
               <div className="lg:col-span-2 space-y-6">
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -927,7 +927,7 @@ export default function RolesPage() {
                       <>
                         <div className="space-y-3">
                           {builderRoles.roles.map((role, index) => (
-                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-gray-900/50 border border-gray-800">
+                            <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border">
                               <div className="flex-shrink-0 w-20">
                                 <Label className="text-xs text-muted-foreground">Level</Label>
                                 <Select
@@ -1021,7 +1021,7 @@ export default function RolesPage() {
               </div>
 
               <div>
-                <Card>
+                <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle className="text-base">Builder Distribution</CardTitle>
                     <CardDescription>Current breakdown</CardDescription>
