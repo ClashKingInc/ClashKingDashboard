@@ -30,7 +30,7 @@
 }
 
 .dark {
-  /* ClashKing Dark Theme - MEE6 style */
+  /* ClashKing Dark Theme */
   /* Ultra dark backgrounds for depth */
   --background: 0 0% 5.9%; /* #0F0F0F */
   --foreground: 0 0% 100%; /* #FFFFFF */
@@ -118,7 +118,7 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/* MEE6-style enhancements */
+/* Dark theme enhancements */
 @layer base {
   * {
     @apply border-border;
@@ -137,13 +137,13 @@ body {
 }
 
 @layer components {
-  /* Card enhancements for MEE6 dark style */
-  .card-mee6 {
+  /* Enhanced card styling for dark theme */
+  .card-dark {
     @apply bg-card border border-border rounded-lg shadow-sm;
     transition: all 0.2s ease-in-out;
   }
 
-  .card-mee6:hover {
+  .card-dark:hover {
     @apply border-border/60;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }

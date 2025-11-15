@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Web dashboard to configure ClashKing bot settings (MEE6-style), compatible with mobile and desktop.
+Web dashboard to configure ClashKing bot settings, compatible with mobile and desktop.
 
 ### Chosen Tech Stack
 
@@ -241,7 +241,7 @@ Automatic role types:
 
 ## Dashboard Structure to Create
 
-### Main Pages (MEE6-style)
+### Main Pages
 
 ```
 /
@@ -512,7 +512,7 @@ npx shadcn@latest add button card dialog form input label select switch tabs tab
 3. ✅ Create .claude/context.md
 4. ✅ Initialize Next.js with shadcn/ui
 5. ✅ Create dashboard page structure
-6. ✅ Create MEE6-style example pages
+6. ✅ Create example pages
 7. 🔄 Create dashboard API endpoints (in ClashKingAPI)
 8. 🔄 Implement Discord OAuth2 auth flow
 9. 🔄 Connect frontend ↔ backend with Tanstack Query

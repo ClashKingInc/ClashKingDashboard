@@ -128,12 +128,12 @@ export const clashKingAssets = {
 } as const;
 
 // ============================================================================
-// DARK MODE THEME (MEE6/Discord modern style)
+// DARK MODE THEME
 // ============================================================================
 
 /**
  * Dark theme configuration for the dashboard
- * Inspired by modern dashboards (MEE6, Discord, etc.)
+ * Modern dark interface with ClashKing branding
  */
 export const darkTheme = {
   // Backgrounds
