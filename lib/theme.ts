@@ -44,15 +44,31 @@ export const clashKingColors = {
  */
 export const clashKingAssets = {
   logos: {
-    // Logos principaux
-    full: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/ClashKing-logo.png',
-    crown: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/ClashKing-crown-logo.png',
-    name: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/ClashKing-name-logo.png',
+    // LOGOS OFFICIELS (couronne + flèche)
+    // Utilisez ces logos pour le dashboard
+    darkBg: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-dark-bg/ClashKing-1.svg',
+    darkBgPng: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-dark-bg/ClashKing-1.png',
+    whiteBg: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-white-bg/ClashKing-2.svg',
+    whiteBgPng: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-white-bg/ClashKing-2.png',
 
-    // Variantes de la couronne
+    // LOGOS AVEC TEXTE "ClashKing"
+    withTextDark: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-text-dark-bg/ClashKing-with-text-3.svg',
+    withTextWhite: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-text-white-bg/ClashKing-with-text-2.svg',
+
+    // ICÔNES (couronne seule)
+    // Couronne rouge
     crownRed: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-red/ClashKing-crown.svg',
+    // Couronne noire (sur fond blanc)
+    iconBlack: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-black-arrow-white-bg/ClashKing-icon-black.svg',
+    // Couronne blanche (sur fond sombre)
+    iconWhite: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-white-arrow-dark-bg/ClashKing-icon-white.svg',
+    // Couronne simple (noire/blanche)
     crownBlack: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-black/crown-black.svg',
     crownWhite: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-white/crown-white.svg',
+
+    // BOT/APP LOGOS
+    botApp: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/bot-app-logo/bot-app-logo.png',
+    christmas: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/bot-app-logo/christmas-logo.gif',
   },
 
   // Dossiers d'assets disponibles
