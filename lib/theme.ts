@@ -39,44 +39,91 @@ export const clashKingColors = {
 // ============================================================================
 
 /**
- * URLs des logos ClashKing disponibles
- * Base URL: https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main
+ * URLs des logos et assets ClashKing
+ * CDN: https://assets.clashk.ing
  */
 export const clashKingAssets = {
+  // Base URL du CDN
+  baseUrl: 'https://assets.clashk.ing',
+
   logos: {
-    // LOGOS OFFICIELS (couronne + flèche)
+    // LOGOS OFFICIELS (couronne + flèche) - À privilégier
     // Utilisez ces logos pour le dashboard
-    darkBg: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-dark-bg/ClashKing-1.svg',
-    darkBgPng: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-dark-bg/ClashKing-1.png',
-    whiteBg: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-white-bg/ClashKing-2.svg',
-    whiteBgPng: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-arrow-white-bg/ClashKing-2.png',
+    darkBg: 'https://assets.clashk.ing/logos/crown-arrow-dark-bg/ClashKing-1.svg',
+    darkBgPng: 'https://assets.clashk.ing/logos/crown-arrow-dark-bg/ClashKing-1.png',
+    whiteBg: 'https://assets.clashk.ing/logos/crown-arrow-white-bg/ClashKing-2.svg',
+    whiteBgPng: 'https://assets.clashk.ing/logos/crown-arrow-white-bg/ClashKing-2.png',
 
     // LOGOS AVEC TEXTE "ClashKing"
-    withTextDark: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-text-dark-bg/ClashKing-with-text-3.svg',
-    withTextWhite: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-text-white-bg/ClashKing-with-text-2.svg',
+    withTextDark: 'https://assets.clashk.ing/logos/crown-text-dark-bg/ClashKing-with-text-3.svg',
+    withTextDarkPng: 'https://assets.clashk.ing/logos/crown-text-dark-bg/KTYEp1081709208tL7z4HA7BiA2MucfE08fgsIuKdtnuf37cwqzbdp9qpnj2j.png',
+    withTextWhite: 'https://assets.clashk.ing/logos/crown-text-white-bg/ClashKing-with-text-2.svg',
+    withTextWhitePng: 'https://assets.clashk.ing/logos/crown-text-white-bg/BqlEp974170917vB1qK0zunfANJCGi0W031dTksEq7KQ9LoXWMFk0u77unHJa.png',
 
     // ICÔNES (couronne seule)
-    // Couronne rouge
-    crownRed: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-red/ClashKing-crown.svg',
-    // Couronne noire (sur fond blanc)
-    iconBlack: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-black-arrow-white-bg/ClashKing-icon-black.svg',
-    // Couronne blanche (sur fond sombre)
-    iconWhite: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-white-arrow-dark-bg/ClashKing-icon-white.svg',
-    // Couronne simple (noire/blanche)
-    crownBlack: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-black/crown-black.svg',
-    crownWhite: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/crown-white/crown-white.svg',
+    crownRed: 'https://assets.clashk.ing/logos/crown-red/ClashKing-crown.svg',
+    iconBlack: 'https://assets.clashk.ing/logos/crown-black-arrow-white-bg/ClashKing-icon-black.svg',
+    iconBlackPng: 'https://assets.clashk.ing/logos/crown-black-arrow-white-bg/Rl3Ep2541709222E0oUYaLObTdAOBkQ6MiAb16i3iq7ROnNlky4kqZQPS8Ku6.png',
+    iconWhite: 'https://assets.clashk.ing/logos/crown-white-arrow-dark-bg/ClashKing-icon-white.svg',
+    iconWhitePng: 'https://assets.clashk.ing/logos/crown-white-arrow-dark-bg/FjTEp708170921wcQnjjhKgCZNfLjaMO7uQy3lFnLiwcsjtNluf1CyZ3e7QtL.png',
+    crownBlack: 'https://assets.clashk.ing/logos/crown-black/crown-black.svg',
+    crownWhite: 'https://assets.clashk.ing/logos/crown-white/crown-white.svg',
 
     // BOT/APP LOGOS
-    botApp: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/bot-app-logo/bot-app-logo.png',
-    christmas: 'https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/logos/bot-app-logo/christmas-logo.gif',
+    botApp: 'https://assets.clashk.ing/logos/bot-app-logo/bot-app-logo.png',
+    christmas: 'https://assets.clashk.ing/logos/bot-app-logo/christmas-logo.gif',
   },
 
-  // Dossiers d'assets disponibles
+  // Icônes de jeu disponibles
+  icons: {
+    // Clash Royale / Discord (Icon_DC_*)
+    dc: {
+      cwl: 'https://assets.clashk.ing/icons/Icon_DC_CWL.png',
+      war: 'https://assets.clashk.ing/icons/Icon_DC_War.png',
+      hitrate: 'https://assets.clashk.ing/icons/Icon_DC_Hitrate.png',
+      cross: 'https://assets.clashk.ing/icons/Icon_DC_Cross.png',
+      tick: 'https://assets.clashk.ing/icons/Icon_DC_Tick.png',
+      arrowLeft: 'https://assets.clashk.ing/icons/Icon_DC_ArrowLeft.png',
+      arrowRight: 'https://assets.clashk.ing/icons/Icon_DC_ArrowRight.png',
+    },
+    // Clash of Clans - Home Village (Icon_HV_*)
+    hv: {
+      attack: 'https://assets.clashk.ing/icons/Icon_HV_Attack.png',
+      shield: 'https://assets.clashk.ing/icons/Icon_HV_Shield.png',
+      trophy: 'https://assets.clashk.ing/icons/Icon_HV_Trophy.png',
+      legendLeague: 'https://assets.clashk.ing/icons/Icon_HV_League_Legend_3.png',
+      clanWar: 'https://assets.clashk.ing/icons/Icon_HV_Clan_War.png',
+      goldPass: 'https://assets.clashk.ing/icons/Icon_HV_Gold_Pass.png',
+      raidAttack: 'https://assets.clashk.ing/icons/Icon_HV_Raid_Attack.png',
+      capitalGold: 'https://assets.clashk.ing/icons/Icon_HV_Capital_Gold.png',
+      capitalTrophy: 'https://assets.clashk.ing/icons/Icon_HV_Capital_Trophy.png',
+    },
+    // Builder Base (Icon_BB_*)
+    bb: {
+      starEmpty: 'https://assets.clashk.ing/icons/Icon_BB_Star_Empty.png',
+      starFilled: 'https://assets.clashk.ing/icons/Icon_BB_Star_Filled.png',
+    },
+    // Icônes génériques
+    generic: {
+      startFlag: 'https://assets.clashk.ing/icons/Icon_HV_Start_Flag.png',
+      sword: 'https://assets.clashk.ing/icons/Icon_HV_Sword.png',
+      podium: 'https://assets.clashk.ing/icons/Icon_HV_Podium.png',
+      shieldArrow: 'https://assets.clashk.ing/icons/Icon_HV_Shield_Arrow.png',
+      unknownPerson: 'https://assets.clashk.ing/icons/Unknown_person.jpg',
+    },
+  },
+
+  // Chemins vers les dossiers d'assets
   paths: {
-    icons: '/assets/icons',
-    flags: '/assets/country-flags',
-    stickers: '/assets/stickers',
-    defaultPics: '/assets/default-pics',
+    logos: 'https://assets.clashk.ing/logos',
+    icons: 'https://assets.clashk.ing/icons',
+    flags: 'https://assets.clashk.ing/country-flags',
+    stickers: 'https://assets.clashk.ing/stickers',
+    defaultPics: 'https://assets.clashk.ing/default-pics',
+    fonts: 'https://assets.clashk.ing/fonts',
+    homeBase: 'https://assets.clashk.ing/home-base',
+    builderBase: 'https://assets.clashk.ing/builder-base',
+    capitalBase: 'https://assets.clashk.ing/capital-base',
   },
 } as const;
 
