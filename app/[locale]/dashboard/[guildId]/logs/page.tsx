@@ -3,434 +3,903 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  FileText,
   Users,
   Gift,
   Swords,
   Castle,
-  Trophy,
   TrendingUp,
-  Webhook,
-  Hash,
-  Save,
-  RotateCcw,
+  Trophy,
+  Ban,
+  AlertTriangle,
+  Activity,
   Bell,
-  CheckCircle2,
-  XCircle
+  Hash,
+  MessageSquare,
+  Eye,
+  Settings,
 } from "lucide-react";
+import { darkTheme, clashKingColors } from "@/lib/theme";
 
-// Mock data for Discord channels
+// Mock data for available channels
 const mockChannels = [
-  { id: "1", name: "general" },
-  { id: "2", name: "clan-logs" },
-  { id: "3", name: "war-logs" },
-  { id: "4", name: "donation-logs" },
-  { id: "5", name: "activity-logs" },
-  { id: "6", name: "legend-logs" },
+  { id: "123456", name: "logs-general" },
+  { id: "123457", name: "clan-logs" },
+  { id: "123458", name: "war-logs" },
+  { id: "123459", name: "member-activity" },
+  { id: "123460", name: "admin-logs" },
+];
+
+const mockClans = [
+  { tag: "#CLAN123", name: "Elite Warriors" },
+  { tag: "#CLAN456", name: "Training Ground" },
+  { tag: "#CLAN789", name: "War Masters" },
 ];
 
 interface LogConfig {
   enabled: boolean;
-  type: "webhook" | "channel";
-  webhookUrl: string;
-  channelId: string;
+  channel: string;
+  thread?: string;
+  includeButtons?: boolean;
+  pingRole?: string;
+  clans?: string[];
 }
-
-interface LogsSettings {
-  joinLeave: LogConfig;
-  donations: LogConfig;
-  wars: LogConfig;
-  capital: LogConfig;
-  legends: LogConfig;
-  upgrades: LogConfig;
-}
-
-const defaultLogConfig: LogConfig = {
-  enabled: false,
-  type: "channel",
-  webhookUrl: "",
-  channelId: "",
-};
-
-const logTypes = [
-  {
-    key: "joinLeave" as const,
-    title: "Join/Leave Logs",
-    description: "Track when members join or leave the clan",
-    icon: Users,
-    color: "bg-blue-500",
-    stats: { today: 5, total: 234 },
-  },
-  {
-    key: "donations" as const,
-    title: "Donation Logs",
-    description: "Monitor troop and spell donations",
-    icon: Gift,
-    color: "bg-green-500",
-    stats: { today: 142, total: 8923 },
-  },
-  {
-    key: "wars" as const,
-    title: "War Logs",
-    description: "Track war attacks and results",
-    icon: Swords,
-    color: "bg-red-500",
-    stats: { today: 8, total: 456 },
-  },
-  {
-    key: "capital" as const,
-    title: "Capital Logs",
-    description: "Monitor clan capital contributions and raids",
-    icon: Castle,
-    color: "bg-purple-500",
-    stats: { today: 23, total: 1567 },
-  },
-  {
-    key: "legends" as const,
-    title: "Legend Logs",
-    description: "Track Legend League attacks and trophies",
-    icon: Trophy,
-    color: "bg-yellow-500",
-    stats: { today: 12, total: 890 },
-  },
-  {
-    key: "upgrades" as const,
-    title: "Upgrade Logs",
-    description: "Monitor building and troop upgrades",
-    icon: TrendingUp,
-    color: "bg-orange-500",
-    stats: { today: 34, total: 2341 },
-  },
-];
 
 export default function LogsPage() {
-  const [settings, setSettings] = useState<LogsSettings>({
-    joinLeave: { ...defaultLogConfig },
-    donations: { ...defaultLogConfig },
-    wars: { ...defaultLogConfig },
-    capital: { ...defaultLogConfig },
-    legends: { ...defaultLogConfig },
-    upgrades: { ...defaultLogConfig },
+  const [joinLeaveLog, setJoinLeaveLog] = useState<LogConfig>({
+    enabled: true,
+    channel: "123457",
+    includeButtons: true,
+    clans: ["#CLAN123", "#CLAN456"],
   });
 
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [donationLog, setDonationLog] = useState<LogConfig>({
+    enabled: true,
+    channel: "123457",
+    clans: ["#CLAN123", "#CLAN456", "#CLAN789"],
+  });
 
-  const updateLogConfig = (key: keyof LogsSettings, updates: Partial<LogConfig>) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: { ...prev[key], ...updates }
-    }));
-    setHasUnsavedChanges(true);
+  const [warLog, setWarLog] = useState<LogConfig>({
+    enabled: true,
+    channel: "123458",
+    clans: ["#CLAN123", "#CLAN456"],
+  });
+
+  const [capitalDonationLog, setCapitalDonationLog] = useState<LogConfig>({
+    enabled: true,
+    channel: "123457",
+    clans: ["#CLAN123"],
+  });
+
+  const [capitalRaidLog, setCapitalRaidLog] = useState<LogConfig>({
+    enabled: false,
+    channel: "",
+    clans: [],
+  });
+
+  const [playerUpgradeLog, setPlayerUpgradeLog] = useState<LogConfig>({
+    enabled: true,
+    channel: "123459",
+    includeButtons: false,
+    clans: [],
+  });
+
+  const [legendLog, setLegendLog] = useState<LogConfig>({
+    enabled: false,
+    channel: "",
+    clans: [],
+  });
+
+  const [banLog, setBanLog] = useState<LogConfig>({
+    enabled: true,
+    channel: "123460",
+    pingRole: "@Admins",
+    clans: [],
+  });
+
+  const [strikeLog, setStrikeLog] = useState<LogConfig>({
+    enabled: true,
+    channel: "123460",
+    clans: [],
+  });
+
+  const handleToggleClan = (config: LogConfig, setConfig: (config: LogConfig) => void, clanTag: string) => {
+    const clans = config.clans || [];
+    const newClans = clans.includes(clanTag)
+      ? clans.filter(tag => tag !== clanTag)
+      : [...clans, clanTag];
+    setConfig({ ...config, clans: newClans });
   };
-
-  const handleSave = () => {
-    // In real implementation, this would save to API
-    console.log("Saving settings:", settings);
-    setHasUnsavedChanges(false);
-  };
-
-  const handleReset = () => {
-    setSettings({
-      joinLeave: { ...defaultLogConfig },
-      donations: { ...defaultLogConfig },
-      wars: { ...defaultLogConfig },
-      capital: { ...defaultLogConfig },
-      legends: { ...defaultLogConfig },
-      upgrades: { ...defaultLogConfig },
-    });
-    setHasUnsavedChanges(false);
-  };
-
-  const enabledCount = Object.values(settings).filter(config => config.enabled).length;
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="p-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Logging Configuration</h1>
-            <p className="text-muted-foreground mt-1">
-              Configure webhooks and channels for different activity logs
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              disabled={!hasUnsavedChanges}
-              className="border-border"
-            >
-              <RotateCcw className="mr-2 h-4 w-4" />
-              Reset
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={!hasUnsavedChanges}
-              className="bg-primary hover:bg-primary/90"
-            >
-              <Save className="mr-2 h-4 w-4" />
-              Save Changes
-            </Button>
-          </div>
-        </div>
-
-        {/* Stats Overview */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card className="bg-card border-border">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Active Logs</p>
-                  <p className="text-3xl font-bold text-foreground">{enabledCount}/6</p>
-                </div>
-                <div className="rounded-full bg-primary/10 p-3">
-                  <Bell className="h-6 w-6 text-primary" />
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-500/30">
+                <FileText className="h-8 w-8 text-red-500" />
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Events Today</p>
-                  <p className="text-3xl font-bold text-foreground">
-                    {logTypes.reduce((sum, log) => sum + (settings[log.key].enabled ? log.stats.today : 0), 0)}
-                  </p>
-                </div>
-                <div className="rounded-full bg-green-500/10 p-3">
-                  <CheckCircle2 className="h-6 w-6 text-green-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Events</p>
-                  <p className="text-3xl font-bold text-foreground">
-                    {logTypes.reduce((sum, log) => sum + (settings[log.key].enabled ? log.stats.total : 0), 0).toLocaleString()}
-                  </p>
-                </div>
-                <div className="rounded-full bg-blue-500/10 p-3">
-                  <TrendingUp className="h-6 w-6 text-blue-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Unsaved Changes Banner */}
-        {hasUnsavedChanges && (
-          <Card className="bg-amber-500/10 border-amber-500/50">
-            <CardContent className="flex items-center justify-between py-3">
-              <div className="flex items-center gap-2">
-                <div className="rounded-full bg-amber-500/20 p-1">
-                  <Bell className="h-4 w-4 text-amber-500" />
-                </div>
-                <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
-                  You have unsaved changes. Click &quot;Save Changes&quot; to apply them.
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Activity Logs</h1>
+                <p className="text-gray-600 dark:text-gray-400 mt-1">
+                  Configure automatic logging for clan and player activities
                 </p>
               </div>
-              <Button
-                size="sm"
-                onClick={handleSave}
-                className="bg-amber-500 hover:bg-amber-600 text-white"
-              >
-                Save Now
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Log Configuration Cards */}
-        <div className="grid gap-6 md:grid-cols-2">
-          {logTypes.map((logType) => {
-            const config = settings[logType.key];
-            const Icon = logType.icon;
-
-            return (
-              <Card
-                key={logType.key}
-                className={`bg-card border-border transition-all duration-200 ${
-                  config.enabled ? "ring-2 ring-primary/20" : ""
-                }`}
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`rounded-lg ${logType.color} p-2.5`}>
-                        <Icon className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg font-bold text-foreground">
-                          {logType.title}
-                        </CardTitle>
-                        <CardDescription className="text-muted-foreground text-sm">
-                          {logType.description}
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <Switch
-                      checked={config.enabled}
-                      onCheckedChange={(checked) =>
-                        updateLogConfig(logType.key, { enabled: checked })
-                      }
-                    />
-                  </div>
-                </CardHeader>
-
-                {config.enabled && (
-                  <>
-                    <Separator className="bg-border" />
-                    <CardContent className="pt-6 space-y-4">
-                      {/* Stats */}
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                          <div className="text-xs text-muted-foreground mb-1">Today</div>
-                          <div className="text-xl font-bold text-foreground">{logType.stats.today}</div>
-                        </div>
-                        <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                          <div className="text-xs text-muted-foreground mb-1">Total</div>
-                          <div className="text-xl font-bold text-foreground">
-                            {logType.stats.total.toLocaleString()}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Delivery Type Selection */}
-                      <Tabs
-                        value={config.type}
-                        onValueChange={(value) =>
-                          updateLogConfig(logType.key, { type: value as "webhook" | "channel" })
-                        }
-                        className="w-full"
-                      >
-                        <TabsList className="grid w-full grid-cols-2 bg-secondary">
-                          <TabsTrigger value="channel" className="data-[state=active]:bg-primary">
-                            <Hash className="h-4 w-4 mr-2" />
-                            Channel
-                          </TabsTrigger>
-                          <TabsTrigger value="webhook" className="data-[state=active]:bg-primary">
-                            <Webhook className="h-4 w-4 mr-2" />
-                            Webhook
-                          </TabsTrigger>
-                        </TabsList>
-
-                        <TabsContent value="channel" className="mt-4 space-y-2">
-                          <Label htmlFor={`${logType.key}-channel`}>Select Channel</Label>
-                          <Select
-                            value={config.channelId}
-                            onValueChange={(value) =>
-                              updateLogConfig(logType.key, { channelId: value })
-                            }
-                          >
-                            <SelectTrigger
-                              id={`${logType.key}-channel`}
-                              className="bg-secondary border-border"
-                            >
-                              <SelectValue placeholder="Select a channel" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {mockChannels.map((channel) => (
-                                <SelectItem key={channel.id} value={channel.id}>
-                                  #{channel.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <p className="text-xs text-muted-foreground">
-                            Logs will be sent to the selected channel
-                          </p>
-                        </TabsContent>
-
-                        <TabsContent value="webhook" className="mt-4 space-y-2">
-                          <Label htmlFor={`${logType.key}-webhook`}>Webhook URL</Label>
-                          <Input
-                            id={`${logType.key}-webhook`}
-                            type="url"
-                            placeholder="https://discord.com/api/webhooks/..."
-                            value={config.webhookUrl}
-                            onChange={(e) =>
-                              updateLogConfig(logType.key, { webhookUrl: e.target.value })
-                            }
-                            className="bg-secondary border-border font-mono text-xs"
-                          />
-                          <p className="text-xs text-muted-foreground">
-                            Logs will be sent to the provided webhook
-                          </p>
-                        </TabsContent>
-                      </Tabs>
-
-                      {/* Configuration Status */}
-                      <div className="flex items-center gap-2 pt-2">
-                        {(config.type === "channel" && config.channelId) ||
-                        (config.type === "webhook" && config.webhookUrl) ? (
-                          <>
-                            <CheckCircle2 className="h-4 w-4 text-green-500" />
-                            <span className="text-xs text-green-600 dark:text-green-400 font-medium">
-                              Configured
-                            </span>
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="h-4 w-4 text-amber-500" />
-                            <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">
-                              Configuration required
-                            </span>
-                          </>
-                        )}
-                      </div>
-                    </CardContent>
-                  </>
-                )}
-
-                {!config.enabled && (
-                  <CardContent className="pt-0">
-                    <div className="bg-secondary/30 border border-dashed border-border rounded-lg p-6 text-center">
-                      <XCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
-                        Enable this log type to configure it
-                      </p>
-                    </div>
-                  </CardContent>
-                )}
-              </Card>
-            );
-          })}
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button variant="outline">
+              <Eye className="mr-2 h-4 w-4" />
+              Preview Logs
+            </Button>
+            <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800">
+              <Settings className="mr-2 h-4 w-4" />
+              Save All Settings
+            </Button>
+          </div>
         </div>
 
+        {/* Statistics Overview */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <Card className="border-blue-500/30 bg-blue-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Active Logs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-blue-500">7</div>
+                <Activity className="h-8 w-8 text-blue-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Out of 9 log types
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-green-500/30 bg-green-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Logs Today</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-green-500">1,247</div>
+                <MessageSquare className="h-8 w-8 text-green-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                <span className="text-green-500">+23%</span> from yesterday
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-yellow-500/30 bg-yellow-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Log Channels</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-yellow-500">4</div>
+                <Hash className="h-8 w-8 text-yellow-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Configured channels
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-purple-500/30 bg-purple-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Webhooks</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-purple-500">7</div>
+                <Bell className="h-8 w-8 text-purple-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Active webhooks
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Tabs defaultValue="clan" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 lg:w-[600px]">
+            <TabsTrigger value="clan">
+              <Castle className="mr-2 h-4 w-4" />
+              Clan Logs
+            </TabsTrigger>
+            <TabsTrigger value="player">
+              <Users className="mr-2 h-4 w-4" />
+              Player Logs
+            </TabsTrigger>
+            <TabsTrigger value="moderation">
+              <Ban className="mr-2 h-4 w-4" />
+              Moderation
+            </TabsTrigger>
+          </TabsList>
+
+          {/* CLAN LOGS TAB */}
+          <TabsContent value="clan" className="space-y-6">
+            {/* Join/Leave Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-green-500" />
+                    <div>
+                      <CardTitle>Join/Leave Logs</CardTitle>
+                      <CardDescription>
+                        Track members joining and leaving your clans
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={joinLeaveLog.enabled}
+                    onCheckedChange={(checked) => setJoinLeaveLog({ ...joinLeaveLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {joinLeaveLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="jl-channel">Log Channel</Label>
+                      <Select value={joinLeaveLog.channel} onValueChange={(value) => setJoinLeaveLog({ ...joinLeaveLog, channel: value })}>
+                        <SelectTrigger id="jl-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="jl-thread">Thread (Optional)</Label>
+                      <Input
+                        id="jl-thread"
+                        placeholder="Thread ID or name"
+                        value={joinLeaveLog.thread || ""}
+                        onChange={(e) => setJoinLeaveLog({ ...joinLeaveLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-gray-900/50">
+                    <div className="space-y-0.5">
+                      <Label>Include Action Buttons</Label>
+                      <p className="text-xs text-muted-foreground">
+                        Add ban/strike buttons on leave messages
+                      </p>
+                    </div>
+                    <Switch
+                      checked={joinLeaveLog.includeButtons}
+                      onCheckedChange={(checked) => setJoinLeaveLog({ ...joinLeaveLog, includeButtons: checked })}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <Label>Active Clans</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {mockClans.map(clan => (
+                        <Badge
+                          key={clan.tag}
+                          variant={joinLeaveLog.clans?.includes(clan.tag) ? "default" : "outline"}
+                          className={`cursor-pointer ${joinLeaveLog.clans?.includes(clan.tag) ? 'bg-red-500/20 text-red-500 border-red-500/30' : ''}`}
+                          onClick={() => handleToggleClan(joinLeaveLog, setJoinLeaveLog, clan.tag)}
+                        >
+                          {clan.name}
+                        </Badge>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Click to toggle which clans trigger this log
+                    </p>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            {/* Donation Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-5 w-5 text-purple-500" />
+                    <div>
+                      <CardTitle>Donation Logs</CardTitle>
+                      <CardDescription>
+                        Track troop donations and requests
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={donationLog.enabled}
+                    onCheckedChange={(checked) => setDonationLog({ ...donationLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {donationLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="dono-channel">Log Channel</Label>
+                      <Select value={donationLog.channel} onValueChange={(value) => setDonationLog({ ...donationLog, channel: value })}>
+                        <SelectTrigger id="dono-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="dono-thread">Thread (Optional)</Label>
+                      <Input
+                        id="dono-thread"
+                        placeholder="Thread ID or name"
+                        value={donationLog.thread || ""}
+                        onChange={(e) => setDonationLog({ ...donationLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <Label>Active Clans</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {mockClans.map(clan => (
+                        <Badge
+                          key={clan.tag}
+                          variant={donationLog.clans?.includes(clan.tag) ? "default" : "outline"}
+                          className={`cursor-pointer ${donationLog.clans?.includes(clan.tag) ? 'bg-red-500/20 text-red-500 border-red-500/30' : ''}`}
+                          onClick={() => handleToggleClan(donationLog, setDonationLog, clan.tag)}
+                        >
+                          {clan.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            {/* War Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Swords className="h-5 w-5 text-red-500" />
+                    <div>
+                      <CardTitle>War Attack Logs</CardTitle>
+                      <CardDescription>
+                        Log attacks and defenses during wars
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={warLog.enabled}
+                    onCheckedChange={(checked) => setWarLog({ ...warLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {warLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="war-channel">Log Channel</Label>
+                      <Select value={warLog.channel} onValueChange={(value) => setWarLog({ ...warLog, channel: value })}>
+                        <SelectTrigger id="war-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="war-thread">Thread (Optional)</Label>
+                      <Input
+                        id="war-thread"
+                        placeholder="Thread ID or name"
+                        value={warLog.thread || ""}
+                        onChange={(e) => setWarLog({ ...warLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <Label>Active Clans</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {mockClans.map(clan => (
+                        <Badge
+                          key={clan.tag}
+                          variant={warLog.clans?.includes(clan.tag) ? "default" : "outline"}
+                          className={`cursor-pointer ${warLog.clans?.includes(clan.tag) ? 'bg-red-500/20 text-red-500 border-red-500/30' : ''}`}
+                          onClick={() => handleToggleClan(warLog, setWarLog, clan.tag)}
+                        >
+                          {clan.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            {/* Capital Donation Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Castle className="h-5 w-5 text-yellow-500" />
+                    <div>
+                      <CardTitle>Capital Donation Logs</CardTitle>
+                      <CardDescription>
+                        Track capital gold donations
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={capitalDonationLog.enabled}
+                    onCheckedChange={(checked) => setCapitalDonationLog({ ...capitalDonationLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {capitalDonationLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="cap-dono-channel">Log Channel</Label>
+                      <Select value={capitalDonationLog.channel} onValueChange={(value) => setCapitalDonationLog({ ...capitalDonationLog, channel: value })}>
+                        <SelectTrigger id="cap-dono-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="cap-dono-thread">Thread (Optional)</Label>
+                      <Input
+                        id="cap-dono-thread"
+                        placeholder="Thread ID or name"
+                        value={capitalDonationLog.thread || ""}
+                        onChange={(e) => setCapitalDonationLog({ ...capitalDonationLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <Label>Active Clans</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {mockClans.map(clan => (
+                        <Badge
+                          key={clan.tag}
+                          variant={capitalDonationLog.clans?.includes(clan.tag) ? "default" : "outline"}
+                          className={`cursor-pointer ${capitalDonationLog.clans?.includes(clan.tag) ? 'bg-red-500/20 text-red-500 border-red-500/30' : ''}`}
+                          onClick={() => handleToggleClan(capitalDonationLog, setCapitalDonationLog, clan.tag)}
+                        >
+                          {clan.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            {/* Capital Raid Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Swords className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <CardTitle>Capital Raid Logs</CardTitle>
+                      <CardDescription>
+                        Track raid weekend attacks
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={capitalRaidLog.enabled}
+                    onCheckedChange={(checked) => setCapitalRaidLog({ ...capitalRaidLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {capitalRaidLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="cap-raid-channel">Log Channel</Label>
+                      <Select value={capitalRaidLog.channel} onValueChange={(value) => setCapitalRaidLog({ ...capitalRaidLog, channel: value })}>
+                        <SelectTrigger id="cap-raid-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="cap-raid-thread">Thread (Optional)</Label>
+                      <Input
+                        id="cap-raid-thread"
+                        placeholder="Thread ID or name"
+                        value={capitalRaidLog.thread || ""}
+                        onChange={(e) => setCapitalRaidLog({ ...capitalRaidLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-2">
+                    <Label>Active Clans</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {mockClans.map(clan => (
+                        <Badge
+                          key={clan.tag}
+                          variant={capitalRaidLog.clans?.includes(clan.tag) ? "default" : "outline"}
+                          className={`cursor-pointer ${capitalRaidLog.clans?.includes(clan.tag) ? 'bg-red-500/20 text-red-500 border-red-500/30' : ''}`}
+                          onClick={() => handleToggleClan(capitalRaidLog, setCapitalRaidLog, clan.tag)}
+                        >
+                          {clan.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          </TabsContent>
+
+          {/* PLAYER LOGS TAB */}
+          <TabsContent value="player" className="space-y-6">
+            {/* Player Upgrade Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-blue-500" />
+                    <div>
+                      <CardTitle>Player Upgrade Logs</CardTitle>
+                      <CardDescription>
+                        Track Town Hall, hero, and troop upgrades
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={playerUpgradeLog.enabled}
+                    onCheckedChange={(checked) => setPlayerUpgradeLog({ ...playerUpgradeLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {playerUpgradeLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="upgrade-channel">Log Channel</Label>
+                      <Select value={playerUpgradeLog.channel} onValueChange={(value) => setPlayerUpgradeLog({ ...playerUpgradeLog, channel: value })}>
+                        <SelectTrigger id="upgrade-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="upgrade-thread">Thread (Optional)</Label>
+                      <Input
+                        id="upgrade-thread"
+                        placeholder="Thread ID or name"
+                        value={playerUpgradeLog.thread || ""}
+                        onChange={(e) => setPlayerUpgradeLog({ ...playerUpgradeLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                    <div className="flex items-start gap-2">
+                      <TrendingUp className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-blue-200">Tracked Upgrades</p>
+                        <p className="text-xs text-blue-300/80">
+                          • Town Hall levels • Hero levels • Troop levels • Pet levels • Spell levels
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Filter by Clan (Optional)</Label>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline" className="cursor-pointer">
+                        All Players
+                      </Badge>
+                      {mockClans.map(clan => (
+                        <Badge
+                          key={clan.tag}
+                          variant={playerUpgradeLog.clans?.includes(clan.tag) ? "default" : "outline"}
+                          className={`cursor-pointer ${playerUpgradeLog.clans?.includes(clan.tag) ? 'bg-red-500/20 text-red-500 border-red-500/30' : ''}`}
+                          onClick={() => handleToggleClan(playerUpgradeLog, setPlayerUpgradeLog, clan.tag)}
+                        >
+                          {clan.name}
+                        </Badge>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Leave empty to track all linked players
+                    </p>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            {/* Legend Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Trophy className="h-5 w-5 text-yellow-500" />
+                    <div>
+                      <CardTitle>Legend League Logs</CardTitle>
+                      <CardDescription>
+                        Track Legend League attacks and trophy changes
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={legendLog.enabled}
+                    onCheckedChange={(checked) => setLegendLog({ ...legendLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {legendLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="legend-channel">Log Channel</Label>
+                      <Select value={legendLog.channel} onValueChange={(value) => setLegendLog({ ...legendLog, channel: value })}>
+                        <SelectTrigger id="legend-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="legend-thread">Thread (Optional)</Label>
+                      <Input
+                        id="legend-thread"
+                        placeholder="Thread ID or name"
+                        value={legendLog.thread || ""}
+                        onChange={(e) => setLegendLog({ ...legendLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                    <div className="flex items-start gap-2">
+                      <Trophy className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-yellow-200">Legend League Tracking</p>
+                        <p className="text-xs text-yellow-300/80">
+                          Logs will show attacks, defenses, and trophy changes for players in Legend League
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          </TabsContent>
+
+          {/* MODERATION LOGS TAB */}
+          <TabsContent value="moderation" className="space-y-6">
+            {/* Ban Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Ban className="h-5 w-5 text-red-500" />
+                    <div>
+                      <CardTitle>Ban Logs</CardTitle>
+                      <CardDescription>
+                        Track player bans and ban list changes
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={banLog.enabled}
+                    onCheckedChange={(checked) => setBanLog({ ...banLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {banLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="ban-channel">Log Channel</Label>
+                      <Select value={banLog.channel} onValueChange={(value) => setBanLog({ ...banLog, channel: value })}>
+                        <SelectTrigger id="ban-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="ban-ping">Ping Role (Optional)</Label>
+                      <Input
+                        id="ban-ping"
+                        placeholder="@Moderators"
+                        value={banLog.pingRole || ""}
+                        onChange={(e) => setBanLog({ ...banLog, pingRole: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20">
+                    <div className="flex items-start gap-2">
+                      <Ban className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-red-200">Ban Tracking</p>
+                        <p className="text-xs text-red-300/80">
+                          Logs when players are added/removed from ban list and when banned players try to join clans
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+
+            {/* Strike Logs */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5 text-orange-500" />
+                    <div>
+                      <CardTitle>Strike Logs</CardTitle>
+                      <CardDescription>
+                        Track strikes and warnings issued to players
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={strikeLog.enabled}
+                    onCheckedChange={(checked) => setStrikeLog({ ...strikeLog, enabled: checked })}
+                  />
+                </div>
+              </CardHeader>
+              {strikeLog.enabled && (
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="strike-channel">Log Channel</Label>
+                      <Select value={strikeLog.channel} onValueChange={(value) => setStrikeLog({ ...strikeLog, channel: value })}>
+                        <SelectTrigger id="strike-channel">
+                          <SelectValue placeholder="Select channel" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {mockChannels.map(ch => (
+                            <SelectItem key={ch.id} value={ch.id}>#{ch.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="strike-thread">Thread (Optional)</Label>
+                      <Input
+                        id="strike-thread"
+                        placeholder="Thread ID or name"
+                        value={strikeLog.thread || ""}
+                        onChange={(e) => setStrikeLog({ ...strikeLog, thread: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="p-4 rounded-lg bg-orange-500/10 border border-orange-500/20">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-orange-200">Strike System</p>
+                        <p className="text-xs text-orange-300/80">
+                          Logs when strikes are issued, updated, or removed. Helps maintain accountability.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          </TabsContent>
+        </Tabs>
+
         {/* Info Card */}
-        <Card className="bg-primary/5 border-primary/20">
+        <Card className="mt-8 border-blue-500/30 bg-blue-500/5">
           <CardHeader>
-            <CardTitle className="text-primary flex items-center gap-2">
-              <Bell className="h-5 w-5" />
-              About Logging
-            </CardTitle>
+            <CardTitle className="text-blue-400">💡 About Activity Logs</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <CardContent className="space-y-2 text-sm text-blue-300">
             <p>
-              <strong className="text-foreground">Channels:</strong> Logs will be posted directly to the selected Discord channel. The bot needs permission to send messages in that channel.
+              <strong>Webhooks:</strong> Logs use webhooks for efficient message delivery. ClashKing will create webhooks automatically in your selected channels.
             </p>
             <p>
-              <strong className="text-foreground">Webhooks:</strong> Logs will be sent via webhook, allowing for custom names and avatars. Create a webhook in your Discord channel settings.
+              <strong>Threads:</strong> Optionally post logs to specific threads to keep channels organized.
             </p>
             <p>
-              <strong className="text-foreground">Real-time:</strong> All logs are processed in real-time as events occur in Clash of Clans.
+              <strong>Clan Filtering:</strong> Configure which clans trigger each log type. Leave empty to track all clans.
+            </p>
+            <p>
+              <strong>Performance:</strong> Logs are processed in real-time as events occur in Clash of Clans.
             </p>
           </CardContent>
         </Card>
+
+        {/* Save Button */}
+        <div className="flex justify-end gap-4 mt-8">
+          <Button variant="outline">Reset All Changes</Button>
+          <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800">
+            Save All Log Settings
+          </Button>
+        </div>
       </div>
     </div>
   );
