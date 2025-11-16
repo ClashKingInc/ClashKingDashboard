@@ -22,6 +22,12 @@ export async function PUT(
     });
 
     const data = await response.json();
+
+    // Log errors from backend
+    if (!response.ok) {
+      console.error(`Backend error (${response.status}):`, JSON.stringify(data, null, 2));
+    }
+
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('API proxy error (PUT /clan/logs):', error);

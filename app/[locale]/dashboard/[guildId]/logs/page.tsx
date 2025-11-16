@@ -213,8 +213,8 @@ export default function LogsPage() {
 
       const isThread = threads.some(t => t.id === channelOrThreadId);
       const requestBody = {
-        channel_id: isThread ? null : parseInt(channelOrThreadId),
-        thread_id: isThread ? parseInt(channelOrThreadId) : null,
+        channel_id: isThread ? null : channelOrThreadId,
+        thread_id: isThread ? channelOrThreadId : null,
         log_types: logKeys
       };
 
