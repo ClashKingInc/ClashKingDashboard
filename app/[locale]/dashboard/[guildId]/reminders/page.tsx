@@ -573,9 +573,13 @@ export default function RemindersPage() {
           </Card>
         </div>
 
-        {/* Clan Selector - Compact version */}
-        {clans.length > 0 && (
-          <div className="flex justify-end mb-4">
+        {/* Clan Selector and Add Button */}
+        <div className="flex justify-between items-center mb-4">
+          <Button onClick={addReminder} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add {activeTab === "war" ? "War" : activeTab === "capital" ? "Capital" : activeTab === "games" ? "Clan Games" : "Inactivity"} Reminder
+          </Button>
+          {clans.length > 0 && (
             <div className="flex items-center gap-2">
               <Label className="text-sm text-muted-foreground">Clan:</Label>
               <Select value={selectedClan} onValueChange={setSelectedClan}>
@@ -592,8 +596,8 @@ export default function RemindersPage() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -646,14 +650,6 @@ export default function RemindersPage() {
 
           {["war", "capital", "games", "inactivity"].map((tab) => (
             <TabsContent key={tab} value={tab} className="space-y-4">
-              {/* Add Button */}
-              <div className="flex justify-end">
-                <Button onClick={addReminder} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add {tab === "war" ? "War" : tab === "capital" ? "Capital" : tab === "games" ? "Clan Games" : "Inactivity"} Reminder
-                </Button>
-              </div>
-
               {/* Reminders List */}
               {currentReminders.length === 0 ? (
                 <Card className="bg-card border-border">
