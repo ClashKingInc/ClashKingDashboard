@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -24,172 +26,351 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
 
-// Type definitions
+// Type definitions based on ClashKingAPI models
 interface RosterMember {
-  tag: string;
   name: string;
-  town_hall: number;
-  group: string;
-  clan_tag?: string;
-  clan_name?: string;
+  tag: string;
+  hero_lvs: number;
+  townhall: number;
+  discord: string;
+  current_clan: string;
+  current_clan_tag: string;
+  war_pref: boolean;
+  trophies: number;
+  sub: boolean;
+  signup_group?: string | null;
+  hitrate?: number | null;
+  last_online?: number | null;
+  current_league?: string | null;
+  added_at?: number | null;
+  last_updated?: number | null;
+  member_status: string;
+  error_details?: string | null;
 }
 
 interface Roster {
-  _id: string;
-  alias: string;
-  roster_type: string;
-  clan_tag?: string;
-  clan_name?: string;
-  members: RosterMember[];
-  groups: string[];
-  created_at?: string;
+  custom_id: string;
   server_id: number;
+  alias: string;
+  roster_type: "clan" | "family";
+  signup_scope: "clan-only" | "family-wide";
+  clan_tag?: string | null;
+  clan_name?: string | null;
+  clan_badge?: string | null;
+  members: RosterMember[];
+  min_th?: number | null;
+  max_th?: number | null;
+  description?: string | null;
+  roster_size?: number | null;
+  min_signups?: number | null;
+  columns?: string[];
+  image?: string | null;
+  group_id?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
-interface RostersListResponse {
-  rosters: Roster[];
-  count: number;
+interface ClanMember {
+  tag: string;
+  name: string;
+  townhall: number;
+  clan_tag: string;
+  clan_name: string;
+}
+
+interface Clan {
+  tag: string;
+  name: string;
+  badge_url?: string | null;
 }
 
 export default function RostersPage() {
   const params = useParams();
+  const router = useRouter();
+  const { toast } = useToast();
   const guildId = params?.guildId as string;
 
   const [loading, setLoading] = useState(true);
   const [rosters, setRosters] = useState<Roster[]>([]);
+  const [clans, setClans] = useState<Clan[]>([]);
   const [selectedRoster, setSelectedRoster] = useState<Roster | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [addMembersDialogOpen, setAddMembersDialogOpen] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
   // New roster form state
-  const [newRosterName, setNewRosterName] = useState("");
-  const [newRosterType, setNewRosterType] = useState("clan");
-  const [newRosterClanTag, setNewRosterClanTag] = useState("");
+  const [newRosterData, setNewRosterData] = useState({
+    alias: "",
+    roster_type: "clan" as "clan" | "family",
+    signup_scope: "clan-only" as "clan-only" | "family-wide",
+    clan_tag: "",
+  });
 
-  // Fetch rosters
+  // Edit roster form state
+  const [editRosterData, setEditRosterData] = useState({
+    alias: "",
+    description: "",
+    min_th: "",
+    max_th: "",
+    roster_size: "",
+  });
+
+  // Add members state
+  const [bulkTags, setBulkTags] = useState("");
+  const [clanMembers, setClanMembers] = useState<ClanMember[]>([]);
+  const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
+  const [memberSearch, setMemberSearch] = useState("");
+
+  // Fetch rosters and clans
   useEffect(() => {
-    const fetchRosters = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/v2/roster/${guildId}/list`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch rosters');
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) {
+          router.push("/login");
+          return;
         }
 
-        const data: RostersListResponse = await response.json();
-        setRosters(data.rosters || []);
+        // Fetch rosters and clans in parallel
+        const [rostersRes, clansRes] = await Promise.all([
+          fetch(`/api/v2/roster/${guildId}/list`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          }),
+          fetch(`/api/v2/server/${guildId}/clans`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          }),
+        ]);
+
+        if (!rostersRes.ok) {
+          if (rostersRes.status === 401) {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            router.push("/login");
+            return;
+          }
+          throw new Error("Failed to fetch rosters");
+        }
+
+        const rostersData = await rostersRes.json();
+        setRosters(rostersData.rosters || rostersData || []);
+
+        if (clansRes.ok) {
+          const clansData = await clansRes.json();
+          setClans(clansData || []);
+        }
       } catch (error) {
-        console.error('Error fetching rosters:', error);
+        console.error("Error fetching data:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load rosters. Please try again.",
+          variant: "destructive",
+        });
       } finally {
         setLoading(false);
       }
     };
 
     if (guildId) {
-      fetchRosters();
+      fetchData();
     }
-  }, [guildId]);
+  }, [guildId, router, toast]);
+
+  // Fetch clan members when opening add members dialog
+  const handleOpenAddMembers = async (roster: Roster) => {
+    setSelectedRoster(roster);
+    setAddMembersDialogOpen(true);
+    setSelectedMembers(new Set());
+
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster/server/${guildId}/members`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setClanMembers(data.members || data || []);
+      }
+    } catch (error) {
+      console.error("Error fetching clan members:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load clan members.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleCreateRoster = async () => {
     setCreating(true);
     try {
+      const accessToken = localStorage.getItem("access_token");
+
       const rosterData = {
-        alias: newRosterName,
-        roster_type: newRosterType,
-        clan_tag: newRosterType === 'clan' ? newRosterClanTag : undefined,
-        groups: ["Main", "Benched", "Substitutes"]
+        ...newRosterData,
+        clan_tag: newRosterData.roster_type === "clan" ? newRosterData.clan_tag : undefined,
       };
 
       const response = await fetch(`/api/v2/roster?server_id=${guildId}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
         },
         body: JSON.stringify(rosterData)
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create roster');
+        throw new Error("Failed to create roster");
       }
 
       // Refresh rosters list
       const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
+        headers: { Authorization: `Bearer ${accessToken}` }
       });
 
       if (refreshResponse.ok) {
-        const data: RostersListResponse = await refreshResponse.json();
-        setRosters(data.rosters || []);
+        const data = await refreshResponse.json();
+        setRosters(data.rosters || data || []);
       }
 
+      toast({
+        title: "Success",
+        description: "Roster created successfully!",
+      });
+
       setCreateDialogOpen(false);
-      setNewRosterName("");
-      setNewRosterClanTag("");
-      setNewRosterType("clan");
+      setNewRosterData({
+        alias: "",
+        roster_type: "clan",
+        signup_scope: "clan-only",
+        clan_tag: "",
+      });
     } catch (error) {
-      console.error('Error creating roster:', error);
-      alert('Failed to create roster. Please try again.');
+      console.error("Error creating roster:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create roster. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleUpdateRoster = async () => {
+    if (!selectedRoster) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      const updates = {
+        alias: editRosterData.alias,
+        description: editRosterData.description || null,
+        min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
+        max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
+        roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
+      };
+
+      const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(updates)
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update roster");
+      }
+
+      // Refresh rosters list
+      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        setRosters(data.rosters || data || []);
+      }
+
+      toast({
+        title: "Success",
+        description: "Roster updated successfully!",
+      });
+
+      setEditDialogOpen(false);
+    } catch (error) {
+      console.error("Error updating roster:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update roster. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleDeleteRoster = async (rosterId: string) => {
     setDeleting(rosterId);
     try {
+      const accessToken = localStorage.getItem("access_token");
+
       const response = await fetch(`/api/v2/roster/${rosterId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete roster');
+        throw new Error("Failed to delete roster");
       }
 
       // Refresh rosters list
       const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
+        headers: { Authorization: `Bearer ${accessToken}` }
       });
 
       if (refreshResponse.ok) {
-        const data: RostersListResponse = await refreshResponse.json();
-        setRosters(data.rosters || []);
+        const data = await refreshResponse.json();
+        setRosters(data.rosters || data || []);
       }
 
-      if (selectedRoster?._id === rosterId) {
+      toast({
+        title: "Success",
+        description: "Roster deleted successfully!",
+      });
+
+      if (selectedRoster?.custom_id === rosterId) {
         setDetailsDialogOpen(false);
         setSelectedRoster(null);
       }
     } catch (error) {
-      console.error('Error deleting roster:', error);
-      alert('Failed to delete roster. Please try again.');
+      console.error("Error deleting roster:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete roster. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setDeleting(null);
     }
   };
 
   const handleViewRoster = async (roster: Roster) => {
-    // Fetch full roster details if needed
     try {
-      const response = await fetch(`/api/v2/roster/${roster._id}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster/${roster.custom_id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
       });
 
       if (response.ok) {
@@ -198,26 +379,173 @@ export default function RostersPage() {
         setDetailsDialogOpen(true);
       }
     } catch (error) {
-      console.error('Error fetching roster details:', error);
+      console.error("Error fetching roster details:", error);
       setSelectedRoster(roster);
       setDetailsDialogOpen(true);
     }
   };
 
-  // Group members by their group assignment
-  const getMembersByGroup = (roster: Roster) => {
-    const grouped: Record<string, RosterMember[]> = {};
-
-    roster.members?.forEach(member => {
-      const group = member.group || "Unassigned";
-      if (!grouped[group]) {
-        grouped[group] = [];
-      }
-      grouped[group].push(member);
+  const handleOpenEdit = (roster: Roster) => {
+    setSelectedRoster(roster);
+    setEditRosterData({
+      alias: roster.alias,
+      description: roster.description || "",
+      min_th: roster.min_th?.toString() || "",
+      max_th: roster.max_th?.toString() || "",
+      roster_size: roster.roster_size?.toString() || "",
     });
-
-    return grouped;
+    setEditDialogOpen(true);
   };
+
+  const handleAddMembers = async () => {
+    if (!selectedRoster) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      // Parse bulk tags from textarea
+      const tagsFromTextarea = bulkTags
+        .split(/[\n,\s]+/)
+        .map(t => t.trim())
+        .filter(t => t.length > 0 && t.startsWith("#"));
+
+      // Combine with selected members
+      const allTags = [
+        ...tagsFromTextarea,
+        ...Array.from(selectedMembers)
+      ];
+
+      if (allTags.length === 0) {
+        toast({
+          title: "No members selected",
+          description: "Please select members or enter player tags.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const membersToAdd = allTags.map(tag => ({ tag }));
+
+      const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}/members?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ add: membersToAdd })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add members");
+      }
+
+      // Refresh roster details
+      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (refreshResponse.ok) {
+        const updatedRoster = await refreshResponse.json();
+        setSelectedRoster(updatedRoster);
+
+        // Also refresh rosters list
+        const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        if (listResponse.ok) {
+          const data = await listResponse.json();
+          setRosters(data.rosters || data || []);
+        }
+      }
+
+      toast({
+        title: "Success",
+        description: `Added ${allTags.length} member(s) to roster!`,
+      });
+
+      setAddMembersDialogOpen(false);
+      setBulkTags("");
+      setSelectedMembers(new Set());
+    } catch (error) {
+      console.error("Error adding members:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add members. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Calculate roster statistics
+  const getRosterStats = (roster: Roster) => {
+    const members = roster.members || [];
+    const memberCount = members.length;
+
+    if (memberCount === 0) {
+      return {
+        avgTownhall: 0,
+        avgHitrate: 0,
+        clanCount: 0,
+        familyCount: 0,
+        externalCount: 0,
+      };
+    }
+
+    const avgTownhall = Math.round(
+      members.reduce((sum, m) => sum + (m.townhall || 0), 0) / memberCount * 10
+    ) / 10;
+
+    const membersWithHitrate = members.filter(m => m.hitrate !== null && m.hitrate !== undefined);
+    const avgHitrate = membersWithHitrate.length > 0
+      ? Math.round(membersWithHitrate.reduce((sum, m) => sum + (m.hitrate || 0), 0) / membersWithHitrate.length)
+      : 0;
+
+    const clanCount = roster.clan_tag
+      ? members.filter(m => m.current_clan_tag === roster.clan_tag).length
+      : 0;
+
+    const familyCount = members.filter(m => {
+      if (!m.current_clan_tag || m.current_clan_tag === "#") return false;
+      if (roster.clan_tag && m.current_clan_tag === roster.clan_tag) return false;
+      return clans.some(clan => clan.tag === m.current_clan_tag);
+    }).length;
+
+    const externalCount = memberCount - clanCount - familyCount;
+
+    return {
+      avgTownhall,
+      avgHitrate,
+      clanCount,
+      familyCount,
+      externalCount,
+    };
+  };
+
+  // Get townhall restriction text
+  const getTownhallRestrictionText = (roster: Roster) => {
+    const { min_th, max_th } = roster;
+
+    if (min_th && max_th) {
+      if (min_th === max_th) {
+        return `TH${min_th} only`;
+      }
+      return `TH${min_th}-${max_th}`;
+    } else if (min_th) {
+      return `TH${min_th}+`;
+    } else if (max_th) {
+      return `TH1-${max_th}`;
+    }
+    return "No restriction";
+  };
+
+  // Filter clan members by search
+  const filteredClanMembers = clanMembers.filter(member =>
+    member.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
+    member.tag.toLowerCase().includes(memberSearch.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -257,14 +585,19 @@ export default function RostersPage() {
                 <Input
                   id="roster-name"
                   placeholder="e.g., CWL Main, War Team A"
-                  value={newRosterName}
-                  onChange={(e) => setNewRosterName(e.target.value)}
+                  value={newRosterData.alias}
+                  onChange={(e) => setNewRosterData({ ...newRosterData, alias: e.target.value })}
                   className="bg-background border-border text-foreground"
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="roster-type" className="text-foreground">Roster Type</Label>
-                <Select value={newRosterType} onValueChange={setNewRosterType}>
+                <Select
+                  value={newRosterData.roster_type}
+                  onValueChange={(value: "clan" | "family") =>
+                    setNewRosterData({ ...newRosterData, roster_type: value })
+                  }
+                >
                   <SelectTrigger className="bg-background border-border text-foreground">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
@@ -274,16 +607,43 @@ export default function RostersPage() {
                   </SelectContent>
                 </Select>
               </div>
-              {newRosterType === 'clan' && (
+              <div className="space-y-2">
+                <Label htmlFor="signup-scope" className="text-foreground">Signup Scope</Label>
+                <Select
+                  value={newRosterData.signup_scope}
+                  onValueChange={(value: "clan-only" | "family-wide") =>
+                    setNewRosterData({ ...newRosterData, signup_scope: value })
+                  }
+                >
+                  <SelectTrigger className="bg-background border-border text-foreground">
+                    <SelectValue placeholder="Select scope" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border">
+                    <SelectItem value="clan-only">Clan Members Only</SelectItem>
+                    <SelectItem value="family-wide">Entire Family</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {newRosterData.roster_type === "clan" && (
                 <div className="space-y-2">
-                  <Label htmlFor="clan-tag" className="text-foreground">Clan Tag</Label>
-                  <Input
-                    id="clan-tag"
-                    placeholder="#2PP"
-                    value={newRosterClanTag}
-                    onChange={(e) => setNewRosterClanTag(e.target.value)}
-                    className="bg-background border-border text-foreground"
-                  />
+                  <Label htmlFor="clan-tag" className="text-foreground">Clan</Label>
+                  <Select
+                    value={newRosterData.clan_tag}
+                    onValueChange={(value) =>
+                      setNewRosterData({ ...newRosterData, clan_tag: value })
+                    }
+                  >
+                    <SelectTrigger className="bg-background border-border text-foreground">
+                      <SelectValue placeholder="Select clan" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card border-border">
+                      {clans.map((clan) => (
+                        <SelectItem key={clan.tag} value={clan.tag}>
+                          {clan.name} ({clan.tag})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
             </div>
@@ -298,7 +658,7 @@ export default function RostersPage() {
               </Button>
               <Button
                 onClick={handleCreateRoster}
-                disabled={creating || !newRosterName || (newRosterType === 'clan' && !newRosterClanTag)}
+                disabled={creating || !newRosterData.alias || (newRosterData.roster_type === "clan" && !newRosterData.clan_tag)}
                 className="bg-primary hover:bg-primary/90"
               >
                 {creating ? (
@@ -307,7 +667,7 @@ export default function RostersPage() {
                     Creating...
                   </>
                 ) : (
-                  'Create Roster'
+                  "Create Roster"
                 )}
               </Button>
             </DialogFooter>
@@ -316,7 +676,7 @@ export default function RostersPage() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-4">
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-foreground">Total Rosters</CardTitle>
@@ -346,7 +706,19 @@ export default function RostersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {rosters.filter(r => r.roster_type === 'clan').length}
+              {rosters.filter(r => r.roster_type === "clan").length}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border-border">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-foreground">Family Rosters</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-foreground">
+              {rosters.filter(r => r.roster_type === "family").length}
             </div>
           </CardContent>
         </Card>
@@ -369,59 +741,129 @@ export default function RostersPage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {rosters.map((roster) => (
-                <Card key={roster._id} className="bg-secondary/50 border-border">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg text-foreground">{roster.alias}</CardTitle>
-                        {roster.clan_name && (
-                          <p className="text-sm text-muted-foreground mt-1">{roster.clan_name}</p>
-                        )}
+              {rosters.map((roster) => {
+                const stats = getRosterStats(roster);
+                const thRestriction = getTownhallRestrictionText(roster);
+
+                return (
+                  <Card key={roster.custom_id} className="bg-secondary/50 border-border hover:border-primary/50 transition-all">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3 flex-1">
+                          {roster.clan_badge && (
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
+                              <AvatarFallback>{roster.alias.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <CardTitle className="text-lg text-foreground truncate">
+                              {roster.alias}
+                            </CardTitle>
+                            {roster.clan_name && (
+                              <p className="text-sm text-muted-foreground truncate">
+                                {roster.clan_name}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <Badge
+                          variant={roster.roster_type === "clan" ? "default" : "secondary"}
+                          className="bg-primary/10 text-primary shrink-0"
+                        >
+                          {roster.roster_type}
+                        </Badge>
                       </div>
-                      <Badge
-                        variant={roster.roster_type === 'clan' ? 'default' : 'secondary'}
-                        className="bg-primary/10 text-primary"
-                      >
-                        {roster.roster_type}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Members:</span>
-                      <span className="font-semibold text-foreground">{roster.members?.length || 0}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Groups:</span>
-                      <span className="font-semibold text-foreground">{roster.groups?.length || 0}</span>
-                    </div>
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleViewRoster(roster)}
-                        className="flex-1 border-border"
-                      >
-                        <Edit className="w-4 h-4 mr-1" />
-                        View
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDeleteRoster(roster._id)}
-                        disabled={deleting === roster._id}
-                      >
-                        {deleting === roster._id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-4 h-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {/* Member count */}
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Members:</span>
+                        <span className="font-semibold text-foreground">
+                          {roster.roster_size
+                            ? `${roster.members?.length || 0}/${roster.roster_size}`
+                            : roster.members?.length || 0}
+                        </span>
+                      </div>
+
+                      {/* TH restriction */}
+                      {thRestriction !== "No restriction" && (
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">TH Level:</span>
+                          <span className="font-semibold text-foreground">{thRestriction}</span>
+                        </div>
+                      )}
+
+                      {/* Stats */}
+                      {roster.members && roster.members.length > 0 && (
+                        <>
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Avg TH:</span>
+                            <span className="font-semibold text-orange-400">TH{stats.avgTownhall}</span>
+                          </div>
+
+                          {stats.avgHitrate > 0 && (
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">Avg Hitrate:</span>
+                              <span className={`font-semibold ${
+                                stats.avgHitrate >= 80 ? "text-green-400" :
+                                stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
+                              }`}>
+                                {stats.avgHitrate}%
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Distribution:</span>
+                            <span className="font-semibold">
+                              {roster.clan_tag && (
+                                <span className="text-blue-400">{stats.clanCount}</span>
+                              )}
+                              {roster.clan_tag && <span className="text-muted-foreground mx-1">/</span>}
+                              <span className="text-green-400">{stats.familyCount}</span>
+                              <span className="text-muted-foreground mx-1">/</span>
+                              <span className="text-red-400">{stats.externalCount}</span>
+                            </span>
+                          </div>
+                        </>
+                      )}
+
+                      <div className="flex gap-2 pt-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleViewRoster(roster)}
+                          className="flex-1 border-border"
+                        >
+                          <Edit className="w-4 h-4 mr-1" />
+                          View
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleOpenEdit(roster)}
+                          className="border-border"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteRoster(roster.custom_id)}
+                          disabled={deleting === roster.custom_id}
+                        >
+                          {deleting === roster.custom_id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </CardContent>
@@ -440,47 +882,282 @@ export default function RostersPage() {
 
           {selectedRoster && (
             <div className="space-y-4">
-              {Object.entries(getMembersByGroup(selectedRoster)).map(([group, members]) => (
-                <div key={group} className="space-y-2">
-                  <h3 className="font-semibold text-foreground flex items-center gap-2">
-                    <Badge variant="outline" className="border-primary text-primary">
-                      {group}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground">({members.length})</span>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => handleOpenAddMembers(selectedRoster)}
+                  className="border-border"
+                >
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Add Members
+                </Button>
+              </div>
+
+              {(!selectedRoster.members || selectedRoster.members.length === 0) ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>No members in this roster yet</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-foreground">
+                    Members ({selectedRoster.members.length})
                   </h3>
                   <div className="grid gap-2">
-                    {members.map((member) => (
+                    {selectedRoster.members.map((member) => (
                       <div
                         key={member.tag}
                         className="flex items-center justify-between p-3 rounded bg-background border border-border"
                       >
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                            <span className="text-sm font-bold text-primary">{member.town_hall}</span>
+                            <span className="text-sm font-bold text-primary">{member.townhall}</span>
                           </div>
                           <div>
                             <p className="font-medium text-foreground">{member.name}</p>
                             <p className="text-xs text-muted-foreground">{member.tag}</p>
                           </div>
                         </div>
-                        {member.clan_name && (
-                          <Badge variant="secondary" className="bg-secondary text-foreground">
-                            {member.clan_name}
-                          </Badge>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {member.hitrate !== null && member.hitrate !== undefined && (
+                            <Badge
+                              variant="secondary"
+                              className={`${
+                                member.hitrate >= 80 ? "bg-green-600/20 text-green-400" :
+                                member.hitrate >= 60 ? "bg-yellow-600/20 text-yellow-400" :
+                                "bg-red-600/20 text-red-400"
+                              }`}
+                            >
+                              {member.hitrate}% HR
+                            </Badge>
+                          )}
+                          {member.current_clan && (
+                            <Badge variant="secondary" className="bg-secondary text-foreground">
+                              {member.current_clan}
+                            </Badge>
+                          )}
+                          {member.sub && (
+                            <Badge variant="outline" className="border-primary text-primary">
+                              SUB
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              ))}
-
-              {(!selectedRoster.members || selectedRoster.members.length === 0) && (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>No members in this roster yet</p>
-                </div>
               )}
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Roster Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Edit Roster</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Update roster settings
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-alias" className="text-foreground">Roster Name</Label>
+              <Input
+                id="edit-alias"
+                value={editRosterData.alias}
+                onChange={(e) => setEditRosterData({ ...editRosterData, alias: e.target.value })}
+                className="bg-background border-border text-foreground"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-description" className="text-foreground">Description</Label>
+              <Textarea
+                id="edit-description"
+                value={editRosterData.description}
+                onChange={(e) => setEditRosterData({ ...editRosterData, description: e.target.value })}
+                className="bg-background border-border text-foreground"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-min-th" className="text-foreground">Min TH</Label>
+                <Input
+                  id="edit-min-th"
+                  type="number"
+                  min="1"
+                  max="17"
+                  value={editRosterData.min_th}
+                  onChange={(e) => setEditRosterData({ ...editRosterData, min_th: e.target.value })}
+                  className="bg-background border-border text-foreground"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-max-th" className="text-foreground">Max TH</Label>
+                <Input
+                  id="edit-max-th"
+                  type="number"
+                  min="1"
+                  max="17"
+                  value={editRosterData.max_th}
+                  onChange={(e) => setEditRosterData({ ...editRosterData, max_th: e.target.value })}
+                  className="bg-background border-border text-foreground"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-roster-size" className="text-foreground">Roster Size</Label>
+              <Input
+                id="edit-roster-size"
+                type="number"
+                min="1"
+                value={editRosterData.roster_size}
+                onChange={(e) => setEditRosterData({ ...editRosterData, roster_size: e.target.value })}
+                className="bg-background border-border text-foreground"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setEditDialogOpen(false)}
+              disabled={saving}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateRoster}
+              disabled={saving || !editRosterData.alias}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Members Dialog */}
+      <Dialog open={addMembersDialogOpen} onOpenChange={setAddMembersDialogOpen}>
+        <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Add Members to Roster</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Select members from your clans or enter player tags
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {/* Bulk tags textarea */}
+            <div className="space-y-2">
+              <Label htmlFor="bulk-tags" className="text-foreground">
+                Player Tags (one per line or comma-separated)
+              </Label>
+              <Textarea
+                id="bulk-tags"
+                placeholder="#ABC123, #DEF456&#10;#GHI789"
+                value={bulkTags}
+                onChange={(e) => setBulkTags(e.target.value)}
+                className="bg-background border-border text-foreground font-mono text-sm"
+                rows={4}
+              />
+            </div>
+
+            {/* Clan members selection */}
+            {clanMembers.length > 0 && (
+              <div className="space-y-2">
+                <Label className="text-foreground">Or Select from Clan Members</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search members..."
+                    value={memberSearch}
+                    onChange={(e) => setMemberSearch(e.target.value)}
+                    className="bg-background border-border text-foreground pl-9"
+                  />
+                </div>
+                <div className="border border-border rounded-lg max-h-60 overflow-y-auto">
+                  {filteredClanMembers.map((member) => (
+                    <div
+                      key={member.tag}
+                      className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors ${
+                        selectedMembers.has(member.tag) ? "bg-primary/10" : ""
+                      }`}
+                      onClick={() => {
+                        const newSelected = new Set(selectedMembers);
+                        if (newSelected.has(member.tag)) {
+                          newSelected.delete(member.tag);
+                        } else {
+                          newSelected.add(member.tag);
+                        }
+                        setSelectedMembers(newSelected);
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
+                          <span className="text-sm font-bold text-primary">{member.townhall}</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-foreground">{member.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {member.tag} • {member.clan_name}
+                          </p>
+                        </div>
+                      </div>
+                      {selectedMembers.has(member.tag) && (
+                        <Badge variant="default" className="bg-primary">
+                          Selected
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {selectedMembers.size} member(s) selected
+                </p>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAddMembersDialogOpen(false);
+                setBulkTags("");
+                setSelectedMembers(new Set());
+              }}
+              disabled={saving}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddMembers}
+              disabled={saving || (bulkTags.trim().length === 0 && selectedMembers.size === 0)}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Add Members
+                </>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
