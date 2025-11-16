@@ -98,7 +98,7 @@ export default function LogsPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('access_token');
 
         const [channelsRes, clanLogsRes] = await Promise.all([
           fetch(`/api/v2/server/${guildId}/channels`, {
@@ -157,7 +157,7 @@ export default function LogsPage() {
 
     try {
       setSaving(logKey);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('access_token');
 
       // Check if "disabled" was selected
       if (channelOrThreadId === "disabled") {
