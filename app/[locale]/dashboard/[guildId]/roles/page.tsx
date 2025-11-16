@@ -85,7 +85,7 @@ const FAMILY_POSITIONS = [
 
 export default function RolesPage() {
   const params = useParams();
-  const guildId = parseInt(params.guildId as string);
+  const guildId = params.guildId as string;
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -94,7 +94,7 @@ export default function RolesPage() {
 
   const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>([]);
   const [roleSettings, setRoleSettings] = useState<RoleSettings>({
-    server_id: guildId,
+    server_id: parseInt(guildId),
     auto_eval_status: false,
     auto_eval_nickname: false,
     autoeval_triggers: [],

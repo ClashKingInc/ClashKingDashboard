@@ -25,14 +25,14 @@ export class RolesClient extends BaseApiClient {
   /**
    * GET /v2/server/{server_id}/discord-roles
    */
-  async getDiscordRoles(serverId: number): Promise<ApiResponse<DiscordRolesResponse>> {
+  async getDiscordRoles(serverId: string | number): Promise<ApiResponse<DiscordRolesResponse>> {
     return this.request(`/v2/server/${serverId}/discord-roles`, { method: 'GET' });
   }
 
   /**
    * GET /v2/server/{server_id}/role-settings
    */
-  async getRoleSettings(serverId: number): Promise<ApiResponse<RoleSettings>> {
+  async getRoleSettings(serverId: string | number): Promise<ApiResponse<RoleSettings>> {
     return this.request(`/v2/server/${serverId}/role-settings`, { method: 'GET' });
   }
 
@@ -40,7 +40,7 @@ export class RolesClient extends BaseApiClient {
    * PATCH /v2/server/{server_id}/role-settings
    */
   async updateRoleSettings(
-    serverId: number,
+    serverId: string | number,
     settings: RoleSettingsUpdate
   ): Promise<ApiResponse<{ message: string; server_id: number; updated_fields: number }>> {
     return this.request(`/v2/server/${serverId}/role-settings`, {
@@ -52,14 +52,14 @@ export class RolesClient extends BaseApiClient {
   /**
    * GET /v2/server/{server_id}/roles/all
    */
-  async getAllRoles(serverId: number): Promise<ApiResponse<AllRolesResponse>> {
+  async getAllRoles(serverId: string | number): Promise<ApiResponse<AllRolesResponse>> {
     return this.request(`/v2/server/${serverId}/roles/all`, { method: 'GET' });
   }
 
   /**
    * GET /v2/server/{server_id}/roles/{role_type}
    */
-  async getRolesByType(serverId: number, roleType: RoleType): Promise<ApiResponse<RolesListResponse>> {
+  async getRolesByType(serverId: string | number, roleType: RoleType): Promise<ApiResponse<RolesListResponse>> {
     return this.request(`/v2/server/${serverId}/roles/${roleType}`, { method: 'GET' });
   }
 
@@ -67,7 +67,7 @@ export class RolesClient extends BaseApiClient {
    * POST /v2/server/{server_id}/roles/{role_type}
    */
   async createRole(
-    serverId: number,
+    serverId: string | number,
     roleType: RoleType,
     roleData:
       | TownhallRole
@@ -87,7 +87,7 @@ export class RolesClient extends BaseApiClient {
   /**
    * DELETE /v2/server/{server_id}/roles/{role_type}/{role_id}
    */
-  async deleteRole(serverId: number, roleType: RoleType, roleId: number): Promise<ApiResponse<RoleResponse>> {
+  async deleteRole(serverId: string | number, roleType: RoleType, roleId: number): Promise<ApiResponse<RoleResponse>> {
     return this.request(`/v2/server/${serverId}/roles/${roleType}/${roleId}`, {
       method: 'DELETE',
     });

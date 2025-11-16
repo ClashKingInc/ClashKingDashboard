@@ -16,7 +16,7 @@ import { apiClient } from "@/lib/api/client";
 
 export default function GeneralSettingsPage() {
   const params = useParams();
-  const guildId = parseInt(params.guildId as string);
+  const guildId = params.guildId as string;
 
   const [settings, setSettings] = useState({
     change_nickname: true,
