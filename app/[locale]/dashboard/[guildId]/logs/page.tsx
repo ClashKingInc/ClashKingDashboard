@@ -205,9 +205,39 @@ export default function LogsPage() {
       setSaving(logKeys[0]);
       const token = localStorage.getItem('access_token');
 
-      // Set channel_id to null if "disabled" was selected
+      // Use DELETE endpoint if "disabled" was selected
+      if (channelId === "disabled") {
+        const response = await fetch(
+          `/api/v2/server/${guildId}/clan/${encodeURIComponent(selectedClan)}/logs?log_types=${logKeys.join(',')}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to delete clan log configuration');
+        }
+
+        // Refresh clan logs
+        const clanLogsRes = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (clanLogsRes.ok) {
+          const data = await clanLogsRes.json();
+          setClanLogs(data);
+        }
+
+        setSaving(null);
+        return;
+      }
+
+      // Use PUT endpoint to update channel
       const requestBody = {
-        channel_id: channelId === "disabled" ? null : channelId,
+        channel_id: channelId,
         thread_id: null,
         log_types: logKeys
       };
