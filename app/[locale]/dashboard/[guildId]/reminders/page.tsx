@@ -121,13 +121,14 @@ export default function RemindersPage() {
 
         // Flatten all reminders into a single array
         const allRemindersArray = [
-          ...data.war_reminders,
-          ...data.capital_reminders,
-          ...data.clan_games_reminders,
-          ...data.inactivity_reminders,
-          ...data.roster_reminders,
+          ...(data.war_reminders || []),
+          ...(data.capital_reminders || []),
+          ...(data.clan_games_reminders || []),
+          ...(data.inactivity_reminders || []),
+          ...(data.roster_reminders || []),
         ];
 
+        console.log('Fetched reminders:', allRemindersArray);
         setAllReminders(allRemindersArray);
       } catch (err) {
         console.error("Error fetching reminders:", err);
@@ -145,10 +146,12 @@ export default function RemindersPage() {
     if (guildId) {
       fetchReminders();
     }
-  }, [guildId, router, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guildId]);
 
   // Add a new reminder (locally, to be saved later)
   const addReminder = () => {
+    console.log('Adding new reminder, current count:', allReminders.length);
     const newReminder: ReminderConfig = {
       id: `temp-${Date.now()}`, // Temporary ID for new reminders
       type: "War",
@@ -160,7 +163,9 @@ export default function RemindersPage() {
       townhall_filter: [],
       roles: [],
     };
-    setAllReminders([...allReminders, newReminder]);
+    const updatedReminders = [...allReminders, newReminder];
+    console.log('New reminders array:', updatedReminders);
+    setAllReminders(updatedReminders);
   };
 
   // Update a reminder
@@ -320,11 +325,11 @@ export default function RemindersPage() {
       if (response.ok) {
         const data: ServerRemindersResponse = await response.json();
         const allRemindersArray = [
-          ...data.war_reminders,
-          ...data.capital_reminders,
-          ...data.clan_games_reminders,
-          ...data.inactivity_reminders,
-          ...data.roster_reminders,
+          ...(data.war_reminders || []),
+          ...(data.capital_reminders || []),
+          ...(data.clan_games_reminders || []),
+          ...(data.inactivity_reminders || []),
+          ...(data.roster_reminders || []),
         ];
         setAllReminders(allRemindersArray);
       }
