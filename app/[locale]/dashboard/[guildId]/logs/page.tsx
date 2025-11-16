@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   FileText,
   Users,
@@ -20,6 +20,8 @@ import {
   Activity,
   Hash,
   Bell,
+  Ban,
+  AlertTriangle,
 } from "lucide-react";
 
 interface Channel {
@@ -59,21 +61,27 @@ interface ClanLogsConfig {
   legend_log_defenses: ClanLogTypeConfig | null;
 }
 
-const LOG_TYPES = [
-  { key: "join_log", label: "Join Logs", icon: Users, description: "When members join the clan", color: "green" },
-  { key: "leave_log", label: "Leave Logs", icon: Users, description: "When members leave the clan", color: "red" },
-  { key: "donation_log", label: "Donation Logs", icon: Gift, description: "Troop and spell donations", color: "purple" },
-  { key: "war_log", label: "War Logs", icon: Swords, description: "War attacks and results", color: "red" },
-  { key: "capital_donations", label: "Capital Donations", icon: Castle, description: "Clan capital gold donations", color: "yellow" },
-  { key: "capital_attacks", label: "Capital Attacks", icon: Castle, description: "Raid weekend attacks", color: "orange" },
-  { key: "th_upgrade", label: "Town Hall Upgrades", icon: TrendingUp, description: "Town hall level increases", color: "blue" },
-  { key: "hero_upgrade", label: "Hero Upgrades", icon: Shield, description: "Hero level increases", color: "blue" },
-  { key: "troop_upgrade", label: "Troop Upgrades", icon: TrendingUp, description: "Troop level increases", color: "blue" },
-  { key: "spell_upgrade", label: "Spell Upgrades", icon: TrendingUp, description: "Spell level increases", color: "blue" },
-  { key: "hero_equipment_upgrade", label: "Equipment Upgrades", icon: Shield, description: "Hero equipment upgrades", color: "blue" },
-  { key: "legend_log_attacks", label: "Legend Attacks", icon: Trophy, description: "Legend league attacks", color: "yellow" },
-  { key: "legend_log_defenses", label: "Legend Defenses", icon: Trophy, description: "Legend league defenses", color: "yellow" },
-];
+const LOG_TYPES = {
+  "clan": [
+    { key: "join_log", label: "Join/Leave Logs", icon: Users, description: "Track members joining and leaving your clans", color: "green" },
+    { key: "donation_log", label: "Donation Logs", icon: Gift, description: "Track troop donations and requests", color: "purple" },
+    { key: "war_log", label: "War Attack Logs", icon: Swords, description: "Log attacks and defenses during wars", color: "red" },
+    { key: "capital_donations", label: "Capital Donation Logs", icon: Castle, description: "Track capital gold donations", color: "yellow" },
+    { key: "capital_attacks", label: "Capital Raid Logs", icon: Swords, description: "Track raid weekend attacks", color: "orange" },
+  ],
+  "player": [
+    { key: "th_upgrade", label: "Town Hall Upgrades", icon: TrendingUp, description: "Town hall level increases", color: "blue" },
+    { key: "hero_upgrade", label: "Hero Upgrades", icon: Shield, description: "Hero level increases", color: "blue" },
+    { key: "troop_upgrade", label: "Troop Upgrades", icon: TrendingUp, description: "Troop level increases", color: "blue" },
+    { key: "spell_upgrade", label: "Spell Upgrades", icon: TrendingUp, description: "Spell level increases", color: "blue" },
+    { key: "hero_equipment_upgrade", label: "Equipment Upgrades", icon: Shield, description: "Hero equipment upgrades", color: "blue" },
+    { key: "legend_log_attacks", label: "Legend Attacks", icon: Trophy, description: "Legend league attacks", color: "yellow" },
+    { key: "legend_log_defenses", label: "Legend Defenses", icon: Trophy, description: "Legend league defenses", color: "yellow" },
+  ],
+  "moderation": [
+    { key: "leave_log", label: "Leave Logs", icon: Users, description: "When members leave the clan", color: "red" },
+  ],
+};
 
 export default function LogsPage() {
   const params = useParams();
@@ -82,6 +90,7 @@ export default function LogsPage() {
   const [saving, setSaving] = useState<string | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [threadsLoaded, setThreadsLoaded] = useState(false);
   const [clanLogs, setClanLogs] = useState<ClanLogsConfig[]>([]);
   const [selectedClan, setSelectedClan] = useState<string>("");
 
@@ -91,11 +100,8 @@ export default function LogsPage() {
         setLoading(true);
         const token = localStorage.getItem('token');
 
-        const [channelsRes, threadsRes, clanLogsRes] = await Promise.all([
+        const [channelsRes, clanLogsRes] = await Promise.all([
           fetch(`/api/v2/server/${guildId}/channels`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          }),
-          fetch(`/api/v2/server/${guildId}/threads`, {
             headers: { 'Authorization': `Bearer ${token}` }
           }),
           fetch(`/api/v2/server/${guildId}/clan-logs`, {
@@ -106,11 +112,6 @@ export default function LogsPage() {
         if (channelsRes.ok) {
           const data = await channelsRes.json();
           setChannels(data);
-        }
-
-        if (threadsRes.ok) {
-          const data = await threadsRes.json();
-          setThreads(data);
         }
 
         if (clanLogsRes.ok) {
@@ -131,6 +132,25 @@ export default function LogsPage() {
       fetchData();
     }
   }, [guildId, selectedClan]);
+
+  const loadThreadsIfNeeded = async () => {
+    if (threadsLoaded) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const threadsRes = await fetch(`/api/v2/server/${guildId}/threads`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (threadsRes.ok) {
+        const data = await threadsRes.json();
+        setThreads(data);
+        setThreadsLoaded(true);
+      }
+    } catch (error) {
+      console.error("Failed to fetch threads:", error);
+    }
+  };
 
   const handleUpdateLog = async (logKey: string, channelOrThreadId: string) => {
     if (!selectedClan) return;
@@ -200,10 +220,15 @@ export default function LogsPage() {
     const currentClan = getCurrentClan();
     if (!currentClan) return 0;
 
-    return LOG_TYPES.filter(log => {
+    const allLogTypes = [...LOG_TYPES.clan, ...LOG_TYPES.player, ...LOG_TYPES.moderation];
+    return allLogTypes.filter(log => {
       const config = currentClan[log.key as keyof ClanLogsConfig];
       return config && typeof config === 'object' && config.webhook;
     }).length;
+  };
+
+  const getThreadsForChannel = (channelId: string) => {
+    return threads.filter(t => t.parent_channel_id === channelId);
   };
 
   if (loading) {
@@ -218,6 +243,7 @@ export default function LogsPage() {
   }
 
   const currentClan = getCurrentClan();
+  const allLogTypes = [...LOG_TYPES.clan, ...LOG_TYPES.player, ...LOG_TYPES.moderation];
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -251,7 +277,7 @@ export default function LogsPage() {
                 <Activity className="h-8 w-8 text-blue-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Out of {LOG_TYPES.length} log types
+                Out of {allLogTypes.length} log types
               </p>
             </CardContent>
           </Card>
@@ -288,29 +314,28 @@ export default function LogsPage() {
 
           <Card className="bg-card border-purple-500/30 bg-purple-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Threads</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Configuration</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-purple-500">{threads.length}</div>
+                <div className="text-3xl font-bold text-purple-500">
+                  {saving ? <Loader2 className="h-8 w-8 animate-spin" /> : <Bell className="h-8 w-8" />}
+                </div>
                 <Bell className="h-8 w-8 text-purple-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Active threads
+                {saving ? "Saving..." : "Ready to configure"}
               </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Clan Selector */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Select Clan</CardTitle>
-            <CardDescription>Choose which clan to configure logs for</CardDescription>
-          </CardHeader>
-          <CardContent>
+        {/* Clan Selector - Compact version */}
+        <div className="flex justify-end mb-4">
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground">Clan:</Label>
             <Select value={selectedClan} onValueChange={setSelectedClan}>
-              <SelectTrigger className="w-full">
+              <SelectTrigger className="w-[250px]">
                 <SelectValue placeholder="Select a clan" />
               </SelectTrigger>
               <SelectContent>
@@ -321,75 +346,234 @@ export default function LogsPage() {
                 ))}
               </SelectContent>
             </Select>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* Log Configuration */}
+        {/* Log Configuration with Tabs */}
         {currentClan && (
-          <div className="space-y-4">
-            {LOG_TYPES.map((logType) => {
-              const currentConfig = currentClan[logType.key as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-              const isEnabled = currentConfig && currentConfig.webhook;
-              const selectedValue = getSelectedValue(currentConfig);
+          <Tabs defaultValue="clan" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3 lg:w-[600px]">
+              <TabsTrigger value="clan">
+                <Castle className="mr-2 h-4 w-4" />
+                Clan Logs
+              </TabsTrigger>
+              <TabsTrigger value="player">
+                <Users className="mr-2 h-4 w-4" />
+                Player Logs
+              </TabsTrigger>
+              <TabsTrigger value="moderation">
+                <Ban className="mr-2 h-4 w-4" />
+                Moderation
+              </TabsTrigger>
+            </TabsList>
 
-              return (
-                <Card key={logType.key} className="bg-card border-border">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <logType.icon className={`h-5 w-5 text-${logType.color}-500`} />
-                        <div>
-                          <CardTitle>{logType.label}</CardTitle>
-                          <CardDescription>{logType.description}</CardDescription>
+            {/* Clan Logs Tab */}
+            <TabsContent value="clan" className="space-y-4">
+              {LOG_TYPES.clan.map((logType) => {
+                const currentConfig = currentClan[logType.key as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
+                const isEnabled = currentConfig && currentConfig.webhook;
+                const selectedValue = getSelectedValue(currentConfig);
+
+                return (
+                  <Card key={logType.key} className="bg-card border-border">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <logType.icon className={`h-5 w-5 text-${logType.color}-500`} />
+                          <div>
+                            <CardTitle>{logType.label}</CardTitle>
+                            <CardDescription>{logType.description}</CardDescription>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {saving === logType.key && (
+                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                          )}
+                          {isEnabled && !saving && (
+                            <div className="text-xs text-green-600 font-medium">Configured</div>
+                          )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {saving === logType.key && (
-                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                        )}
-                        {isEnabled && !saving && (
-                          <div className="text-xs text-green-600 font-medium">Configured</div>
-                        )}
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label>Channel / Thread</Label>
+                          <Select
+                            value={selectedValue}
+                            onValueChange={(value) => handleUpdateLog(logType.key, value)}
+                            disabled={saving === logType.key}
+                            onOpenChange={(open) => {
+                              if (open) loadThreadsIfNeeded();
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select channel or thread" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="disabled">Disabled</SelectItem>
+                              <Separator className="my-2" />
+                              {channels.map((channel) => (
+                                <SelectItem key={channel.id} value={channel.id}>
+                                  # {channel.name}
+                                  {channel.parent_name && ` (${channel.parent_name})`}
+                                </SelectItem>
+                              ))}
+                              {threadsLoaded && threads.length > 0 && <Separator className="my-2" />}
+                              {threadsLoaded && threads.map((thread) => (
+                                <SelectItem key={thread.id} value={thread.id}>
+                                  🧵 {thread.name}
+                                  {thread.parent_channel_name && ` (${thread.parent_channel_name})`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label>Channel / Thread</Label>
-                        <Select
-                          value={selectedValue}
-                          onValueChange={(value) => handleUpdateLog(logType.key, value)}
-                          disabled={saving === logType.key}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select channel or thread" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="disabled">Disabled</SelectItem>
-                            <Separator className="my-2" />
-                            {channels.map((channel) => (
-                              <SelectItem key={channel.id} value={channel.id}>
-                                # {channel.name}
-                                {channel.parent_name && ` (${channel.parent_name})`}
-                              </SelectItem>
-                            ))}
-                            {threads.length > 0 && <Separator className="my-2" />}
-                            {threads.map((thread) => (
-                              <SelectItem key={thread.id} value={thread.id}>
-                                🧵 {thread.name}
-                                {thread.parent_channel_name && ` (${thread.parent_channel_name})`}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </TabsContent>
+
+            {/* Player Logs Tab */}
+            <TabsContent value="player" className="space-y-4">
+              {LOG_TYPES.player.map((logType) => {
+                const currentConfig = currentClan[logType.key as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
+                const isEnabled = currentConfig && currentConfig.webhook;
+                const selectedValue = getSelectedValue(currentConfig);
+
+                return (
+                  <Card key={logType.key} className="bg-card border-border">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <logType.icon className={`h-5 w-5 text-${logType.color}-500`} />
+                          <div>
+                            <CardTitle>{logType.label}</CardTitle>
+                            <CardDescription>{logType.description}</CardDescription>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {saving === logType.key && (
+                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                          )}
+                          {isEnabled && !saving && (
+                            <div className="text-xs text-green-600 font-medium">Configured</div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label>Channel / Thread</Label>
+                          <Select
+                            value={selectedValue}
+                            onValueChange={(value) => handleUpdateLog(logType.key, value)}
+                            disabled={saving === logType.key}
+                            onOpenChange={(open) => {
+                              if (open) loadThreadsIfNeeded();
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select channel or thread" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="disabled">Disabled</SelectItem>
+                              <Separator className="my-2" />
+                              {channels.map((channel) => (
+                                <SelectItem key={channel.id} value={channel.id}>
+                                  # {channel.name}
+                                  {channel.parent_name && ` (${channel.parent_name})`}
+                                </SelectItem>
+                              ))}
+                              {threadsLoaded && threads.length > 0 && <Separator className="my-2" />}
+                              {threadsLoaded && threads.map((thread) => (
+                                <SelectItem key={thread.id} value={thread.id}>
+                                  🧵 {thread.name}
+                                  {thread.parent_channel_name && ` (${thread.parent_channel_name})`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </TabsContent>
+
+            {/* Moderation Tab */}
+            <TabsContent value="moderation" className="space-y-4">
+              {LOG_TYPES.moderation.map((logType) => {
+                const currentConfig = currentClan[logType.key as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
+                const isEnabled = currentConfig && currentConfig.webhook;
+                const selectedValue = getSelectedValue(currentConfig);
+
+                return (
+                  <Card key={logType.key} className="bg-card border-border">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <logType.icon className={`h-5 w-5 text-${logType.color}-500`} />
+                          <div>
+                            <CardTitle>{logType.label}</CardTitle>
+                            <CardDescription>{logType.description}</CardDescription>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {saving === logType.key && (
+                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                          )}
+                          {isEnabled && !saving && (
+                            <div className="text-xs text-green-600 font-medium">Configured</div>
+                          )}
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label>Channel / Thread</Label>
+                          <Select
+                            value={selectedValue}
+                            onValueChange={(value) => handleUpdateLog(logType.key, value)}
+                            disabled={saving === logType.key}
+                            onOpenChange={(open) => {
+                              if (open) loadThreadsIfNeeded();
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select channel or thread" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="disabled">Disabled</SelectItem>
+                              <Separator className="my-2" />
+                              {channels.map((channel) => (
+                                <SelectItem key={channel.id} value={channel.id}>
+                                  # {channel.name}
+                                  {channel.parent_name && ` (${channel.parent_name})`}
+                                </SelectItem>
+                              ))}
+                              {threadsLoaded && threads.length > 0 && <Separator className="my-2" />}
+                              {threadsLoaded && threads.map((thread) => (
+                                <SelectItem key={thread.id} value={thread.id}>
+                                  🧵 {thread.name}
+                                  {thread.parent_channel_name && ` (${thread.parent_channel_name})`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </TabsContent>
+          </Tabs>
         )}
       </div>
     </div>
