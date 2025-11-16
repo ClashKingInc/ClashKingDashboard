@@ -47,7 +47,7 @@ export default function GeneralSettingsPage() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await apiClient.server.getSettings(guildId);
+      const response = await apiClient.servers.getSettings(guildId);
 
       if (response.data) {
         setSettings({
@@ -73,7 +73,7 @@ export default function GeneralSettingsPage() {
 
   const loadChannels = async () => {
     try {
-      const response = await apiClient.server.getChannels(guildId);
+      const response = await apiClient.servers.getChannels(guildId);
       if (response.data) {
         setChannels(response.data);
       }
@@ -88,7 +88,7 @@ export default function GeneralSettingsPage() {
       setError(null);
       setSuccess(false);
 
-      await apiClient.server.updateSettings(guildId, settings);
+      await apiClient.servers.updateSettings(guildId, settings);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);

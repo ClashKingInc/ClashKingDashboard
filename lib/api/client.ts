@@ -102,3 +102,13 @@ export function createApiClient(
     refreshToken,
   });
 }
+
+/**
+ * Default API client instance
+ * Uses environment variables for configuration
+ */
+export const apiClient = createApiClient(
+  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  undefined,
+  undefined
+);
