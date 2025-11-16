@@ -4,13 +4,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ server_id: string }> }
+  { params }: { params: Promise<{ server_id: string; clan_tag: string }> }
 ) {
   try {
-    const { server_id } = await params;
+    const { server_id, clan_tag } = await params;
     const token = request.headers.get('authorization');
 
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clans`, {
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clan/${encodeURIComponent(clan_tag)}/settings`, {
       method: 'GET',
       headers: {
         'Authorization': token || '',
@@ -21,22 +21,22 @@ export async function GET(
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('API proxy error (GET /clans):', error);
-    return NextResponse.json({ error: 'Failed to fetch clans' }, { status: 500 });
+    console.error('API proxy error (GET /clan/settings):', error);
+    return NextResponse.json({ error: 'Failed to fetch clan settings' }, { status: 500 });
   }
 }
 
-export async function POST(
+export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ server_id: string }> }
+  { params }: { params: Promise<{ server_id: string; clan_tag: string }> }
 ) {
   try {
-    const { server_id } = await params;
+    const { server_id, clan_tag } = await params;
     const token = request.headers.get('authorization');
     const body = await request.json();
 
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clans`, {
-      method: 'POST',
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clan/${encodeURIComponent(clan_tag)}/settings`, {
+      method: 'PATCH',
       headers: {
         'Authorization': token || '',
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export async function POST(
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('API proxy error (POST /clans):', error);
-    return NextResponse.json({ error: 'Failed to add clan' }, { status: 500 });
+    console.error('API proxy error (PATCH /clan/settings):', error);
+    return NextResponse.json({ error: 'Failed to update clan settings' }, { status: 500 });
   }
 }

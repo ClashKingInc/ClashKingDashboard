@@ -116,7 +116,7 @@ export default function RemindersPage() {
 
         // Fetch clans and reminders in parallel
         const [clansRes, remindersRes] = await Promise.all([
-          fetch(`/api/v2/server/${guildId}/clans`, {
+          fetch(`/api/v2/server/${guildId}/clans-basic`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
               'Content-Type': 'application/json',
