@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import {
   FileText,
   Users,
@@ -17,7 +17,9 @@ import {
   Trophy,
   Shield,
   Loader2,
-  Check,
+  Activity,
+  Hash,
+  Bell,
 } from "lucide-react";
 
 interface Channel {
@@ -57,33 +59,21 @@ interface ClanLogsConfig {
   legend_log_defenses: ClanLogTypeConfig | null;
 }
 
-const LOG_TYPES = {
-  "member": [
-    { key: "join_log", label: "Join Logs", icon: Users, description: "When members join the clan" },
-    { key: "leave_log", label: "Leave Logs", icon: Users, description: "When members leave the clan" },
-  ],
-  "war": [
-    { key: "war_log", label: "War Logs", icon: Swords, description: "War attacks and results" },
-  ],
-  "donations": [
-    { key: "donation_log", label: "Donation Logs", icon: Gift, description: "Troop and spell donations" },
-  ],
-  "capital": [
-    { key: "capital_donations", label: "Capital Donations", icon: Castle, description: "Clan capital gold donations" },
-    { key: "capital_attacks", label: "Capital Attacks", icon: Castle, description: "Raid weekend attacks" },
-  ],
-  "upgrades": [
-    { key: "th_upgrade", label: "Town Hall Upgrades", icon: TrendingUp, description: "Town hall level increases" },
-    { key: "hero_upgrade", label: "Hero Upgrades", icon: Shield, description: "Hero level increases" },
-    { key: "troop_upgrade", label: "Troop Upgrades", icon: TrendingUp, description: "Troop level increases" },
-    { key: "spell_upgrade", label: "Spell Upgrades", icon: TrendingUp, description: "Spell level increases" },
-    { key: "hero_equipment_upgrade", label: "Equipment Upgrades", icon: Shield, description: "Hero equipment upgrades" },
-  ],
-  "legend": [
-    { key: "legend_log_attacks", label: "Legend Attacks", icon: Trophy, description: "Legend league attacks" },
-    { key: "legend_log_defenses", label: "Legend Defenses", icon: Trophy, description: "Legend league defenses" },
-  ],
-};
+const LOG_TYPES = [
+  { key: "join_log", label: "Join Logs", icon: Users, description: "When members join the clan", color: "green" },
+  { key: "leave_log", label: "Leave Logs", icon: Users, description: "When members leave the clan", color: "red" },
+  { key: "donation_log", label: "Donation Logs", icon: Gift, description: "Troop and spell donations", color: "purple" },
+  { key: "war_log", label: "War Logs", icon: Swords, description: "War attacks and results", color: "red" },
+  { key: "capital_donations", label: "Capital Donations", icon: Castle, description: "Clan capital gold donations", color: "yellow" },
+  { key: "capital_attacks", label: "Capital Attacks", icon: Castle, description: "Raid weekend attacks", color: "orange" },
+  { key: "th_upgrade", label: "Town Hall Upgrades", icon: TrendingUp, description: "Town hall level increases", color: "blue" },
+  { key: "hero_upgrade", label: "Hero Upgrades", icon: Shield, description: "Hero level increases", color: "blue" },
+  { key: "troop_upgrade", label: "Troop Upgrades", icon: TrendingUp, description: "Troop level increases", color: "blue" },
+  { key: "spell_upgrade", label: "Spell Upgrades", icon: TrendingUp, description: "Spell level increases", color: "blue" },
+  { key: "hero_equipment_upgrade", label: "Equipment Upgrades", icon: Shield, description: "Hero equipment upgrades", color: "blue" },
+  { key: "legend_log_attacks", label: "Legend Attacks", icon: Trophy, description: "Legend league attacks", color: "yellow" },
+  { key: "legend_log_defenses", label: "Legend Defenses", icon: Trophy, description: "Legend league defenses", color: "yellow" },
+];
 
 export default function LogsPage() {
   const params = useParams();
@@ -142,20 +132,28 @@ export default function LogsPage() {
     }
   }, [guildId, selectedClan]);
 
-  const handleUpdateClanLog = async (clanTag: string, logTypes: string[], channelOrThreadId: string) => {
+  const handleUpdateLog = async (logKey: string, channelOrThreadId: string) => {
+    if (!selectedClan) return;
+
     try {
-      setSaving(clanTag);
+      setSaving(logKey);
       const token = localStorage.getItem('token');
 
-      // Determine if it's a channel or thread
+      // Check if "disabled" was selected
+      if (channelOrThreadId === "disabled") {
+        // We don't have a disable endpoint yet, so skip for now
+        setSaving(null);
+        return;
+      }
+
       const isThread = threads.some(t => t.id === channelOrThreadId);
       const requestBody = {
         channel_id: isThread ? null : parseInt(channelOrThreadId),
         thread_id: isThread ? parseInt(channelOrThreadId) : null,
-        log_types: logTypes
+        log_types: [logKey]
       };
 
-      const response = await fetch(`/api/v2/server/${guildId}/clan/${clanTag}/logs`, {
+      const response = await fetch(`/api/v2/server/${guildId}/clan/${selectedClan}/logs`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -188,13 +186,24 @@ export default function LogsPage() {
     return clanLogs.find(c => c.tag === selectedClan);
   };
 
-  const getChannelOrThreadById = (webhook: number | null, thread: number | null) => {
-    if (thread) {
-      const foundThread = threads.find(t => parseInt(t.id) === thread);
-      if (foundThread) return { id: foundThread.id, name: `🧵 ${foundThread.name} (${foundThread.parent_channel_name})`, isThread: true };
+  const getSelectedValue = (logConfig: ClanLogTypeConfig | null) => {
+    if (!logConfig) return "";
+    if (logConfig.thread) {
+      return threads.find(t => parseInt(t.id) === logConfig.thread)?.id || "";
     }
-    // If we have a webhook, try to find the channel from existing logs
-    return null;
+    // Try to find channel from webhook
+    // For now, we'll just return empty if we only have webhook
+    return "";
+  };
+
+  const countActiveLogs = () => {
+    const currentClan = getCurrentClan();
+    if (!currentClan) return 0;
+
+    return LOG_TYPES.filter(log => {
+      const config = currentClan[log.key as keyof ClanLogsConfig];
+      return config && typeof config === 'object' && config.webhook;
+    }).length;
   };
 
   if (loading) {
@@ -230,6 +239,69 @@ export default function LogsPage() {
           </div>
         </div>
 
+        {/* Statistics Overview */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Active Logs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
+                <Activity className="h-8 w-8 text-blue-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Out of {LOG_TYPES.length} log types
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-green-500/30 bg-green-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Log Channels</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-green-500">{channels.length}</div>
+                <Hash className="h-8 w-8 text-green-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Available channels
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Tracked Clans</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
+                <Users className="h-8 w-8 text-yellow-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Configured clans
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Threads</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-purple-500">{threads.length}</div>
+                <Bell className="h-8 w-8 text-purple-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Active threads
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Clan Selector */}
         <Card>
           <CardHeader>
@@ -254,85 +326,70 @@ export default function LogsPage() {
 
         {/* Log Configuration */}
         {currentClan && (
-          <Tabs defaultValue="member" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-6">
-              <TabsTrigger value="member">Members</TabsTrigger>
-              <TabsTrigger value="war">War</TabsTrigger>
-              <TabsTrigger value="donations">Donations</TabsTrigger>
-              <TabsTrigger value="capital">Capital</TabsTrigger>
-              <TabsTrigger value="upgrades">Upgrades</TabsTrigger>
-              <TabsTrigger value="legend">Legend</TabsTrigger>
-            </TabsList>
+          <div className="space-y-4">
+            {LOG_TYPES.map((logType) => {
+              const currentConfig = currentClan[logType.key as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
+              const isEnabled = currentConfig && currentConfig.webhook;
+              const selectedValue = getSelectedValue(currentConfig);
 
-            {Object.entries(LOG_TYPES).map(([category, logTypes]) => (
-              <TabsContent key={category} value={category} className="space-y-4">
-                {logTypes.map((logType) => {
-                  const currentConfig = currentClan[logType.key as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-                  const currentLocation = getChannelOrThreadById(currentConfig?.webhook || null, currentConfig?.thread || null);
-
-                  return (
-                    <Card key={logType.key}>
-                      <CardHeader>
-                        <div className="flex items-center gap-3">
-                          <logType.icon className="h-5 w-5 text-primary" />
-                          <div>
-                            <CardTitle>{logType.label}</CardTitle>
-                            <CardDescription>{logType.description}</CardDescription>
-                          </div>
+              return (
+                <Card key={logType.key} className="bg-card border-border">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <logType.icon className={`h-5 w-5 text-${logType.color}-500`} />
+                        <div>
+                          <CardTitle>{logType.label}</CardTitle>
+                          <CardDescription>{logType.description}</CardDescription>
                         </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label>Channel / Thread</Label>
-                            <Select
-                              value={currentLocation?.id || ""}
-                              onValueChange={(value) => handleUpdateClanLog(currentClan.tag, [logType.key], value)}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select channel or thread" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="disabled">Disabled</SelectItem>
-                                <Separator className="my-2" />
-                                {channels.map((channel) => (
-                                  <SelectItem key={channel.id} value={channel.id}>
-                                    # {channel.name}
-                                    {channel.parent_name && ` (${channel.parent_name})`}
-                                  </SelectItem>
-                                ))}
-                                {threads.length > 0 && <Separator className="my-2" />}
-                                {threads.map((thread) => (
-                                  <SelectItem key={thread.id} value={thread.id}>
-                                    🧵 {thread.name}
-                                    {thread.parent_channel_name && ` (${thread.parent_channel_name})`}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="flex items-end">
-                            {currentConfig?.webhook && (
-                              <div className="flex items-center gap-2 text-sm text-green-600">
-                                <Check className="h-4 w-4" />
-                                <span>Configured</span>
-                              </div>
-                            )}
-                            {saving === currentClan.tag && (
-                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                                <span>Saving...</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </TabsContent>
-            ))}
-          </Tabs>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {saving === logType.key && (
+                          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        )}
+                        {isEnabled && !saving && (
+                          <div className="text-xs text-green-600 font-medium">Configured</div>
+                        )}
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label>Channel / Thread</Label>
+                        <Select
+                          value={selectedValue}
+                          onValueChange={(value) => handleUpdateLog(logType.key, value)}
+                          disabled={saving === logType.key}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select channel or thread" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="disabled">Disabled</SelectItem>
+                            <Separator className="my-2" />
+                            {channels.map((channel) => (
+                              <SelectItem key={channel.id} value={channel.id}>
+                                # {channel.name}
+                                {channel.parent_name && ` (${channel.parent_name})`}
+                              </SelectItem>
+                            ))}
+                            {threads.length > 0 && <Separator className="my-2" />}
+                            {threads.map((thread) => (
+                              <SelectItem key={thread.id} value={thread.id}>
+                                🧵 {thread.name}
+                                {thread.parent_channel_name && ` (${thread.parent_channel_name})`}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
