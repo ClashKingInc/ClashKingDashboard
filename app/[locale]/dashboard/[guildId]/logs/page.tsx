@@ -29,7 +29,7 @@ import {
   Settings,
   Loader2,
 } from "lucide-react";
-import { createApiClient } from "@/lib/api";
+// Removed unused import
 
 interface LogConfig {
   enabled: boolean;
@@ -119,21 +119,29 @@ export default function LogsPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const api = createApiClient();
 
         // Fetch channels and logs config
         const [channelsRes, logsRes] = await Promise.all([
-          api.server.getChannels(Number(guildId)),
-          api.server.getLogsConfig(Number(guildId)),
+          fetch(`/api/v2/server/${guildId}/channels`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          }),
+          fetch(`/api/v2/server/${guildId}/logs`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          })
         ]);
 
-        if (channelsRes.data) {
-          setChannels(channelsRes.data);
+        if (channelsRes.ok) {
+          const channelsData = await channelsRes.json();
+          setChannels(channelsData);
         }
 
-        if (logsRes.data) {
+        if (logsRes.ok) {
+          const config = await logsRes.json();
           // Map API response to state (API uses snake_case)
-          const config = logsRes.data;
           if (config.join_leave_log) setJoinLeaveLog(config.join_leave_log);
           if (config.donation_log) setDonationLog(config.donation_log);
           if (config.war_log) setWarLog(config.war_log);
@@ -159,7 +167,6 @@ export default function LogsPage() {
   const handleSave = async () => {
     try {
       setSaving(true);
-      const api = createApiClient();
 
       const logsConfig = {
         join_leave_log: joinLeaveLog,
@@ -173,7 +180,18 @@ export default function LogsPage() {
         strike_log: strikeLog,
       };
 
-      await api.server.saveLogsConfig(Number(guildId), logsConfig);
+      const response = await fetch(`/api/v2/server/${guildId}/logs`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(logsConfig)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save logs configuration');
+      }
 
       // Show success message (you can add toast notification here)
       console.log("Logs configuration saved successfully");
@@ -757,7 +775,7 @@ export default function LogsPage() {
                       <Badge variant="outline" className="cursor-pointer">
                         All Players
                       </Badge>
-                      {mockClans.map(clan => (
+                      {clans.map((clan) => (
                         <Badge
                           key={clan.tag}
                           variant={playerUpgradeLog.clans?.includes(clan.tag) ? "default" : "outline"}
