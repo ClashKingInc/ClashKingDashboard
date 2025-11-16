@@ -198,23 +198,92 @@ export default function LogsPage() {
     }
   };
 
-  const handleUpdateLog = async (logKeys: string[], channelOrThreadId: string) => {
+  const handleChannelChange = async (logKeys: string[], channelId: string) => {
     if (!selectedClan) return;
 
     try {
       setSaving(logKeys[0]);
       const token = localStorage.getItem('access_token');
 
-      // Check if "disabled" was selected
-      if (channelOrThreadId === "disabled") {
+      // Check if "disabled" was selected - DELETE the log configuration
+      if (channelId === "disabled") {
+        const response = await fetch(
+          `/api/v2/server/${guildId}/clan/${encodeURIComponent(selectedClan)}/logs?log_types=${logKeys.join(',')}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to delete clan log configuration');
+        }
+
+        // Refresh clan logs
+        const clanLogsRes = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (clanLogsRes.ok) {
+          const data = await clanLogsRes.json();
+          setClanLogs(data);
+        }
+
         setSaving(null);
         return;
       }
 
-      const isThread = threads.some(t => t.id === channelOrThreadId);
       const requestBody = {
-        channel_id: isThread ? null : channelOrThreadId,
-        thread_id: isThread ? channelOrThreadId : null,
+        channel_id: channelId,
+        thread_id: null,
+        log_types: logKeys
+      };
+
+      const response = await fetch(`/api/v2/server/${guildId}/clan/${encodeURIComponent(selectedClan)}/logs`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update clan logs');
+      }
+
+      // Refresh clan logs
+      const clanLogsRes = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (clanLogsRes.ok) {
+        const data = await clanLogsRes.json();
+        setClanLogs(data);
+      }
+    } catch (error) {
+      console.error("Failed to update clan logs:", error);
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  const handleThreadChange = async (logKeys: string[], threadId: string) => {
+    if (!selectedClan) return;
+
+    try {
+      setSaving(logKeys[0]);
+      const token = localStorage.getItem('access_token');
+
+      // Get current channel
+      const currentChannel = getSelectedChannelForLogs(logKeys);
+      if (!currentChannel) return;
+
+      const requestBody = {
+        channel_id: currentChannel,
+        thread_id: threadId === "none" ? null : threadId,
         log_types: logKeys
       };
 
@@ -251,24 +320,24 @@ export default function LogsPage() {
     return clanLogs.find(c => c.tag === selectedClan);
   };
 
-  const getSelectedValueForLogs = (logKeys: string[]) => {
+  const getSelectedChannelForLogs = (logKeys: string[]) => {
     const currentClan = getCurrentClan();
     if (!currentClan) return "";
 
     const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-    if (!firstLogConfig) return "";
+    if (!firstLogConfig || !firstLogConfig.channel) return "";
 
-    // Prioritize thread over channel
-    if (firstLogConfig.thread) {
-      return firstLogConfig.thread.toString();
-    }
+    return firstLogConfig.channel;
+  };
 
-    // Return channel if available (already a string)
-    if (firstLogConfig.channel) {
-      return firstLogConfig.channel;
-    }
+  const getSelectedThreadForLogs = (logKeys: string[]) => {
+    const currentClan = getCurrentClan();
+    if (!currentClan) return "";
 
-    return "";
+    const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
+    if (!firstLogConfig || !firstLogConfig.thread) return "";
+
+    return firstLogConfig.thread.toString();
   };
 
   const isLogEnabled = (logKeys: string[]) => {
@@ -299,7 +368,13 @@ export default function LogsPage() {
   const renderLogCard = (logDef: LogTypeDefinition) => {
     const Icon = logDef.icon;
     const isEnabled = isLogEnabled(logDef.keys);
-    const selectedValue = getSelectedValueForLogs(logDef.keys);
+    const selectedChannel = getSelectedChannelForLogs(logDef.keys);
+    const selectedThread = getSelectedThreadForLogs(logDef.keys);
+
+    // Filter threads for the selected channel
+    const channelThreads = selectedChannel
+      ? threads.filter(t => t.parent_channel_id === selectedChannel)
+      : [];
 
     return (
       <Card key={logDef.keys[0]} className="bg-card border-border">
@@ -325,10 +400,10 @@ export default function LogsPage() {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Log Channel</Label>
+              <Label>Channel</Label>
               <Select
-                value={selectedValue}
-                onValueChange={(value) => handleUpdateLog(logDef.keys, value)}
+                value={selectedChannel || "disabled"}
+                onValueChange={(value) => handleChannelChange(logDef.keys, value)}
                 disabled={saving === logDef.keys[0]}
                 onOpenChange={(open) => {
                   if (open) loadThreadsIfNeeded();
@@ -346,16 +421,33 @@ export default function LogsPage() {
                       {ch.parent_name && ` (${ch.parent_name})`}
                     </SelectItem>
                   ))}
-                  {threadsLoaded && threads.length > 0 && <Separator className="my-2" />}
-                  {threadsLoaded && threads.map((thread) => (
-                    <SelectItem key={thread.id} value={thread.id}>
-                      🧵 {thread.name}
-                      {thread.parent_channel_name && ` (${thread.parent_channel_name})`}
-                    </SelectItem>
-                  ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {selectedChannel && channelThreads.length > 0 && (
+              <div className="space-y-2">
+                <Label>Thread (Optional)</Label>
+                <Select
+                  value={selectedThread || "none"}
+                  onValueChange={(value) => handleThreadChange(logDef.keys, value)}
+                  disabled={saving === logDef.keys[0]}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select thread" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Thread</SelectItem>
+                    <Separator className="my-2" />
+                    {channelThreads.map((thread) => (
+                      <SelectItem key={thread.id} value={thread.id}>
+                        🧵 {thread.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
