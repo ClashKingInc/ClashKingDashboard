@@ -10,10 +10,10 @@ export async function GET(
     const { server_id } = await params;
     const token = request.headers.get('authorization');
 
-    console.log('[roles/all] server_id:', server_id, 'token present:', !!token);
-    console.log('[roles/all] Making request to:', `${API_BASE_URL}/v2/server/${server_id}/roles/all`);
+    console.log('[all-roles] server_id:', server_id, 'token present:', !!token);
+    console.log('[all-roles] Making request to:', `${API_BASE_URL}/v2/server/${server_id}/all-roles`);
 
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/roles/all`, {
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/all-roles`, {
       method: 'GET',
       headers: {
         'Authorization': token || '',
@@ -22,12 +22,12 @@ export async function GET(
     });
 
     const data = await response.json();
-    console.log('[roles/all] Response status:', response.status);
-    console.log('[roles/all] Response data:', data);
+    console.log('[all-roles] Response status:', response.status);
+    console.log('[all-roles] Response data:', data);
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('API proxy error (GET /roles/all):', error);
+    console.error('API proxy error (GET /all-roles):', error);
     return NextResponse.json(
       { error: 'Failed to fetch roles' },
       { status: 500 }

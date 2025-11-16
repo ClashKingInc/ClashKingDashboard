@@ -50,10 +50,10 @@ export class RolesClient extends BaseApiClient {
   }
 
   /**
-   * GET /v2/server/{server_id}/roles/all
+   * GET /v2/server/{server_id}/all-roles
    */
   async getAllRoles(serverId: string | number): Promise<ApiResponse<AllRolesResponse>> {
-    return this.request(`/v2/server/${serverId}/roles/all`, { method: 'GET' });
+    return this.request(`/v2/server/${serverId}/all-roles`, { method: 'GET' });
   }
 
   /**

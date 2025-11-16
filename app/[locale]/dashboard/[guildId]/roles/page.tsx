@@ -55,6 +55,7 @@ import type {
   FamilyPositionRole,
   RoleSettings,
 } from "@/lib/api/types/roles";
+import { LetterCaseUppercaseIcon } from "@radix-ui/react-icons";
 
 const ROLE_TYPES: Array<{ value: RoleType; label: string; icon: any }> = [
   { value: "townhall", label: "Town Hall", icon: Users },
@@ -444,7 +445,11 @@ export default function RolesPage() {
 
             switch (roleType) {
               case "townhall":
-                criteria = `TH ${role.th}`;
+                criteria = role.th
+                  ? ["TH", role.th.toString().toUpperCase().replace(/^TH\s*/, "").replace(/^TH/, "").trim()]
+                    .filter(Boolean)
+                    .join(" ")
+                  : "";
                 break;
               case "league":
                 criteria = role.league;
