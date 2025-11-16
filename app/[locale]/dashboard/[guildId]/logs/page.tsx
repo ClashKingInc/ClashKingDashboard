@@ -120,9 +120,14 @@ export default function LogsPage() {
       try {
         setLoading(true);
 
-        // Fetch channels and logs config
-        const [channelsRes, logsRes] = await Promise.all([
+        // Fetch channels, clans, and logs config
+        const [channelsRes, clansRes, logsRes] = await Promise.all([
           fetch(`/api/v2/server/${guildId}/channels`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          }),
+          fetch(`/api/v2/server/${guildId}/clans`, {
             headers: {
               'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -137,6 +142,11 @@ export default function LogsPage() {
         if (channelsRes.ok) {
           const channelsData = await channelsRes.json();
           setChannels(channelsData);
+        }
+
+        if (clansRes.ok) {
+          const clansData = await clansRes.json();
+          setClans(clansData);
         }
 
         if (logsRes.ok) {
