@@ -23,7 +23,7 @@ import {
   AlertCircle,
   Loader2
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 // API types based on ClashKingAPI reminders endpoints
 interface Reminder {
