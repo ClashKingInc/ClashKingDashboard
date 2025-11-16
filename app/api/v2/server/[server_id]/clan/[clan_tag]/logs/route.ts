@@ -11,7 +11,8 @@ export async function PUT(
     const token = request.headers.get('authorization');
     const body = await request.json();
 
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clan/${clan_tag}/logs`, {
+    // Encode clan_tag as it may contain special characters like #
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clan/${encodeURIComponent(clan_tag)}/logs`, {
       method: 'PUT',
       headers: {
         'Authorization': token || '',

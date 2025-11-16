@@ -48,7 +48,7 @@ interface Thread {
 
 interface ClanLogTypeConfig {
   webhook: number | null;
-  channel: number | null;
+  channel: string | null;  // Channel ID as string to match channel list
   thread: number | null;
 }
 
@@ -263,9 +263,9 @@ export default function LogsPage() {
       return firstLogConfig.thread.toString();
     }
 
-    // Return channel if available
+    // Return channel if available (already a string)
     if (firstLogConfig.channel) {
-      return firstLogConfig.channel.toString();
+      return firstLogConfig.channel;
     }
 
     return "";
