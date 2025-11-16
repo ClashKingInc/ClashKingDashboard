@@ -4,10 +4,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { server_id: string; user_id: string; player_tag: string } }
+  { params }: { params: Promise<{ server_id: string; user_id: string; player_tag: string }> }
 ) {
   try {
-    const { server_id, user_id, player_tag } = params;
+    const { server_id, user_id, player_tag } = await params;
     const token = request.headers.get('authorization');
 
     const response = await fetch(

@@ -4,10 +4,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { server_id: string; autoboard_id: string } }
+  { params }: { params: Promise<{ server_id: string; autoboard_id: string }> }
 ) {
   try {
-    const { server_id, autoboard_id } = params;
+    const { server_id, autoboard_id } = await params;
     const token = request.headers.get('authorization');
 
     const response = await fetch(
@@ -34,10 +34,10 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { server_id: string; autoboard_id: string } }
+  { params }: { params: Promise<{ server_id: string; autoboard_id: string }> }
 ) {
   try {
-    const { server_id, autoboard_id } = params;
+    const { server_id, autoboard_id } = await params;
     const token = request.headers.get('authorization');
     const body = await request.json();
 

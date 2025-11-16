@@ -4,10 +4,10 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
     const token = request.headers.get('authorization');
 
     const response = await fetch(`${API_BASE_URL}/v2/roster/${id}`, {
@@ -31,10 +31,10 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = params.id;
+    const { id } = await params;
     const token = request.headers.get('authorization');
 
     const response = await fetch(`${API_BASE_URL}/v2/roster/${id}`, {
