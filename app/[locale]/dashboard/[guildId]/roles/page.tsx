@@ -444,16 +444,16 @@ export default function RolesPage() {
 
             switch (roleType) {
               case "townhall":
-                criteria = \`TH \${role.th}\`;
+                criteria = `TH ${role.th}`;
                 break;
               case "league":
                 criteria = role.league;
                 break;
               case "builderhall":
-                criteria = \`BH \${role.bh}\`;
+                criteria = `BH ${role.bh}`;
                 break;
               case "status":
-                criteria = \`\${role.months} month\${role.months > 1 ? "s" : ""}\`;
+                criteria = `${role.months} month${role.months > 1 ? "s" : ""}`;
                 break;
               case "family_position":
                 criteria = FAMILY_POSITIONS.find((p) => p.value === role.type)?.label || role.type;
@@ -466,7 +466,7 @@ export default function RolesPage() {
                   <div className="flex items-center gap-2">
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: discordRole ? \`#\${discordRole.color.toString(16).padStart(6, "0")}\` : "#000" }}
+                      style={{ backgroundColor: discordRole ? `#${discordRole.color.toString(16).padStart(6, "0")}` : "#000" }}
                     />
                     <span>{discordRole?.name || "Unknown Role"}</span>
                   </div>
