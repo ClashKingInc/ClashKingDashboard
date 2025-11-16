@@ -60,4 +60,28 @@ export class ServerClient extends BaseApiClient {
     const params = this.buildQueryString({ query });
     return this.request(`/v2/search/${guildId}/banned-players${params}`, { method: 'GET' });
   }
+
+  /**
+   * GET /v2/server/{server_id}/logs
+   */
+  async getLogsConfig(serverId: number): Promise<ApiResponse<any>> {
+    return this.request(`/v2/server/${serverId}/logs`, { method: 'GET' });
+  }
+
+  /**
+   * PUT /v2/server/{server_id}/logs
+   */
+  async saveLogsConfig(serverId: number, logsConfig: any): Promise<ApiResponse<any>> {
+    return this.request(`/v2/server/${serverId}/logs`, {
+      method: 'PUT',
+      body: JSON.stringify(logsConfig),
+    });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/channels
+   */
+  async getChannels(serverId: number): Promise<ApiResponse<any>> {
+    return this.request(`/v2/server/${serverId}/channels`, { method: 'GET' });
+  }
 }
