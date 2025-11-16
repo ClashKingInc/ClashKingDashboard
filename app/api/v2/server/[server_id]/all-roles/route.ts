@@ -21,8 +21,20 @@ export async function GET(
       },
     });
 
-    const data = await response.json();
     console.log('[all-roles] Response status:', response.status);
+    console.log('[all-roles] Response headers:', Object.fromEntries(response.headers));
+
+    const contentType = response.headers.get('content-type');
+    let data;
+
+    if (contentType?.includes('application/json')) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.log('[all-roles] Response text:', text);
+      data = { error: text || 'Invalid response from API' };
+    }
+
     console.log('[all-roles] Response data:', data);
 
     return NextResponse.json(data, { status: response.status });
