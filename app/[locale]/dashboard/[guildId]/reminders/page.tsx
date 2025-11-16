@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Bell,
   Target,
@@ -62,6 +63,8 @@ interface CreateReminderRequest {
   war_types?: string[];
   point_threshold?: number;
   attack_threshold?: number;
+  roster_id?: string;
+  ping_type?: string;
 }
 
 interface Clan {
@@ -168,152 +171,6 @@ export default function RemindersPage() {
       fetchReminders();
     }
   }, [guildId, router, toast]);
-
-  // Add a new reminder (locally, to be saved later)
-  const addReminder = () => {
-    const newReminder: ReminderConfig = {
-      id: `temp-${Date.now()}`, // Temporary ID for new reminders
-      type: "War",
-      channel_id: "",
-      time: "6h",
-      custom_text: "",
-      clan_tag: "",
-      war_types: ["Random", "Friendly", "CWL"],
-      townhall_filter: [],
-      roles: [],
-    };
-    setAllReminders([...allReminders, newReminder]);
-  };
-
-  // Update a reminder
-  const updateReminder = (index: number, field: keyof ReminderConfig, value: any) => {
-    const updatedReminders = [...allReminders];
-    updatedReminders[index] = {
-      ...updatedReminders[index],
-      [field]: value,
-    };
-    setAllReminders(updatedReminders);
-  };
-
-  // Delete a reminder
-  const deleteReminder = async (index: number) => {
-    const reminder = allReminders[index];
-
-    // If reminder has a real ID (not temporary), delete it from the API
-    if (!reminder.id.startsWith('temp-')) {
-      try {
-        setSaving(true);
-        const accessToken = localStorage.getItem("access_token");
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-        const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to delete reminder');
-        }
-
-        toast({
-          title: "Success",
-          description: "Reminder deleted successfully",
-        });
-      } catch (err) {
-        console.error("Error deleting reminder:", err);
-        toast({
-          title: "Error",
-          description: "Failed to delete reminder",
-          variant: "destructive",
-        });
-        setSaving(false);
-        return;
-      } finally {
-        setSaving(false);
-      }
-    }
-
-    // Remove from local state
-    const updatedReminders = allReminders.filter((_, i) => i !== index);
-    setAllReminders(updatedReminders);
-  };
-
-  // Save a single reminder
-  const saveReminder = async (reminder: ReminderConfig) => {
-    const accessToken = localStorage.getItem("access_token");
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-    if (!apiUrl) {
-      throw new Error("API URL is not configured");
-    }
-
-    const isNew = reminder.id.startsWith('temp-');
-
-    if (isNew) {
-      // Create new reminder
-      const createRequest: CreateReminderRequest = {
-        type: reminder.type,
-        clan_tag: reminder.clan_tag,
-        channel_id: reminder.channel_id || "",
-        time: reminder.time,
-        custom_text: reminder.custom_text,
-        townhall_filter: reminder.townhall_filter,
-        roles: reminder.roles,
-        war_types: reminder.war_types,
-        point_threshold: reminder.point_threshold,
-        attack_threshold: reminder.attack_threshold,
-        roster_id: reminder.roster_id,
-        ping_type: reminder.ping_type,
-      };
-
-      const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(createRequest),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create reminder: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } else {
-      // Update existing reminder
-      const updateRequest = {
-        channel_id: reminder.channel_id,
-        time: reminder.time,
-        custom_text: reminder.custom_text,
-        townhall_filter: reminder.townhall_filter,
-        roles: reminder.roles,
-        war_types: reminder.war_types,
-        point_threshold: reminder.point_threshold,
-        attack_threshold: reminder.attack_threshold,
-        ping_type: reminder.ping_type,
-      };
-
-      const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updateRequest),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update reminder: ${response.statusText}`);
-      }
-
-      return await response.json();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guildId]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
@@ -474,6 +331,8 @@ export default function RemindersPage() {
         war_types: reminder.war_types,
         point_threshold: reminder.point_threshold,
         attack_threshold: reminder.attack_threshold,
+        roster_id: reminder.roster_id,
+        ping_type: reminder.ping_type,
       };
 
       const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
@@ -501,6 +360,7 @@ export default function RemindersPage() {
         war_types: reminder.war_types,
         point_threshold: reminder.point_threshold,
         attack_threshold: reminder.attack_threshold,
+        ping_type: reminder.ping_type,
       };
 
       const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {
