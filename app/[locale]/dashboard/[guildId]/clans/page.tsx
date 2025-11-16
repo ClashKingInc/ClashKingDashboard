@@ -624,14 +624,14 @@ export default function ClansPage() {
                   <div className="space-y-2">
                     <Label>Clan Channel</Label>
                     <Select
-                      value={clanSettings.clanChannel?.toString() || ''}
-                      onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value ? parseInt(value) : null})}
+                      value={clanSettings.clanChannel?.toString() || 'none'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' ? null : parseInt(value)})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -679,14 +679,14 @@ export default function ClansPage() {
                   <div className="space-y-2">
                     <Label>War Countdown Channel</Label>
                     <Select
-                      value={clanSettings.warCountdown?.toString() || ''}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value ? parseInt(value) : null})}
+                      value={clanSettings.warCountdown?.toString() || 'none'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' ? null : parseInt(value)})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -699,14 +699,14 @@ export default function ClansPage() {
                   <div className="space-y-2">
                     <Label>War Timer Countdown</Label>
                     <Select
-                      value={clanSettings.warTimerCountdown?.toString() || ''}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value ? parseInt(value) : null})}
+                      value={clanSettings.warTimerCountdown?.toString() || 'none'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' ? null : parseInt(value)})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -719,14 +719,14 @@ export default function ClansPage() {
                   <div className="space-y-2">
                     <Label>Ban Alert Channel</Label>
                     <Select
-                      value={clanSettings.ban_alert_channel?.toString() || ''}
-                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value ? parseInt(value) : null})}
+                      value={clanSettings.ban_alert_channel?.toString() || 'none'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' ? null : parseInt(value)})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
