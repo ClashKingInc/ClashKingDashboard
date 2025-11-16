@@ -358,7 +358,7 @@ export default function ClansPage() {
 
   const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || 0), 0);
   const configuredClans = clans.filter(c =>
-    c.settings.clanChannel || c.settings.generalRole
+    c.settings?.clanChannel || c.settings?.generalRole
   ).length;
 
   return (
@@ -501,7 +501,7 @@ export default function ClansPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {clans.map((clan) => {
-              const isConfigured = !!(clan.settings.clanChannel || clan.settings.generalRole);
+              const isConfigured = !!(clan.settings?.clanChannel || clan.settings?.generalRole);
 
               return (
                 <Card key={clan.tag} className="bg-card border-border hover:border-primary/50 transition-all duration-200">
