@@ -107,7 +107,7 @@ export default function GeneralSettingsPage() {
                 placeholder="[{clan_abbr}] {player_name}"
                 className="bg-secondary border-border"
               />
-              <p className="text-xs text-muted-foreground">
+              <div className="text-xs text-muted-foreground">
                 Available placeholders:{" "}
                 <Badge variant="secondary" className="text-xs bg-secondary/50 text-foreground">
                   {"{player_name}"}
@@ -121,7 +121,7 @@ export default function GeneralSettingsPage() {
                 <Badge variant="secondary" className="text-xs bg-secondary/50 text-foreground">
                   {"{trophies}"}
                 </Badge>
-              </p>
+              </div>
             </div>
 
             <div className="space-y-2">
