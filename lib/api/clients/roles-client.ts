@@ -87,7 +87,7 @@ export class RolesClient extends BaseApiClient {
   /**
    * DELETE /v2/server/{server_id}/roles/{role_type}/{role_id}
    */
-  async deleteRole(serverId: string | number, roleType: RoleType, roleId: number): Promise<ApiResponse<RoleResponse>> {
+  async deleteRole(serverId: string | number, roleType: RoleType, roleId: string | number): Promise<ApiResponse<RoleResponse>> {
     return this.request(`/v2/server/${serverId}/roles/${roleType}/${roleId}`, {
       method: 'DELETE',
     });

@@ -214,7 +214,7 @@ export default function RolesPage() {
               <Label htmlFor="role">Discord Role</Label>
               <Select
                 value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: parseInt(value) })}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
                 <SelectTrigger id="role">
                   <SelectValue placeholder="Select a role" />
@@ -256,7 +256,7 @@ export default function RolesPage() {
               <Label htmlFor="role">Discord Role</Label>
               <Select
                 value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: parseInt(value) })}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
                 <SelectTrigger id="role">
                   <SelectValue placeholder="Select a role" />
@@ -298,7 +298,7 @@ export default function RolesPage() {
               <Label htmlFor="role">Discord Role</Label>
               <Select
                 value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: parseInt(value) })}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
                 <SelectTrigger id="role">
                   <SelectValue placeholder="Select a role" />
@@ -340,7 +340,7 @@ export default function RolesPage() {
               <Label htmlFor="role">Discord Role</Label>
               <Select
                 value={newRole.id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, id: parseInt(value) })}
+                onValueChange={(value) => setNewRole({ ...newRole, id: value })}
               >
                 <SelectTrigger id="role">
                   <SelectValue placeholder="Select a role" />
@@ -375,7 +375,7 @@ export default function RolesPage() {
               <Label htmlFor="role">Discord Role</Label>
               <Select
                 value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: parseInt(value) })}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
                 <SelectTrigger id="role">
                   <SelectValue placeholder="Select a role" />

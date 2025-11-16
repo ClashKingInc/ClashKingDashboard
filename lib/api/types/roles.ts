@@ -21,48 +21,48 @@ export interface DiscordRole {
 }
 
 export interface TownhallRole {
-  role_id: number;
+  role_id: string | number;
   th: number;
   toggle?: boolean;
   server?: number;
 }
 
 export interface LeagueRole {
-  role_id: number;
+  role_id: string | number;
   league: string;
   toggle?: boolean;
   server?: number;
 }
 
 export interface BuilderHallRole {
-  role_id: number;
+  role_id: string | number;
   bh: number;
   toggle?: boolean;
   server?: number;
 }
 
 export interface BuilderLeagueRole {
-  role_id: number;
+  role_id: string | number;
   league: string;
   toggle?: boolean;
   server?: number;
 }
 
 export interface AchievementRole {
-  role_id: number;
+  role_id: string | number;
   achievement: string;
   toggle?: boolean;
   server?: number;
 }
 
 export interface StatusRole {
-  id: number;
+  id: string | number;
   months: number;
   server?: number;
 }
 
 export interface FamilyPositionRole {
-  role_id: number;
+  role_id: string | number;
   type: "family_elder_roles" | "family_co-leader_roles" | "family_leader_roles";
   toggle?: boolean;
   server?: number;
