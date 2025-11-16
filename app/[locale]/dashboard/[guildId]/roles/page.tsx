@@ -134,7 +134,39 @@ export default function RolesPage() {
       ]);
 
       if (rolesRes.data) {
-        setAllRoles(rolesRes.data.roles);
+        // Normalize role data from API
+        const normalizedRoles = {
+          townhall: rolesRes.data.roles.townhall?.map((r: any) => ({
+            ...r,
+            role_id: r.role || r.role_id,
+            th: typeof r.th === 'string' ? parseInt(r.th.replace(/^th/i, '')) : r.th,
+          })) || [],
+          league: rolesRes.data.roles.league?.map((r: any) => ({
+            ...r,
+            role_id: r.role || r.role_id,
+          })) || [],
+          builderhall: rolesRes.data.roles.builderhall?.map((r: any) => ({
+            ...r,
+            role_id: r.role || r.role_id,
+          })) || [],
+          builder_league: rolesRes.data.roles.builder_league?.map((r: any) => ({
+            ...r,
+            role_id: r.role || r.role_id,
+          })) || [],
+          achievement: rolesRes.data.roles.achievement?.map((r: any) => ({
+            ...r,
+            role_id: r.role || r.role_id,
+          })) || [],
+          status: rolesRes.data.roles.status?.map((r: any) => ({
+            ...r,
+            id: r.role || r.id,
+          })) || [],
+          family_position: rolesRes.data.roles.family_position?.map((r: any) => ({
+            ...r,
+            role_id: r.role || r.role_id,
+          })) || [],
+        };
+        setAllRoles(normalizedRoles);
       }
 
       if (settingsRes.data) {
