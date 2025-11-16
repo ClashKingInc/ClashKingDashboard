@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -8,39 +9,116 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Save, RotateCcw } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Save, RotateCcw, AlertCircle, Loader2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { apiClient } from "@/lib/api/client";
 
 export default function GeneralSettingsPage() {
+  const params = useParams();
+  const guildId = parseInt(params.guildId as string);
+
   const [settings, setSettings] = useState({
-    changeNicknames: true,
-    familyNicknameConvention: "[{clan_abbr}] {player_name}",
-    nonFamilyNicknameConvention: "{player_name}",
-    flairNonFamily: false,
-    embedColor: "#D90709",
-    leadershipEval: true,
-    apiToken: true,
+    change_nickname: true,
+    nickname_rule: "[{clan_abbr}] {player_name}",
+    non_family_nickname_rule: "{player_name}",
+    flair_non_family: false,
+    embed_color: 14227209, // #D90709 as integer
+    leadership_eval: true,
+    api_token: true,
+    banlist: undefined as number | undefined,
+    strike_log: undefined as number | undefined,
+    full_whitelist_role: undefined as number | undefined,
   });
 
+  const [channels, setChannels] = useState<Array<{ id: string; name: string }>>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  // Load settings on mount
+  useEffect(() => {
+    loadSettings();
+    loadChannels();
+  }, [guildId]);
+
+  const loadSettings = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await apiClient.servers.getSettings(guildId);
+
+      if (response.data) {
+        setSettings({
+          change_nickname: response.data.change_nickname ?? true,
+          nickname_rule: response.data.nickname_rule ?? "[{clan_abbr}] {player_name}",
+          non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
+          flair_non_family: response.data.flair_non_family ?? false,
+          embed_color: response.data.embed_color ?? 14227209,
+          leadership_eval: response.data.leadership_eval ?? true,
+          api_token: response.data.api_token ?? true,
+          banlist: response.data.banlist,
+          strike_log: response.data.strike_log,
+          full_whitelist_role: response.data.full_whitelist_role,
+        });
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to load settings");
+      console.error("Failed to load settings:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadChannels = async () => {
+    try {
+      const response = await apiClient.servers.getChannels(guildId);
+      if (response.data) {
+        setChannels(response.data);
+      }
+    } catch (err) {
+      console.error("Failed to load channels:", err);
+    }
+  };
 
   const handleSave = async () => {
-    setIsSaving(true);
-    // TODO: Implement API call to save settings
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSaving(false);
+    try {
+      setIsSaving(true);
+      setError(null);
+      setSuccess(false);
+
+      await apiClient.servers.updateSettings(guildId, settings);
+
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: any) {
+      setError(err.message || "Failed to save settings");
+      console.error("Failed to save settings:", err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleReset = () => {
-    setSettings({
-      changeNicknames: true,
-      familyNicknameConvention: "[{clan_abbr}] {player_name}",
-      nonFamilyNicknameConvention: "{player_name}",
-      flairNonFamily: false,
-      embedColor: "#D90709",
-      leadershipEval: true,
-      apiToken: true,
-    });
+    loadSettings();
   };
+
+  const hexToInt = (hex: string): number => {
+    return parseInt(hex.replace("#", ""), 16);
+  };
+
+  const intToHex = (int: number): string => {
+    return "#" + int.toString(16).padStart(6, "0").toUpperCase();
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -63,11 +141,36 @@ export default function GeneralSettingsPage() {
               disabled={isSaving}
               className="bg-primary hover:bg-primary/90"
             >
-              <Save className="mr-2 h-4 w-4" />
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Changes
+                </>
+              )}
             </Button>
           </div>
         </div>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* Success Alert */}
+        {success && (
+          <Alert className="border-green-500/30 bg-green-500/5">
+            <AlertCircle className="h-4 w-4 text-green-500" />
+            <AlertDescription className="text-green-600">Settings saved successfully!</AlertDescription>
+          </Alert>
+        )}
 
         {/* Nickname Management */}
         <Card className="bg-card border-border">
@@ -87,9 +190,9 @@ export default function GeneralSettingsPage() {
               </div>
               <Switch
                 id="change-nicknames"
-                checked={settings.changeNicknames}
+                checked={settings.change_nickname}
                 onCheckedChange={(checked) =>
-                  setSettings({ ...settings, changeNicknames: checked })
+                  setSettings({ ...settings, change_nickname: checked })
                 }
               />
             </div>
@@ -100,9 +203,9 @@ export default function GeneralSettingsPage() {
               <Label htmlFor="family-convention">Family Nickname Convention</Label>
               <Input
                 id="family-convention"
-                value={settings.familyNicknameConvention}
+                value={settings.nickname_rule}
                 onChange={(e) =>
-                  setSettings({ ...settings, familyNicknameConvention: e.target.value })
+                  setSettings({ ...settings, nickname_rule: e.target.value })
                 }
                 placeholder="[{clan_abbr}] {player_name}"
                 className="bg-secondary border-border"
@@ -128,9 +231,9 @@ export default function GeneralSettingsPage() {
               <Label htmlFor="non-family-convention">Non-Family Nickname Convention</Label>
               <Input
                 id="non-family-convention"
-                value={settings.nonFamilyNicknameConvention}
+                value={settings.non_family_nickname_rule}
                 onChange={(e) =>
-                  setSettings({ ...settings, nonFamilyNicknameConvention: e.target.value })
+                  setSettings({ ...settings, non_family_nickname_rule: e.target.value })
                 }
                 placeholder="{player_name}"
                 className="bg-secondary border-border"
@@ -149,11 +252,72 @@ export default function GeneralSettingsPage() {
               </div>
               <Switch
                 id="flair-non-family"
-                checked={settings.flairNonFamily}
+                checked={settings.flair_non_family}
                 onCheckedChange={(checked) =>
-                  setSettings({ ...settings, flairNonFamily: checked })
+                  setSettings({ ...settings, flair_non_family: checked })
                 }
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Moderation Channels */}
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <CardTitle className="text-foreground">Moderation Channels</CardTitle>
+            <CardDescription>
+              Configure channels for moderation logs and notifications
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="ban-log">Ban Log Channel</Label>
+              <Select
+                value={settings.banlist?.toString() || "none"}
+                onValueChange={(value) =>
+                  setSettings({ ...settings, banlist: value === "none" ? undefined : parseInt(value) })
+                }
+              >
+                <SelectTrigger id="ban-log" className="bg-secondary border-border">
+                  <SelectValue placeholder="Select a channel" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No Channel</SelectItem>
+                  {channels.map((channel) => (
+                    <SelectItem key={channel.id} value={channel.id}>
+                      #{channel.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Channel where ban actions will be logged
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="strike-log">Strike Log Channel</Label>
+              <Select
+                value={settings.strike_log?.toString() || "none"}
+                onValueChange={(value) =>
+                  setSettings({ ...settings, strike_log: value === "none" ? undefined : parseInt(value) })
+                }
+              >
+                <SelectTrigger id="strike-log" className="bg-secondary border-border">
+                  <SelectValue placeholder="Select a channel" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No Channel</SelectItem>
+                  {channels.map((channel) => (
+                    <SelectItem key={channel.id} value={channel.id}>
+                      #{channel.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Channel where strike/warning actions will be logged
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -173,13 +337,13 @@ export default function GeneralSettingsPage() {
                 <Input
                   id="embed-color"
                   type="color"
-                  value={settings.embedColor}
-                  onChange={(e) => setSettings({ ...settings, embedColor: e.target.value })}
+                  value={intToHex(settings.embed_color)}
+                  onChange={(e) => setSettings({ ...settings, embed_color: hexToInt(e.target.value) })}
                   className="w-20 h-10 cursor-pointer"
                 />
                 <Input
-                  value={settings.embedColor}
-                  onChange={(e) => setSettings({ ...settings, embedColor: e.target.value })}
+                  value={intToHex(settings.embed_color)}
+                  onChange={(e) => setSettings({ ...settings, embed_color: hexToInt(e.target.value) })}
                   placeholder="#D90709"
                   className="flex-1 bg-secondary border-border"
                 />
@@ -209,9 +373,9 @@ export default function GeneralSettingsPage() {
               </div>
               <Switch
                 id="leadership-eval"
-                checked={settings.leadershipEval}
+                checked={settings.leadership_eval}
                 onCheckedChange={(checked) =>
-                  setSettings({ ...settings, leadershipEval: checked })
+                  setSettings({ ...settings, leadership_eval: checked })
                 }
               />
             </div>
@@ -225,11 +389,28 @@ export default function GeneralSettingsPage() {
               </div>
               <Switch
                 id="api-token"
-                checked={settings.apiToken}
+                checked={settings.api_token}
                 onCheckedChange={(checked) =>
-                  setSettings({ ...settings, apiToken: checked })
+                  setSettings({ ...settings, api_token: checked })
                 }
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="whitelist-role">Full Whitelist Role</Label>
+              <Input
+                id="whitelist-role"
+                type="number"
+                value={settings.full_whitelist_role || ""}
+                onChange={(e) =>
+                  setSettings({ ...settings, full_whitelist_role: e.target.value ? parseInt(e.target.value) : undefined })
+                }
+                placeholder="Role ID (e.g., 123456789)"
+                className="bg-secondary border-border"
+              />
+              <p className="text-xs text-muted-foreground">
+                Role ID that has full access to all bot commands
+              </p>
             </div>
           </CardContent>
         </Card>

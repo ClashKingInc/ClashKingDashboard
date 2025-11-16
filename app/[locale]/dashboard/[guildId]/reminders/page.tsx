@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,8 @@ interface ReminderConfig {
   war_types?: string[];
   point_threshold?: number;
   attack_threshold?: number;
+  roster_id?: string;
+  ping_type?: string;
 }
 
 interface ServerRemindersResponse {
@@ -61,6 +63,8 @@ interface CreateReminderRequest {
   war_types?: string[];
   point_threshold?: number;
   attack_threshold?: number;
+  roster_id?: string;
+  ping_type?: string;
 }
 
 interface Clan {
@@ -97,7 +101,7 @@ export default function RemindersPage() {
 
   // Fetch clans and reminders from API
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchReminders = async () => {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
@@ -164,10 +168,9 @@ export default function RemindersPage() {
     };
 
     if (guildId) {
-      fetchData();
+      fetchReminders();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [guildId]);
+  }, [guildId, router, toast]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
@@ -328,6 +331,8 @@ export default function RemindersPage() {
         war_types: reminder.war_types,
         point_threshold: reminder.point_threshold,
         attack_threshold: reminder.attack_threshold,
+        roster_id: reminder.roster_id,
+        ping_type: reminder.ping_type,
       };
 
       const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
@@ -355,6 +360,7 @@ export default function RemindersPage() {
         war_types: reminder.war_types,
         point_threshold: reminder.point_threshold,
         attack_threshold: reminder.attack_threshold,
+        ping_type: reminder.ping_type,
       };
 
       const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {

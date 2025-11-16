@@ -29,60 +29,70 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
   const params = useParams();
   const locale = params.locale || "en";
 
-  const navigation = [
+  const navigationSections = [
     {
-      name: "Overview",
-      href: `/${locale}/dashboard/${guildId}`,
-      icon: Home,
-      description: "Dashboard home",
+      title: "Server Settings",
+      items: [
+        {
+          name: "Overview",
+          href: `/${locale}/dashboard/${guildId}`,
+          icon: Home,
+          description: "Dashboard home",
+        },
+        {
+          name: "General Settings",
+          href: `/${locale}/dashboard/${guildId}/general`,
+          icon: Settings,
+          description: "Server configuration",
+        },
+        {
+          name: "Clans",
+          href: `/${locale}/dashboard/${guildId}/clans`,
+          icon: Users,
+          description: "Manage your clans",
+        },
+        {
+          name: "Logs",
+          href: `/${locale}/dashboard/${guildId}/logs`,
+          icon: ScrollText,
+          description: "Webhook configuration",
+        },
+        {
+          name: "Roles",
+          href: `/${locale}/dashboard/${guildId}/roles`,
+          icon: ShieldCheck,
+          description: "Role automation",
+        },
+        {
+          name: "Reminders",
+          href: `/${locale}/dashboard/${guildId}/reminders`,
+          icon: Bell,
+          description: "All reminder types",
+        },
+        {
+          name: "Rosters",
+          href: `/${locale}/dashboard/${guildId}/rosters`,
+          icon: ClipboardList,
+          description: "Roster management",
+        },
+        {
+          name: "Bans",
+          href: `/${locale}/dashboard/${guildId}/bans`,
+          icon: Ban,
+          description: "Moderation tools",
+        },
+      ],
     },
     {
-      name: "General Settings",
-      href: `/${locale}/dashboard/${guildId}/general`,
-      icon: Settings,
-      description: "Server configuration",
-    },
-    {
-      name: "Clans",
-      href: `/${locale}/dashboard/${guildId}/clans`,
-      icon: Users,
-      description: "Manage your clans",
-    },
-    {
-      name: "Wars",
-      href: `/${locale}/dashboard/${guildId}/wars`,
-      icon: Swords,
-      description: "War stats & reminders",
-    },
-    {
-      name: "Logs",
-      href: `/${locale}/dashboard/${guildId}/logs`,
-      icon: ScrollText,
-      description: "Webhook configuration",
-    },
-    {
-      name: "Roles",
-      href: `/${locale}/dashboard/${guildId}/roles`,
-      icon: ShieldCheck,
-      description: "Role automation",
-    },
-    {
-      name: "Reminders",
-      href: `/${locale}/dashboard/${guildId}/reminders`,
-      icon: Bell,
-      description: "All reminder types",
-    },
-    {
-      name: "Rosters",
-      href: `/${locale}/dashboard/${guildId}/rosters`,
-      icon: ClipboardList,
-      description: "Roster management",
-    },
-    {
-      name: "Bans",
-      href: `/${locale}/dashboard/${guildId}/bans`,
-      icon: Ban,
-      description: "Moderation tools",
+      title: "Stats",
+      items: [
+        {
+          name: "Wars",
+          href: `/${locale}/dashboard/${guildId}/wars`,
+          icon: Swords,
+          description: "War statistics",
+        },
+      ],
     },
   ];
 
@@ -115,37 +125,50 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 group relative overflow-hidden",
-                isActive
-                  ? "bg-primary/10 text-primary shadow-sm"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              )}
-            >
-              {/* Active indicator */}
-              {isActive && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 rounded-r bg-primary" />
-              )}
+      <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+        {navigationSections.map((section, sectionIndex) => (
+          <div key={section.title}>
+            {/* Section Title */}
+            <div className="px-3 mb-2">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {section.title}
+              </h3>
+            </div>
+            {/* Section Items */}
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                      isActive
+                        ? "bg-primary/10 text-primary shadow-sm"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                    )}
+                  >
+                    {/* Active indicator */}
+                    {isActive && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 rounded-r bg-primary" />
+                    )}
 
-              <item.icon
-                className={cn(
-                  "h-5 w-5 transition-transform group-hover:scale-110",
-                  isActive ? "ml-1" : ""
-                )}
-              />
-              <div className="flex-1 min-w-0">
-                <div className="truncate">{item.name}</div>
-              </div>
-            </Link>
-          );
-        })}
+                    <item.icon
+                      className={cn(
+                        "h-5 w-5 transition-transform group-hover:scale-110",
+                        isActive ? "ml-1" : ""
+                      )}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="truncate">{item.name}</div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Footer - ClashKing Branding & Theme Switcher */}

@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ClanSettings, BanRequest } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, DiscordChannel, DiscordRole } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
   /**
@@ -13,6 +13,16 @@ export class ServerClient extends BaseApiClient {
   async getSettings(serverId: number, clanSettings = false): Promise<ApiResponse<ServerSettings>> {
     const query = this.buildQueryString({ clan_settings: clanSettings });
     return this.request(`/v2/server/${serverId}/settings${query}`, { method: 'GET' });
+  }
+
+  /**
+   * PATCH /v2/server/{server_id}/settings
+   */
+  async updateSettings(serverId: number, settings: ServerSettingsUpdate): Promise<ApiResponse<ServerSettingsResponse>> {
+    return this.request(`/v2/server/${serverId}/settings`, {
+      method: 'PATCH',
+      body: JSON.stringify(settings),
+    });
   }
 
   /**
