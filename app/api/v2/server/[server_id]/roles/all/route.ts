@@ -10,6 +10,9 @@ export async function GET(
     const { server_id } = await params;
     const token = request.headers.get('authorization');
 
+    console.log('[roles/all] server_id:', server_id, 'token present:', !!token);
+    console.log('[roles/all] Making request to:', `${API_BASE_URL}/v2/server/${server_id}/roles/all`);
+
     const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/roles/all`, {
       method: 'GET',
       headers: {
@@ -19,6 +22,9 @@ export async function GET(
     });
 
     const data = await response.json();
+    console.log('[roles/all] Response status:', response.status);
+    console.log('[roles/all] Response data:', data);
+
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('API proxy error (GET /roles/all):', error);
