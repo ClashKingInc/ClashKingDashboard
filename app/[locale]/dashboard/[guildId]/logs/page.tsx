@@ -48,6 +48,7 @@ interface Thread {
 
 interface ClanLogTypeConfig {
   webhook: number | null;
+  channel: number | null;
   thread: number | null;
 }
 
@@ -217,7 +218,7 @@ export default function LogsPage() {
         log_types: logKeys
       };
 
-      const response = await fetch(`/api/v2/server/${guildId}/clan/${selectedClan}/logs`, {
+      const response = await fetch(`/api/v2/server/${guildId}/clan/${encodeURIComponent(selectedClan)}/logs`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -257,8 +258,14 @@ export default function LogsPage() {
     const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
     if (!firstLogConfig) return "";
 
+    // Prioritize thread over channel
     if (firstLogConfig.thread) {
-      return threads.find(t => parseInt(t.id) === firstLogConfig.thread)?.id || "";
+      return firstLogConfig.thread.toString();
+    }
+
+    // Return channel if available
+    if (firstLogConfig.channel) {
+      return firstLogConfig.channel.toString();
     }
 
     return "";
