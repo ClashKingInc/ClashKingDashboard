@@ -63,7 +63,7 @@ export default function LinksManagementPage() {
       try {
         const response = await fetch(`/api/v2/server/${guildId}/links?limit=1000`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }
         });
 
@@ -118,7 +118,7 @@ export default function LinksManagementPage() {
         {
           method: 'DELETE',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }
         }
       );
@@ -130,7 +130,7 @@ export default function LinksManagementPage() {
       // Refresh data
       const refreshResponse = await fetch(`/api/v2/server/${guildId}/links?limit=1000`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 

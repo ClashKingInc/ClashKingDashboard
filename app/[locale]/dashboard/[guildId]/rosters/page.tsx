@@ -76,7 +76,7 @@ export default function RostersPage() {
       try {
         const response = await fetch(`/api/v2/roster/${guildId}/list`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }
         });
 
@@ -112,7 +112,7 @@ export default function RostersPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
         body: JSON.stringify(rosterData)
       });
@@ -124,7 +124,7 @@ export default function RostersPage() {
       // Refresh rosters list
       const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 
@@ -151,7 +151,7 @@ export default function RostersPage() {
       const response = await fetch(`/api/v2/roster/${rosterId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 
@@ -162,7 +162,7 @@ export default function RostersPage() {
       // Refresh rosters list
       const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 
@@ -188,7 +188,7 @@ export default function RostersPage() {
     try {
       const response = await fetch(`/api/v2/roster/${roster._id}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 

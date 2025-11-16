@@ -118,7 +118,7 @@ export default function AutoBoardsPage() {
       try {
         const response = await fetch(`/api/v2/server/${guildId}/autoboards`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }
         });
 
@@ -177,7 +177,7 @@ export default function AutoBoardsPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
         body: JSON.stringify(autoboardData)
       });
@@ -190,7 +190,7 @@ export default function AutoBoardsPage() {
       // Refresh autoboards list
       const refreshResponse = await fetch(`/api/v2/server/${guildId}/autoboards`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 
@@ -217,7 +217,7 @@ export default function AutoBoardsPage() {
       const response = await fetch(`/api/v2/server/${guildId}/autoboards/${autoboardId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 
@@ -228,7 +228,7 @@ export default function AutoBoardsPage() {
       // Refresh autoboards list
       const refreshResponse = await fetch(`/api/v2/server/${guildId}/autoboards`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
 

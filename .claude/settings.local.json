@@ -23,7 +23,8 @@
       "Bash(echo:*)",
       "Bash(printenv:*)",
       "Bash(git checkout:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
