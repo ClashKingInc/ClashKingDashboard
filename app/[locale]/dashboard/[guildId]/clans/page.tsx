@@ -267,7 +267,7 @@ export default function ClansPage() {
   // Open settings dialog
   const handleOpenSettings = async (clan: Clan) => {
     setSelectedClan(clan);
-    setClanSettings(clan.settings);
+    setClanSettings(clan.settings || {});
     setIsSettingsDialogOpen(true);
   };
 
@@ -607,7 +607,7 @@ export default function ClansPage() {
                     <Label>Member Role</Label>
                     <Input
                       placeholder="Role ID"
-                      value={clanSettings.generalRole || ''}
+                      value={clanSettings?.generalRole || ''}
                       onChange={(e) => setClanSettings({...clanSettings, generalRole: e.target.value ? parseInt(e.target.value) : null})}
                     />
                   </div>
@@ -616,7 +616,7 @@ export default function ClansPage() {
                     <Label>Leader Role</Label>
                     <Input
                       placeholder="Role ID"
-                      value={clanSettings.leaderRole || ''}
+                      value={clanSettings?.leaderRole || ''}
                       onChange={(e) => setClanSettings({...clanSettings, leaderRole: e.target.value ? parseInt(e.target.value) : null})}
                     />
                   </div>
@@ -645,7 +645,7 @@ export default function ClansPage() {
                     <Label>Clan Abbreviation</Label>
                     <Input
                       placeholder="e.g., CK"
-                      value={clanSettings.abbreviation || ''}
+                      value={clanSettings?.abbreviation || ''}
                       onChange={(e) => setClanSettings({...clanSettings, abbreviation: e.target.value})}
                     />
                   </div>
@@ -654,7 +654,7 @@ export default function ClansPage() {
                     <Label>Greeting Message</Label>
                     <Input
                       placeholder="Welcome {player} to {clan}!"
-                      value={clanSettings.greeting || ''}
+                      value={clanSettings?.greeting || ''}
                       onChange={(e) => setClanSettings({...clanSettings, greeting: e.target.value})}
                     />
                   </div>
@@ -667,7 +667,7 @@ export default function ClansPage() {
                       </p>
                     </div>
                     <Switch
-                      checked={clanSettings.leadership_eval || false}
+                      checked={clanSettings?.leadership_eval || false}
                       onCheckedChange={(checked) => setClanSettings({...clanSettings, leadership_eval: checked})}
                     />
                   </div>
@@ -744,7 +744,7 @@ export default function ClansPage() {
                     <Label>Category</Label>
                     <Input
                       placeholder="Category name"
-                      value={clanSettings.category || ''}
+                      value={clanSettings?.category || ''}
                       onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
                     />
                   </div>
@@ -752,7 +752,7 @@ export default function ClansPage() {
                   <div className="space-y-2">
                     <Label>Auto Greet Option</Label>
                     <Select
-                      value={clanSettings.auto_greet_option || 'Never'}
+                      value={clanSettings?.auto_greet_option || 'Never'}
                       onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
                     >
                       <SelectTrigger>
