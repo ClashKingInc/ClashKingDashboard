@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -21,34 +20,58 @@ import {
   Trash2,
   Save,
   AlertCircle,
-  Loader2
+  Loader2,
+  Castle,
+  UserX
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // API types based on ClashKingAPI reminders endpoints
-interface Reminder {
-  id?: string;
-  guild_id: string;
-  reminder_type: "war" | "cwl" | "raid" | "games" | "custom";
-  enabled: boolean;
-  time_before_hours: number;
+interface ReminderConfig {
+  id: string;
+  type: "War" | "Clan Capital" | "Clan Games" | "Inactivity" | "roster";
+  clan_tag?: string;
   channel_id?: string;
-  role_id?: string;
-  message?: string;
-  created_at?: string;
-  updated_at?: string;
+  time: string;
+  custom_text?: string;
+  townhall_filter?: number[];
+  roles?: string[];
+  war_types?: string[];
+  point_threshold?: number;
+  attack_threshold?: number;
+  roster_id?: string;
+  ping_type?: string;
 }
 
-interface RemindersResponse {
-  reminders: Reminder[];
+interface ServerRemindersResponse {
+  war_reminders: ReminderConfig[];
+  capital_reminders: ReminderConfig[];
+  clan_games_reminders: ReminderConfig[];
+  inactivity_reminders: ReminderConfig[];
+  roster_reminders: ReminderConfig[];
+}
+
+interface CreateReminderRequest {
+  type: string;
+  clan_tag?: string;
+  channel_id: string;
+  time: string;
+  custom_text?: string;
+  townhall_filter?: number[];
+  roles?: string[];
+  war_types?: string[];
+  point_threshold?: number;
+  attack_threshold?: number;
+  roster_id?: string;
+  ping_type?: string;
 }
 
 const reminderTypes = [
-  { value: "war", label: "Regular War", icon: Target, color: "text-red-500" },
-  { value: "cwl", label: "Clan War League", icon: Trophy, color: "text-yellow-500" },
-  { value: "raid", label: "Raid Weekend", icon: Users, color: "text-blue-500" },
-  { value: "games", label: "Clan Games", icon: Calendar, color: "text-green-500" },
-  { value: "custom", label: "Custom Reminder", icon: Bell, color: "text-purple-500" },
+  { value: "War", label: "War Reminders", icon: Target, color: "text-red-500" },
+  { value: "Clan Capital", label: "Clan Capital", icon: Castle, color: "text-purple-500" },
+  { value: "Clan Games", label: "Clan Games", icon: Calendar, color: "text-green-500" },
+  { value: "Inactivity", label: "Inactivity", icon: UserX, color: "text-orange-500" },
+  { value: "roster", label: "Roster", icon: Users, color: "text-blue-500" },
 ];
 
 export default function RemindersPage() {
@@ -57,7 +80,7 @@ export default function RemindersPage() {
   const { toast } = useToast();
   const guildId = params.guildId as string;
 
-  const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [allReminders, setAllReminders] = useState<ReminderConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +100,7 @@ export default function RemindersPage() {
           throw new Error("API URL is not configured");
         }
 
-        const response = await fetch(`${apiUrl}/v2/reminders/${guildId}`, {
+        const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
@@ -94,8 +117,18 @@ export default function RemindersPage() {
           throw new Error(`Failed to fetch reminders: ${response.statusText}`);
         }
 
-        const data: RemindersResponse = await response.json();
-        setReminders(data.reminders || []);
+        const data: ServerRemindersResponse = await response.json();
+
+        // Flatten all reminders into a single array
+        const allRemindersArray = [
+          ...data.war_reminders,
+          ...data.capital_reminders,
+          ...data.clan_games_reminders,
+          ...data.inactivity_reminders,
+          ...data.roster_reminders,
+        ];
+
+        setAllReminders(allRemindersArray);
       } catch (err) {
         console.error("Error fetching reminders:", err);
         setError(err instanceof Error ? err.message : "Failed to load reminders");
@@ -114,42 +147,44 @@ export default function RemindersPage() {
     }
   }, [guildId, router, toast]);
 
-  // Add a new reminder
+  // Add a new reminder (locally, to be saved later)
   const addReminder = () => {
-    const newReminder: Reminder = {
-      guild_id: guildId,
-      reminder_type: "war",
-      enabled: true,
-      time_before_hours: 6,
+    const newReminder: ReminderConfig = {
+      id: `temp-${Date.now()}`, // Temporary ID for new reminders
+      type: "War",
       channel_id: "",
-      role_id: "",
-      message: "",
+      time: "6h",
+      custom_text: "",
+      clan_tag: "",
+      war_types: ["Random", "Friendly", "CWL"],
+      townhall_filter: [],
+      roles: [],
     };
-    setReminders([...reminders, newReminder]);
+    setAllReminders([...allReminders, newReminder]);
   };
 
   // Update a reminder
-  const updateReminder = (index: number, field: keyof Reminder, value: any) => {
-    const updatedReminders = [...reminders];
+  const updateReminder = (index: number, field: keyof ReminderConfig, value: any) => {
+    const updatedReminders = [...allReminders];
     updatedReminders[index] = {
       ...updatedReminders[index],
       [field]: value,
     };
-    setReminders(updatedReminders);
+    setAllReminders(updatedReminders);
   };
 
   // Delete a reminder
   const deleteReminder = async (index: number) => {
-    const reminder = reminders[index];
+    const reminder = allReminders[index];
 
-    // If reminder has an ID, delete it from the API
-    if (reminder.id) {
+    // If reminder has a real ID (not temporary), delete it from the API
+    if (!reminder.id.startsWith('temp-')) {
       try {
         setSaving(true);
         const accessToken = localStorage.getItem("access_token");
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-        const response = await fetch(`${apiUrl}/v2/reminders/${reminder.id}`, {
+        const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -180,49 +215,102 @@ export default function RemindersPage() {
     }
 
     // Remove from local state
-    const updatedReminders = reminders.filter((_, i) => i !== index);
-    setReminders(updatedReminders);
+    const updatedReminders = allReminders.filter((_, i) => i !== index);
+    setAllReminders(updatedReminders);
+  };
+
+  // Save a single reminder
+  const saveReminder = async (reminder: ReminderConfig) => {
+    const accessToken = localStorage.getItem("access_token");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    if (!apiUrl) {
+      throw new Error("API URL is not configured");
+    }
+
+    const isNew = reminder.id.startsWith('temp-');
+
+    if (isNew) {
+      // Create new reminder
+      const createRequest: CreateReminderRequest = {
+        type: reminder.type,
+        clan_tag: reminder.clan_tag,
+        channel_id: reminder.channel_id || "",
+        time: reminder.time,
+        custom_text: reminder.custom_text,
+        townhall_filter: reminder.townhall_filter,
+        roles: reminder.roles,
+        war_types: reminder.war_types,
+        point_threshold: reminder.point_threshold,
+        attack_threshold: reminder.attack_threshold,
+        roster_id: reminder.roster_id,
+        ping_type: reminder.ping_type,
+      };
+
+      const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createRequest),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create reminder: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } else {
+      // Update existing reminder
+      const updateRequest = {
+        channel_id: reminder.channel_id,
+        time: reminder.time,
+        custom_text: reminder.custom_text,
+        townhall_filter: reminder.townhall_filter,
+        roles: reminder.roles,
+        war_types: reminder.war_types,
+        point_threshold: reminder.point_threshold,
+        attack_threshold: reminder.attack_threshold,
+        ping_type: reminder.ping_type,
+      };
+
+      const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateRequest),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update reminder: ${response.statusText}`);
+      }
+
+      return await response.json();
+    }
   };
 
   // Save all reminders
-  const saveReminders = async () => {
+  const saveAllReminders = async () => {
     try {
       setSaving(true);
-      const accessToken = localStorage.getItem("access_token");
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-      if (!apiUrl) {
-        throw new Error("API URL is not configured");
-      }
-
-      // Save or update each reminder
-      for (const reminder of reminders) {
-        const method = reminder.id ? 'PUT' : 'POST';
-        const url = reminder.id
-          ? `${apiUrl}/v2/reminders/${reminder.id}`
-          : `${apiUrl}/v2/reminders`;
-
-        const response = await fetch(url, {
-          method,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(reminder),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to save reminder: ${response.statusText}`);
-        }
+      // Save each reminder
+      for (const reminder of allReminders) {
+        await saveReminder(reminder);
       }
 
       toast({
         title: "Success",
-        description: "Reminders saved successfully",
+        description: "All reminders saved successfully",
       });
 
       // Refresh reminders from API
-      const response = await fetch(`${apiUrl}/v2/reminders/${guildId}`, {
+      const accessToken = localStorage.getItem("access_token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
@@ -230,8 +318,15 @@ export default function RemindersPage() {
       });
 
       if (response.ok) {
-        const data: RemindersResponse = await response.json();
-        setReminders(data.reminders || []);
+        const data: ServerRemindersResponse = await response.json();
+        const allRemindersArray = [
+          ...data.war_reminders,
+          ...data.capital_reminders,
+          ...data.clan_games_reminders,
+          ...data.inactivity_reminders,
+          ...data.roster_reminders,
+        ];
+        setAllReminders(allRemindersArray);
       }
     } catch (err) {
       console.error("Error saving reminders:", err);
@@ -293,7 +388,7 @@ export default function RemindersPage() {
               <div>
                 <h1 className="text-3xl font-bold text-foreground">Reminders</h1>
                 <p className="text-muted-foreground mt-1">
-                  Configure automatic reminders for wars, raids, and events
+                  Configure automatic reminders for wars, raids, clan games, and more
                 </p>
               </div>
             </div>
@@ -308,7 +403,7 @@ export default function RemindersPage() {
               Add Reminder
             </Button>
             <Button
-              onClick={saveReminders}
+              onClick={saveAllReminders}
               disabled={saving}
               className="bg-primary hover:bg-primary/90 gap-2"
             >
@@ -334,20 +429,23 @@ export default function RemindersPage() {
           </CardHeader>
           <CardContent className="text-sm text-blue-300 space-y-1">
             <p>
-              <strong>Automatic Notifications:</strong> Set up reminders to ping roles before important events
+              <strong>War Reminders:</strong> Get notified before war attacks are due
             </p>
             <p>
-              <strong>Flexible Timing:</strong> Choose how many hours before an event the reminder should be sent
+              <strong>Clan Capital:</strong> Reminders for raid weekend attacks
             </p>
             <p>
-              <strong>Custom Messages:</strong> Personalize reminder messages for your server
+              <strong>Clan Games:</strong> Track member progress and send reminders
+            </p>
+            <p>
+              <strong>Inactivity:</strong> Monitor and notify about inactive members
             </p>
           </CardContent>
         </Card>
 
         {/* Reminders List */}
         <div className="space-y-4">
-          {reminders.length === 0 ? (
+          {allReminders.length === 0 ? (
             <Card className="bg-card border-border">
               <CardContent className="py-12 text-center">
                 <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -362,12 +460,12 @@ export default function RemindersPage() {
               </CardContent>
             </Card>
           ) : (
-            reminders.map((reminder, index) => {
-              const typeInfo = reminderTypes.find(t => t.value === reminder.reminder_type);
+            allReminders.map((reminder, index) => {
+              const typeInfo = reminderTypes.find(t => t.value === reminder.type);
               const TypeIcon = typeInfo?.icon || Bell;
 
               return (
-                <Card key={index} className="bg-card border-border">
+                <Card key={reminder.id} className="bg-card border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -376,35 +474,23 @@ export default function RemindersPage() {
                         </div>
                         <div>
                           <CardTitle className="text-lg">
-                            {typeInfo?.label || reminder.reminder_type}
+                            {typeInfo?.label || reminder.type}
                           </CardTitle>
                           <CardDescription>
-                            {reminder.enabled ? (
-                              <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30">
-                                Active
-                              </Badge>
-                            ) : (
-                              <Badge variant="secondary" className="bg-gray-500/20 text-gray-500 border-gray-500/30">
-                                Disabled
-                              </Badge>
-                            )}
+                            <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30">
+                              {reminder.time} before
+                            </Badge>
                           </CardDescription>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          checked={reminder.enabled}
-                          onCheckedChange={(checked) => updateReminder(index, "enabled", checked)}
-                        />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => deleteReminder(index)}
-                          disabled={saving}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteReminder(index)}
+                        disabled={saving}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -412,8 +498,8 @@ export default function RemindersPage() {
                       <div className="space-y-2">
                         <Label htmlFor={`type-${index}`}>Reminder Type</Label>
                         <Select
-                          value={reminder.reminder_type}
-                          onValueChange={(value) => updateReminder(index, "reminder_type", value)}
+                          value={reminder.type}
+                          onValueChange={(value) => updateReminder(index, "type", value)}
                         >
                           <SelectTrigger id={`type-${index}`}>
                             <SelectValue />
@@ -431,20 +517,18 @@ export default function RemindersPage() {
                       <div className="space-y-2">
                         <Label htmlFor={`time-${index}`}>
                           <Clock className="h-4 w-4 inline mr-1" />
-                          Hours Before Event
+                          Time Before (e.g., "6h", "30m")
                         </Label>
                         <Input
                           id={`time-${index}`}
-                          type="number"
-                          min="1"
-                          max="72"
-                          value={reminder.time_before_hours}
-                          onChange={(e) => updateReminder(index, "time_before_hours", parseInt(e.target.value) || 1)}
+                          placeholder="6h"
+                          value={reminder.time}
+                          onChange={(e) => updateReminder(index, "time", e.target.value)}
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor={`channel-${index}`}>Channel ID (Optional)</Label>
+                        <Label htmlFor={`channel-${index}`}>Channel ID</Label>
                         <Input
                           id={`channel-${index}`}
                           placeholder="123456789012345678"
@@ -454,12 +538,12 @@ export default function RemindersPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor={`role-${index}`}>Role ID (Optional)</Label>
+                        <Label htmlFor={`clan-${index}`}>Clan Tag (Optional)</Label>
                         <Input
-                          id={`role-${index}`}
-                          placeholder="123456789012345678"
-                          value={reminder.role_id || ""}
-                          onChange={(e) => updateReminder(index, "role_id", e.target.value)}
+                          id={`clan-${index}`}
+                          placeholder="#CLAN123"
+                          value={reminder.clan_tag || ""}
+                          onChange={(e) => updateReminder(index, "clan_tag", e.target.value)}
                         />
                       </div>
                     </div>
@@ -469,10 +553,61 @@ export default function RemindersPage() {
                       <Input
                         id={`message-${index}`}
                         placeholder="Don't forget to use your attacks!"
-                        value={reminder.message || ""}
-                        onChange={(e) => updateReminder(index, "message", e.target.value)}
+                        value={reminder.custom_text || ""}
+                        onChange={(e) => updateReminder(index, "custom_text", e.target.value)}
                       />
                     </div>
+
+                    {/* Type-specific fields */}
+                    {reminder.type === "War" && (
+                      <div className="space-y-2">
+                        <Label>War Types</Label>
+                        <div className="flex gap-2">
+                          {["Random", "Friendly", "CWL"].map((type) => (
+                            <Badge
+                              key={type}
+                              variant={reminder.war_types?.includes(type) ? "default" : "outline"}
+                              className="cursor-pointer"
+                              onClick={() => {
+                                const current = reminder.war_types || [];
+                                const updated = current.includes(type)
+                                  ? current.filter((t) => t !== type)
+                                  : [...current, type];
+                                updateReminder(index, "war_types", updated);
+                              }}
+                            >
+                              {type}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {reminder.type === "Clan Games" && (
+                      <div className="space-y-2">
+                        <Label htmlFor={`points-${index}`}>Point Threshold</Label>
+                        <Input
+                          id={`points-${index}`}
+                          type="number"
+                          placeholder="4000"
+                          value={reminder.point_threshold || 4000}
+                          onChange={(e) => updateReminder(index, "point_threshold", parseInt(e.target.value) || 4000)}
+                        />
+                      </div>
+                    )}
+
+                    {reminder.type === "Clan Capital" && (
+                      <div className="space-y-2">
+                        <Label htmlFor={`attacks-${index}`}>Attack Threshold</Label>
+                        <Input
+                          id={`attacks-${index}`}
+                          type="number"
+                          placeholder="1"
+                          value={reminder.attack_threshold || 1}
+                          onChange={(e) => updateReminder(index, "attack_threshold", parseInt(e.target.value) || 1)}
+                        />
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
@@ -481,10 +616,10 @@ export default function RemindersPage() {
         </div>
 
         {/* Save Button (Bottom) */}
-        {reminders.length > 0 && (
+        {allReminders.length > 0 && (
           <div className="flex justify-end gap-4 pt-4">
             <Button
-              onClick={saveReminders}
+              onClick={saveAllReminders}
               disabled={saving}
               className="bg-primary hover:bg-primary/90 gap-2"
             >
