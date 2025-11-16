@@ -35,7 +35,7 @@ export async function GET(
       data = { error: text || 'Invalid response from API' };
     }
 
-    console.log('[all-roles] Response data:', data);
+    console.log('[all-roles] Response data:', JSON.stringify(data, null, 2));
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
