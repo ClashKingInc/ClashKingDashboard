@@ -22,7 +22,9 @@ import {
   Loader2,
   Castle,
   UserX,
-  Shield
+  Shield,
+  Activity,
+  Hash
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -501,35 +503,101 @@ export default function RemindersPage() {
           </div>
         </div>
 
-        {/* Clan Selector */}
-        {clans.length > 0 && (
-          <Card className="bg-card border-border">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <Label htmlFor="clan-select" className="text-foreground min-w-[100px]">
-                  Filter by Clan:
-                </Label>
-                <Select value={selectedClan} onValueChange={setSelectedClan}>
-                  <SelectTrigger id="clan-select" className="max-w-md">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Clans</SelectItem>
-                    {clans.map((clan) => (
-                      <SelectItem key={clan.tag} value={clan.tag}>
-                        {clan.name} ({clan.tag})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+        {/* Statistics Overview */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Reminders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-blue-500">
+                  {reminders.war_reminders.length +
+                   reminders.capital_reminders.length +
+                   reminders.clan_games_reminders.length +
+                   reminders.inactivity_reminders.length}
+                </div>
+                <Activity className="h-8 w-8 text-blue-500/50" />
               </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Active reminders configured
+              </p>
             </CardContent>
           </Card>
+
+          <Card className="bg-card border-red-500/30 bg-red-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">War Reminders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-red-500">{reminders.war_reminders.length}</div>
+                <Target className="h-8 w-8 text-red-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Regular & CWL wars
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Capital Reminders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-purple-500">{reminders.capital_reminders.length}</div>
+                <Castle className="h-8 w-8 text-purple-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Raid weekend attacks
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-green-500/30 bg-green-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Other Reminders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-green-500">
+                  {reminders.clan_games_reminders.length + reminders.inactivity_reminders.length}
+                </div>
+                <Bell className="h-8 w-8 text-green-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Games & inactivity
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Clan Selector - Compact version */}
+        {clans.length > 0 && (
+          <div className="flex justify-end mb-4">
+            <div className="flex items-center gap-2">
+              <Label className="text-sm text-muted-foreground">Clan:</Label>
+              <Select value={selectedClan} onValueChange={setSelectedClan}>
+                <SelectTrigger className="w-[250px]">
+                  <SelectValue placeholder="Select a clan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Clans</SelectItem>
+                  {clans.map((clan) => (
+                    <SelectItem key={clan.tag} value={clan.tag}>
+                      {clan.name} ({clan.tag})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         )}
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-4 lg:w-[800px]">
             <TabsTrigger value="war" className="gap-2">
               <Target className="h-4 w-4" />
               War
