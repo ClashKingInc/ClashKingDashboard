@@ -14,6 +14,9 @@ import {
   ClipboardList,
   Ban,
   ChevronDown,
+  LayoutDashboard,
+  Link2,
+  Trophy,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -76,6 +79,18 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
           description: "Roster management",
         },
         {
+          name: "Autoboards",
+          href: `/${locale}/dashboard/${guildId}/autoboards`,
+          icon: LayoutDashboard,
+          description: "Automated leaderboards",
+        },
+        {
+          name: "Links",
+          href: `/${locale}/dashboard/${guildId}/links`,
+          icon: Link2,
+          description: "Player-Discord linking",
+        },
+        {
           name: "Bans",
           href: `/${locale}/dashboard/${guildId}/bans`,
           icon: Ban,
@@ -91,6 +106,12 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
           href: `/${locale}/dashboard/${guildId}/wars`,
           icon: Swords,
           description: "War statistics",
+        },
+        {
+          name: "Leaderboards",
+          href: `/${locale}/dashboard/${guildId}/leaderboards`,
+          icon: Trophy,
+          description: "Global rankings",
         },
       ],
     },
