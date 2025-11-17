@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter, Eye, TrendingUp, Target, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -243,7 +243,7 @@ export default function RostersPage() {
 
       if (refreshResponse.ok) {
         const data = await refreshResponse.json();
-        setRosters(data.rosters || data || []);
+        setRosters(data.items || data.rosters || data || []);
       }
 
       toast({
@@ -305,7 +305,7 @@ export default function RostersPage() {
 
       if (refreshResponse.ok) {
         const data = await refreshResponse.json();
-        setRosters(data.rosters || data || []);
+        setRosters(data.items || data.rosters || data || []);
       }
 
       toast({
@@ -347,7 +347,7 @@ export default function RostersPage() {
 
       if (refreshResponse.ok) {
         const data = await refreshResponse.json();
-        setRosters(data.rosters || data || []);
+        setRosters(data.items || data.rosters || data || []);
       }
 
       toast({
@@ -460,7 +460,7 @@ export default function RostersPage() {
         });
         if (listResponse.ok) {
           const data = await listResponse.json();
-          setRosters(data.rosters || data || []);
+          setRosters(data.items || data.rosters || data || []);
         }
       }
 
@@ -519,7 +519,7 @@ export default function RostersPage() {
         });
         if (listResponse.ok) {
           const data = await listResponse.json();
-          setRosters(data.rosters || data || []);
+          setRosters(data.items || data.rosters || data || []);
         }
       }
 
@@ -577,7 +577,7 @@ export default function RostersPage() {
         });
         if (listResponse.ok) {
           const data = await listResponse.json();
-          setRosters(data.rosters || data || []);
+          setRosters(data.items || data.rosters || data || []);
         }
       }
 
@@ -995,22 +995,36 @@ export default function RostersPage() {
                 const thRestriction = getTownhallRestrictionText(roster);
 
                 return (
-                  <Card key={roster.custom_id} className="bg-secondary/50 border-border hover:border-primary/50 transition-all">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
+                  <Card key={roster.custom_id} className="group bg-gradient-to-br from-card to-secondary/30 border-border hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 hover:scale-[1.02] overflow-hidden">
+                    <CardHeader className="pb-3 relative">
+                      {/* Decorative gradient bar */}
+                      <div className={`absolute top-0 left-0 right-0 h-1 ${
+                        roster.roster_type === "clan"
+                          ? "bg-gradient-to-r from-blue-500 to-cyan-500"
+                          : "bg-gradient-to-r from-purple-500 to-pink-500"
+                      }`} />
+
+                      <div className="flex items-start justify-between mt-2">
                         <div className="flex items-center gap-3 flex-1">
-                          {roster.clan_badge && (
-                            <Avatar className="h-10 w-10">
+                          {roster.clan_badge ? (
+                            <Avatar className="h-14 w-14 border-2 border-primary/20 shadow-md">
                               <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
-                              <AvatarFallback>{roster.alias.charAt(0)}</AvatarFallback>
+                              <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
+                                {roster.alias.charAt(0)}
+                              </AvatarFallback>
                             </Avatar>
+                          ) : (
+                            <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border-2 border-primary/20">
+                              <Shield className="h-7 w-7 text-primary" />
+                            </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <CardTitle className="text-lg text-foreground truncate">
+                            <CardTitle className="text-xl text-foreground truncate group-hover:text-primary transition-colors">
                               {roster.alias}
                             </CardTitle>
                             {roster.clan_name && (
-                              <p className="text-sm text-muted-foreground truncate">
+                              <p className="text-sm text-muted-foreground truncate flex items-center gap-1 mt-0.5">
+                                <Star className="h-3 w-3" />
                                 {roster.clan_name}
                               </p>
                             )}
@@ -1018,43 +1032,85 @@ export default function RostersPage() {
                         </div>
                         <Badge
                           variant={roster.roster_type === "clan" ? "default" : "secondary"}
-                          className="bg-primary/10 text-primary shrink-0"
+                          className={`shrink-0 ${
+                            roster.roster_type === "clan"
+                              ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0"
+                              : "bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0"
+                          }`}
                         >
-                          {roster.roster_type}
+                          {roster.roster_type.toUpperCase()}
                         </Badge>
                       </div>
                     </CardHeader>
+
                     <CardContent className="space-y-3">
-                      {/* Member count */}
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">Members:</span>
-                        <span className="font-semibold text-foreground">
-                          {roster.roster_size
-                            ? `${roster.members?.length || 0}/${roster.roster_size}`
-                            : roster.members?.length || 0}
-                        </span>
+                      {/* Member count with progress bar */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground flex items-center gap-1.5">
+                            <Users className="h-4 w-4" />
+                            Members
+                          </span>
+                          <span className="font-bold text-foreground">
+                            {roster.roster_size
+                              ? `${roster.members?.length || 0}/${roster.roster_size}`
+                              : roster.members?.length || 0}
+                          </span>
+                        </div>
+                        {roster.roster_size && (
+                          <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                ((roster.members?.length || 0) / roster.roster_size) >= 0.9
+                                  ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                                  : ((roster.members?.length || 0) / roster.roster_size) >= 0.5
+                                  ? "bg-gradient-to-r from-yellow-500 to-orange-500"
+                                  : "bg-gradient-to-r from-red-500 to-pink-500"
+                              }`}
+                              style={{ width: `${Math.min(((roster.members?.length || 0) / roster.roster_size) * 100, 100)}%` }}
+                            />
+                          </div>
+                        )}
                       </div>
 
                       {/* TH restriction */}
                       {thRestriction !== "No restriction" && (
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">TH Level:</span>
-                          <span className="font-semibold text-foreground">{thRestriction}</span>
+                        <div className="flex items-center justify-between text-sm p-2 bg-primary/5 rounded-md border border-primary/10">
+                          <span className="text-muted-foreground flex items-center gap-1.5">
+                            <Target className="h-4 w-4" />
+                            TH Level
+                          </span>
+                          <span className="font-bold text-primary">{thRestriction}</span>
                         </div>
                       )}
 
                       {/* Stats */}
                       {roster.members && roster.members.length > 0 && (
-                        <>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Avg TH:</span>
-                            <span className="font-semibold text-orange-400">TH{stats.avgTownhall}</span>
+                        <div className="space-y-2 pt-1">
+                          <div className="flex items-center justify-between text-sm p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
+                            <span className="text-muted-foreground flex items-center gap-1.5">
+                              <TrendingUp className="h-4 w-4 text-orange-500" />
+                              Avg TH
+                            </span>
+                            <span className="font-bold text-orange-400">TH{stats.avgTownhall}</span>
                           </div>
 
                           {stats.avgHitrate > 0 && (
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-muted-foreground">Avg Hitrate:</span>
-                              <span className={`font-semibold ${
+                            <div className={`flex items-center justify-between text-sm p-2 rounded-md border ${
+                              stats.avgHitrate >= 80
+                                ? "bg-green-500/10 border-green-500/20"
+                                : stats.avgHitrate >= 60
+                                ? "bg-yellow-500/10 border-yellow-500/20"
+                                : "bg-red-500/10 border-red-500/20"
+                            }`}>
+                              <span className="text-muted-foreground flex items-center gap-1.5">
+                                <Target className={`h-4 w-4 ${
+                                  stats.avgHitrate >= 80 ? "text-green-500" :
+                                  stats.avgHitrate >= 60 ? "text-yellow-500" : "text-red-500"
+                                }`} />
+                                Avg Hitrate
+                              </span>
+                              <span className={`font-bold ${
                                 stats.avgHitrate >= 80 ? "text-green-400" :
                                 stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
                               }`}>
@@ -1063,44 +1119,48 @@ export default function RostersPage() {
                             </div>
                           )}
 
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Distribution:</span>
-                            <span className="font-semibold">
-                              {roster.clan_tag && (
-                                <span className="text-blue-400">{stats.clanCount}</span>
-                              )}
-                              {roster.clan_tag && <span className="text-muted-foreground mx-1">/</span>}
-                              <span className="text-green-400">{stats.familyCount}</span>
-                              <span className="text-muted-foreground mx-1">/</span>
-                              <span className="text-red-400">{stats.externalCount}</span>
-                            </span>
+                          <div className="flex items-center gap-2 pt-1">
+                            {roster.clan_tag && (
+                              <div className="flex-1 text-center p-2 bg-blue-500/10 rounded-md border border-blue-500/20">
+                                <div className="text-xs text-muted-foreground">Clan</div>
+                                <div className="text-lg font-bold text-blue-400">{stats.clanCount}</div>
+                              </div>
+                            )}
+                            <div className="flex-1 text-center p-2 bg-green-500/10 rounded-md border border-green-500/20">
+                              <div className="text-xs text-muted-foreground">Family</div>
+                              <div className="text-lg font-bold text-green-400">{stats.familyCount}</div>
+                            </div>
+                            <div className="flex-1 text-center p-2 bg-red-500/10 rounded-md border border-red-500/20">
+                              <div className="text-xs text-muted-foreground">External</div>
+                              <div className="text-lg font-bold text-red-400">{stats.externalCount}</div>
+                            </div>
                           </div>
-                        </>
+                        </div>
                       )}
 
-                      <div className="flex gap-2 pt-2">
+                      <div className="flex gap-2 pt-3 border-t border-border/50">
                         <Button
                           size="sm"
-                          variant="outline"
                           onClick={() => handleViewRoster(roster)}
-                          className="flex-1 border-border"
+                          className="flex-1 bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all"
                         >
-                          <Edit className="w-4 h-4 mr-1" />
-                          View
+                          <Eye className="w-4 h-4 mr-1.5" />
+                          View Details
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleOpenEdit(roster)}
-                          className="border-border"
+                          className="border-border hover:border-primary hover:bg-primary/10"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
                         <Button
                           size="sm"
-                          variant="destructive"
+                          variant="outline"
                           onClick={() => handleDeleteRoster(roster.custom_id)}
                           disabled={deleting === roster.custom_id}
+                          className="border-destructive/50 text-destructive hover:bg-destructive hover:text-white"
                         >
                           {deleting === roster.custom_id ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
