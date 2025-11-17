@@ -374,7 +374,7 @@ export default function RostersPage() {
   const handleViewRoster = async (roster: Roster) => {
     try {
       const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster/${roster.custom_id}`, {
+      const response = await fetch(`/api/v2/roster/${roster.custom_id}?server_id=${guildId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
 
@@ -1001,7 +1001,7 @@ export default function RostersPage() {
                       <div className={`absolute top-0 left-0 right-0 h-1 ${
                         roster.roster_type === "clan"
                           ? "bg-gradient-to-r from-blue-500 to-cyan-500"
-                          : "bg-gradient-to-r from-purple-500 to-pink-500"
+                          : "bg-gradient-to-r from-orange-500 to-amber-500"
                       }`} />
 
                       <div className="flex items-start justify-between mt-2">
@@ -1035,7 +1035,7 @@ export default function RostersPage() {
                           className={`shrink-0 ${
                             roster.roster_type === "clan"
                               ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0"
-                              : "bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0"
+                              : "bg-gradient-to-r from-orange-600 to-amber-600 text-white border-0"
                           }`}
                         >
                           {roster.roster_type.toUpperCase()}

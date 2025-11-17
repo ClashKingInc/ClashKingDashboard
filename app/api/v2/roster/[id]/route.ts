@@ -10,7 +10,18 @@ export async function GET(
     const { id } = await params;
     const token = request.headers.get('authorization');
 
-    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}`, {
+    // Get server_id from query params
+    const searchParams = request.nextUrl.searchParams;
+    const server_id = searchParams.get('server_id');
+
+    if (!server_id) {
+      return NextResponse.json(
+        { error: 'server_id is required' },
+        { status: 400 }
+      );
+    }
+
+    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}?server_id=${server_id}`, {
       method: 'GET',
       headers: {
         'Authorization': token || '',
