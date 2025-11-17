@@ -9,9 +9,25 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Sparkles } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Sparkles, Eye } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
+
+// Placeholder descriptions
+const PLACEHOLDERS = [
+  { key: "{discord_name}", desc: "Discord username", example: "JohnDoe#1234" },
+  { key: "{discord_display_name}", desc: "Server nickname", example: "John" },
+  { key: "{player_name}", desc: "CoC player name", example: "Chief John" },
+  { key: "{player_tag}", desc: "Player tag", example: "#2PP" },
+  { key: "{player_townhall}", desc: "TH level", example: "16" },
+  { key: "{player_townhall_small}", desc: "TH superscript", example: "¹⁶" },
+  { key: "{player_warstars}", desc: "War stars", example: "1234" },
+  { key: "{player_role}", desc: "Clan role", example: "Leader" },
+  { key: "{player_clan}", desc: "Clan name", example: "RCS Clan" },
+  { key: "{player_league}", desc: "League", example: "Legend" },
+  { key: "{player_clan_abbreviation}", desc: "Clan abbr", example: "RCS" },
+];
 
 export default function GeneralSettingsPage() {
   const params = useParams();
@@ -19,7 +35,7 @@ export default function GeneralSettingsPage() {
 
   const [settings, setSettings] = useState({
     change_nickname: true,
-    nickname_rule: "[{clan_abbr}] {player_name}",
+    nickname_rule: "[{player_clan_abbreviation}] {player_name}",
     non_family_nickname_rule: "{player_name}",
     flair_non_family: false,
     embed_color: 14227209, // #D90709 as integer
@@ -28,6 +44,7 @@ export default function GeneralSettingsPage() {
     full_whitelist_role: undefined as string | undefined,
   });
 
+  const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string }>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +53,7 @@ export default function GeneralSettingsPage() {
   // Load settings on mount
   useEffect(() => {
     loadSettings();
+    loadDiscordRoles();
   }, [guildId]);
 
   const loadSettings = async () => {
@@ -47,13 +65,13 @@ export default function GeneralSettingsPage() {
       if (response.data) {
         setSettings({
           change_nickname: response.data.change_nickname ?? true,
-          nickname_rule: response.data.nickname_rule ?? "[{clan_abbr}] {player_name}",
+          nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
           non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
           flair_non_family: response.data.flair_non_family ?? false,
           embed_color: response.data.embed_color ?? 14227209,
           leadership_eval: response.data.leadership_eval ?? true,
           api_token: response.data.api_token ?? true,
-          full_whitelist_role: response.data.full_whitelist_role,
+          full_whitelist_role: response.data.full_whitelist_role?.toString(),
         });
       }
     } catch (err: any) {
@@ -61,6 +79,17 @@ export default function GeneralSettingsPage() {
       console.error("Failed to load settings:", err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadDiscordRoles = async () => {
+    try {
+      const response = await apiClient.roles.getDiscordRoles(guildId);
+      if (response.data) {
+        setDiscordRoles(response.data.roles);
+      }
+    } catch (err) {
+      console.error("Failed to load Discord roles:", err);
     }
   };
 
@@ -92,6 +121,31 @@ export default function GeneralSettingsPage() {
 
   const intToHex = (int: number): string => {
     return "#" + int.toString(16).padStart(6, "0").toUpperCase();
+  };
+
+  // Generate preview of nickname format
+  const generatePreview = (format: string): string => {
+    const examples: Record<string, string> = {
+      "{discord_name}": "JohnDoe#1234",
+      "{discord_display_name}": "John",
+      "{player_name}": "Chief John",
+      "{player_tag}": "#2PP",
+      "{player_townhall}": "16",
+      "{player_townhall_small}": "¹⁶",
+      "{player_warstars}": "1234",
+      "{player_role}": "Leader",
+      "{player_clan}": "RCS Clan",
+      "{player_league}": "Legend",
+      "{player_clan_abbreviation}": "RCS",
+      "{clan_abbr}": "RCS", // Legacy support
+    };
+
+    let preview = format;
+    Object.entries(examples).forEach(([key, value]) => {
+      preview = preview.replace(new RegExp(key, "g"), value);
+    });
+
+    return preview;
   };
 
   if (isLoading) {
@@ -186,7 +240,7 @@ export default function GeneralSettingsPage() {
         {/* Grid Layout for Cards */}
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Nickname Management */}
-          <Card className="bg-card border-border">
+          <Card className="bg-card border-border lg:col-span-2">
             <CardHeader>
               <div className="flex items-center gap-2">
                 <div className="p-2 bg-primary/10 rounded-lg">
@@ -223,7 +277,7 @@ export default function GeneralSettingsPage() {
               <Separator className="bg-border" />
 
               {/* Family Convention */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label htmlFor="family-convention" className="text-sm font-medium">
                   Family Members Format
                 </Label>
@@ -233,30 +287,58 @@ export default function GeneralSettingsPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, nickname_rule: e.target.value })
                   }
-                  placeholder="[{clan_abbr}] {player_name}"
+                  placeholder="[{player_clan_abbreviation}] {player_name}"
                   className="bg-secondary border-border font-mono text-sm"
                 />
-                <div className="flex flex-wrap gap-1">
-                  <Badge variant="secondary" className="text-xs font-mono">
-                    {"{player_name}"}
-                  </Badge>
-                  <Badge variant="secondary" className="text-xs font-mono">
-                    {"{clan_abbr}"}
-                  </Badge>
-                  <Badge variant="secondary" className="text-xs font-mono">
-                    {"{townhall}"}
-                  </Badge>
-                  <Badge variant="secondary" className="text-xs font-mono">
-                    {"{trophies}"}
-                  </Badge>
+
+                {/* Available Placeholders */}
+                <div className="bg-secondary/50 border border-border rounded-lg p-3 space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground">Available Placeholders:</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {PLACEHOLDERS.map((p) => (
+                      <div key={p.key} className="flex items-start gap-2">
+                        <Badge
+                          variant="secondary"
+                          className="text-xs font-mono cursor-pointer hover:bg-primary/20"
+                          onClick={() => {
+                            const input = document.getElementById("family-convention") as HTMLInputElement;
+                            if (input) {
+                              const start = input.selectionStart || 0;
+                              const end = input.selectionEnd || 0;
+                              const newValue =
+                                settings.nickname_rule.substring(0, start) +
+                                p.key +
+                                settings.nickname_rule.substring(end);
+                              setSettings({ ...settings, nickname_rule: newValue });
+                              setTimeout(() => {
+                                input.focus();
+                                input.setSelectionRange(start + p.key.length, start + p.key.length);
+                              }, 0);
+                            }
+                          }}
+                        >
+                          {p.key}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">{p.desc}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Example: <span className="font-medium">[RCS] JohnDoe</span>
-                </p>
+
+                {/* Live Preview */}
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Eye className="h-4 w-4 text-primary" />
+                    <p className="text-xs font-medium text-primary">Preview:</p>
+                  </div>
+                  <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
+                    {generatePreview(settings.nickname_rule)}
+                  </p>
+                </div>
               </div>
 
               {/* Non-Family Convention */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label htmlFor="non-family-convention" className="text-sm font-medium">
                   Non-Family Members Format
                 </Label>
@@ -269,6 +351,18 @@ export default function GeneralSettingsPage() {
                   placeholder="{player_name}"
                   className="bg-secondary border-border font-mono text-sm"
                 />
+
+                {/* Live Preview */}
+                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Eye className="h-4 w-4 text-primary" />
+                    <p className="text-xs font-medium text-primary">Preview:</p>
+                  </div>
+                  <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
+                    {generatePreview(settings.non_family_nickname_rule)}
+                  </p>
+                </div>
+
                 <p className="text-xs text-muted-foreground">
                   Format for members not in your clan family
                 </p>
@@ -305,7 +399,7 @@ export default function GeneralSettingsPage() {
                 <div>
                   <CardTitle className="text-foreground">Appearance</CardTitle>
                   <CardDescription className="text-xs">
-                    Customize bot messages and embeds
+                    Customize bot embed messages
                   </CardDescription>
                 </div>
               </div>
@@ -315,6 +409,9 @@ export default function GeneralSettingsPage() {
                 <Label htmlFor="embed-color" className="text-sm font-medium">
                   Embed Color
                 </Label>
+                <p className="text-xs text-muted-foreground">
+                  Color of the side bar on all bot embed messages in Discord
+                </p>
                 <div className="flex gap-3">
                   <div className="relative">
                     <Input
@@ -328,7 +425,12 @@ export default function GeneralSettingsPage() {
                   <div className="flex-1 space-y-2">
                     <Input
                       value={intToHex(settings.embed_color)}
-                      onChange={(e) => setSettings({ ...settings, embed_color: hexToInt(e.target.value) })}
+                      onChange={(e) => {
+                        const hex = e.target.value;
+                        if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                          setSettings({ ...settings, embed_color: hexToInt(hex) });
+                        }
+                      }}
                       placeholder="#D90709"
                       className="bg-secondary border-border font-mono"
                     />
@@ -345,31 +447,29 @@ export default function GeneralSettingsPage() {
                 >
                   <p className="text-sm font-medium mb-1">Embed Preview</p>
                   <p className="text-xs text-muted-foreground">
-                    This is how bot embeds will appear in your server
+                    This colored bar will appear on the left side of all bot messages
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Advanced Features - Full Width */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-orange-500/10 rounded-lg">
-                <Sparkles className="h-4 w-4 text-orange-500" />
+          {/* Advanced Features */}
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-orange-500/10 rounded-lg">
+                  <Sparkles className="h-4 w-4 text-orange-500" />
+                </div>
+                <div>
+                  <CardTitle className="text-foreground">Advanced Features</CardTitle>
+                  <CardDescription className="text-xs">
+                    Enable advanced bot capabilities
+                  </CardDescription>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-foreground">Advanced Features</CardTitle>
-                <CardDescription className="text-xs">
-                  Enable advanced bot capabilities
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-3 md:grid-cols-2">
+            </CardHeader>
+            <CardContent className="space-y-4">
               {/* Leadership Evaluation */}
               <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-4">
                 <div className="space-y-1 flex-1">
@@ -407,34 +507,42 @@ export default function GeneralSettingsPage() {
                   }
                 />
               </div>
-            </div>
 
-            <Separator className="my-4" />
+              <Separator className="my-2" />
 
-            {/* Whitelist Role */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-muted-foreground" />
-                <Label htmlFor="whitelist-role" className="text-sm font-medium">
-                  Full Whitelist Role
-                </Label>
+              {/* Whitelist Role */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-muted-foreground" />
+                  <Label htmlFor="whitelist-role" className="text-sm font-medium">
+                    Full Whitelist Role
+                  </Label>
+                </div>
+                <Select
+                  value={settings.full_whitelist_role || "none"}
+                  onValueChange={(value) =>
+                    setSettings({ ...settings, full_whitelist_role: value === "none" ? undefined : value })
+                  }
+                >
+                  <SelectTrigger id="whitelist-role" className="bg-secondary border-border">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Role</SelectItem>
+                    {discordRoles.map((role) => (
+                      <SelectItem key={role.id} value={role.id}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Discord role with full access to all bot commands (bypasses all permission checks)
+                </p>
               </div>
-              <Input
-                id="whitelist-role"
-                type="text"
-                value={settings.full_whitelist_role || ""}
-                onChange={(e) =>
-                  setSettings({ ...settings, full_whitelist_role: e.target.value || undefined })
-                }
-                placeholder="Role ID (e.g., 1234567890123456789)"
-                className="bg-secondary border-border font-mono"
-              />
-              <p className="text-xs text-muted-foreground">
-                Discord role ID with full access to all bot commands. Right-click a role → Copy ID (Developer Mode required)
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
