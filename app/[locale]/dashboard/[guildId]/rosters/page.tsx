@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -126,6 +126,11 @@ export default function RostersPage() {
   const [clanMembers, setClanMembers] = useState<ClanMember[]>([]);
   const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
   const [memberSearch, setMemberSearch] = useState("");
+
+  // Filter and search state
+  const [rosterSearch, setRosterSearch] = useState("");
+  const [rosterTypeFilter, setRosterTypeFilter] = useState<"all" | "clan" | "family">("all");
+  const [refreshing, setRefreshing] = useState(false);
 
   // Fetch rosters and clans
   useEffect(() => {
@@ -479,6 +484,178 @@ export default function RostersPage() {
     }
   };
 
+  const handleRemoveMember = async (memberTag: string) => {
+    if (!selectedRoster) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}/members?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ remove: [memberTag] })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to remove member");
+      }
+
+      // Refresh roster details
+      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (refreshResponse.ok) {
+        const updatedRoster = await refreshResponse.json();
+        setSelectedRoster(updatedRoster);
+
+        // Also refresh rosters list
+        const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        if (listResponse.ok) {
+          const data = await listResponse.json();
+          setRosters(data.rosters || data || []);
+        }
+      }
+
+      toast({
+        title: "Success",
+        description: "Member removed from roster!",
+      });
+    } catch (error) {
+      console.error("Error removing member:", error);
+      toast({
+        title: "Error",
+        description: "Failed to remove member. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleToggleSubstitute = async (memberTag: string, currentSub: boolean) => {
+    if (!selectedRoster) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      const response = await fetch(
+        `/api/v2/roster/${selectedRoster.custom_id}/members/${encodeURIComponent(memberTag)}?server_id=${guildId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({ sub: !currentSub })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update member");
+      }
+
+      // Refresh roster details
+      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (refreshResponse.ok) {
+        const updatedRoster = await refreshResponse.json();
+        setSelectedRoster(updatedRoster);
+
+        // Also refresh rosters list
+        const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        if (listResponse.ok) {
+          const data = await listResponse.json();
+          setRosters(data.rosters || data || []);
+        }
+      }
+
+      toast({
+        title: "Success",
+        description: `Member ${!currentSub ? "marked" : "unmarked"} as substitute!`,
+      });
+    } catch (error) {
+      console.error("Error toggling substitute:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update member. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRefreshRoster = async (rosterId?: string) => {
+    setRefreshing(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      // Build query params - refresh specific roster or all server rosters
+      const queryParams = rosterId
+        ? `roster_id=${rosterId}`
+        : `server_id=${guildId}`;
+
+      const response = await fetch(`/api/v2/roster/refresh?${queryParams}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to refresh roster data");
+      }
+
+      const result = await response.json();
+
+      // Refresh rosters list
+      const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      if (listResponse.ok) {
+        const data = await listResponse.json();
+        setRosters(data.rosters || data || []);
+      }
+
+      // If a specific roster is selected, refresh its details
+      if (selectedRoster && rosterId === selectedRoster.custom_id) {
+        const detailsResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        if (detailsResponse.ok) {
+          const updatedRoster = await detailsResponse.json();
+          setSelectedRoster(updatedRoster);
+        }
+      }
+
+      toast({
+        title: "Success",
+        description: result.message || "Roster data refreshed successfully!",
+      });
+    } catch (error) {
+      console.error("Error refreshing roster:", error);
+      toast({
+        title: "Error",
+        description: "Failed to refresh roster data. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   // Calculate roster statistics
   const getRosterStats = (roster: Roster) => {
     const members = roster.members || [];
@@ -546,6 +723,17 @@ export default function RostersPage() {
     member.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
     member.tag.toLowerCase().includes(memberSearch.toLowerCase())
   );
+
+  // Filter rosters by search and type
+  const filteredRosters = rosters.filter(roster => {
+    const matchesSearch = roster.alias.toLowerCase().includes(rosterSearch.toLowerCase()) ||
+      roster.clan_name?.toLowerCase().includes(rosterSearch.toLowerCase()) ||
+      roster.clan_tag?.toLowerCase().includes(rosterSearch.toLowerCase());
+
+    const matchesType = rosterTypeFilter === "all" || roster.roster_type === rosterTypeFilter;
+
+    return matchesSearch && matchesType;
+  });
 
   if (loading) {
     return (
@@ -724,24 +912,85 @@ export default function RostersPage() {
         </Card>
       </div>
 
+      {/* Filters and Search */}
+      <Card className="bg-card border-border">
+        <CardContent className="pt-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search rosters by name, clan..."
+                value={rosterSearch}
+                onChange={(e) => setRosterSearch(e.target.value)}
+                className="bg-background border-border text-foreground pl-9"
+              />
+            </div>
+            <Select value={rosterTypeFilter} onValueChange={(value: "all" | "clan" | "family") => setRosterTypeFilter(value)}>
+              <SelectTrigger className="w-full sm:w-[180px] bg-background border-border text-foreground">
+                <Filter className="w-4 h-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border">
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="clan">Clan Only</SelectItem>
+                <SelectItem value="family">Family Only</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              variant="outline"
+              onClick={() => handleRefreshRoster()}
+              disabled={refreshing}
+              className="border-border"
+            >
+              {refreshing ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Refreshing...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh All
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Rosters List */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">All Rosters</CardTitle>
+          <CardTitle className="text-foreground">
+            All Rosters
+            {filteredRosters.length !== rosters.length && (
+              <span className="text-sm font-normal text-muted-foreground ml-2">
+                ({filteredRosters.length} of {rosters.length})
+              </span>
+            )}
+          </CardTitle>
           <CardDescription className="text-muted-foreground">
             Manage your war rosters and lineups
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {rosters.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p className="text-lg">No rosters created yet</p>
-              <p className="text-sm">Create your first roster to get started</p>
-            </div>
+          {filteredRosters.length === 0 ? (
+            rosters.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p className="text-lg">No rosters created yet</p>
+                <p className="text-sm">Create your first roster to get started</p>
+              </div>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p className="text-lg">No rosters match your filters</p>
+                <p className="text-sm">Try adjusting your search or filter criteria</p>
+              </div>
+            )
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {rosters.map((roster) => {
+              {filteredRosters.map((roster) => {
                 const stats = getRosterStats(roster);
                 const thRestriction = getTownhallRestrictionText(roster);
 
@@ -891,6 +1140,24 @@ export default function RostersPage() {
                   <UserPlus className="w-4 h-4 mr-2" />
                   Add Members
                 </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => handleRefreshRoster(selectedRoster.custom_id)}
+                  disabled={refreshing}
+                  className="border-border"
+                >
+                  {refreshing ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Refreshing...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Refresh Data
+                    </>
+                  )}
+                </Button>
               </div>
 
               {(!selectedRoster.members || selectedRoster.members.length === 0) ? (
@@ -935,11 +1202,26 @@ export default function RostersPage() {
                               {member.current_clan}
                             </Badge>
                           )}
-                          {member.sub && (
-                            <Badge variant="outline" className="border-primary text-primary">
-                              SUB
-                            </Badge>
-                          )}
+                          <Button
+                            size="sm"
+                            variant={member.sub ? "default" : "outline"}
+                            onClick={() => handleToggleSubstitute(member.tag, member.sub)}
+                            disabled={saving}
+                            className={member.sub ? "bg-primary" : "border-border"}
+                            title={member.sub ? "Unmark as substitute" : "Mark as substitute"}
+                          >
+                            {member.sub ? "SUB" : "SUB"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleRemoveMember(member.tag)}
+                            disabled={saving}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            title="Remove member"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
                     ))}
