@@ -725,7 +725,7 @@ export default function RostersPage() {
   );
 
   // Filter rosters by search and type
-  const filteredRosters = rosters.filter(roster => {
+  const filteredRosters = Array.isArray(rosters) ? rosters.filter(roster => {
     const matchesSearch = roster.alias.toLowerCase().includes(rosterSearch.toLowerCase()) ||
       roster.clan_name?.toLowerCase().includes(rosterSearch.toLowerCase()) ||
       roster.clan_tag?.toLowerCase().includes(rosterSearch.toLowerCase());
@@ -733,7 +733,7 @@ export default function RostersPage() {
     const matchesType = rosterTypeFilter === "all" || roster.roster_type === rosterTypeFilter;
 
     return matchesSearch && matchesType;
-  });
+  }) : [];
 
   if (loading) {
     return (
