@@ -164,7 +164,7 @@ export default function RostersPage() {
         }
 
         const rostersData = await rostersRes.json();
-        setRosters(rostersData.rosters || rostersData || []);
+        setRosters(rostersData.items || rostersData.rosters || rostersData || []);
 
         if (clansRes.ok) {
           const clansData = await clansRes.json();
