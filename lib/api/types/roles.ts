@@ -78,12 +78,12 @@ export type ConfiguredRole =
   | FamilyPositionRole;
 
 export interface RoleSettings {
-  server_id: number;
+  server_id: string | number;
   auto_eval_status: boolean;
   auto_eval_nickname: boolean;
   autoeval_triggers: string[];
-  autoeval_log?: number;
-  blacklisted_roles: number[];
+  autoeval_log?: string | number;
+  blacklisted_roles: (string | number)[];
   role_treatment: string[];
   category_roles?: any;
 }
@@ -92,20 +92,20 @@ export interface RoleSettingsUpdate {
   auto_eval_status?: boolean;
   auto_eval_nickname?: boolean;
   autoeval_triggers?: string[];
-  autoeval_log?: number;
-  blacklisted_roles?: number[];
+  autoeval_log?: string | number;
+  blacklisted_roles?: (string | number)[];
   role_treatment?: string[];
 }
 
 export interface RolesListResponse {
-  server_id: number;
+  server_id: string | number;
   role_type: string;
   roles: ConfiguredRole[];
   count: number;
 }
 
 export interface AllRolesResponse {
-  server_id: number;
+  server_id: string | number;
   roles: {
     townhall: TownhallRole[];
     league: LeagueRole[];
@@ -120,13 +120,13 @@ export interface AllRolesResponse {
 
 export interface RoleResponse {
   message: string;
-  server_id: number;
+  server_id: string | number;
   role_type: string;
-  role_id?: number;
+  role_id?: string | number;
 }
 
 export interface DiscordRolesResponse {
-  server_id: number;
+  server_id: string | number;
   roles: DiscordRole[];
   count: number;
 }

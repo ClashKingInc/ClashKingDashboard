@@ -95,7 +95,7 @@ export default function RolesPage() {
 
   const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>([]);
   const [roleSettings, setRoleSettings] = useState<RoleSettings>({
-    server_id: parseInt(guildId),
+    server_id: guildId,
     auto_eval_status: false,
     auto_eval_nickname: false,
     autoeval_triggers: [],
@@ -224,7 +224,7 @@ export default function RolesPage() {
     }
   };
 
-  const handleDeleteRole = async (roleType: RoleType, roleId: number) => {
+  const handleDeleteRole = async (roleType: RoleType, roleId: string | number) => {
     try {
       setError(null);
 

@@ -275,7 +275,7 @@ export default function GeneralSettingsPage() {
               <Select
                 value={settings.banlist?.toString() || "none"}
                 onValueChange={(value) =>
-                  setSettings({ ...settings, banlist: value === "none" ? undefined : parseInt(value) })
+                  setSettings({ ...settings, banlist: value === "none" ? undefined : value })
                 }
               >
                 <SelectTrigger id="ban-log" className="bg-secondary border-border">
@@ -300,7 +300,7 @@ export default function GeneralSettingsPage() {
               <Select
                 value={settings.strike_log?.toString() || "none"}
                 onValueChange={(value) =>
-                  setSettings({ ...settings, strike_log: value === "none" ? undefined : parseInt(value) })
+                  setSettings({ ...settings, strike_log: value === "none" ? undefined : value })
                 }
               >
                 <SelectTrigger id="strike-log" className="bg-secondary border-border">
@@ -400,10 +400,10 @@ export default function GeneralSettingsPage() {
               <Label htmlFor="whitelist-role">Full Whitelist Role</Label>
               <Input
                 id="whitelist-role"
-                type="number"
+                type="text"
                 value={settings.full_whitelist_role || ""}
                 onChange={(e) =>
-                  setSettings({ ...settings, full_whitelist_role: e.target.value ? parseInt(e.target.value) : undefined })
+                  setSettings({ ...settings, full_whitelist_role: e.target.value || undefined })
                 }
                 placeholder="Role ID (e.g., 123456789)"
                 className="bg-secondary border-border"

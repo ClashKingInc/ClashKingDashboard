@@ -3,7 +3,7 @@
  */
 
 export interface ServerSettings {
-  server: number;
+  server: string | number;
   embed_color?: number;
   nickname_rule?: string;
   non_family_nickname_rule?: string;
@@ -12,10 +12,10 @@ export interface ServerSettings {
   auto_eval_nickname?: boolean;
   leadership_eval?: boolean;
   api_token?: boolean;
-  banlist?: number;
-  strike_log?: number;
-  full_whitelist_role?: number;
-  reddit_feed?: number;
+  banlist?: string | number;
+  strike_log?: string | number;
+  full_whitelist_role?: string | number;
+  reddit_feed?: string | number;
   family_label?: string;
   greeting?: string;
   clans?: any[];
@@ -31,17 +31,17 @@ export interface ServerSettingsUpdate {
   auto_eval_nickname?: boolean;
   leadership_eval?: boolean;
   api_token?: boolean;
-  banlist?: number;
-  strike_log?: number;
-  full_whitelist_role?: number;
-  reddit_feed?: number;
+  banlist?: string | number;
+  strike_log?: string | number;
+  full_whitelist_role?: string | number;
+  reddit_feed?: string | number;
   family_label?: string;
   greeting?: string;
 }
 
 export interface ServerSettingsResponse {
   message: string;
-  server_id: number;
+  server_id: string | number;
   updated_fields: number;
 }
 
@@ -58,7 +58,7 @@ export interface DiscordRole {
 }
 
 export interface ClanSettings {
-  server_id: number;
+  server_id: string | number;
   clan_tag: string;
   settings: any;
 }

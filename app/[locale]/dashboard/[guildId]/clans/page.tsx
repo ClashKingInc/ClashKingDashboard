@@ -608,7 +608,7 @@ export default function ClansPage() {
                     <Input
                       placeholder="Role ID"
                       value={clanSettings?.generalRole || ''}
-                      onChange={(e) => setClanSettings({...clanSettings, generalRole: e.target.value ? parseInt(e.target.value) : null})}
+                      onChange={(e) => setClanSettings({...clanSettings, generalRole: e.target.value || null})}
                     />
                   </div>
 
@@ -617,7 +617,7 @@ export default function ClansPage() {
                     <Input
                       placeholder="Role ID"
                       value={clanSettings?.leaderRole || ''}
-                      onChange={(e) => setClanSettings({...clanSettings, leaderRole: e.target.value ? parseInt(e.target.value) : null})}
+                      onChange={(e) => setClanSettings({...clanSettings, leaderRole: e.target.value || null})}
                     />
                   </div>
 
@@ -625,7 +625,7 @@ export default function ClansPage() {
                     <Label>Clan Channel</Label>
                     <Select
                       value={clanSettings.clanChannel?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' ? null : parseInt(value)})}
+                      onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
@@ -680,7 +680,7 @@ export default function ClansPage() {
                     <Label>War Countdown Channel</Label>
                     <Select
                       value={clanSettings.warCountdown?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' ? null : parseInt(value)})}
+                      onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
@@ -700,7 +700,7 @@ export default function ClansPage() {
                     <Label>War Timer Countdown</Label>
                     <Select
                       value={clanSettings.warTimerCountdown?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' ? null : parseInt(value)})}
+                      onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
@@ -720,7 +720,7 @@ export default function ClansPage() {
                     <Label>Ban Alert Channel</Label>
                     <Select
                       value={clanSettings.ban_alert_channel?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' ? null : parseInt(value)})}
+                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select channel" />
