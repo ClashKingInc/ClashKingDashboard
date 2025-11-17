@@ -380,7 +380,15 @@ export default function RostersPage() {
 
       if (response.ok) {
         const fullRoster = await response.json();
+        console.log("Full roster data:", fullRoster);
+        console.log("Members array:", fullRoster.members);
+        console.log("Members is array?", Array.isArray(fullRoster.members));
+        console.log("Members length:", fullRoster.members?.length);
         setSelectedRoster(fullRoster);
+        setDetailsDialogOpen(true);
+      } else {
+        console.error("Failed to fetch roster:", response.status, await response.text());
+        setSelectedRoster(roster);
         setDetailsDialogOpen(true);
       }
     } catch (error) {
