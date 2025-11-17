@@ -212,7 +212,20 @@ export default function RolesPage() {
     try {
       setError(null);
 
-      await apiClient.roles.createRole(guildId, currentRoleType, newRole);
+      // Transform data to match backend format
+      let roleData = { ...newRole };
+
+      // For townhall roles, convert th: 17 → th: "th17"
+      if (currentRoleType === "townhall" && typeof roleData.th === "number") {
+        roleData.th = `th${roleData.th}`;
+      }
+
+      // For builderhall roles, convert bh: 9 → bh: "bh9"
+      if (currentRoleType === "builderhall" && typeof roleData.bh === "number") {
+        roleData.bh = `bh${roleData.bh}`;
+      }
+
+      await apiClient.roles.createRole(guildId, currentRoleType, roleData);
 
       await loadData();
       setIsAddDialogOpen(false);
