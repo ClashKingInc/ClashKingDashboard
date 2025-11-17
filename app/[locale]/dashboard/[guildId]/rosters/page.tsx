@@ -871,7 +871,7 @@ export default function RostersPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{rosters.length}</div>
+            <div className="text-2xl font-bold text-foreground">{Array.isArray(rosters) ? rosters.length : 0}</div>
           </CardContent>
         </Card>
 
@@ -882,7 +882,7 @@ export default function RostersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {rosters.reduce((sum, r) => sum + (r.members?.length || 0), 0)}
+              {Array.isArray(rosters) ? rosters.reduce((sum, r) => sum + (r.members?.length || 0), 0) : 0}
             </div>
           </CardContent>
         </Card>
@@ -894,7 +894,7 @@ export default function RostersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {rosters.filter(r => r.roster_type === "clan").length}
+              {Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "clan").length : 0}
             </div>
           </CardContent>
         </Card>
@@ -906,7 +906,7 @@ export default function RostersPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-foreground">
-              {rosters.filter(r => r.roster_type === "family").length}
+              {Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "family").length : 0}
             </div>
           </CardContent>
         </Card>
@@ -963,9 +963,9 @@ export default function RostersPage() {
         <CardHeader>
           <CardTitle className="text-foreground">
             All Rosters
-            {filteredRosters.length !== rosters.length && (
+            {filteredRosters.length !== (Array.isArray(rosters) ? rosters.length : 0) && (
               <span className="text-sm font-normal text-muted-foreground ml-2">
-                ({filteredRosters.length} of {rosters.length})
+                ({filteredRosters.length} of {Array.isArray(rosters) ? rosters.length : 0})
               </span>
             )}
           </CardTitle>
@@ -975,7 +975,7 @@ export default function RostersPage() {
         </CardHeader>
         <CardContent>
           {filteredRosters.length === 0 ? (
-            rosters.length === 0 ? (
+            (Array.isArray(rosters) ? rosters.length : 0) === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg">No rosters created yet</p>
