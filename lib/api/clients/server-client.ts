@@ -4,9 +4,24 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, DiscordChannel, DiscordRole } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, DiscordChannel, DiscordRole, GuildInfo } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
+  /**
+   * GET /v2/guilds
+   * Get all guilds the authenticated user has access to
+   */
+  async getGuilds(): Promise<ApiResponse<GuildInfo[]>> {
+    return this.request('/v2/guilds', { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/guild/{guild_id}
+   * Get information for a specific guild
+   */
+  async getGuild(guildId: string): Promise<ApiResponse<GuildInfo>> {
+    return this.request(`/v2/guild/${guildId}`, { method: 'GET' });
+  }
   /**
    * GET /v2/server/{server_id}/settings
    */

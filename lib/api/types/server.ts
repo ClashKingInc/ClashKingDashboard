@@ -68,3 +68,23 @@ export interface BanRequest {
   added_by: string;
   image?: any;
 }
+
+/**
+ * Discord Guild/Server information
+ */
+export interface GuildInfo {
+  id: string;
+  name: string;
+  icon: string | null;
+  owner: boolean;
+  permissions: string;
+  role: "Owner" | "Administrator" | "Manager" | "Member";
+  features: string[];
+  has_bot: boolean;
+  member_count?: number;
+  owner_id?: string;
+  description?: string;
+  banner?: string;
+  premium_tier?: number;
+  boost_count?: number;
+}
