@@ -119,6 +119,8 @@ export default function RostersPage() {
     min_th: "",
     max_th: "",
     roster_size: "",
+    columns: [] as string[],
+    sort: [] as string[],
   });
 
   // Add members state
@@ -283,6 +285,8 @@ export default function RostersPage() {
         min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
         max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
         roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
+        columns: editRosterData.columns.length > 0 ? editRosterData.columns : null,
+        sort: editRosterData.sort.length > 0 ? editRosterData.sort : null,
       };
 
       const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
@@ -404,6 +408,8 @@ export default function RostersPage() {
       min_th: roster.min_th?.toString() || "",
       max_th: roster.max_th?.toString() || "",
       roster_size: roster.roster_size?.toString() || "",
+      columns: roster.columns || [],
+      sort: roster.sort || [],
     });
     setEditDialogOpen(true);
   };
@@ -1712,6 +1718,92 @@ export default function RostersPage() {
                 onChange={(e) => setEditRosterData({ ...editRosterData, roster_size: e.target.value })}
                 className="bg-background border-border text-foreground"
               />
+            </div>
+
+            {/* Display Columns Configuration */}
+            <div className="space-y-3">
+              <Label className="text-foreground">Display Columns (choose up to 4)</Label>
+              <p className="text-xs text-muted-foreground">Select which columns to show in the members table</p>
+              <div className="grid grid-cols-2 gap-3">
+                {['Name', 'Townhall Level', 'Tag', '30 Day Hitrate', 'Clan Tag', 'Discord', 'Heroes', 'War Opt', 'Trophies'].map((column) => (
+                  <div key={column} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`column-${column}`}
+                      checked={editRosterData.columns.includes(column)}
+                      onChange={(e) => {
+                        const newColumns = e.target.checked
+                          ? [...editRosterData.columns, column]
+                          : editRosterData.columns.filter(c => c !== column);
+                        setEditRosterData({ ...editRosterData, columns: newColumns.slice(0, 4) });
+                      }}
+                      disabled={editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)}
+                      className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                    />
+                    <label
+                      htmlFor={`column-${column}`}
+                      className={`text-sm ${
+                        editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)
+                          ? 'text-muted-foreground cursor-not-allowed'
+                          : 'text-foreground cursor-pointer'
+                      }`}
+                    >
+                      {column}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {editRosterData.columns.length}/4 columns selected
+              </p>
+            </div>
+
+            {/* Sort Configuration */}
+            <div className="space-y-3">
+              <Label className="text-foreground">Sort Order (choose up to 4)</Label>
+              <p className="text-xs text-muted-foreground">Define the sort priority for members</p>
+              <div className="grid grid-cols-2 gap-3">
+                {['Townhall Level', 'Name', 'Tag', 'Heroes', 'Trophies', '30 Day Hitrate', 'Clan Tag', 'Added At'].map((field) => (
+                  <div key={field} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`sort-${field}`}
+                      checked={editRosterData.sort.includes(field)}
+                      onChange={(e) => {
+                        const newSort = e.target.checked
+                          ? [...editRosterData.sort, field]
+                          : editRosterData.sort.filter(s => s !== field);
+                        setEditRosterData({ ...editRosterData, sort: newSort.slice(0, 4) });
+                      }}
+                      disabled={editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)}
+                      className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                    />
+                    <label
+                      htmlFor={`sort-${field}`}
+                      className={`text-sm ${
+                        editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)
+                          ? 'text-muted-foreground cursor-not-allowed'
+                          : 'text-foreground cursor-pointer'
+                      }`}
+                    >
+                      {field}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {editRosterData.sort.length}/4 sort fields selected
+                {editRosterData.sort.length > 0 && (
+                  <span className="ml-2">
+                    • Order: {editRosterData.sort.map((s, i) => (
+                      <span key={s} className="text-primary">
+                        {i > 0 && ' → '}
+                        {s}
+                      </span>
+                    ))}
+                  </span>
+                )}
+              </p>
             </div>
           </div>
           <DialogFooter>
