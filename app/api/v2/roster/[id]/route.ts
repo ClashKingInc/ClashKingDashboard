@@ -10,7 +10,18 @@ export async function GET(
     const { id } = await params;
     const token = request.headers.get('authorization');
 
-    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}`, {
+    // Get server_id from query params
+    const searchParams = request.nextUrl.searchParams;
+    const server_id = searchParams.get('server_id');
+
+    if (!server_id) {
+      return NextResponse.json(
+        { error: 'server_id is required' },
+        { status: 400 }
+      );
+    }
+
+    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}?server_id=${server_id}`, {
       method: 'GET',
       headers: {
         'Authorization': token || '',
@@ -24,6 +35,46 @@ export async function GET(
     console.error('API proxy error (GET /roster/:id):', error);
     return NextResponse.json(
       { error: 'Failed to fetch roster' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const token = request.headers.get('authorization');
+    const body = await request.json();
+
+    // Get server_id from query params
+    const searchParams = request.nextUrl.searchParams;
+    const server_id = searchParams.get('server_id');
+
+    if (!server_id) {
+      return NextResponse.json(
+        { error: 'server_id is required' },
+        { status: 400 }
+      );
+    }
+
+    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}?server_id=${server_id}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': token || '',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    return NextResponse.json(data, { status: response.status });
+  } catch (error) {
+    console.error('API proxy error (PATCH /roster/:id):', error);
+    return NextResponse.json(
+      { error: 'Failed to update roster' },
       { status: 500 }
     );
   }
