@@ -727,6 +727,119 @@ export default function RostersPage() {
     return "No restriction";
   };
 
+  // Helper: Get column display name
+  const getColumnDisplayName = (col: string): string => {
+    const columnNames: Record<string, string> = {
+      'name': 'Name',
+      'townhall': 'TH',
+      'tag': 'Tag',
+      'hitrate': 'Hitrate',
+      'current_clan_tag': 'Clan',
+      'discord': 'Discord',
+      'hero_lvs': 'Heroes',
+      'war_pref': 'War',
+      'trophies': 'Trophies'
+    };
+    return columnNames[col] || col;
+  };
+
+  // Helper: Get display columns from roster config
+  const getDisplayColumns = (roster: Roster): string[] => {
+    if (!roster.columns || roster.columns.length === 0) {
+      return ['name', 'townhall', 'discord', 'trophies'];
+    }
+
+    const reverseColumnMapping: Record<string, string> = {
+      'Name': 'name',
+      'Townhall Level': 'townhall',
+      'Tag': 'tag',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Discord': 'discord',
+      'Heroes': 'hero_lvs',
+      'War Opt': 'war_pref',
+      'Trophies': 'trophies'
+    };
+
+    return roster.columns.map(col => reverseColumnMapping[col] || col);
+  };
+
+  // Helper: Get sort configuration
+  const getSortConfig = (roster: Roster): string[] => {
+    if (!roster.sort || roster.sort.length === 0) {
+      return ['townhall', 'hitrate', 'hero_lvs', 'added_at'];
+    }
+
+    const reverseSortMapping: Record<string, string> = {
+      'Townhall Level': 'townhall',
+      'Name': 'name',
+      'Tag': 'tag',
+      'Heroes': 'hero_lvs',
+      'Trophies': 'trophies',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Added At': 'added_at'
+    };
+
+    return roster.sort.map(field => reverseSortMapping[field] || field);
+  };
+
+  // Helper: Sort members based on configuration
+  const sortMembers = (members: RosterMember[], sortConfig: string[]): RosterMember[] => {
+    return [...members].sort((a, b) => {
+      for (const field of sortConfig) {
+        if (!field) continue;
+
+        let valueA = a[field as keyof RosterMember];
+        let valueB = b[field as keyof RosterMember];
+
+        if (valueA == null && valueB == null) continue;
+        if (valueA == null) return 1;
+        if (valueB == null) return -1;
+
+        const isDateField = field === 'added_at' || field.includes('date') || field.includes('time');
+
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          const comparison = isDateField
+            ? valueA.toLowerCase().localeCompare(valueB.toLowerCase())
+            : valueB.toLowerCase().localeCompare(valueA.toLowerCase());
+          if (comparison !== 0) return comparison;
+        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
+          if (valueA !== valueB) {
+            return isDateField ? valueA - valueB : valueB - valueA;
+          }
+        } else {
+          const strA = String(valueA).toLowerCase();
+          const strB = String(valueB).toLowerCase();
+          const comparison = isDateField
+            ? strA.localeCompare(strB)
+            : strB.localeCompare(strA);
+          if (comparison !== 0) return comparison;
+        }
+      }
+      return 0;
+    });
+  };
+
+  // Helper: Group members by signup category
+  const groupMembersByCategory = (members: RosterMember[]) => {
+    const grouped: Record<string, RosterMember[]> = {};
+    const uncategorized: RosterMember[] = [];
+
+    members.forEach(member => {
+      if (!member.signup_group) {
+        uncategorized.push(member);
+      } else {
+        if (!grouped[member.signup_group]) {
+          grouped[member.signup_group] = [];
+        }
+        grouped[member.signup_group].push(member);
+      }
+    });
+
+    return { grouped, uncategorized };
+  };
+
   // Filter clan members by search
   const filteredClanMembers = clanMembers.filter(member =>
     member.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
@@ -1231,72 +1344,193 @@ export default function RostersPage() {
 
               {(!selectedRoster.members || selectedRoster.members.length === 0) ? (
                 <div className="text-center py-8 text-muted-foreground">
+                  <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
                   <p>No members in this roster yet</p>
                 </div>
-              ) : (
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-foreground">
-                    Members ({selectedRoster.members.length})
-                  </h3>
-                  <div className="grid gap-2">
-                    {selectedRoster.members.map((member) => (
-                      <div
-                        key={member.tag}
-                        className="flex items-center justify-between p-3 rounded bg-background border border-border"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                            <span className="text-sm font-bold text-primary">{member.townhall}</span>
-                          </div>
-                          <div>
-                            <p className="font-medium text-foreground">{member.name}</p>
-                            <p className="text-xs text-muted-foreground">{member.tag}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {member.hitrate !== null && member.hitrate !== undefined && (
-                            <Badge
-                              variant="secondary"
-                              className={`${
-                                member.hitrate >= 80 ? "bg-green-600/20 text-green-400" :
-                                member.hitrate >= 60 ? "bg-yellow-600/20 text-yellow-400" :
-                                "bg-red-600/20 text-red-400"
-                              }`}
-                            >
-                              {member.hitrate}% HR
-                            </Badge>
-                          )}
-                          {member.current_clan && (
-                            <Badge variant="secondary" className="bg-secondary text-foreground">
-                              {member.current_clan}
-                            </Badge>
-                          )}
-                          <Button
-                            size="sm"
-                            variant={member.sub ? "default" : "outline"}
-                            onClick={() => handleToggleSubstitute(member.tag, member.sub)}
-                            disabled={saving}
-                            className={member.sub ? "bg-primary" : "border-border"}
-                            title={member.sub ? "Unmark as substitute" : "Mark as substitute"}
-                          >
-                            {member.sub ? "SUB" : "SUB"}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleRemoveMember(member.tag)}
-                            disabled={saving}
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            title="Remove member"
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
+              ) : (() => {
+                // Get display configuration
+                const displayColumns = getDisplayColumns(selectedRoster);
+                const sortConfig = getSortConfig(selectedRoster);
+
+                // Sort and group members
+                const sortedMembers = sortMembers(selectedRoster.members, sortConfig);
+                const { grouped, uncategorized } = groupMembersByCategory(sortedMembers);
+
+                // Render cell content based on column type
+                const renderCell = (member: RosterMember, column: string) => {
+                  switch (column) {
+                    case 'townhall':
+                      return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
+                    case 'name':
+                      return (
+                        <span className="font-medium text-foreground">
+                          {member.name}
+                          {member.sub && <span className="text-xs text-yellow-600 ml-1">(Sub)</span>}
+                        </span>
+                      );
+                    case 'tag':
+                      return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
+                    case 'hitrate':
+                      if (member.hitrate !== null && member.hitrate !== undefined) {
+                        const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
+                        return <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>;
+                      }
+                      return <span className="text-muted-foreground">-</span>;
+                    case 'current_clan_tag':
+                      if (member.current_clan_tag && member.current_clan_tag !== '#') {
+                        let colorClass = 'text-red-400';
+                        if (selectedRoster.clan_tag && member.current_clan_tag === selectedRoster.clan_tag) {
+                          colorClass = 'text-green-400';
+                        } else if (clans.some(clan => clan.tag === member.current_clan_tag)) {
+                          colorClass = 'text-yellow-400';
+                        }
+                        return <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>;
+                      }
+                      return <span className="text-muted-foreground">-</span>;
+                    case 'discord':
+                      if (member.discord) {
+                        return <span className="text-blue-400 text-xs">@{member.discord}</span>;
+                      }
+                      return <span className="text-muted-foreground">-</span>;
+                    case 'hero_lvs':
+                      return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;
+                    case 'war_pref':
+                      const warStatus = member.war_pref ? '⚔️ In' : '🚫 Out';
+                      const warColor = member.war_pref ? 'text-green-400' : 'text-red-400';
+                      return <span className={`${warColor} text-xs`}>{warStatus}</span>;
+                    case 'trophies':
+                      return <span className="text-yellow-400">{member.trophies || '-'} 🏆</span>;
+                    default:
+                      return <span className="text-muted-foreground">-</span>;
+                  }
+                };
+
+                return (
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-foreground">
+                      Members ({selectedRoster.members.length})
+                    </h3>
+
+                    <div className="border border-border rounded-lg overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-muted/50">
+                            <tr>
+                              {displayColumns.map(col => (
+                                <th key={col} className="px-3 py-2 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                  {getColumnDisplayName(col)}
+                                </th>
+                              ))}
+                              <th className="px-3 py-2 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                Actions
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {/* Uncategorized members */}
+                            {uncategorized.length > 0 && (
+                              <>
+                                <tr className="bg-muted/30 border-y border-border">
+                                  <td colSpan={displayColumns.length + 1} className="px-3 py-3">
+                                    <div className="flex items-center justify-between">
+                                      <h4 className="font-medium text-sm">Uncategorized</h4>
+                                      <span className="text-xs text-muted-foreground">
+                                        {uncategorized.length} member{uncategorized.length !== 1 ? 's' : ''}
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
+                                {uncategorized.map((member) => (
+                                  <tr key={member.tag} className="hover:bg-accent/50 transition-colors border-b border-border">
+                                    {displayColumns.map(col => (
+                                      <td key={col} className="px-3 py-2 text-center text-xs">
+                                        {renderCell(member, col)}
+                                      </td>
+                                    ))}
+                                    <td className="px-3 py-2 text-center">
+                                      <div className="flex items-center justify-center gap-1">
+                                        <Button
+                                          size="sm"
+                                          variant={member.sub ? "default" : "outline"}
+                                          onClick={() => handleToggleSubstitute(member.tag, member.sub)}
+                                          disabled={saving}
+                                          className={member.sub ? "bg-primary" : "border-border"}
+                                          title={member.sub ? "Unmark as substitute" : "Mark as substitute"}
+                                        >
+                                          SUB
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => handleRemoveMember(member.tag)}
+                                          disabled={saving}
+                                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                          title="Remove member"
+                                        >
+                                          <X className="w-4 h-4" />
+                                        </Button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </>
+                            )}
+
+                            {/* Categorized members */}
+                            {Object.entries(grouped).map(([categoryId, categoryMembers]) => (
+                              <React.Fragment key={categoryId}>
+                                <tr className="bg-muted/30 border-y border-border">
+                                  <td colSpan={displayColumns.length + 1} className="px-3 py-3">
+                                    <div className="flex items-center justify-between">
+                                      <h4 className="font-medium text-sm capitalize">{categoryId}</h4>
+                                      <span className="text-xs text-muted-foreground">
+                                        {categoryMembers.length} member{categoryMembers.length !== 1 ? 's' : ''}
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
+                                {categoryMembers.map((member) => (
+                                  <tr key={member.tag} className="hover:bg-accent/50 transition-colors border-b border-border">
+                                    {displayColumns.map(col => (
+                                      <td key={col} className="px-3 py-2 text-center text-xs">
+                                        {renderCell(member, col)}
+                                      </td>
+                                    ))}
+                                    <td className="px-3 py-2 text-center">
+                                      <div className="flex items-center justify-center gap-1">
+                                        <Button
+                                          size="sm"
+                                          variant={member.sub ? "default" : "outline"}
+                                          onClick={() => handleToggleSubstitute(member.tag, member.sub)}
+                                          disabled={saving}
+                                          className={member.sub ? "bg-primary" : "border-border"}
+                                          title={member.sub ? "Unmark as substitute" : "Mark as substitute"}
+                                        >
+                                          SUB
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => handleRemoveMember(member.tag)}
+                                          disabled={saving}
+                                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                          title="Remove member"
+                                        >
+                                          <X className="w-4 h-4" />
+                                        </Button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </React.Fragment>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           )}
         </DialogContent>
