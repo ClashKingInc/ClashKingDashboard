@@ -61,6 +61,8 @@ const ROLE_TYPES: Array<{ value: RoleType; label: string; icon: any }> = [
   { value: "townhall", label: "Town Hall", icon: Users },
   { value: "league", label: "League", icon: Trophy },
   { value: "builderhall", label: "Builder Hall", icon: Hammer },
+  { value: "builder_league", label: "Builder League", icon: Award },
+  { value: "achievement", label: "Achievement", icon: Award },
   { value: "status", label: "Status/Tenure", icon: Clock },
   { value: "family_position", label: "Family Position", icon: Crown },
 ];
@@ -381,6 +383,72 @@ export default function RolesPage() {
           </>
         );
 
+      case "builder_league":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="role">Discord Role</Label>
+              <Select
+                value={newRole.role_id?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+              >
+                <SelectTrigger id="role">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {discordRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="builder_league">Builder League</Label>
+              <Input
+                id="builder_league"
+                value={newRole.builder_league || ""}
+                onChange={(e) => setNewRole({ ...newRole, builder_league: e.target.value })}
+                placeholder="e.g., Titanium League I"
+              />
+            </div>
+          </>
+        );
+
+      case "achievement":
+        return (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="role">Discord Role</Label>
+              <Select
+                value={newRole.role_id?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+              >
+                <SelectTrigger id="role">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {discordRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="achievement">Achievement Name</Label>
+              <Input
+                id="achievement"
+                value={newRole.achievement || ""}
+                onChange={(e) => setNewRole({ ...newRole, achievement: e.target.value })}
+                placeholder="e.g., Gold Grab"
+              />
+            </div>
+          </>
+        );
+
       case "status":
         return (
           <>
@@ -507,6 +575,12 @@ export default function RolesPage() {
                 break;
               case "builderhall":
                 criteria = `BH ${role.bh}`;
+                break;
+              case "builder_league":
+                criteria = role.builder_league || "";
+                break;
+              case "achievement":
+                criteria = role.achievement || "";
                 break;
               case "status":
                 criteria = `${role.months} month${role.months > 1 ? "s" : ""}`;
@@ -791,11 +865,12 @@ export default function RolesPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
-              <TabsList className="grid w-full grid-cols-5">
+              <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
                 {ROLE_TYPES.map((type) => (
-                  <TabsTrigger key={type.value} value={type.value}>
-                    <type.icon className="mr-2 h-4 w-4" />
-                    {type.label}
+                  <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm">
+                    <type.icon className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                    <span className="hidden sm:inline">{type.label}</span>
+                    <span className="sm:hidden">{type.label.split(' ')[0]}</span>
                   </TabsTrigger>
                 ))}
               </TabsList>
