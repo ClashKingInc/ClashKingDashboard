@@ -24,8 +24,14 @@ export class BaseApiClient {
       ...options.headers,
     };
 
-    if (this.config.accessToken && !options.headers?.['Authorization']) {
-      headers['Authorization'] = `Bearer ${this.config.accessToken}`;
+    // Get token from config or localStorage (client-side only)
+    let token = this.config.accessToken;
+    if (!token && typeof window !== 'undefined') {
+      token = localStorage.getItem('access_token') || undefined;
+    }
+
+    if (token && !options.headers?.['Authorization']) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     try {

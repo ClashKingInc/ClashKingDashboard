@@ -12,6 +12,7 @@ import { WarClient } from './clients/war-client';
 import { ServerClient } from './clients/server-client';
 import { LinkClient } from './clients/link-client';
 import { UtilityClient } from './clients/utility-client';
+import { RolesClient } from './clients/roles-client';
 
 /**
  * Main API client with all endpoints organized by domain
@@ -25,6 +26,7 @@ export class ClashKingApiClient {
   public readonly servers: ServerClient;
   public readonly links: LinkClient;
   public readonly utils: UtilityClient;
+  public readonly roles: RolesClient;
 
   constructor(config: ApiConfig) {
     // Initialize all specialized clients with the same config
@@ -36,6 +38,7 @@ export class ClashKingApiClient {
     this.servers = new ServerClient(config);
     this.links = new LinkClient(config);
     this.utils = new UtilityClient(config);
+    this.roles = new RolesClient(config);
   }
 
   /**
@@ -50,6 +53,7 @@ export class ClashKingApiClient {
     this.servers.setAccessToken(token);
     this.links.setAccessToken(token);
     this.utils.setAccessToken(token);
+    this.roles.setAccessToken(token);
   }
 
   /**
@@ -64,6 +68,7 @@ export class ClashKingApiClient {
     this.servers.setRefreshToken(token);
     this.links.setRefreshToken(token);
     this.utils.setRefreshToken(token);
+    this.roles.setRefreshToken(token);
   }
 
   /**
@@ -78,6 +83,7 @@ export class ClashKingApiClient {
     this.servers.clearTokens();
     this.links.clearTokens();
     this.utils.clearTokens();
+    this.roles.clearTokens();
   }
 
   /**
@@ -106,9 +112,14 @@ export function createApiClient(
 /**
  * Default API client instance
  * Uses environment variables for configuration
+ *
+ * For client-side requests, use the Next.js API routes (/api) as proxy
+ * For server-side requests, use the backend URL directly
  */
 export const apiClient = createApiClient(
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  typeof window !== 'undefined'
+    ? '/api'  // Client-side: use Next.js API routes
+    : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',  // Server-side: use backend directly
   undefined,
   undefined
 );

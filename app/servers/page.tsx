@@ -7,25 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Users } from "lucide-react";
-
-interface DiscordGuild {
-  id: string;
-  name: string;
-  icon: string | null;
-  owner: boolean;
-  permissions: string;
-  role: "Owner" | "Administrator" | "Manager" | "Member";
-  features: string[];
-}
-
-interface GuildWithBot extends DiscordGuild {
-  has_bot: boolean;
-  member_count?: number;
-}
+import { apiClient } from "@/lib/api/client";
+import type { GuildInfo } from "@/lib/api/types/server";
 
 export default function ServersPage() {
   const router = useRouter();
-  const [guilds, setGuilds] = useState<GuildWithBot[]>([]);
+  const [guilds, setGuilds] = useState<GuildInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,21 +25,13 @@ export default function ServersPage() {
           return;
         }
 
-        // Fetch user's guilds with bot presence from our backend
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        // Set token for API client
+        apiClient.setAccessToken(accessToken);
 
-        if (!apiUrl) {
-          throw new Error("API URL is not set in environment variables.");
-        }
+        // Fetch user's guilds using API client
+        const response = await apiClient.servers.getGuilds();
 
-        const response = await fetch(`${apiUrl}/v2/guilds`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-
-        if (!response.ok) {
+        if (response.error || !response.data) {
           if (response.status === 401) {
             // Token expired, redirect to login
             localStorage.removeItem("access_token");
@@ -61,11 +40,20 @@ export default function ServersPage() {
             router.push("/login");
             return;
           }
-          throw new Error("Failed to fetch guilds");
+          throw new Error(response.error || "Failed to fetch guilds");
         }
 
-        const guildsData: GuildWithBot[] = await response.json();
-        setGuilds(guildsData);
+        // Sort guilds: servers with bot first, then by name
+        const sortedGuilds = response.data.sort((a, b) => {
+          // Primary sort: has_bot (true first)
+          if (a.has_bot && !b.has_bot) return -1;
+          if (!a.has_bot && b.has_bot) return 1;
+
+          // Secondary sort: alphabetically by name
+          return a.name.localeCompare(b.name);
+        });
+
+        setGuilds(sortedGuilds);
       } catch (err) {
         console.error("Error fetching guilds:", err);
         setError(err instanceof Error ? err.message : "Failed to load servers");
@@ -77,7 +65,7 @@ export default function ServersPage() {
     fetchGuilds();
   }, [router]);
 
-  const getGuildIconUrl = (guild: DiscordGuild) => {
+  const getGuildIconUrl = (guild: GuildInfo) => {
     console.log(guild);
     if (!guild.icon) return null;
     if (guild.icon.startsWith('https')) {
@@ -88,7 +76,7 @@ export default function ServersPage() {
     }
   };
 
-  const handleGuildClick = (guild: GuildWithBot) => {
+  const handleGuildClick = (guild: GuildInfo) => {
     if (guild.has_bot) {
       router.push(`/en/dashboard/${guild.id}`);
     }
