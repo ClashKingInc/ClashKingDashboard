@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Sparkles, Eye } from "lucide-react";
+import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 
@@ -37,9 +37,7 @@ export default function GeneralSettingsPage() {
     change_nickname: true,
     nickname_rule: "[{player_clan_abbreviation}] {player_name}",
     non_family_nickname_rule: "{player_name}",
-    flair_non_family: false,
     embed_color: 14227209, // #D90709 as integer
-    leadership_eval: true,
     api_token: true,
     full_whitelist_role: undefined as string | undefined,
   });
@@ -67,9 +65,7 @@ export default function GeneralSettingsPage() {
           change_nickname: response.data.change_nickname ?? true,
           nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
           non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
-          flair_non_family: response.data.flair_non_family ?? false,
           embed_color: response.data.embed_color ?? 14227209,
-          leadership_eval: response.data.leadership_eval ?? true,
           api_token: response.data.api_token ?? true,
           full_whitelist_role: response.data.full_whitelist_role?.toString(),
         });
@@ -226,11 +222,10 @@ export default function GeneralSettingsPage() {
               <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
               <div className="space-y-1">
                 <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  Looking for clan-specific settings?
+                  Looking for more settings?
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Ban/Strike logs, war channels, and other clan-specific configurations are managed in the{" "}
-                  <strong>Clans</strong> page.
+                  Role management settings are in <strong>Roles</strong> page. Clan-specific settings (ban/strike logs, war channels) are in <strong>Clans</strong> page.
                 </p>
               </div>
             </div>
@@ -367,25 +362,6 @@ export default function GeneralSettingsPage() {
                   Format for members not in your clan family
                 </p>
               </div>
-
-              {/* Flair Non-Family */}
-              <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-3">
-                <div className="space-y-0.5 flex-1">
-                  <Label htmlFor="flair-non-family" className="text-sm font-medium">
-                    Flair Non-Family
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Assign TH/trophy roles to non-family members
-                  </p>
-                </div>
-                <Switch
-                  id="flair-non-family"
-                  checked={settings.flair_non_family}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, flair_non_family: checked })
-                  }
-                />
-              </div>
             </CardContent>
           </Card>
 
@@ -454,49 +430,30 @@ export default function GeneralSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Advanced Features */}
+          {/* Security & Permissions */}
           <Card className="bg-card border-border">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-orange-500/10 rounded-lg">
-                  <Sparkles className="h-4 w-4 text-orange-500" />
+                <div className="p-2 bg-green-500/10 rounded-lg">
+                  <Lock className="h-4 w-4 text-green-500" />
                 </div>
                 <div>
-                  <CardTitle className="text-foreground">Advanced Features</CardTitle>
+                  <CardTitle className="text-foreground">Security & Permissions</CardTitle>
                   <CardDescription className="text-xs">
-                    Enable advanced bot capabilities
+                    Control access and verification
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Leadership Evaluation */}
-              <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-4">
-                <div className="space-y-1 flex-1">
-                  <Label htmlFor="leadership-eval" className="text-sm font-medium">
-                    Leadership Evaluation
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Auto-assign roles for clan leaders and co-leaders
-                  </p>
-                </div>
-                <Switch
-                  id="leadership-eval"
-                  checked={settings.leadership_eval}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, leadership_eval: checked })
-                  }
-                />
-              </div>
-
-              {/* API Token */}
+              {/* API Token Requirement */}
               <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-4">
                 <div className="space-y-1 flex-1">
                   <Label htmlFor="api-token" className="text-sm font-medium">
-                    ClashKing API
+                    Require Player API Token
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Use ClashKing API for enhanced features
+                    Players must verify account ownership with Clash of Clans API token when linking (recommended)
                   </p>
                 </div>
                 <Switch
