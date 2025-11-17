@@ -479,13 +479,27 @@ export default function RolesPage() {
           <TableRow>
             <TableHead>Discord Role</TableHead>
             <TableHead>Criteria</TableHead>
-            <TableHead>Status</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {roles.map((role: any, index: number) => {
-            const discordRole = discordRoles.find((r) => r.id === role.role_id?.toString() || r.id === role.id?.toString());
+            // Get the role ID from either role_id or id field
+            const roleId = (role.role_id || role.id)?.toString();
+
+            // Find matching Discord role by comparing string IDs
+            const discordRole = discordRoles.find((r) => r.id === roleId);
+
+            // Debug log if role not found
+            if (!discordRole && roleId) {
+              console.log('[Roles Debug] Role not found:', {
+                lookingFor: roleId,
+                roleType: roleType,
+                availableRoles: discordRoles.map(r => ({ id: r.id, name: r.name })),
+                roleData: role
+              });
+            }
+
             let criteria = "";
 
             switch (roleType) {
@@ -522,13 +536,6 @@ export default function RolesPage() {
                   </div>
                 </TableCell>
                 <TableCell>{criteria}</TableCell>
-                <TableCell>
-                  {role.toggle === undefined || role.toggle ? (
-                    <Badge className="bg-green-500">Enabled</Badge>
-                  ) : (
-                    <Badge variant="secondary">Disabled</Badge>
-                  )}
-                </TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"
