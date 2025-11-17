@@ -117,6 +117,10 @@ export default function RosterDetailPage() {
     sort: [] as string[],
   });
 
+  // Drag & Drop state
+  const [draggedMember, setDraggedMember] = useState<string | null>(null);
+  const [dragOverCategory, setDragOverCategory] = useState<string | null>(null);
+
   // Load roster data
   useEffect(() => {
     loadRoster();
@@ -359,6 +363,90 @@ export default function RosterDetailPage() {
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Drag & Drop handlers
+  const handleDragStart = (e: React.DragEvent<HTMLTableRowElement>, memberTag: string) => {
+    setDraggedMember(memberTag);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", memberTag);
+
+    // Add visual feedback
+    e.currentTarget.style.opacity = "0.5";
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLTableRowElement>) => {
+    setDraggedMember(null);
+    setDragOverCategory(null);
+    e.currentTarget.style.opacity = "1";
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>, categoryId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverCategory(categoryId);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverCategory(null);
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLTableRowElement>, targetCategoryId: string) => {
+    e.preventDefault();
+    setDragOverCategory(null);
+
+    if (!draggedMember || !roster) return;
+
+    // Find the dragged member's current category
+    const member = roster.members?.find(m => m.tag === draggedMember);
+    if (!member) return;
+
+    const currentCategory = member.signup_group || "";
+
+    // Don't do anything if dropping in the same category
+    if (currentCategory === targetCategoryId) {
+      setDraggedMember(null);
+      return;
+    }
+
+    // Update member's signup_group
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(
+        `/api/v2/roster/${rosterId}/members/${encodeURIComponent(draggedMember)}?server_id=${guildId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({
+            signup_group: targetCategoryId === "" ? null : targetCategoryId
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update member category");
+      }
+
+      await loadRoster();
+      toast({
+        title: "Success",
+        description: `Member moved to ${targetCategoryId || 'Uncategorized'}`,
+      });
+    } catch (error) {
+      console.error("Error moving member:", error);
+      toast({
+        title: "Error",
+        description: "Failed to move member. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+      setDraggedMember(null);
     }
   };
 
@@ -896,7 +984,20 @@ export default function RosterDetailPage() {
                                 </td>
                               </tr>
                               {uncategorized.map((member) => (
-                                <tr key={member.tag} className="hover:bg-accent/50 transition-colors border-b border-border">
+                                <tr
+                                  key={member.tag}
+                                  draggable={true}
+                                  onDragStart={(e) => handleDragStart(e, member.tag)}
+                                  onDragEnd={handleDragEnd}
+                                  onDragOver={(e) => handleDragOver(e, "")}
+                                  onDragLeave={handleDragLeave}
+                                  onDrop={(e) => handleDrop(e, "")}
+                                  className={`hover:bg-accent/50 transition-colors border-b border-border cursor-move ${
+                                    draggedMember === member.tag ? 'opacity-50' : ''
+                                  } ${
+                                    dragOverCategory === "" ? 'bg-primary/10 border-l-4 border-l-primary' : ''
+                                  }`}
+                                >
                                   {displayColumns.map(col => (
                                     <td key={col} className="px-3 py-2 text-center text-xs">
                                       {renderCell(member, col)}
@@ -943,7 +1044,20 @@ export default function RosterDetailPage() {
                                 </td>
                               </tr>
                               {categoryMembers.map((member) => (
-                                <tr key={member.tag} className="hover:bg-accent/50 transition-colors border-b border-border">
+                                <tr
+                                  key={member.tag}
+                                  draggable={true}
+                                  onDragStart={(e) => handleDragStart(e, member.tag)}
+                                  onDragEnd={handleDragEnd}
+                                  onDragOver={(e) => handleDragOver(e, categoryId)}
+                                  onDragLeave={handleDragLeave}
+                                  onDrop={(e) => handleDrop(e, categoryId)}
+                                  className={`hover:bg-accent/50 transition-colors border-b border-border cursor-move ${
+                                    draggedMember === member.tag ? 'opacity-50' : ''
+                                  } ${
+                                    dragOverCategory === categoryId ? 'bg-primary/10 border-l-4 border-l-primary' : ''
+                                  }`}
+                                >
                                   {displayColumns.map(col => (
                                     <td key={col} className="px-3 py-2 text-center text-xs">
                                       {renderCell(member, col)}
