@@ -1313,6 +1313,117 @@ export default function RostersPage() {
 
           {selectedRoster && (
             <div className="space-y-4">
+              {/* Roster Info Card */}
+              <Card className="bg-gradient-to-br from-secondary/30 to-secondary/10 border-border">
+                <CardContent className="pt-6">
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {/* Members Stats */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <Users className="w-4 h-4" />
+                        <span>Members</span>
+                      </div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-bold text-foreground">
+                          {selectedRoster.members?.length || 0}
+                        </span>
+                        {selectedRoster.roster_size && (
+                          <span className="text-muted-foreground">/ {selectedRoster.roster_size}</span>
+                        )}
+                      </div>
+                      {selectedRoster.roster_size && (
+                        <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all ${
+                              ((selectedRoster.members?.length || 0) / selectedRoster.roster_size) >= 0.9
+                                ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                                : ((selectedRoster.members?.length || 0) / selectedRoster.roster_size) >= 0.5
+                                ? "bg-gradient-to-r from-yellow-500 to-orange-500"
+                                : "bg-gradient-to-r from-red-500 to-pink-500"
+                            }`}
+                            style={{ width: `${Math.min(((selectedRoster.members?.length || 0) / selectedRoster.roster_size) * 100, 100)}%` }}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Performance Stats */}
+                    {selectedRoster.members && selectedRoster.members.length > 0 && (() => {
+                      const stats = getRosterStats(selectedRoster);
+                      return (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
+                            <span className="text-sm text-muted-foreground">Avg TH</span>
+                            <span className="font-bold text-orange-400">TH{stats.avgTownhall}</span>
+                          </div>
+                          {stats.avgHitrate > 0 && (
+                            <div className={`flex items-center justify-between p-2 rounded-md border ${
+                              stats.avgHitrate >= 80
+                                ? "bg-green-500/10 border-green-500/20"
+                                : stats.avgHitrate >= 60
+                                ? "bg-yellow-500/10 border-yellow-500/20"
+                                : "bg-red-500/10 border-red-500/20"
+                            }`}>
+                              <span className="text-sm text-muted-foreground">Avg Hitrate</span>
+                              <span className={`font-bold ${
+                                stats.avgHitrate >= 80 ? "text-green-400" :
+                                stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
+                              }`}>
+                                {stats.avgHitrate}%
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* Distribution & Info */}
+                    <div className="space-y-3">
+                      {selectedRoster.members && selectedRoster.members.length > 0 && (() => {
+                        const stats = getRosterStats(selectedRoster);
+                        return (
+                          <div className="flex items-center gap-2">
+                            {selectedRoster.clan_tag && (
+                              <div className="flex-1 text-center p-2 bg-blue-500/10 rounded-md border border-blue-500/20">
+                                <div className="text-xs text-muted-foreground">Clan</div>
+                                <div className="text-lg font-bold text-blue-400">{stats.clanCount}</div>
+                              </div>
+                            )}
+                            <div className="flex-1 text-center p-2 bg-green-500/10 rounded-md border border-green-500/20">
+                              <div className="text-xs text-muted-foreground">Family</div>
+                              <div className="text-lg font-bold text-green-400">{stats.familyCount}</div>
+                            </div>
+                            <div className="flex-1 text-center p-2 bg-red-500/10 rounded-md border border-red-500/20">
+                              <div className="text-xs text-muted-foreground">External</div>
+                              <div className="text-lg font-bold text-red-400">{stats.externalCount}</div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {selectedRoster.description && (
+                        <div className="p-2 bg-secondary/30 rounded-md border border-border">
+                          <p className="text-xs text-muted-foreground italic">{selectedRoster.description}</p>
+                        </div>
+                      )}
+
+                      {(() => {
+                        const thRestriction = getTownhallRestrictionText(selectedRoster);
+                        if (thRestriction !== "No restriction") {
+                          return (
+                            <div className="flex items-center justify-between p-2 bg-primary/5 rounded-md border border-primary/10">
+                              <span className="text-xs text-muted-foreground">TH Restriction</span>
+                              <span className="font-bold text-primary text-xs">{thRestriction}</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               <div className="flex gap-2">
                 <Button
                   variant="outline"
