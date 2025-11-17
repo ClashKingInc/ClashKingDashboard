@@ -366,11 +366,25 @@ export default function LogsPage() {
     }).length;
   };
 
+  const getColorClasses = (color: string) => {
+    const colorMap: Record<string, { bg: string; text: string }> = {
+      'green': { bg: 'bg-green-500/10', text: 'text-green-500' },
+      'red': { bg: 'bg-red-500/10', text: 'text-red-500' },
+      'purple': { bg: 'bg-purple-500/10', text: 'text-purple-500' },
+      'yellow': { bg: 'bg-yellow-500/10', text: 'text-yellow-500' },
+      'blue': { bg: 'bg-blue-500/10', text: 'text-blue-500' },
+      'orange': { bg: 'bg-orange-500/10', text: 'text-orange-500' },
+      'gray': { bg: 'bg-gray-500/10', text: 'text-gray-500' },
+    };
+    return colorMap[color] || colorMap['gray'];
+  };
+
   const renderLogCard = (logDef: LogTypeDefinition) => {
     const Icon = logDef.icon;
     const isEnabled = isLogEnabled(logDef.keys);
     const selectedChannel = getSelectedChannelForLogs(logDef.keys);
     const selectedThread = getSelectedThreadForLogs(logDef.keys);
+    const colors = getColorClasses(logDef.color);
 
     // Filter threads for the selected channel
     const channelThreads = selectedChannel
@@ -378,14 +392,16 @@ export default function LogsPage() {
       : [];
 
     return (
-      <Card key={logDef.keys[0]} className="bg-card border-border">
+      <Card key={logDef.keys[0]} className="bg-card border-border hover:border-border/80 transition-colors">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icon className={`h-5 w-5 text-${logDef.color}-500`} />
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg ${colors.bg}`}>
+                <Icon className={`h-4 w-4 ${colors.text}`} />
+              </div>
               <div>
-                <CardTitle className="text-foreground">{logDef.label}</CardTitle>
-                <CardDescription>{logDef.description}</CardDescription>
+                <CardTitle className="text-base text-foreground">{logDef.label}</CardTitle>
+                <CardDescription className="text-xs">{logDef.description}</CardDescription>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -393,7 +409,10 @@ export default function LogsPage() {
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               )}
               {isEnabled && !saving && (
-                <div className="text-xs text-green-600 font-medium">Configured</div>
+                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/10">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  <span className="text-xs text-green-600 font-medium">Active</span>
+                </div>
               )}
             </div>
           </div>
@@ -401,7 +420,7 @@ export default function LogsPage() {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label>Channel</Label>
+              <Label className="text-sm font-medium">Channel</Label>
               <Select
                 value={selectedChannel || "disabled"}
                 onValueChange={(value) => handleChannelChange(logDef.keys, value)}
@@ -410,7 +429,7 @@ export default function LogsPage() {
                   if (open) loadThreadsIfNeeded();
                 }}
               >
-                <SelectTrigger>
+                <SelectTrigger className="bg-secondary border-border">
                   <SelectValue placeholder="Select channel" />
                 </SelectTrigger>
                 <SelectContent>
@@ -428,13 +447,13 @@ export default function LogsPage() {
 
             {selectedChannel && channelThreads.length > 0 && (
               <div className="space-y-2">
-                <Label>Thread (Optional)</Label>
+                <Label className="text-sm font-medium">Thread (Optional)</Label>
                 <Select
                   value={selectedThread || "none"}
                   onValueChange={(value) => handleThreadChange(logDef.keys, value)}
                   disabled={saving === logDef.keys[0]}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-secondary border-border">
                     <SelectValue placeholder="Select thread" />
                   </SelectTrigger>
                   <SelectContent>
@@ -470,21 +489,17 @@ export default function LogsPage() {
 
   return (
     <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-lg bg-blue-500/10">
+            <FileText className="h-8 w-8 text-blue-500" />
+          </div>
           <div>
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-                <FileText className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">Activity Logs</h1>
-                <p className="text-muted-foreground mt-1">
-                  Configure automatic logging for clan and player activities
-                </p>
-              </div>
-            </div>
+            <h1 className="text-3xl font-bold text-foreground">Activity Logs</h1>
+            <p className="text-muted-foreground mt-1">
+              Configure automatic logging for clan and player activities
+            </p>
           </div>
         </div>
 
@@ -553,63 +568,78 @@ export default function LogsPage() {
           </Card>
         </div>
 
-        {/* Clan Selector - Compact version */}
-        <div className="flex justify-end mb-4">
-          <div className="flex items-center gap-2">
-            <Label className="text-sm text-muted-foreground">Clan:</Label>
-            <Select value={selectedClan} onValueChange={setSelectedClan}>
-              <SelectTrigger className="w-[250px]">
-                <SelectValue placeholder="Select a clan" />
-              </SelectTrigger>
-              <SelectContent>
-                {clanLogs.map((clan) => (
-                  <SelectItem key={clan.tag} value={clan.tag}>
-                    {clan.name} ({clan.tag})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        {/* Clan Selector */}
+        <Card className="bg-card border-border">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 flex-1">
+                <div className="p-2 rounded-lg bg-purple-500/10">
+                  <Users className="h-4 w-4 text-purple-500" />
+                </div>
+                <Label className="text-sm font-medium">Select Clan to Configure</Label>
+              </div>
+              <Select value={selectedClan} onValueChange={setSelectedClan}>
+                <SelectTrigger className="w-[300px] bg-secondary border-border">
+                  <SelectValue placeholder="Select a clan" />
+                </SelectTrigger>
+                <SelectContent>
+                  {clanLogs.map((clan) => (
+                    <SelectItem key={clan.tag} value={clan.tag}>
+                      {clan.name} ({clan.tag})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
 
         <Tabs defaultValue="clan" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-[800px]">
-            <TabsTrigger value="clan">
+          <TabsList className="grid w-full grid-cols-4 lg:w-[800px] bg-secondary">
+            <TabsTrigger value="clan" className="data-[state=active]:bg-background">
               <Users className="mr-2 h-4 w-4" />
-              Clan Logs
+              Clan
             </TabsTrigger>
-            <TabsTrigger value="war">
+            <TabsTrigger value="war" className="data-[state=active]:bg-background">
               <Swords className="mr-2 h-4 w-4" />
-              War Logs
+              War
             </TabsTrigger>
-            <TabsTrigger value="capital">
+            <TabsTrigger value="capital" className="data-[state=active]:bg-background">
               <Castle className="mr-2 h-4 w-4" />
-              Capital Logs
+              Capital
             </TabsTrigger>
-            <TabsTrigger value="player">
+            <TabsTrigger value="player" className="data-[state=active]:bg-background">
               <TrendingUp className="mr-2 h-4 w-4" />
-              Player Logs
+              Player
             </TabsTrigger>
           </TabsList>
 
           {/* CLAN LOGS TAB */}
-          <TabsContent value="clan" className="space-y-6">
-            {CLAN_LOGS.map(renderLogCard)}
+          <TabsContent value="clan" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              {CLAN_LOGS.map(renderLogCard)}
+            </div>
           </TabsContent>
 
           {/* WAR LOGS TAB */}
-          <TabsContent value="war" className="space-y-6">
-            {WAR_LOGS.map(renderLogCard)}
+          <TabsContent value="war" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              {WAR_LOGS.map(renderLogCard)}
+            </div>
           </TabsContent>
 
           {/* CAPITAL LOGS TAB */}
-          <TabsContent value="capital" className="space-y-6">
-            {CAPITAL_LOGS.map(renderLogCard)}
+          <TabsContent value="capital" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              {CAPITAL_LOGS.map(renderLogCard)}
+            </div>
           </TabsContent>
 
           {/* PLAYER LOGS TAB */}
-          <TabsContent value="player" className="space-y-6">
-            {PLAYER_LOGS.map(renderLogCard)}
+          <TabsContent value="player" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              {PLAYER_LOGS.map(renderLogCard)}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
