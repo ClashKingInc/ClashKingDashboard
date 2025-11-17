@@ -9,6 +9,7 @@ interface SidebarWrapperProps {
 }
 
 export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
+  const [isLoading, setIsLoading] = useState(true);
   const [serverInfo, setServerInfo] = useState({
     name: "My Server",
     icon: undefined as string | undefined,
@@ -18,7 +19,10 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
     async function fetchServerInfo() {
       try {
         const token = localStorage.getItem("access_token");
-        if (!token) return;
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
 
         // Set token for API client
         apiClient.setAccessToken(token);
@@ -28,6 +32,7 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
 
         if (response.error || !response.data) {
           console.error("Failed to fetch guild info:", response.error);
+          setIsLoading(false);
           return;
         }
 
@@ -44,6 +49,8 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
         });
       } catch (error) {
         console.error("Failed to fetch server info:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -55,6 +62,7 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
       guildId={guildId}
       guildName={serverInfo.name}
       guildIcon={serverInfo.icon}
+      isLoading={isLoading}
     />
   );
 }
