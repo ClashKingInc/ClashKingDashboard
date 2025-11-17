@@ -70,6 +70,29 @@ export interface BanRequest {
 }
 
 /**
+ * Banned player information
+ */
+export interface BannedPlayer {
+  player_tag: string;
+  player_name?: string;
+  reason: string;
+  banned_by: string;
+  banned_date: string;
+  clan_tag?: string | null;
+  clan_name?: string | null;
+  image_url?: string;
+}
+
+/**
+ * Ban add/remove response
+ */
+export interface BanResponse {
+  status: string;
+  player_tag: string;
+  server_id: number;
+}
+
+/**
  * Discord Guild/Server information
  */
 export interface GuildInfo {

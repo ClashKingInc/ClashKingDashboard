@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -33,72 +35,143 @@ import {
   Trash2,
   Calendar,
   User,
+  Loader2,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-
-// Mock data for banned players
-const mockBannedPlayers = [
-  {
-    player_tag: "#ABC123",
-    player_name: "BadPlayer1",
-    reason: "Harassment and toxic behavior in clan chat",
-    banned_by: "Admin#1234",
-    banned_date: "2024-01-15",
-    clan_tag: "#CLAN123",
-    clan_name: "Elite Warriors",
-  },
-  {
-    player_tag: "#DEF456",
-    player_name: "Cheater2",
-    reason: "Using third-party tools to cheat in wars",
-    banned_by: "Moderator#5678",
-    banned_date: "2024-01-10",
-    clan_tag: "#CLAN456",
-    clan_name: "War Masters",
-  },
-  {
-    player_tag: "#GHI789",
-    player_name: "Spammer3",
-    reason: "Repeated spam and advertising",
-    banned_by: "Admin#1234",
-    banned_date: "2024-01-05",
-    clan_tag: null,
-    clan_name: null,
-  },
-];
+import { apiClient } from "@/lib/api/client";
+import type { BannedPlayer } from "@/lib/api/types/server";
+import { useToast } from "@/hooks/use-toast";
 
 export default function BansPage() {
-  const [bans, setBans] = useState(mockBannedPlayers);
+  const params = useParams();
+  const guildId = params.guildId as string;
+  const { toast } = useToast();
+
+  const [bans, setBans] = useState<BannedPlayer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newBan, setNewBan] = useState({
     player_tag: "",
     player_name: "",
     reason: "",
   });
 
-  const handleAddBan = () => {
-    // TODO: Connect to API
-    const ban = {
-      ...newBan,
-      banned_by: "CurrentUser#0000",
-      banned_date: new Date().toISOString().split("T")[0],
-      clan_tag: null,
-      clan_name: null,
-    };
-    setBans([...bans, ban]);
-    setNewBan({ player_tag: "", player_name: "", reason: "" });
-    setIsAddDialogOpen(false);
+  // Fetch bans on mount
+  useEffect(() => {
+    fetchBans();
+  }, [guildId]);
+
+  const fetchBans = async () => {
+    try {
+      setIsLoading(true);
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+      const response = await apiClient.servers.getBans(guildId);
+
+      if (response.error || !response.data) {
+        throw new Error(response.error || "Failed to fetch bans");
+      }
+
+      setBans(response.data.items || []);
+    } catch (error) {
+      console.error("Error fetching bans:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load banned players",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleRemoveBan = (playerTag: string) => {
-    // TODO: Connect to API
-    setBans(bans.filter((ban) => ban.player_tag !== playerTag));
+  const handleAddBan = async () => {
+    if (!newBan.player_tag || !newBan.reason) return;
+
+    try {
+      setIsSubmitting(true);
+      const token = localStorage.getItem("access_token");
+      const user = localStorage.getItem("user");
+      const username = user ? JSON.parse(user).username : "Unknown";
+
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+
+      // Clean player tag (remove # if present)
+      const cleanTag = newBan.player_tag.replace(/^#/, "");
+
+      const response = await apiClient.servers.addBan(guildId, cleanTag, {
+        reason: newBan.reason,
+        added_by: username,
+      });
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      toast({
+        title: "Success",
+        description: `Player ${newBan.player_tag} has been banned`,
+      });
+
+      // Refresh the ban list
+      await fetchBans();
+
+      setNewBan({ player_tag: "", player_name: "", reason: "" });
+      setIsAddDialogOpen(false);
+    } catch (error) {
+      console.error("Error adding ban:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to add ban",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRemoveBan = async (playerTag: string) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+
+      // Clean player tag (remove # if present)
+      const cleanTag = playerTag.replace(/^#/, "");
+
+      const response = await apiClient.servers.removeBan(guildId, cleanTag);
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
+
+      toast({
+        title: "Success",
+        description: `Ban removed for player ${playerTag}`,
+      });
+
+      // Refresh the ban list
+      await fetchBans();
+    } catch (error) {
+      console.error("Error removing ban:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to remove ban",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredBans = bans.filter(
     (ban) =>
-      ban.player_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (ban.player_name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
       ban.player_tag.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ban.reason.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -145,6 +218,7 @@ export default function BansPage() {
                     onChange={(e) =>
                       setNewBan({ ...newBan, player_tag: e.target.value })
                     }
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div className="space-y-2">
@@ -156,6 +230,7 @@ export default function BansPage() {
                     onChange={(e) =>
                       setNewBan({ ...newBan, player_name: e.target.value })
                     }
+                    disabled={isSubmitting}
                   />
                 </div>
                 <div className="space-y-2">
@@ -168,6 +243,7 @@ export default function BansPage() {
                       setNewBan({ ...newBan, reason: e.target.value })
                     }
                     rows={4}
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -175,14 +251,16 @@ export default function BansPage() {
                 <Button
                   variant="outline"
                   onClick={() => setIsAddDialogOpen(false)}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </Button>
                 <Button
                   className="bg-red-500 hover:bg-red-600"
                   onClick={handleAddBan}
-                  disabled={!newBan.player_tag || !newBan.reason}
+                  disabled={!newBan.player_tag || !newBan.reason || isSubmitting}
                 >
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Add Ban
                 </Button>
               </DialogFooter>
@@ -209,10 +287,14 @@ export default function BansPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-foreground">{bans.length}</div>
-                <UserX className="h-8 w-8 text-red-500/50" />
-              </div>
+              {isLoading ? (
+                <Skeleton className="h-10 w-20" />
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-foreground">{bans.length}</div>
+                  <UserX className="h-8 w-8 text-red-500/50" />
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -223,18 +305,22 @@ export default function BansPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-foreground">
-                  {bans.filter((b) => {
-                    const days = Math.floor(
-                      (new Date().getTime() - new Date(b.banned_date).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                    );
-                    return days <= 7;
-                  }).length}
+              {isLoading ? (
+                <Skeleton className="h-10 w-20" />
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-foreground">
+                    {bans.filter((b) => {
+                      const days = Math.floor(
+                        (new Date().getTime() - new Date(b.banned_date).getTime()) /
+                          (1000 * 60 * 60 * 24)
+                      );
+                      return days <= 7;
+                    }).length}
+                  </div>
+                  <Calendar className="h-8 w-8 text-orange-500/50" />
                 </div>
-                <Calendar className="h-8 w-8 text-orange-500/50" />
-              </div>
+              )}
             </CardContent>
           </Card>
 
@@ -245,12 +331,22 @@ export default function BansPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-sm font-medium text-foreground truncate">
-                Harassment & Toxicity
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {Math.round((1 / bans.length) * 100)}% of all bans
-              </p>
+              {isLoading ? (
+                <Skeleton className="h-10 w-32" />
+              ) : bans.length > 0 ? (
+                <>
+                  <div className="text-sm font-medium text-foreground truncate">
+                    Harassment & Toxicity
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {Math.round((1 / bans.length) * 100)}% of all bans
+                  </p>
+                </>
+              ) : (
+                <div className="text-sm font-medium text-muted-foreground">
+                  No bans yet
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -262,7 +358,11 @@ export default function BansPage() {
               <div>
                 <CardTitle>Banned Players</CardTitle>
                 <CardDescription>
-                  {filteredBans.length} player{filteredBans.length !== 1 ? "s" : ""} banned
+                  {isLoading ? (
+                    <Skeleton className="h-4 w-24" />
+                  ) : (
+                    `${filteredBans.length} player${filteredBans.length !== 1 ? "s" : ""} banned`
+                  )}
                 </CardDescription>
               </div>
               <div className="relative w-64">
@@ -272,12 +372,21 @@ export default function BansPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-8"
+                  disabled={isLoading}
                 />
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            {filteredBans.length === 0 ? (
+            {isLoading ? (
+              <div className="space-y-3">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <Skeleton className="h-12 w-full" />
+                  </div>
+                ))}
+              </div>
+            ) : filteredBans.length === 0 ? (
               <div className="text-center py-12">
                 <UserX className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold text-foreground mb-2">
