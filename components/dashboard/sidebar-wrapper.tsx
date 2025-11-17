@@ -7,6 +7,13 @@ interface SidebarWrapperProps {
   guildId: string;
 }
 
+interface GuildInfo {
+  id: string;
+  name: string;
+  icon: string | null;
+  has_bot: boolean;
+}
+
 export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
   const [serverInfo, setServerInfo] = useState({
     name: "My Server",
@@ -19,28 +26,35 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
+        // Fetch all guilds and find the one matching guildId
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/v2/server/${guildId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/v2/guilds`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
             },
           }
         );
 
         if (!response.ok) return;
 
-        const data = await response.json();
+        const guilds: GuildInfo[] = await response.json();
 
-        // Discord CDN URL for guild icons
-        const iconUrl = data.icon
-          ? `https://cdn.discordapp.com/icons/${guildId}/${data.icon}.png?size=128`
-          : undefined;
+        // Find the guild matching our guildId
+        const currentGuild = guilds.find((g) => g.id === guildId);
 
-        setServerInfo({
-          name: data.name || "My Server",
-          icon: iconUrl,
-        });
+        if (currentGuild) {
+          // Icon URL is already provided by the backend as a full URL
+          const iconUrl = currentGuild.icon?.startsWith('https')
+            ? currentGuild.icon
+            : undefined;
+
+          setServerInfo({
+            name: currentGuild.name || "My Server",
+            icon: iconUrl,
+          });
+        }
       } catch (error) {
         console.error("Failed to fetch server info:", error);
       }
