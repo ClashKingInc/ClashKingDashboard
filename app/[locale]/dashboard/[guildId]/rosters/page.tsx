@@ -379,11 +379,9 @@ export default function RostersPage() {
       });
 
       if (response.ok) {
-        const fullRoster = await response.json();
-        console.log("Full roster data:", fullRoster);
-        console.log("Members array:", fullRoster.members);
-        console.log("Members is array?", Array.isArray(fullRoster.members));
-        console.log("Members length:", fullRoster.members?.length);
+        const data = await response.json();
+        // API returns { roster: {...} } so we need to extract the roster object
+        const fullRoster = data.roster || data;
         setSelectedRoster(fullRoster);
         setDetailsDialogOpen(true);
       } else {
@@ -454,12 +452,13 @@ export default function RostersPage() {
       }
 
       // Refresh roster details
-      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
+      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
 
       if (refreshResponse.ok) {
-        const updatedRoster = await refreshResponse.json();
+        const data = await refreshResponse.json();
+        const updatedRoster = data.roster || data;
         setSelectedRoster(updatedRoster);
 
         // Also refresh rosters list
@@ -513,12 +512,13 @@ export default function RostersPage() {
       }
 
       // Refresh roster details
-      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
+      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
 
       if (refreshResponse.ok) {
-        const updatedRoster = await refreshResponse.json();
+        const data = await refreshResponse.json();
+        const updatedRoster = data.roster || data;
         setSelectedRoster(updatedRoster);
 
         // Also refresh rosters list
@@ -571,12 +571,13 @@ export default function RostersPage() {
       }
 
       // Refresh roster details
-      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
+      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
 
       if (refreshResponse.ok) {
-        const updatedRoster = await refreshResponse.json();
+        const data = await refreshResponse.json();
+        const updatedRoster = data.roster || data;
         setSelectedRoster(updatedRoster);
 
         // Also refresh rosters list
