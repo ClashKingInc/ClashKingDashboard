@@ -65,7 +65,18 @@ export default function ServersPage() {
         }
 
         const guildsData: GuildWithBot[] = await response.json();
-        setGuilds(guildsData);
+
+        // Sort guilds: servers with bot first, then by name
+        const sortedGuilds = guildsData.sort((a, b) => {
+          // Primary sort: has_bot (true first)
+          if (a.has_bot && !b.has_bot) return -1;
+          if (!a.has_bot && b.has_bot) return 1;
+
+          // Secondary sort: alphabetically by name
+          return a.name.localeCompare(b.name);
+        });
+
+        setGuilds(sortedGuilds);
       } catch (err) {
         console.error("Error fetching guilds:", err);
         setError(err instanceof Error ? err.message : "Failed to load servers");
