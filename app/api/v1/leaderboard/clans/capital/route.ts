@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const url = `${API_BASE_URL}/leaderboard/clans/capital?weekend=${weekend}&type=${type}&league=${encodeURIComponent(league)}&lower=${lower}&upper=${upper}`;
+    const url = `${API_BASE_URL}/v2/leaderboard/clans/capital?weekend=${weekend}&type=${type}&league=${encodeURIComponent(league)}&lower=${lower}&upper=${upper}`;
 
     const response = await fetch(url, {
       method: 'GET',
