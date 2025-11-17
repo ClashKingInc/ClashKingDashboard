@@ -1269,17 +1269,18 @@ export default function RostersPage() {
                       <div className="flex gap-2 pt-3 border-t border-border/50">
                         <Button
                           size="sm"
-                          onClick={() => handleViewRoster(roster)}
+                          onClick={() => router.push(`/${params.locale}/dashboard/${guildId}/rosters/${roster.custom_id}`)}
                           className="flex-1 bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all"
                         >
                           <Eye className="w-4 h-4 mr-1.5" />
-                          View Details
+                          Open Roster
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleOpenEdit(roster)}
                           className="border-border hover:border-primary hover:bg-primary/10"
+                          title="Quick Edit"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
