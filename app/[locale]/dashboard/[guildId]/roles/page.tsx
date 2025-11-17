@@ -135,35 +135,37 @@ export default function RolesPage() {
 
       if (rolesRes.data) {
         // Normalize role data from API
+        // CRITICAL: Convert all Discord IDs to strings immediately to prevent precision loss
+        // Discord Snowflake IDs are 64-bit integers that get rounded when stored as JS numbers
         const normalizedRoles = {
           townhall: rolesRes.data.roles.townhall?.map((r: any) => ({
             ...r,
-            role_id: r.role || r.role_id,
+            role_id: String(r.role || r.role_id),
             th: typeof r.th === 'string' ? parseInt(r.th.replace(/^th/i, '')) : r.th,
           })) || [],
           league: rolesRes.data.roles.league?.map((r: any) => ({
             ...r,
-            role_id: r.role || r.role_id,
+            role_id: String(r.role || r.role_id),
           })) || [],
           builderhall: rolesRes.data.roles.builderhall?.map((r: any) => ({
             ...r,
-            role_id: r.role || r.role_id,
+            role_id: String(r.role || r.role_id),
           })) || [],
           builder_league: rolesRes.data.roles.builder_league?.map((r: any) => ({
             ...r,
-            role_id: r.role || r.role_id,
+            role_id: String(r.role || r.role_id),
           })) || [],
           achievement: rolesRes.data.roles.achievement?.map((r: any) => ({
             ...r,
-            role_id: r.role || r.role_id,
+            role_id: String(r.role || r.role_id),
           })) || [],
           status: rolesRes.data.roles.status?.map((r: any) => ({
             ...r,
-            id: r.role || r.id,
+            id: String(r.role || r.id),
           })) || [],
           family_position: rolesRes.data.roles.family_position?.map((r: any) => ({
             ...r,
-            role_id: r.role || r.role_id,
+            role_id: String(r.role || r.role_id),
           })) || [],
         };
         setAllRoles(normalizedRoles);
@@ -484,21 +486,11 @@ export default function RolesPage() {
         </TableHeader>
         <TableBody>
           {roles.map((role: any, index: number) => {
-            // Get the role ID from either role_id or id field
-            const roleId = (role.role_id || role.id)?.toString();
+            // Get the role ID from either role_id or id field (already converted to string in loadData)
+            const roleId = role.role_id || role.id;
 
             // Find matching Discord role by comparing string IDs
             const discordRole = discordRoles.find((r) => r.id === roleId);
-
-            // Debug log if role not found
-            if (!discordRole && roleId) {
-              console.log('[Roles Debug] Role not found:', {
-                lookingFor: roleId,
-                roleType: roleType,
-                availableRoles: discordRoles.map(r => ({ id: r.id, name: r.name })),
-                roleData: role
-              });
-            }
 
             let criteria = "";
 
