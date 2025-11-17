@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, DiscordChannel, DiscordRole, GuildInfo } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, DiscordChannel, DiscordRole, GuildInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
   /**
@@ -55,27 +55,33 @@ export class ServerClient extends BaseApiClient {
   }
 
   /**
-   * GET /v2/ban/list/{server_id}
+   * GET /v2/server/{server_id}/bans
+   * Get all bans for a server
    */
-  async getBans(serverId: string | number): Promise<ApiResponse<PaginatedResponse<any>>> {
-    return this.request(`/v2/ban/list/${serverId}`, { method: 'GET' });
+  async getBans(serverId: string | number, userId?: string): Promise<ApiResponse<PaginatedResponse<any>>> {
+    const query = userId ? this.buildQueryString({ user_id: userId }) : '';
+    return this.request(`/v2/server/${serverId}/bans${query}`, { method: 'GET' });
   }
 
   /**
-   * POST /v2/ban/add/{server_id}/{player_tag}
+   * POST /v2/server/{server_id}/bans/{player_tag}
+   * Add or update a ban for a player
    */
-  async addBan(serverId: string | number, playerTag: string, data: BanRequest): Promise<ApiResponse<{ status: string; player_tag: string; server_id: number }>> {
-    return this.request(`/v2/ban/add/${serverId}/${playerTag}`, {
+  async addBan(serverId: string | number, playerTag: string, data: BanRequest, userId?: string): Promise<ApiResponse<{ status: string; player_tag: string; server_id: number }>> {
+    const query = userId ? this.buildQueryString({ user_id: userId }) : '';
+    return this.request(`/v2/server/${serverId}/bans/${playerTag}${query}`, {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   /**
-   * DELETE /v2/ban/remove/{server_id}/{player_tag}
+   * DELETE /v2/server/{server_id}/bans/{player_tag}
+   * Remove a ban for a player
    */
-  async removeBan(serverId: string, playerTag: string): Promise<ApiResponse<{ status: string; player_tag: string; server_id: string }>> {
-    return this.request(`/v2/ban/remove/${serverId}/${playerTag}`, { method: 'DELETE' });
+  async removeBan(serverId: string, playerTag: string, userId?: string): Promise<ApiResponse<{ status: string; player_tag: string; server_id: string }>> {
+    const query = userId ? this.buildQueryString({ user_id: userId }) : '';
+    return this.request(`/v2/server/${serverId}/bans/${playerTag}${query}`, { method: 'DELETE' });
   }
 
   /**
@@ -108,5 +114,43 @@ export class ServerClient extends BaseApiClient {
    */
   async getChannels(serverId: string | number): Promise<ApiResponse<any>> {
     return this.request(`/v2/server/${serverId}/channels`, { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/strikes
+   * Get all strikes for a server (optionally filtered by player)
+   */
+  async getStrikes(serverId: string | number, playerTag?: string, viewExpired: boolean = false): Promise<ApiResponse<PaginatedResponse<Strike>>> {
+    const params: any = { view_expired: viewExpired };
+    if (playerTag) params.player_tag = playerTag;
+    const query = this.buildQueryString(params);
+    return this.request(`/v2/server/${serverId}/strikes${query}`, { method: 'GET' });
+  }
+
+  /**
+   * POST /v2/server/{server_id}/strikes/{player_tag}
+   * Add a strike to a player
+   */
+  async addStrike(serverId: string | number, playerTag: string, data: StrikeRequest): Promise<ApiResponse<StrikeAddResponse>> {
+    return this.request(`/v2/server/${serverId}/strikes/${playerTag}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  /**
+   * DELETE /v2/server/{server_id}/strikes/{strike_id}
+   * Remove a strike by ID
+   */
+  async removeStrike(serverId: string | number, strikeId: string): Promise<ApiResponse<StrikeDeleteResponse>> {
+    return this.request(`/v2/server/${serverId}/strikes/${strikeId}`, { method: 'DELETE' });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/strikes/player/{player_tag}/summary
+   * Get strike summary for a specific player
+   */
+  async getPlayerStrikeSummary(serverId: string | number, playerTag: string): Promise<ApiResponse<StrikeSummary>> {
+    return this.request(`/v2/server/${serverId}/strikes/player/${playerTag}/summary`, { method: 'GET' });
   }
 }

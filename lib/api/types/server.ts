@@ -93,6 +93,66 @@ export interface BanResponse {
 }
 
 /**
+ * Strike request data
+ */
+export interface StrikeRequest {
+  reason: string;
+  added_by: number;
+  strike_weight: number;
+  rollover_days?: number;
+  image?: string;
+}
+
+/**
+ * Strike information
+ */
+export interface Strike {
+  strike_id: string;
+  tag: string;
+  date_created: string;
+  reason: string;
+  server: number;
+  added_by: number;
+  strike_weight: number;
+  rollover_date?: number;
+  image?: string;
+  player_name?: string;
+}
+
+/**
+ * Strike add response
+ */
+export interface StrikeAddResponse {
+  status: string;
+  strike_id: string;
+  player_tag: string;
+  server_id: number;
+  total_strikes: number;
+  total_weight: number;
+}
+
+/**
+ * Strike delete response
+ */
+export interface StrikeDeleteResponse {
+  status: string;
+  strike_id: string;
+  player_tag: string;
+  server_id: number;
+}
+
+/**
+ * Strike summary for a player
+ */
+export interface StrikeSummary {
+  player_tag: string;
+  server_id: number;
+  total_strikes: number;
+  total_weight: number;
+  strikes: Strike[];
+}
+
+/**
  * Discord Guild/Server information
  */
 export interface GuildInfo {
