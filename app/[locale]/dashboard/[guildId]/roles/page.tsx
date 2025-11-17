@@ -522,7 +522,11 @@ export default function RolesPage() {
                   <div className="flex items-center gap-2">
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: discordRole ? `#${discordRole.color.toString(16).padStart(6, "0")}` : "#000" }}
+                      style={{
+                        backgroundColor: discordRole && discordRole.color !== 0
+                          ? `#${discordRole.color.toString(16).padStart(6, "0")}`
+                          : "#99AAB5" // Discord default role color (grey)
+                      }}
                     />
                     <span>{discordRole?.name || "Unknown Role"}</span>
                   </div>
@@ -555,24 +559,90 @@ export default function RolesPage() {
     );
   }
 
+  // Calculate statistics
+  const totalRoles = Object.values(allRoles).reduce((sum, roles) => sum + roles.length, 0);
+  const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]) => roles.length > 0).length;
+  const totalRoleTypes = 7; // townhall, league, builderhall, builder_league, achievement, status, family_position
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-                <Shield className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">Role Management</h1>
-                <p className="text-muted-foreground mt-1">
-                  Configure automatic role assignment based on player stats
-                </p>
-              </div>
-            </div>
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-lg bg-purple-500/10">
+            <Shield className="h-8 w-8 text-purple-500" />
           </div>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Role Management</h1>
+            <p className="text-muted-foreground mt-1">
+              Configure automatic role assignment based on player stats
+            </p>
+          </div>
+        </div>
+
+        {/* Statistics Overview */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Roles</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-purple-500">{totalRoles}</div>
+                <Shield className="h-8 w-8 text-purple-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Configured role assignments
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className={`bg-card ${roleSettings.auto_eval_status ? 'border-green-500/30 bg-green-500/5' : 'border-gray-500/30 bg-gray-500/5'}`}>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Auto-Evaluation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className={`text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-gray-500'}`}>
+                  {roleSettings.auto_eval_status ? 'ON' : 'OFF'}
+                </div>
+                <Settings className={`h-8 w-8 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-gray-500/50'}`} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {roleSettings.auto_eval_status ? 'Automatically assigning roles' : 'Manual role assignment only'}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Active Types</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-blue-500">{activeRoleTypes}/{totalRoleTypes}</div>
+                <Trophy className="h-8 w-8 text-blue-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Role types in use
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-orange-500/30 bg-orange-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Discord Roles</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-orange-500">{discordRoles.length}</div>
+                <Users className="h-8 w-8 text-orange-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Available on server
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Error/Success Alerts */}
