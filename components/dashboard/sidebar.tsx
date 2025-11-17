@@ -14,17 +14,22 @@ import {
   ClipboardList,
   Ban,
   ChevronDown,
+  LayoutDashboard,
+  Link2,
+  Trophy,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 
 interface SidebarProps {
   guildId: string;
   guildName: string;
   guildIcon?: string;
+  isLoading?: boolean;
 }
 
-export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
+export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: SidebarProps) {
   const pathname = usePathname();
   const params = useParams();
   const locale = params.locale || "en";
@@ -76,6 +81,18 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
           description: "Roster management",
         },
         {
+          name: "Autoboards",
+          href: `/${locale}/dashboard/${guildId}/autoboards`,
+          icon: LayoutDashboard,
+          description: "Automated leaderboards",
+        },
+        {
+          name: "Links",
+          href: `/${locale}/dashboard/${guildId}/links`,
+          icon: Link2,
+          description: "Player-Discord linking",
+        },
+        {
           name: "Bans",
           href: `/${locale}/dashboard/${guildId}/bans`,
           icon: Ban,
@@ -92,6 +109,12 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
           icon: Swords,
           description: "War statistics",
         },
+        {
+          name: "Leaderboards",
+          href: `/${locale}/dashboard/${guildId}/leaderboards`,
+          icon: Trophy,
+          description: "Global rankings",
+        },
       ],
     },
   ];
@@ -100,28 +123,38 @@ export function Sidebar({ guildId, guildName, guildIcon }: SidebarProps) {
     <div className="flex h-full w-64 flex-col bg-card border-r border-border">
       {/* Server Header */}
       <div className="p-4 border-b border-border">
-        <Link
-          href="/servers"
-          className="flex items-center gap-3 group transition-all duration-200"
-        >
-          <Avatar className="h-12 w-12 rounded-xl ring-2 ring-border transition-all group-hover:ring-4">
-            <AvatarImage src={guildIcon} className="rounded-xl" />
-            <AvatarFallback className="rounded-xl text-lg font-bold bg-secondary text-primary">
-              {guildName.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1">
-              <p className="font-semibold text-base truncate text-foreground">
-                {guildName}
-              </p>
-              <ChevronDown className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity text-muted-foreground" />
+        {isLoading ? (
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-12 w-12 rounded-xl" />
+            <div className="flex-1 min-w-0 space-y-2">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-3 w-24" />
             </div>
-            <p className="text-xs mt-0.5 text-muted-foreground">
-              Dashboard Settings
-            </p>
           </div>
-        </Link>
+        ) : (
+          <Link
+            href="/servers"
+            className="flex items-center gap-3 group transition-all duration-200"
+          >
+            <Avatar className="h-12 w-12 rounded-xl ring-2 ring-border transition-all group-hover:ring-4">
+              <AvatarImage src={guildIcon} className="rounded-xl" />
+              <AvatarFallback className="rounded-xl text-lg font-bold bg-secondary text-primary">
+                {guildName.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1">
+                <p className="font-semibold text-base truncate text-foreground">
+                  {guildName}
+                </p>
+                <ChevronDown className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity text-muted-foreground" />
+              </div>
+              <p className="text-xs mt-0.5 text-muted-foreground">
+                Dashboard Settings
+              </p>
+            </div>
+          </Link>
+        )}
       </div>
 
       {/* Navigation */}

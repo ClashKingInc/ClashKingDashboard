@@ -38,7 +38,7 @@ export interface UpdateRosterGroupModel {
 
 export interface CreateRosterSignupCategoryModel {
   alias: string;
-  server_id: number;
+  server_id: string | number;
   custom_id: string;
   description?: string;
 }
