@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle, Hash, Pencil } from "lucide-react";
 import {
   Dialog,
@@ -368,14 +369,6 @@ export default function AutoBoardsPage() {
   const getBoardTypeName = (boardType: string): string => {
     return BOARD_TYPES[boardType as keyof typeof BOARD_TYPES] || boardType;
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -761,13 +754,22 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold text-foreground">{autoboardsData?.total || 0}</div>
-              <LayoutDashboard className="h-8 w-8 text-primary/50" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} used` : 'Loading...'}
-            </p>
+            {loading ? (
+              <>
+                <Skeleton className="h-10 w-20 mb-2" />
+                <Skeleton className="h-4 w-32" />
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-foreground">{autoboardsData?.total || 0}</div>
+                  <LayoutDashboard className="h-8 w-8 text-primary/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} used` : 'Loading...'}
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -778,11 +780,20 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold text-foreground">{autoboardsData?.post_count || 0}</div>
-              <Calendar className="h-8 w-8 text-green-500/50" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Scheduled boards</p>
+            {loading ? (
+              <>
+                <Skeleton className="h-10 w-16 mb-2" />
+                <Skeleton className="h-4 w-28" />
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-foreground">{autoboardsData?.post_count || 0}</div>
+                  <Calendar className="h-8 w-8 text-green-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Scheduled boards</p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -793,11 +804,20 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold text-foreground">{autoboardsData?.refresh_count || 0}</div>
-              <RefreshCw className="h-8 w-8 text-blue-500/50" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Continuous updates</p>
+            {loading ? (
+              <>
+                <Skeleton className="h-10 w-16 mb-2" />
+                <Skeleton className="h-4 w-32" />
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-foreground">{autoboardsData?.refresh_count || 0}</div>
+                  <RefreshCw className="h-8 w-8 text-blue-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Continuous updates</p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -808,13 +828,22 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold text-foreground">
-                {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
-              </div>
-              <Clock className="h-8 w-8 text-orange-500/50" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Remaining capacity</p>
+            {loading ? (
+              <>
+                <Skeleton className="h-10 w-16 mb-2" />
+                <Skeleton className="h-4 w-36" />
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-foreground">
+                    {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
+                  </div>
+                  <Clock className="h-8 w-8 text-orange-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">Remaining capacity</p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -835,7 +864,23 @@ export default function AutoBoardsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {!autoboardsData || autoboardsData.autoboards.length === 0 ? (
+          {loading ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-center gap-4 p-4 border border-border rounded-lg">
+                  <Skeleton className="h-14 w-14 rounded-lg" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-5 w-48" />
+                    <Skeleton className="h-4 w-64" />
+                  </div>
+                  <div className="flex gap-2">
+                    <Skeleton className="h-8 w-16" />
+                    <Skeleton className="h-8 w-20" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : !autoboardsData || autoboardsData.autoboards.length === 0 ? (
             <div className="text-center py-12">
               <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2">
