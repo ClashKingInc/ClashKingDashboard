@@ -89,8 +89,8 @@ interface RosterGroup {
 }
 
 interface SignupCategory {
-  category_id: string;
-  display_name: string;
+  custom_id: string;
+  alias: string;
   server_id: number;
   created_at?: number;
 }
@@ -188,13 +188,13 @@ export default function RosterDetailPage() {
   const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<RosterGroup | null>(null);
-  const [newGroup, setNewGroup] = useState({ alias: "", description: "" });
+  const [newGroup, setNewGroup] = useState({ alias: "" });
 
   // Categories state
   const [categories, setCategories] = useState<SignupCategory[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState({ category_id: "", display_name: "" });
+  const [newCategory, setNewCategory] = useState({ custom_id: "", alias: "" });
 
   // Load roster data
   useEffect(() => {
@@ -474,7 +474,6 @@ export default function RosterDetailPage() {
         },
         body: JSON.stringify({
           alias: newGroup.alias,
-          description: newGroup.description || undefined,
         })
       });
 
@@ -484,7 +483,7 @@ export default function RosterDetailPage() {
 
       await loadGroups();
       setCreateGroupDialogOpen(false);
-      setNewGroup({ alias: "", description: "" });
+      setNewGroup({ alias: "" });
       toast({
         title: "Success",
         description: "Group created successfully!",
@@ -515,7 +514,6 @@ export default function RosterDetailPage() {
         },
         body: JSON.stringify({
           alias: selectedGroup.alias,
-          description: selectedGroup.description || undefined,
           max_accounts_per_user: selectedGroup.max_accounts_per_user || undefined,
           auto_signup_publish: selectedGroup.auto_signup_publish,
           auto_registration_close: selectedGroup.auto_registration_close,
@@ -583,7 +581,7 @@ export default function RosterDetailPage() {
     setLoadingCategories(true);
     try {
       const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-category/list?server_id=${guildId}`, {
+      const response = await fetch(`/api/v2/roster-signup-category/list?server_id=${guildId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
 
@@ -599,10 +597,10 @@ export default function RosterDetailPage() {
   };
 
   const handleCreateCategory = async () => {
-    if (!newCategory.category_id || !newCategory.display_name) {
+    if (!newCategory.alias) {
       toast({
         title: "Error",
-        description: "Category ID and display name are required",
+        description: "Category alias is required",
         variant: "destructive",
       });
       return;
@@ -611,13 +609,17 @@ export default function RosterDetailPage() {
     setSaving(true);
     try {
       const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-category?server_id=${guildId}`, {
+      const response = await fetch(`/api/v2/roster-signup-category?server_id=${guildId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`
         },
-        body: JSON.stringify(newCategory)
+        body: JSON.stringify({
+          server_id: parseInt(guildId),
+          custom_id: newCategory.custom_id || undefined,
+          alias: newCategory.alias,
+        })
       });
 
       if (!response.ok) {
@@ -626,7 +628,7 @@ export default function RosterDetailPage() {
 
       await loadCategories();
       setCreateCategoryDialogOpen(false);
-      setNewCategory({ category_id: "", display_name: "" });
+      setNewCategory({ custom_id: "", alias: "" });
       toast({
         title: "Success",
         description: "Category created successfully!",
@@ -649,7 +651,7 @@ export default function RosterDetailPage() {
     setSaving(true);
     try {
       const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-category/${encodeURIComponent(categoryId)}?server_id=${guildId}`, {
+      const response = await fetch(`/api/v2/roster-signup-category/${encodeURIComponent(categoryId)}?server_id=${guildId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${accessToken}` }
       });
@@ -2141,20 +2143,20 @@ export default function RosterDetailPage() {
                   <div className="space-y-2">
                     {categories.map((category) => (
                       <div
-                        key={category.category_id}
+                        key={category.custom_id}
                         className="flex items-center justify-between p-3 rounded-lg bg-background border border-border"
                       >
                         <div className="flex items-center gap-3">
                           <Tag className="w-4 h-4 text-primary" />
                           <div>
-                            <p className="font-medium text-foreground">{category.display_name}</p>
-                            <p className="text-xs text-muted-foreground">ID: {category.category_id}</p>
+                            <p className="font-medium text-foreground">{category.alias}</p>
+                            <p className="text-xs text-muted-foreground">ID: {category.custom_id}</p>
                           </div>
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteCategory(category.category_id)}
+                          onClick={() => handleDeleteCategory(category.custom_id)}
                         >
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
@@ -2428,18 +2430,6 @@ export default function RosterDetailPage() {
                 className="bg-background border-border text-foreground"
               />
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="group-description" className="text-foreground">Description</Label>
-              <Textarea
-                id="group-description"
-                placeholder="Enter group description..."
-                value={newGroup.description}
-                onChange={(e) => setNewGroup({ ...newGroup, description: e.target.value })}
-                className="bg-background border-border text-foreground"
-                rows={3}
-              />
-            </div>
           </div>
 
           <DialogFooter>
@@ -2447,7 +2437,7 @@ export default function RosterDetailPage() {
               variant="outline"
               onClick={() => {
                 setCreateGroupDialogOpen(false);
-                setNewGroup({ alias: "", description: "" });
+                setNewGroup({ alias: "" });
               }}
               disabled={saving}
               className="border-border"
@@ -2492,18 +2482,6 @@ export default function RosterDetailPage() {
                   value={selectedGroup.alias}
                   onChange={(e) => setSelectedGroup({ ...selectedGroup, alias: e.target.value })}
                   className="bg-background border-border text-foreground"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-group-description" className="text-foreground">Description</Label>
-                <Textarea
-                  id="edit-group-description"
-                  placeholder="Enter group description..."
-                  value={selectedGroup.description || ""}
-                  onChange={(e) => setSelectedGroup({ ...selectedGroup, description: e.target.value })}
-                  className="bg-background border-border text-foreground"
-                  rows={3}
                 />
               </div>
 
@@ -2619,30 +2597,30 @@ export default function RosterDetailPage() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="category-id" className="text-foreground">Category ID *</Label>
+              <Label htmlFor="category-alias" className="text-foreground">Category Name *</Label>
               <Input
-                id="category-id"
-                placeholder="e.g., attackers, defenders"
-                value={newCategory.category_id}
+                id="category-alias"
+                placeholder="e.g., Attackers, Defenders"
+                value={newCategory.alias}
+                onChange={(e) => setNewCategory({ ...newCategory, alias: e.target.value })}
+                className="bg-background border-border text-foreground"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category-custom-id" className="text-foreground">Custom ID (Optional)</Label>
+              <Input
+                id="category-custom-id"
+                placeholder="e.g., attackers, defenders (auto-generated if empty)"
+                value={newCategory.custom_id}
                 onChange={(e) =>
-                  setNewCategory({ ...newCategory, category_id: e.target.value.toLowerCase().replace(/\s+/g, "_") })
+                  setNewCategory({ ...newCategory, custom_id: e.target.value.toLowerCase().replace(/\s+/g, "_") })
                 }
                 className="bg-background border-border text-foreground"
               />
               <p className="text-xs text-muted-foreground">
-                Use lowercase letters, numbers, and underscores only
+                Use lowercase letters, numbers, and underscores only. Leave empty to auto-generate.
               </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="category-display" className="text-foreground">Display Name *</Label>
-              <Input
-                id="category-display"
-                placeholder="e.g., Attackers, Defenders"
-                value={newCategory.display_name}
-                onChange={(e) => setNewCategory({ ...newCategory, display_name: e.target.value })}
-                className="bg-background border-border text-foreground"
-              />
             </div>
           </div>
 
@@ -2651,7 +2629,7 @@ export default function RosterDetailPage() {
               variant="outline"
               onClick={() => {
                 setCreateCategoryDialogOpen(false);
-                setNewCategory({ category_id: "", display_name: "" });
+                setNewCategory({ custom_id: "", alias: "" });
               }}
               disabled={saving}
               className="border-border"
@@ -2660,7 +2638,7 @@ export default function RosterDetailPage() {
             </Button>
             <Button
               onClick={handleCreateCategory}
-              disabled={saving || !newCategory.category_id.trim() || !newCategory.display_name.trim()}
+              disabled={saving || !newCategory.alias.trim()}
               className="bg-primary hover:bg-primary/90"
             >
               {saving ? (
