@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter, Eye, TrendingUp, Target, Star, GitCompare, CheckSquare, Square } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter, Eye, TrendingUp, Target, Star, GitCompare, CheckSquare, Square, Download, FileJson, FileText } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -86,6 +86,11 @@ interface Clan {
   badge_url?: string | null;
 }
 
+interface GlobalSearchResult {
+  member: RosterMember;
+  roster: Roster;
+}
+
 export default function RostersPage() {
   const params = useParams();
   const router = useRouter();
@@ -144,6 +149,11 @@ export default function RostersPage() {
   const [dragSourceRosterId, setDragSourceRosterId] = useState<string | null>(null);
   const [dragOverRosterId, setDragOverRosterId] = useState<string | null>(null);
   const [transferring, setTransferring] = useState(false);
+
+  // Global search state
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
+  const [globalSearchQuery, setGlobalSearchQuery] = useState("");
+  const [globalSearchResults, setGlobalSearchResults] = useState<GlobalSearchResult[]>([]);
 
   // Fetch rosters and clans
   useEffect(() => {
@@ -875,6 +885,136 @@ export default function RostersPage() {
     }
   };
 
+  // Global search functionality
+  const handleGlobalSearch = (query: string) => {
+    setGlobalSearchQuery(query);
+
+    if (!query.trim()) {
+      setGlobalSearchResults([]);
+      return;
+    }
+
+    const results: GlobalSearchResult[] = [];
+    const lowerQuery = query.toLowerCase();
+
+    rosters.forEach(roster => {
+      roster.members?.forEach(member => {
+        const nameMatch = member.name.toLowerCase().includes(lowerQuery);
+        const tagMatch = member.tag.toLowerCase().includes(lowerQuery);
+        const discordMatch = member.discord?.toLowerCase().includes(lowerQuery);
+
+        if (nameMatch || tagMatch || discordMatch) {
+          results.push({ member, roster });
+        }
+      });
+    });
+
+    setGlobalSearchResults(results);
+  };
+
+  const handleNavigateToRoster = (rosterId: string) => {
+    setGlobalSearchOpen(false);
+    setGlobalSearchQuery("");
+    setGlobalSearchResults([]);
+    router.push(`/${params.locale}/dashboard/${guildId}/rosters/${rosterId}`);
+  };
+
+  // Export functionality
+  const handleExportCSV = () => {
+    const csvRows: string[] = [];
+
+    // Header
+    csvRows.push('Roster,Roster Type,Member Name,Tag,TH,Heroes,Hitrate,Discord,Clan Tag,War Pref,Trophies,Substitute,Signup Group');
+
+    // Data
+    rosters.forEach(roster => {
+      roster.members?.forEach(member => {
+        const row = [
+          roster.alias,
+          roster.roster_type,
+          member.name,
+          member.tag,
+          member.townhall,
+          member.hero_lvs || '',
+          member.hitrate !== null ? member.hitrate : '',
+          member.discord || '',
+          member.current_clan_tag || '',
+          member.war_pref ? 'Yes' : 'No',
+          member.trophies || '',
+          member.sub ? 'Yes' : 'No',
+          member.signup_group || ''
+        ].map(val => `"${String(val).replace(/"/g, '""')}"`);
+
+        csvRows.push(row.join(','));
+      });
+    });
+
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', `rosters_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Success",
+      description: `Exported ${rosters.length} roster(s) to CSV`,
+    });
+  };
+
+  const handleExportJSON = () => {
+    const exportData = rosters.map(roster => ({
+      id: roster.custom_id,
+      alias: roster.alias,
+      type: roster.roster_type,
+      signupScope: roster.signup_scope,
+      clanTag: roster.clan_tag,
+      clanName: roster.clan_name,
+      description: roster.description,
+      rosterSize: roster.roster_size,
+      minTH: roster.min_th,
+      maxTH: roster.max_th,
+      columns: roster.columns,
+      members: roster.members?.map(m => ({
+        name: m.name,
+        tag: m.tag,
+        townhall: m.townhall,
+        heroes: m.hero_lvs,
+        hitrate: m.hitrate,
+        discord: m.discord,
+        currentClan: m.current_clan,
+        currentClanTag: m.current_clan_tag,
+        warPref: m.war_pref,
+        trophies: m.trophies,
+        substitute: m.sub,
+        signupGroup: m.signup_group,
+        memberStatus: m.member_status
+      })) || []
+    }));
+
+    const jsonContent = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', `rosters_export_${new Date().toISOString().split('T')[0]}.json`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast({
+      title: "Success",
+      description: `Exported ${rosters.length} roster(s) to JSON`,
+    });
+  };
+
   // Calculate roster statistics
   const getRosterStats = (roster: Roster) => {
     const members = roster.members || [];
@@ -1107,6 +1247,37 @@ export default function RostersPage() {
             </>
           ) : (
             <>
+              <Button
+                variant="outline"
+                onClick={() => setGlobalSearchOpen(true)}
+                className="border-border"
+              >
+                <Search className="w-4 h-4 mr-2" />
+                Search Members
+              </Button>
+              <Select onValueChange={(value) => {
+                if (value === 'csv') handleExportCSV();
+                else if (value === 'json') handleExportJSON();
+              }}>
+                <SelectTrigger className="w-[140px] border-border">
+                  <Download className="w-4 h-4 mr-2" />
+                  <span>Export</span>
+                </SelectTrigger>
+                <SelectContent className="bg-card border-border">
+                  <SelectItem value="csv">
+                    <div className="flex items-center">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Export CSV
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="json">
+                    <div className="flex items-center">
+                      <FileJson className="w-4 h-4 mr-2" />
+                      Export JSON
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
               <Button
                 variant="outline"
                 onClick={() => setComparisonMode(true)}
@@ -2460,6 +2631,138 @@ export default function RostersPage() {
             <Button
               variant="outline"
               onClick={() => setCompareDialogOpen(false)}
+              className="border-border"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Global Search Dialog */}
+      <Dialog open={globalSearchOpen} onOpenChange={setGlobalSearchOpen}>
+        <DialogContent className="bg-card border-border max-w-3xl max-h-[80vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Search Members Across All Rosters</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Search by name, tag, or Discord username
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search for members..."
+                value={globalSearchQuery}
+                onChange={(e) => handleGlobalSearch(e.target.value)}
+                className="bg-background border-border text-foreground pl-9"
+                autoFocus
+              />
+            </div>
+
+            {globalSearchQuery && (
+              <div className="border border-border rounded-lg overflow-hidden max-h-[50vh] overflow-y-auto">
+                {globalSearchResults.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>No members found matching "{globalSearchQuery}"</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-border">
+                    {globalSearchResults.map((result, index) => (
+                      <div
+                        key={`${result.member.tag}-${index}`}
+                        className="p-4 hover:bg-secondary/50 cursor-pointer transition-colors"
+                        onClick={() => handleNavigateToRoster(result.roster.custom_id)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded bg-primary/10 flex items-center justify-center">
+                              <span className="text-lg font-bold text-primary">
+                                {result.member.townhall}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-foreground">
+                                  {result.member.name}
+                                </span>
+                                {result.member.sub && (
+                                  <Badge variant="outline" className="text-xs">SUB</Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                {result.member.tag}
+                              </p>
+                              {result.member.discord && (
+                                <p className="text-xs text-blue-400">
+                                  @{result.member.discord}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <div className="flex items-center gap-2 mb-1">
+                              {result.roster.clan_badge && (
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage src={result.roster.clan_badge} />
+                                  <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                                    {result.roster.alias.charAt(0)}
+                                  </AvatarFallback>
+                                </Avatar>
+                              )}
+                              <div>
+                                <p className="font-medium text-sm text-foreground">
+                                  {result.roster.alias}
+                                </p>
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs ${
+                                    result.roster.roster_type === "clan"
+                                      ? "border-blue-500/50 text-blue-400"
+                                      : "border-orange-500/50 text-orange-400"
+                                  }`}
+                                >
+                                  {result.roster.roster_type}
+                                </Badge>
+                              </div>
+                            </div>
+                            {result.member.hitrate !== null && result.member.hitrate !== undefined && (
+                              <div className="text-xs">
+                                <span className={`font-medium ${
+                                  result.member.hitrate >= 80 ? 'text-green-400' :
+                                  result.member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400'
+                                }`}>
+                                  {result.member.hitrate}% hitrate
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {globalSearchResults.length > 0 && (
+              <p className="text-sm text-muted-foreground text-center">
+                Found {globalSearchResults.length} member{globalSearchResults.length !== 1 ? 's' : ''} • Click to view roster
+              </p>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setGlobalSearchOpen(false);
+                setGlobalSearchQuery("");
+                setGlobalSearchResults([]);
+              }}
               className="border-border"
             >
               Close
