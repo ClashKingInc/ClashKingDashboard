@@ -129,3 +129,26 @@ export interface WarPerformanceByTH {
   destruction: number;
   success_rate: number;
 }
+
+// War Summary types
+export interface CwlLeagueRound {
+  round: number;
+  war_tags: string[];
+}
+
+export interface CwlLeague {
+  rounds: CwlLeagueRound[];
+}
+
+export interface WarSummary {
+  clan_tag?: string;
+  isInWar: boolean;
+  isInCwl: boolean;
+  war_info: War | null;
+  league_info: CwlLeague | null;
+  war_league_infos: War[];
+}
+
+export interface WarSummaryResponse {
+  items: WarSummary[];
+}

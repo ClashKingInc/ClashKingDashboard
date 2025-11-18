@@ -33,7 +33,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { darkTheme, clashKingColors } from "@/lib/theme";
-import type { War, PlayerWarStats } from "@/lib/api/types/war";
+import type { War, PlayerWarStats, WarSummary } from "@/lib/api/types/war";
 
 interface Clan {
   tag: string;
@@ -51,6 +51,9 @@ interface ComputedClanStats {
   win_rate: number;
   avg_stars: number;
   avg_destruction: number;
+  current_war?: War | null;
+  is_in_war: boolean;
+  is_in_cwl: boolean;
 }
 
 interface DailyWarStats {
@@ -74,7 +77,7 @@ export default function WarsPage() {
 
   const [loading, setLoading] = useState(true);
   const [clans, setClans] = useState<Clan[]>([]);
-  const [wars, setWars] = useState<War[]>([]);
+  const [warSummaries, setWarSummaries] = useState<WarSummary[]>([]);
   const [clanStats, setClanStats] = useState<ComputedClanStats[]>([]);
   const [topPerformers, setTopPerformers] = useState<PlayerWarStats[]>([]);
   const [dailyStats, setDailyStats] = useState<DailyWarStats[]>([]);
@@ -156,32 +159,47 @@ export default function WarsPage() {
         ? Math.floor(new Date(filters.endDate).getTime() / 1000)
         : Math.floor(now / 1000);
 
-      // Fetch wars for each clan and player stats in parallel
-      const [warsResults, playerStatsRes] = await Promise.all([
+      // Fetch war summaries (includes current war + CWL info) and player stats in parallel
+      const [warSummaryRes, playerStatsRes, historicalWars] = await Promise.all([
+        fetch('/api/v2/war/war-summary', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ clan_tags: clansToFetch }),
+        }).then(res => res.ok ? res.json() : { items: [] }),
+
+        fetchPlayerStats(clansToFetch, accessToken, startTs, endTs),
+
+        // Fetch historical wars for statistics
         Promise.all(
           clansToFetch.map(tag =>
             fetch(`/api/v2/war/${tag}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100`, {
               headers: { Authorization: `Bearer ${accessToken}` }
             }).then(res => res.ok ? res.json() : { items: [] })
           )
-        ),
-        fetchPlayerStats(clansToFetch, accessToken, startTs, endTs)
+        )
       ]);
 
-      // Combine all wars
-      const allWars: War[] = warsResults.flatMap(result => result.items || []);
-      setWars(allWars);
+      const summaries: WarSummary[] = warSummaryRes.items || [];
+      setWarSummaries(summaries);
 
-      // Calculate clan stats from wars
+      // Combine historical wars
+      const allHistoricalWars: War[] = historicalWars.flatMap(result => result.items || []);
+
+      // Calculate clan stats
       const statsMap = new Map<string, ComputedClanStats>();
 
       clansToFetch.forEach((clanTag, index) => {
-        const clanWars = (warsResults[index]?.items || []) as War[];
+        const summary = summaries.find(s => s.clan_tag === clanTag || s.war_info?.clan?.tag === clanTag);
+        const clanWars = (historicalWars[index]?.items || []) as War[];
         const clanName = clans.find(c => c.tag === clanTag)?.name || clanTag;
 
         let wins = 0, losses = 0, draws = 0;
         let totalStars = 0, totalDestruction = 0;
 
+        // Calculate from historical wars
         clanWars.forEach(war => {
           if (war.state !== 'warEnded') return;
 
@@ -208,13 +226,16 @@ export default function WarsPage() {
           win_rate: totalWars > 0 ? wins / totalWars : 0,
           avg_stars: totalWars > 0 ? totalStars / totalWars : 0,
           avg_destruction: totalWars > 0 ? totalDestruction / totalWars : 0,
+          current_war: summary?.war_info || null,
+          is_in_war: summary?.isInWar || false,
+          is_in_cwl: summary?.isInCwl || false,
         });
       });
 
       setClanStats(Array.from(statsMap.values()));
 
-      // Calculate daily stats (last 7 days)
-      calculateDailyStats(allWars);
+      // Calculate daily stats from all historical wars
+      calculateDailyStats(allHistoricalWars);
 
       // Set player stats
       setTopPerformers(playerStatsRes);
@@ -275,9 +296,9 @@ export default function WarsPage() {
     });
 
     allWars.forEach(war => {
-      if (war.state !== 'warEnded' || !war.endTime) return;
+      if (war.state !== 'warEnded' || !war.endTime && !war.end_time) return;
 
-      const endDate = new Date(war.endTime).toISOString().split('T')[0];
+      const endDate = new Date(war.endTime || war.end_time!).toISOString().split('T')[0];
       const stats = dailyMap.get(endDate);
 
       if (stats) {
@@ -335,6 +356,10 @@ export default function WarsPage() {
   const avgStars = clanStats.length > 0
     ? (clanStats.reduce((sum, stat) => sum + stat.avg_stars, 0) / clanStats.length).toFixed(1)
     : "0.0";
+
+  // Count active wars
+  const activeWars = clanStats.filter(s => s.is_in_war).length;
+  const activeCwl = clanStats.filter(s => s.is_in_cwl).length;
 
   // Prepare daily chart data
   const dailyChartData = dailyStats.map(day => ({
@@ -534,15 +559,15 @@ export default function WarsPage() {
 
               <Card className="border-blue-500/30 bg-blue-500/5">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Avg Stars</CardTitle>
+                  <CardTitle className="text-sm font-medium text-muted-foreground">Active Wars</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-blue-500">{avgStars}</div>
+                    <div className="text-3xl font-bold text-blue-500">{activeWars}</div>
                     <Star className="h-8 w-8 text-blue-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Per war average
+                    {activeCwl} in CWL
                   </p>
                 </CardContent>
               </Card>
@@ -659,9 +684,9 @@ export default function WarsPage() {
                             {index + 1}
                           </div>
                           <div className="flex-1">
-                            <div className="font-medium text-foreground">{player.player_name || player.name}</div>
+                            <div className="font-medium text-foreground">{player.player_name}</div>
                             <div className="text-xs text-muted-foreground">
-                              {player.total_attacks || player.attacks} attacks • {player.total_stars || player.stars} stars
+                              {player.total_attacks} attacks • {player.total_stars} stars
                             </div>
                           </div>
                           <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30">
@@ -692,6 +717,7 @@ export default function WarsPage() {
                       <thead>
                         <tr className="border-b border-border">
                           <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Clan</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
                           <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Wars</th>
                           <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">W/L/D</th>
                           <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Win Rate</th>
@@ -705,6 +731,23 @@ export default function WarsPage() {
                             <td className="py-3 px-4">
                               <div className="font-medium text-foreground">{stat.clan_name}</div>
                               <div className="text-xs text-muted-foreground">{stat.clan_tag}</div>
+                            </td>
+                            <td className="text-center py-3 px-4">
+                              {stat.is_in_war && (
+                                <Badge className="bg-green-500/20 text-green-500 border-green-500/30">
+                                  In War
+                                </Badge>
+                              )}
+                              {stat.is_in_cwl && !stat.is_in_war && (
+                                <Badge className="bg-blue-500/20 text-blue-500 border-blue-500/30">
+                                  CWL
+                                </Badge>
+                              )}
+                              {!stat.is_in_war && !stat.is_in_cwl && (
+                                <Badge variant="secondary">
+                                  Peace
+                                </Badge>
+                              )}
                             </td>
                             <td className="text-center py-3 px-4 text-foreground">{stat.total_wars}</td>
                             <td className="text-center py-3 px-4">
