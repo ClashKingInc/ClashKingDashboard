@@ -6,7 +6,7 @@
  */
 
 // Main client
-export { ClashKingApiClient, createApiClient } from './client';
+export { ClashKingApiClient, createApiClient, apiClient } from './client';
 
 // Specialized clients (for advanced usage)
 export { AuthClient } from './clients/auth-client';
@@ -17,6 +17,7 @@ export { WarClient } from './clients/war-client';
 export { ServerClient } from './clients/server-client';
 export { LinkClient } from './clients/link-client';
 export { UtilityClient } from './clients/utility-client';
+export { LeaderboardClient } from './clients/leaderboard-client';
 
 // Base client (for extending)
 export { BaseApiClient } from './core/base-client';
@@ -80,6 +81,18 @@ export type { ServerSettings, ClanSettings, BanRequest } from './types/server';
 
 // Link types
 export type { CocAccountRequest } from './types/link';
+
+// Leaderboard types
+export type {
+  LeaderboardEntry,
+  LeaderboardResponse,
+  LeaderboardQueryParams,
+  LeaderboardCategory,
+  LeaderboardEntityType,
+  PlayerCapitalMetric,
+  ClanCapitalMetric,
+  LeaderboardMetric,
+} from './types/leaderboard';
 
 // Default export
 export { createApiClient as default } from './client';

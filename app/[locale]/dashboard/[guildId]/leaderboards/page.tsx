@@ -13,22 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// Type definitions
-interface LeaderboardEntry {
-  tag: string;
-  name: string;
-  value: number;
-  rank: number;
-  clan_tag?: string;
-  clan_name?: string;
-  league?: string;
-  trophies?: number;
-}
-
-interface LeaderboardData {
-  items: LeaderboardEntry[];
-}
+import { apiClient } from "@/lib/api";
+import type { LeaderboardEntry } from "@/lib/api";
 
 const LEADERBOARD_TYPES = {
   capital: {
@@ -69,26 +55,24 @@ export default function LeaderboardsPage() {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
-      const endpoint = leaderboardType === "player"
-        ? `/api/v1/leaderboard/players/capital`
-        : `/api/v1/leaderboard/clans/capital`;
-
-      const params = new URLSearchParams({
+      const params = {
         weekend: selectedWeekend,
         type: selectedMetric,
         league: selectedLeague,
         lower: "1",
         upper: "50"
-      });
+      };
 
-      const response = await fetch(`${endpoint}?${params}`);
+      const response = leaderboardType === "player"
+        ? await apiClient.leaderboards.getPlayerCapitalLeaderboard(params)
+        : await apiClient.leaderboards.getClanCapitalLeaderboard(params);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch leaderboard');
+      if (response.error) {
+        console.error('Error fetching leaderboard:', response.error);
+        setLeaderboardData([]);
+      } else {
+        setLeaderboardData(response.data?.items || []);
       }
-
-      const data: LeaderboardData = await response.json();
-      setLeaderboardData(data.items || []);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
       setLeaderboardData([]);
