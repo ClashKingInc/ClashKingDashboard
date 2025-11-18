@@ -99,8 +99,11 @@
   },
   "Sidebar": {
     "sections": {
-      "serverSettings": "Paramètres du Serveur",
-      "stats": "Statistiques"
+      "configuration": "Configuration",
+      "clanManagement": "Gestion des Clans",
+      "playerManagement": "Gestion des Joueurs",
+      "automation": "Automatisation",
+      "statistics": "Statistiques"
     },
     "overview": {
       "name": "Aperçu",
@@ -139,7 +142,7 @@
       "description": "Liaison Joueur-Discord"
     },
     "bans": {
-      "name": "Bannissements",
+      "name": "Bannissements & Avertissements",
       "description": "Outils de modération"
     },
     "wars": {

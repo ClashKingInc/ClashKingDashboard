@@ -40,48 +40,48 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
 
   const navigationSections = [
     {
-      titleKey: "sections.serverSettings",
+      titleKey: null, // Overview - no section title
       items: [
         {
           nameKey: "overview.name",
           href: `/${locale}/dashboard/${guildId}`,
           icon: Home,
         },
+      ],
+    },
+    {
+      titleKey: "sections.configuration",
+      items: [
         {
           nameKey: "general.name",
           href: `/${locale}/dashboard/${guildId}/general`,
           icon: Settings,
         },
         {
-          nameKey: "clans.name",
-          href: `/${locale}/dashboard/${guildId}/clans`,
-          icon: Users,
-        },
-        {
           nameKey: "logs.name",
           href: `/${locale}/dashboard/${guildId}/logs`,
           icon: ScrollText,
         },
+      ],
+    },
+    {
+      titleKey: "sections.clanManagement",
+      items: [
         {
-          nameKey: "roles.name",
-          href: `/${locale}/dashboard/${guildId}/roles`,
-          icon: ShieldCheck,
-        },
-        {
-          nameKey: "reminders.name",
-          href: `/${locale}/dashboard/${guildId}/reminders`,
-          icon: Bell,
+          nameKey: "clans.name",
+          href: `/${locale}/dashboard/${guildId}/clans`,
+          icon: Users,
         },
         {
           nameKey: "rosters.name",
           href: `/${locale}/dashboard/${guildId}/rosters`,
           icon: ClipboardList,
         },
-        {
-          nameKey: "autoboards.name",
-          href: `/${locale}/dashboard/${guildId}/autoboards`,
-          icon: LayoutDashboard,
-        },
+      ],
+    },
+    {
+      titleKey: "sections.playerManagement",
+      items: [
         {
           nameKey: "links.name",
           href: `/${locale}/dashboard/${guildId}/links`,
@@ -95,7 +95,27 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       ],
     },
     {
-      titleKey: "sections.stats",
+      titleKey: "sections.automation",
+      items: [
+        {
+          nameKey: "roles.name",
+          href: `/${locale}/dashboard/${guildId}/roles`,
+          icon: ShieldCheck,
+        },
+        {
+          nameKey: "reminders.name",
+          href: `/${locale}/dashboard/${guildId}/reminders`,
+          icon: Bell,
+        },
+        {
+          nameKey: "autoboards.name",
+          href: `/${locale}/dashboard/${guildId}/autoboards`,
+          icon: LayoutDashboard,
+        },
+      ],
+    },
+    {
+      titleKey: "sections.statistics",
       items: [
         {
           nameKey: "wars.name",
@@ -141,9 +161,6 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                 </p>
                 <ChevronDown className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity text-muted-foreground" />
               </div>
-              <p className="text-xs mt-0.5 text-muted-foreground">
-                {t("sections.serverSettings")}
-              </p>
             </div>
           </Link>
         )}
@@ -152,13 +169,15 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-3 space-y-4">
         {navigationSections.map((section, sectionIndex) => (
-          <div key={section.titleKey}>
-            {/* Section Title */}
-            <div className="px-3 mb-2">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t(section.titleKey)}
-              </h3>
-            </div>
+          <div key={section.titleKey || `section-${sectionIndex}`}>
+            {/* Section Title - only show if titleKey exists */}
+            {section.titleKey && (
+              <div className="px-3 mb-2">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {t(section.titleKey)}
+                </h3>
+              </div>
+            )}
             {/* Section Items */}
             <div className="space-y-1">
               {section.items.map((item) => {
