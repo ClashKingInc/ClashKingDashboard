@@ -73,14 +73,24 @@ export interface BanRequest {
  * Banned player information
  */
 export interface BannedPlayer {
-  player_tag: string;
-  player_name?: string;
-  reason: string;
-  banned_by: string;
-  banned_date: string;
+  _id?: string;
+  VillageTag: string;
+  name?: string;
+  Notes: string;
+  added_by: number;
+  DateCreated: string;
+  server: number;
+  rollover_date?: number | null;
   clan_tag?: string | null;
   clan_name?: string | null;
   image_url?: string;
+  edited_by?: Array<{
+    user: number;
+    previous: {
+      reason: string;
+      rollover_days: number | null;
+    };
+  }>;
 }
 
 /**

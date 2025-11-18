@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, DiscordChannel, DiscordRole, GuildInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
   /**
@@ -58,7 +58,7 @@ export class ServerClient extends BaseApiClient {
    * GET /v2/server/{server_id}/bans
    * Get all bans for a server
    */
-  async getBans(serverId: string | number, userId?: string): Promise<ApiResponse<PaginatedResponse<any>>> {
+  async getBans(serverId: string | number, userId?: string): Promise<ApiResponse<PaginatedResponse<BannedPlayer>>> {
     const query = userId ? this.buildQueryString({ user_id: userId }) : '';
     return this.request(`/v2/server/${serverId}/bans${query}`, { method: 'GET' });
   }
@@ -87,7 +87,7 @@ export class ServerClient extends BaseApiClient {
   /**
    * GET /v2/search/{guild_id}/banned-players
    */
-  async searchBannedPlayers(guildId: number, query: string): Promise<ApiResponse<PaginatedResponse<any>>> {
+  async searchBannedPlayers(guildId: number, query: string): Promise<ApiResponse<PaginatedResponse<BannedPlayer>>> {
     const params = this.buildQueryString({ query });
     return this.request(`/v2/search/${guildId}/banned-players${params}`, { method: 'GET' });
   }

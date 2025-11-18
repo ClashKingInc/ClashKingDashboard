@@ -171,9 +171,9 @@ export default function BansPage() {
 
   const filteredBans = bans.filter(
     (ban) =>
-      (ban.player_name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
-      ban.player_tag.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ban.reason.toLowerCase().includes(searchQuery.toLowerCase())
+      (ban.name?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+      ban.VillageTag.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ban.Notes.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -312,7 +312,7 @@ export default function BansPage() {
                   <div className="text-3xl font-bold text-foreground">
                     {bans.filter((b) => {
                       const days = Math.floor(
-                        (new Date().getTime() - new Date(b.banned_date).getTime()) /
+                        (new Date().getTime() - new Date(b.DateCreated).getTime()) /
                           (1000 * 60 * 60 * 24)
                       );
                       return days <= 7;
@@ -413,35 +413,35 @@ export default function BansPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredBans.map((ban, index) => (
-                      <TableRow key={`${ban.player_tag}-${index}`}>
+                      <TableRow key={`${ban.VillageTag}-${index}`}>
                         <TableCell>
                           <div>
                             <div className="font-medium text-foreground">
-                              {ban.player_name || "Unknown"}
+                              {ban.name || "Unknown"}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              {ban.player_tag}
+                              {ban.VillageTag}
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className="max-w-xs">
-                          <div className="truncate text-sm text-muted-foreground" title={ban.reason}>
-                            {ban.reason}
+                          <div className="truncate text-sm text-muted-foreground" title={ban.Notes}>
+                            {ban.Notes}
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <User className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">{ban.banned_by}</span>
+                            <span className="text-sm">{ban.added_by}</span>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="text-sm">
-                            {new Date(ban.banned_date).toLocaleDateString()}
+                            {new Date(ban.DateCreated).toLocaleDateString()}
                           </div>
                           <div className="text-xs text-muted-foreground">
                             {Math.floor(
-                              (new Date().getTime() - new Date(ban.banned_date).getTime()) /
+                              (new Date().getTime() - new Date(ban.DateCreated).getTime()) /
                                 (1000 * 60 * 60 * 24)
                             )}{" "}
                             days ago
@@ -465,7 +465,7 @@ export default function BansPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleRemoveBan(ban.player_tag)}
+                            onClick={() => handleRemoveBan(ban.VillageTag)}
                             className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
