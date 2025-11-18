@@ -40,7 +40,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import type { BannedPlayer } from "@/lib/api/types/server";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function BansPage() {
   const params = useParams();
