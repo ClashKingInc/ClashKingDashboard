@@ -139,6 +139,13 @@ export default function RostersPage() {
   const [selectedRosterIds, setSelectedRosterIds] = useState<Set<string>>(new Set());
   const [compareDialogOpen, setCompareDialogOpen] = useState(false);
 
+  // Cross-roster drag & drop state
+  const [draggedMemberData, setDraggedMemberData] = useState<{
+    memberTag: string;
+    sourceRosterId: string;
+  } | null>(null);
+  const [dropTargetRoster, setDropTargetRoster] = useState<string | null>(null);
+
   // Fetch rosters and clans
   useEffect(() => {
     const fetchData = async () => {
@@ -747,6 +754,97 @@ export default function RostersPage() {
     });
 
     return duplicates;
+  };
+
+  // Cross-roster drag & drop handlers
+  const handleCrossRosterDragStart = (e: React.DragEvent, memberTag: string, sourceRosterId: string) => {
+    setDraggedMemberData({ memberTag, sourceRosterId });
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", JSON.stringify({ memberTag, sourceRosterId }));
+
+    // Visual feedback
+    e.currentTarget.style.opacity = "0.5";
+  };
+
+  const handleCrossRosterDragEnd = (e: React.DragEvent) => {
+    setDraggedMemberData(null);
+    setDropTargetRoster(null);
+    e.currentTarget.style.opacity = "1";
+  };
+
+  const handleCrossRosterDragOver = (e: React.DragEvent, targetRosterId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDropTargetRoster(targetRosterId);
+  };
+
+  const handleCrossRosterDragLeave = () => {
+    setDropTargetRoster(null);
+  };
+
+  const handleCrossRosterDrop = async (e: React.DragEvent, targetRosterId: string) => {
+    e.preventDefault();
+    setDropTargetRoster(null);
+
+    if (!draggedMemberData) return;
+
+    const { memberTag, sourceRosterId } = draggedMemberData;
+
+    // Don't do anything if dropping in the same roster
+    if (sourceRosterId === targetRosterId) {
+      setDraggedMemberData(null);
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      // Step 1: Remove from source roster
+      await fetch(`/api/v2/roster/${sourceRosterId}/members?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ remove: [memberTag] })
+      });
+
+      // Step 2: Add to target roster
+      await fetch(`/api/v2/roster/${targetRosterId}/members?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ add: [memberTag] })
+      });
+
+      // Step 3: Refresh rosters list to get updated data
+      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        setRosters(data.items || data.rosters || data || []);
+      }
+
+      toast({
+        title: "Success",
+        description: `Member transferred between rosters successfully!`,
+      });
+    } catch (error) {
+      console.error("Error transferring member:", error);
+      toast({
+        title: "Error",
+        description: "Failed to transfer member. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+      setDraggedMemberData(null);
+    }
   };
 
   // Calculate roster statistics
@@ -2171,7 +2269,7 @@ export default function RostersPage() {
               Roster Comparison
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted
+              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted • Drag members between rosters to transfer
             </DialogDescription>
           </DialogHeader>
 
@@ -2303,8 +2401,17 @@ export default function RostersPage() {
                             )}
                           </div>
 
-                          {/* Members table */}
-                          <div className="border border-border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto">
+                          {/* Members table with drop zone */}
+                          <div
+                            className={`border border-border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto transition-all ${
+                              dropTargetRoster === roster.custom_id
+                                ? 'border-primary border-2 bg-primary/5'
+                                : ''
+                            }`}
+                            onDragOver={(e) => handleCrossRosterDragOver(e, roster.custom_id)}
+                            onDragLeave={handleCrossRosterDragLeave}
+                            onDrop={(e) => handleCrossRosterDrop(e, roster.custom_id)}
+                          >
                             <table className="w-full">
                               <thead className="bg-muted/50 sticky top-0">
                                 <tr>
@@ -2319,19 +2426,33 @@ export default function RostersPage() {
                                 {sortedMembers.length === 0 ? (
                                   <tr>
                                     <td colSpan={displayColumns.length} className="px-2 py-8 text-center text-muted-foreground text-sm">
-                                      No members
+                                      {dropTargetRoster === roster.custom_id
+                                        ? 'Drop member here to add to this roster'
+                                        : 'No members'
+                                      }
                                     </td>
                                   </tr>
                                 ) : (
                                   sortedMembers.map((member) => (
                                     <tr
                                       key={member.tag}
-                                      className={`border-b border-border transition-colors ${
+                                      draggable={true}
+                                      onDragStart={(e) => handleCrossRosterDragStart(e, member.tag, roster.custom_id)}
+                                      onDragEnd={handleCrossRosterDragEnd}
+                                      className={`border-b border-border transition-colors cursor-move ${
+                                        draggedMemberData?.memberTag === member.tag
+                                          ? 'opacity-50'
+                                          : ''
+                                      } ${
                                         duplicateMembers.has(member.tag)
                                           ? 'bg-yellow-500/10 hover:bg-yellow-500/20 border-l-4 border-l-yellow-500'
                                           : 'hover:bg-accent/50'
                                       }`}
-                                      title={duplicateMembers.has(member.tag) ? 'Duplicate member (in multiple rosters)' : ''}
+                                      title={
+                                        duplicateMembers.has(member.tag)
+                                          ? 'Duplicate member (in multiple rosters) • Drag to transfer to another roster'
+                                          : 'Drag to transfer to another roster'
+                                      }
                                     >
                                       {displayColumns.map(col => (
                                         <td key={col} className="px-2 py-1.5 text-center text-xs">
