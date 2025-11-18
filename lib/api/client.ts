@@ -13,6 +13,7 @@ import { ServerClient } from './clients/server-client';
 import { LinkClient } from './clients/link-client';
 import { UtilityClient } from './clients/utility-client';
 import { RolesClient } from './clients/roles-client';
+import { LeaderboardClient } from './clients/leaderboard-client';
 
 /**
  * Main API client with all endpoints organized by domain
@@ -27,6 +28,7 @@ export class ClashKingApiClient {
   public readonly links: LinkClient;
   public readonly utils: UtilityClient;
   public readonly roles: RolesClient;
+  public readonly leaderboards: LeaderboardClient;
 
   constructor(config: ApiConfig) {
     // Initialize all specialized clients with the same config
@@ -39,6 +41,7 @@ export class ClashKingApiClient {
     this.links = new LinkClient(config);
     this.utils = new UtilityClient(config);
     this.roles = new RolesClient(config);
+    this.leaderboards = new LeaderboardClient(config);
   }
 
   /**
@@ -54,6 +57,7 @@ export class ClashKingApiClient {
     this.links.setAccessToken(token);
     this.utils.setAccessToken(token);
     this.roles.setAccessToken(token);
+    this.leaderboards.setAccessToken(token);
   }
 
   /**
@@ -69,6 +73,7 @@ export class ClashKingApiClient {
     this.links.setRefreshToken(token);
     this.utils.setRefreshToken(token);
     this.roles.setRefreshToken(token);
+    this.leaderboards.setRefreshToken(token);
   }
 
   /**
@@ -84,6 +89,7 @@ export class ClashKingApiClient {
     this.links.clearTokens();
     this.utils.clearTokens();
     this.roles.clearTokens();
+    this.leaderboards.clearTokens();
   }
 
   /**
