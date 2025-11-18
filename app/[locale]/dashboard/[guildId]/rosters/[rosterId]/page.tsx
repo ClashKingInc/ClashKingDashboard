@@ -143,15 +143,15 @@ export default function RosterDetailPage() {
       const rosterData = data.roster || data;
       setRoster(rosterData);
 
-      // Update edit form
+      // Update edit form - convert internal names to display labels
       setEditRosterData({
         alias: rosterData.alias,
         description: rosterData.description || "",
         min_th: rosterData.min_th?.toString() || "",
         max_th: rosterData.max_th?.toString() || "",
         roster_size: rosterData.roster_size?.toString() || "",
-        columns: rosterData.columns || [],
-        sort: rosterData.sort || [],
+        columns: (rosterData.columns || []).map((col: string) => getColumnDisplayLabel(col)),
+        sort: (rosterData.sort || []).map((field: string) => getSortDisplayLabel(field)),
       });
 
       // Load clan members if clan roster
@@ -457,14 +457,19 @@ export default function RosterDetailPage() {
     try {
       const accessToken = localStorage.getItem("access_token");
 
+      // Convert display labels back to internal names
       const updates = {
         alias: editRosterData.alias,
         description: editRosterData.description || null,
         min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
         max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
         roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
-        columns: editRosterData.columns.length > 0 ? editRosterData.columns : null,
-        sort: editRosterData.sort.length > 0 ? editRosterData.sort : null,
+        columns: editRosterData.columns.length > 0
+          ? editRosterData.columns.map(col => getInternalColumnName(col))
+          : null,
+        sort: editRosterData.sort.length > 0
+          ? editRosterData.sort.map(field => getInternalSortField(field))
+          : null,
       };
 
       const response = await fetch(`/api/v2/roster/${rosterId}?server_id=${guildId}`, {
@@ -511,6 +516,68 @@ export default function RosterDetailPage() {
       'trophies': 'Trophies'
     };
     return columnNames[col] || col;
+  };
+
+  // Convert internal column names to display labels for settings form
+  const getColumnDisplayLabel = (col: string): string => {
+    const columnLabels: Record<string, string> = {
+      'name': 'Name',
+      'townhall': 'Townhall Level',
+      'tag': 'Tag',
+      'hitrate': '30 Day Hitrate',
+      'current_clan_tag': 'Clan Tag',
+      'discord': 'Discord',
+      'hero_lvs': 'Heroes',
+      'war_pref': 'War Opt',
+      'trophies': 'Trophies'
+    };
+    return columnLabels[col] || col;
+  };
+
+  // Convert display labels to internal column names
+  const getInternalColumnName = (label: string): string => {
+    const internalNames: Record<string, string> = {
+      'Name': 'name',
+      'Townhall Level': 'townhall',
+      'Tag': 'tag',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Discord': 'discord',
+      'Heroes': 'hero_lvs',
+      'War Opt': 'war_pref',
+      'Trophies': 'trophies'
+    };
+    return internalNames[label] || label;
+  };
+
+  // Convert internal sort field names to display labels
+  const getSortDisplayLabel = (field: string): string => {
+    const sortLabels: Record<string, string> = {
+      'townhall': 'Townhall Level',
+      'name': 'Name',
+      'tag': 'Tag',
+      'hero_lvs': 'Heroes',
+      'trophies': 'Trophies',
+      'hitrate': '30 Day Hitrate',
+      'current_clan_tag': 'Clan Tag',
+      'added_at': 'Added At'
+    };
+    return sortLabels[field] || field;
+  };
+
+  // Convert display labels to internal sort field names
+  const getInternalSortField = (label: string): string => {
+    const internalFields: Record<string, string> = {
+      'Townhall Level': 'townhall',
+      'Name': 'name',
+      'Tag': 'tag',
+      'Heroes': 'hero_lvs',
+      'Trophies': 'trophies',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Added At': 'added_at'
+    };
+    return internalFields[label] || label;
   };
 
   const getDisplayColumns = (rosterData: Roster): string[] => {
