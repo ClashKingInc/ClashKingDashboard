@@ -175,7 +175,7 @@ export default function WarsPage() {
         // Fetch historical wars for statistics
         Promise.all(
           clansToFetch.map(tag =>
-            fetch(`/api/v2/war/${tag}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100`, {
+            fetch(`/api/v2/war/${encodeURIComponent(tag)}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100`, {
               headers: { Authorization: `Bearer ${accessToken}` }
             }).then(res => res.ok ? res.json() : { items: [] })
           )
