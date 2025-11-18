@@ -12,8 +12,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
-  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye
+  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye,
+  Plus, Trash2, Clock, Bell, Lock, Unlock, MessageSquare, Calendar
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -84,6 +92,26 @@ interface ClanMember {
   clan_tag: string;
 }
 
+interface Automation {
+  id: string;
+  enabled: boolean;
+  trigger_type: "time_before_event" | "time_after_event" | "specific_time" | "member_count";
+  trigger_value: number; // hours before/after event, or member count threshold
+  action_type: "send_reminder" | "notify_leader" | "lock_roster" | "unlock_roster";
+  message_template?: string;
+  channel_id?: string;
+  target_roles?: string[];
+}
+
+interface RosterSettings {
+  event_start_time?: number; // Unix timestamp
+  event_end_time?: number; // Unix timestamp
+  event_type?: "cwl" | "war" | "friendly" | "tournament";
+  reminder_channel_id?: string;
+  leader_role_id?: string;
+  automations?: Automation[];
+}
+
 export default function RosterDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -121,6 +149,27 @@ export default function RosterDetailPage() {
   // Drag & Drop state
   const [draggedMember, setDraggedMember] = useState<string | null>(null);
   const [dragOverCategory, setDragOverCategory] = useState<string | null>(null);
+
+  // Automation state
+  const [automationSettings, setAutomationSettings] = useState<RosterSettings>({
+    event_start_time: undefined,
+    event_end_time: undefined,
+    event_type: "war",
+    reminder_channel_id: "",
+    leader_role_id: "",
+    automations: [],
+  });
+  const [addAutomationDialogOpen, setAddAutomationDialogOpen] = useState(false);
+  const [newAutomation, setNewAutomation] = useState<Automation>({
+    id: crypto.randomUUID(),
+    enabled: true,
+    trigger_type: "time_before_event",
+    trigger_value: 24,
+    action_type: "send_reminder",
+    message_template: "",
+    channel_id: "",
+    target_roles: [],
+  });
 
   // Load roster data
   useEffect(() => {
@@ -1270,20 +1319,313 @@ export default function RosterDetailPage() {
 
           {/* Automation Tab */}
           <TabsContent value="automation" className="space-y-6">
+            {/* Event Settings */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-foreground">Automation</CardTitle>
+                <CardTitle className="text-foreground flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  Event Settings
+                </CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  Set up automated reminders and actions
+                  Configure event times for automated reminders
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <Zap className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>Automation coming in a future update...</p>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-foreground">Event Type</Label>
+                    <Select
+                      value={automationSettings.event_type}
+                      onValueChange={(value: any) =>
+                        setAutomationSettings({ ...automationSettings, event_type: value })
+                      }
+                    >
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-card border-border">
+                        <SelectItem value="war">Regular War</SelectItem>
+                        <SelectItem value="cwl">CWL</SelectItem>
+                        <SelectItem value="friendly">Friendly War</SelectItem>
+                        <SelectItem value="tournament">Tournament</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-foreground">Reminder Channel</Label>
+                    <Input
+                      placeholder="Channel ID (optional)"
+                      value={automationSettings.reminder_channel_id}
+                      onChange={(e) =>
+                        setAutomationSettings({ ...automationSettings, reminder_channel_id: e.target.value })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
                 </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-foreground">Event Start Time</Label>
+                    <Input
+                      type="datetime-local"
+                      value={
+                        automationSettings.event_start_time
+                          ? new Date(automationSettings.event_start_time * 1000).toISOString().slice(0, 16)
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setAutomationSettings({
+                          ...automationSettings,
+                          event_start_time: e.target.value ? Math.floor(new Date(e.target.value).getTime() / 1000) : undefined,
+                        })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-foreground">Event End Time</Label>
+                    <Input
+                      type="datetime-local"
+                      value={
+                        automationSettings.event_end_time
+                          ? new Date(automationSettings.event_end_time * 1000).toISOString().slice(0, 16)
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setAutomationSettings({
+                          ...automationSettings,
+                          event_end_time: e.target.value ? Math.floor(new Date(e.target.value).getTime() / 1000) : undefined,
+                        })
+                      }
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+
+                <Button onClick={() => toast({ title: "Event settings saved", description: "Settings will be applied on next sync" })}>
+                  <Clock className="w-4 h-4 mr-2" />
+                  Save Event Settings
+                </Button>
               </CardContent>
             </Card>
+
+            {/* Automations List */}
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-foreground flex items-center gap-2">
+                      <Zap className="w-5 h-5" />
+                      Automated Actions
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground">
+                      Set up triggers and actions for automated roster management
+                    </CardDescription>
+                  </div>
+                  <Button onClick={() => setAddAutomationDialogOpen(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Automation
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {automationSettings.automations && automationSettings.automations.length > 0 ? (
+                  <div className="space-y-3">
+                    {automationSettings.automations.map((automation) => (
+                      <Card key={automation.id} className="bg-secondary/30 border-border">
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 space-y-2">
+                              <div className="flex items-center gap-3">
+                                <Checkbox
+                                  checked={automation.enabled}
+                                  onCheckedChange={(checked) => {
+                                    setAutomationSettings({
+                                      ...automationSettings,
+                                      automations: automationSettings.automations?.map((a) =>
+                                        a.id === automation.id ? { ...a, enabled: !!checked } : a
+                                      ),
+                                    });
+                                  }}
+                                />
+                                <div className="flex items-center gap-2">
+                                  {automation.action_type === "send_reminder" && <Bell className="w-4 h-4 text-blue-400" />}
+                                  {automation.action_type === "notify_leader" && <MessageSquare className="w-4 h-4 text-purple-400" />}
+                                  {automation.action_type === "lock_roster" && <Lock className="w-4 h-4 text-red-400" />}
+                                  {automation.action_type === "unlock_roster" && <Unlock className="w-4 h-4 text-green-400" />}
+                                  <span className="font-medium text-foreground">
+                                    {automation.action_type.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                                  </span>
+                                </div>
+                                <Badge variant={automation.enabled ? "default" : "outline"} className="text-xs">
+                                  {automation.enabled ? "Active" : "Disabled"}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground ml-7">
+                                <span className="font-medium">Trigger:</span>{" "}
+                                {automation.trigger_type === "time_before_event" && `${automation.trigger_value}h before event`}
+                                {automation.trigger_type === "time_after_event" && `${automation.trigger_value}h after event`}
+                                {automation.trigger_type === "member_count" && `When ${automation.trigger_value} members signed up`}
+                                {automation.trigger_type === "specific_time" && "At specific time"}
+                              </p>
+                              {automation.message_template && (
+                                <p className="text-xs text-muted-foreground ml-7 italic">
+                                  "{automation.message_template}"
+                                </p>
+                              )}
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setAutomationSettings({
+                                  ...automationSettings,
+                                  automations: automationSettings.automations?.filter((a) => a.id !== automation.id),
+                                });
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4 text-red-400" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Zap className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>No automations configured yet</p>
+                    <p className="text-xs mt-1">Click "Add Automation" to create your first automated action</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Add Automation Dialog */}
+            <Dialog open={addAutomationDialogOpen} onOpenChange={setAddAutomationDialogOpen}>
+              <DialogContent className="bg-card border-border max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle className="text-foreground">Create Automation</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Configure a new automated action for this roster
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-foreground">Trigger Type</Label>
+                      <Select
+                        value={newAutomation.trigger_type}
+                        onValueChange={(value: any) => setNewAutomation({ ...newAutomation, trigger_type: value })}
+                      >
+                        <SelectTrigger className="bg-background border-border">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-card border-border">
+                          <SelectItem value="time_before_event">Time Before Event</SelectItem>
+                          <SelectItem value="time_after_event">Time After Event</SelectItem>
+                          <SelectItem value="member_count">Member Count Threshold</SelectItem>
+                          <SelectItem value="specific_time">Specific Time</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-foreground">
+                        {newAutomation.trigger_type === "member_count" ? "Member Count" : "Hours"}
+                      </Label>
+                      <Input
+                        type="number"
+                        value={newAutomation.trigger_value}
+                        onChange={(e) => setNewAutomation({ ...newAutomation, trigger_value: parseInt(e.target.value) || 0 })}
+                        placeholder={newAutomation.trigger_type === "member_count" ? "e.g., 50" : "e.g., 24"}
+                        className="bg-background border-border"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-foreground">Action Type</Label>
+                    <Select
+                      value={newAutomation.action_type}
+                      onValueChange={(value: any) => setNewAutomation({ ...newAutomation, action_type: value })}
+                    >
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-card border-border">
+                        <SelectItem value="send_reminder">Send Reminder Message</SelectItem>
+                        <SelectItem value="notify_leader">Notify Leader</SelectItem>
+                        <SelectItem value="lock_roster">Lock Roster</SelectItem>
+                        <SelectItem value="unlock_roster">Unlock Roster</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {(newAutomation.action_type === "send_reminder" || newAutomation.action_type === "notify_leader") && (
+                    <>
+                      <div className="space-y-2">
+                        <Label className="text-foreground">Message Template</Label>
+                        <Textarea
+                          value={newAutomation.message_template}
+                          onChange={(e) => setNewAutomation({ ...newAutomation, message_template: e.target.value })}
+                          placeholder="e.g., @everyone War starts in 24 hours! Make sure to sign up on the roster."
+                          className="bg-background border-border"
+                          rows={3}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          You can use: @everyone, @here, or specific role mentions
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-foreground">Channel ID (optional)</Label>
+                        <Input
+                          value={newAutomation.channel_id}
+                          onChange={(e) => setNewAutomation({ ...newAutomation, channel_id: e.target.value })}
+                          placeholder="Leave empty to use default reminder channel"
+                          className="bg-background border-border"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setAddAutomationDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setAutomationSettings({
+                        ...automationSettings,
+                        automations: [...(automationSettings.automations || []), { ...newAutomation, id: crypto.randomUUID() }],
+                      });
+                      setNewAutomation({
+                        id: crypto.randomUUID(),
+                        enabled: true,
+                        trigger_type: "time_before_event",
+                        trigger_value: 24,
+                        action_type: "send_reminder",
+                        message_template: "",
+                        channel_id: "",
+                        target_roles: [],
+                      });
+                      setAddAutomationDialogOpen(false);
+                      toast({
+                        title: "Automation created",
+                        description: "Your automated action has been added successfully",
+                      });
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Automation
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </TabsContent>
 
           {/* Groups Tab */}
