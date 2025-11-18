@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle, Hash } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -34,6 +34,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Type definitions
+interface Channel {
+  id: string;
+  name: string;
+  type: string;
+  parent_name?: string;
+}
+
 interface AutoBoardConfig {
   id: string;
   type: string;
@@ -108,37 +115,52 @@ export default function AutoBoardsPage() {
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
+  // Channels state
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [loadingChannels, setLoadingChannels] = useState(false);
+
   // New autoboard form state
   const [newType, setNewType] = useState<"post" | "refresh">("post");
   const [newBoardType, setNewBoardType] = useState("");
+  const [selectedChannel, setSelectedChannel] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
-  // Fetch autoboards
+  // Fetch autoboards and channels
   useEffect(() => {
-    const fetchAutoBoards = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/v2/server/${guildId}/autoboards`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
+        const token = `Bearer ${localStorage.getItem('access_token')}`;
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch autoboards');
+        const [autoboardsRes, channelsRes] = await Promise.all([
+          fetch(`/api/v2/server/${guildId}/autoboards`, {
+            headers: { 'Authorization': token }
+          }),
+          fetch(`/api/v2/server/${guildId}/channels`, {
+            headers: { 'Authorization': token }
+          })
+        ]);
+
+        if (autoboardsRes.ok) {
+          const autoboardsData: ServerAutoBoardsResponse = await autoboardsRes.json();
+          setAutoboardsData(autoboardsData);
         }
 
-        const data: ServerAutoBoardsResponse = await response.json();
-        setAutoboardsData(data);
+        if (channelsRes.ok) {
+          const channelsData: Channel[] = await channelsRes.json();
+          // Filter to only text channels
+          const textChannels = channelsData.filter(ch => ch.type === 'text' || ch.type === '0');
+          setChannels(textChannels);
+        }
       } catch (error) {
-        console.error('Error fetching autoboards:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
     if (guildId) {
-      fetchAutoBoards();
+      fetchData();
     }
   }, [guildId]);
 
@@ -156,6 +178,11 @@ export default function AutoBoardsPage() {
       return;
     }
 
+    if (!selectedChannel) {
+      alert('Please select a channel');
+      return;
+    }
+
     if (newType === 'post' && selectedDays.length === 0) {
       alert('Please select at least one day for auto-post');
       return;
@@ -163,14 +190,12 @@ export default function AutoBoardsPage() {
 
     setCreating(true);
     try {
-      // For demo purposes, using dummy webhook/channel IDs
-      // In production, you'd need to fetch these from a channel selector
       const autoboardData = {
         type: newType,
         board_type: newBoardType,
         button_id: `${newBoardType}:${guildId}:page=0`,
-        webhook_id: "0", // Placeholder - should be selected from available channels
-        channel_id: "0",
+        webhook_id: "0", // Will be created by backend
+        channel_id: selectedChannel,
         days: newType === 'post' ? selectedDays : null,
         locale: "en-US"
       };
@@ -203,6 +228,7 @@ export default function AutoBoardsPage() {
 
       setCreateDialogOpen(false);
       setNewBoardType("");
+      setSelectedChannel("");
       setSelectedDays([]);
       setNewType("post");
     } catch (error) {
@@ -318,6 +344,39 @@ export default function AutoBoardsPage() {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="channel" className="text-foreground">Channel</Label>
+                <Select value={selectedChannel} onValueChange={setSelectedChannel}>
+                  <SelectTrigger className="bg-background border-border text-foreground">
+                    <SelectValue placeholder="Select a channel" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border max-h-[300px]">
+                    {channels.length === 0 ? (
+                      <div className="px-2 py-4 text-sm text-muted-foreground text-center">
+                        No channels available
+                      </div>
+                    ) : (
+                      channels.map((channel) => (
+                        <SelectItem key={channel.id} value={channel.id}>
+                          <div className="flex items-center gap-2">
+                            <Hash className="w-3 h-3 text-muted-foreground" />
+                            <span>{channel.name}</span>
+                            {channel.parent_name && (
+                              <span className="text-xs text-muted-foreground">
+                                ({channel.parent_name})
+                              </span>
+                            )}
+                          </div>
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  The channel where the autoboard will be posted
+                </p>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="board-type" className="text-foreground">Board Type</Label>
                 <Select value={newBoardType} onValueChange={setNewBoardType}>
                   <SelectTrigger className="bg-background border-border text-foreground">
@@ -404,7 +463,7 @@ export default function AutoBoardsPage() {
               </Button>
               <Button
                 onClick={handleCreateAutoBoard}
-                disabled={creating || !newBoardType || (newType === 'post' && selectedDays.length === 0)}
+                disabled={creating || !newBoardType || !selectedChannel || (newType === 'post' && selectedDays.length === 0)}
                 className="bg-primary hover:bg-primary/90"
               >
                 {creating ? (
