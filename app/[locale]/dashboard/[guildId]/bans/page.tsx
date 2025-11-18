@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -54,6 +55,8 @@ export default function BansPage() {
   const params = useParams();
   const guildId = params.guildId as string;
   const { toast } = useToast();
+  const t = useTranslations("BansPage");
+  const tCommon = useTranslations("Common");
 
   // Bans state
   const [bans, setBans] = useState<BannedPlayer[]>([]);

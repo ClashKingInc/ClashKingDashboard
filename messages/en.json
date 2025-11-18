@@ -1,44 +1,436 @@
 {
+  "Common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "add": "Add",
+    "remove": "Remove",
+    "refresh": "Refresh",
+    "close": "Close",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "poweredBy": "Powered by",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Success",
+    "confirm": "Confirm",
+    "actions": "Actions",
+    "settings": "Settings",
+    "status": "Status",
+    "name": "Name",
+    "description": "Description",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At"
+  },
+  "Navigation": {
+    "features": "Features",
+    "commands": "Commands",
+    "premium": "Premium",
+    "documentation": "Documentation",
+    "loginWithDiscord": "Login with Discord",
+    "addToDiscord": "Add to Discord",
+    "openDashboard": "Open Dashboard",
+    "dashboardSettings": "Dashboard Settings"
+  },
   "HomePage": {
-    "title": "The Ultimate Clash of Clans Bot for Discord",
-    "subtitle": "Manage your clan with powerful automation, detailed statistics, and seamless Discord integration",
+    "badge": "12,500+ servers already using ClashKing",
+    "title": "The Most Powerful",
+    "titleHighlight": "Clash of Clans Bot",
+    "subtitle": "Automate your clan management, track player stats, manage wars, and keep your community engaged—all from Discord.",
+    "cta": {
+      "addToDiscord": "Add to Discord",
+      "openDashboard": "Open Dashboard"
+    },
+    "stats": {
+      "servers": "Discord Servers",
+      "users": "Active Users",
+      "clans": "Clans Tracked"
+    },
     "features": {
-      "title": "Powerful Features for Clan Management",
-      "automation": {
-        "title": "Role Automation",
-        "description": "Automatically verify players and assign roles based on their in-game status"
+      "title": "Everything You Need to Manage Your Clan",
+      "subtitle": "Powerful features designed specifically for Clash of Clans communities",
+      "autoRoles": {
+        "title": "Auto Role Management",
+        "description": "Automatically assign roles based on player status, clan position, and achievements. Keep your server organized effortlessly."
       },
-      "stats": {
+      "playerStats": {
         "title": "Player Statistics",
-        "description": "Track detailed player stats, progress, and activity across your clan"
+        "description": "Track detailed player stats, progress graphs, and attack history. See who's improving and who needs help."
       },
       "leaderboards": {
         "title": "Leaderboards",
-        "description": "Generate competitive leaderboards to compare player performance"
+        "description": "Create competitive leaderboards for donations, trophies, war stars, and custom metrics. Boost engagement."
       },
-      "war": {
+      "warTracking": {
         "title": "War Tracking",
-        "description": "Monitor war attacks, defenses, and results in real-time"
+        "description": "Monitor war lineups, track attacks in real-time, and get post-war analytics. Never miss a war detail."
       },
-      "reminders": {
-        "title": "Reminders & Alerts",
-        "description": "Never miss Clan Games, war starts, or important clan events"
+      "smartReminders": {
+        "title": "Smart Reminders",
+        "description": "Automated reminders for Clan Games, war attacks, Clan War League, and custom events. Keep everyone informed."
       },
       "customization": {
         "title": "Full Customization",
-        "description": "Tailor bot settings, commands, and permissions to your clan's needs"
+        "description": "Customize commands, embed colors, nicknames, and permissions. Make ClashKing truly yours."
+      },
+      "familyManagement": {
+        "title": "Family Management",
+        "description": "Manage multiple clans as a family. Cross-clan stats, shared leaderboards, and unified roles."
+      },
+      "analytics": {
+        "title": "Advanced Analytics",
+        "description": "Deep insights into clan performance, player activity patterns, and growth trends. Data-driven decisions."
+      },
+      "performance": {
+        "title": "Lightning Fast",
+        "description": "Built for performance with instant command responses and real-time updates. No lag, no delays."
+      },
+      "security": {
+        "title": "Secure & Reliable",
+        "description": "99.9% uptime, encrypted data, and regular backups. Your clan data is safe with us."
+      }
+    }
+  },
+  "Sidebar": {
+    "sections": {
+      "serverSettings": "Server Settings",
+      "stats": "Stats"
+    },
+    "overview": {
+      "name": "Overview",
+      "description": "Dashboard home"
+    },
+    "general": {
+      "name": "General Settings",
+      "description": "Server configuration"
+    },
+    "clans": {
+      "name": "Clans",
+      "description": "Manage your clans"
+    },
+    "logs": {
+      "name": "Logs",
+      "description": "Webhook configuration"
+    },
+    "roles": {
+      "name": "Roles",
+      "description": "Role automation"
+    },
+    "reminders": {
+      "name": "Reminders",
+      "description": "All reminder types"
+    },
+    "rosters": {
+      "name": "Rosters",
+      "description": "Roster management"
+    },
+    "autoboards": {
+      "name": "Autoboards",
+      "description": "Automated leaderboards"
+    },
+    "links": {
+      "name": "Links",
+      "description": "Player-Discord linking"
+    },
+    "bans": {
+      "name": "Bans",
+      "description": "Moderation tools"
+    },
+    "wars": {
+      "name": "Wars",
+      "description": "War statistics"
+    },
+    "leaderboards": {
+      "name": "Leaderboards",
+      "description": "Global rankings"
+    }
+  },
+  "BansPage": {
+    "title": "Bans & Strikes Management",
+    "description": "Manage banned players and strikes for your server",
+    "tabs": {
+      "bans": "Bans",
+      "strikes": "Strikes"
+    },
+    "bans": {
+      "title": "Banned Players",
+      "noBans": "No banned players found",
+      "addBan": "Add Ban",
+      "removeBan": "Remove Ban",
+      "confirmRemove": "Are you sure you want to remove this ban?",
+      "playerTag": "Player Tag",
+      "playerName": "Player Name",
+      "reason": "Reason",
+      "bannedAt": "Banned At",
+      "search": "Search by name or tag...",
+      "addDialog": {
+        "title": "Add New Ban",
+        "description": "Ban a player from your server",
+        "playerTagLabel": "Player Tag",
+        "playerTagPlaceholder": "#ABC123",
+        "playerNameLabel": "Player Name",
+        "playerNamePlaceholder": "Enter player name",
+        "reasonLabel": "Reason",
+        "reasonPlaceholder": "Reason for ban...",
+        "submit": "Ban Player"
       }
     },
-    "cta": {
-      "dashboard": "Open Dashboard",
-      "invite": "Invite to Discord",
-      "docs": "View Documentation"
+    "strikes": {
+      "title": "Player Strikes",
+      "noStrikes": "No strikes found",
+      "addStrike": "Add Strike",
+      "removeStrike": "Remove Strike",
+      "confirmRemove": "Are you sure you want to remove this strike?",
+      "playerTag": "Player Tag",
+      "reason": "Reason",
+      "weight": "Weight",
+      "rolloverDays": "Rollover Days",
+      "createdAt": "Created At",
+      "search": "Search by player tag...",
+      "addDialog": {
+        "title": "Add New Strike",
+        "description": "Add a strike to a player",
+        "playerTagLabel": "Player Tag",
+        "playerTagPlaceholder": "#ABC123",
+        "reasonLabel": "Reason",
+        "reasonPlaceholder": "Reason for strike...",
+        "weightLabel": "Strike Weight",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Rollover Days (Optional)",
+        "rolloverPlaceholder": "Days until strike expires",
+        "submit": "Add Strike"
+      }
+    },
+    "toast": {
+      "banAdded": "Ban added successfully",
+      "banRemoved": "Ban removed successfully",
+      "strikeAdded": "Strike added successfully",
+      "strikeRemoved": "Strike removed successfully",
+      "error": "An error occurred"
+    }
+  },
+  "RostersPage": {
+    "title": "Rosters",
+    "description": "Manage your war rosters",
+    "noRosters": "No rosters found",
+    "createRoster": "Create Roster",
+    "viewDetails": "View Details",
+    "deleteRoster": "Delete Roster",
+    "members": "Members",
+    "type": {
+      "clan": "Clan",
+      "family": "Family"
+    },
+    "signupScope": {
+      "clanOnly": "Clan Only",
+      "familyWide": "Family Wide"
+    },
+    "filters": {
+      "search": "Search rosters...",
+      "type": "Type",
+      "all": "All"
+    },
+    "createDialog": {
+      "title": "Create New Roster",
+      "description": "Set up a new roster for your clan",
+      "aliasLabel": "Roster Name",
+      "aliasPlaceholder": "e.g., CWL Roster",
+      "typeLabel": "Roster Type",
+      "signupScopeLabel": "Signup Scope",
+      "clanLabel": "Clan",
+      "descriptionLabel": "Description (Optional)",
+      "descriptionPlaceholder": "Roster description...",
+      "submit": "Create Roster"
+    },
+    "details": {
+      "title": "Roster Details",
+      "members": "Members",
+      "addMember": "Add Member",
+      "removeMember": "Remove Member",
+      "noMembers": "No members in this roster",
+      "playerName": "Player Name",
+      "townHall": "Town Hall",
+      "clan": "Clan",
+      "status": "Status"
+    },
+    "toast": {
+      "rosterCreated": "Roster created successfully",
+      "rosterDeleted": "Roster deleted successfully",
+      "memberAdded": "Member added successfully",
+      "memberRemoved": "Member removed successfully",
+      "error": "An error occurred"
+    }
+  },
+  "LinksPage": {
+    "title": "Links Management",
+    "description": "Manage Discord-Player links for your server",
+    "tabs": {
+      "links": "Links",
+      "settings": "Settings",
+      "stats": "Statistics"
     },
     "stats": {
-      "servers": "Servers",
-      "users": "Users",
-      "clans": "Clans Tracked"
+      "totalMembers": "Total Members",
+      "membersWithLinks": "Members with Links",
+      "totalLinkedAccounts": "Total Linked Accounts",
+      "verifiedAccounts": "Verified Accounts"
     },
-    "trustedBy": "Trusted by thousands of Clash of Clans communities worldwide"
+    "filters": {
+      "search": "Search by username or player tag...",
+      "verification": "Verification Status",
+      "all": "All",
+      "verified": "Verified Only",
+      "unverified": "Unverified Only",
+      "minAccounts": "Min Accounts"
+    },
+    "table": {
+      "user": "User",
+      "linkedAccounts": "Linked Accounts",
+      "verificationStatus": "Verification Status",
+      "actions": "Actions",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "accounts": "accounts"
+    },
+    "actions": {
+      "linkAccount": "Link Account",
+      "removeLink": "Remove Link",
+      "bulkActions": "Bulk Actions",
+      "exportData": "Export Data"
+    },
+    "linkDialog": {
+      "title": "Link Player Account",
+      "description": "Link a Clash of Clans account to a Discord user",
+      "playerTagLabel": "Player Tag",
+      "playerTagPlaceholder": "#ABC123",
+      "apiTokenLabel": "API Token",
+      "apiTokenPlaceholder": "API token from in-game settings",
+      "submit": "Link Account"
+    },
+    "deleteDialog": {
+      "title": "Remove Link",
+      "description": "Are you sure you want to remove this link?",
+      "confirm": "Remove",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "linkAdded": "Account linked successfully",
+      "linkRemoved": "Link removed successfully",
+      "error": "An error occurred"
+    }
+  },
+  "WarsPage": {
+    "title": "War Statistics",
+    "description": "View and analyze war performance",
+    "tabs": {
+      "current": "Current War",
+      "previous": "Previous Wars",
+      "stats": "Statistics"
+    },
+    "noWar": "No active war",
+    "warStatus": {
+      "preparation": "Preparation",
+      "inWar": "In War",
+      "ended": "Ended"
+    },
+    "stats": {
+      "attacks": "Attacks",
+      "stars": "Stars",
+      "destruction": "Destruction",
+      "performance": "Performance"
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Leaderboards",
+    "description": "View global and server rankings",
+    "types": {
+      "donations": "Donations",
+      "trophies": "Trophies",
+      "warStars": "War Stars",
+      "activity": "Activity"
+    },
+    "rank": "Rank",
+    "player": "Player",
+    "value": "Value"
+  },
+  "ClansPage": {
+    "title": "Clans",
+    "description": "Manage your Clash of Clans clans",
+    "addClan": "Add Clan",
+    "removeClan": "Remove Clan",
+    "clanTag": "Clan Tag",
+    "clanName": "Clan Name",
+    "members": "Members",
+    "level": "Level"
+  },
+  "RolesPage": {
+    "title": "Role Automation",
+    "description": "Configure automatic role assignments",
+    "noRoles": "No role configurations found",
+    "addRole": "Add Role",
+    "roleName": "Role Name",
+    "condition": "Condition",
+    "actions": "Actions"
+  },
+  "RemindersPage": {
+    "title": "Reminders",
+    "description": "Set up automated reminders",
+    "types": {
+      "clanGames": "Clan Games",
+      "war": "War",
+      "cwl": "CWL",
+      "custom": "Custom"
+    },
+    "addReminder": "Add Reminder",
+    "channel": "Channel",
+    "message": "Message",
+    "timing": "Timing"
+  },
+  "AutoboardsPage": {
+    "title": "Autoboards",
+    "description": "Automated leaderboard messages",
+    "noAutoboards": "No autoboards configured",
+    "createAutoboard": "Create Autoboard",
+    "type": "Type",
+    "channel": "Channel",
+    "updateInterval": "Update Interval"
+  },
+  "LogsPage": {
+    "title": "Logs",
+    "description": "Configure webhook logs",
+    "events": {
+      "playerJoin": "Player Join",
+      "playerLeave": "Player Leave",
+      "donations": "Donations",
+      "warAttacks": "War Attacks",
+      "achievements": "Achievements"
+    },
+    "channel": "Channel",
+    "enabled": "Enabled"
+  },
+  "GeneralPage": {
+    "title": "General Settings",
+    "description": "Configure your server settings",
+    "prefix": "Command Prefix",
+    "language": "Language",
+    "timezone": "Timezone",
+    "theme": "Theme"
+  },
+  "LanguageSwitcher": {
+    "label": "Language",
+    "english": "English",
+    "french": "Français"
+  },
+  "ThemeSwitcher": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
   }
 }

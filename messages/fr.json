@@ -1,44 +1,436 @@
 {
+  "Common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "refresh": "Actualiser",
+    "close": "Fermer",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "poweredBy": "Propulsé par",
+    "noData": "Aucune donnée disponible",
+    "error": "Une erreur s'est produite",
+    "success": "Succès",
+    "confirm": "Confirmer",
+    "actions": "Actions",
+    "settings": "Paramètres",
+    "status": "Statut",
+    "name": "Nom",
+    "description": "Description",
+    "createdAt": "Créé le",
+    "updatedAt": "Mis à jour le"
+  },
+  "Navigation": {
+    "features": "Fonctionnalités",
+    "commands": "Commandes",
+    "premium": "Premium",
+    "documentation": "Documentation",
+    "loginWithDiscord": "Connexion avec Discord",
+    "addToDiscord": "Ajouter à Discord",
+    "openDashboard": "Ouvrir le Tableau de Bord",
+    "dashboardSettings": "Paramètres du Tableau de Bord"
+  },
   "HomePage": {
-    "title": "Le Bot Clash of Clans Ultime pour Discord",
-    "subtitle": "Gérez votre clan avec une automatisation puissante, des statistiques détaillées et une intégration Discord transparente",
+    "badge": "Plus de 12 500 serveurs utilisent déjà ClashKing",
+    "title": "Le Bot le Plus Puissant",
+    "titleHighlight": "Clash of Clans",
+    "subtitle": "Automatisez la gestion de votre clan, suivez les statistiques des joueurs, gérez les guerres et gardez votre communauté engagée—le tout depuis Discord.",
+    "cta": {
+      "addToDiscord": "Ajouter à Discord",
+      "openDashboard": "Ouvrir le Tableau de Bord"
+    },
+    "stats": {
+      "servers": "Serveurs Discord",
+      "users": "Utilisateurs Actifs",
+      "clans": "Clans Suivis"
+    },
     "features": {
-      "title": "Fonctionnalités Puissantes pour la Gestion de Clan",
-      "automation": {
-        "title": "Automatisation des Rôles",
-        "description": "Vérifiez automatiquement les joueurs et attribuez des rôles en fonction de leur statut dans le jeu"
+      "title": "Tout ce Dont Vous Avez Besoin pour Gérer Votre Clan",
+      "subtitle": "Des fonctionnalités puissantes conçues spécifiquement pour les communautés Clash of Clans",
+      "autoRoles": {
+        "title": "Gestion Automatique des Rôles",
+        "description": "Attribuez automatiquement des rôles en fonction du statut du joueur, de sa position dans le clan et de ses réalisations. Gardez votre serveur organisé sans effort."
       },
-      "stats": {
+      "playerStats": {
         "title": "Statistiques des Joueurs",
-        "description": "Suivez les statistiques détaillées, la progression et l'activité des joueurs dans votre clan"
+        "description": "Suivez les statistiques détaillées des joueurs, les graphiques de progression et l'historique des attaques. Voyez qui s'améliore et qui a besoin d'aide."
       },
       "leaderboards": {
         "title": "Classements",
-        "description": "Générez des classements compétitifs pour comparer les performances des joueurs"
+        "description": "Créez des classements compétitifs pour les dons, les trophées, les étoiles de guerre et les métriques personnalisées. Boostez l'engagement."
       },
-      "war": {
+      "warTracking": {
         "title": "Suivi des Guerres",
-        "description": "Surveillez les attaques, défenses et résultats de guerre en temps réel"
+        "description": "Surveillez les compositions de guerre, suivez les attaques en temps réel et obtenez des analyses post-guerre. Ne manquez aucun détail de guerre."
       },
-      "reminders": {
-        "title": "Rappels & Alertes",
-        "description": "Ne manquez jamais les Jeux de Clan, les débuts de guerre ou les événements importants"
+      "smartReminders": {
+        "title": "Rappels Intelligents",
+        "description": "Rappels automatisés pour les Jeux de Clan, les attaques de guerre, la Ligue des Clans et les événements personnalisés. Gardez tout le monde informé."
       },
       "customization": {
         "title": "Personnalisation Complète",
-        "description": "Adaptez les paramètres, commandes et permissions du bot aux besoins de votre clan"
+        "description": "Personnalisez les commandes, les couleurs des embeds, les pseudonymes et les permissions. Faites de ClashKing le vôtre."
+      },
+      "familyManagement": {
+        "title": "Gestion de Famille",
+        "description": "Gérez plusieurs clans en tant que famille. Statistiques inter-clans, classements partagés et rôles unifiés."
+      },
+      "analytics": {
+        "title": "Analyses Avancées",
+        "description": "Informations approfondies sur les performances du clan, les modèles d'activité des joueurs et les tendances de croissance. Décisions basées sur les données."
+      },
+      "performance": {
+        "title": "Ultra Rapide",
+        "description": "Conçu pour la performance avec des réponses instantanées aux commandes et des mises à jour en temps réel. Aucun lag, aucun délai."
+      },
+      "security": {
+        "title": "Sécurisé et Fiable",
+        "description": "99,9% de disponibilité, données cryptées et sauvegardes régulières. Les données de votre clan sont en sécurité avec nous."
+      }
+    }
+  },
+  "Sidebar": {
+    "sections": {
+      "serverSettings": "Paramètres du Serveur",
+      "stats": "Statistiques"
+    },
+    "overview": {
+      "name": "Aperçu",
+      "description": "Page d'accueil du tableau de bord"
+    },
+    "general": {
+      "name": "Paramètres Généraux",
+      "description": "Configuration du serveur"
+    },
+    "clans": {
+      "name": "Clans",
+      "description": "Gérer vos clans"
+    },
+    "logs": {
+      "name": "Journaux",
+      "description": "Configuration des webhooks"
+    },
+    "roles": {
+      "name": "Rôles",
+      "description": "Automatisation des rôles"
+    },
+    "reminders": {
+      "name": "Rappels",
+      "description": "Tous les types de rappels"
+    },
+    "rosters": {
+      "name": "Compositions",
+      "description": "Gestion des compositions"
+    },
+    "autoboards": {
+      "name": "Tableaux Auto",
+      "description": "Classements automatisés"
+    },
+    "links": {
+      "name": "Liens",
+      "description": "Liaison Joueur-Discord"
+    },
+    "bans": {
+      "name": "Bannissements",
+      "description": "Outils de modération"
+    },
+    "wars": {
+      "name": "Guerres",
+      "description": "Statistiques de guerre"
+    },
+    "leaderboards": {
+      "name": "Classements",
+      "description": "Classements globaux"
+    }
+  },
+  "BansPage": {
+    "title": "Gestion des Bannissements et Avertissements",
+    "description": "Gérer les joueurs bannis et les avertissements pour votre serveur",
+    "tabs": {
+      "bans": "Bannissements",
+      "strikes": "Avertissements"
+    },
+    "bans": {
+      "title": "Joueurs Bannis",
+      "noBans": "Aucun joueur banni trouvé",
+      "addBan": "Ajouter un Bannissement",
+      "removeBan": "Retirer le Bannissement",
+      "confirmRemove": "Êtes-vous sûr de vouloir retirer ce bannissement ?",
+      "playerTag": "Tag du Joueur",
+      "playerName": "Nom du Joueur",
+      "reason": "Raison",
+      "bannedAt": "Banni le",
+      "search": "Rechercher par nom ou tag...",
+      "addDialog": {
+        "title": "Ajouter un Nouveau Bannissement",
+        "description": "Bannir un joueur de votre serveur",
+        "playerTagLabel": "Tag du Joueur",
+        "playerTagPlaceholder": "#ABC123",
+        "playerNameLabel": "Nom du Joueur",
+        "playerNamePlaceholder": "Entrer le nom du joueur",
+        "reasonLabel": "Raison",
+        "reasonPlaceholder": "Raison du bannissement...",
+        "submit": "Bannir le Joueur"
       }
     },
-    "cta": {
-      "dashboard": "Ouvrir le Tableau de Bord",
-      "invite": "Inviter sur Discord",
-      "docs": "Voir la Documentation"
+    "strikes": {
+      "title": "Avertissements des Joueurs",
+      "noStrikes": "Aucun avertissement trouvé",
+      "addStrike": "Ajouter un Avertissement",
+      "removeStrike": "Retirer l'Avertissement",
+      "confirmRemove": "Êtes-vous sûr de vouloir retirer cet avertissement ?",
+      "playerTag": "Tag du Joueur",
+      "reason": "Raison",
+      "weight": "Poids",
+      "rolloverDays": "Jours de Validité",
+      "createdAt": "Créé le",
+      "search": "Rechercher par tag de joueur...",
+      "addDialog": {
+        "title": "Ajouter un Nouvel Avertissement",
+        "description": "Ajouter un avertissement à un joueur",
+        "playerTagLabel": "Tag du Joueur",
+        "playerTagPlaceholder": "#ABC123",
+        "reasonLabel": "Raison",
+        "reasonPlaceholder": "Raison de l'avertissement...",
+        "weightLabel": "Poids de l'Avertissement",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Jours de Validité (Optionnel)",
+        "rolloverPlaceholder": "Jours avant expiration de l'avertissement",
+        "submit": "Ajouter l'Avertissement"
+      }
+    },
+    "toast": {
+      "banAdded": "Bannissement ajouté avec succès",
+      "banRemoved": "Bannissement retiré avec succès",
+      "strikeAdded": "Avertissement ajouté avec succès",
+      "strikeRemoved": "Avertissement retiré avec succès",
+      "error": "Une erreur s'est produite"
+    }
+  },
+  "RostersPage": {
+    "title": "Compositions",
+    "description": "Gérer vos compositions de guerre",
+    "noRosters": "Aucune composition trouvée",
+    "createRoster": "Créer une Composition",
+    "viewDetails": "Voir les Détails",
+    "deleteRoster": "Supprimer la Composition",
+    "members": "Membres",
+    "type": {
+      "clan": "Clan",
+      "family": "Famille"
+    },
+    "signupScope": {
+      "clanOnly": "Clan Uniquement",
+      "familyWide": "Toute la Famille"
+    },
+    "filters": {
+      "search": "Rechercher des compositions...",
+      "type": "Type",
+      "all": "Tous"
+    },
+    "createDialog": {
+      "title": "Créer une Nouvelle Composition",
+      "description": "Configurer une nouvelle composition pour votre clan",
+      "aliasLabel": "Nom de la Composition",
+      "aliasPlaceholder": "ex: Composition LDC",
+      "typeLabel": "Type de Composition",
+      "signupScopeLabel": "Portée d'Inscription",
+      "clanLabel": "Clan",
+      "descriptionLabel": "Description (Optionnel)",
+      "descriptionPlaceholder": "Description de la composition...",
+      "submit": "Créer la Composition"
+    },
+    "details": {
+      "title": "Détails de la Composition",
+      "members": "Membres",
+      "addMember": "Ajouter un Membre",
+      "removeMember": "Retirer le Membre",
+      "noMembers": "Aucun membre dans cette composition",
+      "playerName": "Nom du Joueur",
+      "townHall": "Hôtel de Ville",
+      "clan": "Clan",
+      "status": "Statut"
+    },
+    "toast": {
+      "rosterCreated": "Composition créée avec succès",
+      "rosterDeleted": "Composition supprimée avec succès",
+      "memberAdded": "Membre ajouté avec succès",
+      "memberRemoved": "Membre retiré avec succès",
+      "error": "Une erreur s'est produite"
+    }
+  },
+  "LinksPage": {
+    "title": "Gestion des Liens",
+    "description": "Gérer les liens Discord-Joueur pour votre serveur",
+    "tabs": {
+      "links": "Liens",
+      "settings": "Paramètres",
+      "stats": "Statistiques"
     },
     "stats": {
-      "servers": "Serveurs",
-      "users": "Utilisateurs",
-      "clans": "Clans Suivis"
+      "totalMembers": "Total des Membres",
+      "membersWithLinks": "Membres avec des Liens",
+      "totalLinkedAccounts": "Total des Comptes Liés",
+      "verifiedAccounts": "Comptes Vérifiés"
     },
-    "trustedBy": "Approuvé par des milliers de communautés Clash of Clans dans le monde"
+    "filters": {
+      "search": "Rechercher par nom d'utilisateur ou tag de joueur...",
+      "verification": "Statut de Vérification",
+      "all": "Tous",
+      "verified": "Vérifiés Uniquement",
+      "unverified": "Non Vérifiés Uniquement",
+      "minAccounts": "Comptes Minimum"
+    },
+    "table": {
+      "user": "Utilisateur",
+      "linkedAccounts": "Comptes Liés",
+      "verificationStatus": "Statut de Vérification",
+      "actions": "Actions",
+      "verified": "Vérifié",
+      "unverified": "Non Vérifié",
+      "accounts": "comptes"
+    },
+    "actions": {
+      "linkAccount": "Lier un Compte",
+      "removeLink": "Retirer le Lien",
+      "bulkActions": "Actions Groupées",
+      "exportData": "Exporter les Données"
+    },
+    "linkDialog": {
+      "title": "Lier un Compte Joueur",
+      "description": "Lier un compte Clash of Clans à un utilisateur Discord",
+      "playerTagLabel": "Tag du Joueur",
+      "playerTagPlaceholder": "#ABC123",
+      "apiTokenLabel": "Jeton API",
+      "apiTokenPlaceholder": "Jeton API des paramètres du jeu",
+      "submit": "Lier le Compte"
+    },
+    "deleteDialog": {
+      "title": "Retirer le Lien",
+      "description": "Êtes-vous sûr de vouloir retirer ce lien ?",
+      "confirm": "Retirer",
+      "cancel": "Annuler"
+    },
+    "toast": {
+      "linkAdded": "Compte lié avec succès",
+      "linkRemoved": "Lien retiré avec succès",
+      "error": "Une erreur s'est produite"
+    }
+  },
+  "WarsPage": {
+    "title": "Statistiques de Guerre",
+    "description": "Voir et analyser les performances de guerre",
+    "tabs": {
+      "current": "Guerre Actuelle",
+      "previous": "Guerres Précédentes",
+      "stats": "Statistiques"
+    },
+    "noWar": "Aucune guerre active",
+    "warStatus": {
+      "preparation": "Préparation",
+      "inWar": "En Guerre",
+      "ended": "Terminée"
+    },
+    "stats": {
+      "attacks": "Attaques",
+      "stars": "Étoiles",
+      "destruction": "Destruction",
+      "performance": "Performance"
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Classements",
+    "description": "Voir les classements globaux et du serveur",
+    "types": {
+      "donations": "Dons",
+      "trophies": "Trophées",
+      "warStars": "Étoiles de Guerre",
+      "activity": "Activité"
+    },
+    "rank": "Rang",
+    "player": "Joueur",
+    "value": "Valeur"
+  },
+  "ClansPage": {
+    "title": "Clans",
+    "description": "Gérer vos clans Clash of Clans",
+    "addClan": "Ajouter un Clan",
+    "removeClan": "Retirer le Clan",
+    "clanTag": "Tag du Clan",
+    "clanName": "Nom du Clan",
+    "members": "Membres",
+    "level": "Niveau"
+  },
+  "RolesPage": {
+    "title": "Automatisation des Rôles",
+    "description": "Configurer les attributions automatiques de rôles",
+    "noRoles": "Aucune configuration de rôle trouvée",
+    "addRole": "Ajouter un Rôle",
+    "roleName": "Nom du Rôle",
+    "condition": "Condition",
+    "actions": "Actions"
+  },
+  "RemindersPage": {
+    "title": "Rappels",
+    "description": "Configurer les rappels automatisés",
+    "types": {
+      "clanGames": "Jeux de Clan",
+      "war": "Guerre",
+      "cwl": "LDC",
+      "custom": "Personnalisé"
+    },
+    "addReminder": "Ajouter un Rappel",
+    "channel": "Canal",
+    "message": "Message",
+    "timing": "Timing"
+  },
+  "AutoboardsPage": {
+    "title": "Tableaux Automatiques",
+    "description": "Messages de classement automatisés",
+    "noAutoboards": "Aucun tableau automatique configuré",
+    "createAutoboard": "Créer un Tableau Automatique",
+    "type": "Type",
+    "channel": "Canal",
+    "updateInterval": "Intervalle de Mise à Jour"
+  },
+  "LogsPage": {
+    "title": "Journaux",
+    "description": "Configurer les journaux webhook",
+    "events": {
+      "playerJoin": "Arrivée de Joueur",
+      "playerLeave": "Départ de Joueur",
+      "donations": "Dons",
+      "warAttacks": "Attaques de Guerre",
+      "achievements": "Réalisations"
+    },
+    "channel": "Canal",
+    "enabled": "Activé"
+  },
+  "GeneralPage": {
+    "title": "Paramètres Généraux",
+    "description": "Configurer les paramètres de votre serveur",
+    "prefix": "Préfixe de Commande",
+    "language": "Langue",
+    "timezone": "Fuseau Horaire",
+    "theme": "Thème"
+  },
+  "LanguageSwitcher": {
+    "label": "Langue",
+    "english": "English",
+    "french": "Français"
+  },
+  "ThemeSwitcher": {
+    "label": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
   }
 }
