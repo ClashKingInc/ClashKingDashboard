@@ -91,9 +91,10 @@ export default function WarsPage() {
     endDate: "",
   });
 
-  // Fetch clans on mount
+  // Fetch clans and war data on mount
   useEffect(() => {
-    const fetchClans = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
@@ -101,6 +102,7 @@ export default function WarsPage() {
           return;
         }
 
+        // Fetch clans first
         const clansRes = await fetch(`/api/v2/server/${guildId}/clans`, {
           headers: { Authorization: `Bearer ${accessToken}` }
         });
@@ -118,39 +120,36 @@ export default function WarsPage() {
         const clansData = await clansRes.json();
         console.log('Clans data received:', clansData);
         setClans(clansData || []);
+
+        // If we have clans, fetch war data immediately
+        if (clansData && clansData.length > 0) {
+          await fetchWarDataForClans(clansData, accessToken);
+        } else {
+          setLoading(false);
+        }
       } catch (error) {
-        console.error("Error fetching clans:", error);
+        console.error("Error fetching data:", error);
         toast({
           title: "Error",
           description: "Failed to load clans. Please try again.",
           variant: "destructive",
         });
+        setLoading(false);
       }
     };
 
     if (guildId) {
-      fetchClans();
+      fetchData();
     }
   }, [guildId, router, toast]);
 
-  // Fetch war data when clans are loaded or filters change
-  useEffect(() => {
-    if (clans.length > 0) {
-      fetchWarData();
-    }
-  }, [clans]);
-
-  const fetchWarData = async () => {
-    setLoading(true);
+  const fetchWarDataForClans = async (clansList: Clan[], token: string) => {
     try {
-      const accessToken = localStorage.getItem("access_token");
-      if (!accessToken) return;
-
       const clansToFetch = filters.clan === "all"
-        ? clans.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
+        ? clansList.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
         : filters.clan && filters.clan !== "all" ? [filters.clan] : [];
 
-      console.log('Clans:', clans);
+      console.log('Clans:', clansList);
       console.log('Clans to fetch:', clansToFetch);
 
       // If no clans to fetch, return early
@@ -175,19 +174,19 @@ export default function WarsPage() {
         fetch('/api/v2/war/war-summary', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${accessToken}`,
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ clan_tags: clansToFetch }),
         }).then(res => res.ok ? res.json() : { items: [] }),
 
-        fetchPlayerStats(clansToFetch, accessToken, startTs, endTs),
+        fetchPlayerStats(clansToFetch, token, startTs, endTs),
 
         // Fetch historical wars for statistics
         Promise.all(
           clansToFetch.map(tag =>
             fetch(`/api/v2/war/${encodeURIComponent(tag)}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100`, {
-              headers: { Authorization: `Bearer ${accessToken}` }
+              headers: { Authorization: `Bearer ${token}` }
             }).then(res => res.ok ? res.json() : { items: [] })
           )
         )
@@ -205,7 +204,7 @@ export default function WarsPage() {
       clansToFetch.forEach((clanTag, index) => {
         const summary = summaries.find(s => s.clan_tag === clanTag || s.war_info?.clan?.tag === clanTag);
         const clanWars = (historicalWars[index]?.items || []) as War[];
-        const clanName = clans.find(c => c.tag === clanTag)?.name || clanTag;
+        const clanName = clansList.find(c => c.tag === clanTag)?.name || clanTag;
 
         let wins = 0, losses = 0, draws = 0;
         let totalStars = 0, totalDestruction = 0;
@@ -354,8 +353,32 @@ export default function WarsPage() {
     setFilters({ ...filters, [key]: value });
   };
 
-  const handleApplyFilters = () => {
-    fetchWarData();
+  const handleApplyFilters = async () => {
+    if (clans.length === 0) {
+      toast({
+        title: "Error",
+        description: "No clans available",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      if (accessToken) {
+        await fetchWarDataForClans(clans, accessToken);
+      }
+    } catch (error) {
+      console.error("Error applying filters:", error);
+      toast({
+        title: "Error",
+        description: "Failed to apply filters. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Calculate summary stats
