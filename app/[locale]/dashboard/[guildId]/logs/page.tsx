@@ -569,30 +569,23 @@ export default function LogsPage() {
         </div>
 
         {/* Clan Selector */}
-        <Card className="bg-card border-border">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 flex-1">
-                <div className="p-2 rounded-lg bg-purple-500/10">
-                  <Users className="h-4 w-4 text-purple-500" />
-                </div>
-                <Label className="text-sm font-medium">Select Clan to Configure</Label>
-              </div>
-              <Select value={selectedClan} onValueChange={setSelectedClan}>
-                <SelectTrigger className="w-[300px] bg-secondary border-border">
-                  <SelectValue placeholder="Select a clan" />
-                </SelectTrigger>
-                <SelectContent>
-                  {clanLogs.map((clan) => (
-                    <SelectItem key={clan.tag} value={clan.tag}>
-                      {clan.name} ({clan.tag})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+        {clanLogs.length > 0 && (
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground">Clan:</Label>
+            <Select value={selectedClan} onValueChange={setSelectedClan}>
+              <SelectTrigger className="w-[300px]">
+                <SelectValue placeholder="Select a clan" />
+              </SelectTrigger>
+              <SelectContent>
+                {clanLogs.map((clan) => (
+                  <SelectItem key={clan.tag} value={clan.tag}>
+                    {clan.name} ({clan.tag})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <Tabs defaultValue="clan" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:w-[800px] bg-secondary">
