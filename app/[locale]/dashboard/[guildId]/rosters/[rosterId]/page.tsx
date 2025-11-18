@@ -12,8 +12,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
-  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye, GitCompare
+  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye, GitCompare,
+  Bell, Lock, Unlock, MessageSquare, Clock, Hash, Calendar, Plus, Tag, Edit, Trash2
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -43,6 +51,48 @@ interface RosterMember {
   is_in_family?: boolean;
   member_status?: string;
   added_at?: number;
+}
+
+interface RosterAutomation {
+  automation_id: string;
+  server_id: number;
+  roster_id?: string;
+  group_id?: string;
+  action_type: "roster_signup" | "roster_signup_close" | "roster_post" | "roster_ping" | "recurring_event" | "roster_delete" | "roster_clear" | "roster_archive";
+  scheduled_time: number;
+  discord_channel_id?: string;
+  options?: Record<string, any>;
+  active: boolean;
+  executed: boolean;
+  created_at?: number;
+  updated_at?: number;
+}
+
+interface RosterGroup {
+  group_id: string;
+  alias: string;
+  description?: string;
+  server_id: number;
+  max_accounts_per_user?: number;
+  auto_signup_publish?: boolean;
+  auto_registration_close?: boolean;
+  auto_result_publish?: boolean;
+  roster_count?: number;
+  rosters?: Array<{
+    custom_id: string;
+    alias: string;
+    clan_name?: string;
+    updated_at?: string;
+  }>;
+  created_at?: number;
+  updated_at?: number;
+}
+
+interface SignupCategory {
+  custom_id: string;
+  alias: string;
+  server_id: number;
+  created_at?: number;
 }
 
 interface Roster {
@@ -122,10 +172,37 @@ export default function RosterDetailPage() {
   const [draggedMember, setDraggedMember] = useState<string | null>(null);
   const [dragOverCategory, setDragOverCategory] = useState<string | null>(null);
 
+  // Automation state
+  const [automations, setAutomations] = useState<RosterAutomation[]>([]);
+  const [loadingAutomations, setLoadingAutomations] = useState(false);
+  const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>({
+    action_type: "roster_ping",
+    scheduled_time: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
+    active: true,
+  });
+
+  // Groups state
+  const [groups, setGroups] = useState<RosterGroup[]>([]);
+  const [loadingGroups, setLoadingGroups] = useState(false);
+  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
+  const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<RosterGroup | null>(null);
+  const [newGroup, setNewGroup] = useState({ alias: "" });
+
+  // Categories state
+  const [categories, setCategories] = useState<SignupCategory[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
+  const [newCategory, setNewCategory] = useState({ custom_id: "", alias: "" });
+
   // Load roster data
   useEffect(() => {
     loadRoster();
     loadClans();
+    loadAutomations();
+    loadGroups();
+    loadCategories();
   }, [rosterId]);
 
   const loadRoster = async () => {
@@ -203,6 +280,403 @@ export default function RosterDetailPage() {
     }
   };
 
+  const loadAutomations = async () => {
+    setLoadingAutomations(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(
+        `/api/v2/roster-automation/list?server_id=${guildId}&roster_id=${rosterId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setAutomations(data.items || []);
+      }
+    } catch (error) {
+      console.error("Error loading automations:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load automations",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingAutomations(false);
+    }
+  };
+
+  const handleCreateAutomation = async () => {
+    if (!newAutomation.action_type || !newAutomation.scheduled_time) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-automation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          server_id: parseInt(guildId),
+          roster_id: rosterId,
+          action_type: newAutomation.action_type,
+          scheduled_time: newAutomation.scheduled_time,
+          discord_channel_id: newAutomation.discord_channel_id,
+          options: newAutomation.options,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create automation");
+      }
+
+      await loadAutomations();
+      setCreateAutomationDialogOpen(false);
+      setNewAutomation({
+        action_type: "roster_ping",
+        scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+        active: true,
+      });
+
+      toast({
+        title: "Success",
+        description: "Automation created successfully!",
+      });
+    } catch (error) {
+      console.error("Error creating automation:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create automation",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleToggleAutomation = async (automationId: string) => {
+    const automation = automations.find(a => a.automation_id === automationId);
+    if (!automation) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          active: !automation.active
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update automation");
+      }
+
+      await loadAutomations();
+      toast({
+        title: "Success",
+        description: "Automation updated",
+      });
+    } catch (error) {
+      console.error("Error updating automation:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update automation",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteAutomation = async (automationId: string) => {
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete automation");
+      }
+
+      await loadAutomations();
+      toast({
+        title: "Success",
+        description: "Automation deleted",
+      });
+    } catch (error) {
+      console.error("Error deleting automation:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete automation",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Groups functions
+  const loadGroups = async () => {
+    setLoadingGroups(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-group/list?server_id=${guildId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setGroups(data.items || []);
+      }
+    } catch (error) {
+      console.error("Error loading groups:", error);
+    } finally {
+      setLoadingGroups(false);
+    }
+  };
+
+  const handleCreateGroup = async () => {
+    if (!newGroup.alias) {
+      toast({
+        title: "Error",
+        description: "Group name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-group?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          alias: newGroup.alias,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create group");
+      }
+
+      await loadGroups();
+      setCreateGroupDialogOpen(false);
+      setNewGroup({ alias: "" });
+      toast({
+        title: "Success",
+        description: "Group created successfully!",
+      });
+    } catch (error) {
+      console.error("Error creating group:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create group",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleUpdateGroup = async () => {
+    if (!selectedGroup) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-group/${selectedGroup.group_id}?server_id=${guildId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          alias: selectedGroup.alias,
+          max_accounts_per_user: selectedGroup.max_accounts_per_user || undefined,
+          auto_signup_publish: selectedGroup.auto_signup_publish,
+          auto_registration_close: selectedGroup.auto_registration_close,
+          auto_result_publish: selectedGroup.auto_result_publish,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update group");
+      }
+
+      await loadGroups();
+      setEditGroupDialogOpen(false);
+      setSelectedGroup(null);
+      toast({
+        title: "Success",
+        description: "Group updated successfully!",
+      });
+    } catch (error) {
+      console.error("Error updating group:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update group",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteGroup = async (groupId: string) => {
+    if (!confirm("Are you sure? Rosters in this group will be ungrouped.")) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-group/${groupId}?server_id=${guildId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete group");
+      }
+
+      await loadGroups();
+      toast({
+        title: "Success",
+        description: "Group deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting group:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete group",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Categories functions
+  const loadCategories = async () => {
+    setLoadingCategories(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-signup-category/list?server_id=${guildId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data.items || []);
+      }
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCategory.alias) {
+      toast({
+        title: "Error",
+        description: "Category alias is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-signup-category?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          server_id: parseInt(guildId),
+          custom_id: newCategory.custom_id || undefined,
+          alias: newCategory.alias,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create category");
+      }
+
+      await loadCategories();
+      setCreateCategoryDialogOpen(false);
+      setNewCategory({ custom_id: "", alias: "" });
+      toast({
+        title: "Success",
+        description: "Category created successfully!",
+      });
+    } catch (error) {
+      console.error("Error creating category:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create category",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    if (!confirm("Are you sure you want to delete this category?")) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-signup-category/${encodeURIComponent(categoryId)}?server_id=${guildId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete category");
+      }
+
+      await loadCategories();
+      toast({
+        title: "Success",
+        description: "Category deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete category",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
@@ -265,7 +739,7 @@ export default function RosterDetailPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`
         },
-        body: JSON.stringify({ add: allTags })
+        body: JSON.stringify({ add: allTags.map(tag => ({ tag })) })
       });
 
       if (!response.ok) {
@@ -741,6 +1215,67 @@ export default function RosterDetailPage() {
     member.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
     member.tag.toLowerCase().includes(memberSearch.toLowerCase())
   );
+
+  // Automation helper functions
+  const getActionIcon = (actionType: string) => {
+    switch (actionType) {
+      case "roster_ping":
+        return <Bell className="w-4 h-4" />;
+      case "roster_post":
+        return <MessageSquare className="w-4 h-4" />;
+      case "roster_signup":
+        return <Unlock className="w-4 h-4" />;
+      case "roster_signup_close":
+        return <Lock className="w-4 h-4" />;
+      case "recurring_event":
+        return <RefreshCw className="w-4 h-4" />;
+      case "roster_delete":
+      case "roster_clear":
+      case "roster_archive":
+        return <X className="w-4 h-4" />;
+      default:
+        return <Zap className="w-4 h-4" />;
+    }
+  };
+
+  const getActionLabel = (actionType: string) => {
+    switch (actionType) {
+      case "roster_ping":
+        return "Ping Roster";
+      case "roster_post":
+        return "Post Roster";
+      case "roster_signup":
+        return "Open Signup";
+      case "roster_signup_close":
+        return "Close Signup";
+      case "recurring_event":
+        return "Recurring Event";
+      case "roster_delete":
+        return "Delete Roster";
+      case "roster_clear":
+        return "Clear Roster";
+      case "roster_archive":
+        return "Archive Roster";
+      default:
+        return actionType;
+    }
+  };
+
+  const unixToDatetimeLocal = (timestamp?: number): string => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp * 1000);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const datetimeLocalToUnix = (datetimeLocal: string): number => {
+    if (!datetimeLocal) return 0;
+    return Math.floor(new Date(datetimeLocal).getTime() / 1000);
+  };
 
   const renderCell = (member: RosterMember, column: string) => {
     switch (column) {
@@ -1349,41 +1884,417 @@ export default function RosterDetailPage() {
 
           {/* Automation Tab */}
           <TabsContent value="automation" className="space-y-6">
+            {/* Automations List */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-foreground">Automation</CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Set up automated reminders and actions
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-foreground flex items-center gap-2">
+                      <Zap className="w-5 h-5" />
+                      Automated Actions
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground">
+                      Schedule automated actions for this roster
+                    </CardDescription>
+                  </div>
+                  <Button
+                    onClick={() => setCreateAutomationDialogOpen(true)}
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Automation
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <Zap className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>Automation coming in a future update...</p>
-                </div>
+                {loadingAutomations ? (
+                  <div className="text-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+                  </div>
+                ) : !automations || automations.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Zap className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>No automations configured yet</p>
+                    <p className="text-xs mt-2">Click "Add Automation" to schedule your first action</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {automations.map((automation) => (
+                      <div
+                        key={automation.automation_id}
+                        className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
+                          automation.active && !automation.executed
+                            ? "bg-primary/5 border-primary/20"
+                            : "bg-muted/30 border-border opacity-60"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className={`p-2 rounded-full ${
+                            automation.active && !automation.executed ? "bg-primary/10" : "bg-muted"
+                          }`}>
+                            {getActionIcon(automation.action_type)}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-medium text-foreground">
+                                {getActionLabel(automation.action_type)}
+                              </span>
+                              <Badge
+                                variant={automation.active && !automation.executed ? "default" : "secondary"}
+                                className="text-xs"
+                              >
+                                {automation.executed ? "Executed" : automation.active ? "Active" : "Inactive"}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              Scheduled: {new Date(automation.scheduled_time * 1000).toLocaleString()}
+                            </p>
+                            {automation.discord_channel_id && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Channel: {automation.discord_channel_id}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {!automation.executed && (
+                            <Button
+                              size="sm"
+                              variant={automation.active ? "outline" : "default"}
+                              onClick={() => handleToggleAutomation(automation.automation_id)}
+                              disabled={saving}
+                              className="text-xs"
+                            >
+                              {automation.active ? "Disable" : "Enable"}
+                            </Button>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDeleteAutomation(automation.automation_id)}
+                            disabled={saving}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Groups Tab */}
           <TabsContent value="groups" className="space-y-6">
+            {/* Roster Groups */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-foreground">Groups & Categories</CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Manage signup groups and member categories
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-foreground">Roster Groups</CardTitle>
+                    <CardDescription className="text-muted-foreground">
+                      Organize rosters into groups for batch management
+                    </CardDescription>
+                  </div>
+                  <Button
+                    onClick={() => setCreateGroupDialogOpen(true)}
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Group
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <FolderTree className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>Groups management coming in a future update...</p>
+                {loadingGroups ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  </div>
+                ) : groups.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <FolderTree className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>No groups created yet</p>
+                    <p className="text-sm mt-1">Create a group to organize multiple rosters</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {groups.map((group) => (
+                      <Card key={group.group_id} className="bg-background border-border">
+                        <CardHeader>
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <CardTitle className="text-lg text-foreground">{group.alias}</CardTitle>
+                              {group.description && (
+                                <CardDescription className="text-muted-foreground mt-1">
+                                  {group.description}
+                                </CardDescription>
+                              )}
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedGroup(group);
+                                  setEditGroupDialogOpen(true);
+                                }}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleDeleteGroup(group.group_id)}
+                              >
+                                <Trash2 className="w-4 h-4 text-destructive" />
+                              </Button>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <FolderTree className="w-4 h-4" />
+                            <span>{group.roster_count || 0} roster(s)</span>
+                          </div>
+
+                          {group.max_accounts_per_user && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Users className="w-4 h-4" />
+                              <span>Max {group.max_accounts_per_user} accounts per user</span>
+                            </div>
+                          )}
+
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {group.auto_signup_publish && (
+                              <Badge variant="secondary" className="text-xs">
+                                Auto Publish
+                              </Badge>
+                            )}
+                            {group.auto_registration_close && (
+                              <Badge variant="secondary" className="text-xs">
+                                Auto Close
+                              </Badge>
+                            )}
+                            {group.auto_result_publish && (
+                              <Badge variant="secondary" className="text-xs">
+                                Auto Results
+                              </Badge>
+                            )}
+                          </div>
+
+                          {group.rosters && group.rosters.length > 0 && (
+                            <div className="mt-3 pt-3 border-t border-border">
+                              <p className="text-xs font-medium text-muted-foreground mb-2">Rosters:</p>
+                              <div className="space-y-1">
+                                {group.rosters.slice(0, 3).map((roster) => (
+                                  <div key={roster.custom_id} className="text-xs text-foreground">
+                                    • {roster.alias} {roster.clan_name && `(${roster.clan_name})`}
+                                  </div>
+                                ))}
+                                {group.rosters.length > 3 && (
+                                  <div className="text-xs text-muted-foreground">
+                                    +{group.rosters.length - 3} more
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Signup Categories */}
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-foreground">Signup Categories</CardTitle>
+                    <CardDescription className="text-muted-foreground">
+                      Define categories for member signups
+                    </CardDescription>
+                  </div>
+                  <Button
+                    onClick={() => setCreateCategoryDialogOpen(true)}
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Category
+                  </Button>
                 </div>
+              </CardHeader>
+              <CardContent>
+                {loadingCategories ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                  </div>
+                ) : categories.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Tag className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>No categories created yet</p>
+                    <p className="text-sm mt-1">Create categories to organize member signups</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {categories.map((category) => (
+                      <div
+                        key={category.custom_id}
+                        className="flex items-center justify-between p-3 rounded-lg bg-background border border-border"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Tag className="w-4 h-4 text-primary" />
+                          <div>
+                            <p className="font-medium text-foreground">{category.alias}</p>
+                            <p className="text-xs text-muted-foreground">ID: {category.custom_id}</p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteCategory(category.custom_id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Create Automation Dialog */}
+      <Dialog open={createAutomationDialogOpen} onOpenChange={setCreateAutomationDialogOpen}>
+        <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Schedule Automation</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Configure an automated action for this roster
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {/* Action Configuration */}
+            <div className="space-y-2">
+              <Label htmlFor="action-type" className="text-foreground">Action Type</Label>
+              <Select
+                value={newAutomation.action_type || ""}
+                onValueChange={(value) =>
+                  setNewAutomation({ ...newAutomation, action_type: value as RosterAutomation["action_type"] })
+                }
+              >
+                <SelectTrigger className="bg-background border-border">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="roster_ping">
+                    <div className="flex items-center gap-2">
+                      <Bell className="w-4 h-4" />
+                      Ping Roster
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_post">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4" />
+                      Post Roster
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup">
+                    <div className="flex items-center gap-2">
+                      <Unlock className="w-4 h-4" />
+                      Open Signup
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup_close">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4" />
+                      Close Signup
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="recurring_event">
+                    <div className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4" />
+                      Recurring Event
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Scheduled Time */}
+            <div className="space-y-2">
+              <Label htmlFor="scheduled-time" className="text-foreground">Scheduled Time</Label>
+              <Input
+                id="scheduled-time"
+                type="datetime-local"
+                value={unixToDatetimeLocal(newAutomation.scheduled_time)}
+                onChange={(e) =>
+                  setNewAutomation({ ...newAutomation, scheduled_time: datetimeLocalToUnix(e.target.value) })
+                }
+                className="bg-background border-border text-foreground"
+              />
+              <p className="text-xs text-muted-foreground">
+                When should this action be executed?
+              </p>
+            </div>
+
+            {/* Discord Channel ID */}
+            <div className="space-y-2">
+              <Label htmlFor="channel-id" className="text-foreground">Discord Channel ID (optional)</Label>
+              <Input
+                id="channel-id"
+                placeholder="123456789"
+                value={newAutomation.discord_channel_id || ""}
+                onChange={(e) =>
+                  setNewAutomation({ ...newAutomation, discord_channel_id: e.target.value })
+                }
+                className="bg-background border-border text-foreground"
+              />
+              <p className="text-xs text-muted-foreground">
+                Leave empty to use the roster's default channel
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreateAutomationDialogOpen(false);
+                setNewAutomation({
+                  action_type: "roster_ping",
+                  scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+                  active: true,
+                });
+              }}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateAutomation}
+              disabled={saving}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create Automation"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Add Members Dialog */}
       <Dialog open={addMembersDialogOpen} onOpenChange={setAddMembersDialogOpen}>
@@ -1492,6 +2403,251 @@ export default function RosterDetailPage() {
                 </>
               ) : (
                 "Add Members"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Group Dialog */}
+      <Dialog open={createGroupDialogOpen} onOpenChange={setCreateGroupDialogOpen}>
+        <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Create Roster Group</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Create a new group to organize multiple rosters
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="group-alias" className="text-foreground">Group Name *</Label>
+              <Input
+                id="group-alias"
+                placeholder="Enter group name..."
+                value={newGroup.alias}
+                onChange={(e) => setNewGroup({ ...newGroup, alias: e.target.value })}
+                className="bg-background border-border text-foreground"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreateGroupDialogOpen(false);
+                setNewGroup({ alias: "" });
+              }}
+              disabled={saving}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateGroup}
+              disabled={saving || !newGroup.alias.trim()}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create Group"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Group Dialog */}
+      <Dialog open={editGroupDialogOpen} onOpenChange={setEditGroupDialogOpen}>
+        <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Edit Roster Group</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Update group settings and automation options
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedGroup && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-group-alias" className="text-foreground">Group Name *</Label>
+                <Input
+                  id="edit-group-alias"
+                  placeholder="Enter group name..."
+                  value={selectedGroup.alias}
+                  onChange={(e) => setSelectedGroup({ ...selectedGroup, alias: e.target.value })}
+                  className="bg-background border-border text-foreground"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="max-accounts" className="text-foreground">Max Accounts Per User</Label>
+                <Input
+                  id="max-accounts"
+                  type="number"
+                  min="1"
+                  placeholder="Leave empty for no limit"
+                  value={selectedGroup.max_accounts_per_user || ""}
+                  onChange={(e) =>
+                    setSelectedGroup({
+                      ...selectedGroup,
+                      max_accounts_per_user: e.target.value ? parseInt(e.target.value) : undefined,
+                    })
+                  }
+                  className="bg-background border-border text-foreground"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-foreground">Automation Settings</Label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-background border border-border">
+                    <div>
+                      <p className="font-medium text-foreground">Auto Publish Signups</p>
+                      <p className="text-xs text-muted-foreground">
+                        Automatically publish signup sheets when created
+                      </p>
+                    </div>
+                    <Checkbox
+                      checked={selectedGroup.auto_signup_publish || false}
+                      onCheckedChange={(checked) =>
+                        setSelectedGroup({ ...selectedGroup, auto_signup_publish: checked as boolean })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-background border border-border">
+                    <div>
+                      <p className="font-medium text-foreground">Auto Close Registration</p>
+                      <p className="text-xs text-muted-foreground">
+                        Automatically close registration when roster is full
+                      </p>
+                    </div>
+                    <Checkbox
+                      checked={selectedGroup.auto_registration_close || false}
+                      onCheckedChange={(checked) =>
+                        setSelectedGroup({ ...selectedGroup, auto_registration_close: checked as boolean })
+                      }
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-background border border-border">
+                    <div>
+                      <p className="font-medium text-foreground">Auto Publish Results</p>
+                      <p className="text-xs text-muted-foreground">
+                        Automatically publish results when event completes
+                      </p>
+                    </div>
+                    <Checkbox
+                      checked={selectedGroup.auto_result_publish || false}
+                      onCheckedChange={(checked) =>
+                        setSelectedGroup({ ...selectedGroup, auto_result_publish: checked as boolean })
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditGroupDialogOpen(false);
+                setSelectedGroup(null);
+              }}
+              disabled={saving}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateGroup}
+              disabled={saving || !selectedGroup?.alias.trim()}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Category Dialog */}
+      <Dialog open={createCategoryDialogOpen} onOpenChange={setCreateCategoryDialogOpen}>
+        <DialogContent className="bg-card border-border">
+          <DialogHeader>
+            <DialogTitle className="text-foreground">Create Signup Category</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Define a new category for organizing member signups
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="category-alias" className="text-foreground">Category Name *</Label>
+              <Input
+                id="category-alias"
+                placeholder="e.g., Attackers, Defenders"
+                value={newCategory.alias}
+                onChange={(e) => setNewCategory({ ...newCategory, alias: e.target.value })}
+                className="bg-background border-border text-foreground"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category-custom-id" className="text-foreground">Custom ID (Optional)</Label>
+              <Input
+                id="category-custom-id"
+                placeholder="e.g., attackers, defenders (auto-generated if empty)"
+                value={newCategory.custom_id}
+                onChange={(e) =>
+                  setNewCategory({ ...newCategory, custom_id: e.target.value.toLowerCase().replace(/\s+/g, "_") })
+                }
+                className="bg-background border-border text-foreground"
+              />
+              <p className="text-xs text-muted-foreground">
+                Use lowercase letters, numbers, and underscores only. Leave empty to auto-generate.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreateCategoryDialogOpen(false);
+                setNewCategory({ custom_id: "", alias: "" });
+              }}
+              disabled={saving}
+              className="border-border"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateCategory}
+              disabled={saving || !newCategory.alias.trim()}
+              className="bg-primary hover:bg-primary/90"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create Category"
               )}
             </Button>
           </DialogFooter>
