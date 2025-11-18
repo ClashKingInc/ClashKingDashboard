@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle, Hash } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle, Hash, Pencil } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -125,6 +125,15 @@ export default function AutoBoardsPage() {
   const [selectedChannel, setSelectedChannel] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
+  // Edit autoboard state
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingAutoboard, setEditingAutoboard] = useState<AutoBoardConfig | null>(null);
+  const [updating, setUpdating] = useState(false);
+  const [editType, setEditType] = useState<"post" | "refresh">("post");
+  const [editBoardType, setEditBoardType] = useState("");
+  const [editChannel, setEditChannel] = useState("");
+  const [editDays, setEditDays] = useState<string[]>([]);
+
   // Fetch autoboards and channels
   useEffect(() => {
     const fetchData = async () => {
@@ -170,6 +179,23 @@ export default function AutoBoardsPage() {
         ? prev.filter(d => d !== day)
         : [...prev, day]
     );
+  };
+
+  const handleEditDayToggle = (day: string) => {
+    setEditDays(prev =>
+      prev.includes(day)
+        ? prev.filter(d => d !== day)
+        : [...prev, day]
+    );
+  };
+
+  const openEditDialog = (autoboard: AutoBoardConfig) => {
+    setEditingAutoboard(autoboard);
+    setEditType(autoboard.type as "post" | "refresh");
+    setEditBoardType(autoboard.board_type);
+    setEditChannel(autoboard.channel_id || "");
+    setEditDays(autoboard.days || []);
+    setEditDialogOpen(true);
   };
 
   const handleCreateAutoBoard = async () => {
@@ -236,6 +262,73 @@ export default function AutoBoardsPage() {
       alert(error instanceof Error ? error.message : 'Failed to create autoboard. Please try again.');
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleUpdateAutoBoard = async () => {
+    if (!editingAutoboard) return;
+
+    if (!editBoardType) {
+      alert('Please select a board type');
+      return;
+    }
+
+    if (!editChannel) {
+      alert('Please select a channel');
+      return;
+    }
+
+    if (editType === 'post' && editDays.length === 0) {
+      alert('Please select at least one day for auto-post');
+      return;
+    }
+
+    setUpdating(true);
+    try {
+      const updateData = {
+        type: editType,
+        board_type: editBoardType,
+        channel_id: editChannel,
+        days: editType === 'post' ? editDays : null,
+      };
+
+      const response = await fetch(`/api/v2/server/${guildId}/autoboards/${editingAutoboard.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Failed to update autoboard');
+      }
+
+      // Refresh autoboards list
+      const refreshResponse = await fetch(`/api/v2/server/${guildId}/autoboards`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+
+      if (refreshResponse.ok) {
+        const data: ServerAutoBoardsResponse = await refreshResponse.json();
+        setAutoboardsData(data);
+      }
+
+      setEditDialogOpen(false);
+      setEditingAutoboard(null);
+      setEditBoardType("");
+      setEditChannel("");
+      setEditDays([]);
+      setEditType("post");
+    } catch (error) {
+      console.error('Error updating autoboard:', error);
+      alert(error instanceof Error ? error.message : 'Failed to update autoboard. Please try again.');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -478,6 +571,175 @@ export default function AutoBoardsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Edit AutoBoard Dialog */}
+        <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <DialogContent className="bg-card border-border max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="text-foreground">Edit AutoBoard</DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                Modify the configuration of this autoboard
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-autoboard-type" className="text-foreground">Automation Type</Label>
+                <Select value={editType} onValueChange={(val) => setEditType(val as "post" | "refresh")}>
+                  <SelectTrigger className="bg-background border-border text-foreground">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border">
+                    <SelectItem value="post">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        Auto Post - Scheduled daily posts
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="refresh">
+                      <div className="flex items-center gap-2">
+                        <RefreshCw className="w-4 h-4" />
+                        Auto Refresh - Continuous updates (30-60 min)
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-channel" className="text-foreground">Channel</Label>
+                <Select value={editChannel} onValueChange={setEditChannel}>
+                  <SelectTrigger className="bg-background border-border text-foreground">
+                    <SelectValue placeholder="Select a channel" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border max-h-[300px]">
+                    {channels.length === 0 ? (
+                      <div className="px-2 py-4 text-sm text-muted-foreground text-center">
+                        No channels available
+                      </div>
+                    ) : (
+                      channels.map((channel) => (
+                        <SelectItem key={channel.id} value={channel.id}>
+                          <div className="flex items-center gap-2">
+                            <Hash className="w-3 h-3 text-muted-foreground" />
+                            <span>{channel.name}</span>
+                            {channel.parent_name && (
+                              <span className="text-xs text-muted-foreground">
+                                ({channel.parent_name})
+                              </span>
+                            )}
+                          </div>
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  The channel where the autoboard will be posted
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-board-type" className="text-foreground">Board Type</Label>
+                <Select value={editBoardType} onValueChange={setEditBoardType}>
+                  <SelectTrigger className="bg-background border-border text-foreground">
+                    <SelectValue placeholder="Select a board type" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border max-h-[300px]">
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Clan Boards</div>
+                    {Object.entries(BOARD_TYPES)
+                      .filter(([key]) => key.startsWith('clan'))
+                      .map(([key, label]) => (
+                        <SelectItem key={key} value={key}>{label}</SelectItem>
+                      ))}
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Family Boards</div>
+                    {Object.entries(BOARD_TYPES)
+                      .filter(([key]) => key.startsWith('family'))
+                      .map(([key, label]) => (
+                        <SelectItem key={key} value={key}>{label}</SelectItem>
+                      ))}
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Legend Boards</div>
+                    {Object.entries(BOARD_TYPES)
+                      .filter(([key]) => key.startsWith('legend'))
+                      .map(([key, label]) => (
+                        <SelectItem key={key} value={key}>{label}</SelectItem>
+                      ))}
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Other</div>
+                    {Object.entries(BOARD_TYPES)
+                      .filter(([key]) => !key.startsWith('clan') && !key.startsWith('family') && !key.startsWith('legend'))
+                      .map(([key, label]) => (
+                        <SelectItem key={key} value={key}>{label}</SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {editType === 'post' && (
+                <div className="space-y-2">
+                  <Label className="text-foreground">Post Days (select at least one)</Label>
+                  <div className="grid grid-cols-2 gap-3 p-4 border border-border rounded-lg bg-background">
+                    {DAYS.map((day) => (
+                      <div key={day.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`edit-${day.value}`}
+                          checked={editDays.includes(day.value)}
+                          onCheckedChange={() => handleEditDayToggle(day.value)}
+                        />
+                        <label
+                          htmlFor={`edit-${day.value}`}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground cursor-pointer"
+                        >
+                          {day.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Posts occur at 5:00 AM UTC daily reset time
+                  </p>
+                </div>
+              )}
+
+              {editType === 'refresh' && (
+                <div className="p-4 border border-border rounded-lg bg-background/50">
+                  <div className="flex items-start gap-3">
+                    <Info className="w-5 h-5 text-primary mt-0.5" />
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-foreground">Auto Refresh Info</p>
+                      <p className="text-xs text-muted-foreground">
+                        The board will automatically refresh every 30-60 minutes with the latest data. Perfect for keeping
+                        stats current without manual updates.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setEditDialogOpen(false)}
+                disabled={updating}
+                className="border-border"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdateAutoBoard}
+                disabled={updating || !editBoardType || !editChannel || (editType === 'post' && editDays.length === 0)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                {updating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  'Update'
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Info Alert */}
@@ -635,22 +897,33 @@ export default function AutoBoardsPage() {
                         )}
                       </div>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDeleteAutoBoard(autoboard.id)}
-                      disabled={deleting === autoboard.id}
-                      className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                    >
-                      {deleting === autoboard.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          Remove
-                        </>
-                      )}
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => openEditDialog(autoboard)}
+                        className="text-primary hover:text-primary hover:bg-primary/10"
+                      >
+                        <Pencil className="w-4 h-4 mr-1" />
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDeleteAutoBoard(autoboard.id)}
+                        disabled={deleting === autoboard.id}
+                        className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                      >
+                        {deleting === autoboard.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Trash2 className="w-4 h-4 mr-1" />
+                            Remove
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
