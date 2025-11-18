@@ -116,6 +116,7 @@ export default function WarsPage() {
         }
 
         const clansData = await clansRes.json();
+        console.log('Clans data received:', clansData);
         setClans(clansData || []);
       } catch (error) {
         console.error("Error fetching clans:", error);
@@ -149,8 +150,12 @@ export default function WarsPage() {
         ? clans.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
         : filters.clan && filters.clan !== "all" ? [filters.clan] : [];
 
+      console.log('Clans:', clans);
+      console.log('Clans to fetch:', clansToFetch);
+
       // If no clans to fetch, return early
       if (clansToFetch.length === 0) {
+        console.warn('No clans to fetch - clans data might be invalid');
         setLoading(false);
         return;
       }
