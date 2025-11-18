@@ -694,10 +694,10 @@ export default function RostersPage() {
     if (newSelection.has(rosterId)) {
       newSelection.delete(rosterId);
     } else {
-      if (newSelection.size >= 3) {
+      if (newSelection.size >= 5) {
         toast({
           title: "Maximum reached",
-          description: "You can compare up to 3 rosters at a time",
+          description: "You can compare up to 5 rosters at a time",
           variant: "destructive",
         });
         return;
@@ -810,14 +810,14 @@ export default function RostersPage() {
         body: JSON.stringify({ remove: [memberTag] })
       });
 
-      // Step 2: Add to target roster
+      // Step 2: Add to target roster (correct format: add expects array of objects with tag property)
       await fetch(`/api/v2/roster/${targetRosterId}/members?server_id=${guildId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`
         },
-        body: JSON.stringify({ add: [memberTag] })
+        body: JSON.stringify({ add: [{ tag: memberTag }] })
       });
 
       // Step 3: Refresh rosters list to get updated data
@@ -1136,7 +1136,7 @@ export default function RostersPage() {
                 className="bg-primary hover:bg-primary/90"
               >
                 <GitCompare className="w-4 h-4 mr-2" />
-                Compare ({selectedRosterIds.size}/3)
+                Compare ({selectedRosterIds.size}/5)
               </Button>
             </>
           ) : (
