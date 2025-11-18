@@ -430,7 +430,9 @@ export default function RosterDetailPage() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update member category");
+        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
+        console.error('Backend error:', response.status, errorData);
+        throw new Error(errorData.detail || `HTTP ${response.status}: Failed to update member category`);
       }
 
       await loadRoster();
@@ -440,9 +442,10 @@ export default function RosterDetailPage() {
       });
     } catch (error) {
       console.error("Error moving member:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to move member. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to move member. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
