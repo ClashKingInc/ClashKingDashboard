@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,11 +43,12 @@ export function Navbar() {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login">
-              <Button className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]">
-                Login
-              </Button>
-            </Link>
+            <Button
+              onClick={initiateDiscordLogin}
+              className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]"
+            >
+              Login with Discord
+            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -76,11 +78,13 @@ export function Navbar() {
               Documentation
             </a>
             <div className="pt-4 space-y-2">
-              <Link href="/login" className="block">
-                <Button variant="outline" className="w-full">
-                  Login
-                </Button>
-              </Link>
+              <Button
+                onClick={initiateDiscordLogin}
+                variant="outline"
+                className="w-full"
+              >
+                Login with Discord
+              </Button>
               <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer" className="block">
                 <Button className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]">
                   Add to Discord
