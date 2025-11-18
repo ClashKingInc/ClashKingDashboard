@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter, Eye, TrendingUp, Target, Star } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter, Eye, TrendingUp, Target, Star, GitCompare, CheckSquare, Square } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -119,6 +119,8 @@ export default function RostersPage() {
     min_th: "",
     max_th: "",
     roster_size: "",
+    columns: [] as string[],
+    sort: [] as string[],
   });
 
   // Add members state
@@ -131,6 +133,11 @@ export default function RostersPage() {
   const [rosterSearch, setRosterSearch] = useState("");
   const [rosterTypeFilter, setRosterTypeFilter] = useState<"all" | "clan" | "family">("all");
   const [refreshing, setRefreshing] = useState(false);
+
+  // Comparison mode state
+  const [comparisonMode, setComparisonMode] = useState(false);
+  const [selectedRosterIds, setSelectedRosterIds] = useState<Set<string>>(new Set());
+  const [compareDialogOpen, setCompareDialogOpen] = useState(false);
 
   // Fetch rosters and clans
   useEffect(() => {
@@ -283,6 +290,8 @@ export default function RostersPage() {
         min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
         max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
         roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
+        columns: editRosterData.columns.length > 0 ? editRosterData.columns : null,
+        sort: editRosterData.sort.length > 0 ? editRosterData.sort : null,
       };
 
       const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
@@ -404,6 +413,8 @@ export default function RostersPage() {
       min_th: roster.min_th?.toString() || "",
       max_th: roster.max_th?.toString() || "",
       roster_size: roster.roster_size?.toString() || "",
+      columns: roster.columns || [],
+      sort: roster.sort || [],
     });
     setEditDialogOpen(true);
   };
@@ -665,6 +676,74 @@ export default function RostersPage() {
     }
   };
 
+  // Comparison mode functions
+  const handleToggleRosterSelection = (rosterId: string) => {
+    const newSelection = new Set(selectedRosterIds);
+    if (newSelection.has(rosterId)) {
+      newSelection.delete(rosterId);
+    } else {
+      if (newSelection.size >= 3) {
+        toast({
+          title: "Maximum reached",
+          description: "You can compare up to 3 rosters at a time",
+          variant: "destructive",
+        });
+        return;
+      }
+      newSelection.add(rosterId);
+    }
+    setSelectedRosterIds(newSelection);
+  };
+
+  const handleStartComparison = async () => {
+    if (selectedRosterIds.size < 2) {
+      toast({
+        title: "Select rosters",
+        description: "Please select at least 2 rosters to compare",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setCompareDialogOpen(true);
+  };
+
+  const handleExitComparisonMode = () => {
+    setComparisonMode(false);
+    setSelectedRosterIds(new Set());
+  };
+
+  // Get rosters for comparison with full data
+  const getComparisonRosters = () => {
+    return Array.from(selectedRosterIds)
+      .map(id => rosters.find(r => r.custom_id === id))
+      .filter((r): r is Roster => r !== undefined);
+  };
+
+  // Find duplicate members across selected rosters
+  const findDuplicateMembers = (rostersToCompare: Roster[]) => {
+    const memberTags = new Map<string, Set<string>>(); // tag -> set of roster IDs
+
+    rostersToCompare.forEach(roster => {
+      roster.members?.forEach(member => {
+        if (!memberTags.has(member.tag)) {
+          memberTags.set(member.tag, new Set());
+        }
+        memberTags.get(member.tag)!.add(roster.custom_id);
+      });
+    });
+
+    // Return tags that appear in multiple rosters
+    const duplicates = new Set<string>();
+    memberTags.forEach((rosterIds, tag) => {
+      if (rosterIds.size > 1) {
+        duplicates.add(tag);
+      }
+    });
+
+    return duplicates;
+  };
+
   // Calculate roster statistics
   const getRosterStats = (roster: Roster) => {
     const members = roster.members || [];
@@ -868,27 +947,57 @@ export default function RostersPage() {
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-foreground">Rosters & Lineups</h1>
           <p className="text-muted-foreground">
             Manage war rosters, lineups, and member assignments
           </p>
         </div>
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-primary hover:bg-primary/90">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Roster
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="bg-card border-border">
-            <DialogHeader>
-              <DialogTitle className="text-foreground">Create New Roster</DialogTitle>
-              <DialogDescription className="text-muted-foreground">
-                Create a new war roster or lineup for your server
-              </DialogDescription>
-            </DialogHeader>
+        <div className="flex items-center gap-2">
+          {comparisonMode ? (
+            <>
+              <Button
+                variant="outline"
+                onClick={handleExitComparisonMode}
+                className="border-border"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Cancel
+              </Button>
+              <Button
+                onClick={handleStartComparison}
+                disabled={selectedRosterIds.size < 2}
+                className="bg-primary hover:bg-primary/90"
+              >
+                <GitCompare className="w-4 h-4 mr-2" />
+                Compare ({selectedRosterIds.size}/3)
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => setComparisonMode(true)}
+                className="border-border"
+              >
+                <GitCompare className="w-4 h-4 mr-2" />
+                Compare Rosters
+              </Button>
+              <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-primary hover:bg-primary/90">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Roster
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-card border-border">
+                  <DialogHeader>
+                    <DialogTitle className="text-foreground">Create New Roster</DialogTitle>
+                    <DialogDescription className="text-muted-foreground">
+                      Create a new war roster or lineup for your server
+                    </DialogDescription>
+                  </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="roster-name" className="text-foreground">Roster Name</Label>
@@ -980,9 +1089,12 @@ export default function RostersPage() {
                   "Create Roster"
                 )}
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Statistics Cards */}
@@ -1116,8 +1228,20 @@ export default function RostersPage() {
                 const stats = getRosterStats(roster);
                 const thRestriction = getTownhallRestrictionText(roster);
 
+                const isSelected = selectedRosterIds.has(roster.custom_id);
+
                 return (
-                  <Card key={roster.custom_id} className="group bg-gradient-to-br from-card to-secondary/30 border-border hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 hover:scale-[1.02] overflow-hidden">
+                  <Card
+                    key={roster.custom_id}
+                    className={`group bg-gradient-to-br from-card to-secondary/30 border-border hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 ${
+                      comparisonMode ? 'cursor-pointer' : ''
+                    } ${
+                      isSelected ? 'border-primary border-2 scale-[1.02]' : ''
+                    } ${
+                      !comparisonMode ? 'hover:scale-[1.02]' : ''
+                    } overflow-hidden`}
+                    onClick={() => comparisonMode && handleToggleRosterSelection(roster.custom_id)}
+                  >
                     <CardHeader className="pb-3 relative">
                       {/* Decorative gradient bar */}
                       <div className={`absolute top-0 left-0 right-0 h-1 ${
@@ -1125,6 +1249,17 @@ export default function RostersPage() {
                           ? "bg-gradient-to-r from-blue-500 to-cyan-500"
                           : "bg-gradient-to-r from-orange-500 to-amber-500"
                       }`} />
+
+                      {/* Selection checkbox (comparison mode) */}
+                      {comparisonMode && (
+                        <div className="absolute top-3 right-3 z-10">
+                          {isSelected ? (
+                            <CheckSquare className="w-6 h-6 text-primary" />
+                          ) : (
+                            <Square className="w-6 h-6 text-muted-foreground" />
+                          )}
+                        </div>
+                      )}
 
                       <div className="flex items-start justify-between mt-2">
                         <div className="flex items-center gap-3 flex-1">
@@ -1260,37 +1395,54 @@ export default function RostersPage() {
                         </div>
                       )}
 
-                      <div className="flex gap-2 pt-3 border-t border-border/50">
-                        <Button
-                          size="sm"
-                          onClick={() => handleViewRoster(roster)}
-                          className="flex-1 bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all"
-                        >
-                          <Eye className="w-4 h-4 mr-1.5" />
-                          View Details
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleOpenEdit(roster)}
-                          className="border-border hover:border-primary hover:bg-primary/10"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDeleteRoster(roster.custom_id)}
-                          disabled={deleting === roster.custom_id}
-                          className="border-destructive/50 text-destructive hover:bg-destructive hover:text-white"
-                        >
-                          {deleting === roster.custom_id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Trash2 className="w-4 h-4" />
-                          )}
-                        </Button>
-                      </div>
+                      {!comparisonMode && (
+                        <div className="flex gap-2 pt-3 border-t border-border/50">
+                          <Button
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(`/${params.locale}/dashboard/${guildId}/rosters/${roster.custom_id}`);
+                            }}
+                            className="flex-1 bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all"
+                          >
+                            <Eye className="w-4 h-4 mr-1.5" />
+                            Open Roster
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenEdit(roster);
+                            }}
+                            className="border-border hover:border-primary hover:bg-primary/10"
+                            title="Quick Edit"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteRoster(roster.custom_id);
+                            }}
+                            disabled={deleting === roster.custom_id}
+                            className="border-destructive/50 text-destructive hover:bg-destructive hover:text-white"
+                          >
+                            {deleting === roster.custom_id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      )}
+                      {comparisonMode && (
+                        <div className="pt-3 border-t border-border/50 text-center text-sm text-muted-foreground">
+                          {isSelected ? "Selected for comparison" : "Click to select"}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 );
@@ -1313,6 +1465,117 @@ export default function RostersPage() {
 
           {selectedRoster && (
             <div className="space-y-4">
+              {/* Roster Info Card */}
+              <Card className="bg-gradient-to-br from-secondary/30 to-secondary/10 border-border">
+                <CardContent className="pt-6">
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {/* Members Stats */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <Users className="w-4 h-4" />
+                        <span>Members</span>
+                      </div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-3xl font-bold text-foreground">
+                          {selectedRoster.members?.length || 0}
+                        </span>
+                        {selectedRoster.roster_size && (
+                          <span className="text-muted-foreground">/ {selectedRoster.roster_size}</span>
+                        )}
+                      </div>
+                      {selectedRoster.roster_size && (
+                        <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all ${
+                              ((selectedRoster.members?.length || 0) / selectedRoster.roster_size) >= 0.9
+                                ? "bg-gradient-to-r from-green-500 to-emerald-500"
+                                : ((selectedRoster.members?.length || 0) / selectedRoster.roster_size) >= 0.5
+                                ? "bg-gradient-to-r from-yellow-500 to-orange-500"
+                                : "bg-gradient-to-r from-red-500 to-pink-500"
+                            }`}
+                            style={{ width: `${Math.min(((selectedRoster.members?.length || 0) / selectedRoster.roster_size) * 100, 100)}%` }}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Performance Stats */}
+                    {selectedRoster.members && selectedRoster.members.length > 0 && (() => {
+                      const stats = getRosterStats(selectedRoster);
+                      return (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
+                            <span className="text-sm text-muted-foreground">Avg TH</span>
+                            <span className="font-bold text-orange-400">TH{stats.avgTownhall}</span>
+                          </div>
+                          {stats.avgHitrate > 0 && (
+                            <div className={`flex items-center justify-between p-2 rounded-md border ${
+                              stats.avgHitrate >= 80
+                                ? "bg-green-500/10 border-green-500/20"
+                                : stats.avgHitrate >= 60
+                                ? "bg-yellow-500/10 border-yellow-500/20"
+                                : "bg-red-500/10 border-red-500/20"
+                            }`}>
+                              <span className="text-sm text-muted-foreground">Avg Hitrate</span>
+                              <span className={`font-bold ${
+                                stats.avgHitrate >= 80 ? "text-green-400" :
+                                stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
+                              }`}>
+                                {stats.avgHitrate}%
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* Distribution & Info */}
+                    <div className="space-y-3">
+                      {selectedRoster.members && selectedRoster.members.length > 0 && (() => {
+                        const stats = getRosterStats(selectedRoster);
+                        return (
+                          <div className="flex items-center gap-2">
+                            {selectedRoster.clan_tag && (
+                              <div className="flex-1 text-center p-2 bg-blue-500/10 rounded-md border border-blue-500/20">
+                                <div className="text-xs text-muted-foreground">Clan</div>
+                                <div className="text-lg font-bold text-blue-400">{stats.clanCount}</div>
+                              </div>
+                            )}
+                            <div className="flex-1 text-center p-2 bg-green-500/10 rounded-md border border-green-500/20">
+                              <div className="text-xs text-muted-foreground">Family</div>
+                              <div className="text-lg font-bold text-green-400">{stats.familyCount}</div>
+                            </div>
+                            <div className="flex-1 text-center p-2 bg-red-500/10 rounded-md border border-red-500/20">
+                              <div className="text-xs text-muted-foreground">External</div>
+                              <div className="text-lg font-bold text-red-400">{stats.externalCount}</div>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {selectedRoster.description && (
+                        <div className="p-2 bg-secondary/30 rounded-md border border-border">
+                          <p className="text-xs text-muted-foreground italic">{selectedRoster.description}</p>
+                        </div>
+                      )}
+
+                      {(() => {
+                        const thRestriction = getTownhallRestrictionText(selectedRoster);
+                        if (thRestriction !== "No restriction") {
+                          return (
+                            <div className="flex items-center justify-between p-2 bg-primary/5 rounded-md border border-primary/10">
+                              <span className="text-xs text-muted-foreground">TH Restriction</span>
+                              <span className="font-bold text-primary text-xs">{thRestriction}</span>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -1602,6 +1865,92 @@ export default function RostersPage() {
                 className="bg-background border-border text-foreground"
               />
             </div>
+
+            {/* Display Columns Configuration */}
+            <div className="space-y-3">
+              <Label className="text-foreground">Display Columns (choose up to 4)</Label>
+              <p className="text-xs text-muted-foreground">Select which columns to show in the members table</p>
+              <div className="grid grid-cols-2 gap-3">
+                {['Name', 'Townhall Level', 'Tag', '30 Day Hitrate', 'Clan Tag', 'Discord', 'Heroes', 'War Opt', 'Trophies'].map((column) => (
+                  <div key={column} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`column-${column}`}
+                      checked={editRosterData.columns.includes(column)}
+                      onChange={(e) => {
+                        const newColumns = e.target.checked
+                          ? [...editRosterData.columns, column]
+                          : editRosterData.columns.filter(c => c !== column);
+                        setEditRosterData({ ...editRosterData, columns: newColumns.slice(0, 4) });
+                      }}
+                      disabled={editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)}
+                      className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                    />
+                    <label
+                      htmlFor={`column-${column}`}
+                      className={`text-sm ${
+                        editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)
+                          ? 'text-muted-foreground cursor-not-allowed'
+                          : 'text-foreground cursor-pointer'
+                      }`}
+                    >
+                      {column}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {editRosterData.columns.length}/4 columns selected
+              </p>
+            </div>
+
+            {/* Sort Configuration */}
+            <div className="space-y-3">
+              <Label className="text-foreground">Sort Order (choose up to 4)</Label>
+              <p className="text-xs text-muted-foreground">Define the sort priority for members</p>
+              <div className="grid grid-cols-2 gap-3">
+                {['Townhall Level', 'Name', 'Tag', 'Heroes', 'Trophies', '30 Day Hitrate', 'Clan Tag', 'Added At'].map((field) => (
+                  <div key={field} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`sort-${field}`}
+                      checked={editRosterData.sort.includes(field)}
+                      onChange={(e) => {
+                        const newSort = e.target.checked
+                          ? [...editRosterData.sort, field]
+                          : editRosterData.sort.filter(s => s !== field);
+                        setEditRosterData({ ...editRosterData, sort: newSort.slice(0, 4) });
+                      }}
+                      disabled={editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)}
+                      className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                    />
+                    <label
+                      htmlFor={`sort-${field}`}
+                      className={`text-sm ${
+                        editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)
+                          ? 'text-muted-foreground cursor-not-allowed'
+                          : 'text-foreground cursor-pointer'
+                      }`}
+                    >
+                      {field}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {editRosterData.sort.length}/4 sort fields selected
+                {editRosterData.sort.length > 0 && (
+                  <span className="ml-2">
+                    • Order: {editRosterData.sort.map((s, i) => (
+                      <span key={s} className="text-primary">
+                        {i > 0 && ' → '}
+                        {s}
+                      </span>
+                    ))}
+                  </span>
+                )}
+              </p>
+            </div>
           </div>
           <DialogFooter>
             <Button
@@ -1741,6 +2090,222 @@ export default function RostersPage() {
                   Add Members
                 </>
               )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Comparison Dialog */}
+      <Dialog open={compareDialogOpen} onOpenChange={setCompareDialogOpen}>
+        <DialogContent className="bg-card border-border max-w-[95vw] max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="text-foreground flex items-center gap-2">
+              <GitCompare className="w-5 h-5" />
+              Roster Comparison
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted
+            </DialogDescription>
+          </DialogHeader>
+
+          {(() => {
+            const rostersToCompare = getComparisonRosters();
+            const duplicateMembers = findDuplicateMembers(rostersToCompare);
+
+            return (
+              <div className="overflow-x-auto overflow-y-auto max-h-[70vh]">
+                <div className="flex gap-4 min-w-max pb-4">
+                  {rostersToCompare.map((roster) => {
+                    const stats = getRosterStats(roster);
+                    const thRestriction = getTownhallRestrictionText(roster);
+                    const displayColumns = getDisplayColumns(roster);
+                    const sortConfig = getSortConfig(roster);
+                    const sortedMembers = sortMembers(roster.members || [], sortConfig);
+
+                    // Render cell helper
+                    const renderCell = (member: RosterMember, column: string) => {
+                      switch (column) {
+                        case 'townhall':
+                          return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
+                        case 'name':
+                          return (
+                            <span className="font-medium text-foreground">
+                              {member.name}
+                              {member.sub && <span className="text-xs text-yellow-600 ml-1">(Sub)</span>}
+                            </span>
+                          );
+                        case 'tag':
+                          return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
+                        case 'hitrate':
+                          if (member.hitrate !== null && member.hitrate !== undefined) {
+                            const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
+                            return <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>;
+                          }
+                          return <span className="text-muted-foreground">-</span>;
+                        case 'current_clan_tag':
+                          if (member.current_clan_tag && member.current_clan_tag !== '#') {
+                            let colorClass = 'text-red-400';
+                            if (roster.clan_tag && member.current_clan_tag === roster.clan_tag) {
+                              colorClass = 'text-green-400';
+                            } else if (clans.some(clan => clan.tag === member.current_clan_tag)) {
+                              colorClass = 'text-yellow-400';
+                            }
+                            return <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>;
+                          }
+                          return <span className="text-muted-foreground">-</span>;
+                        case 'discord':
+                          if (member.discord) {
+                            return <span className="text-blue-400 text-xs">@{member.discord}</span>;
+                          }
+                          return <span className="text-muted-foreground">-</span>;
+                        case 'hero_lvs':
+                          return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;
+                        case 'war_pref':
+                          const warStatus = member.war_pref ? '⚔️ In' : '🚫 Out';
+                          const warColor = member.war_pref ? 'text-green-400' : 'text-red-400';
+                          return <span className={`${warColor} text-xs`}>{warStatus}</span>;
+                        case 'trophies':
+                          return <span className="text-yellow-400">{member.trophies || '-'} 🏆</span>;
+                        default:
+                          return <span className="text-muted-foreground">-</span>;
+                      }
+                    };
+
+                    return (
+                      <Card key={roster.custom_id} className="bg-card border-border min-w-[400px] flex-shrink-0">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center gap-3">
+                            {roster.clan_badge ? (
+                              <Avatar className="h-12 w-12 border-2 border-primary/20">
+                                <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
+                                <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                                  {roster.alias.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                            ) : (
+                              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border-2 border-primary/20">
+                                <Shield className="h-6 w-6 text-primary" />
+                              </div>
+                            )}
+                            <div className="flex-1">
+                              <CardTitle className="text-lg text-foreground">{roster.alias}</CardTitle>
+                              {roster.clan_name && (
+                                <p className="text-xs text-muted-foreground">{roster.clan_name}</p>
+                              )}
+                            </div>
+                            <Badge
+                              variant={roster.roster_type === "clan" ? "default" : "secondary"}
+                              className={`${
+                                roster.roster_type === "clan"
+                                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0"
+                                  : "bg-gradient-to-r from-orange-600 to-amber-600 text-white border-0"
+                              }`}
+                            >
+                              {roster.roster_type.toUpperCase()}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+
+                        <CardContent className="space-y-3">
+                          {/* Stats summary */}
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="text-center p-2 bg-primary/5 rounded-md border border-primary/10">
+                              <div className="text-2xl font-bold text-primary">{roster.members?.length || 0}</div>
+                              <div className="text-xs text-muted-foreground">Members</div>
+                            </div>
+                            <div className="text-center p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
+                              <div className="text-2xl font-bold text-orange-400">TH{stats.avgTownhall}</div>
+                              <div className="text-xs text-muted-foreground">Avg TH</div>
+                            </div>
+                            {stats.avgHitrate > 0 && (
+                              <div className={`text-center p-2 rounded-md border ${
+                                stats.avgHitrate >= 80
+                                  ? "bg-green-500/10 border-green-500/20"
+                                  : stats.avgHitrate >= 60
+                                  ? "bg-yellow-500/10 border-yellow-500/20"
+                                  : "bg-red-500/10 border-red-500/20"
+                              }`}>
+                                <div className={`text-2xl font-bold ${
+                                  stats.avgHitrate >= 80 ? "text-green-400" :
+                                  stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
+                                }`}>
+                                  {stats.avgHitrate}%
+                                </div>
+                                <div className="text-xs text-muted-foreground">Hitrate</div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Members table */}
+                          <div className="border border-border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto">
+                            <table className="w-full">
+                              <thead className="bg-muted/50 sticky top-0">
+                                <tr>
+                                  {displayColumns.map(col => (
+                                    <th key={col} className="px-2 py-1 text-center text-xs font-medium text-muted-foreground uppercase">
+                                      {getColumnDisplayName(col)}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {sortedMembers.length === 0 ? (
+                                  <tr>
+                                    <td colSpan={displayColumns.length} className="px-2 py-8 text-center text-muted-foreground text-sm">
+                                      No members
+                                    </td>
+                                  </tr>
+                                ) : (
+                                  sortedMembers.map((member) => (
+                                    <tr
+                                      key={member.tag}
+                                      className={`border-b border-border transition-colors ${
+                                        duplicateMembers.has(member.tag)
+                                          ? 'bg-yellow-500/10 hover:bg-yellow-500/20 border-l-4 border-l-yellow-500'
+                                          : 'hover:bg-accent/50'
+                                      }`}
+                                      title={duplicateMembers.has(member.tag) ? 'Duplicate member (in multiple rosters)' : ''}
+                                    >
+                                      {displayColumns.map(col => (
+                                        <td key={col} className="px-2 py-1.5 text-center text-xs">
+                                          {renderCell(member, col)}
+                                        </td>
+                                      ))}
+                                    </tr>
+                                  ))
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+
+                {/* Duplicate summary */}
+                {duplicateMembers.size > 0 && (
+                  <div className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                    <div className="flex items-center gap-2 text-yellow-600 font-medium mb-2">
+                      <TrendingUp className="w-4 h-4" />
+                      {duplicateMembers.size} Duplicate Member{duplicateMembers.size !== 1 ? 's' : ''} Found
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Members highlighted in yellow appear in multiple rosters
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setCompareDialogOpen(false)}
+              className="border-border"
+            >
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>
