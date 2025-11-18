@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +30,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Type definitions
 interface AutoBoardConfig {
@@ -257,16 +259,24 @@ export default function AutoBoardsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">AutoBoards</h1>
-          <p className="text-muted-foreground">
-            Automatically post and refresh clan, family, and legend boards
-          </p>
-        </div>
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Page Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <LayoutDashboard className="h-8 w-8 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">AutoBoards</h1>
+                <p className="text-muted-foreground mt-1">
+                  Automatically post and refresh clan, family, and legend boards
+                </p>
+              </div>
+            </div>
+          </div>
+          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button
               className="bg-primary hover:bg-primary/90"
@@ -411,53 +421,79 @@ export default function AutoBoardsPage() {
         </Dialog>
       </div>
 
+      {/* Info Alert */}
+      <Alert className="border-blue-500/30 bg-blue-500/5">
+        <AlertCircle className="h-4 w-4 text-blue-500" />
+        <AlertTitle className="text-blue-400">How AutoBoards Work</AlertTitle>
+        <AlertDescription className="text-blue-300">
+          AutoBoards can automatically post new boards on a schedule or continuously refresh existing boards with up-to-date data.
+          Choose <strong>Auto Post</strong> to create new boards daily at specific days, or <strong>Auto Refresh</strong> to keep a board updated every 30-60 minutes.
+        </AlertDescription>
+      </Alert>
+
       {/* Statistics Cards */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Total AutoBoards</CardTitle>
-            <RefreshCw className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total AutoBoards
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{autoboardsData?.total || 0}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold text-foreground">{autoboardsData?.total || 0}</div>
+              <LayoutDashboard className="h-8 w-8 text-primary/50" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
               {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} used` : 'Loading...'}
             </p>
           </CardContent>
         </Card>
 
         <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Auto Post</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Auto Post
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{autoboardsData?.post_count || 0}</div>
-            <p className="text-xs text-muted-foreground">Scheduled boards</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Auto Refresh</CardTitle>
-            <RefreshCw className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">{autoboardsData?.refresh_count || 0}</div>
-            <p className="text-xs text-muted-foreground">Continuous updates</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Available Slots</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">
-              {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold text-foreground">{autoboardsData?.post_count || 0}</div>
+              <Calendar className="h-8 w-8 text-green-500/50" />
             </div>
-            <p className="text-xs text-muted-foreground">Remaining capacity</p>
+            <p className="text-xs text-muted-foreground mt-1">Scheduled boards</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Auto Refresh
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold text-foreground">{autoboardsData?.refresh_count || 0}</div>
+              <RefreshCw className="h-8 w-8 text-blue-500/50" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Continuous updates</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Available Slots
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="text-3xl font-bold text-foreground">
+                {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
+              </div>
+              <Clock className="h-8 w-8 text-orange-500/50" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">Remaining capacity</p>
           </CardContent>
         </Card>
       </div>
@@ -465,76 +501,126 @@ export default function AutoBoardsPage() {
       {/* AutoBoards List */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">Active AutoBoards</CardTitle>
-          <CardDescription className="text-muted-foreground">
-            Manage your automatic board posting and refreshing
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-foreground">Active AutoBoards</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                {!autoboardsData || autoboardsData.autoboards.length === 0
+                  ? 'No active autoboards'
+                  : `${autoboardsData.autoboards.length} active autoboard${autoboardsData.autoboards.length !== 1 ? 's' : ''}`
+                }
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           {!autoboardsData || autoboardsData.autoboards.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <RefreshCw className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p className="text-lg">No AutoBoards configured</p>
-              <p className="text-sm">Create your first AutoBoard to automate board updates</p>
+            <div className="text-center py-12">
+              <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                No AutoBoards configured
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Create your first AutoBoard to automate board updates
+              </p>
+              <Button
+                onClick={() => setCreateDialogOpen(true)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Create AutoBoard
+              </Button>
             </div>
           ) : (
-            <div className="space-y-3">
-              {autoboardsData.autoboards.map((autoboard) => (
-                <div
-                  key={autoboard.id}
-                  className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/50"
-                >
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-foreground">
-                        {getBoardTypeName(autoboard.board_type)}
-                      </h3>
-                      <Badge
-                        variant={autoboard.type === 'post' ? 'default' : 'secondary'}
-                        className={autoboard.type === 'post' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground'}
-                      >
-                        {autoboard.type === 'post' ? (
-                          <>
-                            <Calendar className="w-3 h-3 mr-1" />
-                            Auto Post
-                          </>
-                        ) : (
-                          <>
-                            <RefreshCw className="w-3 h-3 mr-1" />
-                            Auto Refresh
-                          </>
-                        )}
-                      </Badge>
-                    </div>
-                    {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
-                      <p className="text-sm text-muted-foreground">
-                        Posts on: {autoboard.days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')}
-                      </p>
-                    )}
-                    {autoboard.type === 'refresh' && (
-                      <p className="text-sm text-muted-foreground">
-                        Updates every 30-60 minutes
-                      </p>
-                    )}
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => handleDeleteAutoBoard(autoboard.id)}
-                    disabled={deleting === autoboard.id}
+            <div className="rounded-md border border-border">
+              <div className="divide-y divide-border">
+                {autoboardsData.autoboards.map((autoboard) => (
+                  <div
+                    key={autoboard.id}
+                    className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors"
                   >
-                    {deleting === autoboard.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              ))}
+                    <div className="flex items-center gap-4 flex-1">
+                      <div className={`p-3 rounded-lg ${autoboard.type === 'post' ? 'bg-green-500/10 border border-green-500/30' : 'bg-blue-500/10 border border-blue-500/30'}`}>
+                        {autoboard.type === 'post' ? (
+                          <Calendar className="h-5 w-5 text-green-500" />
+                        ) : (
+                          <RefreshCw className="h-5 w-5 text-blue-500" />
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-foreground">
+                            {getBoardTypeName(autoboard.board_type)}
+                          </h3>
+                          <Badge
+                            variant={autoboard.type === 'post' ? 'default' : 'secondary'}
+                            className={autoboard.type === 'post' ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}
+                          >
+                            {autoboard.type === 'post' ? 'Auto Post' : 'Auto Refresh'}
+                          </Badge>
+                        </div>
+                        {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
+                          <p className="text-sm text-muted-foreground">
+                            Posts on: {autoboard.days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')}
+                          </p>
+                        )}
+                        {autoboard.type === 'refresh' && (
+                          <p className="text-sm text-muted-foreground">
+                            Updates every 30-60 minutes
+                          </p>
+                        )}
+                        {autoboard.created_at && (
+                          <p className="text-xs text-muted-foreground">
+                            Created: {new Date(autoboard.created_at).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleDeleteAutoBoard(autoboard.id)}
+                      disabled={deleting === autoboard.id}
+                      className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                    >
+                      {deleting === autoboard.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          Remove
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </CardContent>
       </Card>
+
+      {/* Best Practices */}
+      <Card className="border-yellow-500/30 bg-yellow-500/5">
+        <CardHeader>
+          <CardTitle className="text-yellow-400">💡 AutoBoard Tips</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm text-yellow-300">
+          <p>
+            <strong>Choose the right type:</strong> Use Auto Post for daily summaries and Auto Refresh for live leaderboards and real-time tracking.
+          </p>
+          <p>
+            <strong>Manage your limits:</strong> Each server has a limited number of autoboard slots. Remove unused autoboards to free up space.
+          </p>
+          <p>
+            <strong>Schedule wisely:</strong> Auto Post boards appear at 5:00 AM UTC. Choose days that align with your clan's activity cycle.
+          </p>
+          <p>
+            <strong>Avoid duplicates:</strong> Using both Auto Post and Auto Refresh for the same board type in the same channel can cause clutter.
+          </p>
+        </CardContent>
+      </Card>
+      </div>
     </div>
   );
 }
