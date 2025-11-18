@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
-  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye
+  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye, GitCompare
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -848,6 +848,15 @@ export default function RosterDetailPage() {
             >
               {roster.roster_type.toUpperCase()}
             </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.push(`/${locale}/dashboard/${guildId}/rosters?compare=${rosterId}`)}
+              className="border-border"
+            >
+              <GitCompare className="w-4 h-4 mr-2" />
+              Compare
+            </Button>
             <Button
               variant="outline"
               size="sm"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -89,6 +89,7 @@ interface Clan {
 export default function RostersPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const guildId = params?.guildId as string;
 
@@ -200,6 +201,24 @@ export default function RostersPage() {
       fetchData();
     }
   }, [guildId, router, toast]);
+
+  // Auto-activate comparison mode if 'compare' query parameter is present
+  useEffect(() => {
+    const compareRosterId = searchParams.get('compare');
+    if (compareRosterId && rosters.length > 0) {
+      // Check if roster exists in the list
+      const rosterExists = rosters.some(r => r.custom_id === compareRosterId);
+      if (rosterExists) {
+        setComparisonMode(true);
+        setSelectedRosterIds(new Set([compareRosterId]));
+
+        // Remove the query parameter from URL
+        const url = new URL(window.location.href);
+        url.searchParams.delete('compare');
+        router.replace(url.pathname);
+      }
+    }
+  }, [rosters, searchParams, router]);
 
   // Fetch clan members when opening add members dialog
   const handleOpenAddMembers = async (roster: Roster) => {
