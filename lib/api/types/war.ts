@@ -59,22 +59,37 @@ export interface WarMember {
 export interface WarClan {
   tag: string;
   name: string;
+  badgeUrl?: string;
   badge_url?: string;
+  badgeUrls?: {
+    small?: string;
+    medium?: string;
+    large?: string;
+  };
+  clanLevel?: number;
   clan_level?: number;
-  attacks: number;
+  attacks?: number;
   stars: number;
-  destruction: number;
+  destruction?: number;
+  destructionPercentage?: number;
   members?: WarMember[];
 }
 
 export interface War {
+  tag?: string;
   state: 'notInWar' | 'preparation' | 'inWar' | 'warEnded';
-  team_size: number;
+  teamSize?: number;
+  team_size?: number; // API might use either format
+  attacksPerMember?: number;
+  preparationStartTime?: string;
   preparation_start_time?: string;
+  startTime?: string;
   start_time?: string;
+  endTime?: string;
   end_time?: string;
   clan: WarClan;
   opponent: WarClan;
+  warType?: string;
   type?: 'random' | 'friendly' | 'cwl';
 }
 
