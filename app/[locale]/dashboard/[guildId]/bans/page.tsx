@@ -412,8 +412,8 @@ export default function BansPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredBans.map((ban) => (
-                      <TableRow key={ban.player_tag}>
+                    {filteredBans.map((ban, index) => (
+                      <TableRow key={`${ban.player_tag}-${index}`}>
                         <TableCell>
                           <div>
                             <div className="font-medium text-foreground">
