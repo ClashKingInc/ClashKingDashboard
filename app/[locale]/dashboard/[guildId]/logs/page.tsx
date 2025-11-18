@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -474,17 +475,6 @@ export default function LogsPage() {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading logs configuration...</p>
-        </div>
-      </div>
-    );
-  }
-
   const currentClan = getCurrentClan();
 
   return (
@@ -510,13 +500,22 @@ export default function LogsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Active Logs</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
-                <Activity className="h-8 w-8 text-blue-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Out of 26 log types
-              </p>
+              {loading ? (
+                <>
+                  <Skeleton className="h-10 w-16 mb-2" />
+                  <Skeleton className="h-4 w-28" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
+                    <Activity className="h-8 w-8 text-blue-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Out of 26 log types
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -525,13 +524,22 @@ export default function LogsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Log Channels</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-green-500">{channels.length}</div>
-                <Hash className="h-8 w-8 text-green-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Available channels
-              </p>
+              {loading ? (
+                <>
+                  <Skeleton className="h-10 w-16 mb-2" />
+                  <Skeleton className="h-4 w-32" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold text-green-500">{channels.length}</div>
+                    <Hash className="h-8 w-8 text-green-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Available channels
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -540,13 +548,22 @@ export default function LogsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Tracked Clans</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
-                <Users className="h-8 w-8 text-yellow-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                Configured clans
-              </p>
+              {loading ? (
+                <>
+                  <Skeleton className="h-10 w-16 mb-2" />
+                  <Skeleton className="h-4 w-32" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
+                    <Users className="h-8 w-8 text-yellow-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Configured clans
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -555,44 +572,46 @@ export default function LogsPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">Configuration</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-purple-500">
-                  {saving ? <Loader2 className="h-8 w-8 animate-spin" /> : <Bell className="h-8 w-8" />}
-                </div>
-                <Bell className="h-8 w-8 text-purple-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {saving ? "Saving..." : "Ready to configure"}
-              </p>
+              {loading ? (
+                <>
+                  <Skeleton className="h-10 w-16 mb-2" />
+                  <Skeleton className="h-4 w-32" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold text-purple-500">
+                      {saving ? <Loader2 className="h-8 w-8 animate-spin" /> : <Bell className="h-8 w-8" />}
+                    </div>
+                    <Bell className="h-8 w-8 text-purple-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {saving ? "Saving..." : "Ready to configure"}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
 
         {/* Clan Selector */}
-        <Card className="bg-card border-border">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 flex-1">
-                <div className="p-2 rounded-lg bg-purple-500/10">
-                  <Users className="h-4 w-4 text-purple-500" />
-                </div>
-                <Label className="text-sm font-medium">Select Clan to Configure</Label>
-              </div>
-              <Select value={selectedClan} onValueChange={setSelectedClan}>
-                <SelectTrigger className="w-[300px] bg-secondary border-border">
-                  <SelectValue placeholder="Select a clan" />
-                </SelectTrigger>
-                <SelectContent>
-                  {clanLogs.map((clan) => (
-                    <SelectItem key={clan.tag} value={clan.tag}>
-                      {clan.name} ({clan.tag})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+        {clanLogs.length > 0 && (
+          <div className="flex items-center gap-2">
+            <Label className="text-sm text-muted-foreground">Clan:</Label>
+            <Select value={selectedClan} onValueChange={setSelectedClan}>
+              <SelectTrigger className="w-[300px]">
+                <SelectValue placeholder="Select a clan" />
+              </SelectTrigger>
+              <SelectContent>
+                {clanLogs.map((clan) => (
+                  <SelectItem key={clan.tag} value={clan.tag}>
+                    {clan.name} ({clan.tag})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <Tabs defaultValue="clan" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4 lg:w-[800px] bg-secondary">

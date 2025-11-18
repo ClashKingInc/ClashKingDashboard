@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 
 export function Hero() {
   return (
@@ -67,11 +67,14 @@ export function Hero() {
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </a>
-            <Link href="/login">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-xl border-2">
-                Open Dashboard
-              </Button>
-            </Link>
+            <Button
+              onClick={initiateDiscordLogin}
+              size="lg"
+              variant="outline"
+              className="text-lg px-8 py-6 rounded-xl border-2"
+            >
+              Open Dashboard
+            </Button>
           </motion.div>
 
           {/* Stats */}

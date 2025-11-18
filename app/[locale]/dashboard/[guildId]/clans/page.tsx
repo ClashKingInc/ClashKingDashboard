@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -324,17 +325,6 @@ export default function ClansPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Loading clans...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -366,11 +356,16 @@ export default function ClansPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Clan Management</h1>
-            <p className="text-muted-foreground mt-1">
-              Configure your clans and their Discord integration settings
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+              <Shield className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Clan Management</h1>
+              <p className="text-muted-foreground mt-1">
+                Configure your clans and their Discord integration settings
+              </p>
+            </div>
           </div>
 
           {/* Add Clan Dialog */}
