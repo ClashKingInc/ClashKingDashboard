@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -89,6 +89,7 @@ interface Clan {
 export default function RostersPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const guildId = params?.guildId as string;
 
@@ -138,6 +139,13 @@ export default function RostersPage() {
   const [comparisonMode, setComparisonMode] = useState(false);
   const [selectedRosterIds, setSelectedRosterIds] = useState<Set<string>>(new Set());
   const [compareDialogOpen, setCompareDialogOpen] = useState(false);
+
+  // Cross-roster drag & drop state
+  const [draggedMemberData, setDraggedMemberData] = useState<{
+    memberTag: string;
+    sourceRosterId: string;
+  } | null>(null);
+  const [dropTargetRoster, setDropTargetRoster] = useState<string | null>(null);
 
   // Fetch rosters and clans
   useEffect(() => {
@@ -193,6 +201,24 @@ export default function RostersPage() {
       fetchData();
     }
   }, [guildId, router, toast]);
+
+  // Auto-activate comparison mode if 'compare' query parameter is present
+  useEffect(() => {
+    const compareRosterId = searchParams.get('compare');
+    if (compareRosterId && rosters.length > 0) {
+      // Check if roster exists in the list
+      const rosterExists = rosters.some(r => r.custom_id === compareRosterId);
+      if (rosterExists) {
+        setComparisonMode(true);
+        setSelectedRosterIds(new Set([compareRosterId]));
+
+        // Remove the query parameter from URL
+        const url = new URL(window.location.href);
+        url.searchParams.delete('compare');
+        router.replace(url.pathname);
+      }
+    }
+  }, [rosters, searchParams, router]);
 
   // Fetch clan members when opening add members dialog
   const handleOpenAddMembers = async (roster: Roster) => {
@@ -284,14 +310,19 @@ export default function RostersPage() {
     try {
       const accessToken = localStorage.getItem("access_token");
 
+      // Convert display labels back to internal names
       const updates = {
         alias: editRosterData.alias,
         description: editRosterData.description || null,
         min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
         max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
         roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
-        columns: editRosterData.columns.length > 0 ? editRosterData.columns : null,
-        sort: editRosterData.sort.length > 0 ? editRosterData.sort : null,
+        columns: editRosterData.columns.length > 0
+          ? editRosterData.columns.map(col => getInternalColumnName(col))
+          : null,
+        sort: editRosterData.sort.length > 0
+          ? editRosterData.sort.map(field => getInternalSortField(field))
+          : null,
       };
 
       const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
@@ -413,8 +444,8 @@ export default function RostersPage() {
       min_th: roster.min_th?.toString() || "",
       max_th: roster.max_th?.toString() || "",
       roster_size: roster.roster_size?.toString() || "",
-      columns: roster.columns || [],
-      sort: roster.sort || [],
+      columns: (roster.columns || []).map(col => getColumnDisplayLabel(col)),
+      sort: (roster.sort || []).map(field => getSortDisplayLabel(field)),
     });
     setEditDialogOpen(true);
   };
@@ -682,10 +713,10 @@ export default function RostersPage() {
     if (newSelection.has(rosterId)) {
       newSelection.delete(rosterId);
     } else {
-      if (newSelection.size >= 3) {
+      if (newSelection.size >= 5) {
         toast({
           title: "Maximum reached",
-          description: "You can compare up to 3 rosters at a time",
+          description: "You can compare up to 5 rosters at a time",
           variant: "destructive",
         });
         return;
@@ -742,6 +773,97 @@ export default function RostersPage() {
     });
 
     return duplicates;
+  };
+
+  // Cross-roster drag & drop handlers
+  const handleCrossRosterDragStart = (e: React.DragEvent, memberTag: string, sourceRosterId: string) => {
+    setDraggedMemberData({ memberTag, sourceRosterId });
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", JSON.stringify({ memberTag, sourceRosterId }));
+
+    // Visual feedback
+    e.currentTarget.style.opacity = "0.5";
+  };
+
+  const handleCrossRosterDragEnd = (e: React.DragEvent) => {
+    setDraggedMemberData(null);
+    setDropTargetRoster(null);
+    e.currentTarget.style.opacity = "1";
+  };
+
+  const handleCrossRosterDragOver = (e: React.DragEvent, targetRosterId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDropTargetRoster(targetRosterId);
+  };
+
+  const handleCrossRosterDragLeave = () => {
+    setDropTargetRoster(null);
+  };
+
+  const handleCrossRosterDrop = async (e: React.DragEvent, targetRosterId: string) => {
+    e.preventDefault();
+    setDropTargetRoster(null);
+
+    if (!draggedMemberData) return;
+
+    const { memberTag, sourceRosterId } = draggedMemberData;
+
+    // Don't do anything if dropping in the same roster
+    if (sourceRosterId === targetRosterId) {
+      setDraggedMemberData(null);
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      // Step 1: Remove from source roster
+      await fetch(`/api/v2/roster/${sourceRosterId}/members?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ remove: [memberTag] })
+      });
+
+      // Step 2: Add to target roster (correct format: add expects array of objects with tag property)
+      await fetch(`/api/v2/roster/${targetRosterId}/members?server_id=${guildId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({ add: [{ tag: memberTag }] })
+      });
+
+      // Step 3: Refresh rosters list to get updated data
+      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        setRosters(data.items || data.rosters || data || []);
+      }
+
+      toast({
+        title: "Success",
+        description: `Member transferred between rosters successfully!`,
+      });
+    } catch (error) {
+      console.error("Error transferring member:", error);
+      toast({
+        title: "Error",
+        description: "Failed to transfer member. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+      setDraggedMemberData(null);
+    }
   };
 
   // Calculate roster statistics
@@ -820,6 +942,68 @@ export default function RostersPage() {
       'trophies': 'Trophies'
     };
     return columnNames[col] || col;
+  };
+
+  // Convert internal column names to display labels for settings form
+  const getColumnDisplayLabel = (col: string): string => {
+    const columnLabels: Record<string, string> = {
+      'name': 'Name',
+      'townhall': 'Townhall Level',
+      'tag': 'Tag',
+      'hitrate': '30 Day Hitrate',
+      'current_clan_tag': 'Clan Tag',
+      'discord': 'Discord',
+      'hero_lvs': 'Heroes',
+      'war_pref': 'War Opt',
+      'trophies': 'Trophies'
+    };
+    return columnLabels[col] || col;
+  };
+
+  // Convert display labels to internal column names
+  const getInternalColumnName = (label: string): string => {
+    const internalNames: Record<string, string> = {
+      'Name': 'name',
+      'Townhall Level': 'townhall',
+      'Tag': 'tag',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Discord': 'discord',
+      'Heroes': 'hero_lvs',
+      'War Opt': 'war_pref',
+      'Trophies': 'trophies'
+    };
+    return internalNames[label] || label;
+  };
+
+  // Convert internal sort field names to display labels
+  const getSortDisplayLabel = (field: string): string => {
+    const sortLabels: Record<string, string> = {
+      'townhall': 'Townhall Level',
+      'name': 'Name',
+      'tag': 'Tag',
+      'hero_lvs': 'Heroes',
+      'trophies': 'Trophies',
+      'hitrate': '30 Day Hitrate',
+      'current_clan_tag': 'Clan Tag',
+      'added_at': 'Added At'
+    };
+    return sortLabels[field] || field;
+  };
+
+  // Convert display labels to internal sort field names
+  const getInternalSortField = (label: string): string => {
+    const internalFields: Record<string, string> = {
+      'Townhall Level': 'townhall',
+      'Name': 'name',
+      'Tag': 'tag',
+      'Heroes': 'hero_lvs',
+      'Trophies': 'trophies',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Added At': 'added_at'
+    };
+    return internalFields[label] || label;
   };
 
   // Helper: Get display columns from roster config
@@ -971,7 +1155,7 @@ export default function RostersPage() {
                 className="bg-primary hover:bg-primary/90"
               >
                 <GitCompare className="w-4 h-4 mr-2" />
-                Compare ({selectedRosterIds.size}/3)
+                Compare ({selectedRosterIds.size}/5)
               </Button>
             </>
           ) : (
@@ -2104,7 +2288,7 @@ export default function RostersPage() {
               Roster Comparison
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted
+              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted • Drag members between rosters to transfer
             </DialogDescription>
           </DialogHeader>
 
@@ -2236,8 +2420,17 @@ export default function RostersPage() {
                             )}
                           </div>
 
-                          {/* Members table */}
-                          <div className="border border-border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto">
+                          {/* Members table with drop zone */}
+                          <div
+                            className={`border border-border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto transition-all ${
+                              dropTargetRoster === roster.custom_id
+                                ? 'border-primary border-2 bg-primary/5'
+                                : ''
+                            }`}
+                            onDragOver={(e) => handleCrossRosterDragOver(e, roster.custom_id)}
+                            onDragLeave={handleCrossRosterDragLeave}
+                            onDrop={(e) => handleCrossRosterDrop(e, roster.custom_id)}
+                          >
                             <table className="w-full">
                               <thead className="bg-muted/50 sticky top-0">
                                 <tr>
@@ -2252,19 +2445,33 @@ export default function RostersPage() {
                                 {sortedMembers.length === 0 ? (
                                   <tr>
                                     <td colSpan={displayColumns.length} className="px-2 py-8 text-center text-muted-foreground text-sm">
-                                      No members
+                                      {dropTargetRoster === roster.custom_id
+                                        ? 'Drop member here to add to this roster'
+                                        : 'No members'
+                                      }
                                     </td>
                                   </tr>
                                 ) : (
                                   sortedMembers.map((member) => (
                                     <tr
                                       key={member.tag}
-                                      className={`border-b border-border transition-colors ${
+                                      draggable={true}
+                                      onDragStart={(e) => handleCrossRosterDragStart(e, member.tag, roster.custom_id)}
+                                      onDragEnd={handleCrossRosterDragEnd}
+                                      className={`border-b border-border transition-colors cursor-move ${
+                                        draggedMemberData?.memberTag === member.tag
+                                          ? 'opacity-50'
+                                          : ''
+                                      } ${
                                         duplicateMembers.has(member.tag)
                                           ? 'bg-yellow-500/10 hover:bg-yellow-500/20 border-l-4 border-l-yellow-500'
                                           : 'hover:bg-accent/50'
                                       }`}
-                                      title={duplicateMembers.has(member.tag) ? 'Duplicate member (in multiple rosters)' : ''}
+                                      title={
+                                        duplicateMembers.has(member.tag)
+                                          ? 'Duplicate member (in multiple rosters) • Drag to transfer to another roster'
+                                          : 'Drag to transfer to another roster'
+                                      }
                                     >
                                       {displayColumns.map(col => (
                                         <td key={col} className="px-2 py-1.5 text-center text-xs">

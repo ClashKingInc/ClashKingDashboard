@@ -10,9 +10,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
-  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye
+  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye, GitCompare
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -143,15 +144,15 @@ export default function RosterDetailPage() {
       const rosterData = data.roster || data;
       setRoster(rosterData);
 
-      // Update edit form
+      // Update edit form - convert internal names to display labels
       setEditRosterData({
         alias: rosterData.alias,
         description: rosterData.description || "",
         min_th: rosterData.min_th?.toString() || "",
         max_th: rosterData.max_th?.toString() || "",
         roster_size: rosterData.roster_size?.toString() || "",
-        columns: rosterData.columns || [],
-        sort: rosterData.sort || [],
+        columns: (rosterData.columns || []).map((col: string) => getColumnDisplayLabel(col)),
+        sort: (rosterData.sort || []).map((field: string) => getSortDisplayLabel(field)),
       });
 
       // Load clan members if clan roster
@@ -429,7 +430,9 @@ export default function RosterDetailPage() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update member category");
+        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
+        console.error('Backend error:', response.status, errorData);
+        throw new Error(errorData.detail || `HTTP ${response.status}: Failed to update member category`);
       }
 
       await loadRoster();
@@ -439,9 +442,10 @@ export default function RosterDetailPage() {
       });
     } catch (error) {
       console.error("Error moving member:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to move member. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to move member. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -457,14 +461,19 @@ export default function RosterDetailPage() {
     try {
       const accessToken = localStorage.getItem("access_token");
 
+      // Convert display labels back to internal names
       const updates = {
         alias: editRosterData.alias,
         description: editRosterData.description || null,
         min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
         max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
         roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
-        columns: editRosterData.columns.length > 0 ? editRosterData.columns : null,
-        sort: editRosterData.sort.length > 0 ? editRosterData.sort : null,
+        columns: editRosterData.columns.length > 0
+          ? editRosterData.columns.map(col => getInternalColumnName(col))
+          : null,
+        sort: editRosterData.sort.length > 0
+          ? editRosterData.sort.map(field => getInternalSortField(field))
+          : null,
       };
 
       const response = await fetch(`/api/v2/roster/${rosterId}?server_id=${guildId}`, {
@@ -511,6 +520,68 @@ export default function RosterDetailPage() {
       'trophies': 'Trophies'
     };
     return columnNames[col] || col;
+  };
+
+  // Convert internal column names to display labels for settings form
+  const getColumnDisplayLabel = (col: string): string => {
+    const columnLabels: Record<string, string> = {
+      'name': 'Name',
+      'townhall': 'Townhall Level',
+      'tag': 'Tag',
+      'hitrate': '30 Day Hitrate',
+      'current_clan_tag': 'Clan Tag',
+      'discord': 'Discord',
+      'hero_lvs': 'Heroes',
+      'war_pref': 'War Opt',
+      'trophies': 'Trophies'
+    };
+    return columnLabels[col] || col;
+  };
+
+  // Convert display labels to internal column names
+  const getInternalColumnName = (label: string): string => {
+    const internalNames: Record<string, string> = {
+      'Name': 'name',
+      'Townhall Level': 'townhall',
+      'Tag': 'tag',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Discord': 'discord',
+      'Heroes': 'hero_lvs',
+      'War Opt': 'war_pref',
+      'Trophies': 'trophies'
+    };
+    return internalNames[label] || label;
+  };
+
+  // Convert internal sort field names to display labels
+  const getSortDisplayLabel = (field: string): string => {
+    const sortLabels: Record<string, string> = {
+      'townhall': 'Townhall Level',
+      'name': 'Name',
+      'tag': 'Tag',
+      'hero_lvs': 'Heroes',
+      'trophies': 'Trophies',
+      'hitrate': '30 Day Hitrate',
+      'current_clan_tag': 'Clan Tag',
+      'added_at': 'Added At'
+    };
+    return sortLabels[field] || field;
+  };
+
+  // Convert display labels to internal sort field names
+  const getInternalSortField = (label: string): string => {
+    const internalFields: Record<string, string> = {
+      'Townhall Level': 'townhall',
+      'Name': 'name',
+      'Tag': 'tag',
+      'Heroes': 'hero_lvs',
+      'Trophies': 'trophies',
+      '30 Day Hitrate': 'hitrate',
+      'Clan Tag': 'current_clan_tag',
+      'Added At': 'added_at'
+    };
+    return internalFields[label] || label;
   };
 
   const getDisplayColumns = (rosterData: Roster): string[] => {
@@ -780,6 +851,15 @@ export default function RosterDetailPage() {
             >
               {roster.roster_type.toUpperCase()}
             </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.push(`/${locale}/dashboard/${guildId}/rosters?compare=${rosterId}`)}
+              className="border-border"
+            >
+              <GitCompare className="w-4 h-4 mr-2" />
+              Compare
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -1172,18 +1252,16 @@ export default function RosterDetailPage() {
                   <div className="grid grid-cols-2 gap-3">
                     {['Name', 'Townhall Level', 'Tag', '30 Day Hitrate', 'Clan Tag', 'Discord', 'Heroes', 'War Opt', 'Trophies'].map((column) => (
                       <div key={column} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
+                        <Checkbox
                           id={`column-${column}`}
                           checked={editRosterData.columns.includes(column)}
-                          onChange={(e) => {
-                            const newColumns = e.target.checked
+                          onCheckedChange={(checked) => {
+                            const newColumns = checked
                               ? [...editRosterData.columns, column]
                               : editRosterData.columns.filter(c => c !== column);
                             setEditRosterData({ ...editRosterData, columns: newColumns.slice(0, 4) });
                           }}
                           disabled={editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)}
-                          className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                         />
                         <label
                           htmlFor={`column-${column}`}
@@ -1210,18 +1288,16 @@ export default function RosterDetailPage() {
                   <div className="grid grid-cols-2 gap-3">
                     {['Townhall Level', 'Name', 'Tag', 'Heroes', 'Trophies', '30 Day Hitrate', 'Clan Tag', 'Added At'].map((field) => (
                       <div key={field} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
+                        <Checkbox
                           id={`sort-${field}`}
                           checked={editRosterData.sort.includes(field)}
-                          onChange={(e) => {
-                            const newSort = e.target.checked
+                          onCheckedChange={(checked) => {
+                            const newSort = checked
                               ? [...editRosterData.sort, field]
                               : editRosterData.sort.filter(s => s !== field);
                             setEditRosterData({ ...editRosterData, sort: newSort.slice(0, 4) });
                           }}
                           disabled={editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)}
-                          className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                         />
                         <label
                           htmlFor={`sort-${field}`}
