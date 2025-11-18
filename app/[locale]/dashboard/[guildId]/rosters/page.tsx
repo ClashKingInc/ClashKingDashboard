@@ -139,6 +139,12 @@ export default function RostersPage() {
   const [selectedRosterIds, setSelectedRosterIds] = useState<Set<string>>(new Set());
   const [compareDialogOpen, setCompareDialogOpen] = useState(false);
 
+  // Cross-roster drag & drop state
+  const [draggedMemberTag, setDraggedMemberTag] = useState<string | null>(null);
+  const [dragSourceRosterId, setDragSourceRosterId] = useState<string | null>(null);
+  const [dragOverRosterId, setDragOverRosterId] = useState<string | null>(null);
+  const [transferring, setTransferring] = useState(false);
+
   // Fetch rosters and clans
   useEffect(() => {
     const fetchData = async () => {
@@ -742,6 +748,131 @@ export default function RostersPage() {
     });
 
     return duplicates;
+  };
+
+  // Cross-roster drag & drop handlers
+  const handleCrossRosterDragStart = (
+    e: React.DragEvent<HTMLTableRowElement>,
+    memberTag: string,
+    rosterId: string
+  ) => {
+    setDraggedMemberTag(memberTag);
+    setDragSourceRosterId(rosterId);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", memberTag);
+    e.currentTarget.style.opacity = "0.5";
+  };
+
+  const handleCrossRosterDragEnd = (e: React.DragEvent<HTMLTableRowElement>) => {
+    setDraggedMemberTag(null);
+    setDragSourceRosterId(null);
+    setDragOverRosterId(null);
+    e.currentTarget.style.opacity = "1";
+  };
+
+  const handleCrossRosterDragOver = (e: React.DragEvent, targetRosterId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverRosterId(targetRosterId);
+  };
+
+  const handleCrossRosterDragLeave = () => {
+    setDragOverRosterId(null);
+  };
+
+  const handleCrossRosterDrop = async (
+    e: React.DragEvent,
+    targetRosterId: string
+  ) => {
+    e.preventDefault();
+    setDragOverRosterId(null);
+
+    if (!draggedMemberTag || !dragSourceRosterId) return;
+
+    // Don't do anything if dropping in the same roster
+    if (dragSourceRosterId === targetRosterId) {
+      setDraggedMemberTag(null);
+      setDragSourceRosterId(null);
+      return;
+    }
+
+    // Transfer member between rosters
+    setTransferring(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      // Step 1: Remove from source roster
+      const removeResponse = await fetch(
+        `/api/v2/roster/${dragSourceRosterId}/members?server_id=${guildId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({ remove: [draggedMemberTag] })
+        }
+      );
+
+      if (!removeResponse.ok) {
+        throw new Error("Failed to remove member from source roster");
+      }
+
+      // Step 2: Add to target roster
+      const addResponse = await fetch(
+        `/api/v2/roster/${targetRosterId}/members?server_id=${guildId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({ add: [{ tag: draggedMemberTag }] })
+        }
+      );
+
+      if (!addResponse.ok) {
+        // Rollback: Try to add back to source roster
+        await fetch(
+          `/api/v2/roster/${dragSourceRosterId}/members?server_id=${guildId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({ add: [{ tag: draggedMemberTag }] })
+          }
+        );
+        throw new Error("Failed to add member to target roster");
+      }
+
+      // Refresh rosters data
+      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (refreshResponse.ok) {
+        const data = await refreshResponse.json();
+        setRosters(data.items || data.rosters || data || []);
+      }
+
+      toast({
+        title: "Success",
+        description: "Member transferred between rosters successfully!",
+      });
+    } catch (error) {
+      console.error("Error transferring member:", error);
+      toast({
+        title: "Error",
+        description: "Failed to transfer member. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setTransferring(false);
+      setDraggedMemberTag(null);
+      setDragSourceRosterId(null);
+    }
   };
 
   // Calculate roster statistics
@@ -2104,9 +2235,16 @@ export default function RostersPage() {
               Roster Comparison
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted
+              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted • Drag & drop members between rosters
             </DialogDescription>
           </DialogHeader>
+
+          {transferring && (
+            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+              <span className="text-sm text-blue-600 font-medium">Transferring member between rosters...</span>
+            </div>
+          )}
 
           {(() => {
             const rostersToCompare = getComparisonRosters();
@@ -2172,7 +2310,17 @@ export default function RostersPage() {
                     };
 
                     return (
-                      <Card key={roster.custom_id} className="bg-card border-border min-w-[400px] flex-shrink-0">
+                      <Card
+                        key={roster.custom_id}
+                        className={`bg-card border-border min-w-[400px] flex-shrink-0 transition-all ${
+                          dragOverRosterId === roster.custom_id
+                            ? 'ring-2 ring-primary border-primary bg-primary/5 scale-[1.02]'
+                            : ''
+                        }`}
+                        onDragOver={(e) => handleCrossRosterDragOver(e, roster.custom_id)}
+                        onDragLeave={handleCrossRosterDragLeave}
+                        onDrop={(e) => handleCrossRosterDrop(e, roster.custom_id)}
+                      >
                         <CardHeader className="pb-3">
                           <div className="flex items-center gap-3">
                             {roster.clan_badge ? (
@@ -2259,12 +2407,21 @@ export default function RostersPage() {
                                   sortedMembers.map((member) => (
                                     <tr
                                       key={member.tag}
-                                      className={`border-b border-border transition-colors ${
+                                      draggable={!transferring}
+                                      onDragStart={(e) => handleCrossRosterDragStart(e, member.tag, roster.custom_id)}
+                                      onDragEnd={handleCrossRosterDragEnd}
+                                      className={`border-b border-border transition-colors cursor-move ${
                                         duplicateMembers.has(member.tag)
                                           ? 'bg-yellow-500/10 hover:bg-yellow-500/20 border-l-4 border-l-yellow-500'
                                           : 'hover:bg-accent/50'
+                                      } ${
+                                        draggedMemberTag === member.tag ? 'opacity-50' : ''
                                       }`}
-                                      title={duplicateMembers.has(member.tag) ? 'Duplicate member (in multiple rosters)' : ''}
+                                      title={
+                                        duplicateMembers.has(member.tag)
+                                          ? 'Duplicate member (in multiple rosters) • Drag to move between rosters'
+                                          : 'Drag to move between rosters'
+                                      }
                                     >
                                       {displayColumns.map(col => (
                                         <td key={col} className="px-2 py-1.5 text-center text-xs">
