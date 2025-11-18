@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
   RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye
@@ -1239,18 +1240,16 @@ export default function RosterDetailPage() {
                   <div className="grid grid-cols-2 gap-3">
                     {['Name', 'Townhall Level', 'Tag', '30 Day Hitrate', 'Clan Tag', 'Discord', 'Heroes', 'War Opt', 'Trophies'].map((column) => (
                       <div key={column} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
+                        <Checkbox
                           id={`column-${column}`}
                           checked={editRosterData.columns.includes(column)}
-                          onChange={(e) => {
-                            const newColumns = e.target.checked
+                          onCheckedChange={(checked) => {
+                            const newColumns = checked
                               ? [...editRosterData.columns, column]
                               : editRosterData.columns.filter(c => c !== column);
                             setEditRosterData({ ...editRosterData, columns: newColumns.slice(0, 4) });
                           }}
                           disabled={editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)}
-                          className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                         />
                         <label
                           htmlFor={`column-${column}`}
@@ -1277,18 +1276,16 @@ export default function RosterDetailPage() {
                   <div className="grid grid-cols-2 gap-3">
                     {['Townhall Level', 'Name', 'Tag', 'Heroes', 'Trophies', '30 Day Hitrate', 'Clan Tag', 'Added At'].map((field) => (
                       <div key={field} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
+                        <Checkbox
                           id={`sort-${field}`}
                           checked={editRosterData.sort.includes(field)}
-                          onChange={(e) => {
-                            const newSort = e.target.checked
+                          onCheckedChange={(checked) => {
+                            const newSort = checked
                               ? [...editRosterData.sort, field]
                               : editRosterData.sort.filter(s => s !== field);
                             setEditRosterData({ ...editRosterData, sort: newSort.slice(0, 4) });
                           }}
                           disabled={editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)}
-                          className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                         />
                         <label
                           htmlFor={`sort-${field}`}
