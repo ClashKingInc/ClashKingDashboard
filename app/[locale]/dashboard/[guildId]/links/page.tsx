@@ -292,11 +292,16 @@ export default function LinksManagementPage() {
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       {/* Page Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-foreground">Links Management</h1>
-        <p className="text-muted-foreground">
-          Manage Discord member account links and verify player ownership
-        </p>
+      <div className="flex items-center gap-3">
+        <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+          <Link className="h-8 w-8 text-primary" />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Links Management</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage Discord member account links and verify player ownership
+          </p>
+        </div>
       </div>
 
       {/* Statistics Cards */}

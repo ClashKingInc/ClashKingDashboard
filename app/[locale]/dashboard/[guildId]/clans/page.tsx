@@ -356,11 +356,16 @@ export default function ClansPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Clan Management</h1>
-            <p className="text-muted-foreground mt-1">
-              Configure your clans and their Discord integration settings
-            </p>
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+              <Shield className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Clan Management</h1>
+              <p className="text-muted-foreground mt-1">
+                Configure your clans and their Discord integration settings
+              </p>
+            </div>
           </div>
 
           {/* Add Clan Dialog */}
