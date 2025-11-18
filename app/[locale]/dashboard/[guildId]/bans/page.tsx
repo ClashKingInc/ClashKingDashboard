@@ -273,7 +273,7 @@ export default function BansPage() {
           <AlertCircle className="h-4 w-4 text-blue-500" />
           <AlertTitle className="text-blue-400">How Bans Work</AlertTitle>
           <AlertDescription className="text-blue-300">
-            Banned players are prevented from joining any clan linked to this server. The bot will automatically kick them if they try to join.
+            Banned players are prevented from joining any clan linked to this server. The bot will warn you if they join one of the clans.
             Bans are server-wide and apply to all your clans.
           </AlertDescription>
         </Alert>
@@ -313,7 +313,7 @@ export default function BansPage() {
                     {bans.filter((b) => {
                       const days = Math.floor(
                         (new Date().getTime() - new Date(b.DateCreated).getTime()) /
-                          (1000 * 60 * 60 * 24)
+                        (1000 * 60 * 60 * 24)
                       );
                       return days <= 7;
                     }).length}
@@ -442,24 +442,10 @@ export default function BansPage() {
                           <div className="text-xs text-muted-foreground">
                             {Math.floor(
                               (new Date().getTime() - new Date(ban.DateCreated).getTime()) /
-                                (1000 * 60 * 60 * 24)
+                              (1000 * 60 * 60 * 24)
                             )}{" "}
                             days ago
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          {ban.clan_name ? (
-                            <div>
-                              <div className="text-sm font-medium">{ban.clan_name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {ban.clan_tag}
-                              </div>
-                            </div>
-                          ) : (
-                            <Badge variant="secondary" className="text-xs">
-                              No Clan
-                            </Badge>
-                          )}
                         </TableCell>
                         <TableCell className="text-right">
                           <Button
