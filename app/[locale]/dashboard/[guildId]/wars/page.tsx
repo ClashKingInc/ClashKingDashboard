@@ -146,8 +146,14 @@ export default function WarsPage() {
       if (!accessToken) return;
 
       const clansToFetch = filters.clan === "all"
-        ? clans.map(c => c.tag)
-        : [filters.clan];
+        ? clans.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
+        : filters.clan && filters.clan !== "all" ? [filters.clan] : [];
+
+      // If no clans to fetch, return early
+      if (clansToFetch.length === 0) {
+        setLoading(false);
+        return;
+      }
 
       // Calculate timestamps (default: last 30 days)
       const now = Date.now();
