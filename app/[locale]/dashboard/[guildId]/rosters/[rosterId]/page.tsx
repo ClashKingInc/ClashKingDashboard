@@ -739,7 +739,7 @@ export default function RosterDetailPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`
         },
-        body: JSON.stringify({ add: allTags })
+        body: JSON.stringify({ add: allTags.map(tag => ({ tag })) })
       });
 
       if (!response.ok) {
