@@ -53,24 +53,19 @@ interface RosterMember {
   added_at?: number;
 }
 
-interface Automation {
-  id: string;
-  enabled: boolean;
-  trigger_type: "time_before_event" | "time_after_event" | "specific_time" | "member_count";
-  trigger_value: number;
-  action_type: "send_reminder" | "notify_leader" | "lock_roster" | "unlock_roster";
-  message_template?: string;
-  channel_id?: string;
-  target_roles?: string[];
-}
-
-interface RosterSettings {
-  event_start_time?: number;
-  event_end_time?: number;
-  event_type?: "cwl" | "war" | "friendly" | "tournament";
-  reminder_channel_id?: string;
-  leader_role_id?: string;
-  automations?: Automation[];
+interface RosterAutomation {
+  automation_id: string;
+  server_id: number;
+  roster_id?: string;
+  group_id?: string;
+  action_type: "roster_signup" | "roster_signup_close" | "roster_post" | "roster_ping" | "recurring_event" | "roster_delete" | "roster_clear" | "roster_archive";
+  scheduled_time: number;
+  discord_channel_id?: string;
+  options?: Record<string, any>;
+  active: boolean;
+  executed: boolean;
+  created_at?: number;
+  updated_at?: number;
 }
 
 interface Roster {
@@ -96,7 +91,6 @@ interface Roster {
   created_at?: string;
   updated_at?: string;
   event_start_time?: number;
-  settings?: RosterSettings;
 }
 
 interface Clan {
@@ -152,21 +146,20 @@ export default function RosterDetailPage() {
   const [dragOverCategory, setDragOverCategory] = useState<string | null>(null);
 
   // Automation state
-  const [rosterSettings, setRosterSettings] = useState<RosterSettings>({
-    automations: [],
-  });
+  const [automations, setAutomations] = useState<RosterAutomation[]>([]);
+  const [loadingAutomations, setLoadingAutomations] = useState(false);
   const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
-  const [newAutomation, setNewAutomation] = useState<Partial<Automation>>({
-    trigger_type: "time_before_event",
-    action_type: "send_reminder",
-    trigger_value: 60,
-    enabled: true,
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>({
+    action_type: "roster_ping",
+    scheduled_time: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
+    active: true,
   });
 
   // Load roster data
   useEffect(() => {
     loadRoster();
     loadClans();
+    loadAutomations();
   }, [rosterId]);
 
   const loadRoster = async () => {
@@ -241,6 +234,159 @@ export default function RosterDetailPage() {
       }
     } catch (error) {
       console.error("Error loading clan members:", error);
+    }
+  };
+
+  const loadAutomations = async () => {
+    setLoadingAutomations(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(
+        `/api/v2/roster-automation/list?server_id=${guildId}&roster_id=${rosterId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setAutomations(data.items || []);
+      }
+    } catch (error) {
+      console.error("Error loading automations:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load automations",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingAutomations(false);
+    }
+  };
+
+  const handleCreateAutomation = async () => {
+    if (!newAutomation.action_type || !newAutomation.scheduled_time) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-automation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          server_id: parseInt(guildId),
+          roster_id: rosterId,
+          action_type: newAutomation.action_type,
+          scheduled_time: newAutomation.scheduled_time,
+          discord_channel_id: newAutomation.discord_channel_id,
+          options: newAutomation.options,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create automation");
+      }
+
+      await loadAutomations();
+      setCreateAutomationDialogOpen(false);
+      setNewAutomation({
+        action_type: "roster_ping",
+        scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+        active: true,
+      });
+
+      toast({
+        title: "Success",
+        description: "Automation created successfully!",
+      });
+    } catch (error) {
+      console.error("Error creating automation:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create automation",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleToggleAutomation = async (automationId: string) => {
+    const automation = automations.find(a => a.automation_id === automationId);
+    if (!automation) return;
+
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          active: !automation.active
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update automation");
+      }
+
+      await loadAutomations();
+      toast({
+        title: "Success",
+        description: "Automation updated",
+      });
+    } catch (error) {
+      console.error("Error updating automation:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update automation",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteAutomation = async (automationId: string) => {
+    setSaving(true);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete automation");
+      }
+
+      await loadAutomations();
+      toast({
+        title: "Success",
+        description: "Automation deleted",
+      });
+    } catch (error) {
+      console.error("Error deleting automation:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete automation",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -786,14 +932,20 @@ export default function RosterDetailPage() {
   // Automation helper functions
   const getActionIcon = (actionType: string) => {
     switch (actionType) {
-      case "send_reminder":
+      case "roster_ping":
         return <Bell className="w-4 h-4" />;
-      case "notify_leader":
+      case "roster_post":
         return <MessageSquare className="w-4 h-4" />;
-      case "lock_roster":
-        return <Lock className="w-4 h-4" />;
-      case "unlock_roster":
+      case "roster_signup":
         return <Unlock className="w-4 h-4" />;
+      case "roster_signup_close":
+        return <Lock className="w-4 h-4" />;
+      case "recurring_event":
+        return <RefreshCw className="w-4 h-4" />;
+      case "roster_delete":
+      case "roster_clear":
+      case "roster_archive":
+        return <X className="w-4 h-4" />;
       default:
         return <Zap className="w-4 h-4" />;
     }
@@ -801,94 +953,25 @@ export default function RosterDetailPage() {
 
   const getActionLabel = (actionType: string) => {
     switch (actionType) {
-      case "send_reminder":
-        return "Send Reminder";
-      case "notify_leader":
-        return "Notify Leader";
-      case "lock_roster":
-        return "Lock Roster";
-      case "unlock_roster":
-        return "Unlock Roster";
+      case "roster_ping":
+        return "Ping Roster";
+      case "roster_post":
+        return "Post Roster";
+      case "roster_signup":
+        return "Open Signup";
+      case "roster_signup_close":
+        return "Close Signup";
+      case "recurring_event":
+        return "Recurring Event";
+      case "roster_delete":
+        return "Delete Roster";
+      case "roster_clear":
+        return "Clear Roster";
+      case "roster_archive":
+        return "Archive Roster";
       default:
         return actionType;
     }
-  };
-
-  const getTriggerLabel = (triggerType: string, triggerValue: number) => {
-    switch (triggerType) {
-      case "time_before_event":
-        return `${triggerValue} min before event`;
-      case "time_after_event":
-        return `${triggerValue} min after event`;
-      case "specific_time":
-        return `At ${new Date(triggerValue * 1000).toLocaleTimeString()}`;
-      case "member_count":
-        return `When ${triggerValue} members`;
-      default:
-        return triggerType;
-    }
-  };
-
-  const handleToggleAutomation = (automationId: string) => {
-    const updatedAutomations = (rosterSettings.automations || []).map(auto =>
-      auto.id === automationId ? { ...auto, enabled: !auto.enabled } : auto
-    );
-    setRosterSettings({ ...rosterSettings, automations: updatedAutomations });
-    toast({
-      title: "Success",
-      description: "Automation updated",
-    });
-  };
-
-  const handleCreateAutomation = () => {
-    if (!newAutomation.trigger_type || !newAutomation.action_type || !newAutomation.trigger_value) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const automation: Automation = {
-      id: crypto.randomUUID(),
-      enabled: newAutomation.enabled ?? true,
-      trigger_type: newAutomation.trigger_type as Automation["trigger_type"],
-      trigger_value: newAutomation.trigger_value,
-      action_type: newAutomation.action_type as Automation["action_type"],
-      message_template: newAutomation.message_template,
-      channel_id: newAutomation.channel_id,
-      target_roles: newAutomation.target_roles,
-    };
-
-    setRosterSettings({
-      ...rosterSettings,
-      automations: [...(rosterSettings.automations || []), automation],
-    });
-
-    setCreateAutomationDialogOpen(false);
-    setNewAutomation({
-      trigger_type: "time_before_event",
-      action_type: "send_reminder",
-      trigger_value: 60,
-      enabled: true,
-    });
-
-    toast({
-      title: "Success",
-      description: "Automation created successfully!",
-    });
-  };
-
-  const handleDeleteAutomation = (automationId: string) => {
-    const updatedAutomations = (rosterSettings.automations || []).filter(
-      auto => auto.id !== automationId
-    );
-    setRosterSettings({ ...rosterSettings, automations: updatedAutomations });
-    toast({
-      title: "Success",
-      description: "Automation deleted",
-    });
   };
 
   const unixToDatetimeLocal = (timestamp?: number): string => {
@@ -1514,81 +1597,6 @@ export default function RosterDetailPage() {
 
           {/* Automation Tab */}
           <TabsContent value="automation" className="space-y-6">
-            {/* Event Settings Card */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-foreground flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  Event Settings
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Configure event timing and notification channels
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="event-type" className="text-foreground">Event Type</Label>
-                    <Select
-                      value={rosterSettings.event_type || ""}
-                      onValueChange={(value) =>
-                        setRosterSettings({ ...rosterSettings, event_type: value as RosterSettings["event_type"] })
-                      }
-                    >
-                      <SelectTrigger className="bg-background border-border">
-                        <SelectValue placeholder="Select event type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cwl">Clan War League</SelectItem>
-                        <SelectItem value="war">Regular War</SelectItem>
-                        <SelectItem value="friendly">Friendly War</SelectItem>
-                        <SelectItem value="tournament">Tournament</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reminder-channel" className="text-foreground">Reminder Channel ID</Label>
-                    <Input
-                      id="reminder-channel"
-                      placeholder="123456789"
-                      value={rosterSettings.reminder_channel_id || ""}
-                      onChange={(e) =>
-                        setRosterSettings({ ...rosterSettings, reminder_channel_id: e.target.value })
-                      }
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="event-start" className="text-foreground">Event Start Time</Label>
-                    <Input
-                      id="event-start"
-                      type="datetime-local"
-                      value={unixToDatetimeLocal(rosterSettings.event_start_time)}
-                      onChange={(e) =>
-                        setRosterSettings({ ...rosterSettings, event_start_time: datetimeLocalToUnix(e.target.value) })
-                      }
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="event-end" className="text-foreground">Event End Time</Label>
-                    <Input
-                      id="event-end"
-                      type="datetime-local"
-                      value={unixToDatetimeLocal(rosterSettings.event_end_time)}
-                      onChange={(e) =>
-                        setRosterSettings({ ...rosterSettings, event_end_time: datetimeLocalToUnix(e.target.value) })
-                      }
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Automations List */}
             <Card className="bg-card border-border">
               <CardHeader>
@@ -1599,7 +1607,7 @@ export default function RosterDetailPage() {
                       Automated Actions
                     </CardTitle>
                     <CardDescription className="text-muted-foreground">
-                      Create automated reminders and actions based on triggers
+                      Schedule automated actions for this roster
                     </CardDescription>
                   </div>
                   <Button
@@ -1612,26 +1620,30 @@ export default function RosterDetailPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {!rosterSettings.automations || rosterSettings.automations.length === 0 ? (
+                {loadingAutomations ? (
+                  <div className="text-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+                  </div>
+                ) : !automations || automations.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <Zap className="w-12 h-12 mx-auto mb-3 opacity-50" />
                     <p>No automations configured yet</p>
-                    <p className="text-xs mt-2">Click "Add Automation" to create your first automated action</p>
+                    <p className="text-xs mt-2">Click "Add Automation" to schedule your first action</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {rosterSettings.automations.map((automation) => (
+                    {automations.map((automation) => (
                       <div
-                        key={automation.id}
+                        key={automation.automation_id}
                         className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
-                          automation.enabled
+                          automation.active && !automation.executed
                             ? "bg-primary/5 border-primary/20"
                             : "bg-muted/30 border-border opacity-60"
                         }`}
                       >
                         <div className="flex items-center gap-4 flex-1">
                           <div className={`p-2 rounded-full ${
-                            automation.enabled ? "bg-primary/10" : "bg-muted"
+                            automation.active && !automation.executed ? "bg-primary/10" : "bg-muted"
                           }`}>
                             {getActionIcon(automation.action_type)}
                           </div>
@@ -1640,33 +1652,40 @@ export default function RosterDetailPage() {
                               <span className="font-medium text-foreground">
                                 {getActionLabel(automation.action_type)}
                               </span>
-                              <Badge variant={automation.enabled ? "default" : "secondary"} className="text-xs">
-                                {automation.enabled ? "Enabled" : "Disabled"}
+                              <Badge
+                                variant={automation.active && !automation.executed ? "default" : "secondary"}
+                                className="text-xs"
+                              >
+                                {automation.executed ? "Executed" : automation.active ? "Active" : "Inactive"}
                               </Badge>
                             </div>
                             <p className="text-sm text-muted-foreground">
-                              Trigger: {getTriggerLabel(automation.trigger_type, automation.trigger_value)}
+                              Scheduled: {new Date(automation.scheduled_time * 1000).toLocaleString()}
                             </p>
-                            {automation.message_template && (
-                              <p className="text-xs text-muted-foreground mt-1 italic">
-                                "{automation.message_template}"
+                            {automation.discord_channel_id && (
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Channel: {automation.discord_channel_id}
                               </p>
                             )}
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
-                            variant={automation.enabled ? "outline" : "default"}
-                            onClick={() => handleToggleAutomation(automation.id)}
-                            className="text-xs"
-                          >
-                            {automation.enabled ? "Disable" : "Enable"}
-                          </Button>
+                          {!automation.executed && (
+                            <Button
+                              size="sm"
+                              variant={automation.active ? "outline" : "default"}
+                              onClick={() => handleToggleAutomation(automation.automation_id)}
+                              disabled={saving}
+                              className="text-xs"
+                            >
+                              {automation.active ? "Disable" : "Enable"}
+                            </Button>
+                          )}
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => handleDeleteAutomation(automation.id)}
+                            onClick={() => handleDeleteAutomation(automation.automation_id)}
+                            disabled={saving}
                             className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <X className="w-4 h-4" />
@@ -1704,170 +1723,92 @@ export default function RosterDetailPage() {
       <Dialog open={createAutomationDialogOpen} onOpenChange={setCreateAutomationDialogOpen}>
         <DialogContent className="bg-card border-border max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-foreground">Create Automation</DialogTitle>
+            <DialogTitle className="text-foreground">Schedule Automation</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              Set up an automated action based on a trigger
+              Configure an automated action for this roster
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4">
-            {/* Trigger Configuration */}
-            <div className="space-y-3">
-              <Label className="text-foreground font-semibold">Trigger</Label>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="trigger-type" className="text-foreground">Trigger Type</Label>
-                  <Select
-                    value={newAutomation.trigger_type || ""}
-                    onValueChange={(value) =>
-                      setNewAutomation({ ...newAutomation, trigger_type: value as Automation["trigger_type"] })
-                    }
-                  >
-                    <SelectTrigger className="bg-background border-border">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="time_before_event">
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          Time Before Event
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="time_after_event">
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4" />
-                          Time After Event
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="specific_time">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4" />
-                          Specific Time
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="member_count">
-                        <div className="flex items-center gap-2">
-                          <Hash className="w-4 h-4" />
-                          Member Count
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="trigger-value" className="text-foreground">
-                    {newAutomation.trigger_type === "member_count" ? "Member Count" :
-                     newAutomation.trigger_type === "specific_time" ? "Time" : "Minutes"}
-                  </Label>
-                  {newAutomation.trigger_type === "specific_time" ? (
-                    <Input
-                      id="trigger-value"
-                      type="time"
-                      onChange={(e) => {
-                        const [hours, minutes] = e.target.value.split(':');
-                        const date = new Date();
-                        date.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-                        setNewAutomation({ ...newAutomation, trigger_value: Math.floor(date.getTime() / 1000) });
-                      }}
-                      className="bg-background border-border text-foreground"
-                    />
-                  ) : (
-                    <Input
-                      id="trigger-value"
-                      type="number"
-                      min="1"
-                      value={newAutomation.trigger_value || ""}
-                      onChange={(e) =>
-                        setNewAutomation({ ...newAutomation, trigger_value: parseInt(e.target.value) || 0 })
-                      }
-                      className="bg-background border-border text-foreground"
-                    />
-                  )}
-                </div>
-              </div>
+            {/* Action Configuration */}
+            <div className="space-y-2">
+              <Label htmlFor="action-type" className="text-foreground">Action Type</Label>
+              <Select
+                value={newAutomation.action_type || ""}
+                onValueChange={(value) =>
+                  setNewAutomation({ ...newAutomation, action_type: value as RosterAutomation["action_type"] })
+                }
+              >
+                <SelectTrigger className="bg-background border-border">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="roster_ping">
+                    <div className="flex items-center gap-2">
+                      <Bell className="w-4 h-4" />
+                      Ping Roster
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_post">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4" />
+                      Post Roster
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup">
+                    <div className="flex items-center gap-2">
+                      <Unlock className="w-4 h-4" />
+                      Open Signup
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup_close">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4" />
+                      Close Signup
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="recurring_event">
+                    <div className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4" />
+                      Recurring Event
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Action Configuration */}
-            <div className="space-y-3">
-              <Label className="text-foreground font-semibold">Action</Label>
-              <div className="space-y-2">
-                <Label htmlFor="action-type" className="text-foreground">Action Type</Label>
-                <Select
-                  value={newAutomation.action_type || ""}
-                  onValueChange={(value) =>
-                    setNewAutomation({ ...newAutomation, action_type: value as Automation["action_type"] })
-                  }
-                >
-                  <SelectTrigger className="bg-background border-border">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="send_reminder">
-                      <div className="flex items-center gap-2">
-                        <Bell className="w-4 h-4" />
-                        Send Reminder
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="notify_leader">
-                      <div className="flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4" />
-                        Notify Leader
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="lock_roster">
-                      <div className="flex items-center gap-2">
-                        <Lock className="w-4 h-4" />
-                        Lock Roster
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="unlock_roster">
-                      <div className="flex items-center gap-2">
-                        <Unlock className="w-4 h-4" />
-                        Unlock Roster
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* Scheduled Time */}
+            <div className="space-y-2">
+              <Label htmlFor="scheduled-time" className="text-foreground">Scheduled Time</Label>
+              <Input
+                id="scheduled-time"
+                type="datetime-local"
+                value={unixToDatetimeLocal(newAutomation.scheduled_time)}
+                onChange={(e) =>
+                  setNewAutomation({ ...newAutomation, scheduled_time: datetimeLocalToUnix(e.target.value) })
+                }
+                className="bg-background border-border text-foreground"
+              />
+              <p className="text-xs text-muted-foreground">
+                When should this action be executed?
+              </p>
+            </div>
 
-              {/* Message Template (for send_reminder and notify_leader) */}
-              {(newAutomation.action_type === "send_reminder" || newAutomation.action_type === "notify_leader") && (
-                <div className="space-y-2">
-                  <Label htmlFor="message-template" className="text-foreground">Message Template</Label>
-                  <Textarea
-                    id="message-template"
-                    placeholder="Enter your message here..."
-                    value={newAutomation.message_template || ""}
-                    onChange={(e) =>
-                      setNewAutomation({ ...newAutomation, message_template: e.target.value })
-                    }
-                    className="bg-background border-border text-foreground"
-                    rows={3}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    You can use variables: {"{roster_name}"}, {"{event_type}"}, {"{member_count}"}
-                  </p>
-                </div>
-              )}
-
-              {/* Channel ID (for send_reminder) */}
-              {newAutomation.action_type === "send_reminder" && (
-                <div className="space-y-2">
-                  <Label htmlFor="channel-id" className="text-foreground">Channel ID (optional)</Label>
-                  <Input
-                    id="channel-id"
-                    placeholder="123456789"
-                    value={newAutomation.channel_id || ""}
-                    onChange={(e) =>
-                      setNewAutomation({ ...newAutomation, channel_id: e.target.value })
-                    }
-                    className="bg-background border-border text-foreground"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Leave empty to use the default reminder channel
-                  </p>
-                </div>
-              )}
+            {/* Discord Channel ID */}
+            <div className="space-y-2">
+              <Label htmlFor="channel-id" className="text-foreground">Discord Channel ID (optional)</Label>
+              <Input
+                id="channel-id"
+                placeholder="123456789"
+                value={newAutomation.discord_channel_id || ""}
+                onChange={(e) =>
+                  setNewAutomation({ ...newAutomation, discord_channel_id: e.target.value })
+                }
+                className="bg-background border-border text-foreground"
+              />
+              <p className="text-xs text-muted-foreground">
+                Leave empty to use the roster's default channel
+              </p>
             </div>
           </div>
 
@@ -1877,10 +1818,9 @@ export default function RosterDetailPage() {
               onClick={() => {
                 setCreateAutomationDialogOpen(false);
                 setNewAutomation({
-                  trigger_type: "time_before_event",
-                  action_type: "send_reminder",
-                  trigger_value: 60,
-                  enabled: true,
+                  action_type: "roster_ping",
+                  scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+                  active: true,
                 });
               }}
               className="border-border"
@@ -1889,9 +1829,17 @@ export default function RosterDetailPage() {
             </Button>
             <Button
               onClick={handleCreateAutomation}
+              disabled={saving}
               className="bg-primary hover:bg-primary/90"
             >
-              Create Automation
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                "Create Automation"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
