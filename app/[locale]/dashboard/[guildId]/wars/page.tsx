@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -74,6 +75,8 @@ export default function WarsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const guildId = params?.guildId as string;
+  const t = useTranslations("WarsPage");
+  const tCommon = useTranslations("Common");
 
   const [loading, setLoading] = useState(true);
   const [clans, setClans] = useState<Clan[]>([]);

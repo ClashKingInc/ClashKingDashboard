@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,8 @@ const PLACEHOLDERS = [
 export default function GeneralSettingsPage() {
   const params = useParams();
   const guildId = params.guildId as string;
+  const t = useTranslations("GeneralPage");
+  const tCommon = useTranslations("Common");
 
   const [settings, setSettings] = useState({
     change_nickname: true,

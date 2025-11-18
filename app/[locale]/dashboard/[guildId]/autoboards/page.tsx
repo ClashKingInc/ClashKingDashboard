@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -109,6 +110,8 @@ const DAYS = [
 export default function AutoBoardsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
+  const t = useTranslations("AutoboardsPage");
+  const tCommon = useTranslations("Common");
 
   const [loading, setLoading] = useState(true);
   const [autoboardsData, setAutoboardsData] = useState<ServerAutoBoardsResponse | null>(null);

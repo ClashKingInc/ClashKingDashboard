@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -142,6 +143,8 @@ export default function RosterDetailPage() {
   const guildId = params.guildId as string;
   const rosterId = params.rosterId as string;
   const locale = params.locale as string;
+  const t = useTranslations("RostersPage");
+  const tCommon = useTranslations("Common");
 
   const [roster, setRoster] = useState<Roster | null>(null);
   const [clans, setClans] = useState<Clan[]>([]);

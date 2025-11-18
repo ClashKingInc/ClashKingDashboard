@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -89,6 +90,8 @@ const FAMILY_POSITIONS = [
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;
+  const t = useTranslations("RolesPage");
+  const tCommon = useTranslations("Common");
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);

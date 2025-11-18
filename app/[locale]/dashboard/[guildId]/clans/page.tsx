@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -89,6 +90,8 @@ export default function ClansPage() {
   const router = useRouter();
   const { toast } = useToast();
   const guildId = params.guildId as string;
+  const t = useTranslations("ClansPage");
+  const tCommon = useTranslations("Common");
 
   const [clans, setClans] = useState<Clan[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);

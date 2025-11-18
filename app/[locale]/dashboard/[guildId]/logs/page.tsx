@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -133,6 +134,8 @@ const PLAYER_LOGS: LogTypeDefinition[] = [
 export default function LogsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
+  const t = useTranslations("LogsPage");
+  const tCommon = useTranslations("Common");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
