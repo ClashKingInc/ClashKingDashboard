@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from ";@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -85,6 +86,8 @@ export default function RemindersPage() {
   const router = useRouter();
   const { toast } = useToast();
   const guildId = params.guildId as string;
+  const t = useTranslations("RemindersPage");
+  const tCommon = useTranslations("Common");
 
   const [reminders, setReminders] = useState<ServerRemindersResponse>({
     war_reminders: [],
@@ -106,7 +109,7 @@ export default function RemindersPage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          router.push("/login");
+          router.push(`/${params.locale}/login`);
           return;
         }
 
@@ -135,7 +138,7 @@ export default function RemindersPage() {
           if (remindersRes.status === 401) {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            router.push("/login");
+            router.push(`/${params.locale}/login`);
             return;
           }
           throw new Error(`Failed to fetch reminders: ${remindersRes.statusText}`);

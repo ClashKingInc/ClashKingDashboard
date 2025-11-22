@@ -3,12 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const t = useTranslations("Navigation");
 
   return (
     <nav className="fixed top-0 w-full bg-[#1F1F1F]/95 backdrop-blur-lg z-50 border-b border-[#DC2626]/30">
@@ -28,26 +34,27 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link href="#features" className="text-gray-300 hover:text-[#EF4444] transition-colors">
-              Features
+              {t("features")}
             </Link>
             <Link href="#commands" className="text-gray-300 hover:text-[#EF4444] transition-colors">
-              Commands
+              {t("commands")}
             </Link>
             <Link href="#pricing" className="text-gray-300 hover:text-[#EF4444] transition-colors">
-              Premium
+              {t("premium")}
             </Link>
             <a href="https://docs.clashk.ing" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-[#EF4444] transition-colors">
-              Documentation
+              {t("documentation")}
             </a>
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            <LanguageSwitcher />
             <Button
-              onClick={initiateDiscordLogin}
+              onClick={() => initiateDiscordLogin(locale)}
               className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]"
             >
-              Login with Discord
+              {t("loginWithDiscord")}
             </Button>
           </div>
 
@@ -66,28 +73,31 @@ export function Navbar() {
         <div className="md:hidden border-t border-gray-200 dark:border-gray-800">
           <div className="px-4 py-4 space-y-3">
             <Link href="#features" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
-              Features
+              {t("features")}
             </Link>
             <Link href="#commands" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
-              Commands
+              {t("commands")}
             </Link>
             <Link href="#pricing" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
-              Premium
+              {t("premium")}
             </Link>
             <a href="https://docs.clashk.ing" target="_blank" rel="noopener noreferrer" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
-              Documentation
+              {t("documentation")}
             </a>
             <div className="pt-4 space-y-2">
+              <div className="flex justify-center mb-2">
+                <LanguageSwitcher />
+              </div>
               <Button
-                onClick={initiateDiscordLogin}
+                onClick={() => initiateDiscordLogin(locale)}
                 variant="outline"
                 className="w-full"
               >
-                Login with Discord
+                {t("loginWithDiscord")}
               </Button>
               <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer" className="block">
                 <Button className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]">
-                  Add to Discord
+                  {t("addToDiscord")}
                 </Button>
               </a>
             </div>

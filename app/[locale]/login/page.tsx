@@ -3,15 +3,21 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 
 export default function LoginPage() {
+  const t = useTranslations("LoginPage");
+  const params = useParams();
+  const locale = params.locale as string;
+
   // Auto-trigger Discord login when the page loads
   useEffect(() => {
-    initiateDiscordLogin();
-  }, []);
+    initiateDiscordLogin(locale);
+  }, [locale]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
@@ -23,11 +29,11 @@ export default function LoginPage() {
 
       {/* Back button */}
       <Link
-        href="/en"
+        href={`/${locale}`}
         className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back to Home</span>
+        <span>{t("backToHome")}</span>
       </Link>
 
       <Card className="w-full max-w-md relative z-10 border-2 border-[#2A2A2A] bg-[#1F1F1F]/95 backdrop-blur">
@@ -42,9 +48,9 @@ export default function LoginPage() {
               className="h-11 w-auto"
             />
           </div>
-          <CardTitle className="text-3xl font-bold text-white">Redirecting to Discord...</CardTitle>
+          <CardTitle className="text-3xl font-bold text-white">{t("redirecting")}</CardTitle>
           <CardDescription className="text-gray-400">
-            You will be redirected to Discord to complete the login process
+            {t("redirectingDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center py-8">

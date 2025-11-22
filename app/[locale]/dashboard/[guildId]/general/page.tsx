@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -10,28 +11,35 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock } from "lucide-react";
+import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
+import ReactMarkdown from "react-markdown";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Placeholder descriptions
-const PLACEHOLDERS = [
-  { key: "{discord_name}", desc: "Discord username", example: "JohnDoe#1234" },
-  { key: "{discord_display_name}", desc: "Server nickname", example: "John" },
-  { key: "{player_name}", desc: "CoC player name", example: "Chief John" },
-  { key: "{player_tag}", desc: "Player tag", example: "#2PP" },
-  { key: "{player_townhall}", desc: "TH level", example: "16" },
-  { key: "{player_townhall_small}", desc: "TH superscript", example: "¹⁶" },
-  { key: "{player_warstars}", desc: "War stars", example: "1234" },
-  { key: "{player_role}", desc: "Clan role", example: "Leader" },
-  { key: "{player_clan}", desc: "Clan name", example: "RCS Clan" },
-  { key: "{player_league}", desc: "League", example: "Legend" },
-  { key: "{player_clan_abbreviation}", desc: "Clan abbr", example: "RCS" },
-];
+// Placeholder descriptions will be fetched from translations dynamically
 
 export default function GeneralSettingsPage() {
   const params = useParams();
   const guildId = params.guildId as string;
+  const t = useTranslations("GeneralPage");
+  const tCommon = useTranslations("Common");
+
+  // Placeholder descriptions from translations
+  const PLACEHOLDERS = [
+    { key: "{discord_name}", desc: t("nickname.placeholders.discordName"), example: "JohnDoe#1234" },
+    { key: "{discord_display_name}", desc: t("nickname.placeholders.discordDisplayName"), example: "John" },
+    { key: "{player_name}", desc: t("nickname.placeholders.playerName"), example: "Chief John" },
+    { key: "{player_tag}", desc: t("nickname.placeholders.playerTag"), example: "#2PP" },
+    { key: "{player_townhall}", desc: t("nickname.placeholders.playerTownhall"), example: "16" },
+    { key: "{player_townhall_small}", desc: t("nickname.placeholders.playerTownhallSmall"), example: "¹⁶" },
+    { key: "{player_warstars}", desc: t("nickname.placeholders.playerWarstars"), example: "1234" },
+    { key: "{player_role}", desc: t("nickname.placeholders.playerRole"), example: "Leader" },
+    { key: "{player_clan}", desc: t("nickname.placeholders.playerClan"), example: "RCS Clan" },
+    { key: "{player_league}", desc: t("nickname.placeholders.playerLeague"), example: "Legend" },
+    { key: "{player_clan_abbreviation}", desc: t("nickname.placeholders.playerClanAbbr"), example: "RCS" },
+  ];
 
   const [settings, setSettings] = useState({
     change_nickname: true,
@@ -47,6 +55,8 @@ export default function GeneralSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isFamilyPlaceholdersOpen, setIsFamilyPlaceholdersOpen] = useState(false);
+  const [isNonFamilyPlaceholdersOpen, setIsNonFamilyPlaceholdersOpen] = useState(false);
 
   // Load settings on mount
   useEffect(() => {
@@ -58,7 +68,20 @@ export default function GeneralSettingsPage() {
     try {
       setIsLoading(true);
       setError(null);
+
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        throw new Error("No access token found. Please log in again.");
+      }
+
+      apiClient.setAccessToken(token);
       const response = await apiClient.servers.getSettings(guildId);
+
+      console.log("Settings response:", response);
+
+      if (response.error) {
+        throw new Error(response.error);
+      }
 
       if (response.data) {
         setSettings({
@@ -146,10 +169,81 @@ export default function GeneralSettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-10 w-10 animate-spin text-primary mx-auto" />
-          <p className="text-sm text-muted-foreground">Loading settings...</p>
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-5xl mx-auto space-y-6">
+          {/* Header Skeleton */}
+          <div className="flex items-start justify-between">
+            <div className="space-y-2">
+              <Skeleton className="h-9 w-64" />
+              <Skeleton className="h-5 w-96" />
+            </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-9 w-20" />
+              <Skeleton className="h-9 w-32" />
+            </div>
+          </div>
+
+          {/* Info Banner Skeleton */}
+          <Card className="bg-blue-500/5 border-blue-500/30">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <Skeleton className="h-5 w-5 rounded" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-48" />
+                  <Skeleton className="h-3 w-full" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Main Cards Skeleton */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-8 rounded-lg" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-40" />
+                    <Skeleton className="h-3 w-64" />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-20 w-full" />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-8 rounded-lg" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-3 w-48" />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-16 w-full" />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-8 w-8 rounded-lg" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-32" />
+                    <Skeleton className="h-3 w-48" />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-16 w-full" />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     );
@@ -161,9 +255,9 @@ export default function GeneralSettingsPage() {
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-foreground">General Settings</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
             <p className="text-muted-foreground">
-              Configure server-wide bot behavior and appearance
+              {t("description")}
             </p>
           </div>
           <div className="flex gap-2">
@@ -174,7 +268,7 @@ export default function GeneralSettingsPage() {
               size="sm"
             >
               <RotateCcw className="mr-2 h-4 w-4" />
-              Reset
+              {t("reset")}
             </Button>
             <Button
               onClick={handleSave}
@@ -185,12 +279,12 @@ export default function GeneralSettingsPage() {
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
+                  {t("saving")}
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-4 w-4" />
-                  Save Changes
+                  {t("saveChanges")}
                 </>
               )}
             </Button>
@@ -210,7 +304,7 @@ export default function GeneralSettingsPage() {
           <Alert className="border-green-500/30 bg-green-500/5">
             <AlertCircle className="h-4 w-4 text-green-500" />
             <AlertDescription className="text-green-600">
-              Settings saved successfully!
+              {t("settingsSaved")}
             </AlertDescription>
           </Alert>
         )}
@@ -222,11 +316,18 @@ export default function GeneralSettingsPage() {
               <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
               <div className="space-y-1">
                 <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  Looking for more settings?
+                  {t("infoBanner.title")}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  Role management settings are in <strong>Roles</strong> page. Clan-specific settings (ban/strike logs, war channels) are in <strong>Clans</strong> page.
-                </p>
+                <div className="text-xs text-muted-foreground prose prose-sm max-w-none dark:prose-invert">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <span>{children}</span>,
+                      strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                    }}
+                  >
+                    {t("infoBanner.description")}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -242,9 +343,9 @@ export default function GeneralSettingsPage() {
                   <User className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-foreground">Nickname Management</CardTitle>
+                  <CardTitle className="text-foreground">{t("nickname.title")}</CardTitle>
                   <CardDescription className="text-xs">
-                    Control how nicknames are formatted
+                    {t("nickname.description")}
                   </CardDescription>
                 </div>
               </div>
@@ -254,10 +355,10 @@ export default function GeneralSettingsPage() {
               <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-3">
                 <div className="space-y-0.5 flex-1">
                   <Label htmlFor="change-nicknames" className="text-sm font-medium">
-                    Automatic Changes
+                    {t("nickname.automaticChanges")}
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Allow bot to update member nicknames
+                    {t("nickname.automaticChangesDesc")}
                   </p>
                 </div>
                 <Switch
@@ -274,7 +375,7 @@ export default function GeneralSettingsPage() {
               {/* Family Convention */}
               <div className="space-y-3">
                 <Label htmlFor="family-convention" className="text-sm font-medium">
-                  Family Members Format
+                  {t("nickname.familyFormat")}
                 </Label>
                 <Input
                   id="family-convention"
@@ -286,45 +387,11 @@ export default function GeneralSettingsPage() {
                   className="bg-secondary border-border font-mono text-sm"
                 />
 
-                {/* Available Placeholders */}
-                <div className="bg-secondary/50 border border-border rounded-lg p-3 space-y-2">
-                  <p className="text-xs font-medium text-muted-foreground">Available Placeholders:</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {PLACEHOLDERS.map((p) => (
-                      <div key={p.key} className="flex items-start gap-2">
-                        <Badge
-                          variant="secondary"
-                          className="text-xs font-mono cursor-pointer hover:bg-primary/20"
-                          onClick={() => {
-                            const input = document.getElementById("family-convention") as HTMLInputElement;
-                            if (input) {
-                              const start = input.selectionStart || 0;
-                              const end = input.selectionEnd || 0;
-                              const newValue =
-                                settings.nickname_rule.substring(0, start) +
-                                p.key +
-                                settings.nickname_rule.substring(end);
-                              setSettings({ ...settings, nickname_rule: newValue });
-                              setTimeout(() => {
-                                input.focus();
-                                input.setSelectionRange(start + p.key.length, start + p.key.length);
-                              }, 0);
-                            }
-                          }}
-                        >
-                          {p.key}
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">{p.desc}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Live Preview */}
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-2">
                     <Eye className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-medium text-primary">Preview:</p>
+                    <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
                   <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
                     {generatePreview(settings.nickname_rule)}
@@ -332,10 +399,59 @@ export default function GeneralSettingsPage() {
                 </div>
               </div>
 
+              {/* Available Placeholders */}
+              <Collapsible open={isFamilyPlaceholdersOpen} onOpenChange={setIsFamilyPlaceholdersOpen}>
+                <CollapsibleTrigger className="w-full text-left">
+                  <div className="px-3 pb-2">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-medium text-[#DC2626]">{t("nickname.availablePlaceholders")}</p>
+                      {isFamilyPlaceholdersOpen ? (
+                        <ChevronDown className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
+                      )}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
+                    <div className="grid grid-cols-2 gap-2">
+                      {PLACEHOLDERS.map((p) => (
+                        <div key={p.key} className="flex items-start gap-2">
+                          <Badge
+                            variant="secondary"
+                            className="text-xs font-mono cursor-pointer hover:bg-primary/20"
+                            onClick={() => {
+                              const input = document.getElementById("family-convention") as HTMLInputElement;
+                              if (input) {
+                                const start = input.selectionStart || 0;
+                                const end = input.selectionEnd || 0;
+                                const newValue =
+                                  settings.nickname_rule.substring(0, start) +
+                                  p.key +
+                                  settings.nickname_rule.substring(end);
+                                setSettings({ ...settings, nickname_rule: newValue });
+                                setTimeout(() => {
+                                  input.focus();
+                                  input.setSelectionRange(start + p.key.length, start + p.key.length);
+                                }, 0);
+                              }
+                            }}
+                          >
+                            {p.key}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{p.desc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
               {/* Non-Family Convention */}
               <div className="space-y-3">
                 <Label htmlFor="non-family-convention" className="text-sm font-medium">
-                  Non-Family Members Format
+                  {t("nickname.nonFamilyFormat")}
                 </Label>
                 <Input
                   id="non-family-convention"
@@ -351,17 +467,61 @@ export default function GeneralSettingsPage() {
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
                   <div className="flex items-center gap-2 mb-2">
                     <Eye className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-medium text-primary">Preview:</p>
+                    <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
                   <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
                     {generatePreview(settings.non_family_nickname_rule)}
                   </p>
                 </div>
-
-                <p className="text-xs text-muted-foreground">
-                  Format for members not in your clan family
-                </p>
               </div>
+
+              {/* Available Placeholders */}
+              <Collapsible open={isNonFamilyPlaceholdersOpen} onOpenChange={setIsNonFamilyPlaceholdersOpen}>
+                <CollapsibleTrigger className="w-full text-left">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-medium text-[#DC2626]">{t("nickname.availablePlaceholders")}</p>
+                    {isNonFamilyPlaceholdersOpen ? (
+                      <ChevronDown className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
+                    )}
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
+                    <div className="grid grid-cols-2 gap-2">
+                      {PLACEHOLDERS.map((p) => (
+                        <div key={p.key} className="flex items-start gap-2">
+                          <Badge
+                            variant="secondary"
+                            className="text-xs font-mono cursor-pointer hover:bg-primary/20"
+                            onClick={() => {
+                              const input = document.getElementById("non-family-convention") as HTMLInputElement;
+                              if (input) {
+                                const start = input.selectionStart || 0;
+                                const end = input.selectionEnd || 0;
+                                const newValue =
+                                  settings.non_family_nickname_rule.substring(0, start) +
+                                  p.key +
+                                  settings.non_family_nickname_rule.substring(end);
+                                setSettings({ ...settings, non_family_nickname_rule: newValue });
+                                setTimeout(() => {
+                                  input.focus();
+                                  input.setSelectionRange(start + p.key.length, start + p.key.length);
+                                }, 0);
+                              }
+                            }}
+                          >
+                            {p.key}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{p.desc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+
             </CardContent>
           </Card>
 
@@ -373,9 +533,9 @@ export default function GeneralSettingsPage() {
                   <Palette className="h-4 w-4 text-purple-500" />
                 </div>
                 <div>
-                  <CardTitle className="text-foreground">Appearance</CardTitle>
+                  <CardTitle className="text-foreground">{t("appearance.title")}</CardTitle>
                   <CardDescription className="text-xs">
-                    Customize bot embed messages
+                    {t("appearance.description")}
                   </CardDescription>
                 </div>
               </div>
@@ -383,10 +543,10 @@ export default function GeneralSettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <Label htmlFor="embed-color" className="text-sm font-medium">
-                  Embed Color
+                  {t("appearance.embedColor")}
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  Color of the side bar on all bot embed messages in Discord
+                  {t("appearance.embedColorDesc")}
                 </p>
                 <div className="flex gap-3">
                   <div className="relative">
@@ -411,7 +571,7 @@ export default function GeneralSettingsPage() {
                       className="bg-secondary border-border font-mono"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Default: <span className="font-medium">#D90709</span> (ClashKing Red)
+                      {t("appearance.embedColorDefault")}
                     </p>
                   </div>
                 </div>
@@ -421,9 +581,9 @@ export default function GeneralSettingsPage() {
                   className="rounded-lg p-4 border-l-4 bg-secondary/50"
                   style={{ borderLeftColor: intToHex(settings.embed_color) }}
                 >
-                  <p className="text-sm font-medium mb-1">Embed Preview</p>
+                  <p className="text-sm font-medium mb-1">{t("appearance.embedPreview")}</p>
                   <p className="text-xs text-muted-foreground">
-                    This colored bar will appear on the left side of all bot messages
+                    {t("appearance.embedPreviewDesc")}
                   </p>
                 </div>
               </div>
@@ -438,9 +598,9 @@ export default function GeneralSettingsPage() {
                   <Lock className="h-4 w-4 text-green-500" />
                 </div>
                 <div>
-                  <CardTitle className="text-foreground">Security & Permissions</CardTitle>
+                  <CardTitle className="text-foreground">{t("security.title")}</CardTitle>
                   <CardDescription className="text-xs">
-                    Control access and verification
+                    {t("security.description")}
                   </CardDescription>
                 </div>
               </div>
@@ -450,10 +610,10 @@ export default function GeneralSettingsPage() {
               <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-4">
                 <div className="space-y-1 flex-1">
                   <Label htmlFor="api-token" className="text-sm font-medium">
-                    Require Player API Token
+                    {t("security.requireApiToken")}
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Players must verify account ownership with Clash of Clans API token when linking (recommended)
+                    {t("security.requireApiTokenDesc")}
                   </p>
                 </div>
                 <Switch
@@ -472,7 +632,7 @@ export default function GeneralSettingsPage() {
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4 text-muted-foreground" />
                   <Label htmlFor="whitelist-role" className="text-sm font-medium">
-                    Full Whitelist Role
+                    {t("security.fullWhitelistRole")}
                   </Label>
                 </div>
                 <Select
@@ -485,7 +645,7 @@ export default function GeneralSettingsPage() {
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">No Role</SelectItem>
+                    <SelectItem value="none">{t("security.noRole")}</SelectItem>
                     {discordRoles.map((role) => (
                       <SelectItem key={role.id} value={role.id}>
                         {role.name}
@@ -494,7 +654,7 @@ export default function GeneralSettingsPage() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Discord role with full access to all bot commands (bypasses all permission checks)
+                  {t("security.fullWhitelistRoleDesc")}
                 </p>
               </div>
             </CardContent>

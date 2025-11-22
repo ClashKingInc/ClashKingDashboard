@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -74,6 +75,8 @@ export default function WarsPage() {
   const router = useRouter();
   const { toast } = useToast();
   const guildId = params?.guildId as string;
+  const t = useTranslations("WarsPage");
+  const tCommon = useTranslations("Common");
 
   const [loading, setLoading] = useState(true);
   const [clans, setClans] = useState<Clan[]>([]);
@@ -98,7 +101,7 @@ export default function WarsPage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          router.push("/login");
+          router.push(`/${params.locale}/login`);
           return;
         }
 
@@ -111,7 +114,7 @@ export default function WarsPage() {
           if (clansRes.status === 401) {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            router.push("/login");
+            router.push(`/${params.locale}/login`);
             return;
           }
           throw new Error("Failed to fetch clans");

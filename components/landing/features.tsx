@@ -3,71 +3,74 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, TrendingUp, Trophy, Swords, Bell, Settings, Users, BarChart3, Zap, Lock } from "lucide-react";
-
-const features = [
-  {
-    icon: Shield,
-    title: "Auto Role Management",
-    description: "Automatically assign roles based on player status, clan position, and achievements. Keep your server organized effortlessly.",
-    color: "from-blue-500 to-cyan-500"
-  },
-  {
-    icon: TrendingUp,
-    title: "Player Statistics",
-    description: "Track detailed player stats, progress graphs, and attack history. See who's improving and who needs help.",
-    color: "from-red-500 to-pink-500"
-  },
-  {
-    icon: Trophy,
-    title: "Leaderboards",
-    description: "Create competitive leaderboards for donations, trophies, war stars, and custom metrics. Boost engagement.",
-    color: "from-amber-500 to-orange-500"
-  },
-  {
-    icon: Swords,
-    title: "War Tracking",
-    description: "Monitor war lineups, track attacks in real-time, and get post-war analytics. Never miss a war detail.",
-    color: "from-red-500 to-rose-500"
-  },
-  {
-    icon: Bell,
-    title: "Smart Reminders",
-    description: "Automated reminders for Clan Games, war attacks, Clan War League, and custom events. Keep everyone informed.",
-    color: "from-green-500 to-emerald-500"
-  },
-  {
-    icon: Settings,
-    title: "Full Customization",
-    description: "Customize commands, embed colors, nicknames, and permissions. Make ClashKing truly yours.",
-    color: "from-slate-500 to-gray-600"
-  },
-  {
-    icon: Users,
-    title: "Family Management",
-    description: "Manage multiple clans as a family. Cross-clan stats, shared leaderboards, and unified roles.",
-    color: "from-teal-500 to-cyan-500"
-  },
-  {
-    icon: BarChart3,
-    title: "Advanced Analytics",
-    description: "Deep insights into clan performance, player activity patterns, and growth trends. Data-driven decisions.",
-    color: "from-fuchsia-500 to-pink-600"
-  },
-  {
-    icon: Zap,
-    title: "Lightning Fast",
-    description: "Built for performance with instant command responses and real-time updates. No lag, no delays.",
-    color: "from-yellow-500 to-orange-500"
-  },
-  {
-    icon: Lock,
-    title: "Secure & Reliable",
-    description: "99.9% uptime, encrypted data, and regular backups. Your clan data is safe with us.",
-    color: "from-slate-500 to-gray-500"
-  }
-];
+import { useTranslations } from "next-intl";
 
 export function Features() {
+  const t = useTranslations("HomePage.features");
+
+  const features = [
+    {
+      icon: Shield,
+      titleKey: "autoRoles.title",
+      descriptionKey: "autoRoles.description",
+      color: "from-blue-500 to-cyan-500"
+    },
+    {
+      icon: TrendingUp,
+      titleKey: "playerStats.title",
+      descriptionKey: "playerStats.description",
+      color: "from-red-500 to-pink-500"
+    },
+    {
+      icon: Trophy,
+      titleKey: "leaderboards.title",
+      descriptionKey: "leaderboards.description",
+      color: "from-amber-500 to-orange-500"
+    },
+    {
+      icon: Swords,
+      titleKey: "warTracking.title",
+      descriptionKey: "warTracking.description",
+      color: "from-red-500 to-rose-500"
+    },
+    {
+      icon: Bell,
+      titleKey: "smartReminders.title",
+      descriptionKey: "smartReminders.description",
+      color: "from-green-500 to-emerald-500"
+    },
+    {
+      icon: Settings,
+      titleKey: "customization.title",
+      descriptionKey: "customization.description",
+      color: "from-slate-500 to-gray-600"
+    },
+    {
+      icon: Users,
+      titleKey: "familyManagement.title",
+      descriptionKey: "familyManagement.description",
+      color: "from-teal-500 to-cyan-500"
+    },
+    {
+      icon: BarChart3,
+      titleKey: "analytics.title",
+      descriptionKey: "analytics.description",
+      color: "from-fuchsia-500 to-pink-600"
+    },
+    {
+      icon: Zap,
+      titleKey: "performance.title",
+      descriptionKey: "performance.description",
+      color: "from-yellow-500 to-orange-500"
+    },
+    {
+      icon: Lock,
+      titleKey: "security.title",
+      descriptionKey: "security.description",
+      color: "from-slate-500 to-gray-500"
+    }
+  ];
+
   return (
     <section id="features" className="py-24 px-4 bg-[#1F1F1F]">
       <div className="max-w-7xl mx-auto">
@@ -80,10 +83,10 @@ export function Features() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Everything You Need to Manage Your Clan
+              {t("title")}
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Powerful features designed specifically for Clash of Clans communities
+              {t("subtitle")}
             </p>
           </motion.div>
         </div>
@@ -106,10 +109,10 @@ export function Features() {
                       <Icon className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-3">
-                      {feature.title}
+                      {t(feature.titleKey)}
                     </h3>
                     <p className="text-gray-300 leading-relaxed">
-                      {feature.description}
+                      {t(feature.descriptionKey)}
                     </p>
                   </CardContent>
                 </Card>

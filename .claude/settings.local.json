@@ -24,7 +24,19 @@
       "Bash(printenv:*)",
       "Bash(git checkout:*)",
       "Bash(git pull:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(while read file)",
+      "Bash(do if ! grep -q \"useTranslations\" \"$file\")",
+      "Bash(then echo \"$file\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(for file in /mnt/c/Users/Valen/Documents/ClashKing/ClashKingDashboard/app/[locale]/dashboard/[guildId]/**/page.tsx)",
+      "Bash(do)",
+      "Bash(if ! grep -q \"useTranslations\" \"$file\")",
+      "Bash(then)",
+      "Bash(for page in WarsPage ClansPage LinksPage LogsPage LeaderboardsPage RolesPage RostersPage RemindersPage)",
+      "Bash(if grep -q \"\"\"$page\"\":\" messages/en.json)",
+      "Bash(else)"
     ],
     "deny": [],
     "ask": []

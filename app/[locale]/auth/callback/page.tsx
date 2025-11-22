@@ -1,37 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-// Import translations
-import enMessages from "@/messages/en.json";
-import frMessages from "@/messages/fr.json";
-
-const messages = {
-  en: enMessages,
-  fr: frMessages,
-} as const;
-
-type Locale = keyof typeof messages;
-
 export default function AuthCallbackPage() {
+  const t = useTranslations("AuthCallback");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = useParams();
+  const locale = params.locale as string;
   const [status, setStatus] = useState<"loading" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
-
-  // Get locale from sessionStorage (set during login)
-  const [locale, setLocale] = useState<Locale>("en");
-
-  useEffect(() => {
-    const storedLocale = sessionStorage.getItem('auth_locale') as Locale;
-    if (storedLocale && (storedLocale === 'en' || storedLocale === 'fr')) {
-      setLocale(storedLocale);
-    }
-  }, []);
-
-  const t = messages[locale].AuthCallback;
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -64,9 +45,6 @@ export default function AuthCallbackPage() {
           throw new Error("Code verifier not found. Please try logging in again.");
         }
 
-        // Retrieve the stored locale from sessionStorage (or default to 'en')
-        const storedLocale = sessionStorage.getItem('auth_locale') || 'en';
-
         // Get device ID (or generate one)
         let deviceId = localStorage.getItem('device_id');
         if (!deviceId) {
@@ -90,7 +68,7 @@ export default function AuthCallbackPage() {
         const requestBody = {
           code,
           code_verifier: codeVerifier,
-          redirect_uri: window.location.origin + '/auth/callback',
+          redirect_uri: window.location.origin + `/${locale}/auth/callback`,
           device_id: deviceId,
           device_name: 'Dashboard',
         };
@@ -147,10 +125,9 @@ export default function AuthCallbackPage() {
 
         // Clean up
         sessionStorage.removeItem('discord_code_verifier');
-        sessionStorage.removeItem('auth_locale');
 
-        // Redirect to servers page with the correct locale
-        router.push(`/${storedLocale}/servers`);
+        // Redirect to servers page
+        router.push(`/${locale}/servers`);
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : "Failed to authenticate with Discord");
@@ -159,16 +136,16 @@ export default function AuthCallbackPage() {
     };
 
     authenticateWithDiscord();
-  }, [searchParams, router]);
+  }, [searchParams, router, locale]);
 
   if (status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
         <Card className="w-full max-w-md border-2 border-[#2A2A2A] bg-[#1F1F1F]/95">
           <CardHeader className="text-center">
-            <CardTitle className="text-white">{t.authenticating}</CardTitle>
+            <CardTitle className="text-white">{t("authenticating")}</CardTitle>
             <CardDescription className="text-gray-400">
-              {t.authenticatingDescription}
+              {t("authenticatingDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center py-8">
@@ -183,7 +160,7 @@ export default function AuthCallbackPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
       <Card className="w-full max-w-md border-2 border-[#DC2626] bg-[#1F1F1F]/95">
         <CardHeader className="text-center">
-          <CardTitle className="text-[#EF4444]">{t.authenticationFailed}</CardTitle>
+          <CardTitle className="text-[#EF4444]">{t("authenticationFailed")}</CardTitle>
           <CardDescription className="text-gray-400">{error}</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
@@ -191,7 +168,7 @@ export default function AuthCallbackPage() {
             onClick={() => router.push(`/${locale}/login`)}
             className="px-4 py-2 bg-[#DC2626] hover:bg-[#EF4444] text-white rounded-lg transition-colors"
           >
-            {t.tryAgain}
+            {t("tryAgain")}
           </button>
         </CardContent>
       </Card>

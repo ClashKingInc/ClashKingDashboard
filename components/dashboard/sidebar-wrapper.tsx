@@ -28,10 +28,16 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
         apiClient.setAccessToken(token);
 
         // Fetch guild info using the dedicated endpoint
+        console.log(`🔍 Fetching guild info for guildId: ${guildId}`);
         const response = await apiClient.servers.getGuild(guildId);
 
         if (response.error || !response.data) {
-          console.error("Failed to fetch guild info:", response.error);
+          console.error("Failed to fetch guild info:", {
+            guildId,
+            error: response.error,
+            status: response.status,
+            fullResponse: response
+          });
           setIsLoading(false);
           return;
         }

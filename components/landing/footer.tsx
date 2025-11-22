@@ -1,7 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export function Footer() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
+  const t = useTranslations("HomePage.footer");
+
   return (
     <footer className="bg-[#1F1F1F] border-t border-[#DC2626]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -16,32 +24,32 @@ export function Footer() {
               className="mb-4"
             />
             <p className="text-gray-400 text-sm">
-              The most powerful Clash of Clans bot for Discord communities.
+              {t("tagline")}
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h3 className="font-semibold text-white mb-4">Product</h3>
+            <h3 className="font-semibold text-white mb-4">{t("product.title")}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="#features" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Features
+                  {t("product.features")}
                 </Link>
               </li>
               <li>
                 <Link href="#pricing" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Premium
+                  {t("product.premium")}
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Dashboard
+                <Link href={`/${locale}/login`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                  {t("product.dashboard")}
                 </Link>
               </li>
               <li>
                 <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Invite Bot
+                  {t("product.inviteBot")}
                 </a>
               </li>
             </ul>
@@ -49,26 +57,26 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="font-semibold text-white mb-4">Resources</h3>
+            <h3 className="font-semibold text-white mb-4">{t("resources.title")}</h3>
             <ul className="space-y-2">
               <li>
                 <a href="https://docs.clashk.ing" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Documentation
+                  {t("resources.documentation")}
                 </a>
               </li>
               <li>
                 <a href="https://docs.clashk.ing/quick-start" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Quick Start Guide
+                  {t("resources.quickStart")}
                 </a>
               </li>
               <li>
                 <a href="https://discord.gg/clashking" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Support Server
+                  {t("resources.support")}
                 </a>
               </li>
               <li>
                 <a href="https://github.com/ClashKingInc" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  GitHub
+                  {t("resources.github")}
                 </a>
               </li>
             </ul>
@@ -76,26 +84,26 @@ export function Footer() {
 
           {/* Community */}
           <div>
-            <h3 className="font-semibold text-white mb-4">Community</h3>
+            <h3 className="font-semibold text-white mb-4">{t("community.title")}</h3>
             <ul className="space-y-2">
               <li>
                 <a href="https://discord.gg/clashking" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Discord Server
+                  {t("community.discord")}
                 </a>
               </li>
               <li>
                 <a href="https://twitter.com/clashking" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Twitter
+                  {t("community.twitter")}
                 </a>
               </li>
               <li>
                 <a href="https://github.com/ClashKingInc/ClashKingBot/issues" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Report a Bug
+                  {t("community.reportBug")}
                 </a>
               </li>
               <li>
                 <a href="https://github.com/ClashKingInc/ClashKingBot/issues" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  Request Feature
+                  {t("community.requestFeature")}
                 </a>
               </li>
             </ul>
@@ -106,14 +114,14 @@ export function Footer() {
         <div className="pt-8 border-t border-[#DC2626]/30">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} ClashKing. All rights reserved.
+              &copy; {new Date().getFullYear()} {t("legal.copyright")}
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
-                Privacy Policy
+                {t("legal.privacy")}
               </Link>
               <Link href="/terms" className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
-                Terms of Service
+                {t("legal.terms")}
               </Link>
             </div>
           </div>

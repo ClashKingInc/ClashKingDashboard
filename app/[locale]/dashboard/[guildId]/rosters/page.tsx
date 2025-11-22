@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -92,6 +93,8 @@ export default function RostersPage() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const guildId = params?.guildId as string;
+  const t = useTranslations("RostersPage");
+  const tCommon = useTranslations("Common");
 
   const [loading, setLoading] = useState(true);
   const [rosters, setRosters] = useState<Roster[]>([]);
@@ -154,7 +157,7 @@ export default function RostersPage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          router.push("/login");
+          router.push(`/${params.locale}/login`);
           return;
         }
 
@@ -172,7 +175,7 @@ export default function RostersPage() {
           if (rostersRes.status === 401) {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            router.push("/login");
+            router.push(`/${params.locale}/login`);
             return;
           }
           throw new Error("Failed to fetch rosters");
