@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
@@ -11,6 +12,8 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
   const t = useTranslations("Navigation");
 
   return (
@@ -48,7 +51,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <LanguageSwitcher />
             <Button
-              onClick={initiateDiscordLogin}
+              onClick={() => initiateDiscordLogin(locale)}
               className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]"
             >
               {t("loginWithDiscord")}
@@ -86,7 +89,7 @@ export function Navbar() {
                 <LanguageSwitcher />
               </div>
               <Button
-                onClick={initiateDiscordLogin}
+                onClick={() => initiateDiscordLogin(locale)}
                 variant="outline"
                 className="w-full"
               >

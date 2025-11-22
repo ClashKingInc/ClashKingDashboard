@@ -44,6 +44,10 @@
     "titleHighlight": "Clash of Clans Bot",
     "subtitle": "Automate your clan management, track player stats, manage wars, and keep your community engaged—all from Discord.",
     "cta": {
+      "heading": "Ready to Transform Your Clan?",
+      "description": "Join 12,500+ Discord servers already using ClashKing to elevate their Clash of Clans community. Setup takes just 2 minutes.",
+      "button": "Add ClashKing to Discord",
+      "trustBadge": "Free forever • No credit card required • 12,500+ servers",
       "addToDiscord": "Add to Discord",
       "openDashboard": "Open Dashboard"
     },
@@ -94,6 +98,35 @@
       "security": {
         "title": "Secure & Reliable",
         "description": "99.9% uptime, encrypted data, and regular backups. Your clan data is safe with us."
+      }
+    },
+    "footer": {
+      "tagline": "The most powerful Clash of Clans bot for Discord communities.",
+      "product": {
+        "title": "Product",
+        "features": "Features",
+        "premium": "Premium",
+        "dashboard": "Dashboard",
+        "inviteBot": "Invite Bot"
+      },
+      "resources": {
+        "title": "Resources",
+        "documentation": "Documentation",
+        "quickStart": "Quick Start Guide",
+        "support": "Support Server",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Community",
+        "discord": "Discord Server",
+        "twitter": "Twitter",
+        "reportBug": "Report a Bug",
+        "requestFeature": "Request Feature"
+      },
+      "legal": {
+        "copyright": "ClashKing. All rights reserved.",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
       }
     }
   },
@@ -215,7 +248,12 @@
       "banRemoved": "Ban removed successfully",
       "strikeAdded": "Strike added successfully",
       "strikeRemoved": "Strike removed successfully",
-      "error": "An error occurred"
+      "errorLoadingBans": "Failed to load banned players",
+      "errorLoadingStrikes": "Failed to load strikes",
+      "errorAddingBan": "Failed to add ban",
+      "errorAddingStrike": "Failed to add strike",
+      "errorRemovingBan": "Failed to remove ban",
+      "errorRemovingStrike": "Failed to remove strike"
     }
   },
   "RostersPage": {
@@ -370,7 +408,17 @@
     "clanTag": "Clan Tag",
     "clanName": "Clan Name",
     "members": "Members",
-    "level": "Level"
+    "level": "Level",
+    "toast": {
+      "clanAdded": "Clan added successfully",
+      "clanRemoved": "Clan removed successfully",
+      "settingsSaved": "Settings saved successfully",
+      "errorLoadingClans": "Failed to load clans. Please try again.",
+      "errorEmptyClanTag": "Please enter a clan tag",
+      "errorAddingClan": "Failed to add clan",
+      "errorRemovingClan": "Failed to delete clan",
+      "errorSavingSettings": "Failed to save settings"
+    }
   },
   "RolesPage": {
     "title": "Role Automation",
@@ -419,7 +467,57 @@
   },
   "GeneralPage": {
     "title": "General Settings",
-    "description": "Configure your server settings",
+    "description": "Configure server-wide bot behavior and appearance",
+    "loading": "Loading settings...",
+    "reset": "Reset",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "settingsSaved": "Settings saved successfully!",
+    "infoBanner": {
+      "title": "Looking for more settings?",
+      "description": "Role management settings are in **Roles** page. Clan-specific settings (ban/strike logs, war channels) are in **Clans** page."
+    },
+    "nickname": {
+      "title": "Nickname Management",
+      "description": "Control how nicknames are formatted",
+      "automaticChanges": "Automatic Changes",
+      "automaticChangesDesc": "Allow bot to update member nicknames",
+      "familyFormat": "Family Members Format",
+      "availablePlaceholders": "Available Placeholders",
+      "preview": "Preview:",
+      "nonFamilyFormat": "Non-Family Members Format",
+      "placeholders": {
+        "discordName": "Discord username",
+        "discordDisplayName": "Server nickname",
+        "playerName": "CoC player name",
+        "playerTag": "Player tag",
+        "playerTownhall": "TH level",
+        "playerTownhallSmall": "TH superscript",
+        "playerWarstars": "War stars",
+        "playerRole": "Clan role",
+        "playerClan": "Clan name",
+        "playerLeague": "League",
+        "playerClanAbbr": "Clan abbr"
+      }
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize bot embed messages",
+      "embedColor": "Embed Color",
+      "embedColorDesc": "Color of the side bar on all bot embed messages in Discord",
+      "embedColorDefault": "Default: **#D90709** (ClashKing Red)",
+      "embedPreview": "Embed Preview",
+      "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages"
+    },
+    "security": {
+      "title": "Security & Permissions",
+      "description": "Control access and verification",
+      "requireApiToken": "Require Player API Token",
+      "requireApiTokenDesc": "Players must verify account ownership with Clash of Clans API token when linking (recommended)",
+      "fullWhitelistRole": "Full Whitelist Role",
+      "fullWhitelistRoleDesc": "Discord role with full access to all bot commands (bypasses all permission checks)",
+      "noRole": "No Role"
+    },
     "prefix": "Command Prefix",
     "language": "Language",
     "timezone": "Timezone",
@@ -435,5 +533,156 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "AuthCallback": {
+    "authenticating": "Authenticating...",
+    "authenticatingDescription": "Please wait while we log you in with Discord",
+    "authenticationFailed": "Authentication Failed",
+    "tryAgain": "Try Again"
+  },
+  "LoginPage": {
+    "backToHome": "Back to Home",
+    "redirecting": "Redirecting to Discord...",
+    "redirectingDescription": "You will be redirected to Discord to complete the login process"
+  },
+  "ServersPage": {
+    "title": "Select a Server",
+    "description": "Choose a server to configure ClashKing bot settings",
+    "backToHome": "Back to Home",
+    "backToLogin": "Back to Login",
+    "error": "Error",
+    "configure": "Configure",
+    "invite": "Invite",
+    "members": "members",
+    "server": "Server",
+    "roles": {
+      "owner": "Owner",
+      "administrator": "Administrator",
+      "manager": "Manager"
+    },
+    "noServers": {
+      "title": "No Servers Found",
+      "description": "You don't have admin permissions in any Discord servers."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Automatically post and refresh clan, family, and legend boards",
+    "createAutoboard": "Create AutoBoard",
+    "editAutoboard": "Edit AutoBoard",
+    "createDialogTitle": "Create AutoBoard",
+    "createDialogDesc": "Set up automatic posting or refreshing for a board",
+    "editDialogTitle": "Edit AutoBoard",
+    "editDialogDesc": "Modify the configuration of this autoboard",
+    "automationType": "Automation Type",
+    "autoPost": "Auto Post",
+    "autoPostDesc": "Auto Post - Scheduled daily posts",
+    "autoRefresh": "Auto Refresh",
+    "autoRefreshDesc": "Auto Refresh - Continuous updates (30-60 min)",
+    "channel": "Channel",
+    "selectChannel": "Select a channel",
+    "channelDesc": "The channel where the autoboard will be posted",
+    "boardType": "Board Type",
+    "selectBoardType": "Select a board type",
+    "postDays": "Post Days (select at least one)",
+    "postDaysDesc": "Posts occur at 5:00 AM UTC daily reset time",
+    "autoRefreshInfo": "Auto Refresh Info",
+    "autoRefreshInfoDesc": "The board will automatically refresh every 30-60 minutes with the latest data. Perfect for keeping stats current without manual updates.",
+    "cancel": "Cancel",
+    "creating": "Creating...",
+    "create": "Create",
+    "updating": "Updating...",
+    "update": "Update",
+    "howItWorks": "How AutoBoards Work",
+    "howItWorksDesc": "AutoBoards can automatically post new boards on a schedule or continuously refresh existing boards with up-to-date data. Choose **Auto Post** to create new boards daily at specific days, or **Auto Refresh** to keep a board updated every 30-60 minutes.",
+    "totalAutoboards": "Total AutoBoards",
+    "used": "used",
+    "scheduledBoards": "Scheduled boards",
+    "continuousUpdates": "Continuous updates",
+    "availableSlots": "Available Slots",
+    "remainingCapacity": "Remaining capacity",
+    "activeAutoboards": "Active AutoBoards",
+    "noAutoboards": "No AutoBoards configured",
+    "noAutoboardsDesc": "Create your first AutoBoard to automate board updates",
+    "postsOn": "Posts on:",
+    "updatesEvery": "Updates every 30-60 minutes",
+    "created": "Created:",
+    "edit": "Edit",
+    "remove": "Remove",
+    "tips": "💡 AutoBoard Tips",
+    "boardTypes": {
+      "clanBoards": "Clan Boards",
+      "familyBoards": "Family Boards",
+      "legendBoards": "Legend Boards",
+      "other": "Other",
+      "clandetailed": "Clan Detailed",
+      "clanbasic": "Clan Basic",
+      "clanmini": "Clan Minimalistic",
+      "clancompo": "Clan Composition",
+      "clandonos": "Clan Donations",
+      "clanactivity": "Clan Activity",
+      "clancapoverview": "Clan Capital Overview",
+      "clancapdonos": "Clan Capital Donations",
+      "clancapraids": "Clan Capital Raids",
+      "clanwarlog": "Clan War Log",
+      "clancwlperf": "Clan CWL Performance",
+      "clangames": "Clan Games",
+      "familyoverview": "Family Overview",
+      "familycompo": "Family Composition",
+      "familydonos": "Family Donations",
+      "familygames": "Family Games",
+      "familyactivity": "Family Activity",
+      "legendclan": "Legend Clan",
+      "legendday": "Legend Day",
+      "legendseason": "Legend Season",
+      "discordlinks": "Discord Links"
+    },
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "endofseason": "End of Season"
+    },
+    "alerts": {
+      "selectBoardType": "Please select a board type",
+      "selectChannel": "Please select a channel",
+      "selectDays": "Please select at least one day for auto-post",
+      "createFailed": "Failed to create autoboard. Please try again.",
+      "updateFailed": "Failed to update autoboard. Please try again.",
+      "deleteFailed": "Failed to delete autoboard. Please try again."
+    }
+  },
+  "OverviewPage": {
+    "title": "Dashboard Overview",
+    "description": "Monitor your ClashKing bot status and quick stats",
+    "stats": {
+      "linkedPlayers": "Linked Players",
+      "linkedPlayersChange": "+12 from last month",
+      "activeClans": "Active Clans",
+      "allClansConfigured": "All clans configured",
+      "botStatus": "Bot Status",
+      "online": "Online",
+      "lastRestart": "Last restart: 2h ago"
+    },
+    "quickStart": {
+      "title": "Quick Start",
+      "description": "Get started with configuring your ClashKing bot",
+      "step1": {
+        "title": "Configure General Settings",
+        "description": "Set up nickname conventions, embed colors, and logging channels"
+      },
+      "step2": {
+        "title": "Add Your Clans",
+        "description": "Connect your Clash of Clans clans and configure roles"
+      },
+      "step3": {
+        "title": "Set Up Auto Roles",
+        "description": "Configure automatic role assignment based on Town Hall, trophies, etc."
+      }
+    }
   }
 }

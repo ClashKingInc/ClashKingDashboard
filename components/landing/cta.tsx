@@ -1,10 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 export function CTA() {
+  const t = useTranslations("HomePage.cta");
+
   return (
     <section className="py-24 px-4 relative overflow-hidden">
       {/* Background - ClashKing colors */}
@@ -25,25 +28,25 @@ export function CTA() {
 
           {/* Heading */}
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-            Ready to Transform Your Clan?
+            {t("heading")}
           </h2>
 
           {/* Description */}
           <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            Join 12,500+ Discord servers using ClashKing. Setup takes less than 2 minutes.
+            {t("description")}
           </p>
 
           {/* CTA Button */}
           <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer">
             <Button size="lg" className="bg-white text-[#DC2626] hover:bg-gray-100 text-lg px-10 py-7 rounded-xl shadow-2xl hover:shadow-3xl transition-all group text-base font-semibold border-4 border-white/30">
-              Add ClashKing to Discord
+              {t("button")}
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </a>
 
           {/* Trust badge */}
           <p className="mt-8 text-sm text-white/80">
-            Free forever • No credit card required • Setup in 2 minutes
+            {t("trustBadge")}
           </p>
         </motion.div>
       </div>

@@ -64,54 +64,56 @@ interface ServerAutoBoardsResponse {
   limit: number;
 }
 
-// Board type definitions
-const BOARD_TYPES = {
+// Board type keys - labels will come from translations
+const BOARD_TYPE_KEYS = {
   // Clan Boards
-  clandetailed: "Clan Detailed",
-  clanbasic: "Clan Basic",
-  clanmini: "Clan Minimalistic",
-  clancompo: "Clan Composition",
-  clandonos: "Clan Donations",
-  clanactivity: "Clan Activity",
-  clancapoverview: "Clan Capital Overview",
-  clancapdonos: "Clan Capital Donations",
-  clancapraids: "Clan Capital Raids",
-  clanwarlog: "Clan War Log",
-  clancwlperf: "Clan CWL Performance",
-  clangames: "Clan Games",
+  clandetailed: "clandetailed",
+  clanbasic: "clanbasic",
+  clanmini: "clanmini",
+  clancompo: "clancompo",
+  clandonos: "clandonos",
+  clanactivity: "clanactivity",
+  clancapoverview: "clancapoverview",
+  clancapdonos: "clancapdonos",
+  clancapraids: "clancapraids",
+  clanwarlog: "clanwarlog",
+  clancwlperf: "clancwlperf",
+  clangames: "clangames",
 
   // Family Boards
-  familyoverview: "Family Overview",
-  familycompo: "Family Composition",
-  familydonos: "Family Donations",
-  familygames: "Family Games",
-  familyactivity: "Family Activity",
+  familyoverview: "familyoverview",
+  familycompo: "familycompo",
+  familydonos: "familydonos",
+  familygames: "familygames",
+  familyactivity: "familyactivity",
 
   // Legend Boards
-  legendclan: "Legend Clan",
-  legendday: "Legend Day",
-  legendseason: "Legend Season",
+  legendclan: "legendclan",
+  legendday: "legendday",
+  legendseason: "legendseason",
 
   // Other
-  discordlinks: "Discord Links",
+  discordlinks: "discordlinks",
 };
 
-const DAYS = [
-  { value: "monday", label: "Monday" },
-  { value: "tuesday", label: "Tuesday" },
-  { value: "wednesday", label: "Wednesday" },
-  { value: "thursday", label: "Thursday" },
-  { value: "friday", label: "Friday" },
-  { value: "saturday", label: "Saturday" },
-  { value: "sunday", label: "Sunday" },
-  { value: "endofseason", label: "End of Season" },
-];
+const DAY_KEYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "endofseason"];
 
 export default function AutoBoardsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("AutoboardsPage");
   const tCommon = useTranslations("Common");
+
+  // Helper functions for translations
+  const getBoardTypeLabel = (key: string) => t(`boardTypes.${key}` as any);
+  const getDayLabel = (key: string) => t(`days.${key}` as any);
+
+  const BOARD_TYPES: Record<string, string> = Object.keys(BOARD_TYPE_KEYS).reduce((acc, key) => {
+    acc[key] = getBoardTypeLabel(key);
+    return acc;
+  }, {} as Record<string, string>);
+
+  const DAYS = DAY_KEYS.map(key => ({ value: key, label: getDayLabel(key) }));
 
   const [loading, setLoading] = useState(true);
   const [autoboardsData, setAutoboardsData] = useState<ServerAutoBoardsResponse | null>(null);
@@ -204,17 +206,17 @@ export default function AutoBoardsPage() {
 
   const handleCreateAutoBoard = async () => {
     if (!newBoardType) {
-      alert('Please select a board type');
+      alert(t('alerts.selectBoardType'));
       return;
     }
 
     if (!selectedChannel) {
-      alert('Please select a channel');
+      alert(t('alerts.selectChannel'));
       return;
     }
 
     if (newType === 'post' && selectedDays.length === 0) {
-      alert('Please select at least one day for auto-post');
+      alert(t('alerts.selectDays'));
       return;
     }
 
@@ -263,7 +265,7 @@ export default function AutoBoardsPage() {
       setNewType("post");
     } catch (error) {
       console.error('Error creating autoboard:', error);
-      alert(error instanceof Error ? error.message : 'Failed to create autoboard. Please try again.');
+      alert(error instanceof Error ? error.message : t('alerts.createFailed'));
     } finally {
       setCreating(false);
     }
@@ -273,17 +275,17 @@ export default function AutoBoardsPage() {
     if (!editingAutoboard) return;
 
     if (!editBoardType) {
-      alert('Please select a board type');
+      alert(t('alerts.selectBoardType'));
       return;
     }
 
     if (!editChannel) {
-      alert('Please select a channel');
+      alert(t('alerts.selectChannel'));
       return;
     }
 
     if (editType === 'post' && editDays.length === 0) {
-      alert('Please select at least one day for auto-post');
+      alert(t('alerts.selectDays'));
       return;
     }
 
@@ -330,7 +332,7 @@ export default function AutoBoardsPage() {
       setEditType("post");
     } catch (error) {
       console.error('Error updating autoboard:', error);
-      alert(error instanceof Error ? error.message : 'Failed to update autoboard. Please try again.');
+      alert(error instanceof Error ? error.message : t('alerts.updateFailed'));
     } finally {
       setUpdating(false);
     }
@@ -363,7 +365,7 @@ export default function AutoBoardsPage() {
       }
     } catch (error) {
       console.error('Error deleting autoboard:', error);
-      alert('Failed to delete autoboard. Please try again.');
+      alert(t('alerts.deleteFailed'));
     } finally {
       setDeleting(null);
     }
@@ -384,9 +386,9 @@ export default function AutoBoardsPage() {
                 <LayoutDashboard className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">AutoBoards</h1>
+                <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
                 <p className="text-muted-foreground mt-1">
-                  Automatically post and refresh clan, family, and legend boards
+                  {t('description')}
                 </p>
               </div>
             </div>
@@ -398,19 +400,19 @@ export default function AutoBoardsPage() {
               disabled={autoboardsData ? autoboardsData.total >= autoboardsData.limit : false}
             >
               <Plus className="w-4 h-4 mr-2" />
-              Create AutoBoard
+              {t('createAutoboard')}
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-card border-border max-w-2xl">
             <DialogHeader>
-              <DialogTitle className="text-foreground">Create AutoBoard</DialogTitle>
+              <DialogTitle className="text-foreground">{t('createDialogTitle')}</DialogTitle>
               <DialogDescription className="text-muted-foreground">
-                Set up automatic posting or refreshing for a board
+                {t('createDialogDesc')}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="autoboard-type" className="text-foreground">Automation Type</Label>
+                <Label htmlFor="autoboard-type" className="text-foreground">{t('automationType')}</Label>
                 <Select value={newType} onValueChange={(val) => setNewType(val as "post" | "refresh")}>
                   <SelectTrigger className="bg-background border-border text-foreground">
                     <SelectValue />
@@ -419,13 +421,13 @@ export default function AutoBoardsPage() {
                     <SelectItem value="post">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        Auto Post - Scheduled daily posts
+                        {t('autoPostDesc')}
                       </div>
                     </SelectItem>
                     <SelectItem value="refresh">
                       <div className="flex items-center gap-2">
                         <RefreshCw className="w-4 h-4" />
-                        Auto Refresh - Continuous updates (30-60 min)
+                        {t('autoRefreshDesc')}
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -433,10 +435,10 @@ export default function AutoBoardsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="channel" className="text-foreground">Channel</Label>
+                <Label htmlFor="channel" className="text-foreground">{t('channel')}</Label>
                 <Select value={selectedChannel} onValueChange={setSelectedChannel}>
                   <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder="Select a channel" />
+                    <SelectValue placeholder={t('selectChannel')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
                     {channels.length === 0 ? (
@@ -466,10 +468,10 @@ export default function AutoBoardsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="board-type" className="text-foreground">Board Type</Label>
+                <Label htmlFor="board-type" className="text-foreground">{t('boardType')}</Label>
                 <Select value={newBoardType} onValueChange={setNewBoardType}>
                   <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder="Select a board type" />
+                    <SelectValue placeholder={t('selectBoardType')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
                     <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Clan Boards</div>
@@ -502,7 +504,7 @@ export default function AutoBoardsPage() {
 
               {newType === 'post' && (
                 <div className="space-y-2">
-                  <Label className="text-foreground">Post Days (select at least one)</Label>
+                  <Label className="text-foreground">{t('postDays')}</Label>
                   <div className="grid grid-cols-2 gap-3 p-4 border border-border rounded-lg bg-background">
                     {DAYS.map((day) => (
                       <div key={day.value} className="flex items-center space-x-2">
@@ -572,9 +574,9 @@ export default function AutoBoardsPage() {
         <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
           <DialogContent className="bg-card border-border max-w-2xl">
             <DialogHeader>
-              <DialogTitle className="text-foreground">Edit AutoBoard</DialogTitle>
+              <DialogTitle className="text-foreground">{t('editDialogTitle')}</DialogTitle>
               <DialogDescription className="text-muted-foreground">
-                Modify the configuration of this autoboard
+                {t('editDialogDesc')}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -588,13 +590,13 @@ export default function AutoBoardsPage() {
                     <SelectItem value="post">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        Auto Post - Scheduled daily posts
+                        {t('autoPostDesc')}
                       </div>
                     </SelectItem>
                     <SelectItem value="refresh">
                       <div className="flex items-center gap-2">
                         <RefreshCw className="w-4 h-4" />
-                        Auto Refresh - Continuous updates (30-60 min)
+                        {t('autoRefreshDesc')}
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -605,7 +607,7 @@ export default function AutoBoardsPage() {
                 <Label htmlFor="edit-channel" className="text-foreground">Channel</Label>
                 <Select value={editChannel} onValueChange={setEditChannel}>
                   <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder="Select a channel" />
+                    <SelectValue placeholder={t('selectChannel')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
                     {channels.length === 0 ? (
@@ -638,7 +640,7 @@ export default function AutoBoardsPage() {
                 <Label htmlFor="edit-board-type" className="text-foreground">Board Type</Label>
                 <Select value={editBoardType} onValueChange={setEditBoardType}>
                   <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder="Select a board type" />
+                    <SelectValue placeholder={t('selectBoardType')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
                     <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Clan Boards</div>
@@ -671,7 +673,7 @@ export default function AutoBoardsPage() {
 
               {editType === 'post' && (
                 <div className="space-y-2">
-                  <Label className="text-foreground">Post Days (select at least one)</Label>
+                  <Label className="text-foreground">{t('postDays')}</Label>
                   <div className="grid grid-cols-2 gap-3 p-4 border border-border rounded-lg bg-background">
                     {DAYS.map((day) => (
                       <div key={day.value} className="flex items-center space-x-2">
@@ -769,7 +771,7 @@ export default function AutoBoardsPage() {
                   <LayoutDashboard className="h-8 w-8 text-primary/50" />
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} used` : 'Loading...'}
+                  {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} used` : tCommon("loading")}
                 </p>
               </>
             )}

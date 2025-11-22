@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,7 +12,10 @@ import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
 
 export default function ServersPage() {
+  const t = useTranslations("ServersPage");
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const [guilds, setGuilds] = useState<GuildInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +25,7 @@ export default function ServersPage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          router.push("/login");
+          router.push(`/${locale}/login`);
           return;
         }
 
@@ -37,7 +41,7 @@ export default function ServersPage() {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
             localStorage.removeItem("user");
-            router.push("/login");
+            router.push(`/${locale}/login`);
             return;
           }
           throw new Error(response.error || "Failed to fetch guilds");
@@ -63,7 +67,7 @@ export default function ServersPage() {
     };
 
     fetchGuilds();
-  }, [router]);
+  }, [router, locale]);
 
   const getGuildIconUrl = (guild: GuildInfo) => {
     console.log(guild);
@@ -78,7 +82,7 @@ export default function ServersPage() {
 
   const handleGuildClick = (guild: GuildInfo) => {
     if (guild.has_bot) {
-      router.push(`/en/dashboard/${guild.id}`);
+      router.push(`/${locale}/dashboard/${guild.id}`);
     }
   };
 
@@ -95,15 +99,15 @@ export default function ServersPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center">
         <Card className="max-w-md border-2 border-[#DC2626] bg-[#1F1F1F]/95">
           <CardHeader>
-            <CardTitle className="text-[#EF4444]">Error</CardTitle>
+            <CardTitle className="text-[#EF4444]">{t("error")}</CardTitle>
             <CardDescription className="text-gray-400">{error}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button
-              onClick={() => router.push("/login")}
+              onClick={() => router.push(`/${locale}/login`)}
               className="w-full bg-[#DC2626] hover:bg-[#EF4444]"
             >
-              Back to Login
+              {t("backToLogin")}
             </Button>
           </CardContent>
         </Card>
@@ -124,17 +128,17 @@ export default function ServersPage() {
           {/* Header */}
           <div className="mb-8">
             <Link
-              href="/en"
+              href={`/${locale}`}
               className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Home</span>
+              <span>{t("backToHome")}</span>
             </Link>
             <h1 className="text-4xl font-bold text-white mb-2">
-              Select a Server
+              {t("title")}
             </h1>
             <p className="text-gray-400">
-              Choose a server to configure ClashKing bot settings
+              {t("description")}
             </p>
           </div>
 
@@ -172,8 +176,8 @@ export default function ServersPage() {
                       <CardDescription className="text-gray-400 flex items-center gap-1">
                         <Users className="w-3 h-3" />
                         {guild.member_count
-                          ? `${guild.member_count.toLocaleString()} members`
-                          : "Server"}
+                          ? `${guild.member_count.toLocaleString()} ${t("members")}`
+                          : t("server")}
                       </CardDescription>
 
                       {/* Role badge */}
@@ -188,7 +192,10 @@ export default function ServersPage() {
                                 : "bg-gray-500/20 text-gray-300"
                             }`}
                         >
-                          {guild.role}
+                          {guild.role === "Owner" ? t("roles.owner")
+                            : guild.role === "Administrator" ? t("roles.administrator")
+                            : guild.role === "Manager" ? t("roles.manager")
+                            : guild.role}
                         </span>
                       </div>
                     </div>
@@ -199,7 +206,7 @@ export default function ServersPage() {
                     <Button
                       className="w-28 bg-gray-700 text-white hover:bg-gray-600 cursor-pointer"
                     >
-                      Configure
+                      {t("configure")}
                     </Button>
                   ) : (
                     <a
@@ -209,7 +216,7 @@ export default function ServersPage() {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Button className="w-28 bg-[#DC2626] hover:bg-[#EF4444] text-white cursor-pointer">
-                        Invite
+                        {t("invite")}
                       </Button>
                     </a>
                   )}
@@ -221,9 +228,9 @@ export default function ServersPage() {
           {guilds.length === 0 && (
             <Card className="border-2 border-[#2A2A2A] bg-[#1F1F1F]/95 backdrop-blur">
               <CardHeader className="text-center py-12">
-                <CardTitle className="text-white mb-2">No Servers Found</CardTitle>
+                <CardTitle className="text-white mb-2">{t("noServers.title")}</CardTitle>
                 <CardDescription className="text-gray-400">
-                  You don't have admin permissions in any Discord servers.
+                  {t("noServers.description")}
                 </CardDescription>
               </CardHeader>
             </Card>

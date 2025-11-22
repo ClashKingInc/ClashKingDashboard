@@ -107,8 +107,8 @@ export default function BansPage() {
     } catch (error) {
       console.error("Error fetching bans:", error);
       toast({
-        title: "Error",
-        description: "Failed to load banned players",
+        title: tCommon("error"),
+        description: t("toast.errorLoadingBans"),
         variant: "destructive",
       });
     } finally {
@@ -133,8 +133,8 @@ export default function BansPage() {
     } catch (error) {
       console.error("Error fetching strikes:", error);
       toast({
-        title: "Error",
-        description: "Failed to load strikes",
+        title: tCommon("error"),
+        description: t("toast.errorLoadingStrikes"),
         variant: "destructive",
       });
     } finally {
@@ -168,7 +168,7 @@ export default function BansPage() {
       }
 
       toast({
-        title: "Success",
+        title: tCommon("success"),
         description: `Player ${newBan.player_tag} has been banned`,
       });
 
@@ -180,8 +180,8 @@ export default function BansPage() {
     } catch (error) {
       console.error("Error adding ban:", error);
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to add ban",
+        title: tCommon("error"),
+        description: error instanceof Error ? error.message : t("toast.errorAddingBan"),
         variant: "destructive",
       });
     } finally {
@@ -217,7 +217,7 @@ export default function BansPage() {
       }
 
       toast({
-        title: "Success",
+        title: tCommon("success"),
         description: `Strike added to player ${newStrike.player_tag}`,
       });
 
@@ -229,8 +229,8 @@ export default function BansPage() {
     } catch (error) {
       console.error("Error adding strike:", error);
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to add strike",
+        title: tCommon("error"),
+        description: error instanceof Error ? error.message : t("toast.errorAddingStrike"),
         variant: "destructive",
       });
     } finally {
@@ -255,7 +255,7 @@ export default function BansPage() {
       }
 
       toast({
-        title: "Success",
+        title: tCommon("success"),
         description: `Ban removed for player ${playerTag}`,
       });
 
@@ -264,8 +264,8 @@ export default function BansPage() {
     } catch (error) {
       console.error("Error removing ban:", error);
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to remove ban",
+        title: tCommon("error"),
+        description: error instanceof Error ? error.message : t("toast.errorRemovingBan"),
         variant: "destructive",
       });
     }
@@ -285,7 +285,7 @@ export default function BansPage() {
       }
 
       toast({
-        title: "Success",
+        title: tCommon("success"),
         description: "Strike removed successfully",
       });
 
@@ -294,8 +294,8 @@ export default function BansPage() {
     } catch (error) {
       console.error("Error removing strike:", error);
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to remove strike",
+        title: tCommon("error"),
+        description: error instanceof Error ? error.message : t("toast.errorRemovingStrike"),
         variant: "destructive",
       });
     }

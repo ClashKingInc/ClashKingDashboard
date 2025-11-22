@@ -35,15 +35,19 @@
     "documentation": "Documentation",
     "loginWithDiscord": "Connexion avec Discord",
     "addToDiscord": "Ajouter à Discord",
-    "openDashboard": "Ouvrir le Tableau de Bord",
+    "openDashboard": "Ouvrir le Tableau de Bord", 
     "dashboardSettings": "Paramètres du Tableau de Bord"
   },
   "HomePage": {
     "badge": "Plus de 12 500 serveurs utilisent déjà ClashKing",
-    "title": "Le Bot le Plus Puissant",
+    "title": "Le Bot le Plus Puissant pour",
     "titleHighlight": "Clash of Clans",
-    "subtitle": "Automatisez la gestion de votre clan, suivez les statistiques des joueurs, gérez les guerres et gardez votre communauté engagée—le tout depuis Discord.",
+    "subtitle": "Automatisez la gestion de votre clan, suivez les statistiques des joueurs, gérez les guerres et gardez votre communauté engagée, le tout depuis Discord.",
     "cta": {
+      "heading": "Prêt à Transformer Votre Clan ?",
+      "description": "Rejoignez plus de 12 500 serveurs Discord qui utilisent déjà ClashKing pour élever leur communauté Clash of Clans. Configuration en seulement 2 minutes.",
+      "button": "Ajouter ClashKing à Discord",
+      "trustBadge": "Gratuit pour toujours • Aucune carte de crédit requise • Plus de 12 500 serveurs",
       "addToDiscord": "Ajouter à Discord",
       "openDashboard": "Ouvrir le Tableau de Bord"
     },
@@ -94,6 +98,35 @@
       "security": {
         "title": "Sécurisé et Fiable",
         "description": "99,9% de disponibilité, données cryptées et sauvegardes régulières. Les données de votre clan sont en sécurité avec nous."
+      }
+    },
+    "footer": {
+      "tagline": "Le bot Clash of Clans le plus puissant pour les communautés Discord.",
+      "product": {
+        "title": "Produit",
+        "features": "Fonctionnalités",
+        "premium": "Premium",
+        "dashboard": "Tableau de Bord",
+        "inviteBot": "Inviter le Bot"
+      },
+      "resources": {
+        "title": "Ressources",
+        "documentation": "Documentation",
+        "quickStart": "Guide de Démarrage Rapide",
+        "support": "Serveur de Support",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Communauté",
+        "discord": "Serveur Discord",
+        "twitter": "Twitter",
+        "reportBug": "Signaler un Bug",
+        "requestFeature": "Demander une Fonctionnalité"
+      },
+      "legal": {
+        "copyright": "ClashKing. Tous droits réservés.",
+        "privacy": "Politique de Confidentialité",
+        "terms": "Conditions d'Utilisation"
       }
     }
   },
@@ -215,7 +248,12 @@
       "banRemoved": "Bannissement retiré avec succès",
       "strikeAdded": "Avertissement ajouté avec succès",
       "strikeRemoved": "Avertissement retiré avec succès",
-      "error": "Une erreur s'est produite"
+      "errorLoadingBans": "Échec du chargement des joueurs bannis",
+      "errorLoadingStrikes": "Échec du chargement des avertissements",
+      "errorAddingBan": "Échec de l'ajout du bannissement",
+      "errorAddingStrike": "Échec de l'ajout de l'avertissement",
+      "errorRemovingBan": "Échec de la suppression du bannissement",
+      "errorRemovingStrike": "Échec de la suppression de l'avertissement"
     }
   },
   "RostersPage": {
@@ -370,7 +408,17 @@
     "clanTag": "Tag du Clan",
     "clanName": "Nom du Clan",
     "members": "Membres",
-    "level": "Niveau"
+    "level": "Niveau",
+    "toast": {
+      "clanAdded": "Clan ajouté avec succès",
+      "clanRemoved": "Clan retiré avec succès",
+      "settingsSaved": "Paramètres enregistrés avec succès",
+      "errorLoadingClans": "Échec du chargement des clans. Veuillez réessayer.",
+      "errorEmptyClanTag": "Veuillez entrer un tag de clan",
+      "errorAddingClan": "Échec de l'ajout du clan",
+      "errorRemovingClan": "Échec de la suppression du clan",
+      "errorSavingSettings": "Échec de l'enregistrement des paramètres"
+    }
   },
   "RolesPage": {
     "title": "Automatisation des Rôles",
@@ -419,7 +467,57 @@
   },
   "GeneralPage": {
     "title": "Paramètres Généraux",
-    "description": "Configurer les paramètres de votre serveur",
+    "description": "Configurer le comportement et l'apparence du bot pour le serveur",
+    "loading": "Chargement des paramètres...",
+    "reset": "Réinitialiser",
+    "saving": "Enregistrement...",
+    "saveChanges": "Enregistrer les Modifications",
+    "settingsSaved": "Paramètres enregistrés avec succès !",
+    "infoBanner": {
+      "title": "Vous cherchez plus de paramètres ?",
+      "description": "Les paramètres de gestion des rôles se trouvent dans la page **Rôles**. Les paramètres spécifiques aux clans (logs de ban/avertissement, canaux de guerre) se trouvent dans la page **Clans**."
+    },
+    "nickname": {
+      "title": "Gestion des Pseudos",
+      "description": "Contrôler le formatage des pseudonymes",
+      "automaticChanges": "Modifications Automatiques",
+      "automaticChangesDesc": "Autoriser le bot à mettre à jour les pseudos des membres",
+      "familyFormat": "Format des Membres de la Famille",
+      "availablePlaceholders": "Paramètres disponibles",
+      "preview": "Aperçu :",
+      "nonFamilyFormat": "Format des Non-Membres de la Famille",
+      "placeholders": {
+        "discordName": "Nom d'utilisateur Discord",
+        "discordDisplayName": "Pseudo du serveur",
+        "playerName": "Nom du joueur CoC",
+        "playerTag": "Tag du joueur",
+        "playerTownhall": "Niveau d'HDV",
+        "playerTownhallSmall": "HDV en exposant",
+        "playerWarstars": "Étoiles de guerre",
+        "playerRole": "Rôle dans le clan",
+        "playerClan": "Nom du clan",
+        "playerLeague": "Ligue",
+        "playerClanAbbr": "Abrév. du clan"
+      }
+    },
+    "appearance": {
+      "title": "Apparence",
+      "description": "Personnaliser les messages embed du bot",
+      "embedColor": "Couleur d'Embed",
+      "embedColorDesc": "Couleur de la barre latérale sur tous les messages embed du bot dans Discord",
+      "embedColorDefault": "Par défaut : **#D90709** (Rouge ClashKing)",
+      "embedPreview": "Aperçu d'Embed",
+      "embedPreviewDesc": "Cette barre colorée apparaîtra sur le côté gauche de tous les messages du bot"
+    },
+    "security": {
+      "title": "Sécurité et Permissions",
+      "description": "Contrôler l'accès et la vérification",
+      "requireApiToken": "Exiger un Token API du Joueur",
+      "requireApiTokenDesc": "Les joueurs doivent vérifier la propriété du compte avec le token API de Clash of Clans lors de la liaison (recommandé)",
+      "fullWhitelistRole": "Rôle de Liste Blanche Complet",
+      "fullWhitelistRoleDesc": "Rôle Discord avec un accès complet à toutes les commandes du bot (contourne toutes les vérifications de permissions)",
+      "noRole": "Aucun Rôle"
+    },
     "prefix": "Préfixe de Commande",
     "language": "Langue",
     "timezone": "Fuseau Horaire",
@@ -435,5 +533,156 @@
     "light": "Clair",
     "dark": "Sombre",
     "system": "Système"
+  },
+  "AuthCallback": {
+    "authenticating": "Authentification...",
+    "authenticatingDescription": "Veuillez patienter pendant que nous vous connectons avec Discord",
+    "authenticationFailed": "Échec de l'Authentification",
+    "tryAgain": "Réessayer"
+  },
+  "LoginPage": {
+    "backToHome": "Retour à l'Accueil",
+    "redirecting": "Redirection vers Discord...",
+    "redirectingDescription": "Vous allez être redirigé vers Discord pour compléter le processus de connexion"
+  },
+  "ServersPage": {
+    "title": "Sélectionner un Serveur",
+    "description": "Choisissez un serveur pour configurer les paramètres du bot ClashKing",
+    "backToHome": "Retour à l'Accueil",
+    "backToLogin": "Retour à la Connexion",
+    "error": "Erreur",
+    "configure": "Configurer",
+    "invite": "Inviter",
+    "members": "membres",
+    "server": "Serveur",
+    "roles": {
+      "owner": "Propriétaire",
+      "administrator": "Administrateur",
+      "manager": "Gestionnaire"
+    },
+    "noServers": {
+      "title": "Aucun Serveur Trouvé",
+      "description": "Vous n'avez pas les permissions d'administrateur dans aucun serveur Discord."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "Tableaux Automatiques",
+    "description": "Publier et actualiser automatiquement les tableaux de clan, famille et légende",
+    "createAutoboard": "Créer un Tableau Automatique",
+    "editAutoboard": "Modifier le Tableau Automatique",
+    "createDialogTitle": "Créer un Tableau Automatique",
+    "createDialogDesc": "Configurer la publication ou l'actualisation automatique d'un tableau",
+    "editDialogTitle": "Modifier le Tableau Automatique",
+    "editDialogDesc": "Modifier la configuration de ce tableau automatique",
+    "automationType": "Type d'Automatisation",
+    "autoPost": "Publication Auto",
+    "autoPostDesc": "Publication Auto - Publications quotidiennes programmées",
+    "autoRefresh": "Actualisation Auto",
+    "autoRefreshDesc": "Actualisation Auto - Mises à jour continues (30-60 min)",
+    "channel": "Canal",
+    "selectChannel": "Sélectionner un canal",
+    "channelDesc": "Le canal où le tableau automatique sera publié",
+    "boardType": "Type de Tableau",
+    "selectBoardType": "Sélectionner un type de tableau",
+    "postDays": "Jours de Publication (sélectionner au moins un)",
+    "postDaysDesc": "Les publications ont lieu à 5h00 UTC lors de la réinitialisation quotidienne",
+    "autoRefreshInfo": "Info Actualisation Auto",
+    "autoRefreshInfoDesc": "Le tableau s'actualisera automatiquement toutes les 30-60 minutes avec les dernières données. Parfait pour garder les statistiques à jour sans mises à jour manuelles.",
+    "cancel": "Annuler",
+    "creating": "Création...",
+    "create": "Créer",
+    "updating": "Mise à jour...",
+    "update": "Mettre à jour",
+    "howItWorks": "Comment Fonctionnent les Tableaux Automatiques",
+    "howItWorksDesc": "Les tableaux automatiques peuvent publier de nouveaux tableaux selon un calendrier ou actualiser en continu les tableaux existants avec des données à jour. Choisissez **Publication Auto** pour créer de nouveaux tableaux quotidiennement à des jours spécifiques, ou **Actualisation Auto** pour maintenir un tableau à jour toutes les 30-60 minutes.",
+    "totalAutoboards": "Total de Tableaux Automatiques",
+    "used": "utilisés",
+    "scheduledBoards": "Tableaux programmés",
+    "continuousUpdates": "Mises à jour continues",
+    "availableSlots": "Emplacements Disponibles",
+    "remainingCapacity": "Capacité restante",
+    "activeAutoboards": "Tableaux Automatiques Actifs",
+    "noAutoboards": "Aucun Tableau Automatique configuré",
+    "noAutoboardsDesc": "Créez votre premier Tableau Automatique pour automatiser les mises à jour de tableaux",
+    "postsOn": "Publie le :",
+    "updatesEvery": "Actualise toutes les 30-60 minutes",
+    "created": "Créé :",
+    "edit": "Modifier",
+    "remove": "Supprimer",
+    "tips": "💡 Astuces Tableaux Automatiques",
+    "boardTypes": {
+      "clanBoards": "Tableaux de Clan",
+      "familyBoards": "Tableaux de Famille",
+      "legendBoards": "Tableaux Légende",
+      "other": "Autre",
+      "clandetailed": "Clan Détaillé",
+      "clanbasic": "Clan Basique",
+      "clanmini": "Clan Minimaliste",
+      "clancompo": "Composition Clan",
+      "clandonos": "Dons Clan",
+      "clanactivity": "Activité Clan",
+      "clancapoverview": "Aperçu Capitale Clan",
+      "clancapdonos": "Dons Capitale Clan",
+      "clancapraids": "Raids Capitale Clan",
+      "clanwarlog": "Historique Guerre Clan",
+      "clancwlperf": "Performance LGC Clan",
+      "clangames": "Jeux de Clan",
+      "familyoverview": "Aperçu Famille",
+      "familycompo": "Composition Famille",
+      "familydonos": "Dons Famille",
+      "familygames": "Jeux Famille",
+      "familyactivity": "Activité Famille",
+      "legendclan": "Clan Légende",
+      "legendday": "Jour Légende",
+      "legendseason": "Saison Légende",
+      "discordlinks": "Liens Discord"
+    },
+    "days": {
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi",
+      "sunday": "Dimanche",
+      "endofseason": "Fin de Saison"
+    },
+    "alerts": {
+      "selectBoardType": "Veuillez sélectionner un type de tableau",
+      "selectChannel": "Veuillez sélectionner un canal",
+      "selectDays": "Veuillez sélectionner au moins un jour pour la publication automatique",
+      "createFailed": "Échec de la création du tableau automatique. Veuillez réessayer.",
+      "updateFailed": "Échec de la mise à jour du tableau automatique. Veuillez réessayer.",
+      "deleteFailed": "Échec de la suppression du tableau automatique. Veuillez réessayer."
+    }
+  },
+  "OverviewPage": {
+    "title": "Aperçu du Tableau de Bord",
+    "description": "Surveillez le statut de votre bot ClashKing et les statistiques rapides",
+    "stats": {
+      "linkedPlayers": "Joueurs Liés",
+      "linkedPlayersChange": "+12 depuis le mois dernier",
+      "activeClans": "Clans Actifs",
+      "allClansConfigured": "Tous les clans configurés",
+      "botStatus": "Statut du Bot",
+      "online": "En Ligne",
+      "lastRestart": "Dernier redémarrage : il y a 2h"
+    },
+    "quickStart": {
+      "title": "Démarrage Rapide",
+      "description": "Commencez à configurer votre bot ClashKing",
+      "step1": {
+        "title": "Configurer les Paramètres Généraux",
+        "description": "Configurez les conventions de pseudo, les couleurs des embeds et les canaux de logs"
+      },
+      "step2": {
+        "title": "Ajouter Vos Clans",
+        "description": "Connectez vos clans Clash of Clans et configurez les rôles"
+      },
+      "step3": {
+        "title": "Configurer les Rôles Automatiques",
+        "description": "Configurez l'attribution automatique des rôles basée sur l'Hôtel de Ville, les trophées, etc."
+      }
+    }
   }
 }

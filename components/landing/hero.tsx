@@ -1,12 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { useTranslations } from "next-intl";
 
 export function Hero() {
+  const params = useParams();
+  const locale = (params?.locale as string) || "en";
   const t = useTranslations("HomePage");
 
   return (
@@ -71,7 +74,7 @@ export function Hero() {
               </Button>
             </a>
             <Button
-              onClick={initiateDiscordLogin}
+              onClick={() => initiateDiscordLogin(locale)}
               size="lg"
               variant="outline"
               className="text-lg px-8 py-6 rounded-xl border-2"

@@ -113,7 +113,7 @@ export default function ClansPage() {
         setLoading(true);
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          router.push("/login");
+          router.push(`/${params.locale}/login`);
           return;
         }
 
@@ -131,7 +131,7 @@ export default function ClansPage() {
           if (clansRes.status === 401) {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            router.push("/login");
+            router.push(`/${params.locale}/login`);
             return;
           }
           throw new Error(`Failed to fetch clans: ${clansRes.statusText}`);
@@ -148,8 +148,8 @@ export default function ClansPage() {
         console.error("Error fetching data:", err);
         setError(err instanceof Error ? err.message : "Failed to load clans");
         toast({
-          title: "Error",
-          description: "Failed to load clans. Please try again.",
+          title: tCommon("error"),
+          description: t("toast.errorLoadingClans"),
           variant: "destructive",
         });
       } finally {
@@ -167,8 +167,8 @@ export default function ClansPage() {
   const handleAddClan = async () => {
     if (!newClanTag.trim()) {
       toast({
-        title: "Error",
-        description: "Please enter a clan tag",
+        title: tCommon("error"),
+        description: t("toast.errorEmptyClanTag"),
         variant: "destructive",
       });
       return;
@@ -193,8 +193,8 @@ export default function ClansPage() {
       }
 
       toast({
-        title: "Success",
-        description: "Clan added successfully",
+        title: tCommon("success"),
+        description: t("toast.clanAdded"),
       });
 
       // Refresh clans list
@@ -211,8 +211,8 @@ export default function ClansPage() {
     } catch (err) {
       console.error("Error adding clan:", err);
       toast({
-        title: "Error",
-        description: err instanceof Error ? err.message : "Failed to add clan",
+        title: tCommon("error"),
+        description: err instanceof Error ? err.message : t("toast.errorAddingClan"),
         variant: "destructive",
       });
     } finally {
@@ -244,8 +244,8 @@ export default function ClansPage() {
       }
 
       toast({
-        title: "Success",
-        description: "Clan removed successfully",
+        title: tCommon("success"),
+        description: t("toast.clanRemoved"),
       });
 
       // Refresh clans list
@@ -259,8 +259,8 @@ export default function ClansPage() {
     } catch (err) {
       console.error("Error deleting clan:", err);
       toast({
-        title: "Error",
-        description: "Failed to delete clan",
+        title: tCommon("error"),
+        description: t("toast.errorRemovingClan"),
         variant: "destructive",
       });
     } finally {
@@ -301,8 +301,8 @@ export default function ClansPage() {
       }
 
       toast({
-        title: "Success",
-        description: "Settings saved successfully",
+        title: tCommon("success"),
+        description: t("toast.settingsSaved"),
       });
 
       // Refresh clans list
@@ -319,8 +319,8 @@ export default function ClansPage() {
     } catch (err) {
       console.error("Error saving settings:", err);
       toast({
-        title: "Error",
-        description: "Failed to save settings",
+        title: tCommon("error"),
+        description: t("toast.errorSavingSettings"),
         variant: "destructive",
       });
     } finally {

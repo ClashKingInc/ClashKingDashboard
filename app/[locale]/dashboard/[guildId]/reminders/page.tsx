@@ -109,7 +109,7 @@ export default function RemindersPage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          router.push("/login");
+          router.push(`/${params.locale}/login`);
           return;
         }
 
@@ -138,7 +138,7 @@ export default function RemindersPage() {
           if (remindersRes.status === 401) {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            router.push("/login");
+            router.push(`/${params.locale}/login`);
             return;
           }
           throw new Error(`Failed to fetch reminders: ${remindersRes.statusText}`);
