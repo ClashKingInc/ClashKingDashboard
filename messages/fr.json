@@ -30,6 +30,9 @@
   },
   "Navigation": {
     "features": "Fonctionnalités",
+    "openSource": "Open Source",
+    "help": "Besoin d'aide ?",
+    "support": "Nous soutenir",
     "commands": "Commandes",
     "premium": "Premium",
     "documentation": "Documentation",
@@ -105,7 +108,9 @@
       "product": {
         "title": "Produit",
         "features": "Fonctionnalités",
-        "premium": "Premium",
+        "help": "Besoin d'aide ?",
+        "openSource": "Open Source",
+        "support": "Nous soutenir",
         "dashboard": "Tableau de Bord",
         "inviteBot": "Inviter le Bot"
       },
@@ -119,7 +124,7 @@
       "community": {
         "title": "Communauté",
         "discord": "Serveur Discord",
-        "twitter": "Twitter",
+        "twitter": "X (Twitter)",
         "reportBug": "Signaler un Bug",
         "requestFeature": "Demander une Fonctionnalité"
       },

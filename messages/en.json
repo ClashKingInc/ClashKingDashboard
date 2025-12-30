@@ -30,6 +30,9 @@
   },
   "Navigation": {
     "features": "Features",
+    "openSource": "Open Source",
+    "help": "Need Help?",
+    "support": "Support Us",
     "commands": "Commands",
     "premium": "Premium",
     "documentation": "Documentation",
@@ -105,7 +108,9 @@
       "product": {
         "title": "Product",
         "features": "Features",
-        "premium": "Premium",
+        "help": "Need Help?",
+        "openSource": "Open Source",
+        "support": "Support Us",
         "dashboard": "Dashboard",
         "inviteBot": "Invite Bot"
       },
@@ -119,7 +124,7 @@
       "community": {
         "title": "Community",
         "discord": "Discord Server",
-        "twitter": "Twitter",
+        "twitter": "X (Twitter)",
         "reportBug": "Report a Bug",
         "requestFeature": "Request Feature"
       },
