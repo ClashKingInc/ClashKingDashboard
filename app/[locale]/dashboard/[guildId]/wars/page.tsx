@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Trophy,
@@ -415,10 +416,106 @@ export default function WarsPage() {
 
   if (loading && clanStats.length === 0) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Loading war statistics...</p>
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Header Skeleton */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-56 animate-pulse" />
+                <Skeleton className="h-5 w-96 animate-pulse" />
+              </div>
+            </div>
+            <Skeleton className="h-10 w-36 animate-pulse" />
+          </div>
+
+          {/* Filters Card Skeleton */}
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <Skeleton className="h-6 w-24 animate-pulse" />
+                  <Skeleton className="h-4 w-80 animate-pulse" />
+                </div>
+                <div className="flex gap-2">
+                  <Skeleton className="h-9 w-28 animate-pulse" />
+                  <Skeleton className="h-9 w-32 animate-pulse" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="space-y-2">
+                    <Skeleton className="h-4 w-20 animate-pulse" />
+                    <Skeleton className="h-10 w-full animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Summary Stats Skeleton */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="bg-card border-border">
+                <CardHeader className="pb-3">
+                  <Skeleton className="h-4 w-28 animate-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-10 w-16 animate-pulse" />
+                    <Skeleton className="h-8 w-8 rounded animate-pulse" />
+                  </div>
+                  <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Charts Row Skeleton */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            {[1, 2].map((i) => (
+              <Card key={i} className="bg-card border-border">
+                <CardHeader>
+                  <Skeleton className="h-6 w-48 animate-pulse" />
+                  <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-64 w-full animate-pulse" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Tables Skeleton */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            {[1, 2].map((i) => (
+              <Card key={i} className="bg-card border-border">
+                <CardHeader>
+                  <Skeleton className="h-6 w-40 animate-pulse" />
+                  <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {[1, 2, 3, 4, 5].map((j) => (
+                      <div key={j} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                        <div className="flex items-center gap-3 flex-1">
+                          <Skeleton className="h-10 w-10 rounded-full animate-pulse" />
+                          <div className="space-y-2 flex-1">
+                            <Skeleton className="h-4 w-32 animate-pulse" />
+                            <Skeleton className="h-3 w-24 animate-pulse" />
+                          </div>
+                        </div>
+                        <Skeleton className="h-6 w-16 animate-pulse" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     );

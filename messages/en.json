@@ -131,13 +131,6 @@
     }
   },
   "Sidebar": {
-    "sections": {
-      "configuration": "Configuration",
-      "clanManagement": "Clan Management",
-      "playerManagement": "Player Management",
-      "automation": "Automation",
-      "statistics": "Statistics"
-    },
     "overview": {
       "name": "Overview",
       "description": "Dashboard home"
@@ -185,6 +178,18 @@
     "leaderboards": {
       "name": "Leaderboards",
       "description": "Global rankings"
+    },
+    "botStats": {
+      "name": "Bot Stats",
+      "description": "Global bot statistics"
+    },
+    "sections": {
+      "configuration": "Configuration",
+      "clanManagement": "Clan Management",
+      "playerManagement": "Player Management",
+      "automation": "Automation",
+      "statistics": "Statistics",
+      "system": "System"
     }
   },
   "BansPage": {
@@ -658,15 +663,14 @@
   },
   "OverviewPage": {
     "title": "Dashboard Overview",
-    "description": "Monitor your ClashKing bot status and quick stats",
+    "description": "Monitor your server statistics and get started",
     "stats": {
       "linkedPlayers": "Linked Players",
-      "linkedPlayersChange": "+12 from last month",
-      "activeClans": "Active Clans",
-      "allClansConfigured": "All clans configured",
-      "botStatus": "Bot Status",
-      "online": "Online",
-      "lastRestart": "Last restart: 2h ago"
+      "linkedPlayersDesc": "Players linked in this server",
+      "clansConfigured": "Clans Configured",
+      "clansConfiguredDesc": "Clans tracked for this server",
+      "activeRosters": "Active Rosters",
+      "activeRostersDesc": "War rosters created"
     },
     "quickStart": {
       "title": "Quick Start",
@@ -683,6 +687,18 @@
         "title": "Set Up Auto Roles",
         "description": "Configure automatic role assignment based on Town Hall, trophies, etc."
       }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Bot Statistics",
+    "description": "Global ClashKing bot statistics and system health",
+    "about": {
+      "title": "About These Statistics",
+      "description": "These are global statistics for the entire ClashKing bot network",
+      "globalStats": "Global Statistics",
+      "globalStatsDesc": "Player and clan counts represent all tracked entities across all Discord servers using ClashKing",
+      "systemHealth": "System Health",
+      "systemHealthDesc": "CPU and memory usage indicate the current load on the ClashKing API infrastructure"
     }
   }
 }

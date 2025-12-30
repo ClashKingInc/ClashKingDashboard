@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
   /**
@@ -21,6 +21,14 @@ export class ServerClient extends BaseApiClient {
    */
   async getGuild(guildId: string): Promise<ApiResponse<GuildInfo>> {
     return this.request(`/v2/guild/${guildId}`, { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/internal/bot/info
+   * Get bot information and status
+   */
+  async getBotInfo(): Promise<ApiResponse<BotInfo>> {
+    return this.request('/v2/internal/bot/info', { method: 'GET' });
   }
   /**
    * GET /v2/server/{server_id}/settings
@@ -114,6 +122,15 @@ export class ServerClient extends BaseApiClient {
    */
   async getChannels(serverId: string | number): Promise<ApiResponse<any>> {
     return this.request(`/v2/server/${serverId}/channels`, { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/links
+   * Get all links for a server with pagination
+   */
+  async getServerLinks(serverId: string | number, params?: { limit?: number; offset?: number; search?: string }): Promise<ApiResponse<PaginatedResponse<any>>> {
+    const query = params ? this.buildQueryString(params) : '';
+    return this.request(`/v2/server/${serverId}/links${query}`, { method: 'GET' });
   }
 
   /**

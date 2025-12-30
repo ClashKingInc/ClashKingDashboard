@@ -131,13 +131,6 @@
     }
   },
   "Sidebar": {
-    "sections": {
-      "configuration": "Configuration",
-      "clanManagement": "Gestion des Clans",
-      "playerManagement": "Gestion des Joueurs",
-      "automation": "Automatisation",
-      "statistics": "Statistiques"
-    },
     "overview": {
       "name": "Aperçu",
       "description": "Page d'accueil du tableau de bord"
@@ -163,8 +156,8 @@
       "description": "Tous les types de rappels"
     },
     "rosters": {
-      "name": "Compositions",
-      "description": "Gestion des compositions"
+      "name": "Rosters",
+      "description": "Gestion des rosters"
     },
     "autoboards": {
       "name": "Tableaux Auto",
@@ -185,6 +178,18 @@
     "leaderboards": {
       "name": "Classements",
       "description": "Classements globaux"
+    },
+    "botStats": {
+      "name": "Stats du Bot",
+      "description": "Statistiques globales du bot"
+    },
+    "sections": {
+      "configuration": "Configuration",
+      "clanManagement": "Gestion des Clans",
+      "playerManagement": "Gestion des Joueurs",
+      "automation": "Automatisation",
+      "statistics": "Statistiques",
+      "system": "Système"
     }
   },
   "BansPage": {
@@ -658,15 +663,14 @@
   },
   "OverviewPage": {
     "title": "Aperçu du Tableau de Bord",
-    "description": "Surveillez le statut de votre bot ClashKing et les statistiques rapides",
+    "description": "Surveillez les statistiques de votre serveur et démarrez",
     "stats": {
       "linkedPlayers": "Joueurs Liés",
-      "linkedPlayersChange": "+12 depuis le mois dernier",
-      "activeClans": "Clans Actifs",
-      "allClansConfigured": "Tous les clans configurés",
-      "botStatus": "Statut du Bot",
-      "online": "En Ligne",
-      "lastRestart": "Dernier redémarrage : il y a 2h"
+      "linkedPlayersDesc": "Joueurs liés dans ce serveur",
+      "clansConfigured": "Clans Configurés",
+      "clansConfiguredDesc": "Clans suivis pour ce serveur",
+      "activeRosters": "Rosters Actifs",
+      "activeRostersDesc": "Compositions de guerre créées"
     },
     "quickStart": {
       "title": "Démarrage Rapide",
@@ -683,6 +687,18 @@
         "title": "Configurer les Rôles Automatiques",
         "description": "Configurez l'attribution automatique des rôles basée sur l'Hôtel de Ville, les trophées, etc."
       }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Statistiques du Bot",
+    "description": "Statistiques globales du bot ClashKing et santé du système",
+    "about": {
+      "title": "À Propos de Ces Statistiques",
+      "description": "Ce sont des statistiques globales pour tout le réseau de bots ClashKing",
+      "globalStats": "Statistiques Globales",
+      "globalStatsDesc": "Les nombres de joueurs et de clans représentent toutes les entités suivies sur tous les serveurs Discord utilisant ClashKing",
+      "systemHealth": "Santé du Système",
+      "systemHealthDesc": "L'utilisation du CPU et de la mémoire indique la charge actuelle sur l'infrastructure API de ClashKing"
     }
   }
 }

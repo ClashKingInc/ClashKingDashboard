@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
+// Configure route to be dynamic and set longer timeout
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // 60 seconds timeout
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ server_id: string }> }
@@ -21,16 +25,38 @@ export async function GET(
       url += `&search=${encodeURIComponent(search)}`;
     }
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': token || '',
-        'Content-Type': 'application/json',
-      },
-    });
+    // Add AbortController with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 55000); // 55 seconds
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': token || '',
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal,
+        // @ts-ignore - Next.js specific options
+        cache: 'no-store',
+      });
+
+      clearTimeout(timeoutId);
+
+      const data = await response.json();
+      return NextResponse.json(data, { status: response.status });
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+
+      if (fetchError instanceof Error && fetchError.name === 'AbortError') {
+        console.error('API proxy timeout (GET /links): Request took longer than 55 seconds');
+        return NextResponse.json(
+          { error: 'Request timeout - the links endpoint is taking too long to respond' },
+          { status: 504 }
+        );
+      }
+      throw fetchError;
+    }
   } catch (error) {
     console.error('API proxy error (GET /links):', error);
     return NextResponse.json(

@@ -36,7 +36,9 @@
       "Bash(then)",
       "Bash(for page in WarsPage ClansPage LinksPage LogsPage LeaderboardsPage RolesPage RostersPage RemindersPage)",
       "Bash(if grep -q \"\"\"$page\"\":\" messages/en.json)",
-      "Bash(else)"
+      "Bash(else)",
+      "Bash(git stash show:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

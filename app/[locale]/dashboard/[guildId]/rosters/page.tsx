@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter, Eye, TrendingUp, Target, Star, GitCompare, CheckSquare, Square } from "lucide-react";
 import {
   Dialog,
@@ -1125,8 +1126,88 @@ export default function RostersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-background p-6 space-y-6">
+        {/* Header Skeleton */}
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
+            <div className="space-y-2">
+              <Skeleton className="h-8 w-48 animate-pulse" />
+              <Skeleton className="h-5 w-96 animate-pulse" />
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-10 w-40 animate-pulse" />
+            <Skeleton className="h-10 w-32 animate-pulse" />
+          </div>
+        </div>
+
+        {/* Statistics Cards Skeleton */}
+        <div className="grid gap-4 md:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+                <Skeleton className="h-4 w-4 rounded animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-16 animate-pulse" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Filters Skeleton */}
+        <Card className="bg-card border-border">
+          <CardContent className="pt-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Skeleton className="h-10 flex-1 animate-pulse" />
+              <Skeleton className="h-10 w-full sm:w-[180px] animate-pulse" />
+              <Skeleton className="h-10 w-full sm:w-32 animate-pulse" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Rosters List Skeleton */}
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <Skeleton className="h-6 w-32 animate-pulse" />
+            <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="bg-secondary/50 border-border">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-12 w-12 rounded-full animate-pulse" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-5 w-40 animate-pulse" />
+                        <Skeleton className="h-4 w-24 animate-pulse" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Skeleton className="h-9 w-20 animate-pulse" />
+                      <Skeleton className="h-9 w-9 animate-pulse" />
+                      <Skeleton className="h-9 w-9 animate-pulse" />
+                      <Skeleton className="h-9 w-9 animate-pulse" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[1, 2, 3, 4].map((j) => (
+                      <div key={j} className="space-y-1">
+                        <Skeleton className="h-3 w-16 animate-pulse" />
+                        <Skeleton className="h-6 w-12 animate-pulse" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     );
   }

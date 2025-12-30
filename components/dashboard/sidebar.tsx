@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   Link2,
   Trophy,
+  Activity,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -126,6 +127,16 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
           nameKey: "leaderboards.name",
           href: `/${locale}/dashboard/${guildId}/leaderboards`,
           icon: Trophy,
+        },
+      ],
+    },
+    {
+      titleKey: "sections.system",
+      items: [
+        {
+          nameKey: "botStats.name",
+          href: `/${locale}/dashboard/${guildId}/bot-stats`,
+          icon: Activity,
         },
       ],
     },
