@@ -37,7 +37,7 @@ export function CTA() {
           </p>
 
           {/* CTA Button */}
-          <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer">
+          <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer">
             <Button size="lg" className="bg-white text-[#DC2626] hover:bg-gray-100 text-lg px-10 py-7 rounded-xl shadow-2xl hover:shadow-3xl transition-all group text-base font-semibold border-4 border-white/30">
               {t("button")}
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />

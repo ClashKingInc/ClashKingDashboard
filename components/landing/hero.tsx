@@ -67,7 +67,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer">
+            <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-[#DC2626] hover:bg-[#EF4444] text-white text-lg px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all group border-2 border-[#DC2626]">
                 {t("cta.addToDiscord")}
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />

@@ -48,7 +48,7 @@ export default function HelpPage() {
               Need more help? Join our Discord community to ask questions, report bugs, or chat with other users.
             </p>
             <Link
-              href="http://discord.clashk.ing/"
+              href="https://discord.clashk.ing/"
               target="_blank"
               className="bg-[#5865F2] text-white px-6 py-3 rounded-lg font-bold text-center hover:bg-[#4752C4] transition-colors flex items-center justify-center gap-2"
             >

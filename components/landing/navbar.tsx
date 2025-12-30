@@ -95,7 +95,7 @@ export function Navbar() {
               >
                 {t("loginWithDiscord")}
               </Button>
-              <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer" className="block">
+              <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="block">
                 <Button className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]">
                   {t("addToDiscord")}
                 </Button>
