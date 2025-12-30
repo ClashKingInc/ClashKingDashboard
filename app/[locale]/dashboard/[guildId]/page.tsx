@@ -1,12 +1,17 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Users, Shield, Activity } from "lucide-react";
+import { ServerStats } from "@/components/dashboard/server-stats";
 
-export default function OverviewPage() {
-  const t = useTranslations("OverviewPage");
+interface OverviewPageProps {
+  params: {
+    guildId: string;
+    locale: string;
+  };
+}
+
+export default async function OverviewPage({ params }: OverviewPageProps) {
+  const { guildId } = await params;
+  const t = await getTranslations("OverviewPage");
 
   return (
     <div className="min-h-screen bg-background p-6">
@@ -21,44 +26,7 @@ export default function OverviewPage() {
 
         {/* Stats Grid */}
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="bg-card border-border">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">{t("stats.linkedPlayers")}</CardTitle>
-              <div className="rounded-full bg-primary/10 p-2">
-                <Users className="h-4 w-4 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">245</div>
-              <p className="text-xs text-muted-foreground">{t("stats.linkedPlayersChange")}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">{t("stats.activeClans")}</CardTitle>
-              <div className="rounded-full bg-primary/10 p-2">
-                <Shield className="h-4 w-4 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">8</div>
-              <p className="text-xs text-muted-foreground">{t("stats.allClansConfigured")}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-border">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-foreground">{t("stats.botStatus")}</CardTitle>
-              <div className="rounded-full bg-green-500/10 p-2">
-                <Activity className="h-4 w-4 text-green-500" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Badge className="bg-green-500 hover:bg-green-600">{t("stats.online")}</Badge>
-              <p className="text-xs text-muted-foreground mt-2">{t("stats.lastRestart")}</p>
-            </CardContent>
-          </Card>
+          <ServerStats guildId={guildId} />
         </div>
 
         {/* Quick Start Card */}

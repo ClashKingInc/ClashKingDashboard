@@ -27,7 +27,10 @@ import {
   Users,
   Settings,
   Clock,
-  Plus
+  Plus,
+  ChevronDown,
+  ChevronUp,
+  MoreVertical
 } from "lucide-react";
 import {
   AlertDialog,
@@ -48,6 +51,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Type definitions
 interface LinkedAccount {
@@ -69,10 +78,10 @@ interface MemberLinks {
 
 interface ServerLinksResponse {
   members: MemberLinks[];
-  total_members: number;
-  members_with_links: number;
-  total_linked_accounts: number;
-  verified_accounts: number;
+  total_members: number; // Total filtered members (after search, before pagination)
+  members_with_links: number; // Total members with links (server-wide, accurate stat)
+  total_linked_accounts: number; // Total linked accounts (server-wide, accurate stat)
+  verified_accounts: number; // Total verified accounts (server-wide, accurate stat)
 }
 
 export default function LinksManagementPage() {
@@ -89,6 +98,11 @@ export default function LinksManagementPage() {
   const [accountToDelete, setAccountToDelete] = useState<{ userId: string; playerTag: string; playerName: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(100);
+  const [totalCount, setTotalCount] = useState(0);
+
   // Filter states
   const [filterVerified, setFilterVerified] = useState<"all" | "verified" | "unverified">("all");
   const [filterMinAccounts, setFilterMinAccounts] = useState<number>(0);
@@ -96,6 +110,9 @@ export default function LinksManagementPage() {
   // Bulk actions states
   const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
   const [bulkActionDialogOpen, setBulkActionDialogOpen] = useState(false);
+
+  // Expanded members state
+  const [expandedMembers, setExpandedMembers] = useState<Set<string>>(new Set());
 
   // Link account dialog states
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
@@ -108,7 +125,8 @@ export default function LinksManagementPage() {
     const fetchLinksData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/v2/server/${guildId}/links?limit=1000`, {
+        const offset = (currentPage - 1) * itemsPerPage;
+        const response = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`
           }
@@ -119,8 +137,17 @@ export default function LinksManagementPage() {
         }
 
         const data: ServerLinksResponse = await response.json();
+        console.log('📊 Links API Response:', data);
+        console.log('👥 Total members:', data.total_members);
+        console.log('🔗 Members with links:', data.members_with_links);
+        console.log('📝 Total linked accounts:', data.total_linked_accounts);
+        console.log('✅ Verified accounts:', data.verified_accounts);
+
         setLinksData(data);
-        setFilteredMembers(data.members);
+        setFilteredMembers(data.members || []);
+
+        // Use total_members for pagination (filtered count before pagination)
+        setTotalCount(data.total_members || 0);
       } catch (error) {
         console.error('Error fetching links:', error);
       } finally {
@@ -131,7 +158,7 @@ export default function LinksManagementPage() {
     if (guildId) {
       fetchLinksData();
     }
-  }, [guildId]);
+  }, [guildId, currentPage, itemsPerPage]);
 
   // Filter members based on search query and filters
   useEffect(() => {
@@ -193,8 +220,9 @@ export default function LinksManagementPage() {
         throw new Error('Failed to unlink account');
       }
 
-      // Refresh data
-      const refreshResponse = await fetch(`/api/v2/server/${guildId}/links?limit=1000`, {
+      // Refresh data for current page
+      const offset = (currentPage - 1) * itemsPerPage;
+      const refreshResponse = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
@@ -204,6 +232,7 @@ export default function LinksManagementPage() {
         const data: ServerLinksResponse = await refreshResponse.json();
         setLinksData(data);
         setFilteredMembers(data.members);
+        setTotalCount(data.total_members || 0);
       }
 
       setDeleteDialogOpen(false);
@@ -286,11 +315,126 @@ export default function LinksManagementPage() {
     setBulkActionDialogOpen(false);
   };
 
+  const toggleMemberExpanded = (userId: string) => {
+    const newExpanded = new Set(expandedMembers);
+    if (newExpanded.has(userId)) {
+      newExpanded.delete(userId);
+    } else {
+      newExpanded.add(userId);
+    }
+    setExpandedMembers(newExpanded);
+  };
+
   const pendingVerifications = linksData?.members.flatMap(member =>
     member.linked_accounts
       .filter(acc => !acc.is_verified)
       .map(acc => ({ ...acc, user: member }))
   ) || [];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-6 space-y-6">
+        {/* Header Skeleton */}
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-56 animate-pulse" />
+            <Skeleton className="h-5 w-96 animate-pulse" />
+          </div>
+        </div>
+
+        {/* Statistics Cards Skeleton */}
+        <div className="grid gap-4 md:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="bg-card border-border">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Skeleton className="h-4 w-28 animate-pulse" />
+                <Skeleton className="h-4 w-4 rounded animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
+                <Skeleton className="h-3 w-24 animate-pulse" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Main Content Skeleton */}
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <Skeleton className="h-6 w-40 animate-pulse" />
+            <Skeleton className="h-4 w-80 mt-2 animate-pulse" />
+          </CardHeader>
+          <CardContent>
+            {/* Tabs Skeleton */}
+            <div className="flex gap-2 mb-6">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-10 w-32 animate-pulse" />
+              ))}
+            </div>
+
+            {/* Search and Filters Skeleton */}
+            <div className="flex flex-col lg:flex-row gap-4 mb-6">
+              <Skeleton className="h-10 flex-1 animate-pulse" />
+              <Skeleton className="h-10 w-[180px] animate-pulse" />
+              <Skeleton className="h-10 w-[180px] animate-pulse" />
+            </div>
+
+            {/* Action Buttons Skeleton */}
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex gap-2">
+                <Skeleton className="h-9 w-24 animate-pulse" />
+                <Skeleton className="h-9 w-32 animate-pulse" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-9 w-28 animate-pulse" />
+                <Skeleton className="h-9 w-28 animate-pulse" />
+              </div>
+            </div>
+
+            {/* Members List Skeleton */}
+            <div className="space-y-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Card key={i} className="bg-secondary/50 border-border">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-3 flex-1">
+                        <Skeleton className="h-10 w-10 rounded-full animate-pulse" />
+                        <div className="flex-1 space-y-3">
+                          <div className="space-y-2">
+                            <Skeleton className="h-5 w-40 animate-pulse" />
+                            <Skeleton className="h-4 w-32 animate-pulse" />
+                          </div>
+                          <div className="space-y-2">
+                            {[1, 2].map((j) => (
+                              <div key={j} className="flex items-center gap-3">
+                                <Skeleton className="h-4 w-4 rounded animate-pulse" />
+                                <Skeleton className="h-4 w-28 animate-pulse" />
+                                <Skeleton className="h-5 w-16 animate-pulse" />
+                                <Skeleton className="h-5 w-20 animate-pulse" />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <Skeleton className="h-8 w-8 rounded animate-pulse" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Pagination Skeleton */}
+            <div className="flex items-center justify-between mt-6">
+              <Skeleton className="h-9 w-24 animate-pulse" />
+              <Skeleton className="h-4 w-32 animate-pulse" />
+              <Skeleton className="h-9 w-20 animate-pulse" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
@@ -454,83 +598,183 @@ export default function LinksManagementPage() {
                     </p>
                   </div>
                 ) : (
-                  filteredMembers.map((member) => (
-                    <div
-                      key={member.user_id}
-                      className="border border-border rounded-lg p-4 bg-secondary/50 space-y-3 hover:bg-secondary/70 transition-colors"
-                    >
-                      {/* Member Header */}
-                      <div className="flex items-center gap-3">
-                        {member.avatar_url && (
-                          <img
-                            src={member.avatar_url}
-                            alt={member.display_name}
-                            className="w-10 h-10 rounded-full"
-                          />
-                        )}
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-foreground">{member.display_name}</h3>
-                          <p className="text-sm text-muted-foreground">@{member.username}</p>
-                        </div>
-                        <Badge variant={member.account_count > 0 ? "default" : "secondary"} className="bg-primary text-primary-foreground">
-                          {member.account_count} {member.account_count === 1 ? 'account' : 'accounts'}
-                        </Badge>
-                      </div>
+                  filteredMembers.map((member) => {
+                    const isExpanded = expandedMembers.has(member.user_id);
+                    const previewAccounts = member.linked_accounts.slice(0, 3);
+                    const hasMore = member.linked_accounts.length > 3;
 
-                      {/* Linked Accounts */}
-                      {member.linked_accounts.length > 0 && (
-                        <div className="pl-4 space-y-2 border-l-2 border-primary/20">
-                          {member.linked_accounts.map((account) => (
-                            <div
-                              key={account.player_tag}
-                              className="flex items-center justify-between gap-2 p-2 rounded bg-background/50 hover:bg-background transition-colors"
-                            >
-                              <div className="flex items-center gap-2 flex-1">
-                                {account.town_hall && (
-                                  <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                                    <span className="text-sm font-bold text-primary">{account.town_hall}</span>
-                                  </div>
-                                )}
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-medium text-foreground">
-                                      {account.player_name || account.player_tag}
-                                    </span>
-                                    {account.is_verified ? (
-                                      <Badge variant="default" className="bg-green-600 text-white text-xs">
-                                        <CheckCircle className="w-3 h-3 mr-1" />
-                                        Verified
-                                      </Badge>
-                                    ) : (
-                                      <Badge variant="secondary" className="bg-yellow-600 text-white text-xs">
-                                        <XCircle className="w-3 h-3 mr-1" />
-                                        Unverified
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  <p className="text-xs text-muted-foreground">{account.player_tag}</p>
-                                  {account.added_at && (
-                                    <p className="text-xs text-muted-foreground">
-                                      Added: {new Date(account.added_at).toLocaleDateString()}
-                                    </p>
-                                  )}
-                                </div>
-                              </div>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => openDeleteDialog(member.user_id, account.player_tag, account.player_name || account.player_tag)}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
+                    return (
+                      <div
+                        key={member.user_id}
+                        className="border border-border rounded-lg bg-card hover:border-primary/50 transition-colors"
+                      >
+                        {/* Member Header - Clickable to expand/collapse */}
+                        <div
+                          className="flex items-center gap-4 p-4 cursor-pointer"
+                          onClick={() => toggleMemberExpanded(member.user_id)}
+                        >
+                          {member.avatar_url ? (
+                            <img
+                              src={member.avatar_url}
+                              alt={member.display_name}
+                              className="w-12 h-12 rounded-full ring-2 ring-primary/20"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                              <User className="w-6 h-6 text-primary" />
                             </div>
-                          ))}
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-foreground truncate">{member.display_name}</h3>
+                            <p className="text-sm text-muted-foreground">@{member.username} • {member.account_count} {member.account_count === 1 ? 'account' : 'accounts'}</p>
+                          </div>
+                          {isExpanded ? (
+                            <ChevronUp className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ))
+
+                        {/* Accounts Preview (when collapsed) */}
+                        {!isExpanded && member.linked_accounts.length > 0 && (
+                          <div
+                            className="px-4 pb-4 flex items-center gap-2 flex-wrap cursor-pointer"
+                            onClick={() => toggleMemberExpanded(member.user_id)}
+                          >
+                            {previewAccounts.map((account) => (
+                              <div
+                                key={account.player_tag}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary/50 border border-border text-sm"
+                              >
+                                {account.town_hall && (
+                                  <span className="font-bold text-primary">TH{account.town_hall}</span>
+                                )}
+                                <span className="text-foreground font-medium max-w-[120px] truncate">
+                                  {account.player_name || account.player_tag}
+                                </span>
+                                {account.is_verified ? (
+                                  <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+                                ) : (
+                                  <XCircle className="w-3.5 h-3.5 text-yellow-600" />
+                                )}
+                              </div>
+                            ))}
+                            {hasMore && (
+                              <Badge variant="outline" className="text-muted-foreground">
+                                +{member.linked_accounts.length - 3} more
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Expanded Accounts Grid */}
+                        {isExpanded && member.linked_accounts.length > 0 && (
+                          <div className="px-4 pb-4 border-t border-border pt-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                              {member.linked_accounts.map((account) => (
+                                <div
+                                  key={account.player_tag}
+                                  className="relative border border-border rounded-lg p-3 bg-secondary/30 hover:bg-secondary/50 transition-colors group"
+                                >
+                                  <div className="flex items-start gap-2">
+                                    {account.town_hall && (
+                                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-sm font-bold text-primary">TH{account.town_hall}</span>
+                                      </div>
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-start gap-2">
+                                        <div className="flex-1 min-w-0">
+                                          <p className="font-medium text-foreground truncate text-sm">
+                                            {account.player_name || 'Unknown'}
+                                          </p>
+                                          <p className="text-xs text-muted-foreground truncate">{account.player_tag}</p>
+                                        </div>
+                                        <DropdownMenu>
+                                          <DropdownMenuTrigger asChild>
+                                            <Button
+                                              size="sm"
+                                              variant="ghost"
+                                              className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                              onClick={(e) => e.stopPropagation()}
+                                            >
+                                              <MoreVertical className="w-4 h-4" />
+                                            </Button>
+                                          </DropdownMenuTrigger>
+                                          <DropdownMenuContent align="end">
+                                            <DropdownMenuItem
+                                              className="text-destructive focus:text-destructive"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                openDeleteDialog(member.user_id, account.player_tag, account.player_name || account.player_tag);
+                                              }}
+                                            >
+                                              <Trash2 className="w-4 h-4 mr-2" />
+                                              Unlink Account
+                                            </DropdownMenuItem>
+                                          </DropdownMenuContent>
+                                        </DropdownMenu>
+                                      </div>
+                                      <div className="flex items-center gap-2 mt-1.5">
+                                        {account.is_verified ? (
+                                          <Badge variant="default" className="bg-green-600 text-white text-xs h-5">
+                                            <CheckCircle className="w-3 h-3 mr-1" />
+                                            Verified
+                                          </Badge>
+                                        ) : (
+                                          <Badge variant="secondary" className="bg-yellow-600 text-white text-xs h-5">
+                                            <XCircle className="w-3 h-3 mr-1" />
+                                            Unverified
+                                          </Badge>
+                                        )}
+                                      </div>
+                                      {account.added_at && (
+                                        <p className="text-xs text-muted-foreground mt-1">
+                                          {new Date(account.added_at).toLocaleDateString()}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
                 )}
               </div>
+
+              {/* Pagination Controls */}
+              {!loading && filteredMembers.length > 0 && (
+                <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <div className="text-sm text-muted-foreground">
+                    Showing {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} members
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </Button>
+                    <div className="text-sm text-muted-foreground">
+                      Page {currentPage} of {Math.ceil(totalCount / itemsPerPage)}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(prev => prev + 1)}
+                      disabled={currentPage >= Math.ceil(totalCount / itemsPerPage)}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
             </TabsContent>
 
             {/* Pending Tab */}

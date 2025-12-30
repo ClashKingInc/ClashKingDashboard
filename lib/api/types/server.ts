@@ -181,3 +181,38 @@ export interface GuildInfo {
   premium_tier?: number;
   boost_count?: number;
 }
+
+/**
+ * Bot information and status from /v2/internal/bot/info
+ */
+export interface BotInfo {
+  bot: {
+    total_servers: number;
+    total_members: number;
+    total_clans: number;
+    total_shards: number;
+    clusters: Array<{
+      cluster_id: number;
+      server_count: number;
+      member_count: number;
+      clan_count: number;
+      shards: number[];
+    }>;
+  };
+  system: {
+    python_version: string;
+    platform: string;
+    cpu_percent: number;
+    memory_used_mb: number;
+    memory_total_gb: number;
+    memory_percent: number;
+    disk_usage_percent: number;
+  };
+  database: {
+    clans_tracked: number;
+    players_tracked: number;
+    wars_stored: number;
+    tickets_open: number;
+    capital_raids: number;
+  };
+}
