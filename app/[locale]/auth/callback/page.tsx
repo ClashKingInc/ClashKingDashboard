@@ -68,7 +68,7 @@ export default function AuthCallbackPage() {
         const requestBody = {
           code,
           code_verifier: codeVerifier,
-          redirect_uri: window.location.origin + `/${locale}/auth/callback`,
+          redirect_uri: window.location.origin + '/auth/callback',
           device_id: deviceId,
           device_name: 'Dashboard',
         };
@@ -127,7 +127,7 @@ export default function AuthCallbackPage() {
         sessionStorage.removeItem('discord_code_verifier');
 
         // Redirect to servers page
-        router.push(`/${locale}/servers`);
+        router.push('/servers');
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : "Failed to authenticate with Discord");
@@ -165,7 +165,7 @@ export default function AuthCallbackPage() {
         </CardHeader>
         <CardContent className="flex justify-center">
           <button
-            onClick={() => router.push(`/${locale}/login`)}
+            onClick={() => router.push('/login')}
             className="px-4 py-2 bg-[#DC2626] hover:bg-[#EF4444] text-white rounded-lg transition-colors"
           >
             {t("tryAgain")}
