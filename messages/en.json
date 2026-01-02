@@ -453,15 +453,6 @@
     "message": "Message",
     "timing": "Timing"
   },
-  "AutoboardsPage": {
-    "title": "Autoboards",
-    "description": "Automated leaderboard messages",
-    "noAutoboards": "No autoboards configured",
-    "createAutoboard": "Create Autoboard",
-    "type": "Type",
-    "channel": "Channel",
-    "updateInterval": "Update Interval"
-  },
   "LogsPage": {
     "title": "Logs",
     "description": "Configure webhook logs",

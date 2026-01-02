@@ -453,15 +453,6 @@
     "message": "Message",
     "timing": "Timing"
   },
-  "AutoboardsPage": {
-    "title": "Tableaux Automatiques",
-    "description": "Messages de classement automatisés",
-    "noAutoboards": "Aucun tableau automatique configuré",
-    "createAutoboard": "Créer un Tableau Automatique",
-    "type": "Type",
-    "channel": "Canal",
-    "updateInterval": "Intervalle de Mise à Jour"
-  },
   "LogsPage": {
     "title": "Journaux",
     "description": "Configurer les journaux webhook",
