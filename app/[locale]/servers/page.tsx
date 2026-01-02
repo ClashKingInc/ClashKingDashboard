@@ -116,14 +116,14 @@ export default function ServersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-x-hidden">
       {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[#DC2626]/10 to-transparent rounded-full blur-3xl" />
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-[#F03529]/10 to-transparent rounded-full blur-3xl" />
       </div>
 
-      <div className="relative container mx-auto px-4 py-12">
+      <div className="relative container mx-auto px-4 py-8 sm:py-12">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -134,10 +134,10 @@ export default function ServersPage() {
               <ArrowLeft className="w-4 h-4" />
               <span>{t("backToHome")}</span>
             </Link>
-            <h1 className="text-4xl font-bold text-white mb-2">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
               {t("title")}
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-sm sm:text-base">
               {t("description")}
             </p>
           </div>
@@ -150,40 +150,42 @@ export default function ServersPage() {
                 className={`border-2 bg-[#1F1F1F]/95 backdrop-blur transition-all duration-300 ${guild.has_bot
                   ? "border-[#2A2A2A] hover:border-[#DC2626] hover:shadow-[0_0_10px_#DC2626]/30 cursor-pointer"
                   : "border-[#2A2A2A] opacity-75"
-                  } rounded-xl`}
+                  } rounded-xl overflow-hidden`}
                 onClick={() => handleGuildClick(guild)}
               >
-                <CardHeader className="flex flex-row items-center justify-between gap-4">
+                <CardHeader className="flex flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6">
                   {/* Left side: avatar + info */}
-                  <div className="flex items-center gap-4 min-w-0 flex-1">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <Avatar
-                      className={`h-16 w-16 border-2 transition-transform duration-300 ${guild.has_bot
+                      className={`h-12 w-12 sm:h-16 sm:w-16 border-2 transition-transform duration-300 flex-shrink-0 ${guild.has_bot
                         ? "border-[#DC2626] group-hover:scale-105"
                         : "border-[#2A2A2A]"
                         }`}
                     >
                       <AvatarImage src={getGuildIconUrl(guild) || undefined} />
-                      <AvatarFallback className="text-2xl bg-[#2A2A2A] text-white">
+                      <AvatarFallback className="text-xl sm:text-2xl bg-[#2A2A2A] text-white">
                         {guild.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
 
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-xl text-white truncate">
+                      <CardTitle className="text-lg sm:text-xl text-white truncate">
                         {guild.name}
                       </CardTitle>
 
-                      <CardDescription className="text-gray-400 flex items-center gap-1">
+                      <CardDescription className="text-gray-400 flex items-center gap-1 text-xs sm:text-sm">
                         <Users className="w-3 h-3" />
-                        {guild.member_count
-                          ? `${guild.member_count.toLocaleString()} ${t("members")}`
-                          : t("server")}
+                        <span className="truncate">
+                          {guild.member_count
+                            ? `${guild.member_count.toLocaleString()} ${t("members")}`
+                            : t("server")}
+                        </span>
                       </CardDescription>
 
                       {/* Role badge */}
-                      <div className="mt-2">
+                      <div className="mt-1 sm:mt-2">
                         <span
-                          className={`text-xs font-semibold px-2 py-1 rounded-full ${guild.role === "Owner"
+                          className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full inline-block ${guild.role === "Owner"
                             ? "bg-green-500/20 text-green-400"
                             : guild.role === "Administrator"
                               ? "bg-blue-500/20 text-blue-400"
@@ -202,24 +204,27 @@ export default function ServersPage() {
                   </div>
 
                   {/* Right side: action button */}
-                  {guild.has_bot ? (
-                    <Button
-                      className="w-28 bg-gray-700 text-white hover:bg-gray-600 cursor-pointer"
-                    >
-                      {t("configure")}
-                    </Button>
-                  ) : (
-                    <a
-                      href={`https://discord.com/application-directory/824653933347209227?guild_id=${guild.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Button className="w-28 bg-[#DC2626] hover:bg-[#EF4444] text-white cursor-pointer">
-                        {t("invite")}
+                  <div className="flex-shrink-0">
+                    {guild.has_bot ? (
+                      <Button
+                        className="w-24 sm:w-28 bg-gray-700 text-white hover:bg-gray-600 cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
+                      >
+                        {t("configure")}
                       </Button>
-                    </a>
-                  )}
+                    ) : (
+                      <a
+                        href={`https://discord.com/application-directory/824653933347209227?guild_id=${guild.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="block"
+                      >
+                        <Button className="w-24 sm:w-28 bg-[#DC2626] hover:bg-[#EF4444] text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10">
+                          {t("invite")}
+                        </Button>
+                      </a>
+                    )}
+                  </div>
                 </CardHeader>
               </Card>
             ))}
