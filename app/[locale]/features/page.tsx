@@ -106,7 +106,11 @@ export default function FeaturesPage() {
                       href={feature.cta.secondaryLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gray-700 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-600 transition-colors"
+                      className={
+                        feature.id === "app"
+                          ? "bg-[#DC2626] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#EF4444] transition-colors"
+                          : "bg-gray-700 text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-600 transition-colors"
+                      }
                     >
                       {feature.cta.secondaryText}
                     </a>
