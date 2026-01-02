@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,6 +68,7 @@ interface Roster {
   roster_size?: number | null;
   min_signups?: number | null;
   columns?: string[];
+  sort?: string[];
   image?: string | null;
   group_id?: string | null;
   created_at?: string;
@@ -786,13 +787,13 @@ export default function RostersPage() {
     e.dataTransfer.setData("text/plain", JSON.stringify({ memberTag, sourceRosterId }));
 
     // Visual feedback
-    e.currentTarget.style.opacity = "0.5";
+    (e.currentTarget as HTMLElement).style.opacity = "0.5";
   };
 
   const handleCrossRosterDragEnd = (e: React.DragEvent) => {
     setDraggedMemberData(null);
     setDropTargetRoster(null);
-    e.currentTarget.style.opacity = "1";
+    (e.currentTarget as HTMLElement).style.opacity = "1";
   };
 
   const handleCrossRosterDragOver = (e: React.DragEvent, targetRosterId: string) => {
@@ -2014,7 +2015,7 @@ export default function RostersPage() {
 
                             {/* Categorized members */}
                             {Object.entries(grouped).map(([categoryId, categoryMembers]) => (
-                              <React.Fragment key={categoryId}>
+                              <Fragment key={categoryId}>
                                 <tr className="bg-muted/30 border-y border-border">
                                   <td colSpan={displayColumns.length + 1} className="px-3 py-3">
                                     <div className="flex items-center justify-between">
@@ -2058,7 +2059,7 @@ export default function RostersPage() {
                                     </td>
                                   </tr>
                                 ))}
-                              </React.Fragment>
+                              </Fragment>
                             ))}
                           </tbody>
                         </table>
