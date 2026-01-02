@@ -424,16 +424,16 @@ export default function ClansPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
               <Shield className="h-8 w-8 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Clan Management</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Clan Management</h1>
               <p className="text-muted-foreground mt-1">
                 Configure your clans and their Discord integration settings
               </p>
@@ -488,7 +488,7 @@ export default function ClansPage() {
         </div>
 
         {/* Statistics */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Clans</CardTitle>
@@ -566,7 +566,7 @@ export default function ClansPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {clans.map((clan) => {
               const isConfigured = !!(clan.settings?.clanChannel || clan.settings?.generalRole);
 

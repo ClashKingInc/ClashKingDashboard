@@ -376,17 +376,17 @@ export default function AutoBoardsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
                 <LayoutDashboard className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
                 <p className="text-muted-foreground mt-1">
                   {t('description')}
                 </p>
@@ -396,7 +396,7 @@ export default function AutoBoardsPage() {
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 w-full md:w-auto"
               disabled={autoboardsData ? autoboardsData.total >= autoboardsData.limit : false}
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -751,7 +751,7 @@ export default function AutoBoardsPage() {
       </Alert>
 
       {/* Statistics Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -856,7 +856,7 @@ export default function AutoBoardsPage() {
       {/* AutoBoards List */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <CardTitle className="text-foreground">Active AutoBoards</CardTitle>
               <CardDescription className="text-muted-foreground">
@@ -908,9 +908,9 @@ export default function AutoBoardsPage() {
                 {autoboardsData.autoboards.map((autoboard) => (
                   <div
                     key={autoboard.id}
-                    className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors"
+                    className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 hover:bg-secondary/50 transition-colors"
                   >
-                    <div className="flex items-center gap-4 flex-1">
+                    <div className="flex items-center gap-4 flex-1 w-full">
                       <div className={`p-3 rounded-lg ${autoboard.type === 'post' ? 'bg-green-500/10 border border-green-500/30' : 'bg-blue-500/10 border border-blue-500/30'}`}>
                         {autoboard.type === 'post' ? (
                           <Calendar className="h-5 w-5 text-green-500" />

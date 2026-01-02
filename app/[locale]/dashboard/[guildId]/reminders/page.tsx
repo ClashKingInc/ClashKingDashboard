@@ -464,10 +464,10 @@ export default function RemindersPage() {
   const currentReminders = getCurrentReminders();
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
@@ -573,16 +573,16 @@ export default function RemindersPage() {
         </div>
 
         {/* Clan Selector and Add Button */}
-        <div className="flex justify-between items-center mb-4">
-          <Button onClick={addReminder} className="gap-2">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+          <Button onClick={addReminder} className="gap-2 w-full md:w-auto">
             <Plus className="h-4 w-4" />
             Add {activeTab === "war" ? "War" : activeTab === "capital" ? "Capital" : activeTab === "games" ? "Clan Games" : "Inactivity"} Reminder
           </Button>
           {clans.length > 0 && (
-            <div className="flex items-center gap-2">
-              <Label className="text-sm text-muted-foreground">Clan:</Label>
+            <div className="flex items-center gap-2 w-full md:w-auto">
+              <Label className="text-sm text-muted-foreground whitespace-nowrap">Clan:</Label>
               <Select value={selectedClan} onValueChange={setSelectedClan}>
-                <SelectTrigger className="w-[250px]">
+                <SelectTrigger className="w-full md:w-[250px]">
                   <SelectValue placeholder="Select a clan" />
                 </SelectTrigger>
                 <SelectContent>
@@ -600,7 +600,7 @@ export default function RemindersPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-[800px]">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-[800px] h-auto">
             <TabsTrigger value="war" className="gap-2">
               <Target className="h-4 w-4" />
               War

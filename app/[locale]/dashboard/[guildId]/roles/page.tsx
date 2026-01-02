@@ -642,10 +642,10 @@ export default function RolesPage() {
   const totalRoleTypes = 7; // townhall, league, builderhall, builder_league, achievement, status, family_position
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
           <div className="p-3 rounded-lg bg-purple-500/10">
             <Shield className="h-8 w-8 text-purple-500" />
           </div>
@@ -740,7 +740,7 @@ export default function RolesPage() {
         {/* Auto-Eval Settings */}
         <Card className="bg-card border-border">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="h-5 w-5" />
@@ -753,7 +753,7 @@ export default function RolesPage() {
               <Button
                 onClick={handleSaveSettings}
                 disabled={isSaving}
-                className="bg-primary hover:bg-primary/90"
+                className="bg-primary hover:bg-primary/90 w-full md:w-auto"
               >
                 {isSaving ? (
                   <>
@@ -807,11 +807,11 @@ export default function RolesPage() {
         {/* Role Types Tabs */}
         <Card className="bg-card border-border">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <CardTitle>Configured Roles</CardTitle>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-primary hover:bg-primary/90">
+                  <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Role
                   </Button>
@@ -868,7 +868,7 @@ export default function RolesPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 h-auto">
                 {ROLE_TYPES.map((type) => (
                   <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm">
                     <type.icon className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />

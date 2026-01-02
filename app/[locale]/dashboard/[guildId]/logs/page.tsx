@@ -562,15 +562,15 @@ export default function LogsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-lg bg-blue-500/10">
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <div className="p-3 rounded-lg bg-blue-500/10 w-fit">
             <FileText className="h-8 w-8 text-blue-500" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Activity Logs</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Activity Logs</h1>
             <p className="text-muted-foreground mt-1">
               Configure automatic logging for clan and player activities
             </p>
@@ -578,7 +578,7 @@ export default function LogsPage() {
         </div>
 
         {/* Statistics Overview */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Active Logs</CardTitle>
@@ -680,10 +680,10 @@ export default function LogsPage() {
 
         {/* Clan Selector */}
         {clanLogs.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col md:flex-row md:items-center gap-2">
             <Label className="text-sm text-muted-foreground">Clan:</Label>
             <Select value={selectedClan} onValueChange={setSelectedClan}>
-              <SelectTrigger className="w-[300px]">
+              <SelectTrigger className="w-full md:w-[300px]">
                 <SelectValue placeholder="Select a clan" />
               </SelectTrigger>
               <SelectContent>
@@ -698,7 +698,7 @@ export default function LogsPage() {
         )}
 
         <Tabs defaultValue="clan" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-[800px] bg-secondary">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-[800px] bg-secondary h-auto p-1">
             <TabsTrigger value="clan" className="data-[state=active]:bg-background">
               <Users className="mr-2 h-4 w-4" />
               Clan
@@ -719,28 +719,28 @@ export default function LogsPage() {
 
           {/* CLAN LOGS TAB */}
           <TabsContent value="clan" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               {CLAN_LOGS.map(renderLogCard)}
             </div>
           </TabsContent>
 
           {/* WAR LOGS TAB */}
           <TabsContent value="war" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               {WAR_LOGS.map(renderLogCard)}
             </div>
           </TabsContent>
 
           {/* CAPITAL LOGS TAB */}
           <TabsContent value="capital" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               {CAPITAL_LOGS.map(renderLogCard)}
             </div>
           </TabsContent>
 
           {/* PLAYER LOGS TAB */}
           <TabsContent value="player" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               {PLAYER_LOGS.map(renderLogCard)}
             </div>
           </TabsContent>

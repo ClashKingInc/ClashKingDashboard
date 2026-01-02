@@ -183,17 +183,17 @@ export default function LeaderboardsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 space-y-6">
+    <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
       {/* Page Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-foreground">Leaderboards</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Leaderboards</h1>
         <p className="text-muted-foreground">
           Global leaderboards for Clan Capital and more
         </p>
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-foreground">Total Entries</CardTitle>
@@ -244,7 +244,7 @@ export default function LeaderboardsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Type</label>
               <Tabs value={leaderboardType} onValueChange={(val) => setLeaderboardType(val as "player" | "clan")}>
@@ -320,9 +320,9 @@ export default function LeaderboardsPage() {
               {leaderboardData.map((entry) => (
                 <div
                   key={entry.tag}
-                  className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/50 hover:bg-secondary transition-colors"
+                  className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 rounded-lg border border-border bg-secondary/50 hover:bg-secondary transition-colors"
                 >
-                  <div className="flex items-center gap-4 flex-1">
+                  <div className="flex items-center gap-4 flex-1 w-full">
                     <div className={`flex items-center gap-2 min-w-[60px] ${getRankColor(entry.rank)}`}>
                       {getRankIcon(entry.rank)}
                       <span className="text-xl font-bold">#{entry.rank}</span>

@@ -522,10 +522,10 @@ export default function WarsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
@@ -539,7 +539,7 @@ export default function WarsPage() {
               </div>
             </div>
           </div>
-          <Button className="bg-primary hover:bg-primary/90">
+          <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
             <Download className="mr-2 h-4 w-4" />
             Export Data
           </Button>
@@ -550,7 +550,7 @@ export default function WarsPage() {
             {/* Filters Card */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Filter className="h-5 w-5" />
@@ -558,17 +558,17 @@ export default function WarsPage() {
                     </CardTitle>
                     <CardDescription>Filter war statistics by various criteria</CardDescription>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full md:w-auto">
                     <Button variant="outline" size="sm" onClick={() => setFilters({
                       clan: "all",
                       user: "",
                       townHall: "all",
                       startDate: "",
                       endDate: "",
-                    })}>
+                    })} className="flex-1 md:flex-none">
                       Reset Filters
                     </Button>
-                    <Button size="sm" onClick={handleApplyFilters} disabled={loading}>
+                    <Button size="sm" onClick={handleApplyFilters} disabled={loading} className="flex-1 md:flex-none">
                       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                       Apply Filters
                     </Button>
