@@ -105,12 +105,15 @@
     },
     "footer": {
       "tagline": "De krachtigste Clash of Clans-bot voor Discord-communities.",
-      "product": {
-        "title": "Product",
+      "about": {
+        "title": "Over",
         "features": "Functies",
         "help": "Hulp nodig?",
         "openSource": "Open Source",
-        "support": "Steun ons",
+        "support": "Steun ons"
+      },
+      "bot": {
+        "title": "Bot",
         "dashboard": "Dashboard",
         "inviteBot": "Nodig Bot Uit"
       },
@@ -118,7 +121,6 @@
         "title": "Bronnen",
         "documentation": "Documentatie",
         "quickStart": "Snelstartgids",
-        "support": "Support Server",
         "github": "GitHub"
       },
       "community": {

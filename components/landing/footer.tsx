@@ -13,9 +13,9 @@ export function Footer() {
   return (
     <footer className="bg-[#1F1F1F] border-t border-[#DC2626]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
           {/* Brand */}
-          <div className="col-span-1 md:col-span-1">
+          <div className="col-span-2 md:col-span-1">
             <Image
               src="https://assets.clashk.ing/logos/crown-arrow-dark-bg/ClashKing-1.png"
               alt="ClashKing"
@@ -28,38 +28,45 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Product */}
+          {/* About */}
           <div>
-            <h3 className="font-semibold text-white mb-4">{t("product.title")}</h3>
+            <h3 className="font-semibold text-white mb-4">{t("about.title")}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href={`/features`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("product.features")}
+                  {t("about.features")}
                 </Link>
               </li>
               <li>
                 <Link href={`/help`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("product.help")}
+                  {t("about.help")}
                 </Link>
               </li>
               <li>
                 <Link href={`/open-source`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("product.openSource")}
+                  {t("about.openSource")}
                 </Link>
               </li>
               <li>
                 <Link href={`/support`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("product.support")}
+                  {t("about.support")}
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Bot */}
+          <div>
+            <h3 className="font-semibold text-white mb-4">{t("bot.title")}</h3>
+            <ul className="space-y-2">
               <li>
                 <Link href={`/login`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("product.dashboard")}
+                  {t("bot.dashboard")}
                 </Link>
               </li>
               <li>
                 <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("product.inviteBot")}
+                  {t("bot.inviteBot")}
                 </a>
               </li>
             </ul>
@@ -77,11 +84,6 @@ export function Footer() {
               <li>
                 <a href="https://docs.clashk.ing/quick-start" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("resources.quickStart")}
-                </a>
-              </li>
-              <li>
-                <a href="https://discord.clashk.ing/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("resources.support")}
                 </a>
               </li>
               <li>
