@@ -555,6 +555,117 @@
     "redirecting": "Redirection vers Discord...",
     "redirectingDescription": "Vous allez être redirigé vers Discord pour compléter le processus de connexion"
   },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Fonctionnalités",
+      "subtitle": "Découvrez les outils puissants que ClashKing propose pour vous aider à gérer et développer votre clan sur Discord, mobile et web."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "ClashKing Bot est le seul bot Discord dont vous avez besoin pour gérer votre clan et votre communauté Clash of Clans. Il regorge de fonctionnalités uniques pour garder votre clan organisé, impliqué et en croissance.",
+        "items": [
+          "Logs en temps réel : Suivez les guerres, la LDC, les jeux de clan, les raids, les dons et les événements des membres.",
+          "Système de tickets : Système de tickets de recrutement en plus des tickets de support standards.",
+          "Rôles automatiques : Attribuez automatiquement des rôles selon le statut du clan ou la gestion de la famille.",
+          "Rappels : Envoyez des pings pour les attaques de guerre, les jeux de clan ou tout autre événement.",
+          "Statistiques détaillées : Des insights sur les performances des joueurs et du clan avec suivi d'activité.",
+          "Gestion des rosters : Organisez et optimisez vos compositions de guerre facilement."
+        ],
+        "ctaPrimary": "Inviter le Bot",
+        "ctaSecondary": "Rejoindre la communauté"
+      },
+      "app": {
+        "title": "ClashKing App (Bêta Ouverte)",
+        "description": "ClashKing App est l'extension idéale du ClashKing Bot, apportant des outils essentiels et des insights directement sur votre mobile. Elle vous aide à rester connecté à tout moment, même sans Discord.",
+        "items": [
+          "Statistiques en temps réel : Statistiques détaillées des joueurs et clans synchronisées avec le bot.",
+          "Suivi de progression du clan : Surveillez l'évolution de votre clan au fil du temps sans effort.",
+          "Gestion multi-compte : Basculez facilement entre vos comptes et suivez leurs performances.",
+          "Historique intégré : Accédez aux données historiques pour analyser les tendances et améliorer les stratégies.",
+          "Gestion du serveur Discord : (Bientôt) Gérez les rôles et tickets depuis l'application.",
+          "Notifications avancées : (Bientôt) Personnalisez les alertes pour les événements importants."
+        ],
+        "ctaPrimary": "Bêta Android",
+        "ctaSecondary": "TestFlight iOS"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Créez vos propres outils ou projets en utilisant l'API ClashKing. Elle est gratuite tant que vous créditez le projet ClashKing.",
+        "items": [],
+        "ctaPrimary": "Documentation API",
+        "ctaSecondary": "API sur GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Besoin d'aide ?",
+    "subtitle": "Que vous cherchiez la documentation ou un support direct, nous sommes là.",
+    "documentation": {
+      "title": "Documentation",
+      "description": "Consultez nos guides complets et références de commandes pour tirer le meilleur parti de ClashKing.",
+      "cta": "Voir la documentation"
+    },
+    "discord": {
+      "title": "Support Discord",
+      "description": "Besoin d'aide supplémentaire ? Rejoignez notre communauté Discord pour poser vos questions, signaler des bugs ou discuter avec les autres utilisateurs.",
+      "cta": "Rejoindre Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Un projet open source",
+    "subtitle": "ClashKing est un projet totalement gratuit et open source, et nous croyons au pouvoir de la communauté pour l'améliorer encore. Le bot et l'API sont entièrement open source, vous offrant la liberté de contribuer ou de les utiliser dans vos propres projets.",
+    "github": {
+      "title": "Organisation GitHub",
+      "description": "Explorez notre code source, contribuez au bot ou découvrez nos autres outils open source.",
+      "ctaPrimary": "Voir l'organisation",
+      "repos": {
+        "bot": "Repo du Bot",
+        "app": "Repo de l'App",
+        "api": "Repo de l'API",
+        "assets": "Repo des Assets"
+      }
+    },
+    "api": {
+      "title": "Documentation API",
+      "description": "Créez vos propres outils ou projets en utilisant l'API ClashKing. Elle est gratuite tant que vous créditez le projet ClashKing.",
+      "cta": "Docs API"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Contribuer",
+        "description": "Aidez-nous à nous améliorer en corrigeant des bugs, en ajoutant de nouvelles fonctionnalités ou en améliorant les existantes. Chaque contribution compte !"
+      },
+      "community": {
+        "title": "Communauté",
+        "description": "Rejoignez notre communauté Discord pour discuter d'idées, obtenir de l'aide et collaborer avec d'autres développeurs."
+      },
+      "learn": {
+        "title": "Apprendre",
+        "description": "Consultez notre documentation et nos exemples pour apprendre à utiliser efficacement le bot et l'API."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Nous soutenir",
+    "subtitle": "ClashKing est un projet gratuit et open source. Votre soutien nous aide à maintenir les serveurs et à développer de nouvelles fonctionnalités pour la communauté.",
+    "patreon": {
+      "title": "Devenir mécène",
+      "description": "Soutenez-nous chaque mois sur Patreon pour obtenir des avantages exclusifs, un accès anticipé aux fonctionnalités et aider à couvrir nos coûts d'hébergement.",
+      "cta": "Soutenir sur Patreon"
+    },
+    "creatorCode": {
+      "title": "Utiliser le code créateur",
+      "description": "Soutenez-nous gratuitement en utilisant le code créateur",
+      "descriptionSuffix": "dans le jeu ou sur le Supercell Store.",
+      "ctaGame": "Utiliser en jeu",
+      "ctaStore": "Utiliser sur le Supercell Store"
+    },
+    "whySupport": {
+      "title": "Pourquoi nous soutenir ?",
+      "description": "Chaque contribution, même minime, va directement aux coûts serveurs et aux frais d'API. Utiliser notre code créateur ne vous coûte rien mais nous aide énormément !"
+    }
+  },
   "ServersPage": {
     "title": "Sélectionner un Serveur",
     "description": "Choisissez un serveur pour configurer les paramètres du bot ClashKing",

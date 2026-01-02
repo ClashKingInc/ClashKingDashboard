@@ -3,59 +3,48 @@
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { CheckCircle2, Bot, Smartphone, Code2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function FeaturesPage() {
+  const t = useTranslations("FeaturesPage");
+
   const features = [
     {
       id: "bot",
-      title: "ClashKing Bot",
+      title: t("sections.bot.title"),
       icon: <Bot className="text-[#DC2626]" size={32} />,
-      description: "ClashKing Bot is the only Discord bot you need to manage your Clash of Clans clan and community. It’s packed with unique features to keep your clan organized, engaged, and growing.",
-      items: [
-        "Real-Time Logs: Track wars, CWL, clan games, raids, donations, and member events.",
-        "Ticketing System: Recruitment ticket system in addition to standard support tickets.",
-        "Auto Roles: Automatically assign roles based on clan status or family management.",
-        "Reminders: Send pings for war attacks, clan games, or anything else.",
-        "Detailed Stats: Insights into player and clan performance with activity tracking.",
-        "Roster Management: Organize and optimize your war rosters with ease.",
-      ],
+      description: t("sections.bot.description"),
+      items: (t.raw("sections.bot.items") as string[]) ?? [],
       cta: {
-        text: "Invite Bot",
+        text: t("sections.bot.ctaPrimary"),
         link: "https://invite.clashk.ing/",
-        secondaryText: "Join Community",
+        secondaryText: t("sections.bot.ctaSecondary"),
         secondaryLink: "https://discord.clashk.ing/"
       }
     },
     {
       id: "app",
-      title: "ClashKing App (Open Beta)",
+      title: t("sections.app.title"),
       icon: <Smartphone className="text-[#DC2626]" size={32} />,
-      description: "ClashKing App is the perfect extension to the ClashKing Bot, bringing essential tools and insights directly to your mobile device. It helps you stay connected anytime, anywhere, even without Discord.",
-      items: [
-        "Real-Time Stats: Detailed stats for players and clans synced with the bot.",
-        "Clan Progress Tracking: Monitor your clan’s progress over time seamlessly.",
-        "Multi account Management: Switch easily between your accounts and track performance.",
-        "Built-In History: Access historical data to analyze trends and improve strategies.",
-        "Discord Server Management: (Coming Soon) Manage roles and tickets from the app.",
-        "Advanced Notifications: (Coming Soon) Customize alerts for important events.",
-      ],
+      description: t("sections.app.description"),
+      items: (t.raw("sections.app.items") as string[]) ?? [],
       cta: {
-        text: "Android Beta",
+        text: t("sections.app.ctaPrimary"),
         link: "https://play.google.com/apps/testing/com.clashking.clashkingapp",
-        secondaryText: "iOS TestFlight",
+        secondaryText: t("sections.app.ctaSecondary"),
         secondaryLink: "https://testflight.apple.com/join/6Q8dfnMX"
       }
     },
     {
       id: "api",
-      title: "ClashKing API",
+      title: t("sections.api.title"),
       icon: <Code2 className="text-[#DC2626]" size={32} />,
-      description: "Build your own tools or projects using the ClashKing API. It’s free to use as long as you credit the ClashKing project.",
-      items: [],
+      description: t("sections.api.description"),
+      items: (t.raw("sections.api.items") as string[]) ?? [],
       cta: {
-        text: "API Documentation",
+        text: t("sections.api.ctaPrimary"),
         link: "https://api.clashk.ing/",
-        secondaryText: "API on GitHub",
+        secondaryText: t("sections.api.ctaSecondary"),
         secondaryLink: "https://github.com/ClashKingInc/ClashKingAPI"
       }
     }
@@ -66,9 +55,9 @@ export default function FeaturesPage() {
       <Navbar />
       <div className="container mx-auto px-4 py-24">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Features</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">{t("hero.title")}</h1>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Discover the powerful tools ClashKing offers to help you manage and grow your clan across Discord, Mobile, and Web.
+            {t("hero.subtitle")}
           </p>
         </div>
 
