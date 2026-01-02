@@ -7,10 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 // Import translations
 import enMessages from "@/messages/en.json";
 import frMessages from "@/messages/fr.json";
+import nlMessages from "@/messages/nl.json";
 
 const messages = {
   en: enMessages,
   fr: frMessages,
+  nl: nlMessages,
 } as const;
 
 type Locale = keyof typeof messages;
@@ -26,7 +28,7 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const storedLocale = sessionStorage.getItem('auth_locale') as Locale;
-    if (storedLocale && (storedLocale === 'en' || storedLocale === 'fr')) {
+    if (storedLocale && (storedLocale === 'en' || storedLocale === 'fr' || storedLocale === 'nl')) {
       setLocale(storedLocale);
     }
   }, []);

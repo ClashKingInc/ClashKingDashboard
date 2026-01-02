@@ -527,7 +527,8 @@
   "LanguageSwitcher": {
     "label": "Langue",
     "english": "English",
-    "french": "Français"
+    "french": "Français",
+    "dutch": "Néerlandais"
   },
   "ThemeSwitcher": {
     "label": "Thème",

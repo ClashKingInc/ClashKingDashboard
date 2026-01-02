@@ -60,6 +60,12 @@ export function LanguageSwitcher() {
         >
           {t("french")}
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => switchLocale("nl")}
+          className={currentLocale === "nl" ? "bg-accent" : ""}
+        >
+          {t("dutch")}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
