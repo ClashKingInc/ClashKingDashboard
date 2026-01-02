@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { SERVER_COUNT } from "@/lib/constants";
 
 export function CTA() {
   const t = useTranslations("HomePage.cta");
@@ -33,11 +34,11 @@ export function CTA() {
 
           {/* Description */}
           <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            {t("description")}
+            {t("description", { serverCount: SERVER_COUNT })}
           </p>
 
           {/* CTA Button */}
-          <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer">
+          <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer">
             <Button size="lg" className="bg-white text-[#DC2626] hover:bg-gray-100 text-lg px-10 py-7 rounded-xl shadow-2xl hover:shadow-3xl transition-all group text-base font-semibold border-4 border-white/30">
               {t("button")}
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
@@ -46,7 +47,7 @@ export function CTA() {
 
           {/* Trust badge */}
           <p className="mt-8 text-sm text-white/80">
-            {t("trustBadge")}
+            {t("trustBadge", { serverCount: SERVER_COUNT })}
           </p>
         </motion.div>
       </div>

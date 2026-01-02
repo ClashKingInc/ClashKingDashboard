@@ -3,7 +3,7 @@ import { generateCodeVerifier, generateCodeChallenge } from "@/lib/pkce";
 /**
  * Initiates Discord OAuth2 login flow with PKCE
  * Can be called from anywhere in the application
- * @param locale - The locale to use for the callback URL (e.g., 'en', 'fr')
+ * @param locale - The locale to use for the callback URL (e.g., 'en', 'fr', 'nl')
  */
 export async function initiateDiscordLogin(locale: string = 'en') {
   try {

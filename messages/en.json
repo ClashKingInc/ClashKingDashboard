@@ -30,6 +30,9 @@
   },
   "Navigation": {
     "features": "Features",
+    "openSource": "Open Source",
+    "help": "Need Help?",
+    "support": "Support Us",
     "commands": "Commands",
     "premium": "Premium",
     "documentation": "Documentation",
@@ -39,15 +42,15 @@
     "dashboardSettings": "Dashboard Settings"
   },
   "HomePage": {
-    "badge": "12,500+ servers already using ClashKing",
+    "badge": "{serverCount}+ servers already using ClashKing",
     "title": "The Most Powerful",
     "titleHighlight": "Clash of Clans Bot",
     "subtitle": "Automate your clan management, track player stats, manage wars, and keep your community engaged—all from Discord.",
     "cta": {
       "heading": "Ready to Transform Your Clan?",
-      "description": "Join 12,500+ Discord servers already using ClashKing to elevate their Clash of Clans community. Setup takes just 2 minutes.",
+      "description": "Join {serverCount}+ Discord servers already using ClashKing to elevate their Clash of Clans community. Setup takes just 2 minutes.",
       "button": "Add ClashKing to Discord",
-      "trustBadge": "Free forever • No credit card required • 12,500+ servers",
+      "trustBadge": "Free forever • No credit card required • {serverCount}+ servers",
       "addToDiscord": "Add to Discord",
       "openDashboard": "Open Dashboard"
     },
@@ -105,7 +108,9 @@
       "product": {
         "title": "Product",
         "features": "Features",
-        "premium": "Premium",
+        "help": "Need Help?",
+        "openSource": "Open Source",
+        "support": "Support Us",
         "dashboard": "Dashboard",
         "inviteBot": "Invite Bot"
       },
@@ -119,7 +124,7 @@
       "community": {
         "title": "Community",
         "discord": "Discord Server",
-        "twitter": "Twitter",
+        "twitter": "X (Twitter)",
         "reportBug": "Report a Bug",
         "requestFeature": "Request Feature"
       },
@@ -448,15 +453,6 @@
     "message": "Message",
     "timing": "Timing"
   },
-  "AutoboardsPage": {
-    "title": "Autoboards",
-    "description": "Automated leaderboard messages",
-    "noAutoboards": "No autoboards configured",
-    "createAutoboard": "Create Autoboard",
-    "type": "Type",
-    "channel": "Channel",
-    "updateInterval": "Update Interval"
-  },
   "LogsPage": {
     "title": "Logs",
     "description": "Configure webhook logs",
@@ -531,7 +527,8 @@
   "LanguageSwitcher": {
     "label": "Language",
     "english": "English",
-    "french": "Français"
+    "french": "Français",
+    "dutch": "Dutch"
   },
   "ThemeSwitcher": {
     "label": "Theme",
@@ -549,6 +546,117 @@
     "backToHome": "Back to Home",
     "redirecting": "Redirecting to Discord...",
     "redirectingDescription": "You will be redirected to Discord to complete the login process"
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Features",
+      "subtitle": "Discover the powerful tools ClashKing offers to help you manage and grow your clan across Discord, Mobile, and Web."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "ClashKing Bot is the only Discord bot you need to manage your Clash of Clans clan and community. It's packed with unique features to keep your clan organized, engaged, and growing.",
+        "items": [
+          "Real-Time Logs: Track wars, CWL, clan games, raids, donations, and member events.",
+          "Ticketing System: Recruitment ticket system in addition to standard support tickets.",
+          "Auto Roles: Automatically assign roles based on clan status or family management.",
+          "Reminders: Send pings for war attacks, clan games, or anything else.",
+          "Detailed Stats: Insights into player and clan performance with activity tracking.",
+          "Roster Management: Organize and optimize your war rosters with ease."
+        ],
+        "ctaPrimary": "Invite Bot",
+        "ctaSecondary": "Join Community"
+      },
+      "app": {
+        "title": "ClashKing App (Open Beta)",
+        "description": "ClashKing App is the perfect extension to the ClashKing Bot, bringing essential tools and insights directly to your mobile device. It helps you stay connected anytime, anywhere, even without Discord.",
+        "items": [
+          "Real-Time Stats: Detailed stats for players and clans synced with the bot.",
+          "Clan Progress Tracking: Monitor your clan's progress over time seamlessly.",
+          "Multi account Management: Switch easily between your accounts and track performance.",
+          "Built-In History: Access historical data to analyze trends and improve strategies.",
+          "Discord Server Management: (Coming Soon) Manage roles and tickets from the app.",
+          "Advanced Notifications: (Coming Soon) Customize alerts for important events."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Build your own tools or projects using the ClashKing API. It's free to use as long as you credit the ClashKing project.",
+        "items": [],
+        "ctaPrimary": "API Documentation",
+        "ctaSecondary": "API on GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Need Help?",
+    "subtitle": "Whether you're looking for documentation or direct support, we've got you covered.",
+    "documentation": {
+      "title": "Documentation",
+      "description": "Check out our comprehensive guides and command references to get the most out of ClashKing.",
+      "cta": "View Docs"
+    },
+    "discord": {
+      "title": "Discord Support",
+      "description": "Need more help? Join our Discord community to ask questions, report bugs, or chat with other users.",
+      "cta": "Join Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "An Open Source Project",
+    "subtitle": "ClashKing is a totally free and open source project, and we believe in the power of community to make it even better. Both the bot and the API are fully open source, giving you the freedom to contribute or use them for your own projects.",
+    "github": {
+      "title": "GitHub Organization",
+      "description": "Explore our source code, contribute to the bot, or check out our other open-source tools.",
+      "ctaPrimary": "View Organization",
+      "repos": {
+        "bot": "Bot Repo",
+        "app": "App Repo",
+        "api": "API Repo",
+        "assets": "Assets Repo"
+      }
+    },
+    "api": {
+      "title": "API Documentation",
+      "description": "Build your own tools or projects using the ClashKing API. It's free to use as long as you credit the ClashKing project.",
+      "cta": "API Docs"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Contribute",
+        "description": "Help us improve by fixing bugs, adding new features, or enhancing existing ones. Every contribution counts!"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Join our Discord community to discuss ideas, get help, and collaborate with other developers."
+      },
+      "learn": {
+        "title": "Learn",
+        "description": "Check out our documentation and examples to learn how to use the bot and API effectively."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Support Us",
+    "subtitle": "ClashKing is a free, open-source project. Your support helps us keep the servers running and continue developing new features for the community.",
+    "patreon": {
+      "title": "Become a Patron",
+      "description": "Support us monthly on Patreon to get exclusive perks, early access to features, and help cover our hosting costs.",
+      "cta": "Support on Patreon"
+    },
+    "creatorCode": {
+      "title": "Use Creator Code",
+      "description": "Support us for free by using creator code",
+      "descriptionSuffix": "in-game or in the Supercell Store.",
+      "ctaGame": "Use in Game",
+      "ctaStore": "Use in Supercell Store"
+    },
+    "whySupport": {
+      "title": "Why support us?",
+      "description": "Every contribution, no matter how small, goes directly towards server costs and API fees. Using our creator code costs you nothing extra but helps us immensely!"
+    }
   },
   "ServersPage": {
     "title": "Select a Server",

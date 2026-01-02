@@ -33,18 +33,18 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="#features" className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/features`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
               {t("features")}
             </Link>
-            <Link href="#commands" className="text-gray-300 hover:text-[#EF4444] transition-colors">
-              {t("commands")}
+            <Link href={`/open-source`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+              {t("openSource")}
             </Link>
-            <Link href="#pricing" className="text-gray-300 hover:text-[#EF4444] transition-colors">
-              {t("premium")}
+            <Link href={`/help`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+              {t("help")}
             </Link>
-            <a href="https://docs.clashk.ing" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-[#EF4444] transition-colors">
-              {t("documentation")}
-            </a>
+            <Link href={`/support`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+              {t("support")}
+            </Link>
           </div>
 
           {/* CTA Buttons */}
@@ -72,18 +72,18 @@ export function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-gray-200 dark:border-gray-800">
           <div className="px-4 py-4 space-y-3">
-            <Link href="#features" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/features`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
               {t("features")}
             </Link>
-            <Link href="#commands" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
-              {t("commands")}
+            <Link href={`/open-source`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+              {t("openSource")}
             </Link>
-            <Link href="#pricing" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
-              {t("premium")}
+            <Link href={`/help`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+              {t("help")}
             </Link>
-            <a href="https://docs.clashk.ing" target="_blank" rel="noopener noreferrer" className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
-              {t("documentation")}
-            </a>
+            <Link href={`/support`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+              {t("support")}
+            </Link>
             <div className="pt-4 space-y-2">
               <div className="flex justify-center mb-2">
                 <LanguageSwitcher />
@@ -95,7 +95,7 @@ export function Navbar() {
               >
                 {t("loginWithDiscord")}
               </Button>
-              <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer" className="block">
+              <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="block">
                 <Button className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]">
                   {t("addToDiscord")}
                 </Button>

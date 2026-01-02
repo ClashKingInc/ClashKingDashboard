@@ -33,22 +33,32 @@ export function Footer() {
             <h3 className="font-semibold text-white mb-4">{t("product.title")}</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#features" className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <Link href={`/features`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.features")}
                 </Link>
               </li>
               <li>
-                <Link href="#pricing" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("product.premium")}
+                <Link href={`/help`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                  {t("product.help")}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/login`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <Link href={`/open-source`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                  {t("product.openSource")}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/support`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                  {t("product.support")}
+                </Link>
+              </li>
+              <li>
+                <Link href={`/login`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.dashboard")}
                 </Link>
               </li>
               <li>
-                <a href="https://discord.com/application-directory/824653933347209227" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.inviteBot")}
                 </a>
               </li>
@@ -70,30 +80,13 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://discord.gg/clashking" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <a href="https://discord.clashk.ing/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("resources.support")}
                 </a>
               </li>
               <li>
-                <a href="https://github.com/ClashKingInc" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <a href="https://git.clashk.ing/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("resources.github")}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Community */}
-          <div>
-            <h3 className="font-semibold text-white mb-4">{t("community.title")}</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="https://discord.gg/clashking" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("community.discord")}
-                </a>
-              </li>
-              <li>
-                <a href="https://twitter.com/clashking" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
-                  {t("community.twitter")}
                 </a>
               </li>
               <li>
@@ -108,6 +101,23 @@ export function Footer() {
               </li>
             </ul>
           </div>
+
+          {/* Community */}
+          <div>
+            <h3 className="font-semibold text-white mb-4">{t("community.title")}</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="https://discord.clashk.ing/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                  {t("community.discord")}
+                </a>
+              </li>
+              <li>
+                <a href="https://x.clashk.ing/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                  {t("community.twitter")}
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Bottom bar */}
@@ -117,10 +127,10 @@ export function Footer() {
               &copy; {new Date().getFullYear()} {t("legal.copyright")}
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
+              <Link href={`/privacy`} className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
                 {t("legal.privacy")}
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
+              <Link href={`/terms`} className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
                 {t("legal.terms")}
               </Link>
             </div>

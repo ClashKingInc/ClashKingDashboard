@@ -29,7 +29,7 @@ export default function LoginPage() {
 
       {/* Back button */}
       <Link
-        href={`/${locale}`}
+        href="/"
         className="absolute top-8 left-8 flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
