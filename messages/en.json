@@ -42,15 +42,15 @@
     "dashboardSettings": "Dashboard Settings"
   },
   "HomePage": {
-    "badge": "12,500+ servers already using ClashKing",
+    "badge": "{serverCount}+ servers already using ClashKing",
     "title": "The Most Powerful",
     "titleHighlight": "Clash of Clans Bot",
     "subtitle": "Automate your clan management, track player stats, manage wars, and keep your community engaged—all from Discord.",
     "cta": {
       "heading": "Ready to Transform Your Clan?",
-      "description": "Join 12,500+ Discord servers already using ClashKing to elevate their Clash of Clans community. Setup takes just 2 minutes.",
+      "description": "Join {serverCount}+ Discord servers already using ClashKing to elevate their Clash of Clans community. Setup takes just 2 minutes.",
       "button": "Add ClashKing to Discord",
-      "trustBadge": "Free forever • No credit card required • 12,500+ servers",
+      "trustBadge": "Free forever • No credit card required • {serverCount}+ servers",
       "addToDiscord": "Add to Discord",
       "openDashboard": "Open Dashboard"
     },

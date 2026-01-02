@@ -42,15 +42,15 @@
     "dashboardSettings": "Paramètres du Tableau de Bord"
   },
   "HomePage": {
-    "badge": "Plus de 12 500 serveurs utilisent déjà ClashKing",
+    "badge": "Plus de {serverCount} serveurs utilisent déjà ClashKing",
     "title": "Le Bot le Plus Puissant pour",
     "titleHighlight": "Clash of Clans",
     "subtitle": "Automatisez la gestion de votre clan, suivez les statistiques des joueurs, gérez les guerres et gardez votre communauté engagée, le tout depuis Discord.",
     "cta": {
       "heading": "Prêt à Transformer Votre Clan ?",
-      "description": "Rejoignez plus de 12 500 serveurs Discord qui utilisent déjà ClashKing pour élever leur communauté Clash of Clans. Configuration en seulement 2 minutes.",
+      "description": "Rejoignez plus de {serverCount} serveurs Discord qui utilisent déjà ClashKing pour élever leur communauté Clash of Clans. Configuration en seulement 2 minutes.",
       "button": "Ajouter ClashKing à Discord",
-      "trustBadge": "Gratuit pour toujours • Aucune carte de crédit requise • Plus de 12 500 serveurs",
+      "trustBadge": "Gratuit pour toujours • Aucune carte de crédit requise • Plus de {serverCount} serveurs",
       "addToDiscord": "Ajouter à Discord",
       "openDashboard": "Ouvrir le Tableau de Bord"
     },

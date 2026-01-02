@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { SERVER_COUNT } from "@/lib/constants";
 
 export function CTA() {
   const t = useTranslations("HomePage.cta");
@@ -33,7 +34,7 @@ export function CTA() {
 
           {/* Description */}
           <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            {t("description")}
+            {t("description", { serverCount: SERVER_COUNT })}
           </p>
 
           {/* CTA Button */}
@@ -46,7 +47,7 @@ export function CTA() {
 
           {/* Trust badge */}
           <p className="mt-8 text-sm text-white/80">
-            {t("trustBadge")}
+            {t("trustBadge", { serverCount: SERVER_COUNT })}
           </p>
         </motion.div>
       </div>
