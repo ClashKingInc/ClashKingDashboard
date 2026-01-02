@@ -4,6 +4,6 @@ import { routing } from './i18n/routing';
 export default createMiddleware(routing);
 
 export const config = {
-  // Match all routes except login, auth, servers, and static files
-  matcher: ['/((?!login|auth|servers|_next|_vercel|api|.*\\..*).*)', '/']
+  // Match all routes except static files and API routes
+  matcher: ['/((?!_next|_vercel|api|.*\\..*).*)', '/']
 };
