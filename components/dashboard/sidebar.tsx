@@ -45,7 +45,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       items: [
         {
           nameKey: "overview.name",
-          href: `/${locale}/dashboard/${guildId}`,
+          href: `/dashboard/${guildId}`,
           icon: Home,
         },
       ],
@@ -55,12 +55,12 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       items: [
         {
           nameKey: "general.name",
-          href: `/${locale}/dashboard/${guildId}/general`,
+          href: `/dashboard/${guildId}/general`,
           icon: Settings,
         },
         {
           nameKey: "logs.name",
-          href: `/${locale}/dashboard/${guildId}/logs`,
+          href: `/dashboard/${guildId}/logs`,
           icon: ScrollText,
         },
       ],
@@ -70,12 +70,12 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       items: [
         {
           nameKey: "clans.name",
-          href: `/${locale}/dashboard/${guildId}/clans`,
+          href: `/dashboard/${guildId}/clans`,
           icon: Users,
         },
         {
           nameKey: "rosters.name",
-          href: `/${locale}/dashboard/${guildId}/rosters`,
+          href: `/dashboard/${guildId}/rosters`,
           icon: ClipboardList,
         },
       ],
@@ -85,12 +85,12 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       items: [
         {
           nameKey: "links.name",
-          href: `/${locale}/dashboard/${guildId}/links`,
+          href: `/dashboard/${guildId}/links`,
           icon: Link2,
         },
         {
           nameKey: "bans.name",
-          href: `/${locale}/dashboard/${guildId}/bans`,
+          href: `/dashboard/${guildId}/bans`,
           icon: Ban,
         },
       ],
@@ -100,17 +100,17 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       items: [
         {
           nameKey: "roles.name",
-          href: `/${locale}/dashboard/${guildId}/roles`,
+          href: `/dashboard/${guildId}/roles`,
           icon: ShieldCheck,
         },
         {
           nameKey: "reminders.name",
-          href: `/${locale}/dashboard/${guildId}/reminders`,
+          href: `/dashboard/${guildId}/reminders`,
           icon: Bell,
         },
         {
           nameKey: "autoboards.name",
-          href: `/${locale}/dashboard/${guildId}/autoboards`,
+          href: `/dashboard/${guildId}/autoboards`,
           icon: LayoutDashboard,
         },
       ],
@@ -120,12 +120,12 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       items: [
         {
           nameKey: "wars.name",
-          href: `/${locale}/dashboard/${guildId}/wars`,
+          href: `/dashboard/${guildId}/wars`,
           icon: Swords,
         },
         {
           nameKey: "leaderboards.name",
-          href: `/${locale}/dashboard/${guildId}/leaderboards`,
+          href: `/dashboard/${guildId}/leaderboards`,
           icon: Trophy,
         },
       ],
@@ -135,7 +135,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
       items: [
         {
           nameKey: "botStats.name",
-          href: `/${locale}/dashboard/${guildId}/bot-stats`,
+          href: `/dashboard/${guildId}/bot-stats`,
           icon: Activity,
         },
       ],

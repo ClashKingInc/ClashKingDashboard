@@ -33,27 +33,27 @@ export function Footer() {
             <h3 className="font-semibold text-white mb-4">{t("product.title")}</h3>
             <ul className="space-y-2">
               <li>
-                <Link href={`/${locale}/features`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <Link href={`/features`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.features")}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/help`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <Link href={`/help`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.help")}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/open-source`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <Link href={`/open-source`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.openSource")}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/support`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <Link href={`/support`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.support")}
                 </Link>
               </li>
               <li>
-                <Link href={`/${locale}/login`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
+                <Link href={`/login`} className="text-gray-400 hover:text-[#EF4444] transition-colors">
                   {t("product.dashboard")}
                 </Link>
               </li>
@@ -127,10 +127,10 @@ export function Footer() {
               &copy; {new Date().getFullYear()} {t("legal.copyright")}
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href={`/${locale}/privacy`} className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
+              <Link href={`/privacy`} className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
                 {t("legal.privacy")}
               </Link>
-              <Link href={`/${locale}/terms`} className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
+              <Link href={`/terms`} className="text-gray-400 hover:text-[#EF4444] text-sm transition-colors">
                 {t("legal.terms")}
               </Link>
             </div>

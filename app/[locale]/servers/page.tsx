@@ -25,7 +25,7 @@ export default function ServersPage() {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          router.push(`/${locale}/login`);
+          router.push('/login');
           return;
         }
 
@@ -41,7 +41,7 @@ export default function ServersPage() {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
             localStorage.removeItem("user");
-            router.push(`/${locale}/login`);
+            router.push('/login');
             return;
           }
           throw new Error(response.error || "Failed to fetch guilds");
@@ -82,7 +82,7 @@ export default function ServersPage() {
 
   const handleGuildClick = (guild: GuildInfo) => {
     if (guild.has_bot) {
-      router.push(`/${locale}/dashboard/${guild.id}`);
+      router.push(`/dashboard/${guild.id}`);
     }
   };
 

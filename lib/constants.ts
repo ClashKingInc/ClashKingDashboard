@@ -1,0 +1,1 @@
+export const SERVER_COUNT = "12.5k";

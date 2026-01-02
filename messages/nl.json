@@ -1,0 +1,812 @@
+{
+  "Common": {
+    "loading": "Laden...",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "search": "Zoeken",
+    "filter": "Filteren",
+    "add": "Toevoegen",
+    "remove": "Verwijderen",
+    "refresh": "Vernieuwen",
+    "close": "Sluiten",
+    "submit": "Indienen",
+    "back": "Terug",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "poweredBy": "Mogelijk gemaakt door",
+    "noData": "Geen gegevens beschikbaar",
+    "error": "Er is een fout opgetreden",
+    "success": "Succes",
+    "confirm": "Bevestigen",
+    "actions": "Acties",
+    "settings": "Instellingen",
+    "status": "Status",
+    "name": "Naam",
+    "description": "Beschrijving",
+    "createdAt": "Aangemaakt op",
+    "updatedAt": "Bijgewerkt op"
+  },
+  "Navigation": {
+    "features": "Functies",
+    "openSource": "Open Source",
+    "help": "Hulp nodig?",
+    "support": "Steun ons",
+    "commands": "Commando's",
+    "premium": "Premium",
+    "documentation": "Documentatie",
+    "loginWithDiscord": "Inloggen met Discord",
+    "addToDiscord": "Toevoegen aan Discord",
+    "openDashboard": "Open Dashboard",
+    "dashboardSettings": "Dashboard Instellingen"
+  },
+  "HomePage": {
+    "badge": "{serverCount}+ servers gebruiken ClashKing al",
+    "title": "De Krachtigste",
+    "titleHighlight": "Clash of Clans Bot",
+    "subtitle": "Automatiseer je clanbeheer, volg spelerstatistieken, beheer oorlogen en houd je community betrokken—allemaal vanuit Discord.",
+    "cta": {
+      "heading": "Klaar om je clan te transformeren?",
+      "description": "Sluit je aan bij {serverCount}+ Discord-servers die ClashKing al gebruiken om hun Clash of Clans-community te verbeteren. Installatie duurt slechts 2 minuten.",
+      "button": "Voeg ClashKing toe aan Discord",
+      "trustBadge": "Voor altijd gratis • Geen creditcard nodig • {serverCount}+ servers",
+      "addToDiscord": "Toevoegen aan Discord",
+      "openDashboard": "Open Dashboard"
+    },
+    "stats": {
+      "servers": "Discord Servers",
+      "users": "Actieve Gebruikers",
+      "clans": "Gevolgde Clans"
+    },
+    "features": {
+      "title": "Alles wat je nodig hebt om je clan te beheren",
+      "subtitle": "Krachtige functies speciaal ontworpen voor Clash of Clans-communities",
+      "autoRoles": {
+        "title": "Automatisch Rollenbeheer",
+        "description": "Wijs automatisch rollen toe op basis van spelerstatus, clanpositie en prestaties. Houd je server moeiteloos georganiseerd."
+      },
+      "playerStats": {
+        "title": "Spelerstatistieken",
+        "description": "Volg gedetailleerde spelerstatistieken, voortgangsgrafieken en aanvalsgeschiedenis. Zie wie verbetert en wie hulp nodig heeft."
+      },
+      "leaderboards": {
+        "title": "Ranglijsten",
+        "description": "Maak competitieve ranglijsten voor donaties, trofeeën, oorlogssterren en aangepaste statistieken. Verhoog de betrokkenheid."
+      },
+      "warTracking": {
+        "title": "Oorlogstracking",
+        "description": "Monitor oorlogsopstellingen, volg aanvallen in realtime en krijg analyses na de oorlog. Mis nooit een oorlogsdetail."
+      },
+      "smartReminders": {
+        "title": "Slimme Herinneringen",
+        "description": "Geautomatiseerde herinneringen voor Clan Games, oorlogsaanvallen, Clan War League en aangepaste evenementen. Houd iedereen op de hoogte."
+      },
+      "customization": {
+        "title": "Volledige Aanpassing",
+        "description": "Pas commando's, embed-kleuren, bijnamen en rechten aan. Maak ClashKing echt van jou."
+      },
+      "familyManagement": {
+        "title": "Familiebeheer",
+        "description": "Beheer meerdere clans als een familie. Statistieken over clans heen, gedeelde ranglijsten en uniforme rollen."
+      },
+      "analytics": {
+        "title": "Geavanceerde Analyses",
+        "description": "Diepgaande inzichten in clanprestaties, activiteitspatronen van spelers en groeitrends. Datagestuurde beslissingen."
+      },
+      "performance": {
+        "title": "Razendsnel",
+        "description": "Gebouwd voor prestaties met directe commando-reacties en realtime updates. Geen vertraging, geen wachttijden."
+      },
+      "security": {
+        "title": "Veilig & Betrouwbaar",
+        "description": "99,9% uptime, versleutelde gegevens en regelmatige back-ups. Je clangegevens zijn veilig bij ons."
+      }
+    },
+    "footer": {
+      "tagline": "De krachtigste Clash of Clans-bot voor Discord-communities.",
+      "product": {
+        "title": "Product",
+        "features": "Functies",
+        "help": "Hulp nodig?",
+        "openSource": "Open Source",
+        "support": "Steun ons",
+        "dashboard": "Dashboard",
+        "inviteBot": "Nodig Bot Uit"
+      },
+      "resources": {
+        "title": "Bronnen",
+        "documentation": "Documentatie",
+        "quickStart": "Snelstartgids",
+        "support": "Support Server",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Community",
+        "discord": "Discord Server",
+        "twitter": "X (Twitter)",
+        "reportBug": "Meld een bug",
+        "requestFeature": "Vraag functie aan"
+      },
+      "legal": {
+        "copyright": "ClashKing. Alle rechten voorbehouden.",
+        "privacy": "Privacybeleid",
+        "terms": "Servicevoorwaarden"
+      }
+    }
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Overzicht",
+      "description": "Dashboard startpagina"
+    },
+    "general": {
+      "name": "Algemene Instellingen",
+      "description": "Serverconfiguratie"
+    },
+    "clans": {
+      "name": "Clans",
+      "description": "Beheer je clans"
+    },
+    "logs": {
+      "name": "Logs",
+      "description": "Webhook configuratie"
+    },
+    "roles": {
+      "name": "Rollen",
+      "description": "Rolautomatisering"
+    },
+    "reminders": {
+      "name": "Herinneringen",
+      "description": "Alle herinneringstypes"
+    },
+    "rosters": {
+      "name": "Roosters",
+      "description": "Roosterbeheer"
+    },
+    "autoboards": {
+      "name": "Autoboards",
+      "description": "Geautomatiseerde ranglijsten"
+    },
+    "links": {
+      "name": "Koppelingen",
+      "description": "Speler-Discord koppeling"
+    },
+    "bans": {
+      "name": "Bans & Strikes",
+      "description": "Moderatietools"
+    },
+    "wars": {
+      "name": "Oorlogen",
+      "description": "Oorlogsstatistieken"
+    },
+    "leaderboards": {
+      "name": "Ranglijsten",
+      "description": "Wereldwijde ranglijsten"
+    },
+    "botStats": {
+      "name": "Bot Statistieken",
+      "description": "Wereldwijde bot statistieken"
+    },
+    "sections": {
+      "configuration": "Configuratie",
+      "clanManagement": "Clanbeheer",
+      "playerManagement": "Spelerbeheer",
+      "automation": "Automatisering",
+      "statistics": "Statistieken",
+      "system": "Systeem"
+    }
+  },
+  "BansPage": {
+    "title": "Bans & Strikes Beheer",
+    "description": "Beheer verbannen spelers en strikes voor je server",
+    "tabs": {
+      "bans": "Bans",
+      "strikes": "Strikes"
+    },
+    "bans": {
+      "title": "Verbannen Spelers",
+      "noBans": "Geen verbannen spelers gevonden",
+      "addBan": "Ban Toevoegen",
+      "removeBan": "Ban Verwijderen",
+      "confirmRemove": "Weet je zeker dat je deze ban wilt verwijderen?",
+      "playerTag": "Speler Tag",
+      "playerName": "Speler Naam",
+      "reason": "Reden",
+      "bannedAt": "Verbannen Op",
+      "search": "Zoek op naam of tag...",
+      "addDialog": {
+        "title": "Nieuwe Ban Toevoegen",
+        "description": "Verban een speler van je server",
+        "playerTagLabel": "Speler Tag",
+        "playerTagPlaceholder": "#ABC123",
+        "playerNameLabel": "Speler Naam",
+        "playerNamePlaceholder": "Voer spelernaam in",
+        "reasonLabel": "Reden",
+        "reasonPlaceholder": "Reden voor ban...",
+        "submit": "Verban Speler"
+      }
+    },
+    "strikes": {
+      "title": "Speler Strikes",
+      "noStrikes": "Geen strikes gevonden",
+      "addStrike": "Strike Toevoegen",
+      "removeStrike": "Strike Verwijderen",
+      "confirmRemove": "Weet je zeker dat je deze strike wilt verwijderen?",
+      "playerTag": "Speler Tag",
+      "reason": "Reden",
+      "weight": "Gewicht",
+      "rolloverDays": "Vervaldagen",
+      "createdAt": "Aangemaakt Op",
+      "search": "Zoek op speler tag...",
+      "addDialog": {
+        "title": "Nieuwe Strike Toevoegen",
+        "description": "Voeg een strike toe aan een speler",
+        "playerTagLabel": "Speler Tag",
+        "playerTagPlaceholder": "#ABC123",
+        "reasonLabel": "Reden",
+        "reasonPlaceholder": "Reden voor strike...",
+        "weightLabel": "Strike Gewicht",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Vervaldagen (Optioneel)",
+        "rolloverPlaceholder": "Dagen tot strike vervalt",
+        "submit": "Strike Toevoegen"
+      }
+    },
+    "toast": {
+      "banAdded": "Ban succesvol toegevoegd",
+      "banRemoved": "Ban succesvol verwijderd",
+      "strikeAdded": "Strike succesvol toegevoegd",
+      "strikeRemoved": "Strike succesvol verwijderd",
+      "errorLoadingBans": "Kon verbannen spelers niet laden",
+      "errorLoadingStrikes": "Kon strikes niet laden",
+      "errorAddingBan": "Kon ban niet toevoegen",
+      "errorAddingStrike": "Kon strike niet toevoegen",
+      "errorRemovingBan": "Kon ban niet verwijderen",
+      "errorRemovingStrike": "Kon strike niet verwijderen"
+    }
+  },
+  "RostersPage": {
+    "title": "Roosters",
+    "description": "Beheer je oorlogsroosters",
+    "noRosters": "Geen roosters gevonden",
+    "createRoster": "Rooster Maken",
+    "viewDetails": "Details Bekijken",
+    "deleteRoster": "Rooster Verwijderen",
+    "members": "Leden",
+    "type": {
+      "clan": "Clan",
+      "family": "Familie"
+    },
+    "signupScope": {
+      "clanOnly": "Alleen Clan",
+      "familyWide": "Familiebreed"
+    },
+    "filters": {
+      "search": "Zoek roosters...",
+      "type": "Type",
+      "all": "Alle"
+    },
+    "createDialog": {
+      "title": "Nieuw Rooster Maken",
+      "description": "Stel een nieuw rooster in voor je clan",
+      "aliasLabel": "Roosternaam",
+      "aliasPlaceholder": "bijv. CWL Rooster",
+      "typeLabel": "Roostertype",
+      "signupScopeLabel": "Inschrijfbereik",
+      "clanLabel": "Clan",
+      "descriptionLabel": "Beschrijving (Optioneel)",
+      "descriptionPlaceholder": "Roosterbeschrijving...",
+      "submit": "Rooster Maken"
+    },
+    "details": {
+      "title": "Roosterdetails",
+      "members": "Leden",
+      "addMember": "Lid Toevoegen",
+      "removeMember": "Lid Verwijderen",
+      "noMembers": "Geen leden in dit rooster",
+      "playerName": "Speler Naam",
+      "townHall": "Stadhuis",
+      "clan": "Clan",
+      "status": "Status"
+    },
+    "toast": {
+      "rosterCreated": "Rooster succesvol aangemaakt",
+      "rosterDeleted": "Rooster succesvol verwijderd",
+      "memberAdded": "Lid succesvol toegevoegd",
+      "memberRemoved": "Lid succesvol verwijderd",
+      "error": "Er is een fout opgetreden"
+    }
+  },
+  "LinksPage": {
+    "title": "Koppelingen Beheer",
+    "description": "Beheer Discord-Speler koppelingen voor je server",
+    "tabs": {
+      "links": "Koppelingen",
+      "settings": "Instellingen",
+      "stats": "Statistieken"
+    },
+    "stats": {
+      "totalMembers": "Totaal Leden",
+      "membersWithLinks": "Leden met Koppelingen",
+      "totalLinkedAccounts": "Totaal Gekoppelde Accounts",
+      "verifiedAccounts": "Geverifieerde Accounts"
+    },
+    "filters": {
+      "search": "Zoek op gebruikersnaam of speler tag...",
+      "verification": "Verificatiestatus",
+      "all": "Alle",
+      "verified": "Alleen Geverifieerd",
+      "unverified": "Alleen Ongeverifieerd",
+      "minAccounts": "Min Accounts"
+    },
+    "table": {
+      "user": "Gebruiker",
+      "linkedAccounts": "Gekoppelde Accounts",
+      "verificationStatus": "Verificatiestatus",
+      "actions": "Acties",
+      "verified": "Geverifieerd",
+      "unverified": "Ongeverifieerd",
+      "accounts": "accounts"
+    },
+    "actions": {
+      "linkAccount": "Account Koppelen",
+      "removeLink": "Koppeling Verwijderen",
+      "bulkActions": "Bulk Acties",
+      "exportData": "Gegevens Exporteren"
+    },
+    "linkDialog": {
+      "title": "Speler Account Koppelen",
+      "description": "Koppel een Clash of Clans account aan een Discord gebruiker",
+      "playerTagLabel": "Speler Tag",
+      "playerTagPlaceholder": "#ABC123",
+      "apiTokenLabel": "API Token",
+      "apiTokenPlaceholder": "API token uit in-game instellingen",
+      "submit": "Account Koppelen"
+    },
+    "deleteDialog": {
+      "title": "Koppeling Verwijderen",
+      "description": "Weet je zeker dat je deze koppeling wilt verwijderen?",
+      "confirm": "Verwijderen",
+      "cancel": "Annuleren"
+    },
+    "toast": {
+      "linkAdded": "Account succesvol gekoppeld",
+      "linkRemoved": "Koppeling succesvol verwijderd",
+      "error": "Er is een fout opgetreden"
+    }
+  },
+  "WarsPage": {
+    "title": "Oorlogsstatistieken",
+    "description": "Bekijk en analyseer oorlogsprestaties",
+    "tabs": {
+      "current": "Huidige Oorlog",
+      "previous": "Vorige Oorlogen",
+      "stats": "Statistieken"
+    },
+    "noWar": "Geen actieve oorlog",
+    "warStatus": {
+      "preparation": "Voorbereiding",
+      "inWar": "In Oorlog",
+      "ended": "Beëindigd"
+    },
+    "stats": {
+      "attacks": "Aanvallen",
+      "stars": "Sterren",
+      "destruction": "Vernietiging",
+      "performance": "Prestatie"
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Ranglijsten",
+    "description": "Bekijk wereldwijde en server ranglijsten",
+    "types": {
+      "donations": "Donaties",
+      "trophies": "Trofeeën",
+      "warStars": "Oorlogssterren",
+      "activity": "Activiteit"
+    },
+    "rank": "Rang",
+    "player": "Speler",
+    "value": "Waarde"
+  },
+  "ClansPage": {
+    "title": "Clans",
+    "description": "Beheer je Clash of Clans clans",
+    "addClan": "Clan Toevoegen",
+    "removeClan": "Clan Verwijderen",
+    "clanTag": "Clan Tag",
+    "clanName": "Clan Naam",
+    "members": "Leden",
+    "level": "Niveau",
+    "toast": {
+      "clanAdded": "Clan succesvol toegevoegd",
+      "clanRemoved": "Clan succesvol verwijderd",
+      "settingsSaved": "Instellingen succesvol opgeslagen",
+      "errorLoadingClans": "Kon clans niet laden. Probeer het opnieuw.",
+      "errorEmptyClanTag": "Voer een clan tag in",
+      "errorAddingClan": "Kon clan niet toevoegen",
+      "errorRemovingClan": "Kon clan niet verwijderen",
+      "errorSavingSettings": "Kon instellingen niet opslaan"
+    }
+  },
+  "RolesPage": {
+    "title": "Rolautomatisering",
+    "description": "Configureer automatische roltoewijzingen",
+    "noRoles": "Geen rolconfiguraties gevonden",
+    "addRole": "Rol Toevoegen",
+    "roleName": "Rol Naam",
+    "condition": "Voorwaarde",
+    "actions": "Acties"
+  },
+  "RemindersPage": {
+    "title": "Herinneringen",
+    "description": "Stel geautomatiseerde herinneringen in",
+    "types": {
+      "clanGames": "Clan Games",
+      "war": "Oorlog",
+      "cwl": "CWL",
+      "custom": "Aangepast"
+    },
+    "addReminder": "Herinnering Toevoegen",
+    "channel": "Kanaal",
+    "message": "Bericht",
+    "timing": "Timing"
+  },
+  "LogsPage": {
+    "title": "Logs",
+    "description": "Configureer webhook logs",
+    "events": {
+      "playerJoin": "Speler Join",
+      "playerLeave": "Speler Leave",
+      "donations": "Donaties",
+      "warAttacks": "Oorlogsaanvallen",
+      "achievements": "Prestaties"
+    },
+    "channel": "Kanaal",
+    "enabled": "Ingeschakeld"
+  },
+  "GeneralPage": {
+    "title": "Algemene Instellingen",
+    "description": "Configureer serverbrede botgedrag en uiterlijk",
+    "loading": "Instellingen laden...",
+    "reset": "Resetten",
+    "saving": "Opslaan...",
+    "saveChanges": "Wijzigingen Opslaan",
+    "settingsSaved": "Instellingen succesvol opgeslagen!",
+    "infoBanner": {
+      "title": "Op zoek naar meer instellingen?",
+      "description": "Rolbeheerinstellingen staan op de **Rollen** pagina. Clan-specifieke instellingen (ban/strike logs, oorlogskanalen) staan op de **Clans** pagina."
+    },
+    "nickname": {
+      "title": "Bijnaam Beheer",
+      "description": "Beheer hoe bijnamen worden geformatteerd",
+      "automaticChanges": "Automatische Wijzigingen",
+      "automaticChangesDesc": "Sta bot toe om ledenbijnamen bij te werken",
+      "familyFormat": "Familieleden Formaat",
+      "availablePlaceholders": "Beschikbare Plaatshouders",
+      "preview": "Voorbeeld:",
+      "nonFamilyFormat": "Niet-Familieleden Formaat",
+      "placeholders": {
+        "discordName": "Discord gebruikersnaam",
+        "discordDisplayName": "Server bijnaam",
+        "playerName": "CoC spelernaam",
+        "playerTag": "Speler tag",
+        "playerTownhall": "TH niveau",
+        "playerTownhallSmall": "TH superscript",
+        "playerWarstars": "Oorlogssterren",
+        "playerRole": "Clan rol",
+        "playerClan": "Clan naam",
+        "playerLeague": "Competitie",
+        "playerClanAbbr": "Clan afk"
+      }
+    },
+    "appearance": {
+      "title": "Uiterlijk",
+      "description": "Pas bot embed berichten aan",
+      "embedColor": "Embed Kleur",
+      "embedColorDesc": "Kleur van de zijbalk op alle bot embed berichten in Discord",
+      "embedColorDefault": "Standaard: **#D90709** (ClashKing Rood)",
+      "embedPreview": "Embed Voorbeeld",
+      "embedPreviewDesc": "Deze gekleurde balk verschijnt aan de linkerkant van alle bot berichten"
+    },
+    "security": {
+      "title": "Beveiliging & Rechten",
+      "description": "Beheer toegang en verificatie",
+      "requireApiToken": "Vereis Speler API Token",
+      "requireApiTokenDesc": "Spelers moeten accounteigendom verifiëren met Clash of Clans API token bij koppelen (aanbevolen)",
+      "fullWhitelistRole": "Volledige Whitelist Rol",
+      "fullWhitelistRoleDesc": "Discord rol met volledige toegang tot alle bot commando's (omzeilt alle rechtencontroles)",
+      "noRole": "Geen Rol"
+    },
+    "prefix": "Commando Prefix",
+    "language": "Taal",
+    "timezone": "Tijdzone",
+    "theme": "Thema"
+  },
+  "LanguageSwitcher": {
+    "label": "Taal",
+    "english": "English",
+    "french": "Français",
+    "dutch": "Nederlands"
+  },
+  "ThemeSwitcher": {
+    "label": "Thema",
+    "light": "Licht",
+    "dark": "Donker",
+    "system": "Systeem"
+  },
+  "AuthCallback": {
+    "authenticating": "Authenticeren...",
+    "authenticatingDescription": "Even geduld terwijl we je inloggen met Discord",
+    "authenticationFailed": "Authenticatie Mislukt",
+    "tryAgain": "Probeer Opnieuw"
+  },
+  "LoginPage": {
+    "backToHome": "Terug naar Home",
+    "redirecting": "Doorverwijzen naar Discord...",
+    "redirectingDescription": "Je wordt doorverwezen naar Discord om het inlogproces te voltooien"
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Functies",
+      "subtitle": "Ontdek de krachtige tools die ClashKing biedt om je clan te beheren en te laten groeien via Discord, Mobiel en Web."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "ClashKing Bot is de enige Discord-bot die je nodig hebt om je Clash of Clans-clan en community te beheren. Het zit boordevol unieke functies om je clan georganiseerd, betrokken en groeiend te houden.",
+        "items": [
+          "Realtime Logs: Volg oorlogen, CWL, clan games, raids, donaties en ledenevents.",
+          "Ticketsysteem: Wervingsticketsysteem naast standaard supporttickets.",
+          "Auto Rollen: Wijs automatisch rollen toe op basis van clanstatus of familiebeheer.",
+          "Herinneringen: Stuur pings voor oorlogsaanvallen, clan games of iets anders.",
+          "Gedetailleerde Stats: Inzichten in speler- en clanprestaties met activiteitstracking.",
+          "Roosterbeheer: Organiseer en optimaliseer je oorlogsroosters met gemak."
+        ],
+        "ctaPrimary": "Nodig Bot Uit",
+        "ctaSecondary": "Word Lid van Community"
+      },
+      "app": {
+        "title": "ClashKing App (Open Beta)",
+        "description": "ClashKing App is de perfecte uitbreiding op de ClashKing Bot, die essentiële tools en inzichten direct naar je mobiele apparaat brengt. Het helpt je altijd en overal verbonden te blijven, zelfs zonder Discord.",
+        "items": [
+          "Realtime Stats: Gedetailleerde stats voor spelers en clans gesynchroniseerd met de bot.",
+          "Clan Voortgang Tracking: Monitor de voortgang van je clan in de loop van de tijd naadloos.",
+          "Multi-account Beheer: Schakel eenvoudig tussen je accounts en volg prestaties.",
+          "Ingebouwde Geschiedenis: Toegang tot historische gegevens om trends te analyseren en strategieën te verbeteren.",
+          "Discord Server Beheer: (Binnenkort) Beheer rollen en tickets vanuit de app.",
+          "Geavanceerde Meldingen: (Binnenkort) Pas meldingen aan voor belangrijke gebeurtenissen."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Bouw je eigen tools of projecten met de ClashKing API. Het is gratis te gebruiken zolang je het ClashKing-project vermeldt.",
+        "items": [],
+        "ctaPrimary": "API Documentatie",
+        "ctaSecondary": "API op GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Hulp Nodig?",
+    "subtitle": "Of je nu op zoek bent naar documentatie of directe ondersteuning, wij staan voor je klaar.",
+    "documentation": {
+      "title": "Documentatie",
+      "description": "Bekijk onze uitgebreide handleidingen en commandoreferenties om het meeste uit ClashKing te halen.",
+      "cta": "Bekijk Docs"
+    },
+    "discord": {
+      "title": "Discord Support",
+      "description": "Meer hulp nodig? Word lid van onze Discord-community om vragen te stellen, bugs te melden of met andere gebruikers te chatten.",
+      "cta": "Word Lid van Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Een Open Source Project",
+    "subtitle": "ClashKing is een volledig gratis en open source project, en wij geloven in de kracht van de community om het nog beter te maken. Zowel de bot als de API zijn volledig open source, wat je de vrijheid geeft om bij te dragen of ze voor je eigen projecten te gebruiken.",
+    "github": {
+      "title": "GitHub Organisatie",
+      "description": "Verken onze broncode, draag bij aan de bot of bekijk onze andere open-source tools.",
+      "ctaPrimary": "Bekijk Organisatie",
+      "repos": {
+        "bot": "Bot Repo",
+        "app": "App Repo",
+        "api": "API Repo",
+        "assets": "Assets Repo"
+      }
+    },
+    "api": {
+      "title": "API Documentatie",
+      "description": "Bouw je eigen tools of projecten met de ClashKing API. Het is gratis te gebruiken zolang je het ClashKing-project vermeldt.",
+      "cta": "API Docs"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Draag Bij",
+        "description": "Help ons verbeteren door bugs op te lossen, nieuwe functies toe te voegen of bestaande te verbeteren. Elke bijdrage telt!"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Word lid van onze Discord-community om ideeën te bespreken, hulp te krijgen en samen te werken met andere ontwikkelaars."
+      },
+      "learn": {
+        "title": "Leer",
+        "description": "Bekijk onze documentatie en voorbeelden om te leren hoe je de bot en API effectief kunt gebruiken."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Steun Ons",
+    "subtitle": "ClashKing is een gratis, open-source project. Jouw steun helpt ons de servers draaiende te houden en nieuwe functies voor de community te blijven ontwikkelen.",
+    "patreon": {
+      "title": "Word een Patron",
+      "description": "Steun ons maandelijks op Patreon om exclusieve voordelen te krijgen, vroege toegang tot functies en te helpen onze hostingkosten te dekken.",
+      "cta": "Steun op Patreon"
+    },
+    "creatorCode": {
+      "title": "Gebruik Creator Code",
+      "description": "Steun ons gratis door creator code te gebruiken",
+      "descriptionSuffix": "in-game of in de Supercell Store.",
+      "ctaGame": "Gebruik in Game",
+      "ctaStore": "Gebruik in Supercell Store"
+    },
+    "whySupport": {
+      "title": "Waarom ons steunen?",
+      "description": "Elke bijdrage, hoe klein ook, gaat rechtstreeks naar serverkosten en API-kosten. Het gebruik van onze creator code kost jou niets extra maar helpt ons enorm!"
+    }
+  },
+  "ServersPage": {
+    "title": "Selecteer een Server",
+    "description": "Kies een server om ClashKing bot instellingen te configureren",
+    "backToHome": "Terug naar Home",
+    "backToLogin": "Terug naar Login",
+    "error": "Fout",
+    "configure": "Configureren",
+    "invite": "Uitnodigen",
+    "members": "leden",
+    "server": "Server",
+    "roles": {
+      "owner": "Eigenaar",
+      "administrator": "Beheerder",
+      "manager": "Manager"
+    },
+    "noServers": {
+      "title": "Geen Servers Gevonden",
+      "description": "Je hebt geen beheerdersrechten in Discord-servers."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Automatisch posten en vernieuwen van clan, familie en legende borden",
+    "createAutoboard": "AutoBoard Maken",
+    "editAutoboard": "AutoBoard Bewerken",
+    "createDialogTitle": "AutoBoard Maken",
+    "createDialogDesc": "Stel automatisch posten of vernieuwen in voor een bord",
+    "editDialogTitle": "AutoBoard Bewerken",
+    "editDialogDesc": "Wijzig de configuratie van dit autoboard",
+    "automationType": "Automatiseringstype",
+    "autoPost": "Auto Post",
+    "autoPostDesc": "Auto Post - Geplande dagelijkse posts",
+    "autoRefresh": "Auto Refresh",
+    "autoRefreshDesc": "Auto Refresh - Continue updates (30-60 min)",
+    "channel": "Kanaal",
+    "selectChannel": "Selecteer een kanaal",
+    "channelDesc": "Het kanaal waar het autoboard wordt gepost",
+    "boardType": "Bordtype",
+    "selectBoardType": "Selecteer een bordtype",
+    "postDays": "Postdagen (selecteer er minstens één)",
+    "postDaysDesc": "Posts vinden plaats om 5:00 AM UTC dagelijkse reset tijd",
+    "autoRefreshInfo": "Auto Refresh Info",
+    "autoRefreshInfoDesc": "Het bord wordt automatisch elke 30-60 minuten vernieuwd met de laatste gegevens. Perfect om statistieken actueel te houden zonder handmatige updates.",
+    "cancel": "Annuleren",
+    "creating": "Aanmaken...",
+    "create": "Maken",
+    "updating": "Bijwerken...",
+    "update": "Bijwerken",
+    "howItWorks": "Hoe AutoBoards Werken",
+    "howItWorksDesc": "AutoBoards kunnen automatisch nieuwe borden posten volgens een schema of bestaande borden continu vernieuwen met actuele gegevens. Kies **Auto Post** om dagelijks nieuwe borden te maken op specifieke dagen, of **Auto Refresh** om een bord elke 30-60 minuten bij te werken.",
+    "totalAutoboards": "Totaal AutoBoards",
+    "used": "gebruikt",
+    "scheduledBoards": "Geplande borden",
+    "continuousUpdates": "Continue updates",
+    "availableSlots": "Beschikbare Sloten",
+    "remainingCapacity": "Resterende capaciteit",
+    "activeAutoboards": "Actieve AutoBoards",
+    "noAutoboards": "Geen AutoBoards geconfigureerd",
+    "noAutoboardsDesc": "Maak je eerste AutoBoard om bordupdates te automatiseren",
+    "postsOn": "Post op:",
+    "updatesEvery": "Vernieuwt elke 30-60 minuten",
+    "created": "Aangemaakt:",
+    "edit": "Bewerken",
+    "remove": "Verwijderen",
+    "tips": "💡 AutoBoard Tips",
+    "boardTypes": {
+      "clanBoards": "Clan Borden",
+      "familyBoards": "Familie Borden",
+      "legendBoards": "Legende Borden",
+      "other": "Overig",
+      "clandetailed": "Clan Gedetailleerd",
+      "clanbasic": "Clan Basis",
+      "clanmini": "Clan Minimalistisch",
+      "clancompo": "Clan Samenstelling",
+      "clandonos": "Clan Donaties",
+      "clanactivity": "Clan Activiteit",
+      "clancapoverview": "Clan Hoofdstad Overzicht",
+      "clancapdonos": "Clan Hoofdstad Donaties",
+      "clancapraids": "Clan Hoofdstad Raids",
+      "clanwarlog": "Clan Oorlogslog",
+      "clancwlperf": "Clan CWL Prestatie",
+      "clangames": "Clan Games",
+      "familyoverview": "Familie Overzicht",
+      "familycompo": "Familie Samenstelling",
+      "familydonos": "Familie Donaties",
+      "familygames": "Familie Games",
+      "familyactivity": "Familie Activiteit",
+      "legendclan": "Legende Clan",
+      "legendday": "Legende Dag",
+      "legendseason": "Legende Seizoen",
+      "discordlinks": "Discord Koppelingen"
+    },
+    "days": {
+      "monday": "Maandag",
+      "tuesday": "Dinsdag",
+      "wednesday": "Woensdag",
+      "thursday": "Donderdag",
+      "friday": "Vrijdag",
+      "saturday": "Zaterdag",
+      "sunday": "Zondag",
+      "endofseason": "Einde van Seizoen"
+    },
+    "alerts": {
+      "selectBoardType": "Selecteer een bordtype",
+      "selectChannel": "Selecteer een kanaal",
+      "selectDays": "Selecteer minstens één dag voor auto-post",
+      "createFailed": "Kon autoboard niet maken. Probeer het opnieuw.",
+      "updateFailed": "Kon autoboard niet bijwerken. Probeer het opnieuw.",
+      "deleteFailed": "Kon autoboard niet verwijderen. Probeer het opnieuw."
+    }
+  },
+  "OverviewPage": {
+    "title": "Dashboard Overzicht",
+    "description": "Monitor je serverstatistieken en ga aan de slag",
+    "stats": {
+      "linkedPlayers": "Gekoppelde Spelers",
+      "linkedPlayersDesc": "Spelers gekoppeld in deze server",
+      "clansConfigured": "Clans Geconfigureerd",
+      "clansConfiguredDesc": "Clans gevolgd voor deze server",
+      "activeRosters": "Actieve Roosters",
+      "activeRostersDesc": "Oorlogsroosters aangemaakt"
+    },
+    "quickStart": {
+      "title": "Snelstart",
+      "description": "Ga aan de slag met het configureren van je ClashKing bot",
+      "step1": {
+        "title": "Configureer Algemene Instellingen",
+        "description": "Stel bijnaamconventies, embed-kleuren en logkanalen in"
+      },
+      "step2": {
+        "title": "Voeg Je Clans Toe",
+        "description": "Verbind je Clash of Clans clans en configureer rollen"
+      },
+      "step3": {
+        "title": "Stel Auto Rollen In",
+        "description": "Configureer automatische roltoewijzing op basis van Stadhuis, trofeeën, enz."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Bot Statistieken",
+    "description": "Wereldwijde ClashKing bot statistieken en systeemgezondheid",
+    "about": {
+      "title": "Over Deze Statistieken",
+      "description": "Dit zijn wereldwijde statistieken voor het gehele ClashKing bot netwerk",
+      "globalStats": "Wereldwijde Statistieken",
+      "globalStatsDesc": "Speler- en clantellingen vertegenwoordigen alle gevolgde entiteiten over alle Discord-servers die ClashKing gebruiken",
+      "systemHealth": "Systeemgezondheid",
+      "systemHealthDesc": "CPU- en geheugengebruik geven de huidige belasting van de ClashKing API-infrastructuur aan"
+    }
+  }
+}

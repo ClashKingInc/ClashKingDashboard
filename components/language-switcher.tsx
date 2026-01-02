@@ -26,14 +26,8 @@ export function LanguageSwitcher() {
   }, []);
 
   const switchLocale = (newLocale: string) => {
-    if (!pathname) return;
-
-    // Replace the locale in the current pathname
-    const segments = pathname.split('/');
-    segments[1] = newLocale; // Replace locale segment
-    const newPath = segments.join('/');
-
-    router.push(newPath);
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    router.refresh();
   };
 
   if (!mounted) {
@@ -65,6 +59,12 @@ export function LanguageSwitcher() {
           className={currentLocale === "fr" ? "bg-accent" : ""}
         >
           {t("french")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => switchLocale("nl")}
+          className={currentLocale === "nl" ? "bg-accent" : ""}
+        >
+          {t("dutch")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

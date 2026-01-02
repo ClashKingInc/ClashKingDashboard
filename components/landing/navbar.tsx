@@ -33,16 +33,16 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href={`/${locale}/features`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/features`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
               {t("features")}
             </Link>
-            <Link href={`/${locale}/open-source`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/open-source`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
               {t("openSource")}
             </Link>
-            <Link href={`/${locale}/help`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/help`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
               {t("help")}
             </Link>
-            <Link href={`/${locale}/support`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/support`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
               {t("support")}
             </Link>
           </div>
@@ -72,16 +72,16 @@ export function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-gray-200 dark:border-gray-800">
           <div className="px-4 py-4 space-y-3">
-            <Link href={`/${locale}/features`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/features`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
               {t("features")}
             </Link>
-            <Link href={`/${locale}/open-source`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/open-source`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
               {t("openSource")}
             </Link>
-            <Link href={`/${locale}/help`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/help`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
               {t("help")}
             </Link>
-            <Link href={`/${locale}/support`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/support`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
               {t("support")}
             </Link>
             <div className="pt-4 space-y-2">
