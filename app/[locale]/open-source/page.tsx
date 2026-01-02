@@ -3,7 +3,7 @@
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
-import { Github, Code2, BookOpen, Users, ExternalLink } from "lucide-react";
+import { Github, Code2, BookOpen, Users, ExternalLink, Languages } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function OpenSourcePage() {
@@ -89,6 +89,33 @@ export default function OpenSourcePage() {
             >
               {t("api.cta")} <ExternalLink size={18} />
             </Link>
+          </div>
+
+          {/* Translation Section */}
+          <div className="bg-[#2A2A2A] p-8 rounded-2xl border border-[#DC2626]/20 flex flex-col md:col-span-2">
+            <div className="bg-[#DC2626]/10 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+              <Languages className="text-[#DC2626]" size={24} />
+            </div>
+            <h2 className="text-2xl font-bold mb-4 text-white">{t("translation.title")}</h2>
+            <p className="text-gray-400 mb-8">
+              {t("translation.description")}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link
+                href="https://crowdin.com/project/clashkingapp"
+                target="_blank"
+                className="bg-white text-slate-900 px-6 py-3 rounded-lg font-bold text-center hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
+              >
+                {t("translation.app")} <ExternalLink size={18} />
+              </Link>
+              <Link
+                href="https://crowdin.com/project/clashkingbot"
+                target="_blank"
+                className="bg-white text-slate-900 px-6 py-3 rounded-lg font-bold text-center hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
+              >
+                {t("translation.bot")} <ExternalLink size={18} />
+              </Link>
+            </div>
           </div>
         </div>
 
