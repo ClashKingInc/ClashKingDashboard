@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
@@ -10,8 +11,22 @@ import { SERVER_COUNT } from "@/lib/constants";
 
 export function Hero() {
   const params = useParams();
+  const router = useRouter();
   const locale = (params?.locale as string) || "en";
   const t = useTranslations("HomePage");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("access_token"));
+  }, []);
+
+  const handleDashboardClick = () => {
+    if (isLoggedIn) {
+      router.push(`/${locale}/servers`);
+    } else {
+      initiateDiscordLogin(locale);
+    }
+  };
 
   return (
     <section className="relative pt-32 pb-20 px-4 overflow-hidden">
@@ -75,7 +90,7 @@ export function Hero() {
               </Button>
             </a>
             <Button
-              onClick={() => initiateDiscordLogin(locale)}
+              onClick={handleDashboardClick}
               size="lg"
               variant="outline"
               className="text-lg px-8 py-6 rounded-xl border-2"

@@ -2,19 +2,42 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import { useParams } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import type { UserInfo } from "@/lib/api/types/auth";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<UserInfo | null>(null);
   const params = useParams();
+  const router = useRouter();
   const locale = (params?.locale as string) || "en";
   const t = useTranslations("Navigation");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Failed to parse user from localStorage", e);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+    setUser(null);
+    router.push(`/${locale}`);
+  };
 
   return (
     <nav className="fixed top-0 w-full bg-[#1F1F1F]/95 backdrop-blur-lg z-50 border-b border-[#DC2626]/30">
@@ -50,12 +73,32 @@ export function Navbar() {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <LanguageSwitcher />
-            <Button
-              onClick={() => initiateDiscordLogin(locale)}
-              className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]"
-            >
-              {t("loginWithDiscord")}
-            </Button>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <Link href={`/${locale}/servers`} className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                  <Avatar className="h-8 w-8 border border-[#DC2626]/50">
+                    <AvatarImage src={user.avatar_url} alt={user.username} />
+                    <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-gray-200 font-medium hidden lg:block">{user.username}</span>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLogout}
+                  className="text-gray-400 hover:text-[#EF4444] hover:bg-transparent"
+                >
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                onClick={() => initiateDiscordLogin(locale)}
+                className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]"
+              >
+                {t("loginWithDiscord")}
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -88,13 +131,40 @@ export function Navbar() {
               <div className="flex justify-center mb-2">
                 <LanguageSwitcher />
               </div>
-              <Button
-                onClick={() => initiateDiscordLogin(locale)}
-                variant="outline"
-                className="w-full"
-              >
-                {t("loginWithDiscord")}
-              </Button>
+              {user ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 bg-gray-800/50 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="h-10 w-10 border border-[#DC2626]/50">
+                        <AvatarImage src={user.avatar_url} alt={user.username} />
+                        <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <span className="text-white font-medium">{user.username}</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleLogout}
+                      className="text-gray-400 hover:text-[#EF4444]"
+                    >
+                      <LogOut className="h-5 w-5" />
+                    </Button>
+                  </div>
+                  <Link href={`/${locale}/servers`} className="block">
+                    <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-700">
+                      {t("openDashboard")}
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => initiateDiscordLogin(locale)}
+                  variant="outline"
+                  className="w-full"
+                >
+                  {t("loginWithDiscord")}
+                </Button>
+              )}
               <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="block">
                 <Button className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]">
                   {t("addToDiscord")}
