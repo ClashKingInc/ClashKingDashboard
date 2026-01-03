@@ -19,8 +19,9 @@
     "noData": "Aucune donnée disponible",
     "error": "Une erreur s'est produite",
     "success": "Succès",
-    "confirm": "Confirmer",
     "actions": "Actions",
+    "unknown": "Inconnu",
+    "confirm": "Confirmer",
     "settings": "Paramètres",
     "status": "Statut",
     "name": "Nom",
@@ -200,8 +201,8 @@
     }
   },
   "BansPage": {
-    "title": "Gestion des Bannissements et Avertissements",
-    "description": "Gérer les joueurs bannis et les avertissements pour votre serveur",
+    "title": "Modération",
+    "description": "Gérer les bannissements et les avertissements des joueurs",
     "tabs": {
       "bans": "Bannissements",
       "strikes": "Avertissements"
@@ -217,16 +218,60 @@
       "reason": "Raison",
       "bannedAt": "Banni le",
       "search": "Rechercher par nom ou tag...",
+      "howItWorks": {
+        "title": "Comment fonctionnent les bannissements",
+        "description": "Les joueurs bannis ne peuvent rejoindre aucun clan lié à ce serveur. Le bot vous avertira s'ils rejoignent l'un des clans. Les bannissements s'appliquent à l'ensemble du serveur et à tous vos clans."
+      },
+      "stats": {
+        "total": "Total des bannissements",
+        "recent": "Bannissements récents (7 jours)",
+        "commonReason": "Raison la plus fréquente",
+        "commonReasonValue": "Harcèlement et toxicité",
+        "noBans": "Aucun bannissement pour le moment",
+        "percentOfAll": "{percent}% de tous les bannissements"
+      },
+      "list": {
+        "title": "Joueurs bannis",
+        "count": "{count} joueur{count, plural, one {} other {s}} banni{count, plural, one {} other {s}}",
+        "searchPlaceholder": "Rechercher par nom, tag ou raison...",
+        "noBansFound": "Aucun bannissement trouvé",
+        "noBans": "Aucun joueur banni",
+        "adjustSearch": "Essayez d'ajuster votre recherche",
+        "getStarted": "Ajoutez un bannissement pour commencer la modération des joueurs"
+      },
+      "table": {
+        "player": "Joueur",
+        "reason": "Raison",
+        "bannedBy": "Banni par",
+        "date": "Date",
+        "daysAgo": "Il y a {days} jours",
+        "noReason": "Aucune raison fournie"
+      },
       "addDialog": {
-        "title": "Ajouter un Nouveau Bannissement",
-        "description": "Bannir un joueur de votre serveur",
-        "playerTagLabel": "Tag du Joueur",
-        "playerTagPlaceholder": "#ABC123",
-        "playerNameLabel": "Nom du Joueur",
+        "title": "Bannir un joueur",
+        "description": "Ajouter un joueur à la liste de bannissement. Il ne pourra rejoindre aucun clan sur ce serveur.",
+        "playerTagLabel": "Tag du Joueur *",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Nom du Joueur (optionnel)",
         "playerNamePlaceholder": "Entrer le nom du joueur",
-        "reasonLabel": "Raison",
-        "reasonPlaceholder": "Raison du bannissement...",
+        "reasonLabel": "Raison du bannissement *",
+        "reasonPlaceholder": "Expliquez pourquoi ce joueur est banni...",
         "submit": "Bannir le Joueur"
+      },
+      "bestPractices": {
+        "title": "Bonnes pratiques",
+        "document": {
+          "title": "Documentez minutieusement :",
+          "desc": "Fournissez toujours une raison détaillée pour chaque bannissement afin d'aider les autres modérateurs à comprendre le contexte."
+        },
+        "review": {
+          "title": "Révisez régulièrement :",
+          "desc": "Révisez périodiquement votre liste de bannissements pour vous assurer qu'ils sont toujours nécessaires et justifiés."
+        },
+        "consistent": {
+          "title": "Soyez cohérent :",
+          "desc": "Appliquez les bannissements de manière équitable et cohérente à tous les joueurs pour maintenir une communauté saine."
+        }
       }
     },
     "strikes": {
@@ -241,18 +286,64 @@
       "rolloverDays": "Jours de Validité",
       "createdAt": "Créé le",
       "search": "Rechercher par tag de joueur...",
+      "howItWorks": {
+        "title": "Comment fonctionnent les avertissements",
+        "description": "Les avertissements sont des mises en garde données aux joueurs pour des violations de règles. Chaque avertissement a un poids (gravité) et peut éventuellement expirer après un nombre de jours défini. Les avertissements aident à suivre le comportement des joueurs avant d'émettre des bannissements."
+      },
+      "stats": {
+        "total": "Total des avertissements",
+        "recent": "Avertissements récents (7 jours)",
+        "totalWeight": "Poids total des avertissements",
+        "commonReason": "Raison la plus fréquente",
+        "commonReasonValue": "Spam"
+      },
+      "list": {
+        "title": "Avertissements des joueurs",
+        "count": "{count} avertissement{count, plural, one {} other {s}} émis",
+        "searchPlaceholder": "Rechercher par nom, tag ou raison...",
+        "noStrikesFound": "Aucun avertissement trouvé",
+        "noStrikes": "Aucun avertissement émis",
+        "adjustSearch": "Essayez d'ajuster votre recherche",
+        "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs"
+      },
+      "table": {
+        "player": "Joueur",
+        "reason": "Raison",
+        "weight": "Poids",
+        "addedBy": "Ajouté par",
+        "date": "Date",
+        "expires": "Expire le",
+        "never": "Jamais",
+        "noReason": "Aucune raison fournie",
+        "daysAgo": "Il y a {days} jours"
+      },
       "addDialog": {
-        "title": "Ajouter un Nouvel Avertissement",
-        "description": "Ajouter un avertissement à un joueur",
-        "playerTagLabel": "Tag du Joueur",
-        "playerTagPlaceholder": "#ABC123",
-        "reasonLabel": "Raison",
-        "reasonPlaceholder": "Raison de l'avertissement...",
-        "weightLabel": "Poids de l'Avertissement",
+        "title": "Ajouter un avertissement",
+        "description": "Émettre un avertissement à un joueur. Les avertissements peuvent avoir différents poids et dates d'expiration.",
+        "playerTagLabel": "Tag du Joueur *",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Raison *",
+        "reasonPlaceholder": "Expliquez pourquoi cet avertissement est émis...",
+        "weightLabel": "Poids de l'avertissement *",
         "weightPlaceholder": "1",
-        "rolloverLabel": "Jours de Validité (Optionnel)",
-        "rolloverPlaceholder": "Jours avant expiration de l'avertissement",
+        "rolloverLabel": "Expire dans (jours)",
+        "rolloverPlaceholder": "Optionnel",
         "submit": "Ajouter l'Avertissement"
+      },
+      "guidelines": {
+        "title": "Directives pour les avertissements",
+        "weights": {
+          "title": "Utilisez les poids judicieusement :",
+          "desc": "Attribuez des poids plus élevés (2-3) pour les violations graves et des poids plus faibles (1) pour les problèmes mineurs."
+        },
+        "expiration": {
+          "title": "Définissez des dates d'expiration :",
+          "desc": "Envisagez de définir des dates d'expiration pour les avertissements afin de donner aux joueurs une chance d'améliorer leur comportement au fil du temps."
+        },
+        "patterns": {
+          "title": "Suivez les modèles :",
+          "desc": "Utilisez les avertissements pour identifier les récidivistes avant de passer à des bannissements permanents."
+        }
       }
     },
     "toast": {
