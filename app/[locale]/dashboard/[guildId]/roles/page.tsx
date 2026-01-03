@@ -109,7 +109,7 @@ export default function RolesPage() {
     role_treatment: [],
   });
 
-  const [allRoles, setAllRoles] = useState<any>({
+  const [allRoles, setAllRoles] = useState<Record<string, any[]>>({
     townhall: [],
     league: [],
     builderhall: [],
@@ -637,8 +637,8 @@ export default function RolesPage() {
   }
 
   // Calculate statistics
-  const totalRoles = Object.values(allRoles).reduce((sum, roles) => sum + roles.length, 0);
-  const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]) => roles.length > 0).length;
+  const totalRoles = Object.values(allRoles).reduce((sum, roles: any) => sum + (roles?.length || 0), 0);
+  const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
   const totalRoleTypes = 7; // townhall, league, builderhall, builder_league, achievement, status, family_position
 
   return (

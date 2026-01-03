@@ -19,10 +19,11 @@ export class BaseApiClient {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     const url = `${this.config.baseUrl}${endpoint}`;
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    };
+    const headers = new Headers(options.headers);
+    
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
 
     // Get token from config or localStorage (client-side only)
     let token = this.config.accessToken;
@@ -30,8 +31,8 @@ export class BaseApiClient {
       token = localStorage.getItem('access_token') || undefined;
     }
 
-    if (token && !options.headers?.['Authorization']) {
-      headers['Authorization'] = `Bearer ${token}`;
+    if (token && !headers.has('Authorization')) {
+      headers.set('Authorization', `Bearer ${token}`);
     }
 
     try {

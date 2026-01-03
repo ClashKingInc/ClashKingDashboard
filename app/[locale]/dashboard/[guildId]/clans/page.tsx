@@ -38,10 +38,10 @@ import { useToast } from "@/components/ui/use-toast";
 
 // Types based on ClashKingAPI models
 interface MemberCountWarning {
-  channel?: number | null;
+  channel?: string | number | null;
   above?: number | null;
   below?: number | null;
-  role?: number | null;
+  role?: string | number | null;
 }
 
 interface LogButtonSettings {
@@ -56,17 +56,17 @@ interface ClanLogSettings {
 }
 
 interface ClanSettings {
-  generalRole?: number | null;
-  leaderRole?: number | null;
-  clanChannel?: number | null;
+  generalRole?: string | number | null;
+  leaderRole?: string | number | null;
+  clanChannel?: string | number | null;
   category?: string | null;
   abbreviation?: string | null;
   greeting?: string | null;
   auto_greet_option?: string | null;
   leadership_eval?: boolean | null;
-  warCountdown?: number | null;
-  warTimerCountdown?: number | null;
-  ban_alert_channel?: number | null;
+  warCountdown?: string | number | null;
+  warTimerCountdown?: string | number | null;
+  ban_alert_channel?: string | number | null;
   member_count_warning?: MemberCountWarning | null;
   logs?: ClanLogSettings | null;
 }
