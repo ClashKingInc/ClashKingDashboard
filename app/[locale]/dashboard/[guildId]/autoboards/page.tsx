@@ -222,6 +222,9 @@ export default function AutoBoardsPage() {
 
     setCreating(true);
     try {
+      const locale = params?.locale as string;
+      const apiLocale = locale === 'en' ? 'en-US' : locale === 'fr' ? 'fr-FR' : locale === 'nl' ? 'nl-NL' : 'en-US';
+
       const autoboardData = {
         type: newType,
         board_type: newBoardType,
@@ -229,7 +232,7 @@ export default function AutoBoardsPage() {
         webhook_id: "0", // Will be created by backend
         channel_id: selectedChannel,
         days: newType === 'post' ? selectedDays : null,
-        locale: "en-US"
+        locale: apiLocale
       };
 
       const response = await fetch(`/api/v2/server/${guildId}/autoboards`, {
@@ -243,7 +246,7 @@ export default function AutoBoardsPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Failed to create autoboard');
+        throw new Error(error.detail || t('alerts.createFailed'));
       }
 
       // Refresh autoboards list
@@ -309,7 +312,7 @@ export default function AutoBoardsPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Failed to update autoboard');
+        throw new Error(error.detail || t('alerts.updateFailed'));
       }
 
       // Refresh autoboards list
@@ -349,7 +352,7 @@ export default function AutoBoardsPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete autoboard');
+        throw new Error(t('alerts.deleteFailed'));
       }
 
       // Refresh autoboards list
@@ -443,7 +446,7 @@ export default function AutoBoardsPage() {
                   <SelectContent className="bg-card border-border max-h-[300px]">
                     {channels.length === 0 ? (
                       <div className="px-2 py-4 text-sm text-muted-foreground text-center">
-                        No channels available
+                        {t('noChannels')}
                       </div>
                     ) : (
                       channels.map((channel) => (
@@ -463,7 +466,7 @@ export default function AutoBoardsPage() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  The channel where the autoboard will be posted
+                  {t('channelDesc')}
                 </p>
               </div>
 
@@ -474,25 +477,25 @@ export default function AutoBoardsPage() {
                     <SelectValue placeholder={t('selectBoardType')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Clan Boards</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{t('boardTypes.clanBoards')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => key.startsWith('clan'))
                       .map(([key, label]) => (
                         <SelectItem key={key} value={key}>{label}</SelectItem>
                       ))}
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Family Boards</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">{t('boardTypes.familyBoards')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => key.startsWith('family'))
                       .map(([key, label]) => (
                         <SelectItem key={key} value={key}>{label}</SelectItem>
                       ))}
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Legend Boards</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">{t('boardTypes.legendBoards')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => key.startsWith('legend'))
                       .map(([key, label]) => (
                         <SelectItem key={key} value={key}>{label}</SelectItem>
                       ))}
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Other</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">{t('boardTypes.other')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => !key.startsWith('clan') && !key.startsWith('family') && !key.startsWith('legend'))
                       .map(([key, label]) => (
@@ -523,7 +526,7 @@ export default function AutoBoardsPage() {
                     ))}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Posts occur at 5:00 AM UTC daily reset time
+                    {t('postDaysDesc')}
                   </p>
                 </div>
               )}
@@ -533,10 +536,9 @@ export default function AutoBoardsPage() {
                   <div className="flex items-start gap-3">
                     <Info className="w-5 h-5 text-primary mt-0.5" />
                     <div className="space-y-1">
-                      <p className="text-sm font-medium text-foreground">Auto Refresh Info</p>
+                      <p className="text-sm font-medium text-foreground">{t('autoRefreshInfo')}</p>
                       <p className="text-xs text-muted-foreground">
-                        The board will automatically refresh every 30-60 minutes with the latest data. Perfect for keeping
-                        stats current without manual updates.
+                        {t('autoRefreshInfoDesc')}
                       </p>
                     </div>
                   </div>
@@ -550,7 +552,7 @@ export default function AutoBoardsPage() {
                 disabled={creating}
                 className="border-border"
               >
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 onClick={handleCreateAutoBoard}
@@ -560,10 +562,10 @@ export default function AutoBoardsPage() {
                 {creating ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating...
+                    {t('creating')}
                   </>
                 ) : (
-                  'Create'
+                  t('create')
                 )}
               </Button>
             </DialogFooter>
@@ -581,7 +583,7 @@ export default function AutoBoardsPage() {
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-autoboard-type" className="text-foreground">Automation Type</Label>
+                <Label htmlFor="edit-autoboard-type" className="text-foreground">{t('automationType')}</Label>
                 <Select value={editType} onValueChange={(val) => setEditType(val as "post" | "refresh")}>
                   <SelectTrigger className="bg-background border-border text-foreground">
                     <SelectValue />
@@ -604,7 +606,7 @@ export default function AutoBoardsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-channel" className="text-foreground">Channel</Label>
+                <Label htmlFor="edit-channel" className="text-foreground">{t('channel')}</Label>
                 <Select value={editChannel} onValueChange={setEditChannel}>
                   <SelectTrigger className="bg-background border-border text-foreground">
                     <SelectValue placeholder={t('selectChannel')} />
@@ -612,7 +614,7 @@ export default function AutoBoardsPage() {
                   <SelectContent className="bg-card border-border max-h-[300px]">
                     {channels.length === 0 ? (
                       <div className="px-2 py-4 text-sm text-muted-foreground text-center">
-                        No channels available
+                        {t('noChannels')}
                       </div>
                     ) : (
                       channels.map((channel) => (
@@ -632,36 +634,36 @@ export default function AutoBoardsPage() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  The channel where the autoboard will be posted
+                  {t('channelDesc')}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edit-board-type" className="text-foreground">Board Type</Label>
+                <Label htmlFor="edit-board-type" className="text-foreground">{t('boardType')}</Label>
                 <Select value={editBoardType} onValueChange={setEditBoardType}>
                   <SelectTrigger className="bg-background border-border text-foreground">
                     <SelectValue placeholder={t('selectBoardType')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">Clan Boards</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground">{t('boardTypes.clanBoards')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => key.startsWith('clan'))
                       .map(([key, label]) => (
                         <SelectItem key={key} value={key}>{label}</SelectItem>
                       ))}
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Family Boards</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">{t('boardTypes.familyBoards')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => key.startsWith('family'))
                       .map(([key, label]) => (
                         <SelectItem key={key} value={key}>{label}</SelectItem>
                       ))}
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Legend Boards</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">{t('boardTypes.legendBoards')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => key.startsWith('legend'))
                       .map(([key, label]) => (
                         <SelectItem key={key} value={key}>{label}</SelectItem>
                       ))}
-                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">Other</div>
+                    <div className="px-2 py-1.5 text-xs font-semibold text-muted-foreground mt-2">{t('boardTypes.other')}</div>
                     {Object.entries(BOARD_TYPES)
                       .filter(([key]) => !key.startsWith('clan') && !key.startsWith('family') && !key.startsWith('legend'))
                       .map(([key, label]) => (
@@ -692,7 +694,7 @@ export default function AutoBoardsPage() {
                     ))}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Posts occur at 5:00 AM UTC daily reset time
+                    {t('postDaysDesc')}
                   </p>
                 </div>
               )}
@@ -702,10 +704,9 @@ export default function AutoBoardsPage() {
                   <div className="flex items-start gap-3">
                     <Info className="w-5 h-5 text-primary mt-0.5" />
                     <div className="space-y-1">
-                      <p className="text-sm font-medium text-foreground">Auto Refresh Info</p>
+                      <p className="text-sm font-medium text-foreground">{t('autoRefreshInfo')}</p>
                       <p className="text-xs text-muted-foreground">
-                        The board will automatically refresh every 30-60 minutes with the latest data. Perfect for keeping
-                        stats current without manual updates.
+                        {t('autoRefreshInfoDesc')}
                       </p>
                     </div>
                   </div>
@@ -719,7 +720,7 @@ export default function AutoBoardsPage() {
                 disabled={updating}
                 className="border-border"
               >
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 onClick={handleUpdateAutoBoard}
@@ -729,10 +730,10 @@ export default function AutoBoardsPage() {
                 {updating ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Updating...
+                    {t('updating')}
                   </>
                 ) : (
-                  'Update'
+                  t('update')
                 )}
               </Button>
             </DialogFooter>
@@ -743,10 +744,9 @@ export default function AutoBoardsPage() {
       {/* Info Alert */}
       <Alert className="border-blue-500/30 bg-blue-500/5">
         <AlertCircle className="h-4 w-4 text-blue-500" />
-        <AlertTitle className="text-blue-400">How AutoBoards Work</AlertTitle>
+        <AlertTitle className="text-blue-400">{t('howItWorks')}</AlertTitle>
         <AlertDescription className="text-blue-300">
-          AutoBoards can automatically post new boards on a schedule or continuously refresh existing boards with up-to-date data.
-          Choose <strong>Auto Post</strong> to create new boards daily at specific days, or <strong>Auto Refresh</strong> to keep a board updated every 30-60 minutes.
+          {t('howItWorksDesc')}
         </AlertDescription>
       </Alert>
 
@@ -755,7 +755,7 @@ export default function AutoBoardsPage() {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total AutoBoards
+              {t('totalAutoboards')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -771,7 +771,7 @@ export default function AutoBoardsPage() {
                   <LayoutDashboard className="h-8 w-8 text-primary/50" />
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} used` : tCommon("loading")}
+                  {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} ${t('used')}` : tCommon("loading")}
                 </p>
               </>
             )}
@@ -781,7 +781,7 @@ export default function AutoBoardsPage() {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Auto Post
+              {t('autoPost')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -796,7 +796,7 @@ export default function AutoBoardsPage() {
                   <div className="text-3xl font-bold text-foreground">{autoboardsData?.post_count || 0}</div>
                   <Calendar className="h-8 w-8 text-green-500/50" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Scheduled boards</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('scheduledBoards')}</p>
               </>
             )}
           </CardContent>
@@ -805,7 +805,7 @@ export default function AutoBoardsPage() {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Auto Refresh
+              {t('autoRefresh')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -820,7 +820,7 @@ export default function AutoBoardsPage() {
                   <div className="text-3xl font-bold text-foreground">{autoboardsData?.refresh_count || 0}</div>
                   <RefreshCw className="h-8 w-8 text-blue-500/50" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Continuous updates</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('continuousUpdates')}</p>
               </>
             )}
           </CardContent>
@@ -829,7 +829,7 @@ export default function AutoBoardsPage() {
         <Card className="bg-card border-border">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Available Slots
+              {t('availableSlots')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -846,7 +846,7 @@ export default function AutoBoardsPage() {
                   </div>
                   <Clock className="h-8 w-8 text-orange-500/50" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Remaining capacity</p>
+                <p className="text-xs text-muted-foreground mt-1">{t('remainingCapacity')}</p>
               </>
             )}
           </CardContent>
@@ -858,11 +858,11 @@ export default function AutoBoardsPage() {
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <CardTitle className="text-foreground">Active AutoBoards</CardTitle>
+              <CardTitle className="text-foreground">{t('activeAutoboards')}</CardTitle>
               <CardDescription className="text-muted-foreground">
                 {!autoboardsData || autoboardsData.autoboards.length === 0
-                  ? 'No active autoboards'
-                  : `${autoboardsData.autoboards.length} active autoboard${autoboardsData.autoboards.length !== 1 ? 's' : ''}`
+                  ? t('noAutoboards')
+                  : t('activeAutoboardsCount', { count: autoboardsData.autoboards.length })
                 }
               </CardDescription>
             </div>
@@ -889,17 +889,17 @@ export default function AutoBoardsPage() {
             <div className="text-center py-12">
               <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                No AutoBoards configured
+                {t('noAutoboards')}
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Create your first AutoBoard to automate board updates
+                {t('noAutoboardsDesc')}
               </p>
               <Button
                 onClick={() => setCreateDialogOpen(true)}
                 className="bg-primary hover:bg-primary/90"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Create AutoBoard
+                {t('createAutoboard')}
               </Button>
             </div>
           ) : (
@@ -927,22 +927,22 @@ export default function AutoBoardsPage() {
                             variant={autoboard.type === 'post' ? 'default' : 'secondary'}
                             className={autoboard.type === 'post' ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}
                           >
-                            {autoboard.type === 'post' ? 'Auto Post' : 'Auto Refresh'}
+                            {autoboard.type === 'post' ? t('autoPost') : t('autoRefresh')}
                           </Badge>
                         </div>
                         {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
                           <p className="text-sm text-muted-foreground">
-                            Posts on: {autoboard.days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')}
+                            {t('postsOn')} {autoboard.days.map(d => getDayLabel(d)).join(', ')}
                           </p>
                         )}
                         {autoboard.type === 'refresh' && (
                           <p className="text-sm text-muted-foreground">
-                            Updates every 30-60 minutes
+                            {t('updatesEvery')}
                           </p>
                         )}
                         {autoboard.created_at && (
                           <p className="text-xs text-muted-foreground">
-                            Created: {new Date(autoboard.created_at).toLocaleDateString()}
+                            {t('created')} {new Date(autoboard.created_at).toLocaleDateString()}
                           </p>
                         )}
                       </div>
@@ -955,7 +955,7 @@ export default function AutoBoardsPage() {
                         className="text-primary hover:text-primary hover:bg-primary/10"
                       >
                         <Pencil className="w-4 h-4 mr-1" />
-                        Edit
+                        {t('edit')}
                       </Button>
                       <Button
                         size="sm"
@@ -969,7 +969,7 @@ export default function AutoBoardsPage() {
                         ) : (
                           <>
                             <Trash2 className="w-4 h-4 mr-1" />
-                            Remove
+                            {t('remove')}
                           </>
                         )}
                       </Button>
@@ -985,20 +985,20 @@ export default function AutoBoardsPage() {
       {/* Best Practices */}
       <Card className="border-yellow-500/30 bg-yellow-500/5">
         <CardHeader>
-          <CardTitle className="text-yellow-400">💡 AutoBoard Tips</CardTitle>
+          <CardTitle className="text-yellow-400">{t('tips')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-yellow-300">
           <p>
-            <strong>Choose the right type:</strong> Use Auto Post for daily summaries and Auto Refresh for live leaderboards and real-time tracking.
+            <strong>{t('tipsContent.type.title')}</strong> {t('tipsContent.type.desc')}
           </p>
           <p>
-            <strong>Manage your limits:</strong> Each server has a limited number of autoboard slots. Remove unused autoboards to free up space.
+            <strong>{t('tipsContent.limits.title')}</strong> {t('tipsContent.limits.desc')}
           </p>
           <p>
-            <strong>Schedule wisely:</strong> Auto Post boards appear at 5:00 AM UTC. Choose days that align with your clan's activity cycle.
+            <strong>{t('tipsContent.schedule.title')}</strong> {t('tipsContent.schedule.desc')}
           </p>
           <p>
-            <strong>Avoid duplicates:</strong> Using both Auto Post and Auto Refresh for the same board type in the same channel can cause clutter.
+            <strong>{t('tipsContent.duplicates.title')}</strong> {t('tipsContent.duplicates.desc')}
           </p>
         </CardContent>
       </Card>

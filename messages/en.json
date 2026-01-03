@@ -1478,6 +1478,26 @@
     "edit": "Edit",
     "remove": "Remove",
     "tips": "💡 AutoBoard Tips",
+    "noChannels": "No channels available",
+    "activeAutoboardsCount": "{count} active autoboard{count, plural, one {} other {s}}",
+    "tipsContent": {
+      "type": {
+        "title": "Choose the right type:",
+        "desc": "Use Auto Post for daily summaries and Auto Refresh for live leaderboards and real-time tracking."
+      },
+      "limits": {
+        "title": "Manage your limits:",
+        "desc": "Each server has a limited number of autoboard slots. Remove unused autoboards to free up space."
+      },
+      "schedule": {
+        "title": "Schedule wisely:",
+        "desc": "Auto Post boards appear at 5:00 AM UTC. Choose days that align with your clan's activity cycle."
+      },
+      "duplicates": {
+        "title": "Avoid duplicates:",
+        "desc": "Using both Auto Post and Auto Refresh for the same board type in the same channel can cause clutter."
+      }
+    },
     "boardTypes": {
       "clanBoards": "Clan Boards",
       "familyBoards": "Family Boards",
