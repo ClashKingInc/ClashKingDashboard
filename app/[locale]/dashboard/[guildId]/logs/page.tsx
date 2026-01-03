@@ -484,9 +484,9 @@ export default function LogsPage() {
                     !channelExists ? 'text-orange-600' :
                     'text-green-600'
                   }`}>
-                    {!isEnabled && !showEnableForm ? 'OFF' :
-                     showEnableForm && !isEnabled ? 'Configuring' :
-                     'ON'}
+                    {!isEnabled && !showEnableForm ? t('logCard.off') :
+                     showEnableForm && !isEnabled ? t('logCard.configuring') :
+                     t('logCard.on')}
                   </span>
                   {isEnabled && !channelExists && (
                     <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/10 border border-orange-500/30">

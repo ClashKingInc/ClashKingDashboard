@@ -1093,7 +1093,10 @@
       "threadPlaceholder": "Selecteer thread",
       "noThread": "Geen Thread",
       "channelDeleted": "Dit kanaal bestaat niet meer. Selecteer een nieuw kanaal of schakel het logboek uit.",
-      "enableToConfig": "Schakel dit logboek in om het te configureren"
+      "enableToConfig": "Schakel dit logboek in om het te configureren",
+      "configuring": "Configureren",
+      "on": "Aan",
+      "off": "Uit"
     }
   },
   "GeneralPage": {

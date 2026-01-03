@@ -1216,7 +1216,10 @@
       "threadPlaceholder": "Select thread",
       "noThread": "No Thread",
       "channelDeleted": "This channel no longer exists. Select a new one or disable the log.",
-      "enableToConfig": "Enable this log to configure it"
+      "enableToConfig": "Enable this log to configure it",
+      "configuring": "Configuring",
+      "on": "On",
+      "off": "Off"
     }
   },
   "GeneralPage": {

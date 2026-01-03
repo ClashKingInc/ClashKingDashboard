@@ -1093,7 +1093,10 @@
       "threadPlaceholder": "Sélectionner un fil",
       "noThread": "Aucun Fil",
       "channelDeleted": "Ce canal n'existe plus. Sélectionnez-en un nouveau ou désactivez le journal.",
-      "enableToConfig": "Activez ce journal pour le configurer"
+      "enableToConfig": "Activez ce journal pour le configurer",
+      "configuring": "Configuration",
+      "on": "Actif",
+      "off": "Inactif"
     }
   },
   "GeneralPage": {
