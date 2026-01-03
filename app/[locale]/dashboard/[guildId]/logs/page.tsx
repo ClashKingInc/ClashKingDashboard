@@ -522,7 +522,7 @@ export default function LogsPage() {
                 }}
                 placeholder={t('logCard.channelPlaceholder')}
                 disabled={isSaving}
-                showDisabled={true}
+                showDisabled={false}
               />
             </div>
           ) : (
@@ -542,7 +542,7 @@ export default function LogsPage() {
                   placeholder={t('logCard.channelPlaceholder')}
                   disabled={isSaving}
                   className={!channelExists && isEnabled ? 'border-orange-500/50' : ''}
-                  showDisabled={true}
+                  showDisabled={false}
                 />
                 {!channelExists && isEnabled && !isSaving && (
                   <p className="text-xs text-orange-600 flex items-center gap-1">
