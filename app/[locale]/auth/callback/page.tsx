@@ -127,7 +127,7 @@ export default function AuthCallbackPage() {
         sessionStorage.removeItem('discord_code_verifier');
 
         // Redirect to servers page
-        router.push('/servers');
+        router.push(`/${locale}/servers`);
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : "Failed to authenticate with Discord");
@@ -165,7 +165,7 @@ export default function AuthCallbackPage() {
         </CardHeader>
         <CardContent className="flex justify-center">
           <button
-            onClick={() => router.push('/login')}
+            onClick={() => router.push(`/${locale}/login`)}
             className="px-4 py-2 bg-[#DC2626] hover:bg-[#EF4444] text-white rounded-lg transition-colors"
           >
             {t("tryAgain")}
