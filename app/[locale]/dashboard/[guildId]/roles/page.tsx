@@ -58,11 +58,104 @@ import type {
 } from "@/lib/api/types/roles";
 import { LetterCaseUppercaseIcon } from "@radix-ui/react-icons";
 
+const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
+  { value: "townhall", icon: Users },
+  { value: "league", icon: Trophy },
+  { value: "builderhall", icon: Hammer },
+  { value: "builder_league", icon: Award },
+  { value: "achievement", icon: Award },
+  { value: "status", icon: Clock },
+  { value: "family_position", icon: Crown },
+];
+
+const LEAGUE_TIERS = [
+  { id: "legend", apiName: "Legend League", range: null },
+  { id: "electroDragon", apiName: "Electro Dragon", range: [33, 31] },
+  { id: "dragon", apiName: "Dragon", range: [30, 28] },
+  { id: "electroTitan", apiName: "Electro Titan", range: [27, 25] },
+  { id: "pekka", apiName: "P.E.K.K.A", range: [24, 22] },
+  { id: "golem", apiName: "Golem", range: [21, 19] },
+  { id: "witch", apiName: "Witch", range: [18, 16] },
+  { id: "valkyrie", apiName: "Valkyrie", range: [15, 13] },
+  { id: "wizard", apiName: "Wizard", range: [12, 10] },
+  { id: "archer", apiName: "Archer", range: [9, 7] },
+  { id: "barbarian", apiName: "Barbarian", range: [6, 4] },
+  { id: "skeleton", apiName: "Skeleton", range: [3, 1] },
+];
+
+const FAMILY_POSITIONS_CONFIG = [
+  { value: "family_elder_roles" },
+  { value: "family_co-leader_roles" },
+  { value: "family_leader_roles" },
+];
+
+const BUILDER_LEAGUE_TIERS = [
+  { id: "diamond", apiName: "Diamond", range: null },
+  { id: "ruby", apiName: "Ruby", range: [1, 3] },
+  { id: "emerald", apiName: "Emerald", range: [1, 3] },
+  { id: "platinum", apiName: "Platinum", range: [1, 3] },
+  { id: "titanium", apiName: "Titanium", range: [1, 3] },
+  { id: "steel", apiName: "Steel", range: [1, 3] },
+  { id: "iron", apiName: "Iron", range: [1, 3] },
+  { id: "brass", apiName: "Brass", range: [1, 3] },
+  { id: "copper", apiName: "Copper", range: [1, 5] },
+  { id: "stone", apiName: "Stone", range: [1, 5] },
+  { id: "clay", apiName: "Clay", range: [1, 5] },
+  { id: "wood", apiName: "Wood", range: [1, 5] },
+];
+
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;
   const t = useTranslations("RolesPage");
   const tCommon = useTranslations("Common");
+
+  const roleTypes = ROLE_TYPES_CONFIG.map((rt) => ({
+    ...rt,
+    label: t(`roleTypes.${rt.value.replace(/_([a-z])/g, (g) => g[1].toUpperCase())}`),
+  }));
+
+  const familyPositions = FAMILY_POSITIONS_CONFIG.map((fp) => {
+    const key = fp.value
+      .replace("family_", "")
+      .replace("_roles", "")
+      .replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+    return {
+      ...fp,
+      label: t(`familyPositions.${key}`),
+    };
+  });
+
+  const leagues = LEAGUE_TIERS.flatMap((tier) => {
+    const tierName = t(`leagues.${tier.id}`);
+    if (!tier.range) {
+      return [{ value: tier.apiName, label: tierName }];
+    }
+    const leaguesInTier = [];
+    for (let i = tier.range[0]; i >= tier.range[1]; i--) {
+      leaguesInTier.push({
+        value: `${tier.apiName} ${i}`,
+        label: `${tierName} ${i}`,
+      });
+    }
+    return leaguesInTier;
+  });
+
+  const builderLeagues = BUILDER_LEAGUE_TIERS.flatMap((tier) => {
+    const tierName = t(`builderLeagues.${tier.id}`);
+    if (!tier.range) {
+      return [{ value: tier.apiName, label: tierName }];
+    }
+    const leaguesInTier = [];
+    for (let i = tier.range[0]; i <= tier.range[1]; i++) {
+      const roman = i === 1 ? "I" : i === 2 ? "II" : i === 3 ? "III" : i === 4 ? "IV" : "V";
+      leaguesInTier.push({
+        value: `${tier.apiName} ${roman}`,
+        label: `${tierName} ${roman}`,
+      });
+    }
+    return leaguesInTier;
+  });
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -235,36 +328,36 @@ export default function RolesPage() {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="role">Discord Role</Label>
+              <Label htmlFor="th">{t("addRoleDialog.townHallLevel")}</Label>
               <Select
-                value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+                value={newRole.th?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, th: parseInt(value) })}
               >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
+                <SelectTrigger id="th">
+                  <SelectValue placeholder={t("addRoleDialog.selectThLevel")} />
                 </SelectTrigger>
-                <SelectContent>
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
+                <SelectContent className="max-h-80">
+                  {Array.from({ length: 17 }, (_, i) => 17 - i).map((th) => (
+                    <SelectItem key={th} value={th.toString()}>
+                      TH {th}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="th">Town Hall Level</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
               <Select
-                value={newRole.th?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, th: parseInt(value) })}
+                value={newRole.role_id?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
-                <SelectTrigger id="th">
-                  <SelectValue placeholder="Select TH level" />
+                <SelectTrigger id="role">
+                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
                 </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 17 }, (_, i) => i + 1).map((th) => (
-                    <SelectItem key={th} value={th.toString()}>
-                      TH {th}
+                <SelectContent className="max-h-80">
+                  {discordRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -277,36 +370,36 @@ export default function RolesPage() {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="role">Discord Role</Label>
+              <Label htmlFor="league">{t("addRoleDialog.league")}</Label>
               <Select
-                value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+                value={newRole.league}
+                onValueChange={(value) => setNewRole({ ...newRole, league: value })}
               >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
+                <SelectTrigger id="league">
+                  <SelectValue placeholder={t("addRoleDialog.selectLeague")} />
                 </SelectTrigger>
-                <SelectContent>
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
+                <SelectContent className="max-h-80">
+                  {leagues.map((league) => (
+                    <SelectItem key={league.value} value={league.value}>
+                      {league.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="league">League</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
               <Select
-                value={newRole.league}
-                onValueChange={(value) => setNewRole({ ...newRole, league: value })}
+                value={newRole.role_id?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
-                <SelectTrigger id="league">
-                  <SelectValue placeholder="Select league" />
+                <SelectTrigger id="role">
+                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
                 </SelectTrigger>
-                <SelectContent>
-                  {LEAGUES.map((league) => (
-                    <SelectItem key={league} value={league}>
-                      {league}
+                <SelectContent className="max-h-80">
+                  {discordRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -319,36 +412,36 @@ export default function RolesPage() {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="role">Discord Role</Label>
+              <Label htmlFor="bh">{t("addRoleDialog.builderHallLevel")}</Label>
               <Select
-                value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+                value={newRole.bh?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, bh: parseInt(value) })}
               >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
+                <SelectTrigger id="bh">
+                  <SelectValue placeholder={t("addRoleDialog.selectBhLevel")} />
                 </SelectTrigger>
-                <SelectContent>
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
+                <SelectContent className="max-h-80">
+                  {Array.from({ length: 10 }, (_, i) => 10 - i).map((bh) => (
+                    <SelectItem key={bh} value={bh.toString()}>
+                      BH {bh}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="bh">Builder Hall Level</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
               <Select
-                value={newRole.bh?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, bh: parseInt(value) })}
+                value={newRole.role_id?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
-                <SelectTrigger id="bh">
-                  <SelectValue placeholder="Select BH level" />
+                <SelectTrigger id="role">
+                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
                 </SelectTrigger>
-                <SelectContent>
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((bh) => (
-                    <SelectItem key={bh} value={bh.toString()}>
-                      BH {bh}
+                <SelectContent className="max-h-80">
+                  {discordRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -361,15 +454,33 @@ export default function RolesPage() {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="role">Discord Role</Label>
+              <Label htmlFor="builder_league">{t("addRoleDialog.builderLeague")}</Label>
+              <Select
+                value={newRole.builder_league}
+                onValueChange={(value) => setNewRole({ ...newRole, builder_league: value })}
+              >
+                <SelectTrigger id="builder_league">
+                  <SelectValue placeholder={t("addRoleDialog.selectBuilderLeague")} />
+                </SelectTrigger>
+                <SelectContent className="max-h-80">
+                  {builderLeagues.map((league) => (
+                    <SelectItem key={league.value} value={league.value}>
+                      {league.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
               <Select
                 value={newRole.role_id?.toString()}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
                 <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-80">
                   {discordRoles.map((role) => (
                     <SelectItem key={role.id} value={role.id}>
                       {role.name}
@@ -377,15 +488,6 @@ export default function RolesPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="builder_league">Builder League</Label>
-              <Input
-                id="builder_league"
-                value={newRole.builder_league || ""}
-                onChange={(e) => setNewRole({ ...newRole, builder_league: e.target.value })}
-                placeholder="e.g., Titanium League I"
-              />
             </div>
           </>
         );
@@ -394,15 +496,24 @@ export default function RolesPage() {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="role">Discord Role</Label>
+              <Label htmlFor="achievement">{t("addRoleDialog.achievementName")}</Label>
+              <Input
+                id="achievement"
+                value={newRole.achievement || ""}
+                onChange={(e) => setNewRole({ ...newRole, achievement: e.target.value })}
+                placeholder={t("addRoleDialog.achievementPlaceholder")}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
               <Select
                 value={newRole.role_id?.toString()}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
               >
                 <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-80">
                   {discordRoles.map((role) => (
                     <SelectItem key={role.id} value={role.id}>
                       {role.name}
@@ -410,15 +521,6 @@ export default function RolesPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="achievement">Achievement Name</Label>
-              <Input
-                id="achievement"
-                value={newRole.achievement || ""}
-                onChange={(e) => setNewRole({ ...newRole, achievement: e.target.value })}
-                placeholder="e.g., Gold Grab"
-              />
             </div>
           </>
         );
@@ -427,25 +529,7 @@ export default function RolesPage() {
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="role">Discord Role</Label>
-              <Select
-                value={newRole.id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
-                </SelectTrigger>
-                <SelectContent>
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="months">Months in Server</Label>
+              <Label htmlFor="months">{t("addRoleDialog.monthsInServer")}</Label>
               <Input
                 id="months"
                 type="number"
@@ -455,22 +539,16 @@ export default function RolesPage() {
                 placeholder="6"
               />
             </div>
-          </>
-        );
-
-      case "family_position":
-        return (
-          <>
             <div className="space-y-2">
-              <Label htmlFor="role">Discord Role</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
               <Select
-                value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+                value={newRole.id?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, id: value })}
               >
                 <SelectTrigger id="role">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-80">
                   {discordRoles.map((role) => (
                     <SelectItem key={role.id} value={role.id}>
                       {role.name}
@@ -479,19 +557,43 @@ export default function RolesPage() {
                 </SelectContent>
               </Select>
             </div>
+          </>
+        );
+
+      case "family_position":
+        return (
+          <>
             <div className="space-y-2">
-              <Label htmlFor="position">Family Position</Label>
+              <Label htmlFor="position">{t("addRoleDialog.familyPosition")}</Label>
               <Select
                 value={newRole.type}
                 onValueChange={(value) => setNewRole({ ...newRole, type: value })}
               >
                 <SelectTrigger id="position">
-                  <SelectValue placeholder="Select position" />
+                  <SelectValue placeholder={t("addRoleDialog.selectPosition")} />
                 </SelectTrigger>
-                <SelectContent>
-                  {FAMILY_POSITIONS.map((pos) => (
+                <SelectContent className="max-h-80">
+                  {familyPositions.map((pos) => (
                     <SelectItem key={pos.value} value={pos.value}>
                       {pos.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
+              <Select
+                value={newRole.role_id?.toString()}
+                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
+              >
+                <SelectTrigger id="role">
+                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
+                </SelectTrigger>
+                <SelectContent className="max-h-80">
+                  {discordRoles.map((role) => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -511,8 +613,8 @@ export default function RolesPage() {
     if (roles.length === 0) {
       return (
         <div className="text-center py-8 text-muted-foreground">
-          <p>No {roleType.replace("_", " ")} roles configured</p>
-          <p className="text-sm mt-2">Click "Add Role" to create one</p>
+          <p>{t("configuredRoles.noRolesConfigured", { roleType: roleType.replace("_", " ") })}</p>
+          <p className="text-sm mt-2">{t("configuredRoles.addRoleToStart")}</p>
         </div>
       );
     }
@@ -521,9 +623,9 @@ export default function RolesPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Discord Role</TableHead>
-            <TableHead>Criteria</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t("configuredRoles.discordRole")}</TableHead>
+            <TableHead>{t("configuredRoles.criteria")}</TableHead>
+            <TableHead className="text-right">{t("configuredRoles.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -557,10 +659,10 @@ export default function RolesPage() {
                 criteria = role.achievement || "";
                 break;
               case "status":
-                criteria = `${role.months} month${role.months > 1 ? "s" : ""}`;
+                criteria = `${role.months} ${role.months === 1 ? t("configuredRoles.month") : t("configuredRoles.months")}`;
                 break;
               case "family_position":
-                criteria = FAMILY_POSITIONS.find((p) => p.value === role.type)?.label || role.type;
+                criteria = familyPositions.find((p) => p.value === role.type)?.label || role.type;
                 break;
             }
 
@@ -576,7 +678,7 @@ export default function RolesPage() {
                           : "#99AAB5" // Discord default role color (grey)
                       }}
                     />
-                    <span>{discordRole?.name || "Unknown Role"}</span>
+                    <span>{discordRole?.name || t("configuredRoles.unknownRole")}</span>
                   </div>
                 </TableCell>
                 <TableCell>{criteria}</TableCell>
@@ -588,7 +690,7 @@ export default function RolesPage() {
                     className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
-                    Remove
+                    {t("configuredRoles.remove")}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -621,9 +723,9 @@ export default function RolesPage() {
             <Shield className="h-8 w-8 text-purple-500" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Role Management</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
             <p className="text-muted-foreground mt-1">
-              Configure automatic role assignment based on player stats
+              {t("description")}
             </p>
           </div>
         </div>
@@ -632,7 +734,7 @@ export default function RolesPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card className="bg-card border-purple-500/30 bg-purple-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Roles</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRoles")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -640,31 +742,31 @@ export default function RolesPage() {
                 <Shield className="h-8 w-8 text-purple-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Configured role assignments
+                {t("stats.totalRolesDesc")}
               </p>
             </CardContent>
           </Card>
 
           <Card className={`bg-card ${roleSettings.auto_eval_status ? 'border-green-500/30 bg-green-500/5' : 'border-gray-500/30 bg-gray-500/5'}`}>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Auto-Evaluation</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.autoEvaluation")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
                 <div className={`text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-gray-500'}`}>
-                  {roleSettings.auto_eval_status ? 'ON' : 'OFF'}
+                  {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
                 </div>
                 <Settings className={`h-8 w-8 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-gray-500/50'}`} />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                {roleSettings.auto_eval_status ? 'Automatically assigning roles' : 'Manual role assignment only'}
+                {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Active Types</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.activeTypes")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -672,14 +774,14 @@ export default function RolesPage() {
                 <Trophy className="h-8 w-8 text-blue-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Role types in use
+                {t("stats.activeTypesDesc")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-orange-500/30 bg-orange-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Discord Roles</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.discordRoles")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -687,7 +789,7 @@ export default function RolesPage() {
                 <Users className="h-8 w-8 text-orange-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Available on server
+                {t("stats.discordRolesDesc")}
               </p>
             </CardContent>
           </Card>
@@ -704,7 +806,7 @@ export default function RolesPage() {
         {success && (
           <Alert className="border-green-500/30 bg-green-500/5">
             <AlertCircle className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-600">Changes saved successfully!</AlertDescription>
+            <AlertDescription className="text-green-600">{t("toast.changesSaved")}</AlertDescription>
           </Alert>
         )}
 
@@ -715,10 +817,10 @@ export default function RolesPage() {
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="h-5 w-5" />
-                  Auto-Evaluation Settings
+                  {t("settings.title")}
                 </CardTitle>
                 <CardDescription>
-                  Configure automatic role evaluation and assignment
+                  {t("settings.description")}
                 </CardDescription>
               </div>
               <Button
@@ -729,12 +831,12 @@ export default function RolesPage() {
                 {isSaving ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    {t("settings.saving")}
                   </>
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    Save Settings
+                    {t("settings.saveButton")}
                   </>
                 )}
               </Button>
@@ -743,9 +845,9 @@ export default function RolesPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
               <div className="space-y-0.5">
-                <Label htmlFor="auto-eval">Enable Auto-Evaluation</Label>
+                <Label htmlFor="auto-eval">{t("settings.enableAutoEval")}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Automatically assign and remove roles based on player stats
+                  {t("settings.enableAutoEvalDesc")}
                 </p>
               </div>
               <Switch
@@ -759,9 +861,9 @@ export default function RolesPage() {
 
             <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
               <div className="space-y-0.5">
-                <Label htmlFor="auto-nickname">Auto-Update Nicknames</Label>
+                <Label htmlFor="auto-nickname">{t("settings.autoNickname")}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Update nicknames when roles are evaluated
+                  {t("settings.autoNicknameDesc")}
                 </p>
               </div>
               <Switch
@@ -779,24 +881,24 @@ export default function RolesPage() {
         <Card className="bg-card border-border">
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <CardTitle>Configured Roles</CardTitle>
+              <CardTitle>{t("configuredRoles.title")}</CardTitle>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Role
+                    {tCommon("add")} {t("addRoleDialog.roleType")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[500px]">
                   <DialogHeader>
-                    <DialogTitle>Add New Role</DialogTitle>
+                    <DialogTitle>{t("addRoleDialog.title")}</DialogTitle>
                     <DialogDescription>
-                      Configure a new automatic role assignment rule
+                      {t("addRoleDialog.description")}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-4">
                     <div className="space-y-2">
-                      <Label htmlFor="role-type">Role Type</Label>
+                      <Label htmlFor="role-type">{t("addRoleDialog.roleType")}</Label>
                       <Select
                         value={currentRoleType}
                         onValueChange={(value) => {
@@ -808,7 +910,7 @@ export default function RolesPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {ROLE_TYPES.map((type) => (
+                          {roleTypes.map((type) => (
                             <SelectItem key={type.value} value={type.value}>
                               {type.label}
                             </SelectItem>
@@ -823,14 +925,14 @@ export default function RolesPage() {
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                      Cancel
+                      {t("addRoleDialog.cancel")}
                     </Button>
                     <Button
                       className="bg-primary hover:bg-primary/90"
                       onClick={handleAddRole}
                       disabled={!newRole.role_id && !newRole.id}
                     >
-                      Add Role
+                      {t("addRoleDialog.addRole")}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -840,7 +942,7 @@ export default function RolesPage() {
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 h-auto">
-                {ROLE_TYPES.map((type) => (
+                {roleTypes.map((type) => (
                   <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm">
                     <type.icon className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
                     <span className="hidden sm:inline">{type.label}</span>
@@ -849,7 +951,7 @@ export default function RolesPage() {
                 ))}
               </TabsList>
 
-              {ROLE_TYPES.map((type) => (
+              {roleTypes.map((type) => (
                 <TabsContent key={type.value} value={type.value} className="mt-6">
                   {renderRolesList(type.value)}
                 </TabsContent>
@@ -861,17 +963,17 @@ export default function RolesPage() {
         {/* Info Card */}
         <Card className="border-blue-500/30 bg-blue-500/5">
           <CardHeader>
-            <CardTitle className="text-blue-400">💡 How Auto-Roles Work</CardTitle>
+            <CardTitle className="text-blue-400">{t("infoCard.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-blue-300">
             <p>
-              <strong>Automatic Evaluation:</strong> When enabled, the bot will periodically check players and assign/remove roles based on their current stats.
+              <strong>{t("infoCard.automaticEvaluation")}</strong> {t("infoCard.automaticEvaluationDesc")}
             </p>
             <p>
-              <strong>Role Priority:</strong> If multiple roles match a player's stats, the highest level role will be assigned.
+              <strong>{t("infoCard.rolePriority")}</strong> {t("infoCard.rolePriorityDesc")}
             </p>
             <p>
-              <strong>Manual Override:</strong> Server admins can manually assign roles, which will not be removed by auto-evaluation.
+              <strong>{t("infoCard.manualOverride")}</strong> {t("infoCard.manualOverrideDesc")}
             </p>
           </CardContent>
         </Card>
