@@ -427,6 +427,8 @@ export default function LogsPage() {
     const selectedThread = getSelectedThreadForLogs(logDef.keys);
     const colors = getColorClasses(logDef.color);
     const [showEnableForm, setShowEnableForm] = useState(false);
+    const [pendingChannel, setPendingChannel] = useState<string | null>(null);
+    const isSaving = saving === logDef.keys[0];
 
     // Check if the selected channel exists in the available channels list
     // If log is enabled but no channel, it's also an issue
@@ -452,32 +454,32 @@ export default function LogsPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {saving === logDef.keys[0] ? (
+              <Switch
+                checked={Boolean(isEnabled) || showEnableForm}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setShowEnableForm(true);
+                  } else {
+                    if (showEnableForm && !isEnabled) {
+                      setShowEnableForm(false);
+                    } else {
+                      handleChannelChange(logDef.keys, 'disabled');
+                    }
+                  }
+                }}
+                disabled={isSaving}
+                className={
+                  showEnableForm && !isEnabled
+                    ? 'data-[state=checked]:bg-blue-500'
+                    : isEnabled && !channelExists
+                    ? 'data-[state=checked]:bg-orange-500'
+                    : 'data-[state=checked]:bg-green-500'
+                }
+              />
+              {isSaving ? (
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               ) : (
                 <>
-                  <Switch
-                    checked={Boolean(isEnabled) || showEnableForm}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setShowEnableForm(true);
-                      } else {
-                        if (showEnableForm && !isEnabled) {
-                          setShowEnableForm(false);
-                        } else {
-                          handleChannelChange(logDef.keys, 'disabled');
-                        }
-                      }
-                    }}
-                    disabled={saving === logDef.keys[0]}
-                    className={
-                      showEnableForm && !isEnabled
-                        ? 'data-[state=checked]:bg-blue-500'
-                        : isEnabled && !channelExists
-                        ? 'data-[state=checked]:bg-orange-500'
-                        : 'data-[state=checked]:bg-green-500'
-                    }
-                  />
                   <span className={`text-xs font-medium ${
                     !isEnabled && !showEnableForm ? 'text-muted-foreground' :
                     showEnableForm && !isEnabled ? 'text-blue-600' :
@@ -500,24 +502,26 @@ export default function LogsPage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
-          {!isEnabled && !showEnableForm ? (
+          {!isEnabled && !showEnableForm && !isSaving ? (
             /* DISABLED STATE: Empty state */
             <div className="text-center py-6 text-muted-foreground text-sm">
               {t('logCard.enableToConfig')}
             </div>
-          ) : !isEnabled && showEnableForm ? (
+          ) : (!isEnabled && showEnableForm) || (isSaving && !isEnabled) ? (
             /* CONFIGURING STATE: Show channel selector */
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
               <ChannelCombobox
                 channels={channels}
-                value="disabled"
-                onValueChange={(value) => {
-                  handleChannelChange(logDef.keys, value);
+                value={pendingChannel || "disabled"}
+                onValueChange={async (value) => {
+                  setPendingChannel(value);
+                  await handleChannelChange(logDef.keys, value);
+                  setPendingChannel(null);
                   setShowEnableForm(false);
                 }}
                 placeholder={t('logCard.channelPlaceholder')}
-                disabled={saving === logDef.keys[0]}
+                disabled={isSaving}
                 showDisabled={true}
               />
             </div>
@@ -528,17 +532,19 @@ export default function LogsPage() {
                 <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
                 <ChannelCombobox
                   channels={channels}
-                  value={channelExists ? selectedChannel : ""}
-                  onValueChange={(value) => {
-                    handleChannelChange(logDef.keys, value);
+                  value={pendingChannel || (channelExists ? selectedChannel : "")}
+                  onValueChange={async (value) => {
+                    setPendingChannel(value);
+                    await handleChannelChange(logDef.keys, value);
+                    setPendingChannel(null);
                     if (value !== "disabled") loadThreadsIfNeeded();
                   }}
                   placeholder={t('logCard.channelPlaceholder')}
-                  disabled={saving === logDef.keys[0]}
-                  className={!channelExists ? 'border-orange-500/50' : ''}
+                  disabled={isSaving}
+                  className={!channelExists && isEnabled ? 'border-orange-500/50' : ''}
                   showDisabled={true}
                 />
-                {!channelExists && (
+                {!channelExists && isEnabled && !isSaving && (
                   <p className="text-xs text-orange-600 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
                     {t('logCard.channelDeleted')}
@@ -552,7 +558,7 @@ export default function LogsPage() {
                   <Select
                     value={selectedThread || "none"}
                     onValueChange={(value) => handleThreadChange(logDef.keys, value)}
-                    disabled={saving === logDef.keys[0]}
+                    disabled={isSaving}
                   >
                     <SelectTrigger className="bg-secondary border-border">
                       <SelectValue placeholder={t('logCard.threadPlaceholder')} />
