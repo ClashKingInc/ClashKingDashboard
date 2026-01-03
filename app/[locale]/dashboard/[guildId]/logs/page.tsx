@@ -96,47 +96,47 @@ interface LogTypeDefinition {
   color: string;
 }
 
-const CLAN_LOGS: LogTypeDefinition[] = [
-  { keys: ['join_log'], label: 'Member Join', description: 'Track members joining the clan', icon: Users, color: 'green' },
-  { keys: ['leave_log'], label: 'Member Leave', description: 'Track members leaving the clan', icon: Users, color: 'red' },
-  { keys: ['donation_log'], label: 'Member Donation', description: 'Track troop and spell donations', icon: Gift, color: 'purple' },
-  { keys: ['clan_achievement_log'], label: 'Clan Achievements', description: 'Track clan achievements earned', icon: Award, color: 'yellow' },
-  { keys: ['clan_requirements_log'], label: 'Clan Requirements', description: 'Track changes to clan requirements', icon: FileCheck, color: 'blue' },
-  { keys: ['clan_description_log'], label: 'Clan Description', description: 'Track changes to clan description', icon: MessageCircle, color: 'gray' },
-];
-
-const WAR_LOGS: LogTypeDefinition[] = [
-  { keys: ['war_log'], label: 'War Log', description: 'Track war attacks and results', icon: Swords, color: 'red' },
-  { keys: ['war_panel'], label: 'War Panel', description: 'Interactive war panel with live updates', icon: ScrollText, color: 'orange' },
-  { keys: ['cwl_lineup_change_log'], label: 'CWL Lineup Change', description: 'Track CWL lineup changes', icon: Users, color: 'blue' },
-];
-
-const CAPITAL_LOGS: LogTypeDefinition[] = [
-  { keys: ['capital_donations'], label: 'Capital Donations', description: 'Track capital gold donations', icon: Castle, color: 'yellow' },
-  { keys: ['capital_attacks'], label: 'Capital Attacks', description: 'Track raid weekend attacks', icon: Swords, color: 'orange' },
-  { keys: ['raid_panel'], label: 'Capital Panel', description: 'Interactive raid panel with live updates', icon: Map, color: 'purple' },
-  { keys: ['capital_weekly_summary'], label: 'Capital Weekly Summary', description: 'Weekly summary of capital performance', icon: BarChart, color: 'blue' },
-];
-
-const PLAYER_LOGS: LogTypeDefinition[] = [
-  { keys: ['role_change'], label: 'Role Change', description: 'Track player role changes in clan', icon: UserCog, color: 'blue' },
-  { keys: ['troop_upgrade'], label: 'Troop Upgrade', description: 'Track troop level upgrades', icon: TrendingUp, color: 'green' },
-  { keys: ['super_troop_boost_log'], label: 'Super Troop Boosts', description: 'Track super troop activations', icon: Zap, color: 'yellow' },
-  { keys: ['th_upgrade'], label: 'Townhall Upgrade', description: 'Track town hall upgrades', icon: Castle, color: 'orange' },
-  { keys: ['league_change'], label: 'League Change', description: 'Track league tier changes', icon: Target, color: 'purple' },
-  { keys: ['spell_upgrade'], label: 'Spell Upgrade', description: 'Track spell level upgrades', icon: Star, color: 'blue' },
-  { keys: ['hero_upgrade'], label: 'Hero Upgrade', description: 'Track hero level upgrades', icon: Shield, color: 'red' },
-  { keys: ['hero_equipment_upgrade'], label: 'Hero Equipment Upgrade', description: 'Track hero equipment upgrades', icon: Shield, color: 'orange' },
-  { keys: ['name_change'], label: 'Name Change', description: 'Track player name changes', icon: Users, color: 'gray' },
-  { keys: ['legend_log_attacks'], label: 'Legend Attacks', description: 'Track legend league attacks', icon: Trophy, color: 'yellow' },
-  { keys: ['legend_log_defenses'], label: 'Legend Defenses', description: 'Track legend league defenses', icon: Trophy, color: 'blue' },
-];
-
 export default function LogsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("LogsPage");
   const tCommon = useTranslations("Common");
+
+  const CLAN_LOGS: LogTypeDefinition[] = [
+    { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green' },
+    { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red' },
+    { keys: ['donation_log'], label: t('clanLogs.donationLog.label'), description: t('clanLogs.donationLog.description'), icon: Gift, color: 'purple' },
+    { keys: ['clan_achievement_log'], label: t('clanLogs.clanAchievementLog.label'), description: t('clanLogs.clanAchievementLog.description'), icon: Award, color: 'yellow' },
+    { keys: ['clan_requirements_log'], label: t('clanLogs.clanRequirementsLog.label'), description: t('clanLogs.clanRequirementsLog.description'), icon: FileCheck, color: 'blue' },
+    { keys: ['clan_description_log'], label: t('clanLogs.clanDescriptionLog.label'), description: t('clanLogs.clanDescriptionLog.description'), icon: MessageCircle, color: 'gray' },
+  ];
+
+  const WAR_LOGS: LogTypeDefinition[] = [
+    { keys: ['war_log'], label: t('warLogs.warLog.label'), description: t('warLogs.warLog.description'), icon: Swords, color: 'red' },
+    { keys: ['war_panel'], label: t('warLogs.warPanel.label'), description: t('warLogs.warPanel.description'), icon: ScrollText, color: 'orange' },
+    { keys: ['cwl_lineup_change_log'], label: t('warLogs.cwlLineupChangeLog.label'), description: t('warLogs.cwlLineupChangeLog.description'), icon: Users, color: 'blue' },
+  ];
+
+  const CAPITAL_LOGS: LogTypeDefinition[] = [
+    { keys: ['capital_donations'], label: t('capitalLogs.capitalDonations.label'), description: t('capitalLogs.capitalDonations.description'), icon: Castle, color: 'yellow' },
+    { keys: ['capital_attacks'], label: t('capitalLogs.capitalAttacks.label'), description: t('capitalLogs.capitalAttacks.description'), icon: Swords, color: 'orange' },
+    { keys: ['raid_panel'], label: t('capitalLogs.raidPanel.label'), description: t('capitalLogs.raidPanel.description'), icon: Map, color: 'purple' },
+    { keys: ['capital_weekly_summary'], label: t('capitalLogs.capitalWeeklySummary.label'), description: t('capitalLogs.capitalWeeklySummary.description'), icon: BarChart, color: 'blue' },
+  ];
+
+  const PLAYER_LOGS: LogTypeDefinition[] = [
+    { keys: ['role_change'], label: t('playerLogs.roleChange.label'), description: t('playerLogs.roleChange.description'), icon: UserCog, color: 'blue' },
+    { keys: ['troop_upgrade'], label: t('playerLogs.troopUpgrade.label'), description: t('playerLogs.troopUpgrade.description'), icon: TrendingUp, color: 'green' },
+    { keys: ['super_troop_boost_log'], label: t('playerLogs.superTroopBoostLog.label'), description: t('playerLogs.superTroopBoostLog.description'), icon: Zap, color: 'yellow' },
+    { keys: ['th_upgrade'], label: t('playerLogs.thUpgrade.label'), description: t('playerLogs.thUpgrade.description'), icon: Castle, color: 'orange' },
+    { keys: ['league_change'], label: t('playerLogs.leagueChange.label'), description: t('playerLogs.leagueChange.description'), icon: Target, color: 'purple' },
+    { keys: ['spell_upgrade'], label: t('playerLogs.spellUpgrade.label'), description: t('playerLogs.spellUpgrade.description'), icon: Star, color: 'blue' },
+    { keys: ['hero_upgrade'], label: t('playerLogs.heroUpgrade.label'), description: t('playerLogs.heroUpgrade.description'), icon: Shield, color: 'red' },
+    { keys: ['hero_equipment_upgrade'], label: t('playerLogs.heroEquipmentUpgrade.label'), description: t('playerLogs.heroEquipmentUpgrade.description'), icon: Shield, color: 'orange' },
+    { keys: ['name_change'], label: t('playerLogs.nameChange.label'), description: t('playerLogs.nameChange.description'), icon: Users, color: 'gray' },
+    { keys: ['legend_log_attacks'], label: t('playerLogs.legendLogAttacks.label'), description: t('playerLogs.legendLogAttacks.description'), icon: Trophy, color: 'yellow' },
+    { keys: ['legend_log_defenses'], label: t('playerLogs.legendLogDefenses.label'), description: t('playerLogs.legendLogDefenses.description'), icon: Trophy, color: 'blue' },
+  ];
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [channels, setChannels] = useState<Channel[]>([]);
@@ -426,7 +426,7 @@ export default function LogsPage() {
               {isEnabled && !saving && (
                 <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/10">
                   <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  <span className="text-xs text-green-600 font-medium">Active</span>
+                  <span className="text-xs text-green-600 font-medium">{t('logCard.active')}</span>
                 </div>
               )}
             </div>
@@ -435,7 +435,7 @@ export default function LogsPage() {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label className="text-sm font-medium">Channel</Label>
+              <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
               <Select
                 value={selectedChannel || "disabled"}
                 onValueChange={(value) => handleChannelChange(logDef.keys, value)}
@@ -445,10 +445,10 @@ export default function LogsPage() {
                 }}
               >
                 <SelectTrigger className="bg-secondary border-border">
-                  <SelectValue placeholder="Select channel" />
+                  <SelectValue placeholder={t('logCard.channelPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="disabled">Disabled</SelectItem>
+                  <SelectItem value="disabled">{t('logCard.disabled')}</SelectItem>
                   <Separator className="my-2" />
                   {channels.map(ch => (
                     <SelectItem key={ch.id} value={ch.id}>
@@ -462,17 +462,17 @@ export default function LogsPage() {
 
             {selectedChannel && channelThreads.length > 0 && (
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Thread (Optional)</Label>
+                <Label className="text-sm font-medium">{t('logCard.thread')}</Label>
                 <Select
                   value={selectedThread || "none"}
                   onValueChange={(value) => handleThreadChange(logDef.keys, value)}
                   disabled={saving === logDef.keys[0]}
                 >
                   <SelectTrigger className="bg-secondary border-border">
-                    <SelectValue placeholder="Select thread" />
+                    <SelectValue placeholder={t('logCard.threadPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="none">No Thread</SelectItem>
+                    <SelectItem value="none">{t('logCard.noThread')}</SelectItem>
                     <Separator className="my-2" />
                     {channelThreads.map((thread) => (
                       <SelectItem key={thread.id} value={thread.id}>
@@ -570,9 +570,9 @@ export default function LogsPage() {
             <FileText className="h-8 w-8 text-blue-500" />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Activity Logs</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
             <p className="text-muted-foreground mt-1">
-              Configure automatic logging for clan and player activities
+              {t('description')}
             </p>
           </div>
         </div>
@@ -581,7 +581,7 @@ export default function LogsPage() {
         <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Active Logs</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.activeLogs')}</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -596,7 +596,7 @@ export default function LogsPage() {
                     <Activity className="h-8 w-8 text-blue-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Out of 26 log types
+                    {t('stats.activeLogsDesc')}
                   </p>
                 </>
               )}
@@ -605,7 +605,7 @@ export default function LogsPage() {
 
           <Card className="bg-card border-green-500/30 bg-green-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Log Channels</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.logChannels')}</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -620,7 +620,7 @@ export default function LogsPage() {
                     <Hash className="h-8 w-8 text-green-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Available channels
+                    {t('stats.logChannelsDesc')}
                   </p>
                 </>
               )}
@@ -629,7 +629,7 @@ export default function LogsPage() {
 
           <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Tracked Clans</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.trackedClans')}</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -644,7 +644,7 @@ export default function LogsPage() {
                     <Users className="h-8 w-8 text-yellow-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    Configured clans
+                    {t('stats.trackedClansDesc')}
                   </p>
                 </>
               )}
@@ -653,7 +653,7 @@ export default function LogsPage() {
 
           <Card className="bg-card border-purple-500/30 bg-purple-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Configuration</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.configuration')}</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -670,7 +670,7 @@ export default function LogsPage() {
                     <Bell className="h-8 w-8 text-purple-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    {saving ? "Saving..." : "Ready to configure"}
+                    {saving ? t('stats.saving') : t('stats.readyToConfigure')}
                   </p>
                 </>
               )}
@@ -681,10 +681,10 @@ export default function LogsPage() {
         {/* Clan Selector */}
         {clanLogs.length > 0 && (
           <div className="flex flex-col md:flex-row md:items-center gap-2">
-            <Label className="text-sm text-muted-foreground">Clan:</Label>
+            <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
             <Select value={selectedClan} onValueChange={setSelectedClan}>
               <SelectTrigger className="w-full md:w-[300px]">
-                <SelectValue placeholder="Select a clan" />
+                <SelectValue placeholder={t('clanSelector.placeholder')} />
               </SelectTrigger>
               <SelectContent>
                 {clanLogs.map((clan) => (
@@ -701,19 +701,19 @@ export default function LogsPage() {
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-[800px] bg-secondary h-auto p-1">
             <TabsTrigger value="clan" className="data-[state=active]:bg-background">
               <Users className="mr-2 h-4 w-4" />
-              Clan
+              {t('tabs.clan')}
             </TabsTrigger>
             <TabsTrigger value="war" className="data-[state=active]:bg-background">
               <Swords className="mr-2 h-4 w-4" />
-              War
+              {t('tabs.war')}
             </TabsTrigger>
             <TabsTrigger value="capital" className="data-[state=active]:bg-background">
               <Castle className="mr-2 h-4 w-4" />
-              Capital
+              {t('tabs.capital')}
             </TabsTrigger>
             <TabsTrigger value="player" className="data-[state=active]:bg-background">
               <TrendingUp className="mr-2 h-4 w-4" />
-              Player
+              {t('tabs.player')}
             </TabsTrigger>
           </TabsList>
 

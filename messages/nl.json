@@ -322,95 +322,255 @@
   },
   "LinksPage": {
     "title": "Koppelingen Beheer",
-    "description": "Beheer Discord-Speler koppelingen voor je server",
+    "description": "Beheer Discord-lid accountkoppelingen en verifieer spelereigendom",
     "tabs": {
-      "links": "Koppelingen",
-      "settings": "Instellingen",
-      "stats": "Statistieken"
+      "overview": "Overzicht",
+      "pending": "In Behandeling",
+      "bulk": "Bulk Acties",
+      "analytics": "Analyses"
     },
     "stats": {
       "totalMembers": "Totaal Leden",
       "membersWithLinks": "Leden met Koppelingen",
       "totalLinkedAccounts": "Totaal Gekoppelde Accounts",
-      "verifiedAccounts": "Geverifieerde Accounts"
+      "verifiedAccounts": "Geverifieerde Accounts",
+      "ofTotal": "van totaal",
+      "avgPerMember": "Gem.:",
+      "perMember": "per lid",
+      "verified": "geverifieerd"
     },
     "filters": {
-      "search": "Zoek op gebruikersnaam of speler tag...",
-      "verification": "Verificatiestatus",
-      "all": "Alle",
-      "verified": "Alleen Geverifieerd",
-      "unverified": "Alleen Ongeverifieerd",
-      "minAccounts": "Min Accounts"
+      "searchPlaceholder": "Zoek op lidnaam, gebruikersnaam, spelernaam of tag...",
+      "filterByStatus": "Filter op status",
+      "allAccounts": "Alle Accounts",
+      "verifiedOnly": "Alleen Geverifieerd",
+      "unverifiedOnly": "Alleen Ongeverifieerd",
+      "minAccounts": "Min accounts",
+      "allMembers": "Alle Leden",
+      "oneOrMore": "1+ accounts",
+      "twoOrMore": "2+ accounts",
+      "threeOrMore": "3+ accounts",
+      "fiveOrMore": "5+ accounts"
     },
-    "table": {
-      "user": "Gebruiker",
-      "linkedAccounts": "Gekoppelde Accounts",
-      "verificationStatus": "Verificatiestatus",
-      "actions": "Acties",
+    "overview": {
+      "title": "Accountkoppelingen",
+      "description": "Bekijk en beheer alle Discord-Clash of Clans accountkoppelingen",
+      "showingMembers": "{count} {members} weergegeven",
+      "member": "lid",
+      "members": "leden",
+      "noMembers": "Geen leden gevonden",
+      "adjustFilters": "Probeer je zoekopdracht of filters aan te passen.",
+      "noLinkedAccounts": "Geen leden met gekoppelde accounts.",
+      "exportCSV": "Exporteer CSV",
+      "exportJSON": "Exporteer JSON",
+      "account": "account",
+      "accounts": "accounts",
+      "more": "meer",
+      "unknown": "Onbekend"
+    },
+    "pending": {
+      "title": "Verificaties in Behandeling",
+      "description": "{count} accounts wachten op verificatie",
+      "allVerified": "Alle accounts geverifieerd!",
+      "noPending": "Er zijn momenteel geen verificaties in behandeling.",
+      "linked": "Gekoppeld:"
+    },
+    "bulk": {
+      "title": "Bulk Acties",
+      "description": "Voer acties uit op meerdere leden tegelijk",
+      "selectAll": "Alles Selecteren ({count})",
+      "deselectAll": "Alles Deselecteren",
+      "unlinkSelected": "Selectie Ontkoppelen ({count})",
+      "linked": "gekoppeld",
+      "comingSoon": "Bulk ontkoppelen functie komt binnenkort!"
+    },
+    "analytics": {
+      "title": "Koppelingsanalyses",
+      "description": "Overzicht van koppelingstatistieken en trends",
+      "verificationRate": "Verificatiepercentage",
       "verified": "Geverifieerd",
       "unverified": "Ongeverifieerd",
-      "accounts": "accounts"
+      "accountDistribution": "Accountverdeling",
+      "oneAccount": "1 account",
+      "twoToThreeAccounts": "2-3 accounts",
+      "fourPlusAccounts": "4+ accounts",
+      "townHallLevels": "Stadhuis Niveaus",
+      "other": "Overig",
+      "coverage": "Dekking",
+      "linkedMembers": "Gekoppelde leden",
+      "coverageRate": "Dekkingspercentage",
+      "linkInsights": "Koppeling Inzichten",
+      "avgAccountsPerMember": "Gemiddelde accounts per lid:",
+      "mostLinkedAccounts": "Meeste gekoppelde accounts:",
+      "membersWithoutLinks": "Leden zonder koppelingen:"
     },
     "actions": {
-      "linkAccount": "Account Koppelen",
-      "removeLink": "Koppeling Verwijderen",
-      "bulkActions": "Bulk Acties",
-      "exportData": "Gegevens Exporteren"
-    },
-    "linkDialog": {
-      "title": "Speler Account Koppelen",
-      "description": "Koppel een Clash of Clans account aan een Discord gebruiker",
-      "playerTagLabel": "Speler Tag",
-      "playerTagPlaceholder": "#ABC123",
-      "apiTokenLabel": "API Token",
-      "apiTokenPlaceholder": "API token uit in-game instellingen",
-      "submit": "Account Koppelen"
+      "unlinkAccount": "Account Ontkoppelen"
     },
     "deleteDialog": {
-      "title": "Koppeling Verwijderen",
-      "description": "Weet je zeker dat je deze koppeling wilt verwijderen?",
-      "confirm": "Verwijderen",
-      "cancel": "Annuleren"
+      "title": "Account Ontkoppelen",
+      "description": "Weet je zeker dat je {playerName} wilt ontkoppelen? Deze actie kan niet ongedaan worden gemaakt.",
+      "cancel": "Annuleren",
+      "unlinking": "Ontkoppelen...",
+      "unlink": "Ontkoppelen"
+    },
+    "bulkDialog": {
+      "title": "Bulk Accounts Ontkoppelen",
+      "description": "Weet je zeker dat je alle accounts voor {count} geselecteerde leden wilt ontkoppelen? Deze actie kan niet ongedaan worden gemaakt.",
+      "cancel": "Annuleren",
+      "unlinkAll": "Alles Ontkoppelen"
     },
     "toast": {
-      "linkAdded": "Account succesvol gekoppeld",
-      "linkRemoved": "Koppeling succesvol verwijderd",
-      "error": "Er is een fout opgetreden"
+      "unlinkFailed": "Kan account niet ontkoppelen. Probeer het opnieuw."
+    },
+    "badges": {
+      "verified": "Geverifieerd",
+      "unverified": "Ongeverifieerd",
+      "pending": "In Behandeling"
+    },
+    "pagination": {
+      "showing": "{start} - {end} van {total} leden weergegeven",
+      "page": "Pagina {current} van {total}",
+      "previous": "Vorige",
+      "next": "Volgende"
     }
   },
   "WarsPage": {
     "title": "Oorlogsstatistieken",
-    "description": "Bekijk en analyseer oorlogsprestaties",
-    "tabs": {
-      "current": "Huidige Oorlog",
-      "previous": "Vorige Oorlogen",
-      "stats": "Statistieken"
+    "description": "Volg oorlogsprestaties en analyseer gevechtsstatistieken",
+    "actions": {
+      "exportData": "Gegevens Exporteren",
+      "resetFilters": "Filters Resetten",
+      "applyFilters": "Filters Toepassen"
     },
-    "noWar": "Geen actieve oorlog",
-    "warStatus": {
-      "preparation": "Voorbereiding",
-      "inWar": "In Oorlog",
-      "ended": "Beëindigd"
+    "filters": {
+      "title": "Filters",
+      "description": "Filter oorlogsstatistieken op verschillende criteria",
+      "clan": "Clan",
+      "allClans": "Alle Clans",
+      "user": "Gebruiker",
+      "userPlaceholder": "Zoek gebruiker...",
+      "townHall": "Dorpshuis",
+      "allTownHalls": "Alle DH Niveaus",
+      "townHallLevel": "DH {level}",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum"
     },
-    "stats": {
-      "attacks": "Aanvallen",
-      "stars": "Sterren",
-      "destruction": "Vernietiging",
-      "performance": "Prestatie"
+    "summaryStats": {
+      "totalWins": "Totale Overwinningen",
+      "totalWinsDesc": "Van {totalWars} totale oorlogen",
+      "totalLosses": "Totale Nederlagen",
+      "totalLossesDesc": "{totalDraws} gelijkspel",
+      "winRate": "Winratio",
+      "winRateDesc": "Algehele prestaties",
+      "activeWars": "Actieve Oorlogen",
+      "activeWarsDesc": "{activeCwl} in CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Oorlogsprestaties (Laatste 7 Dagen)",
+        "description": "Dagelijkse overwinningen, nederlagen en gelijkspel",
+        "wins": "Overwinningen",
+        "losses": "Nederlagen",
+        "draws": "Gelijkspel"
+      },
+      "thSuccessRate": {
+        "title": "Aanval Succesratio per Dorpshuis",
+        "description": "3-sterren ratio per DH niveau",
+        "threeStarPercent": "3-Sterren %",
+        "otherPercent": "Andere %"
+      },
+      "warTypeDistribution": {
+        "title": "Oorlogstype Verdeling",
+        "description": "Verdeling van oorlogstypes (Binnenkort beschikbaar)",
+        "cwl": "CWL",
+        "random": "Willekeurig",
+        "friendly": "Vriendschappelijk"
+      },
+      "topPerformers": {
+        "title": "Topspelers",
+        "description": "Beste strijders op totaal aantal sterren",
+        "attacksAndStars": "{attacks} aanvallen • {stars} sterren",
+        "noData": "Geen spelersgegevens beschikbaar. Probeer je filters aan te passen."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Clan Oorlogsstatistieken",
+      "description": "Gedetailleerde statistieken voor elke clan",
+      "headers": {
+        "clan": "Clan",
+        "status": "Status",
+        "wars": "Oorlogen",
+        "record": "W/V/G",
+        "winRate": "Winratio",
+        "avgStars": "Gem. Sterren",
+        "avgDestruction": "Gem. Vernietiging"
+      },
+      "status": {
+        "inWar": "In Oorlog",
+        "cwl": "CWL",
+        "peace": "Vrede"
+      }
+    },
+    "toast": {
+      "errorTitle": "Fout",
+      "errorLoadingClans": "Kon clans niet laden. Probeer het opnieuw.",
+      "errorLoadingWarData": "Kon oorlogsgegevens niet laden. Probeer het opnieuw.",
+      "errorNoClans": "Geen clans beschikbaar",
+      "errorApplyingFilters": "Kon filters niet toepassen. Probeer het opnieuw."
     }
   },
   "LeaderboardsPage": {
     "title": "Ranglijsten",
-    "description": "Bekijk wereldwijde en server ranglijsten",
-    "types": {
-      "donations": "Donaties",
-      "trophies": "Trofeeën",
-      "warStars": "Oorlogssterren",
-      "activity": "Activiteit"
+    "description": "Wereldwijde ranglijsten voor Clan Hoofdstad en meer",
+    "stats": {
+      "totalEntries": "Totaal Vermeldingen",
+      "type": "Type",
+      "league": "Liga",
+      "weekend": "Weekend"
     },
-    "rank": "Rang",
-    "player": "Speler",
-    "value": "Waarde"
+    "filters": {
+      "title": "Filters",
+      "description": "Pas je ranglijstweergave aan",
+      "type": "Type",
+      "metric": "Metriek",
+      "league": "Liga",
+      "weekend": "Weekend"
+    },
+    "types": {
+      "player": "Spelers",
+      "clan": "Clans"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Hoofdstad Geplunderd"
+        },
+        "clan": {
+          "capitalTotalLoot": "Totale Buit",
+          "raidsCompleted": "Raids Voltooid",
+          "enemyDistrictsDestroyed": "Districten Vernietigd",
+          "medals": "Medailles"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Alle",
+      "legendLeague": "Legende Liga",
+      "titanLeagueI": "Titan Liga I",
+      "titanLeagueII": "Titan Liga II",
+      "titanLeagueIII": "Titan Liga III"
+    },
+    "rankings": {
+      "title": "Ranglijsten",
+      "description": "Top {count} {type} voor {weekend}",
+      "players": "spelers",
+      "clans": "clans"
+    },
+    "empty": {
+      "title": "Geen gegevens beschikbaar",
+      "description": "Probeer een ander weekend of liga te selecteren"
+    }
   },
   "ClansPage": {
     "title": "Clans",
@@ -433,40 +593,325 @@
     }
   },
   "RolesPage": {
-    "title": "Rolautomatisering",
-    "description": "Configureer automatische roltoewijzingen",
-    "noRoles": "Geen rolconfiguraties gevonden",
-    "addRole": "Rol Toevoegen",
-    "roleName": "Rol Naam",
-    "condition": "Voorwaarde",
-    "actions": "Acties"
+    "title": "Rolbeheer",
+    "description": "Configureer automatische roltoewijzing op basis van spelersstatistieken",
+    "stats": {
+      "totalRoles": "Totaal Rollen",
+      "totalRolesDesc": "Geconfigureerde roltoewijzingen",
+      "autoEvaluation": "Auto-Evaluatie",
+      "autoEvaluationOn": "AAN",
+      "autoEvaluationOff": "UIT",
+      "autoEvaluationActiveDesc": "Automatisch rollen toewijzen",
+      "autoEvaluationInactiveDesc": "Alleen handmatige roltoewijzing",
+      "activeTypes": "Actieve Types",
+      "activeTypesDesc": "Gebruikte roltypes",
+      "discordRoles": "Discord Rollen",
+      "discordRolesDesc": "Beschikbaar op server"
+    },
+    "settings": {
+      "title": "Auto-Evaluatie Instellingen",
+      "description": "Configureer automatische rolevaluatie en toewijzing",
+      "saveButton": "Instellingen Opslaan",
+      "saving": "Opslaan...",
+      "enableAutoEval": "Auto-Evaluatie Inschakelen",
+      "enableAutoEvalDesc": "Automatisch rollen toewijzen en verwijderen op basis van spelersstatistieken",
+      "autoNickname": "Automatisch Bijnamen Bijwerken",
+      "autoNicknameDesc": "Bijnamen bijwerken bij rolevaluatie"
+    },
+    "roleTypes": {
+      "townhall": "Stadhuis",
+      "league": "Liga",
+      "builderhall": "Bouwershut",
+      "builderLeague": "Bouwersliga",
+      "achievement": "Prestatie",
+      "status": "Status/Anciënniteit",
+      "familyPosition": "Familiepositie"
+    },
+    "familyPositions": {
+      "elder": "Oudste",
+      "coLeader": "Medeleider",
+      "leader": "Leider"
+    },
+    "leagues": {
+      "legend": "Legende Liga",
+      "titan1": "Titan Liga I",
+      "titan2": "Titan Liga II",
+      "titan3": "Titan Liga III",
+      "champion1": "Kampioen Liga I",
+      "champion2": "Kampioen Liga II",
+      "champion3": "Kampioen Liga III",
+      "master1": "Meester Liga I",
+      "master2": "Meester Liga II",
+      "master3": "Meester Liga III"
+    },
+    "configuredRoles": {
+      "title": "Geconfigureerde Rollen",
+      "noRolesConfigured": "Geen {roleType} rollen geconfigureerd",
+      "addRoleToStart": "Klik op \"Rol Toevoegen\" om er een te maken",
+      "discordRole": "Discord Rol",
+      "criteria": "Criteria",
+      "actions": "Acties",
+      "unknownRole": "Onbekende Rol",
+      "remove": "Verwijderen",
+      "month": "maand",
+      "months": "maanden"
+    },
+    "addRoleDialog": {
+      "title": "Nieuwe Rol Toevoegen",
+      "description": "Configureer een nieuwe automatische roltoewijzingsregel",
+      "roleType": "Roltype",
+      "discordRole": "Discord Rol",
+      "selectRole": "Selecteer een rol",
+      "townhallLevel": "Stadhuis Niveau",
+      "selectTHLevel": "Selecteer SH niveau",
+      "league": "Liga",
+      "selectLeague": "Selecteer een liga",
+      "builderHallLevel": "Bouwershut Niveau",
+      "selectBHLevel": "Selecteer BH niveau",
+      "builderLeague": "Bouwersliga",
+      "builderLeaguePlaceholder": "bijv. Titanium Liga I",
+      "achievementName": "Prestatie Naam",
+      "achievementPlaceholder": "bijv. Goudkoorts",
+      "monthsInServer": "Maanden op Server",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Familiepositie",
+      "selectPosition": "Selecteer positie",
+      "cancel": "Annuleren",
+      "addRole": "Rol Toevoegen"
+    },
+    "infoCard": {
+      "title": "💡 Hoe Auto-Rollen Werken",
+      "automaticEvaluation": "Automatische Evaluatie:",
+      "automaticEvaluationDesc": "Wanneer ingeschakeld, zal de bot periodiek spelers controleren en rollen toewijzen/verwijderen op basis van hun huidige statistieken.",
+      "rolePriority": "Rolprioriteit:",
+      "rolePriorityDesc": "Als meerdere rollen overeenkomen met de statistieken van een speler, wordt de hoogste rol toegewezen.",
+      "manualOverride": "Handmatige Overschrijving:",
+      "manualOverrideDesc": "Serverbeheerders kunnen handmatig rollen toewijzen, die niet worden verwijderd door auto-evaluatie."
+    },
+    "toast": {
+      "changesSaved": "Wijzigingen succesvol opgeslagen!",
+      "errorLoading": "Laden van rollen mislukt",
+      "errorSaving": "Opslaan van instellingen mislukt",
+      "errorAdding": "Toevoegen van rol mislukt",
+      "errorDeleting": "Verwijderen van rol mislukt"
+    }
   },
   "RemindersPage": {
     "title": "Herinneringen",
-    "description": "Stel geautomatiseerde herinneringen in",
+    "description": "Configureer automatische herinneringen voor oorlogen, raids, clan games en inactiviteit",
     "types": {
+      "war": "Oorlog Herinneringen",
+      "capital": "Clan Hoofdstad",
       "clanGames": "Clan Games",
-      "war": "Oorlog",
-      "cwl": "CWL",
-      "custom": "Aangepast"
+      "inactivity": "Inactiviteit"
     },
-    "addReminder": "Herinnering Toevoegen",
-    "channel": "Kanaal",
-    "message": "Bericht",
-    "timing": "Timing"
+    "tabs": {
+      "war": "Oorlog",
+      "capital": "Hoofdstad",
+      "clanGames": "Clan Games",
+      "inactivity": "Inactiviteit"
+    },
+    "stats": {
+      "totalReminders": "Totale Herinneringen",
+      "totalRemindersDesc": "Actieve herinneringen geconfigureerd",
+      "warReminders": "Oorlog Herinneringen",
+      "warRemindersDesc": "Reguliere & CWL oorlogen",
+      "capitalReminders": "Hoofdstad Herinneringen",
+      "capitalRemindersDesc": "Raid weekend aanvallen",
+      "otherReminders": "Andere Herinneringen",
+      "otherRemindersDesc": "Games & inactiviteit"
+    },
+    "actions": {
+      "saving": "Opslaan...",
+      "saveChanges": "Wijzigingen Opslaan",
+      "addReminder": "Herinnering Toevoegen",
+      "addWarReminder": "Oorlog Herinnering Toevoegen",
+      "addCapitalReminder": "Hoofdstad Herinnering Toevoegen",
+      "addClanGamesReminder": "Clan Games Herinnering Toevoegen",
+      "addInactivityReminder": "Inactiviteit Herinnering Toevoegen",
+      "retry": "Opnieuw Proberen"
+    },
+    "clanSelector": {
+      "label": "Clan:",
+      "placeholder": "Selecteer een clan",
+      "allClans": "Alle Clans"
+    },
+    "empty": {
+      "noWarReminders": "Geen Oorlog Herinneringen",
+      "noCapitalReminders": "Geen Hoofdstad Herinneringen",
+      "noClanGamesReminders": "Geen Clan Games Herinneringen",
+      "noInactivityReminders": "Geen Inactiviteit Herinneringen",
+      "getStarted": "Begin met het maken van je eerste herinnering"
+    },
+    "card": {
+      "new": "Nieuw",
+      "before": "voor",
+      "timeBefore": "Tijd Ervoor (bijv. \"6h\", \"30m\")",
+      "timeBeforePlaceholder": "6h",
+      "channelId": "Kanaal ID",
+      "channelIdPlaceholder": "123456789012345678",
+      "clan": "Clan",
+      "clanPlaceholder": "Selecteer clan",
+      "customMessage": "Aangepast Bericht (Optioneel)",
+      "customMessagePlaceholder": "Vergeet niet je aanvallen te gebruiken!",
+      "warTypes": "Oorlog Types",
+      "random": "Willekeurig",
+      "friendly": "Vriendschappelijk",
+      "cwl": "CWL",
+      "pointThreshold": "Puntendrempel",
+      "pointThresholdPlaceholder": "4000",
+      "attackThreshold": "Aanvalsdrempel",
+      "attackThresholdPlaceholder": "1"
+    },
+    "toast": {
+      "errorTitle": "Fout",
+      "errorLoadingReminders": "Kan herinneringen niet laden. Probeer het opnieuw.",
+      "reminderAdded": "Herinnering Toegevoegd",
+      "reminderAddedDesc": "Nieuwe {type} herinnering toegevoegd. Vergeet niet op te slaan!",
+      "successTitle": "Succes",
+      "reminderDeleted": "Herinnering succesvol verwijderd",
+      "failedToDelete": "Kan herinnering niet verwijderen",
+      "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
+      "failedToSave": "Kan herinneringen niet opslaan"
+    }
   },
   "LogsPage": {
-    "title": "Logs",
-    "description": "Configureer webhook logs",
-    "events": {
-      "playerJoin": "Speler Join",
-      "playerLeave": "Speler Leave",
-      "donations": "Donaties",
-      "warAttacks": "Oorlogsaanvallen",
-      "achievements": "Prestaties"
+    "title": "Activiteitslogboeken",
+    "description": "Configureer automatische logging voor clan- en speleractiviteiten",
+    "stats": {
+      "activeLogs": "Actieve Logs",
+      "activeLogsDesc": "Van 26 logtypen",
+      "logChannels": "Log Kanalen",
+      "logChannelsDesc": "Beschikbare kanalen",
+      "trackedClans": "Gevolgde Clans",
+      "trackedClansDesc": "Geconfigureerde clans",
+      "configuration": "Configuratie",
+      "readyToConfigure": "Klaar om te configureren",
+      "saving": "Opslaan..."
     },
-    "channel": "Kanaal",
-    "enabled": "Ingeschakeld"
+    "clanSelector": {
+      "label": "Clan:",
+      "placeholder": "Selecteer een clan"
+    },
+    "tabs": {
+      "clan": "Clan",
+      "war": "Oorlog",
+      "capital": "Hoofdstad",
+      "player": "Speler"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Lid Toegetreden",
+        "description": "Volg leden die toetreden tot de clan"
+      },
+      "leaveLog": {
+        "label": "Lid Vertrokken",
+        "description": "Volg leden die de clan verlaten"
+      },
+      "donationLog": {
+        "label": "Lid Donatie",
+        "description": "Volg troepen en spreuken donaties"
+      },
+      "clanAchievementLog": {
+        "label": "Clan Prestaties",
+        "description": "Volg behaalde clan prestaties"
+      },
+      "clanRequirementsLog": {
+        "label": "Clan Vereisten",
+        "description": "Volg wijzigingen in clan vereisten"
+      },
+      "clanDescriptionLog": {
+        "label": "Clan Beschrijving",
+        "description": "Volg wijzigingen in clan beschrijving"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Oorlogslog",
+        "description": "Volg oorlogsaanvallen en resultaten"
+      },
+      "warPanel": {
+        "label": "Oorlogspaneel",
+        "description": "Interactief oorlogspaneel met live updates"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL Opstelling Wijziging",
+        "description": "Volg CWL opstelling wijzigingen"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Hoofdstad Donaties",
+        "description": "Volg hoofdstad goud donaties"
+      },
+      "capitalAttacks": {
+        "label": "Hoofdstad Aanvallen",
+        "description": "Volg raid weekend aanvallen"
+      },
+      "raidPanel": {
+        "label": "Hoofdstad Paneel",
+        "description": "Interactief raid paneel met live updates"
+      },
+      "capitalWeeklySummary": {
+        "label": "Hoofdstad Wekelijkse Samenvatting",
+        "description": "Wekelijkse samenvatting van hoofdstad prestaties"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Rol Wijziging",
+        "description": "Volg speler rol wijzigingen in clan"
+      },
+      "troopUpgrade": {
+        "label": "Troepen Upgrade",
+        "description": "Volg troepen niveau upgrades"
+      },
+      "superTroopBoostLog": {
+        "label": "Super Troepen Boost",
+        "description": "Volg super troepen activaties"
+      },
+      "thUpgrade": {
+        "label": "Stadhuis Upgrade",
+        "description": "Volg stadhuis upgrades"
+      },
+      "leagueChange": {
+        "label": "Liga Wijziging",
+        "description": "Volg liga tier wijzigingen"
+      },
+      "spellUpgrade": {
+        "label": "Spreuk Upgrade",
+        "description": "Volg spreuk niveau upgrades"
+      },
+      "heroUpgrade": {
+        "label": "Held Upgrade",
+        "description": "Volg held niveau upgrades"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Held Uitrusting Upgrade",
+        "description": "Volg held uitrusting upgrades"
+      },
+      "nameChange": {
+        "label": "Naam Wijziging",
+        "description": "Volg speler naam wijzigingen"
+      },
+      "legendLogAttacks": {
+        "label": "Legende Aanvallen",
+        "description": "Volg legende liga aanvallen"
+      },
+      "legendLogDefenses": {
+        "label": "Legende Verdedigingen",
+        "description": "Volg legende liga verdedigingen"
+      }
+    },
+    "logCard": {
+      "active": "Actief",
+      "channel": "Kanaal",
+      "channelPlaceholder": "Selecteer kanaal",
+      "disabled": "Uitgeschakeld",
+      "thread": "Thread (Optioneel)",
+      "threadPlaceholder": "Selecteer thread",
+      "noThread": "Geen Thread"
+    }
   },
   "GeneralPage": {
     "title": "Algemene Instellingen",

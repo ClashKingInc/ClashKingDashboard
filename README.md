@@ -17,25 +17,98 @@ clashking-dashboard/
 ├── app/                          # Next.js app directory
 │   ├── [locale]/                 # Localized routes (i18n)
 │   │   ├── page.tsx              # Landing page
+│   │   ├── login/                # Login page
+│   │   ├── servers/              # Server selection
 │   │   └── dashboard/[guildId]/  # Dashboard pages
 │   │       ├── layout.tsx        # Dashboard layout with sidebar
 │   │       ├── page.tsx          # Overview page
 │   │       ├── general/          # General settings
-│   │       └── clans/            # Clan management
-│   ├── login/                    # Login page
-│   ├── servers/                  # Server selection
+│   │       ├── clans/            # Clan management
+│   │       ├── wars/             # War history & stats
+│   │       ├── links/            # Account links
+│   │       ├── logs/             # Event logs
+│   │       ├── leaderboards/     # Leaderboards
+│   │       ├── roles/            # Role management
+│   │       ├── rosters/          # Roster management
+│   │       └── reminders/        # Reminders
+│   ├── api/                      # Next.js API routes (proxy layer)
+│   │   ├── v1/                   # Legacy API endpoints
+│   │   └── v2/                   # Current API version
+│   │       ├── auth/             # Authentication
+│   │       ├── ban/              # Ban management
+│   │       ├── cwl/              # CWL rankings
+│   │       ├── guild/            # Guild operations
+│   │       ├── roster/           # Roster endpoints
+│   │       ├── server/           # Server settings
+│   │       └── war/              # War data
 │   └── auth/callback/            # OAuth callback
 ├── components/
-│   ├── ui/                       # shadcn/ui components
-│   ├── dashboard/                # Dashboard components
-│   └── landing/                  # Landing page components
-├── lib/
-│   └── utils.ts                  # Utility functions
+│   ├── ui/                       # shadcn/ui components (40+ components)
+│   ├── dashboard/                # Dashboard-specific components
+│   ├── landing/                  # Landing page components
+│   └── providers/                # Context providers
+├── lib/                          # SDK & utilities
+│   ├── api/                      # Modular API client (type-safe SDK)
+│   │   ├── client.ts             # Main ClashKingApiClient
+│   │   ├── core/
+│   │   │   └── base-client.ts    # HTTP request logic
+│   │   ├── clients/              # Domain-specific clients (11 clients)
+│   │   │   ├── auth-client.ts    # Authentication
+│   │   │   ├── player-client.ts  # Player data
+│   │   │   ├── clan-client.ts    # Clan data
+│   │   │   ├── roster-client.ts  # Roster management
+│   │   │   ├── war-client.ts     # War history
+│   │   │   ├── server-client.ts  # Server settings
+│   │   │   ├── link-client.ts    # Account links
+│   │   │   ├── utility-client.ts # Utilities
+│   │   │   ├── roles-client.ts   # Role management
+│   │   │   └── leaderboard-client.ts # Leaderboards
+│   │   └── types/                # TypeScript interfaces
+│   │       ├── common.ts         # ApiResponse, ApiConfig
+│   │       ├── auth.ts           # User & auth types
+│   │       ├── player.ts         # Player types
+│   │       ├── clan.ts           # Clan types
+│   │       ├── roster.ts         # Roster types
+│   │       ├── war.ts            # War types
+│   │       ├── server.ts         # Server types
+│   │       ├── link.ts           # Link types
+│   │       ├── roles.ts          # Role types
+│   │       └── leaderboard.ts    # Leaderboard types
+│   ├── api-client.ts             # Legacy auth client
+│   ├── api-cache.ts              # Request caching (30s TTL)
+│   ├── auth/
+│   │   ├── discord-login.ts      # OAuth2 PKCE flow
+│   │   └── redirect.ts           # Redirect handling
+│   ├── pkce.ts                   # PKCE code generation
+│   ├── utils.ts                  # Utility functions
+│   ├── theme.ts                  # Theme utilities
+│   └── constants.ts              # App constants
 ├── messages/                     # i18n translations
 │   ├── en.json                   # English
 │   └── fr.json                   # French
+├── public/                       # Static assets
+│   └── images/                   # Images & icons
+├── store/                        # Zustand state management
 └── .claude/
     └── context.md                # Project documentation
+```
+
+### Architecture Overview
+
+**`/lib/api` - Type-Safe SDK:**
+- Modular client architecture with 11 specialized domain clients
+- Full TypeScript coverage for 85+ endpoints
+- Automatic token management and error handling
+- Smart context detection (browser uses `/api` proxy, server uses direct backend)
+
+**`/app/api` - Proxy Layer:**
+- 50+ Next.js API routes that proxy requests to the ClashKing backend
+- Transparent authorization header pass-through
+- Enables secure browser-to-backend communication
+
+**How they work together:**
+```
+React Component → lib/api client → /app/api proxy → ClashKing Backend
 ```
 
 ## Getting Started

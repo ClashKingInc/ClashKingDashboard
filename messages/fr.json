@@ -322,95 +322,255 @@
   },
   "LinksPage": {
     "title": "Gestion des Liens",
-    "description": "Gérer les liens Discord-Joueur pour votre serveur",
+    "description": "Gérer les liens de comptes des membres Discord et vérifier la propriété des joueurs",
     "tabs": {
-      "links": "Liens",
-      "settings": "Paramètres",
-      "stats": "Statistiques"
+      "overview": "Aperçu",
+      "pending": "En Attente",
+      "bulk": "Actions Groupées",
+      "analytics": "Analyses"
     },
     "stats": {
       "totalMembers": "Total des Membres",
       "membersWithLinks": "Membres avec des Liens",
       "totalLinkedAccounts": "Total des Comptes Liés",
-      "verifiedAccounts": "Comptes Vérifiés"
+      "verifiedAccounts": "Comptes Vérifiés",
+      "ofTotal": "du total",
+      "avgPerMember": "Moy. :",
+      "perMember": "par membre",
+      "verified": "vérifiés"
     },
     "filters": {
-      "search": "Rechercher par nom d'utilisateur ou tag de joueur...",
-      "verification": "Statut de Vérification",
-      "all": "Tous",
-      "verified": "Vérifiés Uniquement",
-      "unverified": "Non Vérifiés Uniquement",
-      "minAccounts": "Comptes Minimum"
+      "searchPlaceholder": "Rechercher par nom de membre, nom d'utilisateur, nom de joueur ou tag...",
+      "filterByStatus": "Filtrer par statut",
+      "allAccounts": "Tous les Comptes",
+      "verifiedOnly": "Vérifiés Uniquement",
+      "unverifiedOnly": "Non Vérifiés Uniquement",
+      "minAccounts": "Comptes minimum",
+      "allMembers": "Tous les Membres",
+      "oneOrMore": "1+ comptes",
+      "twoOrMore": "2+ comptes",
+      "threeOrMore": "3+ comptes",
+      "fiveOrMore": "5+ comptes"
     },
-    "table": {
-      "user": "Utilisateur",
-      "linkedAccounts": "Comptes Liés",
-      "verificationStatus": "Statut de Vérification",
-      "actions": "Actions",
-      "verified": "Vérifié",
-      "unverified": "Non Vérifié",
-      "accounts": "comptes"
+    "overview": {
+      "title": "Liens de Comptes",
+      "description": "Afficher et gérer tous les liens Discord-Clash of Clans",
+      "showingMembers": "Affichage de {count} {members}",
+      "member": "membre",
+      "members": "membres",
+      "noMembers": "Aucun membre trouvé",
+      "adjustFilters": "Essayez d'ajuster votre recherche ou vos filtres.",
+      "noLinkedAccounts": "Aucun membre avec des comptes liés.",
+      "exportCSV": "Exporter CSV",
+      "exportJSON": "Exporter JSON",
+      "account": "compte",
+      "accounts": "comptes",
+      "more": "de plus",
+      "unknown": "Inconnu"
+    },
+    "pending": {
+      "title": "Vérifications en Attente",
+      "description": "{count} comptes en attente de vérification",
+      "allVerified": "Tous les comptes sont vérifiés !",
+      "noPending": "Il n'y a aucune vérification en attente pour le moment.",
+      "linked": "Lié le :"
+    },
+    "bulk": {
+      "title": "Actions Groupées",
+      "description": "Effectuer des actions sur plusieurs membres à la fois",
+      "selectAll": "Tout Sélectionner ({count})",
+      "deselectAll": "Tout Désélectionner",
+      "unlinkSelected": "Délier la Sélection ({count})",
+      "linked": "liés",
+      "comingSoon": "La fonction de déconnexion en masse arrive bientôt !"
+    },
+    "analytics": {
+      "title": "Analyses des Liens",
+      "description": "Aperçu des statistiques et tendances de liaison",
+      "verificationRate": "Taux de Vérification",
+      "verified": "Vérifiés",
+      "unverified": "Non Vérifiés",
+      "accountDistribution": "Distribution des Comptes",
+      "oneAccount": "1 compte",
+      "twoToThreeAccounts": "2-3 comptes",
+      "fourPlusAccounts": "4+ comptes",
+      "townHallLevels": "Niveaux d'Hôtel de Ville",
+      "other": "Autre",
+      "coverage": "Couverture",
+      "linkedMembers": "Membres liés",
+      "coverageRate": "Taux de couverture",
+      "linkInsights": "Aperçu des Liens",
+      "avgAccountsPerMember": "Comptes moyens par membre :",
+      "mostLinkedAccounts": "Plus de comptes liés :",
+      "membersWithoutLinks": "Membres sans liens :"
     },
     "actions": {
-      "linkAccount": "Lier un Compte",
-      "removeLink": "Retirer le Lien",
-      "bulkActions": "Actions Groupées",
-      "exportData": "Exporter les Données"
-    },
-    "linkDialog": {
-      "title": "Lier un Compte Joueur",
-      "description": "Lier un compte Clash of Clans à un utilisateur Discord",
-      "playerTagLabel": "Tag du Joueur",
-      "playerTagPlaceholder": "#ABC123",
-      "apiTokenLabel": "Jeton API",
-      "apiTokenPlaceholder": "Jeton API des paramètres du jeu",
-      "submit": "Lier le Compte"
+      "unlinkAccount": "Délier le Compte"
     },
     "deleteDialog": {
-      "title": "Retirer le Lien",
-      "description": "Êtes-vous sûr de vouloir retirer ce lien ?",
-      "confirm": "Retirer",
-      "cancel": "Annuler"
+      "title": "Délier le Compte",
+      "description": "Êtes-vous sûr de vouloir délier {playerName} ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "unlinking": "Déconnexion...",
+      "unlink": "Délier"
+    },
+    "bulkDialog": {
+      "title": "Délier les Comptes en Masse",
+      "description": "Êtes-vous sûr de vouloir délier tous les comptes de {count} membres sélectionnés ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "unlinkAll": "Tout Délier"
     },
     "toast": {
-      "linkAdded": "Compte lié avec succès",
-      "linkRemoved": "Lien retiré avec succès",
-      "error": "Une erreur s'est produite"
+      "unlinkFailed": "Échec de la déconnexion du compte. Veuillez réessayer."
+    },
+    "badges": {
+      "verified": "Vérifié",
+      "unverified": "Non Vérifié",
+      "pending": "En Attente"
+    },
+    "pagination": {
+      "showing": "Affichage de {start} - {end} sur {total} membres",
+      "page": "Page {current} sur {total}",
+      "previous": "Précédent",
+      "next": "Suivant"
     }
   },
   "WarsPage": {
     "title": "Statistiques de Guerre",
-    "description": "Voir et analyser les performances de guerre",
-    "tabs": {
-      "current": "Guerre Actuelle",
-      "previous": "Guerres Précédentes",
-      "stats": "Statistiques"
+    "description": "Suivez les performances de guerre et analysez les statistiques de combat",
+    "actions": {
+      "exportData": "Exporter les Données",
+      "resetFilters": "Réinitialiser les Filtres",
+      "applyFilters": "Appliquer les Filtres"
     },
-    "noWar": "Aucune guerre active",
-    "warStatus": {
-      "preparation": "Préparation",
-      "inWar": "En Guerre",
-      "ended": "Terminée"
+    "filters": {
+      "title": "Filtres",
+      "description": "Filtrer les statistiques de guerre selon différents critères",
+      "clan": "Clan",
+      "allClans": "Tous les Clans",
+      "user": "Utilisateur",
+      "userPlaceholder": "Rechercher un utilisateur...",
+      "townHall": "Hôtel de Ville",
+      "allTownHalls": "Tous les Niveaux d'HDV",
+      "townHallLevel": "HDV {level}",
+      "startDate": "Date de Début",
+      "endDate": "Date de Fin"
     },
-    "stats": {
-      "attacks": "Attaques",
-      "stars": "Étoiles",
-      "destruction": "Destruction",
-      "performance": "Performance"
+    "summaryStats": {
+      "totalWins": "Total de Victoires",
+      "totalWinsDesc": "Sur {totalWars} guerres au total",
+      "totalLosses": "Total de Défaites",
+      "totalLossesDesc": "{totalDraws} matchs nuls",
+      "winRate": "Taux de Victoire",
+      "winRateDesc": "Performance globale",
+      "activeWars": "Guerres Actives",
+      "activeWarsDesc": "{activeCwl} en LDC"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Performance de Guerre (7 Derniers Jours)",
+        "description": "Victoires, défaites et matchs nuls quotidiens",
+        "wins": "Victoires",
+        "losses": "Défaites",
+        "draws": "Matchs Nuls"
+      },
+      "thSuccessRate": {
+        "title": "Taux de Réussite des Attaques par Hôtel de Ville",
+        "description": "Taux de 3 étoiles par niveau d'HDV",
+        "threeStarPercent": "3 Étoiles %",
+        "otherPercent": "Autre %"
+      },
+      "warTypeDistribution": {
+        "title": "Distribution des Types de Guerre",
+        "description": "Répartition des types de guerre (Bientôt disponible)",
+        "cwl": "LDC",
+        "random": "Aléatoire",
+        "friendly": "Amicale"
+      },
+      "topPerformers": {
+        "title": "Meilleurs Joueurs",
+        "description": "Meilleurs guerriers par nombre total d'étoiles",
+        "attacksAndStars": "{attacks} attaques • {stars} étoiles",
+        "noData": "Aucune donnée de joueur disponible. Essayez d'ajuster vos filtres."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Statistiques de Guerre par Clan",
+      "description": "Statistiques détaillées pour chaque clan",
+      "headers": {
+        "clan": "Clan",
+        "status": "Statut",
+        "wars": "Guerres",
+        "record": "V/D/N",
+        "winRate": "Taux de Victoire",
+        "avgStars": "Moy. Étoiles",
+        "avgDestruction": "Moy. Destruction"
+      },
+      "status": {
+        "inWar": "En Guerre",
+        "cwl": "LDC",
+        "peace": "En Paix"
+      }
+    },
+    "toast": {
+      "errorTitle": "Erreur",
+      "errorLoadingClans": "Échec du chargement des clans. Veuillez réessayer.",
+      "errorLoadingWarData": "Échec du chargement des données de guerre. Veuillez réessayer.",
+      "errorNoClans": "Aucun clan disponible",
+      "errorApplyingFilters": "Échec de l'application des filtres. Veuillez réessayer."
     }
   },
   "LeaderboardsPage": {
     "title": "Classements",
-    "description": "Voir les classements globaux et du serveur",
-    "types": {
-      "donations": "Dons",
-      "trophies": "Trophées",
-      "warStars": "Étoiles de Guerre",
-      "activity": "Activité"
+    "description": "Classements globaux pour la Capitale de Clan et plus",
+    "stats": {
+      "totalEntries": "Total d'Entrées",
+      "type": "Type",
+      "league": "Ligue",
+      "weekend": "Week-end"
     },
-    "rank": "Rang",
-    "player": "Joueur",
-    "value": "Valeur"
+    "filters": {
+      "title": "Filtres",
+      "description": "Personnalisez votre vue des classements",
+      "type": "Type",
+      "metric": "Métrique",
+      "league": "Ligue",
+      "weekend": "Week-end"
+    },
+    "types": {
+      "player": "Joueurs",
+      "clan": "Clans"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Capitale Pillée"
+        },
+        "clan": {
+          "capitalTotalLoot": "Butin Total",
+          "raidsCompleted": "Raids Terminés",
+          "enemyDistrictsDestroyed": "Districts Détruits",
+          "medals": "Médailles"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Toutes",
+      "legendLeague": "Ligue Légende",
+      "titanLeagueI": "Ligue Titan I",
+      "titanLeagueII": "Ligue Titan II",
+      "titanLeagueIII": "Ligue Titan III"
+    },
+    "rankings": {
+      "title": "Classements",
+      "description": "Top {count} {type} pour {weekend}",
+      "players": "joueurs",
+      "clans": "clans"
+    },
+    "empty": {
+      "title": "Aucune donnée disponible",
+      "description": "Essayez de sélectionner un autre week-end ou une autre ligue"
+    }
   },
   "ClansPage": {
     "title": "Clans",
@@ -433,40 +593,325 @@
     }
   },
   "RolesPage": {
-    "title": "Automatisation des Rôles",
-    "description": "Configurer les attributions automatiques de rôles",
-    "noRoles": "Aucune configuration de rôle trouvée",
-    "addRole": "Ajouter un Rôle",
-    "roleName": "Nom du Rôle",
-    "condition": "Condition",
-    "actions": "Actions"
+    "title": "Gestion des Rôles",
+    "description": "Configurer l'attribution automatique des rôles basée sur les statistiques des joueurs",
+    "stats": {
+      "totalRoles": "Rôles Totaux",
+      "totalRolesDesc": "Attributions de rôles configurées",
+      "autoEvaluation": "Auto-Évaluation",
+      "autoEvaluationOn": "ACTIVÉE",
+      "autoEvaluationOff": "DÉSACTIVÉE",
+      "autoEvaluationActiveDesc": "Attribution automatique des rôles",
+      "autoEvaluationInactiveDesc": "Attribution manuelle uniquement",
+      "activeTypes": "Types Actifs",
+      "activeTypesDesc": "Types de rôles utilisés",
+      "discordRoles": "Rôles Discord",
+      "discordRolesDesc": "Disponibles sur le serveur"
+    },
+    "settings": {
+      "title": "Paramètres d'Auto-Évaluation",
+      "description": "Configurer l'évaluation et l'attribution automatique des rôles",
+      "saveButton": "Enregistrer les Paramètres",
+      "saving": "Enregistrement...",
+      "enableAutoEval": "Activer l'Auto-Évaluation",
+      "enableAutoEvalDesc": "Attribuer et retirer automatiquement les rôles selon les statistiques des joueurs",
+      "autoNickname": "Mise à Jour Automatique des Pseudos",
+      "autoNicknameDesc": "Mettre à jour les pseudos lors de l'évaluation des rôles"
+    },
+    "roleTypes": {
+      "townhall": "Hôtel de Ville",
+      "league": "Ligue",
+      "builderhall": "Hall du Constructeur",
+      "builderLeague": "Ligue du Constructeur",
+      "achievement": "Succès",
+      "status": "Statut/Ancienneté",
+      "familyPosition": "Position Familiale"
+    },
+    "familyPositions": {
+      "elder": "Ainé",
+      "coLeader": "Chef Adjoint",
+      "leader": "Chef"
+    },
+    "leagues": {
+      "legend": "Ligue des Légendes",
+      "titan1": "Ligue Titan I",
+      "titan2": "Ligue Titan II",
+      "titan3": "Ligue Titan III",
+      "champion1": "Ligue Champion I",
+      "champion2": "Ligue Champion II",
+      "champion3": "Ligue Champion III",
+      "master1": "Ligue Master I",
+      "master2": "Ligue Master II",
+      "master3": "Ligue Master III"
+    },
+    "configuredRoles": {
+      "title": "Rôles Configurés",
+      "noRolesConfigured": "Aucun rôle {roleType} configuré",
+      "addRoleToStart": "Cliquez sur \"Ajouter un Rôle\" pour en créer un",
+      "discordRole": "Rôle Discord",
+      "criteria": "Critères",
+      "actions": "Actions",
+      "unknownRole": "Rôle Inconnu",
+      "remove": "Retirer",
+      "month": "mois",
+      "months": "mois"
+    },
+    "addRoleDialog": {
+      "title": "Ajouter un Nouveau Rôle",
+      "description": "Configurer une nouvelle règle d'attribution automatique de rôle",
+      "roleType": "Type de Rôle",
+      "discordRole": "Rôle Discord",
+      "selectRole": "Sélectionner un rôle",
+      "townhallLevel": "Niveau d'Hôtel de Ville",
+      "selectTHLevel": "Sélectionner le niveau HDV",
+      "league": "Ligue",
+      "selectLeague": "Sélectionner une ligue",
+      "builderHallLevel": "Niveau du Hall du Constructeur",
+      "selectBHLevel": "Sélectionner le niveau HDC",
+      "builderLeague": "Ligue du Constructeur",
+      "builderLeaguePlaceholder": "ex : Ligue Titane I",
+      "achievementName": "Nom du Succès",
+      "achievementPlaceholder": "ex : Ruée vers l'or",
+      "monthsInServer": "Mois sur le Serveur",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Position Familiale",
+      "selectPosition": "Sélectionner une position",
+      "cancel": "Annuler",
+      "addRole": "Ajouter un Rôle"
+    },
+    "infoCard": {
+      "title": "💡 Fonctionnement des Rôles Automatiques",
+      "automaticEvaluation": "Évaluation Automatique :",
+      "automaticEvaluationDesc": "Lorsqu'activé, le bot vérifiera périodiquement les joueurs et attribuera/retirera les rôles selon leurs statistiques actuelles.",
+      "rolePriority": "Priorité des Rôles :",
+      "rolePriorityDesc": "Si plusieurs rôles correspondent aux statistiques d'un joueur, le rôle de plus haut niveau sera attribué.",
+      "manualOverride": "Remplacement Manuel :",
+      "manualOverrideDesc": "Les administrateurs du serveur peuvent attribuer manuellement des rôles, qui ne seront pas retirés par l'auto-évaluation."
+    },
+    "toast": {
+      "changesSaved": "Modifications enregistrées avec succès !",
+      "errorLoading": "Échec du chargement des rôles",
+      "errorSaving": "Échec de l'enregistrement des paramètres",
+      "errorAdding": "Échec de l'ajout du rôle",
+      "errorDeleting": "Échec de la suppression du rôle"
+    }
   },
   "RemindersPage": {
     "title": "Rappels",
-    "description": "Configurer les rappels automatisés",
+    "description": "Configurez des rappels automatiques pour les guerres, raids, jeux de clan et inactivité",
     "types": {
+      "war": "Rappels de Guerre",
+      "capital": "Capitale de Clan",
       "clanGames": "Jeux de Clan",
-      "war": "Guerre",
-      "cwl": "LDC",
-      "custom": "Personnalisé"
+      "inactivity": "Inactivité"
     },
-    "addReminder": "Ajouter un Rappel",
-    "channel": "Canal",
-    "message": "Message",
-    "timing": "Timing"
+    "tabs": {
+      "war": "Guerre",
+      "capital": "Capitale",
+      "clanGames": "Jeux de Clan",
+      "inactivity": "Inactivité"
+    },
+    "stats": {
+      "totalReminders": "Rappels Totaux",
+      "totalRemindersDesc": "Rappels actifs configurés",
+      "warReminders": "Rappels de Guerre",
+      "warRemindersDesc": "Guerres normales & LDC",
+      "capitalReminders": "Rappels de Capitale",
+      "capitalRemindersDesc": "Attaques du week-end de raid",
+      "otherReminders": "Autres Rappels",
+      "otherRemindersDesc": "Jeux & inactivité"
+    },
+    "actions": {
+      "saving": "Enregistrement...",
+      "saveChanges": "Enregistrer les Modifications",
+      "addReminder": "Ajouter un Rappel",
+      "addWarReminder": "Ajouter un Rappel de Guerre",
+      "addCapitalReminder": "Ajouter un Rappel de Capitale",
+      "addClanGamesReminder": "Ajouter un Rappel de Jeux de Clan",
+      "addInactivityReminder": "Ajouter un Rappel d'Inactivité",
+      "retry": "Réessayer"
+    },
+    "clanSelector": {
+      "label": "Clan :",
+      "placeholder": "Sélectionner un clan",
+      "allClans": "Tous les Clans"
+    },
+    "empty": {
+      "noWarReminders": "Aucun Rappel de Guerre",
+      "noCapitalReminders": "Aucun Rappel de Capitale",
+      "noClanGamesReminders": "Aucun Rappel de Jeux de Clan",
+      "noInactivityReminders": "Aucun Rappel d'Inactivité",
+      "getStarted": "Commencez par créer votre premier rappel"
+    },
+    "card": {
+      "new": "Nouveau",
+      "before": "avant",
+      "timeBefore": "Temps Avant (ex: \"6h\", \"30m\")",
+      "timeBeforePlaceholder": "6h",
+      "channelId": "ID du Canal",
+      "channelIdPlaceholder": "123456789012345678",
+      "clan": "Clan",
+      "clanPlaceholder": "Sélectionner un clan",
+      "customMessage": "Message Personnalisé (Optionnel)",
+      "customMessagePlaceholder": "N'oubliez pas d'utiliser vos attaques !",
+      "warTypes": "Types de Guerre",
+      "random": "Aléatoire",
+      "friendly": "Amicale",
+      "cwl": "LDC",
+      "pointThreshold": "Seuil de Points",
+      "pointThresholdPlaceholder": "4000",
+      "attackThreshold": "Seuil d'Attaques",
+      "attackThresholdPlaceholder": "1"
+    },
+    "toast": {
+      "errorTitle": "Erreur",
+      "errorLoadingReminders": "Échec du chargement des rappels. Veuillez réessayer.",
+      "reminderAdded": "Rappel Ajouté",
+      "reminderAddedDesc": "Nouveau rappel {type} ajouté. N'oubliez pas d'enregistrer !",
+      "successTitle": "Succès",
+      "reminderDeleted": "Rappel supprimé avec succès",
+      "failedToDelete": "Échec de la suppression du rappel",
+      "allRemindersSaved": "Tous les rappels enregistrés avec succès",
+      "failedToSave": "Échec de l'enregistrement des rappels"
+    }
   },
   "LogsPage": {
-    "title": "Journaux",
-    "description": "Configurer les journaux webhook",
-    "events": {
-      "playerJoin": "Arrivée de Joueur",
-      "playerLeave": "Départ de Joueur",
-      "donations": "Dons",
-      "warAttacks": "Attaques de Guerre",
-      "achievements": "Réalisations"
+    "title": "Journaux d'Activité",
+    "description": "Configurez la journalisation automatique des activités de clan et de joueurs",
+    "stats": {
+      "activeLogs": "Journaux Actifs",
+      "activeLogsDesc": "Sur 26 types de journaux",
+      "logChannels": "Canaux de Journaux",
+      "logChannelsDesc": "Canaux disponibles",
+      "trackedClans": "Clans Suivis",
+      "trackedClansDesc": "Clans configurés",
+      "configuration": "Configuration",
+      "readyToConfigure": "Prêt à configurer",
+      "saving": "Enregistrement..."
     },
-    "channel": "Canal",
-    "enabled": "Activé"
+    "clanSelector": {
+      "label": "Clan :",
+      "placeholder": "Sélectionner un clan"
+    },
+    "tabs": {
+      "clan": "Clan",
+      "war": "Guerre",
+      "capital": "Capitale",
+      "player": "Joueur"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Arrivée de Membre",
+        "description": "Suivre les membres rejoignant le clan"
+      },
+      "leaveLog": {
+        "label": "Départ de Membre",
+        "description": "Suivre les membres quittant le clan"
+      },
+      "donationLog": {
+        "label": "Dons de Membre",
+        "description": "Suivre les dons de troupes et de sorts"
+      },
+      "clanAchievementLog": {
+        "label": "Succès du Clan",
+        "description": "Suivre les succès du clan obtenus"
+      },
+      "clanRequirementsLog": {
+        "label": "Exigences du Clan",
+        "description": "Suivre les modifications des exigences du clan"
+      },
+      "clanDescriptionLog": {
+        "label": "Description du Clan",
+        "description": "Suivre les modifications de la description du clan"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Journal de Guerre",
+        "description": "Suivre les attaques et résultats de guerre"
+      },
+      "warPanel": {
+        "label": "Panneau de Guerre",
+        "description": "Panneau de guerre interactif avec mises à jour en direct"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Changement de Composition LDC",
+        "description": "Suivre les changements de composition en Ligue des Clans"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Dons à la Capitale",
+        "description": "Suivre les dons d'or de capitale"
+      },
+      "capitalAttacks": {
+        "label": "Attaques de Capitale",
+        "description": "Suivre les attaques du week-end de raid"
+      },
+      "raidPanel": {
+        "label": "Panneau de Capitale",
+        "description": "Panneau de raid interactif avec mises à jour en direct"
+      },
+      "capitalWeeklySummary": {
+        "label": "Résumé Hebdomadaire de Capitale",
+        "description": "Résumé hebdomadaire des performances de la capitale"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Changement de Rôle",
+        "description": "Suivre les changements de rôle des joueurs dans le clan"
+      },
+      "troopUpgrade": {
+        "label": "Amélioration de Troupe",
+        "description": "Suivre les améliorations de niveau de troupes"
+      },
+      "superTroopBoostLog": {
+        "label": "Activation de Super Troupes",
+        "description": "Suivre les activations de super troupes"
+      },
+      "thUpgrade": {
+        "label": "Amélioration d'Hôtel de Ville",
+        "description": "Suivre les améliorations d'hôtel de ville"
+      },
+      "leagueChange": {
+        "label": "Changement de Ligue",
+        "description": "Suivre les changements de niveau de ligue"
+      },
+      "spellUpgrade": {
+        "label": "Amélioration de Sort",
+        "description": "Suivre les améliorations de niveau de sorts"
+      },
+      "heroUpgrade": {
+        "label": "Amélioration de Héros",
+        "description": "Suivre les améliorations de niveau de héros"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Amélioration d'Équipement de Héros",
+        "description": "Suivre les améliorations d'équipement de héros"
+      },
+      "nameChange": {
+        "label": "Changement de Nom",
+        "description": "Suivre les changements de nom de joueur"
+      },
+      "legendLogAttacks": {
+        "label": "Attaques en Légende",
+        "description": "Suivre les attaques en ligue Légende"
+      },
+      "legendLogDefenses": {
+        "label": "Défenses en Légende",
+        "description": "Suivre les défenses en ligue Légende"
+      }
+    },
+    "logCard": {
+      "active": "Actif",
+      "channel": "Canal",
+      "channelPlaceholder": "Sélectionner un canal",
+      "disabled": "Désactivé",
+      "thread": "Fil (Optionnel)",
+      "threadPlaceholder": "Sélectionner un fil",
+      "noThread": "Aucun Fil"
+    }
   },
   "GeneralPage": {
     "title": "Paramètres Généraux",
@@ -517,7 +962,7 @@
       "description": "Contrôler l'accès et la vérification",
       "requireApiToken": "Exiger un Token API du Joueur",
       "requireApiTokenDesc": "Les joueurs doivent vérifier la propriété du compte avec le token API de Clash of Clans lors de la liaison (recommandé)",
-      "fullWhitelistRole": "Rôle de Liste Blanche Complet",
+      "fullWhitelistRole": "Rôle super-administrateur",
       "fullWhitelistRoleDesc": "Rôle Discord avec un accès complet à toutes les commandes du bot (contourne toutes les vérifications de permissions)",
       "noRole": "Aucun Rôle"
     },
