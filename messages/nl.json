@@ -526,7 +526,7 @@
     "stats": {
       "totalEntries": "Totaal Vermeldingen",
       "type": "Type",
-      "league": "Liga",
+      "league": "Divisie",
       "weekend": "Weekend"
     },
     "filters": {
@@ -534,7 +534,7 @@
       "description": "Pas je ranglijstweergave aan",
       "type": "Type",
       "metric": "Metriek",
-      "league": "Liga",
+      "league": "Divisie",
       "weekend": "Weekend"
     },
     "types": {
@@ -556,10 +556,10 @@
     },
     "leagues": {
       "all": "Alle",
-      "legendLeague": "Legende Liga",
-      "titanLeagueI": "Titan Liga I",
-      "titanLeagueII": "Titan Liga II",
-      "titanLeagueIII": "Titan Liga III"
+      "legendLeague": "Legende Divisie",
+      "titanLeagueI": "Titan Divisie I",
+      "titanLeagueII": "Titan Divisie II",
+      "titanLeagueIII": "Titan Divisie III"
     },
     "rankings": {
       "title": "Ranglijsten",
@@ -569,7 +569,7 @@
     },
     "empty": {
       "title": "Geen gegevens beschikbaar",
-      "description": "Probeer een ander weekend of liga te selecteren"
+      "description": "Probeer een ander weekend of divisie te selecteren"
     }
   },
   "ClansPage": {
@@ -620,9 +620,9 @@
     },
     "roleTypes": {
       "townhall": "Stadhuis",
-      "league": "Liga",
+      "league": "Divisie",
       "builderhall": "Bouwershut",
-      "builderLeague": "Bouwersliga",
+      "builderLeague": "Bouwersdivisie",
       "achievement": "Prestatie",
       "status": "Status/Anciënniteit",
       "familyPosition": "Familiepositie"
@@ -633,16 +633,32 @@
       "leader": "Leider"
     },
     "leagues": {
-      "legend": "Legende Liga",
-      "titan1": "Titan Liga I",
-      "titan2": "Titan Liga II",
-      "titan3": "Titan Liga III",
-      "champion1": "Kampioen Liga I",
-      "champion2": "Kampioen Liga II",
-      "champion3": "Kampioen Liga III",
-      "master1": "Meester Liga I",
-      "master2": "Meester Liga II",
-      "master3": "Meester Liga III"
+      "legend": "Legende Divisie",
+      "electroDragon": "Elektro Draak",
+      "dragon": "Draak",
+      "electroTitan": "Elektro Titaan",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Heks",
+      "valkyrie": "Valkyrie",
+      "wizard": "Tovenaar",
+      "archer": "Boogschutter",
+      "barbarian": "Barbaar",
+      "skeleton": "Skelet"
+    },
+    "builderLeagues": {
+      "diamond": "Diamant",
+      "ruby": "Robijn",
+      "emerald": "Smaragd",
+      "platinum": "Platina",
+      "titanium": "Titanium",
+      "steel": "Staal",
+      "iron": "IJzer",
+      "brass": "Messing",
+      "copper": "Koper",
+      "stone": "Steen",
+      "clay": "Klei",
+      "wood": "Hout"
     },
     "configuredRoles": {
       "title": "Geconfigureerde Rollen",
@@ -662,14 +678,14 @@
       "roleType": "Roltype",
       "discordRole": "Discord Rol",
       "selectRole": "Selecteer een rol",
-      "townhallLevel": "Stadhuis Niveau",
-      "selectTHLevel": "Selecteer SH niveau",
-      "league": "Liga",
-      "selectLeague": "Selecteer een liga",
+      "townHallLevel": "Stadhuis Niveau",
+      "selectThLevel": "Selecteer SH niveau",
+      "league": "Divisie",
+      "selectLeague": "Selecteer een divisie",
       "builderHallLevel": "Bouwershut Niveau",
-      "selectBHLevel": "Selecteer BH niveau",
-      "builderLeague": "Bouwersliga",
-      "builderLeaguePlaceholder": "bijv. Titanium Liga I",
+      "selectBhLevel": "Selecteer BH niveau",
+      "builderLeague": "Bouwersdivisie",
+      "selectBuilderLeague": "Selecteer bouwersdivisie",
       "achievementName": "Prestatie Naam",
       "achievementPlaceholder": "bijv. Goudkoorts",
       "monthsInServer": "Maanden op Server",
@@ -875,8 +891,8 @@
         "description": "Volg stadhuis upgrades"
       },
       "leagueChange": {
-        "label": "Liga Wijziging",
-        "description": "Volg liga tier wijzigingen"
+        "label": "Divisie Wijziging",
+        "description": "Volg divisie tier wijzigingen"
       },
       "spellUpgrade": {
         "label": "Spreuk Upgrade",
@@ -896,11 +912,11 @@
       },
       "legendLogAttacks": {
         "label": "Legende Aanvallen",
-        "description": "Volg legende liga aanvallen"
+        "description": "Volg legende divisie aanvallen"
       },
       "legendLogDefenses": {
         "label": "Legende Verdedigingen",
-        "description": "Volg legende liga verdedigingen"
+        "description": "Volg legende divisie verdedigingen"
       }
     },
     "logCard": {
