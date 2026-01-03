@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -43,6 +44,7 @@ export function ChannelCombobox({
   className,
   showDisabled = true,
 }: ChannelComboboxProps) {
+  const t = useTranslations("Common")
   const [open, setOpen] = React.useState(false)
 
   const selectedChannel = channels.find((channel) => channel.id === value)
@@ -71,9 +73,11 @@ export function ChannelCombobox({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search channels..." />
+          <CommandInput placeholder={t("searchChannels")} />
           <CommandList>
-            <CommandEmpty>No channel found.</CommandEmpty>
+            <CommandEmpty className="py-3">
+              {t("noChannelFound")}
+            </CommandEmpty>
             <CommandGroup>
               {showDisabled && (
                 <CommandItem
@@ -89,7 +93,7 @@ export function ChannelCombobox({
                       value === "disabled" ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  Disabled
+                  {t("disabled") || "Disabled"}
                 </CommandItem>
               )}
               {channels.map((channel) => (
