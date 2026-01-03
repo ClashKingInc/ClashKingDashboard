@@ -623,6 +623,12 @@
       "description": "Build your own tools or projects using the ClashKing API. It's free to use as long as you credit the ClashKing project.",
       "cta": "API Docs"
     },
+    "translation": {
+      "title": "Help Us Translate",
+      "description": "Help us translate ClashKing into your language! You can contribute to translating the website, the bot, and all related texts through our Crowdin projects.",
+      "app": "Translate App",
+      "bot": "Translate Bot"
+    },
     "pillars": {
       "contribute": {
         "title": "Contribute",

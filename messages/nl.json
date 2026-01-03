@@ -623,6 +623,12 @@
       "description": "Bouw je eigen tools of projecten met de ClashKing API. Het is gratis te gebruiken zolang je het ClashKing-project vermeldt.",
       "cta": "API Docs"
     },
+    "translation": {
+      "title": "Help ons vertalen",
+      "description": "Help ons ClashKing naar jouw taal te vertalen! Je kunt bijdragen aan het vertalen van de website, de bot en alle bijbehorende teksten via onze Crowdin-projecten.",
+      "app": "Vertaal App",
+      "bot": "Vertaal Bot"
+    },
     "pillars": {
       "contribute": {
         "title": "Draag Bij",
