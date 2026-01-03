@@ -227,7 +227,16 @@ export default function ClansPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Failed to add clan');
+        const detail = error.detail || '';
+        if (detail.toLowerCase().includes("not found in clash of clans")) {
+          toast({
+            title: tCommon("error"),
+            description: t("toast.errorClanNotFound"),
+            variant: "destructive",
+          });
+          return;
+        }
+        throw new Error(detail || 'Failed to add clan');
       }
 
       toast({
@@ -498,15 +507,12 @@ export default function ClansPage() {
                   <Label htmlFor="clan-tag">{t("clanTag")}</Label>
                   <Input
                     id="clan-tag"
-                    placeholder={t("clanTagPlaceholder")}
+                    placeholder="#ABCD1234"
                     value={newClanTag}
                     onChange={(e) => setNewClanTag(e.target.value)}
                     className="bg-secondary border-border"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddClan()}
                   />
-                  <p className="text-xs text-muted-foreground">
-                    {t("clanTagHelp")}
-                  </p>
                 </div>
               </div>
               <DialogFooter>

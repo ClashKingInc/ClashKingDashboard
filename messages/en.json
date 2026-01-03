@@ -703,8 +703,6 @@
     "addNewClan": "Add New Clan",
     "addClanDescription": "Enter your clan tag to add it to this server",
     "clanTag": "Clan Tag",
-    "clanTagPlaceholder": "#YOURCLAN",
-    "clanTagHelp": "Include the # symbol at the start",
     "totalClans": "Total Clans",
     "registeredClans": "Registered clans",
     "configured": "Configured",
@@ -780,6 +778,7 @@
     "toast": {
       "errorLoadingClans": "Failed to load clans",
       "errorEmptyClanTag": "Please enter a clan tag",
+      "errorClanNotFound": "Clan not found. Please check the tag.",
       "clanAdded": "Clan added successfully",
       "errorAddingClan": "Failed to add clan",
       "clanRemoved": "Clan removed successfully",

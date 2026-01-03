@@ -580,8 +580,6 @@
     "addNewClan": "Nieuwe Clan Toevoegen",
     "addClanDescription": "Voer je clantag in om deze aan de server toe te voegen",
     "clanTag": "Clantag",
-    "clanTagPlaceholder": "#JOUWCLAN",
-    "clanTagHelp": "Inclusief het # symbool aan het begin",
     "totalClans": "Totaal Aantal Clans",
     "registeredClans": "Geregistreerde clans",
     "configured": "Geconfigureerd",
@@ -657,6 +655,7 @@
     "toast": {
       "errorLoadingClans": "Kon clans niet laden",
       "errorEmptyClanTag": "Voer een clantag in",
+      "errorClanNotFound": "De clantag bestaat niet. Controleer de tag.",
       "clanAdded": "Clan succesvol toegevoegd",
       "errorAddingClan": "Kon clan niet toevoegen",
       "clanRemoved": "Clan succesvol verwijderd",

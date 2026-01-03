@@ -580,8 +580,6 @@
     "addNewClan": "Ajouter un Nouveau Clan",
     "addClanDescription": "Entrez votre tag de clan pour l'ajouter à ce serveur",
     "clanTag": "Tag du Clan",
-    "clanTagPlaceholder": "#VOTRECLAN",
-    "clanTagHelp": "Incluez le symbole # au début",
     "totalClans": "Total des Clans",
     "registeredClans": "Clans enregistrés",
     "configured": "Configuré",
@@ -657,6 +655,7 @@
     "toast": {
       "errorLoadingClans": "Échec du chargement des clans",
       "errorEmptyClanTag": "Veuillez entrer un tag de clan",
+      "errorClanNotFound": "Clan non trouvé. Veuillez vérifier le tag.",
       "clanAdded": "Clan ajouté avec succès",
       "errorAddingClan": "Échec de l'ajout du clan",
       "clanRemoved": "Clan retiré avec succès",
