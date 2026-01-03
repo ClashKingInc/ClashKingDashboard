@@ -644,22 +644,6 @@
       "errorSavingSettings": "Échec de l'enregistrement des paramètres"
     }
   },
-    "categoryPlaceholder": "Nom de la catégorie",
-    "notAvailable": "N/A",
-    "saving": "Enregistrement...",
-    "saveChanges": "Enregistrer les Modifications",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {tag} ? Cela supprimera également tous les rappels et journaux associés.",
-    "toast": {
-      "errorLoadingClans": "Échec du chargement des clans",
-      "errorEmptyClanTag": "Veuillez entrer un tag de clan",
-      "clanAdded": "Clan ajouté avec succès",
-      "errorAddingClan": "Échec de l'ajout du clan",
-      "clanRemoved": "Clan supprimé avec succès",
-      "errorRemovingClan": "Échec de la suppression du clan",
-      "settingsSaved": "Paramètres enregistrés avec succès",
-      "errorSavingSettings": "Échec de l'enregistrement des paramètres"
-    }
-  },
   "RolesPage": {
     "title": "Gestion des Rôles",
     "description": "Configurer l'attribution automatique des rôles basée sur les statistiques des joueurs",

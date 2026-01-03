@@ -644,22 +644,6 @@
       "errorSavingSettings": "Kon instellingen niet opslaan"
     }
   },
-    "categoryPlaceholder": "Categorienaam",
-    "notAvailable": "N.v.t.",
-    "saving": "Opslaan...",
-    "saveChanges": "Wijzigingen Opslaan",
-    "deleteConfirm": "Weet je zeker dat je {tag} wilt verwijderen? Dit zal ook alle bijbehorende herinneringen en logs verwijderen.",
-    "toast": {
-      "errorLoadingClans": "Laden van clans mislukt",
-      "errorEmptyClanTag": "Voer een clantag in",
-      "clanAdded": "Clan succesvol toegevoegd",
-      "errorAddingClan": "Toevoegen van clan mislukt",
-      "clanRemoved": "Clan succesvol verwijderd",
-      "errorRemovingClan": "Verwijderen van clan mislukt",
-      "settingsSaved": "Instellingen succesvol opgeslagen",
-      "errorSavingSettings": "Opslaan van instellingen mislukt"
-    }
-  },
   "RolesPage": {
     "title": "Rolbeheer",
     "description": "Configureer automatische roltoewijzing op basis van spelersstatistieken",
