@@ -1151,10 +1151,7 @@
     "theme": "Thème"
   },
   "LanguageSwitcher": {
-    "label": "Langue",
-    "english": "English",
-    "french": "Français",
-    "dutch": "Néerlandais"
+    "label": "Langue"
   },
   "ThemeSwitcher": {
     "label": "Thème",
