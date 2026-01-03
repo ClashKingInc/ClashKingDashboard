@@ -58,35 +58,6 @@ import type {
 } from "@/lib/api/types/roles";
 import { LetterCaseUppercaseIcon } from "@radix-ui/react-icons";
 
-const ROLE_TYPES: Array<{ value: RoleType; label: string; icon: any }> = [
-  { value: "townhall", label: "Town Hall", icon: Users },
-  { value: "league", label: "League", icon: Trophy },
-  { value: "builderhall", label: "Builder Hall", icon: Hammer },
-  { value: "builder_league", label: "Builder League", icon: Award },
-  { value: "achievement", label: "Achievement", icon: Award },
-  { value: "status", label: "Status/Tenure", icon: Clock },
-  { value: "family_position", label: "Family Position", icon: Crown },
-];
-
-const LEAGUES = [
-  "Legend League",
-  "Titan League I",
-  "Titan League II",
-  "Titan League III",
-  "Champion League I",
-  "Champion League II",
-  "Champion League III",
-  "Master League I",
-  "Master League II",
-  "Master League III",
-];
-
-const FAMILY_POSITIONS = [
-  { value: "family_elder_roles", label: "Elder" },
-  { value: "family_co-leader_roles", label: "Co-Leader" },
-  { value: "family_leader_roles", label: "Leader" },
-];
-
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;

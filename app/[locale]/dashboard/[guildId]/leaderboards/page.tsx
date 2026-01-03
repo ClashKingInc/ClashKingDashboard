@@ -18,32 +18,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiClient } from "@/lib/api";
 import type { LeaderboardEntry } from "@/lib/api";
 
-const LEADERBOARD_TYPES = {
-  capital: {
-    player: [
-      { value: "capital_looted", label: "Capital Looted" }
-    ],
-    clan: [
-      { value: "capitalTotalLoot", label: "Total Loot" },
-      { value: "raidsCompleted", label: "Raids Completed" },
-      { value: "enemyDistrictsDestroyed", label: "Districts Destroyed" },
-      { value: "medals", label: "Medals" }
-    ]
-  }
-};
-
-const LEAGUES = ["All", "Legend League", "Titan League I", "Titan League II", "Titan League III"];
-
 export default function LeaderboardsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("LeaderboardsPage");
   const tCommon = useTranslations("Common");
 
+  // Define constants inside component to access t()
+  const LEADERBOARD_TYPES = {
+    capital: {
+      player: [
+        { value: "capital_looted", label: t('metrics.capital.player.capitalLooted') }
+      ],
+      clan: [
+        { value: "capitalTotalLoot", label: t('metrics.capital.clan.capitalTotalLoot') },
+        { value: "raidsCompleted", label: t('metrics.capital.clan.raidsCompleted') },
+        { value: "enemyDistrictsDestroyed", label: t('metrics.capital.clan.enemyDistrictsDestroyed') },
+        { value: "medals", label: t('metrics.capital.clan.medals') }
+      ]
+    }
+  };
+
+  const LEAGUES = [
+    t('leagues.all'),
+    t('leagues.legendLeague'),
+    t('leagues.titanLeagueI'),
+    t('leagues.titanLeagueII'),
+    t('leagues.titanLeagueIII')
+  ];
+
   const [loading, setLoading] = useState(false);
   const [leaderboardType, setLeaderboardType] = useState<"player" | "clan">("player");
   const [selectedMetric, setSelectedMetric] = useState("capital_looted");
-  const [selectedLeague, setSelectedLeague] = useState("All");
+  const [selectedLeague, setSelectedLeague] = useState(t('leagues.all'));
   const [selectedWeekend, setSelectedWeekend] = useState(() => {
     // Get last weekend (Friday)
     const now = new Date();
@@ -186,9 +193,9 @@ export default function LeaderboardsPage() {
     <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
       {/* Page Header */}
       <div className="space-y-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Leaderboards</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
         <p className="text-muted-foreground">
-          Global leaderboards for Clan Capital and more
+          {t('description')}
         </p>
       </div>
 
@@ -196,7 +203,7 @@ export default function LeaderboardsPage() {
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Total Entries</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">{t('stats.totalEntries')}</CardTitle>
             <Trophy className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -206,17 +213,17 @@ export default function LeaderboardsPage() {
 
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Type</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">{t('stats.type')}</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground capitalize">{leaderboardType}</div>
+            <div className="text-2xl font-bold text-foreground capitalize">{t(`types.${leaderboardType}`)}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">League</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">{t('stats.league')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -226,7 +233,7 @@ export default function LeaderboardsPage() {
 
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Weekend</CardTitle>
+            <CardTitle className="text-sm font-medium text-foreground">{t('stats.weekend')}</CardTitle>
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -238,25 +245,25 @@ export default function LeaderboardsPage() {
       {/* Filters */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">Filters</CardTitle>
+          <CardTitle className="text-foreground">{t('filters.title')}</CardTitle>
           <CardDescription className="text-muted-foreground">
-            Customize your leaderboard view
+            {t('filters.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Type</label>
+              <label className="text-sm font-medium text-foreground">{t('filters.type')}</label>
               <Tabs value={leaderboardType} onValueChange={(val) => setLeaderboardType(val as "player" | "clan")}>
                 <TabsList className="grid w-full grid-cols-2 bg-secondary">
-                  <TabsTrigger value="player">Players</TabsTrigger>
-                  <TabsTrigger value="clan">Clans</TabsTrigger>
+                  <TabsTrigger value="player">{t('types.player')}</TabsTrigger>
+                  <TabsTrigger value="clan">{t('types.clan')}</TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Metric</label>
+              <label className="text-sm font-medium text-foreground">{t('filters.metric')}</label>
               <Select value={selectedMetric} onValueChange={setSelectedMetric}>
                 <SelectTrigger className="bg-background border-border text-foreground">
                   <SelectValue />
@@ -272,7 +279,7 @@ export default function LeaderboardsPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">League</label>
+              <label className="text-sm font-medium text-foreground">{t('filters.league')}</label>
               <Select value={selectedLeague} onValueChange={setSelectedLeague}>
                 <SelectTrigger className="bg-background border-border text-foreground">
                   <SelectValue />
@@ -288,7 +295,7 @@ export default function LeaderboardsPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Weekend</label>
+              <label className="text-sm font-medium text-foreground">{t('filters.weekend')}</label>
               <input
                 type="date"
                 value={selectedWeekend}
@@ -303,17 +310,21 @@ export default function LeaderboardsPage() {
       {/* Leaderboard Table */}
       <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-foreground">Rankings</CardTitle>
+          <CardTitle className="text-foreground">{t('rankings.title')}</CardTitle>
           <CardDescription className="text-muted-foreground">
-            Top {leaderboardData.length} {leaderboardType === "player" ? "players" : "clans"} for {selectedWeekend}
+            {t('rankings.description', {
+              count: leaderboardData.length,
+              type: t(`rankings.${leaderboardType === "player" ? "players" : "clans"}`),
+              weekend: selectedWeekend
+            })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {leaderboardData.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Trophy className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p className="text-lg">No data available</p>
-              <p className="text-sm">Try selecting a different weekend or league</p>
+              <p className="text-lg">{t('empty.title')}</p>
+              <p className="text-sm">{t('empty.description')}</p>
             </div>
           ) : (
             <div className="space-y-2">

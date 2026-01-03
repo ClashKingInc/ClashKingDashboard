@@ -269,25 +269,30 @@
     }
   },
   "RostersPage": {
-    "title": "Rosters",
-    "description": "Manage your war rosters",
-    "noRosters": "No rosters found",
-    "createRoster": "Create Roster",
-    "viewDetails": "View Details",
-    "deleteRoster": "Delete Roster",
-    "members": "Members",
-    "type": {
-      "clan": "Clan",
-      "family": "Family"
-    },
-    "signupScope": {
-      "clanOnly": "Clan Only",
-      "familyWide": "Family Wide"
+    "title": "Rosters & Lineups",
+    "description": "Manage war rosters, lineups, and member assignments",
+    "stats": {
+      "totalRosters": "Total Rosters",
+      "totalMembers": "Total Members",
+      "clanRosters": "Clan Rosters",
+      "familyRosters": "Family Rosters"
     },
     "filters": {
       "search": "Search rosters...",
       "type": "Type",
-      "all": "All"
+      "all": "All",
+      "clan": "Clan",
+      "family": "Family",
+      "clear": "Clear"
+    },
+    "comparisonMode": {
+      "cancel": "Cancel",
+      "compare": "Compare",
+      "compareRosters": "Compare Rosters",
+      "selectRosters": "Select rosters",
+      "selectRostersDesc": "Please select at least 2 rosters to compare",
+      "maxReached": "Maximum reached",
+      "maxReachedDesc": "You can compare up to 5 rosters at a time"
     },
     "createDialog": {
       "title": "Create New Roster",
@@ -295,122 +300,400 @@
       "aliasLabel": "Roster Name",
       "aliasPlaceholder": "e.g., CWL Roster",
       "typeLabel": "Roster Type",
+      "typeClan": "Clan",
+      "typeFamily": "Family",
       "signupScopeLabel": "Signup Scope",
+      "scopeClanOnly": "Clan Only",
+      "scopeFamilyWide": "Family Wide",
       "clanLabel": "Clan",
+      "clanPlaceholder": "Select a clan",
       "descriptionLabel": "Description (Optional)",
       "descriptionPlaceholder": "Roster description...",
-      "submit": "Create Roster"
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "create": "Create Roster"
     },
-    "details": {
+    "editDialog": {
+      "title": "Edit Roster",
+      "description": "Modify roster settings and configuration",
+      "aliasLabel": "Roster Name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Roster description...",
+      "minThLabel": "Minimum Town Hall",
+      "minThPlaceholder": "e.g., 13",
+      "maxThLabel": "Maximum Town Hall",
+      "maxThPlaceholder": "e.g., 16",
+      "rosterSizeLabel": "Roster Size",
+      "rosterSizePlaceholder": "e.g., 50",
+      "columnsLabel": "Display Columns",
+      "columnsPlaceholder": "Select columns to display",
+      "sortLabel": "Sort Order",
+      "sortPlaceholder": "Select sort fields",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save Changes"
+    },
+    "addMembersDialog": {
+      "title": "Add Members to Roster",
+      "description": "Select members from your clan or enter player tags",
+      "bulkTagsLabel": "Bulk Add by Tags",
+      "bulkTagsPlaceholder": "Enter player tags (one per line or comma-separated)",
+      "searchLabel": "Search Members",
+      "searchPlaceholder": "Search by name or tag...",
+      "selectFromClan": "Select from Clan Members",
+      "selectedCount": "Selected",
+      "noMembers": "No members available",
+      "noMembersSelected": "No members selected",
+      "noMembersSelectedDesc": "Please select members or enter player tags.",
+      "cancel": "Cancel",
+      "adding": "Adding...",
+      "add": "Add Members"
+    },
+    "detailsDialog": {
       "title": "Roster Details",
-      "members": "Members",
-      "addMember": "Add Member",
-      "removeMember": "Remove Member",
+      "edit": "Edit",
+      "refresh": "Refresh",
+      "refreshing": "Refreshing...",
+      "delete": "Delete",
+      "deleting": "Deleting...",
+      "addMembers": "Add Members",
+      "close": "Close",
       "noMembers": "No members in this roster",
-      "playerName": "Player Name",
-      "townHall": "Town Hall",
+      "noMembersDesc": "Add members to get started",
+      "memberCount": "Members",
+      "thRestriction": "TH Level",
+      "avgTh": "Avg TH",
+      "avgHitrate": "Avg Hitrate",
       "clan": "Clan",
-      "status": "Status"
+      "family": "Family",
+      "external": "External",
+      "substitute": "SUB",
+      "removeMember": "Remove"
+    },
+    "rosterCard": {
+      "members": "Members",
+      "thLevel": "TH Level",
+      "avgTh": "Avg TH",
+      "avgHitrate": "Avg Hitrate",
+      "clan": "Clan",
+      "family": "Family",
+      "external": "External",
+      "noRestriction": "No restriction",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "allRosters": "All Rosters",
+      "manageRosters": "Manage your war rosters and lineups"
+    },
+    "memberColumns": {
+      "name": "Name",
+      "townhall": "Townhall Level",
+      "tag": "Tag",
+      "hitrate": "30 Day Hitrate",
+      "currentClanTag": "Clan Tag",
+      "discord": "Discord",
+      "heroLvs": "Heroes",
+      "warPref": "War Opt",
+      "trophies": "Trophies"
+    },
+    "sortFields": {
+      "townhall": "Townhall Level",
+      "name": "Name",
+      "tag": "Tag",
+      "heroLvs": "Heroes",
+      "trophies": "Trophies",
+      "hitrate": "30 Day Hitrate",
+      "currentClanTag": "Clan Tag",
+      "addedAt": "Added At"
+    },
+    "thRestrictions": {
+      "only": "TH{th} only",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "No restriction"
+    },
+    "emptyState": {
+      "noRosters": "No rosters created yet",
+      "noRostersDesc": "Create your first roster to get started",
+      "noMatch": "No rosters match your filters",
+      "noMatchDesc": "Try adjusting your search or filter criteria"
     },
     "toast": {
-      "rosterCreated": "Roster created successfully",
-      "rosterDeleted": "Roster deleted successfully",
-      "memberAdded": "Member added successfully",
-      "memberRemoved": "Member removed successfully",
-      "error": "An error occurred"
+      "errorTitle": "Error",
+      "successTitle": "Success",
+      "errorLoadingRosters": "Failed to load rosters. Please try again.",
+      "errorLoadingMembers": "Failed to load clan members.",
+      "rosterCreated": "Roster created successfully!",
+      "errorCreatingRoster": "Failed to create roster. Please try again.",
+      "rosterUpdated": "Roster updated successfully!",
+      "errorUpdatingRoster": "Failed to update roster. Please try again.",
+      "rosterDeleted": "Roster deleted successfully!",
+      "errorDeletingRoster": "Failed to delete roster. Please try again.",
+      "membersAdded": "Added {count} member(s) to roster!",
+      "errorAddingMembers": "Failed to add members. Please try again.",
+      "memberRemoved": "Member removed from roster!",
+      "errorRemovingMember": "Failed to remove member. Please try again.",
+      "substituteMarked": "Member marked as substitute!",
+      "substituteUnmarked": "Member unmarked as substitute!",
+      "errorUpdatingMember": "Failed to update member. Please try again.",
+      "rosterRefreshed": "Roster data refreshed successfully!",
+      "errorRefreshingRoster": "Failed to refresh roster data. Please try again.",
+      "memberTransferred": "Member transferred between rosters successfully!",
+      "errorTransferringMember": "Failed to transfer member. Please try again."
     }
   },
   "LinksPage": {
     "title": "Links Management",
-    "description": "Manage Discord-Player links for your server",
+    "description": "Manage Discord member account links and verify player ownership",
     "tabs": {
-      "links": "Links",
-      "settings": "Settings",
-      "stats": "Statistics"
+      "overview": "Overview",
+      "pending": "Pending",
+      "bulk": "Bulk Actions",
+      "analytics": "Analytics"
     },
     "stats": {
       "totalMembers": "Total Members",
       "membersWithLinks": "Members with Links",
       "totalLinkedAccounts": "Total Linked Accounts",
-      "verifiedAccounts": "Verified Accounts"
+      "verifiedAccounts": "Verified Accounts",
+      "ofTotal": "of total",
+      "avgPerMember": "Avg:",
+      "perMember": "per member",
+      "verified": "verified"
     },
     "filters": {
-      "search": "Search by username or player tag...",
-      "verification": "Verification Status",
-      "all": "All",
-      "verified": "Verified Only",
-      "unverified": "Unverified Only",
-      "minAccounts": "Min Accounts"
+      "searchPlaceholder": "Search by member name, username, player name, or tag...",
+      "filterByStatus": "Filter by status",
+      "allAccounts": "All Accounts",
+      "verifiedOnly": "Verified Only",
+      "unverifiedOnly": "Unverified Only",
+      "minAccounts": "Min accounts",
+      "allMembers": "All Members",
+      "oneOrMore": "1+ accounts",
+      "twoOrMore": "2+ accounts",
+      "threeOrMore": "3+ accounts",
+      "fiveOrMore": "5+ accounts"
     },
-    "table": {
-      "user": "User",
-      "linkedAccounts": "Linked Accounts",
-      "verificationStatus": "Verification Status",
-      "actions": "Actions",
+    "overview": {
+      "title": "Account Links",
+      "description": "View and manage all Discord-Clash of Clans account links",
+      "showingMembers": "Showing {count} {members}",
+      "member": "member",
+      "members": "members",
+      "noMembers": "No members found",
+      "adjustFilters": "Try adjusting your search or filters.",
+      "noLinkedAccounts": "No members with linked accounts.",
+      "exportCSV": "Export CSV",
+      "exportJSON": "Export JSON",
+      "account": "account",
+      "accounts": "accounts",
+      "more": "more",
+      "unknown": "Unknown"
+    },
+    "pending": {
+      "title": "Pending Verifications",
+      "description": "{count} accounts awaiting verification",
+      "allVerified": "All accounts verified!",
+      "noPending": "There are no pending verifications at this time.",
+      "linked": "Linked:"
+    },
+    "bulk": {
+      "title": "Bulk Actions",
+      "description": "Perform actions on multiple members at once",
+      "selectAll": "Select All ({count})",
+      "deselectAll": "Deselect All",
+      "unlinkSelected": "Unlink Selected ({count})",
+      "linked": "linked",
+      "comingSoon": "Bulk unlink feature coming soon!"
+    },
+    "analytics": {
+      "title": "Link Analytics",
+      "description": "Overview of linking statistics and trends",
+      "verificationRate": "Verification Rate",
       "verified": "Verified",
       "unverified": "Unverified",
-      "accounts": "accounts"
+      "accountDistribution": "Account Distribution",
+      "oneAccount": "1 account",
+      "twoToThreeAccounts": "2-3 accounts",
+      "fourPlusAccounts": "4+ accounts",
+      "townHallLevels": "Town Hall Levels",
+      "other": "Other",
+      "coverage": "Coverage",
+      "linkedMembers": "Linked members",
+      "coverageRate": "Coverage rate",
+      "linkInsights": "Link Insights",
+      "avgAccountsPerMember": "Average accounts per member:",
+      "mostLinkedAccounts": "Most linked accounts:",
+      "membersWithoutLinks": "Members without links:"
     },
     "actions": {
-      "linkAccount": "Link Account",
-      "removeLink": "Remove Link",
-      "bulkActions": "Bulk Actions",
-      "exportData": "Export Data"
-    },
-    "linkDialog": {
-      "title": "Link Player Account",
-      "description": "Link a Clash of Clans account to a Discord user",
-      "playerTagLabel": "Player Tag",
-      "playerTagPlaceholder": "#ABC123",
-      "apiTokenLabel": "API Token",
-      "apiTokenPlaceholder": "API token from in-game settings",
-      "submit": "Link Account"
+      "unlinkAccount": "Unlink Account"
     },
     "deleteDialog": {
-      "title": "Remove Link",
-      "description": "Are you sure you want to remove this link?",
-      "confirm": "Remove",
-      "cancel": "Cancel"
+      "title": "Unlink Account",
+      "description": "Are you sure you want to unlink {playerName}? This action cannot be undone.",
+      "cancel": "Cancel",
+      "unlinking": "Unlinking...",
+      "unlink": "Unlink"
+    },
+    "bulkDialog": {
+      "title": "Bulk Unlink Accounts",
+      "description": "Are you sure you want to unlink all accounts for {count} selected members? This action cannot be undone.",
+      "cancel": "Cancel",
+      "unlinkAll": "Unlink All"
     },
     "toast": {
-      "linkAdded": "Account linked successfully",
-      "linkRemoved": "Link removed successfully",
-      "error": "An error occurred"
+      "unlinkFailed": "Failed to unlink account. Please try again."
+    },
+    "badges": {
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "pending": "Pending"
+    },
+    "pagination": {
+      "showing": "Showing {start} - {end} of {total} members",
+      "page": "Page {current} of {total}",
+      "previous": "Previous",
+      "next": "Next"
     }
   },
   "WarsPage": {
     "title": "War Statistics",
-    "description": "View and analyze war performance",
-    "tabs": {
-      "current": "Current War",
-      "previous": "Previous Wars",
-      "stats": "Statistics"
+    "description": "Track war performance and analyze battle statistics",
+    "actions": {
+      "exportData": "Export Data",
+      "resetFilters": "Reset Filters",
+      "applyFilters": "Apply Filters"
     },
-    "noWar": "No active war",
-    "warStatus": {
-      "preparation": "Preparation",
-      "inWar": "In War",
-      "ended": "Ended"
+    "filters": {
+      "title": "Filters",
+      "description": "Filter war statistics by various criteria",
+      "clan": "Clan",
+      "allClans": "All Clans",
+      "user": "User",
+      "userPlaceholder": "Search user...",
+      "townHall": "Town Hall",
+      "allTownHalls": "All TH Levels",
+      "townHallLevel": "TH {level}",
+      "startDate": "Start Date",
+      "endDate": "End Date"
     },
-    "stats": {
-      "attacks": "Attacks",
-      "stars": "Stars",
-      "destruction": "Destruction",
-      "performance": "Performance"
+    "summaryStats": {
+      "totalWins": "Total Wins",
+      "totalWinsDesc": "Out of {totalWars} total wars",
+      "totalLosses": "Total Losses",
+      "totalLossesDesc": "{totalDraws} draws",
+      "winRate": "Win Rate",
+      "winRateDesc": "Overall performance",
+      "activeWars": "Active Wars",
+      "activeWarsDesc": "{activeCwl} in CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "War Performance (Last 7 Days)",
+        "description": "Daily wins, losses, and draws",
+        "wins": "Wins",
+        "losses": "Losses",
+        "draws": "Draws"
+      },
+      "thSuccessRate": {
+        "title": "Attack Success Rate by Town Hall",
+        "description": "3-star rate per TH level",
+        "threeStarPercent": "3-Star %",
+        "otherPercent": "Other %"
+      },
+      "warTypeDistribution": {
+        "title": "War Type Distribution",
+        "description": "Breakdown of war types (Coming soon)",
+        "cwl": "CWL",
+        "random": "Random",
+        "friendly": "Friendly"
+      },
+      "topPerformers": {
+        "title": "Top Performers",
+        "description": "Best warriors by total stars",
+        "attacksAndStars": "{attacks} attacks • {stars} stars",
+        "noData": "No player data available. Try adjusting your filters."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Clan War Statistics",
+      "description": "Detailed statistics for each clan",
+      "headers": {
+        "clan": "Clan",
+        "status": "Status",
+        "wars": "Wars",
+        "record": "W/L/D",
+        "winRate": "Win Rate",
+        "avgStars": "Avg Stars",
+        "avgDestruction": "Avg Destruction"
+      },
+      "status": {
+        "inWar": "In War",
+        "cwl": "CWL",
+        "peace": "Peace"
+      }
+    },
+    "toast": {
+      "errorTitle": "Error",
+      "errorLoadingClans": "Failed to load clans. Please try again.",
+      "errorLoadingWarData": "Failed to load war data. Please try again.",
+      "errorNoClans": "No clans available",
+      "errorApplyingFilters": "Failed to apply filters. Please try again."
     }
   },
   "LeaderboardsPage": {
     "title": "Leaderboards",
-    "description": "View global and server rankings",
-    "types": {
-      "donations": "Donations",
-      "trophies": "Trophies",
-      "warStars": "War Stars",
-      "activity": "Activity"
+    "description": "Global leaderboards for Clan Capital and more",
+    "stats": {
+      "totalEntries": "Total Entries",
+      "type": "Type",
+      "league": "League",
+      "weekend": "Weekend"
     },
-    "rank": "Rank",
-    "player": "Player",
-    "value": "Value"
+    "filters": {
+      "title": "Filters",
+      "description": "Customize your leaderboard view",
+      "type": "Type",
+      "metric": "Metric",
+      "league": "League",
+      "weekend": "Weekend"
+    },
+    "types": {
+      "player": "Players",
+      "clan": "Clans"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Capital Looted"
+        },
+        "clan": {
+          "capitalTotalLoot": "Total Loot",
+          "raidsCompleted": "Raids Completed",
+          "enemyDistrictsDestroyed": "Districts Destroyed",
+          "medals": "Medals"
+        }
+      }
+    },
+    "leagues": {
+      "all": "All",
+      "legendLeague": "Legend League",
+      "titanLeagueI": "Titan League I",
+      "titanLeagueII": "Titan League II",
+      "titanLeagueIII": "Titan League III"
+    },
+    "rankings": {
+      "title": "Rankings",
+      "description": "Top {count} {type} for {weekend}",
+      "players": "players",
+      "clans": "clans"
+    },
+    "empty": {
+      "title": "No data available",
+      "description": "Try selecting a different weekend or league"
+    }
   },
   "ClansPage": {
     "title": "Clans",
@@ -433,40 +716,325 @@
     }
   },
   "RolesPage": {
-    "title": "Role Automation",
-    "description": "Configure automatic role assignments",
-    "noRoles": "No role configurations found",
-    "addRole": "Add Role",
-    "roleName": "Role Name",
-    "condition": "Condition",
-    "actions": "Actions"
+    "title": "Role Management",
+    "description": "Configure automatic role assignment based on player stats",
+    "stats": {
+      "totalRoles": "Total Roles",
+      "totalRolesDesc": "Configured role assignments",
+      "autoEvaluation": "Auto-Evaluation",
+      "autoEvaluationOn": "ON",
+      "autoEvaluationOff": "OFF",
+      "autoEvaluationActiveDesc": "Automatically assigning roles",
+      "autoEvaluationInactiveDesc": "Manual role assignment only",
+      "activeTypes": "Active Types",
+      "activeTypesDesc": "Role types in use",
+      "discordRoles": "Discord Roles",
+      "discordRolesDesc": "Available on server"
+    },
+    "settings": {
+      "title": "Auto-Evaluation Settings",
+      "description": "Configure automatic role evaluation and assignment",
+      "saveButton": "Save Settings",
+      "saving": "Saving...",
+      "enableAutoEval": "Enable Auto-Evaluation",
+      "enableAutoEvalDesc": "Automatically assign and remove roles based on player stats",
+      "autoNickname": "Auto-Update Nicknames",
+      "autoNicknameDesc": "Update nicknames when roles are evaluated"
+    },
+    "roleTypes": {
+      "townhall": "Town Hall",
+      "league": "League",
+      "builderhall": "Builder Hall",
+      "builderLeague": "Builder League",
+      "achievement": "Achievement",
+      "status": "Status/Tenure",
+      "familyPosition": "Family Position"
+    },
+    "familyPositions": {
+      "elder": "Elder",
+      "coLeader": "Co-Leader",
+      "leader": "Leader"
+    },
+    "leagues": {
+      "legend": "Legend League",
+      "titan1": "Titan League I",
+      "titan2": "Titan League II",
+      "titan3": "Titan League III",
+      "champion1": "Champion League I",
+      "champion2": "Champion League II",
+      "champion3": "Champion League III",
+      "master1": "Master League I",
+      "master2": "Master League II",
+      "master3": "Master League III"
+    },
+    "configuredRoles": {
+      "title": "Configured Roles",
+      "noRolesConfigured": "No {roleType} roles configured",
+      "addRoleToStart": "Click \"Add Role\" to create one",
+      "discordRole": "Discord Role",
+      "criteria": "Criteria",
+      "actions": "Actions",
+      "unknownRole": "Unknown Role",
+      "remove": "Remove",
+      "month": "month",
+      "months": "months"
+    },
+    "addRoleDialog": {
+      "title": "Add New Role",
+      "description": "Configure a new automatic role assignment rule",
+      "roleType": "Role Type",
+      "discordRole": "Discord Role",
+      "selectRole": "Select a role",
+      "townhallLevel": "Town Hall Level",
+      "selectTHLevel": "Select TH level",
+      "league": "League",
+      "selectLeague": "Select league",
+      "builderHallLevel": "Builder Hall Level",
+      "selectBHLevel": "Select BH level",
+      "builderLeague": "Builder League",
+      "builderLeaguePlaceholder": "e.g., Titanium League I",
+      "achievementName": "Achievement Name",
+      "achievementPlaceholder": "e.g., Gold Grab",
+      "monthsInServer": "Months in Server",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Family Position",
+      "selectPosition": "Select position",
+      "cancel": "Cancel",
+      "addRole": "Add Role"
+    },
+    "infoCard": {
+      "title": "💡 How Auto-Roles Work",
+      "automaticEvaluation": "Automatic Evaluation:",
+      "automaticEvaluationDesc": "When enabled, the bot will periodically check players and assign/remove roles based on their current stats.",
+      "rolePriority": "Role Priority:",
+      "rolePriorityDesc": "If multiple roles match a player's stats, the highest level role will be assigned.",
+      "manualOverride": "Manual Override:",
+      "manualOverrideDesc": "Server admins can manually assign roles, which will not be removed by auto-evaluation."
+    },
+    "toast": {
+      "changesSaved": "Changes saved successfully!",
+      "errorLoading": "Failed to load roles",
+      "errorSaving": "Failed to save settings",
+      "errorAdding": "Failed to add role",
+      "errorDeleting": "Failed to delete role"
+    }
   },
   "RemindersPage": {
     "title": "Reminders",
-    "description": "Set up automated reminders",
+    "description": "Configure automatic reminders for wars, raids, clan games, and inactivity",
     "types": {
+      "war": "War Reminders",
+      "capital": "Clan Capital",
       "clanGames": "Clan Games",
-      "war": "War",
-      "cwl": "CWL",
-      "custom": "Custom"
+      "inactivity": "Inactivity"
     },
-    "addReminder": "Add Reminder",
-    "channel": "Channel",
-    "message": "Message",
-    "timing": "Timing"
+    "tabs": {
+      "war": "War",
+      "capital": "Capital",
+      "clanGames": "Clan Games",
+      "inactivity": "Inactivity"
+    },
+    "stats": {
+      "totalReminders": "Total Reminders",
+      "totalRemindersDesc": "Active reminders configured",
+      "warReminders": "War Reminders",
+      "warRemindersDesc": "Regular & CWL wars",
+      "capitalReminders": "Capital Reminders",
+      "capitalRemindersDesc": "Raid weekend attacks",
+      "otherReminders": "Other Reminders",
+      "otherRemindersDesc": "Games & inactivity"
+    },
+    "actions": {
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "addReminder": "Add Reminder",
+      "addWarReminder": "Add War Reminder",
+      "addCapitalReminder": "Add Capital Reminder",
+      "addClanGamesReminder": "Add Clan Games Reminder",
+      "addInactivityReminder": "Add Inactivity Reminder",
+      "retry": "Retry"
+    },
+    "clanSelector": {
+      "label": "Clan:",
+      "placeholder": "Select a clan",
+      "allClans": "All Clans"
+    },
+    "empty": {
+      "noWarReminders": "No War Reminders",
+      "noCapitalReminders": "No Capital Reminders",
+      "noClanGamesReminders": "No Clan Games Reminders",
+      "noInactivityReminders": "No Inactivity Reminders",
+      "getStarted": "Get started by creating your first reminder"
+    },
+    "card": {
+      "new": "New",
+      "before": "before",
+      "timeBefore": "Time Before (e.g., \"6h\", \"30m\")",
+      "timeBeforePlaceholder": "6h",
+      "channelId": "Channel ID",
+      "channelIdPlaceholder": "123456789012345678",
+      "clan": "Clan",
+      "clanPlaceholder": "Select clan",
+      "customMessage": "Custom Message (Optional)",
+      "customMessagePlaceholder": "Don't forget to use your attacks!",
+      "warTypes": "War Types",
+      "random": "Random",
+      "friendly": "Friendly",
+      "cwl": "CWL",
+      "pointThreshold": "Point Threshold",
+      "pointThresholdPlaceholder": "4000",
+      "attackThreshold": "Attack Threshold",
+      "attackThresholdPlaceholder": "1"
+    },
+    "toast": {
+      "errorTitle": "Error",
+      "errorLoadingReminders": "Failed to load reminders. Please try again.",
+      "reminderAdded": "Reminder Added",
+      "reminderAddedDesc": "New {type} reminder added. Don't forget to save!",
+      "successTitle": "Success",
+      "reminderDeleted": "Reminder deleted successfully",
+      "failedToDelete": "Failed to delete reminder",
+      "allRemindersSaved": "All reminders saved successfully",
+      "failedToSave": "Failed to save reminders"
+    }
   },
   "LogsPage": {
-    "title": "Logs",
-    "description": "Configure webhook logs",
-    "events": {
-      "playerJoin": "Player Join",
-      "playerLeave": "Player Leave",
-      "donations": "Donations",
-      "warAttacks": "War Attacks",
-      "achievements": "Achievements"
+    "title": "Activity Logs",
+    "description": "Configure automatic logging for clan and player activities",
+    "stats": {
+      "activeLogs": "Active Logs",
+      "activeLogsDesc": "Out of 26 log types",
+      "logChannels": "Log Channels",
+      "logChannelsDesc": "Available channels",
+      "trackedClans": "Tracked Clans",
+      "trackedClansDesc": "Configured clans",
+      "configuration": "Configuration",
+      "readyToConfigure": "Ready to configure",
+      "saving": "Saving..."
     },
-    "channel": "Channel",
-    "enabled": "Enabled"
+    "clanSelector": {
+      "label": "Clan:",
+      "placeholder": "Select a clan"
+    },
+    "tabs": {
+      "clan": "Clan",
+      "war": "War",
+      "capital": "Capital",
+      "player": "Player"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Member Join",
+        "description": "Track members joining the clan"
+      },
+      "leaveLog": {
+        "label": "Member Leave",
+        "description": "Track members leaving the clan"
+      },
+      "donationLog": {
+        "label": "Member Donation",
+        "description": "Track troop and spell donations"
+      },
+      "clanAchievementLog": {
+        "label": "Clan Achievements",
+        "description": "Track clan achievements earned"
+      },
+      "clanRequirementsLog": {
+        "label": "Clan Requirements",
+        "description": "Track changes to clan requirements"
+      },
+      "clanDescriptionLog": {
+        "label": "Clan Description",
+        "description": "Track changes to clan description"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "War Log",
+        "description": "Track war attacks and results"
+      },
+      "warPanel": {
+        "label": "War Panel",
+        "description": "Interactive war panel with live updates"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL Lineup Change",
+        "description": "Track CWL lineup changes"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Capital Donations",
+        "description": "Track capital gold donations"
+      },
+      "capitalAttacks": {
+        "label": "Capital Attacks",
+        "description": "Track raid weekend attacks"
+      },
+      "raidPanel": {
+        "label": "Capital Panel",
+        "description": "Interactive raid panel with live updates"
+      },
+      "capitalWeeklySummary": {
+        "label": "Capital Weekly Summary",
+        "description": "Weekly summary of capital performance"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Role Change",
+        "description": "Track player role changes in clan"
+      },
+      "troopUpgrade": {
+        "label": "Troop Upgrade",
+        "description": "Track troop level upgrades"
+      },
+      "superTroopBoostLog": {
+        "label": "Super Troop Boosts",
+        "description": "Track super troop activations"
+      },
+      "thUpgrade": {
+        "label": "Townhall Upgrade",
+        "description": "Track town hall upgrades"
+      },
+      "leagueChange": {
+        "label": "League Change",
+        "description": "Track league tier changes"
+      },
+      "spellUpgrade": {
+        "label": "Spell Upgrade",
+        "description": "Track spell level upgrades"
+      },
+      "heroUpgrade": {
+        "label": "Hero Upgrade",
+        "description": "Track hero level upgrades"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Hero Equipment Upgrade",
+        "description": "Track hero equipment upgrades"
+      },
+      "nameChange": {
+        "label": "Name Change",
+        "description": "Track player name changes"
+      },
+      "legendLogAttacks": {
+        "label": "Legend Attacks",
+        "description": "Track legend league attacks"
+      },
+      "legendLogDefenses": {
+        "label": "Legend Defenses",
+        "description": "Track legend league defenses"
+      }
+    },
+    "logCard": {
+      "active": "Active",
+      "channel": "Channel",
+      "channelPlaceholder": "Select channel",
+      "disabled": "Disabled",
+      "thread": "Thread (Optional)",
+      "threadPlaceholder": "Select thread",
+      "noThread": "No Thread"
+    }
   },
   "GeneralPage": {
     "title": "General Settings",

@@ -134,8 +134,8 @@ export default function WarsPage() {
       } catch (error) {
         console.error("Error fetching data:", error);
         toast({
-          title: "Error",
-          description: "Failed to load clans. Please try again.",
+          title: t('toast.errorTitle'),
+          description: t('toast.errorLoadingClans'),
           variant: "destructive",
         });
         setLoading(false);
@@ -260,8 +260,8 @@ export default function WarsPage() {
     } catch (error) {
       console.error("Error fetching war data:", error);
       toast({
-        title: "Error",
-        description: "Failed to load war data. Please try again.",
+        title: t('toast.errorTitle'),
+        description: t('toast.errorLoadingWarData'),
         variant: "destructive",
       });
     } finally {
@@ -360,8 +360,8 @@ export default function WarsPage() {
   const handleApplyFilters = async () => {
     if (clans.length === 0) {
       toast({
-        title: "Error",
-        description: "No clans available",
+        title: t('toast.errorTitle'),
+        description: t('toast.errorNoClans'),
         variant: "destructive",
       });
       return;
@@ -376,8 +376,8 @@ export default function WarsPage() {
     } catch (error) {
       console.error("Error applying filters:", error);
       toast({
-        title: "Error",
-        description: "Failed to apply filters. Please try again.",
+        title: t('toast.errorTitle'),
+        description: t('toast.errorApplyingFilters'),
         variant: "destructive",
       });
     } finally {
@@ -532,16 +532,16 @@ export default function WarsPage() {
                 <Swords className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">War Statistics</h1>
+                <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
                 <p className="text-muted-foreground mt-1">
-                  Track war performance and analyze battle statistics
+                  {t('description')}
                 </p>
               </div>
             </div>
           </div>
           <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
             <Download className="mr-2 h-4 w-4" />
-            Export Data
+            {t('actions.exportData')}
           </Button>
         </div>
 
@@ -554,9 +554,9 @@ export default function WarsPage() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Filter className="h-5 w-5" />
-                      Filters
+                      {t('filters.title')}
                     </CardTitle>
-                    <CardDescription>Filter war statistics by various criteria</CardDescription>
+                    <CardDescription>{t('filters.description')}</CardDescription>
                   </div>
                   <div className="flex gap-2 w-full md:w-auto">
                     <Button variant="outline" size="sm" onClick={() => setFilters({
@@ -566,11 +566,11 @@ export default function WarsPage() {
                       startDate: "",
                       endDate: "",
                     })} className="flex-1 md:flex-none">
-                      Reset Filters
+                      {t('actions.resetFilters')}
                     </Button>
                     <Button size="sm" onClick={handleApplyFilters} disabled={loading} className="flex-1 md:flex-none">
                       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Apply Filters
+                      {t('actions.applyFilters')}
                     </Button>
                   </div>
                 </div>
