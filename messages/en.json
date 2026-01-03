@@ -19,8 +19,9 @@
     "noData": "No data available",
     "error": "An error occurred",
     "success": "Success",
-    "confirm": "Confirm",
     "actions": "Actions",
+    "unknown": "Unknown",
+    "confirm": "Confirm",
     "settings": "Settings",
     "status": "Status",
     "retry": "Retry",
@@ -201,8 +202,8 @@
     }
   },
   "BansPage": {
-    "title": "Bans & Strikes Management",
-    "description": "Manage banned players and strikes for your server",
+    "title": "Moderation",
+    "description": "Manage player bans and strikes",
     "tabs": {
       "bans": "Bans",
       "strikes": "Strikes"
@@ -218,16 +219,60 @@
       "reason": "Reason",
       "bannedAt": "Banned At",
       "search": "Search by name or tag...",
+      "howItWorks": {
+        "title": "How Bans Work",
+        "description": "Banned players are prevented from joining any clan linked to this server. The bot will warn you if they join one of the clans. Bans are server-wide and apply to all your clans."
+      },
+      "stats": {
+        "total": "Total Bans",
+        "recent": "Recent Bans (7 days)",
+        "commonReason": "Most Common Reason",
+        "commonReasonValue": "Harassment & Toxicity",
+        "noBans": "No bans yet",
+        "percentOfAll": "{percent}% of all bans"
+      },
+      "list": {
+        "title": "Banned Players",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
+        "searchPlaceholder": "Search by name, tag, or reason...",
+        "noBansFound": "No bans found",
+        "noBans": "No banned players",
+        "adjustSearch": "Try adjusting your search query",
+        "getStarted": "Add a ban to get started with player moderation"
+      },
+      "table": {
+        "player": "Player",
+        "reason": "Reason",
+        "bannedBy": "Banned By",
+        "date": "Date",
+        "daysAgo": "{days} days ago",
+        "noReason": "No reason provided"
+      },
       "addDialog": {
-        "title": "Add New Ban",
-        "description": "Ban a player from your server",
-        "playerTagLabel": "Player Tag",
-        "playerTagPlaceholder": "#ABC123",
-        "playerNameLabel": "Player Name",
+        "title": "Ban a Player",
+        "description": "Add a player to the ban list. They will be prevented from joining any clan on this server.",
+        "playerTagLabel": "Player Tag *",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Player Name (optional)",
         "playerNamePlaceholder": "Enter player name",
-        "reasonLabel": "Reason",
-        "reasonPlaceholder": "Reason for ban...",
+        "reasonLabel": "Reason for Ban *",
+        "reasonPlaceholder": "Explain why this player is being banned...",
         "submit": "Ban Player"
+      },
+      "bestPractices": {
+        "title": "Best Practices",
+        "document": {
+          "title": "Document thoroughly:",
+          "desc": "Always provide a detailed reason for each ban to help other moderators understand the context."
+        },
+        "review": {
+          "title": "Review regularly:",
+          "desc": "Periodically review your ban list to ensure all bans are still necessary and justified."
+        },
+        "consistent": {
+          "title": "Be consistent:",
+          "desc": "Apply bans fairly and consistently across all players to maintain a healthy community."
+        }
       }
     },
     "strikes": {
@@ -242,18 +287,64 @@
       "rolloverDays": "Rollover Days",
       "createdAt": "Created At",
       "search": "Search by player tag...",
+      "howItWorks": {
+        "title": "How Strikes Work",
+        "description": "Strikes are warnings given to players for rule violations. Each strike has a weight (severity) and can optionally expire after a set number of days. Strikes help track player behavior before issuing bans."
+      },
+      "stats": {
+        "total": "Total Strikes",
+        "recent": "Recent Strikes (7 days)",
+        "totalWeight": "Total Strike Weight",
+        "commonReason": "Most Common Reason",
+        "commonReasonValue": "Spamming"
+      },
+      "list": {
+        "title": "Player Strikes",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
+        "searchPlaceholder": "Search by name, tag, or reason...",
+        "noStrikesFound": "No strikes found",
+        "noStrikes": "No strikes issued",
+        "adjustSearch": "Try adjusting your search query",
+        "getStarted": "Add a strike to start tracking player violations"
+      },
+      "table": {
+        "player": "Player",
+        "reason": "Reason",
+        "weight": "Weight",
+        "addedBy": "Added By",
+        "date": "Date",
+        "expires": "Expires",
+        "never": "Never",
+        "noReason": "No reason provided",
+        "daysAgo": "{days} days ago"
+      },
       "addDialog": {
-        "title": "Add New Strike",
-        "description": "Add a strike to a player",
-        "playerTagLabel": "Player Tag",
-        "playerTagPlaceholder": "#ABC123",
-        "reasonLabel": "Reason",
-        "reasonPlaceholder": "Reason for strike...",
-        "weightLabel": "Strike Weight",
+        "title": "Add a Strike",
+        "description": "Issue a strike to a player. Strikes can have different weights and expiration dates.",
+        "playerTagLabel": "Player Tag *",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Reason *",
+        "reasonPlaceholder": "Explain why this strike is being issued...",
+        "weightLabel": "Strike Weight *",
         "weightPlaceholder": "1",
-        "rolloverLabel": "Rollover Days (Optional)",
-        "rolloverPlaceholder": "Days until strike expires",
+        "rolloverLabel": "Expires in (days)",
+        "rolloverPlaceholder": "Optional",
         "submit": "Add Strike"
+      },
+      "guidelines": {
+        "title": "Strike Guidelines",
+        "weights": {
+          "title": "Use weights wisely:",
+          "desc": "Assign higher weights (2-3) for serious violations and lower weights (1) for minor issues."
+        },
+        "expiration": {
+          "title": "Set expiration dates:",
+          "desc": "Consider setting expiration dates for strikes to give players a chance to improve their behavior over time."
+        },
+        "patterns": {
+          "title": "Track patterns:",
+          "desc": "Use strikes to identify repeat offenders before escalating to permanent bans."
+        }
       }
     },
     "toast": {

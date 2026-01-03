@@ -19,8 +19,9 @@
     "noData": "Geen gegevens beschikbaar",
     "error": "Er is een fout opgetreden",
     "success": "Succes",
-    "confirm": "Bevestigen",
     "actions": "Acties",
+    "unknown": "Onbekend",
+    "confirm": "Bevestigen",
     "settings": "Instellingen",
     "status": "Status",
     "retry": "Opnieuw proberen",
@@ -201,8 +202,8 @@
     }
   },
   "BansPage": {
-    "title": "Bans & Strikes Beheer",
-    "description": "Beheer verbannen spelers en strikes voor je server",
+    "title": "Moderatie",
+    "description": "Beheer spelersbans en strikes",
     "tabs": {
       "bans": "Bans",
       "strikes": "Strikes"
@@ -218,16 +219,60 @@
       "reason": "Reden",
       "bannedAt": "Verbannen Op",
       "search": "Zoek op naam of tag...",
+      "howItWorks": {
+        "title": "Hoe bans werken",
+        "description": "Verbannen spelers kunnen geen enkele clan joinen die aan deze server is gekoppeld. De bot zal je waarschuwen als ze een van de clans joinen. Bans zijn serverbreed en gelden voor al je clans."
+      },
+      "stats": {
+        "total": "Totaal aantal bans",
+        "recent": "Recente bans (7 dagen)",
+        "commonReason": "Meest voorkomende reden",
+        "commonReasonValue": "Intimidatie & Toxiciteit",
+        "noBans": "Nog geen bans",
+        "percentOfAll": "{percent}% van alle bans"
+      },
+      "list": {
+        "title": "Verbannen spelers",
+        "count": "{count} speler{count, plural, one {} other {s}} verbannen",
+        "searchPlaceholder": "Zoek op naam, tag of reden...",
+        "noBansFound": "Geen bans gevonden",
+        "noBans": "Geen verbannen spelers",
+        "adjustSearch": "Probeer je zoekopdracht aan te passen",
+        "getStarted": "Voeg een ban toe om te beginnen met spelermoderatie"
+      },
+      "table": {
+        "player": "Speler",
+        "reason": "Reden",
+        "bannedBy": "Verbannen door",
+        "date": "Datum",
+        "daysAgo": "{days} dagen geleden",
+        "noReason": "Geen reden opgegeven"
+      },
       "addDialog": {
-        "title": "Nieuwe Ban Toevoegen",
-        "description": "Verban een speler van je server",
-        "playerTagLabel": "Speler Tag",
-        "playerTagPlaceholder": "#ABC123",
-        "playerNameLabel": "Speler Naam",
+        "title": "Verban een speler",
+        "description": "Voeg een speler toe aan de banlijst. Ze kunnen geen enkele clan op deze server joinen.",
+        "playerTagLabel": "Speler Tag *",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Speler Naam (optioneel)",
         "playerNamePlaceholder": "Voer spelernaam in",
-        "reasonLabel": "Reden",
-        "reasonPlaceholder": "Reden voor ban...",
+        "reasonLabel": "Reden voor ban *",
+        "reasonPlaceholder": "Leg uit waarom deze speler wordt verbannen...",
         "submit": "Verban Speler"
+      },
+      "bestPractices": {
+        "title": "Best Practices",
+        "document": {
+          "title": "Documenteer grondig:",
+          "desc": "Geef altijd een gedetailleerde reden op voor elke ban om andere moderators te helpen de context te begrijpen."
+        },
+        "review": {
+          "title": "Regelmatig controleren:",
+          "desc": "Controleer periodiek je banlijst om er zeker van te zijn dat alle bans nog steeds nodig en gerechtvaardigd zijn."
+        },
+        "consistent": {
+          "title": "Wees consistent:",
+          "desc": "Pas bans eerlijk en consistent toe op alle spelers om een gezonde community te behouden."
+        }
       }
     },
     "strikes": {
@@ -242,18 +287,64 @@
       "rolloverDays": "Vervaldagen",
       "createdAt": "Aangemaakt Op",
       "search": "Zoek op speler tag...",
+      "howItWorks": {
+        "title": "Hoe strikes werken",
+        "description": "Strikes zijn waarschuwingen die aan spelers worden gegeven voor regelovertredingen. Elke strike heeft een gewicht (ernst) en kan optioneel vervallen na een bepaald aantal dagen. Strikes helpen het gedrag van spelers te volgen voordat er bans worden uitgedeeld."
+      },
+      "stats": {
+        "total": "Totaal aantal strikes",
+        "recent": "Recente strikes (7 dagen)",
+        "totalWeight": "Totaal strikegewicht",
+        "commonReason": "Meest voorkomende reden",
+        "commonReasonValue": "Spammen"
+      },
+      "list": {
+        "title": "Spelerstrikes",
+        "count": "{count} strike{count, plural, one {} other {s}} uitgedeeld",
+        "searchPlaceholder": "Zoek op naam, tag of reden...",
+        "noStrikesFound": "Geen strikes gevonden",
+        "noStrikes": "Geen strikes uitgedeeld",
+        "adjustSearch": "Probeer je zoekopdracht aan te passen",
+        "getStarted": "Voeg een strike toe om te beginnen met het volgen van spelerovertredingen"
+      },
+      "table": {
+        "player": "Speler",
+        "reason": "Reden",
+        "weight": "Gewicht",
+        "addedBy": "Toegevoegd door",
+        "date": "Datum",
+        "expires": "Vervalt op",
+        "never": "Nooit",
+        "noReason": "Geen reden opgegeven",
+        "daysAgo": "{days} dagen geleden"
+      },
       "addDialog": {
-        "title": "Nieuwe Strike Toevoegen",
-        "description": "Voeg een strike toe aan een speler",
-        "playerTagLabel": "Speler Tag",
-        "playerTagPlaceholder": "#ABC123",
-        "reasonLabel": "Reden",
-        "reasonPlaceholder": "Reden voor strike...",
-        "weightLabel": "Strike Gewicht",
+        "title": "Voeg een strike toe",
+        "description": "Geef een strike aan een speler. Strikes kunnen verschillende gewichten en vervaldatums hebben.",
+        "playerTagLabel": "Speler Tag *",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Reden *",
+        "reasonPlaceholder": "Leg uit waarom deze strike wordt gegeven...",
+        "weightLabel": "Strike Gewicht *",
         "weightPlaceholder": "1",
-        "rolloverLabel": "Vervaldagen (Optioneel)",
-        "rolloverPlaceholder": "Dagen tot strike vervalt",
+        "rolloverLabel": "Vervalt over (dagen)",
+        "rolloverPlaceholder": "Optioneel",
         "submit": "Strike Toevoegen"
+      },
+      "guidelines": {
+        "title": "Strike richtlijnen",
+        "weights": {
+          "title": "Gebruik gewichten verstandig:",
+          "desc": "Wijs hogere gewichten (2-3) toe voor ernstige overtredingen en lagere gewichten (1) voor kleine problemen."
+        },
+        "expiration": {
+          "title": "Stel vervaldatums in:",
+          "desc": "Overweeg om vervaldatums in te stellen voor strikes om spelers een kans te geven hun gedrag in de loop van de tijd te verbeteren."
+        },
+        "patterns": {
+          "title": "Volg patronen:",
+          "desc": "Gebruik strikes om herhaalde overtreders te identificeren voordat je overgaat tot permanente bans."
+        }
       }
     },
     "toast": {

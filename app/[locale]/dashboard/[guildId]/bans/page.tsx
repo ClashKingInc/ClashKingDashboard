@@ -169,7 +169,7 @@ export default function BansPage() {
 
       toast({
         title: tCommon("success"),
-        description: `Player ${newBan.player_tag} has been banned`,
+        description: t("toast.banAdded"),
       });
 
       // Refresh the ban list
@@ -218,7 +218,7 @@ export default function BansPage() {
 
       toast({
         title: tCommon("success"),
-        description: `Strike added to player ${newStrike.player_tag}`,
+        description: t("toast.strikeAdded"),
       });
 
       // Refresh the strikes list
@@ -256,7 +256,7 @@ export default function BansPage() {
 
       toast({
         title: tCommon("success"),
-        description: `Ban removed for player ${playerTag}`,
+        description: t("toast.banRemoved"),
       });
 
       // Refresh the ban list
@@ -286,7 +286,7 @@ export default function BansPage() {
 
       toast({
         title: tCommon("success"),
-        description: "Strike removed successfully",
+        description: t("toast.strikeRemoved"),
       });
 
       // Refresh the strikes list
@@ -336,9 +336,9 @@ export default function BansPage() {
                 <Ban className="h-8 w-8 text-red-500" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">Moderation</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
                 <p className="text-muted-foreground mt-1">
-                  Manage player bans and strikes
+                  {t("description")}
                 </p>
               </div>
             </div>
@@ -348,22 +348,22 @@ export default function BansPage() {
               <DialogTrigger asChild>
                 <Button className="bg-red-500 hover:bg-red-600 w-full md:w-auto">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Ban
+                  {t("bans.addBan")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>Ban a Player</DialogTitle>
+                  <DialogTitle>{t("bans.addDialog.title")}</DialogTitle>
                   <DialogDescription>
-                    Add a player to the ban list. They will be prevented from joining any clan on this server.
+                    {t("bans.addDialog.description")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="player-tag">Player Tag *</Label>
+                    <Label htmlFor="player-tag">{t("bans.addDialog.playerTagLabel")}</Label>
                     <Input
                       id="player-tag"
-                      placeholder="#ABC123DEF"
+                      placeholder={t("bans.addDialog.playerTagPlaceholder")}
                       value={newBan.player_tag}
                       onChange={(e) =>
                         setNewBan({ ...newBan, player_tag: e.target.value })
@@ -372,10 +372,10 @@ export default function BansPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="player-name">Player Name (optional)</Label>
+                    <Label htmlFor="player-name">{t("bans.addDialog.playerNameLabel")}</Label>
                     <Input
                       id="player-name"
-                      placeholder="Enter player name"
+                      placeholder={t("bans.addDialog.playerNamePlaceholder")}
                       value={newBan.player_name}
                       onChange={(e) =>
                         setNewBan({ ...newBan, player_name: e.target.value })
@@ -384,10 +384,10 @@ export default function BansPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="reason">Reason for Ban *</Label>
+                    <Label htmlFor="reason">{t("bans.addDialog.reasonLabel")}</Label>
                     <Textarea
                       id="reason"
-                      placeholder="Explain why this player is being banned..."
+                      placeholder={t("bans.addDialog.reasonPlaceholder")}
                       value={newBan.reason}
                       onChange={(e) =>
                         setNewBan({ ...newBan, reason: e.target.value })
@@ -403,7 +403,7 @@ export default function BansPage() {
                     onClick={() => setIsAddBanDialogOpen(false)}
                     disabled={isSubmittingBan}
                   >
-                    Cancel
+                    {tCommon("cancel")}
                   </Button>
                   <Button
                     className="bg-red-500 hover:bg-red-600"
@@ -411,7 +411,7 @@ export default function BansPage() {
                     disabled={!newBan.player_tag || !newBan.reason || isSubmittingBan}
                   >
                     {isSubmittingBan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Add Ban
+                    {t("bans.addDialog.submit")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -422,22 +422,22 @@ export default function BansPage() {
               <DialogTrigger asChild>
                 <Button className="bg-orange-500 hover:bg-orange-600">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Strike
+                  {t("strikes.addStrike")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>Add a Strike</DialogTitle>
+                  <DialogTitle>{t("strikes.addDialog.title")}</DialogTitle>
                   <DialogDescription>
-                    Issue a strike to a player. Strikes can have different weights and expiration dates.
+                    {t("strikes.addDialog.description")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="strike-player-tag">Player Tag *</Label>
+                    <Label htmlFor="strike-player-tag">{t("strikes.addDialog.playerTagLabel")}</Label>
                     <Input
                       id="strike-player-tag"
-                      placeholder="#ABC123DEF"
+                      placeholder={t("strikes.addDialog.playerTagPlaceholder")}
                       value={newStrike.player_tag}
                       onChange={(e) =>
                         setNewStrike({ ...newStrike, player_tag: e.target.value })
@@ -446,10 +446,10 @@ export default function BansPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="strike-reason">Reason *</Label>
+                    <Label htmlFor="strike-reason">{t("strikes.addDialog.reasonLabel")}</Label>
                     <Textarea
                       id="strike-reason"
-                      placeholder="Explain why this strike is being issued..."
+                      placeholder={t("strikes.addDialog.reasonPlaceholder")}
                       value={newStrike.reason}
                       onChange={(e) =>
                         setNewStrike({ ...newStrike, reason: e.target.value })
@@ -460,12 +460,12 @@ export default function BansPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="strike-weight">Strike Weight *</Label>
+                      <Label htmlFor="strike-weight">{t("strikes.addDialog.weightLabel")}</Label>
                       <Input
                         id="strike-weight"
                         type="number"
                         min="1"
-                        placeholder="1"
+                        placeholder={t("strikes.addDialog.weightPlaceholder")}
                         value={newStrike.strike_weight}
                         onChange={(e) =>
                           setNewStrike({ ...newStrike, strike_weight: parseInt(e.target.value) || 1 })
@@ -474,12 +474,12 @@ export default function BansPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="rollover-days">Expires in (days)</Label>
+                      <Label htmlFor="rollover-days">{t("strikes.addDialog.rolloverLabel")}</Label>
                       <Input
                         id="rollover-days"
                         type="number"
                         min="1"
-                        placeholder="Optional"
+                        placeholder={t("strikes.addDialog.rolloverPlaceholder")}
                         value={newStrike.rollover_days || ""}
                         onChange={(e) =>
                           setNewStrike({ ...newStrike, rollover_days: e.target.value ? parseInt(e.target.value) : undefined })
@@ -495,7 +495,7 @@ export default function BansPage() {
                     onClick={() => setIsAddStrikeDialogOpen(false)}
                     disabled={isSubmittingStrike}
                   >
-                    Cancel
+                    {tCommon("cancel")}
                   </Button>
                   <Button
                     className="bg-orange-500 hover:bg-orange-600"
@@ -503,7 +503,7 @@ export default function BansPage() {
                     disabled={!newStrike.player_tag || !newStrike.reason || isSubmittingStrike}
                   >
                     {isSubmittingStrike && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Add Strike
+                    {t("strikes.addDialog.submit")}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -516,11 +516,11 @@ export default function BansPage() {
           <TabsList className="grid w-full max-w-md grid-cols-2">
             <TabsTrigger value="bans">
               <Ban className="mr-2 h-4 w-4" />
-              Bans
+              {t("tabs.bans")}
             </TabsTrigger>
             <TabsTrigger value="strikes">
               <AlertTriangle className="mr-2 h-4 w-4" />
-              Strikes
+              {t("tabs.strikes")}
             </TabsTrigger>
           </TabsList>
 
@@ -529,10 +529,9 @@ export default function BansPage() {
             {/* Info Alert */}
             <Alert className="border-blue-500/30 bg-blue-500/5">
               <AlertCircle className="h-4 w-4 text-blue-500" />
-              <AlertTitle className="text-blue-400">How Bans Work</AlertTitle>
+              <AlertTitle className="text-blue-400">{t("bans.howItWorks.title")}</AlertTitle>
               <AlertDescription className="text-blue-300">
-                Banned players are prevented from joining any clan linked to this server. The bot will warn you if they join one of the clans.
-                Bans are server-wide and apply to all your clans.
+                {t("bans.howItWorks.description")}
               </AlertDescription>
             </Alert>
 
@@ -541,7 +540,7 @@ export default function BansPage() {
               <Card className="bg-card border-border">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Total Bans
+                    {t("bans.stats.total")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -559,7 +558,7 @@ export default function BansPage() {
               <Card className="bg-card border-border">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Recent Bans (7 days)
+                    {t("bans.stats.recent")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -585,7 +584,7 @@ export default function BansPage() {
               <Card className="bg-card border-border">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Most Common Reason
+                    {t("bans.stats.commonReason")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -594,15 +593,15 @@ export default function BansPage() {
                   ) : bans.length > 0 ? (
                     <>
                       <div className="text-sm font-medium text-foreground truncate">
-                        Harassment & Toxicity
+                        {t("bans.stats.commonReasonValue")}
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {Math.round((1 / bans.length) * 100)}% of all bans
+                        {t("bans.stats.percentOfAll", { percent: Math.round((1 / bans.length) * 100) })}
                       </p>
                     </>
                   ) : (
                     <div className="text-sm font-medium text-muted-foreground">
-                      No bans yet
+                      {t("bans.stats.noBans")}
                     </div>
                   )}
                 </CardContent>
@@ -614,19 +613,19 @@ export default function BansPage() {
               <CardHeader>
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
-                    <CardTitle>Banned Players</CardTitle>
+                    <CardTitle>{t("bans.list.title")}</CardTitle>
                     <CardDescription>
                       {isLoadingBans ? (
                         <Skeleton className="h-4 w-24" />
                       ) : (
-                        `${filteredBans.length} player${filteredBans.length !== 1 ? "s" : ""} banned`
+                        t("bans.list.count", { count: filteredBans.length })
                       )}
                     </CardDescription>
                   </div>
                   <div className="relative w-full md:w-64">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Search by name, tag, or reason..."
+                      placeholder={t("bans.list.searchPlaceholder")}
                       value={searchQueryBans}
                       onChange={(e) => setSearchQueryBans(e.target.value)}
                       className="pl-8"
@@ -648,12 +647,12 @@ export default function BansPage() {
                     <div className="text-center py-12">
                       <UserX className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                       <h3 className="text-lg font-semibold text-foreground mb-2">
-                        {searchQueryBans ? "No bans found" : "No banned players"}
+                        {searchQueryBans ? t("bans.list.noBansFound") : t("bans.list.noBans")}
                       </h3>
                       <p className="text-sm text-muted-foreground">
                         {searchQueryBans
-                          ? "Try adjusting your search query"
-                          : "Add a ban to get started with player moderation"}
+                          ? t("bans.list.adjustSearch")
+                          : t("bans.list.getStarted")}
                       </p>
                     </div>
                   ) : (
@@ -661,11 +660,11 @@ export default function BansPage() {
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>Player</TableHead>
-                            <TableHead>Reason</TableHead>
-                            <TableHead>Banned By</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
+                            <TableHead>{t("bans.table.player")}</TableHead>
+                            <TableHead>{t("bans.table.reason")}</TableHead>
+                            <TableHead>{t("bans.table.bannedBy")}</TableHead>
+                            <TableHead>{t("bans.table.date")}</TableHead>
+                            <TableHead className="text-right">{tCommon("actions")}</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -674,16 +673,16 @@ export default function BansPage() {
                               <TableCell>
                                 <div>
                                   <div className="font-medium text-foreground">
-                                    {ban.name || "Unknown"}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {ban.VillageTag}
-                                  </div>
+                                  {ban.name || tCommon("unknown")}
                                 </div>
-                              </TableCell>
-                              <TableCell className="max-w-xs">
-                                <div className="truncate text-sm text-muted-foreground" title={ban.Notes}>
-                                  {ban.Notes}
+                                <div className="text-xs text-muted-foreground">
+                                  {ban.VillageTag}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="max-w-xs">
+                              <div className="truncate text-sm text-muted-foreground" title={ban.Notes}>
+                                {ban.Notes || t("bans.table.noReason")}
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -697,11 +696,12 @@ export default function BansPage() {
                                   {new Date(ban.DateCreated).toLocaleDateString()}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
-                                  {Math.floor(
-                                    (new Date().getTime() - new Date(ban.DateCreated).getTime()) /
-                                    (1000 * 60 * 60 * 24)
-                                  )}{" "}
-                                  days ago
+                                  {t("bans.table.daysAgo", {
+                                    days: Math.floor(
+                                      (new Date().getTime() - new Date(ban.DateCreated).getTime()) /
+                                      (1000 * 60 * 60 * 24)
+                                    )
+                                  })}
                                 </div>
                               </TableCell>
                               <TableCell className="text-right">
@@ -712,7 +712,7 @@ export default function BansPage() {
                                   className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                                 >
                                   <Trash2 className="h-4 w-4 mr-1" />
-                                  Remove
+                                  {tCommon("remove")}
                                 </Button>
                               </TableCell>
                             </TableRow>
@@ -727,17 +727,17 @@ export default function BansPage() {
               {/* Additional Info */}
               <Card className="border-yellow-500/30 bg-yellow-500/5">
                 <CardHeader>
-                  <CardTitle className="text-yellow-400">Best Practices</CardTitle>
+                  <CardTitle className="text-yellow-400">{t("bans.bestPractices.title")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm text-yellow-300">
                   <p>
-                    <strong>Document thoroughly:</strong> Always provide a detailed reason for each ban to help other moderators understand the context.
+                    <strong>{t("bans.bestPractices.document.title")}</strong> {t("bans.bestPractices.document.desc")}
                   </p>
                   <p>
-                    <strong>Review regularly:</strong> Periodically review your ban list to ensure all bans are still necessary and justified.
+                    <strong>{t("bans.bestPractices.review.title")}</strong> {t("bans.bestPractices.review.desc")}
                   </p>
                   <p>
-                    <strong>Be consistent:</strong> Apply bans fairly and consistently across all players to maintain a healthy community.
+                    <strong>{t("bans.bestPractices.consistent.title")}</strong> {t("bans.bestPractices.consistent.desc")}
                   </p>
                 </CardContent>
               </Card>
@@ -748,9 +748,9 @@ export default function BansPage() {
               {/* Info Alert */}
               <Alert className="border-orange-500/30 bg-orange-500/5">
                 <AlertTriangle className="h-4 w-4 text-orange-500" />
-                <AlertTitle className="text-orange-400">How Strikes Work</AlertTitle>
+                <AlertTitle className="text-orange-400">{t("strikes.howItWorks.title")}</AlertTitle>
                 <AlertDescription className="text-orange-300">
-                  Strikes are warnings given to players for rule violations. Each strike has a weight (severity) and can optionally expire after a set number of days. Strikes help track player behavior before issuing bans.
+                  {t("strikes.howItWorks.description")}
                 </AlertDescription>
               </Alert>
 
@@ -759,7 +759,7 @@ export default function BansPage() {
                 <Card className="bg-card border-border">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
-                      Total Strikes
+                      {t("strikes.stats.total")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -777,7 +777,7 @@ export default function BansPage() {
                 <Card className="bg-card border-border">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
-                      Recent Strikes (7 days)
+                      {t("strikes.stats.recent")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -795,7 +795,7 @@ export default function BansPage() {
                 <Card className="bg-card border-border">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
-                      Total Strike Weight
+                      {t("strikes.stats.totalWeight")}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -816,19 +816,19 @@ export default function BansPage() {
                 <CardHeader>
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                      <CardTitle>Player Strikes</CardTitle>
+                      <CardTitle>{t("strikes.list.title")}</CardTitle>
                       <CardDescription>
                         {isLoadingStrikes ? (
                           <Skeleton className="h-4 w-24" />
                         ) : (
-                          `${filteredStrikes.length} strike${filteredStrikes.length !== 1 ? "s" : ""} issued`
+                          t("strikes.list.count", { count: filteredStrikes.length })
                         )}
                       </CardDescription>
                     </div>
                     <div className="relative w-full md:w-64">
                       <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder="Search by name, tag, or reason..."
+                        placeholder={t("strikes.list.searchPlaceholder")}
                         value={searchQueryStrikes}
                         onChange={(e) => setSearchQueryStrikes(e.target.value)}
                         className="pl-8"
@@ -850,12 +850,12 @@ export default function BansPage() {
                     <div className="text-center py-12">
                       <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                       <h3 className="text-lg font-semibold text-foreground mb-2">
-                        {searchQueryStrikes ? "No strikes found" : "No strikes issued"}
+                        {searchQueryStrikes ? t("strikes.list.noStrikesFound") : t("strikes.list.noStrikes")}
                       </h3>
                       <p className="text-sm text-muted-foreground">
                         {searchQueryStrikes
-                          ? "Try adjusting your search query"
-                          : "Add a strike to start tracking player violations"}
+                          ? t("strikes.list.adjustSearch")
+                          : t("strikes.list.getStarted")}
                       </p>
                     </div>
                   ) : (
@@ -863,13 +863,13 @@ export default function BansPage() {
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>Player</TableHead>
-                            <TableHead>Reason</TableHead>
-                            <TableHead>Weight</TableHead>
-                            <TableHead>Added By</TableHead>
-                            <TableHead>Date</TableHead>
-                            <TableHead>Expires</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
+                            <TableHead>{t("strikes.table.player")}</TableHead>
+                            <TableHead>{t("strikes.table.reason")}</TableHead>
+                            <TableHead>{t("strikes.table.weight")}</TableHead>
+                            <TableHead>{t("strikes.table.addedBy")}</TableHead>
+                            <TableHead>{t("strikes.table.date")}</TableHead>
+                            <TableHead>{t("strikes.table.expires")}</TableHead>
+                            <TableHead className="text-right">{tCommon("actions")}</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -878,16 +878,16 @@ export default function BansPage() {
                               <TableCell>
                                 <div>
                                   <div className="font-medium text-foreground">
-                                    {strike.player_name || "Unknown"}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {strike.tag}
-                                  </div>
+                                  {strike.player_name || tCommon("unknown")}
                                 </div>
-                              </TableCell>
-                              <TableCell className="max-w-xs">
-                                <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
-                                  {strike.reason}
+                                <div className="text-xs text-muted-foreground">
+                                  {strike.tag}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="max-w-xs">
+                              <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
+                                {strike.reason || t("strikes.table.noReason")}
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -906,11 +906,12 @@ export default function BansPage() {
                                   {new Date(strike.date_created).toLocaleDateString()}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
-                                  {Math.floor(
-                                    (new Date().getTime() - new Date(strike.date_created).getTime()) /
-                                    (1000 * 60 * 60 * 24)
-                                  )}{" "}
-                                  days ago
+                                  {t("strikes.table.daysAgo", {
+                                    days: Math.floor(
+                                      (new Date().getTime() - new Date(strike.date_created).getTime()) /
+                                      (1000 * 60 * 60 * 24)
+                                    )
+                                  })}
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -919,7 +920,7 @@ export default function BansPage() {
                                     {new Date(strike.rollover_date * 1000).toLocaleDateString()}
                                   </div>
                                 ) : (
-                                  <div className="text-sm text-muted-foreground">Never</div>
+                                  <div className="text-sm text-muted-foreground">{t("strikes.table.never")}</div>
                                 )}
                               </TableCell>
                               <TableCell className="text-right">
@@ -930,7 +931,7 @@ export default function BansPage() {
                                   className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"
                                 >
                                   <Trash2 className="h-4 w-4 mr-1" />
-                                  Remove
+                                  {tCommon("remove")}
                                 </Button>
                               </TableCell>
                             </TableRow>
@@ -945,17 +946,17 @@ export default function BansPage() {
               {/* Best Practices */}
               <Card className="border-yellow-500/30 bg-yellow-500/5">
                 <CardHeader>
-                  <CardTitle className="text-yellow-400">Strike Guidelines</CardTitle>
+                  <CardTitle className="text-yellow-400">{t("strikes.guidelines.title")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm text-yellow-300">
                   <p>
-                    <strong>Use weights wisely:</strong> Assign higher weights (2-3) for serious violations and lower weights (1) for minor issues.
+                    <strong>{t("strikes.guidelines.weights.title")}</strong> {t("strikes.guidelines.weights.desc")}
                   </p>
                   <p>
-                    <strong>Set expiration dates:</strong> Consider setting expiration dates for strikes to give players a chance to improve their behavior over time.
+                    <strong>{t("strikes.guidelines.expiration.title")}</strong> {t("strikes.guidelines.expiration.desc")}
                   </p>
                   <p>
-                    <strong>Track patterns:</strong> Use strikes to identify repeat offenders before escalating to permanent bans.
+                    <strong>{t("strikes.guidelines.patterns.title")}</strong> {t("strikes.guidelines.patterns.desc")}
                   </p>
                 </CardContent>
               </Card>
