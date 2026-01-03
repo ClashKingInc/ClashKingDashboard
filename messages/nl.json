@@ -964,9 +964,8 @@
       "logChannelsDesc": "Beschikbare kanalen",
       "trackedClans": "Gevolgde Clans",
       "trackedClansDesc": "Geconfigureerde clans",
-      "configuration": "Configuratie",
-      "readyToConfigure": "Klaar om te configureren",
-      "saving": "Opslaan..."
+      "issues": "Problemen",
+      "issuesDesc": "Logs vereisen aandacht"
     },
     "clanSelector": {
       "label": "Clan:",
@@ -1084,12 +1083,17 @@
     },
     "logCard": {
       "active": "Actief",
+      "issue": "Probleem",
+      "disabled": "Uitgeschakeld",
+      "enable": "Inschakelen",
+      "disable": "Uitschakelen",
       "channel": "Kanaal",
       "channelPlaceholder": "Selecteer kanaal",
-      "disabled": "Uitgeschakeld",
       "thread": "Thread (Optioneel)",
       "threadPlaceholder": "Selecteer thread",
-      "noThread": "Geen Thread"
+      "noThread": "Geen Thread",
+      "channelDeleted": "Dit kanaal bestaat niet meer. Selecteer een nieuw kanaal of schakel het logboek uit.",
+      "enableToConfig": "Schakel dit logboek in om het te configureren"
     }
   },
   "GeneralPage": {

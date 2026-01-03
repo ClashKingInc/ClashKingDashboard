@@ -964,9 +964,8 @@
       "logChannelsDesc": "Canaux disponibles",
       "trackedClans": "Clans Suivis",
       "trackedClansDesc": "Clans configurés",
-      "configuration": "Configuration",
-      "readyToConfigure": "Prêt à configurer",
-      "saving": "Enregistrement..."
+      "issues": "Problèmes",
+      "issuesDesc": "Journaux nécessitant attention"
     },
     "clanSelector": {
       "label": "Clan :",
@@ -1084,12 +1083,17 @@
     },
     "logCard": {
       "active": "Actif",
+      "issue": "Problème",
+      "disabled": "Désactivé",
+      "enable": "Activer",
+      "disable": "Désactiver",
       "channel": "Canal",
       "channelPlaceholder": "Sélectionner un canal",
-      "disabled": "Désactivé",
       "thread": "Fil (Optionnel)",
       "threadPlaceholder": "Sélectionner un fil",
-      "noThread": "Aucun Fil"
+      "noThread": "Aucun Fil",
+      "channelDeleted": "Ce canal n'existe plus. Sélectionnez-en un nouveau ou désactivez le journal.",
+      "enableToConfig": "Activez ce journal pour le configurer"
     }
   },
   "GeneralPage": {
