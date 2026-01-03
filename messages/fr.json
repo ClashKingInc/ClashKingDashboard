@@ -1303,7 +1303,16 @@
       "clansConfigured": "Clans Configurés",
       "clansConfiguredDesc": "Clans suivis pour ce serveur",
       "activeRosters": "Rosters Actifs",
-      "activeRostersDesc": "Compositions de guerre créées"
+      "activeRostersDesc": "Compositions de guerre créées",
+      "playersTracked": "Joueurs suivis",
+      "globalPlayers": "Total des joueurs dans la base de données",
+      "clansTracked": "Clans suivis",
+      "globalClans": "Total des clans dans la base de données",
+      "botStatus": "Statut du bot",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "memoryUsage": "Mémoire : {used}Mo ({percent}%)",
+      "cpuUsage": "CPU : {percent}%"
     },
     "quickStart": {
       "title": "Démarrage Rapide",
