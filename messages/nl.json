@@ -1151,10 +1151,7 @@
     "theme": "Thema"
   },
   "LanguageSwitcher": {
-    "label": "Taal",
-    "english": "English",
-    "french": "Français",
-    "dutch": "Nederlands"
+    "label": "Taal"
   },
   "ThemeSwitcher": {
     "label": "Thema",

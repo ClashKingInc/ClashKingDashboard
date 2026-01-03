@@ -10,16 +10,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import Image from "next/image";
+
+const languages = [
+  { code: "en", name: "English", flagCode: "us" },
+  { code: "fr", name: "Français", flagCode: "fr" },
+  { code: "nl", name: "Nederlands", flagCode: "nl" },
+];
 
 export function LanguageSwitcher() {
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("LanguageSwitcher");
+  const locale = useLocale();
   const [mounted, setMounted] = React.useState(false);
 
-  const currentLocale = params.locale as string || "en";
+  const currentLocale = locale || "en";
 
   React.useEffect(() => {
     setMounted(true);
@@ -48,24 +56,23 @@ export function LanguageSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => switchLocale("en")}
-          className={currentLocale === "en" ? "bg-accent" : ""}
-        >
-          {t("english")}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => switchLocale("fr")}
-          className={currentLocale === "fr" ? "bg-accent" : ""}
-        >
-          {t("french")}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => switchLocale("nl")}
-          className={currentLocale === "nl" ? "bg-accent" : ""}
-        >
-          {t("dutch")}
-        </DropdownMenuItem>
+        {languages.map((lang) => (
+          <DropdownMenuItem
+            key={lang.code}
+            onClick={() => switchLocale(lang.code)}
+            className={currentLocale === lang.code ? "bg-accent" : ""}
+          >
+            <div className="mr-2 relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
+              <Image
+                src={`https://flagcdn.com/w40/${lang.flagCode}.png`}
+                alt={lang.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+            {lang.name}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
