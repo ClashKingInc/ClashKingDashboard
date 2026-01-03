@@ -105,12 +105,15 @@
     },
     "footer": {
       "tagline": "The most powerful Clash of Clans bot for Discord communities.",
-      "product": {
-        "title": "Product",
+      "about": {
+        "title": "About",
         "features": "Features",
         "help": "Need Help?",
         "openSource": "Open Source",
-        "support": "Support Us",
+        "support": "Support Us"
+      },
+      "bot": {
+        "title": "Bot",
         "dashboard": "Dashboard",
         "inviteBot": "Invite Bot"
       },
@@ -118,7 +121,6 @@
         "title": "Resources",
         "documentation": "Documentation",
         "quickStart": "Quick Start Guide",
-        "support": "Support Server",
         "github": "GitHub"
       },
       "community": {
