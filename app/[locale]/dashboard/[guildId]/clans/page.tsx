@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Settings,
   Plus,
@@ -32,7 +33,10 @@ import {
   Shield,
   Loader2,
   AlertCircle,
-  Save
+  Save,
+  ChevronDown,
+  ChevronRight,
+  Eye
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -73,11 +77,16 @@ interface ClanSettings {
 
 interface Clan {
   tag: string;
+  clan_tag?: string;
   name: string;
+  clan_name?: string;
   badge_url?: string | null;
+  clan_badge_url?: string | null;
   level?: number | null;
+  clanLevel?: number | null;
   member_count?: number | null;
-  settings: ClanSettings;
+  members?: number | null;
+  settings?: ClanSettings;
 }
 
 interface Channel {
@@ -93,6 +102,34 @@ export default function ClansPage() {
   const t = useTranslations("ClansPage");
   const tCommon = useTranslations("Common");
 
+  const GREETING_PLACEHOLDERS = [
+    { key: "{user_mention}", desc: t("greeting.placeholders.user_mention"), example: "@ClashKing" },
+    { key: "{user_display_name}", desc: t("greeting.placeholders.user_display_name"), example: "ClashKing" },
+    { key: "{clan_name}", desc: t("greeting.placeholders.clan_name"), example: "Clash King Family" },
+    { key: "{clan_link}", desc: t("greeting.placeholders.clan_link"), example: "https://link.clashofclans.com/en?action=OpenClanProfile&tag=%232PP" },
+    { key: "{clan_leader_name}", desc: t("greeting.placeholders.clan_leader_name"), example: "Chief King" },
+    { key: "{clan_leader_mention}", desc: t("greeting.placeholders.clan_leader_mention"), example: "@ChiefKing" },
+    { key: "{player_name}", desc: t("greeting.placeholders.player_name"), example: "Player One" },
+    { key: "{player_link}", desc: t("greeting.placeholders.player_link"), example: "https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=%232PP" },
+    { key: "{player_townhall}", desc: t("greeting.placeholders.player_townhall"), example: "16" },
+    { key: "{player_townhall_emoji}", desc: t("greeting.placeholders.player_townhall_emoji"), example: "🏰" },
+    { key: "{player_league}", desc: t("greeting.placeholders.player_league"), example: "Legend League" },
+    { key: "{player_league_emoji}", desc: t("greeting.placeholders.player_league_emoji"), example: "🏆" },
+    { key: "{player_trophies}", desc: t("greeting.placeholders.player_trophies"), example: "5200" },
+  ];
+
+  const generateGreetingPreview = (text: string, clanName?: string) => {
+    let preview = text;
+    GREETING_PLACEHOLDERS.forEach((p) => {
+      let example = p.example;
+      if (p.key === "{clan_name}" && clanName) {
+        example = clanName;
+      }
+      preview = preview.replace(new RegExp(p.key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), example);
+    });
+    return preview;
+  };
+
   const [clans, setClans] = useState<Clan[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -105,6 +142,7 @@ export default function ClansPage() {
   const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [clanSettings, setClanSettings] = useState<ClanSettings>({});
+  const [isGreetingPlaceholdersOpen, setIsGreetingPlaceholdersOpen] = useState(false);
 
   // Fetch data on mount
   useEffect(() => {
@@ -189,7 +227,16 @@ export default function ClansPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Failed to add clan');
+        const detail = error.detail || '';
+        if (detail.toLowerCase().includes("not found in clash of clans")) {
+          toast({
+            title: tCommon("error"),
+            description: t("toast.errorClanNotFound"),
+            variant: "destructive",
+          });
+          return;
+        }
+        throw new Error(detail || 'Failed to add clan');
       }
 
       toast({
@@ -222,7 +269,7 @@ export default function ClansPage() {
 
   // Delete clan
   const handleDeleteClan = async (clanTag: string) => {
-    if (!confirm(`Are you sure you want to remove ${clanTag}? This will also delete all associated reminders and logs.`)) {
+    if (!confirm(t("deleteConfirm", { tag: clanTag }))) {
       return;
     }
 
@@ -282,7 +329,7 @@ export default function ClansPage() {
     try {
       setSaving(true);
       const accessToken = localStorage.getItem("access_token");
-      const encodedTag = encodeURIComponent(selectedClan.tag);
+      const encodedTag = encodeURIComponent(selectedClan.tag || selectedClan.clan_tag || '');
 
       const response = await fetch(
         `/api/v2/server/${guildId}/clan/${encodedTag}/settings`,
@@ -404,13 +451,13 @@ export default function ClansPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-destructive" />
-              <CardTitle className="text-destructive">Error</CardTitle>
+              <CardTitle className="text-destructive">{tCommon("error")}</CardTitle>
             </div>
             <CardDescription>{error}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => window.location.reload()} className="w-full">
-              Retry
+              {tCommon("retry")}
             </Button>
           </CardContent>
         </Card>
@@ -418,7 +465,7 @@ export default function ClansPage() {
     );
   }
 
-  const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || 0), 0);
+  const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || clan.members || 0), 0);
   const configuredClans = clans.filter(c =>
     c.settings?.clanChannel || c.settings?.generalRole
   ).length;
@@ -433,9 +480,9 @@ export default function ClansPage() {
               <Shield className="h-8 w-8 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Clan Management</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
               <p className="text-muted-foreground mt-1">
-                Configure your clans and their Discord integration settings
+                {t("description")}
               </p>
             </div>
           </div>
@@ -445,42 +492,39 @@ export default function ClansPage() {
             <DialogTrigger asChild>
               <Button className="bg-primary hover:bg-primary/90 gap-2">
                 <Plus className="h-4 w-4" />
-                Add Clan
+                {t("addClan")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Add New Clan</DialogTitle>
+                <DialogTitle>{t("addNewClan")}</DialogTitle>
                 <DialogDescription>
-                  Enter your clan tag to add it to this server
+                  {t("addClanDescription")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="clan-tag">Clan Tag</Label>
+                  <Label htmlFor="clan-tag">{t("clanTag")}</Label>
                   <Input
                     id="clan-tag"
-                    placeholder="#YOURCLAN"
+                    placeholder="#ABCD1234"
                     value={newClanTag}
                     onChange={(e) => setNewClanTag(e.target.value)}
                     className="bg-secondary border-border"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddClan()}
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Include the # symbol at the start
-                  </p>
                 </div>
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
                 <Button
                   className="bg-primary hover:bg-primary/90"
                   onClick={handleAddClan}
                   disabled={saving}
                 >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Add Clan'}
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("addClan")}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -491,7 +535,7 @@ export default function ClansPage() {
         <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Clans</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("totalClans")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -499,14 +543,14 @@ export default function ClansPage() {
                 <Shield className="h-8 w-8 text-blue-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Registered clans
+                {t("registeredClans")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-green-500/30 bg-green-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Configured</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("configured")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -514,14 +558,14 @@ export default function ClansPage() {
                 <Settings className="h-8 w-8 text-green-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                With settings configured
+                {t("withSettingsConfigured")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-purple-500/30 bg-purple-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Members</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("totalMembers")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -529,14 +573,14 @@ export default function ClansPage() {
                 <Users className="h-8 w-8 text-purple-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Across all clans
+                {t("acrossAllClans")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Channels</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("channels")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -544,7 +588,7 @@ export default function ClansPage() {
                 <Hash className="h-8 w-8 text-yellow-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Available channels
+                {t("availableChannels")}
               </p>
             </CardContent>
           </Card>
@@ -555,13 +599,13 @@ export default function ClansPage() {
           <Card className="bg-card border-border">
             <CardContent className="py-12 text-center">
               <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">No Clans Yet</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2">{t("noClansYet")}</h3>
               <p className="text-muted-foreground mb-4">
-                Get started by adding your first clan
+                {t("getStartedAdding")}
               </p>
               <Button onClick={() => setIsAddDialogOpen(true)} className="gap-2">
                 <Plus className="h-4 w-4" />
-                Add Your First Clan
+                {t("addFirstClan")}
               </Button>
             </CardContent>
           </Card>
@@ -576,17 +620,17 @@ export default function ClansPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-14 w-14 border-2 border-border">
-                          <AvatarImage src={clan.badge_url || ''} alt={clan.name} />
+                          <AvatarImage src={clan.badge_url || clan.clan_badge_url || ''} alt={clan.name || clan.clan_name || 'Clan'} />
                           <AvatarFallback className="bg-secondary text-foreground">
-                            {clan.name.charAt(0)}
+                            {(clan.name || clan.clan_name || 'C').charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <CardTitle className="text-lg font-bold text-foreground">
-                            {clan.name}
+                            {clan.name || clan.clan_name || 'Unknown'}
                           </CardTitle>
                           <CardDescription className="text-muted-foreground font-mono text-xs">
-                            {clan.tag}
+                            {clan.tag || clan.clan_tag}
                           </CardDescription>
                         </div>
                       </div>
@@ -597,26 +641,26 @@ export default function ClansPage() {
                     {/* Clan Stats */}
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                        <div className="text-xs text-muted-foreground mb-1">Level</div>
-                        <div className="text-lg font-bold text-foreground">{clan.level || 'N/A'}</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t("level")}</div>
+                        <div className="text-lg font-bold text-foreground">{clan.level || clan.clanLevel || t("notAvailable")}</div>
                       </div>
                       <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                        <div className="text-xs text-muted-foreground mb-1">Members</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t("members")}</div>
                         <div className="text-lg font-bold text-foreground flex items-center gap-1">
                           <Users className="h-4 w-4" />
-                          {clan.member_count || 0}/50
+                          {clan.member_count || clan.members || 0}/50
                         </div>
                       </div>
                     </div>
 
                     {/* Status Badge */}
                     <div className="flex items-center justify-between py-2">
-                      <span className="text-sm text-muted-foreground">Status</span>
+                      <span className="text-sm text-muted-foreground">{t("status")}</span>
                       <Badge
                         variant={isConfigured ? "default" : "secondary"}
                         className={isConfigured ? "bg-green-600 hover:bg-green-700" : "bg-secondary"}
                       >
-                        {isConfigured ? "Configured" : "Setup Required"}
+                        {isConfigured ? t("configuredBadge") : t("setupRequired")}
                       </Badge>
                     </div>
 
@@ -630,13 +674,13 @@ export default function ClansPage() {
                         onClick={() => handleOpenSettings(clan)}
                       >
                         <Settings className="mr-2 h-4 w-4" />
-                        Configure
+                        {t("configure")}
                       </Button>
                       <Button
                         variant="outline"
                         size="icon"
                         className="border-border hover:border-destructive hover:bg-destructive/10 hover:text-destructive"
-                        onClick={() => handleDeleteClan(clan.tag)}
+                        onClick={() => handleDeleteClan(clan.tag || clan.clan_tag || '')}
                         disabled={saving}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -654,51 +698,54 @@ export default function ClansPage() {
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                Configure {selectedClan?.name} ({selectedClan?.tag})
+                {t("configureClan", { 
+                  name: selectedClan?.name || selectedClan?.clan_name || 'Unknown', 
+                  tag: selectedClan?.tag || selectedClan?.clan_tag || 'Unknown' 
+                })}
               </DialogTitle>
               <DialogDescription>
-                Customize Discord integration settings for this clan
+                {t("customizeIntegration")}
               </DialogDescription>
             </DialogHeader>
 
             <Tabs defaultValue="basic" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="basic">Basic</TabsTrigger>
-                <TabsTrigger value="war">War Settings</TabsTrigger>
-                <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                <TabsTrigger value="basic">{t("tabs.basic")}</TabsTrigger>
+                <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
+                <TabsTrigger value="advanced">{t("tabs.advanced")}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="basic" className="space-y-4">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <Label>Member Role</Label>
+                    <Label>{t("memberRole")}</Label>
                     <Input
-                      placeholder="Role ID"
+                      placeholder={t("roleIdPlaceholder")}
                       value={clanSettings?.generalRole || ''}
                       onChange={(e) => setClanSettings({...clanSettings, generalRole: e.target.value || null})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Leader Role</Label>
+                    <Label>{t("leaderRole")}</Label>
                     <Input
-                      placeholder="Role ID"
+                      placeholder={t("roleIdPlaceholder")}
                       value={clanSettings?.leaderRole || ''}
                       onChange={(e) => setClanSettings({...clanSettings, leaderRole: e.target.value || null})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Clan Channel</Label>
+                    <Label>{t("clanChannel")}</Label>
                     <Select
                       value={clanSettings.clanChannel?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -709,28 +756,91 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Clan Abbreviation</Label>
+                    <Label>{t("clanAbbreviation")}</Label>
                     <Input
-                      placeholder="e.g., CK"
+                      placeholder={t("abbreviationPlaceholder")}
                       value={clanSettings?.abbreviation || ''}
                       onChange={(e) => setClanSettings({...clanSettings, abbreviation: e.target.value})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Greeting Message</Label>
+                    <Label htmlFor="greeting-input">{t("greetingMessage")}</Label>
                     <Input
-                      placeholder="Welcome {player} to {clan}!"
+                      id="greeting-input"
+                      placeholder={t("greetingPlaceholder")}
                       value={clanSettings?.greeting || ''}
                       onChange={(e) => setClanSettings({...clanSettings, greeting: e.target.value})}
                     />
+
+                    {/* Live Preview */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Eye className="h-4 w-4 text-primary" />
+                        <p className="text-xs font-medium text-primary">{t("greeting.preview")}</p>
+                      </div>
+                      <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2 break-words">
+                        {generateGreetingPreview(
+                          clanSettings?.greeting || t("greetingPlaceholder"),
+                          selectedClan?.name || selectedClan?.clan_name
+                        )}
+                      </p>
+                    </div>
+                    
+                    <Collapsible
+                      open={isGreetingPlaceholdersOpen}
+                      onOpenChange={setIsGreetingPlaceholdersOpen}
+                      className="w-full space-y-2"
+                    >
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="flex items-center gap-2 p-0 h-auto text-xs text-primary hover:bg-transparent">
+                          {isGreetingPlaceholdersOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                          {t("greeting.availablePlaceholders")}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="space-y-2">
+                        <div className="bg-secondary/30 rounded-md p-3 border border-border">
+                          <p className="text-xs text-muted-foreground mb-2">{t("greeting.description")}</p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+                            {GREETING_PLACEHOLDERS.map((p) => (
+                              <div key={p.key} className="flex items-center gap-2">
+                                <Badge
+                                  variant="secondary"
+                                  className="text-[10px] font-mono cursor-pointer hover:bg-primary/20 whitespace-nowrap"
+                                  onClick={() => {
+                                    const input = document.getElementById("greeting-input") as HTMLInputElement;
+                                    if (input) {
+                                      const start = input.selectionStart || 0;
+                                      const end = input.selectionEnd || 0;
+                                      const currentGreeting = clanSettings?.greeting || '';
+                                      const newValue =
+                                        currentGreeting.substring(0, start) +
+                                        p.key +
+                                        currentGreeting.substring(end);
+                                      setClanSettings({ ...clanSettings, greeting: newValue });
+                                      setTimeout(() => {
+                                        input.focus();
+                                        input.setSelectionRange(start + p.key.length, start + p.key.length);
+                                      }, 0);
+                                    }
+                                  }}
+                                >
+                                  {p.key}
+                                </Badge>
+                                <span className="text-[10px] text-muted-foreground leading-tight">{p.desc}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
                   </div>
 
                   <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
                     <div className="space-y-0.5">
-                      <Label>Leadership Eval</Label>
+                      <Label>{t("leadershipEval")}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Auto-assign leadership roles
+                        {t("leadershipEvalDescription")}
                       </p>
                     </div>
                     <Switch
@@ -744,16 +854,16 @@ export default function ClansPage() {
               <TabsContent value="war" className="space-y-4">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <Label>War Countdown Channel</Label>
+                    <Label>{t("warCountdownChannel")}</Label>
                     <Select
                       value={clanSettings.warCountdown?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -764,16 +874,16 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>War Timer Countdown</Label>
+                    <Label>{t("warTimerCountdown")}</Label>
                     <Select
                       value={clanSettings.warTimerCountdown?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -784,16 +894,16 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Ban Alert Channel</Label>
+                    <Label>{t("banAlertChannel")}</Label>
                     <Select
                       value={clanSettings.ban_alert_channel?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -808,16 +918,16 @@ export default function ClansPage() {
               <TabsContent value="advanced" className="space-y-4">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Category</Label>
+                    <Label>{t("category")}</Label>
                     <Input
-                      placeholder="Category name"
+                      placeholder={t("categoryPlaceholder")}
                       value={clanSettings?.category || ''}
                       onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Auto Greet Option</Label>
+                    <Label>{t("autoGreetOption")}</Label>
                     <Select
                       value={clanSettings?.auto_greet_option || 'Never'}
                       onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
@@ -826,9 +936,9 @@ export default function ClansPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Never">Never</SelectItem>
-                        <SelectItem value="Always">Always</SelectItem>
-                        <SelectItem value="On Join">On Join</SelectItem>
+                        <SelectItem value="Never">{t("autoGreetOptions.never")}</SelectItem>
+                        <SelectItem value="Always">{t("autoGreetOptions.always")}</SelectItem>
+                        <SelectItem value="On Join">{t("autoGreetOptions.onJoin")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -838,18 +948,18 @@ export default function ClansPage() {
 
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsSettingsDialogOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button onClick={handleSaveSettings} disabled={saving} className="gap-2">
                 {saving ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Saving...
+                    {t("saving")}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    Save Changes
+                    {t("saveChanges")}
                   </>
                 )}
               </Button>
