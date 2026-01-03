@@ -1176,6 +1176,26 @@
     "edit": "Bewerken",
     "remove": "Verwijderen",
     "tips": "💡 AutoBoard Tips",
+    "noChannels": "Geen kanalen beschikbaar",
+    "activeAutoboardsCount": "{count} actieve autoboard{count, plural, one {} other {s}}",
+    "tipsContent": {
+      "type": {
+        "title": "Kies het juiste type:",
+        "desc": "Gebruik Auto Post voor dagelijkse samenvattingen en Auto Refresh voor live ranglijsten en realtime tracking."
+      },
+      "limits": {
+        "title": "Beheer je limieten:",
+        "desc": "Elke server heeft een beperkt aantal autoboard-slots. Verwijder ongebruikte autoboards om ruimte vrij te maken."
+      },
+      "schedule": {
+        "title": "Plan verstandig:",
+        "desc": "Auto Post-borden verschijnen om 5:00 AM UTC. Kies dagen die aansluiten bij de activiteitscyclus van je clan."
+      },
+      "duplicates": {
+        "title": "Vermijd duplicaten:",
+        "desc": "Het gebruik van zowel Auto Post als Auto Refresh voor hetzelfde bordtype in hetzelfde kanaal kan voor rommel zorgen."
+      }
+    },
     "boardTypes": {
       "clanBoards": "Clan Borden",
       "familyBoards": "Familie Borden",

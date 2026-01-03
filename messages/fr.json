@@ -1176,6 +1176,26 @@
     "edit": "Modifier",
     "remove": "Supprimer",
     "tips": "💡 Astuces Tableaux Automatiques",
+    "noChannels": "Aucun canal disponible",
+    "activeAutoboardsCount": "{count} tableau{count, plural, one {} other {x}} automatique{count, plural, one {} other {s}} actif{count, plural, one {} other {s}}",
+    "tipsContent": {
+      "type": {
+        "title": "Choisissez le bon type :",
+        "desc": "Utilisez la Publication Auto pour les résumés quotidiens et l'Actualisation Auto pour les classements en direct et le suivi en temps réel."
+      },
+      "limits": {
+        "title": "Gérez vos limites :",
+        "desc": "Chaque serveur a un nombre limité d'emplacements de tableaux automatiques. Supprimez les tableaux inutilisés pour libérer de l'espace."
+      },
+      "schedule": {
+        "title": "Planifiez judicieusement :",
+        "desc": "Les tableaux de Publication Auto apparaissent à 5h00 UTC. Choisissez des jours qui correspondent au cycle d'activité de votre clan."
+      },
+      "duplicates": {
+        "title": "Évitez les doublons :",
+        "desc": "Utiliser à la fois la Publication Auto et l'Actualisation Auto pour le même type de tableau dans le même canal peut encombrer le canal."
+      }
+    },
     "boardTypes": {
       "clanBoards": "Tableaux de Clan",
       "familyBoards": "Tableaux de Famille",
