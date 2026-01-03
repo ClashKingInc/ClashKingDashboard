@@ -1354,7 +1354,16 @@
       "clansConfigured": "Clans Configured",
       "clansConfiguredDesc": "Clans tracked for this server",
       "activeRosters": "Active Rosters",
-      "activeRostersDesc": "War rosters created"
+      "activeRostersDesc": "War rosters created",
+      "playersTracked": "Players Tracked",
+      "globalPlayers": "Total players in database",
+      "clansTracked": "Clans Tracked",
+      "globalClans": "Total clans in database",
+      "botStatus": "Bot Status",
+      "online": "Online",
+      "offline": "Offline",
+      "memoryUsage": "Memory: {used}MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
     },
     "quickStart": {
       "title": "Quick Start",
