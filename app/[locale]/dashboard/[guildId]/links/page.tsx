@@ -437,14 +437,14 @@ export default function LinksManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 space-y-6">
+    <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
       {/* Page Header */}
-      <div className="flex items-center gap-3">
-        <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+      <div className="flex flex-col md:flex-row md:items-center gap-3">
+        <div className="p-3 rounded-lg bg-primary/10 border border-primary/30 w-fit">
           <Link className="h-8 w-8 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Links Management</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Links Management</h1>
           <p className="text-muted-foreground mt-1">
             Manage Discord member account links and verify player ownership
           </p>
@@ -452,7 +452,7 @@ export default function LinksManagementPage() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-foreground">Total Members</CardTitle>
@@ -513,7 +513,7 @@ export default function LinksManagementPage() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
               <TabsTrigger value="overview">
                 <Users className="h-4 w-4 mr-2" />
                 Overview
@@ -573,7 +573,7 @@ export default function LinksManagementPage() {
 
               {/* Members List */}
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <p className="text-sm text-muted-foreground">
                     Showing {filteredMembers.length} {filteredMembers.length === 1 ? 'member' : 'members'}
                   </p>

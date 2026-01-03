@@ -14,15 +14,15 @@ export default async function BotStatsPage({ params }: BotStatsPageProps) {
   const t = await getTranslations("BotStatsPage");
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30 w-fit">
             <Activity className="h-8 w-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
             <p className="text-muted-foreground mt-1">
               {t("description")}
             </p>
@@ -30,7 +30,7 @@ export default async function BotStatsPage({ params }: BotStatsPageProps) {
         </div>
 
         {/* Bot Stats Grid */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <BotStats />
         </div>
 

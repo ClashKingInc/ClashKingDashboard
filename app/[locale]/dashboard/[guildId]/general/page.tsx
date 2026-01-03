@@ -250,12 +250,12 @@ export default function GeneralSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
             <p className="text-muted-foreground">
               {t("description")}
             </p>
@@ -334,7 +334,7 @@ export default function GeneralSettingsPage() {
         </Card>
 
         {/* Grid Layout for Cards */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
           {/* Nickname Management */}
           <Card className="bg-card border-border lg:col-span-2">
             <CardHeader>
@@ -415,7 +415,7 @@ export default function GeneralSettingsPage() {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {PLACEHOLDERS.map((p) => (
                         <div key={p.key} className="flex items-start gap-2">
                           <Badge
@@ -489,7 +489,7 @@ export default function GeneralSettingsPage() {
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {PLACEHOLDERS.map((p) => (
                         <div key={p.key} className="flex items-start gap-2">
                           <Badge

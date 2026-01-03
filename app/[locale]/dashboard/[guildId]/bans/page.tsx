@@ -326,17 +326,17 @@ export default function BansPage() {
   }).length;
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
                 <Ban className="h-8 w-8 text-red-500" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">Moderation</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">Moderation</h1>
                 <p className="text-muted-foreground mt-1">
                   Manage player bans and strikes
                 </p>
@@ -346,7 +346,7 @@ export default function BansPage() {
           {activeTab === "bans" && (
             <Dialog open={isAddBanDialogOpen} onOpenChange={setIsAddBanDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-red-500 hover:bg-red-600">
+                <Button className="bg-red-500 hover:bg-red-600 w-full md:w-auto">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Ban
                 </Button>
@@ -537,7 +537,7 @@ export default function BansPage() {
             </Alert>
 
             {/* Stats Cards */}
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               <Card className="bg-card border-border">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -612,7 +612,7 @@ export default function BansPage() {
             {/* Ban List */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
                     <CardTitle>Banned Players</CardTitle>
                     <CardDescription>
@@ -623,7 +623,7 @@ export default function BansPage() {
                       )}
                     </CardDescription>
                   </div>
-                  <div className="relative w-64">
+                  <div className="relative w-full md:w-64">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder="Search by name, tag, or reason..."
@@ -755,7 +755,7 @@ export default function BansPage() {
               </Alert>
 
               {/* Stats Cards */}
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 <Card className="bg-card border-border">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -814,7 +814,7 @@ export default function BansPage() {
               {/* Strikes List */}
               <Card className="bg-card border-border">
                 <CardHeader>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
                       <CardTitle>Player Strikes</CardTitle>
                       <CardDescription>
@@ -825,7 +825,7 @@ export default function BansPage() {
                         )}
                       </CardDescription>
                     </div>
-                    <div className="relative w-64">
+                    <div className="relative w-full md:w-64">
                       <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
                         placeholder="Search by name, tag, or reason..."

@@ -1,4 +1,5 @@
 import { SidebarWrapper } from "@/components/dashboard/sidebar-wrapper";
+import { DashboardLayoutWrapper } from "@/components/dashboard/dashboard-layout-wrapper";
 
 export default async function DashboardLayout({
   children,
@@ -10,11 +11,8 @@ export default async function DashboardLayout({
   const { guildId } = await params;
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <SidebarWrapper guildId={guildId} />
-      <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-950">
-        {children}
-      </main>
-    </div>
+    <DashboardLayoutWrapper sidebar={<SidebarWrapper guildId={guildId} />}>
+      {children}
+    </DashboardLayoutWrapper>
   );
 }
