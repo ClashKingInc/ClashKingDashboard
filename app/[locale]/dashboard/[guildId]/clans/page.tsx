@@ -222,7 +222,7 @@ export default function ClansPage() {
 
   // Delete clan
   const handleDeleteClan = async (clanTag: string) => {
-    if (!confirm(`Are you sure you want to remove ${clanTag}? This will also delete all associated reminders and logs.`)) {
+    if (!confirm(t("deleteConfirm", { tag: clanTag }))) {
       return;
     }
 
@@ -404,13 +404,13 @@ export default function ClansPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-destructive" />
-              <CardTitle className="text-destructive">Error</CardTitle>
+              <CardTitle className="text-destructive">{tCommon("error")}</CardTitle>
             </div>
             <CardDescription>{error}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => window.location.reload()} className="w-full">
-              Retry
+              {tCommon("retry")}
             </Button>
           </CardContent>
         </Card>
@@ -433,9 +433,9 @@ export default function ClansPage() {
               <Shield className="h-8 w-8 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Clan Management</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
               <p className="text-muted-foreground mt-1">
-                Configure your clans and their Discord integration settings
+                {t("description")}
               </p>
             </div>
           </div>
@@ -445,42 +445,42 @@ export default function ClansPage() {
             <DialogTrigger asChild>
               <Button className="bg-primary hover:bg-primary/90 gap-2">
                 <Plus className="h-4 w-4" />
-                Add Clan
+                {t("addClan")}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Add New Clan</DialogTitle>
+                <DialogTitle>{t("addNewClan")}</DialogTitle>
                 <DialogDescription>
-                  Enter your clan tag to add it to this server
+                  {t("addClanDescription")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="clan-tag">Clan Tag</Label>
+                  <Label htmlFor="clan-tag">{t("clanTag")}</Label>
                   <Input
                     id="clan-tag"
-                    placeholder="#YOURCLAN"
+                    placeholder={t("clanTagPlaceholder")}
                     value={newClanTag}
                     onChange={(e) => setNewClanTag(e.target.value)}
                     className="bg-secondary border-border"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddClan()}
                   />
                   <p className="text-xs text-muted-foreground">
-                    Include the # symbol at the start
+                    {t("clanTagHelp")}
                   </p>
                 </div>
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
                 <Button
                   className="bg-primary hover:bg-primary/90"
                   onClick={handleAddClan}
                   disabled={saving}
                 >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Add Clan'}
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : t("addClan")}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -491,7 +491,7 @@ export default function ClansPage() {
         <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Clans</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("totalClans")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -499,14 +499,14 @@ export default function ClansPage() {
                 <Shield className="h-8 w-8 text-blue-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Registered clans
+                {t("registeredClans")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-green-500/30 bg-green-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Configured</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("configured")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -514,14 +514,14 @@ export default function ClansPage() {
                 <Settings className="h-8 w-8 text-green-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                With settings configured
+                {t("withSettingsConfigured")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-purple-500/30 bg-purple-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Members</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("totalMembers")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -529,14 +529,14 @@ export default function ClansPage() {
                 <Users className="h-8 w-8 text-purple-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Across all clans
+                {t("acrossAllClans")}
               </p>
             </CardContent>
           </Card>
 
           <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Channels</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("channels")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -544,7 +544,7 @@ export default function ClansPage() {
                 <Hash className="h-8 w-8 text-yellow-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Available channels
+                {t("availableChannels")}
               </p>
             </CardContent>
           </Card>
@@ -555,13 +555,13 @@ export default function ClansPage() {
           <Card className="bg-card border-border">
             <CardContent className="py-12 text-center">
               <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">No Clans Yet</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2">{t("noClansYet")}</h3>
               <p className="text-muted-foreground mb-4">
-                Get started by adding your first clan
+                {t("getStartedAdding")}
               </p>
               <Button onClick={() => setIsAddDialogOpen(true)} className="gap-2">
                 <Plus className="h-4 w-4" />
-                Add Your First Clan
+                {t("addFirstClan")}
               </Button>
             </CardContent>
           </Card>
@@ -597,11 +597,11 @@ export default function ClansPage() {
                     {/* Clan Stats */}
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                        <div className="text-xs text-muted-foreground mb-1">Level</div>
-                        <div className="text-lg font-bold text-foreground">{clan.level || 'N/A'}</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t("level")}</div>
+                        <div className="text-lg font-bold text-foreground">{clan.level || t("notAvailable")}</div>
                       </div>
                       <div className="bg-secondary/50 rounded-lg p-3 border border-border">
-                        <div className="text-xs text-muted-foreground mb-1">Members</div>
+                        <div className="text-xs text-muted-foreground mb-1">{t("members")}</div>
                         <div className="text-lg font-bold text-foreground flex items-center gap-1">
                           <Users className="h-4 w-4" />
                           {clan.member_count || 0}/50
@@ -611,12 +611,12 @@ export default function ClansPage() {
 
                     {/* Status Badge */}
                     <div className="flex items-center justify-between py-2">
-                      <span className="text-sm text-muted-foreground">Status</span>
+                      <span className="text-sm text-muted-foreground">{t("status")}</span>
                       <Badge
                         variant={isConfigured ? "default" : "secondary"}
                         className={isConfigured ? "bg-green-600 hover:bg-green-700" : "bg-secondary"}
                       >
-                        {isConfigured ? "Configured" : "Setup Required"}
+                        {isConfigured ? t("configuredBadge") : t("setupRequired")}
                       </Badge>
                     </div>
 
@@ -630,7 +630,7 @@ export default function ClansPage() {
                         onClick={() => handleOpenSettings(clan)}
                       >
                         <Settings className="mr-2 h-4 w-4" />
-                        Configure
+                        {t("configure")}
                       </Button>
                       <Button
                         variant="outline"
@@ -654,51 +654,51 @@ export default function ClansPage() {
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                Configure {selectedClan?.name} ({selectedClan?.tag})
+                {t("configureClan", { name: selectedClan?.name, tag: selectedClan?.tag })}
               </DialogTitle>
               <DialogDescription>
-                Customize Discord integration settings for this clan
+                {t("customizeIntegration")}
               </DialogDescription>
             </DialogHeader>
 
             <Tabs defaultValue="basic" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="basic">Basic</TabsTrigger>
-                <TabsTrigger value="war">War Settings</TabsTrigger>
-                <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                <TabsTrigger value="basic">{t("tabs.basic")}</TabsTrigger>
+                <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
+                <TabsTrigger value="advanced">{t("tabs.advanced")}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="basic" className="space-y-4">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <Label>Member Role</Label>
+                    <Label>{t("memberRole")}</Label>
                     <Input
-                      placeholder="Role ID"
+                      placeholder={t("roleIdPlaceholder")}
                       value={clanSettings?.generalRole || ''}
                       onChange={(e) => setClanSettings({...clanSettings, generalRole: e.target.value || null})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Leader Role</Label>
+                    <Label>{t("leaderRole")}</Label>
                     <Input
-                      placeholder="Role ID"
+                      placeholder={t("roleIdPlaceholder")}
                       value={clanSettings?.leaderRole || ''}
                       onChange={(e) => setClanSettings({...clanSettings, leaderRole: e.target.value || null})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Clan Channel</Label>
+                    <Label>{t("clanChannel")}</Label>
                     <Select
                       value={clanSettings.clanChannel?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -709,18 +709,18 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Clan Abbreviation</Label>
+                    <Label>{t("clanAbbreviation")}</Label>
                     <Input
-                      placeholder="e.g., CK"
+                      placeholder={t("abbreviationPlaceholder")}
                       value={clanSettings?.abbreviation || ''}
                       onChange={(e) => setClanSettings({...clanSettings, abbreviation: e.target.value})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Greeting Message</Label>
+                    <Label>{t("greetingMessage")}</Label>
                     <Input
-                      placeholder="Welcome {player} to {clan}!"
+                      placeholder={t("greetingPlaceholder")}
                       value={clanSettings?.greeting || ''}
                       onChange={(e) => setClanSettings({...clanSettings, greeting: e.target.value})}
                     />
@@ -728,9 +728,9 @@ export default function ClansPage() {
 
                   <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
                     <div className="space-y-0.5">
-                      <Label>Leadership Eval</Label>
+                      <Label>{t("leadershipEval")}</Label>
                       <p className="text-sm text-muted-foreground">
-                        Auto-assign leadership roles
+                        {t("leadershipEvalDescription")}
                       </p>
                     </div>
                     <Switch
@@ -744,16 +744,16 @@ export default function ClansPage() {
               <TabsContent value="war" className="space-y-4">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <Label>War Countdown Channel</Label>
+                    <Label>{t("warCountdownChannel")}</Label>
                     <Select
                       value={clanSettings.warCountdown?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -764,16 +764,16 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>War Timer Countdown</Label>
+                    <Label>{t("warTimerCountdown")}</Label>
                     <Select
                       value={clanSettings.warTimerCountdown?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -784,16 +784,16 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Ban Alert Channel</Label>
+                    <Label>{t("banAlertChannel")}</Label>
                     <Select
                       value={clanSettings.ban_alert_channel?.toString() || 'none'}
                       onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' ? null : value})}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select channel" />
+                        <SelectValue placeholder={t("selectChannel")} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
+                        <SelectItem value="none">{t("none")}</SelectItem>
                         {channels.map((ch) => (
                           <SelectItem key={ch.id} value={ch.id}>
                             #{ch.name}
@@ -808,16 +808,16 @@ export default function ClansPage() {
               <TabsContent value="advanced" className="space-y-4">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Category</Label>
+                    <Label>{t("category")}</Label>
                     <Input
-                      placeholder="Category name"
+                      placeholder={t("categoryPlaceholder")}
                       value={clanSettings?.category || ''}
                       onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Auto Greet Option</Label>
+                    <Label>{t("autoGreetOption")}</Label>
                     <Select
                       value={clanSettings?.auto_greet_option || 'Never'}
                       onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
@@ -826,9 +826,9 @@ export default function ClansPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Never">Never</SelectItem>
-                        <SelectItem value="Always">Always</SelectItem>
-                        <SelectItem value="On Join">On Join</SelectItem>
+                        <SelectItem value="Never">{t("autoGreetOptions.never")}</SelectItem>
+                        <SelectItem value="Always">{t("autoGreetOptions.always")}</SelectItem>
+                        <SelectItem value="On Join">{t("autoGreetOptions.onJoin")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -838,18 +838,18 @@ export default function ClansPage() {
 
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsSettingsDialogOpen(false)}>
-                Cancel
+                {tCommon("cancel")}
               </Button>
               <Button onClick={handleSaveSettings} disabled={saving} className="gap-2">
                 {saving ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Saving...
+                    {t("saving")}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4" />
-                    Save Changes
+                    {t("saveChanges")}
                   </>
                 )}
               </Button>
