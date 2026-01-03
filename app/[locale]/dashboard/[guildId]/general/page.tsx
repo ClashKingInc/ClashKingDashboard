@@ -570,9 +570,9 @@ export default function GeneralSettingsPage() {
                       placeholder="#D90709"
                       className="bg-secondary border-border font-mono"
                     />
-                    <p className="text-xs text-muted-foreground">
-                      {t("appearance.embedColorDefault")}
-                    </p>
+                    <div className="text-xs text-muted-foreground">
+                      <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
 
