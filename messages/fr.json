@@ -625,9 +625,30 @@
       "always": "Toujours",
       "onJoin": "À l'Arrivée"
     },
+    "greeting": {
+      "title": "Variables du Message d'Accueil",
+      "description": "Variables disponibles pour le message d'accueil :",
+      "preview": "Aperçu",
+      "availablePlaceholders": "Variables Disponibles",
+      "placeholders": {
+        "user_mention": "Mentionne l'utilisateur",
+        "user_display_name": "Nom d'affichage Discord",
+        "clan_name": "Nom du clan",
+        "clan_link": "Lien vers le clan",
+        "clan_leader_name": "Nom du chef de clan",
+        "clan_leader_mention": "Mentionne le chef de clan",
+        "player_name": "Nom en jeu du joueur",
+        "player_link": "Lien vers le profil du joueur",
+        "player_townhall": "Niveau de l'Hôtel de Ville",
+        "player_townhall_emoji": "Emoji de l'Hôtel de Ville",
+        "player_league": "Nom de la ligue",
+        "player_league_emoji": "Emoji de la ligue",
+        "player_trophies": "Trophées actuels"
+      }
+    },
     "roleIdPlaceholder": "ID du Rôle",
     "abbreviationPlaceholder": "ex: CK",
-    "greetingPlaceholder": "Bienvenue '{'player'}' chez '{'clan'}' !",
+    "greetingPlaceholder": "Bienvenue '{'player_name'}' chez '{'clan_name'}' !",
     "categoryPlaceholder": "Nom de la catégorie",
     "notAvailable": "N/A",
     "saving": "Enregistrement...",

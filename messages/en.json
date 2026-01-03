@@ -748,9 +748,30 @@
       "always": "Always",
       "onJoin": "On Join"
     },
+    "greeting": {
+      "title": "Greeting Placeholders",
+      "description": "Available placeholders for the greeting message:",
+      "preview": "Preview",
+      "availablePlaceholders": "Available Placeholders",
+      "placeholders": {
+        "user_mention": "Mentions the user",
+        "user_display_name": "Discord display name",
+        "clan_name": "Name of the clan",
+        "clan_link": "Link to the clan",
+        "clan_leader_name": "Name of the clan leader",
+        "clan_leader_mention": "Mentions the clan leader",
+        "player_name": "In-game name of the player",
+        "player_link": "Link to the player profile",
+        "player_townhall": "Town Hall level",
+        "player_townhall_emoji": "Town Hall emoji",
+        "player_league": "League name",
+        "player_league_emoji": "League emoji",
+        "player_trophies": "Current trophies"
+      }
+    },
     "roleIdPlaceholder": "Role ID",
     "abbreviationPlaceholder": "e.g., CK",
-    "greetingPlaceholder": "Welcome '{'player'}' to '{'clan'}'!",
+    "greetingPlaceholder": "Welcome '{'player_name'}' to '{'clan_name'}'!",
     "categoryPlaceholder": "Category name",
     "notAvailable": "N/A",
     "saving": "Saving...",

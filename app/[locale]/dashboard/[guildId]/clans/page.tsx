@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Settings,
   Plus,
@@ -32,7 +33,10 @@ import {
   Shield,
   Loader2,
   AlertCircle,
-  Save
+  Save,
+  ChevronDown,
+  ChevronRight,
+  Eye
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -73,11 +77,16 @@ interface ClanSettings {
 
 interface Clan {
   tag: string;
+  clan_tag?: string;
   name: string;
+  clan_name?: string;
   badge_url?: string | null;
+  clan_badge_url?: string | null;
   level?: number | null;
+  clanLevel?: number | null;
   member_count?: number | null;
-  settings: ClanSettings;
+  members?: number | null;
+  settings?: ClanSettings;
 }
 
 interface Channel {
@@ -93,6 +102,34 @@ export default function ClansPage() {
   const t = useTranslations("ClansPage");
   const tCommon = useTranslations("Common");
 
+  const GREETING_PLACEHOLDERS = [
+    { key: "{user_mention}", desc: t("greeting.placeholders.user_mention"), example: "@ClashKing" },
+    { key: "{user_display_name}", desc: t("greeting.placeholders.user_display_name"), example: "ClashKing" },
+    { key: "{clan_name}", desc: t("greeting.placeholders.clan_name"), example: "Clash King Family" },
+    { key: "{clan_link}", desc: t("greeting.placeholders.clan_link"), example: "https://link.clashofclans.com/en?action=OpenClanProfile&tag=%232PP" },
+    { key: "{clan_leader_name}", desc: t("greeting.placeholders.clan_leader_name"), example: "Chief King" },
+    { key: "{clan_leader_mention}", desc: t("greeting.placeholders.clan_leader_mention"), example: "@ChiefKing" },
+    { key: "{player_name}", desc: t("greeting.placeholders.player_name"), example: "Player One" },
+    { key: "{player_link}", desc: t("greeting.placeholders.player_link"), example: "https://link.clashofclans.com/en?action=OpenPlayerProfile&tag=%232PP" },
+    { key: "{player_townhall}", desc: t("greeting.placeholders.player_townhall"), example: "16" },
+    { key: "{player_townhall_emoji}", desc: t("greeting.placeholders.player_townhall_emoji"), example: "🏰" },
+    { key: "{player_league}", desc: t("greeting.placeholders.player_league"), example: "Legend League" },
+    { key: "{player_league_emoji}", desc: t("greeting.placeholders.player_league_emoji"), example: "🏆" },
+    { key: "{player_trophies}", desc: t("greeting.placeholders.player_trophies"), example: "5200" },
+  ];
+
+  const generateGreetingPreview = (text: string, clanName?: string) => {
+    let preview = text;
+    GREETING_PLACEHOLDERS.forEach((p) => {
+      let example = p.example;
+      if (p.key === "{clan_name}" && clanName) {
+        example = clanName;
+      }
+      preview = preview.replace(new RegExp(p.key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), example);
+    });
+    return preview;
+  };
+
   const [clans, setClans] = useState<Clan[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -105,6 +142,7 @@ export default function ClansPage() {
   const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [clanSettings, setClanSettings] = useState<ClanSettings>({});
+  const [isGreetingPlaceholdersOpen, setIsGreetingPlaceholdersOpen] = useState(false);
 
   // Fetch data on mount
   useEffect(() => {
@@ -282,7 +320,7 @@ export default function ClansPage() {
     try {
       setSaving(true);
       const accessToken = localStorage.getItem("access_token");
-      const encodedTag = encodeURIComponent(selectedClan.tag);
+      const encodedTag = encodeURIComponent(selectedClan.tag || selectedClan.clan_tag || '');
 
       const response = await fetch(
         `/api/v2/server/${guildId}/clan/${encodedTag}/settings`,
@@ -418,7 +456,7 @@ export default function ClansPage() {
     );
   }
 
-  const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || 0), 0);
+  const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || clan.members || 0), 0);
   const configuredClans = clans.filter(c =>
     c.settings?.clanChannel || c.settings?.generalRole
   ).length;
@@ -576,17 +614,17 @@ export default function ClansPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-14 w-14 border-2 border-border">
-                          <AvatarImage src={clan.badge_url || ''} alt={clan.name} />
+                          <AvatarImage src={clan.badge_url || clan.clan_badge_url || ''} alt={clan.name || clan.clan_name || 'Clan'} />
                           <AvatarFallback className="bg-secondary text-foreground">
-                            {clan.name.charAt(0)}
+                            {(clan.name || clan.clan_name || 'C').charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <CardTitle className="text-lg font-bold text-foreground">
-                            {clan.name}
+                            {clan.name || clan.clan_name || 'Unknown'}
                           </CardTitle>
                           <CardDescription className="text-muted-foreground font-mono text-xs">
-                            {clan.tag}
+                            {clan.tag || clan.clan_tag}
                           </CardDescription>
                         </div>
                       </div>
@@ -598,13 +636,13 @@ export default function ClansPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-secondary/50 rounded-lg p-3 border border-border">
                         <div className="text-xs text-muted-foreground mb-1">{t("level")}</div>
-                        <div className="text-lg font-bold text-foreground">{clan.level || t("notAvailable")}</div>
+                        <div className="text-lg font-bold text-foreground">{clan.level || clan.clanLevel || t("notAvailable")}</div>
                       </div>
                       <div className="bg-secondary/50 rounded-lg p-3 border border-border">
                         <div className="text-xs text-muted-foreground mb-1">{t("members")}</div>
                         <div className="text-lg font-bold text-foreground flex items-center gap-1">
                           <Users className="h-4 w-4" />
-                          {clan.member_count || 0}/50
+                          {clan.member_count || clan.members || 0}/50
                         </div>
                       </div>
                     </div>
@@ -636,7 +674,7 @@ export default function ClansPage() {
                         variant="outline"
                         size="icon"
                         className="border-border hover:border-destructive hover:bg-destructive/10 hover:text-destructive"
-                        onClick={() => handleDeleteClan(clan.tag)}
+                        onClick={() => handleDeleteClan(clan.tag || clan.clan_tag || '')}
                         disabled={saving}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -654,7 +692,10 @@ export default function ClansPage() {
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {t("configureClan", { name: selectedClan?.name, tag: selectedClan?.tag })}
+                {t("configureClan", { 
+                  name: selectedClan?.name || selectedClan?.clan_name || 'Unknown', 
+                  tag: selectedClan?.tag || selectedClan?.clan_tag || 'Unknown' 
+                })}
               </DialogTitle>
               <DialogDescription>
                 {t("customizeIntegration")}
@@ -718,12 +759,75 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("greetingMessage")}</Label>
+                    <Label htmlFor="greeting-input">{t("greetingMessage")}</Label>
                     <Input
+                      id="greeting-input"
                       placeholder={t("greetingPlaceholder")}
                       value={clanSettings?.greeting || ''}
                       onChange={(e) => setClanSettings({...clanSettings, greeting: e.target.value})}
                     />
+
+                    {/* Live Preview */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Eye className="h-4 w-4 text-primary" />
+                        <p className="text-xs font-medium text-primary">{t("greeting.preview")}</p>
+                      </div>
+                      <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2 break-words">
+                        {generateGreetingPreview(
+                          clanSettings?.greeting || t("greetingPlaceholder"),
+                          selectedClan?.name || selectedClan?.clan_name
+                        )}
+                      </p>
+                    </div>
+                    
+                    <Collapsible
+                      open={isGreetingPlaceholdersOpen}
+                      onOpenChange={setIsGreetingPlaceholdersOpen}
+                      className="w-full space-y-2"
+                    >
+                      <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="flex items-center gap-2 p-0 h-auto text-xs text-primary hover:bg-transparent">
+                          {isGreetingPlaceholdersOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                          {t("greeting.availablePlaceholders")}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="space-y-2">
+                        <div className="bg-secondary/30 rounded-md p-3 border border-border">
+                          <p className="text-xs text-muted-foreground mb-2">{t("greeting.description")}</p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+                            {GREETING_PLACEHOLDERS.map((p) => (
+                              <div key={p.key} className="flex items-center gap-2">
+                                <Badge
+                                  variant="secondary"
+                                  className="text-[10px] font-mono cursor-pointer hover:bg-primary/20 whitespace-nowrap"
+                                  onClick={() => {
+                                    const input = document.getElementById("greeting-input") as HTMLInputElement;
+                                    if (input) {
+                                      const start = input.selectionStart || 0;
+                                      const end = input.selectionEnd || 0;
+                                      const currentGreeting = clanSettings?.greeting || '';
+                                      const newValue =
+                                        currentGreeting.substring(0, start) +
+                                        p.key +
+                                        currentGreeting.substring(end);
+                                      setClanSettings({ ...clanSettings, greeting: newValue });
+                                      setTimeout(() => {
+                                        input.focus();
+                                        input.setSelectionRange(start + p.key.length, start + p.key.length);
+                                      }, 0);
+                                    }
+                                  }}
+                                >
+                                  {p.key}
+                                </Badge>
+                                <span className="text-[10px] text-muted-foreground leading-tight">{p.desc}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
                   </div>
 
                   <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">

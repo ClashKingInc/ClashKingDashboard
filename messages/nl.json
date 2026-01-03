@@ -527,7 +527,7 @@
     "stats": {
       "totalEntries": "Totaal Vermeldingen",
       "type": "Type",
-      "league": "Liga",
+      "league": "Divisie",
       "weekend": "Weekend"
     },
     "filters": {
@@ -535,7 +535,7 @@
       "description": "Pas je ranglijstweergave aan",
       "type": "Type",
       "metric": "Metriek",
-      "league": "Liga",
+      "league": "Divisie",
       "weekend": "Weekend"
     },
     "types": {
@@ -557,10 +557,10 @@
     },
     "leagues": {
       "all": "Alle",
-      "legendLeague": "Legende Liga",
-      "titanLeagueI": "Titan Liga I",
-      "titanLeagueII": "Titan Liga II",
-      "titanLeagueIII": "Titan Liga III"
+      "legendLeague": "Legende Divisie",
+      "titanLeagueI": "Titan Divisie I",
+      "titanLeagueII": "Titan Divisie II",
+      "titanLeagueIII": "Titan Divisie III"
     },
     "rankings": {
       "title": "Ranglijsten",
@@ -570,7 +570,7 @@
     },
     "empty": {
       "title": "Geen gegevens beschikbaar",
-      "description": "Probeer een ander weekend of liga te selecteren"
+      "description": "Probeer een ander weekend of divisie te selecteren"
     }
   },
   "ClansPage": {
@@ -625,9 +625,30 @@
       "always": "Altijd",
       "onJoin": "Bij Deelnemen"
     },
+    "greeting": {
+      "title": "Welkomstbericht Variabelen",
+      "description": "Beschikbare variabelen voor het welkomstbericht:",
+      "preview": "Voorbeeld",
+      "availablePlaceholders": "Beschikbare Plaatshouders",
+      "placeholders": {
+        "user_mention": "Vermeldt de gebruiker",
+        "user_display_name": "Discord weergavenaam",
+        "clan_name": "Naam van de clan",
+        "clan_link": "Link naar de clan",
+        "clan_leader_name": "Naam van de clanleider",
+        "clan_leader_mention": "Vermeldt de clanleider",
+        "player_name": "In-game naam van de speler",
+        "player_link": "Link naar het spelersprofiel",
+        "player_townhall": "Stadhuis niveau",
+        "player_townhall_emoji": "Stadhuis emoji",
+        "player_league": "Divisie naam",
+        "player_league_emoji": "Divisie emoji",
+        "player_trophies": "Huidige trofeeën"
+      }
+    },
     "roleIdPlaceholder": "Rol ID",
     "abbreviationPlaceholder": "bijv. CK",
-    "greetingPlaceholder": "Welkom '{'player'}' bij '{'clan'}'!",
+    "greetingPlaceholder": "Welkom '{'player_name'}' bij '{'clan_name'}'!",
     "categoryPlaceholder": "Categorienaam",
     "notAvailable": "N/A",
     "saving": "Opslaan...",
