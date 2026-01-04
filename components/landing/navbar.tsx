@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
@@ -75,20 +75,26 @@ export function Navbar() {
             <LanguageSwitcher />
             {user ? (
               <div className="flex items-center space-x-4">
-                <Link href={`/${locale}/servers`} className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                  <Avatar className="h-8 w-8 border border-[#DC2626]/50">
+                <Link href={`/${locale}/servers`} className="flex items-center space-x-2 hover:opacity-80 transition-opacity cursor-pointer">
+                  <Avatar className="h-6 w-6 border border-[#DC2626]/50">
                     <AvatarImage src={user.avatar_url} alt={user.username} />
                     <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <span className="text-gray-200 font-medium hidden lg:block">{user.username}</span>
+                  <div className="flex flex-col items-start space-y-1">
+                    <span className="text-gray-200 font-medium text-xs">{user.username}</span>
+                    <div className="flex items-center space-x-1 text-gray-300 hover:text-[#EF4444] transition-colors text-xs">
+                      <span>{t("openDashboard")}</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </div>
+                  </div>
                 </Link>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={handleLogout}
-                  className="text-gray-400 hover:text-[#EF4444] hover:bg-transparent"
+                  className="text-gray-400 hover:text-[#EF4444] hover:bg-transparent h-6 w-6"
                 >
-                  <LogOut className="h-5 w-5" />
+                  <LogOut className="h-4 w-4" />
                 </Button>
               </div>
             ) : (
