@@ -454,6 +454,12 @@ export default function LogsPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {isEnabled && !channelExists && !isSaving && (
+                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/10 border border-orange-500/30">
+                  <AlertCircle className="w-3 h-3 text-orange-500" />
+                  <span className="text-xs text-orange-600 font-medium">{t('logCard.issue')}</span>
+                </div>
+              )}
               <Switch
                 checked={Boolean(isEnabled) || showEnableForm}
                 onCheckedChange={(checked) => {
@@ -479,24 +485,16 @@ export default function LogsPage() {
               {isSaving ? (
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               ) : (
-                <>
-                  <span className={`text-xs font-medium ${
-                    !isEnabled && !showEnableForm ? 'text-muted-foreground' :
-                    showEnableForm && !isEnabled ? 'text-blue-600' :
-                    !channelExists ? 'text-orange-600' :
-                    'text-green-600'
-                  }`}>
-                    {!isEnabled && !showEnableForm ? t('logCard.off') :
-                     showEnableForm && !isEnabled ? t('logCard.configuring') :
-                     t('logCard.on')}
-                  </span>
-                  {isEnabled && !channelExists && (
-                    <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/10 border border-orange-500/30">
-                      <AlertCircle className="w-3 h-3 text-orange-500" />
-                      <span className="text-xs text-orange-600 font-medium">{t('logCard.issue')}</span>
-                    </div>
-                  )}
-                </>
+                <span className={`text-xs font-medium ${
+                  !isEnabled && !showEnableForm ? 'text-muted-foreground' :
+                  showEnableForm && !isEnabled ? 'text-blue-600' :
+                  !channelExists ? 'text-orange-600' :
+                  'text-green-600'
+                }`}>
+                  {!isEnabled && !showEnableForm ? t('logCard.off') :
+                   showEnableForm && !isEnabled ? t('logCard.configuring') :
+                   t('logCard.on')}
+                </span>
               )}
             </div>
           </div>
