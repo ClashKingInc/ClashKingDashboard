@@ -4,9 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -40,7 +41,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-[#1F1F1F]/95 backdrop-blur-lg z-50 border-b border-[#DC2626]/30">
+    <nav className="fixed top-0 inset-x-0 bg-[#1F1F1F]/95 backdrop-blur-lg z-50 border-b border-[#DC2626]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -74,23 +75,30 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <LanguageSwitcher />
             {user ? (
-              <div className="flex items-center space-x-4">
-                <Link href={`/${locale}/servers`} className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                  <Avatar className="h-8 w-8 border border-[#DC2626]/50">
-                    <AvatarImage src={user.avatar_url} alt={user.username} />
-                    <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-gray-200 font-medium hidden lg:block">{user.username}</span>
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleLogout}
-                  className="text-gray-400 hover:text-[#EF4444] hover:bg-transparent"
-                >
-                  <LogOut className="h-5 w-5" />
-                </Button>
-              </div>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <button className="group flex items-center space-x-2 hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer p-0 outline-none">
+                    <Avatar className="h-6 w-6 border border-[#DC2626]/50">
+                      <AvatarImage src={user.avatar_url} alt={user.username} />
+                      <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-gray-200 font-medium text-sm">{user.username}</span>
+                    <ChevronDown className="h-4 w-4 text-gray-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 !bg-[#333333] !border !border-white/10 shadow-2xl" sideOffset={4}>
+                  <DropdownMenuItem asChild className="hover:!bg-transparent">
+                    <Link href={`/${locale}/servers`} className="flex items-center space-x-2">
+                      <ArrowRight className="h-4 w-4" />
+                      <span className="hover:!text-[#EF4444]">{t("openDashboard")}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 hover:!bg-transparent">
+                    <LogOut className="h-4 w-4 text-[#DC2626]" />
+                    <span className="hover:!text-[#EF4444]">{t("logout")}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <Button
                 onClick={() => initiateDiscordLogin(locale)}
