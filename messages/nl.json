@@ -44,7 +44,8 @@
     "loginWithDiscord": "Inloggen met Discord",
     "addToDiscord": "Toevoegen aan Discord",
     "openDashboard": "Open Dashboard",
-    "dashboardSettings": "Dashboard Instellingen"
+    "dashboardSettings": "Dashboard Instellingen",
+    "logout": "Uitloggen"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers gebruiken ClashKing al",

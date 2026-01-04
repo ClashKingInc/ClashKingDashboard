@@ -44,7 +44,8 @@
     "loginWithDiscord": "Login with Discord",
     "addToDiscord": "Add to Discord",
     "openDashboard": "Open Dashboard",
-    "dashboardSettings": "Dashboard Settings"
+    "dashboardSettings": "Dashboard Settings",
+    "logout": "Logout"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers already using ClashKing",
