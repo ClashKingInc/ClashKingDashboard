@@ -204,7 +204,8 @@
       "automation": "Automatisation",
       "statistics": "Statistiques",
       "system": "Système"
-    }
+    },
+    "switchServer": "Changer de Serveur"
   },
   "BansPage": {
     "title": "Modération",

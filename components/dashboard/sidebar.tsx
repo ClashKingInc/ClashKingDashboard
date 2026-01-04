@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useParams } from "next/navigation";
+import { usePathname, useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -18,12 +19,16 @@ import {
   Link2,
   Trophy,
   Activity,
+  LogOut,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import type { UserInfo } from "@/lib/api/types/auth";
 
 interface SidebarProps {
   guildId: string;
@@ -35,9 +40,32 @@ interface SidebarProps {
 export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: SidebarProps) {
   const pathname = usePathname();
   const params = useParams();
+  const router = useRouter();
   const locale = params.locale || "en";
   const t = useTranslations("Sidebar");
   const tCommon = useTranslations("Common");
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [user, setUser] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Failed to parse user from localStorage", e);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+    setUser(null);
+    router.push(`/${locale}`);
+  };
 
   const navigationSections = [
     {
@@ -145,35 +173,72 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
   return (
     <div className="flex h-full w-64 flex-col bg-card border-r border-border">
       {/* Server Header */}
-      <div className="p-4 border-b border-border">
+      <div className="border-b border-border">
         {isLoading ? (
-          <div className="flex items-center gap-3">
-            <Skeleton className="h-12 w-12 rounded-xl" />
-            <div className="flex-1 min-w-0 space-y-2">
-              <Skeleton className="h-5 w-32" />
-              <Skeleton className="h-3 w-24" />
+          <div className="p-4">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-12 w-12 rounded-xl" />
+              <div className="flex-1 min-w-0 space-y-2">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-3 w-24" />
+              </div>
             </div>
           </div>
         ) : (
-          <Link
-            href="/servers"
-            className="flex items-center gap-3 group transition-all duration-200"
-          >
-            <Avatar className="h-12 w-12 rounded-xl ring-2 ring-border transition-all group-hover:ring-4">
-              <AvatarImage src={guildIcon} className="rounded-xl" />
-              <AvatarFallback className="rounded-xl text-lg font-bold bg-secondary text-primary">
-                {guildName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1">
-                <p className="font-semibold text-base truncate text-foreground">
-                  {guildName}
-                </p>
-                <ChevronDown className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity text-muted-foreground" />
+          <Collapsible open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+            <CollapsibleTrigger asChild>
+              <div className="flex items-center gap-3 p-4 cursor-pointer group transition-all duration-200 hover:bg-accent/50">
+                <Avatar className="h-12 w-12 rounded-xl ring-2 ring-border transition-all group-hover:ring-4">
+                  <AvatarImage src={guildIcon} className="rounded-xl" />
+                  <AvatarFallback className="rounded-xl text-lg font-bold bg-secondary text-primary">
+                    {guildName.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1">
+                    <p className="font-semibold text-base truncate text-foreground">
+                      {guildName}
+                    </p>
+                    <ChevronDown className={cn(
+                      "h-4 w-4 opacity-60 group-hover:opacity-100 transition-all duration-200 text-muted-foreground",
+                      isDropdownOpen && "rotate-180"
+                    )} />
+                  </div>
+                </div>
               </div>
-            </div>
-          </Link>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="px-4 pb-4 space-y-3">
+              {/* Switch Server */}
+              <Button asChild variant="default" size="sm" className="w-full">
+                <Link href="/servers">
+                  {t("switchServer")}
+                </Link>
+              </Button>
+
+              {/* User Info & Logout */}
+              {user && (
+                <div className="flex items-center justify-between p-3 bg-accent/50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-8 w-8 border border-border">
+                      <AvatarImage src={user.avatar_url} alt={user.username} />
+                      <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium text-foreground truncate">
+                      {user.username}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLogout}
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </CollapsibleContent>
+          </Collapsible>
         )}
       </div>
 
