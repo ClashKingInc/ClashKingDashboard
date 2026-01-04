@@ -216,17 +216,17 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" sideOffset={-10} alignOffset={10} className="w-56 bg-popover/95 backdrop-blur-md border-primary/30 shadow-2xl">
               {/* Switch Server */}
-              <DropdownMenuItem asChild>
-                <Link href="/servers" className="flex items-center gap-2 cursor-pointer py-2">
-                  <Server className="h-4 w-4 text-primary" />
+              <DropdownMenuItem asChild className="focus:bg-muted/60 focus:text-primary hover:bg-muted/60 hover:text-primary transition-colors cursor-pointer">
+                <Link href="/servers" className="flex items-center gap-2 py-2">
+                  <Server className="h-4 w-4" />
                   <span className="font-medium">{t("switchServer")}</span>
                 </Link>
               </DropdownMenuItem>
 
               {/* Go Home */}
-              <DropdownMenuItem asChild>
-                <Link href={`/${locale}`} className="flex items-center gap-2 cursor-pointer py-2">
-                  <Home className="h-4 w-4 text-primary" />
+              <DropdownMenuItem asChild className="focus:bg-muted/60 focus:text-primary hover:bg-muted/60 hover:text-primary transition-colors cursor-pointer">
+                <Link href={`/${locale}`} className="flex items-center gap-2 py-2">
+                  <Home className="h-4 w-4" />
                   <span className="font-medium">{t("goHome")}</span>
                 </Link>
               </DropdownMenuItem>
@@ -234,7 +234,6 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
               {/* User Info & Logout */}
               {user && (
                 <>
-                  <DropdownMenuSeparator className="bg-primary/10" />
                   <div className="flex items-center justify-between p-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <Avatar className="h-8 w-8 border border-border">
@@ -249,7 +248,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                       variant="ghost"
                       size="icon"
                       onClick={handleLogout}
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      className="h-8 w-8 text-muted-foreground hover:bg-muted/60 hover:text-primary"
                     >
                       <LogOut className="h-4 w-4" />
                     </Button>
