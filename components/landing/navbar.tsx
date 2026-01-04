@@ -87,15 +87,15 @@ export function Navbar() {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48" sideOffset={4}>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="hover:!bg-transparent">
                     <Link href={`/${locale}/servers`} className="flex items-center space-x-2">
                       <ArrowRight className="h-4 w-4" />
-                      <span>{t("openDashboard")}</span>
+                      <span className="hover:!text-[#EF4444]">{t("openDashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2">
-                    <LogOut className="h-4 w-4" />
-                    <span>{t("logout")}</span>
+                  <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 hover:!bg-transparent">
+                    <LogOut className="h-4 w-4 text-[#DC2626]" />
+                    <span className="hover:!text-[#EF4444]">{t("logout")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
