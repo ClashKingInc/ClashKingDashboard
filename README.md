@@ -16,6 +16,7 @@ A modern web dashboard for configuring ClashKing bot settings, built with Next.j
 clashking-dashboard/
 ├── app/                          # Next.js app directory
 │   ├── [locale]/                 # Localized routes (i18n)
+│   │   ├── auth/callback/        # OAuth callback
 │   │   ├── page.tsx              # Landing page
 │   │   ├── login/                # Login page
 │   │   ├── servers/              # Server selection
@@ -31,17 +32,16 @@ clashking-dashboard/
 │   │       ├── roles/            # Role management
 │   │       ├── rosters/          # Roster management
 │   │       └── reminders/        # Reminders
-│   ├── api/                      # Next.js API routes (proxy layer)
-│   │   ├── v1/                   # Legacy API endpoints
-│   │   └── v2/                   # Current API version
-│   │       ├── auth/             # Authentication
-│   │       ├── ban/              # Ban management
-│   │       ├── cwl/              # CWL rankings
-│   │       ├── guild/            # Guild operations
-│   │       ├── roster/           # Roster endpoints
-│   │       ├── server/           # Server settings
-│   │       └── war/              # War data
-│   └── auth/callback/            # OAuth callback
+│   └── api/                      # Next.js API routes (proxy layer)
+│       ├── v1/                   # Legacy API endpoints
+│       └── v2/                   # Current API version
+│           ├── auth/             # Authentication
+│           ├── ban/              # Ban management
+│           ├── cwl/              # CWL rankings
+│           ├── guild/            # Guild operations
+│           ├── roster/           # Roster endpoints
+│           ├── server/           # Server settings
+│           └── war/              # War data             
 ├── components/
 │   ├── ui/                       # shadcn/ui components (40+ components)
 │   ├── dashboard/                # Dashboard-specific components
