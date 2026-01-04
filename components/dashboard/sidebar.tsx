@@ -26,7 +26,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { LanguageSwitcher } from "@/components/language-switcher";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import type { UserInfo } from "@/lib/api/types/auth";
@@ -186,9 +192,9 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
             </div>
           </div>
         ) : (
-          <Collapsible open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-            <CollapsibleTrigger asChild>
-              <div className="flex items-center gap-3 p-4 cursor-pointer group transition-all duration-200 hover:bg-accent/50">
+          <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-3 p-4 cursor-pointer group transition-all duration-200 hover:bg-accent/50 outline-none">
                 <Avatar className="h-12 w-12 rounded-xl ring-2 ring-border transition-all group-hover:ring-4">
                   <AvatarImage src={guildIcon} className="rounded-xl" />
                   <AvatarFallback className="rounded-xl text-lg font-bold bg-secondary text-primary">
@@ -207,44 +213,51 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                   </div>
                 </div>
               </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="px-4 pb-4 space-y-3">
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" sideOffset={-10} alignOffset={10} className="w-56 bg-popover/95 backdrop-blur-md border-primary/30 shadow-2xl">
               {/* Switch Server */}
-              <Link href="/servers" className="flex items-center gap-2 text-sm text-white hover:text-white/80 transition-colors">
-                <Server className="h-4 w-4" />
-                {t("switchServer")}
-              </Link>
+              <DropdownMenuItem asChild>
+                <Link href="/servers" className="flex items-center gap-2 cursor-pointer py-2">
+                  <Server className="h-4 w-4 text-primary" />
+                  <span className="font-medium">{t("switchServer")}</span>
+                </Link>
+              </DropdownMenuItem>
 
               {/* Go Home */}
-              <Link href={`/${locale}`} className="flex items-center gap-2 text-sm text-white hover:text-white/80 transition-colors">
-                <Home className="h-4 w-4" />
-                {t("goHome")}
-              </Link>
+              <DropdownMenuItem asChild>
+                <Link href={`/${locale}`} className="flex items-center gap-2 cursor-pointer py-2">
+                  <Home className="h-4 w-4 text-primary" />
+                  <span className="font-medium">{t("goHome")}</span>
+                </Link>
+              </DropdownMenuItem>
 
               {/* User Info & Logout */}
               {user && (
-                <div className="flex items-center justify-between p-3 bg-accent/50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8 border border-border">
-                      <AvatarImage src={user.avatar_url} alt={user.username} />
-                      <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium text-foreground truncate">
-                      {user.username}
-                    </span>
+                <>
+                  <DropdownMenuSeparator className="bg-primary/10" />
+                  <div className="flex items-center justify-between p-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Avatar className="h-8 w-8 border border-border">
+                        <AvatarImage src={user.avatar_url} alt={user.username} />
+                        <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {user.username}
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleLogout}
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <LogOut className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleLogout}
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </Button>
-                </div>
+                </>
               )}
-            </CollapsibleContent>
-          </Collapsible>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
 
