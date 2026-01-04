@@ -21,6 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -92,6 +94,13 @@ interface Clan {
 interface Channel {
   id: string;
   name: string;
+  parent_name?: string;
+}
+
+interface DiscordRole {
+  id: string;
+  name: string;
+  color: number;
 }
 
 export default function ClansPage() {
@@ -132,6 +141,7 @@ export default function ClansPage() {
 
   const [clans, setClans] = useState<Clan[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
+  const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -155,12 +165,15 @@ export default function ClansPage() {
           return;
         }
 
-        // Fetch clans and channels in parallel
-        const [clansRes, channelsRes] = await Promise.all([
+        // Fetch clans, channels and roles in parallel
+        const [clansRes, channelsRes, rolesRes] = await Promise.all([
           fetch(`/api/v2/server/${guildId}/clans`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           }),
           fetch(`/api/v2/server/${guildId}/channels`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          }),
+          fetch(`/api/v2/server/${guildId}/discord-roles`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           }),
         ]);
@@ -181,6 +194,11 @@ export default function ClansPage() {
         if (channelsRes.ok) {
           const channelsData = await channelsRes.json();
           setChannels(channelsData || []);
+        }
+
+        if (rolesRes.ok) {
+          const rolesData = await rolesRes.json();
+          setDiscordRoles(rolesData.roles || []);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -719,40 +737,33 @@ export default function ClansPage() {
                 <div className="grid gap-4">
                   <div className="space-y-2">
                     <Label>{t("memberRole")}</Label>
-                    <Input
-                      placeholder={t("roleIdPlaceholder")}
-                      value={clanSettings?.generalRole || ''}
-                      onChange={(e) => setClanSettings({...clanSettings, generalRole: e.target.value || null})}
+                    <RoleCombobox
+                      roles={discordRoles}
+                      value={clanSettings?.generalRole?.toString() || 'disabled'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, generalRole: value === 'disabled' ? null : value})}
+                      placeholder={t("selectRole")}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>{t("leaderRole")}</Label>
-                    <Input
-                      placeholder={t("roleIdPlaceholder")}
-                      value={clanSettings?.leaderRole || ''}
-                      onChange={(e) => setClanSettings({...clanSettings, leaderRole: e.target.value || null})}
+                    <RoleCombobox
+                      roles={discordRoles}
+                      value={clanSettings?.leaderRole?.toString() || 'disabled'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, leaderRole: value === 'disabled' ? null : value})}
+                      placeholder={t("selectRole")}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>{t("clanChannel")}</Label>
-                    <Select
+                    <ChannelCombobox
+                      channels={channels}
                       value={clanSettings.clanChannel?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' ? null : value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("selectChannel")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">{t("none")}</SelectItem>
-                        {channels.map((ch) => (
-                          <SelectItem key={ch.id} value={ch.id}>
-                            #{ch.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' || value === 'disabled' ? null : value})}
+                      placeholder={t("selectChannel")}
+                      showDisabled={false}
+                    />
                   </div>
 
                   <div className="space-y-2">
@@ -855,62 +866,35 @@ export default function ClansPage() {
                 <div className="grid gap-4">
                   <div className="space-y-2">
                     <Label>{t("warCountdownChannel")}</Label>
-                    <Select
+                    <ChannelCombobox
+                      channels={channels}
                       value={clanSettings.warCountdown?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' ? null : value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("selectChannel")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">{t("none")}</SelectItem>
-                        {channels.map((ch) => (
-                          <SelectItem key={ch.id} value={ch.id}>
-                            #{ch.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' || value === 'disabled' ? null : value})}
+                      placeholder={t("selectChannel")}
+                      showDisabled={false}
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label>{t("warTimerCountdown")}</Label>
-                    <Select
+                    <ChannelCombobox
+                      channels={channels}
                       value={clanSettings.warTimerCountdown?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' ? null : value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("selectChannel")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">{t("none")}</SelectItem>
-                        {channels.map((ch) => (
-                          <SelectItem key={ch.id} value={ch.id}>
-                            #{ch.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' || value === 'disabled' ? null : value})}
+                      placeholder={t("selectChannel")}
+                      showDisabled={false}
+                    />
                   </div>
 
                   <div className="space-y-2">
                     <Label>{t("banAlertChannel")}</Label>
-                    <Select
+                    <ChannelCombobox
+                      channels={channels}
                       value={clanSettings.ban_alert_channel?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' ? null : value})}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("selectChannel")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">{t("none")}</SelectItem>
-                        {channels.map((ch) => (
-                          <SelectItem key={ch.id} value={ch.id}>
-                            #{ch.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' || value === 'disabled' ? null : value})}
+                      placeholder={t("selectChannel")}
+                      showDisabled={false}
+                    />
                   </div>
                 </div>
               </TabsContent>
