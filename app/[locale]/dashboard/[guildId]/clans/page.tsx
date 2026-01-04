@@ -377,14 +377,16 @@ export default function ClansPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6">
+      <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto space-y-6">
           {/* Header Skeleton */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
-              <div className="space-y-2">
-                <Skeleton className="h-8 w-48 animate-pulse" />
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <Skeleton className="h-8 w-8 animate-pulse" />
+              </div>
+              <div>
+                <Skeleton className="h-9 w-48 animate-pulse mb-1" />
                 <Skeleton className="h-5 w-96 animate-pulse" />
               </div>
             </div>
@@ -392,21 +394,58 @@ export default function ClansPage() {
           </div>
 
           {/* Statistics Skeleton */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-            {[1, 2, 3, 4].map((i) => (
-              <Card key={i} className="bg-card border-border">
-                <CardHeader className="pb-3">
-                  <Skeleton className="h-4 w-24 animate-pulse" />
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-10 w-16 animate-pulse" />
-                    <Skeleton className="h-8 w-8 rounded animate-pulse" />
-                  </div>
-                  <Skeleton className="h-4 w-28 mt-2 animate-pulse" />
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-green-500/30 bg-green-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
           </div>
 
           {/* Clans Grid Skeleton */}
