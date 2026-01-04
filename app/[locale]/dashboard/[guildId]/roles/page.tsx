@@ -702,179 +702,6 @@ export default function RolesPage() {
     );
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background p-4 md:p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Header Skeleton */}
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
-            <div className="p-3 rounded-lg bg-purple-500/10">
-              <Skeleton className="h-8 w-8 animate-pulse" />
-            </div>
-            <div>
-              <Skeleton className="h-9 w-56 animate-pulse mb-1" />
-              <Skeleton className="h-5 w-96 animate-pulse" />
-            </div>
-          </div>
-
-          {/* Statistics Overview Skeleton */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-              <CardHeader className="pb-3">
-                <Skeleton className="h-4 w-28 animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-16 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-gray-500/30 bg-gray-500/5">
-              <CardHeader className="pb-3">
-                <Skeleton className="h-4 w-32 animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-20 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-              <CardHeader className="pb-3">
-                <Skeleton className="h-4 w-28 animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-orange-500/30 bg-orange-500/5">
-              <CardHeader className="pb-3">
-                <Skeleton className="h-4 w-32 animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-9 w-12 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Auto-Eval Settings Skeleton */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Skeleton className="h-5 w-5 animate-pulse" />
-                    <Skeleton className="h-6 w-40 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-4 w-80 animate-pulse" />
-                </div>
-                <Skeleton className="h-10 w-32 animate-pulse" />
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-                <div className="space-y-0.5 flex-1">
-                  <Skeleton className="h-4 w-48 animate-pulse mb-1" />
-                  <Skeleton className="h-3 w-64 animate-pulse" />
-                </div>
-                <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
-              </div>
-              <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-                <div className="space-y-0.5 flex-1">
-                  <Skeleton className="h-4 w-48 animate-pulse mb-1" />
-                  <Skeleton className="h-3 w-64 animate-pulse" />
-                </div>
-                <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Role Types Tabs Skeleton */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <Skeleton className="h-6 w-40 animate-pulse" />
-                <Skeleton className="h-10 w-32 animate-pulse" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              {/* Tabs Skeleton */}
-              <div className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 mb-6">
-                {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                  <Skeleton key={i} className="h-10 w-full animate-pulse" />
-                ))}
-              </div>
-
-              {/* Table Skeleton */}
-              <div className="mt-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>
-                        <Skeleton className="h-4 w-24 animate-pulse" />
-                      </TableHead>
-                      <TableHead>
-                        <Skeleton className="h-4 w-20 animate-pulse" />
-                      </TableHead>
-                      <TableHead className="text-right">
-                        <Skeleton className="h-4 w-16 animate-pulse ml-auto" />
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {[1, 2, 3].map((i) => (
-                      <TableRow key={i}>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Skeleton className="h-3 w-3 rounded-full animate-pulse" />
-                            <Skeleton className="h-4 w-32 animate-pulse" />
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-4 w-24 animate-pulse" />
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Skeleton className="h-8 w-20 animate-pulse ml-auto" />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Info Card Skeleton */}
-          <Card className="border-blue-500/30 bg-blue-500/5">
-            <CardHeader>
-              <Skeleton className="h-6 w-32 animate-pulse" />
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              <Skeleton className="h-4 w-full animate-pulse" />
-              <Skeleton className="h-4 w-full animate-pulse" />
-              <Skeleton className="h-4 w-3/4 animate-pulse" />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
   // Calculate statistics
   const totalRoles = Object.values(allRoles).reduce((sum, roles: any) => sum + (roles?.length || 0), 0);
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
@@ -903,13 +730,25 @@ export default function RolesPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRoles")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-purple-500">{totalRoles}</div>
-                <Shield className="h-8 w-8 text-purple-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("stats.totalRolesDesc")}
-              </p>
+              {isLoading ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-9 w-16 animate-pulse" />
+                    <Skeleton className="h-8 w-8 animate-pulse" />
+                  </div>
+                  <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold text-purple-500">{totalRoles}</div>
+                    <Shield className="h-8 w-8 text-purple-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t("stats.totalRolesDesc")}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -918,15 +757,27 @@ export default function RolesPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.autoEvaluation")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className={`text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-gray-500'}`}>
-                  {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
-                </div>
-                <Settings className={`h-8 w-8 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-gray-500/50'}`} />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
-              </p>
+              {isLoading ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-9 w-20 animate-pulse" />
+                    <Skeleton className="h-8 w-8 animate-pulse" />
+                  </div>
+                  <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className={`text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-gray-500'}`}>
+                      {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
+                    </div>
+                    <Settings className={`h-8 w-8 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-gray-500/50'}`} />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -935,13 +786,25 @@ export default function RolesPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.activeTypes")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-blue-500">{activeRoleTypes}/{totalRoleTypes}</div>
-                <Trophy className="h-8 w-8 text-blue-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("stats.activeTypesDesc")}
-              </p>
+              {isLoading ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-9 w-12 animate-pulse" />
+                    <Skeleton className="h-8 w-8 animate-pulse" />
+                  </div>
+                  <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold text-blue-500">{activeRoleTypes}/{totalRoleTypes}</div>
+                    <Trophy className="h-8 w-8 text-blue-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t("stats.activeTypesDesc")}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -950,13 +813,25 @@ export default function RolesPage() {
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.discordRoles")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-orange-500">{discordRoles.length}</div>
-                <Users className="h-8 w-8 text-orange-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t("stats.discordRolesDesc")}
-              </p>
+              {isLoading ? (
+                <>
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-9 w-12 animate-pulse" />
+                    <Skeleton className="h-8 w-8 animate-pulse" />
+                  </div>
+                  <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl font-bold text-orange-500">{discordRoles.length}</div>
+                    <Users className="h-8 w-8 text-orange-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t("stats.discordRolesDesc")}
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -1108,18 +983,60 @@ export default function RolesPage() {
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 h-auto">
-                {roleTypes.map((type) => (
-                  <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm">
-                    <type.icon className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
-                    <span className="hidden sm:inline">{type.label}</span>
-                    <span className="sm:hidden">{type.label.split(' ')[0]}</span>
-                  </TabsTrigger>
-                ))}
+                {isLoading ? (
+                  [...Array(7)].map((_, i) => (
+                    <Skeleton key={i} className="h-10 w-full animate-pulse" />
+                  ))
+                ) : (
+                  roleTypes.map((type) => (
+                    <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm">
+                      <type.icon className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
+                      <span className="hidden sm:inline">{type.label}</span>
+                      <span className="sm:hidden">{type.label.split(' ')[0]}</span>
+                    </TabsTrigger>
+                  ))
+                )}
               </TabsList>
 
               {roleTypes.map((type) => (
                 <TabsContent key={type.value} value={type.value} className="mt-6">
-                  {renderRolesList(type.value)}
+                  {isLoading ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>
+                            <Skeleton className="h-4 w-24 animate-pulse" />
+                          </TableHead>
+                          <TableHead>
+                            <Skeleton className="h-4 w-20 animate-pulse" />
+                          </TableHead>
+                          <TableHead className="text-right">
+                            <Skeleton className="h-4 w-16 animate-pulse ml-auto" />
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {[1, 2, 3].map((i) => (
+                          <TableRow key={i}>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Skeleton className="h-3 w-3 rounded-full animate-pulse" />
+                                <Skeleton className="h-4 w-32 animate-pulse" />
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-4 w-24 animate-pulse" />
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Skeleton className="h-8 w-20 animate-pulse ml-auto" />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    renderRolesList(type.value)
+                  )}
                 </TabsContent>
               ))}
             </Tabs>

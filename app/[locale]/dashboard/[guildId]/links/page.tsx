@@ -331,110 +331,6 @@ export default function LinksManagementPage() {
       .map(acc => ({ ...acc, user: member }))
   ) || [];
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background p-6 space-y-6">
-        {/* Header Skeleton */}
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-56 animate-pulse" />
-            <Skeleton className="h-5 w-96 animate-pulse" />
-          </div>
-        </div>
-
-        {/* Statistics Cards Skeleton */}
-        <div className="grid gap-4 md:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="bg-card border-border">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <Skeleton className="h-4 w-28 animate-pulse" />
-                <Skeleton className="h-4 w-4 rounded animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
-                <Skeleton className="h-3 w-24 animate-pulse" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Main Content Skeleton */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <Skeleton className="h-6 w-40 animate-pulse" />
-            <Skeleton className="h-4 w-80 mt-2 animate-pulse" />
-          </CardHeader>
-          <CardContent>
-            {/* Tabs Skeleton */}
-            <div className="flex gap-2 mb-6">
-              {[1, 2, 3, 4].map((i) => (
-                <Skeleton key={i} className="h-10 w-32 animate-pulse" />
-              ))}
-            </div>
-
-            {/* Search and Filters Skeleton */}
-            <div className="flex flex-col lg:flex-row gap-4 mb-6">
-              <Skeleton className="h-10 flex-1 animate-pulse" />
-              <Skeleton className="h-10 w-[180px] animate-pulse" />
-              <Skeleton className="h-10 w-[180px] animate-pulse" />
-            </div>
-
-            {/* Action Buttons Skeleton */}
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex gap-2">
-                <Skeleton className="h-9 w-24 animate-pulse" />
-                <Skeleton className="h-9 w-32 animate-pulse" />
-              </div>
-              <div className="flex gap-2">
-                <Skeleton className="h-9 w-28 animate-pulse" />
-                <Skeleton className="h-9 w-28 animate-pulse" />
-              </div>
-            </div>
-
-            {/* Members List Skeleton */}
-            <div className="space-y-3">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Card key={i} className="bg-secondary/50 border-border">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-3 flex-1">
-                        <Skeleton className="h-10 w-10 rounded-full animate-pulse" />
-                        <div className="flex-1 space-y-3">
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-40 animate-pulse" />
-                            <Skeleton className="h-4 w-32 animate-pulse" />
-                          </div>
-                          <div className="space-y-2">
-                            {[1, 2].map((j) => (
-                              <div key={j} className="flex items-center gap-3">
-                                <Skeleton className="h-4 w-4 rounded animate-pulse" />
-                                <Skeleton className="h-4 w-28 animate-pulse" />
-                                <Skeleton className="h-5 w-16 animate-pulse" />
-                                <Skeleton className="h-5 w-20 animate-pulse" />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <Skeleton className="h-8 w-8 rounded animate-pulse" />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Pagination Skeleton */}
-            <div className="flex items-center justify-between mt-6">
-              <Skeleton className="h-9 w-24 animate-pulse" />
-              <Skeleton className="h-4 w-32 animate-pulse" />
-              <Skeleton className="h-9 w-20 animate-pulse" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
@@ -459,7 +355,11 @@ export default function LinksManagementPage() {
             <User className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{linksData?.total_members || 0}</div>
+            {loading ? (
+              <Skeleton className="h-8 w-20 animate-pulse" />
+            ) : (
+              <div className="text-2xl font-bold text-foreground">{linksData?.total_members || 0}</div>
+            )}
           </CardContent>
         </Card>
 
@@ -469,10 +369,19 @@ export default function LinksManagementPage() {
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{linksData?.members_with_links || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              {linksData?.total_members ? Math.round((linksData.members_with_links / linksData.total_members) * 100) : 0}% of total
-            </p>
+            {loading ? (
+              <>
+                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
+                <Skeleton className="h-3 w-24 animate-pulse" />
+              </>
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-foreground">{linksData?.members_with_links || 0}</div>
+                <p className="text-xs text-muted-foreground">
+                  {linksData?.total_members ? Math.round((linksData.members_with_links / linksData.total_members) * 100) : 0}% of total
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -482,10 +391,19 @@ export default function LinksManagementPage() {
             <Link className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{linksData?.total_linked_accounts || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              Avg: {linksData?.members_with_links ? (linksData.total_linked_accounts / linksData.members_with_links).toFixed(1) : 0} per member
-            </p>
+            {loading ? (
+              <>
+                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
+                <Skeleton className="h-3 w-24 animate-pulse" />
+              </>
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-foreground">{linksData?.total_linked_accounts || 0}</div>
+                <p className="text-xs text-muted-foreground">
+                  Avg: {linksData?.members_with_links ? (linksData.total_linked_accounts / linksData.members_with_links).toFixed(1) : 0} per member
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -495,10 +413,19 @@ export default function LinksManagementPage() {
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{linksData?.verified_accounts || 0}</div>
-            <p className="text-xs text-muted-foreground">
-              {linksData?.total_linked_accounts ? Math.round((linksData.verified_accounts / linksData.total_linked_accounts) * 100) : 0}% verified
-            </p>
+            {loading ? (
+              <>
+                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
+                <Skeleton className="h-3 w-24 animate-pulse" />
+              </>
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-foreground">{linksData?.verified_accounts || 0}</div>
+                <p className="text-xs text-muted-foreground">
+                  {linksData?.total_linked_accounts ? Math.round((linksData.verified_accounts / linksData.total_linked_accounts) * 100) : 0}% verified
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -574,22 +501,57 @@ export default function LinksManagementPage() {
               {/* Members List */}
               <div className="space-y-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <p className="text-sm text-muted-foreground">
-                    Showing {filteredMembers.length} {filteredMembers.length === 1 ? 'member' : 'members'}
-                  </p>
+                  {loading ? (
+                    <Skeleton className="h-4 w-32 animate-pulse" />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Showing {filteredMembers.length} {filteredMembers.length === 1 ? 'member' : 'members'}
+                    </p>
+                  )}
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={handleExportCSV}>
+                    <Button variant="outline" size="sm" onClick={handleExportCSV} disabled={loading}>
                       <Download className="h-4 w-4 mr-2" />
                       Export CSV
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleExportJSON}>
+                    <Button variant="outline" size="sm" onClick={handleExportJSON} disabled={loading}>
                       <Download className="h-4 w-4 mr-2" />
                       Export JSON
                     </Button>
                   </div>
                 </div>
 
-                {filteredMembers.length === 0 ? (
+                {loading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Card key={i} className="bg-secondary/50 border-border">
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start gap-3 flex-1">
+                              <Skeleton className="h-10 w-10 rounded-full animate-pulse" />
+                              <div className="flex-1 space-y-3">
+                                <div className="space-y-2">
+                                  <Skeleton className="h-5 w-40 animate-pulse" />
+                                  <Skeleton className="h-4 w-32 animate-pulse" />
+                                </div>
+                                <div className="space-y-2">
+                                  {[1, 2].map((j) => (
+                                    <div key={j} className="flex items-center gap-3">
+                                      <Skeleton className="h-4 w-4 rounded animate-pulse" />
+                                      <Skeleton className="h-4 w-28 animate-pulse" />
+                                      <Skeleton className="h-5 w-16 animate-pulse" />
+                                      <Skeleton className="h-5 w-20 animate-pulse" />
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                            <Skeleton className="h-8 w-8 rounded animate-pulse" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : filteredMembers.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground border border-border rounded-lg bg-secondary/20">
                     <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p className="text-lg font-medium">No members found</p>

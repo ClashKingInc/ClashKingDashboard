@@ -167,88 +167,6 @@ export default function GeneralSettingsPage() {
     return preview;
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-5xl mx-auto space-y-6">
-          {/* Header Skeleton */}
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
-              <Skeleton className="h-9 w-64" />
-              <Skeleton className="h-5 w-96" />
-            </div>
-            <div className="flex gap-2">
-              <Skeleton className="h-9 w-20" />
-              <Skeleton className="h-9 w-32" />
-            </div>
-          </div>
-
-          {/* Info Banner Skeleton */}
-          <Card className="bg-blue-500/5 border-blue-500/30">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <Skeleton className="h-5 w-5 rounded" />
-                <div className="space-y-2 flex-1">
-                  <Skeleton className="h-4 w-48" />
-                  <Skeleton className="h-3 w-full" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Main Cards Skeleton */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-8 rounded-lg" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-40" />
-                    <Skeleton className="h-3 w-64" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-20 w-full" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-8 rounded-lg" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-32" />
-                    <Skeleton className="h-3 w-48" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-16 w-full" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-8 rounded-lg" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-32" />
-                    <Skeleton className="h-3 w-48" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-16 w-full" />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-5xl mx-auto space-y-6">
@@ -361,13 +279,17 @@ export default function GeneralSettingsPage() {
                     {t("nickname.automaticChangesDesc")}
                   </p>
                 </div>
-                <Switch
-                  id="change-nicknames"
-                  checked={settings.change_nickname}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, change_nickname: checked })
-                  }
-                />
+                {isLoading ? (
+                  <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
+                ) : (
+                  <Switch
+                    id="change-nicknames"
+                    checked={settings.change_nickname}
+                    onCheckedChange={(checked) =>
+                      setSettings({ ...settings, change_nickname: checked })
+                    }
+                  />
+                )}
               </div>
 
               <Separator className="bg-border" />
@@ -377,15 +299,19 @@ export default function GeneralSettingsPage() {
                 <Label htmlFor="family-convention" className="text-sm font-medium">
                   {t("nickname.familyFormat")}
                 </Label>
-                <Input
-                  id="family-convention"
-                  value={settings.nickname_rule}
-                  onChange={(e) =>
-                    setSettings({ ...settings, nickname_rule: e.target.value })
-                  }
-                  placeholder="[{player_clan_abbreviation}] {player_name}"
-                  className="bg-secondary border-border font-mono text-sm"
-                />
+                {isLoading ? (
+                  <Skeleton className="h-10 w-full animate-pulse" />
+                ) : (
+                  <Input
+                    id="family-convention"
+                    value={settings.nickname_rule}
+                    onChange={(e) =>
+                      setSettings({ ...settings, nickname_rule: e.target.value })
+                    }
+                    placeholder="[{player_clan_abbreviation}] {player_name}"
+                    className="bg-secondary border-border font-mono text-sm"
+                  />
+                )}
 
                 {/* Live Preview */}
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
@@ -393,9 +319,13 @@ export default function GeneralSettingsPage() {
                     <Eye className="h-4 w-4 text-primary" />
                     <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
-                  <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                    {generatePreview(settings.nickname_rule)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton className="h-9 w-full animate-pulse" />
+                  ) : (
+                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
+                      {generatePreview(settings.nickname_rule)}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -453,15 +383,19 @@ export default function GeneralSettingsPage() {
                 <Label htmlFor="non-family-convention" className="text-sm font-medium">
                   {t("nickname.nonFamilyFormat")}
                 </Label>
-                <Input
-                  id="non-family-convention"
-                  value={settings.non_family_nickname_rule}
-                  onChange={(e) =>
-                    setSettings({ ...settings, non_family_nickname_rule: e.target.value })
-                  }
-                  placeholder="{player_name}"
-                  className="bg-secondary border-border font-mono text-sm"
-                />
+                {isLoading ? (
+                  <Skeleton className="h-10 w-full animate-pulse" />
+                ) : (
+                  <Input
+                    id="non-family-convention"
+                    value={settings.non_family_nickname_rule}
+                    onChange={(e) =>
+                      setSettings({ ...settings, non_family_nickname_rule: e.target.value })
+                    }
+                    placeholder="{player_name}"
+                    className="bg-secondary border-border font-mono text-sm"
+                  />
+                )}
 
                 {/* Live Preview */}
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
@@ -469,9 +403,13 @@ export default function GeneralSettingsPage() {
                     <Eye className="h-4 w-4 text-primary" />
                     <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
-                  <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                    {generatePreview(settings.non_family_nickname_rule)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton className="h-9 w-full animate-pulse" />
+                  ) : (
+                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
+                      {generatePreview(settings.non_family_nickname_rule)}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -548,44 +486,58 @@ export default function GeneralSettingsPage() {
                 <p className="text-xs text-muted-foreground">
                   {t("appearance.embedColorDesc")}
                 </p>
-                <div className="flex gap-3">
-                  <div className="relative">
-                    <Input
-                      id="embed-color"
-                      type="color"
-                      value={intToHex(settings.embed_color)}
-                      onChange={(e) => setSettings({ ...settings, embed_color: hexToInt(e.target.value) })}
-                      className="w-16 h-16 cursor-pointer border-2 rounded-lg"
-                    />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <Input
-                      value={intToHex(settings.embed_color)}
-                      onChange={(e) => {
-                        const hex = e.target.value;
-                        if (/^#[0-9A-F]{6}$/i.test(hex)) {
-                          setSettings({ ...settings, embed_color: hexToInt(hex) });
-                        }
-                      }}
-                      placeholder="#D90709"
-                      className="bg-secondary border-border font-mono"
-                    />
-                    <div className="text-xs text-muted-foreground">
-                      <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
+                {isLoading ? (
+                  <div className="flex gap-3">
+                    <Skeleton className="w-16 h-16 animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-10 w-full animate-pulse" />
+                      <Skeleton className="h-4 w-48 animate-pulse" />
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex gap-3">
+                    <div className="relative">
+                      <Input
+                        id="embed-color"
+                        type="color"
+                        value={intToHex(settings.embed_color)}
+                        onChange={(e) => setSettings({ ...settings, embed_color: hexToInt(e.target.value) })}
+                        className="w-16 h-16 cursor-pointer border-2 rounded-lg"
+                      />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <Input
+                        value={intToHex(settings.embed_color)}
+                        onChange={(e) => {
+                          const hex = e.target.value;
+                          if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                            setSettings({ ...settings, embed_color: hexToInt(hex) });
+                          }
+                        }}
+                        placeholder="#D90709"
+                        className="bg-secondary border-border font-mono"
+                      />
+                      <div className="text-xs text-muted-foreground">
+                        <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Color Preview */}
-                <div
-                  className="rounded-lg p-4 border-l-4 bg-secondary/50"
-                  style={{ borderLeftColor: intToHex(settings.embed_color) }}
-                >
-                  <p className="text-sm font-medium mb-1">{t("appearance.embedPreview")}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("appearance.embedPreviewDesc")}
-                  </p>
-                </div>
+                {isLoading ? (
+                  <Skeleton className="h-20 w-full animate-pulse" />
+                ) : (
+                  <div
+                    className="rounded-lg p-4 border-l-4 bg-secondary/50"
+                    style={{ borderLeftColor: intToHex(settings.embed_color) }}
+                  >
+                    <p className="text-sm font-medium mb-1">{t("appearance.embedPreview")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t("appearance.embedPreviewDesc")}
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

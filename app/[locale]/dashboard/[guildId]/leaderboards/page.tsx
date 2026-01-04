@@ -117,78 +117,6 @@ export default function LeaderboardsPage() {
     return <Award className="w-5 h-5" />;
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background p-6 space-y-6">
-        {/* Header Skeleton */}
-        <div className="space-y-2">
-          <Skeleton className="h-9 w-64 animate-pulse" />
-          <Skeleton className="h-5 w-96 animate-pulse" />
-        </div>
-
-        {/* Statistics Cards Skeleton */}
-        <div className="grid gap-4 md:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="bg-card border-border">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <Skeleton className="h-4 w-28 animate-pulse" />
-                <Skeleton className="h-4 w-4 rounded animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-8 w-20 animate-pulse" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Filters Skeleton */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <Skeleton className="h-6 w-24 animate-pulse" />
-            <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="space-y-2">
-                  <Skeleton className="h-4 w-16 animate-pulse" />
-                  <Skeleton className="h-10 w-full animate-pulse" />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Leaderboard Table Skeleton */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <Skeleton className="h-6 w-32 animate-pulse" />
-            <Skeleton className="h-4 w-80 mt-2 animate-pulse" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/50"
-                >
-                  <div className="flex items-center gap-4 flex-1">
-                    <Skeleton className="h-8 w-16 animate-pulse" />
-                    <div className="flex-1 space-y-2">
-                      <Skeleton className="h-5 w-48 animate-pulse" />
-                      <Skeleton className="h-4 w-32 animate-pulse" />
-                    </div>
-                  </div>
-                  <Skeleton className="h-8 w-24 animate-pulse" />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
       {/* Page Header */}
@@ -207,7 +135,11 @@ export default function LeaderboardsPage() {
             <Trophy className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{leaderboardData.length}</div>
+            {loading ? (
+              <Skeleton className="h-8 w-16 animate-pulse" />
+            ) : (
+              <div className="text-2xl font-bold text-foreground">{leaderboardData.length}</div>
+            )}
           </CardContent>
         </Card>
 
@@ -320,7 +252,25 @@ export default function LeaderboardsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {leaderboardData.length === 0 ? (
+          {loading ? (
+            <div className="space-y-2">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/50"
+                >
+                  <div className="flex items-center gap-4 flex-1">
+                    <Skeleton className="h-8 w-16 animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-5 w-48 animate-pulse" />
+                      <Skeleton className="h-4 w-32 animate-pulse" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-8 w-24 animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ) : leaderboardData.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Trophy className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p className="text-lg">{t('empty.title')}</p>
