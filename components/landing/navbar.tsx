@@ -86,7 +86,7 @@ export function Navbar() {
                     <ChevronDown className="h-4 w-4 text-gray-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48" sideOffset={4}>
+                <DropdownMenuContent align="end" className="w-48 !bg-[#333333] !border !border-white/10 shadow-2xl" sideOffset={4}>
                   <DropdownMenuItem asChild className="hover:!bg-transparent">
                     <Link href={`/${locale}/servers`} className="flex items-center space-x-2">
                       <ArrowRight className="h-4 w-4" />
