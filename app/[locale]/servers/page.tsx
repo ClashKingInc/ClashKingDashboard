@@ -7,9 +7,10 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Users } from "lucide-react";
+import { ArrowLeft, Users, LogOut } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
+import type { UserInfo } from "@/lib/api/types/auth";
 
 export default function ServersPage() {
   const t = useTranslations("ServersPage");
@@ -19,8 +20,19 @@ export default function ServersPage() {
   const [guilds, setGuilds] = useState<GuildInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
 
   useEffect(() => {
+    // Load user data from localStorage
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (err) {
+        console.error("Error parsing user data:", err);
+      }
+    }
+
     const fetchGuilds = async () => {
       try {
         const accessToken = localStorage.getItem("access_token");
@@ -68,6 +80,13 @@ export default function ServersPage() {
 
     fetchGuilds();
   }, [router, locale]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+    router.push(`/${locale}`);
+  };
 
   const getGuildIconUrl = (guild: GuildInfo) => {
     console.log(guild);
@@ -123,17 +142,38 @@ export default function ServersPage() {
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-[#F03529]/10 to-transparent rounded-full blur-3xl" />
       </div>
 
-      <div className="relative container mx-auto px-4 py-8 sm:py-12">
+      <div className="relative container mx-auto px-4 py-4 sm:py-8">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <Link
-              href={`/${locale}`}
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>{t("backToHome")}</span>
-            </Link>
+            <div className="flex items-center justify-between mb-6">
+              <Link
+                href={`/${locale}`}
+                className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>{t("backToHome")}</span>
+              </Link>
+              {user && (
+                <div className="flex items-center gap-3 bg-[#1F1F1F]/95 backdrop-blur border border-[#2A2A2A] rounded-lg px-4 py-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.avatar_url} />
+                    <AvatarFallback className="text-sm bg-[#2A2A2A] text-white">
+                      {user.username.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-white text-sm font-medium">{user.username}</span>
+                  <Button
+                    onClick={handleLogout}
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-400 hover:text-white hover:bg-[#2A2A2A] p-1 h-8 w-8"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
               {t("title")}
             </h1>
