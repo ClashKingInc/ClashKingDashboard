@@ -20,6 +20,7 @@ import {
   Trophy,
   Activity,
   LogOut,
+  Server,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -209,18 +210,16 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
             </CollapsibleTrigger>
             <CollapsibleContent className="px-4 pb-4 space-y-3">
               {/* Switch Server */}
-              <Button asChild variant="default" size="sm" className="w-full">
-                <Link href="/servers">
-                  {t("switchServer")}
-                </Link>
-              </Button>
+              <Link href="/servers" className="flex items-center gap-2 text-sm text-white hover:text-white/80 transition-colors">
+                <Server className="h-4 w-4" />
+                {t("switchServer")}
+              </Link>
 
               {/* Go Home */}
-              <Button asChild variant="default" size="sm" className="w-full">
-                <Link href={`/${locale}`}>
-                  {t("goHome")}
-                </Link>
-              </Button>
+              <Link href={`/${locale}`} className="flex items-center gap-2 text-sm text-white hover:text-white/80 transition-colors">
+                <Home className="h-4 w-4" />
+                {t("goHome")}
+              </Link>
 
               {/* User Info & Logout */}
               {user && (
