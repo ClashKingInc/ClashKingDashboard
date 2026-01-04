@@ -205,7 +205,8 @@
       "automation": "Automatisering",
       "statistics": "Statistieken",
       "system": "Systeem"
-    }
+    },
+    "switchServer": "Server Wisselen"
   },
   "BansPage": {
     "title": "Moderatie",
