@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { apiCache } from "@/lib/api-cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import {
   Bell,
   Target,
@@ -74,6 +76,13 @@ interface Clan {
   name: string;
 }
 
+interface Channel {
+  id: string;
+  name: string;
+  type: string;
+  parent_name?: string;
+}
+
 export default function RemindersPage() {
   const params = useParams();
   const router = useRouter();
@@ -96,6 +105,7 @@ export default function RemindersPage() {
     inactivity_reminders: [],
   });
   const [clans, setClans] = useState<Clan[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedClan, setSelectedClan] = useState<string>("all");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -118,13 +128,23 @@ export default function RemindersPage() {
           throw new Error("API URL is not configured");
         }
 
-        // Fetch clans and reminders in parallel
-        const [clansRes, remindersRes] = await Promise.all([
+        // Fetch clans, channels, and reminders in parallel
+        const [clansRes, channelsRes, remindersRes] = await Promise.all([
           fetch(`/api/v2/server/${guildId}/clans-basic`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
               'Content-Type': 'application/json',
             },
+          }),
+          apiCache.get(`channels-${guildId}`, async () => {
+            const res = await fetch(`/api/v2/server/${guildId}/channels`, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+            });
+            if (!res.ok) throw new Error('Failed to fetch channels');
+            return res.json();
           }),
           fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
             headers: {
@@ -148,6 +168,14 @@ export default function RemindersPage() {
         if (clansRes.ok) {
           const clansData = await clansRes.json();
           setClans(clansData || []);
+        }
+
+        // Parse channels
+        if (Array.isArray(channelsRes)) {
+          setChannels(channelsRes);
+        } else {
+          console.error('Channels data is not an array:', channelsRes);
+          setChannels([]);
         }
 
         // Parse reminders
@@ -724,12 +752,13 @@ export default function RemindersPage() {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor={`channel-${index}`}>{t('card.channelId')}</Label>
-                            <Input
-                              id={`channel-${index}`}
-                              placeholder={t('card.channelIdPlaceholder')}
+                            <Label htmlFor={`channel-${index}`}>{t('card.channel')}</Label>
+                            <ChannelCombobox
+                              channels={channels}
                               value={reminder.channel_id || ""}
-                              onChange={(e) => updateReminder(index, "channel_id", e.target.value)}
+                              onValueChange={(value) => updateReminder(index, "channel_id", value)}
+                              placeholder={t('card.channelPlaceholder')}
+                              showDisabled={false}
                             />
                           </div>
 
