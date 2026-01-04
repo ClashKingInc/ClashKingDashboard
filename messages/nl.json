@@ -710,8 +710,10 @@
     "greetingMessage": "Welkomstbericht",
     "leadershipEval": "Leiderschap Evaluatie",
     "leadershipEvalDescription": "Automatisch leiderschapsrollen toewijzen",
-    "warCountdownChannel": "Oorlog Aftelkanaal",
+    "warScoreCountdown": "Oorlogsscore Aftelling",
+    "warScoreCountdownDescription": "Maakt een spraakkanaal met de huidige oorlogsscore",
     "warTimerCountdown": "Oorlog Timer Aftelling",
+    "warTimerCountdownDescription": "Maakt een spraakkanaal met de resterende oorlogstijd",
     "banAlertChannel": "Ban Alert Kanaal",
     "category": "Categorie",
     "autoGreetOption": "Auto Welkomst Optie",
@@ -758,7 +760,10 @@
       "clanRemoved": "Clan succesvol verwijderd",
       "errorRemovingClan": "Kon clan niet verwijderen",
       "settingsSaved": "Instellingen succesvol opgeslagen",
-      "errorSavingSettings": "Kon instellingen niet opslaan"
+      "errorSavingSettings": "Kon instellingen niet opslaan",
+      "countdownEnabled": "Aftelling spraakkanaal aangemaakt",
+      "countdownDisabled": "Aftelling spraakkanaal verwijderd",
+      "errorTogglingCountdown": "Kon aftelling niet schakelen"
     }
   },
   "RolesPage": {
