@@ -206,7 +206,8 @@
       "statistics": "Statistics",
       "system": "System"
     },
-    "switchServer": "Switch Server"
+    "switchServer": "Switch Server",
+    "goHome": "Go Home"
   },
   "BansPage": {
     "title": "Moderation",

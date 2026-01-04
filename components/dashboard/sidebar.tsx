@@ -215,6 +215,13 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                 </Link>
               </Button>
 
+              {/* Go Home */}
+              <Button asChild variant="default" size="sm" className="w-full">
+                <Link href={`/${locale}`}>
+                  {t("goHome")}
+                </Link>
+              </Button>
+
               {/* User Info & Logout */}
               {user && (
                 <div className="flex items-center justify-between p-3 bg-accent/50 rounded-lg">

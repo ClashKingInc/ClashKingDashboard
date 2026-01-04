@@ -206,7 +206,8 @@
       "statistics": "Statistieken",
       "system": "Systeem"
     },
-    "switchServer": "Server Wisselen"
+    "switchServer": "Server Wisselen",
+    "goHome": "Naar Home"
   },
   "BansPage": {
     "title": "Moderatie",
