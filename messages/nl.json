@@ -17,6 +17,8 @@
     "previous": "Vorige",
     "poweredBy": "Mogelijk gemaakt door",
     "noData": "Geen gegevens beschikbaar",
+    "noChannelFound": "Geen kanaal gevonden.",
+    "searchChannels": "Zoek kanalen...",
     "error": "Er is een fout opgetreden",
     "success": "Succes",
     "actions": "Acties",
@@ -25,6 +27,7 @@
     "settings": "Instellingen",
     "status": "Status",
     "retry": "Opnieuw proberen",
+    "disabled": "Uitgeschakeld",
     "name": "Naam",
     "description": "Beschrijving",
     "createdAt": "Aangemaakt op",
@@ -964,9 +967,8 @@
       "logChannelsDesc": "Beschikbare kanalen",
       "trackedClans": "Gevolgde Clans",
       "trackedClansDesc": "Geconfigureerde clans",
-      "configuration": "Configuratie",
-      "readyToConfigure": "Klaar om te configureren",
-      "saving": "Opslaan..."
+      "issues": "Problemen",
+      "issuesDesc": "Logs vereisen aandacht"
     },
     "clanSelector": {
       "label": "Clan:",
@@ -1084,12 +1086,20 @@
     },
     "logCard": {
       "active": "Actief",
+      "issue": "Probleem",
+      "disabled": "Uitgeschakeld",
+      "enable": "Inschakelen",
+      "disable": "Uitschakelen",
       "channel": "Kanaal",
       "channelPlaceholder": "Selecteer kanaal",
-      "disabled": "Uitgeschakeld",
       "thread": "Thread (Optioneel)",
       "threadPlaceholder": "Selecteer thread",
-      "noThread": "Geen Thread"
+      "noThread": "Geen Thread",
+      "channelDeleted": "Dit kanaal bestaat niet meer. Selecteer een nieuw kanaal of schakel het logboek uit.",
+      "enableToConfig": "Schakel dit logboek in om het te configureren",
+      "configuring": "Configureren",
+      "on": "Aan",
+      "off": "Uit"
     }
   },
   "GeneralPage": {

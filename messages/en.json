@@ -17,6 +17,8 @@
     "previous": "Previous",
     "poweredBy": "Powered by",
     "noData": "No data available",
+    "noChannelFound": "No channel found.",
+    "searchChannels": "Search channels...",
     "error": "An error occurred",
     "success": "Success",
     "actions": "Actions",
@@ -25,6 +27,7 @@
     "settings": "Settings",
     "status": "Status",
     "retry": "Retry",
+    "disabled": "Disabled",
     "name": "Name",
     "description": "Description",
     "createdAt": "Created At",
@@ -1087,9 +1090,8 @@
       "logChannelsDesc": "Available channels",
       "trackedClans": "Tracked Clans",
       "trackedClansDesc": "Configured clans",
-      "configuration": "Configuration",
-      "readyToConfigure": "Ready to configure",
-      "saving": "Saving..."
+      "issues": "Issues",
+      "issuesDesc": "Logs need attention"
     },
     "clanSelector": {
       "label": "Clan:",
@@ -1207,12 +1209,20 @@
     },
     "logCard": {
       "active": "Active",
+      "issue": "Issue",
+      "disabled": "Disabled",
+      "enable": "Enable",
+      "disable": "Disable",
       "channel": "Channel",
       "channelPlaceholder": "Select channel",
-      "disabled": "Disabled",
       "thread": "Thread (Optional)",
       "threadPlaceholder": "Select thread",
-      "noThread": "No Thread"
+      "noThread": "No Thread",
+      "channelDeleted": "This channel no longer exists. Select a new one or disable the log.",
+      "enableToConfig": "Enable this log to configure it",
+      "configuring": "Configuring",
+      "on": "On",
+      "off": "Off"
     }
   },
   "GeneralPage": {

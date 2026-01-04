@@ -6,10 +6,13 @@ import { useTranslations } from "next-intl";
 import { apiCache } from "@/lib/api-cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import {
   FileText,
   Users,
@@ -33,6 +36,7 @@ import {
   Map,
   BarChart,
   UserCog,
+  AlertCircle,
 } from "lucide-react";
 
 interface Channel {
@@ -381,6 +385,27 @@ export default function LogsPage() {
     }).length;
   };
 
+  const countLogsWithIssues = () => {
+    const currentClan = getCurrentClan();
+    if (!currentClan) return 0;
+
+    const allLogKeys = [
+      ...CLAN_LOGS.flatMap(l => l.keys),
+      ...WAR_LOGS.flatMap(l => l.keys),
+      ...CAPITAL_LOGS.flatMap(l => l.keys),
+      ...PLAYER_LOGS.flatMap(l => l.keys),
+    ];
+
+    return allLogKeys.filter(key => {
+      const config = currentClan[key as keyof ClanLogsConfig];
+      // Log is enabled (has webhook) but channel doesn't exist
+      if (!config || typeof config !== 'object' || !config.webhook) return false;
+      const channelId = config.channel;
+      const channelExists = channelId && channels.some(ch => ch.id === channelId);
+      return !channelExists;
+    }).length;
+  };
+
   const getColorClasses = (color: string) => {
     const colorMap: Record<string, { bg: string; text: string }> = {
       'green': { bg: 'bg-green-500/10', text: 'text-green-500' },
@@ -394,12 +419,21 @@ export default function LogsPage() {
     return colorMap[color] || colorMap['gray'];
   };
 
-  const renderLogCard = (logDef: LogTypeDefinition) => {
+  // Separate component for LogCard to use hooks properly
+  const LogCard = ({ logDef }: { logDef: LogTypeDefinition }) => {
     const Icon = logDef.icon;
     const isEnabled = isLogEnabled(logDef.keys);
     const selectedChannel = getSelectedChannelForLogs(logDef.keys);
     const selectedThread = getSelectedThreadForLogs(logDef.keys);
     const colors = getColorClasses(logDef.color);
+    const [showEnableForm, setShowEnableForm] = useState(false);
+    const [pendingChannel, setPendingChannel] = useState<string | null>(null);
+    const isSaving = saving === logDef.keys[0];
+
+    // Check if the selected channel exists in the available channels list
+    // If log is enabled but no channel, it's also an issue
+    const channelExists = selectedChannel && channels.some(ch => ch.id === selectedChannel);
+    const selectedChannelData = selectedChannel ? channels.find(ch => ch.id === selectedChannel) : null;
 
     // Filter threads for the selected channel
     const channelThreads = selectedChannel
@@ -419,71 +453,128 @@ export default function LogsPage() {
                 <CardDescription className="text-xs">{logDef.description}</CardDescription>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              {saving === logDef.keys[0] && (
-                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-              )}
-              {isEnabled && !saving && (
-                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/10">
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  <span className="text-xs text-green-600 font-medium">{t('logCard.active')}</span>
+            <div className="flex items-center gap-3">
+              {isEnabled && !channelExists && !isSaving && (
+                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/10 border border-orange-500/30">
+                  <AlertCircle className="w-3 h-3 text-orange-500" />
+                  <span className="text-xs text-orange-600 font-medium">{t('logCard.issue')}</span>
                 </div>
+              )}
+              <Switch
+                checked={Boolean(isEnabled) || showEnableForm}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setShowEnableForm(true);
+                  } else {
+                    if (showEnableForm && !isEnabled) {
+                      setShowEnableForm(false);
+                    } else {
+                      handleChannelChange(logDef.keys, 'disabled');
+                    }
+                  }
+                }}
+                disabled={isSaving}
+                className={
+                  showEnableForm && !isEnabled
+                    ? 'data-[state=checked]:bg-blue-500'
+                    : isEnabled && !channelExists
+                    ? 'data-[state=checked]:bg-orange-500'
+                    : 'data-[state=checked]:bg-green-500'
+                }
+              />
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              ) : (
+                <span className={`text-xs font-medium ${
+                  !isEnabled && !showEnableForm ? 'text-muted-foreground' :
+                  showEnableForm && !isEnabled ? 'text-blue-600' :
+                  !channelExists ? 'text-orange-600' :
+                  'text-green-600'
+                }`}>
+                  {!isEnabled && !showEnableForm ? t('logCard.off') :
+                   showEnableForm && !isEnabled ? t('logCard.configuring') :
+                   t('logCard.on')}
+                </span>
               )}
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
-              <Select
-                value={selectedChannel || "disabled"}
-                onValueChange={(value) => handleChannelChange(logDef.keys, value)}
-                disabled={saving === logDef.keys[0]}
-                onOpenChange={(open) => {
-                  if (open) loadThreadsIfNeeded();
-                }}
-              >
-                <SelectTrigger className="bg-secondary border-border">
-                  <SelectValue placeholder={t('logCard.channelPlaceholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="disabled">{t('logCard.disabled')}</SelectItem>
-                  <Separator className="my-2" />
-                  {channels.map(ch => (
-                    <SelectItem key={ch.id} value={ch.id}>
-                      #{ch.name}
-                      {ch.parent_name && ` (${ch.parent_name})`}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+        <CardContent className="space-y-3">
+          {!isEnabled && !showEnableForm && !isSaving ? (
+            /* DISABLED STATE: Empty state */
+            <div className="text-center py-6 text-muted-foreground text-sm">
+              {t('logCard.enableToConfig')}
             </div>
-
-            {selectedChannel && channelThreads.length > 0 && (
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">{t('logCard.thread')}</Label>
-                <Select
-                  value={selectedThread || "none"}
-                  onValueChange={(value) => handleThreadChange(logDef.keys, value)}
-                  disabled={saving === logDef.keys[0]}
-                >
-                  <SelectTrigger className="bg-secondary border-border">
-                    <SelectValue placeholder={t('logCard.threadPlaceholder')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">{t('logCard.noThread')}</SelectItem>
-                    <Separator className="my-2" />
-                    {channelThreads.map((thread) => (
-                      <SelectItem key={thread.id} value={thread.id}>
-                        🧵 {thread.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          ) : (!isEnabled && showEnableForm) || (isSaving && !isEnabled) ? (
+            /* CONFIGURING STATE: Show channel selector */
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
+              <ChannelCombobox
+                channels={channels}
+                value={pendingChannel || "disabled"}
+                onValueChange={async (value) => {
+                  setPendingChannel(value);
+                  await handleChannelChange(logDef.keys, value);
+                  setPendingChannel(null);
+                  setShowEnableForm(false);
+                }}
+                placeholder={t('logCard.channelPlaceholder')}
+                disabled={isSaving}
+                showDisabled={false}
+              />
+            </div>
+          ) : (
+            /* ACTIVE/ISSUE STATE: Show channel selector */
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
+                <ChannelCombobox
+                  channels={channels}
+                  value={pendingChannel || (channelExists ? selectedChannel : "")}
+                  onValueChange={async (value) => {
+                    setPendingChannel(value);
+                    await handleChannelChange(logDef.keys, value);
+                    setPendingChannel(null);
+                    if (value !== "disabled") loadThreadsIfNeeded();
+                  }}
+                  placeholder={t('logCard.channelPlaceholder')}
+                  disabled={isSaving}
+                  className={!channelExists && isEnabled ? 'border-orange-500/50' : ''}
+                  showDisabled={false}
+                />
+                {!channelExists && isEnabled && !isSaving && (
+                  <p className="text-xs text-orange-600 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {t('logCard.channelDeleted')}
+                  </p>
+                )}
               </div>
-            )}
-          </div>
+
+              {selectedChannel && channelThreads.length > 0 && (
+                <div className="space-y-1.5">
+                  <Label className="text-sm font-medium">{t('logCard.thread')}</Label>
+                  <Select
+                    value={selectedThread || "none"}
+                    onValueChange={(value) => handleThreadChange(logDef.keys, value)}
+                    disabled={isSaving}
+                  >
+                    <SelectTrigger className="bg-secondary border-border">
+                      <SelectValue placeholder={t('logCard.threadPlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">{t('logCard.noThread')}</SelectItem>
+                      <Separator className="my-2" />
+                      {channelThreads.map((thread) => (
+                        <SelectItem key={thread.id} value={thread.id}>
+                          🧵 {thread.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     );
@@ -651,9 +742,9 @@ export default function LogsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+          <Card className="bg-card border-orange-500/30 bg-orange-500/5">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.configuration')}</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.issues')}</CardTitle>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -664,13 +755,11 @@ export default function LogsPage() {
               ) : (
                 <>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-purple-500">
-                      {saving ? <Loader2 className="h-8 w-8 animate-spin" /> : <Bell className="h-8 w-8" />}
-                    </div>
-                    <Bell className="h-8 w-8 text-purple-500/50" />
+                    <div className="text-3xl font-bold text-orange-500">{countLogsWithIssues()}</div>
+                    <AlertCircle className="h-8 w-8 text-orange-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
-                    {saving ? t('stats.saving') : t('stats.readyToConfigure')}
+                    {t('stats.issuesDesc')}
                   </p>
                 </>
               )}
@@ -720,28 +809,28 @@ export default function LogsPage() {
           {/* CLAN LOGS TAB */}
           <TabsContent value="clan" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {CLAN_LOGS.map(renderLogCard)}
+              {CLAN_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)}
             </div>
           </TabsContent>
 
           {/* WAR LOGS TAB */}
           <TabsContent value="war" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {WAR_LOGS.map(renderLogCard)}
+              {WAR_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)}
             </div>
           </TabsContent>
 
           {/* CAPITAL LOGS TAB */}
           <TabsContent value="capital" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {CAPITAL_LOGS.map(renderLogCard)}
+              {CAPITAL_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)}
             </div>
           </TabsContent>
 
           {/* PLAYER LOGS TAB */}
           <TabsContent value="player" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {PLAYER_LOGS.map(renderLogCard)}
+              {PLAYER_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)}
             </div>
           </TabsContent>
         </Tabs>
