@@ -149,7 +149,7 @@ export default function BansPage() {
       setIsSubmittingBan(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const userId = user ? parseInt(JSON.parse(user).user_id) || 0 : 0;
+      const userId = user ? JSON.parse(user).user_id : "0";
 
       if (!token) return;
 
@@ -202,7 +202,7 @@ export default function BansPage() {
       setIsSubmittingStrike(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const userId = user ? parseInt(JSON.parse(user).user_id) || 0 : 0;
+      const userId = user ? JSON.parse(user).user_id : "0";
 
       if (!token) return;
 
@@ -216,6 +216,7 @@ export default function BansPage() {
         added_by: userId,
         strike_weight: newStrike.strike_weight,
         rollover_days: newStrike.rollover_days,
+        image: "",
       });
 
       if (response.error) {

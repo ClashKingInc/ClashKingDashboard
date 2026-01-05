@@ -1144,7 +1144,7 @@
   ```json
   {
     "reason": "string",
-    "added_by": "number",
+    "added_by": "string | number",
     "image": "optional"
   }
   ```

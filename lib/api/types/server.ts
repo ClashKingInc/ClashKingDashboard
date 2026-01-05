@@ -65,7 +65,7 @@ export interface ClanSettings {
 
 export interface BanRequest {
   reason: string;
-  added_by: number;
+  added_by: string | number;
   image?: any;
 }
 
@@ -107,7 +107,7 @@ export interface BanResponse {
  */
 export interface StrikeRequest {
   reason: string;
-  added_by: number;
+  added_by: string | number;
   strike_weight: number;
   rollover_days?: number;
   image?: string;

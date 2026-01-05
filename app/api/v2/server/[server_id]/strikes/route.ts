@@ -27,8 +27,18 @@ export async function GET(
       },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      const data = await response.json();
+      return NextResponse.json(data, { status: response.status });
+    } else {
+      const text = await response.text();
+      console.error(`API non-JSON response (GET /server/${server_id}/strikes):`, text);
+      return NextResponse.json(
+        { error: `Backend error: ${text.substring(0, 100)}` },
+        { status: response.status || 500 }
+      );
+    }
   } catch (error) {
     console.error('API proxy error (GET /server/{server_id}/strikes):', error);
     return NextResponse.json(

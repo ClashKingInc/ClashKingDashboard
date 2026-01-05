@@ -20,8 +20,18 @@ export async function POST(
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      const data = await response.json();
+      return NextResponse.json(data, { status: response.status });
+    } else {
+      const text = await response.text();
+      console.error(`API non-JSON response (POST /server/${server_id}/strikes/${player_tag}):`, text);
+      return NextResponse.json(
+        { error: `Backend error: ${text.substring(0, 100)}` },
+        { status: response.status || 500 }
+      );
+    }
   } catch (error) {
     console.error('API proxy error (POST /server/{server_id}/strikes/{player_tag}):', error);
     return NextResponse.json(
@@ -53,8 +63,18 @@ export async function DELETE(
       },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      const data = await response.json();
+      return NextResponse.json(data, { status: response.status });
+    } else {
+      const text = await response.text();
+      console.error(`API non-JSON response (DELETE /server/${server_id}/strikes/${strikeId}):`, text);
+      return NextResponse.json(
+        { error: `Backend error: ${text.substring(0, 100)}` },
+        { status: response.status || 500 }
+      );
+    }
   } catch (error) {
     console.error('API proxy error (DELETE /server/{server_id}/strikes/{strike_id}):', error);
     return NextResponse.json(
