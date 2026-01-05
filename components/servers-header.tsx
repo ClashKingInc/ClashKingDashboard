@@ -53,7 +53,7 @@ export function ServersHeader() {
   }
 
   return (
-    <nav className="fixed top-0 inset-x-0 bg-background/95 backdrop-blur-lg z-50 border-b border-primary/30">
+    <nav className="fixed top-0 inset-x-0 bg-card/95 backdrop-blur-lg z-50 border-b border-primary/30">
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
