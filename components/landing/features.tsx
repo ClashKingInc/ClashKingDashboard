@@ -72,7 +72,7 @@ export function Features() {
   ];
 
   return (
-    <section id="features" className="py-24 px-4 bg-[#1F1F1F]">
+    <section id="features" className="py-24 px-4 bg-background">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-16">
@@ -82,10 +82,10 @@ export function Features() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
               {t("title")}
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               {t("subtitle")}
             </p>
           </motion.div>
@@ -103,15 +103,15 @@ export function Features() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Card className="h-full border-2 border-[#2A2A2A] hover:border-[#DC2626] transition-all duration-300 hover:shadow-xl group bg-[#2A2A2A]">
+                <Card className="h-full border-2 border-border hover:border-primary transition-all duration-300 hover:shadow-xl group bg-card">
                   <CardContent className="p-6">
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <Icon className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-3">
+                    <h3 className="text-xl font-semibold text-foreground mb-3">
                       {t(feature.titleKey)}
                     </h3>
-                    <p className="text-gray-300 leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed">
                       {t(feature.descriptionKey)}
                     </p>
                   </CardContent>
@@ -124,3 +124,4 @@ export function Features() {
     </section>
   );
 }
+

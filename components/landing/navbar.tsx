@@ -11,6 +11,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeSwitcher } from "@/components/theme-switcher";
+import { useTheme } from "next-themes";
+import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
 
 export function Navbar() {
@@ -18,10 +21,13 @@ export function Navbar() {
   const [user, setUser] = useState<UserInfo | null>(null);
   const params = useParams();
   const router = useRouter();
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const locale = (params?.locale as string) || "en";
   const t = useTranslations("Navigation");
 
   useEffect(() => {
+    setMounted(true);
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
@@ -40,14 +46,18 @@ export function Navbar() {
     router.push(`/${locale}`);
   };
 
+  const logoSrc = mounted && (theme === "light" || resolvedTheme === "light")
+    ? clashKingAssets.logos.withTextWhitePng
+    : clashKingAssets.logos.withTextDarkPng;
+
   return (
-    <nav className="fixed top-0 inset-x-0 bg-[#1F1F1F]/95 backdrop-blur-lg z-50 border-b border-[#DC2626]/30">
+    <nav className="fixed top-0 inset-x-0 bg-background/95 backdrop-blur-lg z-50 border-b border-primary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="https://assets.clashk.ing/logos/crown-text-dark-bg/ClashKing-with-text-3.svg"
+              src={logoSrc}
               alt="ClashKing Logo"
               width={100}
               height={100}
@@ -57,52 +67,53 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href={`/features`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/features`} className="text-muted-foreground hover:text-primary transition-colors">
               {t("features")}
             </Link>
-            <Link href={`/open-source`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/open-source`} className="text-muted-foreground hover:text-primary transition-colors">
               {t("openSource")}
             </Link>
-            <Link href={`/help`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/help`} className="text-muted-foreground hover:text-primary transition-colors">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="text-gray-300 hover:text-[#EF4444] transition-colors">
+            <Link href={`/support`} className="text-muted-foreground hover:text-primary transition-colors">
               {t("support")}
             </Link>
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeSwitcher />
             <LanguageSwitcher />
             {user ? (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <button className="group flex items-center space-x-2 hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer p-0 outline-none">
-                    <Avatar className="h-6 w-6 border border-[#DC2626]/50">
+                    <Avatar className="h-6 w-6 border border-primary/50">
                       <AvatarImage src={user.avatar_url} alt={user.username} />
                       <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
-                    <span className="text-gray-200 font-medium text-sm">{user.username}</span>
-                    <ChevronDown className="h-4 w-4 text-gray-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                    <span className="text-foreground font-medium text-sm">{user.username}</span>
+                    <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 !bg-[#333333] !border !border-white/10 shadow-2xl" sideOffset={4}>
+                <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4}>
                   <DropdownMenuItem asChild className="hover:!bg-transparent">
                     <Link href={`/${locale}/servers`} className="flex items-center space-x-2">
                       <ArrowRight className="h-4 w-4" />
-                      <span className="hover:!text-[#EF4444]">{t("openDashboard")}</span>
+                      <span className="hover:!text-primary">{t("openDashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 hover:!bg-transparent">
-                    <LogOut className="h-4 w-4 text-[#DC2626]" />
-                    <span className="hover:!text-[#EF4444]">{t("logout")}</span>
+                    <LogOut className="h-4 w-4 text-destructive" />
+                    <span className="hover:!text-primary">{t("logout")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Button
                 onClick={() => initiateDiscordLogin(locale)}
-                className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary"
               >
                 {t("loginWithDiscord")}
               </Button>
@@ -112,7 +123,7 @@ export function Navbar() {
           {/* Mobile menu button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="md:hidden p-2 rounded-lg hover:bg-accent"
           >
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -121,45 +132,46 @@ export function Navbar() {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden border-t border-gray-200 dark:border-gray-800">
+        <div className="md:hidden border-t border-border">
           <div className="px-4 py-4 space-y-3">
-            <Link href={`/features`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/features`} className="block py-2 text-muted-foreground hover:text-primary">
               {t("features")}
             </Link>
-            <Link href={`/open-source`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/open-source`} className="block py-2 text-muted-foreground hover:text-primary">
               {t("openSource")}
             </Link>
-            <Link href={`/help`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/help`} className="block py-2 text-muted-foreground hover:text-primary">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="block py-2 text-gray-700 dark:text-gray-300 hover:text-[#EF4444]">
+            <Link href={`/support`} className="block py-2 text-muted-foreground hover:text-primary">
               {t("support")}
             </Link>
             <div className="pt-4 space-y-2">
-              <div className="flex justify-center mb-2">
+              <div className="flex justify-center gap-4 mb-2">
+                <ThemeSwitcher />
                 <LanguageSwitcher />
               </div>
               {user ? (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2 bg-gray-800/50 rounded-lg">
+                  <div className="flex items-center justify-between p-2 bg-accent rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <Avatar className="h-10 w-10 border border-[#DC2626]/50">
+                      <Avatar className="h-10 w-10 border border-primary/50">
                         <AvatarImage src={user.avatar_url} alt={user.username} />
                         <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
                       </Avatar>
-                      <span className="text-white font-medium">{user.username}</span>
+                      <span className="text-foreground font-medium">{user.username}</span>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={handleLogout}
-                      className="text-gray-400 hover:text-[#EF4444]"
+                      className="text-muted-foreground hover:text-primary"
                     >
                       <LogOut className="h-5 w-5" />
                     </Button>
                   </div>
                   <Link href={`/${locale}/servers`} className="block">
-                    <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-700">
+                    <Button className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border">
                       {t("openDashboard")}
                     </Button>
                   </Link>
@@ -174,7 +186,7 @@ export function Navbar() {
                 </Button>
               )}
               <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="block">
-                <Button className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white border-2 border-[#DC2626]">
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary">
                   {t("addToDiscord")}
                 </Button>
               </a>
@@ -183,5 +195,6 @@ export function Navbar() {
         </div>
       )}
     </nav>
+
   );
 }

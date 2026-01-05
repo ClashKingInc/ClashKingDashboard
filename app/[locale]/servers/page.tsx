@@ -107,24 +107,24 @@ export default function ServersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center">
-        <Card className="max-w-md border-2 border-[#DC2626] bg-[#1F1F1F]/95">
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="max-w-md border-2 border-primary bg-card/95">
           <CardHeader>
-            <CardTitle className="text-[#EF4444]">{t("error")}</CardTitle>
-            <CardDescription className="text-gray-400">{error}</CardDescription>
+            <CardTitle className="text-destructive">{t("error")}</CardTitle>
+            <CardDescription className="text-muted-foreground">{error}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button
               onClick={() => router.push(`/${locale}/login`)}
-              className="w-full bg-[#DC2626] hover:bg-[#EF4444]"
+              className="w-full bg-primary hover:bg-primary/90"
             >
               {t("backToLogin")}
             </Button>
@@ -135,11 +135,11 @@ export default function ServersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-[#DC2626]/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-[#F03529]/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl" />
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-primary/10 to-transparent rounded-full blur-3xl" />
       </div>
 
       <div className="relative container mx-auto px-4 py-4 sm:py-8">
@@ -149,35 +149,35 @@ export default function ServersPage() {
             <div className="flex items-center justify-between mb-6">
               <Link
                 href={`/${locale}`}
-                className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>{t("backToHome")}</span>
               </Link>
               {user && (
-                <div className="flex items-center gap-3 bg-[#1F1F1F]/95 backdrop-blur border border-[#2A2A2A] rounded-lg px-4 py-2">
+                <div className="flex items-center gap-3 bg-card/95 backdrop-blur border border-border rounded-lg px-4 py-2">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user.avatar_url} />
-                    <AvatarFallback className="text-sm bg-[#2A2A2A] text-white">
+                    <AvatarFallback className="text-sm bg-muted text-foreground">
                       {user.username.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-white text-sm font-medium">{user.username}</span>
+                  <span className="text-foreground text-sm font-medium">{user.username}</span>
                   <Button
                     onClick={handleLogout}
                     variant="ghost"
                     size="sm"
-                    className="text-gray-400 hover:text-white hover:bg-[#2A2A2A] p-1 h-8 w-8"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted p-1 h-8 w-8"
                   >
                     <LogOut className="h-4 w-4" />
                   </Button>
                 </div>
               )}
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+            <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
               {t("title")}
             </h1>
-            <p className="text-gray-400 text-sm sm:text-base">
+            <p className="text-muted-foreground text-sm sm:text-base">
               {t("description")}
             </p>
           </div>
@@ -187,9 +187,9 @@ export default function ServersPage() {
             {guilds.map((guild) => (
               <Card
                 key={guild.id}
-                className={`border-2 bg-[#1F1F1F]/95 backdrop-blur transition-all duration-300 ${guild.has_bot
-                  ? "border-[#2A2A2A] hover:border-[#DC2626] hover:shadow-[0_0_10px_#DC2626]/30 cursor-pointer"
-                  : "border-[#2A2A2A] opacity-75"
+                className={`border-2 bg-card/95 backdrop-blur transition-all duration-300 ${guild.has_bot
+                  ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30 cursor-pointer"
+                  : "border-border opacity-75"
                   } rounded-xl overflow-hidden`}
                 onClick={() => handleGuildClick(guild)}
               >
@@ -198,22 +198,22 @@ export default function ServersPage() {
                   <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <Avatar
                       className={`h-12 w-12 sm:h-16 sm:w-16 border-2 transition-transform duration-300 flex-shrink-0 ${guild.has_bot
-                        ? "border-[#DC2626] group-hover:scale-105"
-                        : "border-[#2A2A2A]"
+                        ? "border-primary group-hover:scale-105"
+                        : "border-border"
                         }`}
                     >
                       <AvatarImage src={getGuildIconUrl(guild) || undefined} />
-                      <AvatarFallback className="text-xl sm:text-2xl bg-[#2A2A2A] text-white">
+                      <AvatarFallback className="text-xl sm:text-2xl bg-muted text-foreground">
                         {guild.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
 
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg sm:text-xl text-white truncate">
+                      <CardTitle className="text-lg sm:text-xl text-foreground truncate">
                         {guild.name}
                       </CardTitle>
 
-                      <CardDescription className="text-gray-400 flex items-center gap-1 text-xs sm:text-sm">
+                      <CardDescription className="text-muted-foreground flex items-center gap-1 text-xs sm:text-sm">
                         <Users className="w-3 h-3" />
                         <span className="truncate">
                           {guild.member_count
@@ -226,12 +226,12 @@ export default function ServersPage() {
                       <div className="mt-1 sm:mt-2">
                         <span
                           className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full inline-block ${guild.role === "Owner"
-                            ? "bg-green-500/20 text-green-400"
+                            ? "bg-green-500/20 text-green-600 dark:text-green-400"
                             : guild.role === "Administrator"
-                              ? "bg-blue-500/20 text-blue-400"
+                              ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
                               : guild.role === "Manager"
-                                ? "bg-yellow-500/20 text-yellow-400"
-                                : "bg-gray-500/20 text-gray-300"
+                                ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400"
+                                : "bg-gray-500/20 text-muted-foreground"
                             }`}
                         >
                           {guild.role === "Owner" ? t("roles.owner")
@@ -247,7 +247,7 @@ export default function ServersPage() {
                   <div className="flex-shrink-0">
                     {guild.has_bot ? (
                       <Button
-                        className="w-24 sm:w-28 bg-gray-700 text-white hover:bg-gray-600 cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
+                        className="w-24 sm:w-28 bg-muted text-foreground hover:bg-muted/80 cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
                       >
                         {t("configure")}
                       </Button>
@@ -259,7 +259,7 @@ export default function ServersPage() {
                         onClick={(e) => e.stopPropagation()}
                         className="block"
                       >
-                        <Button className="w-24 sm:w-28 bg-[#DC2626] hover:bg-[#EF4444] text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10">
+                        <Button className="w-24 sm:w-28 bg-primary hover:bg-primary/90 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10">
                           {t("invite")}
                         </Button>
                       </a>
@@ -271,10 +271,10 @@ export default function ServersPage() {
           </div>
 
           {guilds.length === 0 && (
-            <Card className="border-2 border-[#2A2A2A] bg-[#1F1F1F]/95 backdrop-blur">
+            <Card className="border-2 border-border bg-card/95 backdrop-blur">
               <CardHeader className="text-center py-12">
-                <CardTitle className="text-white mb-2">{t("noServers.title")}</CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardTitle className="text-foreground mb-2">{t("noServers.title")}</CardTitle>
+                <CardDescription className="text-muted-foreground">
                   {t("noServers.description")}
                 </CardDescription>
               </CardHeader>
