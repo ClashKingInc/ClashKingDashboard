@@ -149,7 +149,7 @@ export default function BansPage() {
       setIsSubmittingBan(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const username = user ? JSON.parse(user).username : "Unknown";
+      const userId = user ? parseInt(JSON.parse(user).user_id) || 0 : 0;
 
       if (!token) return;
 
@@ -160,11 +160,17 @@ export default function BansPage() {
 
       const response = await apiClient.servers.addBan(guildId, cleanTag, {
         reason: newBan.reason,
-        added_by: username,
+        added_by: userId,
+        image: "",
       });
 
       if (response.error) {
-        throw new Error(response.error);
+        const errorMessage = typeof response.error === 'string' 
+          ? response.error 
+          : Array.isArray(response.error) 
+            ? (response.error as any[]).map(e => typeof e === 'object' ? (e as any)?.message || JSON.stringify(e) : String(e)).join(', ')
+            : JSON.stringify(response.error);
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -196,7 +202,7 @@ export default function BansPage() {
       setIsSubmittingStrike(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const userId = user ? JSON.parse(user).id : 0;
+      const userId = user ? parseInt(JSON.parse(user).user_id) || 0 : 0;
 
       if (!token) return;
 
@@ -213,7 +219,12 @@ export default function BansPage() {
       });
 
       if (response.error) {
-        throw new Error(response.error);
+        const errorMessage = typeof response.error === 'string' 
+          ? response.error 
+          : Array.isArray(response.error) 
+            ? (response.error as any[]).map(e => typeof e === 'object' ? (e as any)?.message || JSON.stringify(e) : String(e)).join(', ')
+            : JSON.stringify(response.error);
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -251,7 +262,12 @@ export default function BansPage() {
       const response = await apiClient.servers.removeBan(guildId, cleanTag);
 
       if (response.error) {
-        throw new Error(response.error);
+        const errorMessage = typeof response.error === 'string' 
+          ? response.error 
+          : Array.isArray(response.error) 
+            ? (response.error as any[]).map(e => typeof e === 'object' ? (e as any)?.message || JSON.stringify(e) : String(e)).join(', ')
+            : JSON.stringify(response.error);
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -281,7 +297,12 @@ export default function BansPage() {
       const response = await apiClient.servers.removeStrike(guildId, strikeId);
 
       if (response.error) {
-        throw new Error(response.error);
+        const errorMessage = typeof response.error === 'string' 
+          ? response.error 
+          : Array.isArray(response.error) 
+            ? (response.error as any[]).map(e => typeof e === 'object' ? (e as any)?.message || JSON.stringify(e) : String(e)).join(', ')
+            : JSON.stringify(response.error);
+        throw new Error(errorMessage);
       }
 
       toast({
