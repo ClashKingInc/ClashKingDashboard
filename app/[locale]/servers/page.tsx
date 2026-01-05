@@ -7,10 +7,11 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Users, LogOut } from "lucide-react";
+import { Users } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
 import type { UserInfo } from "@/lib/api/types/auth";
+import { ServersHeader } from "@/components/servers-header";
 
 export default function ServersPage() {
   const t = useTranslations("ServersPage");
@@ -81,13 +82,6 @@ export default function ServersPage() {
     fetchGuilds();
   }, [router, locale]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
-    router.push(`/${locale}`);
-  };
-
   const getGuildIconUrl = (guild: GuildInfo) => {
     console.log(guild);
     if (!guild.icon) return null;
@@ -108,6 +102,7 @@ export default function ServersPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
+        <ServersHeader />
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
@@ -116,6 +111,7 @@ export default function ServersPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
+        <ServersHeader />
         <Card className="max-w-md border-2 border-primary bg-card/95">
           <CardHeader>
             <CardTitle className="text-destructive">{t("error")}</CardTitle>
@@ -136,44 +132,12 @@ export default function ServersPage() {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-primary/10 to-transparent rounded-full blur-3xl" />
-      </div>
+      <ServersHeader />
 
-      <div className="relative container mx-auto px-4 py-4 sm:py-8">
+      <div className="relative container mx-auto px-4 pt-24 pb-8 sm:pt-32 sm:pb-12">
         <div className="max-w-5xl mx-auto">
-          {/* Header */}
+          {/* Page Title */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <Link
-                href={`/${locale}`}
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>{t("backToHome")}</span>
-              </Link>
-              {user && (
-                <div className="flex items-center gap-3 bg-card/95 backdrop-blur border border-border rounded-lg px-4 py-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.avatar_url} />
-                    <AvatarFallback className="text-sm bg-muted text-foreground">
-                      {user.username.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-foreground text-sm font-medium">{user.username}</span>
-                  <Button
-                    onClick={handleLogout}
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-foreground hover:bg-muted p-1 h-8 w-8"
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
               {t("title")}
             </h1>
@@ -247,7 +211,7 @@ export default function ServersPage() {
                   <div className="flex-shrink-0">
                     {guild.has_bot ? (
                       <Button
-                        className="w-24 sm:w-28 bg-muted text-foreground hover:bg-muted/80 cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
+                        className="w-24 sm:w-28 bg-green-600 hover:bg-green-700 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
                       >
                         {t("configure")}
                       </Button>
