@@ -1179,7 +1179,13 @@
     "authenticating": "Authentification...",
     "authenticatingDescription": "Veuillez patienter pendant que nous vous connectons avec Discord",
     "authenticationFailed": "Échec de l'Authentification",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "loadingVillages": "Chargement des villages...",
+    "loadingClanData": "Récupération des données de clan...",
+    "loadingWarStats": "Analyse des statistiques de guerre...",
+    "loadingLegendsData": "Préparation des données de légende...",
+    "loadingCapitalRaids": "Chargement des raids de capitale...",
+    "loadingAlmostReady": "Presque prêt..."
   },
   "LoginPage": {
     "backToHome": "Retour à l'Accueil",
