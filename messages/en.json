@@ -1302,7 +1302,13 @@
     "authenticating": "Authenticating...",
     "authenticatingDescription": "Please wait while we log you in with Discord",
     "authenticationFailed": "Authentication Failed",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "loadingVillages": "Loading villages...",
+    "loadingClanData": "Fetching clan data...",
+    "loadingWarStats": "Analyzing war statistics...",
+    "loadingLegendsData": "Preparing legend data...",
+    "loadingCapitalRaids": "Loading capital raids...",
+    "loadingAlmostReady": "Almost ready..."
   },
   "LoginPage": {
     "backToHome": "Back to Home",

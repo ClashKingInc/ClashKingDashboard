@@ -1179,7 +1179,13 @@
     "authenticating": "Authenticeren...",
     "authenticatingDescription": "Even geduld terwijl we je inloggen met Discord",
     "authenticationFailed": "Authenticatie Mislukt",
-    "tryAgain": "Probeer Opnieuw"
+    "tryAgain": "Probeer Opnieuw",
+    "loadingVillages": "Je dorpen worden geladen...",
+    "loadingClanData": "Clan gegevens ophalen...",
+    "loadingWarStats": "Oorlogsstatistieken analyseren...",
+    "loadingLegendsData": "Legende gegevens voorbereiden...",
+    "loadingCapitalRaids": "Hoofdstad aanvallen laden...",
+    "loadingAlmostReady": "Bijna klaar..."
   },
   "LoginPage": {
     "backToHome": "Terug naar Home",
