@@ -66,7 +66,7 @@ export function Navbar() {
     ];
 
     return (
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="border-border">
             <Settings className="h-5 w-5" />
@@ -200,7 +200,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <SettingsDropdown />
             {user ? (
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <button className="group flex items-center space-x-2 hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer p-0 outline-none">
                     <Avatar className="h-6 w-6 border border-primary/50">
