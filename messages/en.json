@@ -1614,5 +1614,10 @@
       "systemHealth": "System Health",
       "systemHealthDesc": "CPU and memory usage indicate the current load on the ClashKing API infrastructure"
     }
+  },
+  "NotFound": {
+    "title": "404 - Page Not Found",
+    "description": "The page you are looking for does not exist.",
+    "goHome": "Go to Home"
   }
 }

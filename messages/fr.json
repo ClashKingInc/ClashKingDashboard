@@ -1491,5 +1491,10 @@
       "systemHealth": "Santé du Système",
       "systemHealthDesc": "L'utilisation du CPU et de la mémoire indique la charge actuelle sur l'infrastructure API de ClashKing"
     }
+  },
+  "NotFound": {
+    "title": "404 - Page Non Trouvée",
+    "description": "La page que vous recherchez n'existe pas.",
+    "goHome": "Retour à l'Accueil"
   }
 }
