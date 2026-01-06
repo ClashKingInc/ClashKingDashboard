@@ -980,8 +980,8 @@
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
       "failedToSave": "Kan herinneringen niet opslaan",
       "timeExceeds24h": "Tijd moet minder dan of gelijk zijn aan 24 uur",
-      "pointThresholdInvalid": "Puntendrempel moet tussen 0 en 10.000 zijn",
-      "attackThresholdInvalid": "Aanvalsdrempel moet tussen 1 en 5 zijn"
+      "pointThresholdInvalid": "Puntendrempel moet tussen {min} en {max} liggen",
+      "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen"
     }
   },
   "LogsPage": {

@@ -92,6 +92,11 @@ interface Channel {
   parent_name?: string;
 }
 
+const POINT_THRESHOLD_MIN = 0;
+const POINT_THRESHOLD_MAX = 10000;
+const ATTACK_THRESHOLD_MIN = 1;
+const ATTACK_THRESHOLD_MAX = 5;
+
 export default function RemindersPage() {
   const params = useParams();
   const router = useRouter();
@@ -385,23 +390,38 @@ export default function RemindersPage() {
       // Validate clan games point threshold
       if (dialogReminder.type === "Clan Games") {
         const points = dialogReminder.point_threshold;
-        if (points === undefined || points === null || points < 0 || points > 10000) {
+        if (
+          points === undefined ||
+          points === null ||
+          points < POINT_THRESHOLD_MIN ||
+          points > POINT_THRESHOLD_MAX
+        ) {
           toast({
             title: t('toast.errorTitle'),
-            description: t('toast.pointThresholdInvalid'),
+            description: t('toast.pointThresholdInvalid', {
+              min: POINT_THRESHOLD_MIN,
+              max: POINT_THRESHOLD_MAX,
+            }),
             variant: "destructive",
           });
           return;
         }
       }
 
-      // Validate clan capital attack threshold
       if (dialogReminder.type === "Clan Capital") {
         const attacks = dialogReminder.attack_threshold;
-        if (attacks === undefined || attacks === null || attacks < 1 || attacks > 5) {
+        if (
+          attacks === undefined ||
+          attacks === null ||
+          attacks < ATTACK_THRESHOLD_MIN ||
+          attacks > ATTACK_THRESHOLD_MAX
+        ) {
           toast({
             title: t('toast.errorTitle'),
-            description: t('toast.attackThresholdInvalid'),
+            description: t('toast.attackThresholdInvalid', {
+              min: ATTACK_THRESHOLD_MIN,
+              max: ATTACK_THRESHOLD_MAX,
+            }),
             variant: "destructive",
           });
           return;
