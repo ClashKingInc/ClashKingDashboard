@@ -527,7 +527,7 @@ export default function RemindersPage() {
   const currentReminders = getCurrentReminders();
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
+    <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
