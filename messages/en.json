@@ -47,7 +47,13 @@
     "addToDiscord": "Add to Discord",
     "openDashboard": "Open Dashboard",
     "dashboardSettings": "Dashboard Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "settings": "Settings",
+    "theme": "Theme",
+    "systemTheme": "Follow System",
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme",
+    "language": "Language"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers already using ClashKing",

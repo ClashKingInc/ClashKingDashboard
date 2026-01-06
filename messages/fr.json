@@ -47,7 +47,13 @@
     "addToDiscord": "Ajouter à Discord",
     "openDashboard": "Ouvrir le Tableau de Bord", 
     "dashboardSettings": "Paramètres du Tableau de Bord",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "settings": "Paramètres",
+    "theme": "Thème",
+    "systemTheme": "Suivre le Système",
+    "lightTheme": "Thème Clair",
+    "darkTheme": "Thème Sombre",
+    "language": "Langue"
   },
   "HomePage": {
     "badge": "Plus de {serverCount} serveurs utilisent déjà ClashKing",
