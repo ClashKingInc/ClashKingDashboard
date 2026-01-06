@@ -47,6 +47,7 @@ export function Navbar() {
   const SettingsDropdown = () => {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
     const t = useTranslations("Navigation");
 
     useEffect(() => {
@@ -74,7 +75,7 @@ export function Navbar() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4}>
           {/* Theme Submenu */}
-          <DropdownMenuSub>
+          <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
             <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
               {mounted && theme === "dark" ? (
                 <Moon className="h-4 w-4" />
@@ -117,7 +118,7 @@ export function Navbar() {
           </DropdownMenuSub>
 
           {/* Language Submenu */}
-          <DropdownMenuSub>
+          <DropdownMenuSub open={openSubmenu === "language"} onOpenChange={(open) => setOpenSubmenu(open ? "language" : null)}>
             <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
               <div className="relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
                 <Image
