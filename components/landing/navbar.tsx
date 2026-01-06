@@ -51,7 +51,11 @@ export function Navbar() {
     : clashKingAssets.logos.withTextDarkPng;
 
   return (
-    <nav className="fixed top-0 inset-x-0 bg-background/95 backdrop-blur-lg z-50 border-b border-primary/30">
+    <nav className={`fixed top-0 inset-x-0 backdrop-blur-lg z-50 border-b border-primary/30 ${
+      mounted && (theme === "dark" || resolvedTheme === "dark")
+        ? "bg-card/95"
+        : "bg-background/95"
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
