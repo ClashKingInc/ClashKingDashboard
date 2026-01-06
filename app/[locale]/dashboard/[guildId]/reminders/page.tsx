@@ -126,6 +126,8 @@ export default function RemindersPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingReminder, setEditingReminder] = useState<ReminderConfig | null>(null);
   const [dialogReminder, setDialogReminder] = useState<Partial<ReminderConfig>>({});
+  const [pointThresholdTouched, setPointThresholdTouched] = useState(false);
+  const [attackThresholdTouched, setAttackThresholdTouched] = useState(false);
 
   // Fetch clans and reminders from API
   useEffect(() => {
@@ -267,6 +269,8 @@ export default function RemindersPage() {
 
     setDialogReminder(newReminder);
     setEditingReminder(null);
+    setPointThresholdTouched(false);
+    setAttackThresholdTouched(false);
     setIsDialogOpen(true);
   };
 
@@ -274,12 +278,27 @@ export default function RemindersPage() {
   const editReminder = (reminder: ReminderConfig) => {
     setEditingReminder(reminder);
     setDialogReminder({ ...reminder });
+    setPointThresholdTouched(reminder.point_threshold !== undefined);
+    setAttackThresholdTouched(reminder.attack_threshold !== undefined);
     setIsDialogOpen(true);
   };
 
   // Update dialog reminder field
   const updateDialogField = (field: keyof ReminderConfig, value: any) => {
-    setDialogReminder(prev => ({ ...prev, [field]: value }));
+    setDialogReminder(prev => {
+      const updated: Partial<ReminderConfig> = { ...prev, [field]: value };
+
+      if (field === "type") {
+        if (value === "Clan Games" && updated.point_threshold === undefined && !pointThresholdTouched) {
+          updated.point_threshold = 4000;
+        }
+        if (value === "Clan Capital" && updated.attack_threshold === undefined && !attackThresholdTouched) {
+          updated.attack_threshold = 1;
+        }
+      }
+
+      return updated;
+    });
   };
 
   // Validate time is under 24 hours
@@ -965,10 +984,11 @@ export default function RemindersPage() {
                     type="number"
                     min="0"
                     max="10000"
-                    placeholder={t('card.pointThresholdPlaceholder')}
+                    placeholder=""
                     value={dialogReminder.point_threshold ?? ""}
                     onChange={(e) => {
                       const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                      setPointThresholdTouched(true);
                       updateDialogField("point_threshold", value);
                     }}
                   />
@@ -983,10 +1003,11 @@ export default function RemindersPage() {
                     type="number"
                     min="1"
                     max="5"
-                    placeholder={t('card.attackThresholdPlaceholder')}
+                    placeholder=""
                     value={dialogReminder.attack_threshold ?? ""}
                     onChange={(e) => {
                       const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                      setAttackThresholdTouched(true);
                       updateDialogField("attack_threshold", value);
                     }}
                   />
