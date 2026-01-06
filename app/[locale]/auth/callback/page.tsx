@@ -145,10 +145,7 @@ export default function AuthCallbackPage() {
         messages={{
           loadingVillages: t("loadingVillages"),
           loadingClanData: t("loadingClanData"),
-          loadingWarStats: t("loadingWarStats"),
-          loadingLegendsData: t("loadingLegendsData"),
-          loadingCapitalRaids: t("loadingCapitalRaids"),
-          loadingAlmostReady: t("loadingAlmostReady")
+          loadingWarStats: t("loadingWarStats")
         }}
       />
     );

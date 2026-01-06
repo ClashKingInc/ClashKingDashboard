@@ -7,14 +7,7 @@ import Image from "next/image";
 import { clashKingAssets } from "@/lib/theme";
 
 interface LoadingScreenWithMessagesProps {
-  messages: {
-    loadingVillages: string;
-    loadingClanData: string;
-    loadingWarStats: string;
-    loadingLegendsData: string;
-    loadingCapitalRaids: string;
-    loadingAlmostReady: string;
-  };
+  messages: Record<string, string>;
   title?: string;
   description?: string;
 }
@@ -32,14 +25,7 @@ export default function LoadingScreenWithMessages({
     setMounted(true);
   }, []);
 
-  const messageKeys = [
-    'loadingVillages',
-    'loadingClanData',
-    'loadingWarStats',
-    'loadingLegendsData',
-    'loadingCapitalRaids',
-    'loadingAlmostReady'
-  ] as const;
+  const messageKeys = Object.keys(messages);
 
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
@@ -62,7 +48,7 @@ export default function LoadingScreenWithMessages({
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, []);
+  }, [messageKeys.length]);
 
   const currentMessageKey = messageKeys[currentMessageIndex];
   const currentMessage = messages[currentMessageKey];
