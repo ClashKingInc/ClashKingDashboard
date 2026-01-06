@@ -68,12 +68,12 @@ export function Navbar() {
     return (
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="border-border h-10 w-10 md:h-9 md:w-9 [&_svg]:size-6 md:[&_svg]:size-5">
+          <Button variant="ghost" size="icon" className="border-border h-12 w-12 md:h-9 md:w-9 [&_svg]:size-6 md:[&_svg]:size-5">
             <Settings />
             <span className="sr-only">{t("settings")}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={align === "start" ? -4 : 0}>
+        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={align === "start" ? 0 : 0}>
           {/* Theme Submenu */}
           <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
             <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
@@ -264,7 +264,7 @@ export function Navbar() {
               {user ? (
                 <div className="space-y-2">
                   <div className="flex items-stretch gap-2">
-                    <div className="flex items-center justify-center p-1 bg-accent rounded-lg">
+                    <div className="flex items-center justify-center bg-accent rounded-lg">
                       <SettingsDropdown align="start" />
                     </div>
                     <div className="flex items-center justify-between p-1 bg-accent rounded-lg flex-1 min-w-0">
@@ -294,12 +294,12 @@ export function Navbar() {
               ) : (
                 <div className="space-y-2">
                   <div className="flex items-stretch gap-2">
-                    <div className="flex items-center justify-center p-1 bg-accent rounded-lg">
+                    <div className="flex items-center justify-center bg-accent rounded-lg">
                       <SettingsDropdown align="start" />
                     </div>
                     <Button
                       onClick={() => initiateDiscordLogin(locale)}
-                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] text-lg font-semibold"
+                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] text-xl font-bold"
                     >
                       {t("loginWithDiscord")}
                     </Button>
