@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messages";
 
 export default function AuthCallbackPage() {
   const t = useTranslations("AuthCallback");
@@ -140,19 +141,16 @@ export default function AuthCallbackPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
-        <Card className="w-full max-w-md border-2 border-[#2A2A2A] bg-[#1F1F1F]/95">
-          <CardHeader className="text-center">
-            <CardTitle className="text-white">{t("authenticating")}</CardTitle>
-            <CardDescription className="text-gray-400">
-              {t("authenticatingDescription")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
-          </CardContent>
-        </Card>
-      </div>
+      <LoadingScreenWithMessages
+        messages={{
+          loadingVillages: t("loadingVillages"),
+          loadingClanData: t("loadingClanData"),
+          loadingWarStats: t("loadingWarStats"),
+          loadingLegendsData: t("loadingLegendsData"),
+          loadingCapitalRaids: t("loadingCapitalRaids"),
+          loadingAlmostReady: t("loadingAlmostReady")
+        }}
+      />
     );
   }
 
