@@ -89,7 +89,7 @@ export function Navbar() {
               <DropdownMenuItem
                 onClick={() => setTheme("system")}
                 className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
-                  theme === "system" ? "bg-primary/10 text-primary border-l-2 border-primary" : ""
+                  theme === "system" ? "bg-primary/10 text-primary" : ""
                 }`}
               >
                 <Computer className="h-4 w-4" />
@@ -98,7 +98,7 @@ export function Navbar() {
               <DropdownMenuItem
                 onClick={() => setTheme("light")}
                 className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
-                  theme === "light" ? "bg-primary/10 text-primary border-l-2 border-primary" : ""
+                  theme === "light" ? "bg-primary/10 text-primary" : ""
                 }`}
               >
                 <Sun className="h-4 w-4" />
@@ -107,7 +107,7 @@ export function Navbar() {
               <DropdownMenuItem
                 onClick={() => setTheme("dark")}
                 className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
-                  theme === "dark" ? "bg-primary/10 text-primary border-l-2 border-primary" : ""
+                  theme === "dark" ? "bg-primary/10 text-primary" : ""
                 }`}
               >
                 <Moon className="h-4 w-4" />
@@ -135,7 +135,7 @@ export function Navbar() {
                   key={lang.code}
                   onClick={() => switchLocale(lang.code)}
                   className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
-                    locale === lang.code ? "bg-primary/10 text-primary border-l-2 border-primary" : ""
+                    locale === lang.code ? "bg-primary/10 text-primary" : ""
                   }`}
                 >
                   <div className="mr-2 relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
