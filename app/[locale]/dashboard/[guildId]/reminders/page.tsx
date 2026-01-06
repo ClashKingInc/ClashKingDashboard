@@ -363,6 +363,32 @@ export default function RemindersPage() {
         return;
       }
 
+      // Validate clan games point threshold
+      if (dialogReminder.type === "Clan Games") {
+        const points = dialogReminder.point_threshold;
+        if (points === undefined || points === null || points < 0 || points > 10000) {
+          toast({
+            title: t('toast.errorTitle'),
+            description: t('toast.pointThresholdInvalid'),
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
+      // Validate clan capital attack threshold
+      if (dialogReminder.type === "Clan Capital") {
+        const attacks = dialogReminder.attack_threshold;
+        if (attacks === undefined || attacks === null || attacks < 1 || attacks > 5) {
+          toast({
+            title: t('toast.errorTitle'),
+            description: t('toast.attackThresholdInvalid'),
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
       setSaving(true);
       const accessToken = localStorage.getItem("access_token");
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -913,7 +939,7 @@ export default function RemindersPage() {
                         variant={dialogReminder.war_types?.includes(type) ? "default" : "outline"}
                         className={`cursor-pointer transition-all ${
                           dialogReminder.war_types?.includes(type)
-                            ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-destructive"
+                            ? "bg-red-600 hover:bg-red-700 text-white border-red-600"
                             : "hover:bg-muted hover:border-primary"
                         }`}
                         onClick={() => {
@@ -937,9 +963,14 @@ export default function RemindersPage() {
                   <Input
                     id="dialog-points"
                     type="number"
+                    min="0"
+                    max="10000"
                     placeholder={t('card.pointThresholdPlaceholder')}
-                    value={dialogReminder.point_threshold || 4000}
-                    onChange={(e) => updateDialogField("point_threshold", parseInt(e.target.value) || 4000)}
+                    value={dialogReminder.point_threshold ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                      updateDialogField("point_threshold", value);
+                    }}
                   />
                 </div>
               )}
@@ -950,9 +981,14 @@ export default function RemindersPage() {
                   <Input
                     id="dialog-attacks"
                     type="number"
+                    min="1"
+                    max="5"
                     placeholder={t('card.attackThresholdPlaceholder')}
-                    value={dialogReminder.attack_threshold || 1}
-                    onChange={(e) => updateDialogField("attack_threshold", parseInt(e.target.value) || 1)}
+                    value={dialogReminder.attack_threshold ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                      updateDialogField("attack_threshold", value);
+                    }}
                   />
                 </div>
               )}

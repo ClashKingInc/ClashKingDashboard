@@ -1102,7 +1102,9 @@
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
       "failedToSave": "Failed to save reminders",
-      "timeExceeds24h": "Time must be less than or equal to 24 hours"
+      "timeExceeds24h": "Time must be less than or equal to 24 hours",
+      "pointThresholdInvalid": "Point threshold must be between 0 and 10,000",
+      "attackThresholdInvalid": "Attack threshold must be between 1 and 5"
     }
   },
   "LogsPage": {

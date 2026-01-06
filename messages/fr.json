@@ -979,7 +979,9 @@
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
       "failedToSave": "Échec de l'enregistrement des rappels",
-      "timeExceeds24h": "Le temps doit être inférieur ou égal à 24 heures"
+      "timeExceeds24h": "Le temps doit être inférieur ou égal à 24 heures",
+      "pointThresholdInvalid": "Le seuil de points doit être entre 0 et 10 000",
+      "attackThresholdInvalid": "Le seuil d'attaques doit être entre 1 et 5"
     }
   },
   "LogsPage": {
