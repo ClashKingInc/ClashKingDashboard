@@ -1491,5 +1491,10 @@
       "systemHealth": "Systeemgezondheid",
       "systemHealthDesc": "CPU- en geheugengebruik geven de huidige belasting van de ClashKing API-infrastructuur aan"
     }
+  },
+  "NotFound": {
+    "title": "404 - Pagina Niet Gevonden",
+    "description": "De pagina die u zoekt bestaat niet.",
+    "goHome": "Ga naar Home"
   }
 }
