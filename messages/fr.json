@@ -942,6 +942,8 @@
       "clanPlaceholder": "Sélectionner un clan",
       "customMessage": "Message Personnalisé (Optionnel)",
       "customMessagePlaceholder": "N'oubliez pas d'utiliser vos attaques !",
+      "customMessagePlaceholderClanGames": "Essayez d'obtenir plus de points dans les jeux de clan !",
+      "customMessagePlaceholderInactivity": "Vous êtes inactif dans le clan depuis un moment :(",
       "warTypes": "Types de Guerre",
       "random": "Aléatoire",
       "friendly": "Amicale",
@@ -974,7 +976,8 @@
       "reminderDeleted": "Rappel supprimé avec succès",
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
-      "failedToSave": "Échec de l'enregistrement des rappels"
+      "failedToSave": "Échec de l'enregistrement des rappels",
+      "timeExceeds24h": "Le temps doit être inférieur ou égal à 24 heures"
     }
   },
   "LogsPage": {

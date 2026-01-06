@@ -282,6 +282,25 @@ export default function RemindersPage() {
     setDialogReminder(prev => ({ ...prev, [field]: value }));
   };
 
+  // Validate time is under 24 hours
+  const validateTime = (timeString: string): boolean => {
+    if (!timeString) return false;
+    
+    // Parse time string (supports formats like "6h", "30m", "23h40m", "1h30m")
+    const regex = /(?:(\d+)h)?(?:(\d+)m)?/i;
+    const match = timeString.match(regex);
+    
+    if (!match) return false;
+    
+    const hours = match[1] ? parseInt(match[1]) : 0;
+    const minutes = match[2] ? parseInt(match[2]) : 0;
+    
+    const totalMinutes = hours * 60 + minutes;
+    const maxMinutes = 24 * 60; // 24 hours in minutes
+    
+    return totalMinutes > 0 && totalMinutes <= maxMinutes;
+  };
+
   // Delete a reminder
   const deleteReminder = async (index: number) => {
     const currentReminders = getCurrentReminders();
@@ -334,6 +353,16 @@ export default function RemindersPage() {
   // Save a single reminder from dialog
   const handleSaveReminder = async () => {
     try {
+      // Validate time is under 24 hours
+      if (!validateTime(dialogReminder.time || "")) {
+        toast({
+          title: t('toast.errorTitle'),
+          description: t('toast.timeExceeds24h'),
+          variant: "destructive",
+        });
+        return;
+      }
+
       setSaving(true);
       const accessToken = localStorage.getItem("access_token");
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -857,7 +886,13 @@ export default function RemindersPage() {
                 <Label htmlFor="dialog-message">{t('card.customMessage')}</Label>
                 <Input
                   id="dialog-message"
-                  placeholder={t('card.customMessagePlaceholder')}
+                  placeholder={
+                    dialogReminder.type === "Clan Games"
+                      ? t('card.customMessagePlaceholderClanGames')
+                      : dialogReminder.type === "Inactivity"
+                      ? t('card.customMessagePlaceholderInactivity')
+                      : t('card.customMessagePlaceholder')
+                  }
                   value={dialogReminder.custom_text || ""}
                   onChange={(e) => updateDialogField("custom_text", e.target.value)}
                 />
@@ -874,7 +909,7 @@ export default function RemindersPage() {
                         variant={dialogReminder.war_types?.includes(type) ? "default" : "outline"}
                         className={`cursor-pointer transition-all ${
                           dialogReminder.war_types?.includes(type)
-                            ? "bg-green-500 hover:bg-green-600 text-white border-green-500"
+                            ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground border-destructive"
                             : "hover:bg-muted hover:border-primary"
                         }`}
                         onClick={() => {

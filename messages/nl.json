@@ -942,6 +942,8 @@
       "clanPlaceholder": "Selecteer clan",
       "customMessage": "Aangepast Bericht (Optioneel)",
       "customMessagePlaceholder": "Vergeet niet je aanvallen te gebruiken!",
+      "customMessagePlaceholderClanGames": "Probeer meer punten te halen bij de clan spelen!",
+      "customMessagePlaceholderInactivity": "Je bent al een tijdje niet actief in de clan :(",
       "warTypes": "Oorlog Types",
       "random": "Willekeurig",
       "friendly": "Vriendschappelijk",
@@ -974,7 +976,8 @@
       "reminderDeleted": "Herinnering succesvol verwijderd",
       "failedToDelete": "Kan herinnering niet verwijderen",
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
-      "failedToSave": "Kan herinneringen niet opslaan"
+      "failedToSave": "Kan herinneringen niet opslaan",
+      "timeExceeds24h": "Tijd moet minder dan of gelijk zijn aan 24 uur"
     }
   },
   "LogsPage": {

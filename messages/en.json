@@ -1065,6 +1065,8 @@
       "clanPlaceholder": "Select clan",
       "customMessage": "Custom Message (Optional)",
       "customMessagePlaceholder": "Don't forget to use your attacks!",
+      "customMessagePlaceholderClanGames": "Try to get more points in clan games!",
+      "customMessagePlaceholderInactivity": "You've been inactive in the clan for a while :(",
       "warTypes": "War Types",
       "random": "Random",
       "friendly": "Friendly",
@@ -1097,7 +1099,8 @@
       "reminderDeleted": "Reminder deleted successfully",
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
-      "failedToSave": "Failed to save reminders"
+      "failedToSave": "Failed to save reminders",
+      "timeExceeds24h": "Time must be less than or equal to 24 hours"
     }
   },
   "LogsPage": {
