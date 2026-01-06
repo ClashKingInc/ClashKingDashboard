@@ -44,7 +44,7 @@ export function Navbar() {
     router.push(`/${locale}`);
   };
 
-  const SettingsDropdown = () => {
+  const SettingsDropdown = ({ align = "end" }: { align?: "start" | "end" }) => {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -69,11 +69,11 @@ export function Navbar() {
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="border-border">
-            <Settings className="h-5 w-5" />
+            <Settings className="h-8 w-8 md:h-5 md:w-5" />
             <span className="sr-only">{t("settings")}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4}>
+        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={align === "start" ? -8 : 0}>
           {/* Theme Submenu */}
           <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
             <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
@@ -261,27 +261,29 @@ export function Navbar() {
               {t("support")}
             </Link>
             <div className="pt-4 space-y-2">
-              <div className="flex justify-center gap-4 mb-2">
-                <SettingsDropdown />
-              </div>
               {user ? (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2 bg-accent rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-10 w-10 border border-primary/50">
-                        <AvatarImage src={user.avatar_url} alt={user.username} />
-                        <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-foreground font-medium">{user.username}</span>
+                  <div className="flex items-stretch gap-2">
+                    <div className="flex items-center justify-center p-2 bg-accent rounded-lg">
+                      <SettingsDropdown align="start" />
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleLogout}
-                      className="text-muted-foreground hover:text-primary"
-                    >
-                      <LogOut className="h-5 w-5" />
-                    </Button>
+                    <div className="flex items-center justify-between p-2 bg-accent rounded-lg flex-1 min-w-0">
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <Avatar className="h-10 w-10 border border-primary/50">
+                          <AvatarImage src={user.avatar_url} alt={user.username} />
+                          <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <span className="text-foreground font-medium truncate">{user.username}</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleLogout}
+                        className="text-destructive hover:text-destructive/80"
+                      >
+                        <LogOut className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
                   <Link href={`/${locale}/servers`} className="block">
                     <Button className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border">
@@ -290,19 +292,20 @@ export function Navbar() {
                   </Link>
                 </div>
               ) : (
-                <Button
-                  onClick={() => initiateDiscordLogin(locale)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {t("loginWithDiscord")}
-                </Button>
+                <div className="space-y-2">
+                  <div className="flex items-stretch gap-2">
+                    <div className="flex items-center justify-center p-2 bg-accent rounded-lg">
+                      <SettingsDropdown align="start" />
+                    </div>
+                    <Button
+                      onClick={() => initiateDiscordLogin(locale)}
+                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                    >
+                      {t("loginWithDiscord")}
+                    </Button>
+                  </div>
+                </div>
               )}
-              <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="block">
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary">
-                  {t("addToDiscord")}
-                </Button>
-              </a>
             </div>
           </div>
         </div>
