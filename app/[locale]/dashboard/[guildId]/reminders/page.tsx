@@ -353,8 +353,8 @@ export default function RemindersPage() {
   // Save a single reminder from dialog
   const handleSaveReminder = async () => {
     try {
-      // Validate time is under 24 hours
-      if (!validateTime(dialogReminder.time || "")) {
+      // Validate time is under 24 hours (skip for inactivity type)
+      if (dialogReminder.type !== "Inactivity" && !validateTime(dialogReminder.time || "")) {
         toast({
           title: t('toast.errorTitle'),
           description: t('toast.timeExceeds24h'),
@@ -841,11 +841,15 @@ export default function RemindersPage() {
                 <div className="space-y-2">
                   <Label htmlFor="dialog-time">
                     <Clock className="h-4 w-4 inline mr-1" />
-                    {t('card.timeBefore')}
+                    {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
                   </Label>
                   <Input
                     id="dialog-time"
-                    placeholder={t('card.timeBeforePlaceholder')}
+                    placeholder={
+                      dialogReminder.type === "Inactivity"
+                        ? t('card.timeInactivePlaceholder')
+                        : t('card.timeBeforePlaceholder')
+                    }
                     value={dialogReminder.time || ""}
                     onChange={(e) => updateDialogField("time", e.target.value)}
                   />

@@ -1059,6 +1059,8 @@
       "before": "before",
       "timeBefore": "Time Before (e.g., \"6h\", \"30m\")",
       "timeBeforePlaceholder": "6h",
+      "timeInactive": "Time Inactive (e.g., \"7d\", \"30d\")",
+      "timeInactivePlaceholder": "7d",
       "channel": "Channel",
       "channelPlaceholder": "Select channel",
       "clan": "Clan",

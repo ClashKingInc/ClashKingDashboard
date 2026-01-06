@@ -936,6 +936,8 @@
       "before": "voor",
       "timeBefore": "Tijd Ervoor (bijv. \"6h\", \"30m\")",
       "timeBeforePlaceholder": "6h",
+      "timeInactive": "Tijd Inactief (bijv. \"7d\", \"30d\")",
+      "timeInactivePlaceholder": "7d",
       "channel": "Kanaal",
       "channelPlaceholder": "Selecteer kanaal",
       "clan": "Clan",
