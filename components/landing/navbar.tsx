@@ -213,7 +213,7 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4}>
                   <DropdownMenuItem asChild className="hover:!bg-transparent">
-                    <Link href={`/${locale}/servers`} className="flex items-center space-x-2">
+                    <Link href="/servers" className="flex items-center space-x-2">
                       <ArrowRight className="h-4 w-4" />
                       <span className="hover:!text-primary">{t("openDashboard")}</span>
                     </Link>
@@ -285,7 +285,7 @@ export function Navbar() {
                       </Button>
                     </div>
                   </div>
-                  <Link href={`/${locale}/servers`} className="block">
+                  <Link href="/servers" className="block">
                     <Button className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border">
                       {t("openDashboard")}
                     </Button>
