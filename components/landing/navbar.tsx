@@ -67,16 +67,16 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href={`/features`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/features`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("features")}
             </Link>
-            <Link href={`/open-source`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/open-source`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("openSource")}
             </Link>
-            <Link href={`/help`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/help`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/support`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("support")}
             </Link>
           </div>
@@ -134,16 +134,16 @@ export function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-border">
           <div className="px-4 py-4 space-y-3">
-            <Link href={`/features`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/features`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("features")}
             </Link>
-            <Link href={`/open-source`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/open-source`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("openSource")}
             </Link>
-            <Link href={`/help`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/help`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/support`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("support")}
             </Link>
             <div className="pt-4 space-y-2">
