@@ -1072,13 +1072,27 @@
       "pointThreshold": "Point Threshold",
       "pointThresholdPlaceholder": "4000",
       "attackThreshold": "Attack Threshold",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "notSet": "Not set"
+    },
+    "dialog": {
+      "addTitle": "Add New Reminder",
+      "addDescription": "Configure a new reminder for your server",
+      "editTitle": "Edit Reminder",
+      "editDescription": "Update reminder settings",
+      "type": "Reminder Type",
+      "selectType": "Select type",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "addReminder": "Add Reminder"
     },
     "toast": {
       "errorTitle": "Error",
       "errorLoadingReminders": "Failed to load reminders. Please try again.",
-      "reminderAdded": "Reminder Added",
+      "reminderAdded": "Reminder added successfully",
       "reminderAddedDesc": "New {type} reminder added. Don't forget to save!",
+      "reminderUpdated": "Reminder updated successfully",
       "successTitle": "Success",
       "reminderDeleted": "Reminder deleted successfully",
       "failedToDelete": "Failed to delete reminder",

@@ -949,13 +949,27 @@
       "pointThreshold": "Puntendrempel",
       "pointThresholdPlaceholder": "4000",
       "attackThreshold": "Aanvalsdrempel",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "notSet": "Niet ingesteld"
+    },
+    "dialog": {
+      "addTitle": "Nieuwe Herinnering Toevoegen",
+      "addDescription": "Configureer een nieuwe herinnering voor je server",
+      "editTitle": "Herinnering Bewerken",
+      "editDescription": "Update herinnering instellingen",
+      "type": "Herinnering Type",
+      "selectType": "Selecteer type",
+      "cancel": "Annuleren",
+      "saving": "Opslaan...",
+      "saveChanges": "Wijzigingen Opslaan",
+      "addReminder": "Herinnering Toevoegen"
     },
     "toast": {
       "errorTitle": "Fout",
       "errorLoadingReminders": "Kan herinneringen niet laden. Probeer het opnieuw.",
-      "reminderAdded": "Herinnering Toegevoegd",
+      "reminderAdded": "Herinnering succesvol toegevoegd",
       "reminderAddedDesc": "Nieuwe {type} herinnering toegevoegd. Vergeet niet op te slaan!",
+      "reminderUpdated": "Herinnering succesvol bijgewerkt",
       "successTitle": "Succes",
       "reminderDeleted": "Herinnering succesvol verwijderd",
       "failedToDelete": "Kan herinnering niet verwijderen",
