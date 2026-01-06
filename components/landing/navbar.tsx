@@ -65,7 +65,7 @@ export function Navbar() {
     ];
 
     return (
-      <DropdownMenu modal={false}>
+      <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="border-border">
             <Settings className="h-5 w-5" />
@@ -85,7 +85,7 @@ export function Navbar() {
               )}
               <span className="hover:!text-primary">{t("theme")}</span>
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={-2} alignOffset={0}>
+            <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
               <DropdownMenuItem
                 onClick={() => setTheme("system")}
                 className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
@@ -129,7 +129,7 @@ export function Navbar() {
               </div>
               <span className="hover:!text-primary">{t("language")}</span>
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={-2} alignOffset={0}>
+            <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
               {languages.map((lang) => (
                 <DropdownMenuItem
                   key={lang.code}
@@ -199,7 +199,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <SettingsDropdown />
             {user ? (
-              <DropdownMenu modal={false}>
+              <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="group flex items-center space-x-2 hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer p-0 outline-none">
                     <Avatar className="h-6 w-6 border border-primary/50">
