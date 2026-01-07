@@ -47,7 +47,13 @@
     "addToDiscord": "Toevoegen aan Discord",
     "openDashboard": "Open Dashboard",
     "dashboardSettings": "Dashboard Instellingen",
-    "logout": "Uitloggen"
+    "logout": "Uitloggen",
+    "settings": "Instellingen",
+    "theme": "Thema",
+    "systemTheme": "Systeem volgen",
+    "lightTheme": "Wit thema",
+    "darkTheme": "Donker thema",
+    "language": "Taal"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers gebruiken ClashKing al",
@@ -1485,5 +1491,10 @@
       "systemHealth": "Systeemgezondheid",
       "systemHealthDesc": "CPU- en geheugengebruik geven de huidige belasting van de ClashKing API-infrastructuur aan"
     }
+  },
+  "NotFound": {
+    "title": "404 - Pagina Niet Gevonden",
+    "description": "De pagina die u zoekt bestaat niet.",
+    "goHome": "Ga naar Home"
   }
 }

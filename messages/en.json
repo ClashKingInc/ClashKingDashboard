@@ -47,7 +47,13 @@
     "addToDiscord": "Add to Discord",
     "openDashboard": "Open Dashboard",
     "dashboardSettings": "Dashboard Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "settings": "Settings",
+    "theme": "Theme",
+    "systemTheme": "Follow System",
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme",
+    "language": "Language"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers already using ClashKing",
@@ -1608,5 +1614,10 @@
       "systemHealth": "System Health",
       "systemHealthDesc": "CPU and memory usage indicate the current load on the ClashKing API infrastructure"
     }
+  },
+  "NotFound": {
+    "title": "404 - Page Not Found",
+    "description": "The page you are looking for does not exist.",
+    "goHome": "Go to Home"
   }
 }

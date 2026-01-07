@@ -4,14 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Menu, X, LogOut, ArrowRight, ChevronDown } from "lucide-react";
+import { Menu, X, LogOut, ArrowRight, ChevronDown, Settings, Sun, Moon, Computer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { useTranslations } from "next-intl";
-import { LanguageSwitcher } from "@/components/language-switcher";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
@@ -46,12 +44,129 @@ export function Navbar() {
     router.push(`/${locale}`);
   };
 
+  const SettingsDropdown = ({ align = "end" }: { align?: "start" | "end" }) => {
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+    const t = useTranslations("Navigation");
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+
+    const switchLocale = (newLocale: string) => {
+      document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+      router.refresh();
+    };
+
+    const languages = [
+      { code: "en", name: "English", flagCode: "us" },
+      { code: "fr", name: "Français", flagCode: "fr" },
+      { code: "nl", name: "Nederlands", flagCode: "nl" },
+    ];
+
+    return (
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="border-border h-12 w-12 md:h-9 md:w-9 [&_svg]:size-6 md:[&_svg]:size-5">
+            <Settings />
+            <span className="sr-only">{t("settings")}</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={align === "start" ? 0 : 0}>
+          {/* Theme Submenu */}
+          <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
+            <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
+              {mounted && theme === "dark" ? (
+                <Moon className="h-4 w-4" />
+              ) : theme === "light" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Computer className="h-4 w-4" />
+              )}
+              <span className="hover:!text-primary">{t("theme")}</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
+              <DropdownMenuItem
+                onClick={() => setTheme("system")}
+                className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                  theme === "system" ? "bg-primary/10 text-primary" : ""
+                }`}
+              >
+                <Computer className="h-4 w-4" />
+                <span className="hover:!text-primary">{t("systemTheme")}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTheme("light")}
+                className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                  theme === "light" ? "bg-primary/10 text-primary" : ""
+                }`}
+              >
+                <Sun className="h-4 w-4" />
+                <span className="hover:!text-primary">{t("lightTheme")}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTheme("dark")}
+                className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                  theme === "dark" ? "bg-primary/10 text-primary" : ""
+                }`}
+              >
+                <Moon className="h-4 w-4" />
+                <span className="hover:!text-primary">{t("darkTheme")}</span>
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+
+          {/* Language Submenu */}
+          <DropdownMenuSub open={openSubmenu === "language"} onOpenChange={(open) => setOpenSubmenu(open ? "language" : null)}>
+            <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
+              <div className="relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
+                <Image
+                  src={`https://flagcdn.com/w40/${languages.find(lang => lang.code === locale)?.flagCode || "us"}.png`}
+                  alt="Current language"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <span className="hover:!text-primary">{t("language")}</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
+              {languages.map((lang) => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => switchLocale(lang.code)}
+                  className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                    locale === lang.code ? "bg-primary/10 text-primary" : ""
+                  }`}
+                >
+                  <div className="mr-2 relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
+                    <Image
+                      src={`https://flagcdn.com/w40/${lang.flagCode}.png`}
+                      alt={lang.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <span className="hover:!text-primary">{lang.name}</span>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
   const logoSrc = mounted && (theme === "light" || resolvedTheme === "light")
     ? clashKingAssets.logos.withTextWhitePng
     : clashKingAssets.logos.withTextDarkPng;
 
   return (
-    <nav className="fixed top-0 inset-x-0 bg-background/95 backdrop-blur-lg z-50 border-b border-primary/30">
+    <nav className={`fixed top-0 inset-x-0 backdrop-blur-lg z-50 border-b border-primary/30 ${
+      mounted && (theme === "dark" || resolvedTheme === "dark")
+        ? "bg-card/95"
+        : "bg-background/95"
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -67,24 +182,23 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href={`/features`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/features`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("features")}
             </Link>
-            <Link href={`/open-source`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/open-source`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("openSource")}
             </Link>
-            <Link href={`/help`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/help`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href={`/support`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("support")}
             </Link>
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <ThemeSwitcher />
-            <LanguageSwitcher />
+            <SettingsDropdown />
             {user ? (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
@@ -99,7 +213,7 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4}>
                   <DropdownMenuItem asChild className="hover:!bg-transparent">
-                    <Link href={`/${locale}/servers`} className="flex items-center space-x-2">
+                    <Link href="/servers" className="flex items-center space-x-2">
                       <ArrowRight className="h-4 w-4" />
                       <span className="hover:!text-primary">{t("openDashboard")}</span>
                     </Link>
@@ -134,62 +248,64 @@ export function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-border">
           <div className="px-4 py-4 space-y-3">
-            <Link href={`/features`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/features`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("features")}
             </Link>
-            <Link href={`/open-source`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/open-source`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("openSource")}
             </Link>
-            <Link href={`/help`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/help`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="block py-2 text-muted-foreground hover:text-primary">
+            <Link href={`/support`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("support")}
             </Link>
             <div className="pt-4 space-y-2">
-              <div className="flex justify-center gap-4 mb-2">
-                <ThemeSwitcher />
-                <LanguageSwitcher />
-              </div>
               {user ? (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2 bg-accent rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-10 w-10 border border-primary/50">
-                        <AvatarImage src={user.avatar_url} alt={user.username} />
-                        <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-foreground font-medium">{user.username}</span>
+                  <div className="flex items-stretch gap-2">
+                    <div className="flex items-center justify-center bg-accent rounded-lg">
+                      <SettingsDropdown align="start" />
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleLogout}
-                      className="text-muted-foreground hover:text-primary"
-                    >
-                      <LogOut className="h-5 w-5" />
-                    </Button>
+                    <div className="flex items-center justify-between p-1 bg-accent rounded-lg flex-1 min-w-0">
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <Avatar className="h-10 w-10 border border-primary/50">
+                          <AvatarImage src={user.avatar_url} alt={user.username} />
+                          <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <span className="text-foreground font-medium truncate">{user.username}</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleLogout}
+                        className="text-destructive hover:text-destructive/80"
+                      >
+                        <LogOut className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
-                  <Link href={`/${locale}/servers`} className="block">
+                  <Link href="/servers" className="block">
                     <Button className="w-full bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border">
                       {t("openDashboard")}
                     </Button>
                   </Link>
                 </div>
               ) : (
-                <Button
-                  onClick={() => initiateDiscordLogin(locale)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {t("loginWithDiscord")}
-                </Button>
+                <div className="space-y-2">
+                  <div className="flex items-stretch gap-2">
+                    <div className="flex items-center justify-center bg-accent rounded-lg">
+                      <SettingsDropdown align="start" />
+                    </div>
+                    <Button
+                      onClick={() => initiateDiscordLogin(locale)}
+                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground min-h-[48px] text-xl font-bold"
+                    >
+                      {t("loginWithDiscord")}
+                    </Button>
+                  </div>
+                </div>
               )}
-              <a href="https://invite.clashk.ing/" target="_blank" rel="noopener noreferrer" className="block">
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-2 border-primary">
-                  {t("addToDiscord")}
-                </Button>
-              </a>
             </div>
           </div>
         </div>
