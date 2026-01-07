@@ -40,7 +40,7 @@ export default function LoadingScreenWithMessages({
       timeoutId = setTimeout(() => {
         setCurrentMessageIndex(index + 1);
         cycleMessage(index + 1);
-      }, 800);
+      }, 1500);
     };
 
     cycleMessage(0);
