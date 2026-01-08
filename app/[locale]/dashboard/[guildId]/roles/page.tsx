@@ -13,6 +13,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -43,6 +56,8 @@ import {
   Award,
   Clock,
   Crown,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
@@ -105,6 +120,69 @@ const BUILDER_LEAGUE_TIERS = [
   { id: "wood", apiName: "Wood", range: [1, 5] },
 ];
 
+const ACHIEVEMENTS_CONFIG = [
+  { id: "keepYourAccountSafe", apiName: "Keep Your Account Safe!" },
+  { id: "biggerAndBetter", apiName: "Bigger & Better" },
+  { id: "discoverNewTroops", apiName: "Discover New Troops" },
+  { id: "biggerCoffers", apiName: "Bigger Coffers" },
+  { id: "goldGrab", apiName: "Gold Grab" },
+  { id: "elixirEscapade", apiName: "Elixir Escapade" },
+  { id: "heroicHeist", apiName: "Heroic Heist" },
+  { id: "wellSeasoned", apiName: "Well Seasoned" },
+  { id: "niceAndTidy", apiName: "Nice and Tidy" },
+  { id: "empireBuilder", apiName: "Empire Builder" },
+  { id: "clanWarWealth", apiName: "Clan War Wealth" },
+  { id: "friendInNeed", apiName: "Friend in Need" },
+  { id: "sharingIsCaring", apiName: "Sharing is caring" },
+  { id: "siegeSharer", apiName: "Siege Sharer" },
+  { id: "warHero", apiName: "War Hero" },
+  { id: "warLeagueLegend", apiName: "War League Legend" },
+  { id: "gamesChampion", apiName: "Games Champion" },
+  { id: "unbreakable", apiName: "Unbreakable" },
+  { id: "sweetVictory", apiName: "Sweet Victory!" },
+  { id: "conqueror", apiName: "Conqueror" },
+  { id: "leagueAllStar", apiName: "League All-Star" },
+  { id: "leagueFollower", apiName: "League Follower" },
+  { id: "leagueEnthusiast", apiName: "League Enthusiast" },
+  { id: "leagueSuperfan", apiName: "League Superfan" },
+  { id: "leagueFanatic", apiName: "League Fanatic" },
+  { id: "leagueMaster", apiName: "League Master" },
+  { id: "legendLeague", apiName: "Legend League" },
+  { id: "humiliator", apiName: "Humiliator" },
+  { id: "notSoEasyThisTime", apiName: "Not So Easy This Time" },
+  { id: "unionBuster", apiName: "Union Buster" },
+  { id: "bustThis", apiName: "Bust This!" },
+  { id: "wallBuster", apiName: "Wall Buster" },
+  { id: "mortarMauler", apiName: "Mortar Mauler" },
+  { id: "xBowExterminator", apiName: "X-Bow Exterminator" },
+  { id: "firefighter", apiName: "Firefighter" },
+  { id: "antiArtillery", apiName: "Anti-Artillery" },
+  { id: "shatteredAndScatter", apiName: "Shattered and Scattered" },
+  { id: "counterspell", apiName: "Counterspell" },
+  { id: "monolithMasher", apiName: "Monolith Masher" },
+  { id: "multiArcherTowerTerminator", apiName: "Multi-Archer Tower Terminator" },
+  { id: "ricochetCannonCrusher", apiName: "Ricochet Cannon Crusher" },
+  { id: "firespitterFinisher", apiName: "Firespitter Finisher" },
+  { id: "multiGearTowerTrampler", apiName: "Multi-Gear Tower Trampler" },
+  { id: "craftersNightmare", apiName: "Crafter's Nightmare" },
+  { id: "getThoseGoblins", apiName: "Get those Goblins!" },
+  { id: "supercharger", apiName: "Supercharger" },
+  { id: "craftingConnoisseur", apiName: "Crafting Connoisseur" },
+  { id: "getThoseOtherGoblins", apiName: "Get those other Goblins!" },
+  { id: "getEvenMoreGoblins", apiName: "Get even more Goblins!" },
+  { id: "dragonSlayer", apiName: "Dragon Slayer" },
+  { id: "ungratefulChild", apiName: "Ungrateful Child" },
+  { id: "superbWork", apiName: "Superb Work" },
+  { id: "masterEngineering", apiName: "Master Engineering" },
+  { id: "hiddenTreasures", apiName: "Hidden Treasures" },
+  { id: "highGear", apiName: "High Gear" },
+  { id: "nextGenerationModel", apiName: "Next Generation Model" },
+  { id: "unBuildIt", apiName: "Un-Build It" },
+  { id: "championBuilder", apiName: "Champion Builder" },
+  { id: "aggressiveCapitalism", apiName: "Aggressive Capitalism" },
+  { id: "mostValuableClanmate", apiName: "Most Valuable Clanmate" }
+];
+
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;
@@ -157,6 +235,11 @@ export default function RolesPage() {
     }
     return leaguesInTier;
   });
+
+  const achievements = ACHIEVEMENTS_CONFIG.map((a) => ({
+    value: a.apiName,
+    label: t(`achievements.${a.id}`),
+  }));
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -475,12 +558,48 @@ export default function RolesPage() {
           <>
             <div className="space-y-2">
               <Label htmlFor="achievement">{t("addRoleDialog.achievementName")}</Label>
-              <Input
-                id="achievement"
-                value={newRole.achievement || ""}
-                onChange={(e) => setNewRole({ ...newRole, achievement: e.target.value })}
-                placeholder={t("addRoleDialog.achievementPlaceholder")}
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="w-full justify-between font-normal"
+                  >
+                    {newRole.achievement
+                      ? achievements.find((a) => a.value === newRole.achievement)?.label
+                      : t("addRoleDialog.selectAchievement")}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder={t("addRoleDialog.searchAchievement")} />
+                    <CommandList className="max-h-80">
+                      <CommandEmpty>{t("addRoleDialog.noAchievementFound")}</CommandEmpty>
+                      <CommandGroup>
+                        {achievements.map((achievement) => (
+                          <CommandItem
+                            key={achievement.value}
+                            value={achievement.label}
+                            onSelect={() => {
+                              setNewRole({ ...newRole, achievement: achievement.value });
+                            }}
+                          >
+                            <Check
+                              className={`mr-2 h-4 w-4 ${
+                                newRole.achievement === achievement.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              }`}
+                            />
+                            {achievement.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
@@ -610,7 +729,8 @@ export default function RolesPage() {
                 criteria = role.builder_league || "";
                 break;
               case "achievement":
-                criteria = role.achievement || "";
+                const ach = achievements.find((a) => a.value === role.achievement);
+                criteria = ach ? ach.label : (role.achievement || "");
                 break;
               case "status":
                 criteria = `${role.months} ${role.months === 1 ? t("configuredRoles.month") : t("configuredRoles.months")}`;
