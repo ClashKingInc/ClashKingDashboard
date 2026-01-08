@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RoleCombobox } from "@/components/ui/role-combobox";
 import {
   Dialog,
   DialogContent,
@@ -356,21 +357,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -398,21 +391,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -440,21 +425,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -482,21 +459,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -515,21 +484,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -550,21 +511,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -592,21 +545,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
