@@ -158,7 +158,6 @@ export default function RolesPage() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -172,6 +171,16 @@ export default function RolesPage() {
     blacklisted_roles: [],
     role_treatment: [],
   });
+  const [originalRoleSettings, setOriginalRoleSettings] = useState<RoleSettings>({
+    server_id: guildId,
+    auto_eval_status: false,
+    auto_eval_nickname: false,
+    autoeval_triggers: [],
+    autoeval_log: undefined,
+    blacklisted_roles: [],
+    role_treatment: [],
+  });
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   const [allRoles, setAllRoles] = useState<Record<string, any[]>>({
     townhall: [],
@@ -242,6 +251,7 @@ export default function RolesPage() {
 
       if (settingsRes.data) {
         setRoleSettings(settingsRes.data);
+        setOriginalRoleSettings(settingsRes.data);
       }
 
       if (discordRolesRes.data) {
@@ -257,9 +267,8 @@ export default function RolesPage() {
 
   const handleSaveSettings = async () => {
     try {
-      setIsSaving(true);
+      setSaveStatus('saving');
       setError(null);
-      setSuccess(false);
 
       await apiClient.roles.updateRoleSettings(guildId, {
         auto_eval_status: roleSettings.auto_eval_status,
@@ -270,12 +279,12 @@ export default function RolesPage() {
         role_treatment: roleSettings.role_treatment,
       });
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      setOriginalRoleSettings({ ...roleSettings });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (err: any) {
       setError(err.message || "Failed to save settings");
-    } finally {
-      setIsSaving(false);
+      setSaveStatus('idle');
     }
   };
 
@@ -714,6 +723,9 @@ export default function RolesPage() {
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
   const totalRoleTypes = 7; // townhall, league, builderhall, builder_league, achievement, status, family_position
 
+  const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
+                     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -823,23 +835,30 @@ export default function RolesPage() {
                   {t("settings.description")}
                 </CardDescription>
               </div>
-              <Button
-                onClick={handleSaveSettings}
-                disabled={isSaving}
-                className="bg-primary hover:bg-primary/90 w-full md:w-auto"
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("settings.saving")}
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    {t("settings.saveButton")}
-                  </>
-                )}
-              </Button>
+              {saveStatus === 'saved' ? (
+                <div className="flex items-center gap-2 text-green-600 bg-green-500/10 px-3 py-2 rounded-md">
+                  <AlertCircle className="h-4 w-4" />
+                  <span className="text-sm font-medium">{t("toast.changesSaved")}</span>
+                </div>
+              ) : hasChanged && (
+                <Button
+                  onClick={handleSaveSettings}
+                  disabled={saveStatus === 'saving'}
+                  className="bg-primary hover:bg-primary/90 w-full md:w-auto"
+                >
+                  {saveStatus === 'saving' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t("settings.saving")}
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      {t("settings.saveButton")}
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
