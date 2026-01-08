@@ -671,6 +671,22 @@ export default function RolesPage() {
   const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
                      roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
 
+  const isAddRoleDisabled = () => {
+    const hasRole = currentRoleType === "status" ? !!newRole.id : !!newRole.role_id;
+    if (!hasRole) return true;
+
+    switch (currentRoleType) {
+      case "townhall": return !newRole.th;
+      case "league": return !newRole.league;
+      case "builderhall": return !newRole.bh;
+      case "builder_league": return !newRole.builder_league;
+      case "achievement": return !newRole.achievement;
+      case "status": return !newRole.months;
+      case "family_position": return !newRole.type;
+      default: return true;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -894,7 +910,7 @@ export default function RolesPage() {
                     <Button
                       className="bg-primary hover:bg-primary/90"
                       onClick={handleAddRole}
-                      disabled={!newRole.role_id && !newRole.id}
+                      disabled={isAddRoleDisabled()}
                     >
                       {t("addRoleDialog.addRole")}
                     </Button>
