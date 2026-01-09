@@ -1,94 +1,94 @@
-# Token Refresh Implementation - Samenvattting
+# Token Refresh Implementation - Summary
 
-## 🎯 Probleem
-Je kreeg veel 401 (Unauthorized) fouten na een dag ingelogd te zijn, wat aangeeft dat je access token verlopen was.
+## 🎯 Problem
+You were getting many 401 (Unauthorized) errors after being logged in for a day, indicating that your access token had expired.
 
-## ✅ Oplossing Geïmplementeerd
+## ✅ Solution Implemented
 
-Ik heb een volledig automatisch token-refresh systeem ingebouwd dat ervoor zorgt dat je **ingelogd blijft**:
+I've built a complete automatic token-refresh system that ensures you **stay logged in**:
 
 ### 1. **TokenManager** (`lib/auth/token-manager.ts`)
-- Beheert het opslaan en ophalen van tokens uit localStorage
-- **Slaat token expiry op** - berekent wanneer de token verlopen is
-- Biedt methodes om te checken of token verlopen is (met 5-min buffer)
-- `TokenManager.isTokenExpired()` retourneert `true` als token verlopen is
+- Manages storing and retrieving tokens from localStorage
+- **Stores token expiry** - calculates when the token will expire
+- Provides methods to check if token has expired (with 5-min buffer)
+- `TokenManager.isTokenExpired()` returns `true` if token is expired
 
-### 2. **Automatische Token Refresh in BaseClient** (`lib/api/core/base-client.ts`)
-- **Onderschept 401-fouten** automatisch
-- Wanneer een 401 gekregen wordt:
-  - Probeert automatisch de token te refreshen via `/v2/auth/refresh`
-  - **Herhaalt de originele request** met de nieuwe token
-  - Voorkomen van meerdere tegelijkertijdige refreshes (queuing)
-- Redirect naar login pagina als refresh faalt
+### 2. **Automatic Token Refresh in BaseClient** (`lib/api/core/base-client.ts`)
+- **Intercepts 401 errors** automatically
+- When a 401 is received:
+  - Automatically attempts to refresh the token via `/v2/auth/refresh`
+  - **Retries the original request** with the new token
+  - Prevents multiple simultaneous refresh requests (queuing)
+- Redirects to login page if refresh fails
 
 ### 3. **Token Refresh Interceptor** (`lib/auth/token-refresh-interceptor.ts`)
-- `initializeTokenRefresh()` - checkt en refreshes token on app load
-- `startPeriodicTokenRefresh()` - checkt elke 5 minuten of token verlopen is
-- Voorkomt meerdere tegelijkertijdige refresh requests
+- `initializeTokenRefresh()` - checks and refreshes token on app load
+- `startPeriodicTokenRefresh()` - checks every 5 minutes if token is expired
+- Prevents multiple concurrent refresh requests
 
 ### 4. **Token Refresh Provider** (`components/token-refresh-provider.tsx`)
-- Client component die automatisch wordt geactiveerd
-- Geïntegreerd in root layout (`app/layout.tsx`)
-- Voert refresh check uit wanneer app laadt
-- Checkt periodiek (elke 5 minuten)
+- Client component that automatically activates
+- Integrated into root layout (`app/layout.tsx`)
+- Performs refresh check when app loads
+- Periodically checks (every 5 minutes)
 
 ### 5. **useAuth Hook** (`lib/auth/use-auth.ts`)
-- React hook voor authentication state
-- Kan in componenten gebruikt worden: `const { isAuthenticated, isExpired, logout } = useAuth()`
+- React hook for authentication state
+- Can be used in components: `const { isAuthenticated, isExpired, logout } = useAuth()`
 
 ### 6. **Callback Page Update** (`app/[locale]/auth/callback/page.tsx`)
-- Gebruikt nu `TokenManager.setTokens()` om tokens op te slaan
-- Slaat `expires_in` op zodat we weten wanneer token verlopen is
+- Now uses `TokenManager.setTokens()` to store tokens
+- Stores `expires_in` so we know when token will expire
 
-## 🔄 Hoe het werkt
+## 🔄 How It Works
 
 ```
-1. User logt in → tokens opgeslagen met expiry time
-2. TokenManager houdt expiry bij
-3. Als je een request doet en 401 krijgt:
-   → Automatisch refresh token request
-   → Retry originele request met nieuwe token
-4. Elke 5 minuten:
-   → Check of token verlopen is
-   → Automatisch refreshen als nodig
-5. App load:
-   → Check onmiddellijk of token verlopen is
-   → Refresh als nodig
+1. User logs in → tokens stored with expiry time
+2. TokenManager tracks expiry
+3. When you make a request and get 401:
+   → Automatically refresh token request
+   → Retry original request with new token
+4. Every 5 minutes:
+   → Check if token is expired
+   → Automatically refresh if needed
+5. On app load:
+   → Immediately check if token is expired
+   → Refresh if needed
 ```
 
-## 📋 Wat moet je nog doen
+## 📋 What You Still Need to Do
 
-1. **Backend check**: Zorg dat je `/v2/auth/refresh` endpoint:
-   - `refresh_token` in POST body accepteert
-   - Nieuwe `access_token`, `refresh_token`, en `expires_in` retourneert
+1. **Backend Check**: Make sure your `/v2/auth/refresh` endpoint:
+   - Accepts `refresh_token` in POST body
+   - Returns new `access_token`, `refresh_token`, and `expires_in`
 
-2. **Testen**: 
-   - Log in en ga naar dashboard
-   - Laat het meer dan 1 dag lopen
-   - Kijk in console (F12) → Applications → localStorage
-   - Je zou `token_expiry` moeten zien
+2. **Testing**: 
+   - Log in and go to dashboard
+   - Let it run for more than 1 day
+   - Check console (F12) → Applications → localStorage
+   - You should see `token_expiry`
 
-3. **Redirect handling** (optioneel):
-   - In `token-refresh-interceptor.ts` kun je uncomment: `window.location.href = '/login'`
-   - Dit redirect naar login als refresh faalt
+3. **Redirect Handling** (optional):
+   - In `token-refresh-interceptor.ts` you can uncomment: `window.location.href = '/login'`
+   - This redirects to login if refresh fails
 
-## 📦 Files Toegevoegd/Gewijzigd
+## 📦 Files Added/Modified
 
-**Nieuwe files:**
+**New files:**
 - `lib/auth/token-manager.ts`
 - `lib/auth/token-refresh-interceptor.ts`
 - `lib/auth/use-auth.ts`
 - `lib/auth/index.ts`
 - `components/token-refresh-provider.tsx`
 
-**Gewijzigd:**
+**Modified:**
 - `lib/api/core/base-client.ts` (401 handling + retry logic)
 - `app/[locale]/auth/callback/page.tsx` (TokenManager usage)
 - `app/layout.tsx` (TokenRefreshProvider wrapper)
 
 ## 🚀 Extra Features
 
-Je kunt nu ook in componenten dit doen:
+You can now also do this in components:
 
 ```typescript
 import { useAuth } from '@/lib/auth';
@@ -99,13 +99,13 @@ export function MyComponent() {
   if (!isAuthenticated) return <div>Not logged in</div>;
   if (isExpired) return <div>Token expired</div>;
   
-  return <div>Welkom!</div>;
+  return <div>Welcome!</div>;
 }
 ```
 
-## 💡 Toekomstige Optimalisaties
+## 💡 Future Optimizations
 
-1. **Activity tracking**: Token refresh rate aanpassen op basis van user activity
-2. **Sliding window**: Token auto-extend als user actief is
-3. **Multiple tabs sync**: Sessie sync tussen browser tabs
-4. **Offline support**: Queue requests als offline en sync na reconnect
+1. **Activity tracking**: Adjust token refresh rate based on user activity
+2. **Sliding window**: Auto-extend token if user is active
+3. **Multiple tabs sync**: Session sync between browser tabs
+4. **Offline support**: Queue requests when offline and sync after reconnect
