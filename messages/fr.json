@@ -987,7 +987,7 @@
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
       "failedToSave": "Échec de l'enregistrement des rappels",
-      "timeExceedsLimit": "Le temps doit être inférieur ou égal à {limit} heures pour les rappels de type {type}",
+      "timeExceedsLimit": "Le temps restant doit être compris entre {min} et {max} heures",
       "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
       "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
     }

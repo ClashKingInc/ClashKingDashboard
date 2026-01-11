@@ -335,6 +335,34 @@ export default function RemindersPage() {
     return match ? match[1] : timeString;
   };
 
+  const getMaxHours = (type: string): number => {
+    switch (type) {
+      case "War": return 48;
+      case "Clan Games": return 336;
+      case "Clan Capital": return 168;
+      default: return 0;
+    }
+  };
+
+  const isTimeValid = (time: string, type: string): boolean => {
+    if (!time) return false;
+    const hours = parseFloat(time);
+    if (isNaN(hours) || hours <= 0) return false;
+    const max = getMaxHours(type);
+    if (max === 0) return true; // Inactivity
+    return hours <= max;
+  };
+
+  const isPointsValid = (points: number | undefined): boolean => {
+    if (points === undefined || points === null) return false;
+    return points >= POINT_THRESHOLD_MIN && points <= POINT_THRESHOLD_MAX;
+  };
+
+  const isAttacksValid = (attacks: number | undefined): boolean => {
+    if (attacks === undefined || attacks === null) return false;
+    return attacks >= ATTACK_THRESHOLD_MIN && attacks <= ATTACK_THRESHOLD_MAX;
+  };
+
   // Validate time based on reminder type
   const validateTime = (timeString: string, reminderType: string): boolean => {
     if (!timeString) return false;
@@ -1050,6 +1078,14 @@ export default function RemindersPage() {
                       {t('card.timeUnit')}
                     </span>
                     </div>
+                    {dialogReminder.time && !isTimeValid(dialogReminder.time, dialogReminder.type || "") && (
+                        <p className="text-xs text-destructive mt-1">
+                          {t('toast.timeExceedsLimit', {
+                            min: 0,
+                            max: getMaxHours(dialogReminder.type || "") || 9999
+                          })}
+                        </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -1144,6 +1180,14 @@ export default function RemindersPage() {
                             updateDialogField("point_threshold", value);
                           }}
                       />
+                      {dialogReminder.point_threshold !== undefined && !isPointsValid(dialogReminder.point_threshold) && (
+                          <p className="text-xs text-destructive mt-1">
+                            {t('toast.pointThresholdInvalid', {
+                              min: POINT_THRESHOLD_MIN,
+                              max: POINT_THRESHOLD_MAX,
+                            })}
+                          </p>
+                      )}
                     </div>
                 )}
 
@@ -1163,6 +1207,14 @@ export default function RemindersPage() {
                             updateDialogField("attack_threshold", value);
                           }}
                       />
+                      {dialogReminder.attack_threshold !== undefined && !isAttacksValid(dialogReminder.attack_threshold) && (
+                          <p className="text-xs text-destructive mt-1">
+                            {t('toast.attackThresholdInvalid', {
+                              min: ATTACK_THRESHOLD_MIN,
+                              max: ATTACK_THRESHOLD_MAX,
+                            })}
+                          </p>
+                      )}
                     </div>
                 )}
               </div>
@@ -1184,7 +1236,10 @@ export default function RemindersPage() {
                       saving || 
                       !dialogReminder.time || 
                       !dialogReminder.channel_id || 
-                      (dialogReminder.type === "War" && (!dialogReminder.war_types || dialogReminder.war_types.length === 0))
+                      !isTimeValid(dialogReminder.time, dialogReminder.type || "") ||
+                      (dialogReminder.type === "War" && (!dialogReminder.war_types || dialogReminder.war_types.length === 0)) ||
+                      (dialogReminder.type === "Clan Games" && !isPointsValid(dialogReminder.point_threshold)) ||
+                      (dialogReminder.type === "Clan Capital" && !isAttacksValid(dialogReminder.attack_threshold))
                     }
                     className="bg-primary hover:bg-primary/90"
                 >

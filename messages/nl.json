@@ -987,7 +987,7 @@
       "failedToDelete": "Kan herinnering niet verwijderen",
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
       "failedToSave": "Kan herinneringen niet opslaan",
-      "timeExceedsLimit": "Tijd moet minder dan of gelijk zijn aan {limit} uur voor {type} herinneringen",
+      "timeExceedsLimit": "Resterende tijd moet tussen {min} en {max} uur liggen",
       "pointThresholdInvalid": "Puntendrempel moet tussen {min} en {max} liggen",
       "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen"
     }

@@ -1110,7 +1110,7 @@
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
       "failedToSave": "Failed to save reminders",
-      "timeExceedsLimit": "Time must be less than or equal to {limit} hours for {type} reminders",
+      "timeExceedsLimit": "Remaining time must be between {min} and {max} hours",
       "pointThresholdInvalid": "Point threshold must be between {min} and {max}",
       "attackThresholdInvalid": "Attack threshold must be between {min} and {max}"
     }
