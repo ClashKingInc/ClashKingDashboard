@@ -277,7 +277,7 @@ export default function RemindersPage() {
     const newReminder: Partial<ReminderConfig> = {
       type: typeMap[activeTab],
       channel_id: "",
-      time: "6h",
+      time: "",
       custom_text: "",
       clan_tag: selectedClan !== "all" ? selectedClan : clans[0]?.tag || "",
       war_types: activeTab === "war" ? ["Random", "Friendly", "CWL"] : undefined,
@@ -1097,7 +1097,7 @@ export default function RemindersPage() {
               </Button>
               <Button
                 onClick={handleSaveReminder}
-                disabled={saving || !dialogReminder.time || !dialogReminder.channel_id}
+                disabled={saving || !dialogReminder.time || !dialogReminder.channel_id || (dialogReminder.type === "War" && (!dialogReminder.war_types || dialogReminder.war_types.length === 0))}
                 className="bg-primary hover:bg-primary/90"
               >
                 {saving ? (
