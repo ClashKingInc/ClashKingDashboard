@@ -3,12 +3,80 @@
  */
 
 import type { ApiConfig, ApiResponse } from '../types/common';
+import { TokenManager } from '@/lib/auth/token-manager';
 
 export class BaseApiClient {
   protected config: ApiConfig;
+  private isRefreshing: boolean = false;
+  private refreshPromise: Promise<string | null> | null = null;
 
   constructor(config: ApiConfig) {
     this.config = config;
+  }
+
+  /**
+   * Refresh the access token using refresh token
+   */
+  private async refreshAccessToken(): Promise<string | null> {
+    if (this.isRefreshing) {
+      // If already refreshing, wait for the result
+      return this.refreshPromise || null;
+    }
+
+    this.isRefreshing = true;
+    this.refreshPromise = (async () => {
+      try {
+        const refreshToken = this.config.refreshToken || TokenManager.getRefreshToken();
+        if (!refreshToken) {
+          throw new Error('No refresh token available');
+        }
+
+        const url = `${this.config.baseUrl}/v2/auth/refresh`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            refresh_token: refreshToken,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Token refresh failed');
+        }
+
+        const data = await response.json();
+        const newAccessToken = data.access_token;
+        const expiresIn = data.expires_in;
+
+        // Update tokens
+        this.setAccessToken(newAccessToken);
+        TokenManager.setTokens({
+          access_token: newAccessToken,
+          refresh_token: refreshToken,
+          expires_in: expiresIn,
+        });
+
+        console.log('✅ Token refreshed successfully');
+        return newAccessToken;
+      } catch (error) {
+        console.error('❌ Token refresh failed:', error);
+        // Clear tokens on refresh failure
+        this.clearTokens();
+        TokenManager.clearTokens();
+        // Redirect to login
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        return null;
+      } finally {
+        this.isRefreshing = false;
+        this.refreshPromise = null;
+      }
+    })();
+
+    return this.refreshPromise;
   }
 
   /**
@@ -36,12 +104,41 @@ export class BaseApiClient {
     }
 
     try {
-      const response = await fetch(url, {
+      let response = await fetch(url, {
         ...options,
         headers,
       });
 
       const data = await response.json().catch(() => null);
+
+      // Handle 401 - try to refresh token
+      if (response.status === 401 && token && typeof window !== 'undefined') {
+        console.log('⚠️ Got 401, attempting to refresh token...');
+        const newToken = await this.refreshAccessToken();
+
+        if (newToken) {
+          // Retry request with new token
+          headers.set('Authorization', `Bearer ${newToken}`);
+          response = await fetch(url, {
+            ...options,
+            headers,
+          });
+
+          const retryData = await response.json().catch(() => null);
+
+          if (!response.ok) {
+            return {
+              error: retryData?.detail || retryData?.message || `HTTP ${response.status}`,
+              status: response.status,
+            };
+          }
+
+          return {
+            data: retryData,
+            status: response.status,
+          };
+        }
+      }
 
       if (!response.ok) {
         return {

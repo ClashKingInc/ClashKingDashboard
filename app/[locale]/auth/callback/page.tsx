@@ -5,6 +5,7 @@ import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messages";
+import { TokenManager } from "@/lib/auth/token-manager";
 
 export default function AuthCallbackPage() {
   const t = useTranslations("AuthCallback");
@@ -113,9 +114,12 @@ export default function AuthCallbackPage() {
           console.error("Failed to decode JWT:", e);
         }
 
-        // Store tokens
-        localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        // Store tokens using TokenManager
+        TokenManager.setTokens({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token,
+          expires_in: data.expires_in || 3600, // Default to 1 hour if not provided
+        });
         localStorage.setItem("user", JSON.stringify(data.user));
 
         console.log("Access Token:", data.access_token);
