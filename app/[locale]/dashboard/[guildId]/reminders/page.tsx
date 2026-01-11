@@ -277,7 +277,7 @@ export default function RemindersPage() {
     const newReminder: Partial<ReminderConfig> = {
       type: typeMap[activeTab],
       channel_id: "",
-      time: "6h",
+      time: "",
       custom_text: "",
       clan_tag: selectedClan !== "all" ? selectedClan : clans[0]?.tag || "",
       war_types: activeTab === "war" ? ["Random", "Friendly", "CWL"] : undefined,
@@ -1029,6 +1029,7 @@ export default function RemindersPage() {
                     <Label htmlFor="dialog-time">
                       <Clock className="h-4 w-4 inline mr-1" />
                       {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
+                      <span className="text-destructive ml-1">*</span>
                     </Label>
                     <div className="flex items-center gap-2">
                       <Input
@@ -1043,7 +1044,7 @@ export default function RemindersPage() {
                           }
                           value={dialogReminder.time || ""}
                           onChange={(e) => updateDialogField("time", e.target.value)}
-                          className="flex-1"
+                          className="w-3/4"
                       />
                       <span className="text-sm text-muted-foreground whitespace-nowrap">
                       {t('card.timeUnit')}
@@ -1052,7 +1053,7 @@ export default function RemindersPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="dialog-channel">{t('card.channel')}</Label>
+                    <Label htmlFor="dialog-channel">{t('card.channel')} <span className="text-destructive">*</span></Label>
                     <ChannelCombobox
                         channels={channels}
                         value={dialogReminder.channel_id || ""}
@@ -1101,7 +1102,7 @@ export default function RemindersPage() {
                 {/* Type-specific fields */}
                 {dialogReminder.type === "War" && (
                     <div className="space-y-2">
-                      <Label>{t('card.warTypes')}</Label>
+                      <Label>{t('card.warTypes')} <span className="text-destructive">*</span></Label>
                       <div className="flex gap-2 flex-wrap">
                         {["Random", "Friendly", "CWL"].map((type) => (
                             <Badge
@@ -1179,7 +1180,12 @@ export default function RemindersPage() {
                 </Button>
                 <Button
                     onClick={handleSaveReminder}
-                    disabled={saving || !dialogReminder.time || !dialogReminder.channel_id}
+                    disabled={
+                      saving || 
+                      !dialogReminder.time || 
+                      !dialogReminder.channel_id || 
+                      (dialogReminder.type === "War" && (!dialogReminder.war_types || dialogReminder.war_types.length === 0))
+                    }
                     className="bg-primary hover:bg-primary/90"
                 >
                   {saving ? (
