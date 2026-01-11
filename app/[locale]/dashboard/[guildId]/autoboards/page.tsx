@@ -752,7 +752,7 @@ export default function AutoBoardsPage() {
 
       {/* Statistics Cards */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-blue-500/30 bg-blue-500/5">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('totalAutoboards')}
@@ -761,16 +761,19 @@ export default function AutoBoardsPage() {
           <CardContent>
             {loading ? (
               <>
-                <Skeleton className="h-10 w-20 mb-2" />
-                <Skeleton className="h-4 w-32" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
               </>
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-foreground">{autoboardsData?.total || 0}</div>
-                  <LayoutDashboard className="h-8 w-8 text-primary/50" />
+                  <div className="text-3xl font-bold text-blue-500">{autoboardsData?.total || 0}</div>
+                  <LayoutDashboard className="h-8 w-8 text-blue-500/50" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground mt-2">
                   {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} ${t('used')}` : tCommon("loading")}
                 </p>
               </>
@@ -778,7 +781,7 @@ export default function AutoBoardsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-green-500/30 bg-green-500/5">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('autoPost')}
@@ -787,22 +790,25 @@ export default function AutoBoardsPage() {
           <CardContent>
             {loading ? (
               <>
-                <Skeleton className="h-10 w-16 mb-2" />
-                <Skeleton className="h-4 w-28" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-16 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
               </>
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-foreground">{autoboardsData?.post_count || 0}</div>
+                  <div className="text-3xl font-bold text-green-500">{autoboardsData?.post_count || 0}</div>
                   <Calendar className="h-8 w-8 text-green-500/50" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{t('scheduledBoards')}</p>
+                <p className="text-xs text-muted-foreground mt-2">{t('scheduledBoards')}</p>
               </>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-purple-500/30 bg-purple-500/5">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('autoRefresh')}
@@ -811,22 +817,25 @@ export default function AutoBoardsPage() {
           <CardContent>
             {loading ? (
               <>
-                <Skeleton className="h-10 w-16 mb-2" />
-                <Skeleton className="h-4 w-32" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-16 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
               </>
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-foreground">{autoboardsData?.refresh_count || 0}</div>
-                  <RefreshCw className="h-8 w-8 text-blue-500/50" />
+                  <div className="text-3xl font-bold text-purple-500">{autoboardsData?.refresh_count || 0}</div>
+                  <RefreshCw className="h-8 w-8 text-purple-500/50" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{t('continuousUpdates')}</p>
+                <p className="text-xs text-muted-foreground mt-2">{t('continuousUpdates')}</p>
               </>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('availableSlots')}
@@ -835,18 +844,21 @@ export default function AutoBoardsPage() {
           <CardContent>
             {loading ? (
               <>
-                <Skeleton className="h-10 w-16 mb-2" />
-                <Skeleton className="h-4 w-36" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-16 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-36 mt-2 animate-pulse" />
               </>
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-foreground">
+                  <div className="text-3xl font-bold text-yellow-500">
                     {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
                   </div>
-                  <Clock className="h-8 w-8 text-orange-500/50" />
+                  <Clock className="h-8 w-8 text-yellow-500/50" />
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{t('remainingCapacity')}</p>
+                <p className="text-xs text-muted-foreground mt-2">{t('remainingCapacity')}</p>
               </>
             )}
           </CardContent>

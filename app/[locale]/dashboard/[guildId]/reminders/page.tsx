@@ -422,8 +422,8 @@ export default function RemindersPage() {
           title: t('toast.errorTitle'),
           description: t('toast.timeExceedsLimit', {
             limit: dialogReminder.type === "War" ? 48 :
-                   dialogReminder.type === "Clan Games" ? 336 :
-                   dialogReminder.type === "Clan Capital" ? 168 : 24,
+                dialogReminder.type === "Clan Games" ? 336 :
+                    dialogReminder.type === "Clan Capital" ? 168 : 24,
             type: dialogReminder.type || "reminder"
           }),
           variant: "destructive",
@@ -435,10 +435,10 @@ export default function RemindersPage() {
       if (dialogReminder.type === "Clan Games") {
         const points = dialogReminder.point_threshold;
         if (
-          points === undefined ||
-          points === null ||
-          points < POINT_THRESHOLD_MIN ||
-          points > POINT_THRESHOLD_MAX
+            points === undefined ||
+            points === null ||
+            points < POINT_THRESHOLD_MIN ||
+            points > POINT_THRESHOLD_MAX
         ) {
           toast({
             title: t('toast.errorTitle'),
@@ -455,10 +455,10 @@ export default function RemindersPage() {
       if (dialogReminder.type === "Clan Capital") {
         const attacks = dialogReminder.attack_threshold;
         if (
-          attacks === undefined ||
-          attacks === null ||
-          attacks < ATTACK_THRESHOLD_MIN ||
-          attacks > ATTACK_THRESHOLD_MAX
+            attacks === undefined ||
+            attacks === null ||
+            attacks < ATTACK_THRESHOLD_MIN ||
+            attacks > ATTACK_THRESHOLD_MAX
         ) {
           toast({
             title: t('toast.errorTitle'),
@@ -589,533 +589,615 @@ export default function RemindersPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <Card className="max-w-md border-destructive">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-destructive" />
-              <CardTitle className="text-destructive">{t('toast.errorTitle')}</CardTitle>
-            </div>
-            <CardDescription>{error}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              onClick={() => window.location.reload()}
-              className="w-full"
-            >
-              {t('actions.retry')}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+        <div className="min-h-screen bg-background flex items-center justify-center p-6">
+          <Card className="max-w-md border-destructive">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-destructive" />
+                <CardTitle className="text-destructive">{t('toast.errorTitle')}</CardTitle>
+              </div>
+              <CardDescription>{error}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                  onClick={() => window.location.reload()}
+                  className="w-full"
+              >
+                {t('actions.retry')}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
     );
   }
 
   const currentReminders = getCurrentReminders();
 
   return (
-    <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-                <Bell className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
-                <p className="text-muted-foreground mt-1">
-                  {t('description')}
-                </p>
+      <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                  <Bell className="h-8 w-8 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
+                  <p className="text-muted-foreground mt-1">
+                    {t('description')}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Statistics Overview */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.totalReminders')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-blue-500">
-                  {reminders.war_reminders.length +
-                   reminders.capital_reminders.length +
-                   reminders.clan_games_reminders.length +
-                   reminders.inactivity_reminders.length}
-                </div>
-                <Activity className="h-8 w-8 text-blue-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t('stats.totalRemindersDesc')}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-red-500/30 bg-red-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.warReminders')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-red-500">{reminders.war_reminders.length}</div>
-                <Target className="h-8 w-8 text-red-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t('stats.warRemindersDesc')}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.capitalReminders')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-purple-500">{reminders.capital_reminders.length}</div>
-                <Castle className="h-8 w-8 text-purple-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t('stats.capitalRemindersDesc')}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-card border-green-500/30 bg-green-500/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.otherReminders')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-3xl font-bold text-green-500">
-                  {reminders.clan_games_reminders.length + reminders.inactivity_reminders.length}
-                </div>
-                <Bell className="h-8 w-8 text-green-500/50" />
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {t('stats.otherRemindersDesc')}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Clan Selector and Add Button */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-          <Button onClick={addReminder} className="gap-2 w-full md:w-auto">
-            <Plus className="h-4 w-4" />
-            {t('actions.addReminder')}
-          </Button>
-          {clans.length > 0 && (
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              <Label className="text-sm text-muted-foreground whitespace-nowrap">{t('clanSelector.label')}</Label>
-              <Select value={selectedClan} onValueChange={setSelectedClan}>
-                <SelectTrigger className="w-full md:w-[250px]">
-                  <SelectValue placeholder={t('clanSelector.placeholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">{t('clanSelector.allClans')}</SelectItem>
-                  {clans.map((clan) => (
-                    <SelectItem key={clan.tag} value={clan.tag}>
-                      {clan.name} ({clan.tag})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </div>
-
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-[800px] h-auto">
-            <TabsTrigger value="war" className="gap-2">
-              <Target className="h-4 w-4" />
-              {t('tabs.war')}
-              {reminders.war_reminders.length > 0 && (
-                <Badge variant="secondary" className="ml-1 bg-red-500/20 text-red-500">
-                  {selectedClan !== "all"
-                    ? reminders.war_reminders.filter(r => r.clan_tag === selectedClan).length
-                    : reminders.war_reminders.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="capital" className="gap-2">
-              <Castle className="h-4 w-4" />
-              {t('tabs.capital')}
-              {reminders.capital_reminders.length > 0 && (
-                <Badge variant="secondary" className="ml-1 bg-purple-500/20 text-purple-500">
-                  {selectedClan !== "all"
-                    ? reminders.capital_reminders.filter(r => r.clan_tag === selectedClan).length
-                    : reminders.capital_reminders.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="games" className="gap-2">
-              <Calendar className="h-4 w-4" />
-              {t('tabs.clanGames')}
-              {reminders.clan_games_reminders.length > 0 && (
-                <Badge variant="secondary" className="ml-1 bg-green-500/20 text-green-500">
-                  {selectedClan !== "all"
-                    ? reminders.clan_games_reminders.filter(r => r.clan_tag === selectedClan).length
-                    : reminders.clan_games_reminders.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="inactivity" className="gap-2">
-              <UserX className="h-4 w-4" />
-              {t('tabs.inactivity')}
-              {reminders.inactivity_reminders.length > 0 && (
-                <Badge variant="secondary" className="ml-1 bg-orange-500/20 text-orange-500">
-                  {selectedClan !== "all"
-                    ? reminders.inactivity_reminders.filter(r => r.clan_tag === selectedClan).length
-                    : reminders.inactivity_reminders.length}
-                </Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
-
-          {["war", "capital", "games", "inactivity"].map((tab) => (
-            <TabsContent key={tab} value={tab}>
-              {/* Reminders List */}
-              {currentReminders.length === 0 ? (
-                <Card className="bg-card border-border">
-                  <CardContent className="py-12 text-center">
-                    <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
-                      {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders')}
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      {t('empty.getStarted')}
+          {/* Statistics Overview */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.totalReminders')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-8 w-16 animate-pulse" />
+                      <Skeleton className="h-8 w-8 animate-pulse" />
+                    </div>
+                    <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <div className="text-3xl font-bold text-blue-500">
+                        {reminders.war_reminders.length +
+                            reminders.capital_reminders.length +
+                            reminders.clan_games_reminders.length +
+                            reminders.inactivity_reminders.length}
+                      </div>
+                      <Activity className="h-8 w-8 text-blue-500/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {t('stats.totalRemindersDesc')}
                     </p>
-                    <Button onClick={addReminder} className="gap-2">
-                      <Plus className="h-4 w-4" />
-                      {t('actions.addReminder')}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  {currentReminders.map((reminder, index) => {
-                  const isNew = reminder.id.startsWith('temp-');
-                  const typeInfo = reminderTypes.find(t => t.value === reminder.type);
-                  const TypeIcon = typeInfo?.icon || Bell;
-                  const channelName = channels.find(c => c.id === reminder.channel_id)?.name;
-                  const clanName = clans.find(c => c.tag === reminder.clan_tag)?.name;
+                  </>
+                )}
+              </CardContent>
+            </Card>
 
-                  return (
-                    <Card
-                      key={reminder.id}
-                      className={`bg-card border-border ${isNew ? 'ring-2 ring-primary animate-pulse' : ''}`}
-                      ref={isNew ? newReminderRef : null}
-                    >
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-lg bg-secondary ${typeInfo?.color}`}>
-                              <TypeIcon className="h-5 w-5" />
-                            </div>
-                            <div>
-                              <CardTitle className="text-lg flex items-center gap-2">
-                                {typeInfo?.label || reminder.type}
-                                {isNew && (
-                                  <Badge className="bg-primary text-primary-foreground">{t('card.new')}</Badge>
-                                )}
-                              </CardTitle>
-                              <CardDescription>
-                                <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30">
-                                  {extractHours(reminder.time)}{t('card.hoursRemaining')}
-                                </Badge>
-                              </CardDescription>
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => editReminder(reminder)}
-                              disabled={saving}
-                            >
-                              <Edit2 className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => deleteReminder(index)}
-                              disabled={saving}
-                            >
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2">
-                          <div className="space-y-1">
-                            <Label className="text-sm text-muted-foreground">{t('card.channel')}</Label>
-                            <p className="text-sm font-medium">{channelName || reminder.channel_id || t('card.notSet')}</p>
-                          </div>
+            <Card className="bg-card border-green-500/30 bg-green-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.warReminders')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-8 w-12 animate-pulse" />
+                      <Skeleton className="h-8 w-8 animate-pulse" />
+                    </div>
+                    <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <div className="text-3xl font-bold text-green-500">{reminders.war_reminders.length}</div>
+                      <Target className="h-8 w-8 text-green-500/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {t('stats.warRemindersDesc')}
+                    </p>
+                  </>
+                )}
+              </CardContent>
+            </Card>
 
-                          <div className="space-y-1">
-                            <Label className="text-sm text-muted-foreground">{t('card.clan')}</Label>
-                            <p className="text-sm font-medium">{clanName ? `${clanName} (${reminder.clan_tag})` : reminder.clan_tag || t('card.notSet')}</p>
-                          </div>
-                        </div>
+            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.capitalReminders')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-8 w-12 animate-pulse" />
+                      <Skeleton className="h-8 w-8 animate-pulse" />
+                    </div>
+                    <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <div className="text-3xl font-bold text-purple-500">{reminders.capital_reminders.length}</div>
+                      <Castle className="h-8 w-8 text-purple-500/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {t('stats.capitalRemindersDesc')}
+                    </p>
+                  </>
+                )}
+              </CardContent>
+            </Card>
 
-                        {reminder.custom_text && (
-                          <div className="space-y-1">
-                            <Label className="text-sm text-muted-foreground">{t('card.customMessage')}</Label>
-                            <p className="text-sm font-medium">{reminder.custom_text}</p>
-                          </div>
-                        )}
+            <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.otherReminders')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-8 w-12 animate-pulse" />
+                      <Skeleton className="h-8 w-8 animate-pulse" />
+                    </div>
+                    <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <div className="text-3xl font-bold text-yellow-500">
+                        {reminders.clan_games_reminders.length + reminders.inactivity_reminders.length}
+                      </div>
+                      <Bell className="h-8 w-8 text-yellow-500/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {t('stats.otherRemindersDesc')}
+                    </p>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
 
-                        {/* Type-specific fields */}
-                        {reminder.type === "War" && reminder.war_types && reminder.war_types.length > 0 && (
-                          <div className="space-y-1">
-                            <Label className="text-sm text-muted-foreground">{t('card.warTypes')}</Label>
-                            <div className="flex gap-2 flex-wrap">
-                              {reminder.war_types.map((type) => (
-                                <Badge key={type} variant="secondary">
-                                  {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {reminder.type === "Clan Games" && reminder.point_threshold && (
-                          <div className="space-y-1">
-                            <Label className="text-sm text-muted-foreground">{t('card.pointThreshold')}</Label>
-                            <p className="text-sm font-medium">{reminder.point_threshold}</p>
-                          </div>
-                        )}
-
-                        {reminder.type === "Clan Capital" && reminder.attack_threshold && (
-                          <div className="space-y-1">
-                            <Label className="text-sm text-muted-foreground">{t('card.attackThreshold')}</Label>
-                            <p className="text-sm font-medium">{reminder.attack_threshold}</p>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-                </div>
-              )}
-            </TabsContent>
-          ))}
-        </Tabs>
-
-        {/* Add/Edit Reminder Dialog */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
-                {editingReminder ? t('dialog.editTitle') : t('dialog.addTitle')}
-              </DialogTitle>
-              <DialogDescription>
-                {editingReminder ? t('dialog.editDescription') : t('dialog.addDescription')}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              {/* Type Selector */}
-              <div className="space-y-2">
-                <Label htmlFor="dialog-type">{t('dialog.type')}</Label>
-                <Select
-                  value={dialogReminder.type || ""}
-                  onValueChange={(value) => updateDialogField("type", value as "War" | "Clan Capital" | "Clan Games" | "Inactivity")}
-                  disabled={!!editingReminder}
-                >
-                  <SelectTrigger id="dialog-type">
-                    <SelectValue placeholder={t('dialog.selectType')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {reminderTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="dialog-time">
-                    <Clock className="h-4 w-4 inline mr-1" />
-                    {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
-                  </Label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      id="dialog-time"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      placeholder={
-                        dialogReminder.type === "Inactivity"
-                          ? t('card.timeInactivePlaceholder')
-                          : t('card.timeBeforePlaceholder')
-                      }
-                      value={dialogReminder.time || ""}
-                      onChange={(e) => updateDialogField("time", e.target.value)}
-                      className="flex-1"
-                    />
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">
-                      {t('card.timeUnit')}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="dialog-channel">{t('card.channel')}</Label>
-                  <ChannelCombobox
-                    channels={channels}
-                    value={dialogReminder.channel_id || ""}
-                    onValueChange={(value) => updateDialogField("channel_id", value)}
-                    placeholder={t('card.channelPlaceholder')}
-                    showDisabled={false}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="dialog-clan">{t('card.clan')}</Label>
-                  <Select
-                    value={dialogReminder.clan_tag || ""}
-                    onValueChange={(value) => updateDialogField("clan_tag", value)}
-                  >
-                    <SelectTrigger id="dialog-clan">
-                      <SelectValue placeholder={t('card.clanPlaceholder')} />
+          {/* Clan Selector and Add Button */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+            <Button onClick={addReminder} className="gap-2 w-full md:w-auto">
+              <Plus className="h-4 w-4" />
+              {t('actions.addReminder')}
+            </Button>
+            {clans.length > 0 && (
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                  <Label className="text-sm text-muted-foreground whitespace-nowrap">{t('clanSelector.label')}</Label>
+                  <Select value={selectedClan} onValueChange={setSelectedClan}>
+                    <SelectTrigger className="w-full md:w-[250px]">
+                      <SelectValue placeholder={t('clanSelector.placeholder')} />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="all">{t('clanSelector.allClans')}</SelectItem>
                       {clans.map((clan) => (
-                        <SelectItem key={clan.tag} value={clan.tag}>
-                          {clan.name} ({clan.tag})
-                        </SelectItem>
+                          <SelectItem key={clan.tag} value={clan.tag}>
+                            {clan.name} ({clan.tag})
+                          </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
+            )}
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="dialog-message">{t('card.customMessage')}</Label>
-                <Input
-                  id="dialog-message"
-                  placeholder={
-                    dialogReminder.type === "Clan Games"
-                      ? t('card.customMessagePlaceholderClanGames')
-                      : dialogReminder.type === "Inactivity"
-                      ? t('card.customMessagePlaceholderInactivity')
-                      : t('card.customMessagePlaceholder')
-                  }
-                  value={dialogReminder.custom_text || ""}
-                  onChange={(e) => updateDialogField("custom_text", e.target.value)}
-                />
-              </div>
+          {/* Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-[800px] h-auto">
+              <TabsTrigger value="war" className="gap-2">
+                <Target className="h-4 w-4" />
+                {t('tabs.war')}
+                {reminders.war_reminders.length > 0 && (
+                    <Badge variant="secondary" className="ml-1 bg-red-500/20 text-red-500">
+                      {selectedClan !== "all"
+                          ? reminders.war_reminders.filter(r => r.clan_tag === selectedClan).length
+                          : reminders.war_reminders.length}
+                    </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="capital" className="gap-2">
+                <Castle className="h-4 w-4" />
+                {t('tabs.capital')}
+                {reminders.capital_reminders.length > 0 && (
+                    <Badge variant="secondary" className="ml-1 bg-purple-500/20 text-purple-500">
+                      {selectedClan !== "all"
+                          ? reminders.capital_reminders.filter(r => r.clan_tag === selectedClan).length
+                          : reminders.capital_reminders.length}
+                    </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="games" className="gap-2">
+                <Calendar className="h-4 w-4" />
+                {t('tabs.clanGames')}
+                {reminders.clan_games_reminders.length > 0 && (
+                    <Badge variant="secondary" className="ml-1 bg-green-500/20 text-green-500">
+                      {selectedClan !== "all"
+                          ? reminders.clan_games_reminders.filter(r => r.clan_tag === selectedClan).length
+                          : reminders.clan_games_reminders.length}
+                    </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="inactivity" className="gap-2">
+                <UserX className="h-4 w-4" />
+                {t('tabs.inactivity')}
+                {reminders.inactivity_reminders.length > 0 && (
+                    <Badge variant="secondary" className="ml-1 bg-orange-500/20 text-orange-500">
+                      {selectedClan !== "all"
+                          ? reminders.inactivity_reminders.filter(r => r.clan_tag === selectedClan).length
+                          : reminders.inactivity_reminders.length}
+                    </Badge>
+                )}
+              </TabsTrigger>
+            </TabsList>
 
-              {/* Type-specific fields */}
-              {dialogReminder.type === "War" && (
+            {["war", "capital", "games", "inactivity"].map((tab) => (
+                <TabsContent key={tab} value={tab}>
+                  {/* Reminders List */}
+                  {loading ? (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        {[1, 2].map((i) => (
+                            <Card key={i} className="bg-card border-border">
+                              <CardHeader>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <Skeleton className="h-12 w-12 rounded-lg animate-pulse" />
+                                    <div className="space-y-2">
+                                      <Skeleton className="h-5 w-32 animate-pulse" />
+                                      <Skeleton className="h-4 w-24 animate-pulse" />
+                                    </div>
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <Skeleton className="h-8 w-8 animate-pulse" />
+                                    <Skeleton className="h-8 w-8 animate-pulse" />
+                                  </div>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                <div className="grid gap-4 md:grid-cols-2">
+                                  <div className="space-y-1">
+                                    <Skeleton className="h-4 w-16 animate-pulse" />
+                                    <Skeleton className="h-5 w-28 animate-pulse" />
+                                  </div>
+                                  <div className="space-y-1">
+                                    <Skeleton className="h-4 w-12 animate-pulse" />
+                                    <Skeleton className="h-5 w-32 animate-pulse" />
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                        ))}
+                      </div>
+                  ) : currentReminders.length === 0 ? (
+                      <Card className="bg-card border-border">
+                        <CardContent className="py-12 text-center">
+                          <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                          <h3 className="text-lg font-semibold text-foreground mb-2">
+                            {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders')}
+                          </h3>
+                          <p className="text-muted-foreground mb-4">
+                            {t('empty.getStarted')}
+                          </p>
+                          <Button onClick={addReminder} className="gap-2">
+                            <Plus className="h-4 w-4" />
+                            {t('actions.addReminder')}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                  ) : (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        {currentReminders.map((reminder, index) => {
+                          const isNew = reminder.id.startsWith('temp-');
+                          const typeInfo = reminderTypes.find(t => t.value === reminder.type);
+                          const TypeIcon = typeInfo?.icon || Bell;
+                          const channelName = channels.find(c => c.id === reminder.channel_id)?.name;
+                          const clanName = clans.find(c => c.tag === reminder.clan_tag)?.name;
+
+                          return (
+                              <Card
+                                  key={reminder.id}
+                                  className={`bg-card border-border ${isNew ? 'ring-2 ring-primary animate-pulse' : ''}`}
+                                  ref={isNew ? newReminderRef : null}
+                              >
+                                <CardHeader>
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                      <div className={`p-2 rounded-lg bg-secondary ${typeInfo?.color}`}>
+                                        <TypeIcon className="h-5 w-5" />
+                                      </div>
+                                      <div>
+                                        <CardTitle className="text-lg flex items-center gap-2">
+                                          {typeInfo?.label || reminder.type}
+                                          {isNew && (
+                                              <Badge className="bg-primary text-primary-foreground">{t('card.new')}</Badge>
+                                          )}
+                                        </CardTitle>
+                                        <CardDescription>
+                                          <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30">
+                                            {extractHours(reminder.time)}{t('card.hoursRemaining')}
+                                          </Badge>
+                                        </CardDescription>
+                                      </div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                      <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => editReminder(reminder)}
+                                          disabled={saving}
+                                      >
+                                        <Edit2 className="h-4 w-4" />
+                                      </Button>
+                                      <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => deleteReminder(index)}
+                                          disabled={saving}
+                                      >
+                                        <Trash2 className="h-4 w-4 text-destructive" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                  <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-1">
+                                      <Label className="text-sm text-muted-foreground">{t('card.channel')}</Label>
+                                      <p className="text-sm font-medium">{channelName || reminder.channel_id || t('card.notSet')}</p>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                      <Label className="text-sm text-muted-foreground">{t('card.clan')}</Label>
+                                      <p className="text-sm font-medium">{clanName ? `${clanName} (${reminder.clan_tag})` : reminder.clan_tag || t('card.notSet')}</p>
+                                    </div>
+                                  </div>
+
+                                  {reminder.custom_text && (
+                                      <div className="space-y-1">
+                                        <Label className="text-sm text-muted-foreground">{t('card.customMessage')}</Label>
+                                        <p className="text-sm font-medium">{reminder.custom_text}</p>
+                                      </div>
+                                  )}
+
+                                  {/* Type-specific fields */}
+                                  {reminder.type === "War" && reminder.war_types && reminder.war_types.length > 0 && (
+                                      <div className="space-y-1">
+                                        <Label className="text-sm text-muted-foreground">{t('card.warTypes')}</Label>
+                                        <div className="flex gap-2 flex-wrap">
+                                          {reminder.war_types.map((type) => (
+                                              <Badge key={type} variant="secondary">
+                                                {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
+                                              </Badge>
+                                          ))}
+                                        </div>
+                                      </div>
+                                  )}
+
+                                  {reminder.type === "Clan Games" && reminder.point_threshold && (
+                                      <div className="space-y-1">
+                                        <Label className="text-sm text-muted-foreground">{t('card.pointThreshold')}</Label>
+                                        <p className="text-sm font-medium">{reminder.point_threshold}</p>
+                                      </div>
+                                  )}
+
+                                  {reminder.type === "Clan Capital" && reminder.attack_threshold && (
+                                      <div className="space-y-1">
+                                        <Label className="text-sm text-muted-foreground">{t('card.attackThreshold')}</Label>
+                                        <p className="text-sm font-medium">{reminder.attack_threshold}</p>
+                                      </div>
+                                  )}
+                                </CardContent>
+                              </Card>
+                          );
+                        })}
+                      </div>
+                  )}
+                </TabsContent>
+            ))}
+          </Tabs>
+
+          {/* Add/Edit Reminder Dialog */}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingReminder ? t('dialog.editTitle') : t('dialog.addTitle')}
+                </DialogTitle>
+                <DialogDescription>
+                  {editingReminder ? t('dialog.editDescription') : t('dialog.addDescription')}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                {/* Type Selector */}
                 <div className="space-y-2">
-                  <Label>{t('card.warTypes')}</Label>
-                  <div className="flex gap-2 flex-wrap">
-                    {["Random", "Friendly", "CWL"].map((type) => (
-                      <Badge
-                        key={type}
-                        variant={dialogReminder.war_types?.includes(type) ? "default" : "outline"}
-                        className={`cursor-pointer transition-all ${
-                          dialogReminder.war_types?.includes(type)
-                            ? "bg-red-600 hover:bg-red-700 text-white border-red-600"
-                            : "hover:bg-muted hover:border-primary"
-                        }`}
-                        onClick={() => {
-                          const current = dialogReminder.war_types || [];
-                          const updated = current.includes(type)
-                            ? current.filter((t) => t !== type)
-                            : [...current, type];
-                          updateDialogField("war_types", updated);
-                        }}
-                      >
-                        {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
-                      </Badge>
-                    ))}
+                  <Label htmlFor="dialog-type">{t('dialog.type')}</Label>
+                  <Select
+                      value={dialogReminder.type || ""}
+                      onValueChange={(value) => updateDialogField("type", value as "War" | "Clan Capital" | "Clan Games" | "Inactivity")}
+                      disabled={!!editingReminder}
+                  >
+                    <SelectTrigger id="dialog-type">
+                      <SelectValue placeholder={t('dialog.selectType')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {reminderTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="dialog-time">
+                      <Clock className="h-4 w-4 inline mr-1" />
+                      {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                          id="dialog-time"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          placeholder={
+                            dialogReminder.type === "Inactivity"
+                                ? t('card.timeInactivePlaceholder')
+                                : t('card.timeBeforePlaceholder')
+                          }
+                          value={dialogReminder.time || ""}
+                          onChange={(e) => updateDialogField("time", e.target.value)}
+                          className="flex-1"
+                      />
+                      <span className="text-sm text-muted-foreground whitespace-nowrap">
+                      {t('card.timeUnit')}
+                    </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="dialog-channel">{t('card.channel')}</Label>
+                    <ChannelCombobox
+                        channels={channels}
+                        value={dialogReminder.channel_id || ""}
+                        onValueChange={(value) => updateDialogField("channel_id", value)}
+                        placeholder={t('card.channelPlaceholder')}
+                        showDisabled={false}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="dialog-clan">{t('card.clan')}</Label>
+                    <Select
+                        value={dialogReminder.clan_tag || ""}
+                        onValueChange={(value) => updateDialogField("clan_tag", value)}
+                    >
+                      <SelectTrigger id="dialog-clan">
+                        <SelectValue placeholder={t('card.clanPlaceholder')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clans.map((clan) => (
+                            <SelectItem key={clan.tag} value={clan.tag}>
+                              {clan.name} ({clan.tag})
+                            </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-              )}
 
-              {dialogReminder.type === "Clan Games" && (
                 <div className="space-y-2">
-                  <Label htmlFor="dialog-points">{t('card.pointThreshold')}</Label>
+                  <Label htmlFor="dialog-message">{t('card.customMessage')}</Label>
                   <Input
-                    id="dialog-points"
-                    type="number"
-                    min="0"
-                    max="10000"
-                    placeholder=""
-                    value={dialogReminder.point_threshold ?? ""}
-                    onChange={(e) => {
-                      const value = e.target.value === "" ? undefined : parseInt(e.target.value);
-                      setPointThresholdTouched(true);
-                      updateDialogField("point_threshold", value);
-                    }}
+                      id="dialog-message"
+                      placeholder={
+                        dialogReminder.type === "Clan Games"
+                            ? t('card.customMessagePlaceholderClanGames')
+                            : dialogReminder.type === "Inactivity"
+                                ? t('card.customMessagePlaceholderInactivity')
+                                : t('card.customMessagePlaceholder')
+                      }
+                      value={dialogReminder.custom_text || ""}
+                      onChange={(e) => updateDialogField("custom_text", e.target.value)}
                   />
                 </div>
-              )}
 
-              {dialogReminder.type === "Clan Capital" && (
-                <div className="space-y-2">
-                  <Label htmlFor="dialog-attacks">{t('card.attackThreshold')}</Label>
-                  <Input
-                    id="dialog-attacks"
-                    type="number"
-                    min="1"
-                    max="5"
-                    placeholder=""
-                    value={dialogReminder.attack_threshold ?? ""}
-                    onChange={(e) => {
-                      const value = e.target.value === "" ? undefined : parseInt(e.target.value);
-                      setAttackThresholdTouched(true);
-                      updateDialogField("attack_threshold", value);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setIsDialogOpen(false);
-                  setDialogReminder({});
-                  setEditingReminder(null);
-                }}
-                disabled={saving}
-              >
-                {t('dialog.cancel')}
-              </Button>
-              <Button
-                onClick={handleSaveReminder}
-                disabled={saving || !dialogReminder.time || !dialogReminder.channel_id}
-                className="bg-primary hover:bg-primary/90"
-              >
-                {saving ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {t('dialog.saving')}
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    {editingReminder ? t('dialog.saveChanges') : t('dialog.addReminder')}
-                  </>
+                {/* Type-specific fields */}
+                {dialogReminder.type === "War" && (
+                    <div className="space-y-2">
+                      <Label>{t('card.warTypes')}</Label>
+                      <div className="flex gap-2 flex-wrap">
+                        {["Random", "Friendly", "CWL"].map((type) => (
+                            <Badge
+                                key={type}
+                                variant={dialogReminder.war_types?.includes(type) ? "default" : "outline"}
+                                className={`cursor-pointer transition-all ${
+                                    dialogReminder.war_types?.includes(type)
+                                        ? "bg-red-600 hover:bg-red-700 text-white border-red-600"
+                                        : "hover:bg-muted hover:border-primary"
+                                }`}
+                                onClick={() => {
+                                  const current = dialogReminder.war_types || [];
+                                  const updated = current.includes(type)
+                                      ? current.filter((t) => t !== type)
+                                      : [...current, type];
+                                  updateDialogField("war_types", updated);
+                                }}
+                            >
+                              {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
+                            </Badge>
+                        ))}
+                      </div>
+                    </div>
                 )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+
+                {dialogReminder.type === "Clan Games" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="dialog-points">{t('card.pointThreshold')}</Label>
+                      <Input
+                          id="dialog-points"
+                          type="number"
+                          min="0"
+                          max="10000"
+                          placeholder=""
+                          value={dialogReminder.point_threshold ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                            setPointThresholdTouched(true);
+                            updateDialogField("point_threshold", value);
+                          }}
+                      />
+                    </div>
+                )}
+
+                {dialogReminder.type === "Clan Capital" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="dialog-attacks">{t('card.attackThreshold')}</Label>
+                      <Input
+                          id="dialog-attacks"
+                          type="number"
+                          min="1"
+                          max="5"
+                          placeholder=""
+                          value={dialogReminder.attack_threshold ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                            setAttackThresholdTouched(true);
+                            updateDialogField("attack_threshold", value);
+                          }}
+                      />
+                    </div>
+                )}
+              </div>
+              <DialogFooter>
+                <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      setDialogReminder({});
+                      setEditingReminder(null);
+                    }}
+                    disabled={saving}
+                >
+                  {t('dialog.cancel')}
+                </Button>
+                <Button
+                    onClick={handleSaveReminder}
+                    disabled={saving || !dialogReminder.time || !dialogReminder.channel_id}
+                    className="bg-primary hover:bg-primary/90"
+                >
+                  {saving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        {t('dialog.saving')}
+                      </>
+                  ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        {editingReminder ? t('dialog.saveChanges') : t('dialog.addReminder')}
+                      </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-    </div>
   );
 }
