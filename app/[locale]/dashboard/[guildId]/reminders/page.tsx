@@ -323,9 +323,6 @@ export default function RemindersPage() {
         if (value === "Clan Capital" && updated.attack_threshold === undefined && !attackThresholdTouched) {
           updated.attack_threshold = 1;
         }
-        if (value === "War" && (!updated.war_types || updated.war_types.length === 0)) {
-          updated.war_types = ["Random", "Friendly", "CWL"];
-        }
       }
 
       return updated;
@@ -469,18 +466,6 @@ export default function RemindersPage() {
               min: ATTACK_THRESHOLD_MIN,
               max: ATTACK_THRESHOLD_MAX,
             }),
-            variant: "destructive",
-          });
-          return;
-        }
-      }
-
-      // Validate war types for War reminders
-      if (dialogReminder.type === "War") {
-        if (!dialogReminder.war_types || dialogReminder.war_types.length === 0) {
-          toast({
-            title: t('toast.errorTitle'),
-            description: t('toast.warTypesRequired'),
             variant: "destructive",
           });
           return;
@@ -1109,12 +1094,7 @@ export default function RemindersPage() {
               </Button>
               <Button
                 onClick={handleSaveReminder}
-                disabled={
-                  saving || 
-                  !dialogReminder.time || 
-                  !dialogReminder.channel_id || 
-                  (dialogReminder.type === "War" && (!dialogReminder.war_types || dialogReminder.war_types.length === 0))
-                }
+                disabled={saving || !dialogReminder.time || !dialogReminder.channel_id}
                 className="bg-primary hover:bg-primary/90"
               >
                 {saving ? (

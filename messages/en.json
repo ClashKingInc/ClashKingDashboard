@@ -1111,8 +1111,7 @@
       "failedToSave": "Failed to save reminders",
       "timeExceedsLimit": "Time must be less than or equal to {limit} hours for {type} reminders",
       "pointThresholdInvalid": "Point threshold must be between {min} and {max}",
-      "attackThresholdInvalid": "Attack threshold must be between {min} and {max}",
-      "warTypesRequired": "Please select at least one war type"
+      "attackThresholdInvalid": "Attack threshold must be between {min} and {max}"
     }
   },
   "LogsPage": {

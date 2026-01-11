@@ -988,8 +988,7 @@
       "failedToSave": "Échec de l'enregistrement des rappels",
       "timeExceedsLimit": "Le temps doit être inférieur ou égal à {limit} heures pour les rappels de type {type}",
       "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
-      "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} en {max}",
-      "warTypesRequired": "Veuillez sélectionner au moins un type de guerre"
+      "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
     }
   },
   "LogsPage": {

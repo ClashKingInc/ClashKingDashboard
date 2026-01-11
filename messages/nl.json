@@ -988,8 +988,7 @@
       "failedToSave": "Kan herinneringen niet opslaan",
       "timeExceedsLimit": "Tijd moet minder dan of gelijk zijn aan {limit} uur voor {type} herinneringen",
       "pointThresholdInvalid": "Puntendrempel moet tussen {min} en {max} liggen",
-      "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen",
-      "warTypesRequired": "Selecteer ten minste één oorlogstype"
+      "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen"
     }
   },
   "LogsPage": {
