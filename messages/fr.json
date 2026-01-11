@@ -940,14 +940,20 @@
     "card": {
       "new": "Nouveau",
       "before": "avant",
-      "timeBefore": "Temps Avant (ex: \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
+      "timeBefore": "Temps restant",
+      "timeBeforePlaceholder": "ex: 6 ou 0.5",
+      "timeInactive": "Inactivité de",
+      "timeInactivePlaceholder": "ex: 168 ou 0.5",
+      "timeUnit": "Heures",
+      "hoursRemaining": "h restantes",
       "channel": "Canal",
       "channelPlaceholder": "Sélectionner un canal",
       "clan": "Clan",
       "clanPlaceholder": "Sélectionner un clan",
       "customMessage": "Message Personnalisé (Optionnel)",
       "customMessagePlaceholder": "N'oubliez pas d'utiliser vos attaques !",
+      "customMessagePlaceholderClanGames": "Essayez d'obtenir plus de points dans les jeux de clan !",
+      "customMessagePlaceholderInactivity": "Vous êtes inactif dans le clan depuis un moment :(",
       "warTypes": "Types de Guerre",
       "random": "Aléatoire",
       "friendly": "Amicale",
@@ -955,18 +961,35 @@
       "pointThreshold": "Seuil de Points",
       "pointThresholdPlaceholder": "4000",
       "attackThreshold": "Seuil d'Attaques",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "notSet": "Non défini"
+    },
+    "dialog": {
+      "addTitle": "Ajouter un Nouveau Rappel",
+      "addDescription": "Configurez un nouveau rappel pour votre serveur",
+      "editTitle": "Modifier le Rappel",
+      "editDescription": "Mettre à jour les paramètres du rappel",
+      "type": "Type de Rappel",
+      "selectType": "Sélectionner le type",
+      "cancel": "Annuler",
+      "saving": "Enregistrement...",
+      "saveChanges": "Enregistrer les Modifications",
+      "addReminder": "Ajouter un Rappel"
     },
     "toast": {
       "errorTitle": "Erreur",
       "errorLoadingReminders": "Échec du chargement des rappels. Veuillez réessayer.",
-      "reminderAdded": "Rappel Ajouté",
+      "reminderAdded": "Rappel ajouté avec succès",
       "reminderAddedDesc": "Nouveau rappel {type} ajouté. N'oubliez pas d'enregistrer !",
+      "reminderUpdated": "Rappel mis à jour avec succès",
       "successTitle": "Succès",
       "reminderDeleted": "Rappel supprimé avec succès",
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
-      "failedToSave": "Échec de l'enregistrement des rappels"
+      "failedToSave": "Échec de l'enregistrement des rappels",
+      "timeExceedsLimit": "Le temps doit être inférieur ou égal à {limit} heures pour les rappels de type {type}",
+      "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
+      "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
     }
   },
   "LogsPage": {

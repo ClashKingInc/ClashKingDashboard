@@ -14,6 +14,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Bell,
   Target,
   Users,
@@ -28,7 +36,8 @@ import {
   UserX,
   Shield,
   Activity,
-  Hash
+  Hash,
+  Edit2
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -83,6 +92,11 @@ interface Channel {
   parent_name?: string;
 }
 
+const POINT_THRESHOLD_MIN = 0;
+const POINT_THRESHOLD_MAX = 10000;
+const ATTACK_THRESHOLD_MIN = 1;
+const ATTACK_THRESHOLD_MAX = 5;
+
 export default function RemindersPage() {
   const params = useParams();
   const router = useRouter();
@@ -112,6 +126,13 @@ export default function RemindersPage() {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("war");
   const newReminderRef = useRef<HTMLDivElement>(null);
+
+  // Dialog state
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingReminder, setEditingReminder] = useState<ReminderConfig | null>(null);
+  const [dialogReminder, setDialogReminder] = useState<Partial<ReminderConfig>>({});
+  const [pointThresholdTouched, setPointThresholdTouched] = useState(false);
+  const [attackThresholdTouched, setAttackThresholdTouched] = useState(false);
 
   // Fetch clans and reminders from API
   useEffect(() => {
@@ -224,9 +245,24 @@ export default function RemindersPage() {
 
     // Filter by selected clan if needed
     if (selectedClan && selectedClan !== "all") {
-      return currentReminders.filter(r => r.clan_tag === selectedClan);
+      currentReminders = currentReminders.filter(r => r.clan_tag === selectedClan);
     }
-    return currentReminders;
+
+    // Sort by time
+    const sorted = [...currentReminders].sort((a, b) => {
+      const hoursA = parseFloat(extractHours(a.time));
+      const hoursB = parseFloat(extractHours(b.time));
+
+      // For inactivity: ascending order (soonest first)
+      // For others: descending order (furthest first)
+      if (activeTab === "inactivity") {
+        return hoursA - hoursB;
+      } else {
+        return hoursB - hoursA;
+      }
+    });
+
+    return sorted;
   };
 
   // Add a new reminder
@@ -238,8 +274,7 @@ export default function RemindersPage() {
       inactivity: "Inactivity",
     };
 
-    const newReminder: ReminderConfig = {
-      id: `temp-${Date.now()}`,
+    const newReminder: Partial<ReminderConfig> = {
       type: typeMap[activeTab],
       channel_id: "",
       time: "6h",
@@ -252,42 +287,81 @@ export default function RemindersPage() {
       attack_threshold: activeTab === "capital" ? 1 : undefined,
     };
 
-    const updatedReminders = { ...reminders };
-    const key = `${activeTab === "war" ? "war" : activeTab === "capital" ? "capital" : activeTab === "games" ? "clan_games" : "inactivity"}_reminders` as keyof ServerRemindersResponse;
-    updatedReminders[key] = [...updatedReminders[key], newReminder];
+    setDialogReminder(newReminder);
+    setEditingReminder(null);
+    setPointThresholdTouched(false);
+    setAttackThresholdTouched(false);
+    setIsDialogOpen(true);
+  };
 
-    setReminders(updatedReminders);
+  // Edit an existing reminder
+  const editReminder = (reminder: ReminderConfig) => {
+    setEditingReminder(reminder);
 
-    // Scroll to new reminder after a brief delay
-    setTimeout(() => {
-      newReminderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    // Extract the number from "X hr" format for display in input
+    let displayTime = reminder.time;
+    const timeMatch = reminder.time?.match(/^(\d+(?:\.\d+)?)\s+hr$/);
+    if (timeMatch) {
+      displayTime = timeMatch[1];
+    }
 
-    toast({
-      title: t('toast.reminderAdded'),
-      description: t('toast.reminderAddedDesc', { type: typeMap[activeTab] }),
+    setDialogReminder({ ...reminder, time: displayTime });
+    setPointThresholdTouched(reminder.point_threshold !== undefined);
+    setAttackThresholdTouched(reminder.attack_threshold !== undefined);
+    setIsDialogOpen(true);
+  };
+
+  // Update dialog reminder field
+  const updateDialogField = (field: keyof ReminderConfig, value: any) => {
+    setDialogReminder(prev => {
+      const updated: Partial<ReminderConfig> = { ...prev, [field]: value };
+
+      if (field === "type") {
+        if (value === "Clan Games" && updated.point_threshold === undefined && !pointThresholdTouched) {
+          updated.point_threshold = 4000;
+        }
+        if (value === "Clan Capital" && updated.attack_threshold === undefined && !attackThresholdTouched) {
+          updated.attack_threshold = 1;
+        }
+      }
+
+      return updated;
     });
   };
 
-  // Update a reminder
-  const updateReminder = (index: number, field: keyof ReminderConfig, value: any) => {
-    const updatedReminders = { ...reminders };
-    const key = `${activeTab === "war" ? "war" : activeTab === "capital" ? "capital" : activeTab === "games" ? "clan_games" : "inactivity"}_reminders` as keyof ServerRemindersResponse;
-    const remindersList = [...updatedReminders[key]];
+  // Extract hours number from "X hr" format
+  const extractHours = (timeString: string): string => {
+    const match = timeString?.match(/^(\d+(?:\.\d+)?)\s+hr$/);
+    return match ? match[1] : timeString;
+  };
 
-    // Get the actual index in the full list (not filtered)
-    const currentReminders = getCurrentReminders();
-    const reminder = currentReminders[index];
-    const actualIndex = updatedReminders[key].findIndex(r => r.id === reminder.id);
+  // Validate time based on reminder type
+  const validateTime = (timeString: string, reminderType: string): boolean => {
+    if (!timeString) return false;
 
-    if (actualIndex !== -1) {
-      remindersList[actualIndex] = {
-        ...remindersList[actualIndex],
-        [field]: value,
-      };
-      updatedReminders[key] = remindersList;
-      setReminders(updatedReminders);
+    // Parse as decimal number (hours)
+    const hours = parseFloat(timeString);
+    if (isNaN(hours) || hours <= 0) return false;
+
+    // Define max hours based on type
+    let maxHours: number;
+    switch (reminderType) {
+      case "War":
+        maxHours = 48; // 2 days
+        break;
+      case "Clan Games":
+        maxHours = 336; // 2 weeks (14 days)
+        break;
+      case "Clan Capital":
+        maxHours = 168; // 1 week (7 days)
+        break;
+      case "Inactivity":
+        return true; // No limit
+      default:
+        maxHours = 48;
     }
+
+    return hours <= maxHours;
   };
 
   // Delete a reminder
@@ -339,104 +413,147 @@ export default function RemindersPage() {
     setReminders(updatedReminders);
   };
 
-  // Save a single reminder
-  const saveReminder = async (reminder: ReminderConfig) => {
-    const accessToken = localStorage.getItem("access_token");
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-    if (!apiUrl) {
-      throw new Error("API URL is not configured");
-    }
-
-    const isNew = reminder.id.startsWith('temp-');
-
-    if (isNew) {
-      // Create new reminder
-      const createRequest: CreateReminderRequest = {
-        type: reminder.type,
-        clan_tag: reminder.clan_tag,
-        channel_id: reminder.channel_id || "",
-        time: reminder.time,
-        custom_text: reminder.custom_text,
-        townhall_filter: reminder.townhall_filter,
-        roles: reminder.roles,
-        war_types: reminder.war_types,
-        point_threshold: reminder.point_threshold,
-        attack_threshold: reminder.attack_threshold,
-        roster_id: reminder.roster_id,
-        ping_type: reminder.ping_type,
-      };
-
-      const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(createRequest),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create reminder: ${response.statusText}`);
-      }
-
-      return await response.json();
-    } else {
-      // Update existing reminder
-      const updateRequest = {
-        channel_id: reminder.channel_id,
-        time: reminder.time,
-        custom_text: reminder.custom_text,
-        townhall_filter: reminder.townhall_filter,
-        roles: reminder.roles,
-        war_types: reminder.war_types,
-        point_threshold: reminder.point_threshold,
-        attack_threshold: reminder.attack_threshold,
-        ping_type: reminder.ping_type,
-      };
-
-      const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updateRequest),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update reminder: ${response.statusText}`);
-      }
-
-      return await response.json();
-    }
-  };
-
-  // Save all reminders
-  const saveAllReminders = async () => {
+  // Save a single reminder from dialog
+  const handleSaveReminder = async () => {
     try {
-      setSaving(true);
-
-      const allReminders = [
-        ...reminders.war_reminders,
-        ...reminders.capital_reminders,
-        ...reminders.clan_games_reminders,
-        ...reminders.inactivity_reminders,
-      ];
-
-      // Save each reminder
-      for (const reminder of allReminders) {
-        await saveReminder(reminder);
+      // Validate time based on reminder type
+      if (!validateTime(dialogReminder.time || "", dialogReminder.type || "")) {
+        toast({
+          title: t('toast.errorTitle'),
+          description: t('toast.timeExceedsLimit', {
+            limit: dialogReminder.type === "War" ? 48 :
+                   dialogReminder.type === "Clan Games" ? 336 :
+                   dialogReminder.type === "Clan Capital" ? 168 : 24,
+            type: dialogReminder.type || "reminder"
+          }),
+          variant: "destructive",
+        });
+        return;
       }
 
-      toast({
-        title: t('toast.successTitle'),
-        description: t('toast.allRemindersSaved'),
-      });
+      // Validate clan games point threshold
+      if (dialogReminder.type === "Clan Games") {
+        const points = dialogReminder.point_threshold;
+        if (
+          points === undefined ||
+          points === null ||
+          points < POINT_THRESHOLD_MIN ||
+          points > POINT_THRESHOLD_MAX
+        ) {
+          toast({
+            title: t('toast.errorTitle'),
+            description: t('toast.pointThresholdInvalid', {
+              min: POINT_THRESHOLD_MIN,
+              max: POINT_THRESHOLD_MAX,
+            }),
+            variant: "destructive",
+          });
+          return;
+        }
+      }
 
-      // Refresh reminders from API
+      if (dialogReminder.type === "Clan Capital") {
+        const attacks = dialogReminder.attack_threshold;
+        if (
+          attacks === undefined ||
+          attacks === null ||
+          attacks < ATTACK_THRESHOLD_MIN ||
+          attacks > ATTACK_THRESHOLD_MAX
+        ) {
+          toast({
+            title: t('toast.errorTitle'),
+            description: t('toast.attackThresholdInvalid', {
+              min: ATTACK_THRESHOLD_MIN,
+              max: ATTACK_THRESHOLD_MAX,
+            }),
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
+      setSaving(true);
       const accessToken = localStorage.getItem("access_token");
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+      if (!apiUrl) {
+        throw new Error("API URL is not configured");
+      }
+
+      // Add " hr" suffix to time before sending to API
+      const timeWithUnit = `${dialogReminder.time} hr`;
+
+      const isNew = !editingReminder;
+
+      if (isNew) {
+        // Create new reminder
+        const createRequest: CreateReminderRequest = {
+          type: dialogReminder.type!,
+          clan_tag: dialogReminder.clan_tag,
+          channel_id: dialogReminder.channel_id || "",
+          time: timeWithUnit,
+          custom_text: dialogReminder.custom_text,
+          townhall_filter: dialogReminder.townhall_filter,
+          roles: dialogReminder.roles,
+          war_types: dialogReminder.war_types,
+          point_threshold: dialogReminder.point_threshold,
+          attack_threshold: dialogReminder.attack_threshold,
+          roster_id: dialogReminder.roster_id,
+          ping_type: dialogReminder.ping_type,
+        };
+
+        const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(createRequest),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to create reminder: ${response.statusText}`);
+        }
+
+        toast({
+          title: t('toast.successTitle'),
+          description: t('toast.reminderAdded'),
+        });
+      } else {
+        // Update existing reminder
+        const updateRequest = {
+          type: dialogReminder.type, // Include type for validation
+          channel_id: dialogReminder.channel_id,
+          time: timeWithUnit,
+          custom_text: dialogReminder.custom_text,
+          townhall_filter: dialogReminder.townhall_filter,
+          roles: dialogReminder.roles,
+          war_types: dialogReminder.war_types,
+          point_threshold: dialogReminder.point_threshold,
+          attack_threshold: dialogReminder.attack_threshold,
+          ping_type: dialogReminder.ping_type,
+        };
+
+        const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders/${editingReminder.id}`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateRequest),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to update reminder: ${response.statusText}`);
+        }
+
+        toast({
+          title: t('toast.successTitle'),
+          description: t('toast.reminderUpdated'),
+        });
+      }
+
+      // Refresh reminders from API
       const response = await fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -453,8 +570,13 @@ export default function RemindersPage() {
           inactivity_reminders: data.inactivity_reminders || [],
         });
       }
+
+      // Close dialog
+      setIsDialogOpen(false);
+      setDialogReminder({});
+      setEditingReminder(null);
     } catch (err) {
-      console.error("Error saving reminders:", err);
+      console.error("Error saving reminder:", err);
       toast({
         title: t('toast.errorTitle'),
         description: err instanceof Error ? err.message : t('toast.failedToSave'),
@@ -492,7 +614,7 @@ export default function RemindersPage() {
   const currentReminders = getCurrentReminders();
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
+    <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -508,25 +630,6 @@ export default function RemindersPage() {
                 </p>
               </div>
             </div>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              onClick={saveAllReminders}
-              disabled={saving}
-              className="bg-primary hover:bg-primary/90 gap-2"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  {t('actions.saving')}
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  {t('actions.saveChanges')}
-                </>
-              )}
-            </Button>
           </div>
         </div>
 
@@ -604,7 +707,7 @@ export default function RemindersPage() {
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
           <Button onClick={addReminder} className="gap-2 w-full md:w-auto">
             <Plus className="h-4 w-4" />
-            {activeTab === "war" ? t('actions.addWarReminder') : activeTab === "capital" ? t('actions.addCapitalReminder') : activeTab === "games" ? t('actions.addClanGamesReminder') : t('actions.addInactivityReminder')}
+            {t('actions.addReminder')}
           </Button>
           {clans.length > 0 && (
             <div className="flex items-center gap-2 w-full md:w-auto">
@@ -676,7 +779,7 @@ export default function RemindersPage() {
           </TabsList>
 
           {["war", "capital", "games", "inactivity"].map((tab) => (
-            <TabsContent key={tab} value={tab} className="space-y-4">
+            <TabsContent key={tab} value={tab}>
               {/* Reminders List */}
               {currentReminders.length === 0 ? (
                 <Card className="bg-card border-border">
@@ -695,10 +798,13 @@ export default function RemindersPage() {
                   </CardContent>
                 </Card>
               ) : (
-                currentReminders.map((reminder, index) => {
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {currentReminders.map((reminder, index) => {
                   const isNew = reminder.id.startsWith('temp-');
                   const typeInfo = reminderTypes.find(t => t.value === reminder.type);
                   const TypeIcon = typeInfo?.icon || Bell;
+                  const channelName = channels.find(c => c.id === reminder.channel_id)?.name;
+                  const clanName = clans.find(c => c.tag === reminder.clan_tag)?.name;
 
                   return (
                     <Card
@@ -721,95 +827,58 @@ export default function RemindersPage() {
                               </CardTitle>
                               <CardDescription>
                                 <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30">
-                                  {reminder.time} {t('card.before')}
+                                  {extractHours(reminder.time)}{t('card.hoursRemaining')}
                                 </Badge>
                               </CardDescription>
                             </div>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => deleteReminder(index)}
-                            disabled={saving}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => editReminder(reminder)}
+                              disabled={saving}
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => deleteReminder(index)}
+                              disabled={saving}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label htmlFor={`time-${index}`}>
-                              <Clock className="h-4 w-4 inline mr-1" />
-                              {t('card.timeBefore')}
-                            </Label>
-                            <Input
-                              id={`time-${index}`}
-                              placeholder={t('card.timeBeforePlaceholder')}
-                              value={reminder.time}
-                              onChange={(e) => updateReminder(index, "time", e.target.value)}
-                            />
+                          <div className="space-y-1">
+                            <Label className="text-sm text-muted-foreground">{t('card.channel')}</Label>
+                            <p className="text-sm font-medium">{channelName || reminder.channel_id || t('card.notSet')}</p>
                           </div>
 
-                          <div className="space-y-2">
-                            <Label htmlFor={`channel-${index}`}>{t('card.channel')}</Label>
-                            <ChannelCombobox
-                              channels={channels}
-                              value={reminder.channel_id || ""}
-                              onValueChange={(value) => updateReminder(index, "channel_id", value)}
-                              placeholder={t('card.channelPlaceholder')}
-                              showDisabled={false}
-                            />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor={`clan-${index}`}>{t('card.clan')}</Label>
-                            <Select
-                              value={reminder.clan_tag || ""}
-                              onValueChange={(value) => updateReminder(index, "clan_tag", value)}
-                            >
-                              <SelectTrigger id={`clan-${index}`}>
-                                <SelectValue placeholder={t('card.clanPlaceholder')} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {clans.map((clan) => (
-                                  <SelectItem key={clan.tag} value={clan.tag}>
-                                    {clan.name} ({clan.tag})
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                          <div className="space-y-1">
+                            <Label className="text-sm text-muted-foreground">{t('card.clan')}</Label>
+                            <p className="text-sm font-medium">{clanName ? `${clanName} (${reminder.clan_tag})` : reminder.clan_tag || t('card.notSet')}</p>
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor={`message-${index}`}>{t('card.customMessage')}</Label>
-                          <Input
-                            id={`message-${index}`}
-                            placeholder={t('card.customMessagePlaceholder')}
-                            value={reminder.custom_text || ""}
-                            onChange={(e) => updateReminder(index, "custom_text", e.target.value)}
-                          />
-                        </div>
+                        {reminder.custom_text && (
+                          <div className="space-y-1">
+                            <Label className="text-sm text-muted-foreground">{t('card.customMessage')}</Label>
+                            <p className="text-sm font-medium">{reminder.custom_text}</p>
+                          </div>
+                        )}
 
                         {/* Type-specific fields */}
-                        {reminder.type === "War" && (
-                          <div className="space-y-2">
-                            <Label>{t('card.warTypes')}</Label>
+                        {reminder.type === "War" && reminder.war_types && reminder.war_types.length > 0 && (
+                          <div className="space-y-1">
+                            <Label className="text-sm text-muted-foreground">{t('card.warTypes')}</Label>
                             <div className="flex gap-2 flex-wrap">
-                              {["Random", "Friendly", "CWL"].map((type) => (
-                                <Badge
-                                  key={type}
-                                  variant={reminder.war_types?.includes(type) ? "default" : "outline"}
-                                  className="cursor-pointer hover:bg-primary/80"
-                                  onClick={() => {
-                                    const current = reminder.war_types || [];
-                                    const updated = current.includes(type)
-                                      ? current.filter((t) => t !== type)
-                                      : [...current, type];
-                                    updateReminder(index, "war_types", updated);
-                                  }}
-                                >
+                              {reminder.war_types.map((type) => (
+                                <Badge key={type} variant="secondary">
                                   {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
                                 </Badge>
                               ))}
@@ -817,39 +886,235 @@ export default function RemindersPage() {
                           </div>
                         )}
 
-                        {reminder.type === "Clan Games" && (
-                          <div className="space-y-2">
-                            <Label htmlFor={`points-${index}`}>{t('card.pointThreshold')}</Label>
-                            <Input
-                              id={`points-${index}`}
-                              type="number"
-                              placeholder={t('card.pointThresholdPlaceholder')}
-                              value={reminder.point_threshold || 4000}
-                              onChange={(e) => updateReminder(index, "point_threshold", parseInt(e.target.value) || 4000)}
-                            />
+                        {reminder.type === "Clan Games" && reminder.point_threshold && (
+                          <div className="space-y-1">
+                            <Label className="text-sm text-muted-foreground">{t('card.pointThreshold')}</Label>
+                            <p className="text-sm font-medium">{reminder.point_threshold}</p>
                           </div>
                         )}
 
-                        {reminder.type === "Clan Capital" && (
-                          <div className="space-y-2">
-                            <Label htmlFor={`attacks-${index}`}>{t('card.attackThreshold')}</Label>
-                            <Input
-                              id={`attacks-${index}`}
-                              type="number"
-                              placeholder={t('card.attackThresholdPlaceholder')}
-                              value={reminder.attack_threshold || 1}
-                              onChange={(e) => updateReminder(index, "attack_threshold", parseInt(e.target.value) || 1)}
-                            />
+                        {reminder.type === "Clan Capital" && reminder.attack_threshold && (
+                          <div className="space-y-1">
+                            <Label className="text-sm text-muted-foreground">{t('card.attackThreshold')}</Label>
+                            <p className="text-sm font-medium">{reminder.attack_threshold}</p>
                           </div>
                         )}
                       </CardContent>
                     </Card>
                   );
-                })
+                })}
+                </div>
               )}
             </TabsContent>
           ))}
         </Tabs>
+
+        {/* Add/Edit Reminder Dialog */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingReminder ? t('dialog.editTitle') : t('dialog.addTitle')}
+              </DialogTitle>
+              <DialogDescription>
+                {editingReminder ? t('dialog.editDescription') : t('dialog.addDescription')}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              {/* Type Selector */}
+              <div className="space-y-2">
+                <Label htmlFor="dialog-type">{t('dialog.type')}</Label>
+                <Select
+                  value={dialogReminder.type || ""}
+                  onValueChange={(value) => updateDialogField("type", value as "War" | "Clan Capital" | "Clan Games" | "Inactivity")}
+                  disabled={!!editingReminder}
+                >
+                  <SelectTrigger id="dialog-type">
+                    <SelectValue placeholder={t('dialog.selectType')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {reminderTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="dialog-time">
+                    <Clock className="h-4 w-4 inline mr-1" />
+                    {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
+                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="dialog-time"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder={
+                        dialogReminder.type === "Inactivity"
+                          ? t('card.timeInactivePlaceholder')
+                          : t('card.timeBeforePlaceholder')
+                      }
+                      value={dialogReminder.time || ""}
+                      onChange={(e) => updateDialogField("time", e.target.value)}
+                      className="flex-1"
+                    />
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
+                      {t('card.timeUnit')}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="dialog-channel">{t('card.channel')}</Label>
+                  <ChannelCombobox
+                    channels={channels}
+                    value={dialogReminder.channel_id || ""}
+                    onValueChange={(value) => updateDialogField("channel_id", value)}
+                    placeholder={t('card.channelPlaceholder')}
+                    showDisabled={false}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="dialog-clan">{t('card.clan')}</Label>
+                  <Select
+                    value={dialogReminder.clan_tag || ""}
+                    onValueChange={(value) => updateDialogField("clan_tag", value)}
+                  >
+                    <SelectTrigger id="dialog-clan">
+                      <SelectValue placeholder={t('card.clanPlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {clans.map((clan) => (
+                        <SelectItem key={clan.tag} value={clan.tag}>
+                          {clan.name} ({clan.tag})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dialog-message">{t('card.customMessage')}</Label>
+                <Input
+                  id="dialog-message"
+                  placeholder={
+                    dialogReminder.type === "Clan Games"
+                      ? t('card.customMessagePlaceholderClanGames')
+                      : dialogReminder.type === "Inactivity"
+                      ? t('card.customMessagePlaceholderInactivity')
+                      : t('card.customMessagePlaceholder')
+                  }
+                  value={dialogReminder.custom_text || ""}
+                  onChange={(e) => updateDialogField("custom_text", e.target.value)}
+                />
+              </div>
+
+              {/* Type-specific fields */}
+              {dialogReminder.type === "War" && (
+                <div className="space-y-2">
+                  <Label>{t('card.warTypes')}</Label>
+                  <div className="flex gap-2 flex-wrap">
+                    {["Random", "Friendly", "CWL"].map((type) => (
+                      <Badge
+                        key={type}
+                        variant={dialogReminder.war_types?.includes(type) ? "default" : "outline"}
+                        className={`cursor-pointer transition-all ${
+                          dialogReminder.war_types?.includes(type)
+                            ? "bg-red-600 hover:bg-red-700 text-white border-red-600"
+                            : "hover:bg-muted hover:border-primary"
+                        }`}
+                        onClick={() => {
+                          const current = dialogReminder.war_types || [];
+                          const updated = current.includes(type)
+                            ? current.filter((t) => t !== type)
+                            : [...current, type];
+                          updateDialogField("war_types", updated);
+                        }}
+                      >
+                        {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {dialogReminder.type === "Clan Games" && (
+                <div className="space-y-2">
+                  <Label htmlFor="dialog-points">{t('card.pointThreshold')}</Label>
+                  <Input
+                    id="dialog-points"
+                    type="number"
+                    min="0"
+                    max="10000"
+                    placeholder=""
+                    value={dialogReminder.point_threshold ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                      setPointThresholdTouched(true);
+                      updateDialogField("point_threshold", value);
+                    }}
+                  />
+                </div>
+              )}
+
+              {dialogReminder.type === "Clan Capital" && (
+                <div className="space-y-2">
+                  <Label htmlFor="dialog-attacks">{t('card.attackThreshold')}</Label>
+                  <Input
+                    id="dialog-attacks"
+                    type="number"
+                    min="1"
+                    max="5"
+                    placeholder=""
+                    value={dialogReminder.attack_threshold ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                      setAttackThresholdTouched(true);
+                      updateDialogField("attack_threshold", value);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsDialogOpen(false);
+                  setDialogReminder({});
+                  setEditingReminder(null);
+                }}
+                disabled={saving}
+              >
+                {t('dialog.cancel')}
+              </Button>
+              <Button
+                onClick={handleSaveReminder}
+                disabled={saving || !dialogReminder.time || !dialogReminder.channel_id}
+                className="bg-primary hover:bg-primary/90"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {t('dialog.saving')}
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    {editingReminder ? t('dialog.saveChanges') : t('dialog.addReminder')}
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
