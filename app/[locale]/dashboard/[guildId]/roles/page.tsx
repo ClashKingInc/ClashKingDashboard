@@ -725,7 +725,7 @@ export default function RolesPage() {
 
         {/* Statistics Overview */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRoles")}</CardTitle>
             </CardHeader>
@@ -741,8 +741,8 @@ export default function RolesPage() {
               ) : (
                 <>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-purple-500">{totalRoles}</div>
-                    <Shield className="h-8 w-8 text-purple-500/50" />
+                    <div className="text-3xl font-bold text-blue-500">{totalRoles}</div>
+                    <Shield className="h-8 w-8 text-blue-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     {t("stats.totalRolesDesc")}
@@ -752,7 +752,7 @@ export default function RolesPage() {
             </CardContent>
           </Card>
 
-          <Card className={`bg-card ${roleSettings.auto_eval_status ? 'border-green-500/30 bg-green-500/5' : 'border-gray-500/30 bg-gray-500/5'}`}>
+          <Card className={`bg-card ${roleSettings.auto_eval_status ? 'border-green-500/30 bg-green-500/5' : 'border-green-500/30 bg-green-500/5'}`}>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.autoEvaluation")}</CardTitle>
             </CardHeader>
@@ -768,10 +768,10 @@ export default function RolesPage() {
               ) : (
                 <>
                   <div className="flex items-center justify-between">
-                    <div className={`text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-gray-500'}`}>
+                    <div className={`text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-green-500/50'}`}>
                       {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
                     </div>
-                    <Settings className={`h-8 w-8 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-gray-500/50'}`} />
+                    <Settings className={`h-8 w-8 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-green-500/30'}`} />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
@@ -781,7 +781,7 @@ export default function RolesPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.activeTypes")}</CardTitle>
             </CardHeader>
@@ -797,8 +797,8 @@ export default function RolesPage() {
               ) : (
                 <>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-blue-500">{activeRoleTypes}/{totalRoleTypes}</div>
-                    <Trophy className="h-8 w-8 text-blue-500/50" />
+                    <div className="text-3xl font-bold text-purple-500">{activeRoleTypes}/{totalRoleTypes}</div>
+                    <Trophy className="h-8 w-8 text-purple-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     {t("stats.activeTypesDesc")}
@@ -808,7 +808,7 @@ export default function RolesPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-orange-500/30 bg-orange-500/5">
+          <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.discordRoles")}</CardTitle>
             </CardHeader>
@@ -824,8 +824,8 @@ export default function RolesPage() {
               ) : (
                 <>
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-orange-500">{discordRoles.length}</div>
-                    <Users className="h-8 w-8 text-orange-500/50" />
+                    <div className="text-3xl font-bold text-yellow-500">{discordRoles.length}</div>
+                    <Users className="h-8 w-8 text-yellow-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     {t("stats.discordRolesDesc")}
