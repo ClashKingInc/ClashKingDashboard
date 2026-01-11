@@ -261,8 +261,6 @@
         "description": "Add a player to the ban list. They will be prevented from joining any clan on this server.",
         "playerTagLabel": "Player Tag *",
         "playerTagPlaceholder": "#ABC123DEF",
-        "playerNameLabel": "Player Name (optional)",
-        "playerNamePlaceholder": "Enter player name",
         "reasonLabel": "Reason for Ban *",
         "reasonPlaceholder": "Explain why this player is being banned...",
         "submit": "Ban Player"

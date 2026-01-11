@@ -261,8 +261,6 @@
         "description": "Voeg een speler toe aan de banlijst. Ze kunnen geen enkele clan op deze server joinen.",
         "playerTagLabel": "Speler Tag *",
         "playerTagPlaceholder": "#ABC123DEF",
-        "playerNameLabel": "Speler Naam (optioneel)",
-        "playerNamePlaceholder": "Voer spelernaam in",
         "reasonLabel": "Reden voor ban *",
         "reasonPlaceholder": "Leg uit waarom deze speler wordt verbannen...",
         "submit": "Verban Speler"

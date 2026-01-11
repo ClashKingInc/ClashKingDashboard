@@ -66,7 +66,6 @@ export default function BansPage() {
   const [isSubmittingBan, setIsSubmittingBan] = useState(false);
   const [newBan, setNewBan] = useState({
     player_tag: "",
-    player_name: "",
     reason: "",
   });
 
@@ -181,7 +180,7 @@ export default function BansPage() {
       // Refresh the ban list
       await fetchBans();
 
-      setNewBan({ player_tag: "", player_name: "", reason: "" });
+      setNewBan({ player_tag: "", reason: "" });
       setIsAddBanDialogOpen(false);
     } catch (error) {
       console.error("Error adding ban:", error);
@@ -389,18 +388,6 @@ export default function BansPage() {
                       value={newBan.player_tag}
                       onChange={(e) =>
                         setNewBan({ ...newBan, player_tag: e.target.value })
-                      }
-                      disabled={isSubmittingBan}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="player-name">{t("bans.addDialog.playerNameLabel")}</Label>
-                    <Input
-                      id="player-name"
-                      placeholder={t("bans.addDialog.playerNamePlaceholder")}
-                      value={newBan.player_name}
-                      onChange={(e) =>
-                        setNewBan({ ...newBan, player_name: e.target.value })
                       }
                       disabled={isSubmittingBan}
                     />

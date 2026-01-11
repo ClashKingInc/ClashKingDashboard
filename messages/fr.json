@@ -261,8 +261,6 @@
         "description": "Ajouter un joueur à la liste de bannissement. Il ne pourra rejoindre aucun clan sur ce serveur.",
         "playerTagLabel": "Tag du Joueur *",
         "playerTagPlaceholder": "#ABC123DEF",
-        "playerNameLabel": "Nom du Joueur (optionnel)",
-        "playerNamePlaceholder": "Entrer le nom du joueur",
         "reasonLabel": "Raison du bannissement *",
         "reasonPlaceholder": "Expliquez pourquoi ce joueur est banni...",
         "submit": "Bannir le Joueur"
