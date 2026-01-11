@@ -1125,110 +1125,27 @@ export default function RostersPage() {
     return matchesSearch && matchesType;
   }) : [];
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background p-6 space-y-6">
-        {/* Header Skeleton */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
+  const totalMembers = Array.isArray(rosters) ? rosters.reduce((sum, r) => sum + (r.members?.length || 0), 0) : 0;
+  const clanRosters = Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "clan").length : 0;
+  const familyRosters = Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "family").length : 0;
+
+  return (
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
-            <div className="space-y-2">
-              <Skeleton className="h-8 w-48 animate-pulse" />
-              <Skeleton className="h-5 w-96 animate-pulse" />
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+              <Users className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Rosters & Lineups</h1>
+              <p className="text-muted-foreground mt-1">
+                Manage war rosters, lineups, and member assignments
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Skeleton className="h-10 w-40 animate-pulse" />
-            <Skeleton className="h-10 w-32 animate-pulse" />
-          </div>
-        </div>
-
-        {/* Statistics Cards Skeleton */}
-        <div className="grid gap-4 md:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="bg-card border-border">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <Skeleton className="h-4 w-24 animate-pulse" />
-                <Skeleton className="h-4 w-4 rounded animate-pulse" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-8 w-16 animate-pulse" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Filters Skeleton */}
-        <Card className="bg-card border-border">
-          <CardContent className="pt-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Skeleton className="h-10 flex-1 animate-pulse" />
-              <Skeleton className="h-10 w-full sm:w-[180px] animate-pulse" />
-              <Skeleton className="h-10 w-full sm:w-32 animate-pulse" />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Rosters List Skeleton */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <Skeleton className="h-6 w-32 animate-pulse" />
-            <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="bg-secondary/50 border-border">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Skeleton className="h-12 w-12 rounded-full animate-pulse" />
-                      <div className="space-y-2">
-                        <Skeleton className="h-5 w-40 animate-pulse" />
-                        <Skeleton className="h-4 w-24 animate-pulse" />
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Skeleton className="h-9 w-20 animate-pulse" />
-                      <Skeleton className="h-9 w-9 animate-pulse" />
-                      <Skeleton className="h-9 w-9 animate-pulse" />
-                      <Skeleton className="h-9 w-9 animate-pulse" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[1, 2, 3, 4].map((j) => (
-                      <div key={j} className="space-y-1">
-                        <Skeleton className="h-3 w-16 animate-pulse" />
-                        <Skeleton className="h-6 w-12 animate-pulse" />
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-            <Users className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Rosters & Lineups</h1>
-            <p className="text-muted-foreground mt-1">
-              Manage war rosters, lineups, and member assignments
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
           {comparisonMode ? (
             <>
               <Button
@@ -1373,49 +1290,107 @@ export default function RostersPage() {
 
       {/* Statistics Cards */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Total Rosters</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Rosters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{Array.isArray(rosters) ? rosters.length : 0}</div>
+            {loading ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-blue-500">{Array.isArray(rosters) ? rosters.length : 0}</div>
+                  <Users className="h-8 w-8 text-blue-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Active rosters configured
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Total Members</CardTitle>
-            <Shield className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-green-500/30 bg-green-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Members</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">
-              {Array.isArray(rosters) ? rosters.reduce((sum, r) => sum + (r.members?.length || 0), 0) : 0}
-            </div>
+            {loading ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-green-500">{totalMembers}</div>
+                  <Shield className="h-8 w-8 text-green-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Across all rosters
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Clan Rosters</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Clan Rosters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">
-              {Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "clan").length : 0}
-            </div>
+            {loading ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-purple-500">{clanRosters}</div>
+                  <Calendar className="h-8 w-8 text-purple-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Clan-specific lineups
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Family Rosters</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Family Rosters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">
-              {Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "family").length : 0}
-            </div>
+            {loading ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-yellow-500">{familyRosters}</div>
+                  <Target className="h-8 w-8 text-yellow-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Family-wide rosters
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -1471,7 +1446,7 @@ export default function RostersPage() {
         <CardHeader>
           <CardTitle className="text-foreground">
             All Rosters
-            {filteredRosters.length !== (Array.isArray(rosters) ? rosters.length : 0) && (
+            {!loading && filteredRosters.length !== (Array.isArray(rosters) ? rosters.length : 0) && (
               <span className="text-sm font-normal text-muted-foreground ml-2">
                 ({filteredRosters.length} of {Array.isArray(rosters) ? rosters.length : 0})
               </span>
@@ -1482,7 +1457,38 @@ export default function RostersPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {filteredRosters.length === 0 ? (
+          {loading ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="bg-secondary/50 border-border">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="h-12 w-12 rounded-full animate-pulse" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-32 animate-pulse" />
+                          <Skeleton className="h-4 w-24 animate-pulse" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <Skeleton className="h-3 w-16 animate-pulse" />
+                        <Skeleton className="h-6 w-12 animate-pulse" />
+                      </div>
+                      <div className="space-y-1">
+                        <Skeleton className="h-3 w-16 animate-pulse" />
+                        <Skeleton className="h-6 w-12 animate-pulse" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-10 w-full animate-pulse" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : filteredRosters.length === 0 ? (
             (Array.isArray(rosters) ? rosters.length : 0) === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -2607,6 +2613,7 @@ export default function RostersPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
