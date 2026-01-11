@@ -940,11 +940,10 @@
     "card": {
       "new": "Nieuw",
       "before": "voor",
-      "timeBefore": "Resterende tijd",
+      "timeBefore": "Resterende tijd (uren)",
       "timeBeforePlaceholder": "bijv. 6 of 0.5",
-      "timeInactive": "Inactiviteit van",
+      "timeInactive": "Inactiviteit (uren)",
       "timeInactivePlaceholder": "bijv. 168 of 0.5",
-      "timeUnit": "Uren",
       "hoursRemaining": "u resterend",
       "channel": "Kanaal",
       "channelPlaceholder": "Selecteer kanaal",
