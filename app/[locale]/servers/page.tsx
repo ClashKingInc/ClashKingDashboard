@@ -21,6 +21,7 @@ export default function ServersPage() {
   const [guilds, setGuilds] = useState<GuildInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [permissionMessage, setPermissionMessage] = useState<string | null>(null);
   const [user, setUser] = useState<UserInfo | null>(null);
 
   useEffect(() => {
@@ -35,6 +36,10 @@ export default function ServersPage() {
     }
 
     const fetchGuilds = async () => {
+      setPermissionMessage(null);
+      setError(null);
+      setLoading(true);
+
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
@@ -50,11 +55,9 @@ export default function ServersPage() {
 
         if (response.error || !response.data) {
           if (response.status === 401) {
-            // Token expired, redirect to login
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
-            localStorage.removeItem("user");
-            router.push(`/${locale}/login`);
+            // Token expired or no permissions, show no servers message
+            setPermissionMessage(t("noServers.description"));
+            setGuilds([]);
             return;
           }
           throw new Error(response.error || "Failed to fetch guilds");
@@ -80,7 +83,7 @@ export default function ServersPage() {
     };
 
     fetchGuilds();
-  }, [router, locale]);
+  }, [router, locale, t]);
 
   const getGuildIconUrl = (guild: GuildInfo) => {
     console.log(guild);
@@ -239,7 +242,7 @@ export default function ServersPage() {
               <CardHeader className="text-center py-12">
                 <CardTitle className="text-foreground mb-2">{t("noServers.title")}</CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  {t("noServers.description")}
+                  {permissionMessage || t("noServers.description")}
                 </CardDescription>
               </CardHeader>
             </Card>

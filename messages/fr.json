@@ -1352,7 +1352,7 @@
     },
     "noServers": {
       "title": "Aucun Serveur Trouvé",
-      "description": "Vous n'avez pas les permissions d'administrateur dans aucun serveur Discord."
+      "description": "Aucun serveur Discord trouvé où vous êtes administrateur ou propriétaire."
     }
   },
   "AutoboardsPage": {

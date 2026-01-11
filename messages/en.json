@@ -1475,7 +1475,7 @@
     },
     "noServers": {
       "title": "No Servers Found",
-      "description": "You don't have admin permissions in any Discord servers."
+      "description": "No Discord server found where you are an administrator or the owner."
     }
   },
   "AutoboardsPage": {
