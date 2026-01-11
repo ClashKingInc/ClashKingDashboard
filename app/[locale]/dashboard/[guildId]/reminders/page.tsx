@@ -961,7 +961,7 @@ export default function RemindersPage() {
                       }
                       value={dialogReminder.time || ""}
                       onChange={(e) => updateDialogField("time", e.target.value)}
-                      className="flex-1"
+                      className="w-32"
                     />
                     <span className="text-sm text-muted-foreground whitespace-nowrap">
                       {t('card.timeUnit')}
