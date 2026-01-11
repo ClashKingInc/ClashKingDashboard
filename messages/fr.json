@@ -940,10 +940,11 @@
     "card": {
       "new": "Nouveau",
       "before": "avant",
-      "timeBefore": "Temps restant (heures)",
+      "timeBefore": "Temps restant",
       "timeBeforePlaceholder": "ex: 6 ou 0.5",
-      "timeInactive": "Inactivité (heures)",
+      "timeInactive": "Inactivité de",
       "timeInactivePlaceholder": "ex: 168 ou 0.5",
+      "timeUnit": "Heures",
       "hoursRemaining": "h restantes",
       "channel": "Canal",
       "channelPlaceholder": "Sélectionner un canal",

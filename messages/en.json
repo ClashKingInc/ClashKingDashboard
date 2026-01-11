@@ -1063,10 +1063,11 @@
     "card": {
       "new": "New",
       "before": "before",
-      "timeBefore": "Remaining time (hours)",
+      "timeBefore": "Remaining time",
       "timeBeforePlaceholder": "e.g., 6 or 0.5",
-      "timeInactive": "Inactivity (hours)",
+      "timeInactive": "Inactivity of",
       "timeInactivePlaceholder": "e.g., 168 or 0.5",
+      "timeUnit": "Hours",
       "hoursRemaining": "hr remaining",
       "channel": "Channel",
       "channelPlaceholder": "Select channel",
