@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -69,6 +70,9 @@ export default function BansPage() {
     reason: "",
   });
 
+  // Members state for moderator info
+  const [members, setMembers] = useState<Record<string, { username: string, avatar_url: string | null }>>({});
+
   // Strikes state
   const [strikes, setStrikes] = useState<Strike[]>([]);
   const [isLoadingStrikes, setIsLoadingStrikes] = useState(true);
@@ -87,7 +91,37 @@ export default function BansPage() {
   useEffect(() => {
     fetchBans();
     fetchStrikes();
+    fetchMembers();
   }, [guildId]);
+
+  const fetchMembers = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      // Use the links endpoint to get server members
+      const response = await fetch(`/api/v2/server/${guildId}/links?limit=1000`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const membersMap: Record<string, { username: string, avatar_url: string | null }> = {};
+        
+        if (data.members && Array.isArray(data.members)) {
+          data.members.forEach((member: any) => {
+            membersMap[member.user_id] = {
+              username: member.display_name || member.username,
+              avatar_url: member.avatar_url
+            };
+          });
+        }
+        setMembers(membersMap);
+      }
+    } catch (error) {
+      console.error("Error fetching membersMap:", error);
+    }
+  };
 
   const fetchBans = async () => {
     try {
@@ -326,14 +360,16 @@ export default function BansPage() {
     (ban) =>
       (ban.name?.toLowerCase() || "").includes(searchQueryBans.toLowerCase()) ||
       ban.VillageTag.toLowerCase().includes(searchQueryBans.toLowerCase()) ||
-      ban.Notes.toLowerCase().includes(searchQueryBans.toLowerCase())
+      ban.Notes.toLowerCase().includes(searchQueryBans.toLowerCase()) ||
+      (members[ban.added_by]?.username?.toLowerCase() || "").includes(searchQueryBans.toLowerCase())
   );
 
   const filteredStrikes = strikes.filter(
     (strike) =>
       (strike.player_name?.toLowerCase() || "").includes(searchQueryStrikes.toLowerCase()) ||
       strike.tag.toLowerCase().includes(searchQueryStrikes.toLowerCase()) ||
-      strike.reason.toLowerCase().includes(searchQueryStrikes.toLowerCase())
+      strike.reason.toLowerCase().includes(searchQueryStrikes.toLowerCase()) ||
+      (members[strike.added_by]?.username?.toLowerCase() || "").includes(searchQueryStrikes.toLowerCase())
   );
 
   // Calculate strike statistics
@@ -696,8 +732,20 @@ export default function BansPage() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <User className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">{ban.added_by}</span>
+                                  <Avatar className="h-8 w-8">
+                                    <AvatarImage src={members[ban.added_by]?.avatar_url || ""} />
+                                    <AvatarFallback>
+                                      <User className="h-4 w-4 text-muted-foreground" />
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm font-medium">
+                                      {members[ban.added_by]?.username || tCommon("unknown")}
+                                    </span>
+                                    <span className="text-[10px] text-muted-foreground leading-none mt-0.5">
+                                      ID: {ban.added_by}
+                                    </span>
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -906,8 +954,20 @@ export default function BansPage() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <User className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">{strike.added_by}</span>
+                                  <Avatar className="h-8 w-8">
+                                    <AvatarImage src={members[strike.added_by]?.avatar_url || ""} />
+                                    <AvatarFallback>
+                                      <User className="h-4 w-4 text-muted-foreground" />
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm font-medium">
+                                      {members[strike.added_by]?.username || tCommon("unknown")}
+                                    </span>
+                                    <span className="text-[10px] text-muted-foreground leading-none mt-0.5">
+                                      ID: {strike.added_by}
+                                    </span>
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell>
