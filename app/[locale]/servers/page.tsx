@@ -41,6 +41,36 @@ export default function ServersPage() {
       setLoading(true);
 
       try {
+        // Check for prefetched guilds from auth callback
+        const prefetched = sessionStorage.getItem('prefetched_guilds');
+        if (prefetched) {
+          try {
+            const guildsData = JSON.parse(prefetched);
+            setGuilds(guildsData);
+            setLoading(false);
+            sessionStorage.removeItem('prefetched_guilds'); // Clean up
+
+            // Fetch fresh data in background
+            const accessToken = localStorage.getItem("access_token");
+            if (accessToken) {
+              apiClient.setAccessToken(accessToken);
+              const response = await apiClient.servers.getGuilds();
+              if (response.data) {
+                const sortedGuilds = response.data.sort((a, b) => {
+                  if (a.has_bot && !b.has_bot) return -1;
+                  if (!a.has_bot && b.has_bot) return 1;
+                  return a.name.localeCompare(b.name);
+                });
+                setGuilds(sortedGuilds);
+              }
+            }
+            return;
+          } catch (err) {
+            console.error('Error parsing prefetched guilds:', err);
+            // Fall through to normal fetch
+          }
+        }
+
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
           router.push(`/${locale}/login`);
