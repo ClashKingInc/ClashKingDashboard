@@ -943,7 +943,7 @@
       "timeBefore": "Temps restant",
       "timeBeforePlaceholder": "ex: 6 ou 0.5",
       "timeInactive": "Inactivité de",
-      "timeInactivePlaceholder": "ex: 168 ou 0.5",
+      "timeInactivePlaceholder": "ex: 160",
       "timeUnit": "Heures",
       "hoursRemaining": "h restantes",
       "channel": "Canal",

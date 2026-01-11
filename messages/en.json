@@ -1066,7 +1066,7 @@
       "timeBefore": "Remaining time",
       "timeBeforePlaceholder": "e.g., 6 or 0.5",
       "timeInactive": "Inactivity of",
-      "timeInactivePlaceholder": "e.g., 168 or 0.5",
+      "timeInactivePlaceholder": "e.g., 160",
       "timeUnit": "Hours",
       "hoursRemaining": "hrs remaining",
       "channel": "Channel",

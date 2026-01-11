@@ -946,7 +946,7 @@ export default function RemindersPage() {
                 <div className="space-y-2">
                   <Label htmlFor="dialog-time">
                     <Clock className="h-4 w-4 inline mr-1" />
-                    {t('card.timeBefore')}
+                    {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
                   </Label>
                   <div className="flex items-center gap-2">
                     <Input
@@ -954,7 +954,11 @@ export default function RemindersPage() {
                       type="number"
                       step="0.01"
                       min="0"
-                      placeholder={t('card.timeBeforePlaceholder')}
+                      placeholder={
+                        dialogReminder.type === "Inactivity"
+                          ? t('card.timeInactivePlaceholder')
+                          : t('card.timeBeforePlaceholder')
+                      }
                       value={dialogReminder.time || ""}
                       onChange={(e) => updateDialogField("time", e.target.value)}
                       className="w-32"
