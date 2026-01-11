@@ -1057,10 +1057,12 @@
     "card": {
       "new": "New",
       "before": "before",
-      "timeBefore": "Time Before (e.g., \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
-      "timeInactive": "Time Inactive (e.g., \"7d\", \"30d\")",
-      "timeInactivePlaceholder": "7d",
+      "timeBefore": "Remaining time",
+      "timeBeforePlaceholder": "e.g., 6 or 0.5",
+      "timeInactive": "Inactivity of",
+      "timeInactivePlaceholder": "e.g., 168 or 0.5",
+      "timeUnit": "Hours",
+      "hoursRemaining": "hrs remaining",
       "channel": "Channel",
       "channelPlaceholder": "Select channel",
       "clan": "Clan",
@@ -1102,7 +1104,7 @@
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
       "failedToSave": "Failed to save reminders",
-      "timeExceeds24h": "Time must be less than or equal to 24 hours",
+      "timeExceedsLimit": "Time must be less than or equal to {limit} hours for {type} reminders",
       "pointThresholdInvalid": "Point threshold must be between {min} and {max}",
       "attackThresholdInvalid": "Attack threshold must be between {min} and {max}"
     }

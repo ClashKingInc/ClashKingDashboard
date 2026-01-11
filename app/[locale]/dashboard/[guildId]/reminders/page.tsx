@@ -245,9 +245,24 @@ export default function RemindersPage() {
 
     // Filter by selected clan if needed
     if (selectedClan && selectedClan !== "all") {
-      return currentReminders.filter(r => r.clan_tag === selectedClan);
+      currentReminders = currentReminders.filter(r => r.clan_tag === selectedClan);
     }
-    return currentReminders;
+
+    // Sort by time
+    const sorted = [...currentReminders].sort((a, b) => {
+      const hoursA = parseFloat(extractHours(a.time));
+      const hoursB = parseFloat(extractHours(b.time));
+
+      // For inactivity: ascending order (soonest first)
+      // For others: descending order (furthest first)
+      if (activeTab === "inactivity") {
+        return hoursA - hoursB;
+      } else {
+        return hoursB - hoursA;
+      }
+    });
+
+    return sorted;
   };
 
   // Add a new reminder
@@ -282,7 +297,15 @@ export default function RemindersPage() {
   // Edit an existing reminder
   const editReminder = (reminder: ReminderConfig) => {
     setEditingReminder(reminder);
-    setDialogReminder({ ...reminder });
+
+    // Extract the number from "X hr" format for display in input
+    let displayTime = reminder.time;
+    const timeMatch = reminder.time?.match(/^(\d+(?:\.\d+)?)\s+hr$/);
+    if (timeMatch) {
+      displayTime = timeMatch[1];
+    }
+
+    setDialogReminder({ ...reminder, time: displayTime });
     setPointThresholdTouched(reminder.point_threshold !== undefined);
     setAttackThresholdTouched(reminder.attack_threshold !== undefined);
     setIsDialogOpen(true);
@@ -306,23 +329,39 @@ export default function RemindersPage() {
     });
   };
 
-  // Validate time is under 24 hours
-  const validateTime = (timeString: string): boolean => {
+  // Extract hours number from "X hr" format
+  const extractHours = (timeString: string): string => {
+    const match = timeString?.match(/^(\d+(?:\.\d+)?)\s+hr$/);
+    return match ? match[1] : timeString;
+  };
+
+  // Validate time based on reminder type
+  const validateTime = (timeString: string, reminderType: string): boolean => {
     if (!timeString) return false;
-    
-    // Parse time string (supports formats like "6h", "30m", "23h40m", "1h30m")
-    const regex = /(?:(\d+)h)?(?:(\d+)m)?/i;
-    const match = timeString.match(regex);
-    
-    if (!match) return false;
-    
-    const hours = match[1] ? parseInt(match[1]) : 0;
-    const minutes = match[2] ? parseInt(match[2]) : 0;
-    
-    const totalMinutes = hours * 60 + minutes;
-    const maxMinutes = 24 * 60; // 24 hours in minutes
-    
-    return totalMinutes > 0 && totalMinutes <= maxMinutes;
+
+    // Parse as decimal number (hours)
+    const hours = parseFloat(timeString);
+    if (isNaN(hours) || hours <= 0) return false;
+
+    // Define max hours based on type
+    let maxHours: number;
+    switch (reminderType) {
+      case "War":
+        maxHours = 48; // 2 days
+        break;
+      case "Clan Games":
+        maxHours = 336; // 2 weeks (14 days)
+        break;
+      case "Clan Capital":
+        maxHours = 168; // 1 week (7 days)
+        break;
+      case "Inactivity":
+        return true; // No limit
+      default:
+        maxHours = 48;
+    }
+
+    return hours <= maxHours;
   };
 
   // Delete a reminder
@@ -377,11 +416,16 @@ export default function RemindersPage() {
   // Save a single reminder from dialog
   const handleSaveReminder = async () => {
     try {
-      // Validate time is under 24 hours (skip for inactivity type)
-      if (dialogReminder.type !== "Inactivity" && !validateTime(dialogReminder.time || "")) {
+      // Validate time based on reminder type
+      if (!validateTime(dialogReminder.time || "", dialogReminder.type || "")) {
         toast({
           title: t('toast.errorTitle'),
-          description: t('toast.timeExceeds24h'),
+          description: t('toast.timeExceedsLimit', {
+            limit: dialogReminder.type === "War" ? 48 :
+                   dialogReminder.type === "Clan Games" ? 336 :
+                   dialogReminder.type === "Clan Capital" ? 168 : 24,
+            type: dialogReminder.type || "reminder"
+          }),
           variant: "destructive",
         });
         return;
@@ -436,6 +480,9 @@ export default function RemindersPage() {
         throw new Error("API URL is not configured");
       }
 
+      // Add " hr" suffix to time before sending to API
+      const timeWithUnit = `${dialogReminder.time} hr`;
+
       const isNew = !editingReminder;
 
       if (isNew) {
@@ -444,7 +491,7 @@ export default function RemindersPage() {
           type: dialogReminder.type!,
           clan_tag: dialogReminder.clan_tag,
           channel_id: dialogReminder.channel_id || "",
-          time: dialogReminder.time!,
+          time: timeWithUnit,
           custom_text: dialogReminder.custom_text,
           townhall_filter: dialogReminder.townhall_filter,
           roles: dialogReminder.roles,
@@ -475,8 +522,9 @@ export default function RemindersPage() {
       } else {
         // Update existing reminder
         const updateRequest = {
+          type: dialogReminder.type, // Include type for validation
           channel_id: dialogReminder.channel_id,
-          time: dialogReminder.time,
+          time: timeWithUnit,
           custom_text: dialogReminder.custom_text,
           townhall_filter: dialogReminder.townhall_filter,
           roles: dialogReminder.roles,
@@ -779,7 +827,7 @@ export default function RemindersPage() {
                               </CardTitle>
                               <CardDescription>
                                 <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30">
-                                  {reminder.time} {t('card.before')}
+                                  {extractHours(reminder.time)}{t('card.hoursRemaining')}
                                 </Badge>
                               </CardDescription>
                             </div>
@@ -806,14 +854,6 @@ export default function RemindersPage() {
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="grid gap-4 md:grid-cols-2">
-                          <div className="space-y-1">
-                            <Label className="text-sm text-muted-foreground">
-                              <Clock className="h-3 w-3 inline mr-1" />
-                              {t('card.timeBefore')}
-                            </Label>
-                            <p className="text-sm font-medium">{reminder.time}</p>
-                          </div>
-
                           <div className="space-y-1">
                             <Label className="text-sm text-muted-foreground">{t('card.channel')}</Label>
                             <p className="text-sm font-medium">{channelName || reminder.channel_id || t('card.notSet')}</p>
@@ -908,16 +948,25 @@ export default function RemindersPage() {
                     <Clock className="h-4 w-4 inline mr-1" />
                     {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
                   </Label>
-                  <Input
-                    id="dialog-time"
-                    placeholder={
-                      dialogReminder.type === "Inactivity"
-                        ? t('card.timeInactivePlaceholder')
-                        : t('card.timeBeforePlaceholder')
-                    }
-                    value={dialogReminder.time || ""}
-                    onChange={(e) => updateDialogField("time", e.target.value)}
-                  />
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="dialog-time"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder={
+                        dialogReminder.type === "Inactivity"
+                          ? t('card.timeInactivePlaceholder')
+                          : t('card.timeBeforePlaceholder')
+                      }
+                      value={dialogReminder.time || ""}
+                      onChange={(e) => updateDialogField("time", e.target.value)}
+                      className="flex-1"
+                    />
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
+                      {t('card.timeUnit')}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="space-y-2">

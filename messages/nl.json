@@ -934,10 +934,12 @@
     "card": {
       "new": "Nieuw",
       "before": "voor",
-      "timeBefore": "Tijd Ervoor (bijv. \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
-      "timeInactive": "Tijd Inactief (bijv. \"7d\", \"30d\")",
-      "timeInactivePlaceholder": "7d",
+      "timeBefore": "Resterende tijd",
+      "timeBeforePlaceholder": "bijv. 6 of 0.5",
+      "timeInactive": "Inactiviteit van",
+      "timeInactivePlaceholder": "bijv. 168 of 0.5",
+      "timeUnit": "Uren",
+      "hoursRemaining": "uur resterend",
       "channel": "Kanaal",
       "channelPlaceholder": "Selecteer kanaal",
       "clan": "Clan",
@@ -979,7 +981,7 @@
       "failedToDelete": "Kan herinnering niet verwijderen",
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
       "failedToSave": "Kan herinneringen niet opslaan",
-      "timeExceeds24h": "Tijd moet minder dan of gelijk zijn aan 24 uur",
+      "timeExceedsLimit": "Tijd moet minder dan of gelijk zijn aan {limit} uur voor {type} herinneringen",
       "pointThresholdInvalid": "Puntendrempel moet tussen {min} en {max} liggen",
       "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen"
     }

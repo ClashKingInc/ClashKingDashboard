@@ -934,10 +934,12 @@
     "card": {
       "new": "Nouveau",
       "before": "avant",
-      "timeBefore": "Temps Avant (ex: \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
-      "timeInactive": "Temps Inactif (ex: \"7d\", \"30d\")",
-      "timeInactivePlaceholder": "7d",
+      "timeBefore": "Temps restant",
+      "timeBeforePlaceholder": "ex: 6 ou 0.5",
+      "timeInactive": "Inactivité de",
+      "timeInactivePlaceholder": "ex: 168 ou 0.5",
+      "timeUnit": "Heures",
+      "hoursRemaining": "h restantes",
       "channel": "Canal",
       "channelPlaceholder": "Sélectionner un canal",
       "clan": "Clan",
@@ -979,7 +981,7 @@
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
       "failedToSave": "Échec de l'enregistrement des rappels",
-      "timeExceeds24h": "Le temps doit être inférieur ou égal à 24 heures",
+      "timeExceedsLimit": "Le temps doit être inférieur ou égal à {limit} heures pour les rappels de type {type}",
       "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
       "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
     }
