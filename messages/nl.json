@@ -1352,7 +1352,7 @@
     },
     "noServers": {
       "title": "Geen Servers Gevonden",
-      "description": "Je hebt geen beheerdersrechten in Discord-servers."
+      "description": "Geen Discord server gevonden waarbij je een administrator of de eigenaar bent."
     }
   },
   "AutoboardsPage": {
