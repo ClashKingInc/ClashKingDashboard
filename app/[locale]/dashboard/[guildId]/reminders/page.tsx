@@ -339,7 +339,7 @@ export default function RemindersPage() {
     switch (type) {
       case "War": return 48;
       case "Clan Games": return 336;
-      case "Clan Capital": return 168;
+      case "Clan Capital": return 72;
       default: return 0;
     }
   };
@@ -381,7 +381,7 @@ export default function RemindersPage() {
         maxHours = 336; // 2 weeks (14 days)
         break;
       case "Clan Capital":
-        maxHours = 168; // 1 week (7 days)
+        maxHours = 72; // 3 days
         break;
       case "Inactivity":
         return true; // No limit
@@ -451,7 +451,7 @@ export default function RemindersPage() {
           description: t('toast.timeExceedsLimit', {
             limit: dialogReminder.type === "War" ? 48 :
                 dialogReminder.type === "Clan Games" ? 336 :
-                    dialogReminder.type === "Clan Capital" ? 168 : 24,
+                    dialogReminder.type === "Clan Capital" ? 72 : 24,
             type: dialogReminder.type || "reminder"
           }),
           variant: "destructive",
