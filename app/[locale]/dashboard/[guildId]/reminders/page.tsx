@@ -963,7 +963,7 @@ export default function RemindersPage() {
                       onChange={(e) => updateDialogField("time", e.target.value)}
                       className="w-32"
                     />
-                    <span className="text-sm text-muted-foreground whitespace-nowrap">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap lowercase">
                       {t('card.timeUnit')}
                     </span>
                   </div>
