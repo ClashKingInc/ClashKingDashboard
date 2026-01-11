@@ -329,9 +329,9 @@ export default function RemindersPage() {
     });
   };
 
-  // Extract hours number from "X hr" or "Xh" format
+  // Extract hours number from "X hr" format
   const extractHours = (timeString: string): string => {
-    const match = timeString?.match(/^(\d+(?:\.\d+)?)\s*(?:hr|h)$/);
+    const match = timeString?.match(/^(\d+(?:\.\d+)?)\s+hr$/);
     return match ? match[1] : timeString;
   };
 
