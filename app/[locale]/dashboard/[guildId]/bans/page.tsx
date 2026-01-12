@@ -457,183 +457,6 @@ export default function BansPage() {
               </div>
             </div>
           </div>
-          {activeTab === "bans" && (
-            <Dialog open={isAddBanDialogOpen} onOpenChange={setIsAddBanDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-red-500 hover:bg-red-600 w-full md:w-auto">
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t("bans.addBan")}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-card border-border sm:max-w-[500px]">
-                <DialogHeader>
-                  <DialogTitle className="text-foreground">{t("bans.addDialog.title")}</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    {t("bans.addDialog.description")}
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="player-tag" className="text-foreground">
-                      {t("bans.addDialog.playerTagLabel")}
-                      <span className="text-destructive ml-1">*</span>
-                    </Label>
-                    <Input
-                      id="player-tag"
-                      placeholder={t("bans.addDialog.playerTagPlaceholder")}
-                      value={newBan.player_tag}
-                      onChange={(e) =>
-                        setNewBan({ ...newBan, player_tag: e.target.value })
-                      }
-                      disabled={isSubmittingBan}
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reason" className="text-foreground">
-                      {t("bans.addDialog.reasonLabel")}
-                      <span className="text-destructive ml-1">*</span>
-                    </Label>
-                    <Textarea
-                      id="reason"
-                      placeholder={t("bans.addDialog.reasonPlaceholder")}
-                      value={newBan.reason}
-                      onChange={(e) =>
-                        setNewBan({ ...newBan, reason: e.target.value })
-                      }
-                      rows={4}
-                      disabled={isSubmittingBan}
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsAddBanDialogOpen(false)}
-                    disabled={isSubmittingBan}
-                    className="border-border"
-                  >
-                    {tCommon("cancel")}
-                  </Button>
-                  <Button
-                    className="bg-red-500 hover:bg-red-600"
-                    onClick={handleAddBan}
-                    disabled={!newBan.player_tag || !newBan.reason || isSubmittingBan}
-                  >
-                    {isSubmittingBan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {t("bans.addDialog.submit")}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
-          {activeTab === "strikes" && (
-            <Dialog open={isAddStrikeDialogOpen} onOpenChange={setIsAddStrikeDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-orange-500 hover:bg-orange-600">
-                  <Plus className="mr-2 h-4 w-4" />
-                  {t("strikes.addStrike")}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-card border-border sm:max-w-[500px]">
-                <DialogHeader>
-                  <DialogTitle className="text-foreground">{t("strikes.addDialog.title")}</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    {t("strikes.addDialog.description")}
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="strike-player-tag" className="text-foreground">
-                      {t("strikes.addDialog.playerTagLabel")}
-                      <span className="text-destructive ml-1">*</span>
-                    </Label>
-                    <Input
-                      id="strike-player-tag"
-                      placeholder={t("strikes.addDialog.playerTagPlaceholder")}
-                      value={newStrike.player_tag}
-                      onChange={(e) =>
-                        setNewStrike({ ...newStrike, player_tag: e.target.value })
-                      }
-                      disabled={isSubmittingStrike}
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="strike-reason" className="text-foreground">
-                      {t("strikes.addDialog.reasonLabel")}
-                      <span className="text-destructive ml-1">*</span>
-                    </Label>
-                    <Textarea
-                      id="strike-reason"
-                      placeholder={t("strikes.addDialog.reasonPlaceholder")}
-                      value={newStrike.reason}
-                      onChange={(e) =>
-                        setNewStrike({ ...newStrike, reason: e.target.value })
-                      }
-                      rows={4}
-                      disabled={isSubmittingStrike}
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="strike-weight" className="text-foreground">
-                        {t("strikes.addDialog.weightLabel")}
-                        <span className="text-destructive ml-1">*</span>
-                      </Label>
-                      <Input
-                        id="strike-weight"
-                        type="number"
-                        min="1"
-                        placeholder={t("strikes.addDialog.weightPlaceholder")}
-                        value={newStrike.strike_weight}
-                        onChange={(e) =>
-                          setNewStrike({ ...newStrike, strike_weight: parseInt(e.target.value) || 1 })
-                        }
-                        disabled={isSubmittingStrike}
-                        className="bg-background border-border text-foreground"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="rollover-days" className="text-foreground">{t("strikes.addDialog.rolloverLabel")}</Label>
-                      <Input
-                        id="rollover-days"
-                        type="number"
-                        min="1"
-                        placeholder={t("strikes.addDialog.rolloverPlaceholder")}
-                        value={newStrike.rollover_days || ""}
-                        onChange={(e) =>
-                          setNewStrike({ ...newStrike, rollover_days: e.target.value ? parseInt(e.target.value) : undefined })
-                        }
-                        disabled={isSubmittingStrike}
-                        className="bg-background border-border text-foreground"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsAddStrikeDialogOpen(false)}
-                    disabled={isSubmittingStrike}
-                    className="border-border"
-                  >
-                    {tCommon("cancel")}
-                  </Button>
-                  <Button
-                    className="bg-orange-500 hover:bg-orange-600"
-                    onClick={handleAddStrike}
-                    disabled={!newStrike.player_tag || !newStrike.reason || isSubmittingStrike}
-                  >
-                    {isSubmittingStrike && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {t("strikes.addDialog.submit")}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
         </div>
 
         {/* Tabs */}
@@ -651,15 +474,6 @@ export default function BansPage() {
 
           {/* Bans Tab */}
           <TabsContent value="bans" className="space-y-6">
-            {/* Info Alert */}
-            <Alert className="border-blue-500/30 bg-blue-500/5">
-              <AlertCircle className="h-4 w-4 text-blue-500" />
-              <AlertTitle className="text-blue-400">{t("bans.howItWorks.title")}</AlertTitle>
-              <AlertDescription className="text-blue-300">
-                {t("bans.howItWorks.description")}
-              </AlertDescription>
-            </Alert>
-
             {/* Stats Cards */}
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               <Card className="bg-card border-blue-500/30 bg-blue-500/5">
@@ -765,15 +579,86 @@ export default function BansPage() {
             <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                  <div>
-                    <CardTitle>{t("bans.list.title")}</CardTitle>
-                    <CardDescription>
-                      {isLoadingBans ? (
-                        <Skeleton className="h-4 w-24" />
-                      ) : (
-                        t("bans.list.count", { count: filteredBans.length })
-                      )}
-                    </CardDescription>
+                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                    <div>
+                      <CardTitle>{t("bans.list.title")}</CardTitle>
+                      <CardDescription>
+                        {isLoadingBans ? (
+                          <Skeleton className="h-4 w-24" />
+                        ) : (
+                          t("bans.list.count", { count: filteredBans.length })
+                        )}
+                      </CardDescription>
+                    </div>
+                    <Dialog open={isAddBanDialogOpen} onOpenChange={setIsAddBanDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="bg-red-500 hover:bg-red-600 w-full md:w-auto">
+                          <Plus className="mr-2 h-4 w-4" />
+                          {t("bans.addBan")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-card border-border sm:max-w-[500px]">
+                        <DialogHeader>
+                          <DialogTitle className="text-foreground">{t("bans.addDialog.title")}</DialogTitle>
+                          <DialogDescription className="text-muted-foreground">
+                            {t("bans.addDialog.description")}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="player-tag" className="text-foreground">
+                              {t("bans.addDialog.playerTagLabel")}
+                              <span className="text-destructive ml-1">*</span>
+                            </Label>
+                            <Input
+                              id="player-tag"
+                              placeholder={t("bans.addDialog.playerTagPlaceholder")}
+                              value={newBan.player_tag}
+                              onChange={(e) =>
+                                setNewBan({ ...newBan, player_tag: e.target.value })
+                              }
+                              disabled={isSubmittingBan}
+                              className="bg-background border-border text-foreground"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="reason" className="text-foreground">
+                              {t("bans.addDialog.reasonLabel")}
+                              <span className="text-destructive ml-1">*</span>
+                            </Label>
+                            <Textarea
+                              id="reason"
+                              placeholder={t("bans.addDialog.reasonPlaceholder")}
+                              value={newBan.reason}
+                              onChange={(e) =>
+                                setNewBan({ ...newBan, reason: e.target.value })
+                              }
+                              rows={4}
+                              disabled={isSubmittingBan}
+                              className="bg-background border-border text-foreground"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button
+                            variant="outline"
+                            onClick={() => setIsAddBanDialogOpen(false)}
+                            disabled={isSubmittingBan}
+                            className="border-border"
+                          >
+                            {tCommon("cancel")}
+                          </Button>
+                          <Button
+                            className="bg-red-500 hover:bg-red-600"
+                            onClick={handleAddBan}
+                            disabled={!newBan.player_tag || !newBan.reason || isSubmittingBan}
+                          >
+                            {isSubmittingBan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {t("bans.addDialog.submit")}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <div className="relative w-full md:w-64 xl:w-72">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -894,20 +779,32 @@ export default function BansPage() {
                 </CardContent>
               </Card>
 
-              {/* Additional Info */}
+              {/* Info Alert */}
+              <Alert className="border-blue-500/30 bg-blue-500/5">
+                <AlertCircle className="h-4 w-4 text-blue-500" />
+                <AlertTitle className="text-blue-400">{t("bans.howItWorks.title")}</AlertTitle>
+                <AlertDescription className="text-blue-300">
+                  {t("bans.howItWorks.description")}
+                </AlertDescription>
+              </Alert>
+
+              {/* Best Practices */}
               <Card className="border-yellow-500/30 bg-yellow-500/5">
                 <CardHeader>
                   <CardTitle className="text-yellow-400">{t("bans.bestPractices.title")}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2 text-sm text-yellow-300">
+                <CardContent className="space-y-4 text-sm text-yellow-300">
                   <p>
-                    <strong>{t("bans.bestPractices.document.title")}</strong> {t("bans.bestPractices.document.desc")}
+                    <strong className="text-yellow-400 block mb-1">{t("bans.bestPractices.document.title")}</strong>
+                    {t("bans.bestPractices.document.desc")}
                   </p>
                   <p>
-                    <strong>{t("bans.bestPractices.review.title")}</strong> {t("bans.bestPractices.review.desc")}
+                    <strong className="text-yellow-400 block mb-1">{t("bans.bestPractices.review.title")}</strong>
+                    {t("bans.bestPractices.review.desc")}
                   </p>
                   <p>
-                    <strong>{t("bans.bestPractices.consistent.title")}</strong> {t("bans.bestPractices.consistent.desc")}
+                    <strong className="text-yellow-400 block mb-1">{t("bans.bestPractices.consistent.title")}</strong>
+                    {t("bans.bestPractices.consistent.desc")}
                   </p>
                 </CardContent>
               </Card>
@@ -915,15 +812,6 @@ export default function BansPage() {
 
             {/* Strikes Tab */}
             <TabsContent value="strikes" className="space-y-6">
-              {/* Info Alert */}
-              <Alert className="border-orange-500/30 bg-orange-500/5">
-                <AlertTriangle className="h-4 w-4 text-orange-500" />
-                <AlertTitle className="text-orange-400">{t("strikes.howItWorks.title")}</AlertTitle>
-                <AlertDescription className="text-orange-300">
-                  {t("strikes.howItWorks.description")}
-                </AlertDescription>
-              </Alert>
-
               {/* Stats Cards */}
               <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 <Card className="bg-card border-blue-500/30 bg-blue-500/5">
@@ -1038,6 +926,110 @@ export default function BansPage() {
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
+                    <Dialog open={isAddStrikeDialogOpen} onOpenChange={setIsAddStrikeDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="bg-orange-500 hover:bg-orange-600">
+                          <Plus className="mr-2 h-4 w-4" />
+                          {t("strikes.addStrike")}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="bg-card border-border sm:max-w-[500px]">
+                        <DialogHeader>
+                          <DialogTitle className="text-foreground">{t("strikes.addDialog.title")}</DialogTitle>
+                          <DialogDescription className="text-muted-foreground">
+                            {t("strikes.addDialog.description")}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="strike-player-tag" className="text-foreground">
+                              {t("strikes.addDialog.playerTagLabel")}
+                              <span className="text-destructive ml-1">*</span>
+                            </Label>
+                            <Input
+                              id="strike-player-tag"
+                              placeholder={t("strikes.addDialog.playerTagPlaceholder")}
+                              value={newStrike.player_tag}
+                              onChange={(e) =>
+                                setNewStrike({ ...newStrike, player_tag: e.target.value })
+                              }
+                              disabled={isSubmittingStrike}
+                              className="bg-background border-border text-foreground"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="strike-reason" className="text-foreground">
+                              {t("strikes.addDialog.reasonLabel")}
+                              <span className="text-destructive ml-1">*</span>
+                            </Label>
+                            <Textarea
+                              id="strike-reason"
+                              placeholder={t("strikes.addDialog.reasonPlaceholder")}
+                              value={newStrike.reason}
+                              onChange={(e) =>
+                                setNewStrike({ ...newStrike, reason: e.target.value })
+                              }
+                              rows={4}
+                              disabled={isSubmittingStrike}
+                              className="bg-background border-border text-foreground"
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="strike-weight" className="text-foreground">
+                                {t("strikes.addDialog.weightLabel")}
+                                <span className="text-destructive ml-1">*</span>
+                              </Label>
+                              <Input
+                                id="strike-weight"
+                                type="number"
+                                min="1"
+                                placeholder={t("strikes.addDialog.weightPlaceholder")}
+                                value={newStrike.strike_weight}
+                                onChange={(e) =>
+                                  setNewStrike({ ...newStrike, strike_weight: parseInt(e.target.value) || 1 })
+                                }
+                                disabled={isSubmittingStrike}
+                                className="bg-background border-border text-foreground"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="rollover-days" className="text-foreground">{t("strikes.addDialog.rolloverLabel")}</Label>
+                              <Input
+                                id="rollover-days"
+                                type="number"
+                                min="1"
+                                placeholder={t("strikes.addDialog.rolloverPlaceholder")}
+                                value={newStrike.rollover_days || ""}
+                                onChange={(e) =>
+                                  setNewStrike({ ...newStrike, rollover_days: e.target.value ? parseInt(e.target.value) : undefined })
+                                }
+                                disabled={isSubmittingStrike}
+                                className="bg-background border-border text-foreground"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button
+                            variant="outline"
+                            onClick={() => setIsAddStrikeDialogOpen(false)}
+                            disabled={isSubmittingStrike}
+                            className="border-border"
+                          >
+                            {tCommon("cancel")}
+                          </Button>
+                          <Button
+                            className="bg-orange-500 hover:bg-orange-600"
+                            onClick={handleAddStrike}
+                            disabled={!newStrike.player_tag || !newStrike.reason || isSubmittingStrike}
+                          >
+                            {isSubmittingStrike && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {t("strikes.addDialog.submit")}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto">
                     <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="md:hidden w-full">
@@ -1337,20 +1329,32 @@ export default function BansPage() {
                 </CardContent>
               </Card>
 
-              {/* Best Practices */}
+              {/* Info Alert */}
+              <Alert className="border-orange-500/30 bg-orange-500/5">
+                <AlertTriangle className="h-4 w-4 text-orange-500" />
+                <AlertTitle className="text-orange-400">{t("strikes.howItWorks.title")}</AlertTitle>
+                <AlertDescription className="text-orange-300">
+                  {t("strikes.howItWorks.description")}
+                </AlertDescription>
+              </Alert>
+
+              {/* Guidelines */}
               <Card className="border-yellow-500/30 bg-yellow-500/5">
                 <CardHeader>
                   <CardTitle className="text-yellow-400">{t("strikes.guidelines.title")}</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2 text-sm text-yellow-300">
+                <CardContent className="space-y-4 text-sm text-yellow-300">
                   <p>
-                    <strong>{t("strikes.guidelines.weights.title")}</strong> {t("strikes.guidelines.weights.desc")}
+                    <strong className="text-yellow-400 block mb-1">{t("strikes.guidelines.weights.title")}</strong>
+                    {t("strikes.guidelines.weights.desc")}
                   </p>
                   <p>
-                    <strong>{t("strikes.guidelines.expiration.title")}</strong> {t("strikes.guidelines.expiration.desc")}
+                    <strong className="text-yellow-400 block mb-1">{t("strikes.guidelines.expiration.title")}</strong>
+                    {t("strikes.guidelines.expiration.desc")}
                   </p>
                   <p>
-                    <strong>{t("strikes.guidelines.patterns.title")}</strong> {t("strikes.guidelines.patterns.desc")}
+                    <strong className="text-yellow-400 block mb-1">{t("strikes.guidelines.patterns.title")}</strong>
+                    {t("strikes.guidelines.patterns.desc")}
                   </p>
                 </CardContent>
               </Card>
