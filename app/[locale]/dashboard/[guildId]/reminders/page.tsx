@@ -339,7 +339,7 @@ export default function RemindersPage() {
     switch (type) {
       case "War": return 48;
       case "Clan Games": return 336;
-      case "Clan Capital": return 72;
+      case "Clan Capital": return 168;
       default: return 0;
     }
   };
@@ -381,7 +381,7 @@ export default function RemindersPage() {
         maxHours = 336; // 2 weeks (14 days)
         break;
       case "Clan Capital":
-        maxHours = 72; // 3 days
+        maxHours = 168; // 7 days
         break;
       case "Inactivity":
         return true; // No limit
@@ -451,7 +451,7 @@ export default function RemindersPage() {
           description: t('toast.timeExceedsLimit', {
             limit: dialogReminder.type === "War" ? 48 :
                 dialogReminder.type === "Clan Games" ? 336 :
-                    dialogReminder.type === "Clan Capital" ? 72 : 24,
+                    dialogReminder.type === "Clan Capital" ? 168 : 24,
             type: dialogReminder.type || "reminder"
           }),
           variant: "destructive",
@@ -1033,7 +1033,7 @@ export default function RemindersPage() {
               <div className="space-y-4 py-4">
                 {/* Type Selector */}
                 <div className="space-y-2">
-                  <Label htmlFor="dialog-type">{t('dialog.type')}</Label>
+                  <Label htmlFor="dialog-type">{t('dialog.type')}  <span className="text-destructive">*</span></Label>
                   <Select
                       value={dialogReminder.type || ""}
                       onValueChange={(value) => updateDialogField("type", value as "War" | "Clan Capital" | "Clan Games" | "Inactivity")}
@@ -1100,7 +1100,7 @@ export default function RemindersPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="dialog-clan">{t('card.clan')}</Label>
+                    <Label htmlFor="dialog-clan">{t('card.clan')}  <span className="text-destructive">*</span></Label>
                     <Select
                         value={dialogReminder.clan_tag || ""}
                         onValueChange={(value) => updateDialogField("clan_tag", value)}
