@@ -787,9 +787,16 @@ export default function BansPage() {
                                   ) : (
                                     <User className="h-4 w-4 text-muted-foreground" />
                                   )}
-                                  <span className="text-sm">
-                                    {ban.added_by_username || ban.added_by}
-                                  </span>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm font-medium">
+                                      {ban.added_by_username || ban.added_by}
+                                    </span>
+                                    {ban.added_by_username && (
+                                      <span className="text-[10px] text-muted-foreground leading-none">
+                                        ID: {ban.added_by}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -1037,9 +1044,16 @@ export default function BansPage() {
                                   ) : (
                                     <User className="h-4 w-4 text-muted-foreground" />
                                   )}
-                                  <span className="text-sm">
-                                    {strike.added_by_username || strike.added_by}
-                                  </span>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm font-medium">
+                                      {strike.added_by_username || strike.added_by}
+                                    </span>
+                                    {strike.added_by_username && (
+                                      <span className="text-[10px] text-muted-foreground leading-none">
+                                        ID: {strike.added_by}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                               </TableCell>
                               <TableCell>
