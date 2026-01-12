@@ -414,112 +414,6 @@ export default function WarsPage() {
     { name: "Friendly", value: 25, color: "#3BA55D" },
   ];
 
-  if (loading && clanStats.length === 0) {
-    return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Header Skeleton */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
-              <div className="space-y-2">
-                <Skeleton className="h-8 w-56 animate-pulse" />
-                <Skeleton className="h-5 w-96 animate-pulse" />
-              </div>
-            </div>
-            <Skeleton className="h-10 w-36 animate-pulse" />
-          </div>
-
-          {/* Filters Card Skeleton */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-24 animate-pulse" />
-                  <Skeleton className="h-4 w-80 animate-pulse" />
-                </div>
-                <div className="flex gap-2">
-                  <Skeleton className="h-9 w-28 animate-pulse" />
-                  <Skeleton className="h-9 w-32 animate-pulse" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="space-y-2">
-                    <Skeleton className="h-4 w-20 animate-pulse" />
-                    <Skeleton className="h-10 w-full animate-pulse" />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Summary Stats Skeleton */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Card key={i} className="bg-card border-border">
-                <CardHeader className="pb-3">
-                  <Skeleton className="h-4 w-28 animate-pulse" />
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-10 w-16 animate-pulse" />
-                    <Skeleton className="h-8 w-8 rounded animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Charts Row Skeleton */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            {[1, 2].map((i) => (
-              <Card key={i} className="bg-card border-border">
-                <CardHeader>
-                  <Skeleton className="h-6 w-48 animate-pulse" />
-                  <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-64 w-full animate-pulse" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Tables Skeleton */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            {[1, 2].map((i) => (
-              <Card key={i} className="bg-card border-border">
-                <CardHeader>
-                  <Skeleton className="h-6 w-40 animate-pulse" />
-                  <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {[1, 2, 3, 4, 5].map((j) => (
-                      <div key={j} className="flex items-center justify-between p-3 rounded-lg border border-border">
-                        <div className="flex items-center gap-3 flex-1">
-                          <Skeleton className="h-10 w-10 rounded-full animate-pulse" />
-                          <div className="space-y-2 flex-1">
-                            <Skeleton className="h-4 w-32 animate-pulse" />
-                            <Skeleton className="h-3 w-24 animate-pulse" />
-                          </div>
-                        </div>
-                        <Skeleton className="h-6 w-16 animate-pulse" />
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -646,206 +540,366 @@ export default function WarsPage() {
 
             {/* Summary Stats */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="border-green-500/30 bg-green-500/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Total Wins</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-green-500">{totalWins}</div>
-                    <Trophy className="h-8 w-8 text-green-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Out of {totalWars} total wars
-                  </p>
-                </CardContent>
-              </Card>
+              {loading && clanStats.length === 0 ? (
+                <>
+                  <Card className="border-green-500/30 bg-green-500/5">
+                    <CardHeader className="pb-3">
+                      <Skeleton className="h-4 w-24 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-9 w-16 animate-pulse" />
+                        <Skeleton className="h-8 w-8 animate-pulse" />
+                      </div>
+                      <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+                    </CardContent>
+                  </Card>
+                  <Card className="border-red-500/30 bg-red-500/5">
+                    <CardHeader className="pb-3">
+                      <Skeleton className="h-4 w-28 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-9 w-16 animate-pulse" />
+                        <Skeleton className="h-8 w-8 animate-pulse" />
+                      </div>
+                      <Skeleton className="h-3 w-20 mt-2 animate-pulse" />
+                    </CardContent>
+                  </Card>
+                  <Card className="border-yellow-500/30 bg-yellow-500/5">
+                    <CardHeader className="pb-3">
+                      <Skeleton className="h-4 w-20 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-9 w-16 animate-pulse" />
+                        <Skeleton className="h-8 w-8 animate-pulse" />
+                      </div>
+                      <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+                    </CardContent>
+                  </Card>
+                  <Card className="border-blue-500/30 bg-blue-500/5">
+                    <CardHeader className="pb-3">
+                      <Skeleton className="h-4 w-24 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-9 w-12 animate-pulse" />
+                        <Skeleton className="h-8 w-8 animate-pulse" />
+                      </div>
+                      <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
+                    </CardContent>
+                  </Card>
+                </>
+              ) : (
+                <>
+                  <Card className="border-green-500/30 bg-green-500/5">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Total Wins</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="text-3xl font-bold text-green-500">{totalWins}</div>
+                        <Trophy className="h-8 w-8 text-green-500/50" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Out of {totalWars} total wars
+                      </p>
+                    </CardContent>
+                  </Card>
 
-              <Card className="border-red-500/30 bg-red-500/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Total Losses</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-primary">{totalLosses}</div>
-                    <Shield className="h-8 w-8 text-primary/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {totalDraws} draws
-                  </p>
-                </CardContent>
-              </Card>
+                  <Card className="border-red-500/30 bg-red-500/5">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Total Losses</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="text-3xl font-bold text-primary">{totalLosses}</div>
+                        <Shield className="h-8 w-8 text-primary/50" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {totalDraws} draws
+                      </p>
+                    </CardContent>
+                  </Card>
 
-              <Card className="border-yellow-500/30 bg-yellow-500/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Win Rate</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-yellow-500">{overallWinRate}%</div>
-                    <TrendingUp className="h-8 w-8 text-yellow-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Overall performance
-                  </p>
-                </CardContent>
-              </Card>
+                  <Card className="border-yellow-500/30 bg-yellow-500/5">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Win Rate</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="text-3xl font-bold text-yellow-500">{overallWinRate}%</div>
+                        <TrendingUp className="h-8 w-8 text-yellow-500/50" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Overall performance
+                      </p>
+                    </CardContent>
+                  </Card>
 
-              <Card className="border-blue-500/30 bg-blue-500/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Active Wars</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-blue-500">{activeWars}</div>
-                    <Star className="h-8 w-8 text-blue-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {activeCwl} in CWL
-                  </p>
-                </CardContent>
-              </Card>
+                  <Card className="border-blue-500/30 bg-blue-500/5">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium text-muted-foreground">Active Wars</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="text-3xl font-bold text-blue-500">{activeWars}</div>
+                        <Star className="h-8 w-8 text-blue-500/50" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {activeCwl} in CWL
+                      </p>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
             </div>
 
             {/* Charts Row 1 */}
             <div className="grid gap-6 lg:grid-cols-2">
-              <Card className="bg-card border-border">
-                <CardHeader>
-                  <CardTitle>War Performance (Last 7 Days)</CardTitle>
-                  <CardDescription>Daily wins, losses, and draws</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={dailyChartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
-                      <XAxis dataKey="name" stroke={darkTheme.text.secondary} />
-                      <YAxis stroke={darkTheme.text.secondary} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: darkTheme.background.elevated,
-                          border: `1px solid ${darkTheme.border.primary}`,
-                          borderRadius: '8px',
-                        }}
-                      />
-                      <Legend />
-                      <Bar dataKey="wins" fill="#3BA55D" name="Wins" />
-                      <Bar dataKey="losses" fill="#ED4245" name="Losses" />
-                      <Bar dataKey="draws" fill="#FAA81A" name="Draws" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
+              {loading && clanStats.length === 0 ? (
+                <>
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <Skeleton className="h-6 w-48 animate-pulse" />
+                      <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-64 w-full animate-pulse" />
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <Skeleton className="h-6 w-56 animate-pulse" />
+                      <Skeleton className="h-4 w-48 mt-2 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-64 w-full animate-pulse" />
+                    </CardContent>
+                  </Card>
+                </>
+              ) : (
+                <>
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <CardTitle>War Performance (Last 7 Days)</CardTitle>
+                      <CardDescription>Daily wins, losses, and draws</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={dailyChartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
+                          <XAxis dataKey="name" stroke={darkTheme.text.secondary} />
+                          <YAxis stroke={darkTheme.text.secondary} />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: darkTheme.background.elevated,
+                              border: `1px solid ${darkTheme.border.primary}`,
+                              borderRadius: '8px',
+                            }}
+                          />
+                          <Legend />
+                          <Bar dataKey="wins" fill="#3BA55D" name="Wins" />
+                          <Bar dataKey="losses" fill="#ED4245" name="Losses" />
+                          <Bar dataKey="draws" fill="#FAA81A" name="Draws" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
 
-              <Card className="bg-card border-border">
-                <CardHeader>
-                  <CardTitle>Attack Success Rate by Town Hall</CardTitle>
-                  <CardDescription>3-star rate per TH level</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={thStats} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
-                      <XAxis type="number" stroke={darkTheme.text.secondary} />
-                      <YAxis dataKey="th" type="category" stroke={darkTheme.text.secondary} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: darkTheme.background.elevated,
-                          border: `1px solid ${darkTheme.border.primary}`,
-                          borderRadius: '8px',
-                        }}
-                      />
-                      <Legend />
-                      <Bar dataKey="success" fill="#3BA55D" name="3-Star %" stackId="a" />
-                      <Bar dataKey="failed" fill="#ED4245" name="Other %" stackId="a" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <CardTitle>Attack Success Rate by Town Hall</CardTitle>
+                      <CardDescription>3-star rate per TH level</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={thStats} layout="vertical">
+                          <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
+                          <XAxis type="number" stroke={darkTheme.text.secondary} />
+                          <YAxis dataKey="th" type="category" stroke={darkTheme.text.secondary} />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: darkTheme.background.elevated,
+                              border: `1px solid ${darkTheme.border.primary}`,
+                              borderRadius: '8px',
+                            }}
+                          />
+                          <Legend />
+                          <Bar dataKey="success" fill="#3BA55D" name="3-Star %" stackId="a" />
+                          <Bar dataKey="failed" fill="#ED4245" name="Other %" stackId="a" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
             </div>
 
             {/* Charts Row 2 */}
             <div className="grid gap-6 lg:grid-cols-2">
-              <Card className="bg-card border-border">
-                <CardHeader>
-                  <CardTitle>War Type Distribution</CardTitle>
-                  <CardDescription>Breakdown of war types (Coming soon)</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                      <Pie
-                        data={warTypeDistribution}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, value }) => `${name}: ${value}%`}
-                        outerRadius={100}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {warTypeDistribution.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: darkTheme.background.elevated,
-                          border: `1px solid ${darkTheme.border.primary}`,
-                          borderRadius: '8px',
-                        }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card border-border">
-                <CardHeader>
-                  <CardTitle>Top Performers</CardTitle>
-                  <CardDescription>Best warriors by total stars</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {topPerformers.length > 0 ? (
-                      topPerformers.slice(0, 5).map((player, index) => (
-                        <div key={player.player_tag} className="flex items-center gap-4">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                            index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                            index === 1 ? 'bg-gray-400/20 text-muted-foreground' :
-                            index === 2 ? 'bg-orange-500/20 text-orange-500' :
-                            'bg-gray-600/20 text-gray-500'
-                          }`}>
-                            {index + 1}
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-medium text-foreground">{player.player_name}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {player.total_attacks} attacks • {player.total_stars} stars
+              {loading && clanStats.length === 0 ? (
+                <>
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <Skeleton className="h-6 w-40 animate-pulse" />
+                      <Skeleton className="h-4 w-56 mt-2 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-64 w-full animate-pulse" />
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <Skeleton className="h-6 w-32 animate-pulse" />
+                      <Skeleton className="h-4 w-48 mt-2 animate-pulse" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className="flex items-center gap-4">
+                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <Skeleton className="h-4 w-32 animate-pulse" />
+                              <Skeleton className="h-3 w-40 animate-pulse" />
                             </div>
+                            <Skeleton className="h-6 w-16 animate-pulse" />
                           </div>
-                          <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30">
-                            {player.avg_stars?.toFixed(2) || '0.00'}★
-                          </Badge>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        No player data available. Try adjusting your filters.
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              ) : (
+                <>
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <CardTitle>War Type Distribution</CardTitle>
+                      <CardDescription>Breakdown of war types (Coming soon)</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                          <Pie
+                            data={warTypeDistribution}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={({ name, value }) => `${name}: ${value}%`}
+                            outerRadius={100}
+                            fill="#8884d8"
+                            dataKey="value"
+                          >
+                            {warTypeDistribution.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: darkTheme.background.elevated,
+                              border: `1px solid ${darkTheme.border.primary}`,
+                              borderRadius: '8px',
+                            }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-card border-border">
+                    <CardHeader>
+                      <CardTitle>Top Performers</CardTitle>
+                      <CardDescription>Best warriors by total stars</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {topPerformers.length > 0 ? (
+                          topPerformers.slice(0, 5).map((player, index) => (
+                            <div key={player.player_tag} className="flex items-center gap-4">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                                index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
+                                index === 1 ? 'bg-gray-400/20 text-muted-foreground' :
+                                index === 2 ? 'bg-orange-500/20 text-orange-500' :
+                                'bg-gray-600/20 text-gray-500'
+                              }`}>
+                                {index + 1}
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-medium text-foreground">{player.player_name}</div>
+                                <div className="text-xs text-muted-foreground">
+                                  {player.total_attacks} attacks • {player.total_stars} stars
+                                </div>
+                              </div>
+                              <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30">
+                                {player.avg_stars?.toFixed(2) || '0.00'}★
+                              </Badge>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-center text-muted-foreground py-8">
+                            No player data available. Try adjusting your filters.
+                          </p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
             </div>
 
             {/* Clan Stats Table */}
-            {clanStats.length > 0 && (
-              <Card className="bg-card border-border">
-                <CardHeader>
-                  <CardTitle>Clan War Statistics</CardTitle>
-                  <CardDescription>Detailed statistics for each clan</CardDescription>
-                </CardHeader>
-                <CardContent>
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <CardTitle>Clan War Statistics</CardTitle>
+                <CardDescription>Detailed statistics for each clan</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loading && clanStats.length === 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Clan</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Wars</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">W/L/D</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Win Rate</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Avg Stars</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Avg Destruction</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <tr key={i} className="border-b border-border/50">
+                            <td className="py-3 px-4">
+                              <Skeleton className="h-4 w-32 animate-pulse mb-1" />
+                              <Skeleton className="h-3 w-24 animate-pulse" />
+                            </td>
+                            <td className="text-center py-3 px-4">
+                              <Skeleton className="h-6 w-16 mx-auto animate-pulse" />
+                            </td>
+                            <td className="text-center py-3 px-4">
+                              <Skeleton className="h-4 w-12 mx-auto animate-pulse" />
+                            </td>
+                            <td className="text-center py-3 px-4">
+                              <Skeleton className="h-4 w-20 mx-auto animate-pulse" />
+                            </td>
+                            <td className="text-center py-3 px-4">
+                              <Skeleton className="h-4 w-16 mx-auto animate-pulse" />
+                            </td>
+                            <td className="text-center py-3 px-4">
+                              <Skeleton className="h-4 w-12 mx-auto animate-pulse" />
+                            </td>
+                            <td className="text-center py-3 px-4">
+                              <Skeleton className="h-4 w-16 mx-auto animate-pulse" />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : clanStats.length > 0 ? (
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
@@ -907,9 +961,13 @@ export default function WarsPage() {
                       </tbody>
                     </table>
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <p className="text-center text-muted-foreground py-8">
+                    No clan statistics available. Try applying filters or wait for data to load.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
           </div>
       </div>
     </div>

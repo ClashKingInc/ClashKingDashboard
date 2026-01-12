@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight, Pencil } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import ReactMarkdown from "react-markdown";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -126,9 +127,20 @@ export default function GeneralSettingsPage() {
 
   const loadDiscordRoles = async () => {
     try {
-      const response = await apiClient.roles.getDiscordRoles(guildId);
-      if (response.data) {
-        setDiscordRoles(response.data.roles);
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      // Use cache to prevent duplicate requests
+      const rolesData = await apiCache.get(`discord-roles-${guildId}`, async () => {
+        const response = await apiClient.roles.getDiscordRoles(guildId);
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        return response.data;
+      });
+
+      if (rolesData) {
+        setDiscordRoles(rolesData.roles);
       }
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
@@ -142,6 +154,9 @@ export default function GeneralSettingsPage() {
       setSuccess(false);
 
       await apiClient.servers.updateSettings(guildId, settings);
+
+      // Invalidate cache after saving
+      apiCache.invalidate(`settings-${guildId}`);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
