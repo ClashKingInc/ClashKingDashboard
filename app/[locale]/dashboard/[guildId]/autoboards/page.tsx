@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import ReactMarkdown from "react-markdown";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +35,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
 
 // Type definitions
 interface Channel {
@@ -114,6 +116,13 @@ export default function AutoBoardsPage() {
   }, {} as Record<string, string>);
 
   const DAYS = DAY_KEYS.map(key => ({ value: key, label: getDayLabel(key) }));
+
+  // Calculate local time for 5:00 AM UTC
+  const localResetTime = (() => {
+    const date = new Date();
+    date.setUTCHours(5, 0, 0, 0);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  })();
 
   const [loading, setLoading] = useState(true);
   const [autoboardsData, setAutoboardsData] = useState<ServerAutoBoardsResponse | null>(null);
@@ -439,32 +448,13 @@ export default function AutoBoardsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="channel" className="text-foreground">{t('channel')}</Label>
-                <Select value={selectedChannel} onValueChange={setSelectedChannel}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder={t('selectChannel')} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border-border max-h-[300px]">
-                    {channels.length === 0 ? (
-                      <div className="px-2 py-4 text-sm text-muted-foreground text-center">
-                        {t('noChannels')}
-                      </div>
-                    ) : (
-                      channels.map((channel) => (
-                        <SelectItem key={channel.id} value={channel.id}>
-                          <div className="flex items-center gap-2">
-                            <Hash className="w-3 h-3 text-muted-foreground" />
-                            <span>{channel.name}</span>
-                            {channel.parent_name && (
-                              <span className="text-xs text-muted-foreground">
-                                ({channel.parent_name})
-                              </span>
-                            )}
-                          </div>
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
+                <ChannelCombobox
+                  channels={channels}
+                  value={selectedChannel}
+                  onValueChange={setSelectedChannel}
+                  placeholder={t('selectChannel')}
+                  showDisabled={false}
+                />
                 <p className="text-xs text-muted-foreground">
                   {t('channelDesc')}
                 </p>
@@ -526,7 +516,7 @@ export default function AutoBoardsPage() {
                     ))}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {t('postDaysDesc')}
+                    {t('postDaysDesc', { time: localResetTime })}
                   </p>
                 </div>
               )}
@@ -607,32 +597,13 @@ export default function AutoBoardsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="edit-channel" className="text-foreground">{t('channel')}</Label>
-                <Select value={editChannel} onValueChange={setEditChannel}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder={t('selectChannel')} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border-border max-h-[300px]">
-                    {channels.length === 0 ? (
-                      <div className="px-2 py-4 text-sm text-muted-foreground text-center">
-                        {t('noChannels')}
-                      </div>
-                    ) : (
-                      channels.map((channel) => (
-                        <SelectItem key={channel.id} value={channel.id}>
-                          <div className="flex items-center gap-2">
-                            <Hash className="w-3 h-3 text-muted-foreground" />
-                            <span>{channel.name}</span>
-                            {channel.parent_name && (
-                              <span className="text-xs text-muted-foreground">
-                                ({channel.parent_name})
-                              </span>
-                            )}
-                          </div>
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
+                <ChannelCombobox
+                  channels={channels}
+                  value={editChannel}
+                  onValueChange={setEditChannel}
+                  placeholder={t('selectChannel')}
+                  showDisabled={false}
+                />
                 <p className="text-xs text-muted-foreground">
                   {t('channelDesc')}
                 </p>
@@ -694,7 +665,7 @@ export default function AutoBoardsPage() {
                     ))}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {t('postDaysDesc')}
+                    {t('postDaysDesc', { time: localResetTime })}
                   </p>
                 </div>
               )}
@@ -746,7 +717,14 @@ export default function AutoBoardsPage() {
         <AlertCircle className="h-4 w-4 text-blue-500" />
         <AlertTitle className="text-blue-400">{t('howItWorks')}</AlertTitle>
         <AlertDescription className="text-blue-300">
-          {t('howItWorksDesc')}
+          <ReactMarkdown
+            components={{
+              p: ({ children }) => <span>{children}</span>,
+              strong: ({ children }) => <strong className="font-semibold text-blue-300">{children}</strong>,
+            }}
+          >
+            {t('howItWorksDesc')}
+          </ReactMarkdown>
         </AlertDescription>
       </Alert>
 
@@ -1007,7 +985,7 @@ export default function AutoBoardsPage() {
             <strong>{t('tipsContent.limits.title')}</strong> {t('tipsContent.limits.desc')}
           </p>
           <p>
-            <strong>{t('tipsContent.schedule.title')}</strong> {t('tipsContent.schedule.desc')}
+            <strong>{t('tipsContent.schedule.title')}</strong> {t('tipsContent.schedule.desc', { time: localResetTime })}
           </p>
           <p>
             <strong>{t('tipsContent.duplicates.title')}</strong> {t('tipsContent.duplicates.desc')}

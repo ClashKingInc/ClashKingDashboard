@@ -1508,7 +1508,7 @@
     "boardType": "Board Type",
     "selectBoardType": "Select a board type",
     "postDays": "Post Days (select at least one)",
-    "postDaysDesc": "Posts occur at 5:00 AM UTC daily reset time",
+    "postDaysDesc": "On the selected days, a post will be created at {time} (5:00 AM UTC).",
     "autoRefreshInfo": "Auto Refresh Info",
     "autoRefreshInfoDesc": "The board will automatically refresh every 30-60 minutes with the latest data. Perfect for keeping stats current without manual updates.",
     "cancel": "Cancel",
@@ -1546,7 +1546,7 @@
       },
       "schedule": {
         "title": "Schedule wisely:",
-        "desc": "Auto Post boards appear at 5:00 AM UTC. Choose days that align with your clan's activity cycle."
+        "desc": "Auto Post boards appear at {time} (5:00 AM UTC). Choose days that align with your clan's activity cycle."
       },
       "duplicates": {
         "title": "Avoid duplicates:",
