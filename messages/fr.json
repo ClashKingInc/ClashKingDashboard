@@ -965,8 +965,10 @@
       "cwl": "LDC",
       "pointThreshold": "Seuil de Points",
       "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Pinguera les membres qui ont moins de {threshold} points.",
       "attackThreshold": "Seuil d'Attaques",
       "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Pinguera les membres s'il leur reste {threshold} attaques ou plus à effectuer.",
       "notSet": "Non défini"
     },
     "dialog": {

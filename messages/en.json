@@ -1088,8 +1088,10 @@
       "cwl": "CWL",
       "pointThreshold": "Point Threshold",
       "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Will ping people who have fewer than {threshold} points.",
       "attackThreshold": "Attack Threshold",
       "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Will ping people if they have {threshold} or more attacks remaining.",
       "notSet": "Not set"
     },
     "dialog": {

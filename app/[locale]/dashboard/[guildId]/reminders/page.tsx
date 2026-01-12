@@ -998,14 +998,14 @@ export default function RemindersPage() {
 
                                   {reminder.type === "Clan Games" && reminder.point_threshold && (
                                       <div className="space-y-1">
-                                        <Label className="text-sm text-muted-foreground">{t('card.pointThreshold')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('card.pointThreshold')} <span className="text-destructive">*</span></Label>
                                         <p className="text-sm font-medium">{reminder.point_threshold}</p>
                                       </div>
                                   )}
 
                                   {reminder.type === "Clan Capital" && reminder.attack_threshold && (
                                       <div className="space-y-1">
-                                        <Label className="text-sm text-muted-foreground">{t('card.attackThreshold')}</Label>
+                                        <Label className="text-sm text-muted-foreground">{t('card.attackThreshold')} <span className="text-destructive">*</span></Label>
                                         <p className="text-sm font-medium">{reminder.attack_threshold}</p>
                                       </div>
                                   )}
@@ -1166,7 +1166,7 @@ export default function RemindersPage() {
 
                 {dialogReminder.type === "Clan Games" && (
                     <div className="space-y-2">
-                      <Label htmlFor="dialog-points">{t('card.pointThreshold')}</Label>
+                      <Label htmlFor="dialog-points">{t('card.pointThreshold')} <span className="text-destructive">*</span></Label>
                       <Input
                           id="dialog-points"
                           type="number"
@@ -1180,11 +1180,17 @@ export default function RemindersPage() {
                             updateDialogField("point_threshold", value);
                           }}
                       />
-                      {dialogReminder.point_threshold !== undefined && !isPointsValid(dialogReminder.point_threshold) && (
+                      {dialogReminder.point_threshold !== undefined && !isPointsValid(dialogReminder.point_threshold) ? (
                           <p className="text-xs text-destructive mt-1">
                             {t('toast.pointThresholdInvalid', {
                               min: POINT_THRESHOLD_MIN,
                               max: POINT_THRESHOLD_MAX,
+                            })}
+                          </p>
+                      ) : (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {t('card.pointThresholdHelp', {
+                              threshold: dialogReminder.point_threshold ?? "_"
                             })}
                           </p>
                       )}
@@ -1193,7 +1199,7 @@ export default function RemindersPage() {
 
                 {dialogReminder.type === "Clan Capital" && (
                     <div className="space-y-2">
-                      <Label htmlFor="dialog-attacks">{t('card.attackThreshold')}</Label>
+                      <Label htmlFor="dialog-attacks">{t('card.attackThreshold')} <span className="text-destructive">*</span></Label>
                       <Input
                           id="dialog-attacks"
                           type="number"
@@ -1207,11 +1213,17 @@ export default function RemindersPage() {
                             updateDialogField("attack_threshold", value);
                           }}
                       />
-                      {dialogReminder.attack_threshold !== undefined && !isAttacksValid(dialogReminder.attack_threshold) && (
+                      {dialogReminder.attack_threshold !== undefined && !isAttacksValid(dialogReminder.attack_threshold) ? (
                           <p className="text-xs text-destructive mt-1">
                             {t('toast.attackThresholdInvalid', {
                               min: ATTACK_THRESHOLD_MIN,
                               max: ATTACK_THRESHOLD_MAX,
+                            })}
+                          </p>
+                      ) : (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {t('card.attackThresholdHelp', {
+                              threshold: dialogReminder.attack_threshold ?? "_"
                             })}
                           </p>
                       )}
