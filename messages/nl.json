@@ -267,11 +267,11 @@
       "addDialog": {
         "title": "Verban een speler",
         "description": "Voeg een speler toe aan de banlijst. Ze kunnen geen enkele clan op deze server joinen.",
-        "playerTagLabel": "Speler Tag *",
+        "playerTagLabel": "Speler Tag",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Speler Naam (optioneel)",
         "playerNamePlaceholder": "Voer spelernaam in",
-        "reasonLabel": "Reden voor ban *",
+        "reasonLabel": "Reden voor ban",
         "reasonPlaceholder": "Leg uit waarom deze speler wordt verbannen...",
         "submit": "Verban Speler"
       },
@@ -342,11 +342,11 @@
       "addDialog": {
         "title": "Voeg een strike toe",
         "description": "Geef een strike aan een speler. Strikes kunnen verschillende gewichten en vervaldatums hebben.",
-        "playerTagLabel": "Speler Tag *",
+        "playerTagLabel": "Speler Tag",
         "playerTagPlaceholder": "#ABC123DEF",
-        "reasonLabel": "Reden *",
+        "reasonLabel": "Reden",
         "reasonPlaceholder": "Leg uit waarom deze strike wordt gegeven...",
-        "weightLabel": "Strike Gewicht *",
+        "weightLabel": "Strike Gewicht",
         "weightPlaceholder": "1",
         "rolloverLabel": "Vervalt over (dagen)",
         "rolloverPlaceholder": "Optioneel",

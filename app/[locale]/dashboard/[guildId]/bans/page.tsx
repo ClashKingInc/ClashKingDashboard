@@ -474,7 +474,10 @@ export default function BansPage() {
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="player-tag" className="text-foreground">{t("bans.addDialog.playerTagLabel")}</Label>
+                    <Label htmlFor="player-tag" className="text-foreground">
+                      {t("bans.addDialog.playerTagLabel")}
+                      <span className="text-destructive ml-1">*</span>
+                    </Label>
                     <Input
                       id="player-tag"
                       placeholder={t("bans.addDialog.playerTagPlaceholder")}
@@ -487,7 +490,10 @@ export default function BansPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="reason" className="text-foreground">{t("bans.addDialog.reasonLabel")}</Label>
+                    <Label htmlFor="reason" className="text-foreground">
+                      {t("bans.addDialog.reasonLabel")}
+                      <span className="text-destructive ml-1">*</span>
+                    </Label>
                     <Textarea
                       id="reason"
                       placeholder={t("bans.addDialog.reasonPlaceholder")}
@@ -539,7 +545,10 @@ export default function BansPage() {
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="strike-player-tag" className="text-foreground">{t("strikes.addDialog.playerTagLabel")}</Label>
+                    <Label htmlFor="strike-player-tag" className="text-foreground">
+                      {t("strikes.addDialog.playerTagLabel")}
+                      <span className="text-destructive ml-1">*</span>
+                    </Label>
                     <Input
                       id="strike-player-tag"
                       placeholder={t("strikes.addDialog.playerTagPlaceholder")}
@@ -552,7 +561,10 @@ export default function BansPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="strike-reason" className="text-foreground">{t("strikes.addDialog.reasonLabel")}</Label>
+                    <Label htmlFor="strike-reason" className="text-foreground">
+                      {t("strikes.addDialog.reasonLabel")}
+                      <span className="text-destructive ml-1">*</span>
+                    </Label>
                     <Textarea
                       id="strike-reason"
                       placeholder={t("strikes.addDialog.reasonPlaceholder")}
@@ -567,7 +579,10 @@ export default function BansPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="strike-weight" className="text-foreground">{t("strikes.addDialog.weightLabel")}</Label>
+                      <Label htmlFor="strike-weight" className="text-foreground">
+                        {t("strikes.addDialog.weightLabel")}
+                        <span className="text-destructive ml-1">*</span>
+                      </Label>
                       <Input
                         id="strike-weight"
                         type="number"
