@@ -46,7 +46,14 @@
     "loginWithDiscord": "Connexion avec Discord",
     "addToDiscord": "Ajouter à Discord",
     "openDashboard": "Ouvrir le Tableau de Bord", 
-    "dashboardSettings": "Paramètres du Tableau de Bord"
+    "dashboardSettings": "Paramètres du Tableau de Bord",
+    "logout": "Déconnexion",
+    "settings": "Paramètres",
+    "theme": "Thème",
+    "systemTheme": "Suivre le Système",
+    "lightTheme": "Thème Clair",
+    "darkTheme": "Thème Sombre",
+    "language": "Langue"
   },
   "HomePage": {
     "badge": "Plus de {serverCount} serveurs utilisent déjà ClashKing",
@@ -204,7 +211,9 @@
       "automation": "Automatisation",
       "statistics": "Statistiques",
       "system": "Système"
-    }
+    },
+    "switchServer": "Changer de Serveur",
+    "goHome": "Accueil"
   },
   "BansPage": {
     "title": "Modération",
@@ -936,14 +945,20 @@
     "card": {
       "new": "Nouveau",
       "before": "avant",
-      "timeBefore": "Temps Avant (ex: \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
-      "channelId": "ID du Canal",
-      "channelIdPlaceholder": "123456789012345678",
+      "timeBefore": "Temps restant",
+      "timeBeforePlaceholder": "ex: 6 ou 0.5",
+      "timeInactive": "Inactivité de",
+      "timeInactivePlaceholder": "ex: 168 ou 0.5",
+      "timeUnit": "Heures",
+      "hoursRemaining": "h restantes",
+      "channel": "Canal",
+      "channelPlaceholder": "Sélectionner un canal",
       "clan": "Clan",
       "clanPlaceholder": "Sélectionner un clan",
       "customMessage": "Message Personnalisé (Optionnel)",
       "customMessagePlaceholder": "N'oubliez pas d'utiliser vos attaques !",
+      "customMessagePlaceholderClanGames": "Essayez d'obtenir plus de points dans les jeux de clan !",
+      "customMessagePlaceholderInactivity": "Vous êtes inactif dans le clan depuis un moment :(",
       "warTypes": "Types de Guerre",
       "random": "Aléatoire",
       "friendly": "Amicale",
@@ -951,18 +966,35 @@
       "pointThreshold": "Seuil de Points",
       "pointThresholdPlaceholder": "4000",
       "attackThreshold": "Seuil d'Attaques",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "notSet": "Non défini"
+    },
+    "dialog": {
+      "addTitle": "Ajouter un Nouveau Rappel",
+      "addDescription": "Configurez un nouveau rappel pour votre serveur",
+      "editTitle": "Modifier le Rappel",
+      "editDescription": "Mettre à jour les paramètres du rappel",
+      "type": "Type de Rappel",
+      "selectType": "Sélectionner le type",
+      "cancel": "Annuler",
+      "saving": "Enregistrement...",
+      "saveChanges": "Enregistrer les Modifications",
+      "addReminder": "Ajouter un Rappel"
     },
     "toast": {
       "errorTitle": "Erreur",
       "errorLoadingReminders": "Échec du chargement des rappels. Veuillez réessayer.",
-      "reminderAdded": "Rappel Ajouté",
+      "reminderAdded": "Rappel ajouté avec succès",
       "reminderAddedDesc": "Nouveau rappel {type} ajouté. N'oubliez pas d'enregistrer !",
+      "reminderUpdated": "Rappel mis à jour avec succès",
       "successTitle": "Succès",
       "reminderDeleted": "Rappel supprimé avec succès",
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
-      "failedToSave": "Échec de l'enregistrement des rappels"
+      "failedToSave": "Échec de l'enregistrement des rappels",
+      "timeExceedsLimit": "Le temps doit être inférieur ou égal à {limit} heures pour les rappels de type {type}",
+      "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
+      "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
     }
   },
   "LogsPage": {
@@ -1181,7 +1213,10 @@
     "authenticating": "Authentification...",
     "authenticatingDescription": "Veuillez patienter pendant que nous vous connectons avec Discord",
     "authenticationFailed": "Échec de l'Authentification",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "loadingVillages": "Connexion avec Discord...",
+    "loadingClanData": "Chargement de la liste des serveurs...",
+    "loadingWarStats": "Presque prêt..."
   },
   "LoginPage": {
     "backToHome": "Retour à l'Accueil",
@@ -1322,7 +1357,7 @@
     },
     "noServers": {
       "title": "Aucun Serveur Trouvé",
-      "description": "Vous n'avez pas les permissions d'administrateur dans aucun serveur Discord."
+      "description": "Aucun serveur Discord trouvé où vous êtes administrateur ou propriétaire."
     }
   },
   "AutoboardsPage": {
@@ -1484,5 +1519,10 @@
       "systemHealth": "Santé du Système",
       "systemHealthDesc": "L'utilisation du CPU et de la mémoire indique la charge actuelle sur l'infrastructure API de ClashKing"
     }
+  },
+  "NotFound": {
+    "title": "404 - Page Non Trouvée",
+    "description": "La page que vous recherchez n'existe pas.",
+    "goHome": "Retour à l'Accueil"
   }
 }

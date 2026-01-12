@@ -46,7 +46,14 @@
     "loginWithDiscord": "Login with Discord",
     "addToDiscord": "Add to Discord",
     "openDashboard": "Open Dashboard",
-    "dashboardSettings": "Dashboard Settings"
+    "dashboardSettings": "Dashboard Settings",
+    "logout": "Logout",
+    "settings": "Settings",
+    "theme": "Theme",
+    "systemTheme": "Follow System",
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme",
+    "language": "Language"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers already using ClashKing",
@@ -204,7 +211,9 @@
       "automation": "Automation",
       "statistics": "Statistics",
       "system": "System"
-    }
+    },
+    "switchServer": "Switch Server",
+    "goHome": "Homepage"
   },
   "BansPage": {
     "title": "Moderation",
@@ -1059,14 +1068,20 @@
     "card": {
       "new": "New",
       "before": "before",
-      "timeBefore": "Time Before (e.g., \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
-      "channelId": "Channel ID",
-      "channelIdPlaceholder": "123456789012345678",
+      "timeBefore": "Remaining time",
+      "timeBeforePlaceholder": "e.g., 6 or 0.5",
+      "timeInactive": "Inactivity of",
+      "timeInactivePlaceholder": "e.g., 168 or 0.5",
+      "timeUnit": "Hours",
+      "hoursRemaining": "hrs remaining",
+      "channel": "Channel",
+      "channelPlaceholder": "Select channel",
       "clan": "Clan",
       "clanPlaceholder": "Select clan",
       "customMessage": "Custom Message (Optional)",
       "customMessagePlaceholder": "Don't forget to use your attacks!",
+      "customMessagePlaceholderClanGames": "Try to get more points in clan games!",
+      "customMessagePlaceholderInactivity": "You've been inactive in the clan for a while :(",
       "warTypes": "War Types",
       "random": "Random",
       "friendly": "Friendly",
@@ -1074,18 +1089,35 @@
       "pointThreshold": "Point Threshold",
       "pointThresholdPlaceholder": "4000",
       "attackThreshold": "Attack Threshold",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "notSet": "Not set"
+    },
+    "dialog": {
+      "addTitle": "Add New Reminder",
+      "addDescription": "Configure a new reminder for your server",
+      "editTitle": "Edit Reminder",
+      "editDescription": "Update reminder settings",
+      "type": "Reminder Type",
+      "selectType": "Select type",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "addReminder": "Add Reminder"
     },
     "toast": {
       "errorTitle": "Error",
       "errorLoadingReminders": "Failed to load reminders. Please try again.",
-      "reminderAdded": "Reminder Added",
+      "reminderAdded": "Reminder added successfully",
       "reminderAddedDesc": "New {type} reminder added. Don't forget to save!",
+      "reminderUpdated": "Reminder updated successfully",
       "successTitle": "Success",
       "reminderDeleted": "Reminder deleted successfully",
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
-      "failedToSave": "Failed to save reminders"
+      "failedToSave": "Failed to save reminders",
+      "timeExceedsLimit": "Time must be less than or equal to {limit} hours for {type} reminders",
+      "pointThresholdInvalid": "Point threshold must be between {min} and {max}",
+      "attackThresholdInvalid": "Attack threshold must be between {min} and {max}"
     }
   },
   "LogsPage": {
@@ -1304,7 +1336,10 @@
     "authenticating": "Authenticating...",
     "authenticatingDescription": "Please wait while we log you in with Discord",
     "authenticationFailed": "Authentication Failed",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "loadingVillages": "Logging in with Discord...",
+    "loadingClanData": "Loading server list...",
+    "loadingWarStats": "Almost ready..."
   },
   "LoginPage": {
     "backToHome": "Back to Home",
@@ -1445,7 +1480,7 @@
     },
     "noServers": {
       "title": "No Servers Found",
-      "description": "You don't have admin permissions in any Discord servers."
+      "description": "No Discord server found where you are an administrator or the owner."
     }
   },
   "AutoboardsPage": {
@@ -1607,5 +1642,10 @@
       "systemHealth": "System Health",
       "systemHealthDesc": "CPU and memory usage indicate the current load on the ClashKing API infrastructure"
     }
+  },
+  "NotFound": {
+    "title": "404 - Page Not Found",
+    "description": "The page you are looking for does not exist.",
+    "goHome": "Go to Home"
   }
 }

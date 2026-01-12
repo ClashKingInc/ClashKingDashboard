@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messages";
+import { apiClient } from "@/lib/api/client";
 
 export default function AuthCallbackPage() {
   const t = useTranslations("AuthCallback");
@@ -123,6 +125,26 @@ export default function AuthCallbackPage() {
 
         console.log("✅ Tokens stored, redirecting to /servers");
 
+        // Prefetch guilds to avoid loading screen on servers page
+        try {
+          apiClient.setAccessToken(data.access_token);
+          const guildsResponse = await apiClient.servers.getGuilds();
+          if (guildsResponse.data) {
+            // Sort guilds: servers with bot first, then by name
+            const sortedGuilds = guildsResponse.data.sort((a, b) => {
+              // Primary sort: has_bot (true first)
+              if (a.has_bot && !b.has_bot) return -1;
+              if (!a.has_bot && b.has_bot) return 1;
+              // Secondary sort: alphabetically by name
+              return a.name.localeCompare(b.name);
+            });
+            sessionStorage.setItem('prefetched_guilds', JSON.stringify(sortedGuilds));
+          }
+        } catch (err) {
+          console.error('Failed to prefetch guilds:', err);
+          // Still redirect, it will fetch on servers page
+        }
+
         // Clean up
         sessionStorage.removeItem('discord_code_verifier');
 
@@ -140,19 +162,13 @@ export default function AuthCallbackPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
-        <Card className="w-full max-w-md border-2 border-[#2A2A2A] bg-[#1F1F1F]/95">
-          <CardHeader className="text-center">
-            <CardTitle className="text-white">{t("authenticating")}</CardTitle>
-            <CardDescription className="text-gray-400">
-              {t("authenticatingDescription")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#DC2626]"></div>
-          </CardContent>
-        </Card>
-      </div>
+      <LoadingScreenWithMessages
+        messages={{
+          loadingVillages: t("loadingVillages"),
+          loadingClanData: t("loadingClanData"),
+          loadingWarStats: t("loadingWarStats")
+        }}
+      />
     );
   }
 

@@ -46,7 +46,14 @@
     "loginWithDiscord": "Inloggen met Discord",
     "addToDiscord": "Toevoegen aan Discord",
     "openDashboard": "Open Dashboard",
-    "dashboardSettings": "Dashboard Instellingen"
+    "dashboardSettings": "Dashboard Instellingen",
+    "logout": "Uitloggen",
+    "settings": "Instellingen",
+    "theme": "Thema",
+    "systemTheme": "Systeem volgen",
+    "lightTheme": "Wit thema",
+    "darkTheme": "Donker thema",
+    "language": "Taal"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers gebruiken ClashKing al",
@@ -87,7 +94,7 @@
       },
       "smartReminders": {
         "title": "Slimme Herinneringen",
-        "description": "Geautomatiseerde herinneringen voor Clan Games, oorlogsaanvallen, Clan War League en aangepaste evenementen. Houd iedereen op de hoogte."
+        "description": "Geautomatiseerde herinneringen voor Clan Spelen, oorlogsaanvallen, Clan War League en aangepaste evenementen. Houd iedereen op de hoogte."
       },
       "customization": {
         "title": "Volledige Aanpassing",
@@ -204,7 +211,9 @@
       "automation": "Automatisering",
       "statistics": "Statistieken",
       "system": "Systeem"
-    }
+    },
+    "switchServer": "Server Wisselen",
+    "goHome": "Homepagina"
   },
   "BansPage": {
     "title": "Moderatie",
@@ -888,17 +897,17 @@
   },
   "RemindersPage": {
     "title": "Herinneringen",
-    "description": "Configureer automatische herinneringen voor oorlogen, raids, clan games en inactiviteit",
+    "description": "Configureer automatische herinneringen voor oorlogen, raids, clan spelen en inactiviteit",
     "types": {
       "war": "Oorlog Herinneringen",
       "capital": "Clan Hoofdstad",
-      "clanGames": "Clan Games",
+      "clanGames": "Clan Spelen",
       "inactivity": "Inactiviteit"
     },
     "tabs": {
       "war": "Oorlog",
       "capital": "Hoofdstad",
-      "clanGames": "Clan Games",
+      "clanGames": "Clan Spelen",
       "inactivity": "Inactiviteit"
     },
     "stats": {
@@ -917,7 +926,7 @@
       "addReminder": "Herinnering Toevoegen",
       "addWarReminder": "Oorlog Herinnering Toevoegen",
       "addCapitalReminder": "Hoofdstad Herinnering Toevoegen",
-      "addClanGamesReminder": "Clan Games Herinnering Toevoegen",
+      "addClanGamesReminder": "Clan Spelen Herinnering Toevoegen",
       "addInactivityReminder": "Inactiviteit Herinnering Toevoegen",
       "retry": "Opnieuw Proberen"
     },
@@ -929,21 +938,27 @@
     "empty": {
       "noWarReminders": "Geen Oorlog Herinneringen",
       "noCapitalReminders": "Geen Hoofdstad Herinneringen",
-      "noClanGamesReminders": "Geen Clan Games Herinneringen",
+      "noClanGamesReminders": "Geen Clan Spelen Herinneringen",
       "noInactivityReminders": "Geen Inactiviteit Herinneringen",
       "getStarted": "Begin met het maken van je eerste herinnering"
     },
     "card": {
       "new": "Nieuw",
       "before": "voor",
-      "timeBefore": "Tijd Ervoor (bijv. \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
-      "channelId": "Kanaal ID",
-      "channelIdPlaceholder": "123456789012345678",
+      "timeBefore": "Resterende tijd",
+      "timeBeforePlaceholder": "bijv. 6 of 0.5",
+      "timeInactive": "Inactiviteit van",
+      "timeInactivePlaceholder": "bijv. 168 of 0.5",
+      "timeUnit": "Uren",
+      "hoursRemaining": "uur resterend",
+      "channel": "Kanaal",
+      "channelPlaceholder": "Selecteer kanaal",
       "clan": "Clan",
       "clanPlaceholder": "Selecteer clan",
       "customMessage": "Aangepast Bericht (Optioneel)",
       "customMessagePlaceholder": "Vergeet niet je aanvallen te gebruiken!",
+      "customMessagePlaceholderClanGames": "Probeer meer punten te halen bij de clan spelen!",
+      "customMessagePlaceholderInactivity": "Je bent al een tijdje niet actief in de clan :(",
       "warTypes": "Oorlog Types",
       "random": "Willekeurig",
       "friendly": "Vriendschappelijk",
@@ -951,18 +966,35 @@
       "pointThreshold": "Puntendrempel",
       "pointThresholdPlaceholder": "4000",
       "attackThreshold": "Aanvalsdrempel",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "notSet": "Niet ingesteld"
+    },
+    "dialog": {
+      "addTitle": "Nieuwe Herinnering Toevoegen",
+      "addDescription": "Configureer een nieuwe herinnering voor je server",
+      "editTitle": "Herinnering Bewerken",
+      "editDescription": "Update herinnering instellingen",
+      "type": "Herinnering Type",
+      "selectType": "Selecteer type",
+      "cancel": "Annuleren",
+      "saving": "Opslaan...",
+      "saveChanges": "Wijzigingen Opslaan",
+      "addReminder": "Herinnering Toevoegen"
     },
     "toast": {
       "errorTitle": "Fout",
       "errorLoadingReminders": "Kan herinneringen niet laden. Probeer het opnieuw.",
-      "reminderAdded": "Herinnering Toegevoegd",
+      "reminderAdded": "Herinnering succesvol toegevoegd",
       "reminderAddedDesc": "Nieuwe {type} herinnering toegevoegd. Vergeet niet op te slaan!",
+      "reminderUpdated": "Herinnering succesvol bijgewerkt",
       "successTitle": "Succes",
       "reminderDeleted": "Herinnering succesvol verwijderd",
       "failedToDelete": "Kan herinnering niet verwijderen",
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
-      "failedToSave": "Kan herinneringen niet opslaan"
+      "failedToSave": "Kan herinneringen niet opslaan",
+      "timeExceedsLimit": "Tijd moet minder dan of gelijk zijn aan {limit} uur voor {type} herinneringen",
+      "pointThresholdInvalid": "Puntendrempel moet tussen {min} en {max} liggen",
+      "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen"
     }
   },
   "LogsPage": {
@@ -1181,7 +1213,10 @@
     "authenticating": "Authenticeren...",
     "authenticatingDescription": "Even geduld terwijl we je inloggen met Discord",
     "authenticationFailed": "Authenticatie Mislukt",
-    "tryAgain": "Probeer Opnieuw"
+    "tryAgain": "Probeer Opnieuw",
+    "loadingVillages": "Inloggen met discord...",
+    "loadingClanData": "Laden van server lijst...",
+    "loadingWarStats": "Bijna klaar..."
   },
   "LoginPage": {
     "backToHome": "Terug naar Home",
@@ -1198,10 +1233,10 @@
         "title": "ClashKing Bot",
         "description": "ClashKing Bot is de enige Discord-bot die je nodig hebt om je Clash of Clans-clan en community te beheren. Het zit boordevol unieke functies om je clan georganiseerd, betrokken en groeiend te houden.",
         "items": [
-          "Realtime Logs: Volg oorlogen, CWL, clan games, raids, donaties en ledenevents.",
+          "Realtime Logs: Volg oorlogen, CWL, clan spelen, raids, donaties en ledenevents.",
           "Ticketsysteem: Wervingsticketsysteem naast standaard supporttickets.",
           "Auto Rollen: Wijs automatisch rollen toe op basis van clanstatus of familiebeheer.",
-          "Herinneringen: Stuur pings voor oorlogsaanvallen, clan games of iets anders.",
+          "Herinneringen: Stuur pings voor oorlogsaanvallen, clan spelen of iets anders.",
           "Gedetailleerde Stats: Inzichten in speler- en clanprestaties met activiteitstracking.",
           "Roosterbeheer: Organiseer en optimaliseer je oorlogsroosters met gemak."
         ],
@@ -1322,7 +1357,7 @@
     },
     "noServers": {
       "title": "Geen Servers Gevonden",
-      "description": "Je hebt geen beheerdersrechten in Discord-servers."
+      "description": "Geen Discord server gevonden waarbij je een administrator of de eigenaar bent."
     }
   },
   "AutoboardsPage": {
@@ -1406,7 +1441,7 @@
       "clancapraids": "Clan Hoofdstad Raids",
       "clanwarlog": "Clan Oorlogslog",
       "clancwlperf": "Clan CWL Prestatie",
-      "clangames": "Clan Games",
+      "clangames": "Clan Spelen",
       "familyoverview": "Familie Overzicht",
       "familycompo": "Familie Samenstelling",
       "familydonos": "Familie Donaties",
@@ -1484,5 +1519,10 @@
       "systemHealth": "Systeemgezondheid",
       "systemHealthDesc": "CPU- en geheugengebruik geven de huidige belasting van de ClashKing API-infrastructuur aan"
     }
+  },
+  "NotFound": {
+    "title": "404 - Pagina Niet Gevonden",
+    "description": "De pagina die u zoekt bestaat niet.",
+    "goHome": "Ga naar Home"
   }
 }

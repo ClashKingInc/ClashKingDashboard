@@ -333,51 +333,69 @@ export default function LinksManagementPage() {
 
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6 space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center gap-3">
-        <div className="p-3 rounded-lg bg-primary/10 border border-primary/30 w-fit">
-          <Link className="h-8 w-8 text-primary" />
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30 w-fit">
+            <Link className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Links Management</h1>
+            <p className="text-muted-foreground mt-1">
+              Manage Discord member account links and verify player ownership
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Links Management</h1>
-          <p className="text-muted-foreground mt-1">
-            Manage Discord member account links and verify player ownership
-          </p>
-        </div>
-      </div>
 
       {/* Statistics Cards */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Total Members</CardTitle>
-            <User className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Members</CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
-              <Skeleton className="h-8 w-20 animate-pulse" />
+              <>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+              </>
             ) : (
-              <div className="text-2xl font-bold text-foreground">{linksData?.total_members || 0}</div>
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-blue-500">{linksData?.total_members || 0}</div>
+                  <User className="h-8 w-8 text-blue-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Server members total
+                </p>
+              </>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Members with Links</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-green-500/30 bg-green-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Members with Links</CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
               <>
-                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
-                <Skeleton className="h-3 w-24 animate-pulse" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
               </>
             ) : (
               <>
-                <div className="text-2xl font-bold text-foreground">{linksData?.members_with_links || 0}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-green-500">{linksData?.members_with_links || 0}</div>
+                  <CheckCircle className="h-8 w-8 text-green-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
                   {linksData?.total_members ? Math.round((linksData.members_with_links / linksData.total_members) * 100) : 0}% of total
                 </p>
               </>
@@ -385,21 +403,26 @@ export default function LinksManagementPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Total Linked Accounts</CardTitle>
-            <Link className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Linked Accounts</CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
               <>
-                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
-                <Skeleton className="h-3 w-24 animate-pulse" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
               </>
             ) : (
               <>
-                <div className="text-2xl font-bold text-foreground">{linksData?.total_linked_accounts || 0}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-purple-500">{linksData?.total_linked_accounts || 0}</div>
+                  <Link className="h-8 w-8 text-purple-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
                   Avg: {linksData?.members_with_links ? (linksData.total_linked_accounts / linksData.members_with_links).toFixed(1) : 0} per member
                 </p>
               </>
@@ -407,21 +430,26 @@ export default function LinksManagementPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-foreground">Verified Accounts</CardTitle>
-            <Shield className="h-4 w-4 text-muted-foreground" />
+        <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Verified Accounts</CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
               <>
-                <Skeleton className="h-8 w-20 animate-pulse mb-2" />
-                <Skeleton className="h-3 w-24 animate-pulse" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
               </>
             ) : (
               <>
-                <div className="text-2xl font-bold text-foreground">{linksData?.verified_accounts || 0}</div>
-                <p className="text-xs text-muted-foreground">
+                <div className="flex items-center justify-between">
+                  <div className="text-3xl font-bold text-yellow-500">{linksData?.verified_accounts || 0}</div>
+                  <Shield className="h-8 w-8 text-yellow-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
                   {linksData?.total_linked_accounts ? Math.round((linksData.verified_accounts / linksData.total_linked_accounts) * 100) : 0}% verified
                 </p>
               </>
@@ -1078,6 +1106,7 @@ export default function LinksManagementPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      </div>
     </div>
   );
 }
