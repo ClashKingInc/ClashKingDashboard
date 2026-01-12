@@ -99,11 +99,11 @@ export default function BansPage() {
       apiClient.setAccessToken(token);
       const response = await apiClient.servers.getBans(guildId);
 
-      if (response.error || !response.data) {
+      if (response.error) {
         throw new Error(response.error || "Failed to fetch bans");
       }
 
-      setBans(response.data.items || []);
+      setBans(response.data?.items || []);
     } catch (error) {
       console.error("Error fetching bans:", error);
       toast({
@@ -125,11 +125,11 @@ export default function BansPage() {
       apiClient.setAccessToken(token);
       const response = await apiClient.servers.getStrikes(guildId);
 
-      if (response.error || !response.data) {
+      if (response.error) {
         throw new Error(response.error || "Failed to fetch strikes");
       }
 
-      setStrikes(response.data.items || []);
+      setStrikes(response.data?.items || []);
     } catch (error) {
       console.error("Error fetching strikes:", error);
       toast({
@@ -149,7 +149,7 @@ export default function BansPage() {
       setIsSubmittingBan(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const username = user ? JSON.parse(user).username : "Unknown";
+      const userId = user ? parseInt(JSON.parse(user).user_id) : 0;
 
       if (!token) return;
 
@@ -160,11 +160,25 @@ export default function BansPage() {
 
       const response = await apiClient.servers.addBan(guildId, cleanTag, {
         reason: newBan.reason,
-        added_by: username,
+        added_by: userId,
+        image: null,
       });
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorAddingBan");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = response.error.map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object') {
+          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -196,7 +210,7 @@ export default function BansPage() {
       setIsSubmittingStrike(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const userId = user ? JSON.parse(user).id : 0;
+      const userId = user ? parseInt(JSON.parse(user).user_id) : 0;
 
       if (!token) return;
 
@@ -213,7 +227,20 @@ export default function BansPage() {
       });
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorAddingStrike");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = response.error.map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object') {
+          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -251,7 +278,20 @@ export default function BansPage() {
       const response = await apiClient.servers.removeBan(guildId, cleanTag);
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorRemovingBan");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = response.error.map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object') {
+          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -281,7 +321,20 @@ export default function BansPage() {
       const response = await apiClient.servers.removeStrike(guildId, strikeId);
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorRemovingStrike");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = response.error.map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object') {
+          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -303,7 +356,7 @@ export default function BansPage() {
 
   const filteredBans = bans.filter(
     (ban) =>
-      (ban.name?.toLowerCase() || "").includes(searchQueryBans.toLowerCase()) ||
+      (ban.VillageName?.toLowerCase() || ban.name?.toLowerCase() || "").includes(searchQueryBans.toLowerCase()) ||
       ban.VillageTag.toLowerCase().includes(searchQueryBans.toLowerCase()) ||
       ban.Notes.toLowerCase().includes(searchQueryBans.toLowerCase())
   );
@@ -701,7 +754,7 @@ export default function BansPage() {
                               <TableCell>
                                 <div>
                                   <div className="font-medium text-foreground">
-                                  {ban.name || tCommon("unknown")}
+                                  {ban.VillageName || ban.name || tCommon("unknown")}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
                                   {ban.VillageTag}

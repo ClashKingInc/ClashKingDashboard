@@ -64,9 +64,9 @@ export interface ClanSettings {
 }
 
 export interface BanRequest {
-  reason: string;
-  added_by: string;
-  image?: any;
+  reason: string | null;
+  added_by: number;
+  image: string | null;
 }
 
 /**
@@ -75,6 +75,7 @@ export interface BanRequest {
 export interface BannedPlayer {
   _id?: string;
   VillageTag: string;
+  VillageName?: string;
   name?: string;
   Notes: string;
   added_by: number;
