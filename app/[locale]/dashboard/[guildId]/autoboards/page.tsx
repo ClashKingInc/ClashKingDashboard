@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import ReactMarkdown from "react-markdown";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -746,7 +747,14 @@ export default function AutoBoardsPage() {
         <AlertCircle className="h-4 w-4 text-blue-500" />
         <AlertTitle className="text-blue-400">{t('howItWorks')}</AlertTitle>
         <AlertDescription className="text-blue-300">
-          {t('howItWorksDesc')}
+          <ReactMarkdown
+            components={{
+              p: ({ children }) => <span>{children}</span>,
+              strong: ({ children }) => <strong className="font-semibold text-blue-300">{children}</strong>,
+            }}
+          >
+            {t('howItWorksDesc')}
+          </ReactMarkdown>
         </AlertDescription>
       </Alert>
 
