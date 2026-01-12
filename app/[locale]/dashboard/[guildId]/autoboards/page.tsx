@@ -426,7 +426,7 @@ export default function AutoBoardsPage() {
               <div className="space-y-2">
                 <Label htmlFor="autoboard-type" className="text-foreground">{t('automationType')}</Label>
                 <Select value={newType} onValueChange={(val) => setNewType(val as "post" | "refresh")}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
+                  <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border">
@@ -454,6 +454,7 @@ export default function AutoBoardsPage() {
                   onValueChange={setSelectedChannel}
                   placeholder={t('selectChannel')}
                   showDisabled={false}
+                  className="bg-background"
                 />
                 <p className="text-xs text-muted-foreground">
                   {t('channelDesc')}
@@ -463,7 +464,7 @@ export default function AutoBoardsPage() {
               <div className="space-y-2">
                 <Label htmlFor="board-type" className="text-foreground">{t('boardType')}</Label>
                 <Select value={newBoardType} onValueChange={setNewBoardType}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
+                  <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                     <SelectValue placeholder={t('selectBoardType')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
@@ -575,7 +576,7 @@ export default function AutoBoardsPage() {
               <div className="space-y-2">
                 <Label htmlFor="edit-autoboard-type" className="text-foreground">{t('automationType')}</Label>
                 <Select value={editType} onValueChange={(val) => setEditType(val as "post" | "refresh")}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
+                  <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border">
@@ -603,6 +604,7 @@ export default function AutoBoardsPage() {
                   onValueChange={setEditChannel}
                   placeholder={t('selectChannel')}
                   showDisabled={false}
+                  className="bg-background"
                 />
                 <p className="text-xs text-muted-foreground">
                   {t('channelDesc')}
@@ -612,7 +614,7 @@ export default function AutoBoardsPage() {
               <div className="space-y-2">
                 <Label htmlFor="edit-board-type" className="text-foreground">{t('boardType')}</Label>
                 <Select value={editBoardType} onValueChange={setEditBoardType}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
+                  <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                     <SelectValue placeholder={t('selectBoardType')} />
                   </SelectTrigger>
                   <SelectContent className="bg-card border-border max-h-[300px]">
