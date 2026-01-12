@@ -344,26 +344,14 @@ export default function ClansPage() {
   const handleOpenSettings = async (clan: Clan) => {
     setSelectedClan(clan);
     setClanSettings(clan.settings || {});
-    setCountdownStatus({ war_score: null, war_timer: null });
-    setIsSettingsDialogOpen(true);
 
-    // Fetch countdown status for this clan
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const encodedTag = encodeURIComponent(clan.tag || clan.clan_tag || '');
-      const response = await fetch(`/api/v2/server/${guildId}/clan/${encodedTag}/countdowns`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCountdownStatus({
-          war_score: data.war_score || null,
-          war_timer: data.war_timer || null,
-        });
-      }
-    } catch (err) {
-      console.error("Error fetching countdown status:", err);
-    }
+    // Load countdown status from clan settings
+    setCountdownStatus({
+      war_score: clan.settings?.warCountdown || null,
+      war_timer: clan.settings?.warTimerCountdown || null,
+    });
+
+    setIsSettingsDialogOpen(true);
   };
 
   // Toggle countdown (enable/disable)

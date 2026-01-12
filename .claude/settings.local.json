@@ -38,7 +38,10 @@
       "Bash(if grep -q \"\"\"$page\"\":\" messages/en.json)",
       "Bash(else)",
       "Bash(git stash show:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(git merge:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nMerge branch ''main'' into feat/war-countdown\n\nResolved conflicts by:\n- Keeping improved skeleton loading UI from main\n- Preserving war countdown feature logic \\(switches + API integration\\)\n- Using main version for links, reminders, and roles pages\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ],
     "deny": [],
     "ask": []
