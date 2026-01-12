@@ -67,7 +67,6 @@ export default function BansPage() {
   const [isSubmittingBan, setIsSubmittingBan] = useState(false);
   const [newBan, setNewBan] = useState({
     player_tag: "",
-    player_name: "",
     reason: "",
   });
 
@@ -203,7 +202,7 @@ export default function BansPage() {
       // Refresh the ban list
       await fetchBans();
 
-      setNewBan({ player_tag: "", player_name: "", reason: "" });
+      setNewBan({ player_tag: "", reason: "" });
       setIsAddBanDialogOpen(false);
     } catch (error) {
       console.error("Error adding ban:", error);
@@ -419,16 +418,16 @@ export default function BansPage() {
                   {t("bans.addBan")}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="bg-card border-border sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>{t("bans.addDialog.title")}</DialogTitle>
-                  <DialogDescription>
+                  <DialogTitle className="text-foreground">{t("bans.addDialog.title")}</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
                     {t("bans.addDialog.description")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="player-tag">{t("bans.addDialog.playerTagLabel")}</Label>
+                    <Label htmlFor="player-tag" className="text-foreground">{t("bans.addDialog.playerTagLabel")}</Label>
                     <Input
                       id="player-tag"
                       placeholder={t("bans.addDialog.playerTagPlaceholder")}
@@ -437,22 +436,11 @@ export default function BansPage() {
                         setNewBan({ ...newBan, player_tag: e.target.value })
                       }
                       disabled={isSubmittingBan}
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="player-name">{t("bans.addDialog.playerNameLabel")}</Label>
-                    <Input
-                      id="player-name"
-                      placeholder={t("bans.addDialog.playerNamePlaceholder")}
-                      value={newBan.player_name}
-                      onChange={(e) =>
-                        setNewBan({ ...newBan, player_name: e.target.value })
-                      }
-                      disabled={isSubmittingBan}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reason">{t("bans.addDialog.reasonLabel")}</Label>
+                    <Label htmlFor="reason" className="text-foreground">{t("bans.addDialog.reasonLabel")}</Label>
                     <Textarea
                       id="reason"
                       placeholder={t("bans.addDialog.reasonPlaceholder")}
@@ -462,6 +450,7 @@ export default function BansPage() {
                       }
                       rows={4}
                       disabled={isSubmittingBan}
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                 </div>
@@ -470,6 +459,7 @@ export default function BansPage() {
                     variant="outline"
                     onClick={() => setIsAddBanDialogOpen(false)}
                     disabled={isSubmittingBan}
+                    className="border-border"
                   >
                     {tCommon("cancel")}
                   </Button>
@@ -493,16 +483,16 @@ export default function BansPage() {
                   {t("strikes.addStrike")}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="bg-card border-border sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>{t("strikes.addDialog.title")}</DialogTitle>
-                  <DialogDescription>
+                  <DialogTitle className="text-foreground">{t("strikes.addDialog.title")}</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
                     {t("strikes.addDialog.description")}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="strike-player-tag">{t("strikes.addDialog.playerTagLabel")}</Label>
+                    <Label htmlFor="strike-player-tag" className="text-foreground">{t("strikes.addDialog.playerTagLabel")}</Label>
                     <Input
                       id="strike-player-tag"
                       placeholder={t("strikes.addDialog.playerTagPlaceholder")}
@@ -511,10 +501,11 @@ export default function BansPage() {
                         setNewStrike({ ...newStrike, player_tag: e.target.value })
                       }
                       disabled={isSubmittingStrike}
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="strike-reason">{t("strikes.addDialog.reasonLabel")}</Label>
+                    <Label htmlFor="strike-reason" className="text-foreground">{t("strikes.addDialog.reasonLabel")}</Label>
                     <Textarea
                       id="strike-reason"
                       placeholder={t("strikes.addDialog.reasonPlaceholder")}
@@ -524,11 +515,12 @@ export default function BansPage() {
                       }
                       rows={4}
                       disabled={isSubmittingStrike}
+                      className="bg-background border-border text-foreground"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="strike-weight">{t("strikes.addDialog.weightLabel")}</Label>
+                      <Label htmlFor="strike-weight" className="text-foreground">{t("strikes.addDialog.weightLabel")}</Label>
                       <Input
                         id="strike-weight"
                         type="number"
@@ -539,10 +531,11 @@ export default function BansPage() {
                           setNewStrike({ ...newStrike, strike_weight: parseInt(e.target.value) || 1 })
                         }
                         disabled={isSubmittingStrike}
+                        className="bg-background border-border text-foreground"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="rollover-days">{t("strikes.addDialog.rolloverLabel")}</Label>
+                      <Label htmlFor="rollover-days" className="text-foreground">{t("strikes.addDialog.rolloverLabel")}</Label>
                       <Input
                         id="rollover-days"
                         type="number"
@@ -553,6 +546,7 @@ export default function BansPage() {
                           setNewStrike({ ...newStrike, rollover_days: e.target.value ? parseInt(e.target.value) : undefined })
                         }
                         disabled={isSubmittingStrike}
+                        className="bg-background border-border text-foreground"
                       />
                     </div>
                   </div>
@@ -562,6 +556,7 @@ export default function BansPage() {
                     variant="outline"
                     onClick={() => setIsAddStrikeDialogOpen(false)}
                     disabled={isSubmittingStrike}
+                    className="border-border"
                   >
                     {tCommon("cancel")}
                   </Button>
