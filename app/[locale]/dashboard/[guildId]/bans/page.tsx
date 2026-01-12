@@ -54,6 +54,7 @@ import { useToast } from "@/components/ui/use-toast";
 export default function BansPage() {
   const params = useParams();
   const guildId = params.guildId as string;
+  const locale = params.locale as string;
   const { toast } = useToast();
   const t = useTranslations("BansPage");
   const tCommon = useTranslations("Common");
@@ -99,11 +100,17 @@ export default function BansPage() {
       apiClient.setAccessToken(token);
       const response = await apiClient.servers.getBans(guildId);
 
-      if (response.error || !response.data) {
+      if (response.error) {
         throw new Error(response.error || "Failed to fetch bans");
       }
 
-      setBans(response.data.items || []);
+      // Convert added_by to string to preserve precision for large Discord IDs
+      const bans = (response.data?.items || []).map((ban: any) => ({
+        ...ban,
+        added_by: String(ban.added_by), // Ensure added_by is always a string
+      }));
+
+      setBans(bans);
     } catch (error) {
       console.error("Error fetching bans:", error);
       toast({
@@ -125,11 +132,17 @@ export default function BansPage() {
       apiClient.setAccessToken(token);
       const response = await apiClient.servers.getStrikes(guildId);
 
-      if (response.error || !response.data) {
+      if (response.error) {
         throw new Error(response.error || "Failed to fetch strikes");
       }
 
-      setStrikes(response.data.items || []);
+      // Convert added_by to string to preserve precision for large Discord IDs
+      const strikes = (response.data?.items || []).map((strike: any) => ({
+        ...strike,
+        added_by: String(strike.added_by), // Ensure added_by is always a string
+      }));
+
+      setStrikes(strikes);
     } catch (error) {
       console.error("Error fetching strikes:", error);
       toast({
@@ -149,7 +162,8 @@ export default function BansPage() {
       setIsSubmittingBan(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const username = user ? JSON.parse(user).username : "Unknown";
+      // Preserve precision for large Discord IDs by using string instead of number
+      const userId = user ? JSON.parse(user).user_id : "0";
 
       if (!token) return;
 
@@ -160,11 +174,25 @@ export default function BansPage() {
 
       const response = await apiClient.servers.addBan(guildId, cleanTag, {
         reason: newBan.reason,
-        added_by: username,
+        added_by: userId, // Send as string to preserve precision for large Discord IDs
+        image: null,
       });
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorAddingBan");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = (response.error as any[]).map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -196,7 +224,8 @@ export default function BansPage() {
       setIsSubmittingStrike(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const userId = user ? JSON.parse(user).id : 0;
+      // Preserve precision for large Discord IDs by using string instead of number
+      const userId = user ? JSON.parse(user).user_id : "0";
 
       if (!token) return;
 
@@ -207,13 +236,26 @@ export default function BansPage() {
 
       const response = await apiClient.servers.addStrike(guildId, cleanTag, {
         reason: newStrike.reason,
-        added_by: userId,
+        added_by: userId, // Send as string to preserve precision for large Discord IDs
         strike_weight: newStrike.strike_weight,
         rollover_days: newStrike.rollover_days,
       });
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorAddingStrike");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = (response.error as any[]).map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -251,7 +293,20 @@ export default function BansPage() {
       const response = await apiClient.servers.removeBan(guildId, cleanTag);
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorRemovingBan");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = (response.error as any[]).map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -281,7 +336,20 @@ export default function BansPage() {
       const response = await apiClient.servers.removeStrike(guildId, strikeId);
 
       if (response.error) {
-        throw new Error(response.error);
+        // Handle error - could be string, object, or array
+        let errorMessage = t("toast.errorRemovingStrike");
+
+        if (typeof response.error === 'string') {
+          errorMessage = response.error;
+        } else if (Array.isArray(response.error)) {
+          errorMessage = (response.error as any[]).map((e: any) =>
+            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
+          ).join(', ');
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
+        }
+
+        throw new Error(errorMessage);
       }
 
       toast({
@@ -303,7 +371,7 @@ export default function BansPage() {
 
   const filteredBans = bans.filter(
     (ban) =>
-      (ban.name?.toLowerCase() || "").includes(searchQueryBans.toLowerCase()) ||
+      (ban.VillageName?.toLowerCase() || ban.name?.toLowerCase() || "").includes(searchQueryBans.toLowerCase()) ||
       ban.VillageTag.toLowerCase().includes(searchQueryBans.toLowerCase()) ||
       ban.Notes.toLowerCase().includes(searchQueryBans.toLowerCase())
   );
@@ -701,7 +769,7 @@ export default function BansPage() {
                               <TableCell>
                                 <div>
                                   <div className="font-medium text-foreground">
-                                  {ban.name || tCommon("unknown")}
+                                  {ban.VillageName || ban.name || tCommon("unknown")}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
                                   {ban.VillageTag}
@@ -710,18 +778,28 @@ export default function BansPage() {
                             </TableCell>
                             <TableCell className="max-w-xs">
                               <div className="truncate text-sm text-muted-foreground" title={ban.Notes}>
-                                {ban.Notes || t("bans.table.noReason")}
+                                {ban.Notes && ban.Notes !== "No Notes" ? ban.Notes : t("bans.table.noReason")}
                                 </div>
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <User className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">{ban.added_by}</span>
+                                  {ban.added_by_avatar_url ? (
+                                    <img
+                                      src={ban.added_by_avatar_url}
+                                      alt={ban.added_by_username || String(ban.added_by)}
+                                      className="h-6 w-6 rounded-full"
+                                    />
+                                  ) : (
+                                    <User className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                  <span className="text-sm">
+                                    {ban.added_by_username || ban.added_by}
+                                  </span>
                                 </div>
                               </TableCell>
                               <TableCell>
                                 <div className="text-sm">
-                                  {new Date(ban.DateCreated).toLocaleDateString()}
+                                  {new Date(ban.DateCreated).toLocaleDateString(locale)}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
                                   {t("bans.table.daysAgo", {
@@ -945,7 +1023,7 @@ export default function BansPage() {
                             </TableCell>
                             <TableCell className="max-w-xs">
                               <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
-                                {strike.reason || t("strikes.table.noReason")}
+                                {strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -955,13 +1033,23 @@ export default function BansPage() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <User className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">{strike.added_by}</span>
+                                  {strike.added_by_avatar_url ? (
+                                    <img
+                                      src={strike.added_by_avatar_url}
+                                      alt={strike.added_by_username || String(strike.added_by)}
+                                      className="h-6 w-6 rounded-full"
+                                    />
+                                  ) : (
+                                    <User className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                  <span className="text-sm">
+                                    {strike.added_by_username || strike.added_by}
+                                  </span>
                                 </div>
                               </TableCell>
                               <TableCell>
                                 <div className="text-sm">
-                                  {new Date(strike.date_created).toLocaleDateString()}
+                                  {new Date(strike.date_created).toLocaleDateString(locale)}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
                                   {t("strikes.table.daysAgo", {
@@ -975,7 +1063,7 @@ export default function BansPage() {
                               <TableCell>
                                 {strike.rollover_date ? (
                                   <div className="text-sm text-muted-foreground">
-                                    {new Date(strike.rollover_date * 1000).toLocaleDateString()}
+                                    {new Date(strike.rollover_date * 1000).toLocaleDateString(locale)}
                                   </div>
                                 ) : (
                                   <div className="text-sm text-muted-foreground">{t("strikes.table.never")}</div>
