@@ -1309,7 +1309,10 @@
       "embedColorDesc": "Color of the side bar on all bot embed messages in Discord",
       "embedColorDefault": "Default: **#D90709** (ClashKing Red)",
       "embedPreview": "Embed Preview",
-      "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages"
+      "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages",
+      "editColor": "Edit Color",
+      "resetToDefault": "Reset to Default",
+      "apply": "Apply"
     },
     "security": {
       "title": "Security & Permissions",
