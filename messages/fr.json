@@ -1184,7 +1184,10 @@
       "embedColorDesc": "Couleur de la barre latérale sur tous les messages embed du bot dans Discord",
       "embedColorDefault": "Par défaut : **#D90709** (Rouge ClashKing)",
       "embedPreview": "Aperçu d'Embed",
-      "embedPreviewDesc": "Cette barre colorée apparaîtra sur le côté gauche de tous les messages du bot"
+      "embedPreviewDesc": "Cette barre colorée apparaîtra sur le côté gauche de tous les messages du bot",
+      "editColor": "Modifier la Couleur",
+      "resetToDefault": "Réinitialiser par Défaut",
+      "apply": "Appliquer"
     },
     "security": {
       "title": "Sécurité et Permissions",

@@ -11,14 +11,31 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight } from "lucide-react";
+import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight, Pencil } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import ReactMarkdown from "react-markdown";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Placeholder descriptions will be fetched from translations dynamically
+
+const hexToInt = (hex: string): number => {
+  return parseInt(hex.replace("#", ""), 16);
+};
+
+const intToHex = (int: number): string => {
+  return "#" + int.toString(16).padStart(6, "0").toUpperCase();
+};
 
 export default function GeneralSettingsPage() {
   const params = useParams();
@@ -45,7 +62,7 @@ export default function GeneralSettingsPage() {
     change_nickname: true,
     nickname_rule: "[{player_clan_abbreviation}] {player_name}",
     non_family_nickname_rule: "{player_name}",
-    embed_color: 14227209, // #D90709 as integer
+    embed_color: 14223113, // #D90709 as integer
     api_token: true,
     full_whitelist_role: undefined as string | undefined,
   });
@@ -57,6 +74,9 @@ export default function GeneralSettingsPage() {
   const [success, setSuccess] = useState(false);
   const [isFamilyPlaceholdersOpen, setIsFamilyPlaceholdersOpen] = useState(false);
   const [isNonFamilyPlaceholdersOpen, setIsNonFamilyPlaceholdersOpen] = useState(false);
+  const [tempColor, setTempColor] = useState(settings.embed_color);
+  const [tempHex, setTempHex] = useState(intToHex(settings.embed_color));
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Load settings on mount
   useEffect(() => {
@@ -84,14 +104,17 @@ export default function GeneralSettingsPage() {
       }
 
       if (response.data) {
-        setSettings({
+        const newSettings = {
           change_nickname: response.data.change_nickname ?? true,
           nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
           non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
-          embed_color: response.data.embed_color ?? 14227209,
+          embed_color: response.data.embed_color ?? 14223113,
           api_token: response.data.api_token ?? true,
           full_whitelist_role: response.data.full_whitelist_role?.toString(),
-        });
+        };
+        setSettings(newSettings);
+        setTempColor(newSettings.embed_color);
+        setTempHex(intToHex(newSettings.embed_color));
       }
     } catch (err: any) {
       setError(err.message || "Failed to load settings");
@@ -132,14 +155,6 @@ export default function GeneralSettingsPage() {
 
   const handleReset = () => {
     loadSettings();
-  };
-
-  const hexToInt = (hex: string): number => {
-    return parseInt(hex.replace("#", ""), 16);
-  };
-
-  const intToHex = (int: number): string => {
-    return "#" + int.toString(16).padStart(6, "0").toUpperCase();
   };
 
   // Generate preview of nickname format
@@ -495,31 +510,103 @@ export default function GeneralSettingsPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex gap-3">
-                    <div className="relative">
-                      <Input
-                        id="embed-color"
-                        type="color"
-                        value={intToHex(settings.embed_color)}
-                        onChange={(e) => setSettings({ ...settings, embed_color: hexToInt(e.target.value) })}
-                        className="w-16 h-16 cursor-pointer border-2 rounded-lg"
-                      />
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <Input
-                        value={intToHex(settings.embed_color)}
-                        onChange={(e) => {
-                          const hex = e.target.value;
-                          if (/^#[0-9A-F]{6}$/i.test(hex)) {
-                            setSettings({ ...settings, embed_color: hexToInt(hex) });
-                          }
-                        }}
-                        placeholder="#D90709"
-                        className="bg-secondary border-border font-mono"
-                      />
-                      <div className="text-xs text-muted-foreground">
-                        <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
-                      </div>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
+                      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            className="w-16 h-16 p-1 border-2 relative group flex items-center justify-center overflow-hidden shrink-0 shadow-sm transition-all hover:scale-105 active:scale-95"
+                            style={{ backgroundColor: intToHex(settings.embed_color) }}
+                            onClick={() => {
+                              setTempColor(settings.embed_color);
+                              setTempHex(intToHex(settings.embed_color));
+                            }}
+                          >
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <Pencil className="h-7 w-7 text-white" strokeWidth={3} />
+                            </div>
+                            <Pencil className="h-6 w-6 text-white drop-shadow-md opacity-90" strokeWidth={2.5} />
+                          </Button>
+                        </DialogTrigger>
+                        <div className="flex-1 space-y-1">
+                          <p className="text-base font-mono font-medium">{intToHex(settings.embed_color)}</p>
+                          <div className="text-xs text-muted-foreground whitespace-nowrap">
+                            <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
+                          </div>
+                        </div>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>{t("appearance.editColor")}</DialogTitle>
+                            <DialogDescription>
+                              {t("appearance.embedColorDesc")}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="flex flex-col gap-4 py-4">
+                            <div className="flex items-center gap-4">
+                              <div className="relative">
+                                <Input
+                                  type="color"
+                                  value={intToHex(tempColor)}
+                                  onChange={(e) => {
+                                    const newColor = hexToInt(e.target.value);
+                                    setTempColor(newColor);
+                                    setTempHex(intToHex(newColor));
+                                  }}
+                                  className="w-20 h-20 cursor-pointer border-2 rounded-lg p-1"
+                                />
+                              </div>
+                              <div className="flex-1 space-y-2">
+                                <Label className="text-xs text-muted-foreground uppercase font-semibold">Hex Code</Label>
+                                <Input
+                                  value={tempHex}
+                                  onChange={(e) => {
+                                    const hex = e.target.value.toUpperCase();
+                                    if (hex.length <= 7) {
+                                      setTempHex(hex);
+                                      if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                                        setTempColor(hexToInt(hex));
+                                      }
+                                    }
+                                  }}
+                                  placeholder="#D90709"
+                                  className="bg-secondary border-border font-mono text-lg uppercase"
+                                />
+                              </div>
+                            </div>
+                            
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-fit text-xs text-muted-foreground hover:text-primary"
+                              onClick={() => {
+                                setTempColor(14223113);
+                                setTempHex("#D90709");
+                              }}
+                            >
+                              <RotateCcw className="mr-2 h-3 w-3" />
+                              {t("appearance.resetToDefault")}
+                            </Button>
+                          </div>
+                          <DialogFooter className="flex sm:justify-between gap-2">
+                            <Button 
+                              variant="ghost" 
+                              onClick={() => setIsDialogOpen(false)}
+                            >
+                              {tCommon("cancel")}
+                            </Button>
+                            <Button 
+                              onClick={() => {
+                                setSettings({ ...settings, embed_color: tempColor });
+                                setIsDialogOpen(false);
+                              }}
+                              disabled={!/^#[0-9A-F]{6}$/i.test(tempHex)}
+                            >
+                              {t("appearance.apply")}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                 )}

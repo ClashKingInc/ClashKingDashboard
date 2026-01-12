@@ -1184,7 +1184,10 @@
       "embedColorDesc": "Kleur van de zijbalk op alle bot embed berichten in Discord",
       "embedColorDefault": "Standaard: **#D90709** (ClashKing Rood)",
       "embedPreview": "Embed Voorbeeld",
-      "embedPreviewDesc": "Deze gekleurde balk verschijnt aan de linkerkant van alle bot berichten"
+      "embedPreviewDesc": "Deze gekleurde balk verschijnt aan de linkerkant van alle bot berichten",
+      "editColor": "Kleur Bewerken",
+      "resetToDefault": "Reset naar Standaard",
+      "apply": "Toepassen"
     },
     "security": {
       "title": "Beveiliging & Rechten",
