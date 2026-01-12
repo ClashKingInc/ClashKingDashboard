@@ -965,8 +965,10 @@
       "cwl": "CWL",
       "pointThreshold": "Puntendrempel",
       "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Gaat mensen pingen die minder dan {threshold} punten hebben.",
       "attackThreshold": "Aanvalsdrempel",
       "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Gaat mensen pingen als ze {threshold} of meer aanvallen nog kunnen doen.",
       "notSet": "Niet ingesteld"
     },
     "dialog": {

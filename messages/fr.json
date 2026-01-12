@@ -965,8 +965,10 @@
       "cwl": "LDC",
       "pointThreshold": "Seuil de Points",
       "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Mentionnera les membres qui ont moins de {threshold} points.",
       "attackThreshold": "Seuil d'Attaques",
       "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Mentionnera les membres s'il leur reste au moins {threshold} attaques à effectuer.",
       "notSet": "Non défini"
     },
     "dialog": {
