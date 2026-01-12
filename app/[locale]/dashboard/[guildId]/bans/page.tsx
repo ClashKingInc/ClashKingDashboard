@@ -738,7 +738,7 @@ export default function BansPage() {
             {/* Ban List */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   <div>
                     <CardTitle>{t("bans.list.title")}</CardTitle>
                     <CardDescription>
@@ -749,13 +749,13 @@ export default function BansPage() {
                       )}
                     </CardDescription>
                   </div>
-                  <div className="relative w-full md:w-64">
+                  <div className="relative w-full sm:w-64 lg:w-72">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder={t("bans.list.searchPlaceholder")}
                       value={searchQueryBans}
                       onChange={(e) => setSearchQueryBans(e.target.value)}
-                      className="pl-8"
+                      className="pl-8 bg-background border-border text-foreground"
                       disabled={isLoadingBans}
                     />
                   </div>
@@ -987,58 +987,58 @@ export default function BansPage() {
 
               {/* Strikes List */}
               <Card className="bg-card border-border">
-                <CardHeader>
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div>
-                        <CardTitle>{t("strikes.list.title")}</CardTitle>
-                        <CardDescription>
-                          {isLoadingStrikes ? (
-                            <Skeleton className="h-4 w-24" />
-                          ) : (
-                            t("strikes.list.count", { count: filteredStrikes.length })
-                          )}
-                        </CardDescription>
-                      </div>
-                      <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="hidden sm:block">
-                        <TabsList className="grid w-[240px] grid-cols-2">
-                          <TabsTrigger value="grouped">
-                            <Users className="h-4 w-4 mr-2" />
-                            {t("strikes.list.viewGrouped")}
-                          </TabsTrigger>
-                          <TabsTrigger value="all">
-                            <List className="h-4 w-4 mr-2" />
-                            {t("strikes.list.viewAll")}
-                          </TabsTrigger>
-                        </TabsList>
-                      </Tabs>
+              <CardHeader>
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div>
+                      <CardTitle>{t("strikes.list.title")}</CardTitle>
+                      <CardDescription>
+                        {isLoadingStrikes ? (
+                          <Skeleton className="h-4 w-24" />
+                        ) : (
+                          t("strikes.list.count", { count: filteredStrikes.length })
+                        )}
+                      </CardDescription>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
-                      <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="sm:hidden w-full">
-                        <TabsList className="grid w-full grid-cols-2">
-                          <TabsTrigger value="grouped">
-                            <Users className="h-4 w-4 mr-2" />
-                            {t("strikes.list.viewGrouped")}
-                          </TabsTrigger>
-                          <TabsTrigger value="all">
-                            <List className="h-4 w-4 mr-2" />
-                            {t("strikes.list.viewAll")}
-                          </TabsTrigger>
-                        </TabsList>
-                      </Tabs>
-                      <div className="relative w-full md:w-64">
-                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          placeholder={t("strikes.list.searchPlaceholder")}
-                          value={searchQueryStrikes}
-                          onChange={(e) => setSearchQueryStrikes(e.target.value)}
-                          className="pl-8 bg-background border-border text-foreground"
-                          disabled={isLoadingStrikes}
-                        />
-                      </div>
+                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="hidden sm:block">
+                      <TabsList className="grid w-[240px] grid-cols-2">
+                        <TabsTrigger value="grouped">
+                          <Users className="h-4 w-4 mr-2" />
+                          {t("strikes.list.viewGrouped")}
+                        </TabsTrigger>
+                        <TabsTrigger value="all">
+                          <List className="h-4 w-4 mr-2" />
+                          {t("strikes.list.viewAll")}
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="sm:hidden w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="grouped">
+                          <Users className="h-4 w-4 mr-2" />
+                          {t("strikes.list.viewGrouped")}
+                        </TabsTrigger>
+                        <TabsTrigger value="all">
+                          <List className="h-4 w-4 mr-2" />
+                          {t("strikes.list.viewAll")}
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                    <div className="relative w-full sm:w-64 lg:w-72">
+                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder={t("strikes.list.searchPlaceholder")}
+                        value={searchQueryStrikes}
+                        onChange={(e) => setSearchQueryStrikes(e.target.value)}
+                        className="pl-8 bg-background border-border text-foreground"
+                        disabled={isLoadingStrikes}
+                      />
                     </div>
                   </div>
-                </CardHeader>
+                </div>
+              </CardHeader>
                 <CardContent>
                   {isLoadingStrikes ? (
                     <div className="space-y-3">
