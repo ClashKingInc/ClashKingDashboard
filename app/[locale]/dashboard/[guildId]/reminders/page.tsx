@@ -277,7 +277,7 @@ export default function RemindersPage() {
     const newReminder: Partial<ReminderConfig> = {
       type: typeMap[activeTab],
       channel_id: "",
-      time: "6h",
+      time: "",
       custom_text: "",
       clan_tag: selectedClan !== "all" ? selectedClan : clans[0]?.tag || "",
       war_types: activeTab === "war" ? ["Random", "Friendly", "CWL"] : undefined,
@@ -335,6 +335,34 @@ export default function RemindersPage() {
     return match ? match[1] : timeString;
   };
 
+  const getMaxHours = (type: string): number => {
+    switch (type) {
+      case "War": return 48;
+      case "Clan Games": return 336;
+      case "Clan Capital": return 168;
+      default: return 0;
+    }
+  };
+
+  const isTimeValid = (time: string, type: string): boolean => {
+    if (!time) return false;
+    const hours = parseFloat(time);
+    if (isNaN(hours) || hours <= 0) return false;
+    const max = getMaxHours(type);
+    if (max === 0) return true; // Inactivity
+    return hours <= max;
+  };
+
+  const isPointsValid = (points: number | undefined): boolean => {
+    if (points === undefined || points === null) return false;
+    return points >= POINT_THRESHOLD_MIN && points <= POINT_THRESHOLD_MAX;
+  };
+
+  const isAttacksValid = (attacks: number | undefined): boolean => {
+    if (attacks === undefined || attacks === null) return false;
+    return attacks >= ATTACK_THRESHOLD_MIN && attacks <= ATTACK_THRESHOLD_MAX;
+  };
+
   // Validate time based on reminder type
   const validateTime = (timeString: string, reminderType: string): boolean => {
     if (!timeString) return false;
@@ -353,7 +381,7 @@ export default function RemindersPage() {
         maxHours = 336; // 2 weeks (14 days)
         break;
       case "Clan Capital":
-        maxHours = 168; // 1 week (7 days)
+        maxHours = 168; // 7 days
         break;
       case "Inactivity":
         return true; // No limit
@@ -1005,7 +1033,7 @@ export default function RemindersPage() {
               <div className="space-y-4 py-4">
                 {/* Type Selector */}
                 <div className="space-y-2">
-                  <Label htmlFor="dialog-type">{t('dialog.type')}</Label>
+                  <Label htmlFor="dialog-type">{t('dialog.type')}  <span className="text-destructive">*</span></Label>
                   <Select
                       value={dialogReminder.type || ""}
                       onValueChange={(value) => updateDialogField("type", value as "War" | "Clan Capital" | "Clan Games" | "Inactivity")}
@@ -1029,6 +1057,7 @@ export default function RemindersPage() {
                     <Label htmlFor="dialog-time">
                       <Clock className="h-4 w-4 inline mr-1" />
                       {dialogReminder.type === "Inactivity" ? t('card.timeInactive') : t('card.timeBefore')}
+                      <span className="text-destructive ml-1">*</span>
                     </Label>
                     <div className="flex items-center gap-2">
                       <Input
@@ -1043,16 +1072,24 @@ export default function RemindersPage() {
                           }
                           value={dialogReminder.time || ""}
                           onChange={(e) => updateDialogField("time", e.target.value)}
-                          className="flex-1"
+                          className="w-3/4"
                       />
                       <span className="text-sm text-muted-foreground whitespace-nowrap">
                       {t('card.timeUnit')}
                     </span>
                     </div>
+                    {dialogReminder.time && !isTimeValid(dialogReminder.time, dialogReminder.type || "") && (
+                        <p className="text-xs text-destructive mt-1">
+                          {t('toast.timeExceedsLimit', {
+                            min: 0,
+                            max: getMaxHours(dialogReminder.type || "") || 9999
+                          })}
+                        </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="dialog-channel">{t('card.channel')}</Label>
+                    <Label htmlFor="dialog-channel">{t('card.channel')} <span className="text-destructive">*</span></Label>
                     <ChannelCombobox
                         channels={channels}
                         value={dialogReminder.channel_id || ""}
@@ -1063,7 +1100,7 @@ export default function RemindersPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="dialog-clan">{t('card.clan')}</Label>
+                    <Label htmlFor="dialog-clan">{t('card.clan')}  <span className="text-destructive">*</span></Label>
                     <Select
                         value={dialogReminder.clan_tag || ""}
                         onValueChange={(value) => updateDialogField("clan_tag", value)}
@@ -1101,7 +1138,7 @@ export default function RemindersPage() {
                 {/* Type-specific fields */}
                 {dialogReminder.type === "War" && (
                     <div className="space-y-2">
-                      <Label>{t('card.warTypes')}</Label>
+                      <Label>{t('card.warTypes')} <span className="text-destructive">*</span></Label>
                       <div className="flex gap-2 flex-wrap">
                         {["Random", "Friendly", "CWL"].map((type) => (
                             <Badge
@@ -1143,6 +1180,14 @@ export default function RemindersPage() {
                             updateDialogField("point_threshold", value);
                           }}
                       />
+                      {dialogReminder.point_threshold !== undefined && !isPointsValid(dialogReminder.point_threshold) && (
+                          <p className="text-xs text-destructive mt-1">
+                            {t('toast.pointThresholdInvalid', {
+                              min: POINT_THRESHOLD_MIN,
+                              max: POINT_THRESHOLD_MAX,
+                            })}
+                          </p>
+                      )}
                     </div>
                 )}
 
@@ -1162,6 +1207,14 @@ export default function RemindersPage() {
                             updateDialogField("attack_threshold", value);
                           }}
                       />
+                      {dialogReminder.attack_threshold !== undefined && !isAttacksValid(dialogReminder.attack_threshold) && (
+                          <p className="text-xs text-destructive mt-1">
+                            {t('toast.attackThresholdInvalid', {
+                              min: ATTACK_THRESHOLD_MIN,
+                              max: ATTACK_THRESHOLD_MAX,
+                            })}
+                          </p>
+                      )}
                     </div>
                 )}
               </div>
@@ -1179,7 +1232,15 @@ export default function RemindersPage() {
                 </Button>
                 <Button
                     onClick={handleSaveReminder}
-                    disabled={saving || !dialogReminder.time || !dialogReminder.channel_id}
+                    disabled={
+                      saving || 
+                      !dialogReminder.time || 
+                      !dialogReminder.channel_id || 
+                      !isTimeValid(dialogReminder.time, dialogReminder.type || "") ||
+                      (dialogReminder.type === "War" && (!dialogReminder.war_types || dialogReminder.war_types.length === 0)) ||
+                      (dialogReminder.type === "Clan Games" && !isPointsValid(dialogReminder.point_threshold)) ||
+                      (dialogReminder.type === "Clan Capital" && !isAttacksValid(dialogReminder.attack_threshold))
+                    }
                     className="bg-primary hover:bg-primary/90"
                 >
                   {saving ? (
