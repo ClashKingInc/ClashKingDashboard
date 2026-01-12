@@ -21,20 +21,26 @@ import {
   Activity,
   LogOut,
   Server,
+  Sun,
+  Moon,
+  Computer,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { LanguageSwitcher } from "@/components/language-switcher";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import type { UserInfo } from "@/lib/api/types/auth";
 
 interface SidebarProps {
@@ -50,10 +56,12 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
   const router = useRouter();
   const locale = params.locale || "en";
   const t = useTranslations("Sidebar");
+  const tNav = useTranslations("Navigation");
   const tCommon = useTranslations("Common");
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -73,6 +81,24 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
     setUser(null);
     router.push(`/${locale}`);
   };
+
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const switchLocale = (newLocale: string) => {
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    router.refresh();
+  };
+
+  const languages = [
+    { code: "en", name: "English", flagCode: "us" },
+    { code: "fr", name: "Français", flagCode: "fr" },
+    { code: "nl", name: "Nederlands", flagCode: "nl" },
+  ];
 
   const navigationSections = [
     {
@@ -309,12 +335,98 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
         ))}
       </nav>
 
-      {/* Footer - ClashKing Branding & Theme/Language Switcher */}
+      {/* Footer - ClashKing Branding & Settings */}
       <div className="p-4 border-t border-border bg-background space-y-3">
-        {/* Switchers */}
-        <div className="flex justify-center gap-2">
-          <ThemeSwitcher />
-          <LanguageSwitcher />
+        {/* Settings Button */}
+        <div className="flex justify-center">
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="border-border h-10 w-10">
+                <Settings className="h-5 w-5" />
+                <span className="sr-only">{tNav("settings")}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4}>
+              {/* Theme Submenu */}
+              <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
+                <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
+                  {mounted && theme === "dark" ? (
+                    <Moon className="h-4 w-4" />
+                  ) : theme === "light" ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Computer className="h-4 w-4" />
+                  )}
+                  <span className="hover:!text-primary">{tNav("theme")}</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
+                  <DropdownMenuItem
+                    onClick={() => setTheme("system")}
+                    className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                      theme === "system" ? "bg-primary/10 text-primary" : ""
+                    }`}
+                  >
+                    <Computer className="h-4 w-4" />
+                    <span className="hover:!text-primary">{tNav("systemTheme")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setTheme("light")}
+                    className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                      theme === "light" ? "bg-primary/10 text-primary" : ""
+                    }`}
+                  >
+                    <Sun className="h-4 w-4" />
+                    <span className="hover:!text-primary">{tNav("lightTheme")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setTheme("dark")}
+                    className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                      theme === "dark" ? "bg-primary/10 text-primary" : ""
+                    }`}
+                  >
+                    <Moon className="h-4 w-4" />
+                    <span className="hover:!text-primary">{tNav("darkTheme")}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+
+              {/* Language Submenu */}
+              <DropdownMenuSub open={openSubmenu === "language"} onOpenChange={(open) => setOpenSubmenu(open ? "language" : null)}>
+                <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
+                  <div className="relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
+                    <Image
+                      src={`https://flagcdn.com/w40/${languages.find(lang => lang.code === locale)?.flagCode || "us"}.png`}
+                      alt="Current language"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <span className="hover:!text-primary">{tNav("language")}</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
+                  {languages.map((lang) => (
+                    <DropdownMenuItem
+                      key={lang.code}
+                      onClick={() => switchLocale(lang.code)}
+                      className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                        locale === lang.code ? "bg-primary/10 text-primary" : ""
+                      }`}
+                    >
+                      <div className="mr-2 relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
+                        <Image
+                          src={`https://flagcdn.com/w40/${lang.flagCode}.png`}
+                          alt={lang.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <span className="hover:!text-primary">{lang.name}</span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Branding */}

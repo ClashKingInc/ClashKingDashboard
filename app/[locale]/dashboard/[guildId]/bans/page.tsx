@@ -546,7 +546,7 @@ export default function BansPage() {
 
             {/* Stats Cards */}
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              <Card className="bg-card border-border">
+              <Card className="bg-card border-blue-500/30 bg-blue-500/5">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {t("bans.stats.total")}
@@ -554,17 +554,27 @@ export default function BansPage() {
                 </CardHeader>
                 <CardContent>
                   {isLoadingBans ? (
-                    <Skeleton className="h-10 w-20" />
+                    <>
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-8 w-20 animate-pulse" />
+                        <Skeleton className="h-8 w-8 animate-pulse" />
+                      </div>
+                    </>
                   ) : (
-                    <div className="flex items-center justify-between">
-                      <div className="text-3xl font-bold text-foreground">{bans.length}</div>
-                      <UserX className="h-8 w-8 text-red-500/50" />
-                    </div>
+                    <>
+                      <div className="flex items-center justify-between">
+                        <div className="text-3xl font-bold text-blue-500">{bans.length}</div>
+                        <UserX className="h-8 w-8 text-blue-500/50" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Active bans on server
+                      </p>
+                    </>
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border">
+              <Card className="bg-card border-green-500/30 bg-green-500/5">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {t("bans.stats.recent")}
@@ -572,25 +582,35 @@ export default function BansPage() {
                 </CardHeader>
                 <CardContent>
                   {isLoadingBans ? (
-                    <Skeleton className="h-10 w-20" />
-                  ) : (
-                    <div className="flex items-center justify-between">
-                      <div className="text-3xl font-bold text-foreground">
-                        {bans.filter((b) => {
-                          const days = Math.floor(
-                            (new Date().getTime() - new Date(b.DateCreated).getTime()) /
-                            (1000 * 60 * 60 * 24)
-                          );
-                          return days <= 7;
-                        }).length}
+                    <>
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-8 w-20 animate-pulse" />
+                        <Skeleton className="h-8 w-8 animate-pulse" />
                       </div>
-                      <Calendar className="h-8 w-8 text-orange-500/50" />
-                    </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between">
+                        <div className="text-3xl font-bold text-green-500">
+                          {bans.filter((b) => {
+                            const days = Math.floor(
+                              (new Date().getTime() - new Date(b.DateCreated).getTime()) /
+                              (1000 * 60 * 60 * 24)
+                            );
+                            return days <= 7;
+                          }).length}
+                        </div>
+                        <Calendar className="h-8 w-8 text-green-500/50" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        In the last 7 days
+                      </p>
+                    </>
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-border">
+              <Card className="bg-card border-purple-500/30 bg-purple-500/5">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {t("bans.stats.commonReason")}
@@ -598,13 +618,21 @@ export default function BansPage() {
                 </CardHeader>
                 <CardContent>
                   {isLoadingBans ? (
-                    <Skeleton className="h-10 w-32" />
+                    <>
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-8 w-32 animate-pulse" />
+                        <Skeleton className="h-8 w-8 animate-pulse" />
+                      </div>
+                    </>
                   ) : bans.length > 0 ? (
                     <>
-                      <div className="text-sm font-medium text-foreground truncate">
-                        {t("bans.stats.commonReasonValue")}
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium text-purple-500 truncate">
+                          {t("bans.stats.commonReasonValue")}
+                        </div>
+                        <AlertCircle className="h-8 w-8 text-purple-500/50" />
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-muted-foreground mt-2">
                         {t("bans.stats.percentOfAll", { percent: Math.round((1 / bans.length) * 100) })}
                       </p>
                     </>
@@ -765,7 +793,7 @@ export default function BansPage() {
 
               {/* Stats Cards */}
               <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                <Card className="bg-card border-border">
+                <Card className="bg-card border-blue-500/30 bg-blue-500/5">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       {t("strikes.stats.total")}
@@ -773,17 +801,27 @@ export default function BansPage() {
                   </CardHeader>
                   <CardContent>
                     {isLoadingStrikes ? (
-                      <Skeleton className="h-10 w-20" />
+                      <>
+                        <div className="flex items-center justify-between">
+                          <Skeleton className="h-8 w-20 animate-pulse" />
+                          <Skeleton className="h-8 w-8 animate-pulse" />
+                        </div>
+                      </>
                     ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-foreground">{strikes.length}</div>
-                        <AlertTriangle className="h-8 w-8 text-orange-500/50" />
-                      </div>
+                      <>
+                        <div className="flex items-center justify-between">
+                          <div className="text-3xl font-bold text-blue-500">{strikes.length}</div>
+                          <AlertTriangle className="h-8 w-8 text-blue-500/50" />
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Active strikes on server
+                        </p>
+                      </>
                     )}
                   </CardContent>
                 </Card>
 
-                <Card className="bg-card border-border">
+                <Card className="bg-card border-green-500/30 bg-green-500/5">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       {t("strikes.stats.recent")}
@@ -791,17 +829,27 @@ export default function BansPage() {
                   </CardHeader>
                   <CardContent>
                     {isLoadingStrikes ? (
-                      <Skeleton className="h-10 w-20" />
+                      <>
+                        <div className="flex items-center justify-between">
+                          <Skeleton className="h-8 w-20 animate-pulse" />
+                          <Skeleton className="h-8 w-8 animate-pulse" />
+                        </div>
+                      </>
                     ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-foreground">{recentStrikes}</div>
-                        <Calendar className="h-8 w-8 text-orange-500/50" />
-                      </div>
+                      <>
+                        <div className="flex items-center justify-between">
+                          <div className="text-3xl font-bold text-green-500">{recentStrikes}</div>
+                          <Calendar className="h-8 w-8 text-green-500/50" />
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          In the last 7 days
+                        </p>
+                      </>
                     )}
                   </CardContent>
                 </Card>
 
-                <Card className="bg-card border-border">
+                <Card className="bg-card border-purple-500/30 bg-purple-500/5">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       {t("strikes.stats.totalWeight")}
@@ -809,12 +857,22 @@ export default function BansPage() {
                   </CardHeader>
                   <CardContent>
                     {isLoadingStrikes ? (
-                      <Skeleton className="h-10 w-20" />
+                      <>
+                        <div className="flex items-center justify-between">
+                          <Skeleton className="h-8 w-20 animate-pulse" />
+                          <Skeleton className="h-8 w-8 animate-pulse" />
+                        </div>
+                      </>
                     ) : (
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-foreground">{totalStrikeWeight}</div>
-                        <Scale className="h-8 w-8 text-orange-500/50" />
-                      </div>
+                      <>
+                        <div className="flex items-center justify-between">
+                          <div className="text-3xl font-bold text-purple-500">{totalStrikeWeight}</div>
+                          <Scale className="h-8 w-8 text-purple-500/50" />
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Cumulative strike weight
+                        </p>
+                      </>
                     )}
                   </CardContent>
                 </Card>

@@ -60,6 +60,10 @@ export const clashKingAssets = {
     withTextWhite: 'https://assets.clashk.ing/logos/crown-text-white-bg/ClashKing-with-text-2.svg',
     withTextWhitePng: 'https://assets.clashk.ing/logos/crown-text-white-bg/BqlEp974170917vB1qK0zunfANJCGi0W031dTksEq7KQ9LoXWMFk0u77unHJa.png',
 
+    // TEXT LOGOS (for loading screens)
+    textDarkBg: 'https://assets.clashk.ing/logos/crown-arrow-dark-bg/CK-text-dark-bg.png',
+    textWhiteBg: 'https://assets.clashk.ing/logos/crown-arrow-white-bg/CK-text-white-bg.png',
+
     // ICONS (crown only)
     crownRed: 'https://assets.clashk.ing/logos/crown-red/ClashKing-crown.svg',
     iconBlack: 'https://assets.clashk.ing/logos/crown-black-arrow-white-bg/ClashKing-icon-black.svg',
