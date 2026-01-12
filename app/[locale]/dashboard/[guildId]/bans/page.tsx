@@ -104,7 +104,13 @@ export default function BansPage() {
         throw new Error(response.error || "Failed to fetch bans");
       }
 
-      setBans(response.data?.items || []);
+      // Convert added_by to string to preserve precision for large Discord IDs
+      const bans = (response.data?.items || []).map((ban: any) => ({
+        ...ban,
+        added_by: String(ban.added_by), // Ensure added_by is always a string
+      }));
+
+      setBans(bans);
     } catch (error) {
       console.error("Error fetching bans:", error);
       toast({
@@ -130,7 +136,13 @@ export default function BansPage() {
         throw new Error(response.error || "Failed to fetch strikes");
       }
 
-      setStrikes(response.data?.items || []);
+      // Convert added_by to string to preserve precision for large Discord IDs
+      const strikes = (response.data?.items || []).map((strike: any) => ({
+        ...strike,
+        added_by: String(strike.added_by), // Ensure added_by is always a string
+      }));
+
+      setStrikes(strikes);
     } catch (error) {
       console.error("Error fetching strikes:", error);
       toast({
@@ -150,7 +162,8 @@ export default function BansPage() {
       setIsSubmittingBan(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const userId = user ? parseInt(JSON.parse(user).user_id) : 0;
+      // Preserve precision for large Discord IDs by using string instead of number
+      const userId = user ? JSON.parse(user).user_id : "0";
 
       if (!token) return;
 
@@ -161,7 +174,7 @@ export default function BansPage() {
 
       const response = await apiClient.servers.addBan(guildId, cleanTag, {
         reason: newBan.reason,
-        added_by: userId,
+        added_by: userId, // Send as string to preserve precision for large Discord IDs
         image: null,
       });
 
@@ -172,11 +185,11 @@ export default function BansPage() {
         if (typeof response.error === 'string') {
           errorMessage = response.error;
         } else if (Array.isArray(response.error)) {
-          errorMessage = response.error.map((e: any) =>
+          errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');
-        } else if (typeof response.error === 'object') {
-          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
         }
 
         throw new Error(errorMessage);
@@ -211,7 +224,8 @@ export default function BansPage() {
       setIsSubmittingStrike(true);
       const token = localStorage.getItem("access_token");
       const user = localStorage.getItem("user");
-      const userId = user ? parseInt(JSON.parse(user).user_id) : 0;
+      // Preserve precision for large Discord IDs by using string instead of number
+      const userId = user ? JSON.parse(user).user_id : "0";
 
       if (!token) return;
 
@@ -222,7 +236,7 @@ export default function BansPage() {
 
       const response = await apiClient.servers.addStrike(guildId, cleanTag, {
         reason: newStrike.reason,
-        added_by: userId,
+        added_by: userId, // Send as string to preserve precision for large Discord IDs
         strike_weight: newStrike.strike_weight,
         rollover_days: newStrike.rollover_days,
       });
@@ -234,11 +248,11 @@ export default function BansPage() {
         if (typeof response.error === 'string') {
           errorMessage = response.error;
         } else if (Array.isArray(response.error)) {
-          errorMessage = response.error.map((e: any) =>
+          errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');
-        } else if (typeof response.error === 'object') {
-          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
         }
 
         throw new Error(errorMessage);
@@ -285,11 +299,11 @@ export default function BansPage() {
         if (typeof response.error === 'string') {
           errorMessage = response.error;
         } else if (Array.isArray(response.error)) {
-          errorMessage = response.error.map((e: any) =>
+          errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');
-        } else if (typeof response.error === 'object') {
-          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
         }
 
         throw new Error(errorMessage);
@@ -328,11 +342,11 @@ export default function BansPage() {
         if (typeof response.error === 'string') {
           errorMessage = response.error;
         } else if (Array.isArray(response.error)) {
-          errorMessage = response.error.map((e: any) =>
+          errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');
-        } else if (typeof response.error === 'object') {
-          errorMessage = response.error.detail || response.error.message || JSON.stringify(response.error);
+        } else if (typeof response.error === 'object' && response.error !== null) {
+          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
         }
 
         throw new Error(errorMessage);

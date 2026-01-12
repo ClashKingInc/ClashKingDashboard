@@ -65,7 +65,7 @@ export interface ClanSettings {
 
 export interface BanRequest {
   reason: string | null;
-  added_by: number;
+  added_by: number | string; // Allow string for large Discord IDs to preserve precision
   image: string | null;
 }
 
@@ -78,7 +78,7 @@ export interface BannedPlayer {
   VillageName?: string;
   name?: string;
   Notes: string;
-  added_by: number;
+  added_by: number | string; // Can be string to preserve precision for large Discord IDs
   added_by_username?: string;
   added_by_avatar_url?: string;
   DateCreated: string;
@@ -88,7 +88,7 @@ export interface BannedPlayer {
   clan_name?: string | null;
   image_url?: string;
   edited_by?: Array<{
-    user: number;
+    user: number | string; // Can be string to preserve precision for large Discord IDs
     previous: {
       reason: string;
       rollover_days: number | null;
@@ -110,7 +110,7 @@ export interface BanResponse {
  */
 export interface StrikeRequest {
   reason: string;
-  added_by: number;
+  added_by: number | string; // Allow string for large Discord IDs to preserve precision
   strike_weight: number;
   rollover_days?: number;
   image?: string;
@@ -125,7 +125,7 @@ export interface Strike {
   date_created: string;
   reason: string;
   server: number;
-  added_by: number;
+  added_by: number | string; // Can be string to preserve precision for large Discord IDs
   added_by_username?: string;
   added_by_avatar_url?: string;
   strike_weight: number;
@@ -141,6 +141,7 @@ export interface StrikeAddResponse {
   status: string;
   strike_id: string;
   player_tag: string;
+  player_name?: string; // Player name from COC API
   server_id: number;
   total_strikes: number;
   total_weight: number;

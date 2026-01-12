@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import ReactMarkdown from "react-markdown";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -75,22 +76,26 @@ export default function GeneralSettingsPage() {
       }
 
       apiClient.setAccessToken(token);
-      const response = await apiClient.servers.getSettings(guildId);
+      
+      // Use cache to prevent duplicate requests
+      const settingsData = await apiCache.get(`settings-${guildId}`, async () => {
+        const response = await apiClient.servers.getSettings(guildId);
+        
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        
+        return response.data;
+      });
 
-      console.log("Settings response:", response);
-
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      if (response.data) {
+      if (settingsData) {
         setSettings({
-          change_nickname: response.data.change_nickname ?? true,
-          nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
-          non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
-          embed_color: response.data.embed_color ?? 14227209,
-          api_token: response.data.api_token ?? true,
-          full_whitelist_role: response.data.full_whitelist_role?.toString(),
+          change_nickname: settingsData.change_nickname ?? true,
+          nickname_rule: settingsData.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
+          non_family_nickname_rule: settingsData.non_family_nickname_rule ?? "{player_name}",
+          embed_color: settingsData.embed_color ?? 14227209,
+          api_token: settingsData.api_token ?? true,
+          full_whitelist_role: settingsData.full_whitelist_role?.toString(),
         });
       }
     } catch (err: any) {
@@ -103,9 +108,20 @@ export default function GeneralSettingsPage() {
 
   const loadDiscordRoles = async () => {
     try {
-      const response = await apiClient.roles.getDiscordRoles(guildId);
-      if (response.data) {
-        setDiscordRoles(response.data.roles);
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      // Use cache to prevent duplicate requests
+      const rolesData = await apiCache.get(`discord-roles-${guildId}`, async () => {
+        const response = await apiClient.roles.getDiscordRoles(guildId);
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        return response.data;
+      });
+
+      if (rolesData) {
+        setDiscordRoles(rolesData.roles);
       }
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
@@ -119,6 +135,9 @@ export default function GeneralSettingsPage() {
       setSuccess(false);
 
       await apiClient.servers.updateSettings(guildId, settings);
+
+      // Invalidate cache after saving
+      apiCache.invalidate(`settings-${guildId}`);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
