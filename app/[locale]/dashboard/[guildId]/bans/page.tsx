@@ -52,6 +52,7 @@ import {
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import type { BannedPlayer, Strike } from "@/lib/api/types/server";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -103,7 +104,10 @@ export default function BansPage() {
       if (!token) return;
 
       apiClient.setAccessToken(token);
-      const response = await apiClient.servers.getBans(guildId);
+      
+      const response = await apiCache.get(`bans-${guildId}`, async () => {
+        return await apiClient.servers.getBans(guildId);
+      });
 
       if (response.error) {
         throw new Error(response.error || "Failed to fetch bans");
@@ -135,7 +139,10 @@ export default function BansPage() {
       if (!token) return;
 
       apiClient.setAccessToken(token);
-      const response = await apiClient.servers.getStrikes(guildId);
+
+      const response = await apiCache.get(`strikes-${guildId}`, async () => {
+        return await apiClient.servers.getStrikes(guildId);
+      });
 
       if (response.error) {
         throw new Error(response.error || "Failed to fetch strikes");
@@ -205,7 +212,8 @@ export default function BansPage() {
         description: t("toast.banAdded"),
       });
 
-      // Refresh the ban list
+      // Invalidate cache and refresh the ban list
+      apiCache.invalidate(`bans-${guildId}`);
       await fetchBans();
 
       setNewBan({ player_tag: "", reason: "" });
@@ -268,7 +276,8 @@ export default function BansPage() {
         description: t("toast.strikeAdded"),
       });
 
-      // Refresh the strikes list
+      // Invalidate cache and refresh the strikes list
+      apiCache.invalidate(`strikes-${guildId}`);
       await fetchStrikes();
 
       setNewStrike({ player_tag: "", reason: "", strike_weight: 1, rollover_days: undefined });
@@ -319,7 +328,8 @@ export default function BansPage() {
         description: t("toast.banRemoved"),
       });
 
-      // Refresh the ban list
+      // Invalidate cache and refresh the ban list
+      apiCache.invalidate(`bans-${guildId}`);
       await fetchBans();
     } catch (error) {
       console.error("Error removing ban:", error);
@@ -362,7 +372,8 @@ export default function BansPage() {
         description: t("toast.strikeRemoved"),
       });
 
-      // Refresh the strikes list
+      // Invalidate cache and refresh the strikes list
+      apiCache.invalidate(`strikes-${guildId}`);
       await fetchStrikes();
     } catch (error) {
       console.error("Error removing strike:", error);
@@ -432,7 +443,7 @@ export default function BansPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
