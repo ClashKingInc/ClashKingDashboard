@@ -842,8 +842,10 @@
     "greetingMessage": "Greeting Message",
     "leadershipEval": "Leadership Eval",
     "leadershipEvalDescription": "Auto-assign leadership roles",
-    "warCountdownChannel": "War Countdown Channel",
+    "warScoreCountdown": "War Score Countdown",
+    "warScoreCountdownDescription": "Creates a voice channel displaying the current war score",
     "warTimerCountdown": "War Timer Countdown",
+    "warTimerCountdownDescription": "Creates a voice channel displaying time remaining in war",
     "banAlertChannel": "Ban Alert Channel",
     "category": "Category",
     "autoGreetOption": "Auto Greet Option",
@@ -890,7 +892,10 @@
       "clanRemoved": "Clan removed successfully",
       "errorRemovingClan": "Failed to remove clan",
       "settingsSaved": "Settings saved successfully",
-      "errorSavingSettings": "Failed to save settings"
+      "errorSavingSettings": "Failed to save settings",
+      "countdownEnabled": "Countdown voice channel created",
+      "countdownDisabled": "Countdown voice channel removed",
+      "errorTogglingCountdown": "Failed to toggle countdown"
     }
   },
   "RolesPage": {

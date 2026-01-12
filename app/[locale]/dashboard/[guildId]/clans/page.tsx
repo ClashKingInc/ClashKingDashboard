@@ -154,6 +154,13 @@ export default function ClansPage() {
   const [clanSettings, setClanSettings] = useState<ClanSettings>({});
   const [isGreetingPlaceholdersOpen, setIsGreetingPlaceholdersOpen] = useState(false);
 
+  // Countdown states
+  const [countdownStatus, setCountdownStatus] = useState<{
+    war_score: string | null;
+    war_timer: string | null;
+  }>({ war_score: null, war_timer: null });
+  const [countdownLoading, setCountdownLoading] = useState<string | null>(null);
+
   // Fetch data on mount
   useEffect(() => {
     const fetchData = async () => {
@@ -337,7 +344,65 @@ export default function ClansPage() {
   const handleOpenSettings = async (clan: Clan) => {
     setSelectedClan(clan);
     setClanSettings(clan.settings || {});
+
+    // Load countdown status from clan settings
+    setCountdownStatus({
+      war_score: clan.settings?.warCountdown || null,
+      war_timer: clan.settings?.warTimerCountdown || null,
+    });
+
     setIsSettingsDialogOpen(true);
+  };
+
+  // Toggle countdown (enable/disable)
+  const handleToggleCountdown = async (countdownType: 'war_score' | 'war_timer', enabled: boolean) => {
+    if (!selectedClan) return;
+
+    const clanTag = selectedClan.tag || selectedClan.clan_tag || '';
+    setCountdownLoading(countdownType);
+
+    try {
+      const accessToken = localStorage.getItem("access_token");
+
+      const response = await fetch(`/api/v2/server/${guildId}/countdowns`, {
+        method: enabled ? 'POST' : 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          countdown_type: countdownType,
+          clan_tag: clanTag,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || `Failed to ${enabled ? 'enable' : 'disable'} countdown`);
+      }
+
+      const data = await response.json();
+
+      // Update local state
+      setCountdownStatus(prev => ({
+        ...prev,
+        [countdownType]: enabled ? data.channel_id : null,
+      }));
+
+      toast({
+        title: tCommon("success"),
+        description: enabled ? t("toast.countdownEnabled") : t("toast.countdownDisabled"),
+      });
+    } catch (err) {
+      console.error("Error toggling countdown:", err);
+      toast({
+        title: tCommon("error"),
+        description: err instanceof Error ? err.message : t("toast.errorTogglingCountdown"),
+        variant: "destructive",
+      });
+    } finally {
+      setCountdownLoading(null);
+    }
   };
 
   // Save settings
@@ -392,6 +457,114 @@ export default function ClansPage() {
       setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Header Skeleton */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <Skeleton className="h-8 w-8 animate-pulse" />
+              </div>
+              <div>
+                <Skeleton className="h-9 w-48 animate-pulse mb-1" />
+                <Skeleton className="h-5 w-96 animate-pulse" />
+              </div>
+            </div>
+            <Skeleton className="h-10 w-32 animate-pulse" />
+          </div>
+
+          {/* Statistics Skeleton */}
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-green-500/30 bg-green-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24 animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                  <Skeleton className="h-8 w-8 animate-pulse" />
+                </div>
+                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Clans Grid Skeleton */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="bg-card border-border">
+                <CardHeader className="pb-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-14 w-14 rounded-full animate-pulse" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-5 w-32 animate-pulse" />
+                        <Skeleton className="h-4 w-24 animate-pulse" />
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <Skeleton className="h-16 rounded-lg animate-pulse" />
+                    <Skeleton className="h-16 rounded-lg animate-pulse" />
+                  </div>
+                  <Skeleton className="h-6 w-full animate-pulse" />
+                  <Separator className="bg-border" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-10 flex-1 animate-pulse" />
+                    <Skeleton className="h-10 w-10 animate-pulse" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -873,25 +1046,31 @@ export default function ClansPage() {
 
               <TabsContent value="war" className="space-y-4">
                 <div className="grid gap-4">
-                  <div className="space-y-2">
-                    <Label>{t("warCountdownChannel")}</Label>
-                    <ChannelCombobox
-                      channels={channels}
-                      value={clanSettings.warCountdown?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warCountdown: value === 'none' || value === 'disabled' ? null : value})}
-                      placeholder={t("selectChannel")}
-                      showDisabled={false}
+                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
+                    <div className="space-y-0.5">
+                      <Label>{t("warScoreCountdown")}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {t("warScoreCountdownDescription")}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={!!countdownStatus.war_score}
+                      onCheckedChange={(checked) => handleToggleCountdown('war_score', checked)}
+                      disabled={countdownLoading === 'war_score'}
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>{t("warTimerCountdown")}</Label>
-                    <ChannelCombobox
-                      channels={channels}
-                      value={clanSettings.warTimerCountdown?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, warTimerCountdown: value === 'none' || value === 'disabled' ? null : value})}
-                      placeholder={t("selectChannel")}
-                      showDisabled={false}
+                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
+                    <div className="space-y-0.5">
+                      <Label>{t("warTimerCountdown")}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {t("warTimerCountdownDescription")}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={!!countdownStatus.war_timer}
+                      onCheckedChange={(checked) => handleToggleCountdown('war_timer', checked)}
+                      disabled={countdownLoading === 'war_timer'}
                     />
                   </div>
 

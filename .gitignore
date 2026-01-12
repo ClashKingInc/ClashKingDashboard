@@ -71,3 +71,4 @@ Desktop.ini
 *.tmp
 *.bak
 .cache/
+.claude/
