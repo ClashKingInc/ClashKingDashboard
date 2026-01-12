@@ -117,6 +117,13 @@ export default function AutoBoardsPage() {
 
   const DAYS = DAY_KEYS.map(key => ({ value: key, label: getDayLabel(key) }));
 
+  // Calculate local time for 5:00 AM UTC
+  const localResetTime = (() => {
+    const date = new Date();
+    date.setUTCHours(5, 0, 0, 0);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  })();
+
   const [loading, setLoading] = useState(true);
   const [autoboardsData, setAutoboardsData] = useState<ServerAutoBoardsResponse | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -509,7 +516,7 @@ export default function AutoBoardsPage() {
                     ))}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {t('postDaysDesc')}
+                    {t('postDaysDesc', { time: localResetTime })}
                   </p>
                 </div>
               )}
@@ -658,7 +665,7 @@ export default function AutoBoardsPage() {
                     ))}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {t('postDaysDesc')}
+                    {t('postDaysDesc', { time: localResetTime })}
                   </p>
                 </div>
               )}
@@ -978,7 +985,7 @@ export default function AutoBoardsPage() {
             <strong>{t('tipsContent.limits.title')}</strong> {t('tipsContent.limits.desc')}
           </p>
           <p>
-            <strong>{t('tipsContent.schedule.title')}</strong> {t('tipsContent.schedule.desc')}
+            <strong>{t('tipsContent.schedule.title')}</strong> {t('tipsContent.schedule.desc', { time: localResetTime })}
           </p>
           <p>
             <strong>{t('tipsContent.duplicates.title')}</strong> {t('tipsContent.duplicates.desc')}

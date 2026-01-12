@@ -1385,7 +1385,7 @@
     "boardType": "Type de Tableau",
     "selectBoardType": "Sélectionner un type de tableau",
     "postDays": "Jours de Publication (sélectionner au moins un)",
-    "postDaysDesc": "Les publications ont lieu à 5h00 UTC lors de la réinitialisation quotidienne",
+    "postDaysDesc": "Les jours sélectionnés, une publication sera effectuée à {time} (5h00 UTC).",
     "autoRefreshInfo": "Info Actualisation Auto",
     "autoRefreshInfoDesc": "Le tableau s'actualisera automatiquement toutes les 30-60 minutes avec les dernières données. Parfait pour garder les statistiques à jour sans mises à jour manuelles.",
     "cancel": "Annuler",
@@ -1423,7 +1423,7 @@
       },
       "schedule": {
         "title": "Planifiez judicieusement :",
-        "desc": "Les tableaux de Publication Auto apparaissent à 5h00 UTC. Choisissez des jours qui correspondent au cycle d'activité de votre clan."
+        "desc": "Les tableaux de Publication Auto apparaissent à {time} (5h00 UTC). Choisissez des jours qui correspondent au cycle d'activité de votre clan."
       },
       "duplicates": {
         "title": "Évitez les doublons :",

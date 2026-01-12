@@ -1385,7 +1385,7 @@
     "boardType": "Bordtype",
     "selectBoardType": "Selecteer een bordtype",
     "postDays": "Postdagen (selecteer er minstens één)",
-    "postDaysDesc": "Posts vinden plaats om 5:00 AM UTC dagelijkse reset tijd",
+    "postDaysDesc": "Op de geselecteerde dagen wordt een post geplaatst om {time} (5:00 AM UTC).",
     "autoRefreshInfo": "Auto Refresh Info",
     "autoRefreshInfoDesc": "Het bord wordt automatisch elke 30-60 minuten vernieuwd met de laatste gegevens. Perfect om statistieken actueel te houden zonder handmatige updates.",
     "cancel": "Annuleren",
@@ -1423,7 +1423,7 @@
       },
       "schedule": {
         "title": "Plan verstandig:",
-        "desc": "Auto Post-borden verschijnen om 5:00 AM UTC. Kies dagen die aansluiten bij de activiteitscyclus van je clan."
+        "desc": "Auto Post-borden verschijnen om {time} (5:00 AM UTC). Kies dagen die aansluiten bij de activiteitscyclus van je clan."
       },
       "duplicates": {
         "title": "Vermijd duplicaten:",
