@@ -347,8 +347,8 @@ export default function ClansPage() {
 
     // Load countdown status from clan settings
     setCountdownStatus({
-      war_score: clan.settings?.warCountdown || null,
-      war_timer: clan.settings?.warTimerCountdown || null,
+      war_score: clan.settings?.warCountdown ? String(clan.settings.warCountdown) : null,
+      war_timer: clan.settings?.warTimerCountdown ? String(clan.settings.warTimerCountdown) : null,
     });
 
     setIsSettingsDialogOpen(true);
