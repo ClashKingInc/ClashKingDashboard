@@ -79,6 +79,8 @@ export interface BannedPlayer {
   name?: string;
   Notes: string;
   added_by: number;
+  added_by_username?: string;
+  added_by_avatar_url?: string;
   DateCreated: string;
   server: number;
   rollover_date?: number | null;
@@ -124,6 +126,8 @@ export interface Strike {
   reason: string;
   server: number;
   added_by: number;
+  added_by_username?: string;
+  added_by_avatar_url?: string;
   strike_weight: number;
   rollover_date?: number;
   image?: string;

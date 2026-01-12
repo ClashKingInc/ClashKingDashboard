@@ -54,6 +54,7 @@ import { useToast } from "@/components/ui/use-toast";
 export default function BansPage() {
   const params = useParams();
   const guildId = params.guildId as string;
+  const locale = params.locale as string;
   const { toast } = useToast();
   const t = useTranslations("BansPage");
   const tCommon = useTranslations("Common");
@@ -763,18 +764,28 @@ export default function BansPage() {
                             </TableCell>
                             <TableCell className="max-w-xs">
                               <div className="truncate text-sm text-muted-foreground" title={ban.Notes}>
-                                {ban.Notes || t("bans.table.noReason")}
+                                {ban.Notes && ban.Notes !== "No Notes" ? ban.Notes : t("bans.table.noReason")}
                                 </div>
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <User className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">{ban.added_by}</span>
+                                  {ban.added_by_avatar_url ? (
+                                    <img
+                                      src={ban.added_by_avatar_url}
+                                      alt={ban.added_by_username || String(ban.added_by)}
+                                      className="h-6 w-6 rounded-full"
+                                    />
+                                  ) : (
+                                    <User className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                  <span className="text-sm">
+                                    {ban.added_by_username || ban.added_by}
+                                  </span>
                                 </div>
                               </TableCell>
                               <TableCell>
                                 <div className="text-sm">
-                                  {new Date(ban.DateCreated).toLocaleDateString()}
+                                  {new Date(ban.DateCreated).toLocaleDateString(locale)}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
                                   {t("bans.table.daysAgo", {
@@ -998,7 +1009,7 @@ export default function BansPage() {
                             </TableCell>
                             <TableCell className="max-w-xs">
                               <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
-                                {strike.reason || t("strikes.table.noReason")}
+                                {strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -1008,13 +1019,23 @@ export default function BansPage() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <User className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm">{strike.added_by}</span>
+                                  {strike.added_by_avatar_url ? (
+                                    <img
+                                      src={strike.added_by_avatar_url}
+                                      alt={strike.added_by_username || String(strike.added_by)}
+                                      className="h-6 w-6 rounded-full"
+                                    />
+                                  ) : (
+                                    <User className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                  <span className="text-sm">
+                                    {strike.added_by_username || strike.added_by}
+                                  </span>
                                 </div>
                               </TableCell>
                               <TableCell>
                                 <div className="text-sm">
-                                  {new Date(strike.date_created).toLocaleDateString()}
+                                  {new Date(strike.date_created).toLocaleDateString(locale)}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
                                   {t("strikes.table.daysAgo", {
@@ -1028,7 +1049,7 @@ export default function BansPage() {
                               <TableCell>
                                 {strike.rollover_date ? (
                                   <div className="text-sm text-muted-foreground">
-                                    {new Date(strike.rollover_date * 1000).toLocaleDateString()}
+                                    {new Date(strike.rollover_date * 1000).toLocaleDateString(locale)}
                                   </div>
                                 ) : (
                                   <div className="text-sm text-muted-foreground">{t("strikes.table.never")}</div>
