@@ -443,7 +443,7 @@ export default function BansPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
@@ -749,7 +749,7 @@ export default function BansPage() {
             {/* Ban List */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
                   <div>
                     <CardTitle>{t("bans.list.title")}</CardTitle>
                     <CardDescription>
@@ -760,7 +760,7 @@ export default function BansPage() {
                       )}
                     </CardDescription>
                   </div>
-                  <div className="relative w-full sm:w-64 lg:w-72">
+                  <div className="relative w-full md:w-64 xl:w-72">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
                       placeholder={t("bans.list.searchPlaceholder")}
@@ -999,8 +999,8 @@ export default function BansPage() {
               {/* Strikes List */}
               <Card className="bg-card border-border">
               <CardHeader>
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+                  <div className="flex flex-col md:flex-row md:items-center gap-4">
                     <div>
                       <CardTitle>{t("strikes.list.title")}</CardTitle>
                       <CardDescription>
@@ -1011,8 +1011,8 @@ export default function BansPage() {
                         )}
                       </CardDescription>
                     </div>
-                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="hidden sm:block">
-                      <TabsList className="grid w-[240px] grid-cols-2">
+                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="hidden md:block">
+                      <TabsList className="grid grid-cols-2 w-fit">
                         <TabsTrigger value="grouped">
                           <Users className="h-4 w-4 mr-2" />
                           {t("strikes.list.viewGrouped")}
@@ -1024,8 +1024,8 @@ export default function BansPage() {
                       </TabsList>
                     </Tabs>
                   </div>
-                  <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
-                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="sm:hidden w-full">
+                  <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto">
+                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="md:hidden w-full">
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="grouped">
                           <Users className="h-4 w-4 mr-2" />
@@ -1037,7 +1037,7 @@ export default function BansPage() {
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
-                    <div className="relative w-full sm:w-64 lg:w-72">
+                    <div className="relative w-full md:w-64 xl:w-72">
                       <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
                         placeholder={t("strikes.list.searchPlaceholder")}
