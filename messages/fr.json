@@ -719,8 +719,10 @@
     "greetingMessage": "Message d'Accueil",
     "leadershipEval": "Éval de Leadership",
     "leadershipEvalDescription": "Attribution auto des rôles de leadership",
-    "warCountdownChannel": "Canal de Compte à Rebours de Guerre",
-    "warTimerCountdown": "Compte à Rebours du Timer de Guerre",
+    "warScoreCountdown": "Score de Guerre",
+    "warScoreCountdownDescription": "Crée un salon vocal affichant le score de guerre actuel",
+    "warTimerCountdown": "Timer de Guerre",
+    "warTimerCountdownDescription": "Crée un salon vocal affichant le temps restant de guerre",
     "banAlertChannel": "Canal d'Alerte de Bannissement",
     "category": "Catégorie",
     "autoGreetOption": "Option d'Accueil Auto",
@@ -767,7 +769,10 @@
       "clanRemoved": "Clan retiré avec succès",
       "errorRemovingClan": "Échec de la suppression du clan",
       "settingsSaved": "Paramètres enregistrés avec succès",
-      "errorSavingSettings": "Échec de l'enregistrement des paramètres"
+      "errorSavingSettings": "Échec de l'enregistrement des paramètres",
+      "countdownEnabled": "Salon vocal de compte à rebours créé",
+      "countdownDisabled": "Salon vocal de compte à rebours supprimé",
+      "errorTogglingCountdown": "Échec de la bascule du compte à rebours"
     }
   },
   "RolesPage": {
