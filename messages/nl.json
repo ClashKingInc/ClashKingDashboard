@@ -24,6 +24,8 @@
     "error": "Er is een fout opgetreden",
     "success": "Succes",
     "actions": "Acties",
+    "details": "Details",
+    "view": "Bekijken",
     "unknown": "Onbekend",
     "confirm": "Bevestigen",
     "settings": "Instellingen",
@@ -319,7 +321,9 @@
         "noStrikesFound": "Geen strikes gevonden",
         "noStrikes": "Geen strikes uitgedeeld",
         "adjustSearch": "Probeer je zoekopdracht aan te passen",
-        "getStarted": "Voeg een strike toe om te beginnen met het volgen van spelerovertredingen"
+        "getStarted": "Voeg een strike toe om te beginnen met het volgen van spelerovertredingen",
+        "viewAll": "Alle strikes",
+        "viewGrouped": "Per Speler"
       },
       "table": {
         "player": "Speler",
@@ -330,7 +334,10 @@
         "expires": "Vervalt op",
         "never": "Nooit",
         "noReason": "Geen reden opgegeven",
-        "daysAgo": "{days} dagen geleden"
+        "daysAgo": "{days} dagen geleden",
+        "totalStrikes": "Totaal aantal strikes",
+        "totalWeight": "Totaal gewicht",
+        "lastStrike": "Laatste strike"
       },
       "addDialog": {
         "title": "Voeg een strike toe",

@@ -24,6 +24,8 @@
     "error": "Une erreur s'est produite",
     "success": "Succès",
     "actions": "Actions",
+    "details": "Détails",
+    "view": "Voir",
     "unknown": "Inconnu",
     "confirm": "Confirmer",
     "settings": "Paramètres",
@@ -319,7 +321,9 @@
         "noStrikesFound": "Aucun avertissement trouvé",
         "noStrikes": "Aucun avertissement émis",
         "adjustSearch": "Essayez d'ajuster votre recherche",
-        "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs"
+        "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs",
+        "viewAll": "Tous les avertissements",
+        "viewGrouped": "Par Joueur"
       },
       "table": {
         "player": "Joueur",
@@ -330,7 +334,10 @@
         "expires": "Expire le",
         "never": "Jamais",
         "noReason": "Aucune raison fournie",
-        "daysAgo": "Il y a {days} jours"
+        "daysAgo": "Il y a {days} jours",
+        "totalStrikes": "Total des avertissements",
+        "totalWeight": "Poids total",
+        "lastStrike": "Dernier avertissement"
       },
       "addDialog": {
         "title": "Ajouter un avertissement",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,6 +45,10 @@ import {
   Loader2,
   AlertTriangle,
   Scale,
+  List,
+  Users,
+  ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
@@ -83,6 +87,8 @@ export default function BansPage() {
     rollover_days: undefined as number | undefined,
   });
   const [activeTab, setActiveTab] = useState("bans");
+  const [strikeViewMode, setStrikeViewMode] = useState<"grouped" | "all">("grouped");
+  const [expandedPlayerTags, setExpandedPlayerTags] = useState<string[]>([]);
 
   // Fetch bans and strikes on mount
   useEffect(() => {
@@ -381,6 +387,36 @@ export default function BansPage() {
       strike.tag.toLowerCase().includes(searchQueryStrikes.toLowerCase()) ||
       strike.reason.toLowerCase().includes(searchQueryStrikes.toLowerCase())
   );
+
+  const groupedStrikes = Object.values(
+    filteredStrikes.reduce((acc, strike) => {
+      const tag = strike.tag;
+      if (!acc[tag]) {
+        acc[tag] = {
+          tag: tag,
+          player_name: strike.player_name,
+          total_weight: 0,
+          count: 0,
+          last_strike: strike.date_created,
+          strikes: [],
+        };
+      }
+      acc[tag].total_weight += strike.strike_weight;
+      acc[tag].count += 1;
+      if (new Date(strike.date_created) > new Date(acc[tag].last_strike)) {
+        acc[tag].last_strike = strike.date_created;
+      }
+      acc[tag].strikes.push(strike);
+      return acc;
+    }, {} as Record<string, {
+      tag: string,
+      player_name?: string,
+      total_weight: number,
+      count: number,
+      last_strike: string,
+      strikes: Strike[]
+    }>)
+  ).sort((a, b) => b.total_weight - a.total_weight);
 
   // Calculate strike statistics
   const totalStrikeWeight = strikes.reduce((sum, strike) => sum + strike.strike_weight, 0);
@@ -953,25 +989,53 @@ export default function BansPage() {
               <Card className="bg-card border-border">
                 <CardHeader>
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                      <CardTitle>{t("strikes.list.title")}</CardTitle>
-                      <CardDescription>
-                        {isLoadingStrikes ? (
-                          <Skeleton className="h-4 w-24" />
-                        ) : (
-                          t("strikes.list.count", { count: filteredStrikes.length })
-                        )}
-                      </CardDescription>
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <CardTitle>{t("strikes.list.title")}</CardTitle>
+                        <CardDescription>
+                          {isLoadingStrikes ? (
+                            <Skeleton className="h-4 w-24" />
+                          ) : (
+                            t("strikes.list.count", { count: filteredStrikes.length })
+                          )}
+                        </CardDescription>
+                      </div>
+                      <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="hidden sm:block">
+                        <TabsList className="grid w-[240px] grid-cols-2">
+                          <TabsTrigger value="grouped">
+                            <Users className="h-4 w-4 mr-2" />
+                            {t("strikes.list.viewGrouped")}
+                          </TabsTrigger>
+                          <TabsTrigger value="all">
+                            <List className="h-4 w-4 mr-2" />
+                            {t("strikes.list.viewAll")}
+                          </TabsTrigger>
+                        </TabsList>
+                      </Tabs>
                     </div>
-                    <div className="relative w-full md:w-64">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder={t("strikes.list.searchPlaceholder")}
-                        value={searchQueryStrikes}
-                        onChange={(e) => setSearchQueryStrikes(e.target.value)}
-                        className="pl-8"
-                        disabled={isLoadingStrikes}
-                      />
+                    <div className="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                      <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="sm:hidden w-full">
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="grouped">
+                            <Users className="h-4 w-4 mr-2" />
+                            {t("strikes.list.viewGrouped")}
+                          </TabsTrigger>
+                          <TabsTrigger value="all">
+                            <List className="h-4 w-4 mr-2" />
+                            {t("strikes.list.viewAll")}
+                          </TabsTrigger>
+                        </TabsList>
+                      </Tabs>
+                      <div className="relative w-full md:w-64">
+                        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder={t("strikes.list.searchPlaceholder")}
+                          value={searchQueryStrikes}
+                          onChange={(e) => setSearchQueryStrikes(e.target.value)}
+                          className="pl-8 bg-background border-border text-foreground"
+                          disabled={isLoadingStrikes}
+                        />
+                      </div>
                     </div>
                   </div>
                 </CardHeader>
@@ -998,101 +1062,250 @@ export default function BansPage() {
                     </div>
                   ) : (
                     <div className="rounded-md border border-border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>{t("strikes.table.player")}</TableHead>
-                            <TableHead>{t("strikes.table.reason")}</TableHead>
-                            <TableHead>{t("strikes.table.weight")}</TableHead>
-                            <TableHead>{t("strikes.table.addedBy")}</TableHead>
-                            <TableHead>{t("strikes.table.date")}</TableHead>
-                            <TableHead>{t("strikes.table.expires")}</TableHead>
-                            <TableHead className="text-right">{tCommon("actions")}</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredStrikes.map((strike, index) => (
-                            <TableRow key={`${strike.strike_id}-${index}`}>
-                              <TableCell>
-                                <div>
-                                  <div className="font-medium text-foreground">
-                                  {strike.player_name || tCommon("unknown")}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {strike.tag}
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell className="max-w-xs">
-                              <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
-                                {strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/30">
-                                  {strike.strike_weight}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  {strike.added_by_avatar_url ? (
-                                    <img
-                                      src={strike.added_by_avatar_url}
-                                      alt={strike.added_by_username || String(strike.added_by)}
-                                      className="h-6 w-6 rounded-full"
-                                    />
-                                  ) : (
-                                    <User className="h-4 w-4 text-muted-foreground" />
-                                  )}
-                                  <div className="flex flex-col">
-                                    <span className="text-sm font-medium">
-                                      {strike.added_by_username || strike.added_by}
-                                    </span>
-                                    {strike.added_by_username && (
-                                      <span className="text-[10px] text-muted-foreground leading-none">
-                                        ID: {strike.added_by}
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <div className="text-sm">
-                                  {new Date(strike.date_created).toLocaleDateString(locale)}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {t("strikes.table.daysAgo", {
-                                    days: Math.floor(
-                                      (new Date().getTime() - new Date(strike.date_created).getTime()) /
-                                      (1000 * 60 * 60 * 24)
-                                    )
-                                  })}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                {strike.rollover_date ? (
-                                  <div className="text-sm text-muted-foreground">
-                                    {new Date(strike.rollover_date * 1000).toLocaleDateString(locale)}
-                                  </div>
-                                ) : (
-                                  <div className="text-sm text-muted-foreground">{t("strikes.table.never")}</div>
-                                )}
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleRemoveStrike(strike.strike_id)}
-                                  className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"
-                                >
-                                  <Trash2 className="h-4 w-4 mr-1" />
-                                  {tCommon("remove")}
-                                </Button>
-                              </TableCell>
+                      {strikeViewMode === "all" ? (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>{t("strikes.table.player")}</TableHead>
+                              <TableHead>{t("strikes.table.reason")}</TableHead>
+                              <TableHead>{t("strikes.table.weight")}</TableHead>
+                              <TableHead>{t("strikes.table.addedBy")}</TableHead>
+                              <TableHead>{t("strikes.table.date")}</TableHead>
+                              <TableHead>{t("strikes.table.expires")}</TableHead>
+                              <TableHead className="text-right">{tCommon("actions")}</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredStrikes.map((strike, index) => (
+                              <TableRow key={`${strike.strike_id}-${index}`}>
+                                <TableCell>
+                                  <div>
+                                    <div className="font-medium text-foreground">
+                                    {strike.player_name || tCommon("unknown")}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {strike.tag}
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell className="max-w-xs">
+                                <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
+                                  {strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/30">
+                                    {strike.strike_weight}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-2">
+                                    {strike.added_by_avatar_url ? (
+                                      <img
+                                        src={strike.added_by_avatar_url}
+                                        alt={strike.added_by_username || String(strike.added_by)}
+                                        className="h-6 w-6 rounded-full"
+                                      />
+                                    ) : (
+                                      <User className="h-4 w-4 text-muted-foreground" />
+                                    )}
+                                    <div className="flex flex-col">
+                                      <span className="text-sm font-medium">
+                                        {strike.added_by_username || strike.added_by}
+                                      </span>
+                                      {strike.added_by_username && (
+                                        <span className="text-[10px] text-muted-foreground leading-none">
+                                          ID: {strike.added_by}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="text-sm">
+                                    {new Date(strike.date_created).toLocaleDateString(locale)}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {t("strikes.table.daysAgo", {
+                                      days: Math.floor(
+                                        (new Date().getTime() - new Date(strike.date_created).getTime()) /
+                                        (1000 * 60 * 60 * 24)
+                                      )
+                                    })}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  {strike.rollover_date ? (
+                                    <div className="text-sm text-muted-foreground">
+                                      {new Date(strike.rollover_date * 1000).toLocaleDateString(locale)}
+                                    </div>
+                                  ) : (
+                                    <div className="text-sm text-muted-foreground">{t("strikes.table.never")}</div>
+                                  )}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleRemoveStrike(strike.strike_id)}
+                                    className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-1" />
+                                    {tCommon("remove")}
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      ) : (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>{t("strikes.table.player")}</TableHead>
+                              <TableHead className="text-center">{t("strikes.table.totalStrikes")}</TableHead>
+                              <TableHead className="text-center">{t("strikes.table.totalWeight")}</TableHead>
+                              <TableHead>{t("strikes.table.lastStrike")}</TableHead>
+                              <TableHead className="text-right">{tCommon("actions")}</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {groupedStrikes.map((group, index) => {
+                              const isExpanded = expandedPlayerTags.includes(group.tag);
+                              return (
+                                <Fragment key={`${group.tag}-${index}`}>
+                                  <TableRow className={isExpanded ? "border-b-0 bg-muted/30" : ""}>
+                                    <TableCell>
+                                      <div>
+                                        <div className="font-medium text-foreground">
+                                          {group.player_name || tCommon("unknown")}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">
+                                          {group.tag}
+                                        </div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <span className="font-bold">{group.count}</span>
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                      <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/30">
+                                        {group.total_weight}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="text-sm">
+                                        {new Date(group.last_strike).toLocaleDateString(locale)}
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                      <Button 
+                                        variant="ghost" 
+                                        size="sm"
+                                        onClick={() => {
+                                          setExpandedPlayerTags(prev => 
+                                            prev.includes(group.tag) 
+                                              ? prev.filter(t => t !== group.tag) 
+                                              : [...prev, group.tag]
+                                          );
+                                        }}
+                                      >
+                                        {isExpanded ? (
+                                          <ChevronDown className="h-4 w-4 mr-1" />
+                                        ) : (
+                                          <ChevronRight className="h-4 w-4 mr-1" />
+                                        )}
+                                        {tCommon("details")}
+                                      </Button>
+                                    </TableCell>
+                                  </TableRow>
+                                  {isExpanded && (
+                                    <TableRow className="bg-muted/30 border-t-0">
+                                      <TableCell colSpan={5} className="p-0">
+                                        <div className="px-4 pb-4">
+                                          <div className="rounded-lg border border-border bg-background overflow-hidden">
+                                            <Table>
+                                              <TableHeader className="bg-muted/50">
+                                                <TableRow>
+                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.reason")}</TableHead>
+                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground text-center">{t("strikes.table.weight")}</TableHead>
+                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.addedBy")}</TableHead>
+                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.date")}</TableHead>
+                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.expires")}</TableHead>
+                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground text-right">{tCommon("actions")}</TableHead>
+                                                </TableRow>
+                                              </TableHeader>
+                                              <TableBody>
+                                                {group.strikes.map((s, idx) => (
+                                                  <TableRow key={`${s.strike_id}-${idx}`} className="hover:bg-muted/20">
+                                                    <TableCell className="py-2 max-w-[200px]">
+                                                      <div className="truncate text-xs text-muted-foreground" title={s.reason}>
+                                                        {s.reason && s.reason !== "No Notes" ? s.reason : t("bans.table.noReason")}
+                                                      </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-2 text-center">
+                                                      <Badge variant="outline" className="text-[10px] px-1.5 h-5 bg-orange-500/10 text-orange-500 border-orange-500/30">
+                                                        {s.strike_weight}
+                                                      </Badge>
+                                                    </TableCell>
+                                                    <TableCell className="py-2">
+                                                      <div className="flex items-center gap-1.5">
+                                                        {s.added_by_avatar_url ? (
+                                                          <img src={s.added_by_avatar_url} className="h-4 w-4 rounded-full" />
+                                                        ) : (
+                                                          <User className="h-3 w-3 text-muted-foreground" />
+                                                        )}
+                                                        <div className="flex flex-col">
+                                                          <span className="text-[11px] text-muted-foreground truncate max-w-[80px]">
+                                                            {s.added_by_username || s.added_by}
+                                                          </span>
+                                                          {s.added_by_username && (
+                                                            <span className="text-[9px] text-muted-foreground/70 leading-none">
+                                                              ID: {s.added_by}
+                                                            </span>
+                                                          )}
+                                                        </div>
+                                                      </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-2">
+                                                      <div className="text-[11px] text-muted-foreground">
+                                                        {new Date(s.date_created).toLocaleDateString(locale)}
+                                                      </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-2">
+                                                      <div className="text-[11px] text-muted-foreground">
+                                                        {s.rollover_date ? (
+                                                          new Date(s.rollover_date * 1000).toLocaleDateString(locale)
+                                                        ) : (
+                                                          t("strikes.table.never")
+                                                        )}
+                                                      </div>
+                                                    </TableCell>
+                                                    <TableCell className="py-2 text-right">
+                                                      <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-6 w-6 text-red-500/70 hover:text-red-500 hover:bg-red-500/10"
+                                                        onClick={() => handleRemoveStrike(s.strike_id)}
+                                                      >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                      </Button>
+                                                    </TableCell>
+                                                  </TableRow>
+                                                ))}
+                                              </TableBody>
+                                            </Table>
+                                          </div>
+                                        </div>
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                </Fragment>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      )}
                     </div>
                   )}
                 </CardContent>
