@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
 
 // Type definitions
 interface Channel {
@@ -440,32 +441,13 @@ export default function AutoBoardsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="channel" className="text-foreground">{t('channel')}</Label>
-                <Select value={selectedChannel} onValueChange={setSelectedChannel}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder={t('selectChannel')} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border-border max-h-[300px]">
-                    {channels.length === 0 ? (
-                      <div className="px-2 py-4 text-sm text-muted-foreground text-center">
-                        {t('noChannels')}
-                      </div>
-                    ) : (
-                      channels.map((channel) => (
-                        <SelectItem key={channel.id} value={channel.id}>
-                          <div className="flex items-center gap-2">
-                            <Hash className="w-3 h-3 text-muted-foreground" />
-                            <span>{channel.name}</span>
-                            {channel.parent_name && (
-                              <span className="text-xs text-muted-foreground">
-                                ({channel.parent_name})
-                              </span>
-                            )}
-                          </div>
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
+                <ChannelCombobox
+                  channels={channels}
+                  value={selectedChannel}
+                  onValueChange={setSelectedChannel}
+                  placeholder={t('selectChannel')}
+                  showDisabled={false}
+                />
                 <p className="text-xs text-muted-foreground">
                   {t('channelDesc')}
                 </p>
@@ -608,32 +590,13 @@ export default function AutoBoardsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="edit-channel" className="text-foreground">{t('channel')}</Label>
-                <Select value={editChannel} onValueChange={setEditChannel}>
-                  <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder={t('selectChannel')} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border-border max-h-[300px]">
-                    {channels.length === 0 ? (
-                      <div className="px-2 py-4 text-sm text-muted-foreground text-center">
-                        {t('noChannels')}
-                      </div>
-                    ) : (
-                      channels.map((channel) => (
-                        <SelectItem key={channel.id} value={channel.id}>
-                          <div className="flex items-center gap-2">
-                            <Hash className="w-3 h-3 text-muted-foreground" />
-                            <span>{channel.name}</span>
-                            {channel.parent_name && (
-                              <span className="text-xs text-muted-foreground">
-                                ({channel.parent_name})
-                              </span>
-                            )}
-                          </div>
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
+                <ChannelCombobox
+                  channels={channels}
+                  value={editChannel}
+                  onValueChange={setEditChannel}
+                  placeholder={t('selectChannel')}
+                  showDisabled={false}
+                />
                 <p className="text-xs text-muted-foreground">
                   {t('channelDesc')}
                 </p>
