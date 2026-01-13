@@ -24,6 +24,8 @@
     "error": "Une erreur s'est produite",
     "success": "Succès",
     "actions": "Actions",
+    "details": "Détails",
+    "view": "Voir",
     "unknown": "Inconnu",
     "confirm": "Confirmer",
     "settings": "Paramètres",
@@ -265,11 +267,11 @@
       "addDialog": {
         "title": "Bannir un joueur",
         "description": "Ajouter un joueur à la liste de bannissement. Il ne pourra rejoindre aucun clan sur ce serveur.",
-        "playerTagLabel": "Tag du Joueur *",
+        "playerTagLabel": "Tag du Joueur",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Nom du Joueur (optionnel)",
         "playerNamePlaceholder": "Entrer le nom du joueur",
-        "reasonLabel": "Raison du bannissement *",
+        "reasonLabel": "Raison du bannissement",
         "reasonPlaceholder": "Expliquez pourquoi ce joueur est banni...",
         "submit": "Bannir le Joueur"
       },
@@ -319,7 +321,9 @@
         "noStrikesFound": "Aucun avertissement trouvé",
         "noStrikes": "Aucun avertissement émis",
         "adjustSearch": "Essayez d'ajuster votre recherche",
-        "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs"
+        "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs",
+        "viewAll": "Tous les avertissements",
+        "viewGrouped": "Par Joueur"
       },
       "table": {
         "player": "Joueur",
@@ -330,16 +334,19 @@
         "expires": "Expire le",
         "never": "Jamais",
         "noReason": "Aucune raison fournie",
-        "daysAgo": "Il y a {days} jours"
+        "daysAgo": "Il y a {days} jours",
+        "totalStrikes": "Total des avertissements",
+        "totalWeight": "Poids total",
+        "lastStrike": "Dernier avertissement"
       },
       "addDialog": {
         "title": "Ajouter un avertissement",
         "description": "Émettre un avertissement à un joueur. Les avertissements peuvent avoir différents poids et dates d'expiration.",
-        "playerTagLabel": "Tag du Joueur *",
+        "playerTagLabel": "Tag du Joueur",
         "playerTagPlaceholder": "#ABC123DEF",
-        "reasonLabel": "Raison *",
+        "reasonLabel": "Raison",
         "reasonPlaceholder": "Expliquez pourquoi cet avertissement est émis...",
-        "weightLabel": "Poids de l'avertissement *",
+        "weightLabel": "Poids de l'avertissement",
         "weightPlaceholder": "1",
         "rolloverLabel": "Expire dans (jours)",
         "rolloverPlaceholder": "Optionnel",

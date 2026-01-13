@@ -24,6 +24,8 @@
     "error": "An error occurred",
     "success": "Success",
     "actions": "Actions",
+    "details": "Details",
+    "view": "View",
     "unknown": "Unknown",
     "confirm": "Confirm",
     "settings": "Settings",
@@ -265,11 +267,11 @@
       "addDialog": {
         "title": "Ban a Player",
         "description": "Add a player to the ban list. They will be prevented from joining any clan on this server.",
-        "playerTagLabel": "Player Tag *",
+        "playerTagLabel": "Player Tag",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Player Name (optional)",
         "playerNamePlaceholder": "Enter player name",
-        "reasonLabel": "Reason for Ban *",
+        "reasonLabel": "Reason for Ban",
         "reasonPlaceholder": "Explain why this player is being banned...",
         "submit": "Ban Player"
       },
@@ -319,7 +321,9 @@
         "noStrikesFound": "No strikes found",
         "noStrikes": "No strikes issued",
         "adjustSearch": "Try adjusting your search query",
-        "getStarted": "Add a strike to start tracking player violations"
+        "getStarted": "Add a strike to start tracking player violations",
+        "viewAll": "All Strikes",
+        "viewGrouped": "By Player"
       },
       "table": {
         "player": "Player",
@@ -330,16 +334,19 @@
         "expires": "Expires",
         "never": "Never",
         "noReason": "No reason provided",
-        "daysAgo": "{days} days ago"
+        "daysAgo": "{days} days ago",
+        "totalStrikes": "Total Strikes",
+        "totalWeight": "Total Weight",
+        "lastStrike": "Last Strike"
       },
       "addDialog": {
         "title": "Add a Strike",
         "description": "Issue a strike to a player. Strikes can have different weights and expiration dates.",
-        "playerTagLabel": "Player Tag *",
+        "playerTagLabel": "Player Tag",
         "playerTagPlaceholder": "#ABC123DEF",
-        "reasonLabel": "Reason *",
+        "reasonLabel": "Reason",
         "reasonPlaceholder": "Explain why this strike is being issued...",
-        "weightLabel": "Strike Weight *",
+        "weightLabel": "Strike Weight",
         "weightPlaceholder": "1",
         "rolloverLabel": "Expires in (days)",
         "rolloverPlaceholder": "Optional",

@@ -24,6 +24,8 @@
     "error": "Er is een fout opgetreden",
     "success": "Succes",
     "actions": "Acties",
+    "details": "Details",
+    "view": "Bekijken",
     "unknown": "Onbekend",
     "confirm": "Bevestigen",
     "settings": "Instellingen",
@@ -265,11 +267,11 @@
       "addDialog": {
         "title": "Verban een speler",
         "description": "Voeg een speler toe aan de banlijst. Ze kunnen geen enkele clan op deze server joinen.",
-        "playerTagLabel": "Speler Tag *",
+        "playerTagLabel": "Speler Tag",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Speler Naam (optioneel)",
         "playerNamePlaceholder": "Voer spelernaam in",
-        "reasonLabel": "Reden voor ban *",
+        "reasonLabel": "Reden voor ban",
         "reasonPlaceholder": "Leg uit waarom deze speler wordt verbannen...",
         "submit": "Verban Speler"
       },
@@ -319,7 +321,9 @@
         "noStrikesFound": "Geen strikes gevonden",
         "noStrikes": "Geen strikes uitgedeeld",
         "adjustSearch": "Probeer je zoekopdracht aan te passen",
-        "getStarted": "Voeg een strike toe om te beginnen met het volgen van spelerovertredingen"
+        "getStarted": "Voeg een strike toe om te beginnen met het volgen van spelerovertredingen",
+        "viewAll": "Alle strikes",
+        "viewGrouped": "Per Speler"
       },
       "table": {
         "player": "Speler",
@@ -330,16 +334,19 @@
         "expires": "Vervalt op",
         "never": "Nooit",
         "noReason": "Geen reden opgegeven",
-        "daysAgo": "{days} dagen geleden"
+        "daysAgo": "{days} dagen geleden",
+        "totalStrikes": "Totaal aantal strikes",
+        "totalWeight": "Totaal gewicht",
+        "lastStrike": "Laatste strike"
       },
       "addDialog": {
         "title": "Voeg een strike toe",
         "description": "Geef een strike aan een speler. Strikes kunnen verschillende gewichten en vervaldatums hebben.",
-        "playerTagLabel": "Speler Tag *",
+        "playerTagLabel": "Speler Tag",
         "playerTagPlaceholder": "#ABC123DEF",
-        "reasonLabel": "Reden *",
+        "reasonLabel": "Reden",
         "reasonPlaceholder": "Leg uit waarom deze strike wordt gegeven...",
-        "weightLabel": "Strike Gewicht *",
+        "weightLabel": "Strike Gewicht",
         "weightPlaceholder": "1",
         "rolloverLabel": "Vervalt over (dagen)",
         "rolloverPlaceholder": "Optioneel",
