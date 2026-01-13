@@ -85,21 +85,6 @@ const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "family_position", icon: Crown },
 ];
 
-const LEAGUE_TIERS = [
-  { id: "legend", apiName: "Legend League", range: null },
-  { id: "electroDragon", apiName: "Electro Dragon", range: [33, 31] },
-  { id: "dragon", apiName: "Dragon", range: [30, 28] },
-  { id: "electroTitan", apiName: "Electro Titan", range: [27, 25] },
-  { id: "pekka", apiName: "P.E.K.K.A", range: [24, 22] },
-  { id: "golem", apiName: "Golem", range: [21, 19] },
-  { id: "witch", apiName: "Witch", range: [18, 16] },
-  { id: "valkyrie", apiName: "Valkyrie", range: [15, 13] },
-  { id: "wizard", apiName: "Wizard", range: [12, 10] },
-  { id: "archer", apiName: "Archer", range: [9, 7] },
-  { id: "barbarian", apiName: "Barbarian", range: [6, 4] },
-  { id: "skeleton", apiName: "Skeleton", range: [3, 1] },
-];
-
 const FAMILY_POSITIONS_CONFIG = [
   { value: "family_elder_roles" },
   { value: "family_co-leader_roles" },
@@ -184,6 +169,25 @@ const ACHIEVEMENTS_CONFIG = [
   { id: "mostValuableClanmate", apiName: "Most Valuable Clanmate" }
 ];
 
+/**
+ * Denormalize league name from snake_case to display format
+ * @param snakeCaseName - League name in snake_case (e.g., "legend_league", "titan_league_i")
+ * @returns Formatted league name (e.g., "Legend League", "Titan League I")
+ */
+const denormalizeLeagueName = (snakeCaseName: string): string => {
+  return snakeCaseName
+    .split('_')
+    .map(word => {
+      // Keep roman numerals uppercase (i, ii, iii, iv, v)
+      if (['i', 'ii', 'iii', 'iv', 'v'].includes(word.toLowerCase())) {
+        return word.toUpperCase();
+      }
+      // Capitalize first letter of each word
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+};
+
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;
@@ -204,21 +208,6 @@ export default function RolesPage() {
       ...fp,
       label: t(`familyPositions.${key}`),
     };
-  });
-
-  const leagues = LEAGUE_TIERS.flatMap((tier) => {
-    const tierName = t(`leagues.${tier.id}`);
-    if (!tier.range) {
-      return [{ value: tier.apiName, label: tierName }];
-    }
-    const leaguesInTier = [];
-    for (let i = tier.range[0]; i >= tier.range[1]; i--) {
-      leaguesInTier.push({
-        value: `${tier.apiName} ${i}`,
-        label: `${tierName} ${i}`,
-      });
-    }
-    return leaguesInTier;
   });
 
   const builderLeagues = BUILDER_LEAGUE_TIERS.flatMap((tier) => {
@@ -281,9 +270,28 @@ export default function RolesPage() {
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
   const [newRole, setNewRole] = useState<any>({});
 
+  // Dynamic league data loaded from API
+  const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
+
   useEffect(() => {
     loadData();
+    loadLeagues();
   }, [guildId]);
+
+  const loadLeagues = async () => {
+    try {
+      // Load league tiers from static data API via Next.js proxy
+      const response = await fetch('/api/v2/static/league_tiers/names');
+      if (response.ok) {
+        const leagueNames: string[] = await response.json();
+        // Transform to {value, label} format for the select
+        setAvailableLeagues(leagueNames.map(name => ({ value: name, label: name })));
+      }
+    } catch (err) {
+      console.error("Failed to load leagues from static data:", err);
+      // Keep empty array if loading fails, will show empty dropdown
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -378,7 +386,7 @@ export default function RolesPage() {
       setError(null);
 
       // Transform data to match backend format
-      let roleData = { ...newRole };
+      let roleData: any = { ...newRole };
 
       // For townhall roles, convert th: 17 → th: "th17"
       if (currentRoleType === "townhall" && typeof roleData.th === "number") {
@@ -388,6 +396,32 @@ export default function RolesPage() {
       // For builderhall roles, convert bh: 9 → bh: "bh9"
       if (currentRoleType === "builderhall" && typeof roleData.bh === "number") {
         roleData.bh = `bh${roleData.bh}`;
+      }
+
+      // For league roles: rename "league" → "type" to match API schema
+      // Backend expects: { role: int, type: "Legend League" }
+      if (currentRoleType === "league" && roleData.league) {
+        roleData.type = roleData.league;
+        delete roleData.league;
+      }
+
+      // For builder_league roles: rename "builder_league" → "type" to match API schema
+      // Backend expects: { role: int, type: "Diamond I" }
+      if (currentRoleType === "builder_league" && roleData.builder_league) {
+        roleData.type = roleData.builder_league;
+        delete roleData.builder_league;
+      }
+
+      // Backend expects "role" field for most types, but frontend uses "role_id"
+      // Keep as string to avoid JavaScript number precision loss with 64-bit Discord IDs
+      // Pydantic will handle string -> int conversion on the backend
+      if (currentRoleType !== "status" && roleData.role_id !== undefined) {
+        roleData.role = roleData.role_id; // Keep as string
+        delete roleData.role_id;
+      } else if (currentRoleType === "status" && roleData.id !== undefined) {
+        // Status roles: rename id -> role but keep as string
+        roleData.role = roleData.id;
+        delete roleData.id;
       }
 
       await apiClient.roles.createRole(guildId, currentRoleType, roleData);
@@ -465,7 +499,7 @@ export default function RolesPage() {
                   <SelectValue placeholder={t("addRoleDialog.selectLeague")} />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
-                  {leagues.map((league) => (
+                  {availableLeagues.map((league) => (
                     <SelectItem key={league.value} value={league.value}>
                       {league.label}
                     </SelectItem>
@@ -721,13 +755,15 @@ export default function RolesPage() {
                   : "";
                 break;
               case "league":
-                criteria = role.league;
+                // DB stores in snake_case (e.g., "legend_league"), denormalize for display
+                criteria = role.type ? denormalizeLeagueName(role.type) : "";
                 break;
               case "builderhall":
                 criteria = `BH ${role.bh}`;
                 break;
               case "builder_league":
-                criteria = role.builder_league || "";
+                // DB stores in snake_case, denormalize for display
+                criteria = role.type ? denormalizeLeagueName(role.type) : "";
                 break;
               case "achievement":
                 const ach = achievements.find((a) => a.value === role.achievement);
