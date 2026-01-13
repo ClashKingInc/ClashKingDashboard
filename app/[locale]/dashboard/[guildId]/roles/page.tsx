@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -191,6 +191,7 @@ const denormalizeLeagueName = (snakeCaseName: string): string => {
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;
+  const locale = useLocale();
   const t = useTranslations("RolesPage");
   const tCommon = useTranslations("Common");
 
@@ -276,12 +277,38 @@ export default function RolesPage() {
   useEffect(() => {
     loadData();
     loadLeagues();
-  }, [guildId]);
+  }, [guildId, locale]);
 
   const loadLeagues = async () => {
     try {
-      // Load league tiers from static data API via Next.js proxy
-      const response = await fetch('/api/v2/static/league_tiers/names');
+      // Map next-intl locale codes to CoC API locale codes
+      const localeMap: Record<string, string> = {
+        'en': 'EN',
+        'fr': 'FR',
+        'de': 'DE',
+        'es': 'ES',
+        'it': 'IT',
+        'pt': 'PT',
+        'ru': 'RU',
+        'ja': 'JP',
+        'ko': 'KR',
+        'zh': 'CN',
+        'ar': 'AR',
+        'tr': 'TR',
+        'pl': 'PL',
+        'nl': 'NL',
+        'th': 'TH',
+        'vi': 'VI',
+        'fi': 'FI',
+        'no': 'NO',
+        'id': 'ID',
+        'ms': 'MS',
+      };
+
+      const apiLocale = localeMap[locale] || 'EN';
+
+      // Load league tiers from static data API via Next.js proxy with locale
+      const response = await fetch(`/api/v2/static/league_tiers/names?locale=${apiLocale}`);
       if (response.ok) {
         const leagueNames: string[] = await response.json();
         // Transform to {value, label} format for the select
