@@ -24,6 +24,8 @@
     "error": "Une erreur s'est produite",
     "success": "Succès",
     "actions": "Actions",
+    "details": "Détails",
+    "view": "Voir",
     "unknown": "Inconnu",
     "confirm": "Confirmer",
     "settings": "Paramètres",
@@ -265,11 +267,11 @@
       "addDialog": {
         "title": "Bannir un joueur",
         "description": "Ajouter un joueur à la liste de bannissement. Il ne pourra rejoindre aucun clan sur ce serveur.",
-        "playerTagLabel": "Tag du Joueur *",
+        "playerTagLabel": "Tag du Joueur",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Nom du Joueur (optionnel)",
         "playerNamePlaceholder": "Entrer le nom du joueur",
-        "reasonLabel": "Raison du bannissement *",
+        "reasonLabel": "Raison du bannissement",
         "reasonPlaceholder": "Expliquez pourquoi ce joueur est banni...",
         "submit": "Bannir le Joueur"
       },
@@ -319,7 +321,9 @@
         "noStrikesFound": "Aucun avertissement trouvé",
         "noStrikes": "Aucun avertissement émis",
         "adjustSearch": "Essayez d'ajuster votre recherche",
-        "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs"
+        "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs",
+        "viewAll": "Tous les avertissements",
+        "viewGrouped": "Par Joueur"
       },
       "table": {
         "player": "Joueur",
@@ -330,16 +334,19 @@
         "expires": "Expire le",
         "never": "Jamais",
         "noReason": "Aucune raison fournie",
-        "daysAgo": "Il y a {days} jours"
+        "daysAgo": "Il y a {days} jours",
+        "totalStrikes": "Total des avertissements",
+        "totalWeight": "Poids total",
+        "lastStrike": "Dernier avertissement"
       },
       "addDialog": {
         "title": "Ajouter un avertissement",
         "description": "Émettre un avertissement à un joueur. Les avertissements peuvent avoir différents poids et dates d'expiration.",
-        "playerTagLabel": "Tag du Joueur *",
+        "playerTagLabel": "Tag du Joueur",
         "playerTagPlaceholder": "#ABC123DEF",
-        "reasonLabel": "Raison *",
+        "reasonLabel": "Raison",
         "reasonPlaceholder": "Expliquez pourquoi cet avertissement est émis...",
-        "weightLabel": "Poids de l'avertissement *",
+        "weightLabel": "Poids de l'avertissement",
         "weightPlaceholder": "1",
         "rolloverLabel": "Expire dans (jours)",
         "rolloverPlaceholder": "Optionnel",
@@ -719,8 +726,10 @@
     "greetingMessage": "Message d'Accueil",
     "leadershipEval": "Éval de Leadership",
     "leadershipEvalDescription": "Attribution auto des rôles de leadership",
-    "warCountdownChannel": "Canal de Compte à Rebours de Guerre",
-    "warTimerCountdown": "Compte à Rebours du Timer de Guerre",
+    "warScoreCountdown": "Score de Guerre",
+    "warScoreCountdownDescription": "Crée un salon vocal affichant le score de guerre actuel",
+    "warTimerCountdown": "Timer de Guerre",
+    "warTimerCountdownDescription": "Crée un salon vocal affichant le temps restant de guerre",
     "banAlertChannel": "Canal d'Alerte de Bannissement",
     "category": "Catégorie",
     "autoGreetOption": "Option d'Accueil Auto",
@@ -767,7 +776,10 @@
       "clanRemoved": "Clan retiré avec succès",
       "errorRemovingClan": "Échec de la suppression du clan",
       "settingsSaved": "Paramètres enregistrés avec succès",
-      "errorSavingSettings": "Échec de l'enregistrement des paramètres"
+      "errorSavingSettings": "Échec de l'enregistrement des paramètres",
+      "countdownEnabled": "Salon vocal de compte à rebours créé",
+      "countdownDisabled": "Salon vocal de compte à rebours supprimé",
+      "errorTogglingCountdown": "Échec de la bascule du compte à rebours"
     }
   },
   "RolesPage": {
@@ -1004,33 +1016,58 @@
     "card": {
       "new": "Nouveau",
       "before": "avant",
-      "timeBefore": "Temps Avant (ex: \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
+      "timeBefore": "Temps restant",
+      "timeBeforePlaceholder": "Par ex. 6",
+      "timeInactive": "Inactivité de",
+      "timeInactivePlaceholder": "Par ex. 160",
+      "timeUnit": "heures",
+      "hoursRemaining": "h restantes",
       "channel": "Canal",
       "channelPlaceholder": "Sélectionner un canal",
       "clan": "Clan",
       "clanPlaceholder": "Sélectionner un clan",
-      "customMessage": "Message Personnalisé (Optionnel)",
+      "customMessage": "Message Personnalisé",
       "customMessagePlaceholder": "N'oubliez pas d'utiliser vos attaques !",
+      "customMessagePlaceholderClanGames": "Essayez d'obtenir plus de points dans les jeux de clan !",
+      "customMessagePlaceholderInactivity": "Vous êtes inactif dans le clan depuis un moment :(",
       "warTypes": "Types de Guerre",
       "random": "Aléatoire",
       "friendly": "Amicale",
       "cwl": "LDC",
       "pointThreshold": "Seuil de Points",
       "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Mentionnera les membres qui ont moins de {threshold} points.",
       "attackThreshold": "Seuil d'Attaques",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Mentionnera les membres s'il leur reste au moins {threshold} attaques à effectuer.",
+      "notSet": "Non défini"
+    },
+    "dialog": {
+      "addTitle": "Ajouter un Nouveau Rappel",
+      "addDescription": "Configurez un nouveau rappel pour votre serveur",
+      "editTitle": "Modifier le Rappel",
+      "editDescription": "Mettre à jour les paramètres du rappel",
+      "type": "Type de Rappel",
+      "selectType": "Sélectionner le type",
+      "cancel": "Annuler",
+      "saving": "Enregistrement...",
+      "saveChanges": "Enregistrer les Modifications",
+      "addReminder": "Ajouter un Rappel"
     },
     "toast": {
       "errorTitle": "Erreur",
       "errorLoadingReminders": "Échec du chargement des rappels. Veuillez réessayer.",
-      "reminderAdded": "Rappel Ajouté",
+      "reminderAdded": "Rappel ajouté avec succès",
       "reminderAddedDesc": "Nouveau rappel {type} ajouté. N'oubliez pas d'enregistrer !",
+      "reminderUpdated": "Rappel mis à jour avec succès",
       "successTitle": "Succès",
       "reminderDeleted": "Rappel supprimé avec succès",
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
-      "failedToSave": "Échec de l'enregistrement des rappels"
+      "failedToSave": "Échec de l'enregistrement des rappels",
+      "timeExceedsLimit": "Le temps restant doit être compris entre {min} et {max} heures",
+      "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
+      "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
     }
   },
   "LogsPage": {
@@ -1220,7 +1257,10 @@
       "embedColorDesc": "Couleur de la barre latérale sur tous les messages embed du bot dans Discord",
       "embedColorDefault": "Par défaut : **#D90709** (Rouge ClashKing)",
       "embedPreview": "Aperçu d'Embed",
-      "embedPreviewDesc": "Cette barre colorée apparaîtra sur le côté gauche de tous les messages du bot"
+      "embedPreviewDesc": "Cette barre colorée apparaîtra sur le côté gauche de tous les messages du bot",
+      "editColor": "Modifier la Couleur",
+      "resetToDefault": "Réinitialiser par Défaut",
+      "apply": "Appliquer"
     },
     "security": {
       "title": "Sécurité et Permissions",
@@ -1393,7 +1433,7 @@
     },
     "noServers": {
       "title": "Aucun Serveur Trouvé",
-      "description": "Vous n'avez pas les permissions d'administrateur dans aucun serveur Discord."
+      "description": "Aucun serveur Discord trouvé où vous êtes administrateur ou propriétaire."
     }
   },
   "AutoboardsPage": {
@@ -1416,7 +1456,7 @@
     "boardType": "Type de Tableau",
     "selectBoardType": "Sélectionner un type de tableau",
     "postDays": "Jours de Publication (sélectionner au moins un)",
-    "postDaysDesc": "Les publications ont lieu à 5h00 UTC lors de la réinitialisation quotidienne",
+    "postDaysDesc": "Les jours sélectionnés, une publication sera effectuée à {time} (5h00 UTC).",
     "autoRefreshInfo": "Info Actualisation Auto",
     "autoRefreshInfoDesc": "Le tableau s'actualisera automatiquement toutes les 30-60 minutes avec les dernières données. Parfait pour garder les statistiques à jour sans mises à jour manuelles.",
     "cancel": "Annuler",
@@ -1454,7 +1494,7 @@
       },
       "schedule": {
         "title": "Planifiez judicieusement :",
-        "desc": "Les tableaux de Publication Auto apparaissent à 5h00 UTC. Choisissez des jours qui correspondent au cycle d'activité de votre clan."
+        "desc": "Les tableaux de Publication Auto apparaissent à {time} (5h00 UTC). Choisissez des jours qui correspondent au cycle d'activité de votre clan."
       },
       "duplicates": {
         "title": "Évitez les doublons :",

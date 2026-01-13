@@ -11,14 +11,32 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight } from "lucide-react";
+import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight, Pencil } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import ReactMarkdown from "react-markdown";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Placeholder descriptions will be fetched from translations dynamically
+
+const hexToInt = (hex: string): number => {
+  return parseInt(hex.replace("#", ""), 16);
+};
+
+const intToHex = (int: number): string => {
+  return "#" + int.toString(16).padStart(6, "0").toUpperCase();
+};
 
 export default function GeneralSettingsPage() {
   const params = useParams();
@@ -45,7 +63,7 @@ export default function GeneralSettingsPage() {
     change_nickname: true,
     nickname_rule: "[{player_clan_abbreviation}] {player_name}",
     non_family_nickname_rule: "{player_name}",
-    embed_color: 14227209, // #D90709 as integer
+    embed_color: 14223113, // #D90709 as integer
     api_token: true,
     full_whitelist_role: undefined as string | undefined,
   });
@@ -57,6 +75,9 @@ export default function GeneralSettingsPage() {
   const [success, setSuccess] = useState(false);
   const [isFamilyPlaceholdersOpen, setIsFamilyPlaceholdersOpen] = useState(false);
   const [isNonFamilyPlaceholdersOpen, setIsNonFamilyPlaceholdersOpen] = useState(false);
+  const [tempColor, setTempColor] = useState(settings.embed_color);
+  const [tempHex, setTempHex] = useState(intToHex(settings.embed_color));
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Load settings on mount
   useEffect(() => {
@@ -84,14 +105,17 @@ export default function GeneralSettingsPage() {
       }
 
       if (response.data) {
-        setSettings({
+        const newSettings = {
           change_nickname: response.data.change_nickname ?? true,
           nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
           non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
-          embed_color: response.data.embed_color ?? 14227209,
+          embed_color: response.data.embed_color ?? 14223113,
           api_token: response.data.api_token ?? true,
           full_whitelist_role: response.data.full_whitelist_role?.toString(),
-        });
+        };
+        setSettings(newSettings);
+        setTempColor(newSettings.embed_color);
+        setTempHex(intToHex(newSettings.embed_color));
       }
     } catch (err: any) {
       setError(err.message || "Failed to load settings");
@@ -103,9 +127,20 @@ export default function GeneralSettingsPage() {
 
   const loadDiscordRoles = async () => {
     try {
-      const response = await apiClient.roles.getDiscordRoles(guildId);
-      if (response.data) {
-        setDiscordRoles(response.data.roles);
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      // Use cache to prevent duplicate requests
+      const rolesData = await apiCache.get(`discord-roles-${guildId}`, async () => {
+        const response = await apiClient.roles.getDiscordRoles(guildId);
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        return response.data;
+      });
+
+      if (rolesData) {
+        setDiscordRoles(rolesData.roles);
       }
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
@@ -120,6 +155,9 @@ export default function GeneralSettingsPage() {
 
       await apiClient.servers.updateSettings(guildId, settings);
 
+      // Invalidate cache after saving
+      apiCache.invalidate(`settings-${guildId}`);
+
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
@@ -132,14 +170,6 @@ export default function GeneralSettingsPage() {
 
   const handleReset = () => {
     loadSettings();
-  };
-
-  const hexToInt = (hex: string): number => {
-    return parseInt(hex.replace("#", ""), 16);
-  };
-
-  const intToHex = (int: number): string => {
-    return "#" + int.toString(16).padStart(6, "0").toUpperCase();
   };
 
   // Generate preview of nickname format
@@ -166,88 +196,6 @@ export default function GeneralSettingsPage() {
 
     return preview;
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background p-6">
-        <div className="max-w-5xl mx-auto space-y-6">
-          {/* Header Skeleton */}
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
-              <Skeleton className="h-9 w-64" />
-              <Skeleton className="h-5 w-96" />
-            </div>
-            <div className="flex gap-2">
-              <Skeleton className="h-9 w-20" />
-              <Skeleton className="h-9 w-32" />
-            </div>
-          </div>
-
-          {/* Info Banner Skeleton */}
-          <Card className="bg-blue-500/5 border-blue-500/30">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <Skeleton className="h-5 w-5 rounded" />
-                <div className="space-y-2 flex-1">
-                  <Skeleton className="h-4 w-48" />
-                  <Skeleton className="h-3 w-full" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Main Cards Skeleton */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-8 rounded-lg" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-40" />
-                    <Skeleton className="h-3 w-64" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-20 w-full" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-8 rounded-lg" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-32" />
-                    <Skeleton className="h-3 w-48" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-16 w-full" />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-8 w-8 rounded-lg" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-32" />
-                    <Skeleton className="h-3 w-48" />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-16 w-full" />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -361,13 +309,17 @@ export default function GeneralSettingsPage() {
                     {t("nickname.automaticChangesDesc")}
                   </p>
                 </div>
-                <Switch
-                  id="change-nicknames"
-                  checked={settings.change_nickname}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, change_nickname: checked })
-                  }
-                />
+                {isLoading ? (
+                  <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
+                ) : (
+                  <Switch
+                    id="change-nicknames"
+                    checked={settings.change_nickname}
+                    onCheckedChange={(checked) =>
+                      setSettings({ ...settings, change_nickname: checked })
+                    }
+                  />
+                )}
               </div>
 
               <Separator className="bg-border" />
@@ -377,15 +329,19 @@ export default function GeneralSettingsPage() {
                 <Label htmlFor="family-convention" className="text-sm font-medium">
                   {t("nickname.familyFormat")}
                 </Label>
-                <Input
-                  id="family-convention"
-                  value={settings.nickname_rule}
-                  onChange={(e) =>
-                    setSettings({ ...settings, nickname_rule: e.target.value })
-                  }
-                  placeholder="[{player_clan_abbreviation}] {player_name}"
-                  className="bg-secondary border-border font-mono text-sm"
-                />
+                {isLoading ? (
+                  <Skeleton className="h-10 w-full animate-pulse" />
+                ) : (
+                  <Input
+                    id="family-convention"
+                    value={settings.nickname_rule}
+                    onChange={(e) =>
+                      setSettings({ ...settings, nickname_rule: e.target.value })
+                    }
+                    placeholder="[{player_clan_abbreviation}] {player_name}"
+                    className="bg-secondary border-border font-mono text-sm"
+                  />
+                )}
 
                 {/* Live Preview */}
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
@@ -393,9 +349,13 @@ export default function GeneralSettingsPage() {
                     <Eye className="h-4 w-4 text-primary" />
                     <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
-                  <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                    {generatePreview(settings.nickname_rule)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton className="h-9 w-full animate-pulse" />
+                  ) : (
+                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
+                      {generatePreview(settings.nickname_rule)}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -453,15 +413,19 @@ export default function GeneralSettingsPage() {
                 <Label htmlFor="non-family-convention" className="text-sm font-medium">
                   {t("nickname.nonFamilyFormat")}
                 </Label>
-                <Input
-                  id="non-family-convention"
-                  value={settings.non_family_nickname_rule}
-                  onChange={(e) =>
-                    setSettings({ ...settings, non_family_nickname_rule: e.target.value })
-                  }
-                  placeholder="{player_name}"
-                  className="bg-secondary border-border font-mono text-sm"
-                />
+                {isLoading ? (
+                  <Skeleton className="h-10 w-full animate-pulse" />
+                ) : (
+                  <Input
+                    id="non-family-convention"
+                    value={settings.non_family_nickname_rule}
+                    onChange={(e) =>
+                      setSettings({ ...settings, non_family_nickname_rule: e.target.value })
+                    }
+                    placeholder="{player_name}"
+                    className="bg-secondary border-border font-mono text-sm"
+                  />
+                )}
 
                 {/* Live Preview */}
                 <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
@@ -469,9 +433,13 @@ export default function GeneralSettingsPage() {
                     <Eye className="h-4 w-4 text-primary" />
                     <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
-                  <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                    {generatePreview(settings.non_family_nickname_rule)}
-                  </p>
+                  {isLoading ? (
+                    <Skeleton className="h-9 w-full animate-pulse" />
+                  ) : (
+                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
+                      {generatePreview(settings.non_family_nickname_rule)}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -548,44 +516,130 @@ export default function GeneralSettingsPage() {
                 <p className="text-xs text-muted-foreground">
                   {t("appearance.embedColorDesc")}
                 </p>
-                <div className="flex gap-3">
-                  <div className="relative">
-                    <Input
-                      id="embed-color"
-                      type="color"
-                      value={intToHex(settings.embed_color)}
-                      onChange={(e) => setSettings({ ...settings, embed_color: hexToInt(e.target.value) })}
-                      className="w-16 h-16 cursor-pointer border-2 rounded-lg"
-                    />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <Input
-                      value={intToHex(settings.embed_color)}
-                      onChange={(e) => {
-                        const hex = e.target.value;
-                        if (/^#[0-9A-F]{6}$/i.test(hex)) {
-                          setSettings({ ...settings, embed_color: hexToInt(hex) });
-                        }
-                      }}
-                      placeholder="#D90709"
-                      className="bg-secondary border-border font-mono"
-                    />
-                    <div className="text-xs text-muted-foreground">
-                      <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
+                {isLoading ? (
+                  <div className="flex gap-3">
+                    <Skeleton className="w-16 h-16 animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-10 w-full animate-pulse" />
+                      <Skeleton className="h-4 w-48 animate-pulse" />
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
+                      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            className="w-16 h-16 p-1 border-2 relative group flex items-center justify-center overflow-hidden shrink-0 shadow-sm transition-all hover:scale-105 active:scale-95"
+                            style={{ backgroundColor: intToHex(settings.embed_color) }}
+                            onClick={() => {
+                              setTempColor(settings.embed_color);
+                              setTempHex(intToHex(settings.embed_color));
+                            }}
+                          >
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <Pencil className="h-7 w-7 text-white" strokeWidth={3} />
+                            </div>
+                            <Pencil className="h-6 w-6 text-white drop-shadow-md opacity-90" strokeWidth={2.5} />
+                          </Button>
+                        </DialogTrigger>
+                        <div className="flex-1 space-y-1">
+                          <p className="text-base font-mono font-medium">{intToHex(settings.embed_color)}</p>
+                          <div className="text-xs text-muted-foreground whitespace-nowrap">
+                            <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
+                          </div>
+                        </div>
+                        <DialogContent className="sm:max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>{t("appearance.editColor")}</DialogTitle>
+                            <DialogDescription>
+                              {t("appearance.embedColorDesc")}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="flex flex-col gap-4 py-4">
+                            <div className="flex items-center gap-4">
+                              <div className="relative">
+                                <Input
+                                  type="color"
+                                  value={intToHex(tempColor)}
+                                  onChange={(e) => {
+                                    const newColor = hexToInt(e.target.value);
+                                    setTempColor(newColor);
+                                    setTempHex(intToHex(newColor));
+                                  }}
+                                  className="w-20 h-20 cursor-pointer border-2 rounded-lg p-1"
+                                />
+                              </div>
+                              <div className="flex-1 space-y-2">
+                                <Label className="text-xs text-muted-foreground uppercase font-semibold">Hex Code</Label>
+                                <Input
+                                  value={tempHex}
+                                  onChange={(e) => {
+                                    const hex = e.target.value.toUpperCase();
+                                    if (hex.length <= 7) {
+                                      setTempHex(hex);
+                                      if (/^#[0-9A-F]{6}$/i.test(hex)) {
+                                        setTempColor(hexToInt(hex));
+                                      }
+                                    }
+                                  }}
+                                  placeholder="#D90709"
+                                  className="bg-secondary border-border font-mono text-lg uppercase"
+                                />
+                              </div>
+                            </div>
+                            
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-fit text-xs text-muted-foreground hover:text-primary"
+                              onClick={() => {
+                                setTempColor(14223113);
+                                setTempHex("#D90709");
+                              }}
+                            >
+                              <RotateCcw className="mr-2 h-3 w-3" />
+                              {t("appearance.resetToDefault")}
+                            </Button>
+                          </div>
+                          <DialogFooter className="flex sm:justify-between gap-2">
+                            <Button 
+                              variant="ghost" 
+                              onClick={() => setIsDialogOpen(false)}
+                            >
+                              {tCommon("cancel")}
+                            </Button>
+                            <Button 
+                              onClick={() => {
+                                setSettings({ ...settings, embed_color: tempColor });
+                                setIsDialogOpen(false);
+                              }}
+                              disabled={!/^#[0-9A-F]{6}$/i.test(tempHex)}
+                            >
+                              {t("appearance.apply")}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                )}
 
                 {/* Color Preview */}
-                <div
-                  className="rounded-lg p-4 border-l-4 bg-secondary/50"
-                  style={{ borderLeftColor: intToHex(settings.embed_color) }}
-                >
-                  <p className="text-sm font-medium mb-1">{t("appearance.embedPreview")}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {t("appearance.embedPreviewDesc")}
-                  </p>
-                </div>
+                {isLoading ? (
+                  <Skeleton className="h-20 w-full animate-pulse" />
+                ) : (
+                  <div
+                    className="rounded-lg p-4 border-l-4 bg-secondary/50"
+                    style={{ borderLeftColor: intToHex(settings.embed_color) }}
+                  >
+                    <p className="text-sm font-medium mb-1">{t("appearance.embedPreview")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t("appearance.embedPreviewDesc")}
+                    </p>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

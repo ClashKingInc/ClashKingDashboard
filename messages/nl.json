@@ -24,6 +24,8 @@
     "error": "Er is een fout opgetreden",
     "success": "Succes",
     "actions": "Acties",
+    "details": "Details",
+    "view": "Bekijken",
     "unknown": "Onbekend",
     "confirm": "Bevestigen",
     "settings": "Instellingen",
@@ -94,7 +96,7 @@
       },
       "smartReminders": {
         "title": "Slimme Herinneringen",
-        "description": "Geautomatiseerde herinneringen voor Clan Games, oorlogsaanvallen, Clan War League en aangepaste evenementen. Houd iedereen op de hoogte."
+        "description": "Geautomatiseerde herinneringen voor Clan Spelen, oorlogsaanvallen, Clan War League en aangepaste evenementen. Houd iedereen op de hoogte."
       },
       "customization": {
         "title": "Volledige Aanpassing",
@@ -265,11 +267,11 @@
       "addDialog": {
         "title": "Verban een speler",
         "description": "Voeg een speler toe aan de banlijst. Ze kunnen geen enkele clan op deze server joinen.",
-        "playerTagLabel": "Speler Tag *",
+        "playerTagLabel": "Speler Tag",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Speler Naam (optioneel)",
         "playerNamePlaceholder": "Voer spelernaam in",
-        "reasonLabel": "Reden voor ban *",
+        "reasonLabel": "Reden voor ban",
         "reasonPlaceholder": "Leg uit waarom deze speler wordt verbannen...",
         "submit": "Verban Speler"
       },
@@ -319,7 +321,9 @@
         "noStrikesFound": "Geen strikes gevonden",
         "noStrikes": "Geen strikes uitgedeeld",
         "adjustSearch": "Probeer je zoekopdracht aan te passen",
-        "getStarted": "Voeg een strike toe om te beginnen met het volgen van spelerovertredingen"
+        "getStarted": "Voeg een strike toe om te beginnen met het volgen van spelerovertredingen",
+        "viewAll": "Alle strikes",
+        "viewGrouped": "Per Speler"
       },
       "table": {
         "player": "Speler",
@@ -330,16 +334,19 @@
         "expires": "Vervalt op",
         "never": "Nooit",
         "noReason": "Geen reden opgegeven",
-        "daysAgo": "{days} dagen geleden"
+        "daysAgo": "{days} dagen geleden",
+        "totalStrikes": "Totaal aantal strikes",
+        "totalWeight": "Totaal gewicht",
+        "lastStrike": "Laatste strike"
       },
       "addDialog": {
         "title": "Voeg een strike toe",
         "description": "Geef een strike aan een speler. Strikes kunnen verschillende gewichten en vervaldatums hebben.",
-        "playerTagLabel": "Speler Tag *",
+        "playerTagLabel": "Speler Tag",
         "playerTagPlaceholder": "#ABC123DEF",
-        "reasonLabel": "Reden *",
+        "reasonLabel": "Reden",
         "reasonPlaceholder": "Leg uit waarom deze strike wordt gegeven...",
-        "weightLabel": "Strike Gewicht *",
+        "weightLabel": "Strike Gewicht",
         "weightPlaceholder": "1",
         "rolloverLabel": "Vervalt over (dagen)",
         "rolloverPlaceholder": "Optioneel",
@@ -719,8 +726,10 @@
     "greetingMessage": "Welkomstbericht",
     "leadershipEval": "Leiderschap Evaluatie",
     "leadershipEvalDescription": "Automatisch leiderschapsrollen toewijzen",
-    "warCountdownChannel": "Oorlog Aftelkanaal",
+    "warScoreCountdown": "Oorlogsscore Aftelling",
+    "warScoreCountdownDescription": "Maakt een spraakkanaal met de huidige oorlogsscore",
     "warTimerCountdown": "Oorlog Timer Aftelling",
+    "warTimerCountdownDescription": "Maakt een spraakkanaal met de resterende oorlogstijd",
     "banAlertChannel": "Ban Alert Kanaal",
     "category": "Categorie",
     "autoGreetOption": "Auto Welkomst Optie",
@@ -767,7 +776,10 @@
       "clanRemoved": "Clan succesvol verwijderd",
       "errorRemovingClan": "Kon clan niet verwijderen",
       "settingsSaved": "Instellingen succesvol opgeslagen",
-      "errorSavingSettings": "Kon instellingen niet opslaan"
+      "errorSavingSettings": "Kon instellingen niet opslaan",
+      "countdownEnabled": "Aftelling spraakkanaal aangemaakt",
+      "countdownDisabled": "Aftelling spraakkanaal verwijderd",
+      "errorTogglingCountdown": "Kon aftelling niet schakelen"
     }
   },
   "RolesPage": {
@@ -956,17 +968,17 @@
   },
   "RemindersPage": {
     "title": "Herinneringen",
-    "description": "Configureer automatische herinneringen voor oorlogen, raids, clan games en inactiviteit",
+    "description": "Configureer automatische herinneringen voor oorlogen, raids, clan spelen en inactiviteit",
     "types": {
       "war": "Oorlog Herinneringen",
       "capital": "Clan Hoofdstad",
-      "clanGames": "Clan Games",
+      "clanGames": "Clan Spelen",
       "inactivity": "Inactiviteit"
     },
     "tabs": {
       "war": "Oorlog",
       "capital": "Hoofdstad",
-      "clanGames": "Clan Games",
+      "clanGames": "Clan Spelen",
       "inactivity": "Inactiviteit"
     },
     "stats": {
@@ -985,7 +997,7 @@
       "addReminder": "Herinnering Toevoegen",
       "addWarReminder": "Oorlog Herinnering Toevoegen",
       "addCapitalReminder": "Hoofdstad Herinnering Toevoegen",
-      "addClanGamesReminder": "Clan Games Herinnering Toevoegen",
+      "addClanGamesReminder": "Clan Spelen Herinnering Toevoegen",
       "addInactivityReminder": "Inactiviteit Herinnering Toevoegen",
       "retry": "Opnieuw Proberen"
     },
@@ -997,40 +1009,65 @@
     "empty": {
       "noWarReminders": "Geen Oorlog Herinneringen",
       "noCapitalReminders": "Geen Hoofdstad Herinneringen",
-      "noClanGamesReminders": "Geen Clan Games Herinneringen",
+      "noClanGamesReminders": "Geen Clan Spelen Herinneringen",
       "noInactivityReminders": "Geen Inactiviteit Herinneringen",
       "getStarted": "Begin met het maken van je eerste herinnering"
     },
     "card": {
       "new": "Nieuw",
       "before": "voor",
-      "timeBefore": "Tijd Ervoor (bijv. \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
+      "timeBefore": "Resterende tijd",
+      "timeBeforePlaceholder": "Bijv. 6",
+      "timeInactive": "Inactiviteit van",
+      "timeInactivePlaceholder": "Bijv. 160",
+      "timeUnit": "uur",
+      "hoursRemaining": "u resterend",
       "channel": "Kanaal",
       "channelPlaceholder": "Selecteer kanaal",
       "clan": "Clan",
       "clanPlaceholder": "Selecteer clan",
-      "customMessage": "Aangepast Bericht (Optioneel)",
+      "customMessage": "Aangepast Bericht",
       "customMessagePlaceholder": "Vergeet niet je aanvallen te gebruiken!",
+      "customMessagePlaceholderClanGames": "Probeer meer punten te halen bij de clan spelen!",
+      "customMessagePlaceholderInactivity": "Je bent al een tijdje niet actief in de clan :(",
       "warTypes": "Oorlog Types",
       "random": "Willekeurig",
       "friendly": "Vriendschappelijk",
       "cwl": "CWL",
       "pointThreshold": "Puntendrempel",
       "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Gaat mensen pingen die minder dan {threshold} punten hebben.",
       "attackThreshold": "Aanvalsdrempel",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Gaat mensen pingen als ze {threshold} of meer aanvallen nog kunnen doen.",
+      "notSet": "Niet ingesteld"
+    },
+    "dialog": {
+      "addTitle": "Nieuwe Herinnering Toevoegen",
+      "addDescription": "Configureer een nieuwe herinnering voor je server",
+      "editTitle": "Herinnering Bewerken",
+      "editDescription": "Update herinnering instellingen",
+      "type": "Herinnering Type",
+      "selectType": "Selecteer type",
+      "cancel": "Annuleren",
+      "saving": "Opslaan...",
+      "saveChanges": "Wijzigingen Opslaan",
+      "addReminder": "Herinnering Toevoegen"
     },
     "toast": {
       "errorTitle": "Fout",
       "errorLoadingReminders": "Kan herinneringen niet laden. Probeer het opnieuw.",
-      "reminderAdded": "Herinnering Toegevoegd",
+      "reminderAdded": "Herinnering succesvol toegevoegd",
       "reminderAddedDesc": "Nieuwe {type} herinnering toegevoegd. Vergeet niet op te slaan!",
+      "reminderUpdated": "Herinnering succesvol bijgewerkt",
       "successTitle": "Succes",
       "reminderDeleted": "Herinnering succesvol verwijderd",
       "failedToDelete": "Kan herinnering niet verwijderen",
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
-      "failedToSave": "Kan herinneringen niet opslaan"
+      "failedToSave": "Kan herinneringen niet opslaan",
+      "timeExceedsLimit": "Resterende tijd moet tussen {min} en {max} uur liggen",
+      "pointThresholdInvalid": "Puntendrempel moet tussen {min} en {max} liggen",
+      "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen"
     }
   },
   "LogsPage": {
@@ -1220,7 +1257,10 @@
       "embedColorDesc": "Kleur van de zijbalk op alle bot embed berichten in Discord",
       "embedColorDefault": "Standaard: **#D90709** (ClashKing Rood)",
       "embedPreview": "Embed Voorbeeld",
-      "embedPreviewDesc": "Deze gekleurde balk verschijnt aan de linkerkant van alle bot berichten"
+      "embedPreviewDesc": "Deze gekleurde balk verschijnt aan de linkerkant van alle bot berichten",
+      "editColor": "Kleur Bewerken",
+      "resetToDefault": "Reset naar Standaard",
+      "apply": "Toepassen"
     },
     "security": {
       "title": "Beveiliging & Rechten",
@@ -1269,10 +1309,10 @@
         "title": "ClashKing Bot",
         "description": "ClashKing Bot is de enige Discord-bot die je nodig hebt om je Clash of Clans-clan en community te beheren. Het zit boordevol unieke functies om je clan georganiseerd, betrokken en groeiend te houden.",
         "items": [
-          "Realtime Logs: Volg oorlogen, CWL, clan games, raids, donaties en ledenevents.",
+          "Realtime Logs: Volg oorlogen, CWL, clan spelen, raids, donaties en ledenevents.",
           "Ticketsysteem: Wervingsticketsysteem naast standaard supporttickets.",
           "Auto Rollen: Wijs automatisch rollen toe op basis van clanstatus of familiebeheer.",
-          "Herinneringen: Stuur pings voor oorlogsaanvallen, clan games of iets anders.",
+          "Herinneringen: Stuur pings voor oorlogsaanvallen, clan spelen of iets anders.",
           "Gedetailleerde Stats: Inzichten in speler- en clanprestaties met activiteitstracking.",
           "Roosterbeheer: Organiseer en optimaliseer je oorlogsroosters met gemak."
         ],
@@ -1360,7 +1400,7 @@
     "title": "Steun Ons",
     "subtitle": "ClashKing is een gratis, open-source project. Jouw steun helpt ons de servers draaiende te houden en nieuwe functies voor de community te blijven ontwikkelen.",
     "patreon": {
-      "title": "Word een Patron",
+      "title": "Word een Patreon",
       "description": "Steun ons maandelijks op Patreon om exclusieve voordelen te krijgen, vroege toegang tot functies en te helpen onze hostingkosten te dekken.",
       "cta": "Steun op Patreon"
     },
@@ -1393,7 +1433,7 @@
     },
     "noServers": {
       "title": "Geen Servers Gevonden",
-      "description": "Je hebt geen beheerdersrechten in Discord-servers."
+      "description": "Geen Discord server gevonden waarbij je een administrator of de eigenaar bent."
     }
   },
   "AutoboardsPage": {
@@ -1416,7 +1456,7 @@
     "boardType": "Bordtype",
     "selectBoardType": "Selecteer een bordtype",
     "postDays": "Postdagen (selecteer er minstens één)",
-    "postDaysDesc": "Posts vinden plaats om 5:00 AM UTC dagelijkse reset tijd",
+    "postDaysDesc": "Op de geselecteerde dagen wordt een post geplaatst om {time} (5:00 AM UTC).",
     "autoRefreshInfo": "Auto Refresh Info",
     "autoRefreshInfoDesc": "Het bord wordt automatisch elke 30-60 minuten vernieuwd met de laatste gegevens. Perfect om statistieken actueel te houden zonder handmatige updates.",
     "cancel": "Annuleren",
@@ -1454,7 +1494,7 @@
       },
       "schedule": {
         "title": "Plan verstandig:",
-        "desc": "Auto Post-borden verschijnen om 5:00 AM UTC. Kies dagen die aansluiten bij de activiteitscyclus van je clan."
+        "desc": "Auto Post-borden verschijnen om {time} (5:00 AM UTC). Kies dagen die aansluiten bij de activiteitscyclus van je clan."
       },
       "duplicates": {
         "title": "Vermijd duplicaten:",
@@ -1477,7 +1517,7 @@
       "clancapraids": "Clan Hoofdstad Raids",
       "clanwarlog": "Clan Oorlogslog",
       "clancwlperf": "Clan CWL Prestatie",
-      "clangames": "Clan Games",
+      "clangames": "Clan Spelen",
       "familyoverview": "Familie Overzicht",
       "familycompo": "Familie Samenstelling",
       "familydonos": "Familie Donaties",

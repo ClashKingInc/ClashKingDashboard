@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Users, Shield, ClipboardList } from "lucide-react";
 
 interface ServerStatsProps {
@@ -100,9 +101,13 @@ export function ServerStats({ guildId }: ServerStatsProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-foreground">
-            {isLoading ? "..." : stats.linkedPlayers.toLocaleString()}
-          </div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20 animate-pulse mb-1" />
+          ) : (
+            <div className="text-2xl font-bold text-foreground">
+              {stats.linkedPlayers.toLocaleString()}
+            </div>
+          )}
           <p className="text-xs text-muted-foreground">{t("linkedPlayersDesc")}</p>
         </CardContent>
       </Card>
@@ -115,9 +120,13 @@ export function ServerStats({ guildId }: ServerStatsProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-foreground">
-            {isLoading ? "..." : stats.clansConfigured.toLocaleString()}
-          </div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20 animate-pulse mb-1" />
+          ) : (
+            <div className="text-2xl font-bold text-foreground">
+              {stats.clansConfigured.toLocaleString()}
+            </div>
+          )}
           <p className="text-xs text-muted-foreground">{t("clansConfiguredDesc")}</p>
         </CardContent>
       </Card>
@@ -130,9 +139,13 @@ export function ServerStats({ guildId }: ServerStatsProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-foreground">
-            {isLoading ? "..." : stats.activeRosters.toLocaleString()}
-          </div>
+          {isLoading ? (
+            <Skeleton className="h-8 w-20 animate-pulse mb-1" />
+          ) : (
+            <div className="text-2xl font-bold text-foreground">
+              {stats.activeRosters.toLocaleString()}
+            </div>
+          )}
           <p className="text-xs text-muted-foreground">{t("activeRostersDesc")}</p>
         </CardContent>
       </Card>

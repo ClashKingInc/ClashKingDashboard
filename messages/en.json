@@ -24,6 +24,8 @@
     "error": "An error occurred",
     "success": "Success",
     "actions": "Actions",
+    "details": "Details",
+    "view": "View",
     "unknown": "Unknown",
     "confirm": "Confirm",
     "settings": "Settings",
@@ -265,11 +267,11 @@
       "addDialog": {
         "title": "Ban a Player",
         "description": "Add a player to the ban list. They will be prevented from joining any clan on this server.",
-        "playerTagLabel": "Player Tag *",
+        "playerTagLabel": "Player Tag",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Player Name (optional)",
         "playerNamePlaceholder": "Enter player name",
-        "reasonLabel": "Reason for Ban *",
+        "reasonLabel": "Reason for Ban",
         "reasonPlaceholder": "Explain why this player is being banned...",
         "submit": "Ban Player"
       },
@@ -319,7 +321,9 @@
         "noStrikesFound": "No strikes found",
         "noStrikes": "No strikes issued",
         "adjustSearch": "Try adjusting your search query",
-        "getStarted": "Add a strike to start tracking player violations"
+        "getStarted": "Add a strike to start tracking player violations",
+        "viewAll": "All Strikes",
+        "viewGrouped": "By Player"
       },
       "table": {
         "player": "Player",
@@ -330,16 +334,19 @@
         "expires": "Expires",
         "never": "Never",
         "noReason": "No reason provided",
-        "daysAgo": "{days} days ago"
+        "daysAgo": "{days} days ago",
+        "totalStrikes": "Total Strikes",
+        "totalWeight": "Total Weight",
+        "lastStrike": "Last Strike"
       },
       "addDialog": {
         "title": "Add a Strike",
         "description": "Issue a strike to a player. Strikes can have different weights and expiration dates.",
-        "playerTagLabel": "Player Tag *",
+        "playerTagLabel": "Player Tag",
         "playerTagPlaceholder": "#ABC123DEF",
-        "reasonLabel": "Reason *",
+        "reasonLabel": "Reason",
         "reasonPlaceholder": "Explain why this strike is being issued...",
-        "weightLabel": "Strike Weight *",
+        "weightLabel": "Strike Weight",
         "weightPlaceholder": "1",
         "rolloverLabel": "Expires in (days)",
         "rolloverPlaceholder": "Optional",
@@ -842,8 +849,10 @@
     "greetingMessage": "Greeting Message",
     "leadershipEval": "Leadership Eval",
     "leadershipEvalDescription": "Auto-assign leadership roles",
-    "warCountdownChannel": "War Countdown Channel",
+    "warScoreCountdown": "War Score Countdown",
+    "warScoreCountdownDescription": "Creates a voice channel displaying the current war score",
     "warTimerCountdown": "War Timer Countdown",
+    "warTimerCountdownDescription": "Creates a voice channel displaying time remaining in war",
     "banAlertChannel": "Ban Alert Channel",
     "category": "Category",
     "autoGreetOption": "Auto Greet Option",
@@ -890,7 +899,10 @@
       "clanRemoved": "Clan removed successfully",
       "errorRemovingClan": "Failed to remove clan",
       "settingsSaved": "Settings saved successfully",
-      "errorSavingSettings": "Failed to save settings"
+      "errorSavingSettings": "Failed to save settings",
+      "countdownEnabled": "Countdown voice channel created",
+      "countdownDisabled": "Countdown voice channel removed",
+      "errorTogglingCountdown": "Failed to toggle countdown"
     }
   },
   "RolesPage": {
@@ -1127,33 +1139,58 @@
     "card": {
       "new": "New",
       "before": "before",
-      "timeBefore": "Time Before (e.g., \"6h\", \"30m\")",
-      "timeBeforePlaceholder": "6h",
+      "timeBefore": "Remaining time",
+      "timeBeforePlaceholder": "e.g. 6",
+      "timeInactive": "Inactivity of",
+      "timeInactivePlaceholder": "e.g. 160",
+      "timeUnit": "hours",
+      "hoursRemaining": "hrs remaining",
       "channel": "Channel",
       "channelPlaceholder": "Select channel",
       "clan": "Clan",
       "clanPlaceholder": "Select clan",
-      "customMessage": "Custom Message (Optional)",
+      "customMessage": "Custom Message",
       "customMessagePlaceholder": "Don't forget to use your attacks!",
+      "customMessagePlaceholderClanGames": "Try to get more points in clan games!",
+      "customMessagePlaceholderInactivity": "You've been inactive in the clan for a while :(",
       "warTypes": "War Types",
       "random": "Random",
       "friendly": "Friendly",
       "cwl": "CWL",
       "pointThreshold": "Point Threshold",
       "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Will ping people who have fewer than {threshold} points.",
       "attackThreshold": "Attack Threshold",
-      "attackThresholdPlaceholder": "1"
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Will ping people if they have {threshold} or more attacks remaining.",
+      "notSet": "Not set"
+    },
+    "dialog": {
+      "addTitle": "Add New Reminder",
+      "addDescription": "Configure a new reminder for your server",
+      "editTitle": "Edit Reminder",
+      "editDescription": "Update reminder settings",
+      "type": "Reminder Type",
+      "selectType": "Select type",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "addReminder": "Add Reminder"
     },
     "toast": {
       "errorTitle": "Error",
       "errorLoadingReminders": "Failed to load reminders. Please try again.",
-      "reminderAdded": "Reminder Added",
+      "reminderAdded": "Reminder added successfully",
       "reminderAddedDesc": "New {type} reminder added. Don't forget to save!",
+      "reminderUpdated": "Reminder updated successfully",
       "successTitle": "Success",
       "reminderDeleted": "Reminder deleted successfully",
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
-      "failedToSave": "Failed to save reminders"
+      "failedToSave": "Failed to save reminders",
+      "timeExceedsLimit": "Remaining time must be between {min} and {max} hours",
+      "pointThresholdInvalid": "Point threshold must be between {min} and {max}",
+      "attackThresholdInvalid": "Attack threshold must be between {min} and {max}"
     }
   },
   "LogsPage": {
@@ -1343,7 +1380,10 @@
       "embedColorDesc": "Color of the side bar on all bot embed messages in Discord",
       "embedColorDefault": "Default: **#D90709** (ClashKing Red)",
       "embedPreview": "Embed Preview",
-      "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages"
+      "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages",
+      "editColor": "Edit Color",
+      "resetToDefault": "Reset to Default",
+      "apply": "Apply"
     },
     "security": {
       "title": "Security & Permissions",
@@ -1483,7 +1523,7 @@
     "title": "Support Us",
     "subtitle": "ClashKing is a free, open-source project. Your support helps us keep the servers running and continue developing new features for the community.",
     "patreon": {
-      "title": "Become a Patron",
+      "title": "Become a Patreon",
       "description": "Support us monthly on Patreon to get exclusive perks, early access to features, and help cover our hosting costs.",
       "cta": "Support on Patreon"
     },
@@ -1516,7 +1556,7 @@
     },
     "noServers": {
       "title": "No Servers Found",
-      "description": "You don't have admin permissions in any Discord servers."
+      "description": "No Discord server found where you are an administrator or the owner."
     }
   },
   "AutoboardsPage": {
@@ -1539,7 +1579,7 @@
     "boardType": "Board Type",
     "selectBoardType": "Select a board type",
     "postDays": "Post Days (select at least one)",
-    "postDaysDesc": "Posts occur at 5:00 AM UTC daily reset time",
+    "postDaysDesc": "On the selected days, a post will be created at {time} (5:00 AM UTC).",
     "autoRefreshInfo": "Auto Refresh Info",
     "autoRefreshInfoDesc": "The board will automatically refresh every 30-60 minutes with the latest data. Perfect for keeping stats current without manual updates.",
     "cancel": "Cancel",
@@ -1577,7 +1617,7 @@
       },
       "schedule": {
         "title": "Schedule wisely:",
-        "desc": "Auto Post boards appear at 5:00 AM UTC. Choose days that align with your clan's activity cycle."
+        "desc": "Auto Post boards appear at {time} (5:00 AM UTC). Choose days that align with your clan's activity cycle."
       },
       "duplicates": {
         "title": "Avoid duplicates:",
