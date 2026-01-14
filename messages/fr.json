@@ -814,8 +814,8 @@
       "builderhall": "Maison des Ouvriers",
       "builderLeague": "Ligue MDO",
       "achievement": "Succès",
-      "status": "Statut/Ancienneté",
-      "familyPosition": "Position Familiale"
+      "status": "Ancienneté sur Discord",
+      "familyPosition": "Rôle de clan"
     },
     "familyPositions": {
       "elder": "Ainé",
@@ -932,10 +932,12 @@
       "selectRole": "Sélectionner un rôle",
       "townHallLevel": "Niveau d'Hôtel de Ville",
       "selectThLevel": "Sélectionner le niveau HDV",
+      "thPrefix": "HDV",
       "league": "Ligue",
       "selectLeague": "Sélectionner une ligue",
       "builderHallLevel": "Niveau de la Maison des Ouvriers",
       "selectBhLevel": "Sélectionner le niveau MDO",
+      "bhPrefix": "MDO",
       "builderLeague": "Ligue MDO",
       "selectBuilderLeague": "Sélectionner la ligue MDO",
       "achievementName": "Succès",

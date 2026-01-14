@@ -937,7 +937,7 @@
       "builderhall": "Builder Hall",
       "builderLeague": "Builder League",
       "achievement": "Achievement",
-      "status": "Status/Tenure",
+      "status": "Discord tenure",
       "familyPosition": "Family Position"
     },
     "familyPositions": {
@@ -1055,10 +1055,12 @@
       "selectRole": "Select a role",
       "townHallLevel": "Town Hall Level",
       "selectThLevel": "Select TH level",
+      "thPrefix": "TH",
       "league": "League",
       "selectLeague": "Select league",
       "builderHallLevel": "Builder Hall Level",
       "selectBhLevel": "Select BH level",
+      "bhPrefix": "BH",
       "builderLeague": "Builder League",
       "selectBuilderLeague": "Select builder league",
       "achievementName": "Achievement",

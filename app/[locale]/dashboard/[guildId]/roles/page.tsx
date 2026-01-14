@@ -80,7 +80,6 @@ const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "league", icon: Trophy },
   { value: "builderhall", icon: Hammer },
   { value: "builder_league", icon: Award },
-  { value: "achievement", icon: Award },
   { value: "status", icon: Clock },
   { value: "family_position", icon: Crown },
 ];
@@ -104,69 +103,6 @@ const BUILDER_LEAGUE_TIERS = [
   { id: "stone", apiName: "Stone", range: [1, 5] },
   { id: "clay", apiName: "Clay", range: [1, 5] },
   { id: "wood", apiName: "Wood", range: [1, 5] },
-];
-
-const ACHIEVEMENTS_CONFIG = [
-  { id: "keepYourAccountSafe", apiName: "Keep Your Account Safe!" },
-  { id: "biggerAndBetter", apiName: "Bigger & Better" },
-  { id: "discoverNewTroops", apiName: "Discover New Troops" },
-  { id: "biggerCoffers", apiName: "Bigger Coffers" },
-  { id: "goldGrab", apiName: "Gold Grab" },
-  { id: "elixirEscapade", apiName: "Elixir Escapade" },
-  { id: "heroicHeist", apiName: "Heroic Heist" },
-  { id: "wellSeasoned", apiName: "Well Seasoned" },
-  { id: "niceAndTidy", apiName: "Nice and Tidy" },
-  { id: "empireBuilder", apiName: "Empire Builder" },
-  { id: "clanWarWealth", apiName: "Clan War Wealth" },
-  { id: "friendInNeed", apiName: "Friend in Need" },
-  { id: "sharingIsCaring", apiName: "Sharing is caring" },
-  { id: "siegeSharer", apiName: "Siege Sharer" },
-  { id: "warHero", apiName: "War Hero" },
-  { id: "warLeagueLegend", apiName: "War League Legend" },
-  { id: "gamesChampion", apiName: "Games Champion" },
-  { id: "unbreakable", apiName: "Unbreakable" },
-  { id: "sweetVictory", apiName: "Sweet Victory!" },
-  { id: "conqueror", apiName: "Conqueror" },
-  { id: "leagueAllStar", apiName: "League All-Star" },
-  { id: "leagueFollower", apiName: "League Follower" },
-  { id: "leagueEnthusiast", apiName: "League Enthusiast" },
-  { id: "leagueSuperfan", apiName: "League Superfan" },
-  { id: "leagueFanatic", apiName: "League Fanatic" },
-  { id: "leagueMaster", apiName: "League Master" },
-  { id: "legendLeague", apiName: "Legend League" },
-  { id: "humiliator", apiName: "Humiliator" },
-  { id: "notSoEasyThisTime", apiName: "Not So Easy This Time" },
-  { id: "unionBuster", apiName: "Union Buster" },
-  { id: "bustThis", apiName: "Bust This!" },
-  { id: "wallBuster", apiName: "Wall Buster" },
-  { id: "mortarMauler", apiName: "Mortar Mauler" },
-  { id: "xBowExterminator", apiName: "X-Bow Exterminator" },
-  { id: "firefighter", apiName: "Firefighter" },
-  { id: "antiArtillery", apiName: "Anti-Artillery" },
-  { id: "shatteredAndScatter", apiName: "Shattered and Scattered" },
-  { id: "counterspell", apiName: "Counterspell" },
-  { id: "monolithMasher", apiName: "Monolith Masher" },
-  { id: "multiArcherTowerTerminator", apiName: "Multi-Archer Tower Terminator" },
-  { id: "ricochetCannonCrusher", apiName: "Ricochet Cannon Crusher" },
-  { id: "firespitterFinisher", apiName: "Firespitter Finisher" },
-  { id: "multiGearTowerTrampler", apiName: "Multi-Gear Tower Trampler" },
-  { id: "craftersNightmare", apiName: "Crafter's Nightmare" },
-  { id: "getThoseGoblins", apiName: "Get those Goblins!" },
-  { id: "supercharger", apiName: "Supercharger" },
-  { id: "craftingConnoisseur", apiName: "Crafting Connoisseur" },
-  { id: "getThoseOtherGoblins", apiName: "Get those other Goblins!" },
-  { id: "getEvenMoreGoblins", apiName: "Get even more Goblins!" },
-  { id: "dragonSlayer", apiName: "Dragon Slayer" },
-  { id: "ungratefulChild", apiName: "Ungrateful Child" },
-  { id: "superbWork", apiName: "Superb Work" },
-  { id: "masterEngineering", apiName: "Master Engineering" },
-  { id: "hiddenTreasures", apiName: "Hidden Treasures" },
-  { id: "highGear", apiName: "High Gear" },
-  { id: "nextGenerationModel", apiName: "Next Generation Model" },
-  { id: "unBuildIt", apiName: "Un-Build It" },
-  { id: "championBuilder", apiName: "Champion Builder" },
-  { id: "aggressiveCapitalism", apiName: "Aggressive Capitalism" },
-  { id: "mostValuableClanmate", apiName: "Most Valuable Clanmate" }
 ];
 
 /**
@@ -227,11 +163,6 @@ export default function RolesPage() {
     return leaguesInTier;
   });
 
-  const achievements = ACHIEVEMENTS_CONFIG.map((a) => ({
-    value: a.apiName,
-    label: t(`achievements.${a.id}`),
-  }));
-
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -262,7 +193,6 @@ export default function RolesPage() {
     league: [],
     builderhall: [],
     builder_league: [],
-    achievement: [],
     status: [],
     family_position: [],
   });
@@ -273,11 +203,55 @@ export default function RolesPage() {
 
   // Dynamic league data loaded from API
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
+  
+  // Max levels for Town Hall and Builder Hall
+  const [townHallMaxLevel, setTownHallMaxLevel] = useState<number>(17); // Fallback
+  const [builderHallMaxLevel, setBuilderHallMaxLevel] = useState<number>(10); // Fallback
+  
+  // Get building prefixes from translations
+  const thPrefix = t("addRoleDialog.thPrefix");
+  const bhPrefix = t("addRoleDialog.bhPrefix");
 
   useEffect(() => {
     loadData();
     loadLeagues();
+    loadMaxLevels();
   }, [guildId, locale]);
+  
+  const loadMaxLevels = async () => {
+    try {
+      // Load Town Hall max level
+      const thEncoded = encodeURIComponent('Town Hall');
+      const thUrl = `/api/v2/static/buildings/${thEncoded}/maxlevel`;
+      console.log('Fetching Town Hall max level from:', thUrl);
+      const thResponse = await fetch(thUrl);
+      if (thResponse.ok) {
+        const thData = await thResponse.json();
+        setTownHallMaxLevel(thData.max_level);
+        console.log('Town Hall max level loaded:', thData.max_level);
+      } else {
+        const errorText = await thResponse.text();
+        console.error('Failed to load Town Hall max level:', thResponse.status, thResponse.statusText, errorText);
+      }
+      
+      // Load Builder Hall max level
+      const bhEncoded = encodeURIComponent('Builder Hall');
+      const bhUrl = `/api/v2/static/buildings/${bhEncoded}/maxlevel`;
+      console.log('Fetching Builder Hall max level from:', bhUrl);
+      const bhResponse = await fetch(bhUrl);
+      if (bhResponse.ok) {
+        const bhData = await bhResponse.json();
+        setBuilderHallMaxLevel(bhData.max_level);
+        console.log('Builder Hall max level loaded:', bhData.max_level);
+      } else {
+        const errorText = await bhResponse.text();
+        console.error('Failed to load Builder Hall max level:', bhResponse.status, bhResponse.statusText, errorText);
+      }
+    } catch (err) {
+      console.error("Failed to load max levels:", err);
+      // Keep fallback values
+    }
+  };
 
   const loadLeagues = async () => {
     try {
@@ -492,9 +466,9 @@ export default function RolesPage() {
                   <SelectValue placeholder={t("addRoleDialog.selectThLevel")} />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
-                  {Array.from({ length: 17 }, (_, i) => 17 - i).map((th) => (
+                  {Array.from({ length: townHallMaxLevel }, (_, i) => townHallMaxLevel - i).map((th) => (
                     <SelectItem key={th} value={th.toString()}>
-                      TH {th}
+                      {thPrefix} {th}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -560,9 +534,9 @@ export default function RolesPage() {
                   <SelectValue placeholder={t("addRoleDialog.selectBhLevel")} />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
-                  {Array.from({ length: 10 }, (_, i) => 10 - i).map((bh) => (
+                  {Array.from({ length: builderHallMaxLevel }, (_, i) => builderHallMaxLevel - i).map((bh) => (
                     <SelectItem key={bh} value={bh.toString()}>
-                      BH {bh}
+                      {bhPrefix} {bh}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -601,67 +575,6 @@ export default function RolesPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <RoleCombobox
-                roles={discordRoles}
-                value={newRole.role_id?.toString() || ""}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-                placeholder={t("addRoleDialog.selectRole")}
-                showDisabled={false}
-              />
-            </div>
-          </>
-        );
-
-      case "achievement":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="achievement">{t("addRoleDialog.achievementName")}</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    className="w-full justify-between font-normal"
-                  >
-                    {newRole.achievement
-                      ? achievements.find((a) => a.value === newRole.achievement)?.label
-                      : t("addRoleDialog.selectAchievement")}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
-                  <Command>
-                    <CommandInput placeholder={t("addRoleDialog.searchAchievement")} />
-                    <CommandList className="max-h-80">
-                      <CommandEmpty>{t("addRoleDialog.noAchievementFound")}</CommandEmpty>
-                      <CommandGroup>
-                        {achievements.map((achievement) => (
-                          <CommandItem
-                            key={achievement.value}
-                            value={achievement.label}
-                            onSelect={() => {
-                              setNewRole({ ...newRole, achievement: achievement.value });
-                            }}
-                          >
-                            <Check
-                              className={`mr-2 h-4 w-4 ${
-                                newRole.achievement === achievement.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              }`}
-                            />
-                            {achievement.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
@@ -792,10 +705,6 @@ export default function RolesPage() {
                 // DB stores in snake_case, denormalize for display
                 criteria = role.type ? denormalizeLeagueName(role.type) : "";
                 break;
-              case "achievement":
-                const ach = achievements.find((a) => a.value === role.achievement);
-                criteria = ach ? ach.label : (role.achievement || "");
-                break;
               case "status":
                 criteria = `${role.months} ${role.months === 1 ? t("configuredRoles.month") : t("configuredRoles.months")}`;
                 break;
@@ -842,10 +751,10 @@ export default function RolesPage() {
   // Calculate statistics
   const totalRoles = Object.values(allRoles).reduce((sum, roles: any) => sum + (roles?.length || 0), 0);
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
-  const totalRoleTypes = 7; // townhall, league, builderhall, builder_league, achievement, status, family_position
+  const totalRoleTypes = 6; // townhall, league, builderhall, builder_league, status, family_position
 
   const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
-                     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
+    roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
 
   const isAddRoleDisabled = () => {
     const hasRole = currentRoleType === "status" ? !!newRole.id : !!newRole.role_id;
@@ -856,7 +765,6 @@ export default function RolesPage() {
       case "league": return !newRole.league;
       case "builderhall": return !newRole.bh;
       case "builder_league": return !newRole.builder_league;
-      case "achievement": return !newRole.achievement;
       case "status": return !newRole.months;
       case "family_position": return !newRole.type;
       default: return true;
@@ -1145,7 +1053,7 @@ export default function RolesPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 h-auto">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 h-auto">
                 {isLoading ? (
                   [...Array(7)].map((_, i) => (
                     <Skeleton key={i} className="h-10 w-full animate-pulse" />
