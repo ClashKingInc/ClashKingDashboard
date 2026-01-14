@@ -31,6 +31,11 @@ export class BaseApiClient {
           throw new Error('No refresh token available');
         }
 
+        const deviceId = typeof window !== 'undefined' ? localStorage.getItem('device_id') : null;
+        if (!deviceId) {
+          throw new Error('No device_id available');
+        }
+
         const url = `${this.config.baseUrl}/v2/auth/refresh`;
         const response = await fetch(url, {
           method: 'POST',
@@ -39,6 +44,7 @@ export class BaseApiClient {
           },
           body: JSON.stringify({
             refresh_token: refreshToken,
+            device_id: deviceId,
           }),
         });
 
@@ -65,10 +71,10 @@ export class BaseApiClient {
         // Clear tokens on refresh failure
         this.clearTokens();
         TokenManager.clearTokens();
-        // Redirect to login
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
+        // TODO: Redirect to login when ready for production
+        // if (typeof window !== 'undefined') {
+        //   window.location.href = '/login';
+        // }
         return null;
       } finally {
         this.isRefreshing = false;
