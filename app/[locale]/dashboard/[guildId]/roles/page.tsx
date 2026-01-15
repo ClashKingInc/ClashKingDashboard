@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,20 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RoleCombobox } from "@/components/ui/role-combobox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -41,8 +55,9 @@ import {
   Trophy,
   Hammer,
   Award,
-  Clock,
   Crown,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
@@ -64,30 +79,6 @@ const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "league", icon: Trophy },
   { value: "builderhall", icon: Hammer },
   { value: "builder_league", icon: Award },
-  { value: "achievement", icon: Award },
-  { value: "status", icon: Clock },
-  { value: "family_position", icon: Crown },
-];
-
-const LEAGUE_TIERS = [
-  { id: "legend", apiName: "Legend League", range: null },
-  { id: "electroDragon", apiName: "Electro Dragon", range: [33, 31] },
-  { id: "dragon", apiName: "Dragon", range: [30, 28] },
-  { id: "electroTitan", apiName: "Electro Titan", range: [27, 25] },
-  { id: "pekka", apiName: "P.E.K.K.A", range: [24, 22] },
-  { id: "golem", apiName: "Golem", range: [21, 19] },
-  { id: "witch", apiName: "Witch", range: [18, 16] },
-  { id: "valkyrie", apiName: "Valkyrie", range: [15, 13] },
-  { id: "wizard", apiName: "Wizard", range: [12, 10] },
-  { id: "archer", apiName: "Archer", range: [9, 7] },
-  { id: "barbarian", apiName: "Barbarian", range: [6, 4] },
-  { id: "skeleton", apiName: "Skeleton", range: [3, 1] },
-];
-
-const FAMILY_POSITIONS_CONFIG = [
-  { value: "family_elder_roles" },
-  { value: "family_co-leader_roles" },
-  { value: "family_leader_roles" },
 ];
 
 const BUILDER_LEAGUE_TIERS = [
@@ -105,9 +96,29 @@ const BUILDER_LEAGUE_TIERS = [
   { id: "wood", apiName: "Wood", range: [1, 5] },
 ];
 
+/**
+ * Denormalize league name from snake_case to display format
+ * @param snakeCaseName - League name in snake_case (e.g., "legend_league", "titan_league_i")
+ * @returns Formatted league name (e.g., "Legend League", "Titan League I")
+ */
+const denormalizeLeagueName = (snakeCaseName: string): string => {
+  return snakeCaseName
+    .split('_')
+    .map(word => {
+      // Keep roman numerals uppercase (i, ii, iii, iv, v)
+      if (['i', 'ii', 'iii', 'iv', 'v'].includes(word.toLowerCase())) {
+        return word.toUpperCase();
+      }
+      // Capitalize first letter of each word
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+};
+
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;
+  const locale = useLocale();
   const t = useTranslations("RolesPage");
   const tCommon = useTranslations("Common");
 
@@ -115,32 +126,6 @@ export default function RolesPage() {
     ...rt,
     label: t(`roleTypes.${rt.value.replace(/_([a-z])/g, (g) => g[1].toUpperCase())}`),
   }));
-
-  const familyPositions = FAMILY_POSITIONS_CONFIG.map((fp) => {
-    const key = fp.value
-      .replace("family_", "")
-      .replace("_roles", "")
-      .replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-    return {
-      ...fp,
-      label: t(`familyPositions.${key}`),
-    };
-  });
-
-  const leagues = LEAGUE_TIERS.flatMap((tier) => {
-    const tierName = t(`leagues.${tier.id}`);
-    if (!tier.range) {
-      return [{ value: tier.apiName, label: tierName }];
-    }
-    const leaguesInTier = [];
-    for (let i = tier.range[0]; i >= tier.range[1]; i--) {
-      leaguesInTier.push({
-        value: `${tier.apiName} ${i}`,
-        label: `${tierName} ${i}`,
-      });
-    }
-    return leaguesInTier;
-  });
 
   const builderLeagues = BUILDER_LEAGUE_TIERS.flatMap((tier) => {
     const tierName = t(`builderLeagues.${tier.id}`);
@@ -159,7 +144,6 @@ export default function RolesPage() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -173,24 +157,120 @@ export default function RolesPage() {
     blacklisted_roles: [],
     role_treatment: [],
   });
+  const [originalRoleSettings, setOriginalRoleSettings] = useState<RoleSettings>({
+    server_id: guildId,
+    auto_eval_status: false,
+    auto_eval_nickname: false,
+    autoeval_triggers: [],
+    autoeval_log: undefined,
+    blacklisted_roles: [],
+    role_treatment: [],
+  });
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   const [allRoles, setAllRoles] = useState<Record<string, any[]>>({
     townhall: [],
     league: [],
     builderhall: [],
     builder_league: [],
-    achievement: [],
-    status: [],
-    family_position: [],
   });
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
   const [newRole, setNewRole] = useState<any>({});
 
+  // Dynamic league data loaded from API
+  const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
+  
+  // Max levels for Town Hall and Builder Hall
+  const [townHallMaxLevel, setTownHallMaxLevel] = useState<number>(17); // Fallback
+  const [builderHallMaxLevel, setBuilderHallMaxLevel] = useState<number>(10); // Fallback
+  
+  // Get building prefixes from translations
+  const thPrefix = t("addRoleDialog.thPrefix");
+  const bhPrefix = t("addRoleDialog.bhPrefix");
+
   useEffect(() => {
     loadData();
-  }, [guildId]);
+    loadLeagues();
+    loadMaxLevels();
+  }, [guildId, locale]);
+  
+  const loadMaxLevels = async () => {
+    try {
+      // Load Town Hall max level
+      const thEncoded = encodeURIComponent('Town Hall');
+      const thUrl = `/api/v2/static/buildings/${thEncoded}/maxlevel`;
+      console.log('Fetching Town Hall max level from:', thUrl);
+      const thResponse = await fetch(thUrl);
+      if (thResponse.ok) {
+        const thData = await thResponse.json();
+        setTownHallMaxLevel(thData.max_level);
+        console.log('Town Hall max level loaded:', thData.max_level);
+      } else {
+        const errorText = await thResponse.text();
+        console.error('Failed to load Town Hall max level:', thResponse.status, thResponse.statusText, errorText);
+      }
+      
+      // Load Builder Hall max level
+      const bhEncoded = encodeURIComponent('Builder Hall');
+      const bhUrl = `/api/v2/static/buildings/${bhEncoded}/maxlevel`;
+      console.log('Fetching Builder Hall max level from:', bhUrl);
+      const bhResponse = await fetch(bhUrl);
+      if (bhResponse.ok) {
+        const bhData = await bhResponse.json();
+        setBuilderHallMaxLevel(bhData.max_level);
+        console.log('Builder Hall max level loaded:', bhData.max_level);
+      } else {
+        const errorText = await bhResponse.text();
+        console.error('Failed to load Builder Hall max level:', bhResponse.status, bhResponse.statusText, errorText);
+      }
+    } catch (err) {
+      console.error("Failed to load max levels:", err);
+      // Keep fallback values
+    }
+  };
+
+  const loadLeagues = async () => {
+    try {
+      // Map next-intl locale codes to CoC API locale codes
+      const localeMap: Record<string, string> = {
+        'en': 'EN',
+        'fr': 'FR',
+        'de': 'DE',
+        'es': 'ES',
+        'it': 'IT',
+        'pt': 'PT',
+        'ru': 'RU',
+        'ja': 'JP',
+        'ko': 'KR',
+        'zh': 'CN',
+        'ar': 'AR',
+        'tr': 'TR',
+        'pl': 'PL',
+        'nl': 'NL',
+        'th': 'TH',
+        'vi': 'VI',
+        'fi': 'FI',
+        'no': 'NO',
+        'id': 'ID',
+        'ms': 'MS',
+      };
+
+      const apiLocale = localeMap[locale] || 'EN';
+
+      // Load league tiers from static data API via Next.js proxy with locale
+      const response = await fetch(`/api/v2/static/league_tiers/names?locale=${apiLocale}`);
+      if (response.ok) {
+        const leagueNames: string[] = await response.json();
+        // Transform to {value, label} format for the select
+        setAvailableLeagues(leagueNames.map(name => ({ value: name, label: name })));
+      }
+    } catch (err) {
+      console.error("Failed to load leagues from static data:", err);
+      // Keep empty array if loading fails, will show empty dropdown
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -229,20 +309,13 @@ export default function RolesPage() {
             ...r,
             role_id: String(r.role || r.role_id),
           })) || [],
-          status: rolesRes.data.roles.status?.map((r: any) => ({
-            ...r,
-            id: String(r.role || r.id),
-          })) || [],
-          family_position: rolesRes.data.roles.family_position?.map((r: any) => ({
-            ...r,
-            role_id: String(r.role || r.role_id),
-          })) || [],
         };
         setAllRoles(normalizedRoles);
       }
 
       if (settingsRes.data) {
         setRoleSettings(settingsRes.data);
+        setOriginalRoleSettings(settingsRes.data);
       }
 
       if (discordRolesRes.data) {
@@ -258,9 +331,8 @@ export default function RolesPage() {
 
   const handleSaveSettings = async () => {
     try {
-      setIsSaving(true);
+      setSaveStatus('saving');
       setError(null);
-      setSuccess(false);
 
       await apiClient.roles.updateRoleSettings(guildId, {
         auto_eval_status: roleSettings.auto_eval_status,
@@ -271,12 +343,12 @@ export default function RolesPage() {
         role_treatment: roleSettings.role_treatment,
       });
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      setOriginalRoleSettings({ ...roleSettings });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (err: any) {
       setError(err.message || "Failed to save settings");
-    } finally {
-      setIsSaving(false);
+      setSaveStatus('idle');
     }
   };
 
@@ -285,16 +357,28 @@ export default function RolesPage() {
       setError(null);
 
       // Transform data to match backend format
-      let roleData = { ...newRole };
+      let roleData: any = { ...newRole };
 
-      // For townhall roles, convert th: 17 → th: "th17"
-      if (currentRoleType === "townhall" && typeof roleData.th === "number") {
-        roleData.th = `th${roleData.th}`;
+      // For league roles: rename "league" → "type" to match API schema
+      // Backend expects: { role: int, type: "Legend League" }
+      if (currentRoleType === "league" && roleData.league) {
+        roleData.type = roleData.league;
+        delete roleData.league;
       }
 
-      // For builderhall roles, convert bh: 9 → bh: "bh9"
-      if (currentRoleType === "builderhall" && typeof roleData.bh === "number") {
-        roleData.bh = `bh${roleData.bh}`;
+      // For builder_league roles: rename "builder_league" → "type" to match API schema
+      // Backend expects: { role: int, type: "Diamond I" }
+      if (currentRoleType === "builder_league" && roleData.builder_league) {
+        roleData.type = roleData.builder_league;
+        delete roleData.builder_league;
+      }
+
+      // Backend expects "role" field for most types, but frontend uses "role_id"
+      // Keep as string to avoid JavaScript number precision loss with 64-bit Discord IDs
+      // Pydantic will handle string -> int conversion on the backend
+      if (roleData.role_id !== undefined) {
+        roleData.role = roleData.role_id; // Keep as string
+        delete roleData.role_id;
       }
 
       await apiClient.roles.createRole(guildId, currentRoleType, roleData);
@@ -338,9 +422,9 @@ export default function RolesPage() {
                   <SelectValue placeholder={t("addRoleDialog.selectThLevel")} />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
-                  {Array.from({ length: 17 }, (_, i) => 17 - i).map((th) => (
+                  {Array.from({ length: townHallMaxLevel }, (_, i) => townHallMaxLevel - i).map((th) => (
                     <SelectItem key={th} value={th.toString()}>
-                      TH {th}
+                      {thPrefix} {th}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -348,21 +432,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -380,7 +456,7 @@ export default function RolesPage() {
                   <SelectValue placeholder={t("addRoleDialog.selectLeague")} />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
-                  {leagues.map((league) => (
+                  {availableLeagues.map((league) => (
                     <SelectItem key={league.value} value={league.value}>
                       {league.label}
                     </SelectItem>
@@ -390,21 +466,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -422,9 +490,9 @@ export default function RolesPage() {
                   <SelectValue placeholder={t("addRoleDialog.selectBhLevel")} />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
-                  {Array.from({ length: 10 }, (_, i) => 10 - i).map((bh) => (
+                  {Array.from({ length: builderHallMaxLevel }, (_, i) => builderHallMaxLevel - i).map((bh) => (
                     <SelectItem key={bh} value={bh.toString()}>
-                      BH {bh}
+                      {bhPrefix} {bh}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -432,21 +500,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
+              />
             </div>
           </>
         );
@@ -474,131 +534,13 @@ export default function RolesPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
+              <RoleCombobox
+                roles={discordRoles}
+                value={newRole.role_id?.toString() || ""}
                 onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </>
-        );
-
-      case "achievement":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="achievement">{t("addRoleDialog.achievementName")}</Label>
-              <Input
-                id="achievement"
-                value={newRole.achievement || ""}
-                onChange={(e) => setNewRole({ ...newRole, achievement: e.target.value })}
-                placeholder={t("addRoleDialog.achievementPlaceholder")}
+                placeholder={t("addRoleDialog.selectRole")}
+                showDisabled={false}
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </>
-        );
-
-      case "status":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="months">{t("addRoleDialog.monthsInServer")}</Label>
-              <Input
-                id="months"
-                type="number"
-                min="1"
-                value={newRole.months || ""}
-                onChange={(e) => setNewRole({ ...newRole, months: parseInt(e.target.value) })}
-                placeholder="6"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </>
-        );
-
-      case "family_position":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="position">{t("addRoleDialog.familyPosition")}</Label>
-              <Select
-                value={newRole.type}
-                onValueChange={(value) => setNewRole({ ...newRole, type: value })}
-              >
-                <SelectTrigger id="position">
-                  <SelectValue placeholder={t("addRoleDialog.selectPosition")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {familyPositions.map((pos) => (
-                    <SelectItem key={pos.value} value={pos.value}>
-                      {pos.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <Select
-                value={newRole.role_id?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-              >
-                <SelectTrigger id="role">
-                  <SelectValue placeholder={t("addRoleDialog.selectRole")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {discordRoles.map((role) => (
-                    <SelectItem key={role.id} value={role.id}>
-                      {role.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </>
         );
@@ -641,29 +583,20 @@ export default function RolesPage() {
 
             switch (roleType) {
               case "townhall":
-                criteria = role.th
-                  ? ["TH", role.th.toString().toUpperCase().replace(/^TH\s*/, "").replace(/^TH/, "").trim()]
-                    .filter(Boolean)
-                    .join(" ")
-                  : "";
+                // DB stores as "th10", display as "TH 10"
+                criteria = role.th ? `TH ${role.th.toString().replace(/^th/i, "")}` : "";
                 break;
               case "league":
-                criteria = role.league;
+                // DB stores in snake_case (e.g., "legend_league"), denormalize for display
+                criteria = role.type ? denormalizeLeagueName(role.type) : "";
                 break;
               case "builderhall":
-                criteria = `BH ${role.bh}`;
+                // DB stores as "bh3", display as "BH 3"
+                criteria = role.bh ? `BH ${role.bh.toString().replace(/^bh/i, "")}` : "";
                 break;
               case "builder_league":
-                criteria = role.builder_league || "";
-                break;
-              case "achievement":
-                criteria = role.achievement || "";
-                break;
-              case "status":
-                criteria = `${role.months} ${role.months === 1 ? t("configuredRoles.month") : t("configuredRoles.months")}`;
-                break;
-              case "family_position":
-                criteria = familyPositions.find((p) => p.value === role.type)?.label || role.type;
+                // DB stores in snake_case, denormalize for display
+                criteria = role.type ? denormalizeLeagueName(role.type) : "";
                 break;
             }
 
@@ -705,7 +638,23 @@ export default function RolesPage() {
   // Calculate statistics
   const totalRoles = Object.values(allRoles).reduce((sum, roles: any) => sum + (roles?.length || 0), 0);
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
-  const totalRoleTypes = 7; // townhall, league, builderhall, builder_league, achievement, status, family_position
+  const totalRoleTypes = 4; // townhall, league, builderhall, builder_league
+
+  const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
+    roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
+
+  const isAddRoleDisabled = () => {
+    const hasRole = !!newRole.role_id;
+    if (!hasRole) return true;
+
+    switch (currentRoleType) {
+      case "townhall": return !newRole.th;
+      case "league": return !newRole.league;
+      case "builderhall": return !newRole.bh;
+      case "builder_league": return !newRole.builder_league;
+      default: return true;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -864,23 +813,30 @@ export default function RolesPage() {
                   {t("settings.description")}
                 </CardDescription>
               </div>
-              <Button
-                onClick={handleSaveSettings}
-                disabled={isSaving}
-                className="bg-primary hover:bg-primary/90 w-full md:w-auto"
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("settings.saving")}
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    {t("settings.saveButton")}
-                  </>
-                )}
-              </Button>
+              {saveStatus === 'saved' ? (
+                <div className="flex items-center gap-2 text-green-600 bg-green-500/10 px-3 py-2 rounded-md">
+                  <AlertCircle className="h-4 w-4" />
+                  <span className="text-sm font-medium">{t("toast.changesSaved")}</span>
+                </div>
+              ) : hasChanged && (
+                <Button
+                  onClick={handleSaveSettings}
+                  disabled={saveStatus === 'saving'}
+                  className="bg-primary hover:bg-primary/90 w-full md:w-auto"
+                >
+                  {saveStatus === 'saving' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t("settings.saving")}
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      {t("settings.saveButton")}
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -971,7 +927,7 @@ export default function RolesPage() {
                     <Button
                       className="bg-primary hover:bg-primary/90"
                       onClick={handleAddRole}
-                      disabled={!newRole.role_id && !newRole.id}
+                      disabled={isAddRoleDisabled()}
                     >
                       {t("addRoleDialog.addRole")}
                     </Button>
@@ -982,7 +938,7 @@ export default function RolesPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 h-auto">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 h-auto">
                 {isLoading ? (
                   [...Array(7)].map((_, i) => (
                     <Skeleton key={i} className="h-10 w-full animate-pulse" />

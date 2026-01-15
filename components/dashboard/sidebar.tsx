@@ -24,6 +24,7 @@ import {
   Sun,
   Moon,
   Computer,
+  UserCog,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -118,6 +119,11 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
           nameKey: "general.name",
           href: `/dashboard/${guildId}/general`,
           icon: Settings,
+        },
+        {
+          nameKey: "familySettings.name",
+          href: `/dashboard/${guildId}/family-settings`,
+          icon: UserCog,
         },
         {
           nameKey: "logs.name",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,14 +9,14 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Palette, Shield, Eye, Lock, ChevronDown, ChevronRight, Pencil } from "lucide-react";
+import { RoleCombobox } from "@/components/ui/role-combobox";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Save, RotateCcw, AlertCircle, Loader2, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 import ReactMarkdown from "react-markdown";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
@@ -27,8 +27,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-// Placeholder descriptions will be fetched from translations dynamically
 
 const hexToInt = (hex: string): number => {
   return parseInt(hex.replace("#", ""), 16);
@@ -44,45 +42,32 @@ export default function GeneralSettingsPage() {
   const t = useTranslations("GeneralPage");
   const tCommon = useTranslations("Common");
 
-  // Placeholder descriptions from translations
-  const PLACEHOLDERS = [
-    { key: "{discord_name}", desc: t("nickname.placeholders.discordName"), example: "JohnDoe#1234" },
-    { key: "{discord_display_name}", desc: t("nickname.placeholders.discordDisplayName"), example: "John" },
-    { key: "{player_name}", desc: t("nickname.placeholders.playerName"), example: "Chief John" },
-    { key: "{player_tag}", desc: t("nickname.placeholders.playerTag"), example: "#2PP" },
-    { key: "{player_townhall}", desc: t("nickname.placeholders.playerTownhall"), example: "16" },
-    { key: "{player_townhall_small}", desc: t("nickname.placeholders.playerTownhallSmall"), example: "¹⁶" },
-    { key: "{player_warstars}", desc: t("nickname.placeholders.playerWarstars"), example: "1234" },
-    { key: "{player_role}", desc: t("nickname.placeholders.playerRole"), example: "Leader" },
-    { key: "{player_clan}", desc: t("nickname.placeholders.playerClan"), example: "RCS Clan" },
-    { key: "{player_league}", desc: t("nickname.placeholders.playerLeague"), example: "Legend" },
-    { key: "{player_clan_abbreviation}", desc: t("nickname.placeholders.playerClanAbbr"), example: "RCS" },
-  ];
-
   const [settings, setSettings] = useState({
-    change_nickname: true,
-    nickname_rule: "[{player_clan_abbreviation}] {player_name}",
-    non_family_nickname_rule: "{player_name}",
     embed_color: 14223113, // #D90709 as integer
     api_token: true,
     full_whitelist_role: undefined as string | undefined,
   });
 
-  const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string }>>([]);
+  const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [isFamilyPlaceholdersOpen, setIsFamilyPlaceholdersOpen] = useState(false);
-  const [isNonFamilyPlaceholdersOpen, setIsNonFamilyPlaceholdersOpen] = useState(false);
   const [tempColor, setTempColor] = useState(settings.embed_color);
   const [tempHex, setTempHex] = useState(intToHex(settings.embed_color));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Discord Tenure Roles state
+  const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; months: number; role_id?: string }>>([]);
+  const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
+  const [isTenureDialogOpen, setIsTenureDialogOpen] = useState(false);
+  const [newTenureRole, setNewTenureRole] = useState<{ months?: number; id?: string }>({});
 
   // Load settings on mount
   useEffect(() => {
     loadSettings();
     loadDiscordRoles();
+    loadTenureRoles();
   }, [guildId]);
 
   const loadSettings = async () => {
@@ -106,9 +91,6 @@ export default function GeneralSettingsPage() {
 
       if (response.data) {
         const newSettings = {
-          change_nickname: response.data.change_nickname ?? true,
-          nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
-          non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
           embed_color: response.data.embed_color ?? 14223113,
           api_token: response.data.api_token ?? true,
           full_whitelist_role: response.data.full_whitelist_role?.toString(),
@@ -147,6 +129,82 @@ export default function GeneralSettingsPage() {
     }
   };
 
+  const loadTenureRoles = async () => {
+    try {
+      setIsLoadingTenureRoles(true);
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+      const response = await apiClient.roles.getAllRoles(guildId);
+
+      if (response.error) {
+        console.error("Failed to load tenure roles:", response.error);
+        return;
+      }
+
+      if (response.data?.roles?.status) {
+        const normalizedRoles = response.data.roles.status.map((r: any) => ({
+          id: String(r.role || r.id),
+          months: r.months,
+          role_id: String(r.role || r.id),
+        }));
+        setTenureRoles(normalizedRoles);
+      }
+    } catch (err) {
+      console.error("Failed to load tenure roles:", err);
+    } finally {
+      setIsLoadingTenureRoles(false);
+    }
+  };
+
+  const handleAddTenureRole = async () => {
+    try {
+      setError(null);
+
+      if (!newTenureRole.months || !newTenureRole.id) {
+        setError("Please fill in all fields");
+        return;
+      }
+
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+      await apiClient.roles.createRole(guildId, "status", {
+        months: newTenureRole.months,
+        id: newTenureRole.id,
+      });
+
+      await loadTenureRoles();
+      setIsTenureDialogOpen(false);
+      setNewTenureRole({});
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: any) {
+      setError(err.message || "Failed to add tenure role");
+    }
+  };
+
+  const handleDeleteTenureRole = async (roleId: string) => {
+    try {
+      setError(null);
+
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+      await apiClient.roles.deleteRole(guildId, "status", roleId);
+
+      await loadTenureRoles();
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: any) {
+      setError(err.message || "Failed to delete tenure role");
+    }
+  };
+
+
   const handleSave = async () => {
     try {
       setIsSaving(true);
@@ -172,34 +230,9 @@ export default function GeneralSettingsPage() {
     loadSettings();
   };
 
-  // Generate preview of nickname format
-  const generatePreview = (format: string): string => {
-    const examples: Record<string, string> = {
-      "{discord_name}": "JohnDoe#1234",
-      "{discord_display_name}": "John",
-      "{player_name}": "Chief John",
-      "{player_tag}": "#2PP",
-      "{player_townhall}": "16",
-      "{player_townhall_small}": "¹⁶",
-      "{player_warstars}": "1234",
-      "{player_role}": "Leader",
-      "{player_clan}": "RCS Clan",
-      "{player_league}": "Legend",
-      "{player_clan_abbreviation}": "RCS",
-      "{clan_abbr}": "RCS", // Legacy support
-    };
-
-    let preview = format;
-    Object.entries(examples).forEach(([key, value]) => {
-      preview = preview.replace(new RegExp(key, "g"), value);
-    });
-
-    return preview;
-  };
-
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div className="space-y-1">
@@ -281,218 +314,8 @@ export default function GeneralSettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Grid Layout for Cards */}
+        {/* Grid Layout for smaller cards */}
         <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
-          {/* Nickname Management */}
-          <Card className="bg-card border-border lg:col-span-2">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <User className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <CardTitle className="text-foreground">{t("nickname.title")}</CardTitle>
-                  <CardDescription className="text-xs">
-                    {t("nickname.description")}
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Enable Nickname Changes */}
-              <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-3">
-                <div className="space-y-0.5 flex-1">
-                  <Label htmlFor="change-nicknames" className="text-sm font-medium">
-                    {t("nickname.automaticChanges")}
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    {t("nickname.automaticChangesDesc")}
-                  </p>
-                </div>
-                {isLoading ? (
-                  <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
-                ) : (
-                  <Switch
-                    id="change-nicknames"
-                    checked={settings.change_nickname}
-                    onCheckedChange={(checked) =>
-                      setSettings({ ...settings, change_nickname: checked })
-                    }
-                  />
-                )}
-              </div>
-
-              <Separator className="bg-border" />
-
-              {/* Family Convention */}
-              <div className="space-y-3">
-                <Label htmlFor="family-convention" className="text-sm font-medium">
-                  {t("nickname.familyFormat")}
-                </Label>
-                {isLoading ? (
-                  <Skeleton className="h-10 w-full animate-pulse" />
-                ) : (
-                  <Input
-                    id="family-convention"
-                    value={settings.nickname_rule}
-                    onChange={(e) =>
-                      setSettings({ ...settings, nickname_rule: e.target.value })
-                    }
-                    placeholder="[{player_clan_abbreviation}] {player_name}"
-                    className="bg-secondary border-border font-mono text-sm"
-                  />
-                )}
-
-                {/* Live Preview */}
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Eye className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
-                  </div>
-                  {isLoading ? (
-                    <Skeleton className="h-9 w-full animate-pulse" />
-                  ) : (
-                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                      {generatePreview(settings.nickname_rule)}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Available Placeholders */}
-              <Collapsible open={isFamilyPlaceholdersOpen} onOpenChange={setIsFamilyPlaceholdersOpen}>
-                <CollapsibleTrigger className="w-full text-left">
-                  <div className="px-3 pb-2">
-                    <div className="flex items-center gap-2">
-                      <p className="text-xs font-medium text-[#DC2626]">{t("nickname.availablePlaceholders")}</p>
-                      {isFamilyPlaceholdersOpen ? (
-                        <ChevronDown className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                      )}
-                    </div>
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {PLACEHOLDERS.map((p) => (
-                        <div key={p.key} className="flex items-start gap-2">
-                          <Badge
-                            variant="secondary"
-                            className="text-xs font-mono cursor-pointer hover:bg-primary/20"
-                            onClick={() => {
-                              const input = document.getElementById("family-convention") as HTMLInputElement;
-                              if (input) {
-                                const start = input.selectionStart || 0;
-                                const end = input.selectionEnd || 0;
-                                const newValue =
-                                  settings.nickname_rule.substring(0, start) +
-                                  p.key +
-                                  settings.nickname_rule.substring(end);
-                                setSettings({ ...settings, nickname_rule: newValue });
-                                setTimeout(() => {
-                                  input.focus();
-                                  input.setSelectionRange(start + p.key.length, start + p.key.length);
-                                }, 0);
-                              }
-                            }}
-                          >
-                            {p.key}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">{p.desc}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-
-              {/* Non-Family Convention */}
-              <div className="space-y-3">
-                <Label htmlFor="non-family-convention" className="text-sm font-medium">
-                  {t("nickname.nonFamilyFormat")}
-                </Label>
-                {isLoading ? (
-                  <Skeleton className="h-10 w-full animate-pulse" />
-                ) : (
-                  <Input
-                    id="non-family-convention"
-                    value={settings.non_family_nickname_rule}
-                    onChange={(e) =>
-                      setSettings({ ...settings, non_family_nickname_rule: e.target.value })
-                    }
-                    placeholder="{player_name}"
-                    className="bg-secondary border-border font-mono text-sm"
-                  />
-                )}
-
-                {/* Live Preview */}
-                <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Eye className="h-4 w-4 text-primary" />
-                    <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
-                  </div>
-                  {isLoading ? (
-                    <Skeleton className="h-9 w-full animate-pulse" />
-                  ) : (
-                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                      {generatePreview(settings.non_family_nickname_rule)}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Available Placeholders */}
-              <Collapsible open={isNonFamilyPlaceholdersOpen} onOpenChange={setIsNonFamilyPlaceholdersOpen}>
-                <CollapsibleTrigger className="w-full text-left">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs font-medium text-[#DC2626]">{t("nickname.availablePlaceholders")}</p>
-                    {isNonFamilyPlaceholdersOpen ? (
-                      <ChevronDown className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-[#DC2626] transition-transform duration-200" />
-                    )}
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="mt-2 bg-secondary/30 border border-border rounded-lg p-3">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {PLACEHOLDERS.map((p) => (
-                        <div key={p.key} className="flex items-start gap-2">
-                          <Badge
-                            variant="secondary"
-                            className="text-xs font-mono cursor-pointer hover:bg-primary/20"
-                            onClick={() => {
-                              const input = document.getElementById("non-family-convention") as HTMLInputElement;
-                              if (input) {
-                                const start = input.selectionStart || 0;
-                                const end = input.selectionEnd || 0;
-                                const newValue =
-                                  settings.non_family_nickname_rule.substring(0, start) +
-                                  p.key +
-                                  settings.non_family_nickname_rule.substring(end);
-                                setSettings({ ...settings, non_family_nickname_rule: newValue });
-                                setTimeout(() => {
-                                  input.focus();
-                                  input.setSelectionRange(start + p.key.length, start + p.key.length);
-                                }, 0);
-                              }
-                            }}
-                          >
-                            {p.key}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">{p.desc}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-
-            </CardContent>
-          </Card>
-
           {/* Appearance */}
           <Card className="bg-card border-border">
             <CardHeader>
@@ -716,7 +539,161 @@ export default function GeneralSettingsPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Discord Tenure Roles */}
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-blue-500/10 rounded-lg">
+                <Clock className="h-4 w-4 text-blue-500" />
+              </div>
+              <div>
+                <CardTitle className="text-foreground">{t("tenureRoles.title")}</CardTitle>
+                <CardDescription className="text-xs">
+                  {t("tenureRoles.description")}
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Dialog open={isTenureDialogOpen} onOpenChange={setIsTenureDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
+                  <Plus className="mr-2 h-4 w-4" />
+                  {t("tenureRoles.addRole")}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>{t("tenureRoles.addDialogTitle")}</DialogTitle>
+                  <DialogDescription>
+                    {t("tenureRoles.addDialogDescription")}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="months">{t("tenureRoles.monthsInServer")}</Label>
+                    <Input
+                      id="months"
+                      type="number"
+                      min="1"
+                      value={newTenureRole.months || ""}
+                      onChange={(e) => setNewTenureRole({ ...newTenureRole, months: parseInt(e.target.value) || undefined })}
+                      placeholder="6"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="role">{t("tenureRoles.discordRole")}</Label>
+                    <RoleCombobox
+                      roles={discordRoles}
+                      value={newTenureRole.id?.toString() || ""}
+                      onValueChange={(value) => setNewTenureRole({ ...newTenureRole, id: value })}
+                      placeholder={t("tenureRoles.selectRole")}
+                      showDisabled={false}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsTenureDialogOpen(false)}>
+                    {tCommon("cancel")}
+                  </Button>
+                  <Button
+                    className="bg-primary hover:bg-primary/90"
+                    onClick={handleAddTenureRole}
+                    disabled={!newTenureRole.months || !newTenureRole.id}
+                  >
+                    {t("tenureRoles.addRole")}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {isLoadingTenureRoles ? (
+              <div className="space-y-4">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("tenureRoles.discordRole")}</TableHead>
+                      <TableHead>{t("tenureRoles.months")}</TableHead>
+                      <TableHead className="text-right">{t("tenureRoles.actions")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {[1, 2, 3].map((i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Skeleton className="h-3 w-3 rounded-full" />
+                            <Skeleton className="h-4 w-32" />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4 w-20" />
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-8 w-20 ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : tenureRoles.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>{t("tenureRoles.noRolesConfigured")}</p>
+                <p className="text-sm mt-2">{t("tenureRoles.addRoleToStart")}</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("tenureRoles.discordRole")}</TableHead>
+                    <TableHead>{t("tenureRoles.months")}</TableHead>
+                    <TableHead className="text-right">{t("tenureRoles.actions")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tenureRoles.map((role) => {
+                    const discordRole = discordRoles.find((r) => r.id === role.id);
+                    return (
+                      <TableRow key={role.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundColor: discordRole && discordRole.color !== undefined && discordRole.color !== 0
+                                  ? `#${discordRole.color.toString(16).padStart(6, "0")}`
+                                  : "#99AAB5"
+                              }}
+                            />
+                            <span>{discordRole?.name || t("tenureRoles.unknownRole")}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {role.months} {role.months === 1 ? t("tenureRoles.month") : t("tenureRoles.months")}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteTenureRole(role.id)}
+                            className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            {t("tenureRoles.remove")}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 }
+
