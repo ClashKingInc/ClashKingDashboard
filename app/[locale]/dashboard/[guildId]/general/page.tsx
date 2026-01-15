@@ -10,7 +10,9 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, RotateCcw, AlertCircle, Loader2, Palette, Lock, Pencil, Shield } from "lucide-react";
+import { RoleCombobox } from "@/components/ui/role-combobox";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Save, RotateCcw, AlertCircle, Loader2, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
@@ -55,10 +57,17 @@ export default function GeneralSettingsPage() {
   const [tempHex, setTempHex] = useState(intToHex(settings.embed_color));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  // Discord Tenure Roles state
+  const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; months: number; role_id?: string }>>([]);
+  const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
+  const [isTenureDialogOpen, setIsTenureDialogOpen] = useState(false);
+  const [newTenureRole, setNewTenureRole] = useState<{ months?: number; id?: string }>({});
+
   // Load settings on mount
   useEffect(() => {
     loadSettings();
     loadDiscordRoles();
+    loadTenureRoles();
   }, [guildId]);
 
   const loadSettings = async () => {
@@ -117,6 +126,81 @@ export default function GeneralSettingsPage() {
       }
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
+    }
+  };
+
+  const loadTenureRoles = async () => {
+    try {
+      setIsLoadingTenureRoles(true);
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+      const response = await apiClient.roles.getAllRoles(guildId);
+
+      if (response.error) {
+        console.error("Failed to load tenure roles:", response.error);
+        return;
+      }
+
+      if (response.data?.roles?.status) {
+        const normalizedRoles = response.data.roles.status.map((r: any) => ({
+          id: String(r.role || r.id),
+          months: r.months,
+          role_id: String(r.role || r.id),
+        }));
+        setTenureRoles(normalizedRoles);
+      }
+    } catch (err) {
+      console.error("Failed to load tenure roles:", err);
+    } finally {
+      setIsLoadingTenureRoles(false);
+    }
+  };
+
+  const handleAddTenureRole = async () => {
+    try {
+      setError(null);
+
+      if (!newTenureRole.months || !newTenureRole.id) {
+        setError("Please fill in all fields");
+        return;
+      }
+
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+      await apiClient.roles.createRole(guildId, "status", {
+        months: newTenureRole.months,
+        id: newTenureRole.id,
+      });
+
+      await loadTenureRoles();
+      setIsTenureDialogOpen(false);
+      setNewTenureRole({});
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: any) {
+      setError(err.message || "Failed to add tenure role");
+    }
+  };
+
+  const handleDeleteTenureRole = async (roleId: string) => {
+    try {
+      setError(null);
+
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      apiClient.setAccessToken(token);
+      await apiClient.roles.deleteRole(guildId, "status", roleId);
+
+      await loadTenureRoles();
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: any) {
+      setError(err.message || "Failed to delete tenure role");
     }
   };
 
@@ -453,6 +537,159 @@ export default function GeneralSettingsPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Discord Tenure Roles */}
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-blue-500/10 rounded-lg">
+                <Clock className="h-4 w-4 text-blue-500" />
+              </div>
+              <div>
+                <CardTitle className="text-foreground">{t("tenureRoles.title")}</CardTitle>
+                <CardDescription className="text-xs">
+                  {t("tenureRoles.description")}
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Dialog open={isTenureDialogOpen} onOpenChange={setIsTenureDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
+                  <Plus className="mr-2 h-4 w-4" />
+                  {t("tenureRoles.addRole")}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>{t("tenureRoles.addDialogTitle")}</DialogTitle>
+                  <DialogDescription>
+                    {t("tenureRoles.addDialogDescription")}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="months">{t("tenureRoles.monthsInServer")}</Label>
+                    <Input
+                      id="months"
+                      type="number"
+                      min="1"
+                      value={newTenureRole.months || ""}
+                      onChange={(e) => setNewTenureRole({ ...newTenureRole, months: parseInt(e.target.value) || undefined })}
+                      placeholder="6"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="role">{t("tenureRoles.discordRole")}</Label>
+                    <RoleCombobox
+                      roles={discordRoles}
+                      value={newTenureRole.id?.toString() || ""}
+                      onValueChange={(value) => setNewTenureRole({ ...newTenureRole, id: value })}
+                      placeholder={t("tenureRoles.selectRole")}
+                      showDisabled={false}
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsTenureDialogOpen(false)}>
+                    {tCommon("cancel")}
+                  </Button>
+                  <Button
+                    className="bg-primary hover:bg-primary/90"
+                    onClick={handleAddTenureRole}
+                    disabled={!newTenureRole.months || !newTenureRole.id}
+                  >
+                    {t("tenureRoles.addRole")}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            {isLoadingTenureRoles ? (
+              <div className="space-y-4">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("tenureRoles.discordRole")}</TableHead>
+                      <TableHead>{t("tenureRoles.months")}</TableHead>
+                      <TableHead className="text-right">{t("tenureRoles.actions")}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {[1, 2, 3].map((i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Skeleton className="h-3 w-3 rounded-full" />
+                            <Skeleton className="h-4 w-32" />
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-4 w-20" />
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-8 w-20 ml-auto" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : tenureRoles.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>{t("tenureRoles.noRolesConfigured")}</p>
+                <p className="text-sm mt-2">{t("tenureRoles.addRoleToStart")}</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t("tenureRoles.discordRole")}</TableHead>
+                    <TableHead>{t("tenureRoles.months")}</TableHead>
+                    <TableHead className="text-right">{t("tenureRoles.actions")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tenureRoles.map((role) => {
+                    const discordRole = discordRoles.find((r) => r.id === role.id);
+                    return (
+                      <TableRow key={role.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundColor: discordRole && discordRole.color !== undefined && discordRole.color !== 0
+                                  ? `#${discordRole.color.toString(16).padStart(6, "0")}`
+                                  : "#99AAB5"
+                              }}
+                            />
+                            <span>{discordRole?.name || t("tenureRoles.unknownRole")}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {role.months} {role.months === 1 ? t("tenureRoles.month") : t("tenureRoles.months")}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteTenureRole(role.id)}
+                            className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            {t("tenureRoles.remove")}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -1430,6 +1430,23 @@
         "ignored": "Excluded from automatic role evaluation"
       }
     },
+    "tenureRoles": {
+      "title": "Discord Tenure Roles",
+      "description": "Automatically assign roles based on how long members have been in the server",
+      "addRole": "Add Tenure Role",
+      "addDialogTitle": "Add Tenure Role",
+      "addDialogDescription": "Assign a role to members who have been in the server for a specific number of months",
+      "monthsInServer": "Months in Server",
+      "discordRole": "Discord Role",
+      "selectRole": "Select a role",
+      "noRolesConfigured": "No tenure roles configured",
+      "addRoleToStart": "Add a tenure role to get started",
+      "months": "Months",
+      "month": "month",
+      "actions": "Actions",
+      "remove": "Remove",
+      "unknownRole": "Unknown role"
+    },
     "prefix": "Command Prefix",
     "language": "Language",
     "timezone": "Timezone",

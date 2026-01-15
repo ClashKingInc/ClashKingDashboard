@@ -203,6 +203,7 @@ export default function FamilySettingsPage() {
 
   // Family Roles state
   const [familyRoles, setFamilyRoles] = useState<FamilyRolesResponse | null>(null);
+  const [isLoadingFamilyRoles, setIsLoadingFamilyRoles] = useState(true);
   const [familyRolesLoading, setFamilyRolesLoading] = useState(false);
 
   // Load settings on mount
@@ -268,6 +269,7 @@ export default function FamilySettingsPage() {
 
   const loadFamilyRoles = async () => {
     try {
+      setIsLoadingFamilyRoles(true);
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
@@ -284,6 +286,8 @@ export default function FamilySettingsPage() {
       }
     } catch (err) {
       console.error("Failed to load family roles:", err);
+    } finally {
+      setIsLoadingFamilyRoles(false);
     }
   };
 
@@ -691,33 +695,56 @@ export default function FamilySettingsPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               {/* Role Type Cards - Similar to LogCards */}
-              <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                {[
-                  { key: "family", label: t("familyRoles.types.family"), description: t("familyRoles.descriptions.family"), roles: familyRoles?.family_roles || [], icon: Users, color: "green" },
-                  { key: "not_family", label: t("familyRoles.types.notFamily"), description: t("familyRoles.descriptions.notFamily"), roles: familyRoles?.not_family_roles || [], icon: Users, color: "red" },
-                  { key: "only_family", label: t("familyRoles.types.onlyFamily"), description: t("familyRoles.descriptions.onlyFamily"), roles: familyRoles?.only_family_roles || [], icon: Users, color: "blue" },
-                  { key: "family_member", label: t("familyRoles.types.member"), description: t("familyRoles.descriptions.member"), roles: familyRoles?.family_member_roles || [], icon: Shield, color: "gray" },
-                  { key: "family_elder", label: t("familyRoles.types.elder"), description: t("familyRoles.descriptions.elder"), roles: familyRoles?.family_elder_roles || [], icon: Shield, color: "yellow" },
-                  { key: "family_coleader", label: t("familyRoles.types.coLeader"), description: t("familyRoles.descriptions.coLeader"), roles: familyRoles?.family_coleader_roles || [], icon: Shield, color: "orange" },
-                  { key: "family_leader", label: t("familyRoles.types.leader"), description: t("familyRoles.descriptions.leader"), roles: familyRoles?.family_leader_roles || [], icon: Shield, color: "purple" },
-                  { key: "ignored", label: t("familyRoles.types.ignored"), description: t("familyRoles.descriptions.ignored"), roles: familyRoles?.ignored_roles || [], icon: Eye, color: "gray" },
-                ].map((roleType) => (
-                  <FamilyRoleCard
-                    key={roleType.key}
-                    roleTypeKey={roleType.key as FamilyRoleType}
-                    label={roleType.label}
-                    description={roleType.description}
-                    roleIds={roleType.roles}
-                    icon={roleType.icon}
-                    color={roleType.color}
-                    discordRoles={discordRoles}
-                    isLoading={familyRolesLoading}
-                    onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
-                    onRemove={(roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, roleId)}
-                    t={t}
-                  />
-                ))}
-              </div>
+              {isLoadingFamilyRoles ? (
+                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <div key={i} className="rounded-lg border border-border bg-secondary/20 p-3 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3 flex-1">
+                          <Skeleton className="h-8 w-8 rounded-lg" />
+                          <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-3 w-48" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-8 w-full" />
+                        <Skeleton className="h-8 w-full" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                  {[
+                    { key: "family", label: t("familyRoles.types.family"), description: t("familyRoles.descriptions.family"), roles: familyRoles?.family_roles || [], icon: Users, color: "green" },
+                    { key: "not_family", label: t("familyRoles.types.notFamily"), description: t("familyRoles.descriptions.notFamily"), roles: familyRoles?.not_family_roles || [], icon: Users, color: "red" },
+                    { key: "only_family", label: t("familyRoles.types.onlyFamily"), description: t("familyRoles.descriptions.onlyFamily"), roles: familyRoles?.only_family_roles || [], icon: Users, color: "blue" },
+                    { key: "family_member", label: t("familyRoles.types.member"), description: t("familyRoles.descriptions.member"), roles: familyRoles?.family_member_roles || [], icon: Shield, color: "gray" },
+                    { key: "family_elder", label: t("familyRoles.types.elder"), description: t("familyRoles.descriptions.elder"), roles: familyRoles?.family_elder_roles || [], icon: Shield, color: "yellow" },
+                    { key: "family_coleader", label: t("familyRoles.types.coLeader"), description: t("familyRoles.descriptions.coLeader"), roles: familyRoles?.family_coleader_roles || [], icon: Shield, color: "orange" },
+                    { key: "family_leader", label: t("familyRoles.types.leader"), description: t("familyRoles.descriptions.leader"), roles: familyRoles?.family_leader_roles || [], icon: Shield, color: "purple" },
+                    { key: "ignored", label: t("familyRoles.types.ignored"), description: t("familyRoles.descriptions.ignored"), roles: familyRoles?.ignored_roles || [], icon: Eye, color: "gray" },
+                  ].map((roleType) => (
+                    <FamilyRoleCard
+                      key={roleType.key}
+                      roleTypeKey={roleType.key as FamilyRoleType}
+                      label={roleType.label}
+                      description={roleType.description}
+                      roleIds={roleType.roles}
+                      icon={roleType.icon}
+                      color={roleType.color}
+                      discordRoles={discordRoles}
+                      isLoading={familyRolesLoading}
+                      onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
+                      onRemove={(roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, roleId)}
+                      t={t}
+                    />
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

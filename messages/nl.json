@@ -1301,6 +1301,23 @@
         "ignored": "Uitgesloten van automatische rol-evaluatie"
       }
     },
+    "tenureRoles": {
+      "title": "Discord Anciënniteit Rollen",
+      "description": "Wijs automatisch rollen toe op basis van hoe lang leden op de server zijn",
+      "addRole": "Anciënniteit Rol Toevoegen",
+      "addDialogTitle": "Anciënniteit Rol Toevoegen",
+      "addDialogDescription": "Wijs een rol toe aan leden die een specifiek aantal maanden op de server zijn",
+      "monthsInServer": "Maanden op Server",
+      "discordRole": "Discord Rol",
+      "selectRole": "Selecteer een rol",
+      "noRolesConfigured": "Geen anciënniteit rollen geconfigureerd",
+      "addRoleToStart": "Voeg een anciënniteit rol toe om te beginnen",
+      "months": "Maanden",
+      "month": "maand",
+      "actions": "Acties",
+      "remove": "Verwijderen",
+      "unknownRole": "Onbekende rol"
+    },
     "prefix": "Commando Prefix",
     "language": "Taal",
     "timezone": "Tijdzone",

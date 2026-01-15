@@ -55,7 +55,6 @@ import {
   Trophy,
   Hammer,
   Award,
-  Clock,
   Crown,
   Check,
   ChevronsUpDown,
@@ -80,7 +79,6 @@ const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "league", icon: Trophy },
   { value: "builderhall", icon: Hammer },
   { value: "builder_league", icon: Award },
-  { value: "status", icon: Clock },
 ];
 
 const BUILDER_LEAGUE_TIERS = [
@@ -175,7 +173,6 @@ export default function RolesPage() {
     league: [],
     builderhall: [],
     builder_league: [],
-    status: [],
   });
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -312,10 +309,6 @@ export default function RolesPage() {
             ...r,
             role_id: String(r.role || r.role_id),
           })) || [],
-          status: rolesRes.data.roles.status?.map((r: any) => ({
-            ...r,
-            id: String(r.role || r.id),
-          })) || [],
         };
         setAllRoles(normalizedRoles);
       }
@@ -383,8 +376,7 @@ export default function RolesPage() {
       // Backend expects "role" field for most types, but frontend uses "role_id"
       // Keep as string to avoid JavaScript number precision loss with 64-bit Discord IDs
       // Pydantic will handle string -> int conversion on the backend
-      // Status roles use "id" field directly, not "role"
-      if (currentRoleType !== "status" && roleData.role_id !== undefined) {
+      if (roleData.role_id !== undefined) {
         roleData.role = roleData.role_id; // Keep as string
         delete roleData.role_id;
       }
@@ -553,33 +545,6 @@ export default function RolesPage() {
           </>
         );
 
-      case "status":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="months">{t("addRoleDialog.monthsInServer")}</Label>
-              <Input
-                id="months"
-                type="number"
-                min="1"
-                value={newRole.months || ""}
-                onChange={(e) => setNewRole({ ...newRole, months: parseInt(e.target.value) })}
-                placeholder="6"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <RoleCombobox
-                roles={discordRoles}
-                value={newRole.id?.toString() || ""}
-                onValueChange={(value) => setNewRole({ ...newRole, id: value })}
-                placeholder={t("addRoleDialog.selectRole")}
-                showDisabled={false}
-              />
-            </div>
-          </>
-        );
-
       default:
         return null;
     }
@@ -633,9 +598,6 @@ export default function RolesPage() {
                 // DB stores in snake_case, denormalize for display
                 criteria = role.type ? denormalizeLeagueName(role.type) : "";
                 break;
-              case "status":
-                criteria = `${role.months} ${role.months === 1 ? t("configuredRoles.month") : t("configuredRoles.months")}`;
-                break;
             }
 
             return (
@@ -676,13 +638,13 @@ export default function RolesPage() {
   // Calculate statistics
   const totalRoles = Object.values(allRoles).reduce((sum, roles: any) => sum + (roles?.length || 0), 0);
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
-  const totalRoleTypes = 5; // townhall, league, builderhall, builder_league, status
+  const totalRoleTypes = 4; // townhall, league, builderhall, builder_league
 
   const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
 
   const isAddRoleDisabled = () => {
-    const hasRole = currentRoleType === "status" ? !!newRole.id : !!newRole.role_id;
+    const hasRole = !!newRole.role_id;
     if (!hasRole) return true;
 
     switch (currentRoleType) {
@@ -690,7 +652,6 @@ export default function RolesPage() {
       case "league": return !newRole.league;
       case "builderhall": return !newRole.bh;
       case "builder_league": return !newRole.builder_league;
-      case "status": return !newRole.months;
       default: return true;
     }
   };
@@ -977,7 +938,7 @@ export default function RolesPage() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 h-auto">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 h-auto">
                 {isLoading ? (
                   [...Array(7)].map((_, i) => (
                     <Skeleton key={i} className="h-10 w-full animate-pulse" />

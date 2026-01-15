@@ -1307,6 +1307,23 @@
         "ignored": "Exclu de l'évaluation automatique des rôles"
       }
     },
+    "tenureRoles": {
+      "title": "Rôles d'Ancienneté Discord",
+      "description": "Attribuer automatiquement des rôles en fonction de la durée de présence des membres sur le serveur",
+      "addRole": "Ajouter un Rôle d'Ancienneté",
+      "addDialogTitle": "Ajouter un Rôle d'Ancienneté",
+      "addDialogDescription": "Attribuer un rôle aux membres qui sont sur le serveur depuis un certain nombre de mois",
+      "monthsInServer": "Mois sur le Serveur",
+      "discordRole": "Rôle Discord",
+      "selectRole": "Sélectionner un rôle",
+      "noRolesConfigured": "Aucun rôle d'ancienneté configuré",
+      "addRoleToStart": "Ajoutez un rôle d'ancienneté pour commencer",
+      "months": "Mois",
+      "month": "mois",
+      "actions": "Actions",
+      "remove": "Supprimer",
+      "unknownRole": "Rôle inconnu"
+    },
     "prefix": "Préfixe de Commande",
     "language": "Langue",
     "timezone": "Fuseau Horaire",
