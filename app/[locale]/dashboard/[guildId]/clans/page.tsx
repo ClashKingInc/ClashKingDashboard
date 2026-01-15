@@ -617,7 +617,7 @@ export default function ClansPage() {
                 {t("addClan")}
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="bg-card border-border max-w-2xl">
               <DialogHeader>
                 <DialogTitle>{t("addNewClan")}</DialogTitle>
                 <DialogDescription>
@@ -632,7 +632,7 @@ export default function ClansPage() {
                     placeholder="#ABCD1234"
                     value={newClanTag}
                     onChange={(e) => setNewClanTag(e.target.value)}
-                    className="bg-secondary border-border"
+                    className="bg-background border-border"
                     onKeyDown={(e) => e.key === 'Enter' && handleAddClan()}
                   />
                 </div>
@@ -895,7 +895,7 @@ export default function ClansPage() {
 
         {/* Settings Dialog */}
         <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-card border-border max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {t("configureClan", { 
@@ -945,6 +945,7 @@ export default function ClansPage() {
                       onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' || value === 'disabled' ? null : value})}
                       placeholder={t("selectChannel")}
                       showDisabled={false}
+                      className="bg-background"
                     />
                   </div>
 
@@ -954,6 +955,7 @@ export default function ClansPage() {
                       placeholder={t("abbreviationPlaceholder")}
                       value={clanSettings?.abbreviation || ''}
                       onChange={(e) => setClanSettings({...clanSettings, abbreviation: e.target.value})}
+                      className="bg-background border-border"
                     />
                   </div>
 
@@ -964,6 +966,7 @@ export default function ClansPage() {
                       placeholder={t("greetingPlaceholder")}
                       value={clanSettings?.greeting || ''}
                       onChange={(e) => setClanSettings({...clanSettings, greeting: e.target.value})}
+                      className="bg-background border-border"
                     />
 
                     {/* Live Preview */}
@@ -1082,6 +1085,7 @@ export default function ClansPage() {
                       onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' || value === 'disabled' ? null : value})}
                       placeholder={t("selectChannel")}
                       showDisabled={false}
+                      className="bg-background"
                     />
                   </div>
                 </div>
@@ -1095,6 +1099,7 @@ export default function ClansPage() {
                       placeholder={t("categoryPlaceholder")}
                       value={clanSettings?.category || ''}
                       onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
+                      className="bg-background border-border"
                     />
                   </div>
 
@@ -1104,10 +1109,10 @@ export default function ClansPage() {
                       value={clanSettings?.auto_greet_option || 'Never'}
                       onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-card border-border">
                         <SelectItem value="Never">{t("autoGreetOptions.never")}</SelectItem>
                         <SelectItem value="Always">{t("autoGreetOptions.always")}</SelectItem>
                         <SelectItem value="On Join">{t("autoGreetOptions.onJoin")}</SelectItem>

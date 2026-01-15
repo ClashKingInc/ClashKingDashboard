@@ -78,8 +78,8 @@ export function RoleCombobox({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "w-full justify-between bg-secondary border-border",
-            (isAddMode || !value) && "text-muted-foreground",
+            "w-full justify-between bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground",
+            !value && "text-muted-foreground",
             className
           )}
           disabled={disabled || hasNoAvailableRoles}
