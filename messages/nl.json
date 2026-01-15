@@ -21,6 +21,7 @@
     "searchChannels": "Zoek kanalen...",
     "noRoleFound": "Geen rol gevonden.",
     "searchRoles": "Zoek rollen...",
+    "addRole": "Rol toevoegen...",
     "error": "Er is een fout opgetreden",
     "success": "Succes",
     "actions": "Acties",
@@ -818,6 +819,7 @@
       "familyPosition": "Familiepositie"
     },
     "familyPositions": {
+      "member": "Lid",
       "elder": "Oudste",
       "coLeader": "Medeleider",
       "leader": "Leider"
@@ -1270,6 +1272,34 @@
       "fullWhitelistRole": "Volledige Whitelist Rol",
       "fullWhitelistRoleDesc": "Discord rol met volledige toegang tot alle bot commando's (omzeilt alle rechtencontroles)",
       "noRole": "Geen Rol"
+    },
+    "familyRoles": {
+      "title": "Familie Rollen",
+      "description": "Beheer automatische rollen op basis van familie-lidmaatschap en clan posities",
+      "selectRole": "Selecteer een rol",
+      "addRole": "Rol toevoegen...",
+      "deletedRole": "Verwijderde rol",
+      "noRolesConfigured": "Geen rollen geconfigureerd",
+      "types": {
+        "family": "Familie",
+        "notFamily": "Niet-Familie",
+        "onlyFamily": "Exclusief Familie",
+        "member": "Lid",
+        "elder": "Oudste",
+        "coLeader": "Medeleider",
+        "leader": "Leider",
+        "ignored": "Genegeerd"
+      },
+      "descriptions": {
+        "family": "Heeft minstens één account in familie clans",
+        "notFamily": "Heeft geen accounts in familie clans",
+        "onlyFamily": "Alle gekoppelde accounts zijn in familie clans",
+        "member": "Heeft Lid positie in een familie clan",
+        "elder": "Heeft Oudste positie in een familie clan",
+        "coLeader": "Heeft Medeleider positie in een familie clan",
+        "leader": "Heeft Leider positie in een familie clan",
+        "ignored": "Uitgesloten van automatische rol-evaluatie"
+      }
     },
     "prefix": "Commando Prefix",
     "language": "Taal",

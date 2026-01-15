@@ -21,6 +21,7 @@
     "searchChannels": "Rechercher des canaux...",
     "noRoleFound": "Aucun rôle trouvé.",
     "searchRoles": "Rechercher des rôles...",
+    "addRole": "Ajouter un rôle...",
     "error": "Une erreur s'est produite",
     "success": "Succès",
     "actions": "Actions",
@@ -818,6 +819,7 @@
       "familyPosition": "Rôle de clan"
     },
     "familyPositions": {
+      "member": "Membre",
       "elder": "Ainé",
       "coLeader": "Chef Adjoint",
       "leader": "Chef"
@@ -1272,6 +1274,34 @@
       "fullWhitelistRole": "Rôle super-administrateur",
       "fullWhitelistRoleDesc": "Rôle Discord avec un accès complet à toutes les commandes du bot (contourne toutes les vérifications de permissions)",
       "noRole": "Aucun Rôle"
+    },
+    "familyRoles": {
+      "title": "Rôles de Famille",
+      "description": "Gérer les rôles automatiques basés sur l'appartenance à la famille et les positions dans le clan",
+      "selectRole": "Sélectionner un rôle",
+      "addRole": "Ajouter un rôle...",
+      "deletedRole": "Rôle supprimé",
+      "noRolesConfigured": "Aucun rôle configuré",
+      "types": {
+        "family": "Famille",
+        "notFamily": "Non-Famille",
+        "onlyFamily": "Exclusif Famille",
+        "member": "Membre",
+        "elder": "Ainé",
+        "coLeader": "Chef Adjoint",
+        "leader": "Chef",
+        "ignored": "Ignoré"
+      },
+      "descriptions": {
+        "family": "A au moins un compte dans les clans famille",
+        "notFamily": "N'a aucun compte dans les clans famille",
+        "onlyFamily": "Tous les comptes liés sont dans les clans famille",
+        "member": "A le rang Membre dans un clan famille",
+        "elder": "A le rang Ainé dans un clan famille",
+        "coLeader": "A le rang Chef Adjoint dans un clan famille",
+        "leader": "A le rang Chef dans un clan famille",
+        "ignored": "Exclu de l'évaluation automatique des rôles"
+      }
     },
     "prefix": "Préfixe de Commande",
     "language": "Langue",

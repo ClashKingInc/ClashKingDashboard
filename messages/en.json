@@ -21,6 +21,7 @@
     "searchChannels": "Search channels...",
     "noRoleFound": "No role found.",
     "searchRoles": "Search roles...",
+    "addRole": "Add role...",
     "error": "An error occurred",
     "success": "Success",
     "actions": "Actions",
@@ -941,6 +942,7 @@
       "familyPosition": "Family Position"
     },
     "familyPositions": {
+      "member": "Member",
       "elder": "Elder",
       "coLeader": "Co-Leader",
       "leader": "Leader"
@@ -1395,6 +1397,34 @@
       "fullWhitelistRole": "Full Whitelist Role",
       "fullWhitelistRoleDesc": "Discord role with full access to all bot commands (bypasses all permission checks)",
       "noRole": "No Role"
+    },
+    "familyRoles": {
+      "title": "Family Roles",
+      "description": "Manage automatic roles based on family membership and clan positions",
+      "selectRole": "Select a role",
+      "addRole": "Add a role...",
+      "deletedRole": "Deleted role",
+      "noRolesConfigured": "No roles configured",
+      "types": {
+        "family": "Family",
+        "notFamily": "Non-Family",
+        "onlyFamily": "Exclusive Family",
+        "member": "Member",
+        "elder": "Elder",
+        "coLeader": "Co-Leader",
+        "leader": "Leader",
+        "ignored": "Ignored"
+      },
+      "descriptions": {
+        "family": "Has at least one account in family clans",
+        "notFamily": "Has no accounts in family clans",
+        "onlyFamily": "All linked accounts are in family clans",
+        "member": "Has Member position in any family clan",
+        "elder": "Has Elder position in any family clan",
+        "coLeader": "Has Co-Leader position in any family clan",
+        "leader": "Has Leader position in any family clan",
+        "ignored": "Excluded from automatic role evaluation"
+      }
     },
     "prefix": "Command Prefix",
     "language": "Language",

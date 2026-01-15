@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -27,12 +27,16 @@ interface Role {
 
 interface RoleComboboxProps {
   roles: Role[]
-  value: string
-  onValueChange: (value: string) => void
+  value?: string
+  onValueChange?: (value: string) => void
+  onAdd?: (roleId: string) => void
+  excludeRoleIds?: string[]
   placeholder?: string
+  addPlaceholder?: string
   disabled?: boolean
   className?: string
   showDisabled?: boolean
+  mode?: "select" | "add"
 }
 
 function intToHexColor(color: number): string {
@@ -44,15 +48,27 @@ export function RoleCombobox({
   roles,
   value,
   onValueChange,
+  onAdd,
+  excludeRoleIds = [],
   placeholder = "Select role",
+  addPlaceholder,
   disabled = false,
   className,
   showDisabled = true,
+  mode = "select",
 }: RoleComboboxProps) {
   const t = useTranslations("Common")
   const [open, setOpen] = React.useState(false)
 
   const selectedRole = roles.find((role) => role.id === value)
+
+  // Filter out excluded roles in add mode
+  const availableRoles = mode === "add"
+    ? roles.filter((role) => !excludeRoleIds.includes(role.id))
+    : roles
+
+  const isAddMode = mode === "add"
+  const hasNoAvailableRoles = isAddMode && availableRoles.length === 0
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -63,12 +79,17 @@ export function RoleCombobox({
           aria-expanded={open}
           className={cn(
             "w-full justify-between bg-secondary border-border",
-            !value && "text-muted-foreground",
+            (isAddMode || !value) && "text-muted-foreground",
             className
           )}
-          disabled={disabled}
+          disabled={disabled || hasNoAvailableRoles}
         >
-          {selectedRole ? (
+          {isAddMode ? (
+            <span className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              {addPlaceholder || t("addRole")}
+            </span>
+          ) : selectedRole ? (
             <span className="flex items-center gap-2 truncate">
               <span
                 className="w-3 h-3 rounded-full shrink-0"
@@ -82,7 +103,7 @@ export function RoleCombobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0" align="start">
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
         <Command>
           <CommandInput placeholder={t("searchRoles")} />
           <CommandList>
@@ -90,11 +111,11 @@ export function RoleCombobox({
               {t("noRoleFound")}
             </CommandEmpty>
             <CommandGroup>
-              {showDisabled && (
+              {showDisabled && !isAddMode && (
                 <CommandItem
                   value="disabled"
                   onSelect={() => {
-                    onValueChange("disabled")
+                    onValueChange?.("disabled")
                     setOpen(false)
                   }}
                 >
@@ -107,21 +128,27 @@ export function RoleCombobox({
                   {t("disabled") || "Disabled"}
                 </CommandItem>
               )}
-              {roles.map((role) => (
+              {availableRoles.map((role) => (
                 <CommandItem
                   key={role.id}
                   value={role.name}
                   onSelect={() => {
-                    onValueChange(role.id)
+                    if (isAddMode) {
+                      onAdd?.(role.id)
+                    } else {
+                      onValueChange?.(role.id)
+                    }
                     setOpen(false)
                   }}
                 >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === role.id ? "opacity-100" : "opacity-0"
-                    )}
-                  />
+                  {!isAddMode && (
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === role.id ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  )}
                   <span
                     className="w-3 h-3 rounded-full mr-2 shrink-0"
                     style={{ backgroundColor: intToHexColor(role.color || 0) }}

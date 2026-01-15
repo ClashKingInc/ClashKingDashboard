@@ -81,13 +81,6 @@ const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "builderhall", icon: Hammer },
   { value: "builder_league", icon: Award },
   { value: "status", icon: Clock },
-  { value: "family_position", icon: Crown },
-];
-
-const FAMILY_POSITIONS_CONFIG = [
-  { value: "family_elder_roles" },
-  { value: "family_co-leader_roles" },
-  { value: "family_leader_roles" },
 ];
 
 const BUILDER_LEAGUE_TIERS = [
@@ -136,17 +129,6 @@ export default function RolesPage() {
     label: t(`roleTypes.${rt.value.replace(/_([a-z])/g, (g) => g[1].toUpperCase())}`),
   }));
 
-  const familyPositions = FAMILY_POSITIONS_CONFIG.map((fp) => {
-    const key = fp.value
-      .replace("family_", "")
-      .replace("_roles", "")
-      .replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-    return {
-      ...fp,
-      label: t(`familyPositions.${key}`),
-    };
-  });
-
   const builderLeagues = BUILDER_LEAGUE_TIERS.flatMap((tier) => {
     const tierName = t(`builderLeagues.${tier.id}`);
     if (!tier.range) {
@@ -194,7 +176,6 @@ export default function RolesPage() {
     builderhall: [],
     builder_league: [],
     status: [],
-    family_position: [],
   });
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -335,10 +316,6 @@ export default function RolesPage() {
             ...r,
             id: String(r.role || r.id),
           })) || [],
-          family_position: rolesRes.data.roles.family_position?.map((r: any) => ({
-            ...r,
-            role_id: String(r.role || r.role_id),
-          })) || [],
         };
         setAllRoles(normalizedRoles);
       }
@@ -389,16 +366,6 @@ export default function RolesPage() {
       // Transform data to match backend format
       let roleData: any = { ...newRole };
 
-      // For townhall roles, convert th: 17 → th: "th17"
-      if (currentRoleType === "townhall" && typeof roleData.th === "number") {
-        roleData.th = `th${roleData.th}`;
-      }
-
-      // For builderhall roles, convert bh: 9 → bh: "bh9"
-      if (currentRoleType === "builderhall" && typeof roleData.bh === "number") {
-        roleData.bh = `bh${roleData.bh}`;
-      }
-
       // For league roles: rename "league" → "type" to match API schema
       // Backend expects: { role: int, type: "Legend League" }
       if (currentRoleType === "league" && roleData.league) {
@@ -416,13 +383,10 @@ export default function RolesPage() {
       // Backend expects "role" field for most types, but frontend uses "role_id"
       // Keep as string to avoid JavaScript number precision loss with 64-bit Discord IDs
       // Pydantic will handle string -> int conversion on the backend
+      // Status roles use "id" field directly, not "role"
       if (currentRoleType !== "status" && roleData.role_id !== undefined) {
         roleData.role = roleData.role_id; // Keep as string
         delete roleData.role_id;
-      } else if (currentRoleType === "status" && roleData.id !== undefined) {
-        // Status roles: rename id -> role but keep as string
-        roleData.role = roleData.id;
-        delete roleData.id;
       }
 
       await apiClient.roles.createRole(guildId, currentRoleType, roleData);
@@ -616,40 +580,6 @@ export default function RolesPage() {
           </>
         );
 
-      case "family_position":
-        return (
-          <>
-            <div className="space-y-2">
-              <Label htmlFor="position">{t("addRoleDialog.familyPosition")}</Label>
-              <Select
-                value={newRole.type}
-                onValueChange={(value) => setNewRole({ ...newRole, type: value })}
-              >
-                <SelectTrigger id="position">
-                  <SelectValue placeholder={t("addRoleDialog.selectPosition")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {familyPositions.map((pos) => (
-                    <SelectItem key={pos.value} value={pos.value}>
-                      {pos.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
-              <RoleCombobox
-                roles={discordRoles}
-                value={newRole.role_id?.toString() || ""}
-                onValueChange={(value) => setNewRole({ ...newRole, role_id: value })}
-                placeholder={t("addRoleDialog.selectRole")}
-                showDisabled={false}
-              />
-            </div>
-          </>
-        );
-
       default:
         return null;
     }
@@ -688,18 +618,16 @@ export default function RolesPage() {
 
             switch (roleType) {
               case "townhall":
-                criteria = role.th
-                  ? ["TH", role.th.toString().toUpperCase().replace(/^TH\s*/, "").replace(/^TH/, "").trim()]
-                    .filter(Boolean)
-                    .join(" ")
-                  : "";
+                // DB stores as "th10", display as "TH 10"
+                criteria = role.th ? `TH ${role.th.toString().replace(/^th/i, "")}` : "";
                 break;
               case "league":
                 // DB stores in snake_case (e.g., "legend_league"), denormalize for display
                 criteria = role.type ? denormalizeLeagueName(role.type) : "";
                 break;
               case "builderhall":
-                criteria = `BH ${role.bh}`;
+                // DB stores as "bh3", display as "BH 3"
+                criteria = role.bh ? `BH ${role.bh.toString().replace(/^bh/i, "")}` : "";
                 break;
               case "builder_league":
                 // DB stores in snake_case, denormalize for display
@@ -707,9 +635,6 @@ export default function RolesPage() {
                 break;
               case "status":
                 criteria = `${role.months} ${role.months === 1 ? t("configuredRoles.month") : t("configuredRoles.months")}`;
-                break;
-              case "family_position":
-                criteria = familyPositions.find((p) => p.value === role.type)?.label || role.type;
                 break;
             }
 
@@ -751,7 +676,7 @@ export default function RolesPage() {
   // Calculate statistics
   const totalRoles = Object.values(allRoles).reduce((sum, roles: any) => sum + (roles?.length || 0), 0);
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
-  const totalRoleTypes = 6; // townhall, league, builderhall, builder_league, status, family_position
+  const totalRoleTypes = 5; // townhall, league, builderhall, builder_league, status
 
   const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
@@ -766,7 +691,6 @@ export default function RolesPage() {
       case "builderhall": return !newRole.bh;
       case "builder_league": return !newRole.builder_league;
       case "status": return !newRole.months;
-      case "family_position": return !newRole.type;
       default: return true;
     }
   };
