@@ -163,6 +163,10 @@
       "name": "General Settings",
       "description": "Server configuration"
     },
+    "familySettings": {
+      "name": "Family Settings",
+      "description": "Family roles and nicknames"
+    },
     "clans": {
       "name": "Clans",
       "description": "Manage your clans"
@@ -1352,7 +1356,7 @@
     "settingsSaved": "Settings saved successfully!",
     "infoBanner": {
       "title": "Looking for more settings?",
-      "description": "Role management settings are in **Roles** page. Clan-specific settings (ban/strike logs, war channels) are in **Clans** page."
+      "description": "Family roles and nickname settings are in **Family Settings** page. Role management settings are in **Roles** page. Clan-specific settings (ban/strike logs, war channels) are in **Clans** page."
     },
     "nickname": {
       "title": "Nickname Management",
@@ -1430,6 +1434,66 @@
     "language": "Language",
     "timezone": "Timezone",
     "theme": "Theme"
+  },
+  "FamilySettingsPage": {
+    "title": "Family Settings",
+    "description": "Configure family roles and nickname formatting for clan members",
+    "loading": "Loading settings...",
+    "reset": "Reset",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "settingsSaved": "Settings saved successfully!",
+    "nickname": {
+      "title": "Nickname Management",
+      "description": "Control how nicknames are formatted",
+      "automaticChanges": "Automatic Changes",
+      "automaticChangesDesc": "Allow bot to update member nicknames",
+      "familyFormat": "Family Members Format",
+      "availablePlaceholders": "Available Placeholders",
+      "preview": "Preview:",
+      "nonFamilyFormat": "Non-Family Members Format",
+      "placeholders": {
+        "discordName": "Discord username",
+        "discordDisplayName": "Server nickname",
+        "playerName": "CoC player name",
+        "playerTag": "Player tag",
+        "playerTownhall": "TH level",
+        "playerTownhallSmall": "TH superscript",
+        "playerWarstars": "War stars",
+        "playerRole": "Clan role",
+        "playerClan": "Clan name",
+        "playerLeague": "League",
+        "playerClanAbbr": "Clan abbr"
+      }
+    },
+    "familyRoles": {
+      "title": "Family Roles",
+      "description": "Manage automatic roles based on family membership and clan positions",
+      "selectRole": "Select a role",
+      "addRole": "Add a role...",
+      "deletedRole": "Deleted role",
+      "noRolesConfigured": "No roles configured",
+      "types": {
+        "family": "Family",
+        "notFamily": "Non-Family",
+        "onlyFamily": "Exclusive Family",
+        "member": "Member",
+        "elder": "Elder",
+        "coLeader": "Co-Leader",
+        "leader": "Leader",
+        "ignored": "Ignored"
+      },
+      "descriptions": {
+        "family": "Has at least one account in family clans",
+        "notFamily": "Has no accounts in family clans",
+        "onlyFamily": "All linked accounts are in family clans",
+        "member": "Has Member position in any family clan",
+        "elder": "Has Elder position in any family clan",
+        "coLeader": "Has Co-Leader position in any family clan",
+        "leader": "Has Leader position in any family clan",
+        "ignored": "Excluded from automatic role evaluation"
+      }
+    }
   },
   "LanguageSwitcher": {
     "label": "Language"

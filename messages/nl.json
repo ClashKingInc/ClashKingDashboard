@@ -1227,7 +1227,7 @@
     "settingsSaved": "Instellingen succesvol opgeslagen!",
     "infoBanner": {
       "title": "Op zoek naar meer instellingen?",
-      "description": "Rolbeheerinstellingen staan op de **Rollen** pagina. Clan-specifieke instellingen (ban/strike logs, oorlogskanalen) staan op de **Clans** pagina."
+      "description": "Familie rol- en bijnaaminstellingen staan op de **Familie Instellingen** pagina. Rolbeheerinstellingen staan op de **Rollen** pagina. Clan-specifieke instellingen (ban/strike logs, oorlogskanalen) staan op de **Clans** pagina."
     },
     "nickname": {
       "title": "Bijnaam Beheer",

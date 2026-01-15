@@ -163,6 +163,10 @@
       "name": "Paramètres Généraux",
       "description": "Configuration du serveur"
     },
+    "familySettings": {
+      "name": "Paramètres Famille",
+      "description": "Rôles de famille et pseudos"
+    },
     "clans": {
       "name": "Clans",
       "description": "Gérer vos clans"
@@ -1229,7 +1233,7 @@
     "settingsSaved": "Paramètres enregistrés avec succès !",
     "infoBanner": {
       "title": "Vous cherchez plus de paramètres ?",
-      "description": "Les paramètres de gestion des rôles se trouvent dans la page **Rôles**. Les paramètres spécifiques aux clans (logs de ban/avertissement, canaux de guerre) se trouvent dans la page **Clans**."
+      "description": "Les paramètres de rôles de famille et de pseudos se trouvent dans la page **Paramètres Famille**. Les paramètres de gestion des rôles se trouvent dans la page **Rôles**. Les paramètres spécifiques aux clans (logs de ban/avertissement, canaux de guerre) se trouvent dans la page **Clans**."
     },
     "nickname": {
       "title": "Gestion des Pseudos",
@@ -1307,6 +1311,66 @@
     "language": "Langue",
     "timezone": "Fuseau Horaire",
     "theme": "Thème"
+  },
+  "FamilySettingsPage": {
+    "title": "Paramètres Famille",
+    "description": "Configurer les rôles de famille et le formatage des pseudos pour les membres du clan",
+    "loading": "Chargement des paramètres...",
+    "reset": "Réinitialiser",
+    "saving": "Enregistrement...",
+    "saveChanges": "Enregistrer les Modifications",
+    "settingsSaved": "Paramètres enregistrés avec succès !",
+    "nickname": {
+      "title": "Gestion des Pseudos",
+      "description": "Contrôler le formatage des pseudonymes",
+      "automaticChanges": "Modifications Automatiques",
+      "automaticChangesDesc": "Autoriser le bot à mettre à jour les pseudos des membres",
+      "familyFormat": "Format des Membres de la Famille",
+      "availablePlaceholders": "Paramètres disponibles",
+      "preview": "Aperçu :",
+      "nonFamilyFormat": "Format des Non-Membres de la Famille",
+      "placeholders": {
+        "discordName": "Nom d'utilisateur Discord",
+        "discordDisplayName": "Pseudo du serveur",
+        "playerName": "Nom du joueur CoC",
+        "playerTag": "Tag du joueur",
+        "playerTownhall": "Niveau d'HDV",
+        "playerTownhallSmall": "HDV en exposant",
+        "playerWarstars": "Étoiles de guerre",
+        "playerRole": "Rôle dans le clan",
+        "playerClan": "Nom du clan",
+        "playerLeague": "Ligue",
+        "playerClanAbbr": "Abrév. du clan"
+      }
+    },
+    "familyRoles": {
+      "title": "Rôles de Famille",
+      "description": "Gérer les rôles automatiques basés sur l'appartenance à la famille et les positions dans le clan",
+      "selectRole": "Sélectionner un rôle",
+      "addRole": "Ajouter un rôle...",
+      "deletedRole": "Rôle supprimé",
+      "noRolesConfigured": "Aucun rôle configuré",
+      "types": {
+        "family": "Famille",
+        "notFamily": "Non-Famille",
+        "onlyFamily": "Exclusif Famille",
+        "member": "Membre",
+        "elder": "Ainé",
+        "coLeader": "Chef Adjoint",
+        "leader": "Chef",
+        "ignored": "Ignoré"
+      },
+      "descriptions": {
+        "family": "A au moins un compte dans les clans famille",
+        "notFamily": "N'a aucun compte dans les clans famille",
+        "onlyFamily": "Tous les comptes liés sont dans les clans famille",
+        "member": "A le rang Membre dans un clan famille",
+        "elder": "A le rang Ainé dans un clan famille",
+        "coLeader": "A le rang Chef Adjoint dans un clan famille",
+        "leader": "A le rang Chef dans un clan famille",
+        "ignored": "Exclu de l'évaluation automatique des rôles"
+      }
+    }
   },
   "LanguageSwitcher": {
     "label": "Langue"
