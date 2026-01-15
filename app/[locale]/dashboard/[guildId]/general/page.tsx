@@ -550,10 +550,10 @@ export default function GeneralSettingsPage() {
                             <ReactMarkdown>{t("appearance.embedColorDefault")}</ReactMarkdown>
                           </div>
                         </div>
-                        <DialogContent className="sm:max-w-md">
+                        <DialogContent className="sm:max-w-md bg-card border-border">
                           <DialogHeader>
-                            <DialogTitle>{t("appearance.editColor")}</DialogTitle>
-                            <DialogDescription>
+                            <DialogTitle className="text-foreground">{t("appearance.editColor")}</DialogTitle>
+                            <DialogDescription className="text-muted-foreground">
                               {t("appearance.embedColorDesc")}
                             </DialogDescription>
                           </DialogHeader>
@@ -568,7 +568,7 @@ export default function GeneralSettingsPage() {
                                     setTempColor(newColor);
                                     setTempHex(intToHex(newColor));
                                   }}
-                                  className="w-20 h-20 cursor-pointer border-2 rounded-lg p-1"
+                                  className="w-20 h-20 cursor-pointer border-2 rounded-lg p-1 bg-background"
                                 />
                               </div>
                               <div className="flex-1 space-y-2">
@@ -585,7 +585,7 @@ export default function GeneralSettingsPage() {
                                     }
                                   }}
                                   placeholder="#D90709"
-                                  className="bg-secondary border-border font-mono text-lg uppercase"
+                                  className="bg-background border-border font-mono text-lg uppercase"
                                 />
                               </div>
                             </div>
@@ -605,8 +605,9 @@ export default function GeneralSettingsPage() {
                           </div>
                           <DialogFooter className="flex sm:justify-between gap-2">
                             <Button 
-                              variant="ghost" 
+                              variant="outline"
                               onClick={() => setIsDialogOpen(false)}
+                              className="border-border"
                             >
                               {tCommon("cancel")}
                             </Button>
@@ -616,6 +617,7 @@ export default function GeneralSettingsPage() {
                                 setIsDialogOpen(false);
                               }}
                               disabled={!/^#[0-9A-F]{6}$/i.test(tempHex)}
+                              className="bg-primary hover:bg-primary/90"
                             >
                               {t("appearance.apply")}
                             </Button>
