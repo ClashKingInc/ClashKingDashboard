@@ -144,16 +144,21 @@ export default function NicknamesPage() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted-foreground">
-              {t("description")}
-            </p>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="p-3 rounded-lg bg-primary/10">
+              <User className="h-8 w-8 text-primary" />
+            </div>
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>
+              <p className="text-muted-foreground mt-1">
+                {t("description")}
+              </p>
+            </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 md:ml-auto">
             <Button
               variant="outline"
               onClick={handleReset}
