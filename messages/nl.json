@@ -163,6 +163,10 @@
       "name": "Algemene Instellingen",
       "description": "Serverconfiguratie"
     },
+    "familySettings": {
+      "name": "Familie Instellingen",
+      "description": "Familie rollen en bijnamen"
+    },
     "clans": {
       "name": "Clans",
       "description": "Beheer je clans"
@@ -383,25 +387,30 @@
     }
   },
   "RostersPage": {
-    "title": "Roosters",
-    "description": "Beheer je oorlogsroosters",
-    "noRosters": "Geen roosters gevonden",
-    "createRoster": "Rooster Maken",
-    "viewDetails": "Details Bekijken",
-    "deleteRoster": "Rooster Verwijderen",
-    "members": "Leden",
-    "type": {
-      "clan": "Clan",
-      "family": "Familie"
-    },
-    "signupScope": {
-      "clanOnly": "Alleen Clan",
-      "familyWide": "Familiebreed"
+    "title": "Roosters & Opstellingen",
+    "description": "Beheer oorlogsroosters, opstellingen en ledenindelingen",
+    "stats": {
+      "totalRosters": "Totaal Roosters",
+      "totalMembers": "Totaal Leden",
+      "clanRosters": "Clan Roosters",
+      "familyRosters": "Familie Roosters"
     },
     "filters": {
       "search": "Zoek roosters...",
       "type": "Type",
-      "all": "Alle"
+      "all": "Alle",
+      "clan": "Clan",
+      "family": "Familie",
+      "clear": "Wissen"
+    },
+    "comparisonMode": {
+      "cancel": "Annuleren",
+      "compare": "Vergelijken",
+      "compareRosters": "Roosters Vergelijken",
+      "selectRosters": "Selecteer roosters",
+      "selectRostersDesc": "Selecteer minimaal 2 roosters om te vergelijken",
+      "maxReached": "Maximum bereikt",
+      "maxReachedDesc": "Je kunt maximaal 5 roosters tegelijk vergelijken"
     },
     "createDialog": {
       "title": "Nieuw Rooster Maken",
@@ -409,29 +418,141 @@
       "aliasLabel": "Roosternaam",
       "aliasPlaceholder": "bijv. CWL Rooster",
       "typeLabel": "Roostertype",
+      "typeClan": "Clan",
+      "typeFamily": "Familie",
       "signupScopeLabel": "Inschrijfbereik",
+      "scopeClanOnly": "Alleen Clan",
+      "scopeFamilyWide": "Familiebreed",
       "clanLabel": "Clan",
+      "clanPlaceholder": "Selecteer een clan",
       "descriptionLabel": "Beschrijving (Optioneel)",
       "descriptionPlaceholder": "Roosterbeschrijving...",
-      "submit": "Rooster Maken"
+      "cancel": "Annuleren",
+      "creating": "Aanmaken...",
+      "create": "Rooster Maken"
     },
-    "details": {
+    "editDialog": {
+      "title": "Rooster Bewerken",
+      "description": "Wijzig roosterinstellingen en configuratie",
+      "aliasLabel": "Roosternaam",
+      "descriptionLabel": "Beschrijving",
+      "descriptionPlaceholder": "Roosterbeschrijving...",
+      "minThLabel": "Minimum Stadhuis",
+      "minThPlaceholder": "bijv. 13",
+      "maxThLabel": "Maximum Stadhuis",
+      "maxThPlaceholder": "bijv. 16",
+      "rosterSizeLabel": "Roostergrootte",
+      "rosterSizePlaceholder": "bijv. 50",
+      "columnsLabel": "Weergavekolommen",
+      "columnsPlaceholder": "Selecteer te tonen kolommen",
+      "sortLabel": "Sorteervolgorde",
+      "sortPlaceholder": "Selecteer sorteervelden",
+      "cancel": "Annuleren",
+      "saving": "Opslaan...",
+      "save": "Wijzigingen Opslaan"
+    },
+    "addMembersDialog": {
+      "title": "Leden Toevoegen aan Rooster",
+      "description": "Selecteer leden uit je clan of voer spelertags in",
+      "bulkTagsLabel": "Bulk Toevoegen via Tags",
+      "bulkTagsPlaceholder": "Voer spelertags in (één per regel of kommagescheiden)",
+      "searchLabel": "Zoek Leden",
+      "searchPlaceholder": "Zoek op naam of tag...",
+      "selectFromClan": "Selecteer uit Clanleden",
+      "selectedCount": "Geselecteerd",
+      "noMembers": "Geen leden beschikbaar",
+      "noMembersSelected": "Geen leden geselecteerd",
+      "noMembersSelectedDesc": "Selecteer leden of voer spelertags in.",
+      "cancel": "Annuleren",
+      "adding": "Toevoegen...",
+      "add": "Leden Toevoegen"
+    },
+    "detailsDialog": {
       "title": "Roosterdetails",
-      "members": "Leden",
-      "addMember": "Lid Toevoegen",
-      "removeMember": "Lid Verwijderen",
+      "edit": "Bewerken",
+      "refresh": "Vernieuwen",
+      "refreshing": "Vernieuwen...",
+      "delete": "Verwijderen",
+      "deleting": "Verwijderen...",
+      "addMembers": "Leden Toevoegen",
+      "close": "Sluiten",
       "noMembers": "Geen leden in dit rooster",
-      "playerName": "Speler Naam",
-      "townHall": "Stadhuis",
+      "noMembersDesc": "Voeg leden toe om te beginnen",
+      "memberCount": "Leden",
+      "thRestriction": "TH Niveau",
+      "avgTh": "Gem. TH",
+      "avgHitrate": "Gem. Trefferscore",
       "clan": "Clan",
-      "status": "Status"
+      "family": "Familie",
+      "external": "Extern",
+      "substitute": "SUB",
+      "removeMember": "Verwijderen"
+    },
+    "rosterCard": {
+      "members": "Leden",
+      "thLevel": "TH Niveau",
+      "avgTh": "Gem. TH",
+      "avgHitrate": "Gem. Trefferscore",
+      "clan": "Clan",
+      "family": "Familie",
+      "external": "Extern",
+      "noRestriction": "Geen beperking",
+      "view": "Bekijken",
+      "edit": "Bewerken",
+      "delete": "Verwijderen",
+      "allRosters": "Alle Roosters",
+      "manageRosters": "Beheer je oorlogsroosters en opstellingen"
+    },
+    "memberColumns": {
+      "name": "Naam",
+      "townhall": "Stadhuis Niveau",
+      "tag": "Tag",
+      "hitrate": "30 Dagen Trefferscore",
+      "currentClanTag": "Clan Tag",
+      "discord": "Discord",
+      "heroLvs": "Helden",
+      "warPref": "Oorlogsvoorkeur",
+      "trophies": "Trofeeën"
+    },
+    "sortFields": {
+      "townhall": "Stadhuis Niveau",
+      "name": "Naam",
+      "tag": "Tag",
+      "heroLvs": "Helden",
+      "trophies": "Trofeeën",
+      "hitrate": "30 Dagen Trefferscore",
+      "currentClanTag": "Clan Tag",
+      "addedAt": "Toegevoegd op"
+    },
+    "thRestrictions": {
+      "only": "Alleen TH{th}",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "Geen beperking"
+    },
+    "emptyState": {
+      "noRosters": "Nog geen roosters aangemaakt",
+      "noRostersDesc": "Maak je eerste rooster om te beginnen",
+      "noMatch": "Geen roosters komen overeen met je filters",
+      "noMatchDesc": "Probeer je zoek- of filtercriteria aan te passen"
     },
     "toast": {
-      "rosterCreated": "Rooster succesvol aangemaakt",
-      "rosterDeleted": "Rooster succesvol verwijderd",
-      "memberAdded": "Lid succesvol toegevoegd",
-      "memberRemoved": "Lid succesvol verwijderd",
-      "error": "Er is een fout opgetreden"
+      "errorTitle": "Fout",
+      "successTitle": "Succes",
+      "errorLoadingRosters": "Kan roosters niet laden. Probeer het opnieuw.",
+      "errorLoadingMembers": "Kan clanleden niet laden.",
+      "rosterCreated": "Rooster succesvol aangemaakt!",
+      "errorCreatingRoster": "Kan rooster niet aanmaken. Probeer het opnieuw.",
+      "rosterUpdated": "Rooster succesvol bijgewerkt!",
+      "errorUpdatingRoster": "Kan rooster niet bijwerken. Probeer het opnieuw.",
+      "rosterDeleted": "Rooster succesvol verwijderd!",
+      "errorDeletingRoster": "Kan rooster niet verwijderen. Probeer het opnieuw.",
+      "membersAdded": "Leden succesvol toegevoegd!",
+      "errorAddingMembers": "Kan leden niet toevoegen. Probeer het opnieuw.",
+      "memberRemoved": "Lid succesvol verwijderd!",
+      "errorRemovingMember": "Kan lid niet verwijderen. Probeer het opnieuw.",
+      "rosterRefreshed": "Rooster succesvol vernieuwd!"
     }
   },
   "LinksPage": {
@@ -1322,6 +1443,66 @@
     "language": "Taal",
     "timezone": "Tijdzone",
     "theme": "Thema"
+  },
+  "FamilySettingsPage": {
+    "title": "Familie Instellingen",
+    "description": "Configureer familie rollen en bijnaamopmaak voor clanleden",
+    "loading": "Instellingen laden...",
+    "reset": "Resetten",
+    "saving": "Opslaan...",
+    "saveChanges": "Wijzigingen Opslaan",
+    "settingsSaved": "Instellingen succesvol opgeslagen!",
+    "nickname": {
+      "title": "Bijnaam Beheer",
+      "description": "Bepaal hoe bijnamen worden geformatteerd",
+      "automaticChanges": "Automatische Wijzigingen",
+      "automaticChangesDesc": "Sta bot toe om ledenbijnamen bij te werken",
+      "familyFormat": "Familieleden Formaat",
+      "availablePlaceholders": "Beschikbare Plaatshouders",
+      "preview": "Voorbeeld:",
+      "nonFamilyFormat": "Niet-Familieleden Formaat",
+      "placeholders": {
+        "discordName": "Discord gebruikersnaam",
+        "discordDisplayName": "Server bijnaam",
+        "playerName": "CoC spelernaam",
+        "playerTag": "Speler tag",
+        "playerTownhall": "TH niveau",
+        "playerTownhallSmall": "TH superscript",
+        "playerWarstars": "Oorlogssterren",
+        "playerRole": "Clan rol",
+        "playerClan": "Clan naam",
+        "playerLeague": "Competitie",
+        "playerClanAbbr": "Clan afk"
+      }
+    },
+    "familyRoles": {
+      "title": "Familie Rollen",
+      "description": "Beheer automatische rollen op basis van familie-lidmaatschap en clan posities",
+      "selectRole": "Selecteer een rol",
+      "addRole": "Rol toevoegen...",
+      "deletedRole": "Verwijderde rol",
+      "noRolesConfigured": "Geen rollen geconfigureerd",
+      "types": {
+        "family": "Familie",
+        "notFamily": "Niet-Familie",
+        "onlyFamily": "Exclusief Familie",
+        "member": "Lid",
+        "elder": "Oudste",
+        "coLeader": "Medeleider",
+        "leader": "Leider",
+        "ignored": "Genegeerd"
+      },
+      "descriptions": {
+        "family": "Heeft minstens één account in familie clans",
+        "notFamily": "Heeft geen accounts in familie clans",
+        "onlyFamily": "Alle gekoppelde accounts zijn in familie clans",
+        "member": "Heeft Lid positie in een familie clan",
+        "elder": "Heeft Oudste positie in een familie clan",
+        "coLeader": "Heeft Medeleider positie in een familie clan",
+        "leader": "Heeft Leider positie in een familie clan",
+        "ignored": "Uitgesloten van automatische rol-evaluatie"
+      }
+    }
   },
   "LanguageSwitcher": {
     "label": "Taal"
