@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Save, RotateCcw, AlertCircle, Loader2, User, Eye, ChevronDown, ChevronRight } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -231,6 +230,42 @@ export default function NicknamesPage() {
           </CardContent>
         </Card>
 
+        {/* Automatic Changes */}
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <User className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-foreground">{t("automaticChanges")}</CardTitle>
+                <CardDescription className="text-xs">
+                  {t("automaticChangesDesc")}
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3">
+              <div className="space-y-0.5">
+                <p className="text-sm font-medium text-foreground">{t("automaticChanges")}</p>
+                <p className="text-xs text-muted-foreground">{t("automaticChangesDesc")}</p>
+              </div>
+              {isLoading ? (
+                <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
+              ) : (
+                <Switch
+                  id="change-nicknames"
+                  checked={settings.change_nickname}
+                  onCheckedChange={(checked) =>
+                    setSettings({ ...settings, change_nickname: checked })
+                  }
+                />
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Nickname Management Card */}
         <Card className="bg-card border-border">
           <CardHeader>
@@ -247,31 +282,6 @@ export default function NicknamesPage() {
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Enable Nickname Changes */}
-            <div className="flex items-start justify-between rounded-lg border border-border bg-secondary/30 p-3">
-              <div className="space-y-0.5 flex-1">
-                <Label htmlFor="change-nicknames" className="text-sm font-medium">
-                  {t("automaticChanges")}
-                </Label>
-                <p className="text-xs text-muted-foreground">
-                  {t("automaticChangesDesc")}
-                </p>
-              </div>
-              {isLoading ? (
-                <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
-              ) : (
-                <Switch
-                  id="change-nicknames"
-                  checked={settings.change_nickname}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, change_nickname: checked })
-                  }
-                />
-              )}
-            </div>
-
-            <Separator className="bg-border" />
-
             {/* Family Convention */}
             <div className="space-y-3">
               <Label htmlFor="family-convention" className="text-sm font-medium">
