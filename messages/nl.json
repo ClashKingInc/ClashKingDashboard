@@ -174,6 +174,10 @@
       "name": "Rollen",
       "description": "Rolautomatisering"
     },
+    "nicknames": {
+      "name": "Bijnamen",
+      "description": "Bijnaamautomatisering"
+    },
     "reminders": {
       "name": "Herinneringen",
       "description": "Alle herinneringstypes"
@@ -1151,6 +1155,38 @@
       "off": "Uit"
     }
   },
+  "NicknamesPage": {
+    "title": "Bijnaam Beheer",
+    "description": "Beheer hoe bijnamen worden geformatteerd en beheerd",
+    "settingsSaved": "Instellingen succesvol opgeslagen!",
+    "infoBanner": {
+      "title": "Automatische Bijnaam Updates",
+      "description": "De bot kan automatisch ledenbijnamen bijwerken op basis van hun gekoppelde Clash of Clans accounts. Configureer hieronder het formaat voor familieleden en niet-familieleden."
+    },
+    "card": {
+      "title": "Bijnaam Formattering",
+      "description": "Configureer bijnaamsjablonen"
+    },
+    "automaticChanges": "Automatische Wijzigingen",
+    "automaticChangesDesc": "Sta bot toe om ledenbijnamen bij te werken",
+    "familyFormat": "Familieleden Formaat",
+    "nonFamilyFormat": "Niet-Familieleden Formaat",
+    "availablePlaceholders": "Beschikbare Plaatshouders",
+    "preview": "Voorbeeld:",
+    "placeholders": {
+      "discordName": "Discord gebruikersnaam",
+      "discordDisplayName": "Server bijnaam",
+      "playerName": "CoC spelernaam",
+      "playerTag": "Speler tag",
+      "playerTownhall": "TH niveau",
+      "playerTownhallSmall": "TH superscript",
+      "playerWarstars": "Oorlogssterren",
+      "playerRole": "Clan rol",
+      "playerClan": "Clan naam",
+      "playerLeague": "Competitie",
+      "playerClanAbbr": "Clan afk"
+    }
+  },
   "GeneralPage": {
     "title": "Algemene Instellingen",
     "description": "Configureer serverbrede botgedrag en uiterlijk",
@@ -1161,30 +1197,7 @@
     "settingsSaved": "Instellingen succesvol opgeslagen!",
     "infoBanner": {
       "title": "Op zoek naar meer instellingen?",
-      "description": "Rolbeheerinstellingen staan op de **Rollen** pagina. Clan-specifieke instellingen (ban/strike logs, oorlogskanalen) staan op de **Clans** pagina."
-    },
-    "nickname": {
-      "title": "Bijnaam Beheer",
-      "description": "Beheer hoe bijnamen worden geformatteerd",
-      "automaticChanges": "Automatische Wijzigingen",
-      "automaticChangesDesc": "Sta bot toe om ledenbijnamen bij te werken",
-      "familyFormat": "Familieleden Formaat",
-      "availablePlaceholders": "Beschikbare Plaatshouders",
-      "preview": "Voorbeeld:",
-      "nonFamilyFormat": "Niet-Familieleden Formaat",
-      "placeholders": {
-        "discordName": "Discord gebruikersnaam",
-        "discordDisplayName": "Server bijnaam",
-        "playerName": "CoC spelernaam",
-        "playerTag": "Speler tag",
-        "playerTownhall": "TH niveau",
-        "playerTownhallSmall": "TH superscript",
-        "playerWarstars": "Oorlogssterren",
-        "playerRole": "Clan rol",
-        "playerClan": "Clan naam",
-        "playerLeague": "Competitie",
-        "playerClanAbbr": "Clan afk"
-      }
+      "description": "Bijnaam instellingen staan op de **Bijnamen** pagina. Rolbeheerinstellingen staan op de **Rollen** pagina. Clan-specifieke instellingen (ban/strike logs, oorlogskanalen) staan op de **Clans** pagina."
     },
     "appearance": {
       "title": "Uiterlijk",

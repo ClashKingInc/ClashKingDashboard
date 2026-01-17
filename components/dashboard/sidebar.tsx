@@ -24,6 +24,7 @@ import {
   Sun,
   Moon,
   Computer,
+  User,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -163,6 +164,11 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
           nameKey: "roles.name",
           href: `/dashboard/${guildId}/roles`,
           icon: ShieldCheck,
+        },
+        {
+          nameKey: "nicknames.name",
+          href: `/dashboard/${guildId}/nicknames`,
+          icon: User,
         },
         {
           nameKey: "reminders.name",
