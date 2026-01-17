@@ -1157,8 +1157,12 @@
   },
   "NicknamesPage": {
     "title": "Gestion des Pseudonymes",
+    "subtitle": "Automatisez la mise en forme et la mise à jour des pseudos des membres",
     "description": "Contrôler le formatage et la gestion des pseudonymes",
     "settingsSaved": "Paramètres enregistrés avec succès !",
+    "success": "Paramètres enregistrés avec succès !",
+    "automaticChangesSuccess": "Mises à jour automatiques des pseudonymes réussies",
+    "templateChangedSuccess": "Modèles de pseudonymes mis à jour avec succès",
     "infoBanner": {
       "title": "Mises à Jour Automatiques des Pseudos",
       "description": "Le bot peut automatiquement mettre à jour les pseudos des membres en fonction de leurs comptes Clash of Clans liés. Configurez ci-dessous le format pour les membres de la famille et les non-membres."
@@ -1167,6 +1171,8 @@
       "title": "Formatage des Pseudonymes",
       "description": "Configurer les modèles de pseudonymes"
     },
+    "automaticTitle": "Mises à jour automatiques",
+    "automaticSubtitle": "Contrôlez quand le bot met à jour les pseudos des membres",
     "automaticChanges": "Modifications Automatiques",
     "automaticChangesDesc": "Autoriser le bot à mettre à jour les pseudos des membres",
     "familyFormat": "Format des Membres de la Famille",

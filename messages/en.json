@@ -1280,8 +1280,12 @@
   },
   "NicknamesPage": {
     "title": "Nickname Management",
+    "subtitle": "Automate how member nicknames are formatted and updated",
     "description": "Control how nicknames are formatted and managed",
     "settingsSaved": "Settings saved successfully!",
+    "success": "Settings saved successfully!",
+    "automaticChangesSuccess": "Automatic nickname updates successfully updated",
+    "templateChangedSuccess": "Nickname templates successfully updated",
     "infoBanner": {
       "title": "Automatic Nickname Updates",
       "description": "The bot can automatically update member nicknames based on their linked Clash of Clans accounts. Configure the format for family members and non-family members below."
@@ -1290,6 +1294,8 @@
       "title": "Nickname Formatting",
       "description": "Configure nickname templates"
     },
+    "automaticTitle": "Automatic Updates",
+    "automaticSubtitle": "Control when the bot updates member nicknames",
     "automaticChanges": "Automatic Changes",
     "automaticChangesDesc": "Allow bot to update member nicknames",
     "familyFormat": "Family Members Format",

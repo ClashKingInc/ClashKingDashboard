@@ -1157,8 +1157,12 @@
   },
   "NicknamesPage": {
     "title": "Bijnaam Beheer",
+    "subtitle": "Automatiseer hoe ledenbijnamen worden opgemaakt en bijgewerkt",
     "description": "Beheer hoe bijnamen worden geformatteerd en beheerd",
     "settingsSaved": "Instellingen succesvol opgeslagen!",
+    "success": "Instellingen succesvol opgeslagen!",
+    "automaticChangesSuccess": "Automatische bijnamen succesvol aangepast",
+    "templateChangedSuccess": "Bijnaamsjablonen succesvol bijgewerkt",
     "infoBanner": {
       "title": "Automatische Bijnaam Updates",
       "description": "De bot kan automatisch ledenbijnamen bijwerken op basis van hun gekoppelde Clash of Clans accounts. Configureer hieronder het formaat voor familieleden en niet-familieleden."
@@ -1167,6 +1171,8 @@
       "title": "Bijnaam Formattering",
       "description": "Configureer bijnaamsjablonen"
     },
+    "automaticTitle": "Automatische updates",
+    "automaticSubtitle": "Bepaal wanneer de bot bijnamen bijwerkt",
     "automaticChanges": "Automatische Wijzigingen",
     "automaticChangesDesc": "Sta bot toe om ledenbijnamen bij te werken",
     "familyFormat": "Familieleden Formaat",
