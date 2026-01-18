@@ -1595,6 +1595,11 @@
     "remove": "Supprimer",
     "tips": "💡 Astuces Tableaux Automatiques",
     "noChannels": "Aucun canal disponible",
+    "noChannelsAvailable": "Aucun canal disponible",
+    "noChannelsAvailableDesc": "Aucun canal texte n'est disponible sur ce serveur. Veuillez d'abord créer un canal texte.",
+    "channelDeleted": "Ce canal n'existe plus. Veuillez sélectionner un nouveau canal.",
+    "channelIssue": "Problème de canal",
+    "viewMessage": "Voir le message",
     "activeAutoboardsCount": "{count} tableau{count, plural, one {} other {x}} automatique{count, plural, one {} other {s}} actif{count, plural, one {} other {s}}",
     "tipsContent": {
       "type": {

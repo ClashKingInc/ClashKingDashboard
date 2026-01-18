@@ -1529,6 +1529,11 @@
     "remove": "Verwijderen",
     "tips": "💡 AutoBoard Tips",
     "noChannels": "Geen kanalen beschikbaar",
+    "noChannelsAvailable": "Geen kanalen beschikbaar",
+    "noChannelsAvailableDesc": "Er zijn geen tekstkanalen beschikbaar op deze server. Maak eerst een tekstkanaal aan.",
+    "channelDeleted": "Dit kanaal bestaat niet meer. Selecteer een nieuw kanaal.",
+    "channelIssue": "Kanaalprobleem",
+    "viewMessage": "Bericht bekijken",
     "activeAutoboardsCount": "{count} actieve autoboard{count, plural, one {} other {s}}",
     "tipsContent": {
       "type": {

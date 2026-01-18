@@ -186,6 +186,7 @@ export interface GuildInfo {
   banner?: string;
   premium_tier?: number;
   boost_count?: number;
+  preferred_locale?: string; // Discord server locale (e.g., 'en-US', 'fr', 'nl')
 }
 
 /**

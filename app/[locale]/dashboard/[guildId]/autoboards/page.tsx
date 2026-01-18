@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle, Hash, Pencil } from "lucide-react";
+import { Loader2, Plus, RefreshCw, Calendar, Trash2, Clock, Info, LayoutDashboard, AlertCircle, Hash, Pencil, ExternalLink, MessageSquare } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +36,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { Separator } from "@/components/ui/separator";
 
 // Type definitions
 interface Channel {
@@ -46,16 +47,19 @@ interface Channel {
 }
 
 interface AutoBoardConfig {
-  id: string;
+  _id?: string;
+  id?: string;
   type: string;
   board_type: string;
   button_id: string;
-  webhook_id: string;
-  thread_id: string | null;
-  channel_id: string | null;
+  webhook_id: string | number;
+  thread_id: string | number | null;
+  channel_id?: string | null; // Should be present, enriched from webhook by backend if missing
+  message_id?: string | number | null;
   days: string[] | null;
   locale: string;
-  created_at: string | null;
+  created_at?: string | null;
+  server_id?: string | number;
 }
 
 interface ServerAutoBoardsResponse {
@@ -129,15 +133,19 @@ export default function AutoBoardsPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [serverLocale, setServerLocale] = useState<string | null>(null);
 
   // Channels state
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loadingChannels, setLoadingChannels] = useState(false);
+  const [threads, setThreads] = useState<any[]>([]);
+  const [threadsLoaded, setThreadsLoaded] = useState(false);
 
   // New autoboard form state
   const [newType, setNewType] = useState<"post" | "refresh">("post");
   const [newBoardType, setNewBoardType] = useState("");
   const [selectedChannel, setSelectedChannel] = useState("");
+  const [selectedThread, setSelectedThread] = useState<string>("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
   // Edit autoboard state
@@ -147,26 +155,79 @@ export default function AutoBoardsPage() {
   const [editType, setEditType] = useState<"post" | "refresh">("post");
   const [editBoardType, setEditBoardType] = useState("");
   const [editChannel, setEditChannel] = useState("");
+  const [editThread, setEditThread] = useState<string>("");
   const [editDays, setEditDays] = useState<string[]>([]);
+  
+  // Map to store channel_id from webhook_id
+  const [webhookToChannelMap, setWebhookToChannelMap] = useState<Map<string | number, string>>(new Map());
 
-  // Fetch autoboards and channels
+  // Helper function to convert Discord locale to API locale format
+  const convertDiscordLocaleToApiLocale = (discordLocale: string | null | undefined): string => {
+    if (!discordLocale) {
+      // Fallback to dashboard locale if server locale is not available
+      const locale = params?.locale as string;
+      return locale === 'en' ? 'en-US' : locale === 'fr' ? 'fr-FR' : locale === 'nl' ? 'nl-NL' : 'en-US';
+    }
+
+    // Discord locales are typically in format like 'en-US', 'fr', 'nl', etc.
+    // Map common Discord locales to API locale format
+    const localeMap: Record<string, string> = {
+      'en-US': 'en-US',
+      'en-GB': 'en-US',
+      'en': 'en-US',
+      'fr': 'fr-FR',
+      'fr-FR': 'fr-FR',
+      'nl': 'nl-NL',
+      'nl-NL': 'nl-NL',
+    };
+
+    // Check if we have a direct mapping
+    if (localeMap[discordLocale]) {
+      return localeMap[discordLocale];
+    }
+
+    // Extract language code (first 2 characters) and try to map
+    const langCode = discordLocale.toLowerCase().substring(0, 2);
+    if (langCode === 'en') return 'en-US';
+    if (langCode === 'fr') return 'fr-FR';
+    if (langCode === 'nl') return 'nl-NL';
+
+    // Default fallback
+    return 'en-US';
+  };
+
+  // Fetch autoboards, channels, and guild info (for locale)
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const token = `Bearer ${localStorage.getItem('access_token')}`;
 
-        const [autoboardsRes, channelsRes] = await Promise.all([
+        const [autoboardsRes, channelsRes, guildRes] = await Promise.all([
           fetch(`/api/v2/server/${guildId}/autoboards`, {
             headers: { 'Authorization': token }
           }),
           fetch(`/api/v2/server/${guildId}/channels`, {
+            headers: { 'Authorization': token }
+          }),
+          fetch(`/api/v2/guild/${guildId}`, {
             headers: { 'Authorization': token }
           })
         ]);
 
         if (autoboardsRes.ok) {
           const autoboardsData: ServerAutoBoardsResponse = await autoboardsRes.json();
+          
+          // Build webhook to channel map for autoboards that don't have channel_id yet
+          // This is a fallback until the backend returns channel_id directly
+          const webhookMap = new Map<string | number, string>();
+          for (const autoboard of autoboardsData.autoboards) {
+            if (autoboard.channel_id && autoboard.webhook_id) {
+              webhookMap.set(autoboard.webhook_id, String(autoboard.channel_id));
+            }
+          }
+          setWebhookToChannelMap(webhookMap);
+          
           setAutoboardsData(autoboardsData);
         }
 
@@ -175,6 +236,14 @@ export default function AutoBoardsPage() {
           // Filter to only text channels
           const textChannels = channelsData.filter(ch => ch.type === 'text' || ch.type === '0');
           setChannels(textChannels);
+        }
+
+        if (guildRes.ok) {
+          const guildData = await guildRes.json();
+          // Set server locale if available from Hikari
+          if (guildData.preferred_locale) {
+            setServerLocale(guildData.preferred_locale);
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -204,12 +273,91 @@ export default function AutoBoardsPage() {
     );
   };
 
-  const openEditDialog = (autoboard: AutoBoardConfig) => {
+  // Function to get channel from webhook_id
+  const getChannelFromWebhook = async (webhookId: string | number): Promise<string | null> => {
+    try {
+      // Try to get from cache first
+      if (webhookToChannelMap.has(webhookId)) {
+        return webhookToChannelMap.get(webhookId) || null;
+      }
+
+      // Try to fetch from backend API via proxy endpoint
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`/api/v2/server/${guildId}/webhook/${webhookId}/channel`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const channelId = data.channel_id || data.channel || null;
+        if (channelId) {
+          // Cache the result
+          setWebhookToChannelMap(prev => new Map(prev).set(webhookId, String(channelId)));
+          return String(channelId);
+        }
+      }
+
+      // If endpoint doesn't exist or fails, return null
+      // The backend should ideally return channel_id in the autoboard response
+      return null;
+    } catch (error) {
+      console.error('Error getting channel from webhook:', error);
+      return null;
+    }
+  };
+
+  const loadThreadsIfNeeded = async (channelId: string) => {
+    if (!channelId || threadsLoaded) return;
+
+    try {
+      const token = localStorage.getItem('access_token');
+      const threadsRes = await fetch(`/api/v2/server/${guildId}/threads`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (threadsRes.ok) {
+        const threadsData = await threadsRes.json();
+        setThreads(threadsData);
+        setThreadsLoaded(true);
+      }
+    } catch (error) {
+      console.error('Error fetching threads:', error);
+    }
+  };
+
+  const openEditDialog = async (autoboard: AutoBoardConfig) => {
     setEditingAutoboard(autoboard);
     setEditType(autoboard.type as "post" | "refresh");
     setEditBoardType(autoboard.board_type);
-    setEditChannel(autoboard.channel_id || "");
+    
+    // Backend should now return channel_id directly (enriched from webhook if needed)
+    // Fallback to cache or webhook fetch only if channel_id is still missing
+    let channelId: string | null = autoboard.channel_id ? String(autoboard.channel_id) : null;
+    
+    // Fallback: try to get from webhook map cache if channel_id is missing
+    if (!channelId && autoboard.webhook_id && webhookToChannelMap.has(autoboard.webhook_id)) {
+      channelId = webhookToChannelMap.get(autoboard.webhook_id) || null;
+    }
+    
+    // Last resort: try to fetch from webhook endpoint (should rarely be needed now)
+    if (!channelId && autoboard.webhook_id) {
+      channelId = await getChannelFromWebhook(autoboard.webhook_id);
+    }
+    
+    const channelValue = channelId || "";
+    setEditChannel(channelValue);
+    
+    // Set thread if exists
+    const threadValue = autoboard.thread_id ? String(autoboard.thread_id) : "";
+    setEditThread(threadValue);
+    
     setEditDays(autoboard.days || []);
+    
+    // Load threads if we have a channel
+    if (channelValue) {
+      await loadThreadsIfNeeded(channelValue);
+    }
+    
     setEditDialogOpen(true);
   };
 
@@ -231,8 +379,8 @@ export default function AutoBoardsPage() {
 
     setCreating(true);
     try {
-      const locale = params?.locale as string;
-      const apiLocale = locale === 'en' ? 'en-US' : locale === 'fr' ? 'fr-FR' : locale === 'nl' ? 'nl-NL' : 'en-US';
+      // Use server locale from Discord (via Hikari) if available, otherwise fallback to dashboard locale
+      const apiLocale = convertDiscordLocaleToApiLocale(serverLocale);
 
       const autoboardData = {
         type: newType,
@@ -240,6 +388,7 @@ export default function AutoBoardsPage() {
         button_id: `${newBoardType}:${guildId}:page=0`,
         webhook_id: "0", // Will be created by backend
         channel_id: selectedChannel,
+        thread_id: selectedThread || null,
         days: newType === 'post' ? selectedDays : null,
         locale: apiLocale
       };
@@ -273,6 +422,7 @@ export default function AutoBoardsPage() {
       setCreateDialogOpen(false);
       setNewBoardType("");
       setSelectedChannel("");
+      setSelectedThread("");
       setSelectedDays([]);
       setNewType("post");
     } catch (error) {
@@ -303,14 +453,24 @@ export default function AutoBoardsPage() {
 
     setUpdating(true);
     try {
+      // Use server locale from Discord (via Hikari) if available, otherwise fallback to dashboard locale
+      const apiLocale = convertDiscordLocaleToApiLocale(serverLocale);
+
       const updateData = {
         type: editType,
         board_type: editBoardType,
         channel_id: editChannel,
+        thread_id: editThread || null,
         days: editType === 'post' ? editDays : null,
+        locale: apiLocale,
       };
 
-      const response = await fetch(`/api/v2/server/${guildId}/autoboards/${editingAutoboard.id}`, {
+      const autoboardId = editingAutoboard.id || editingAutoboard._id;
+      if (!autoboardId) {
+        throw new Error('Autoboard ID is missing');
+      }
+
+      const response = await fetch(`/api/v2/server/${guildId}/autoboards/${autoboardId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -340,6 +500,7 @@ export default function AutoBoardsPage() {
       setEditingAutoboard(null);
       setEditBoardType("");
       setEditChannel("");
+      setEditThread("");
       setEditDays([]);
       setEditType("post");
     } catch (error) {
@@ -351,6 +512,10 @@ export default function AutoBoardsPage() {
   };
 
   const handleDeleteAutoBoard = async (autoboardId: string) => {
+    if (!autoboardId) {
+      console.error('Cannot delete autoboard: no ID provided');
+      return;
+    }
     setDeleting(autoboardId);
     try {
       const response = await fetch(`/api/v2/server/${guildId}/autoboards/${autoboardId}`, {
@@ -448,18 +613,68 @@ export default function AutoBoardsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="channel" className="text-foreground">{t('channel')}</Label>
-                <ChannelCombobox
-                  channels={channels}
-                  value={selectedChannel}
-                  onValueChange={setSelectedChannel}
-                  placeholder={t('selectChannel')}
-                  showDisabled={false}
-                  className="bg-background"
-                />
-                <p className="text-xs text-muted-foreground">
-                  {t('channelDesc')}
-                </p>
+                {channels.length === 0 ? (
+                  <div className="space-y-2">
+                    <div className="p-3 border border-orange-500/50 rounded-lg bg-orange-500/10">
+                      <div className="flex items-center gap-2 text-orange-600">
+                        <AlertCircle className="w-4 h-4" />
+                        <p className="text-sm font-medium">{t('noChannelsAvailable')}</p>
+                      </div>
+                      <p className="text-xs text-orange-600/80 mt-1">
+                        {t('noChannelsAvailableDesc')}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <ChannelCombobox
+                      channels={channels}
+                      value={selectedChannel}
+                      onValueChange={async (value) => {
+                        setSelectedChannel(value);
+                        setSelectedThread(""); // Reset thread when channel changes
+                        if (value) {
+                          await loadThreadsIfNeeded(value);
+                        }
+                      }}
+                      placeholder={t('selectChannel')}
+                      showDisabled={false}
+                      className="bg-background"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {t('channelDesc')}
+                    </p>
+                  </>
+                )}
               </div>
+
+              {selectedChannel && threads.filter((t: any) => String(t.parent_channel_id) === String(selectedChannel)).length > 0 && (
+                <div className="space-y-2">
+                  <Label htmlFor="thread" className="text-foreground">{t('thread') || 'Thread (Optional)'}</Label>
+                  <Select
+                    value={selectedThread || "none"}
+                    onValueChange={setSelectedThread}
+                  >
+                    <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
+                      <SelectValue placeholder={t('selectThread') || 'Select a thread (optional)'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">{t('noThread') || 'No Thread'}</SelectItem>
+                      <Separator className="my-2" />
+                      {threads
+                        .filter((t: any) => String(t.parent_channel_id) === String(selectedChannel))
+                        .map((thread: any) => (
+                          <SelectItem key={thread.id} value={String(thread.id)}>
+                            🧵 {thread.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    {t('threadDesc') || 'Optional: Select a thread within the channel'}
+                  </p>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="board-type" className="text-foreground">{t('boardType')}</Label>
@@ -598,17 +813,105 @@ export default function AutoBoardsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="edit-channel" className="text-foreground">{t('channel')}</Label>
-                <ChannelCombobox
-                  channels={channels}
-                  value={editChannel}
-                  onValueChange={setEditChannel}
-                  placeholder={t('selectChannel')}
-                  showDisabled={false}
-                  className="bg-background"
-                />
-                <p className="text-xs text-muted-foreground">
-                  {t('channelDesc')}
-                </p>
+                {channels.length === 0 ? (
+                  <div className="space-y-2">
+                    <div className="p-3 border border-orange-500/50 rounded-lg bg-orange-500/10">
+                      <div className="flex items-center gap-2 text-orange-600">
+                        <AlertCircle className="w-4 h-4" />
+                        <p className="text-sm font-medium">{t('noChannelsAvailable')}</p>
+                      </div>
+                      <p className="text-xs text-orange-600/80 mt-1">
+                        {t('noChannelsAvailableDesc')}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {(() => {
+                      const channelExists = editingAutoboard?.channel_id 
+                        ? channels.some(ch => String(ch.id) === String(editingAutoboard.channel_id))
+                        : false;
+                      
+                      // Check if webhook_id exists and is not empty
+                      // webhook_id can be a string or number, but empty string means no webhook
+                      const webhookIdStr = editingAutoboard?.webhook_id ? String(editingAutoboard.webhook_id).trim() : "";
+                      const hasWebhookId = webhookIdStr !== "";
+                      
+                      // Channel issue if:
+                      // 1. Has webhook_id but no channel_id (webhook/channel was deleted - 404)
+                      // 2. Has channel_id but channel doesn't exist in available channels
+                      const hasChannelIssue = 
+                        (hasWebhookId && !editingAutoboard?.channel_id) || // Webhook exists but channel_id is missing (404)
+                        (editingAutoboard?.channel_id && !channelExists); // Channel doesn't exist
+                      
+                      return (
+                        <>
+                          {hasChannelIssue && (
+                            <div className="p-3 border border-orange-500/50 rounded-lg bg-orange-500/10 mb-2">
+                              <div className="flex items-center gap-2 text-orange-600 mb-1">
+                                <AlertCircle className="w-4 h-4" />
+                                <p className="text-sm font-medium">{t('channelIssue')}</p>
+                              </div>
+                              <p className="text-xs text-orange-600/80">
+                                {t('channelDeleted')}
+                              </p>
+                            </div>
+                          )}
+                          <ChannelCombobox
+                            channels={channels}
+                            value={editChannel || ""}
+                            onValueChange={async (value) => {
+                              setEditChannel(value);
+                              setEditThread(""); // Reset thread when channel changes
+                              if (value) {
+                                await loadThreadsIfNeeded(value);
+                              }
+                            }}
+                            placeholder={t('selectChannel')}
+                            showDisabled={false}
+                            className={hasChannelIssue ? 'bg-background border-orange-500/50' : 'bg-background'}
+                          />
+                          {hasChannelIssue && (
+                            <p className="text-xs text-orange-600 flex items-center gap-1">
+                              <AlertCircle className="w-3 h-3" />
+                              {t('channelDeleted')}
+                            </p>
+                          )}
+                          <p className="text-xs text-muted-foreground">
+                            {t('channelDesc')}
+                          </p>
+                          {editChannel && threads.filter((t: any) => String(t.parent_channel_id) === String(editChannel)).length > 0 && (
+                            <div className="space-y-2 mt-2">
+                              <Label htmlFor="edit-thread" className="text-foreground">{t('thread') || 'Thread (Optional)'}</Label>
+                              <Select
+                                value={editThread || "none"}
+                                onValueChange={setEditThread}
+                              >
+                                <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
+                                  <SelectValue placeholder={t('selectThread') || 'Select a thread (optional)'} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="none">{t('noThread') || 'No Thread'}</SelectItem>
+                                  <Separator className="my-2" />
+                                  {threads
+                                    .filter((t: any) => String(t.parent_channel_id) === String(editChannel))
+                                    .map((thread: any) => (
+                                      <SelectItem key={thread.id} value={String(thread.id)}>
+                                        🧵 {thread.name}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              <p className="text-xs text-muted-foreground">
+                                {t('threadDesc') || 'Optional: Select a thread within the channel'}
+                              </p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -897,11 +1200,31 @@ export default function AutoBoardsPage() {
           ) : (
             <div className="rounded-md border border-border">
               <div className="divide-y divide-border">
-                {autoboardsData.autoboards.map((autoboard) => (
-                  <div
-                    key={autoboard.id}
-                    className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 hover:bg-secondary/50 transition-colors"
-                  >
+                {autoboardsData.autoboards.map((autoboard) => {
+                  // Get channel_id from autoboard or from webhook map
+                  const autoboardChannelId = autoboard.channel_id 
+                    ? String(autoboard.channel_id)
+                    : (autoboard.webhook_id && webhookToChannelMap.has(autoboard.webhook_id))
+                      ? webhookToChannelMap.get(autoboard.webhook_id) || null
+                      : null;
+                  
+                  // Check if webhook_id exists and is not empty
+                  // webhook_id can be a string or number, but empty string means no webhook
+                  const webhookIdStr = autoboard.webhook_id ? String(autoboard.webhook_id).trim() : "";
+                  const hasWebhookId = webhookIdStr !== "";
+                  
+                  // Channel issue if:
+                  // 1. Has webhook_id but no channel_id (webhook/channel was deleted - 404)
+                  // 2. Has channel_id but channel doesn't exist in available channels
+                  const hasChannelIssue = 
+                    (hasWebhookId && !autoboardChannelId) || // Webhook exists but channel_id is missing (404)
+                    (autoboardChannelId && !channels.some(ch => String(ch.id) === String(autoboardChannelId))); // Channel doesn't exist
+                  
+                  return (
+                    <div
+                      key={autoboard.id || autoboard._id}
+                      className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 hover:bg-secondary/50 transition-colors"
+                    >
                     <div className="flex items-center gap-4 flex-1 w-full">
                       <div className={`p-3 rounded-lg ${autoboard.type === 'post' ? 'bg-green-500/10 border border-green-500/30' : 'bg-blue-500/10 border border-blue-500/30'}`}>
                         {autoboard.type === 'post' ? (
@@ -911,7 +1234,7 @@ export default function AutoBoardsPage() {
                         )}
                       </div>
                       <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-semibold text-foreground">
                             {getBoardTypeName(autoboard.board_type)}
                           </h3>
@@ -921,22 +1244,90 @@ export default function AutoBoardsPage() {
                           >
                             {autoboard.type === 'post' ? t('autoPost') : t('autoRefresh')}
                           </Badge>
+                          {hasChannelIssue && (
+                            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/10 border border-orange-500/30">
+                              <AlertCircle className="w-3 h-3 text-orange-500" />
+                              <span className="text-xs text-orange-600 font-medium">{t('channelIssue')}</span>
+                            </div>
+                          )}
                         </div>
-                        {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
-                          <p className="text-sm text-muted-foreground">
-                            {t('postsOn')} {autoboard.days.map(d => getDayLabel(d)).join(', ')}
-                          </p>
-                        )}
-                        {autoboard.type === 'refresh' && (
-                          <p className="text-sm text-muted-foreground">
-                            {t('updatesEvery')}
-                          </p>
-                        )}
-                        {autoboard.created_at && (
-                          <p className="text-xs text-muted-foreground">
-                            {t('created')} {new Date(autoboard.created_at).toLocaleDateString()}
-                          </p>
-                        )}
+                        <div className="flex flex-col gap-1.5 mt-2">
+                          {/* Channel info */}
+                          {autoboardChannelId && (() => {
+                            const channel = channels.find(ch => String(ch.id) === String(autoboardChannelId));
+                            const channelName = channel ? `#${channel.name}` : `Channel ${autoboardChannelId}`;
+                            
+                            // Build Discord message URL
+                            // Format: https://discord.com/channels/{guild_id}/{channel_id}/{message_id}
+                            // If thread_id exists, use thread_id as channel_id for the URL
+                            const messageChannelId = autoboard.thread_id ? String(autoboard.thread_id) : autoboardChannelId;
+                            const discordMessageUrl = autoboard.message_id && messageChannelId
+                              ? `https://discord.com/channels/${guildId}/${messageChannelId}/${autoboard.message_id}`
+                              : null;
+                            
+                            // Find thread name if thread_id exists
+                            const thread = autoboard.thread_id 
+                              ? threads.find(t => String(t.id) === String(autoboard.thread_id))
+                              : null;
+                            
+                            return (
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+                                <Hash className="w-3.5 h-3.5 shrink-0" />
+                                <span className="font-medium text-foreground">{channelName}</span>
+                                {autoboard.thread_id && (
+                                  <>
+                                    <span className="text-muted-foreground">•</span>
+                                    <MessageSquare className="w-3.5 h-3.5 shrink-0" />
+                                    <span className="text-foreground">
+                                      {thread ? thread.name : t('thread')}
+                                    </span>
+                                  </>
+                                )}
+                                {discordMessageUrl && (
+                                  <a
+                                    href={discordMessageUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ml-1 inline-flex items-center gap-1 text-primary hover:text-primary/80 hover:underline transition-colors"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                    <span className="text-xs">{t('viewMessage') || 'View message'}</span>
+                                  </a>
+                                )}
+                              </div>
+                            );
+                          })()}
+                          
+                          {/* Show warning if channel is missing */}
+                          {hasChannelIssue && !autoboardChannelId && (
+                            <div className="flex items-center gap-2 text-sm text-orange-600">
+                              <AlertCircle className="w-3.5 h-3.5" />
+                              <span>{t('channelDeleted')}</span>
+                            </div>
+                          )}
+                          
+                          {/* Post schedule */}
+                          {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
+                            <p className="text-sm text-muted-foreground">
+                              {t('postsOn')} {autoboard.days.map(d => getDayLabel(d)).join(', ')}
+                            </p>
+                          )}
+                          
+                          {/* Refresh info */}
+                          {autoboard.type === 'refresh' && (
+                            <p className="text-sm text-muted-foreground">
+                              {t('updatesEvery')}
+                            </p>
+                          )}
+                          
+                          {/* Created date */}
+                          {autoboard.created_at && (
+                            <p className="text-xs text-muted-foreground">
+                              {t('created')} {new Date(autoboard.created_at).toLocaleDateString()}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -952,11 +1343,11 @@ export default function AutoBoardsPage() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => handleDeleteAutoBoard(autoboard.id)}
-                        disabled={deleting === autoboard.id}
+                        onClick={() => handleDeleteAutoBoard(autoboard.id || autoboard._id || '')}
+                        disabled={deleting === (autoboard.id || autoboard._id)}
                         className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                       >
-                        {deleting === autoboard.id ? (
+                        {deleting === (autoboard.id || autoboard._id) ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
                           <>
@@ -966,8 +1357,9 @@ export default function AutoBoardsPage() {
                         )}
                       </Button>
                     </div>
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

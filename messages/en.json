@@ -1718,6 +1718,11 @@
     "remove": "Remove",
     "tips": "💡 AutoBoard Tips",
     "noChannels": "No channels available",
+    "noChannelsAvailable": "No channels available",
+    "noChannelsAvailableDesc": "No text channels are available in this server. Please create a text channel first.",
+    "channelDeleted": "This channel no longer exists. Please select a new channel.",
+    "channelIssue": "Channel issue",
+    "viewMessage": "View message",
     "activeAutoboardsCount": "{count} active autoboard{count, plural, one {} other {s}}",
     "tipsContent": {
       "type": {

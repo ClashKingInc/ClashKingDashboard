@@ -18,7 +18,14 @@ export async function GET(
       },
     });
 
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return NextResponse.json(errorData, { status: response.status });
+    }
+
     const data = await response.json();
+    // Backend already enriches autoboards with channel_id from webhook
+    // No need to enrich again in the proxy
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('API proxy error (GET /autoboards):', error);
