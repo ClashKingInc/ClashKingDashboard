@@ -349,6 +349,33 @@ export default function RolesPage() {
     }
   };
 
+  const handleAutoEvalToggle = async (checked: boolean) => {
+    const newSettings = { ...roleSettings, auto_eval_status: checked };
+    setRoleSettings(newSettings);
+
+    try {
+      setSaveStatus('saving');
+      setError(null);
+
+      await apiClient.roles.updateRoleSettings(guildId, {
+        auto_eval_status: checked,
+        autoeval_triggers: roleSettings.autoeval_triggers,
+        autoeval_log: roleSettings.autoeval_log,
+        blacklisted_roles: roleSettings.blacklisted_roles,
+        role_treatment: roleSettings.role_treatment,
+      });
+
+      setOriginalRoleSettings(newSettings);
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    } catch (err: any) {
+      setError(err.message || "Failed to save settings");
+      setSaveStatus('idle');
+      // Revert on error
+      setRoleSettings(roleSettings);
+    }
+  };
+
   const handleAddRole = async () => {
     try {
       setError(null);
@@ -846,9 +873,7 @@ export default function RolesPage() {
               <Switch
                 id="auto-eval"
                 checked={roleSettings.auto_eval_status}
-                onCheckedChange={(checked) =>
-                  setRoleSettings({ ...roleSettings, auto_eval_status: checked })
-                }
+                onCheckedChange={handleAutoEvalToggle}
               />
             </div>
           </CardContent>
