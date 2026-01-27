@@ -151,7 +151,6 @@ export default function RolesPage() {
   const [roleSettings, setRoleSettings] = useState<RoleSettings>({
     server_id: guildId,
     auto_eval_status: false,
-    auto_eval_nickname: false,
     autoeval_triggers: [],
     autoeval_log: undefined,
     blacklisted_roles: [],
@@ -160,7 +159,6 @@ export default function RolesPage() {
   const [originalRoleSettings, setOriginalRoleSettings] = useState<RoleSettings>({
     server_id: guildId,
     auto_eval_status: false,
-    auto_eval_nickname: false,
     autoeval_triggers: [],
     autoeval_log: undefined,
     blacklisted_roles: [],
@@ -336,7 +334,6 @@ export default function RolesPage() {
 
       await apiClient.roles.updateRoleSettings(guildId, {
         auto_eval_status: roleSettings.auto_eval_status,
-        auto_eval_nickname: roleSettings.auto_eval_nickname,
         autoeval_triggers: roleSettings.autoeval_triggers,
         autoeval_log: roleSettings.autoeval_log,
         blacklisted_roles: roleSettings.blacklisted_roles,
@@ -640,8 +637,7 @@ export default function RolesPage() {
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
   const totalRoleTypes = 4; // townhall, league, builderhall, builder_league
 
-  const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
-    roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
+  const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status;
 
   const isAddRoleDisabled = () => {
     const hasRole = !!newRole.role_id;
@@ -852,22 +848,6 @@ export default function RolesPage() {
                 checked={roleSettings.auto_eval_status}
                 onCheckedChange={(checked) =>
                   setRoleSettings({ ...roleSettings, auto_eval_status: checked })
-                }
-              />
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-              <div className="space-y-0.5">
-                <Label htmlFor="auto-nickname">{t("settings.autoNickname")}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t("settings.autoNicknameDesc")}
-                </p>
-              </div>
-              <Switch
-                id="auto-nickname"
-                checked={roleSettings.auto_eval_nickname}
-                onCheckedChange={(checked) =>
-                  setRoleSettings({ ...roleSettings, auto_eval_nickname: checked })
                 }
               />
             </div>
