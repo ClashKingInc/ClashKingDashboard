@@ -1337,7 +1337,8 @@
       "enableToConfig": "Schakel dit logboek in om het te configureren",
       "configuring": "Configureren",
       "on": "Aan",
-      "off": "Uit"
+      "off": "Uit",
+      "example": "voorbeeld"
     }
   },
   "GeneralPage": {
