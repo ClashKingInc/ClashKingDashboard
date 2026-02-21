@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -20,12 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
-  RefreshCw, UserPlus, X, Search, Shield, TrendingUp, Target, Star, Eye, GitCompare,
-  Bell, Lock, Unlock, MessageSquare, Clock, Hash, Calendar, Plus, Tag, Edit, Trash2
-} from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -33,107 +27,35 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
+  RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
+  MessageSquare, UserMinus
+} from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
-interface RosterMember {
-  name: string;
-  tag: string;
-  townhall: number;
-  discord?: string;
-  current_clan?: string;
-  current_clan_tag?: string;
-  war_pref?: boolean;
-  trophies?: number;
-  signup_group?: string;
-  hitrate?: number;
-  last_online?: number;
-  current_league?: string;
-  hero_lvs?: number;
-  sub?: boolean;
-  is_in_family?: boolean;
-  member_status?: string;
-  added_at?: number;
-}
-
-interface RosterAutomation {
-  automation_id: string;
-  server_id: number;
-  roster_id?: string;
-  group_id?: string;
-  action_type: "roster_signup" | "roster_signup_close" | "roster_post" | "roster_ping" | "recurring_event" | "roster_delete" | "roster_clear" | "roster_archive";
-  scheduled_time: number;
-  discord_channel_id?: string;
-  options?: Record<string, any>;
-  active: boolean;
-  executed: boolean;
-  created_at?: number;
-  updated_at?: number;
-}
-
-interface RosterGroup {
-  group_id: string;
-  alias: string;
-  description?: string;
-  server_id: number;
-  max_accounts_per_user?: number;
-  auto_signup_publish?: boolean;
-  auto_registration_close?: boolean;
-  auto_result_publish?: boolean;
-  roster_count?: number;
-  rosters?: Array<{
-    custom_id: string;
-    alias: string;
-    clan_name?: string;
-    updated_at?: string;
-  }>;
-  created_at?: number;
-  updated_at?: number;
-}
-
-interface SignupCategory {
-  custom_id: string;
-  alias: string;
-  server_id: number;
-  created_at?: number;
-}
-
-interface Roster {
-  custom_id: string;
-  alias: string;
-  description?: string;
-  roster_type: "clan" | "family";
-  signup_scope: "clan-only" | "family-wide";
-  clan_tag?: string;
-  clan_name?: string;
-  clan_badge?: string;
-  server_id: number;
-  group_id?: string;
-  roster_size?: number;
-  max_accounts_per_user?: number;
-  min_th?: number;
-  max_th?: number;
-  th_restriction?: string;
-  allowed_signup_categories?: string[];
-  members?: RosterMember[];
-  columns?: string[];
-  sort?: string[];
-  created_at?: string;
-  updated_at?: string;
-  event_start_time?: number;
-}
-
-interface Clan {
-  tag: string;
-  name: string;
-  badge?: string;
-}
-
-interface ClanMember {
-  tag: string;
-  name: string;
-  townhall: number;
-  clan_name: string;
-  clan_tag: string;
-}
+// Local imports
+import { useRosterDetail } from "../_hooks";
+import {
+  RosterStatsCard,
+  MembersTable,
+  AddMembersDialog,
+  MissingMembersDialog,
+} from "../_components";
+import {
+  unixToDatetimeLocal,
+  datetimeLocalToUnix,
+  getTimezoneOffset,
+  getAutomationLabel,
+  formatTimestamp,
+  getColumnLabel,
+  getColumnInternal,
+  getSortLabel,
+  getSortInternal,
+  ROSTER_COLUMNS,
+  SORT_OPTIONS,
+} from "../_lib";
+import type { EditRosterFormData, RosterAutomation, AutomationActionType } from "../_lib/types";
 
 export default function RosterDetailPage() {
   const params = useParams();
@@ -144,222 +66,190 @@ export default function RosterDetailPage() {
   const rosterId = params.rosterId as string;
   const locale = params.locale as string;
   const t = useTranslations("RostersPage");
-  const tCommon = useTranslations("Common");
 
-  const [roster, setRoster] = useState<Roster | null>(null);
-  const [clans, setClans] = useState<Clan[]>([]);
-  const [clanMembers, setClanMembers] = useState<ClanMember[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Data hook
+  const {
+    roster,
+    clans,
+    clanMembers,
+    serverMembers,
+    automations,
+    groups,
+    categories,
+    missingMembers,
+    loading,
+    loadingMissingMembers,
+    loadingServerMembers,
+    error,
+    refresh,
+    refreshRoster,
+    updateRoster,
+    addMembers,
+    removeMember,
+    loadMissingMembers,
+    loadServerMembers,
+    createAutomation,
+    updateAutomation,
+    deleteAutomation,
+    createGroup,
+    deleteGroup,
+    createCategory,
+    deleteCategory,
+  } = useRosterDetail(rosterId, guildId);
+
+  // UI State
   const [activeTab, setActiveTab] = useState("members");
-  const [refreshing, setRefreshing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [removingMember, setRemovingMember] = useState<string | null>(null);
 
-  // Add members dialog
+  // Dialogs
   const [addMembersDialogOpen, setAddMembersDialogOpen] = useState(false);
-  const [bulkTags, setBulkTags] = useState("");
-  const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
-  const [memberSearch, setMemberSearch] = useState("");
+  const [missingMembersDialogOpen, setMissingMembersDialogOpen] = useState(false);
+  const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
+  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
+  const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
 
-  // Settings form
-  const [editRosterData, setEditRosterData] = useState({
+  // Form state
+  const [editData, setEditData] = useState<EditRosterFormData>({
     alias: "",
     description: "",
     min_th: "",
     max_th: "",
     roster_size: "",
-    columns: [] as string[],
-    sort: [] as string[],
+    event_start_time: "",
+    columns: [],
+    sort: [],
   });
 
-  // Drag & Drop state
-  const [draggedMember, setDraggedMember] = useState<string | null>(null);
-  const [dragOverCategory, setDragOverCategory] = useState<string | null>(null);
-
-  // Automation state
-  const [automations, setAutomations] = useState<RosterAutomation[]>([]);
-  const [loadingAutomations, setLoadingAutomations] = useState(false);
-  const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
   const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>({
     action_type: "roster_ping",
-    scheduled_time: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
+    scheduled_time: Math.floor(Date.now() / 1000) + 3600,
     active: true,
   });
 
-  // Groups state
-  const [groups, setGroups] = useState<RosterGroup[]>([]);
-  const [loadingGroups, setLoadingGroups] = useState(false);
-  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
-  const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState<RosterGroup | null>(null);
   const [newGroup, setNewGroup] = useState({ alias: "" });
-
-  // Categories state
-  const [categories, setCategories] = useState<SignupCategory[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(false);
-  const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
   const [newCategory, setNewCategory] = useState({ custom_id: "", alias: "" });
 
-  // Load roster data
-  useEffect(() => {
-    loadRoster();
-    loadClans();
-    loadAutomations();
-    loadGroups();
-    loadCategories();
-  }, [rosterId]);
+  // Sync edit form with roster data
+  React.useEffect(() => {
+    if (roster) {
+      setEditData({
+        alias: roster.alias,
+        description: roster.description || "",
+        min_th: roster.min_th?.toString() || "",
+        max_th: roster.max_th?.toString() || "",
+        roster_size: roster.roster_size?.toString() || "",
+        event_start_time: unixToDatetimeLocal(roster.event_start_time),
+        columns: (roster.columns || []).map(getColumnLabel),
+        sort: (roster.sort || []).map(getSortLabel),
+      });
+    }
+  }, [roster]);
 
-  const loadRoster = async () => {
-    setLoading(true);
+  // Family clan tags
+  const familyClanTags = clans.map(c => c.tag);
+
+  // Handlers
+  const handleRefresh = async () => {
+    setRefreshing(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster/${rosterId}?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to load roster");
-      }
-
-      const data = await response.json();
-      const rosterData = data.roster || data;
-      setRoster(rosterData);
-
-      // Update edit form - convert internal names to display labels
-      setEditRosterData({
-        alias: rosterData.alias,
-        description: rosterData.description || "",
-        min_th: rosterData.min_th?.toString() || "",
-        max_th: rosterData.max_th?.toString() || "",
-        roster_size: rosterData.roster_size?.toString() || "",
-        columns: (rosterData.columns || []).map((col: string) => getColumnDisplayLabel(col)),
-        sort: (rosterData.sort || []).map((field: string) => getSortDisplayLabel(field)),
-      });
-
-      // Load clan members if clan roster
-      if (rosterData.clan_tag) {
-        loadClanMembers(rosterData.clan_tag);
-      }
-    } catch (error) {
-      console.error("Error loading roster:", error);
+      await refreshRoster();
+      toast({ title: t("refreshSuccess") });
+    } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to load roster data",
+        title: t("refreshError"),
+        description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setRefreshing(false);
     }
   };
 
-  const loadClans = async () => {
+  const handleSaveSettings = async () => {
+    setSaving(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/clans?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
+      await updateRoster({
+        alias: editData.alias,
+        description: editData.description || null,
+        min_th: editData.min_th ? parseInt(editData.min_th) : null,
+        max_th: editData.max_th ? parseInt(editData.max_th) : null,
+        roster_size: editData.roster_size ? parseInt(editData.roster_size) : null,
+        event_start_time: datetimeLocalToUnix(editData.event_start_time),
+        columns: editData.columns.map(getColumnInternal),
+        sort: editData.sort.map(getSortInternal),
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        setClans(data.items || data || []);
-      }
-    } catch (error) {
-      console.error("Error loading clans:", error);
-    }
-  };
-
-  const loadClanMembers = async (clanTag: string) => {
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/clan/${encodeURIComponent(clanTag)}/members`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setClanMembers(data.members || data || []);
-      }
-    } catch (error) {
-      console.error("Error loading clan members:", error);
-    }
-  };
-
-  const loadAutomations = async () => {
-    setLoadingAutomations(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(
-        `/api/v2/roster-automation/list?server_id=${guildId}&roster_id=${rosterId}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setAutomations(data.items || []);
-      }
-    } catch (error) {
-      console.error("Error loading automations:", error);
+      toast({ title: t("saveSuccess") });
+    } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to load automations",
+        title: t("saveError"),
+        description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
       });
     } finally {
-      setLoadingAutomations(false);
+      setSaving(false);
+    }
+  };
+
+  const handleAddMembers = async (tags: string[]) => {
+    try {
+      await addMembers(tags);
+      toast({
+        title: t("addMembersSuccess"),
+        description: t("addMembersSuccessDesc").replace("{count}", tags.length.toString()),
+      });
+    } catch (err) {
+      toast({
+        title: t("addMembersError"),
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+      throw err;
+    }
+  };
+
+  const handleRemoveMember = async (tag: string) => {
+    setRemovingMember(tag);
+    try {
+      await removeMember(tag);
+      toast({ title: t("removeMemberSuccess") });
+    } catch (err) {
+      toast({
+        title: t("removeMemberError"),
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
+    } finally {
+      setRemovingMember(null);
     }
   };
 
   const handleCreateAutomation = async () => {
-    if (!newAutomation.action_type || !newAutomation.scheduled_time) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!newAutomation.action_type || !newAutomation.scheduled_time) return;
 
     setSaving(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-automation`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({
-          server_id: parseInt(guildId),
-          roster_id: rosterId,
-          action_type: newAutomation.action_type,
-          scheduled_time: newAutomation.scheduled_time,
-          discord_channel_id: newAutomation.discord_channel_id,
-          options: newAutomation.options,
-        })
+      await createAutomation({
+        server_id: parseInt(guildId),
+        roster_id: rosterId,
+        action_type: newAutomation.action_type as AutomationActionType,
+        scheduled_time: newAutomation.scheduled_time,
+        discord_channel_id: newAutomation.discord_channel_id,
+        options: newAutomation.options,
+        active: true,
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to create automation");
-      }
-
-      await loadAutomations();
+      toast({ title: t("automationCreated") });
       setCreateAutomationDialogOpen(false);
       setNewAutomation({
         action_type: "roster_ping",
         scheduled_time: Math.floor(Date.now() / 1000) + 3600,
         active: true,
       });
-
+    } catch (err) {
       toast({
-        title: "Success",
-        description: "Automation created successfully!",
-      });
-    } catch (error) {
-      console.error("Error creating automation:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create automation",
+        title: t("automationError"),
+        description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
       });
     } finally {
@@ -371,2042 +261,477 @@ export default function RosterDetailPage() {
     const automation = automations.find(a => a.automation_id === automationId);
     if (!automation) return;
 
-    setSaving(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({
-          active: !automation.active
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update automation");
-      }
-
-      await loadAutomations();
+      await updateAutomation(automationId, { active: !automation.active });
+      toast({ title: t("automationUpdated") });
+    } catch (err) {
       toast({
-        title: "Success",
-        description: "Automation updated",
-      });
-    } catch (error) {
-      console.error("Error updating automation:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update automation",
+        title: t("automationError"),
         variant: "destructive",
       });
-    } finally {
-      setSaving(false);
     }
   };
 
   const handleDeleteAutomation = async (automationId: string) => {
-    setSaving(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete automation");
-      }
-
-      await loadAutomations();
+      await deleteAutomation(automationId);
+      toast({ title: t("automationDeleted") });
+    } catch (err) {
       toast({
-        title: "Success",
-        description: "Automation deleted",
-      });
-    } catch (error) {
-      console.error("Error deleting automation:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete automation",
+        title: t("automationError"),
         variant: "destructive",
       });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // Groups functions
-  const loadGroups = async () => {
-    setLoadingGroups(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-group/list?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setGroups(data.items || []);
-      }
-    } catch (error) {
-      console.error("Error loading groups:", error);
-    } finally {
-      setLoadingGroups(false);
     }
   };
 
   const handleCreateGroup = async () => {
-    if (!newGroup.alias) {
-      toast({
-        title: "Error",
-        description: "Group name is required",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setSaving(true);
+    if (!newGroup.alias.trim()) return;
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-group?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({
-          alias: newGroup.alias,
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create group");
-      }
-
-      await loadGroups();
+      await createGroup(newGroup.alias);
+      toast({ title: t("groupCreated") });
       setCreateGroupDialogOpen(false);
       setNewGroup({ alias: "" });
-      toast({
-        title: "Success",
-        description: "Group created successfully!",
-      });
-    } catch (error) {
-      console.error("Error creating group:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create group",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleUpdateGroup = async () => {
-    if (!selectedGroup) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-group/${selectedGroup.group_id}?server_id=${guildId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({
-          alias: selectedGroup.alias,
-          max_accounts_per_user: selectedGroup.max_accounts_per_user || undefined,
-          auto_signup_publish: selectedGroup.auto_signup_publish,
-          auto_registration_close: selectedGroup.auto_registration_close,
-          auto_result_publish: selectedGroup.auto_result_publish,
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update group");
-      }
-
-      await loadGroups();
-      setEditGroupDialogOpen(false);
-      setSelectedGroup(null);
-      toast({
-        title: "Success",
-        description: "Group updated successfully!",
-      });
-    } catch (error) {
-      console.error("Error updating group:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update group",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleDeleteGroup = async (groupId: string) => {
-    if (!confirm("Are you sure? Rosters in this group will be ungrouped.")) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-group/${groupId}?server_id=${guildId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete group");
-      }
-
-      await loadGroups();
-      toast({
-        title: "Success",
-        description: "Group deleted successfully",
-      });
-    } catch (error) {
-      console.error("Error deleting group:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete group",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // Categories functions
-  const loadCategories = async () => {
-    setLoadingCategories(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-signup-category/list?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data.items || []);
-      }
-    } catch (error) {
-      console.error("Error loading categories:", error);
-    } finally {
-      setLoadingCategories(false);
+    } catch (err) {
+      toast({ title: t("groupError"), variant: "destructive" });
     }
   };
 
   const handleCreateCategory = async () => {
-    if (!newCategory.alias) {
-      toast({
-        title: "Error",
-        description: "Category alias is required",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setSaving(true);
+    if (!newCategory.custom_id.trim() || !newCategory.alias.trim()) return;
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-signup-category?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({
-          server_id: parseInt(guildId),
-          custom_id: newCategory.custom_id || undefined,
-          alias: newCategory.alias,
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create category");
-      }
-
-      await loadCategories();
+      await createCategory(newCategory.custom_id, newCategory.alias);
+      toast({ title: t("categoryCreated") });
       setCreateCategoryDialogOpen(false);
       setNewCategory({ custom_id: "", alias: "" });
-      toast({
-        title: "Success",
-        description: "Category created successfully!",
-      });
-    } catch (error) {
-      console.error("Error creating category:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create category",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
+    } catch (err) {
+      toast({ title: t("categoryError"), variant: "destructive" });
     }
   };
 
-  const handleDeleteCategory = async (categoryId: string) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster-signup-category/${encodeURIComponent(categoryId)}?server_id=${guildId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete category");
-      }
-
-      await loadCategories();
-      toast({
-        title: "Success",
-        description: "Category deleted successfully",
-      });
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete category",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster/refresh?roster_id=${rosterId}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to refresh roster");
-      }
-
-      await loadRoster();
-      toast({
-        title: "Success",
-        description: "Roster data refreshed successfully!",
-      });
-    } catch (error) {
-      console.error("Error refreshing roster:", error);
-      toast({
-        title: "Error",
-        description: "Failed to refresh roster data",
-        variant: "destructive",
-      });
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  const handleAddMembers = async () => {
-    if (!roster) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-
-      // Parse bulk tags
-      const tags = bulkTags
-        .split(/[\n,]/)
-        .map(tag => tag.trim())
-        .filter(tag => tag.length > 0);
-
-      // Combine with selected members
-      const allTags = [...new Set([...tags, ...Array.from(selectedMembers)])];
-
-      if (allTags.length === 0) {
-        toast({
-          title: "Error",
-          description: "Please select or enter at least one member",
-          variant: "destructive",
-        });
-        setSaving(false);
-        return;
-      }
-
-      const response = await fetch(`/api/v2/roster/${rosterId}/members?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({ add: allTags.map(tag => ({ tag })) })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add members");
-      }
-
-      await loadRoster();
-      setAddMembersDialogOpen(false);
-      setBulkTags("");
-      setSelectedMembers(new Set());
-      toast({
-        title: "Success",
-        description: `Added ${allTags.length} member(s) to roster`,
-      });
-    } catch (error) {
-      console.error("Error adding members:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add members. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleRemoveMember = async (memberTag: string) => {
-    if (!roster) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster/${rosterId}/members?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({ remove: [memberTag] })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to remove member");
-      }
-
-      await loadRoster();
-      toast({
-        title: "Success",
-        description: "Member removed from roster",
-      });
-    } catch (error) {
-      console.error("Error removing member:", error);
-      toast({
-        title: "Error",
-        description: "Failed to remove member. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleToggleSubstitute = async (memberTag: string, currentSub: boolean) => {
-    if (!roster) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(
-        `/api/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}?server_id=${guildId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`
-          },
-          body: JSON.stringify({ sub: !currentSub })
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update member");
-      }
-
-      await loadRoster();
-      toast({
-        title: "Success",
-        description: `Member ${!currentSub ? 'marked' : 'unmarked'} as substitute`,
-      });
-    } catch (error) {
-      console.error("Error updating member:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update member. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // Drag & Drop handlers
-  const handleDragStart = (e: React.DragEvent<HTMLTableRowElement>, memberTag: string) => {
-    setDraggedMember(memberTag);
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", memberTag);
-
-    // Add visual feedback
-    e.currentTarget.style.opacity = "0.5";
-  };
-
-  const handleDragEnd = (e: React.DragEvent<HTMLTableRowElement>) => {
-    setDraggedMember(null);
-    setDragOverCategory(null);
-    e.currentTarget.style.opacity = "1";
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>, categoryId: string) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-    setDragOverCategory(categoryId);
-  };
-
-  const handleDragLeave = () => {
-    setDragOverCategory(null);
-  };
-
-  const handleDrop = async (e: React.DragEvent<HTMLTableRowElement>, targetCategoryId: string) => {
-    e.preventDefault();
-    setDragOverCategory(null);
-
-    if (!draggedMember || !roster) return;
-
-    // Find the dragged member's current category
-    const member = roster.members?.find(m => m.tag === draggedMember);
-    if (!member) return;
-
-    const currentCategory = member.signup_group || "";
-
-    // Don't do anything if dropping in the same category
-    if (currentCategory === targetCategoryId) {
-      setDraggedMember(null);
-      return;
-    }
-
-    // Update member's signup_group
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(
-        `/api/v2/roster/${rosterId}/members/${encodeURIComponent(draggedMember)}?server_id=${guildId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`
-          },
-          body: JSON.stringify({
-            signup_group: targetCategoryId === "" ? null : targetCategoryId
-          })
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
-        console.error('Backend error:', response.status, errorData);
-        throw new Error(errorData.detail || `HTTP ${response.status}: Failed to update member category`);
-      }
-
-      await loadRoster();
-      toast({
-        title: "Success",
-        description: `Member moved to ${targetCategoryId || 'Uncategorized'}`,
-      });
-    } catch (error) {
-      console.error("Error moving member:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to move member. Please try again.";
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-      setDraggedMember(null);
-    }
-  };
-
-  const handleUpdateSettings = async () => {
-    if (!roster) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-
-      // Convert display labels back to internal names
-      const updates = {
-        alias: editRosterData.alias,
-        description: editRosterData.description || null,
-        min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
-        max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
-        roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
-        columns: editRosterData.columns.length > 0
-          ? editRosterData.columns.map(col => getInternalColumnName(col))
-          : null,
-        sort: editRosterData.sort.length > 0
-          ? editRosterData.sort.map(field => getInternalSortField(field))
-          : null,
-      };
-
-      const response = await fetch(`/api/v2/roster/${rosterId}?server_id=${guildId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify(updates)
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update roster");
-      }
-
-      await loadRoster();
-      toast({
-        title: "Success",
-        description: "Roster settings updated successfully!",
-      });
-    } catch (error) {
-      console.error("Error updating roster:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update roster settings. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  // Helper functions
-  const getColumnDisplayName = (col: string): string => {
-    const columnNames: Record<string, string> = {
-      'name': 'Name',
-      'townhall': 'TH',
-      'tag': 'Tag',
-      'hitrate': 'Hitrate',
-      'current_clan_tag': 'Clan',
-      'discord': 'Discord',
-      'hero_lvs': 'Heroes',
-      'war_pref': 'War',
-      'trophies': 'Trophies'
-    };
-    return columnNames[col] || col;
-  };
-
-  // Convert internal column names to display labels for settings form
-  const getColumnDisplayLabel = (col: string): string => {
-    const columnLabels: Record<string, string> = {
-      'name': 'Name',
-      'townhall': 'Townhall Level',
-      'tag': 'Tag',
-      'hitrate': '30 Day Hitrate',
-      'current_clan_tag': 'Clan Tag',
-      'discord': 'Discord',
-      'hero_lvs': 'Heroes',
-      'war_pref': 'War Opt',
-      'trophies': 'Trophies'
-    };
-    return columnLabels[col] || col;
-  };
-
-  // Convert display labels to internal column names
-  const getInternalColumnName = (label: string): string => {
-    const internalNames: Record<string, string> = {
-      'Name': 'name',
-      'Townhall Level': 'townhall',
-      'Tag': 'tag',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Discord': 'discord',
-      'Heroes': 'hero_lvs',
-      'War Opt': 'war_pref',
-      'Trophies': 'trophies'
-    };
-    return internalNames[label] || label;
-  };
-
-  // Convert internal sort field names to display labels
-  const getSortDisplayLabel = (field: string): string => {
-    const sortLabels: Record<string, string> = {
-      'townhall': 'Townhall Level',
-      'name': 'Name',
-      'tag': 'Tag',
-      'hero_lvs': 'Heroes',
-      'trophies': 'Trophies',
-      'hitrate': '30 Day Hitrate',
-      'current_clan_tag': 'Clan Tag',
-      'added_at': 'Added At'
-    };
-    return sortLabels[field] || field;
-  };
-
-  // Convert display labels to internal sort field names
-  const getInternalSortField = (label: string): string => {
-    const internalFields: Record<string, string> = {
-      'Townhall Level': 'townhall',
-      'Name': 'name',
-      'Tag': 'tag',
-      'Heroes': 'hero_lvs',
-      'Trophies': 'trophies',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Added At': 'added_at'
-    };
-    return internalFields[label] || label;
-  };
-
-  const getDisplayColumns = (rosterData: Roster): string[] => {
-    if (!rosterData.columns || rosterData.columns.length === 0) {
-      return ['name', 'townhall', 'discord', 'trophies'];
-    }
-
-    const reverseColumnMapping: Record<string, string> = {
-      'Name': 'name',
-      'Townhall Level': 'townhall',
-      'Tag': 'tag',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Discord': 'discord',
-      'Heroes': 'hero_lvs',
-      'War Opt': 'war_pref',
-      'Trophies': 'trophies'
-    };
-
-    return rosterData.columns.map(col => reverseColumnMapping[col] || col);
-  };
-
-  const getSortConfig = (rosterData: Roster): string[] => {
-    if (!rosterData.sort || rosterData.sort.length === 0) {
-      return ['townhall', 'hitrate', 'hero_lvs', 'added_at'];
-    }
-
-    const reverseSortMapping: Record<string, string> = {
-      'Townhall Level': 'townhall',
-      'Name': 'name',
-      'Tag': 'tag',
-      'Heroes': 'hero_lvs',
-      'Trophies': 'trophies',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Added At': 'added_at'
-    };
-
-    return rosterData.sort.map(field => reverseSortMapping[field] || field);
-  };
-
-  const sortMembers = (members: RosterMember[], sortConfig: string[]): RosterMember[] => {
-    return [...members].sort((a, b) => {
-      for (const field of sortConfig) {
-        if (!field) continue;
-
-        let valueA = a[field as keyof RosterMember];
-        let valueB = b[field as keyof RosterMember];
-
-        if (valueA == null && valueB == null) continue;
-        if (valueA == null) return 1;
-        if (valueB == null) return -1;
-
-        const isDateField = field === 'added_at' || field.includes('date') || field.includes('time');
-
-        if (typeof valueA === 'string' && typeof valueB === 'string') {
-          const comparison = isDateField
-            ? valueA.toLowerCase().localeCompare(valueB.toLowerCase())
-            : valueB.toLowerCase().localeCompare(valueA.toLowerCase());
-          if (comparison !== 0) return comparison;
-        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
-          if (valueA !== valueB) {
-            return isDateField ? valueA - valueB : valueB - valueA;
-          }
-        } else {
-          const strA = String(valueA).toLowerCase();
-          const strB = String(valueB).toLowerCase();
-          const comparison = isDateField
-            ? strA.localeCompare(strB)
-            : strB.localeCompare(strA);
-          if (comparison !== 0) return comparison;
-        }
-      }
-      return 0;
-    });
-  };
-
-  const groupMembersByCategory = (members: RosterMember[]) => {
-    const grouped: Record<string, RosterMember[]> = {};
-    const uncategorized: RosterMember[] = [];
-
-    members.forEach(member => {
-      if (!member.signup_group) {
-        uncategorized.push(member);
-      } else {
-        if (!grouped[member.signup_group]) {
-          grouped[member.signup_group] = [];
-        }
-        grouped[member.signup_group].push(member);
-      }
-    });
-
-    return { grouped, uncategorized };
-  };
-
-  const getRosterStats = (rosterData: Roster) => {
-    const members = rosterData.members || [];
-    const memberCount = members.length;
-
-    if (memberCount === 0) {
-      return {
-        avgTownhall: 0,
-        avgHitrate: 0,
-        clanCount: 0,
-        familyCount: 0,
-        externalCount: 0,
-      };
-    }
-
-    const avgTownhall = Math.round(
-      members.reduce((sum, m) => sum + (m.townhall || 0), 0) / memberCount * 10
-    ) / 10;
-
-    const membersWithHitrate = members.filter(m => m.hitrate !== null && m.hitrate !== undefined);
-    const avgHitrate = membersWithHitrate.length > 0
-      ? Math.round(membersWithHitrate.reduce((sum, m) => sum + (m.hitrate || 0), 0) / membersWithHitrate.length)
-      : 0;
-
-    const clanCount = rosterData.clan_tag
-      ? members.filter(m => m.current_clan_tag === rosterData.clan_tag).length
-      : 0;
-
-    const familyCount = members.filter(m => {
-      if (!m.current_clan_tag || m.current_clan_tag === "#") return false;
-      if (rosterData.clan_tag && m.current_clan_tag === rosterData.clan_tag) return false;
-      return clans.some(clan => clan.tag === m.current_clan_tag);
-    }).length;
-
-    const externalCount = memberCount - clanCount - familyCount;
-
-    return {
-      avgTownhall,
-      avgHitrate,
-      clanCount,
-      familyCount,
-      externalCount,
-    };
-  };
-
-  const getTownhallRestrictionText = (rosterData: Roster) => {
-    const { min_th, max_th } = rosterData;
-
-    if (min_th && max_th) {
-      if (min_th === max_th) {
-        return `TH${min_th} only`;
-      }
-      return `TH${min_th}-${max_th}`;
-    } else if (min_th) {
-      return `TH${min_th}+`;
-    } else if (max_th) {
-      return `TH1-${max_th}`;
-    }
-    return "No restriction";
-  };
-
-  const filteredClanMembers = clanMembers.filter(member =>
-    member.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
-    member.tag.toLowerCase().includes(memberSearch.toLowerCase())
-  );
-
-  // Automation helper functions
-  const getActionIcon = (actionType: string) => {
-    switch (actionType) {
-      case "roster_ping":
-        return <Bell className="w-4 h-4" />;
-      case "roster_post":
-        return <MessageSquare className="w-4 h-4" />;
-      case "roster_signup":
-        return <Unlock className="w-4 h-4" />;
-      case "roster_signup_close":
-        return <Lock className="w-4 h-4" />;
-      case "recurring_event":
-        return <RefreshCw className="w-4 h-4" />;
-      case "roster_delete":
-      case "roster_clear":
-      case "roster_archive":
-        return <X className="w-4 h-4" />;
-      default:
-        return <Zap className="w-4 h-4" />;
-    }
-  };
-
-  const getActionLabel = (actionType: string) => {
-    switch (actionType) {
-      case "roster_ping":
-        return "Ping Roster";
-      case "roster_post":
-        return "Post Roster";
-      case "roster_signup":
-        return "Open Signup";
-      case "roster_signup_close":
-        return "Close Signup";
-      case "recurring_event":
-        return "Recurring Event";
-      case "roster_delete":
-        return "Delete Roster";
-      case "roster_clear":
-        return "Clear Roster";
-      case "roster_archive":
-        return "Archive Roster";
-      default:
-        return actionType;
-    }
-  };
-
-  const unixToDatetimeLocal = (timestamp?: number): string => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp * 1000);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
-
-  const datetimeLocalToUnix = (datetimeLocal: string): number => {
-    if (!datetimeLocal) return 0;
-    return Math.floor(new Date(datetimeLocal).getTime() / 1000);
-  };
-
-  const renderCell = (member: RosterMember, column: string) => {
-    switch (column) {
-      case 'townhall':
-        return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
-      case 'name':
-        return (
-          <span className="font-medium text-foreground">
-            {member.name}
-            {member.sub && <span className="text-xs text-yellow-600 ml-1">(Sub)</span>}
-          </span>
-        );
-      case 'tag':
-        return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
-      case 'hitrate':
-        if (member.hitrate !== null && member.hitrate !== undefined) {
-          const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
-          return <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>;
-        }
-        return <span className="text-muted-foreground">-</span>;
-      case 'current_clan_tag':
-        if (member.current_clan_tag && member.current_clan_tag !== '#') {
-          let colorClass = 'text-red-400';
-          if (roster?.clan_tag && member.current_clan_tag === roster.clan_tag) {
-            colorClass = 'text-green-400';
-          } else if (clans.some(clan => clan.tag === member.current_clan_tag)) {
-            colorClass = 'text-yellow-400';
-          }
-          return <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>;
-        }
-        return <span className="text-muted-foreground">-</span>;
-      case 'discord':
-        if (member.discord) {
-          return <span className="text-blue-400 text-xs">@{member.discord}</span>;
-        }
-        return <span className="text-muted-foreground">-</span>;
-      case 'hero_lvs':
-        return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;
-      case 'war_pref':
-        const warStatus = member.war_pref ? '⚔️ In' : '🚫 Out';
-        const warColor = member.war_pref ? 'text-green-400' : 'text-red-400';
-        return <span className={`${warColor} text-xs`}>{warStatus}</span>;
-      case 'trophies':
-        return <span className="text-yellow-400">{member.trophies || '-'} 🏆</span>;
-      default:
-        return <span className="text-muted-foreground">-</span>;
-    }
-  };
-
+  // Loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
       </div>
     );
   }
 
-  if (!roster) {
+  // Error state
+  if (error || !roster) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background">
-        <p className="text-muted-foreground mb-4">Roster not found</p>
-        <Button onClick={() => router.push(`/${locale}/dashboard/${guildId}/rosters`)}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Rosters
-        </Button>
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center h-64 gap-4">
+          <p className="text-destructive">{error || "Roster not found"}</p>
+          <Button onClick={() => router.back()} variant="outline">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            {t("back")}
+          </Button>
+        </div>
       </div>
     );
   }
 
-  const displayColumns = getDisplayColumns(roster);
-  const sortConfig = getSortConfig(roster);
-  const sortedMembers = roster.members ? sortMembers(roster.members, sortConfig) : [];
-  const { grouped, uncategorized } = groupMembersByCategory(sortedMembers);
-  const stats = getRosterStats(roster);
-  const thRestriction = getTownhallRestrictionText(roster);
+  const displayColumns = roster.columns?.length ? roster.columns : ['townhall', 'name', 'tag', 'hitrate', 'current_clan_tag'];
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push(`/${locale}/dashboard/${guildId}/rosters`)}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <div className="flex items-center gap-3">
+            {roster.clan_badge ? (
+              <Avatar className="h-12 w-12">
+                <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
+                <AvatarFallback>{roster.alias.charAt(0)}</AvatarFallback>
+              </Avatar>
+            ) : (
+              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+            )}
             <div>
-              <h1 className="text-3xl font-bold text-foreground">{roster.alias}</h1>
-              <p className="text-sm text-muted-foreground">
-                {roster.clan_name && `${roster.clan_name} • `}
-                {roster.members?.length || 0} members
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge
-              variant={roster.roster_type === "clan" ? "default" : "secondary"}
-              className={`${
-                roster.roster_type === "clan"
-                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0"
-                  : "bg-gradient-to-r from-orange-600 to-amber-600 text-white border-0"
-              }`}
-            >
-              {roster.roster_type.toUpperCase()}
-            </Badge>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push(`/${locale}/dashboard/${guildId}/rosters?compare=${rosterId}`)}
-              className="border-border"
-            >
-              <GitCompare className="w-4 h-4 mr-2" />
-              Compare
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="border-border"
-            >
-              {refreshing ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Refreshing...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Refresh
-                </>
+              <h1 className="text-2xl font-bold text-foreground">{roster.alias}</h1>
+              {roster.clan_name && (
+                <p className="text-muted-foreground">{roster.clan_name}</p>
               )}
-            </Button>
+            </div>
           </div>
         </div>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleRefresh} disabled={refreshing}>
+            <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
+            {t("refresh")}
+          </Button>
+          <Button onClick={() => setAddMembersDialogOpen(true)}>
+            <UserPlus className="w-4 h-4 mr-2" />
+            {t("addMembers.submit")}
+          </Button>
+        </div>
+      </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-auto lg:inline-grid h-auto">
-            <TabsTrigger value="members" className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Members
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <SettingsIcon className="w-4 h-4" />
-              Settings
-            </TabsTrigger>
-            <TabsTrigger value="automation" className="flex items-center gap-2">
-              <Zap className="w-4 h-4" />
-              Automation
-            </TabsTrigger>
-            <TabsTrigger value="groups" className="flex items-center gap-2">
-              <FolderTree className="w-4 h-4" />
-              Groups
-            </TabsTrigger>
-          </TabsList>
+      {/* Stats Card */}
+      <RosterStatsCard roster={roster} familyClanTags={familyClanTags} t={t} />
 
-          {/* Members Tab */}
-          <TabsContent value="members" className="space-y-6">
-            {/* Roster Info Card */}
-            <Card className="bg-gradient-to-br from-secondary/30 to-secondary/10 border-border">
-              <CardContent className="pt-6">
-                <div className="grid gap-4 md:grid-cols-3">
-                  {/* Members Stats */}
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                      <Users className="w-4 h-4" />
-                      <span>Members</span>
-                    </div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold text-foreground">
-                        {roster.members?.length || 0}
-                      </span>
-                      {roster.roster_size && (
-                        <span className="text-muted-foreground">/ {roster.roster_size}</span>
-                      )}
-                    </div>
-                    {roster.roster_size && (
-                      <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all ${
-                            ((roster.members?.length || 0) / roster.roster_size) >= 0.9
-                              ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                              : ((roster.members?.length || 0) / roster.roster_size) >= 0.5
-                              ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                              : "bg-gradient-to-r from-red-500 to-pink-500"
-                          }`}
-                          style={{ width: `${Math.min(((roster.members?.length || 0) / roster.roster_size) * 100, 100)}%` }}
-                        />
-                      </div>
-                    )}
-                  </div>
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="bg-secondary">
+          <TabsTrigger value="members" className="gap-2">
+            <Users className="w-4 h-4" />
+            {t("tabs.members")}
+          </TabsTrigger>
+          <TabsTrigger value="automations" className="gap-2">
+            <Zap className="w-4 h-4" />
+            {t("tabs.automations")}
+          </TabsTrigger>
+          <TabsTrigger value="groups" className="gap-2">
+            <FolderTree className="w-4 h-4" />
+            {t("tabs.groups")}
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="gap-2">
+            <SettingsIcon className="w-4 h-4" />
+            {t("tabs.settings")}
+          </TabsTrigger>
+        </TabsList>
 
-                  {/* Performance Stats */}
-                  {roster.members && roster.members.length > 0 && (
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
-                        <span className="text-sm text-muted-foreground">Avg TH</span>
-                        <span className="font-bold text-orange-400">TH{stats.avgTownhall}</span>
-                      </div>
-                      {stats.avgHitrate > 0 && (
-                        <div className={`flex items-center justify-between p-2 rounded-md border ${
-                          stats.avgHitrate >= 80
-                            ? "bg-green-500/10 border-green-500/20"
-                            : stats.avgHitrate >= 60
-                            ? "bg-yellow-500/10 border-yellow-500/20"
-                            : "bg-red-500/10 border-red-500/20"
-                        }`}>
-                          <span className="text-sm text-muted-foreground">Avg Hitrate</span>
-                          <span className={`font-bold ${
-                            stats.avgHitrate >= 80 ? "text-green-400" :
-                            stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
-                          }`}>
-                            {stats.avgHitrate}%
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Distribution & Info */}
-                  <div className="space-y-3">
-                    {roster.members && roster.members.length > 0 && (
-                      <div className="flex items-center gap-2">
-                        {roster.clan_tag && (
-                          <div className="flex-1 text-center p-2 bg-blue-500/10 rounded-md border border-blue-500/20">
-                            <div className="text-xs text-muted-foreground">Clan</div>
-                            <div className="text-lg font-bold text-blue-400">{stats.clanCount}</div>
-                          </div>
-                        )}
-                        <div className="flex-1 text-center p-2 bg-green-500/10 rounded-md border border-green-500/20">
-                          <div className="text-xs text-muted-foreground">Family</div>
-                          <div className="text-lg font-bold text-green-400">{stats.familyCount}</div>
-                        </div>
-                        <div className="flex-1 text-center p-2 bg-red-500/10 rounded-md border border-red-500/20">
-                          <div className="text-xs text-muted-foreground">External</div>
-                          <div className="text-lg font-bold text-red-400">{stats.externalCount}</div>
-                        </div>
-                      </div>
-                    )}
-
-                    {roster.description && (
-                      <div className="p-2 bg-secondary/30 rounded-md border border-border">
-                        <p className="text-xs text-muted-foreground italic">{roster.description}</p>
-                      </div>
-                    )}
-
-                    {thRestriction !== "No restriction" && (
-                      <div className="flex items-center justify-between p-2 bg-primary/5 rounded-md border border-primary/10">
-                        <span className="text-xs text-muted-foreground">TH Restriction</span>
-                        <span className="font-bold text-primary text-xs">{thRestriction}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2">
+        {/* Members Tab */}
+        <TabsContent value="members" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <p className="text-muted-foreground">
+              {roster.members?.length || 0} {t("members.count")}
+            </p>
+            {roster.clan_tag && (
               <Button
                 variant="outline"
-                onClick={() => setAddMembersDialogOpen(true)}
-                className="border-border"
+                size="sm"
+                onClick={() => setMissingMembersDialogOpen(true)}
               >
-                <UserPlus className="w-4 h-4 mr-2" />
-                Add Members
+                <UserMinus className="w-4 h-4 mr-2" />
+                {t("missingMembers.button")}
               </Button>
-            </div>
+            )}
+          </div>
 
-            {/* Members Table */}
-            {(!roster.members || roster.members.length === 0) ? (
-              <Card className="bg-card border-border">
-                <CardContent className="pt-6">
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No members in this roster yet</p>
+          <Card className="bg-card border-border">
+            <CardContent className="p-0">
+              <MembersTable
+                members={roster.members || []}
+                columns={displayColumns}
+                rosterClanTag={roster.clan_tag}
+                familyClans={clans}
+                onRemoveMember={handleRemoveMember}
+                removingMember={removingMember}
+                t={t}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Automations Tab */}
+        <TabsContent value="automations" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <p className="text-muted-foreground">{t("automations.description")}</p>
+            <Button onClick={() => setCreateAutomationDialogOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              {t("automations.create")}
+            </Button>
+          </div>
+
+          {automations.length === 0 ? (
+            <Card className="bg-card border-border">
+              <CardContent className="flex flex-col items-center justify-center py-12">
+                <Zap className="w-12 h-12 text-muted-foreground mb-4" />
+                <p className="text-foreground">{t("automations.empty")}</p>
+                <p className="text-sm text-muted-foreground">{t("automations.emptyHint")}</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-2">
+              {automations.map((automation) => (
+                <Card key={automation.automation_id} className="bg-card border-border">
+                  <CardContent className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-4">
+                      <div className={`p-2 rounded ${automation.active ? "bg-primary/10" : "bg-muted"}`}>
+                        {automation.action_type === "roster_ping" && <Bell className="w-4 h-4" />}
+                        {automation.action_type === "roster_post" && <MessageSquare className="w-4 h-4" />}
+                        {automation.action_type === "roster_signup" && <Unlock className="w-4 h-4" />}
+                        {automation.action_type === "roster_signup_close" && <Lock className="w-4 h-4" />}
+                        {automation.action_type === "recurring_event" && <RefreshCw className="w-4 h-4" />}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">
+                          {getAutomationLabel(automation.action_type)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          <Clock className="w-3 h-3 inline mr-1" />
+                          {formatTimestamp(automation.scheduled_time)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={automation.active ? "default" : "secondary"}>
+                        {automation.active ? t("automations.active") : t("automations.inactive")}
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleToggleAutomation(automation.automation_id)}
+                      >
+                        {automation.active ? t("automations.disable") : t("automations.enable")}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteAutomation(automation.automation_id)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Groups Tab */}
+        <TabsContent value="groups" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <p className="text-muted-foreground">{t("groups.description")}</p>
+            <Button onClick={() => setCreateGroupDialogOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              {t("groups.create")}
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {groups.map((group) => (
+              <Card key={group.group_id} className="bg-card border-border">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">{group.alias}</CardTitle>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteGroup(group.group_id)}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="bg-card border-border">
-                <CardHeader>
-                  <CardTitle className="text-foreground">
-                    Members ({roster.members.length})
-                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="border border-border rounded-lg overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead className="bg-muted/50">
-                          <tr>
-                            {displayColumns.map(col => (
-                              <th key={col} className="px-3 py-2 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                                {getColumnDisplayName(col)}
-                              </th>
-                            ))}
-                            <th className="px-3 py-2 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                              Actions
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {/* Uncategorized members */}
-                          {uncategorized.length > 0 && (
-                            <>
-                              <tr className="bg-muted/30 border-y border-border">
-                                <td colSpan={displayColumns.length + 1} className="px-3 py-3">
-                                  <div className="flex items-center justify-between">
-                                    <h4 className="font-medium text-sm">Uncategorized</h4>
-                                    <span className="text-xs text-muted-foreground">
-                                      {uncategorized.length} member{uncategorized.length !== 1 ? 's' : ''}
-                                    </span>
-                                  </div>
-                                </td>
-                              </tr>
-                              {uncategorized.map((member) => (
-                                <tr
-                                  key={member.tag}
-                                  draggable={true}
-                                  onDragStart={(e) => handleDragStart(e, member.tag)}
-                                  onDragEnd={handleDragEnd}
-                                  onDragOver={(e) => handleDragOver(e, "")}
-                                  onDragLeave={handleDragLeave}
-                                  onDrop={(e) => handleDrop(e, "")}
-                                  className={`hover:bg-accent/50 transition-colors border-b border-border cursor-move ${
-                                    draggedMember === member.tag ? 'opacity-50' : ''
-                                  } ${
-                                    dragOverCategory === "" ? 'bg-primary/10 border-l-4 border-l-primary' : ''
-                                  }`}
-                                >
-                                  {displayColumns.map(col => (
-                                    <td key={col} className="px-3 py-2 text-center text-xs">
-                                      {renderCell(member, col)}
-                                    </td>
-                                  ))}
-                                  <td className="px-3 py-2 text-center">
-                                    <div className="flex items-center justify-center gap-1">
-                                      <Button
-                                        size="sm"
-                                        variant={member.sub ? "default" : "outline"}
-                                        onClick={() => handleToggleSubstitute(member.tag, member.sub || false)}
-                                        disabled={saving}
-                                        className="text-xs h-7 px-2"
-                                      >
-                                        SUB
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => handleRemoveMember(member.tag)}
-                                        disabled={saving}
-                                        className="text-destructive hover:text-destructive hover:bg-destructive/10 h-7 w-7 p-0"
-                                      >
-                                        <X className="w-4 h-4" />
-                                      </Button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                            </>
-                          )}
-
-                          {/* Categorized members */}
-                          {Object.entries(grouped).map(([categoryId, categoryMembers]) => (
-                            <React.Fragment key={categoryId}>
-                              <tr className="bg-muted/30 border-y border-border">
-                                <td colSpan={displayColumns.length + 1} className="px-3 py-3">
-                                  <div className="flex items-center justify-between">
-                                    <h4 className="font-medium text-sm capitalize">{categoryId}</h4>
-                                    <span className="text-xs text-muted-foreground">
-                                      {categoryMembers.length} member{categoryMembers.length !== 1 ? 's' : ''}
-                                    </span>
-                                  </div>
-                                </td>
-                              </tr>
-                              {categoryMembers.map((member) => (
-                                <tr
-                                  key={member.tag}
-                                  draggable={true}
-                                  onDragStart={(e) => handleDragStart(e, member.tag)}
-                                  onDragEnd={handleDragEnd}
-                                  onDragOver={(e) => handleDragOver(e, categoryId)}
-                                  onDragLeave={handleDragLeave}
-                                  onDrop={(e) => handleDrop(e, categoryId)}
-                                  className={`hover:bg-accent/50 transition-colors border-b border-border cursor-move ${
-                                    draggedMember === member.tag ? 'opacity-50' : ''
-                                  } ${
-                                    dragOverCategory === categoryId ? 'bg-primary/10 border-l-4 border-l-primary' : ''
-                                  }`}
-                                >
-                                  {displayColumns.map(col => (
-                                    <td key={col} className="px-3 py-2 text-center text-xs">
-                                      {renderCell(member, col)}
-                                    </td>
-                                  ))}
-                                  <td className="px-3 py-2 text-center">
-                                    <div className="flex items-center justify-center gap-1">
-                                      <Button
-                                        size="sm"
-                                        variant={member.sub ? "default" : "outline"}
-                                        onClick={() => handleToggleSubstitute(member.tag, member.sub || false)}
-                                        disabled={saving}
-                                        className="text-xs h-7 px-2"
-                                      >
-                                        SUB
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => handleRemoveMember(member.tag)}
-                                        disabled={saving}
-                                        className="text-destructive hover:text-destructive hover:bg-destructive/10 h-7 w-7 p-0"
-                                      >
-                                        <X className="w-4 h-4" />
-                                      </Button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                            </React.Fragment>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {group.roster_count || 0} {t("groups.rostersCount")}
+                  </p>
                 </CardContent>
               </Card>
-            )}
-          </TabsContent>
+            ))}
+          </div>
 
-          {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-foreground">Roster Settings</CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  Configure roster properties, columns, and sort order
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+          {/* Categories */}
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-foreground">{t("categories.title")}</h3>
+              <Button variant="outline" onClick={() => setCreateCategoryDialogOpen(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t("categories.create")}
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <Badge
+                  key={category.custom_id}
+                  variant="secondary"
+                  className="flex items-center gap-2 px-3 py-1"
+                >
+                  {category.alias}
+                  <button
+                    onClick={() => deleteCategory(category.custom_id)}
+                    className="hover:text-destructive"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Settings Tab */}
+        <TabsContent value="settings" className="space-y-4">
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle>{t("settings.general")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="alias" className="text-foreground">Roster Name</Label>
+                  <Label>{t("settings.name")}</Label>
                   <Input
-                    id="alias"
-                    value={editRosterData.alias}
-                    onChange={(e) => setEditRosterData({ ...editRosterData, alias: e.target.value })}
-                    className="bg-background border-border text-foreground"
+                    value={editData.alias}
+                    onChange={(e) => setEditData({ ...editData, alias: e.target.value })}
+                    className="bg-background"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-foreground">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={editRosterData.description}
-                    onChange={(e) => setEditRosterData({ ...editRosterData, description: e.target.value })}
-                    className="bg-background border-border text-foreground"
-                    rows={3}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="min-th" className="text-foreground">Min TH</Label>
-                    <Input
-                      id="min-th"
-                      type="number"
-                      min="1"
-                      max="17"
-                      value={editRosterData.min_th}
-                      onChange={(e) => setEditRosterData({ ...editRosterData, min_th: e.target.value })}
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="max-th" className="text-foreground">Max TH</Label>
-                    <Input
-                      id="max-th"
-                      type="number"
-                      min="1"
-                      max="17"
-                      value={editRosterData.max_th}
-                      onChange={(e) => setEditRosterData({ ...editRosterData, max_th: e.target.value })}
-                      className="bg-background border-border text-foreground"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="roster-size" className="text-foreground">Roster Size</Label>
+                  <Label>{t("settings.rosterSize")}</Label>
                   <Input
-                    id="roster-size"
                     type="number"
-                    min="1"
-                    value={editRosterData.roster_size}
-                    onChange={(e) => setEditRosterData({ ...editRosterData, roster_size: e.target.value })}
-                    className="bg-background border-border text-foreground"
+                    value={editData.roster_size}
+                    onChange={(e) => setEditData({ ...editData, roster_size: e.target.value })}
+                    className="bg-background"
+                    placeholder="50"
                   />
                 </div>
-
-                {/* Display Columns Configuration */}
-                <div className="space-y-3">
-                  <Label className="text-foreground">Display Columns (choose up to 4)</Label>
-                  <p className="text-xs text-muted-foreground">Select which columns to show in the members table</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    {['Name', 'Townhall Level', 'Tag', '30 Day Hitrate', 'Clan Tag', 'Discord', 'Heroes', 'War Opt', 'Trophies'].map((column) => (
-                      <div key={column} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`column-${column}`}
-                          checked={editRosterData.columns.includes(column)}
-                          onCheckedChange={(checked) => {
-                            const newColumns = checked
-                              ? [...editRosterData.columns, column]
-                              : editRosterData.columns.filter(c => c !== column);
-                            setEditRosterData({ ...editRosterData, columns: newColumns.slice(0, 4) });
-                          }}
-                          disabled={editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)}
-                        />
-                        <label
-                          htmlFor={`column-${column}`}
-                          className={`text-sm ${
-                            editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)
-                              ? 'text-muted-foreground cursor-not-allowed'
-                              : 'text-foreground cursor-pointer'
-                          }`}
-                        >
-                          {column}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {editRosterData.columns.length}/4 columns selected
-                  </p>
+                <div className="space-y-2">
+                  <Label>{t("settings.minTh")}</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    max={17}
+                    value={editData.min_th}
+                    onChange={(e) => setEditData({ ...editData, min_th: e.target.value })}
+                    className="bg-background"
+                  />
                 </div>
-
-                {/* Sort Configuration */}
-                <div className="space-y-3">
-                  <Label className="text-foreground">Sort Order (choose up to 4)</Label>
-                  <p className="text-xs text-muted-foreground">Define the sort priority for members</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    {['Townhall Level', 'Name', 'Tag', 'Heroes', 'Trophies', '30 Day Hitrate', 'Clan Tag', 'Added At'].map((field) => (
-                      <div key={field} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`sort-${field}`}
-                          checked={editRosterData.sort.includes(field)}
-                          onCheckedChange={(checked) => {
-                            const newSort = checked
-                              ? [...editRosterData.sort, field]
-                              : editRosterData.sort.filter(s => s !== field);
-                            setEditRosterData({ ...editRosterData, sort: newSort.slice(0, 4) });
-                          }}
-                          disabled={editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)}
-                        />
-                        <label
-                          htmlFor={`sort-${field}`}
-                          className={`text-sm ${
-                            editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)
-                              ? 'text-muted-foreground cursor-not-allowed'
-                              : 'text-foreground cursor-pointer'
-                          }`}
-                        >
-                          {field}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {editRosterData.sort.length}/4 sort fields selected
-                    {editRosterData.sort.length > 0 && (
-                      <span className="ml-2">
-                        • Order: {editRosterData.sort.map((s, i) => (
-                          <span key={s} className="text-primary">
-                            {i > 0 && ' → '}
-                            {s}
-                          </span>
-                        ))}
-                      </span>
-                    )}
-                  </p>
+                <div className="space-y-2">
+                  <Label>{t("settings.maxTh")}</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    max={17}
+                    value={editData.max_th}
+                    onChange={(e) => setEditData({ ...editData, max_th: e.target.value })}
+                    className="bg-background"
+                  />
                 </div>
+              </div>
 
-                <div className="pt-4">
-                  <Button
-                    onClick={handleUpdateSettings}
-                    disabled={saving || !editRosterData.alias}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      "Save Settings"
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+              <div className="space-y-2">
+                <Label>{t("settings.description")}</Label>
+                <Textarea
+                  value={editData.description}
+                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                  className="bg-background"
+                  rows={3}
+                />
+              </div>
 
-          {/* Automation Tab */}
-          <TabsContent value="automation" className="space-y-6">
-            {/* Automations List */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-foreground flex items-center gap-2">
-                      <Zap className="w-5 h-5" />
-                      Automated Actions
-                    </CardTitle>
-                    <CardDescription className="text-muted-foreground">
-                      Schedule automated actions for this roster
-                    </CardDescription>
-                  </div>
-                  <Button
-                    onClick={() => setCreateAutomationDialogOpen(true)}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Automation
-                  </Button>
+              {/* Event Time */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  {t("eventTime.label")}
+                </Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="datetime-local"
+                    value={editData.event_start_time}
+                    onChange={(e) => setEditData({ ...editData, event_start_time: e.target.value })}
+                    className="bg-background flex-1"
+                  />
+                  <Badge variant="outline">{getTimezoneOffset()}</Badge>
                 </div>
-              </CardHeader>
-              <CardContent>
-                {loadingAutomations ? (
-                  <div className="text-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-                  </div>
-                ) : !automations || automations.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Zap className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No automations configured yet</p>
-                    <p className="text-xs mt-2">Click "Add Automation" to schedule your first action</p>
-                  </div>
+              </div>
+
+              <Button onClick={handleSaveSettings} disabled={saving}>
+                {saving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {t("settings.saving")}
+                  </>
                 ) : (
-                  <div className="space-y-3">
-                    {automations.map((automation) => (
-                      <div
-                        key={automation.automation_id}
-                        className={`flex items-center justify-between p-4 rounded-lg border transition-colors ${
-                          automation.active && !automation.executed
-                            ? "bg-primary/5 border-primary/20"
-                            : "bg-muted/30 border-border opacity-60"
-                        }`}
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          <div className={`p-2 rounded-full ${
-                            automation.active && !automation.executed ? "bg-primary/10" : "bg-muted"
-                          }`}>
-                            {getActionIcon(automation.action_type)}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-foreground">
-                                {getActionLabel(automation.action_type)}
-                              </span>
-                              <Badge
-                                variant={automation.active && !automation.executed ? "default" : "secondary"}
-                                className="text-xs"
-                              >
-                                {automation.executed ? "Executed" : automation.active ? "Active" : "Inactive"}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                              Scheduled: {new Date(automation.scheduled_time * 1000).toLocaleString()}
-                            </p>
-                            {automation.discord_channel_id && (
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Channel: {automation.discord_channel_id}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {!automation.executed && (
-                            <Button
-                              size="sm"
-                              variant={automation.active ? "outline" : "default"}
-                              onClick={() => handleToggleAutomation(automation.automation_id)}
-                              disabled={saving}
-                              className="text-xs"
-                            >
-                              {automation.active ? "Disable" : "Enable"}
-                            </Button>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleDeleteAutomation(automation.automation_id)}
-                            disabled={saving}
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  t("settings.save")
                 )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
-          {/* Groups Tab */}
-          <TabsContent value="groups" className="space-y-6">
-            {/* Roster Groups */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-foreground">Roster Groups</CardTitle>
-                    <CardDescription className="text-muted-foreground">
-                      Organize rosters into groups for batch management
-                    </CardDescription>
-                  </div>
-                  <Button
-                    onClick={() => setCreateGroupDialogOpen(true)}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Group
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {loadingGroups ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                  </div>
-                ) : groups.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <FolderTree className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No groups created yet</p>
-                    <p className="text-sm mt-1">Create a group to organize multiple rosters</p>
-                  </div>
-                ) : (
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {groups.map((group) => (
-                      <Card key={group.group_id} className="bg-background border-border">
-                        <CardHeader>
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <CardTitle className="text-lg text-foreground">{group.alias}</CardTitle>
-                              {group.description && (
-                                <CardDescription className="text-muted-foreground mt-1">
-                                  {group.description}
-                                </CardDescription>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
-                                  setSelectedGroup(group);
-                                  setEditGroupDialogOpen(true);
-                                }}
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleDeleteGroup(group.group_id)}
-                              >
-                                <Trash2 className="w-4 h-4 text-destructive" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <FolderTree className="w-4 h-4" />
-                            <span>{group.roster_count || 0} roster(s)</span>
-                          </div>
+      {/* Add Members Dialog */}
+      <AddMembersDialog
+        open={addMembersDialogOpen}
+        onOpenChange={setAddMembersDialogOpen}
+        onAddMembers={handleAddMembers}
+        serverMembers={serverMembers}
+        clanMembers={clanMembers}
+        existingMembers={roster.members}
+        loadServerMembers={loadServerMembers}
+        loadingServerMembers={loadingServerMembers}
+        t={t}
+      />
 
-                          {group.max_accounts_per_user && (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Users className="w-4 h-4" />
-                              <span>Max {group.max_accounts_per_user} accounts per user</span>
-                            </div>
-                          )}
-
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {group.auto_signup_publish && (
-                              <Badge variant="secondary" className="text-xs">
-                                Auto Publish
-                              </Badge>
-                            )}
-                            {group.auto_registration_close && (
-                              <Badge variant="secondary" className="text-xs">
-                                Auto Close
-                              </Badge>
-                            )}
-                            {group.auto_result_publish && (
-                              <Badge variant="secondary" className="text-xs">
-                                Auto Results
-                              </Badge>
-                            )}
-                          </div>
-
-                          {group.rosters && group.rosters.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-border">
-                              <p className="text-xs font-medium text-muted-foreground mb-2">Rosters:</p>
-                              <div className="space-y-1">
-                                {group.rosters.slice(0, 3).map((roster) => (
-                                  <div key={roster.custom_id} className="text-xs text-foreground">
-                                    • {roster.alias} {roster.clan_name && `(${roster.clan_name})`}
-                                  </div>
-                                ))}
-                                {group.rosters.length > 3 && (
-                                  <div className="text-xs text-muted-foreground">
-                                    +{group.rosters.length - 3} more
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Signup Categories */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-foreground">Signup Categories</CardTitle>
-                    <CardDescription className="text-muted-foreground">
-                      Define categories for member signups
-                    </CardDescription>
-                  </div>
-                  <Button
-                    onClick={() => setCreateCategoryDialogOpen(true)}
-                    className="bg-primary hover:bg-primary/90"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Category
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {loadingCategories ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                  </div>
-                ) : categories.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Tag className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>No categories created yet</p>
-                    <p className="text-sm mt-1">Create categories to organize member signups</p>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {categories.map((category) => (
-                      <div
-                        key={category.custom_id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-background border border-border"
-                      >
-                        <div className="flex items-center gap-3">
-                          <Tag className="w-4 h-4 text-primary" />
-                          <div>
-                            <p className="font-medium text-foreground">{category.alias}</p>
-                            <p className="text-xs text-muted-foreground">ID: {category.custom_id}</p>
-                          </div>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteCategory(category.custom_id)}
-                        >
-                          <Trash2 className="w-4 h-4 text-destructive" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
+      {/* Missing Members Dialog */}
+      <MissingMembersDialog
+        open={missingMembersDialogOpen}
+        onOpenChange={setMissingMembersDialogOpen}
+        data={missingMembers}
+        loading={loadingMissingMembers}
+        onLoad={loadMissingMembers}
+        onAddMembers={handleAddMembers}
+        t={t}
+      />
 
       {/* Create Automation Dialog */}
       <Dialog open={createAutomationDialogOpen} onOpenChange={setCreateAutomationDialogOpen}>
-        <DialogContent className="bg-card border-border max-w-2xl">
+        <DialogContent className="bg-card border-border">
           <DialogHeader>
-            <DialogTitle className="text-foreground">Schedule Automation</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Configure an automated action for this roster
-            </DialogDescription>
+            <DialogTitle>{t("automations.createTitle")}</DialogTitle>
+            <DialogDescription>{t("automations.createDesc")}</DialogDescription>
           </DialogHeader>
-
           <div className="space-y-4">
-            {/* Action Configuration */}
             <div className="space-y-2">
-              <Label htmlFor="action-type" className="text-foreground">Action Type</Label>
+              <Label>{t("automations.actionType")}</Label>
               <Select
-                value={newAutomation.action_type || ""}
+                value={newAutomation.action_type}
                 onValueChange={(value) =>
-                  setNewAutomation({ ...newAutomation, action_type: value as RosterAutomation["action_type"] })
+                  setNewAutomation({ ...newAutomation, action_type: value as AutomationActionType })
                 }
               >
-                <SelectTrigger className="bg-background border-border">
+                <SelectTrigger className="bg-background">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="roster_ping">
-                    <div className="flex items-center gap-2">
-                      <Bell className="w-4 h-4" />
-                      Ping Roster
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="roster_post">
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4" />
-                      Post Roster
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="roster_signup">
-                    <div className="flex items-center gap-2">
-                      <Unlock className="w-4 h-4" />
-                      Open Signup
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="roster_signup_close">
-                    <div className="flex items-center gap-2">
-                      <Lock className="w-4 h-4" />
-                      Close Signup
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="recurring_event">
-                    <div className="flex items-center gap-2">
-                      <RefreshCw className="w-4 h-4" />
-                      Recurring Event
-                    </div>
-                  </SelectItem>
+                  <SelectItem value="roster_ping">Ping Roster</SelectItem>
+                  <SelectItem value="roster_post">Post Roster</SelectItem>
+                  <SelectItem value="roster_signup">Open Signup</SelectItem>
+                  <SelectItem value="roster_signup_close">Close Signup</SelectItem>
+                  <SelectItem value="recurring_event">Recurring Event</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
-            {/* Scheduled Time */}
             <div className="space-y-2">
-              <Label htmlFor="scheduled-time" className="text-foreground">Scheduled Time</Label>
+              <Label>{t("automations.scheduledTime")}</Label>
               <Input
-                id="scheduled-time"
                 type="datetime-local"
                 value={unixToDatetimeLocal(newAutomation.scheduled_time)}
                 onChange={(e) =>
-                  setNewAutomation({ ...newAutomation, scheduled_time: datetimeLocalToUnix(e.target.value) })
+                  setNewAutomation({
+                    ...newAutomation,
+                    scheduled_time: datetimeLocalToUnix(e.target.value) || 0,
+                  })
                 }
-                className="bg-background border-border text-foreground"
+                className="bg-background"
               />
-              <p className="text-xs text-muted-foreground">
-                When should this action be executed?
-              </p>
-            </div>
-
-            {/* Discord Channel ID */}
-            <div className="space-y-2">
-              <Label htmlFor="channel-id" className="text-foreground">Discord Channel ID (optional)</Label>
-              <Input
-                id="channel-id"
-                placeholder="123456789"
-                value={newAutomation.discord_channel_id || ""}
-                onChange={(e) =>
-                  setNewAutomation({ ...newAutomation, discord_channel_id: e.target.value })
-                }
-                className="bg-background border-border text-foreground"
-              />
-              <p className="text-xs text-muted-foreground">
-                Leave empty to use the roster's default channel
-              </p>
             </div>
           </div>
-
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setCreateAutomationDialogOpen(false);
-                setNewAutomation({
-                  action_type: "roster_ping",
-                  scheduled_time: Math.floor(Date.now() / 1000) + 3600,
-                  active: true,
-                });
-              }}
-              className="border-border"
-            >
-              Cancel
+            <Button variant="outline" onClick={() => setCreateAutomationDialogOpen(false)}>
+              {t("common.cancel")}
             </Button>
-            <Button
-              onClick={handleCreateAutomation}
-              disabled={saving}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                "Create Automation"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Add Members Dialog */}
-      <Dialog open={addMembersDialogOpen} onOpenChange={setAddMembersDialogOpen}>
-        <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Add Members to Roster</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Select members from your clans or enter player tags
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {/* Bulk tags textarea */}
-            <div className="space-y-2">
-              <Label htmlFor="bulk-tags" className="text-foreground">
-                Player Tags (one per line or comma-separated)
-              </Label>
-              <Textarea
-                id="bulk-tags"
-                placeholder="#ABC123, #DEF456&#10;#GHI789"
-                value={bulkTags}
-                onChange={(e) => setBulkTags(e.target.value)}
-                className="bg-background border-border text-foreground font-mono text-sm"
-                rows={4}
-              />
-            </div>
-
-            {/* Clan members selection */}
-            {clanMembers.length > 0 && (
-              <div className="space-y-2">
-                <Label className="text-foreground">Or Select from Clan Members</Label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search members..."
-                    value={memberSearch}
-                    onChange={(e) => setMemberSearch(e.target.value)}
-                    className="bg-background border-border text-foreground pl-9"
-                  />
-                </div>
-                <div className="border border-border rounded-lg max-h-60 overflow-y-auto">
-                  {filteredClanMembers.map((member) => (
-                    <div
-                      key={member.tag}
-                      className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors ${
-                        selectedMembers.has(member.tag) ? "bg-primary/10" : ""
-                      }`}
-                      onClick={() => {
-                        const newSelected = new Set(selectedMembers);
-                        if (newSelected.has(member.tag)) {
-                          newSelected.delete(member.tag);
-                        } else {
-                          newSelected.add(member.tag);
-                        }
-                        setSelectedMembers(newSelected);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                          <span className="text-sm font-bold text-primary">{member.townhall}</span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">{member.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {member.tag} • {member.clan_name}
-                          </p>
-                        </div>
-                      </div>
-                      {selectedMembers.has(member.tag) && (
-                        <Badge variant="default" className="bg-primary">
-                          Selected
-                        </Badge>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {selectedMembers.size} member(s) selected
-                </p>
-              </div>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setAddMembersDialogOpen(false);
-                setBulkTags("");
-                setSelectedMembers(new Set());
-              }}
-              disabled={saving}
-              className="border-border"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAddMembers}
-              disabled={saving}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Adding...
-                </>
-              ) : (
-                "Add Members"
-              )}
+            <Button onClick={handleCreateAutomation} disabled={saving}>
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : t("automations.create")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2414,175 +739,27 @@ export default function RosterDetailPage() {
 
       {/* Create Group Dialog */}
       <Dialog open={createGroupDialogOpen} onOpenChange={setCreateGroupDialogOpen}>
-        <DialogContent className="bg-card border-border max-w-2xl">
+        <DialogContent className="bg-card border-border">
           <DialogHeader>
-            <DialogTitle className="text-foreground">Create Roster Group</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Create a new group to organize multiple rosters
-            </DialogDescription>
+            <DialogTitle>{t("groups.createTitle")}</DialogTitle>
           </DialogHeader>
-
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="group-alias" className="text-foreground">Group Name *</Label>
+              <Label>{t("groups.nameLabel")}</Label>
               <Input
-                id="group-alias"
-                placeholder="Enter group name..."
                 value={newGroup.alias}
-                onChange={(e) => setNewGroup({ ...newGroup, alias: e.target.value })}
-                className="bg-background border-border text-foreground"
+                onChange={(e) => setNewGroup({ alias: e.target.value })}
+                className="bg-background"
+                placeholder={t("groups.namePlaceholder")}
               />
             </div>
           </div>
-
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setCreateGroupDialogOpen(false);
-                setNewGroup({ alias: "" });
-              }}
-              disabled={saving}
-              className="border-border"
-            >
-              Cancel
+            <Button variant="outline" onClick={() => setCreateGroupDialogOpen(false)}>
+              {t("common.cancel")}
             </Button>
-            <Button
-              onClick={handleCreateGroup}
-              disabled={saving || !newGroup.alias.trim()}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                "Create Group"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Group Dialog */}
-      <Dialog open={editGroupDialogOpen} onOpenChange={setEditGroupDialogOpen}>
-        <DialogContent className="bg-card border-border max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Edit Roster Group</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Update group settings and automation options
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedGroup && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-group-alias" className="text-foreground">Group Name *</Label>
-                <Input
-                  id="edit-group-alias"
-                  placeholder="Enter group name..."
-                  value={selectedGroup.alias}
-                  onChange={(e) => setSelectedGroup({ ...selectedGroup, alias: e.target.value })}
-                  className="bg-background border-border text-foreground"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="max-accounts" className="text-foreground">Max Accounts Per User</Label>
-                <Input
-                  id="max-accounts"
-                  type="number"
-                  min="1"
-                  placeholder="Leave empty for no limit"
-                  value={selectedGroup.max_accounts_per_user || ""}
-                  onChange={(e) =>
-                    setSelectedGroup({
-                      ...selectedGroup,
-                      max_accounts_per_user: e.target.value ? parseInt(e.target.value) : undefined,
-                    })
-                  }
-                  className="bg-background border-border text-foreground"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <Label className="text-foreground">Automation Settings</Label>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-background border border-border">
-                    <div>
-                      <p className="font-medium text-foreground">Auto Publish Signups</p>
-                      <p className="text-xs text-muted-foreground">
-                        Automatically publish signup sheets when created
-                      </p>
-                    </div>
-                    <Checkbox
-                      checked={selectedGroup.auto_signup_publish || false}
-                      onCheckedChange={(checked) =>
-                        setSelectedGroup({ ...selectedGroup, auto_signup_publish: checked as boolean })
-                      }
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-background border border-border">
-                    <div>
-                      <p className="font-medium text-foreground">Auto Close Registration</p>
-                      <p className="text-xs text-muted-foreground">
-                        Automatically close registration when roster is full
-                      </p>
-                    </div>
-                    <Checkbox
-                      checked={selectedGroup.auto_registration_close || false}
-                      onCheckedChange={(checked) =>
-                        setSelectedGroup({ ...selectedGroup, auto_registration_close: checked as boolean })
-                      }
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-background border border-border">
-                    <div>
-                      <p className="font-medium text-foreground">Auto Publish Results</p>
-                      <p className="text-xs text-muted-foreground">
-                        Automatically publish results when event completes
-                      </p>
-                    </div>
-                    <Checkbox
-                      checked={selectedGroup.auto_result_publish || false}
-                      onCheckedChange={(checked) =>
-                        setSelectedGroup({ ...selectedGroup, auto_result_publish: checked as boolean })
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditGroupDialogOpen(false);
-                setSelectedGroup(null);
-              }}
-              disabled={saving}
-              className="border-border"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleUpdateGroup}
-              disabled={saving || !selectedGroup?.alias.trim()}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                "Save Changes"
-              )}
+            <Button onClick={handleCreateGroup} disabled={!newGroup.alias.trim()}>
+              {t("groups.create")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2592,70 +769,42 @@ export default function RosterDetailPage() {
       <Dialog open={createCategoryDialogOpen} onOpenChange={setCreateCategoryDialogOpen}>
         <DialogContent className="bg-card border-border">
           <DialogHeader>
-            <DialogTitle className="text-foreground">Create Signup Category</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Define a new category for organizing member signups
-            </DialogDescription>
+            <DialogTitle>{t("categories.createTitle")}</DialogTitle>
           </DialogHeader>
-
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="category-alias" className="text-foreground">Category Name *</Label>
+              <Label>{t("categories.idLabel")}</Label>
               <Input
-                id="category-alias"
-                placeholder="e.g., Attackers, Defenders"
+                value={newCategory.custom_id}
+                onChange={(e) => setNewCategory({ ...newCategory, custom_id: e.target.value })}
+                className="bg-background"
+                placeholder="tank"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("categories.nameLabel")}</Label>
+              <Input
                 value={newCategory.alias}
                 onChange={(e) => setNewCategory({ ...newCategory, alias: e.target.value })}
-                className="bg-background border-border text-foreground"
+                className="bg-background"
+                placeholder="Tank"
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="category-custom-id" className="text-foreground">Custom ID (Optional)</Label>
-              <Input
-                id="category-custom-id"
-                placeholder="e.g., attackers, defenders (auto-generated if empty)"
-                value={newCategory.custom_id}
-                onChange={(e) =>
-                  setNewCategory({ ...newCategory, custom_id: e.target.value.toLowerCase().replace(/\s+/g, "_") })
-                }
-                className="bg-background border-border text-foreground"
-              />
-              <p className="text-xs text-muted-foreground">
-                Use lowercase letters, numbers, and underscores only. Leave empty to auto-generate.
-              </p>
             </div>
           </div>
-
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setCreateCategoryDialogOpen(false);
-                setNewCategory({ custom_id: "", alias: "" });
-              }}
-              disabled={saving}
-              className="border-border"
-            >
-              Cancel
+            <Button variant="outline" onClick={() => setCreateCategoryDialogOpen(false)}>
+              {t("common.cancel")}
             </Button>
             <Button
               onClick={handleCreateCategory}
-              disabled={saving || !newCategory.alias.trim()}
-              className="bg-primary hover:bg-primary/90"
+              disabled={!newCategory.custom_id.trim() || !newCategory.alias.trim()}
             >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                "Create Category"
-              )}
+              {t("categories.create")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
