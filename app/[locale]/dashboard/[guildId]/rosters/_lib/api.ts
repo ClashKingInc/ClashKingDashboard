@@ -10,6 +10,7 @@ import type {
   MissingMembersResult,
   CreateRosterFormData,
   CloneRosterFormData,
+  DiscordChannel,
 } from './types';
 
 // ============================================
@@ -123,10 +124,13 @@ export async function addRosterMembers(
   serverId: string,
   tags: string[]
 ): Promise<void> {
+  // Transform tags array to the format expected by the API
+  const addMembers = tags.map(tag => ({ tag }));
+
   const response = await fetch(`/api/v2/roster/${rosterId}/members?server_id=${serverId}`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    body: JSON.stringify({ player_tags: tags }),
+    body: JSON.stringify({ add: addMembers }),
   });
   if (!response.ok) {
     throw new Error('Failed to add members');
@@ -327,6 +331,22 @@ export async function createCategory(
   return handleResponse<SignupCategory>(response);
 }
 
+export async function updateCategory(
+  categoryId: string,
+  serverId: string,
+  data: Partial<SignupCategory>
+): Promise<SignupCategory> {
+  const response = await fetch(
+    `/api/v2/roster-signup-category/${categoryId}?server_id=${serverId}`,
+    {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    }
+  );
+  return handleResponse<SignupCategory>(response);
+}
+
 export async function deleteCategory(categoryId: string, serverId: string): Promise<void> {
   const response = await fetch(
     `/api/v2/roster-signup-category/${categoryId}?server_id=${serverId}`,
@@ -338,4 +358,15 @@ export async function deleteCategory(categoryId: string, serverId: string): Prom
   if (!response.ok) {
     throw new Error('Failed to delete category');
   }
+}
+
+// ============================================
+// Discord Channels API
+// ============================================
+
+export async function fetchChannels(serverId: string): Promise<DiscordChannel[]> {
+  const response = await fetch(`/api/v2/server/${serverId}/channels`, {
+    headers: getAuthHeaders(),
+  });
+  return handleResponse<DiscordChannel[]>(response);
 }

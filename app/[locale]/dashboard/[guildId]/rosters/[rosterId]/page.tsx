@@ -28,10 +28,20 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
-  MessageSquare, UserMinus
+  MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
+  Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
+  Info, Lightbulb
 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 
 // Local imports
@@ -80,6 +90,7 @@ export default function RosterDetailPage() {
     automations,
     groups,
     categories,
+    channels,
     missingMembers,
     loading,
     loadingMissingMembers,
@@ -96,8 +107,10 @@ export default function RosterDetailPage() {
     updateAutomation,
     deleteAutomation,
     createGroup,
+    updateGroup,
     deleteGroup,
     createCategory,
+    updateCategory,
     deleteCategory,
   } = useRosterDetail(rosterId, guildId);
 
@@ -113,6 +126,9 @@ export default function RosterDetailPage() {
   const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
   const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
+  const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
+  const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
+  const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
 
   // Form state
   const [editData, setEditData] = useState<EditRosterFormData>({
@@ -141,6 +157,14 @@ export default function RosterDetailPage() {
 
   const [newGroup, setNewGroup] = useState({ alias: "" });
   const [newCategory, setNewCategory] = useState({ custom_id: "", alias: "" });
+  const [editingGroup, setEditingGroup] = useState<{ group_id: string; alias: string } | null>(null);
+  const [editingCategory, setEditingCategory] = useState<{ custom_id: string; alias: string } | null>(null);
+  const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
+
+  // Column configuration state
+  const defaultColumns = ['townhall', 'name', 'tag', 'hitrate', 'current_clan_tag'];
+  const [localColumns, setLocalColumns] = useState<string[]>(defaultColumns);
+  const [columnPopoverOpen, setColumnPopoverOpen] = useState(false);
 
   // Sync edit form with roster data
   React.useEffect(() => {
@@ -164,6 +188,13 @@ export default function RosterDetailPage() {
       });
     }
   }, [roster]);
+
+  // Sync localColumns when roster changes
+  React.useEffect(() => {
+    if (roster?.columns?.length) {
+      setLocalColumns(roster.columns);
+    }
+  }, [roster?.columns]);
 
   // Family clan tags
   const familyClanTags = clans.map(c => c.tag);
@@ -203,7 +234,7 @@ export default function RosterDetailPage() {
         columns: editData.columns.map(getColumnInternal),
         sort: editData.sort.map(getSortInternal),
         group_id: editData.group_id || null,
-        allowed_signup_categories: editData.allowed_signup_categories.length > 0 ? editData.allowed_signup_categories : null,
+        allowed_signup_categories: editData.allowed_signup_categories.length > 0 ? editData.allowed_signup_categories : undefined,
       });
       toast({ title: t("saveSuccess") });
     } catch (err) {
@@ -309,6 +340,26 @@ export default function RosterDetailPage() {
     }
   };
 
+  const handleEditAutomation = async () => {
+    if (!editingAutomation) return;
+    try {
+      await updateAutomation(editingAutomation.automation_id, {
+        action_type: editingAutomation.action_type,
+        scheduled_time: editingAutomation.scheduled_time,
+        discord_channel_id: editingAutomation.discord_channel_id,
+        active: editingAutomation.active,
+      });
+      toast({ title: t("automationUpdated") });
+      setEditAutomationDialogOpen(false);
+      setEditingAutomation(null);
+    } catch (err) {
+      toast({
+        title: t("automationError"),
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleCreateGroup = async () => {
     if (!newGroup.alias.trim()) return;
     try {
@@ -328,6 +379,30 @@ export default function RosterDetailPage() {
       toast({ title: t("categoryCreated") });
       setCreateCategoryDialogOpen(false);
       setNewCategory({ custom_id: "", alias: "" });
+    } catch (err) {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    }
+  };
+
+  const handleEditGroup = async () => {
+    if (!editingGroup || !editingGroup.alias.trim()) return;
+    try {
+      await updateGroup(editingGroup.group_id, { alias: editingGroup.alias });
+      toast({ title: t("groupUpdated") });
+      setEditGroupDialogOpen(false);
+      setEditingGroup(null);
+    } catch (err) {
+      toast({ title: t("groupError"), variant: "destructive" });
+    }
+  };
+
+  const handleEditCategory = async () => {
+    if (!editingCategory || !editingCategory.alias.trim()) return;
+    try {
+      await updateCategory(editingCategory.custom_id, { alias: editingCategory.alias });
+      toast({ title: t("categoryUpdated") });
+      setEditCategoryDialogOpen(false);
+      setEditingCategory(null);
     } catch (err) {
       toast({ title: t("categoryError"), variant: "destructive" });
     }
@@ -361,7 +436,39 @@ export default function RosterDetailPage() {
     );
   }
 
-  const displayColumns = roster.columns?.length ? roster.columns : ['townhall', 'name', 'tag', 'hitrate', 'current_clan_tag'];
+  const handleToggleColumn = (columnValue: string) => {
+    setLocalColumns(prev => {
+      if (prev.includes(columnValue)) {
+        return prev.filter(c => c !== columnValue);
+      } else {
+        return [...prev, columnValue];
+      }
+    });
+  };
+
+  const handleMoveColumn = (columnValue: string, direction: 'up' | 'down') => {
+    setLocalColumns(prev => {
+      const index = prev.indexOf(columnValue);
+      if (index === -1) return prev;
+
+      const newIndex = direction === 'up' ? index - 1 : index + 1;
+      if (newIndex < 0 || newIndex >= prev.length) return prev;
+
+      const newColumns = [...prev];
+      [newColumns[index], newColumns[newIndex]] = [newColumns[newIndex], newColumns[index]];
+      return newColumns;
+    });
+  };
+
+  const handleSaveColumns = async () => {
+    try {
+      await updateRoster({ columns: localColumns });
+      toast({ title: t("columnsUpdated") });
+      setColumnPopoverOpen(false);
+    } catch (err) {
+      toast({ title: t("columnsError"), variant: "destructive" });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -433,23 +540,106 @@ export default function RosterDetailPage() {
             <p className="text-muted-foreground">
               {roster.members?.length || 0} {t("members.count")}
             </p>
-            {roster.clan_tag && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setMissingMembersDialogOpen(true)}
-              >
-                <UserMinus className="w-4 h-4 mr-2" />
-                {t("missingMembers.button")}
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              <Popover open={columnPopoverOpen} onOpenChange={setColumnPopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Columns3 className="w-4 h-4 mr-2" />
+                    {t("columns.configure")}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-0" align="end">
+                  <div className="p-4 border-b border-border">
+                    <h4 className="font-medium">{t("columns.title")}</h4>
+                    <p className="text-sm text-muted-foreground">{t("columns.description")}</p>
+                  </div>
+                  <div className="p-2 max-h-[300px] overflow-y-auto">
+                    {/* Selected columns with reorder */}
+                    <div className="space-y-1 mb-2">
+                      <p className="text-xs font-medium text-muted-foreground px-2 py-1">{t("columns.selected")}</p>
+                      {localColumns.map((col, index) => {
+                        const columnDef = ROSTER_COLUMNS.find(c => c.value === col);
+                        return (
+                          <div
+                            key={col}
+                            className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50"
+                          >
+                            <div className="flex items-center gap-2">
+                              <GripVertical className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{columnDef ? t(`memberColumns.${col}`) : col}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0"
+                                onClick={() => handleMoveColumn(col, 'up')}
+                                disabled={index === 0}
+                              >
+                                <ChevronUp className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0"
+                                onClick={() => handleMoveColumn(col, 'down')}
+                                disabled={index === localColumns.length - 1}
+                              >
+                                <ChevronDown className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-destructive"
+                                onClick={() => handleToggleColumn(col)}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* Available columns */}
+                    <div className="space-y-1 border-t border-border pt-2">
+                      <p className="text-xs font-medium text-muted-foreground px-2 py-1">{t("columns.available")}</p>
+                      {ROSTER_COLUMNS.filter(c => !localColumns.includes(c.value)).map((col) => (
+                        <div
+                          key={col.value}
+                          className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50 cursor-pointer"
+                          onClick={() => handleToggleColumn(col.value)}
+                        >
+                          <span className="text-sm text-muted-foreground">{t(`memberColumns.${col.value}`)}</span>
+                          <Plus className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="p-2 border-t border-border">
+                    <Button size="sm" className="w-full" onClick={handleSaveColumns}>
+                      {t("columns.save")}
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              {roster.clan_tag && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setMissingMembersDialogOpen(true)}
+                >
+                  <UserMinus className="w-4 h-4 mr-2" />
+                  {t("missingMembers.button")}
+                </Button>
+              )}
+            </div>
           </div>
 
           <Card className="bg-card border-border">
             <CardContent className="p-0">
               <MembersTable
                 members={roster.members || []}
-                columns={displayColumns}
+                columns={localColumns}
                 rosterClanTag={roster.clan_tag}
                 familyClans={clans}
                 onRemoveMember={handleRemoveMember}
@@ -470,237 +660,313 @@ export default function RosterDetailPage() {
             </Button>
           </div>
 
+          {/* Info Box */}
+          <Alert className="bg-blue-500/5 border-blue-500/20">
+            <Lightbulb className="h-4 w-4 text-blue-500" />
+            <AlertDescription className="text-sm text-muted-foreground">
+              {t("automations.infoBox")}
+            </AlertDescription>
+          </Alert>
+
           {automations.length === 0 ? (
-            <Card className="bg-card border-border">
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <Zap className="w-12 h-12 text-muted-foreground mb-4" />
-                <p className="text-foreground">{t("automations.empty")}</p>
-                <p className="text-sm text-muted-foreground">{t("automations.emptyHint")}</p>
+            <Card className="bg-card border-border border-dashed">
+              <CardContent className="flex flex-col items-center justify-center py-16">
+                <div className="p-4 rounded-full bg-muted/50 mb-4">
+                  <Zap className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <p className="text-foreground font-medium">{t("automations.empty")}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t("automations.emptyHint")}</p>
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-2">
-              {automations.map((automation) => (
-                <Card key={automation.automation_id} className="bg-card border-border">
-                  <CardContent className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-4">
-                      <div className={`p-2 rounded ${automation.active ? "bg-primary/10" : "bg-muted"}`}>
-                        {automation.action_type === "roster_ping" && <Bell className="w-4 h-4" />}
-                        {automation.action_type === "roster_post" && <MessageSquare className="w-4 h-4" />}
-                        {automation.action_type === "roster_signup" && <Unlock className="w-4 h-4" />}
-                        {automation.action_type === "roster_signup_close" && <Lock className="w-4 h-4" />}
-                        {automation.action_type === "recurring_event" && <RefreshCw className="w-4 h-4" />}
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {automations.map((automation) => {
+                const getActionColor = (type: string) => {
+                  switch (type) {
+                    case "roster_ping": return "amber";
+                    case "roster_post": return "blue";
+                    case "roster_signup": return "emerald";
+                    case "roster_signup_close": return "red";
+                    case "recurring_event": return "purple";
+                    default: return "gray";
+                  }
+                };
+                const color = getActionColor(automation.action_type);
+
+                return (
+                  <Card
+                    key={automation.automation_id}
+                    className={`bg-card border-l-4 transition-all hover:shadow-md ${
+                      automation.active
+                        ? `border-l-${color}-500`
+                        : "border-l-muted opacity-60"
+                    }`}
+                    style={{ borderLeftColor: automation.active ? `var(--${color}-500, hsl(var(--primary)))` : undefined }}
+                  >
+                    <CardContent className="p-4">
+                      {/* Header with icon and status */}
+                      <div className="flex items-start justify-between mb-3">
+                        <div className={`p-2.5 rounded-xl ${
+                          automation.active
+                            ? `bg-${color}-500/10`
+                            : "bg-muted"
+                        }`}>
+                          {automation.action_type === "roster_ping" && <Bell className={`w-5 h-5 ${automation.active ? "text-amber-500" : "text-muted-foreground"}`} />}
+                          {automation.action_type === "roster_post" && <MessageSquare className={`w-5 h-5 ${automation.active ? "text-blue-500" : "text-muted-foreground"}`} />}
+                          {automation.action_type === "roster_signup" && <Unlock className={`w-5 h-5 ${automation.active ? "text-emerald-500" : "text-muted-foreground"}`} />}
+                          {automation.action_type === "roster_signup_close" && <Lock className={`w-5 h-5 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
+                          {automation.action_type === "recurring_event" && <RefreshCw className={`w-5 h-5 ${automation.active ? "text-purple-500" : "text-muted-foreground"}`} />}
+                        </div>
+                        <Badge
+                          variant={automation.active ? "default" : "secondary"}
+                          className={automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}
+                        >
+                          {automation.active ? t("automations.active") : t("automations.inactive")}
+                        </Badge>
                       </div>
-                      <div>
-                        <p className="font-medium text-foreground">
-                          {getAutomationLabel(automation.action_type)}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          <Clock className="w-3 h-3 inline mr-1" />
-                          {formatTimestamp(automation.scheduled_time)}
-                        </p>
+
+                      {/* Title */}
+                      <h4 className="font-semibold text-foreground mb-2">
+                        {getAutomationLabel(automation.action_type)}
+                      </h4>
+
+                      {/* Details */}
+                      <div className="space-y-1.5 mb-4">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Clock className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{formatTimestamp(automation.scheduled_time)}</span>
+                        </div>
+                        {automation.discord_channel_id && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Hash className="w-4 h-4 flex-shrink-0" />
+                            <span className="truncate">
+                              {channels.find(c => c.id === automation.discord_channel_id)?.name || automation.discord_channel_id}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant={automation.active ? "default" : "secondary"}>
-                        {automation.active ? t("automations.active") : t("automations.inactive")}
-                      </Badge>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleToggleAutomation(automation.automation_id)}
-                      >
-                        {automation.active ? t("automations.disable") : t("automations.enable")}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteAutomation(automation.automation_id)}
-                        className="text-destructive"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1 pt-3 border-t border-border/50">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex-1 h-8 text-xs"
+                          onClick={() => handleToggleAutomation(automation.automation_id)}
+                        >
+                          {automation.active ? t("automations.disable") : t("automations.enable")}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => {
+                            setEditingAutomation(automation);
+                            setEditAutomationDialogOpen(true);
+                          }}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteAutomation(automation.automation_id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </TabsContent>
 
         {/* Groups Tab */}
-        <TabsContent value="groups" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <p className="text-muted-foreground">{t("groups.description")}</p>
-            <Button onClick={() => setCreateGroupDialogOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              {t("groups.create")}
-            </Button>
-          </div>
+        <TabsContent value="groups" className="space-y-6">
+          {/* Info Box */}
+          <Alert className="bg-indigo-500/5 border-indigo-500/20">
+            <Lightbulb className="h-4 w-4 text-indigo-500" />
+            <AlertDescription className="text-sm text-muted-foreground">
+              {t("groups.infoBox")}
+            </AlertDescription>
+          </Alert>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {groups.map((group) => (
-              <Card key={group.group_id} className="bg-card border-border">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{group.alias}</CardTitle>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => deleteGroup(group.group_id)}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+          {/* Groups Section */}
+          <Card className="bg-card border-l-4 border-l-indigo-500">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <div className="p-2 bg-indigo-500/10 rounded-lg">
+                    <FolderTree className="w-5 h-5 text-indigo-500" />
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {group.roster_count || 0} {t("groups.rostersCount")}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  {t("groups.title")}
+                </CardTitle>
+                <Button size="sm" onClick={() => setCreateGroupDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("groups.create")}
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground ml-11">{t("groups.description")}</p>
+            </CardHeader>
+            <CardContent>
+              {groups.length === 0 ? (
+                <div className="text-center py-6 text-muted-foreground">
+                  <FolderTree className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>{t("groups.noGroups")}</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {groups.map((group) => (
+                    <div
+                      key={group.group_id}
+                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-indigo-500/10 rounded">
+                          <Layers className="w-4 h-4 text-indigo-500" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{group.alias}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {group.roster_count || 0} {t("groups.rostersCount")}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setEditingGroup({ group_id: group.group_id, alias: group.alias });
+                            setEditGroupDialogOpen(true);
+                          }}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteGroup(group.group_id)}
+                          className="text-muted-foreground hover:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
-          {/* Categories */}
-          <div className="mt-8">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-foreground">{t("categories.title")}</h3>
-              <Button variant="outline" onClick={() => setCreateCategoryDialogOpen(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                {t("categories.create")}
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Badge
-                  key={category.custom_id}
-                  variant="secondary"
-                  className="flex items-center gap-2 px-3 py-1"
-                >
-                  {category.alias}
-                  <button
-                    onClick={() => deleteCategory(category.custom_id)}
-                    className="hover:text-destructive"
-                  >
-                    <Trash2 className="w-3 h-3" />
-                  </button>
-                </Badge>
-              ))}
-            </div>
-          </div>
+          {/* Categories Info Box */}
+          <Alert className="bg-purple-500/5 border-purple-500/20">
+            <Lightbulb className="h-4 w-4 text-purple-500" />
+            <AlertDescription className="text-sm text-muted-foreground">
+              {t("categories.infoBox")}
+            </AlertDescription>
+          </Alert>
+
+          {/* Categories Section */}
+          <Card className="bg-card border-l-4 border-l-purple-500">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <div className="p-2 bg-purple-500/10 rounded-lg">
+                    <Tag className="w-5 h-5 text-purple-500" />
+                  </div>
+                  {t("categories.title")}
+                </CardTitle>
+                <Button size="sm" variant="outline" onClick={() => setCreateCategoryDialogOpen(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("categories.create")}
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground ml-11">{t("categories.description")}</p>
+            </CardHeader>
+            <CardContent>
+              {categories.length === 0 ? (
+                <div className="text-center py-6 text-muted-foreground">
+                  <Tag className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>{t("categories.noCategories")}</p>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((category) => (
+                    <Badge
+                      key={category.custom_id}
+                      variant="secondary"
+                      className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
+                    >
+                      {category.alias}
+                      <button
+                        onClick={() => {
+                          setEditingCategory({ custom_id: category.custom_id, alias: category.alias });
+                          setEditCategoryDialogOpen(true);
+                        }}
+                        className="hover:text-foreground transition-colors"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={() => deleteCategory(category.custom_id)}
+                        className="hover:text-destructive transition-colors"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-4">
-          {/* General Settings */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle>{t("settings.general")}</CardTitle>
+        <TabsContent value="settings" className="space-y-6">
+          {/* Identity Section */}
+          <Card className="bg-card border-l-4 border-l-blue-500">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <div className="p-2 bg-blue-500/10 rounded-lg">
+                  <Tag className="w-5 h-5 text-blue-500" />
+                </div>
+                {t("settings.general")}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent className="space-y-6">
+              {/* Name and Description */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label>{t("settings.name")}</Label>
+                  <Label className="flex items-center gap-2 text-sm font-medium">
+                    <FileText className="w-4 h-4 text-muted-foreground" />
+                    {t("settings.name")}
+                  </Label>
                   <Input
                     value={editData.alias}
                     onChange={(e) => setEditData({ ...editData, alias: e.target.value })}
-                    className="bg-background"
+                    className="bg-background/50"
+                    placeholder="CWL Week 1"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{t("settings.rosterType")}</Label>
+                  <Label className="flex items-center gap-2 text-sm font-medium">
+                    <Layers className="w-4 h-4 text-muted-foreground" />
+                    {t("settings.group")}
+                  </Label>
                   <Select
-                    value={editData.roster_type}
-                    onValueChange={(value: "clan" | "family") => setEditData({ ...editData, roster_type: value })}
+                    value={editData.group_id || "__none__"}
+                    onValueChange={(value) => setEditData({ ...editData, group_id: value === "__none__" ? "" : value })}
                   >
-                    <SelectTrigger className="bg-background">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="clan">{t("settings.typeClan")}</SelectItem>
-                      <SelectItem value="family">{t("settings.typeFamily")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.signupScope")}</Label>
-                  <Select
-                    value={editData.signup_scope}
-                    onValueChange={(value: "clan-only" | "family-wide") => setEditData({ ...editData, signup_scope: value })}
-                  >
-                    <SelectTrigger className="bg-background">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="clan-only">{t("settings.scopeClanOnly")}</SelectItem>
-                      <SelectItem value="family-wide">{t("settings.scopeFamilyWide")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {editData.roster_type === "clan" && (
-                  <div className="space-y-2">
-                    <Label>{t("settings.clan")}</Label>
-                    <Select
-                      value={editData.clan_tag}
-                      onValueChange={(value) => setEditData({ ...editData, clan_tag: value })}
-                    >
-                      <SelectTrigger className="bg-background">
-                        <SelectValue placeholder={t("settings.selectClan")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {clans.map((clan) => (
-                          <SelectItem key={clan.tag} value={clan.tag}>
-                            {clan.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label>{t("settings.description")}</Label>
-                <Textarea
-                  value={editData.description}
-                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                  className="bg-background"
-                  rows={3}
-                />
-              </div>
-
-              {/* Event Time */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  {t("settings.eventTime")}
-                </Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="datetime-local"
-                    value={editData.event_start_time}
-                    onChange={(e) => setEditData({ ...editData, event_start_time: e.target.value })}
-                    className="bg-background flex-1"
-                  />
-                  <Badge variant="outline">{getTimezoneOffset()}</Badge>
-                </div>
-              </div>
-
-              {/* Group */}
-              {groups.length > 0 && (
-                <div className="space-y-2">
-                  <Label>{t("settings.group")}</Label>
-                  <Select
-                    value={editData.group_id}
-                    onValueChange={(value) => setEditData({ ...editData, group_id: value })}
-                  >
-                    <SelectTrigger className="bg-background">
+                    <SelectTrigger className="bg-background/50">
                       <SelectValue placeholder={t("settings.noGroup")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">{t("settings.noGroup")}</SelectItem>
+                      <SelectItem value="__none__">{t("settings.noGroup")}</SelectItem>
                       {groups.map((group) => (
                         <SelectItem key={group.group_id} value={group.group_id}>
                           {group.alias}
@@ -709,86 +975,240 @@ export default function RosterDetailPage() {
                     </SelectContent>
                   </Select>
                 </div>
-              )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-sm font-medium">
+                  <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                  {t("settings.description")}
+                </Label>
+                <Textarea
+                  value={editData.description}
+                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                  className="bg-background/50 resize-none"
+                  rows={3}
+                  placeholder={t("settings.descriptionPlaceholder")}
+                />
+              </div>
+
+              {/* Type and Scope */}
+              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                  {t("settings.typeAndScope")}
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2 text-sm">
+                      <Building2 className="w-4 h-4 text-muted-foreground" />
+                      {t("settings.rosterType")}
+                    </Label>
+                    <Select
+                      value={editData.roster_type}
+                      onValueChange={(value: "clan" | "family") => setEditData({ ...editData, roster_type: value })}
+                    >
+                      <SelectTrigger className="bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="clan">
+                          <span className="flex items-center gap-2">
+                            <Home className="w-4 h-4" />
+                            {t("settings.typeClan")}
+                          </span>
+                        </SelectItem>
+                        <SelectItem value="family">
+                          <span className="flex items-center gap-2">
+                            <Users className="w-4 h-4" />
+                            {t("settings.typeFamily")}
+                          </span>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2 text-sm">
+                      <Globe className="w-4 h-4 text-muted-foreground" />
+                      {t("settings.signupScope")}
+                    </Label>
+                    <Select
+                      value={editData.signup_scope}
+                      onValueChange={(value: "clan-only" | "family-wide") => setEditData({ ...editData, signup_scope: value })}
+                    >
+                      <SelectTrigger className="bg-background">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="clan-only">{t("settings.scopeClanOnly")}</SelectItem>
+                        <SelectItem value="family-wide">{t("settings.scopeFamilyWide")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {editData.roster_type === "clan" && (
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2 text-sm">
+                        <Shield className="w-4 h-4 text-muted-foreground" />
+                        {t("settings.clan")}
+                      </Label>
+                      <Select
+                        value={editData.clan_tag}
+                        onValueChange={(value) => setEditData({ ...editData, clan_tag: value })}
+                      >
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder={t("settings.selectClan")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {clans.map((clan) => (
+                            <SelectItem key={clan.tag} value={clan.tag}>
+                              {clan.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Event Time */}
+              <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-lg space-y-3">
+                <Label className="flex items-center gap-2 text-sm font-medium">
+                  <Calendar className="w-4 h-4 text-amber-500" />
+                  {t("settings.eventTime")}
+                </Label>
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="datetime-local"
+                    value={editData.event_start_time}
+                    onChange={(e) => setEditData({ ...editData, event_start_time: e.target.value })}
+                    className="bg-background flex-1"
+                  />
+                  <Badge variant="outline" className="bg-background">
+                    <Clock className="w-3 h-3 mr-1" />
+                    {getTimezoneOffset()}
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">{t("settings.eventTimeHint")}</p>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Restrictions */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle>{t("settings.restrictions")}</CardTitle>
+          {/* Restrictions Section */}
+          <Card className="bg-card border-l-4 border-l-emerald-500">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <div className="p-2 bg-emerald-500/10 rounded-lg">
+                  <Shield className="w-5 h-5 text-emerald-500" />
+                </div>
+                {t("settings.restrictions")}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>{t("settings.minTh")}</Label>
-                  <Input
-                    type="number"
-                    min={minTh}
-                    max={maxTh}
-                    value={editData.min_th}
-                    onChange={(e) => setEditData({ ...editData, min_th: e.target.value })}
-                    className="bg-background"
-                    placeholder={String(minTh)}
-                  />
+            <CardContent className="space-y-6">
+              {/* Town Hall Requirements */}
+              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                  <Home className="w-4 h-4" />
+                  {t("settings.thRequirements")}
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm">{t("settings.minTh")}</Label>
+                    <Input
+                      type="number"
+                      min={minTh}
+                      max={maxTh}
+                      value={editData.min_th}
+                      onChange={(e) => setEditData({ ...editData, min_th: e.target.value })}
+                      className="bg-background"
+                      placeholder={String(minTh)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm">{t("settings.maxTh")}</Label>
+                    <Input
+                      type="number"
+                      min={minTh}
+                      max={maxTh}
+                      value={editData.max_th}
+                      onChange={(e) => setEditData({ ...editData, max_th: e.target.value })}
+                      className="bg-background"
+                      placeholder={String(maxTh)}
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.maxTh")}</Label>
-                  <Input
-                    type="number"
-                    min={minTh}
-                    max={maxTh}
-                    value={editData.max_th}
-                    onChange={(e) => setEditData({ ...editData, max_th: e.target.value })}
-                    className="bg-background"
-                    placeholder={String(maxTh)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.rosterSize")}</Label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={editData.roster_size}
-                    onChange={(e) => setEditData({ ...editData, roster_size: e.target.value })}
-                    className="bg-background"
-                    placeholder="50"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.minSignups")}</Label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={editData.min_signups}
-                    onChange={(e) => setEditData({ ...editData, min_signups: e.target.value })}
-                    className="bg-background"
-                    placeholder="15"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.maxAccountsPerUser")}</Label>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={editData.max_accounts_per_user}
-                    onChange={(e) => setEditData({ ...editData, max_accounts_per_user: e.target.value })}
-                    className="bg-background"
-                    placeholder="2"
-                  />
+              </div>
+
+              {/* Signup Limits */}
+              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
+                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                  <UserCheck className="w-4 h-4" />
+                  {t("settings.signupLimits")}
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2 text-sm">
+                      <Users className="w-4 h-4 text-muted-foreground" />
+                      {t("settings.rosterSize")}
+                    </Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editData.roster_size}
+                      onChange={(e) => setEditData({ ...editData, roster_size: e.target.value })}
+                      className="bg-background"
+                      placeholder="50"
+                    />
+                    <p className="text-xs text-muted-foreground">{t("settings.rosterSizeHint")}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2 text-sm">
+                      <Hash className="w-4 h-4 text-muted-foreground" />
+                      {t("settings.minSignups")}
+                    </Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editData.min_signups}
+                      onChange={(e) => setEditData({ ...editData, min_signups: e.target.value })}
+                      className="bg-background"
+                      placeholder="15"
+                    />
+                    <p className="text-xs text-muted-foreground">{t("settings.minSignupsHint")}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2 text-sm">
+                      <UserPlus className="w-4 h-4 text-muted-foreground" />
+                      {t("settings.maxAccountsPerUser")}
+                    </Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editData.max_accounts_per_user}
+                      onChange={(e) => setEditData({ ...editData, max_accounts_per_user: e.target.value })}
+                      className="bg-background"
+                      placeholder="2"
+                    />
+                    <p className="text-xs text-muted-foreground">{t("settings.maxAccountsHint")}</p>
+                  </div>
                 </div>
               </div>
 
               {/* Allowed Signup Categories */}
               {categories.length > 0 && (
-                <div className="space-y-2">
-                  <Label>{t("settings.allowedCategories")}</Label>
+                <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg space-y-3">
+                  <Label className="flex items-center gap-2 text-sm font-medium">
+                    <Tag className="w-4 h-4 text-purple-500" />
+                    {t("settings.allowedCategories")}
+                  </Label>
                   <div className="flex flex-wrap gap-2">
                     {categories.map((category) => (
                       <Badge
                         key={category.custom_id}
                         variant={editData.allowed_signup_categories.includes(category.custom_id) ? "default" : "outline"}
-                        className="cursor-pointer"
+                        className={`cursor-pointer transition-all hover:scale-105 ${
+                          editData.allowed_signup_categories.includes(category.custom_id)
+                            ? "bg-purple-500 hover:bg-purple-600"
+                            : "hover:border-purple-500"
+                        }`}
                         onClick={() => {
                           const current = editData.allowed_signup_categories;
                           const updated = current.includes(category.custom_id)
@@ -808,16 +1228,26 @@ export default function RosterDetailPage() {
           </Card>
 
           {/* Save Button */}
-          <Button onClick={handleSaveSettings} disabled={saving} className="w-full md:w-auto">
-            {saving ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {t("settings.saving")}
-              </>
-            ) : (
-              t("settings.save")
-            )}
-          </Button>
+          <div className="flex justify-end">
+            <Button
+              onClick={handleSaveSettings}
+              disabled={saving}
+              size="lg"
+              className="min-w-[200px]"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  {t("settings.saving")}
+                </>
+              ) : (
+                <>
+                  <SettingsIcon className="w-4 h-4 mr-2" />
+                  {t("settings.save")}
+                </>
+              )}
+            </Button>
+          </div>
         </TabsContent>
       </Tabs>
 
@@ -887,6 +1317,22 @@ export default function RosterDetailPage() {
                 className="bg-background"
               />
             </div>
+            <div className="space-y-2">
+              <Label>{t("automations.channel")}</Label>
+              <ChannelCombobox
+                channels={channels}
+                value={newAutomation.discord_channel_id || ""}
+                onValueChange={(value) =>
+                  setNewAutomation({
+                    ...newAutomation,
+                    discord_channel_id: value === "disabled" ? undefined : value,
+                  })
+                }
+                placeholder={t("automations.selectChannel")}
+                showDisabled={true}
+              />
+              <p className="text-xs text-muted-foreground">{t("automations.channelHint")}</p>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateAutomationDialogOpen(false)}>
@@ -894,6 +1340,90 @@ export default function RosterDetailPage() {
             </Button>
             <Button onClick={handleCreateAutomation} disabled={saving}>
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : t("automations.create")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Automation Dialog */}
+      <Dialog open={editAutomationDialogOpen} onOpenChange={(open) => {
+        setEditAutomationDialogOpen(open);
+        if (!open) setEditingAutomation(null);
+      }}>
+        <DialogContent className="bg-card border-border">
+          <DialogHeader>
+            <DialogTitle>{t("automations.editTitle")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>{t("automations.actionType")}</Label>
+              <Select
+                value={editingAutomation?.action_type}
+                onValueChange={(value) =>
+                  setEditingAutomation(prev => prev ? { ...prev, action_type: value as AutomationActionType } : null)
+                }
+              >
+                <SelectTrigger className="bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="roster_ping">Ping Roster</SelectItem>
+                  <SelectItem value="roster_post">Post Roster</SelectItem>
+                  <SelectItem value="roster_signup">Open Signup</SelectItem>
+                  <SelectItem value="roster_signup_close">Close Signup</SelectItem>
+                  <SelectItem value="recurring_event">Recurring Event</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>{t("automations.scheduledTime")}</Label>
+              <Input
+                type="datetime-local"
+                value={editingAutomation ? unixToDatetimeLocal(editingAutomation.scheduled_time) : ""}
+                onChange={(e) =>
+                  setEditingAutomation(prev => prev ? {
+                    ...prev,
+                    scheduled_time: datetimeLocalToUnix(e.target.value) || 0,
+                  } : null)
+                }
+                className="bg-background"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("automations.channel")}</Label>
+              <ChannelCombobox
+                channels={channels}
+                value={editingAutomation?.discord_channel_id || ""}
+                onValueChange={(value) =>
+                  setEditingAutomation(prev => prev ? {
+                    ...prev,
+                    discord_channel_id: value === "disabled" ? undefined : value,
+                  } : null)
+                }
+                placeholder={t("automations.selectChannel")}
+                showDisabled={true}
+              />
+              <p className="text-xs text-muted-foreground">{t("automations.channelHint")}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="edit-automation-active"
+                checked={editingAutomation?.active ?? false}
+                onChange={(e) =>
+                  setEditingAutomation(prev => prev ? { ...prev, active: e.target.checked } : null)
+                }
+                className="rounded border-border"
+              />
+              <Label htmlFor="edit-automation-active">{t("automations.activeLabel")}</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditAutomationDialogOpen(false)}>
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={handleEditAutomation}>
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -962,6 +1492,76 @@ export default function RosterDetailPage() {
               disabled={!newCategory.custom_id.trim() || !newCategory.alias.trim()}
             >
               {t("categories.create")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Group Dialog */}
+      <Dialog open={editGroupDialogOpen} onOpenChange={(open) => {
+        setEditGroupDialogOpen(open);
+        if (!open) setEditingGroup(null);
+      }}>
+        <DialogContent className="bg-card border-border">
+          <DialogHeader>
+            <DialogTitle>{t("groups.editTitle")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>{t("groups.nameLabel")}</Label>
+              <Input
+                value={editingGroup?.alias || ""}
+                onChange={(e) => setEditingGroup(prev => prev ? { ...prev, alias: e.target.value } : null)}
+                className="bg-background"
+                placeholder={t("groups.namePlaceholder")}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditGroupDialogOpen(false)}>
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={handleEditGroup} disabled={!editingGroup?.alias.trim()}>
+              {t("common.save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Category Dialog */}
+      <Dialog open={editCategoryDialogOpen} onOpenChange={(open) => {
+        setEditCategoryDialogOpen(open);
+        if (!open) setEditingCategory(null);
+      }}>
+        <DialogContent className="bg-card border-border">
+          <DialogHeader>
+            <DialogTitle>{t("categories.editTitle")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>{t("categories.idLabel")}</Label>
+              <Input
+                value={editingCategory?.custom_id || ""}
+                disabled
+                className="bg-muted"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>{t("categories.nameLabel")}</Label>
+              <Input
+                value={editingCategory?.alias || ""}
+                onChange={(e) => setEditingCategory(prev => prev ? { ...prev, alias: e.target.value } : null)}
+                className="bg-background"
+                placeholder="Tank"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditCategoryDialogOpen(false)}>
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={handleEditCategory} disabled={!editingCategory?.alias.trim()}>
+              {t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>

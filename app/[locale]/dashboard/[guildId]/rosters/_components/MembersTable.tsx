@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { Trash2 } from "lucide-react";
 import type { RosterMember, Clan } from "../_lib/types";
 import { getColumnLabel } from "../_lib/utils";
@@ -64,10 +65,14 @@ export function MembersTable({
         return <span className="text-muted-foreground">-</span>;
 
       case 'discord':
-        if (member.discord) {
-          return <span className="text-blue-400 text-xs">@{member.discord}</span>;
-        }
-        return <span className="text-muted-foreground">-</span>;
+        return (
+          <DiscordUserDisplay
+            username={member.discord_username}
+            avatarUrl={member.discord_avatar_url}
+            rawDiscordValue={member.discord}
+            size="sm"
+          />
+        );
 
       case 'hero_lvs':
         return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;

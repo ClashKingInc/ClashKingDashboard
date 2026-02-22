@@ -6,6 +6,8 @@ export interface RosterMember {
   townhall: number;
   hero_lvs?: number;
   discord?: string;
+  discord_username?: string | null;
+  discord_avatar_url?: string | null;
   current_clan?: string;
   current_clan_tag?: string;
   war_pref?: boolean;
@@ -106,6 +108,13 @@ export interface Clan {
   name: string;
   badge?: string;
   badge_url?: string | null;
+}
+
+export interface DiscordChannel {
+  id: string;
+  name: string;
+  type: string;
+  parent_name?: string;
 }
 
 export interface ClanMember {

@@ -9,6 +9,7 @@ import type {
   RosterGroup,
   SignupCategory,
   MissingMembersResult,
+  DiscordChannel,
 } from '../_lib/types';
 import * as api from '../_lib/api';
 
@@ -21,6 +22,7 @@ interface UseRosterDetailResult {
   automations: RosterAutomation[];
   groups: RosterGroup[];
   categories: SignupCategory[];
+  channels: DiscordChannel[];
   missingMembers: MissingMembersResult | null;
 
   // Loading states
@@ -28,6 +30,7 @@ interface UseRosterDetailResult {
   loadingAutomations: boolean;
   loadingGroups: boolean;
   loadingCategories: boolean;
+  loadingChannels: boolean;
   loadingMissingMembers: boolean;
   loadingServerMembers: boolean;
 
@@ -55,6 +58,7 @@ interface UseRosterDetailResult {
 
   // Category actions
   createCategory: (customId: string, alias: string) => Promise<void>;
+  updateCategory: (categoryId: string, data: Partial<SignupCategory>) => Promise<void>;
   deleteCategory: (categoryId: string) => Promise<void>;
 }
 
@@ -67,6 +71,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   const [automations, setAutomations] = useState<RosterAutomation[]>([]);
   const [groups, setGroups] = useState<RosterGroup[]>([]);
   const [categories, setCategories] = useState<SignupCategory[]>([]);
+  const [channels, setChannels] = useState<DiscordChannel[]>([]);
   const [missingMembers, setMissingMembers] = useState<MissingMembersResult | null>(null);
 
   // Loading states
@@ -74,6 +79,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   const [loadingAutomations, setLoadingAutomations] = useState(false);
   const [loadingGroups, setLoadingGroups] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(false);
+  const [loadingChannels, setLoadingChannels] = useState(false);
   const [loadingMissingMembers, setLoadingMissingMembers] = useState(false);
   const [loadingServerMembers, setLoadingServerMembers] = useState(false);
 
@@ -128,7 +134,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
       const data = await api.fetchGroups(serverId);
       setGroups(data);
     } catch (err) {
-      console.error('Failed to load groups:', err);
+      console.error('[useRosterDetail] Failed to load groups:', err);
     } finally {
       setLoadingGroups(false);
     }
@@ -141,11 +147,25 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
       const data = await api.fetchCategories(serverId);
       setCategories(data);
     } catch (err) {
-      console.error('Failed to load categories:', err);
+      console.error('[useRosterDetail] Failed to load categories:', err);
     } finally {
       setLoadingCategories(false);
     }
   }, [serverId]);
+
+  // Load Discord channels
+  const loadChannels = useCallback(async () => {
+    if (channels.length > 0) return; // Already loaded
+    setLoadingChannels(true);
+    try {
+      const data = await api.fetchChannels(serverId);
+      setChannels(data);
+    } catch (err) {
+      console.error('[useRosterDetail] Failed to load channels:', err);
+    } finally {
+      setLoadingChannels(false);
+    }
+  }, [serverId, channels.length]);
 
   // Initial load
   useEffect(() => {
@@ -153,7 +173,8 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     loadAutomations();
     loadGroups();
     loadCategories();
-  }, [loadData, loadAutomations, loadGroups, loadCategories]);
+    loadChannels();
+  }, [loadData, loadAutomations, loadGroups, loadCategories, loadChannels]);
 
   // Refresh roster data from API
   const refreshRoster = useCallback(async () => {
@@ -169,7 +190,12 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   // Update roster
   const updateRoster = useCallback(async (data: Partial<Roster>) => {
     const updated = await api.updateRoster(rosterId, serverId, data);
-    setRoster(updated);
+    // Preserve existing members if the API response doesn't include them
+    setRoster(prev => ({
+      ...prev,
+      ...updated,
+      members: updated.members ?? prev?.members,
+    } as Roster));
   }, [rosterId, serverId]);
 
   // Add members
@@ -257,6 +283,11 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     await loadCategories();
   }, [serverId, loadCategories]);
 
+  const updateCategory = useCallback(async (categoryId: string, data: Partial<SignupCategory>) => {
+    await api.updateCategory(categoryId, serverId, data);
+    await loadCategories();
+  }, [serverId, loadCategories]);
+
   const deleteCategory = useCallback(async (categoryId: string) => {
     await api.deleteCategory(categoryId, serverId);
     setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
@@ -271,6 +302,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     automations,
     groups,
     categories,
+    channels,
     missingMembers,
 
     // Loading states
@@ -278,6 +310,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     loadingAutomations,
     loadingGroups,
     loadingCategories,
+    loadingChannels,
     loadingMissingMembers,
     loadingServerMembers,
 
@@ -305,6 +338,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
 
     // Category actions
     createCategory,
+    updateCategory,
     deleteCategory,
   };
 }
