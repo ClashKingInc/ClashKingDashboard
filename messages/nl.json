@@ -693,7 +693,12 @@
       "count": "leden",
       "noMembers": "Geen leden in dit rooster",
       "noMembersHint": "Voeg leden toe om te beginnen",
-      "actions": "Acties"
+      "actions": "Acties",
+      "viewList": "Lijstweergave",
+      "viewGrouped": "Weergave per inschrijfcategorie",
+      "unassigned": "Niet toegewezen",
+      "dragHere": "Sleep leden hierheen",
+      "clickToGroup": "Klik om per categorie te bekijken"
     },
     "addMembers": {
       "title": "Leden Toevoegen",
@@ -702,6 +707,27 @@
       "adding": "Toevoegen...",
       "submit": "Toevoegen"
     },
+    "compare": {
+      "enterMode": "Vergelijken",
+      "modeTitle": "Vergelijkmodus",
+      "modeHint": "Klik op roosters om ze te selecteren (2 tot 4 roosters)",
+      "exitMode": "Annuleren",
+      "selected": "rooster(s) geselecteerd",
+      "button": "Vergelijken",
+      "title": "Roosters Vergelijken",
+      "dragToMove": "Sleep leden tussen roosters om ze te verplaatsen",
+      "loadError": "Kon roosters niet laden",
+      "memberMoved": "Lid verplaatst",
+      "memberMovedDesc": "{name} verplaatst van {from} naar {to}",
+      "moveError": "Kon lid niet verplaatsen",
+      "selectAtLeast2": "Selecteer minimaal 2 roosters om te vergelijken",
+      "moving": "Lid verplaatsen...",
+      "compareGroup": "Groep vergelijken",
+      "dragToMoveCategory": "Sleep leden tussen roosters en categorieën",
+      "categoryChanged": "Categorie gewijzigd",
+      "categoryChangedDesc": "{name} verplaatst naar {category}"
+    },
+    "ungrouped": "Niet gegroepeerd",
     "automations": {
       "description": "Plan automatische acties",
       "create": "Maken",
@@ -720,6 +746,30 @@
       "selectChannel": "Selecteer een kanaal",
       "channelHint": "Kanaal waar de actie wordt gepost/uitgevoerd",
       "activeLabel": "Actief",
+      "target": "Doel",
+      "targetThisRoster": "Dit rooster",
+      "targetGroups": "Groepen",
+      "targetHint": "Pas de automatisering toe op alleen dit rooster of op alle roosters in een groep",
+      "group": "Groep",
+      "groupAutomationHint": "Beheer via tabblad Groepen",
+      "targetRoster": "Rooster",
+      "targetGroup": "Groep",
+      "willExecute": "Wordt uitgevoerd op gepland tijdstip",
+      "paused": "Gepauzeerd - wordt niet uitgevoerd",
+      "actions": {
+        "ping": "Herinnering Sturen",
+        "post": "Rooster Posten",
+        "openSignup": "Inschrijvingen Openen",
+        "closeSignup": "Inschrijvingen Sluiten",
+        "recurring": "Terugkerend Evenement"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Stuurt een herinnering naar leden die zich niet hebben aangemeld of in de verkeerde clan zitten",
+        "roster_post": "Post de definitieve roosterlijst in het geselecteerde kanaal",
+        "roster_signup": "Opent inschrijvingen zodat spelers zich kunnen registreren",
+        "roster_signup_close": "Sluit inschrijvingen en voorkomt nieuwe registraties",
+        "recurring_event": "Werkt roosterdatums automatisch bij voor terugkerende evenementen"
+      },
       "infoBox": "Automatiseringen stellen je in staat om acties te plannen zoals het openen/sluiten van inschrijvingen, het posten van het rooster of het versturen van herinneringen op specifieke tijden. De bot voert deze acties automatisch uit in het geselecteerde Discord kanaal."
     },
     "groups": {
@@ -732,7 +782,13 @@
       "editTitle": "Groep Bewerken",
       "nameLabel": "Groepsnaam",
       "namePlaceholder": "bijv. CWL Groepen",
-      "infoBox": "Groepen laten je meerdere roosters samen organiseren (bijv. alle CWL roosters). Je kunt automatiseringen toepassen op een hele groep en gedeelde limieten instellen zoals max accounts per gebruiker voor alle roosters in de groep."
+      "infoBox": "Groepen laten je meerdere roosters samen organiseren (bijv. alle CWL roosters). Je kunt een rooster aan een groep toewijzen via het tabblad Instellingen, en automatiseringen toepassen op alle roosters in een groep tegelijk.",
+      "manageAutomations": "Automatiseringen beheren",
+      "automationsTitle": "Groep Automatiseringen",
+      "automationsDesc": "Deze automatiseringen gelden voor alle roosters in deze groep",
+      "noAutomations": "Geen automatiseringen",
+      "noAutomationsHint": "Maak een automatisering voor deze groep",
+      "addAutomation": "Automatisering Toevoegen"
     },
     "categories": {
       "title": "Aanmeldcategorieën",

@@ -64,6 +64,8 @@ export interface RosterAutomation {
   executed: boolean;
   created_at?: number;
   updated_at?: number;
+  /** Frontend-only: marks automations inherited from a group */
+  _isGroupAutomation?: boolean;
 }
 
 export type AutomationActionType =

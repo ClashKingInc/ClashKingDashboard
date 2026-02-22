@@ -43,6 +43,7 @@ interface UseRosterDetailResult {
   updateRoster: (data: Partial<Roster>) => Promise<void>;
   addMembers: (tags: string[]) => Promise<void>;
   removeMember: (tag: string) => Promise<void>;
+  updateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
   loadMissingMembers: () => Promise<void>;
   loadServerMembers: () => Promise<void>;
 
@@ -114,12 +115,26 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     }
   }, [rosterId, serverId]);
 
-  // Load automations
-  const loadAutomations = useCallback(async () => {
+  // Load automations (roster-specific + group automations if roster belongs to a group)
+  const loadAutomations = useCallback(async (groupId?: string | null) => {
     setLoadingAutomations(true);
     try {
-      const data = await api.fetchAutomations(serverId, rosterId);
-      setAutomations(data);
+      // Fetch roster-specific automations
+      const rosterAutomations = await api.fetchAutomations(serverId, rosterId);
+
+      // If roster belongs to a group, also fetch group automations
+      let groupAutomations: RosterAutomation[] = [];
+      if (groupId) {
+        groupAutomations = await api.fetchAutomations(serverId, undefined, groupId);
+      }
+
+      // Merge and mark group automations
+      const allAutomations = [
+        ...rosterAutomations,
+        ...groupAutomations.map(a => ({ ...a, _isGroupAutomation: true })),
+      ];
+
+      setAutomations(allAutomations as RosterAutomation[]);
     } catch (err) {
       console.error('Failed to load automations:', err);
     } finally {
@@ -170,11 +185,17 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   // Initial load
   useEffect(() => {
     loadData();
-    loadAutomations();
     loadGroups();
     loadCategories();
     loadChannels();
-  }, [loadData, loadAutomations, loadGroups, loadCategories, loadChannels]);
+  }, [loadData, loadGroups, loadCategories, loadChannels]);
+
+  // Load automations when roster is loaded (to include group automations)
+  useEffect(() => {
+    if (roster) {
+      loadAutomations(roster.group_id);
+    }
+  }, [roster?.group_id, loadAutomations]);
 
   // Refresh roster data from API
   const refreshRoster = useCallback(async () => {
@@ -212,6 +233,20 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
       return {
         ...prev,
         members: prev.members?.filter(m => m.tag !== tag),
+      };
+    });
+  }, [rosterId, serverId]);
+
+  // Update member category
+  const updateMemberCategory = useCallback(async (memberTag: string, categoryId: string | null) => {
+    await api.updateMemberCategory(rosterId, serverId, memberTag, categoryId);
+    setRoster(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        members: prev.members?.map(m =>
+          m.tag === memberTag ? { ...m, signup_group: categoryId } : m
+        ),
       };
     });
   }, [rosterId, serverId]);
@@ -323,6 +358,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     updateRoster,
     addMembers,
     removeMember,
+    updateMemberCategory,
     loadMissingMembers,
     loadServerMembers,
 

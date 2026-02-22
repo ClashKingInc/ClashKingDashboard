@@ -33,13 +33,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
   MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
   Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
-  Info, Lightbulb
+  Info, Lightbulb, Play, Pause, List, LayoutGrid
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
@@ -51,6 +52,7 @@ import {
   MembersTable,
   AddMembersDialog,
   MissingMembersDialog,
+  MembersByCategory,
 } from "../_components";
 import {
   unixToDatetimeLocal,
@@ -65,7 +67,7 @@ import {
   ROSTER_COLUMNS,
   SORT_OPTIONS,
 } from "../_lib";
-import type { EditRosterFormData, RosterAutomation, AutomationActionType } from "../_lib/types";
+import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
 import { useGameConstants } from "../_hooks";
 
 export default function RosterDetailPage() {
@@ -101,6 +103,7 @@ export default function RosterDetailPage() {
     updateRoster,
     addMembers,
     removeMember,
+    updateMemberCategory,
     loadMissingMembers,
     loadServerMembers,
     createAutomation,
@@ -116,6 +119,7 @@ export default function RosterDetailPage() {
 
   // UI State
   const [activeTab, setActiveTab] = useState("members");
+  const [membersViewMode, setMembersViewMode] = useState<"list" | "grouped">("list");
   const [saving, setSaving] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [removingMember, setRemovingMember] = useState<string | null>(null);
@@ -129,6 +133,8 @@ export default function RosterDetailPage() {
   const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
   const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
   const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
+  const [groupAutomationsDialogOpen, setGroupAutomationsDialogOpen] = useState(false);
+  const [selectedGroupForAutomations, setSelectedGroupForAutomations] = useState<RosterGroup | null>(null);
 
   // Form state
   const [editData, setEditData] = useState<EditRosterFormData>({
@@ -149,10 +155,11 @@ export default function RosterDetailPage() {
     allowed_signup_categories: [],
   });
 
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string }>({
     action_type: "roster_ping",
     scheduled_time: Math.floor(Date.now() / 1000) + 3600,
     active: true,
+    target_type: 'roster',
   });
 
   const [newGroup, setNewGroup] = useState({ alias: "" });
@@ -283,12 +290,14 @@ export default function RosterDetailPage() {
 
   const handleCreateAutomation = async () => {
     if (!newAutomation.action_type || !newAutomation.scheduled_time) return;
+    if (newAutomation.target_type === 'group' && !newAutomation.target_group_id) return;
 
     setSaving(true);
     try {
       await createAutomation({
         server_id: parseInt(guildId),
-        roster_id: rosterId,
+        roster_id: newAutomation.target_type === 'roster' ? rosterId : undefined,
+        group_id: newAutomation.target_type === 'group' ? newAutomation.target_group_id : undefined,
         action_type: newAutomation.action_type as AutomationActionType,
         scheduled_time: newAutomation.scheduled_time,
         discord_channel_id: newAutomation.discord_channel_id,
@@ -301,6 +310,7 @@ export default function RosterDetailPage() {
         action_type: "roster_ping",
         scheduled_time: Math.floor(Date.now() / 1000) + 3600,
         active: true,
+        target_type: 'roster',
       });
     } catch (err) {
       toast({
@@ -541,6 +551,29 @@ export default function RosterDetailPage() {
               {roster.members?.length || 0} {t("members.count")}
             </p>
             <div className="flex items-center gap-2">
+              {/* View Mode Toggle */}
+              {categories.length > 0 && (
+                <div className="flex items-center border border-border rounded-lg p-1">
+                  <Button
+                    variant={membersViewMode === "list" ? "secondary" : "ghost"}
+                    size="sm"
+                    className="h-7 px-2"
+                    onClick={() => setMembersViewMode("list")}
+                    title={t("members.viewList")}
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant={membersViewMode === "grouped" ? "secondary" : "ghost"}
+                    size="sm"
+                    className="h-7 px-2"
+                    onClick={() => setMembersViewMode("grouped")}
+                    title={t("members.viewGrouped")}
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
               <Popover open={columnPopoverOpen} onOpenChange={setColumnPopoverOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm">
@@ -636,16 +669,31 @@ export default function RosterDetailPage() {
           </div>
 
           <Card className="bg-card border-border">
-            <CardContent className="p-0">
-              <MembersTable
-                members={roster.members || []}
-                columns={localColumns}
-                rosterClanTag={roster.clan_tag}
-                familyClans={clans}
-                onRemoveMember={handleRemoveMember}
-                removingMember={removingMember}
-                t={t}
-              />
+            <CardContent className={membersViewMode === "grouped" ? "p-4" : "p-0"}>
+              {membersViewMode === "grouped" && categories.length > 0 ? (
+                <MembersByCategory
+                  members={roster.members || []}
+                  categories={categories}
+                  columns={localColumns}
+                  rosterClanTag={roster.clan_tag}
+                  familyClans={clans}
+                  onRemoveMember={handleRemoveMember}
+                  onUpdateMemberCategory={updateMemberCategory}
+                  removingMember={removingMember}
+                  t={t}
+                />
+              ) : (
+                <MembersTable
+                  members={roster.members || []}
+                  columns={localColumns}
+                  rosterClanTag={roster.clan_tag}
+                  familyClans={clans}
+                  onRemoveMember={handleRemoveMember}
+                  removingMember={removingMember}
+                  onCategoryClick={() => setMembersViewMode("grouped")}
+                  t={t}
+                />
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -681,6 +729,7 @@ export default function RosterDetailPage() {
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {automations.map((automation) => {
+                // Icon color based on action type
                 const getActionColor = (type: string) => {
                   switch (type) {
                     case "roster_ping": return "amber";
@@ -691,24 +740,30 @@ export default function RosterDetailPage() {
                     default: return "gray";
                   }
                 };
-                const color = getActionColor(automation.action_type);
+                const iconColor = getActionColor(automation.action_type);
+
+                // Border color: indigo for group automations, primary for roster automations
+                const getBorderColor = () => {
+                  if (!automation.active) return undefined;
+                  return automation._isGroupAutomation
+                    ? "rgb(99, 102, 241)" // indigo-500 for group
+                    : "hsl(var(--primary))"; // primary for roster
+                };
 
                 return (
                   <Card
                     key={automation.automation_id}
                     className={`bg-card border-l-4 transition-all hover:shadow-md ${
-                      automation.active
-                        ? `border-l-${color}-500`
-                        : "border-l-muted opacity-60"
+                      !automation.active ? "border-l-muted opacity-60" : ""
                     }`}
-                    style={{ borderLeftColor: automation.active ? `var(--${color}-500, hsl(var(--primary)))` : undefined }}
+                    style={{ borderLeftColor: getBorderColor() }}
                   >
                     <CardContent className="p-4">
                       {/* Header with icon and status */}
                       <div className="flex items-start justify-between mb-3">
                         <div className={`p-2.5 rounded-xl ${
                           automation.active
-                            ? `bg-${color}-500/10`
+                            ? `bg-${iconColor}-500/10`
                             : "bg-muted"
                         }`}>
                           {automation.action_type === "roster_ping" && <Bell className={`w-5 h-5 ${automation.active ? "text-amber-500" : "text-muted-foreground"}`} />}
@@ -717,12 +772,20 @@ export default function RosterDetailPage() {
                           {automation.action_type === "roster_signup_close" && <Lock className={`w-5 h-5 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
                           {automation.action_type === "recurring_event" && <RefreshCw className={`w-5 h-5 ${automation.active ? "text-purple-500" : "text-muted-foreground"}`} />}
                         </div>
-                        <Badge
-                          variant={automation.active ? "default" : "secondary"}
-                          className={automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}
-                        >
-                          {automation.active ? t("automations.active") : t("automations.inactive")}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          {automation._isGroupAutomation && (
+                            <Badge variant="outline" className="bg-purple-500/10 text-purple-500 border-purple-500/30 text-xs">
+                              <Users className="w-3 h-3 mr-1" />
+                              {groups.find(g => g.group_id === automation.group_id)?.alias || t("automations.group")}
+                            </Badge>
+                          )}
+                          <Badge
+                            variant={automation.active ? "default" : "secondary"}
+                            className={automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}
+                          >
+                            {automation.active ? t("automations.active") : t("automations.inactive")}
+                          </Badge>
+                        </div>
                       </div>
 
                       {/* Title */}
@@ -747,35 +810,43 @@ export default function RosterDetailPage() {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex items-center gap-1 pt-3 border-t border-border/50">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="flex-1 h-8 text-xs"
-                          onClick={() => handleToggleAutomation(automation.automation_id)}
-                        >
-                          {automation.active ? t("automations.disable") : t("automations.enable")}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                          onClick={() => {
-                            setEditingAutomation(automation);
-                            setEditAutomationDialogOpen(true);
-                          }}
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                          onClick={() => handleDeleteAutomation(automation.automation_id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      {automation._isGroupAutomation ? (
+                        <div className="pt-3 border-t border-border/50">
+                          <p className="text-xs text-muted-foreground text-center italic">
+                            {t("automations.groupAutomationHint")}
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 pt-3 border-t border-border/50">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="flex-1 h-8 text-xs"
+                            onClick={() => handleToggleAutomation(automation.automation_id)}
+                          >
+                            {automation.active ? t("automations.disable") : t("automations.enable")}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => {
+                              setEditingAutomation(automation);
+                              setEditAutomationDialogOpen(true);
+                            }}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                            onClick={() => handleDeleteAutomation(automation.automation_id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 );
@@ -819,45 +890,67 @@ export default function RosterDetailPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {groups.map((group) => (
-                    <div
-                      key={group.group_id}
-                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-indigo-500/10 rounded">
-                          <Layers className="w-4 h-4 text-indigo-500" />
+                  {groups.map((group) => {
+                    const groupAutomationCount = automations.filter(
+                      a => a.group_id === group.group_id
+                    ).length;
+                    return (
+                      <div
+                        key={group.group_id}
+                        className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-indigo-500/10 rounded">
+                            <Layers className="w-4 h-4 text-indigo-500" />
+                          </div>
+                          <div>
+                            <p className="font-medium">{group.alias}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {group.roster_count || 0} {t("groups.rostersCount")}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium">{group.alias}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {group.roster_count || 0} {t("groups.rostersCount")}
-                          </p>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedGroupForAutomations(group);
+                              setGroupAutomationsDialogOpen(true);
+                            }}
+                            className="text-muted-foreground hover:text-amber-500 relative"
+                            title={t("groups.manageAutomations")}
+                          >
+                            <Zap className="w-4 h-4" />
+                            {groupAutomationCount > 0 && (
+                              <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                                {groupAutomationCount}
+                              </span>
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setEditingGroup({ group_id: group.group_id, alias: group.alias });
+                              setEditGroupDialogOpen(true);
+                            }}
+                            className="text-muted-foreground hover:text-foreground"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteGroup(group.group_id)}
+                            className="text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            setEditingGroup({ group_id: group.group_id, alias: group.alias });
-                            setEditGroupDialogOpen(true);
-                          }}
-                          className="text-muted-foreground hover:text-foreground"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => deleteGroup(group.group_id)}
-                          className="text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </CardContent>
@@ -1283,6 +1376,38 @@ export default function RosterDetailPage() {
             <DialogDescription>{t("automations.createDesc")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
+            {/* Target selector */}
+            <div className="space-y-2">
+              <Label>{t("automations.target")}</Label>
+              <Select
+                value={newAutomation.target_type === 'group' ? `group:${newAutomation.target_group_id}` : 'roster'}
+                onValueChange={(value) => {
+                  if (value === 'roster') {
+                    setNewAutomation({ ...newAutomation, target_type: 'roster', target_group_id: undefined });
+                  } else if (value.startsWith('group:')) {
+                    setNewAutomation({ ...newAutomation, target_type: 'group', target_group_id: value.replace('group:', '') });
+                  }
+                }}
+              >
+                <SelectTrigger className="bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="roster">{t("automations.targetThisRoster")} ({roster?.alias})</SelectItem>
+                  {groups.length > 0 && (
+                    <>
+                      <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">{t("automations.targetGroups")}</div>
+                      {groups.map((group) => (
+                        <SelectItem key={group.group_id} value={`group:${group.group_id}`}>
+                          {group.alias}
+                        </SelectItem>
+                      ))}
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">{t("automations.targetHint")}</p>
+            </div>
             <div className="space-y-2">
               <Label>{t("automations.actionType")}</Label>
               <Select
@@ -1295,13 +1420,43 @@ export default function RosterDetailPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="roster_ping">Ping Roster</SelectItem>
-                  <SelectItem value="roster_post">Post Roster</SelectItem>
-                  <SelectItem value="roster_signup">Open Signup</SelectItem>
-                  <SelectItem value="roster_signup_close">Close Signup</SelectItem>
-                  <SelectItem value="recurring_event">Recurring Event</SelectItem>
+                  <SelectItem value="roster_ping">
+                    <div className="flex items-center gap-2">
+                      <Bell className="w-4 h-4 text-amber-500" />
+                      <span>{t("automations.actions.ping")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_post">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4 text-blue-500" />
+                      <span>{t("automations.actions.post")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup">
+                    <div className="flex items-center gap-2">
+                      <Unlock className="w-4 h-4 text-emerald-500" />
+                      <span>{t("automations.actions.openSignup")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup_close">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-red-500" />
+                      <span>{t("automations.actions.closeSignup")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="recurring_event">
+                    <div className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4 text-purple-500" />
+                      <span>{t("automations.actions.recurring")}</span>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
+              {newAutomation.action_type && (
+                <p className="text-xs text-muted-foreground">
+                  {t(`automations.actionDescriptions.${newAutomation.action_type}`)}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label>{t("automations.scheduledTime")}</Label>
@@ -1352,7 +1507,25 @@ export default function RosterDetailPage() {
       }}>
         <DialogContent className="bg-card border-border">
           <DialogHeader>
-            <DialogTitle>{t("automations.editTitle")}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-500" />
+              {t("automations.editTitle")}
+            </DialogTitle>
+            {editingAutomation && (
+              <DialogDescription className="flex items-center gap-2">
+                {editingAutomation.group_id ? (
+                  <>
+                    <Users className="w-4 h-4 text-purple-500" />
+                    <span>{t("automations.targetGroup")}: <strong>{groups.find(g => g.group_id === editingAutomation.group_id)?.alias}</strong></span>
+                  </>
+                ) : (
+                  <>
+                    <FileText className="w-4 h-4 text-blue-500" />
+                    <span>{t("automations.targetRoster")}: <strong>{roster?.alias}</strong></span>
+                  </>
+                )}
+              </DialogDescription>
+            )}
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -1367,13 +1540,43 @@ export default function RosterDetailPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="roster_ping">Ping Roster</SelectItem>
-                  <SelectItem value="roster_post">Post Roster</SelectItem>
-                  <SelectItem value="roster_signup">Open Signup</SelectItem>
-                  <SelectItem value="roster_signup_close">Close Signup</SelectItem>
-                  <SelectItem value="recurring_event">Recurring Event</SelectItem>
+                  <SelectItem value="roster_ping">
+                    <div className="flex items-center gap-2">
+                      <Bell className="w-4 h-4 text-amber-500" />
+                      <span>{t("automations.actions.ping")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_post">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4 text-blue-500" />
+                      <span>{t("automations.actions.post")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup">
+                    <div className="flex items-center gap-2">
+                      <Unlock className="w-4 h-4 text-emerald-500" />
+                      <span>{t("automations.actions.openSignup")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="roster_signup_close">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-red-500" />
+                      <span>{t("automations.actions.closeSignup")}</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="recurring_event">
+                    <div className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4 text-purple-500" />
+                      <span>{t("automations.actions.recurring")}</span>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
+              {editingAutomation?.action_type && (
+                <p className="text-xs text-muted-foreground">
+                  {t(`automations.actionDescriptions.${editingAutomation.action_type}`)}
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label>{t("automations.scheduledTime")}</Label>
@@ -1405,17 +1608,28 @@ export default function RosterDetailPage() {
               />
               <p className="text-xs text-muted-foreground">{t("automations.channelHint")}</p>
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="edit-automation-active"
+            <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg ${editingAutomation?.active ? "bg-emerald-500/10" : "bg-muted"}`}>
+                  {editingAutomation?.active ? (
+                    <Play className="w-4 h-4 text-emerald-500" />
+                  ) : (
+                    <Pause className="w-4 h-4 text-muted-foreground" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-sm">{t("automations.activeLabel")}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {editingAutomation?.active ? t("automations.willExecute") : t("automations.paused")}
+                  </p>
+                </div>
+              </div>
+              <Switch
                 checked={editingAutomation?.active ?? false}
-                onChange={(e) =>
-                  setEditingAutomation(prev => prev ? { ...prev, active: e.target.checked } : null)
+                onCheckedChange={(checked) =>
+                  setEditingAutomation(prev => prev ? { ...prev, active: checked } : null)
                 }
-                className="rounded border-border"
               />
-              <Label htmlFor="edit-automation-active">{t("automations.activeLabel")}</Label>
             </div>
           </div>
           <DialogFooter>
@@ -1562,6 +1776,109 @@ export default function RosterDetailPage() {
             </Button>
             <Button onClick={handleEditCategory} disabled={!editingCategory?.alias.trim()}>
               {t("common.save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Group Automations Dialog */}
+      <Dialog open={groupAutomationsDialogOpen} onOpenChange={(open) => {
+        setGroupAutomationsDialogOpen(open);
+        if (!open) setSelectedGroupForAutomations(null);
+      }}>
+        <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-500" />
+              {t("groups.automationsTitle")} - {selectedGroupForAutomations?.alias}
+            </DialogTitle>
+            <DialogDescription>{t("groups.automationsDesc")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+            {(() => {
+              const groupAutomations = automations.filter(
+                a => a.group_id === selectedGroupForAutomations?.group_id
+              );
+              if (groupAutomations.length === 0) {
+                return (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Zap className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <p>{t("groups.noAutomations")}</p>
+                    <p className="text-sm mt-1">{t("groups.noAutomationsHint")}</p>
+                  </div>
+                );
+              }
+              return groupAutomations.map((automation) => (
+                <div
+                  key={automation.automation_id}
+                  className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${automation.active ? "bg-amber-500/10" : "bg-muted"}`}>
+                      {automation.action_type === "roster_ping" && <Bell className={`w-4 h-4 ${automation.active ? "text-amber-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_post" && <MessageSquare className={`w-4 h-4 ${automation.active ? "text-blue-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_signup" && <Unlock className={`w-4 h-4 ${automation.active ? "text-emerald-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_signup_close" && <Lock className={`w-4 h-4 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "recurring_event" && <RefreshCw className={`w-4 h-4 ${automation.active ? "text-purple-500" : "text-muted-foreground"}`} />}
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{getAutomationLabel(automation.action_type)}</p>
+                      <p className="text-xs text-muted-foreground">{formatTimestamp(automation.scheduled_time)}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={automation.active ? "default" : "secondary"} className="text-xs">
+                      {automation.active ? t("automations.active") : t("automations.inactive")}
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => handleToggleAutomation(automation.automation_id)}
+                    >
+                      {automation.active ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => {
+                        setEditingAutomation(automation);
+                        setEditAutomationDialogOpen(true);
+                        setGroupAutomationsDialogOpen(false);
+                      }}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      onClick={() => handleDeleteAutomation(automation.automation_id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ));
+            })()}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setGroupAutomationsDialogOpen(false)}>
+              {t("common.close")}
+            </Button>
+            <Button onClick={() => {
+              // Pre-select the group in the create automation dialog
+              setNewAutomation(prev => ({
+                ...prev,
+                target_type: 'group',
+                target_group_id: selectedGroupForAutomations?.group_id,
+              }));
+              setGroupAutomationsDialogOpen(false);
+              setCreateAutomationDialogOpen(true);
+            }}>
+              <Plus className="w-4 h-4 mr-2" />
+              {t("groups.addAutomation")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -387,13 +387,13 @@
     }
   },
   "RostersPage": {
-    "title": "Compositions",
-    "description": "Gérer vos compositions de guerre",
+    "title": "Rosters",
+    "description": "Gérer vos rosters de guerre",
     "stats": {
-      "totalRosters": "Total des Compositions",
+      "totalRosters": "Total des Rosters",
       "totalMembers": "Total des Membres",
-      "clanRosters": "Compositions de Clan",
-      "familyRosters": "Compositions Familiales",
+      "clanRosters": "Rosters de Clan",
+      "familyRosters": "Rosters Famille",
       "members": "Membres",
       "avgTh": "TH Moyen",
       "avgHitrate": "Taux de Réussite",
@@ -404,10 +404,10 @@
       "thDistribution": "Distribution TH",
       "capacity": "capacité"
     },
-    "noRosters": "Aucune composition trouvée",
-    "createRoster": "Créer une Composition",
+    "noRosters": "Aucun roster trouvé",
+    "createRoster": "Créer un Roster",
     "viewDetails": "Voir les Détails",
-    "deleteRoster": "Supprimer la Composition",
+    "deleteRoster": "Supprimer le Roster",
     "members": "Membres",
     "type": {
       "clan": "Clan",
@@ -418,13 +418,13 @@
       "familyWide": "Toute la Famille"
     },
     "filters": {
-      "search": "Rechercher des compositions...",
+      "search": "Rechercher des rosters...",
       "type": "Type",
       "all": "Tous"
     },
     "createDialog": {
-      "title": "Créer une Nouvelle Composition",
-      "description": "Configurer une nouvelle composition pour votre clan",
+      "title": "Créer un Nouveau Roster",
+      "description": "Configurer un nouveau roster pour votre clan",
       "aliasLabel": "Nom de la Composition",
       "aliasPlaceholder": "ex: Composition LDC",
       "typeLabel": "Type de Composition",
@@ -453,32 +453,32 @@
       "status": "Statut"
     },
     "toast": {
-      "rosterCreated": "Composition créée avec succès",
-      "rosterDeleted": "Composition supprimée avec succès",
+      "rosterCreated": "Roster créé avec succès",
+      "rosterDeleted": "Roster supprimé avec succès",
       "memberAdded": "Membre ajouté avec succès",
       "memberRemoved": "Membre retiré avec succès",
       "error": "Une erreur s'est produite",
-      "rosterCloned": "Composition clonée avec succès !",
-      "errorCloningRoster": "Échec du clonage de la composition. Veuillez réessayer.",
-      "missingMembersAdded": "{count} membre(s) manquant(s) ajouté(s) à la composition !",
+      "rosterCloned": "Roster cloné avec succès !",
+      "errorCloningRoster": "Échec du clonage du roster. Veuillez réessayer.",
+      "missingMembersAdded": "{count} membre(s) manquant(s) ajouté(s) au roster !",
       "errorLoadingMissingMembers": "Échec du chargement des membres manquants."
     },
     "cloneDialog": {
-      "title": "Cloner la Composition",
-      "description": "Créer une copie de cette composition",
-      "aliasLabel": "Nom de la Nouvelle Composition",
-      "aliasPlaceholder": "Entrez le nom de la composition clonée",
-      "copyMembers": "Copier les membres dans la nouvelle composition",
+      "title": "Cloner le Roster",
+      "description": "Créer une copie de ce roster",
+      "aliasLabel": "Nom du Nouveau Roster",
+      "aliasPlaceholder": "Entrez le nom du roster cloné",
+      "copyMembers": "Copier les membres dans le nouveau roster",
       "memberCount": "{count} membres",
-      "originalRoster": "Composition originale :",
+      "originalRoster": "Roster original :",
       "cancel": "Annuler",
       "cloning": "Clonage...",
-      "clone": "Cloner la Composition"
+      "clone": "Cloner le Roster"
     },
     "missingMembers": {
       "title": "Membres Manquants",
-      "description": "Membres du clan non inscrits dans cette composition",
-      "coverage": "Couverture de la Composition",
+      "description": "Membres du clan non inscrits dans ce roster",
+      "coverage": "Couverture du Roster",
       "registered": "inscrit(s)",
       "missing": "manquant(s)",
       "total": "total",
@@ -589,7 +589,12 @@
       "count": "membres",
       "noMembers": "Aucun membre dans ce roster",
       "noMembersHint": "Ajoutez des membres pour commencer",
-      "actions": "Actions"
+      "actions": "Actions",
+      "viewList": "Vue liste",
+      "viewGrouped": "Vue par catégorie d'inscription",
+      "unassigned": "Non assigné",
+      "dragHere": "Glissez des membres ici",
+      "clickToGroup": "Cliquer pour voir par catégorie"
     },
     "addMembers": {
       "title": "Ajouter des Membres",
@@ -598,6 +603,27 @@
       "adding": "Ajout...",
       "submit": "Ajouter"
     },
+    "compare": {
+      "enterMode": "Comparer",
+      "modeTitle": "Mode Comparaison",
+      "modeHint": "Cliquez sur les rosters pour les sélectionner (2 à 4 rosters)",
+      "exitMode": "Annuler",
+      "selected": "roster(s) sélectionné(s)",
+      "button": "Comparer",
+      "title": "Comparer les Rosters",
+      "dragToMove": "Glissez-déposez les membres entre les rosters pour les déplacer",
+      "loadError": "Échec du chargement des rosters",
+      "memberMoved": "Membre déplacé",
+      "memberMovedDesc": "{name} déplacé de {from} vers {to}",
+      "moveError": "Échec du déplacement du membre",
+      "selectAtLeast2": "Sélectionnez au moins 2 rosters à comparer",
+      "moving": "Déplacement en cours...",
+      "compareGroup": "Comparer le groupe",
+      "dragToMoveCategory": "Glissez les membres entre rosters et catégories",
+      "categoryChanged": "Catégorie modifiée",
+      "categoryChangedDesc": "{name} déplacé vers {category}"
+    },
+    "ungrouped": "Sans groupe",
     "automations": {
       "description": "Planifier des actions automatiques",
       "create": "Créer",
@@ -616,6 +642,30 @@
       "selectChannel": "Sélectionner un canal",
       "channelHint": "Canal où l'action sera postée/exécutée",
       "activeLabel": "Actif",
+      "target": "Cible",
+      "targetThisRoster": "Ce roster",
+      "targetGroups": "Groupes",
+      "targetHint": "Appliquer l'automatisation à ce roster uniquement ou à tous les rosters d'un groupe",
+      "group": "Groupe",
+      "groupAutomationHint": "Gérer via l'onglet Groupes",
+      "targetRoster": "Roster",
+      "targetGroup": "Groupe",
+      "willExecute": "S'exécutera à l'heure prévue",
+      "paused": "En pause - ne s'exécutera pas",
+      "actions": {
+        "ping": "Envoyer un rappel",
+        "post": "Publier le roster",
+        "openSignup": "Ouvrir les inscriptions",
+        "closeSignup": "Fermer les inscriptions",
+        "recurring": "Événement récurrent"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Envoie un rappel aux membres non inscrits ou dans le mauvais clan",
+        "roster_post": "Publie la liste finale du roster dans le canal sélectionné",
+        "roster_signup": "Ouvre les inscriptions pour que les joueurs puissent s'inscrire",
+        "roster_signup_close": "Ferme les inscriptions et empêche les nouvelles inscriptions",
+        "recurring_event": "Met à jour automatiquement les dates du roster pour les événements récurrents"
+      },
       "infoBox": "Les automatisations permettent de planifier des actions comme ouvrir/fermer les inscriptions, poster le roster ou envoyer des rappels à des heures précises. Le bot exécutera automatiquement ces actions dans le canal Discord sélectionné."
     },
     "groups": {
@@ -628,7 +678,13 @@
       "editTitle": "Modifier le Groupe",
       "nameLabel": "Nom du Groupe",
       "namePlaceholder": "ex: Groupes CWL",
-      "infoBox": "Les groupes permettent de regrouper plusieurs rosters ensemble (ex: tous les rosters CWL). Vous pouvez appliquer des automatisations à un groupe entier et définir des limites partagées comme le nombre max de comptes par utilisateur pour tous les rosters du groupe."
+      "infoBox": "Les groupes permettent d'organiser plusieurs rosters ensemble (ex: tous les rosters CWL). Vous pouvez assigner un roster à un groupe depuis l'onglet Paramètres, et appliquer des automatisations à tous les rosters d'un groupe en une seule fois.",
+      "manageAutomations": "Gérer les automatisations",
+      "automationsTitle": "Automatisations du groupe",
+      "automationsDesc": "Ces automatisations s'appliquent à tous les rosters de ce groupe",
+      "noAutomations": "Aucune automatisation",
+      "noAutomationsHint": "Créez une automatisation pour ce groupe",
+      "addAutomation": "Ajouter une automatisation"
     },
     "categories": {
       "title": "Catégories d'Inscription",

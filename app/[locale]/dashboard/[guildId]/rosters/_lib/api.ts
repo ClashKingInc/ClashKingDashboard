@@ -37,8 +37,13 @@ async function handleResponse<T>(response: Response): Promise<T> {
 // Rosters API
 // ============================================
 
-export async function fetchRosters(serverId: string): Promise<Roster[]> {
-  const response = await fetch(`/api/v2/roster/${serverId}/list`, {
+export async function fetchRosters(serverId: string, groupId?: string): Promise<Roster[]> {
+  const params = new URLSearchParams();
+  if (groupId) params.append('group_id', groupId);
+  const queryString = params.toString();
+  const url = `/api/v2/roster/${serverId}/list${queryString ? `?${queryString}` : ''}`;
+
+  const response = await fetch(url, {
     headers: getAuthHeaders(),
   });
   const data = await handleResponse<{ items?: Roster[] } | Roster[]>(response);
@@ -151,6 +156,25 @@ export async function removeRosterMember(
   );
   if (!response.ok) {
     throw new Error('Failed to remove member');
+  }
+}
+
+export async function updateMemberCategory(
+  rosterId: string,
+  serverId: string,
+  memberTag: string,
+  categoryId: string | null
+): Promise<void> {
+  const response = await fetch(
+    `/api/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}?server_id=${serverId}`,
+    {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ signup_group: categoryId }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error('Failed to update member category');
   }
 }
 

@@ -690,7 +690,12 @@
       "count": "members",
       "noMembers": "No members in this roster",
       "noMembersHint": "Add members to get started",
-      "actions": "Actions"
+      "actions": "Actions",
+      "viewList": "List view",
+      "viewGrouped": "View by signup category",
+      "unassigned": "Unassigned",
+      "dragHere": "Drag members here",
+      "clickToGroup": "Click to view by category"
     },
     "addMembers": {
       "title": "Add Members to Roster",
@@ -699,6 +704,27 @@
       "adding": "Adding...",
       "submit": "Add Members"
     },
+    "compare": {
+      "enterMode": "Compare",
+      "modeTitle": "Compare Mode",
+      "modeHint": "Click on rosters to select them (2 to 4 rosters)",
+      "exitMode": "Cancel",
+      "selected": "roster(s) selected",
+      "button": "Compare",
+      "title": "Compare Rosters",
+      "dragToMove": "Drag and drop members between rosters to move them",
+      "loadError": "Failed to load rosters",
+      "memberMoved": "Member moved",
+      "memberMovedDesc": "{name} moved from {from} to {to}",
+      "moveError": "Failed to move member",
+      "selectAtLeast2": "Select at least 2 rosters to compare",
+      "moving": "Moving member...",
+      "compareGroup": "Compare Group",
+      "dragToMoveCategory": "Drag members between rosters and categories",
+      "categoryChanged": "Category changed",
+      "categoryChangedDesc": "{name} moved to {category}"
+    },
+    "ungrouped": "Ungrouped",
     "automations": {
       "description": "Schedule automated actions for this roster",
       "create": "Create Automation",
@@ -717,6 +743,30 @@
       "selectChannel": "Select a channel",
       "channelHint": "Channel where the action will be posted/executed",
       "activeLabel": "Active",
+      "target": "Target",
+      "targetThisRoster": "This roster",
+      "targetGroups": "Groups",
+      "targetHint": "Apply the automation to this roster only or to all rosters in a group",
+      "group": "Group",
+      "groupAutomationHint": "Manage via Groups tab",
+      "targetRoster": "Roster",
+      "targetGroup": "Group",
+      "willExecute": "Will execute at scheduled time",
+      "paused": "Paused - will not execute",
+      "actions": {
+        "ping": "Send Reminder",
+        "post": "Post Roster",
+        "openSignup": "Open Signups",
+        "closeSignup": "Close Signups",
+        "recurring": "Recurring Event"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Sends a reminder to members who haven't signed up or are in the wrong clan",
+        "roster_post": "Posts the final roster list in the selected channel",
+        "roster_signup": "Opens signups so players can register",
+        "roster_signup_close": "Closes signups and prevents new registrations",
+        "recurring_event": "Automatically updates roster dates for recurring events"
+      },
       "infoBox": "Automations allow you to schedule actions like opening/closing signups, posting the roster, or sending reminders at specific times. The bot will automatically execute these actions in the selected Discord channel."
     },
     "groups": {
@@ -729,7 +779,13 @@
       "editTitle": "Edit Group",
       "nameLabel": "Group Name",
       "namePlaceholder": "e.g., CWL Groups",
-      "infoBox": "Groups let you organize multiple rosters together (e.g., all CWL rosters). You can apply automations to an entire group and set shared limits like max accounts per user across all rosters in the group."
+      "infoBox": "Groups let you organize multiple rosters together (e.g., all CWL rosters). You can assign a roster to a group from the Settings tab, and apply automations to all rosters in a group at once.",
+      "manageAutomations": "Manage automations",
+      "automationsTitle": "Group Automations",
+      "automationsDesc": "These automations apply to all rosters in this group",
+      "noAutomations": "No automations",
+      "noAutomationsHint": "Create an automation for this group",
+      "addAutomation": "Add Automation"
     },
     "categories": {
       "title": "Signup Categories",

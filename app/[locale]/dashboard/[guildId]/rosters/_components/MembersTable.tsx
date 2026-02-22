@@ -15,6 +15,7 @@ interface MembersTableProps {
   familyClans: Clan[];
   onRemoveMember: (tag: string) => void;
   removingMember?: string | null;
+  onCategoryClick?: () => void;
   t: (key: string) => string;
 }
 
@@ -25,6 +26,7 @@ export function MembersTable({
   familyClans,
   onRemoveMember,
   removingMember,
+  onCategoryClick,
   t,
 }: MembersTableProps) {
   const familyClanTags = familyClans.map(c => c.tag);
@@ -89,7 +91,19 @@ export function MembersTable({
 
       case 'signup_group':
         if (member.signup_group) {
-          return <Badge variant="outline" className="text-xs">{member.signup_group}</Badge>;
+          return (
+            <Badge
+              variant="outline"
+              className="text-xs cursor-pointer hover:bg-purple-500/20 hover:border-purple-500 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                onCategoryClick?.();
+              }}
+              title={t("members.clickToGroup")}
+            >
+              {member.signup_group}
+            </Badge>
+          );
         }
         return <span className="text-muted-foreground">-</span>;
 
