@@ -253,7 +253,7 @@ export async function deleteAutomation(automationId: string): Promise<void> {
 // ============================================
 
 export async function fetchGroups(serverId: string): Promise<RosterGroup[]> {
-  const response = await fetch(`/api/v2/roster-group?server_id=${serverId}`, {
+  const response = await fetch(`/api/v2/roster-group/list?server_id=${serverId}`, {
     headers: getAuthHeaders(),
   });
   const data = await handleResponse<{ items?: RosterGroup[] } | RosterGroup[]>(response);
@@ -303,7 +303,7 @@ export async function deleteGroup(groupId: string, serverId: string): Promise<vo
 // ============================================
 
 export async function fetchCategories(serverId: string): Promise<SignupCategory[]> {
-  const response = await fetch(`/api/v2/roster-signup-category?server_id=${serverId}`, {
+  const response = await fetch(`/api/v2/roster-signup-category/list?server_id=${serverId}`, {
     headers: getAuthHeaders(),
   });
   const data = await handleResponse<{ items?: SignupCategory[] } | SignupCategory[]>(response);

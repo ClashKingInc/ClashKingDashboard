@@ -56,6 +56,7 @@ import {
   SORT_OPTIONS,
 } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType } from "../_lib/types";
+import { useGameConstants } from "../_hooks";
 
 export default function RosterDetailPage() {
   const params = useParams();
@@ -66,6 +67,9 @@ export default function RosterDetailPage() {
   const rosterId = params.rosterId as string;
   const locale = params.locale as string;
   const t = useTranslations("RostersPage");
+
+  // Game constants
+  const { minTh, maxTh } = useGameConstants();
 
   // Data hook
   const {
@@ -114,12 +118,19 @@ export default function RosterDetailPage() {
   const [editData, setEditData] = useState<EditRosterFormData>({
     alias: "",
     description: "",
+    roster_type: "clan",
+    signup_scope: "clan-only",
+    clan_tag: "",
     min_th: "",
     max_th: "",
     roster_size: "",
+    min_signups: "",
+    max_accounts_per_user: "",
     event_start_time: "",
     columns: [],
     sort: [],
+    group_id: "",
+    allowed_signup_categories: [],
   });
 
   const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>({
@@ -137,12 +148,19 @@ export default function RosterDetailPage() {
       setEditData({
         alias: roster.alias,
         description: roster.description || "",
+        roster_type: roster.roster_type || "clan",
+        signup_scope: roster.signup_scope || "clan-only",
+        clan_tag: roster.clan_tag || "",
         min_th: roster.min_th?.toString() || "",
         max_th: roster.max_th?.toString() || "",
         roster_size: roster.roster_size?.toString() || "",
+        min_signups: roster.min_signups?.toString() || "",
+        max_accounts_per_user: roster.max_accounts_per_user?.toString() || "",
         event_start_time: unixToDatetimeLocal(roster.event_start_time),
         columns: (roster.columns || []).map(getColumnLabel),
         sort: (roster.sort || []).map(getSortLabel),
+        group_id: roster.group_id || "",
+        allowed_signup_categories: roster.allowed_signup_categories || [],
       });
     }
   }, [roster]);
@@ -173,12 +191,19 @@ export default function RosterDetailPage() {
       await updateRoster({
         alias: editData.alias,
         description: editData.description || null,
+        roster_type: editData.roster_type,
+        signup_scope: editData.signup_scope,
+        clan_tag: editData.clan_tag || null,
         min_th: editData.min_th ? parseInt(editData.min_th) : null,
         max_th: editData.max_th ? parseInt(editData.max_th) : null,
         roster_size: editData.roster_size ? parseInt(editData.roster_size) : null,
+        min_signups: editData.min_signups ? parseInt(editData.min_signups) : null,
+        max_accounts_per_user: editData.max_accounts_per_user ? parseInt(editData.max_accounts_per_user) : null,
         event_start_time: datetimeLocalToUnix(editData.event_start_time),
         columns: editData.columns.map(getColumnInternal),
         sort: editData.sort.map(getSortInternal),
+        group_id: editData.group_id || null,
+        allowed_signup_categories: editData.allowed_signup_categories.length > 0 ? editData.allowed_signup_categories : null,
       });
       toast({ title: t("saveSuccess") });
     } catch (err) {
@@ -569,6 +594,7 @@ export default function RosterDetailPage() {
 
         {/* Settings Tab */}
         <TabsContent value="settings" className="space-y-4">
+          {/* General Settings */}
           <Card className="bg-card border-border">
             <CardHeader>
               <CardTitle>{t("settings.general")}</CardTitle>
@@ -584,37 +610,55 @@ export default function RosterDetailPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>{t("settings.rosterSize")}</Label>
-                  <Input
-                    type="number"
-                    value={editData.roster_size}
-                    onChange={(e) => setEditData({ ...editData, roster_size: e.target.value })}
-                    className="bg-background"
-                    placeholder="50"
-                  />
+                  <Label>{t("settings.rosterType")}</Label>
+                  <Select
+                    value={editData.roster_type}
+                    onValueChange={(value: "clan" | "family") => setEditData({ ...editData, roster_type: value })}
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="clan">{t("settings.typeClan")}</SelectItem>
+                      <SelectItem value="family">{t("settings.typeFamily")}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>{t("settings.minTh")}</Label>
-                  <Input
-                    type="number"
-                    min={1}
-                    max={17}
-                    value={editData.min_th}
-                    onChange={(e) => setEditData({ ...editData, min_th: e.target.value })}
-                    className="bg-background"
-                  />
+                  <Label>{t("settings.signupScope")}</Label>
+                  <Select
+                    value={editData.signup_scope}
+                    onValueChange={(value: "clan-only" | "family-wide") => setEditData({ ...editData, signup_scope: value })}
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="clan-only">{t("settings.scopeClanOnly")}</SelectItem>
+                      <SelectItem value="family-wide">{t("settings.scopeFamilyWide")}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>{t("settings.maxTh")}</Label>
-                  <Input
-                    type="number"
-                    min={1}
-                    max={17}
-                    value={editData.max_th}
-                    onChange={(e) => setEditData({ ...editData, max_th: e.target.value })}
-                    className="bg-background"
-                  />
-                </div>
+                {editData.roster_type === "clan" && (
+                  <div className="space-y-2">
+                    <Label>{t("settings.clan")}</Label>
+                    <Select
+                      value={editData.clan_tag}
+                      onValueChange={(value) => setEditData({ ...editData, clan_tag: value })}
+                    >
+                      <SelectTrigger className="bg-background">
+                        <SelectValue placeholder={t("settings.selectClan")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {clans.map((clan) => (
+                          <SelectItem key={clan.tag} value={clan.tag}>
+                            {clan.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -631,7 +675,7 @@ export default function RosterDetailPage() {
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
-                  {t("eventTime.label")}
+                  {t("settings.eventTime")}
                 </Label>
                 <div className="flex items-center gap-2">
                   <Input
@@ -644,18 +688,136 @@ export default function RosterDetailPage() {
                 </div>
               </div>
 
-              <Button onClick={handleSaveSettings} disabled={saving}>
-                {saving ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {t("settings.saving")}
-                  </>
-                ) : (
-                  t("settings.save")
-                )}
-              </Button>
+              {/* Group */}
+              {groups.length > 0 && (
+                <div className="space-y-2">
+                  <Label>{t("settings.group")}</Label>
+                  <Select
+                    value={editData.group_id}
+                    onValueChange={(value) => setEditData({ ...editData, group_id: value })}
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder={t("settings.noGroup")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">{t("settings.noGroup")}</SelectItem>
+                      {groups.map((group) => (
+                        <SelectItem key={group.group_id} value={group.group_id}>
+                          {group.alias}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </CardContent>
           </Card>
+
+          {/* Restrictions */}
+          <Card className="bg-card border-border">
+            <CardHeader>
+              <CardTitle>{t("settings.restrictions")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>{t("settings.minTh")}</Label>
+                  <Input
+                    type="number"
+                    min={minTh}
+                    max={maxTh}
+                    value={editData.min_th}
+                    onChange={(e) => setEditData({ ...editData, min_th: e.target.value })}
+                    className="bg-background"
+                    placeholder={String(minTh)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("settings.maxTh")}</Label>
+                  <Input
+                    type="number"
+                    min={minTh}
+                    max={maxTh}
+                    value={editData.max_th}
+                    onChange={(e) => setEditData({ ...editData, max_th: e.target.value })}
+                    className="bg-background"
+                    placeholder={String(maxTh)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("settings.rosterSize")}</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={editData.roster_size}
+                    onChange={(e) => setEditData({ ...editData, roster_size: e.target.value })}
+                    className="bg-background"
+                    placeholder="50"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("settings.minSignups")}</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={editData.min_signups}
+                    onChange={(e) => setEditData({ ...editData, min_signups: e.target.value })}
+                    className="bg-background"
+                    placeholder="15"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("settings.maxAccountsPerUser")}</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={editData.max_accounts_per_user}
+                    onChange={(e) => setEditData({ ...editData, max_accounts_per_user: e.target.value })}
+                    className="bg-background"
+                    placeholder="2"
+                  />
+                </div>
+              </div>
+
+              {/* Allowed Signup Categories */}
+              {categories.length > 0 && (
+                <div className="space-y-2">
+                  <Label>{t("settings.allowedCategories")}</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.map((category) => (
+                      <Badge
+                        key={category.custom_id}
+                        variant={editData.allowed_signup_categories.includes(category.custom_id) ? "default" : "outline"}
+                        className="cursor-pointer"
+                        onClick={() => {
+                          const current = editData.allowed_signup_categories;
+                          const updated = current.includes(category.custom_id)
+                            ? current.filter((id) => id !== category.custom_id)
+                            : [...current, category.custom_id];
+                          setEditData({ ...editData, allowed_signup_categories: updated });
+                        }}
+                      >
+                        {category.alias}
+                      </Badge>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{t("settings.allowedCategoriesHint")}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Save Button */}
+          <Button onClick={handleSaveSettings} disabled={saving} className="w-full md:w-auto">
+            {saving ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {t("settings.saving")}
+              </>
+            ) : (
+              t("settings.save")
+            )}
+          </Button>
         </TabsContent>
       </Tabs>
 

@@ -154,12 +154,19 @@ export interface CreateRosterFormData {
 export interface EditRosterFormData {
   alias: string;
   description: string;
+  roster_type: "clan" | "family";
+  signup_scope: "clan-only" | "family-wide";
+  clan_tag: string;
   min_th: string;
   max_th: string;
   roster_size: string;
+  min_signups: string;
+  max_accounts_per_user: string;
   event_start_time: string;
   columns: string[];
   sort: string[];
+  group_id: string;
+  allowed_signup_categories: string[];
 }
 
 export interface CloneRosterFormData {
