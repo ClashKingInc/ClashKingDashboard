@@ -154,6 +154,17 @@
       }
     }
   },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Unknown",
+    "unknownUser": "Unknown user",
+    "status": {
+      "onServer": "On server",
+      "notOnServer": "Not on server"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "View Discord profile",
+    "idPrefix": "ID: {id}"
+  },
   "Sidebar": {
     "overview": {
       "name": "Overview",

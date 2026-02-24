@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -58,6 +59,7 @@ export function DiscordUserDisplay({
   showPopover = true,
   className,
 }: DiscordUserDisplayProps) {
+  const t = useTranslations("DiscordUserDisplay");
   const [copied, setCopied] = React.useState(false);
 
   // Extract user ID from raw value if not provided directly
@@ -121,9 +123,12 @@ export function DiscordUserDisplay({
           "truncate max-w-[120px]",
           isOnServer ? "text-blue-400" : "text-orange-400 italic"
         )}
-        title={username || (resolvedUserId ? `ID: ${resolvedUserId}` : undefined)}
+        title={
+          username ||
+          (resolvedUserId ? t("idPrefix", { id: resolvedUserId }) : undefined)
+        }
       >
-        {isOnServer ? username : "Inconnu"}
+        {isOnServer ? username : t("unknownUserShort")}
       </span>
     </div>
   );
@@ -160,15 +165,17 @@ export function DiscordUserDisplay({
                   <p className="font-medium text-foreground truncate">{username}</p>
                   <p className="text-xs text-green-500 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-green-500" />
-                    Sur le serveur
+                    {t("status.onServer")}
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="font-medium text-muted-foreground">Utilisateur inconnu</p>
+                  <p className="font-medium text-muted-foreground">
+                    {t("unknownUser")}
+                  </p>
                   <p className="text-xs text-orange-400 flex items-center gap-1">
                     <span className="w-2 h-2 rounded-full bg-orange-400" />
-                    Pas sur le serveur
+                    {t("status.notOnServer")}
                   </p>
                 </>
               )}
@@ -179,7 +186,7 @@ export function DiscordUserDisplay({
           {resolvedUserId && (
             <div className="flex items-center justify-between bg-secondary/50 rounded-md px-3 py-2">
               <div>
-                <p className="text-xs text-muted-foreground">Discord ID</p>
+                <p className="text-xs text-muted-foreground">{t("discordId")}</p>
                 <p className="text-sm font-mono text-foreground">{resolvedUserId}</p>
               </div>
               <Button
@@ -205,7 +212,7 @@ export function DiscordUserDisplay({
               onClick={openDiscordProfile}
             >
               <ExternalLink className="h-4 w-4" />
-              Voir le profil Discord
+              {t("viewProfile")}
             </Button>
           )}
         </div>

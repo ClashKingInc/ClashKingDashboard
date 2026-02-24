@@ -154,6 +154,17 @@
       }
     }
   },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Onbekend",
+    "unknownUser": "Onbekende gebruiker",
+    "status": {
+      "onServer": "Op de server",
+      "notOnServer": "Niet op de server"
+    },
+    "discordId": "Discord-ID",
+    "viewProfile": "Bekijk Discord-profiel",
+    "idPrefix": "ID: {id}"
+  },
   "Sidebar": {
     "overview": {
       "name": "Overzicht",
