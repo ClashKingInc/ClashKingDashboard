@@ -627,7 +627,6 @@
     "retry": "Retry",
     "back": "Back",
     "refresh": "Refresh",
-    "addMembers": "Add Members",
     "createRoster": "Create Roster",
     "searchPlaceholder": "Search rosters...",
     "noRosters": "No rosters yet",
@@ -674,17 +673,6 @@
       "automations": "Automations",
       "groups": "Groups",
       "settings": "Settings"
-    },
-    "stats": {
-      "members": "Members",
-      "avgTh": "Avg TH",
-      "avgHitrate": "Avg Hitrate",
-      "distribution": "Distribution",
-      "clan": "Clan",
-      "family": "Family",
-      "external": "External",
-      "thDistribution": "TH Distribution",
-      "capacity": "capacity"
     },
     "members": {
       "count": "members",
@@ -831,42 +819,6 @@
       "allowedCategoriesHint": "Click to toggle. If none selected, all categories are allowed.",
       "saving": "Saving...",
       "save": "Save Settings"
-    },
-    "cloneDialog": {
-      "title": "Clone Roster",
-      "description": "Create a copy of \"{name}\"",
-      "newNameLabel": "New Roster Name",
-      "newNamePlaceholder": "Enter name for the clone",
-      "copyMembersLabel": "Copy members to new roster",
-      "copyMembersHint": "If unchecked, the new roster will be empty",
-      "cloning": "Cloning...",
-      "submit": "Clone Roster",
-      "success": "Roster Cloned",
-      "successDesc": "Created \"{name}\"",
-      "error": "Failed to clone roster"
-    },
-    "missingMembers": {
-      "title": "Missing Members",
-      "description": "Clan members not registered in this roster",
-      "button": "Missing Members",
-      "coverage": "Roster Coverage",
-      "registered": "registered",
-      "error": "Failed to load missing members",
-      "selectAll": "Select all",
-      "selected": "selected",
-      "addAll": "Add All",
-      "addSelected": "Add Selected",
-      "allCaughtUp": "All caught up!",
-      "allCaughtUpDesc": "All clan members are registered in this roster"
-    },
-    "rosterCard": {
-      "members": "Members",
-      "avgTh": "Avg TH",
-      "avgHitrate": "Avg Hitrate",
-      "inClan": "in clan",
-      "inFamily": "in family",
-      "external": "external",
-      "view": "View"
     }
   },
   "LinksPage": {

@@ -621,11 +621,7 @@
     "retry": "Opnieuw",
     "back": "Terug",
     "refresh": "Vernieuwen",
-    "addMembers": "Leden Toevoegen",
-    "createRoster": "Rooster Maken",
     "searchPlaceholder": "Roosters zoeken...",
-    "noRosters": "Geen roosters",
-    "noRostersHint": "Maak je eerste rooster om te beginnen",
     "noSearchResults": "Geen roosters gevonden",
     "noSearchResultsHint": "Probeer een andere zoekterm",
     "createFirstRoster": "Eerste Rooster Maken",
@@ -658,18 +654,6 @@
     "categoryError": "Categorie opslaan mislukt",
     "columnsUpdated": "Kolommen bijgewerkt",
     "columnsError": "Kolommen bijwerken mislukt",
-    "memberColumns": {
-      "name": "Naam",
-      "townhall": "Raadhuis",
-      "tag": "Tag",
-      "hitrate": "Hitrate",
-      "current_clan_tag": "Huidige Clan",
-      "discord": "Discord",
-      "hero_lvs": "Helden",
-      "war_pref": "Oorlog Pref",
-      "trophies": "Trofeeën",
-      "signup_group": "Aanmeldgroep"
-    },
     "columns": {
       "configure": "Kolommen",
       "title": "Kolommen Configureren",
@@ -688,17 +672,6 @@
       "automations": "Automatiseringen",
       "groups": "Groepen",
       "settings": "Instellingen"
-    },
-    "members": {
-      "count": "leden",
-      "noMembers": "Geen leden in dit rooster",
-      "noMembersHint": "Voeg leden toe om te beginnen",
-      "actions": "Acties",
-      "viewList": "Lijstweergave",
-      "viewGrouped": "Weergave per inschrijfcategorie",
-      "unassigned": "Niet toegewezen",
-      "dragHere": "Sleep leden hierheen",
-      "clickToGroup": "Klik om per categorie te bekijken"
     },
     "addMembers": {
       "title": "Leden Toevoegen",
@@ -834,40 +807,9 @@
       "allowedCategoriesHint": "Klik om te wisselen. Als geen geselecteerd, zijn alle toegestaan.",
       "saving": "Opslaan...",
       "save": "Opslaan"
-    },
-    "cloneDialog": {
-      "title": "Rooster Klonen",
-      "description": "Maak een kopie van \"{name}\"",
-      "newNameLabel": "Nieuwe Naam",
-      "newNamePlaceholder": "Voer naam voor kloon in",
-      "copyMembersLabel": "Leden kopiëren",
-      "copyMembersHint": "Indien uitgeschakeld is het nieuwe rooster leeg",
-      "cloning": "Klonen...",
-      "submit": "Klonen",
-      "success": "Rooster Gekloond",
-      "successDesc": "\"{name}\" gemaakt",
-      "error": "Klonen mislukt"
-    },
-    "missingMembers": {
-      "title": "Ontbrekende Leden",
-      "description": "Clanleden niet geregistreerd",
-      "button": "Ontbrekende Leden",
-      "coverage": "Dekking",
-      "registered": "geregistreerd",
-      "error": "Laden mislukt",
-      "selectAll": "Alles selecteren",
-      "selected": "geselecteerd",
-      "addAll": "Alles Toevoegen",
-      "addSelected": "Selectie Toevoegen",
-      "allCaughtUp": "Alles bijgewerkt!",
-      "allCaughtUpDesc": "Alle leden zijn geregistreerd"
-    },
-    "rosterCard": {
-      "members": "Leden",
-      "avgTh": "Gem. TH",
-      "avgHitrate": "Gem. Hitrate",
-      "inClan": "in clan",
-      "inFamily": "in familie",
+    }
+  },
+  "LinksPage": {
       "external": "extern",
       "view": "Bekijken"
     }

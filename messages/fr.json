@@ -517,11 +517,7 @@
     "retry": "Réessayer",
     "back": "Retour",
     "refresh": "Actualiser",
-    "addMembers": "Ajouter des Membres",
-    "createRoster": "Créer un Roster",
     "searchPlaceholder": "Rechercher des rosters...",
-    "noRosters": "Aucun roster",
-    "noRostersHint": "Créez votre premier roster pour commencer",
     "noSearchResults": "Aucun roster trouvé",
     "noSearchResultsHint": "Essayez un autre terme de recherche",
     "createFirstRoster": "Créer un Premier Roster",
@@ -584,17 +580,6 @@
       "automations": "Automatisations",
       "groups": "Groupes",
       "settings": "Paramètres"
-    },
-    "members": {
-      "count": "membres",
-      "noMembers": "Aucun membre dans ce roster",
-      "noMembersHint": "Ajoutez des membres pour commencer",
-      "actions": "Actions",
-      "viewList": "Vue liste",
-      "viewGrouped": "Vue par catégorie d'inscription",
-      "unassigned": "Non assigné",
-      "dragHere": "Glissez des membres ici",
-      "clickToGroup": "Cliquer pour voir par catégorie"
     },
     "addMembers": {
       "title": "Ajouter des Membres",
@@ -730,42 +715,6 @@
       "allowedCategoriesHint": "Cliquez pour activer/désactiver. Si aucune sélection, toutes sont autorisées.",
       "saving": "Sauvegarde...",
       "save": "Sauvegarder"
-    },
-    "cloneDialog": {
-      "title": "Cloner le Roster",
-      "description": "Créer une copie de \"{name}\"",
-      "newNameLabel": "Nouveau Nom",
-      "newNamePlaceholder": "Entrez le nom du clone",
-      "copyMembersLabel": "Copier les membres",
-      "copyMembersHint": "Si décoché, le nouveau roster sera vide",
-      "cloning": "Clonage...",
-      "submit": "Cloner",
-      "success": "Roster Cloné",
-      "successDesc": "\"{name}\" créé",
-      "error": "Échec du clonage"
-    },
-    "missingMembers": {
-      "title": "Membres Manquants",
-      "description": "Membres du clan non inscrits",
-      "button": "Membres Manquants",
-      "coverage": "Couverture",
-      "registered": "inscrits",
-      "error": "Échec du chargement",
-      "selectAll": "Tout sélectionner",
-      "selected": "sélectionné(s)",
-      "addAll": "Ajouter Tous",
-      "addSelected": "Ajouter Sélection",
-      "allCaughtUp": "Tout est à jour !",
-      "allCaughtUpDesc": "Tous les membres sont inscrits"
-    },
-    "rosterCard": {
-      "members": "Membres",
-      "avgTh": "TH Moyen",
-      "avgHitrate": "Taux de Réussite",
-      "inClan": "dans le clan",
-      "inFamily": "dans la famille",
-      "external": "externe",
-      "view": "Voir"
     }
   },
   "LinksPage": {
