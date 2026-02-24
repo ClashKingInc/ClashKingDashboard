@@ -412,6 +412,9 @@
       "family": "Familie",
       "clear": "Wissen"
     },
+    "createRoster": "Rooster Maken",
+    "noRosters": "Geen roosters",
+    "noRostersHint": "Maak je eerste rooster om te beginnen",
     "comparisonMode": {
       "cancel": "Annuleren",
       "compare": "Vergelijken",
