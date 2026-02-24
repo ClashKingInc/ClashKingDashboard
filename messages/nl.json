@@ -622,6 +622,7 @@
     "back": "Terug",
     "refresh": "Vernieuwen",
     "searchPlaceholder": "Roosters zoeken...",
+    "noRostersHint": "Maak je eerste rooster om te beginnen",
     "noSearchResults": "Geen roosters gevonden",
     "noSearchResultsHint": "Probeer een andere zoekterm",
     "createFirstRoster": "Eerste Rooster Maken",
@@ -807,11 +808,6 @@
       "allowedCategoriesHint": "Klik om te wisselen. Als geen geselecteerd, zijn alle toegestaan.",
       "saving": "Opslaan...",
       "save": "Opslaan"
-    }
-  },
-  "LinksPage": {
-      "external": "extern",
-      "view": "Bekijken"
     }
   },
   "LinksPage": {

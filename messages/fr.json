@@ -518,6 +518,7 @@
     "back": "Retour",
     "refresh": "Actualiser",
     "searchPlaceholder": "Rechercher des rosters...",
+    "noRostersHint": "Créez votre premier roster pour commencer",
     "noSearchResults": "Aucun roster trouvé",
     "noSearchResultsHint": "Essayez un autre terme de recherche",
     "createFirstRoster": "Créer un Premier Roster",
