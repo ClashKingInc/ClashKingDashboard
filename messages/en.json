@@ -404,7 +404,14 @@
       "totalRosters": "Total Rosters",
       "totalMembers": "Total Members",
       "clanRosters": "Clan Rosters",
-      "familyRosters": "Family Rosters"
+      "familyRosters": "Family Rosters",
+      "members": "Members",
+      "external": "External",
+      "avgTh": "Avg TH",
+      "avgHitrate": "Avg Hitrate",
+      "distribution": "Distribution",
+      "clan": "Clan",
+      "family": "Family"
     },
     "filters": {
       "search": "Search rosters...",
