@@ -273,7 +273,7 @@ export default function RostersPage() {
 
   // Filter rosters
   const filteredRosters = rosters.filter(roster =>
-    roster.alias.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -447,14 +447,14 @@ export default function RostersPage() {
   };
 
   const handleDeleteRoster = async (roster: Roster) => {
-    if (!confirm(t("deleteConfirm").replace("{name}", roster.alias))) return;
+    if (!confirm(t("deleteConfirm", { name: roster.alias }))) return;
 
     setDeleting(roster.custom_id);
     try {
       await deleteRoster(roster.custom_id);
       toast({
         title: tCommon("success"),
-        description: t("deleteSuccessDesc").replace("{name}", roster.alias),
+        description: t("deleteSuccessDesc", { name: roster.alias }),
       });
     } catch (err) {
       toast({
@@ -479,7 +479,7 @@ export default function RostersPage() {
       const cloned = await cloneRoster(rosterToClone.custom_id, data);
       toast({
         title: tCommon("success"),
-        description: t("cloneDialog.successDesc").replace("{name}", cloned.alias),
+        description: t("cloneDialog.successDesc", { name: cloned.alias }),
       });
     } catch (err) {
       toast({
@@ -506,7 +506,7 @@ export default function RostersPage() {
       const created = await createRoster(newRosterData);
       toast({
         title: tCommon("success"),
-        description: t("createSuccessDesc").replace("{name}", created.alias),
+        description: t("createSuccessDesc", { name: created.alias }),
       });
       setCreateDialogOpen(false);
       setNewRosterData({
