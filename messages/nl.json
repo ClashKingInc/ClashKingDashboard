@@ -657,6 +657,10 @@
     "addMembersError": "Toevoegen mislukt",
     "removeMemberSuccess": "Lid verwijderd",
     "removeMemberError": "Verwijderen mislukt",
+    "clearMembers": "Leden wissen",
+    "clearMembersConfirm": "Alle leden verwijderen uit \"{name}\"? Dit kan niet ongedaan worden gemaakt.",
+    "clearMembersSuccess": "Alle leden verwijderd",
+    "clearMembersError": "Wissen van leden mislukt",
     "automationCreated": "Automatisering gemaakt",
     "automationUpdated": "Automatisering bijgewerkt",
     "automationDeleted": "Automatisering verwijderd",
@@ -689,6 +693,17 @@
       "groups": "Groepen",
       "categories": "Categorieën",
       "settings": "Instellingen"
+    },
+    "members": {
+      "count": "leden",
+      "noMembers": "Geen leden in dit rooster",
+      "noMembersHint": "Voeg leden toe om te beginnen",
+      "actions": "Acties",
+      "viewList": "Lijstweergave",
+      "viewGrouped": "Weergave per aanmeldingscategorie",
+      "unassigned": "Niet toegewezen",
+      "dragHere": "Sleep leden hier naartoe",
+      "clickToGroup": "Klik om per categorie te bekijken"
     },
     "addMembers": {
       "title": "Leden Toevoegen",
@@ -751,14 +766,20 @@
         "post": "Rooster Posten",
         "openSignup": "Inschrijvingen Openen",
         "closeSignup": "Inschrijvingen Sluiten",
-        "recurring": "Terugkerend Evenement"
+        "recurring": "Terugkerend Evenement",
+        "delete": "Rooster Verwijderen",
+        "clear": "Leden Wissen",
+        "archive": "Rooster Archiveren"
       },
       "actionDescriptions": {
         "roster_ping": "Stuurt een herinnering naar leden die zich niet hebben aangemeld of in de verkeerde clan zitten",
         "roster_post": "Post de definitieve roosterlijst in het geselecteerde kanaal",
         "roster_signup": "Opent inschrijvingen zodat spelers zich kunnen registreren",
         "roster_signup_close": "Sluit inschrijvingen en voorkomt nieuwe registraties",
-        "recurring_event": "Werkt roosterdatums automatisch bij voor terugkerende evenementen"
+        "recurring_event": "Werkt roosterdatums automatisch bij voor terugkerende evenementen",
+        "roster_delete": "Verwijdert het rooster en alle bijbehorende gegevens permanent",
+        "roster_clear": "Verwijdert alle leden uit het rooster zonder het te verwijderen",
+        "roster_archive": "Archiveert het rooster en maakt het alleen-lezen"
       },
       "infoBox": "Automatiseringen stellen je in staat om acties te plannen zoals het openen/sluiten van inschrijvingen, het posten van het rooster of het versturen van herinneringen op specifieke tijden. De bot voert deze acties automatisch uit in het geselecteerde Discord kanaal."
     },

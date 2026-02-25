@@ -43,6 +43,7 @@ interface UseRosterDetailResult {
   updateRoster: (data: Partial<Roster>) => Promise<void>;
   addMembers: (tags: string[]) => Promise<void>;
   removeMember: (tag: string) => Promise<void>;
+  clearMembers: () => Promise<void>;
   updateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
   loadMissingMembers: () => Promise<void>;
   loadServerMembers: () => Promise<void>;
@@ -225,6 +226,12 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     await loadData(); // Reload to get updated members
   }, [rosterId, serverId, loadData]);
 
+  // Clear all members
+  const clearMembers = useCallback(async () => {
+    await api.clearRosterMembers(rosterId, serverId);
+    setRoster(prev => prev ? { ...prev, members: [] } : null);
+  }, [rosterId, serverId]);
+
   // Remove member
   const removeMember = useCallback(async (tag: string) => {
     await api.removeRosterMember(rosterId, serverId, tag);
@@ -358,6 +365,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     updateRoster,
     addMembers,
     removeMember,
+    clearMembers,
     updateMemberCategory,
     loadMissingMembers,
     loadServerMembers,
