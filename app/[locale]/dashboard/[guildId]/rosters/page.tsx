@@ -506,7 +506,7 @@ export default function RostersPage() {
       const created = await createRoster(newRosterData);
       toast({
         title: tCommon("success"),
-        description: t("createSuccessDesc", { name: created.alias }),
+        description: t("createSuccessDesc", { name: created.alias || newRosterData.alias }),
       });
       setCreateDialogOpen(false);
       setNewRosterData({
