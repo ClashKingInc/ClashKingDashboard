@@ -45,6 +45,7 @@ interface UseRosterDetailResult {
   removeMember: (tag: string) => Promise<void>;
   clearMembers: () => Promise<void>;
   updateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
+  updateMemberStatus: (memberTag: string, status: string | null) => Promise<void>;
   loadMissingMembers: () => Promise<void>;
   loadServerMembers: () => Promise<void>;
 
@@ -258,6 +259,20 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     });
   }, [rosterId, serverId]);
 
+  // Update member status
+  const updateMemberStatus = useCallback(async (memberTag: string, status: string | null) => {
+    await api.updateMemberStatus(rosterId, serverId, memberTag, status);
+    setRoster(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        members: prev.members?.map(m =>
+          m.tag === memberTag ? { ...m, member_status: status ?? undefined } : m
+        ),
+      };
+    });
+  }, [rosterId, serverId]);
+
   // Load missing members
   const loadMissingMembers = useCallback(async () => {
     setLoadingMissingMembers(true);
@@ -367,6 +382,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     removeMember,
     clearMembers,
     updateMemberCategory,
+    updateMemberStatus,
     loadMissingMembers,
     loadServerMembers,
 

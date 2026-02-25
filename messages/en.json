@@ -524,7 +524,8 @@
       "hero_lvs": "Heroes",
       "war_pref": "War Opt",
       "trophies": "Trophies",
-      "signup_group": "Signup Group"
+      "signup_group": "Signup Group",
+      "member_status": "Status"
     },
     "columns": {
       "configure": "Columns",
@@ -700,7 +701,9 @@
       "viewGrouped": "View by signup category",
       "unassigned": "Unassigned",
       "dragHere": "Drag members here",
-      "clickToGroup": "Click to view by category"
+      "clickToGroup": "Click to view by category",
+      "setStatus": "Set status",
+      "statusPlaceholder": "Enter a status..."
     },
     "addMembers": {
       "title": "Add Members to Roster",

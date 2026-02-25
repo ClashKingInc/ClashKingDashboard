@@ -591,7 +591,8 @@
       "hero_lvs": "Héros",
       "war_pref": "Préf. Guerre",
       "trophies": "Trophées",
-      "signup_group": "Groupe d'Inscription"
+      "signup_group": "Groupe d'Inscription",
+      "member_status": "Statut"
     },
     "columns": {
       "configure": "Colonnes",
@@ -622,7 +623,9 @@
       "viewGrouped": "Vue par catégorie d'inscription",
       "unassigned": "Non assigné",
       "dragHere": "Déposez des membres ici",
-      "clickToGroup": "Cliquer pour voir par catégorie"
+      "clickToGroup": "Cliquer pour voir par catégorie",
+      "setStatus": "Définir le statut",
+      "statusPlaceholder": "Entrer un statut..."
     },
     "addMembers": {
       "title": "Ajouter des Membres",

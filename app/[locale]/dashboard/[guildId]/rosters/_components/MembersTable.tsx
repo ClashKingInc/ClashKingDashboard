@@ -1,10 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
-import { Trash2 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Trash2, Pencil, X } from "lucide-react";
 import type { RosterMember, Clan } from "../_lib/types";
 import { getColumnLabel } from "../_lib/utils";
 
@@ -16,6 +22,7 @@ interface MembersTableProps {
   onRemoveMember: (tag: string) => void;
   removingMember?: string | null;
   onCategoryClick?: () => void;
+  onUpdateMemberStatus?: (tag: string, status: string | null) => void;
   t: (key: string) => string;
 }
 
@@ -27,9 +34,28 @@ export function MembersTable({
   onRemoveMember,
   removingMember,
   onCategoryClick,
+  onUpdateMemberStatus,
   t,
 }: MembersTableProps) {
   const familyClanTags = familyClans.map(c => c.tag);
+  const [statusPopoverTag, setStatusPopoverTag] = useState<string | null>(null);
+  const [statusInput, setStatusInput] = useState('');
+
+  const openStatusPopover = (member: RosterMember) => {
+    setStatusInput(member.member_status || '');
+    setStatusPopoverTag(member.tag);
+  };
+
+  const saveStatus = (tag: string) => {
+    const trimmed = statusInput.trim();
+    onUpdateMemberStatus?.(tag, trimmed || null);
+    setStatusPopoverTag(null);
+  };
+
+  const clearStatus = (tag: string) => {
+    onUpdateMemberStatus?.(tag, null);
+    setStatusPopoverTag(null);
+  };
 
   const renderCell = (member: RosterMember, column: string) => {
     switch (column) {
@@ -106,6 +132,71 @@ export function MembersTable({
           );
         }
         return <span className="text-muted-foreground">-</span>;
+
+      case 'member_status':
+        if (!onUpdateMemberStatus) {
+          return member.member_status
+            ? <Badge variant="secondary" className="text-xs">{member.member_status}</Badge>
+            : <span className="text-muted-foreground">-</span>;
+        }
+        return (
+          <Popover
+            open={statusPopoverTag === member.tag}
+            onOpenChange={(open) => {
+              if (open) openStatusPopover(member);
+              else setStatusPopoverTag(null);
+            }}
+          >
+            <PopoverTrigger asChild>
+              <div
+                className="flex items-center gap-1 cursor-pointer group"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {member.member_status ? (
+                  <Badge
+                    variant="secondary"
+                    className="text-xs group-hover:bg-secondary/80 transition-colors"
+                  >
+                    {member.member_status}
+                  </Badge>
+                ) : (
+                  <span className="text-muted-foreground text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                    <Pencil className="w-3 h-3" />
+                    {t("members.setStatus")}
+                  </span>
+                )}
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-56 p-3" align="start">
+              <p className="text-xs text-muted-foreground mb-2">{t("members.statusPlaceholder")}</p>
+              <Input
+                value={statusInput}
+                onChange={(e) => setStatusInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') saveStatus(member.tag);
+                  if (e.key === 'Escape') setStatusPopoverTag(null);
+                }}
+                className="h-8 text-sm mb-2"
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <Button size="sm" className="flex-1 h-7 text-xs" onClick={() => saveStatus(member.tag)}>
+                  Save
+                </Button>
+                {member.member_status && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs text-destructive hover:text-destructive"
+                    onClick={() => clearStatus(member.tag)}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+        );
 
       default:
         return <span className="text-muted-foreground">-</span>;

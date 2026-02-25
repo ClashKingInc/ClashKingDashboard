@@ -105,6 +105,7 @@ export default function RosterDetailPage() {
     removeMember,
     clearMembers,
     updateMemberCategory,
+    updateMemberStatus,
     loadMissingMembers,
     loadServerMembers,
     createAutomation,
@@ -696,6 +697,7 @@ export default function RosterDetailPage() {
                   onRemoveMember={handleRemoveMember}
                   removingMember={removingMember}
                   onCategoryClick={() => setMembersViewMode("grouped")}
+                  onUpdateMemberStatus={updateMemberStatus}
                   t={t}
                 />
               )}
