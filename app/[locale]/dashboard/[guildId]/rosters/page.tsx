@@ -273,8 +273,8 @@ export default function RostersPage() {
 
   // Filter rosters
   const filteredRosters = rosters.filter(roster =>
-    roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    (roster.alias && roster.alias.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (roster.clan_name && roster.clan_name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   // Family clan tags for stats calculation
@@ -860,8 +860,8 @@ export default function RostersPage() {
             {/* Groups with rosters */}
             {groups.filter(g => rostersByGroup[g.group_id]?.length > 0).map((group) => {
               const groupRosters = rostersByGroup[group.group_id].filter(roster =>
-                roster.alias.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
+                (roster.alias && roster.alias.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (roster.clan_name && roster.clan_name.toLowerCase().includes(searchQuery.toLowerCase()))
               );
               if (groupRosters.length === 0) return null;
 
@@ -951,8 +951,8 @@ export default function RostersPage() {
             {/* Ungrouped rosters */}
             {(() => {
               const ungroupedRosters = rostersByGroup.ungrouped.filter(roster =>
-                roster.alias.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
+                (roster.alias && roster.alias.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (roster.clan_name && roster.clan_name.toLowerCase().includes(searchQuery.toLowerCase()))
               );
               if (ungroupedRosters.length === 0) return null;
 
