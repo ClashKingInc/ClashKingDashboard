@@ -533,10 +533,9 @@
       "hitrate": "30 Dagen Trefferscore",
       "current_clan_tag": "Huidige Clan",
       "discord": "Discord",
-      "hero_lvs": "Helden",
-      "war_pref": "Oorlogsvoorkeur",
+      "heroLvs": "Helden",
+      "warPref": "Oorlogsvoorkeur",
       "trophies": "Trofeeën",
-      "signup_group": "Aanmeldgroep",
       "member_status": "Status"
     },
     "sortFields": {
