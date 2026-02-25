@@ -70,7 +70,7 @@ export function CloneDialog({
             {t("cloneDialog.title")}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            {t("cloneDialog.description").replace("{name}", roster.alias)}
+            {t("cloneDialog.description", { name: roster.alias })}
           </DialogDescription>
         </DialogHeader>
 

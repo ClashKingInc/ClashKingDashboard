@@ -587,15 +587,21 @@
     },
     "cloneDialog": {
       "title": "Clone Roster",
-      "description": "Create a copy of this roster",
+      "description": "Create a copy of {name}",
       "aliasLabel": "New Roster Name",
       "aliasPlaceholder": "Enter name for cloned roster",
+      "newNameLabel": "New Roster Name",
+      "newNamePlaceholder": "Enter name for cloned roster",
       "copyMembers": "Copy members to new roster",
+      "copyMembersLabel": "Copy members to new roster",
+      "copyMembersHint": "If enabled, all members from the original roster will be copied to the new roster",
       "memberCount": "{count} members",
       "originalRoster": "Original roster:",
       "cancel": "Cancel",
       "cloning": "Cloning...",
-      "clone": "Clone Roster"
+      "clone": "Clone Roster",
+      "submit": "Clone Roster",
+      "successDesc": "Roster \"{name}\" has been created"
     },
     "missingMembers": {
       "title": "Missing Members",

@@ -584,15 +584,21 @@
     },
     "cloneDialog": {
       "title": "Rooster Klonen",
-      "description": "Maak een kopie van dit rooster",
+      "description": "Maak een kopie van {name}",
       "aliasLabel": "Nieuwe Roosternaam",
       "aliasPlaceholder": "Voer naam in voor gekloond rooster",
+      "newNameLabel": "Nieuwe Roosternaam",
+      "newNamePlaceholder": "Voer naam in voor gekloond rooster",
       "copyMembers": "Leden kopiëren naar nieuw rooster",
+      "copyMembersLabel": "Leden kopiëren naar nieuw rooster",
+      "copyMembersHint": "Indien ingeschakeld, worden alle leden van het originele rooster gekopieerd naar het nieuwe rooster",
       "memberCount": "{count} leden",
       "originalRoster": "Origineel rooster:",
       "cancel": "Annuleren",
       "cloning": "Klonen...",
-      "clone": "Rooster Klonen"
+      "clone": "Rooster Klonen",
+      "submit": "Rooster Klonen",
+      "successDesc": "Rooster \"{name}\" is aangemaakt"
     },
     "missingMembers": {
       "title": "Ontbrekende Leden",
