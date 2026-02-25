@@ -47,9 +47,10 @@ export function useRosters(serverId: string): UseRostersResult {
 
   const createRoster = useCallback(async (data: CreateRosterFormData): Promise<Roster> => {
     const newRoster = await api.createRoster(serverId, data);
-    setRosters(prev => [...prev, newRoster]);
+    // Refresh the rosters list to ensure we have complete data
+    await loadData();
     return newRoster;
-  }, [serverId]);
+  }, [serverId, loadData]);
 
   const deleteRoster = useCallback(async (rosterId: string): Promise<void> => {
     await api.deleteRoster(rosterId, serverId);
@@ -58,9 +59,10 @@ export function useRosters(serverId: string): UseRostersResult {
 
   const cloneRoster = useCallback(async (rosterId: string, data: CloneRosterFormData): Promise<Roster> => {
     const clonedRoster = await api.cloneRoster(rosterId, serverId, data);
-    setRosters(prev => [...prev, clonedRoster]);
+    // Refresh the rosters list to ensure we have complete data
+    await loadData();
     return clonedRoster;
-  }, [serverId]);
+  }, [serverId, loadData]);
 
   return {
     rosters,
