@@ -664,6 +664,10 @@
     "addMembersError": "Failed to add members",
     "removeMemberSuccess": "Member removed",
     "removeMemberError": "Failed to remove member",
+    "clearMembers": "Clear members",
+    "clearMembersConfirm": "Remove all members from \"{name}\"? This cannot be undone.",
+    "clearMembersSuccess": "All members removed",
+    "clearMembersError": "Failed to clear members",
     "automationCreated": "Automation created",
     "automationUpdated": "Automation updated",
     "automationDeleted": "Automation deleted",
@@ -759,14 +763,20 @@
         "post": "Post Roster",
         "openSignup": "Open Signups",
         "closeSignup": "Close Signups",
-        "recurring": "Recurring Event"
+        "recurring": "Recurring Event",
+        "delete": "Delete Roster",
+        "clear": "Clear Members",
+        "archive": "Archive Roster"
       },
       "actionDescriptions": {
         "roster_ping": "Sends a reminder to members who haven't signed up or are in the wrong clan",
         "roster_post": "Posts the final roster list in the selected channel",
         "roster_signup": "Opens signups so players can register",
         "roster_signup_close": "Closes signups and prevents new registrations",
-        "recurring_event": "Automatically updates roster dates for recurring events"
+        "recurring_event": "Automatically updates roster dates for recurring events",
+        "roster_delete": "Permanently deletes the roster and all its data",
+        "roster_clear": "Removes all members from the roster without deleting it",
+        "roster_archive": "Archives the roster, making it read-only"
       },
       "infoBox": "Automations allow you to schedule actions like opening/closing signups, posting the roster, or sending reminders at specific times. The bot will automatically execute these actions in the selected Discord channel."
     },

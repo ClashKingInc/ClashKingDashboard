@@ -96,6 +96,16 @@ export async function deleteRoster(rosterId: string, serverId: string): Promise<
   }
 }
 
+export async function clearRosterMembers(rosterId: string, serverId: string): Promise<void> {
+  const response = await fetch(`/api/v2/roster/${rosterId}?server_id=${serverId}&members_only=true`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to clear roster members');
+  }
+}
+
 export async function cloneRoster(
   rosterId: string,
   serverId: string,

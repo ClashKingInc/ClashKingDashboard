@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Users, Trash2, Edit, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Edit, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { useToast } from "@/components/ui/use-toast";
@@ -49,7 +49,6 @@ interface RosterCardProps {
   onView: () => void;
   onClone: () => void;
   onDelete: () => void;
-  t: (key: string) => string;
 }
 
 function RosterCard({
@@ -62,8 +61,8 @@ function RosterCard({
   onView,
   onClone,
   onDelete,
-  t,
 }: RosterCardProps) {
+  const t = useTranslations("RostersPage");
   return (
     <Card
       className={`bg-card border-border transition-all relative ${
@@ -143,10 +142,10 @@ function RosterCard({
         {stats.totalMembers > 0 && (
           <div className="flex justify-center gap-2 text-xs">
             {stats.inClan > 0 && (
-              <span className="text-green-400">{stats.inClan} {t("rosterCard.inClan")}</span>
+              <span className="text-green-400">{stats.inClan} {t("rosterCard.clan")}</span>
             )}
             {stats.inFamily > 0 && (
-              <span className="text-yellow-400">{stats.inFamily} {t("rosterCard.inFamily")}</span>
+              <span className="text-yellow-400">{stats.inFamily} {t("rosterCard.family")}</span>
             )}
             {stats.external > 0 && (
               <span className="text-red-400">{stats.external} {t("rosterCard.external")}</span>
@@ -934,7 +933,6 @@ export default function RostersPage() {
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
                           onDelete={() => handleDeleteRoster(roster)}
-                          t={t}
                         />
                       );
                     })}
@@ -983,7 +981,6 @@ export default function RostersPage() {
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
                           onDelete={() => handleDeleteRoster(roster)}
-                          t={t}
                         />
                       );
                     })}
@@ -1091,6 +1088,9 @@ export default function RostersPage() {
                       {automation.action_type === "roster_signup" && <Unlock className={`w-4 h-4 ${automation.active ? "text-emerald-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_signup_close" && <Lock className={`w-4 h-4 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "recurring_event" && <RefreshCw className={`w-4 h-4 ${automation.active ? "text-purple-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_clear" && <UserMinus className={`w-4 h-4 ${automation.active ? "text-orange-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_archive" && <Archive className={`w-4 h-4 ${automation.active ? "text-slate-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_delete" && <Trash2 className={`w-4 h-4 ${automation.active ? "text-destructive" : "text-muted-foreground"}`} />}
                     </div>
                     <div>
                       <p className="font-medium text-sm">{getAutomationLabel(automation.action_type)}</p>
@@ -1203,6 +1203,24 @@ export default function RostersPage() {
                         <span>{t("automations.actions.recurring")}</span>
                       </div>
                     </SelectItem>
+                    <SelectItem value="roster_clear">
+                      <div className="flex items-center gap-2">
+                        <UserMinus className="w-4 h-4 text-orange-500" />
+                        <span>{t("automations.actions.clear")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_archive">
+                      <div className="flex items-center gap-2">
+                        <Archive className="w-4 h-4 text-slate-500" />
+                        <span>{t("automations.actions.archive")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_delete">
+                      <div className="flex items-center gap-2">
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                        <span>{t("automations.actions.delete")}</span>
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1301,6 +1319,24 @@ export default function RostersPage() {
                       <div className="flex items-center gap-2">
                         <RefreshCw className="w-4 h-4 text-purple-500" />
                         <span>{t("automations.actions.recurring")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_clear">
+                      <div className="flex items-center gap-2">
+                        <UserMinus className="w-4 h-4 text-orange-500" />
+                        <span>{t("automations.actions.clear")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_archive">
+                      <div className="flex items-center gap-2">
+                        <Archive className="w-4 h-4 text-slate-500" />
+                        <span>{t("automations.actions.archive")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_delete">
+                      <div className="flex items-center gap-2">
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                        <span>{t("automations.actions.delete")}</span>
                       </div>
                     </SelectItem>
                   </SelectContent>

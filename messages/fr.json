@@ -419,7 +419,6 @@
     "createRoster": "Créer un Roster",
     "viewDetails": "Voir les Détails",
     "deleteRoster": "Supprimer le Roster",
-    "members": "Membres",
     "type": {
       "clan": "Clan",
       "family": "Famille"
@@ -462,6 +461,21 @@
       "townHall": "Hôtel de Ville",
       "clan": "Clan",
       "status": "Statut"
+    },
+    "rosterCard": {
+      "members": "Membres",
+      "thLevel": "HdV",
+      "avgTh": "Moy. HdV",
+      "avgHitrate": "Moy. Taux de victoire",
+      "clan": "Clan",
+      "family": "Famille",
+      "external": "Externe",
+      "noRestriction": "Pas de restriction",
+      "view": "Voir",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "allRosters": "Toutes les compositions",
+      "manageRosters": "Gérez vos compositions de guerre"
     },
     "toast": {
       "rosterCreated": "Roster créé avec succès",
@@ -550,6 +564,10 @@
     "addMembersError": "Échec de l'ajout",
     "removeMemberSuccess": "Membre retiré",
     "removeMemberError": "Échec du retrait",
+    "clearMembers": "Vider les membres",
+    "clearMembersConfirm": "Supprimer tous les membres de \"{name}\" ? Cette action est irréversible.",
+    "clearMembersSuccess": "Tous les membres supprimés",
+    "clearMembersError": "Échec de la suppression des membres",
     "automationCreated": "Automatisation créée",
     "automationUpdated": "Automatisation mise à jour",
     "automationDeleted": "Automatisation supprimée",
@@ -594,6 +612,17 @@
       "groups": "Groupes",
       "categories": "Catégories",
       "settings": "Paramètres"
+    },
+    "members": {
+      "count": "membres",
+      "noMembers": "Aucun membre dans ce roster",
+      "noMembersHint": "Ajoutez des membres pour commencer",
+      "actions": "Actions",
+      "viewList": "Vue liste",
+      "viewGrouped": "Vue par catégorie d'inscription",
+      "unassigned": "Non assigné",
+      "dragHere": "Déposez des membres ici",
+      "clickToGroup": "Cliquer pour voir par catégorie"
     },
     "addMembers": {
       "title": "Ajouter des Membres",
@@ -656,14 +685,20 @@
         "post": "Publier le roster",
         "openSignup": "Ouvrir les inscriptions",
         "closeSignup": "Fermer les inscriptions",
-        "recurring": "Événement récurrent"
+        "recurring": "Événement récurrent",
+        "delete": "Supprimer le roster",
+        "clear": "Vider les membres",
+        "archive": "Archiver le roster"
       },
       "actionDescriptions": {
         "roster_ping": "Envoie un rappel aux membres non inscrits ou dans le mauvais clan",
         "roster_post": "Publie la liste finale du roster dans le canal sélectionné",
         "roster_signup": "Ouvre les inscriptions pour que les joueurs puissent s'inscrire",
         "roster_signup_close": "Ferme les inscriptions et empêche les nouvelles inscriptions",
-        "recurring_event": "Met à jour automatiquement les dates du roster pour les événements récurrents"
+        "recurring_event": "Met à jour automatiquement les dates du roster pour les événements récurrents",
+        "roster_delete": "Supprime définitivement le roster et toutes ses données",
+        "roster_clear": "Retire tous les membres du roster sans le supprimer",
+        "roster_archive": "Archive le roster en le passant en lecture seule"
       },
       "infoBox": "Les automatisations permettent de planifier des actions comme ouvrir/fermer les inscriptions, poster le roster ou envoyer des rappels à des heures précises. Le bot exécutera automatiquement ces actions dans le canal Discord sélectionné."
     },
