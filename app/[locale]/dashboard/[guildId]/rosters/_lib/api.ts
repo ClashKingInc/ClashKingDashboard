@@ -188,6 +188,25 @@ export async function updateMemberCategory(
   }
 }
 
+export async function updateMemberStatus(
+  rosterId: string,
+  serverId: string,
+  memberTag: string,
+  status: string | null
+): Promise<void> {
+  const response = await fetch(
+    `/api/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}?server_id=${serverId}`,
+    {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ member_status: status }),
+    }
+  );
+  if (!response.ok) {
+    throw new Error('Failed to update member status');
+  }
+}
+
 export async function fetchMissingMembers(
   serverId: string,
   rosterId?: string

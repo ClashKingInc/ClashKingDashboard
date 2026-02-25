@@ -535,7 +535,8 @@
       "discord": "Discord",
       "heroLvs": "Helden",
       "warPref": "Oorlogsvoorkeur",
-      "trophies": "Trofeeën"
+      "trophies": "Trofeeën",
+      "member_status": "Status"
     },
     "sortFields": {
       "townhall": "Stadhuis Niveau",
@@ -703,7 +704,9 @@
       "viewGrouped": "Weergave per aanmeldingscategorie",
       "unassigned": "Niet toegewezen",
       "dragHere": "Sleep leden hier naartoe",
-      "clickToGroup": "Klik om per categorie te bekijken"
+      "clickToGroup": "Klik om per categorie te bekijken",
+      "setStatus": "Status instellen",
+      "statusPlaceholder": "Voer een status in..."
     },
     "addMembers": {
       "title": "Leden Toevoegen",
