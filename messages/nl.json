@@ -531,11 +531,12 @@
       "townhall": "Stadhuis Niveau",
       "tag": "Tag",
       "hitrate": "30 Dagen Trefferscore",
-      "currentClanTag": "Clan Tag",
+      "current_clan_tag": "Huidige Clan",
       "discord": "Discord",
-      "heroLvs": "Helden",
-      "warPref": "Oorlogsvoorkeur",
+      "hero_lvs": "Helden",
+      "war_pref": "Oorlogsvoorkeur",
       "trophies": "Trofeeën",
+      "signup_group": "Aanmeldgroep",
       "member_status": "Status"
     },
     "sortFields": {
