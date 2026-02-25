@@ -699,7 +699,14 @@ export default function RostersPage() {
                   <Button variant="outline" onClick={() => setCreateDialogOpen(false)} disabled={creating}>
                     {tCommon("cancel")}
                   </Button>
-                  <Button onClick={handleCreateRoster} disabled={creating || !newRosterData.alias.trim()}>
+                  <Button 
+                    onClick={handleCreateRoster} 
+                    disabled={
+                      creating || 
+                      !newRosterData.alias.trim() || 
+                      (newRosterData.roster_type === "clan" && !newRosterData.clan_tag)
+                    }
+                  >
                     {creating ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
