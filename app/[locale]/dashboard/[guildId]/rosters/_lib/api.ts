@@ -70,7 +70,10 @@ export async function createRoster(serverId: string, data: CreateRosterFormData)
       ...data,
     }),
   });
-  return handleResponse<Roster>(response);
+  const result = await handleResponse<{ message: string; roster_id: string }>(response);
+  
+  // Fetch the full roster object after creation
+  return fetchRoster(result.roster_id, serverId);
 }
 
 export async function updateRoster(
@@ -116,7 +119,10 @@ export async function cloneRoster(
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
   });
-  return handleResponse<Roster>(response);
+  const result = await handleResponse<{ message: string; new_roster_id: string }>(response);
+  
+  // Fetch the full roster object after cloning
+  return fetchRoster(result.new_roster_id, serverId);
 }
 
 export async function refreshRoster(rosterId: string, serverId: string): Promise<Roster> {
