@@ -670,6 +670,7 @@
     "automationError": "Automation error",
     "groupCreated": "Group created",
     "groupUpdated": "Group updated",
+    "groupDeleted": "Group deleted",
     "groupError": "Failed to save group",
     "categoryCreated": "Category created",
     "categoryUpdated": "Category updated",
@@ -683,6 +684,7 @@
       "members": "Members",
       "automations": "Automations",
       "groups": "Groups",
+      "categories": "Categories",
       "settings": "Settings"
     },
     "members": {
@@ -784,7 +786,8 @@
       "automationsDesc": "These automations apply to all rosters in this group",
       "noAutomations": "No automations",
       "noAutomationsHint": "Create an automation for this group",
-      "addAutomation": "Add Automation"
+      "addAutomation": "Add Automation",
+      "deleteConfirm": "Delete group \"{name}\"? Rosters in this group will become ungrouped."
     },
     "categories": {
       "title": "Signup Categories",

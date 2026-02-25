@@ -128,9 +128,7 @@ export default function RosterDetailPage() {
   const [addMembersDialogOpen, setAddMembersDialogOpen] = useState(false);
   const [missingMembersDialogOpen, setMissingMembersDialogOpen] = useState(false);
   const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
-  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
-  const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
   const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
   const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
   const [groupAutomationsDialogOpen, setGroupAutomationsDialogOpen] = useState(false);
@@ -162,9 +160,7 @@ export default function RosterDetailPage() {
     target_type: 'roster',
   });
 
-  const [newGroup, setNewGroup] = useState({ alias: "" });
   const [newCategory, setNewCategory] = useState({ custom_id: "", alias: "" });
-  const [editingGroup, setEditingGroup] = useState<{ group_id: string; alias: string } | null>(null);
   const [editingCategory, setEditingCategory] = useState<{ custom_id: string; alias: string } | null>(null);
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
 
@@ -370,18 +366,6 @@ export default function RosterDetailPage() {
     }
   };
 
-  const handleCreateGroup = async () => {
-    if (!newGroup.alias.trim()) return;
-    try {
-      await createGroup(newGroup.alias);
-      toast({ title: t("groupCreated") });
-      setCreateGroupDialogOpen(false);
-      setNewGroup({ alias: "" });
-    } catch (err) {
-      toast({ title: t("groupError"), variant: "destructive" });
-    }
-  };
-
   const handleCreateCategory = async () => {
     if (!newCategory.custom_id.trim() || !newCategory.alias.trim()) return;
     try {
@@ -391,18 +375,6 @@ export default function RosterDetailPage() {
       setNewCategory({ custom_id: "", alias: "" });
     } catch (err) {
       toast({ title: t("categoryError"), variant: "destructive" });
-    }
-  };
-
-  const handleEditGroup = async () => {
-    if (!editingGroup || !editingGroup.alias.trim()) return;
-    try {
-      await updateGroup(editingGroup.group_id, { alias: editingGroup.alias });
-      toast({ title: t("groupUpdated") });
-      setEditGroupDialogOpen(false);
-      setEditingGroup(null);
-    } catch (err) {
-      toast({ title: t("groupError"), variant: "destructive" });
     }
   };
 
@@ -535,8 +507,8 @@ export default function RosterDetailPage() {
             {t("tabs.automations")}
           </TabsTrigger>
           <TabsTrigger value="groups" className="gap-2">
-            <FolderTree className="w-4 h-4" />
-            {t("tabs.groups")}
+            <Tag className="w-4 h-4" />
+            {t("tabs.categories")}
           </TabsTrigger>
           <TabsTrigger value="settings" className="gap-2">
             <SettingsIcon className="w-4 h-4" />
@@ -855,107 +827,8 @@ export default function RosterDetailPage() {
           )}
         </TabsContent>
 
-        {/* Groups Tab */}
+        {/* Categories Tab */}
         <TabsContent value="groups" className="space-y-6">
-          {/* Info Box */}
-          <Alert className="bg-indigo-500/5 border-indigo-500/20">
-            <Lightbulb className="h-4 w-4 text-indigo-500" />
-            <AlertDescription className="text-sm text-muted-foreground">
-              {t("groups.infoBox")}
-            </AlertDescription>
-          </Alert>
-
-          {/* Groups Section */}
-          <Card className="bg-card border-l-4 border-l-indigo-500">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <div className="p-2 bg-indigo-500/10 rounded-lg">
-                    <FolderTree className="w-5 h-5 text-indigo-500" />
-                  </div>
-                  {t("groups.title")}
-                </CardTitle>
-                <Button size="sm" onClick={() => setCreateGroupDialogOpen(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t("groups.create")}
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground ml-11">{t("groups.description")}</p>
-            </CardHeader>
-            <CardContent>
-              {groups.length === 0 ? (
-                <div className="text-center py-6 text-muted-foreground">
-                  <FolderTree className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>{t("groups.noGroups")}</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {groups.map((group) => {
-                    const groupAutomationCount = automations.filter(
-                      a => a.group_id === group.group_id
-                    ).length;
-                    return (
-                      <div
-                        key={group.group_id}
-                        className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-indigo-500/10 rounded">
-                            <Layers className="w-4 h-4 text-indigo-500" />
-                          </div>
-                          <div>
-                            <p className="font-medium">{group.alias}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {group.roster_count || 0} {t("groups.rostersCount")}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedGroupForAutomations(group);
-                              setGroupAutomationsDialogOpen(true);
-                            }}
-                            className="text-muted-foreground hover:text-amber-500 relative"
-                            title={t("groups.manageAutomations")}
-                          >
-                            <Zap className="w-4 h-4" />
-                            {groupAutomationCount > 0 && (
-                              <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-                                {groupAutomationCount}
-                              </span>
-                            )}
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setEditingGroup({ group_id: group.group_id, alias: group.alias });
-                              setEditGroupDialogOpen(true);
-                            }}
-                            className="text-muted-foreground hover:text-foreground"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => deleteGroup(group.group_id)}
-                            className="text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
           {/* Categories Info Box */}
           <Alert className="bg-purple-500/5 border-purple-500/20">
             <Lightbulb className="h-4 w-4 text-purple-500" />
@@ -1643,34 +1516,6 @@ export default function RosterDetailPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Create Group Dialog */}
-      <Dialog open={createGroupDialogOpen} onOpenChange={setCreateGroupDialogOpen}>
-        <DialogContent className="bg-card border-border">
-          <DialogHeader>
-            <DialogTitle>{t("groups.createTitle")}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>{t("groups.nameLabel")}</Label>
-              <Input
-                value={newGroup.alias}
-                onChange={(e) => setNewGroup({ alias: e.target.value })}
-                className="bg-background"
-                placeholder={t("groups.namePlaceholder")}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateGroupDialogOpen(false)}>
-              {t("common.cancel")}
-            </Button>
-            <Button onClick={handleCreateGroup} disabled={!newGroup.alias.trim()}>
-              {t("groups.create")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
       {/* Create Category Dialog */}
       <Dialog open={createCategoryDialogOpen} onOpenChange={setCreateCategoryDialogOpen}>
         <DialogContent className="bg-card border-border">
@@ -1706,37 +1551,6 @@ export default function RosterDetailPage() {
               disabled={!newCategory.custom_id.trim() || !newCategory.alias.trim()}
             >
               {t("categories.create")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Group Dialog */}
-      <Dialog open={editGroupDialogOpen} onOpenChange={(open) => {
-        setEditGroupDialogOpen(open);
-        if (!open) setEditingGroup(null);
-      }}>
-        <DialogContent className="bg-card border-border">
-          <DialogHeader>
-            <DialogTitle>{t("groups.editTitle")}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>{t("groups.nameLabel")}</Label>
-              <Input
-                value={editingGroup?.alias || ""}
-                onChange={(e) => setEditingGroup(prev => prev ? { ...prev, alias: e.target.value } : null)}
-                className="bg-background"
-                placeholder={t("groups.namePlaceholder")}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditGroupDialogOpen(false)}>
-              {t("common.cancel")}
-            </Button>
-            <Button onClick={handleEditGroup} disabled={!editingGroup?.alias.trim()}>
-              {t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -556,6 +556,7 @@
     "automationError": "Erreur d'automatisation",
     "groupCreated": "Groupe créé",
     "groupUpdated": "Groupe modifié",
+    "groupDeleted": "Groupe supprimé",
     "groupError": "Échec de sauvegarde du groupe",
     "categoryCreated": "Catégorie créée",
     "categoryUpdated": "Catégorie modifiée",
@@ -591,6 +592,7 @@
       "members": "Membres",
       "automations": "Automatisations",
       "groups": "Groupes",
+      "categories": "Catégories",
       "settings": "Paramètres"
     },
     "addMembers": {
@@ -681,7 +683,8 @@
       "automationsDesc": "Ces automatisations s'appliquent à tous les rosters de ce groupe",
       "noAutomations": "Aucune automatisation",
       "noAutomationsHint": "Créez une automatisation pour ce groupe",
-      "addAutomation": "Ajouter une automatisation"
+      "addAutomation": "Ajouter une automatisation",
+      "deleteConfirm": "Supprimer le groupe \"{name}\" ? Les rosters de ce groupe seront dissociés."
     },
     "categories": {
       "title": "Catégories d'Inscription",

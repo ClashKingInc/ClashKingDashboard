@@ -663,6 +663,7 @@
     "automationError": "Automatiseringsfout",
     "groupCreated": "Groep gemaakt",
     "groupUpdated": "Groep bijgewerkt",
+    "groupDeleted": "Groep verwijderd",
     "groupError": "Groep opslaan mislukt",
     "categoryCreated": "Categorie gemaakt",
     "categoryUpdated": "Categorie bijgewerkt",
@@ -686,6 +687,7 @@
       "members": "Leden",
       "automations": "Automatiseringen",
       "groups": "Groepen",
+      "categories": "Categorieën",
       "settings": "Instellingen"
     },
     "addMembers": {
@@ -776,7 +778,8 @@
       "automationsDesc": "Deze automatiseringen gelden voor alle roosters in deze groep",
       "noAutomations": "Geen automatiseringen",
       "noAutomationsHint": "Maak een automatisering voor deze groep",
-      "addAutomation": "Automatisering Toevoegen"
+      "addAutomation": "Automatisering Toevoegen",
+      "deleteConfirm": "Groep \"{name}\" verwijderen? Roosters in deze groep worden ongegroepeerd."
     },
     "categories": {
       "title": "Aanmeldcategorieën",
