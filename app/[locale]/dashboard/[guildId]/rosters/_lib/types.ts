@@ -209,7 +209,6 @@ export const ROSTER_COLUMNS = [
   { value: "trophies", label: "Trophies" },
   { value: "war_pref", label: "War Preference" },
   { value: "signup_group", label: "Signup Group" },
-  { value: "member_status", label: "Status" },
 ] as const;
 
 export const SORT_OPTIONS = [

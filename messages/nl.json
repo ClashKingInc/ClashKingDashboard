@@ -535,8 +535,7 @@
       "discord": "Discord",
       "heroLvs": "Helden",
       "warPref": "Oorlogsvoorkeur",
-      "trophies": "Trofeeën",
-      "member_status": "Status"
+      "trophies": "Trofeeën"
     },
     "sortFields": {
       "townhall": "Stadhuis Niveau",
@@ -705,8 +704,7 @@
       "unassigned": "Niet toegewezen",
       "dragHere": "Sleep leden hier naartoe",
       "clickToGroup": "Klik om per categorie te bekijken",
-      "setStatus": "Status instellen",
-      "statusPlaceholder": "Voer een status in..."
+      "apiErrorTooltip": "Gegevens konden niet worden opgehaald van de API"
     },
     "addMembers": {
       "title": "Leden Toevoegen",

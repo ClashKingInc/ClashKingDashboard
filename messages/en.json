@@ -524,8 +524,7 @@
       "hero_lvs": "Heroes",
       "war_pref": "War Opt",
       "trophies": "Trophies",
-      "signup_group": "Signup Group",
-      "member_status": "Status"
+      "signup_group": "Signup Group"
     },
     "columns": {
       "configure": "Columns",
@@ -702,8 +701,7 @@
       "unassigned": "Unassigned",
       "dragHere": "Drag members here",
       "clickToGroup": "Click to view by category",
-      "setStatus": "Set status",
-      "statusPlaceholder": "Enter a status..."
+      "apiErrorTooltip": "Data could not be fetched from the API"
     },
     "addMembers": {
       "title": "Add Members to Roster",

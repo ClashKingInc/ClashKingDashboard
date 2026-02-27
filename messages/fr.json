@@ -591,8 +591,7 @@
       "hero_lvs": "Héros",
       "war_pref": "Préf. Guerre",
       "trophies": "Trophées",
-      "signup_group": "Groupe d'Inscription",
-      "member_status": "Statut"
+      "signup_group": "Groupe d'Inscription"
     },
     "columns": {
       "configure": "Colonnes",
@@ -624,8 +623,7 @@
       "unassigned": "Non assigné",
       "dragHere": "Déposez des membres ici",
       "clickToGroup": "Cliquer pour voir par catégorie",
-      "setStatus": "Définir le statut",
-      "statusPlaceholder": "Entrer un statut..."
+      "apiErrorTooltip": "Les données n'ont pas pu être récupérées depuis l'API"
     },
     "addMembers": {
       "title": "Ajouter des Membres",

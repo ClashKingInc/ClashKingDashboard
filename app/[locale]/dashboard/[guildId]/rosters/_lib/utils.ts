@@ -231,7 +231,6 @@ const COLUMN_LABELS: Record<string, string> = {
   trophies: 'Trophies',
   war_pref: 'War Pref',
   signup_group: 'Group',
-  member_status: 'Status',
 };
 
 const COLUMN_INTERNAL: Record<string, string> = {
