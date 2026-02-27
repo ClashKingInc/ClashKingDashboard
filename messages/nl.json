@@ -704,7 +704,9 @@
       "unassigned": "Niet toegewezen",
       "dragHere": "Sleep leden hier naartoe",
       "clickToGroup": "Klik om per categorie te bekijken",
-      "apiErrorTooltip": "Gegevens konden niet worden opgehaald van de API"
+      "apiErrorTooltip": "Gegevens konden niet worden opgehaald van de API",
+      "staleDataTooltip": "Gegevens kunnen verouderd zijn, laatst bijgewerkt:",
+      "refresh": "Gegevens van lid vernieuwen"
     },
     "addMembers": {
       "title": "Leden Toevoegen",

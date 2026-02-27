@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
-import { Trash2, AlertCircle } from "lucide-react";
+import { Trash2, AlertCircle, Clock, RefreshCw } from "lucide-react";
 import type { RosterMember, Clan } from "../_lib/types";
+
+const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
 
 interface MembersTableProps {
   members: RosterMember[];
@@ -15,6 +17,7 @@ interface MembersTableProps {
   onRemoveMember: (tag: string) => void;
   removingMember?: string | null;
   onCategoryClick?: () => void;
+  onRefreshMember?: (tag: string) => Promise<void>;
   t: (key: string) => string;
 }
 
@@ -26,27 +29,47 @@ export function MembersTable({
   onRemoveMember,
   removingMember,
   onCategoryClick,
+  onRefreshMember,
   t,
 }: MembersTableProps) {
   const familyClanTags = familyClans.map(c => c.tag);
+  const [refreshingMember, setRefreshingMember] = useState<string | null>(null);
+
+  const handleRefresh = async (tag: string) => {
+    if (!onRefreshMember) return;
+    setRefreshingMember(tag);
+    try {
+      await onRefreshMember(tag);
+    } finally {
+      setRefreshingMember(null);
+    }
+  };
 
   const renderCell = (member: RosterMember, column: string) => {
     switch (column) {
       case 'townhall':
         return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
 
-      case 'name':
+      case 'name': {
+        const now = Math.floor(Date.now() / 1000);
+        const isStale = member.last_updated != null && (now - member.last_updated) > STALE_THRESHOLD_SECONDS;
+        const staleDate = member.last_updated ? new Date(member.last_updated * 1000).toLocaleDateString() : null;
         return (
           <span className="font-medium text-foreground flex items-center gap-1.5">
             {member.name}
             {member.sub && <span className="text-xs text-yellow-600">(Sub)</span>}
-            {member.member_status === 'api_error' && (
+            {member.member_status === 'api_error' ? (
               <span title={member.error_details || t("members.apiErrorTooltip")}>
                 <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+              </span>
+            ) : isStale && (
+              <span title={`${t("members.staleDataTooltip")} ${staleDate}`}>
+                <Clock className="w-3.5 h-3.5 text-yellow-500 shrink-0" />
               </span>
             )}
           </span>
         );
+      }
 
       case 'tag':
         return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
@@ -153,16 +176,30 @@ export function MembersTable({
                   {renderCell(member, col)}
                 </td>
               ))}
-              <td className="py-3 px-4 text-right">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onRemoveMember(member.tag)}
-                  disabled={removingMember === member.tag}
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+              <td className="py-3 px-4">
+                <div className="flex items-center justify-end gap-1">
+                  {onRefreshMember && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRefresh(member.tag)}
+                      disabled={refreshingMember === member.tag}
+                      className="text-muted-foreground hover:text-foreground"
+                      title={t("members.refresh")}
+                    >
+                      <RefreshCw className={`w-4 h-4 ${refreshingMember === member.tag ? 'animate-spin' : ''}`} />
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onRemoveMember(member.tag)}
+                    disabled={removingMember === member.tag}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </td>
             </tr>
           ))}

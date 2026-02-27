@@ -623,7 +623,9 @@
       "unassigned": "Non assigné",
       "dragHere": "Déposez des membres ici",
       "clickToGroup": "Cliquer pour voir par catégorie",
-      "apiErrorTooltip": "Les données n'ont pas pu être récupérées depuis l'API"
+      "apiErrorTooltip": "Les données n'ont pas pu être récupérées depuis l'API",
+      "staleDataTooltip": "Données potentiellement obsolètes, dernière mise à jour :",
+      "refresh": "Rafraîchir les données du membre"
     },
     "addMembers": {
       "title": "Ajouter des Membres",

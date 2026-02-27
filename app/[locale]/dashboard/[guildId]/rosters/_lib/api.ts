@@ -2,6 +2,7 @@
 
 import type {
   Roster,
+  RosterMember,
   RosterAutomation,
   RosterGroup,
   SignupCategory,
@@ -188,23 +189,21 @@ export async function updateMemberCategory(
   }
 }
 
-export async function updateMemberStatus(
+export async function refreshRosterMember(
   rosterId: string,
   serverId: string,
-  memberTag: string,
-  status: string | null
-): Promise<void> {
+  memberTag: string
+): Promise<RosterMember> {
   const response = await fetch(
-    `/api/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}?server_id=${serverId}`,
+    `/api/v2/roster/${rosterId}/members/${encodeURIComponent(memberTag)}/refresh?server_id=${serverId}`,
     {
-      method: 'PATCH',
+      method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ member_status: status }),
     }
   );
-  if (!response.ok) {
-    throw new Error('Failed to update member status');
-  }
+  if (!response.ok) throw new Error('Failed to refresh member');
+  const data = await response.json();
+  return data.member;
 }
 
 export async function fetchMissingMembers(

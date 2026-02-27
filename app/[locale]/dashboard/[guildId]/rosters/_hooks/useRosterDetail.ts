@@ -45,7 +45,7 @@ interface UseRosterDetailResult {
   removeMember: (tag: string) => Promise<void>;
   clearMembers: () => Promise<void>;
   updateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
-  updateMemberStatus: (memberTag: string, status: string | null) => Promise<void>;
+  refreshMember: (memberTag: string) => Promise<void>;
   loadMissingMembers: () => Promise<void>;
   loadServerMembers: () => Promise<void>;
 
@@ -259,16 +259,14 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     });
   }, [rosterId, serverId]);
 
-  // Update member status
-  const updateMemberStatus = useCallback(async (memberTag: string, status: string | null) => {
-    await api.updateMemberStatus(rosterId, serverId, memberTag, status);
+  // Refresh single member
+  const refreshMember = useCallback(async (memberTag: string) => {
+    const updated = await api.refreshRosterMember(rosterId, serverId, memberTag);
     setRoster(prev => {
       if (!prev) return null;
       return {
         ...prev,
-        members: prev.members?.map(m =>
-          m.tag === memberTag ? { ...m, member_status: status ?? undefined } : m
-        ),
+        members: prev.members?.map(m => m.tag === memberTag ? { ...m, ...updated } : m),
       };
     });
   }, [rosterId, serverId]);
@@ -382,7 +380,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     removeMember,
     clearMembers,
     updateMemberCategory,
-    updateMemberStatus,
+    refreshMember,
     loadMissingMembers,
     loadServerMembers,
 

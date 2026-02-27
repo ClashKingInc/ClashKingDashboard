@@ -701,7 +701,9 @@
       "unassigned": "Unassigned",
       "dragHere": "Drag members here",
       "clickToGroup": "Click to view by category",
-      "apiErrorTooltip": "Data could not be fetched from the API"
+      "apiErrorTooltip": "Data could not be fetched from the API",
+      "staleDataTooltip": "Data may be outdated, last updated:",
+      "refresh": "Refresh member data"
     },
     "addMembers": {
       "title": "Add Members to Roster",
