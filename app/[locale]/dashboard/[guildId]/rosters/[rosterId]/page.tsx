@@ -259,7 +259,7 @@ export default function RosterDetailPage() {
       await addMembers(tags);
       toast({
         title: t("addMembersSuccess"),
-        description: t("addMembersSuccessDesc").replace("{count}", tags.length.toString()),
+        description: t("addMembersSuccessDesc", { count: tags.length }),
       });
     } catch (err) {
       toast({
