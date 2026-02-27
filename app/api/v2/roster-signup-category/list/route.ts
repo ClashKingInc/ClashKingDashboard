@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
           'Authorization': token || '',
           'Content-Type': 'application/json',
         },
+        cache: 'no-store',
       }
     );
 

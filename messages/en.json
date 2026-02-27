@@ -704,7 +704,9 @@
       "clickToGroup": "Click to view by category",
       "apiErrorTooltip": "Data could not be fetched from the API",
       "staleDataTooltip": "Data may be outdated, last updated:",
-      "refresh": "Refresh member data"
+      "refresh": "Refresh member data",
+      "addCategory": "Add group",
+      "removeCategory": "Remove group"
     },
     "addMembers": {
       "title": "Add Members to Roster",

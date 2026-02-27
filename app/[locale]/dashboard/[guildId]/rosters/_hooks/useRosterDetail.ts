@@ -60,7 +60,7 @@ interface UseRosterDetailResult {
   deleteGroup: (groupId: string) => Promise<void>;
 
   // Category actions
-  createCategory: (customId: string, alias: string) => Promise<void>;
+  createCategory: (alias: string) => Promise<void>;
   updateCategory: (categoryId: string, data: Partial<SignupCategory>) => Promise<void>;
   deleteCategory: (categoryId: string) => Promise<void>;
 }
@@ -333,8 +333,8 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   }, [serverId]);
 
   // Category actions
-  const createCategory = useCallback(async (customId: string, alias: string) => {
-    await api.createCategory(serverId, customId, alias);
+  const createCategory = useCallback(async (alias: string) => {
+    await api.createCategory(serverId, alias);
     await loadCategories();
   }, [serverId, loadCategories]);
 

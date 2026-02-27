@@ -387,9 +387,9 @@ export default function RosterDetailPage() {
   };
 
   const handleCreateCategory = async () => {
-    if (!newCategory.custom_id.trim() || !newCategory.alias.trim()) return;
+    if (!newCategory.alias.trim()) return;
     try {
-      await createCategory(newCategory.custom_id, newCategory.alias);
+      await createCategory(newCategory.alias);
       toast({ title: t("categoryCreated") });
       setCreateCategoryDialogOpen(false);
       setNewCategory({ custom_id: "", alias: "" });
@@ -694,9 +694,11 @@ export default function RosterDetailPage() {
                   columns={localColumns}
                   rosterClanTag={roster.clan_tag}
                   familyClans={clans}
+                  categories={categories}
                   onRemoveMember={handleRemoveMember}
                   removingMember={removingMember}
                   onCategoryClick={() => setMembersViewMode("grouped")}
+                  onUpdateMemberCategory={updateMemberCategory}
                   onRefreshMember={refreshMember}
                   t={t}
                 />
@@ -1598,21 +1600,14 @@ export default function RosterDetailPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>{t("categories.idLabel")}</Label>
-              <Input
-                value={newCategory.custom_id}
-                onChange={(e) => setNewCategory({ ...newCategory, custom_id: e.target.value })}
-                className="bg-background"
-                placeholder="tank"
-              />
-            </div>
-            <div className="space-y-2">
               <Label>{t("categories.nameLabel")}</Label>
               <Input
                 value={newCategory.alias}
                 onChange={(e) => setNewCategory({ ...newCategory, alias: e.target.value })}
                 className="bg-background"
-                placeholder="Tank"
+                placeholder="Main"
+                autoFocus
+                onKeyDown={(e) => e.key === 'Enter' && handleCreateCategory()}
               />
             </div>
           </div>
@@ -1622,7 +1617,7 @@ export default function RosterDetailPage() {
             </Button>
             <Button
               onClick={handleCreateCategory}
-              disabled={!newCategory.custom_id.trim() || !newCategory.alias.trim()}
+              disabled={!newCategory.alias.trim()}
             >
               {t("categories.create")}
             </Button>

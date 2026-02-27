@@ -67,7 +67,7 @@ export async function createRoster(serverId: string, data: CreateRosterFormData)
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({
-      server_id: parseInt(serverId),
+      server_id: serverId,
       ...data,
     }),
   });
@@ -324,7 +324,7 @@ export async function createGroup(
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({
-      server_id: parseInt(serverId),
+      server_id: serverId,
       alias,
     }),
   });
@@ -368,15 +368,13 @@ export async function fetchCategories(serverId: string): Promise<SignupCategory[
 
 export async function createCategory(
   serverId: string,
-  customId: string,
   alias: string
 ): Promise<SignupCategory> {
   const response = await fetch(`/api/v2/roster-signup-category?server_id=${serverId}`, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify({
-      server_id: parseInt(serverId),
-      custom_id: customId,
+      server_id: serverId,
       alias,
     }),
   });

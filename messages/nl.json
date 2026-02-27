@@ -707,7 +707,9 @@
       "clickToGroup": "Klik om per categorie te bekijken",
       "apiErrorTooltip": "Gegevens konden niet worden opgehaald van de API",
       "staleDataTooltip": "Gegevens kunnen verouderd zijn, laatst bijgewerkt:",
-      "refresh": "Gegevens van lid vernieuwen"
+      "refresh": "Gegevens van lid vernieuwen",
+      "addCategory": "Groep toevoegen",
+      "removeCategory": "Groep verwijderen"
     },
     "addMembers": {
       "title": "Leden Toevoegen",

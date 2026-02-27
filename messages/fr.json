@@ -626,7 +626,9 @@
       "clickToGroup": "Cliquer pour voir par catégorie",
       "apiErrorTooltip": "Les données n'ont pas pu être récupérées depuis l'API",
       "staleDataTooltip": "Données potentiellement obsolètes, dernière mise à jour :",
-      "refresh": "Rafraîchir les données du membre"
+      "refresh": "Rafraîchir les données du membre",
+      "addCategory": "Ajouter un groupe",
+      "removeCategory": "Retirer le groupe"
     },
     "addMembers": {
       "title": "Ajouter des Membres",
