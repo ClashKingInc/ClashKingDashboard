@@ -405,7 +405,16 @@
       "totalRosters": "Total Rosters",
       "totalMembers": "Total Members",
       "clanRosters": "Clan Rosters",
-      "familyRosters": "Family Rosters"
+      "familyRosters": "Family Rosters",
+      "members": "Members",
+      "avgTh": "Avg TH",
+      "avgHitrate": "Avg Hitrate",
+      "distribution": "Distribution",
+      "clan": "Clan",
+      "family": "Family",
+      "external": "External",
+      "thDistribution": "TH Distribution",
+      "capacity": "capacity"
     },
     "filters": {
       "search": "Search rosters...",
@@ -607,11 +616,16 @@
       "selectAll": "Select All",
       "selected": "selected",
       "addSelected": "Add {count} Member(s)",
+      "button": "Missing Members",
+      "addAll": "Add All",
       "adding": "Adding...",
       "close": "Close",
       "allCaughtUp": "All caught up!",
       "allCaughtUpDesc": "All clan members are registered in this roster",
-      "clanOnly": "Missing members analysis is only available for clan rosters"
+      "clanOnly": "Missing members analysis is only available for clan rosters",
+      "error": "Failed to load missing members",
+      "thisRoster": "This roster",
+      "wholeGroup": "Whole group"
     },
     "eventTime": {
       "label": "Event Start Time",
@@ -705,6 +719,7 @@
       "apiErrorTooltip": "Data could not be fetched from the API",
       "staleDataTooltip": "Data may be outdated, last updated:",
       "refresh": "Refresh member data",
+      "alsoIn": "Also in",
       "addCategory": "Add group",
       "removeCategory": "Remove group"
     },

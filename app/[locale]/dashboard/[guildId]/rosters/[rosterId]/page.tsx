@@ -40,7 +40,7 @@ import {
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
   MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
   Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
-  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X
+  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X, Copy, ExternalLink, Link2
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
@@ -68,6 +68,8 @@ import {
   SORT_OPTIONS,
 } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
+import { generateRosterToken, fetchRosters } from "../_lib/api";
+import type { RosterTokenResult } from "../_lib/api";
 import { useGameConstants } from "../_hooks";
 
 export default function RosterDetailPage() {
@@ -166,6 +168,27 @@ export default function RosterDetailPage() {
   const [newCategory, setNewCategory] = useState({ custom_id: "", alias: "" });
   const [editingCategory, setEditingCategory] = useState<{ custom_id: string; alias: string } | null>(null);
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
+
+  // Group duplicate map: tag → list of other roster aliases in the same group
+  const [groupDuplicateMap, setGroupDuplicateMap] = useState<Record<string, string[]>>({});
+
+  React.useEffect(() => {
+    if (!roster?.group_id) {
+      setGroupDuplicateMap({});
+      return;
+    }
+    fetchRosters(guildId, roster.group_id).then((groupRosters) => {
+      const map: Record<string, string[]> = {};
+      for (const r of groupRosters) {
+        if (r.custom_id === rosterId) continue;
+        for (const m of r.members ?? []) {
+          if (!map[m.tag]) map[m.tag] = [];
+          map[m.tag].push(r.alias);
+        }
+      }
+      setGroupDuplicateMap(map);
+    }).catch(() => {});
+  }, [roster?.group_id, guildId, rosterId]);
 
   // Column configuration state
   const defaultColumns = ['townhall', 'name', 'tag', 'hitrate', 'current_clan_tag'];
@@ -700,6 +723,7 @@ export default function RosterDetailPage() {
                   onCategoryClick={() => setMembersViewMode("grouped")}
                   onUpdateMemberCategory={updateMemberCategory}
                   onRefreshMember={refreshMember}
+                  groupDuplicateMap={groupDuplicateMap}
                   t={t}
                 />
               )}
@@ -1278,6 +1302,7 @@ export default function RosterDetailPage() {
         loading={loadingMissingMembers}
         onLoad={loadMissingMembers}
         onAddMembers={handleAddMembers}
+        groupId={roster?.group_id}
         t={t}
       />
 

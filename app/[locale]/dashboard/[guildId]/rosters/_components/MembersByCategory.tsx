@@ -49,6 +49,7 @@ interface MembersByCategoryProps {
 
 interface DraggableMemberProps {
   member: RosterMember;
+  columns: string[];
   rosterClanTag?: string | null;
   familyClanTags: string[];
   onRemove: () => void;
@@ -57,6 +58,7 @@ interface DraggableMemberProps {
 
 function DraggableMember({
   member,
+  columns,
   rosterClanTag,
   familyClanTags,
   onRemove,
@@ -102,46 +104,49 @@ function DraggableMember({
       </button>
 
       <div className="flex-1 flex items-center gap-4 min-w-0">
-        {/* TH */}
-        <span className="text-orange-400 font-medium text-sm w-10">
-          TH{member.townhall}
-        </span>
+        {/* TH — always shown */}
+        {columns.includes('townhall') && (
+          <span className="text-orange-400 font-medium text-sm w-10 shrink-0">
+            TH{member.townhall}
+          </span>
+        )}
 
-        {/* Name */}
+        {/* Name — always shown */}
         <div className="flex-1 min-w-0">
           <span className="font-medium text-foreground truncate block">
             {member.name}
-            {member.sub && (
-              <span className="text-xs text-yellow-600 ml-1">(Sub)</span>
-            )}
           </span>
-          <span className="text-xs text-muted-foreground font-mono">
-            {member.tag}
-          </span>
+          {columns.includes('tag') && (
+            <span className="text-xs text-muted-foreground font-mono">
+              {member.tag}
+            </span>
+          )}
         </div>
 
         {/* Clan */}
-        {member.current_clan_tag && member.current_clan_tag !== "#" && (
-          <span className={cn("text-xs font-mono", getClanColor())}>
+        {columns.includes('current_clan_tag') && member.current_clan_tag && member.current_clan_tag !== "#" && (
+          <span className={cn("text-xs font-mono shrink-0", getClanColor())}>
             {member.current_clan_tag}
           </span>
         )}
 
         {/* Discord */}
-        <div className="hidden md:block">
-          <DiscordUserDisplay
-            username={member.discord_username}
-            avatarUrl={member.discord_avatar_url}
-            rawDiscordValue={member.discord}
-            size="sm"
-          />
-        </div>
+        {columns.includes('discord') && (
+          <div className="hidden md:block shrink-0">
+            <DiscordUserDisplay
+              username={member.discord_username}
+              avatarUrl={member.discord_avatar_url}
+              rawDiscordValue={member.discord}
+              size="sm"
+            />
+          </div>
+        )}
 
         {/* Hitrate */}
-        {member.hitrate !== null && member.hitrate !== undefined && (
+        {columns.includes('hitrate') && member.hitrate !== null && member.hitrate !== undefined && (
           <span
             className={cn(
-              "text-sm font-medium w-12 text-right",
+              "text-sm font-medium w-12 text-right shrink-0",
               member.hitrate >= 80
                 ? "text-green-400"
                 : member.hitrate >= 60
@@ -150,6 +155,13 @@ function DraggableMember({
             )}
           >
             {member.hitrate}%
+          </span>
+        )}
+
+        {/* Trophies */}
+        {columns.includes('trophies') && member.trophies != null && (
+          <span className="text-yellow-400 text-sm shrink-0">
+            {member.trophies.toLocaleString()}
           </span>
         )}
       </div>
@@ -171,6 +183,7 @@ interface CategorySectionProps {
   categoryId: string | null;
   categoryName: string;
   members: RosterMember[];
+  columns: string[];
   rosterClanTag?: string | null;
   familyClanTags: string[];
   onRemoveMember: (tag: string) => void;
@@ -183,6 +196,7 @@ function CategorySection({
   categoryId,
   categoryName,
   members,
+  columns,
   rosterClanTag,
   familyClanTags,
   onRemoveMember,
@@ -249,6 +263,7 @@ function CategorySection({
                 <DraggableMember
                   key={member.tag}
                   member={member}
+                  columns={columns}
                   rosterClanTag={rosterClanTag}
                   familyClanTags={familyClanTags}
                   onRemove={() => onRemoveMember(member.tag)}
@@ -266,6 +281,7 @@ function CategorySection({
 export function MembersByCategory({
   members,
   categories,
+  columns,
   rosterClanTag,
   familyClans,
   onRemoveMember,
@@ -403,6 +419,7 @@ export function MembersByCategory({
             categoryId={category.custom_id}
             categoryName={category.alias}
             members={membersByCategory[category.custom_id] || []}
+            columns={columns}
             rosterClanTag={rosterClanTag}
             familyClanTags={familyClanTags}
             onRemoveMember={onRemoveMember}
@@ -417,6 +434,7 @@ export function MembersByCategory({
           categoryId={null}
           categoryName={t("members.unassigned")}
           members={membersByCategory.__unassigned__ || []}
+          columns={columns}
           rosterClanTag={rosterClanTag}
           familyClanTags={familyClanTags}
           onRemoveMember={onRemoveMember}

@@ -46,7 +46,7 @@ interface UseRosterDetailResult {
   clearMembers: () => Promise<void>;
   updateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
   refreshMember: (memberTag: string) => Promise<void>;
-  loadMissingMembers: () => Promise<void>;
+  loadMissingMembers: (groupId?: string) => Promise<void>;
   loadServerMembers: () => Promise<void>;
 
   // Automation actions
@@ -271,11 +271,13 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     });
   }, [rosterId, serverId]);
 
-  // Load missing members
-  const loadMissingMembers = useCallback(async () => {
+  // Load missing members (for current roster or its group)
+  const loadMissingMembers = useCallback(async (groupId?: string) => {
     setLoadingMissingMembers(true);
     try {
-      const data = await api.fetchMissingMembers(serverId, rosterId);
+      const data = groupId
+        ? await api.fetchMissingMembers(serverId, undefined, groupId)
+        : await api.fetchMissingMembers(serverId, rosterId);
       setMissingMembers(data);
     } catch (err) {
       console.error('Failed to load missing members:', err);

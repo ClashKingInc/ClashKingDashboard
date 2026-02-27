@@ -604,11 +604,16 @@
       "selectAll": "Alles Selecteren",
       "selected": "geselecteerd",
       "addSelected": "{count} Lid/Leden Toevoegen",
+      "button": "Ontbrekende Leden",
+      "addAll": "Alles Toevoegen",
       "adding": "Toevoegen...",
       "close": "Sluiten",
       "allCaughtUp": "Alles bijgewerkt!",
       "allCaughtUpDesc": "Alle clanleden zijn geregistreerd in dit rooster",
-      "clanOnly": "Ontbrekende leden analyse is alleen beschikbaar voor clan roosters"
+      "clanOnly": "Ontbrekende leden analyse is alleen beschikbaar voor clan roosters",
+      "error": "Kan ontbrekende leden niet laden",
+      "thisRoster": "Dit rooster",
+      "wholeGroup": "Hele groep"
     },
     "eventTime": {
       "label": "Evenement Starttijd",
@@ -708,6 +713,7 @@
       "apiErrorTooltip": "Gegevens konden niet worden opgehaald van de API",
       "staleDataTooltip": "Gegevens kunnen verouderd zijn, laatst bijgewerkt:",
       "refresh": "Gegevens van lid vernieuwen",
+      "alsoIn": "Ook in",
       "addCategory": "Groep toevoegen",
       "removeCategory": "Groep verwijderen"
     },

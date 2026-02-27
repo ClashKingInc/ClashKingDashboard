@@ -14,6 +14,13 @@ import type {
   DiscordChannel,
 } from './types';
 
+export interface RosterTokenResult {
+  access_url: string;
+  token: string;
+  expires_at: string;
+  server_info: { server_id: string; roster_count: number };
+}
+
 // ============================================
 // Helper
 // ============================================
@@ -84,7 +91,11 @@ export async function updateRoster(
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
   });
-  return handleResponse<Roster>(response);
+  const result = await handleResponse<{ roster?: Roster } | Roster>(response);
+  if ('roster' in result && result.roster) {
+    return result.roster;
+  }
+  return result as Roster;
 }
 
 export async function deleteRoster(rosterId: string, serverId: string): Promise<void> {
@@ -208,15 +219,31 @@ export async function refreshRosterMember(
 
 export async function fetchMissingMembers(
   serverId: string,
-  rosterId?: string
+  rosterId?: string,
+  groupId?: string
 ): Promise<MissingMembersResult> {
   const params = new URLSearchParams({ server_id: serverId });
   if (rosterId) params.append('roster_id', rosterId);
+  if (groupId) params.append('group_id', groupId);
 
   const response = await fetch(`/api/v2/roster/missing-members?${params.toString()}`, {
     headers: getAuthHeaders(),
   });
   return handleResponse<MissingMembersResult>(response);
+}
+
+export async function generateRosterToken(
+  serverId: string,
+  rosterId?: string
+): Promise<RosterTokenResult> {
+  const params = new URLSearchParams({ server_id: serverId });
+  if (rosterId) params.append('roster_id', rosterId);
+
+  const response = await fetch(`/api/v2/roster-token?${params.toString()}`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+  return handleResponse<RosterTokenResult>(response);
 }
 
 // ============================================
@@ -235,7 +262,7 @@ export async function fetchClanMembers(clanTag: string): Promise<ClanMember[]> {
   const response = await fetch(`/api/v2/clan/${encodeURIComponent(clanTag)}/members`, {
     headers: getAuthHeaders(),
   });
-  const data = await handleResponse<{ members?: ClanMember[] } | ClanMember[]>(response);
+  const data = await handleResponse<{ members?: ClanMember[]; clan_tag?: string } | ClanMember[]>(response);
   return Array.isArray(data) ? data : data.members || [];
 }
 

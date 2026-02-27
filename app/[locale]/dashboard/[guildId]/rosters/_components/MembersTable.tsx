@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Trash2, AlertCircle, Clock, RefreshCw, Plus, X, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { Trash2, AlertCircle, Clock, RefreshCw, Plus, X, ChevronUp, ChevronDown, ChevronsUpDown, Copy } from "lucide-react";
 import type { RosterMember, Clan, SignupCategory } from "../_lib/types";
 
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
@@ -20,6 +20,7 @@ interface MembersTableProps {
   rosterClanTag?: string | null;
   familyClans: Clan[];
   categories?: SignupCategory[];
+  groupDuplicateMap?: Record<string, string[]>;
   onRemoveMember: (tag: string) => void;
   removingMember?: string | null;
   onCategoryClick?: () => void;
@@ -34,6 +35,7 @@ export function MembersTable({
   rosterClanTag,
   familyClans,
   categories = [],
+  groupDuplicateMap = {},
   onRemoveMember,
   removingMember,
   onCategoryClick,
@@ -117,10 +119,15 @@ export function MembersTable({
         const now = Math.floor(Date.now() / 1000);
         const isStale = member.last_updated != null && (now - member.last_updated) > STALE_THRESHOLD_SECONDS;
         const staleDate = member.last_updated ? new Date(member.last_updated * 1000).toLocaleDateString() : null;
+        const duplicateRosters = groupDuplicateMap[member.tag];
         return (
           <span className="font-medium text-foreground flex items-center gap-1.5">
             {member.name}
-            {member.sub && <span className="text-xs text-yellow-600">(Sub)</span>}
+            {duplicateRosters?.length > 0 && (
+              <span title={`${t("members.alsoIn")}: ${duplicateRosters.join(', ')}`}>
+                <Copy className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              </span>
+            )}
             {member.member_status === 'api_error' ? (
               <span title={member.error_details || t("members.apiErrorTooltip")}>
                 <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />

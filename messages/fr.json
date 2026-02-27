@@ -511,11 +511,16 @@
       "selectAll": "Tout Sélectionner",
       "selected": "sélectionné(s)",
       "addSelected": "Ajouter {count} Membre(s)",
+      "button": "Membres Manquants",
+      "addAll": "Tout Ajouter",
       "adding": "Ajout...",
       "close": "Fermer",
       "allCaughtUp": "Tout est à jour !",
       "allCaughtUpDesc": "Tous les membres du clan sont inscrits dans cette composition",
-      "clanOnly": "L'analyse des membres manquants n'est disponible que pour les compositions de clan"
+      "clanOnly": "L'analyse des membres manquants n'est disponible que pour les compositions de clan",
+      "error": "Erreur lors du chargement des membres manquants",
+      "thisRoster": "Ce roster",
+      "wholeGroup": "Tout le groupe"
     },
     "eventTime": {
       "label": "Date de l'Événement",
@@ -627,7 +632,8 @@
       "apiErrorTooltip": "Les données n'ont pas pu être récupérées depuis l'API",
       "staleDataTooltip": "Données potentiellement obsolètes, dernière mise à jour :",
       "refresh": "Rafraîchir les données du membre",
-      "addCategory": "Ajouter un groupe",
+      "alsoIn": "Aussi dans",
+      "addCategory":"Ajouter un groupe",
       "removeCategory": "Retirer le groupe"
     },
     "addMembers": {

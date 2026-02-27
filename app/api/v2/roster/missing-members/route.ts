@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const server_id = searchParams.get('server_id');
     const roster_id = searchParams.get('roster_id');
+    const group_id = searchParams.get('group_id');
 
     if (!server_id) {
       return NextResponse.json(
@@ -20,9 +21,8 @@ export async function GET(request: NextRequest) {
 
     // Build query string
     const queryParams = new URLSearchParams({ server_id });
-    if (roster_id) {
-      queryParams.append('roster_id', roster_id);
-    }
+    if (roster_id) queryParams.append('roster_id', roster_id);
+    if (group_id) queryParams.append('group_id', group_id);
 
     const response = await fetch(`${API_BASE_URL}/v2/roster/missing-members?${queryParams.toString()}`, {
       method: 'GET',

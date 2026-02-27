@@ -136,7 +136,7 @@ export interface MissingMember {
   discord?: string;
 }
 
-export interface MissingMembersResult {
+export interface MissingMembersRosterResult {
   state: 'ok' | 'error';
   roster_info?: {
     roster_id: string;
@@ -152,6 +152,13 @@ export interface MissingMembersResult {
     coverage_percentage: number;
   };
   error_message?: string;
+}
+
+export interface MissingMembersResult {
+  query_type: 'roster' | 'group';
+  query_value: string;
+  results: MissingMembersRosterResult[];
+  total_rosters_checked: number;
 }
 
 // Form state types

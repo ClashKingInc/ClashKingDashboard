@@ -36,6 +36,7 @@ import {
   Loader2,
   GitCompare,
   Tag,
+  Copy,
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
@@ -47,9 +48,10 @@ import type { Roster, RosterMember, SignupCategory } from "../_lib/types";
 interface DraggableMemberProps {
   member: RosterMember;
   rosterId: string;
+  isDuplicate?: boolean;
 }
 
-function DraggableMember({ member, rosterId }: DraggableMemberProps) {
+function DraggableMember({ member, rosterId, isDuplicate }: DraggableMemberProps) {
   const {
     attributes,
     listeners,
@@ -69,9 +71,11 @@ function DraggableMember({ member, rosterId }: DraggableMemberProps) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-2 p-2 bg-background rounded-lg border border-border/50 transition-all",
+        "flex items-center gap-2 p-2 bg-background rounded-lg border transition-all",
         isDragging && "opacity-50 shadow-lg scale-105",
-        "hover:border-border hover:shadow-sm"
+        isDuplicate
+          ? "border-yellow-500/60 bg-yellow-500/5 hover:border-yellow-500 hover:shadow-sm"
+          : "border-border/50 hover:border-border hover:shadow-sm"
       )}
     >
       <button
@@ -87,8 +91,11 @@ function DraggableMember({ member, rosterId }: DraggableMemberProps) {
       </span>
 
       <div className="flex-1 min-w-0">
-        <span className="font-medium text-foreground truncate block text-sm">
+        <span className="font-medium text-foreground truncate flex items-center gap-1 text-sm">
           {member.name}
+          {isDuplicate && (
+            <Copy className="w-3 h-3 text-yellow-500 shrink-0" title="Dans plusieurs rosters" />
+          )}
         </span>
         <span className="text-xs text-muted-foreground font-mono">
           {member.tag}
@@ -106,6 +113,7 @@ interface CategoryDropZoneProps {
   members: RosterMember[];
   isOver: boolean;
   color?: string;
+  duplicateTags?: Set<string>;
 }
 
 function CategoryDropZone({
@@ -115,6 +123,7 @@ function CategoryDropZone({
   members,
   isOver,
   color,
+  duplicateTags,
 }: CategoryDropZoneProps) {
   const dropId = `${rosterId}:category:${categoryId || "uncategorized"}`;
   const { setNodeRef } = useDroppable({ id: dropId });
@@ -152,6 +161,7 @@ function CategoryDropZone({
               key={member.tag}
               member={member}
               rosterId={rosterId}
+              isDuplicate={duplicateTags?.has(member.tag)}
             />
           ))}
         </div>
@@ -167,6 +177,7 @@ interface RosterColumnProps {
   categories: SignupCategory[];
   overCategoryId: string | null;
   isLoading: boolean;
+  duplicateTags?: Set<string>;
 }
 
 function RosterColumn({
@@ -175,6 +186,7 @@ function RosterColumn({
   categories,
   overCategoryId,
   isLoading,
+  duplicateTags,
 }: RosterColumnProps) {
   const { setNodeRef } = useDroppable({
     id: roster.custom_id,
@@ -279,6 +291,7 @@ function RosterColumn({
                   overCategoryId ===
                   `${roster.custom_id}:category:${category.custom_id}`
                 }
+                duplicateTags={duplicateTags}
               />
             ))}
 
@@ -293,6 +306,7 @@ function RosterColumn({
                 `${roster.custom_id}:category:uncategorized`
               }
               color="#888"
+              duplicateTags={duplicateTags}
             />
           </div>
         )}
@@ -391,6 +405,17 @@ export default function CompareRostersPage() {
   useEffect(() => {
     loadRosters();
   }, [loadRosters]);
+
+  // Compute tags that appear in more than one roster
+  const duplicateTags = useMemo(() => {
+    const tagCount: Record<string, number> = {};
+    for (const rosterId of rosterIds) {
+      for (const member of rosters[rosterId]?.members ?? []) {
+        tagCount[member.tag] = (tagCount[member.tag] ?? 0) + 1;
+      }
+    }
+    return new Set(Object.keys(tagCount).filter((tag) => tagCount[tag] > 1));
+  }, [rosterIds, rosters]);
 
   // Get active member for drag overlay
   const activeMember = useMemo(() => {
@@ -682,6 +707,7 @@ export default function CompareRostersPage() {
                   categories={categories}
                   overCategoryId={overCategoryId}
                   isLoading={false}
+                  duplicateTags={duplicateTags}
                 />
               );
             })}
