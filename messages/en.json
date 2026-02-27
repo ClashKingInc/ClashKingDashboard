@@ -155,8 +155,9 @@
     }
   },
   "DiscordUserDisplay": {
-    "unknownUserShort": "Unknown",
+    "unknownUserShort": "Not on server",
     "unknownUser": "Unknown user",
+    "notLinked": "Not linked",
     "status": {
       "onServer": "On server",
       "notOnServer": "Not on server"

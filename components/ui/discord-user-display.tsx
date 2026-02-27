@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { User, ExternalLink, UserX, Copy, Check } from "lucide-react";
+import { User, ExternalLink, UserX, UserMinus, Copy, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface DiscordUserDisplayProps {
@@ -68,9 +68,14 @@ export function DiscordUserDisplay({
   // Determine if user is on server (has username)
   const isOnServer = !!username;
 
-  // If no user ID and no username, show placeholder
+  // If no user ID and no username, player has no Discord link
   if (!resolvedUserId && !username) {
-    return <span className="text-muted-foreground">-</span>;
+    return (
+      <span className="flex items-center gap-1.5 text-muted-foreground/60 italic">
+        <UserMinus className={size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4"} />
+        <span className={size === "sm" ? "text-xs" : "text-sm"}>{t("notLinked")}</span>
+      </span>
+    );
   }
 
   const avatarSize = size === "sm" ? "h-6 w-6" : "h-8 w-8";

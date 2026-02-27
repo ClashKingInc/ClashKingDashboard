@@ -155,8 +155,9 @@
     }
   },
   "DiscordUserDisplay": {
-    "unknownUserShort": "Onbekend",
+    "unknownUserShort": "Niet op de server",
     "unknownUser": "Onbekende gebruiker",
+    "notLinked": "Niet gekoppeld",
     "status": {
       "onServer": "Op de server",
       "notOnServer": "Niet op de server"
