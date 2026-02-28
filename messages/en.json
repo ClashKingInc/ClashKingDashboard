@@ -693,6 +693,7 @@
     "groupError": "Failed to save group",
     "categoryCreated": "Category created",
     "categoryUpdated": "Category updated",
+    "categoryDeleted": "Category deleted",
     "categoryError": "Failed to save category",
     "common": {
       "cancel": "Cancel",
@@ -764,7 +765,19 @@
       "editTitle": "Edit Automation",
       "createDesc": "Schedule an automated action",
       "actionType": "Action Type",
-      "scheduledTime": "Scheduled Time",
+      "offsetFromEvent": "Timing relative to event",
+      "offsetBefore": "Before event",
+      "offsetAfter": "After event",
+      "offsetUnit_minutes": "minutes",
+      "offsetUnit_hours": "hours",
+      "offsetUnit_days": "days",
+      "offsetPreview": "Will execute at: {date}",
+      "offsetNoEventDate": "Set an event start time in settings to preview the execution date",
+      "offsetAtStart": "At event start",
+      "pingType": "Reminder type",
+      "pingType_signup_reminder": "Signup reminder",
+      "pingType_missing": "Missing from clan",
+      "pingType_sub_needed": "Sub needed",
       "channel": "Discord Channel",
       "selectChannel": "Select a channel",
       "channelHint": "Channel where the action will be posted/executed",
@@ -777,14 +790,13 @@
       "groupAutomationHint": "Manage via Groups tab",
       "targetRoster": "Roster",
       "targetGroup": "Group",
-      "willExecute": "Will execute at scheduled time",
+      "willExecute": "Will execute at the scheduled time",
       "paused": "Paused - will not execute",
       "actions": {
         "ping": "Send Reminder",
         "post": "Post Roster",
         "openSignup": "Open Signups",
         "closeSignup": "Close Signups",
-        "recurring": "Recurring Event",
         "delete": "Delete Roster",
         "clear": "Clear Members",
         "archive": "Archive Roster"
@@ -794,12 +806,11 @@
         "roster_post": "Posts the final roster list in the selected channel",
         "roster_signup": "Opens signups so players can register",
         "roster_signup_close": "Closes signups and prevents new registrations",
-        "recurring_event": "Automatically updates roster dates for recurring events",
         "roster_delete": "Permanently deletes the roster and all its data",
         "roster_clear": "Removes all members from the roster without deleting it",
         "roster_archive": "Archives the roster, making it read-only"
       },
-      "infoBox": "Automations allow you to schedule actions like opening/closing signups, posting the roster, or sending reminders at specific times. The bot will automatically execute these actions in the selected Discord channel."
+      "infoBox": "Automations are triggered relative to the event start time. Set an offset (e.g. 3 days before) and the bot will execute the action at that time automatically — including for recurring events."
     },
     "groups": {
       "title": "Roster Groups",
@@ -818,7 +829,22 @@
       "noAutomations": "No automations",
       "noAutomationsHint": "Create an automation for this group",
       "addAutomation": "Add Automation",
-      "deleteConfirm": "Delete group \"{name}\"? Rosters in this group will become ungrouped."
+      "deleteConfirm": "Delete group \"{name}\"? Rosters in this group will become ungrouped.",
+      "rules": {
+        "title": "Group Rules",
+        "rulesHint": "These rules apply to all rosters in the group and are propagated immediately.",
+        "maxAccounts": "Max accounts/user",
+        "maxAccountsBadge": "Max {count}/user",
+        "rosterSize": "Roster size",
+        "rosterSizeBadge": "Size {size}",
+        "minSignups": "Fill threshold",
+        "minSignupsBadge": "Threshold {count}",
+        "categoriesTitle": "Signup Categories",
+        "categoriesHint": "Select which categories are available for this group. Applied to all rosters immediately.",
+        "categoriesBadge": "{count} categories",
+        "noCategories": "No categories yet.",
+        "newCategoryPlaceholder": "New category name…"
+      }
     },
     "categories": {
       "title": "Signup Categories",
@@ -829,7 +855,7 @@
       "editTitle": "Edit Category",
       "idLabel": "Category ID",
       "nameLabel": "Category Name",
-      "infoBox": "Categories allow players to indicate their availability or role when signing up (e.g., 'Available', 'Tentative', 'Only if needed'). You can filter and organize roster members by their signup category."
+      "infoBox": "Categories allow players to indicate their availability or role when signing up (e.g., 'Available', 'Tentative', 'Only if needed'). Categories are shared across all rosters on this server. For grouped rosters, configure which categories apply via the group settings."
     },
     "settings": {
       "general": "Identity & Configuration",
@@ -848,6 +874,14 @@
       "typeAndScope": "Type & Scope",
       "eventTime": "Event Start Time",
       "eventTimeHint": "When the event starts. Used for automations and countdown displays.",
+      "recurrenceDays": "Repeat every",
+      "recurrenceModeDays": "Every N days",
+      "recurrenceModeMonthly": "Day of month",
+      "recurrenceDaysUnit": "days",
+      "recurrenceDayOfMonthPrefix": "On day",
+      "recurrenceDayOfMonthSuffix": "of each month",
+      "recurrenceDaysHint": "Leave empty for a one-time event. Enter the number of days between occurrences (e.g. 30 for monthly CWL).",
+      "recurrenceDayOfMonthHint": "Repeats on this day each month (e.g. 1 = 1st).",
       "group": "Group",
       "noGroup": "No Group",
       "thRequirements": "Town Hall Requirements",
@@ -862,6 +896,7 @@
       "maxAccountsHint": "Limit accounts per Discord user",
       "allowedCategories": "Allowed Signup Categories",
       "allowedCategoriesHint": "Click to toggle. If none selected, all categories are allowed.",
+      "categoriesManagedByGroup": "Signup categories are managed at the group level. Open the group settings from the Rosters page to configure which categories are available for all rosters in this group.",
       "saving": "Saving...",
       "save": "Save Settings"
     }

@@ -194,7 +194,6 @@ export function getAutomationIcon(actionType: AutomationActionType): string {
     roster_post: 'MessageSquare',
     roster_signup: 'Unlock',
     roster_signup_close: 'Lock',
-    recurring_event: 'RefreshCw',
     roster_delete: 'Trash2',
     roster_clear: 'X',
     roster_archive: 'Archive',
@@ -208,7 +207,6 @@ export function getAutomationLabel(actionType: AutomationActionType): string {
     roster_post: 'Post Roster',
     roster_signup: 'Open Signup',
     roster_signup_close: 'Close Signup',
-    recurring_event: 'Recurring Event',
     roster_delete: 'Delete Roster',
     roster_clear: 'Clear Roster',
     roster_archive: 'Archive Roster',
@@ -316,4 +314,38 @@ export function formatThRestriction(minTh?: number | null, maxTh?: number | null
   if (minTh) return `TH${minTh}+`;
   if (maxTh) return `TH${maxTh} max`;
   return 'All TH';
+}
+
+// ============================================
+// Automation Offset Helpers
+// ============================================
+
+export type OffsetUnit = 'minutes' | 'hours' | 'days';
+export type OffsetDir = 'before' | 'after';
+
+export const UNIT_SECONDS: Record<OffsetUnit, number> = {
+  minutes: 60,
+  hours: 3600,
+  days: 86400,
+};
+
+export function buildOffsetSeconds(dir: OffsetDir, val: number, unit: OffsetUnit): number {
+  const abs = val * UNIT_SECONDS[unit];
+  return dir === 'before' ? -abs : abs;
+}
+
+export function parseOffsetSeconds(seconds: number): { dir: OffsetDir; val: number; unit: OffsetUnit } {
+  const abs = Math.abs(seconds);
+  const dir: OffsetDir = seconds <= 0 ? 'before' : 'after';
+  if (abs % 86400 === 0 && abs >= 86400) return { dir, val: abs / 86400, unit: 'days' };
+  if (abs % 3600 === 0 && abs >= 3600) return { dir, val: abs / 3600, unit: 'hours' };
+  return { dir, val: Math.round(abs / 60), unit: 'minutes' };
+}
+
+export function formatOffsetSeconds(seconds: number, t: (key: string) => string): string {
+  if (seconds === 0) return t('automations.offsetAtStart');
+  const { dir, val, unit } = parseOffsetSeconds(seconds);
+  const unitLabel = t(`automations.offsetUnit_${unit}`);
+  const dirLabel = dir === 'before' ? t('automations.offsetBefore') : t('automations.offsetAfter');
+  return `${val} ${unitLabel} ${dirLabel.toLowerCase()}`;
 }

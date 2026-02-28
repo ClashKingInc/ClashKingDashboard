@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type {
   Roster,
   Clan,
@@ -60,12 +60,15 @@ interface UseRosterDetailResult {
   deleteGroup: (groupId: string) => Promise<void>;
 
   // Category actions
-  createCategory: (alias: string) => Promise<void>;
+  createCategory: (alias: string) => Promise<SignupCategory>;
   updateCategory: (categoryId: string, data: Partial<SignupCategory>) => Promise<void>;
   deleteCategory: (categoryId: string) => Promise<void>;
 }
 
 export function useRosterDetail(rosterId: string, serverId: string): UseRosterDetailResult {
+  // Ref to always have current group_id without adding roster as a dep to every callback
+  const groupIdRef = useRef<string | null | undefined>(undefined);
+
   // Data state
   const [roster, setRoster] = useState<Roster | null>(null);
   const [clans, setClans] = useState<Clan[]>([]);
@@ -103,6 +106,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
       ]);
 
       setRoster(rosterData);
+      groupIdRef.current = rosterData.group_id ?? null;
       setClans(clansData);
 
       // Load clan members if roster has a clan
@@ -305,18 +309,18 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     data: Omit<RosterAutomation, 'automation_id' | 'executed' | 'created_at' | 'updated_at'>
   ) => {
     await api.createAutomation(data);
-    await loadAutomations();
+    await loadAutomations(groupIdRef.current);
   }, [loadAutomations]);
 
   const updateAutomation = useCallback(async (automationId: string, data: Partial<RosterAutomation>) => {
-    await api.updateAutomation(automationId, data);
-    await loadAutomations();
-  }, [loadAutomations]);
+    await api.updateAutomation(automationId, serverId, data);
+    await loadAutomations(groupIdRef.current);
+  }, [serverId, loadAutomations]);
 
   const deleteAutomation = useCallback(async (automationId: string) => {
-    await api.deleteAutomation(automationId);
-    setAutomations(prev => prev.filter(a => a.automation_id !== automationId));
-  }, []);
+    await api.deleteAutomation(automationId, serverId);
+    await loadAutomations(groupIdRef.current);
+  }, [serverId, loadAutomations]);
 
   // Group actions
   const createGroup = useCallback(async (alias: string) => {
@@ -335,9 +339,10 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
   }, [serverId]);
 
   // Category actions
-  const createCategory = useCallback(async (alias: string) => {
-    await api.createCategory(serverId, alias);
+  const createCategory = useCallback(async (alias: string): Promise<SignupCategory> => {
+    const created = await api.createCategory(serverId, alias);
     await loadCategories();
+    return created;
   }, [serverId, loadCategories]);
 
   const updateCategory = useCallback(async (categoryId: string, data: Partial<SignupCategory>) => {

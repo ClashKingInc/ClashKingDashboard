@@ -677,6 +677,7 @@
     "groupError": "Groep opslaan mislukt",
     "categoryCreated": "Categorie gemaakt",
     "categoryUpdated": "Categorie bijgewerkt",
+    "categoryDeleted": "Categorie verwijderd",
     "categoryError": "Categorie opslaan mislukt",
     "columnsUpdated": "Kolommen bijgewerkt",
     "columnsError": "Kolommen bijwerken mislukt",
@@ -758,7 +759,19 @@
       "editTitle": "Automatisering Bewerken",
       "createDesc": "Plan een automatische actie",
       "actionType": "Actietype",
-      "scheduledTime": "Geplande Tijd",
+      "offsetFromEvent": "Timing relatief aan evenement",
+      "offsetBefore": "Voor het evenement",
+      "offsetAfter": "Na het evenement",
+      "offsetUnit_minutes": "minuten",
+      "offsetUnit_hours": "uren",
+      "offsetUnit_days": "dagen",
+      "offsetPreview": "Wordt uitgevoerd op: {date}",
+      "offsetNoEventDate": "Stel een evenementstartdatum in bij instellingen om de uitvoerdatum te zien",
+      "offsetAtStart": "Bij aanvang van het evenement",
+      "pingType": "Type herinnering",
+      "pingType_signup_reminder": "Inschrijvingsherinnering",
+      "pingType_missing": "Afwezig uit clan",
+      "pingType_sub_needed": "Vervanger nodig",
       "channel": "Discord Kanaal",
       "selectChannel": "Selecteer een kanaal",
       "channelHint": "Kanaal waar de actie wordt gepost/uitgevoerd",
@@ -778,7 +791,6 @@
         "post": "Rooster Posten",
         "openSignup": "Inschrijvingen Openen",
         "closeSignup": "Inschrijvingen Sluiten",
-        "recurring": "Terugkerend Evenement",
         "delete": "Rooster Verwijderen",
         "clear": "Leden Wissen",
         "archive": "Rooster Archiveren"
@@ -788,12 +800,11 @@
         "roster_post": "Post de definitieve roosterlijst in het geselecteerde kanaal",
         "roster_signup": "Opent inschrijvingen zodat spelers zich kunnen registreren",
         "roster_signup_close": "Sluit inschrijvingen en voorkomt nieuwe registraties",
-        "recurring_event": "Werkt roosterdatums automatisch bij voor terugkerende evenementen",
         "roster_delete": "Verwijdert het rooster en alle bijbehorende gegevens permanent",
         "roster_clear": "Verwijdert alle leden uit het rooster zonder het te verwijderen",
         "roster_archive": "Archiveert het rooster en maakt het alleen-lezen"
       },
-      "infoBox": "Automatiseringen stellen je in staat om acties te plannen zoals het openen/sluiten van inschrijvingen, het posten van het rooster of het versturen van herinneringen op specifieke tijden. De bot voert deze acties automatisch uit in het geselecteerde Discord kanaal."
+      "infoBox": "Automatiseringen worden geactiveerd relatief aan de evenementstartdatum. Stel een offset in (bijv. 3 dagen voor) en de bot voert de actie automatisch uit — ook voor terugkerende evenementen."
     },
     "groups": {
       "title": "Roostergroepen",
@@ -812,7 +823,22 @@
       "noAutomations": "Geen automatiseringen",
       "noAutomationsHint": "Maak een automatisering voor deze groep",
       "addAutomation": "Automatisering Toevoegen",
-      "deleteConfirm": "Groep \"{name}\" verwijderen? Roosters in deze groep worden ongegroepeerd."
+      "deleteConfirm": "Groep \"{name}\" verwijderen? Roosters in deze groep worden ongegroepeerd.",
+      "rules": {
+        "title": "Groepsregels",
+        "rulesHint": "Deze regels gelden voor alle roosters in de groep en worden direct doorgevoerd.",
+        "maxAccounts": "Max accounts/gebruiker",
+        "maxAccountsBadge": "Max {count}/gebruiker",
+        "rosterSize": "Rostergrootte",
+        "rosterSizeBadge": "Grootte {size}",
+        "minSignups": "Vullingsdrempel",
+        "minSignupsBadge": "Drempel {count}",
+        "categoriesTitle": "Inschrijfcategorieën",
+        "categoriesHint": "Selecteer welke categorieën beschikbaar zijn voor deze groep. Direct toegepast op alle roosters.",
+        "categoriesBadge": "{count} categorieën",
+        "noCategories": "Nog geen categorieën.",
+        "newCategoryPlaceholder": "Naam nieuwe categorie…"
+      }
     },
     "categories": {
       "title": "Aanmeldcategorieën",
@@ -823,7 +849,7 @@
       "createTitle": "Categorie Maken",
       "idLabel": "Categorie ID",
       "nameLabel": "Categorienaam",
-      "infoBox": "Categorieën stellen spelers in staat om hun beschikbaarheid of rol aan te geven bij inschrijving (bijv. 'Beschikbaar', 'Onzeker', 'Alleen indien nodig'). Je kunt roosterleden filteren en organiseren op basis van hun inschrijfcategorie."
+      "infoBox": "Categorieën stellen spelers in staat om hun beschikbaarheid of rol aan te geven bij inschrijving (bijv. 'Beschikbaar', 'Onzeker', 'Alleen indien nodig'). Categorieën zijn gedeeld over alle roosters op deze server. Voor gegroepeerde roosters, configureer welke categorieën van toepassing zijn via de groepsinstellingen."
     },
     "settings": {
       "general": "Identiteit & Configuratie",
@@ -842,6 +868,14 @@
       "typeAndScope": "Type & Bereik",
       "eventTime": "Evenement Starttijd",
       "eventTimeHint": "Wanneer het evenement begint. Gebruikt voor automatiseringen en aftellen.",
+      "recurrenceDays": "Herhaal elke",
+      "recurrenceModeDays": "Elke N dagen",
+      "recurrenceModeMonthly": "Dag van de maand",
+      "recurrenceDaysUnit": "dagen",
+      "recurrenceDayOfMonthPrefix": "Op dag",
+      "recurrenceDayOfMonthSuffix": "van elke maand",
+      "recurrenceDaysHint": "Laat leeg voor een eenmalig evenement. Voer het aantal dagen tussen herhalingen in (bijv. 30 voor maandelijkse CWL).",
+      "recurrenceDayOfMonthHint": "Herhaalt op deze dag van de maand (bijv. 1 = 1e).",
       "group": "Groep",
       "noGroup": "Geen Groep",
       "thRequirements": "Town Hall Vereisten",
@@ -856,6 +890,7 @@
       "maxAccountsHint": "Limiet accounts per Discord gebruiker",
       "allowedCategories": "Toegestane Categorieën",
       "allowedCategoriesHint": "Klik om te wisselen. Als geen geselecteerd, zijn alle toegestaan.",
+      "categoriesManagedByGroup": "Inschrijfcategorieën worden beheerd op groepsniveau. Open de groepsinstellingen via de Rosters pagina om te configureren welke categorieën beschikbaar zijn voor alle roosters in deze groep.",
       "saving": "Opslaan...",
       "save": "Opslaan"
     }

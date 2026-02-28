@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Users, Trash2, Edit, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Edit, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus, Tag } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { useToast } from "@/components/ui/use-toast";
@@ -35,8 +35,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRosters } from "./_hooks";
 import { CloneDialog } from "./_components";
 import * as api from "./_lib/api";
-import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData } from "./_lib/types";
-import { calculateRosterStats, formatThRestriction, getAutomationLabel, formatTimestamp, unixToDatetimeLocal, datetimeLocalToUnix } from "./_lib/utils";
+import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData, SignupCategory } from "./_lib/types";
+import { calculateRosterStats, formatThRestriction, getAutomationLabel, buildOffsetSeconds, parseOffsetSeconds, formatOffsetSeconds } from "./_lib/utils";
+import type { OffsetUnit, OffsetDir } from "./_lib/utils";
 
 // Roster Card Component
 interface RosterCardProps {
@@ -207,7 +208,7 @@ export default function RostersPage() {
   const [groups, setGroups] = useState<RosterGroup[]>([]);
   const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
   const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
-  const [editingGroup, setEditingGroup] = useState<{ group_id: string; alias: string } | null>(null);
+  const [editingGroup, setEditingGroup] = useState<RosterGroup | null>(null);
   const [newGroupAlias, setNewGroupAlias] = useState("");
   const [savingGroup, setSavingGroup] = useState(false);
   const [deletingGroup, setDeletingGroup] = useState<string | null>(null);
@@ -219,21 +220,37 @@ export default function RostersPage() {
   const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
   const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { _offsetDir?: OffsetDir; _offsetVal?: string; _offsetUnit?: OffsetUnit }>({
     action_type: "roster_ping",
-    scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+    offset_seconds: -86400,
+    _offsetDir: 'before',
+    _offsetVal: '1',
+    _offsetUnit: 'days',
     active: true,
   });
   const [savingAutomation, setSavingAutomation] = useState(false);
   const [channels, setChannels] = useState<DiscordChannel[]>([]);
+  const [categories, setCategories] = useState<SignupCategory[]>([]);
+  const [newCategoryAlias, setNewCategoryAlias] = useState("");
+  const [savingCategory, setSavingCategory] = useState(false);
+  // Category management (standalone, outside group dialog)
+  const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
+  const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
+  const [editingCategoryStandalone, setEditingCategoryStandalone] = useState<SignupCategory | null>(null);
+  const [standaloneNewAlias, setStandaloneNewAlias] = useState("");
 
   // Fetch groups
   const refreshGroups = () => {
     if (guildId) api.fetchGroups(guildId).then(setGroups).catch(() => setGroups([]));
   };
 
+  const refreshCategories = () => {
+    if (guildId) api.fetchCategories(guildId).then(setCategories).catch(() => setCategories([]));
+  };
+
   useEffect(() => {
     refreshGroups();
+    refreshCategories();
     if (guildId) api.fetchChannels(guildId).then(setChannels).catch(() => setChannels([]));
   }, [guildId]);
 
@@ -330,11 +347,40 @@ export default function RostersPage() {
     }
   };
 
+  const handleCreateCategoryInline = async () => {
+    if (!newCategoryAlias.trim()) return;
+    setSavingCategory(true);
+    try {
+      const created = await api.createCategory(guildId, newCategoryAlias.trim());
+      setCategories(prev => [...prev, created]);
+      // Auto-select the new category in the editing group
+      setEditingGroup(prev => prev ? {
+        ...prev,
+        allowed_signup_categories: [...(prev.allowed_signup_categories ?? []), created.custom_id],
+      } : null);
+      setNewCategoryAlias("");
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    } finally {
+      setSavingCategory(false);
+    }
+  };
+
   const handleEditGroup = async () => {
     if (!editingGroup?.alias.trim()) return;
     setSavingGroup(true);
     try {
-      const updated = await api.updateGroup(editingGroup.group_id, guildId, { alias: editingGroup.alias });
+      const updated = await api.updateGroup(editingGroup.group_id, guildId, {
+        alias: editingGroup.alias,
+        max_accounts_per_user: editingGroup.max_accounts_per_user ?? null,
+        roster_size: editingGroup.roster_size ?? null,
+        min_signups: editingGroup.min_signups ?? null,
+        // Only send allowed_signup_categories if it was explicitly set in the dialog
+        // (undefined means user never touched it, so don't cascade)
+        ...(editingGroup.allowed_signup_categories !== undefined && {
+          allowed_signup_categories: editingGroup.allowed_signup_categories,
+        }),
+      });
       setGroups(prev => prev.map(g => g.group_id === updated.group_id ? updated : g));
       setEditGroupDialogOpen(false);
       setEditingGroup(null);
@@ -360,6 +406,49 @@ export default function RostersPage() {
     }
   };
 
+  // Category management handlers (standalone, not inside group dialog)
+  const handleCreateCategoryStandalone = async () => {
+    if (!standaloneNewAlias.trim()) return;
+    setSavingCategory(true);
+    try {
+      await api.createCategory(guildId, standaloneNewAlias.trim());
+      refreshCategories();
+      setStandaloneNewAlias("");
+      setCreateCategoryDialogOpen(false);
+      toast({ title: t("categoryCreated") });
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    } finally {
+      setSavingCategory(false);
+    }
+  };
+
+  const handleUpdateCategoryStandalone = async () => {
+    if (!editingCategoryStandalone || !editingCategoryStandalone.alias.trim()) return;
+    setSavingCategory(true);
+    try {
+      await api.updateCategory(editingCategoryStandalone.custom_id, guildId, { alias: editingCategoryStandalone.alias });
+      refreshCategories();
+      setEditCategoryDialogOpen(false);
+      setEditingCategoryStandalone(null);
+      toast({ title: t("categoryUpdated") });
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    } finally {
+      setSavingCategory(false);
+    }
+  };
+
+  const handleDeleteCategoryStandalone = async (categoryId: string) => {
+    try {
+      await api.deleteCategory(categoryId, guildId);
+      setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
+      toast({ title: t("categoryDeleted") });
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    }
+  };
+
   // Group Automation handlers
   const handleOpenGroupAutomations = async (group: RosterGroup) => {
     setSelectedGroupForAutomations(group);
@@ -376,7 +465,7 @@ export default function RostersPage() {
     const automation = groupAutomations.find(a => a.automation_id === automationId);
     if (!automation) return;
     try {
-      const updated = await api.updateAutomation(automationId, { active: !automation.active });
+      const updated = await api.updateAutomation(automationId, guildId, { active: !automation.active });
       setGroupAutomations(prev => prev.map(a => a.automation_id === automationId ? updated : a));
       toast({ title: t("automationUpdated") });
     } catch {
@@ -386,7 +475,7 @@ export default function RostersPage() {
 
   const handleDeleteAutomation = async (automationId: string) => {
     try {
-      await api.deleteAutomation(automationId);
+      await api.deleteAutomation(automationId, guildId);
       setGroupAutomations(prev => prev.filter(a => a.automation_id !== automationId));
       toast({ title: t("automationDeleted") });
     } catch {
@@ -395,14 +484,15 @@ export default function RostersPage() {
   };
 
   const handleCreateAutomation = async () => {
-    if (!newAutomation.action_type || !newAutomation.scheduled_time || !selectedGroupForAutomations) return;
+    if (!newAutomation.action_type || !selectedGroupForAutomations) return;
+    if (newAutomation.action_type === 'roster_ping' && !newAutomation.options?.ping_type) return;
     setSavingAutomation(true);
     try {
       const created = await api.createAutomation({
-        server_id: parseInt(guildId),
+        server_id: guildId,
         group_id: selectedGroupForAutomations.group_id,
         action_type: newAutomation.action_type as AutomationActionType,
-        scheduled_time: newAutomation.scheduled_time,
+        offset_seconds: newAutomation.offset_seconds ?? -86400,
         discord_channel_id: newAutomation.discord_channel_id,
         active: true,
       });
@@ -412,7 +502,10 @@ export default function RostersPage() {
       setGroupAutomationsDialogOpen(true);
       setNewAutomation({
         action_type: "roster_ping",
-        scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+        offset_seconds: -86400,
+        _offsetDir: 'before',
+        _offsetVal: '1',
+        _offsetUnit: 'days',
         active: true,
       });
     } catch {
@@ -425,10 +518,12 @@ export default function RostersPage() {
   const handleEditAutomation = async () => {
     if (!editingAutomation) return;
     try {
-      const updated = await api.updateAutomation(editingAutomation.automation_id, {
+      if (editingAutomation.action_type === 'roster_ping' && !editingAutomation.options?.ping_type) return;
+      const updated = await api.updateAutomation(editingAutomation.automation_id, guildId, {
         action_type: editingAutomation.action_type,
-        scheduled_time: editingAutomation.scheduled_time,
+        offset_seconds: editingAutomation.offset_seconds,
         discord_channel_id: editingAutomation.discord_channel_id,
+        options: editingAutomation.options,
         active: editingAutomation.active,
       });
       setGroupAutomations(prev => prev.map(a => a.automation_id === updated.automation_id ? updated : a));
@@ -868,9 +963,23 @@ export default function RostersPage() {
                       </div>
                       <div>
                         <h2 className="text-lg font-semibold text-foreground">{group.alias}</h2>
-                        <p className="text-sm text-muted-foreground">
-                          {groupRosters.length} roster{groupRosters.length > 1 ? "s" : ""}
-                        </p>
+                        <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                          <p className="text-sm text-muted-foreground">
+                            {groupRosters.length} roster{groupRosters.length > 1 ? "s" : ""}
+                          </p>
+                          {group.max_accounts_per_user && (
+                            <Badge variant="outline" className="text-xs h-5">{t("groups.rules.maxAccountsBadge", { count: group.max_accounts_per_user })}</Badge>
+                          )}
+                          {group.roster_size && (
+                            <Badge variant="outline" className="text-xs h-5">{t("groups.rules.rosterSizeBadge", { size: group.roster_size })}</Badge>
+                          )}
+                          {group.min_signups && (
+                            <Badge variant="outline" className="text-xs h-5">{t("groups.rules.minSignupsBadge", { count: group.min_signups })}</Badge>
+                          )}
+                          {group.allowed_signup_categories && group.allowed_signup_categories.length > 0 && (
+                            <Badge variant="outline" className="text-xs h-5 text-indigo-500 border-indigo-500/30">{t("groups.rules.categoriesBadge", { count: group.allowed_signup_categories.length })}</Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -897,7 +1006,7 @@ export default function RostersPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => { setEditingGroup({ group_id: group.group_id, alias: group.alias }); setEditGroupDialogOpen(true); }}
+                        onClick={() => { setEditingGroup(group); setEditGroupDialogOpen(true); }}
                         className="text-muted-foreground hover:text-foreground"
                       >
                         <Pencil className="w-4 h-4" />
@@ -991,6 +1100,115 @@ export default function RostersPage() {
           </div>
         )}
 
+        {/* Categories Management */}
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-2 pt-3 px-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <Tag className="w-3.5 h-3.5" />
+                <span className="text-xs font-medium">{t("categories.title")}</span>
+                {categories.length > 0 && (
+                  <span className="text-xs opacity-60">({categories.length})</span>
+                )}
+              </div>
+              <Button size="sm" variant="ghost" className="h-6 px-2 text-xs text-muted-foreground" onClick={() => { setStandaloneNewAlias(""); setCreateCategoryDialogOpen(true); }}>
+                <Plus className="w-3 h-3 mr-1" />
+                {t("categories.create")}
+              </Button>
+            </div>
+          </CardHeader>
+          {categories.length > 0 && (
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => (
+                  <Badge
+                    key={cat.custom_id}
+                    variant="secondary"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
+                  >
+                    {cat.alias}
+                    <button
+                      onClick={() => { setEditingCategoryStandalone(cat); setEditCategoryDialogOpen(true); }}
+                      className="hover:text-foreground transition-colors"
+                    >
+                      <Pencil className="w-3 h-3" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCategoryStandalone(cat.custom_id)}
+                      className="hover:text-destructive transition-colors"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">{t("categories.infoBox")}</p>
+            </CardContent>
+          )}
+          {categories.length === 0 && (
+            <CardContent>
+              <p className="text-sm text-muted-foreground italic">{t("categories.noCategories")}</p>
+            </CardContent>
+          )}
+        </Card>
+
+        {/* Create Category Dialog */}
+        <Dialog open={createCategoryDialogOpen} onOpenChange={(open) => { setCreateCategoryDialogOpen(open); if (!open) setStandaloneNewAlias(""); }}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>{t("categories.createTitle")}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label>{t("categories.nameLabel")}</Label>
+              <Input
+                value={standaloneNewAlias}
+                onChange={(e) => setStandaloneNewAlias(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryStandalone()}
+                className="bg-background border-border"
+                placeholder="e.g. Available, Tentative..."
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setCreateCategoryDialogOpen(false)} disabled={savingCategory}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleCreateCategoryStandalone} disabled={!standaloneNewAlias.trim() || savingCategory}>
+                {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {t("categories.create")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Category Dialog */}
+        <Dialog open={editCategoryDialogOpen} onOpenChange={(open) => { setEditCategoryDialogOpen(open); if (!open) setEditingCategoryStandalone(null); }}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>{t("categories.editTitle")}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label>{t("categories.nameLabel")}</Label>
+              <Input
+                value={editingCategoryStandalone?.alias ?? ""}
+                onChange={(e) => setEditingCategoryStandalone(prev => prev ? { ...prev, alias: e.target.value } : null)}
+                onKeyDown={(e) => e.key === "Enter" && handleUpdateCategoryStandalone()}
+                className="bg-background border-border"
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditCategoryDialogOpen(false)} disabled={savingCategory}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleUpdateCategoryStandalone} disabled={!editingCategoryStandalone?.alias.trim() || savingCategory}>
+                {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {tCommon("save")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* Clone Dialog */}
         <CloneDialog
           open={cloneDialogOpen}
@@ -1029,20 +1247,130 @@ export default function RostersPage() {
         </Dialog>
 
         {/* Edit Group Dialog */}
-        <Dialog open={editGroupDialogOpen} onOpenChange={(open) => { setEditGroupDialogOpen(open); if (!open) setEditingGroup(null); }}>
-          <DialogContent className="bg-card border-border">
+        <Dialog open={editGroupDialogOpen} onOpenChange={(open) => { setEditGroupDialogOpen(open); if (!open) { setEditingGroup(null); setNewCategoryAlias(""); } }}>
+          <DialogContent className="bg-card border-border max-w-lg">
             <DialogHeader>
               <DialogTitle>{t("groups.editTitle")}</DialogTitle>
             </DialogHeader>
-            <div className="space-y-2 py-2">
-              <Label>{t("groups.nameLabel")}</Label>
-              <Input
-                value={editingGroup?.alias || ""}
-                onChange={(e) => setEditingGroup(prev => prev ? { ...prev, alias: e.target.value } : null)}
-                onKeyDown={(e) => e.key === "Enter" && handleEditGroup()}
-                className="bg-background border-border"
-                placeholder={t("groups.namePlaceholder")}
-              />
+            <div className="space-y-5 py-2 max-h-[70vh] overflow-y-auto pr-1">
+              {/* Name */}
+              <div className="space-y-2">
+                <Label>{t("groups.nameLabel")}</Label>
+                <Input
+                  value={editingGroup?.alias || ""}
+                  onChange={(e) => setEditingGroup(prev => prev ? { ...prev, alias: e.target.value } : null)}
+                  className="bg-background border-border"
+                  placeholder={t("groups.namePlaceholder")}
+                />
+              </div>
+
+              {/* Rules */}
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold">{t("groups.rules.title")}</Label>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">{t("groups.rules.maxAccounts")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editingGroup?.max_accounts_per_user ?? ""}
+                      onChange={(e) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        max_accounts_per_user: e.target.value ? parseInt(e.target.value) : undefined,
+                      } : null)}
+                      placeholder="∞"
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">{t("groups.rules.rosterSize")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editingGroup?.roster_size ?? ""}
+                      onChange={(e) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        roster_size: e.target.value ? parseInt(e.target.value) : undefined,
+                      } : null)}
+                      placeholder="∞"
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">{t("groups.rules.minSignups")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editingGroup?.min_signups ?? ""}
+                      onChange={(e) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        min_signups: e.target.value ? parseInt(e.target.value) : undefined,
+                      } : null)}
+                      placeholder="—"
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">{t("groups.rules.rulesHint")}</p>
+              </div>
+
+              {/* Signup Categories */}
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold">{t("groups.rules.categoriesTitle")}</Label>
+                <p className="text-xs text-muted-foreground">{t("groups.rules.categoriesHint")}</p>
+                {/* Existing categories as checkboxes */}
+                {categories.length > 0 ? (
+                  <div className="rounded-lg border border-border divide-y divide-border">
+                    {categories.map((cat) => {
+                      const selected = editingGroup?.allowed_signup_categories?.includes(cat.custom_id) ?? false;
+                      return (
+                        <div key={cat.custom_id} className="flex items-center gap-3 px-3 py-2">
+                          <input
+                            type="checkbox"
+                            id={`cat-${cat.custom_id}`}
+                            checked={selected}
+                            onChange={(e) => setEditingGroup(prev => {
+                              if (!prev) return null;
+                              const current = prev.allowed_signup_categories ?? [];
+                              return {
+                                ...prev,
+                                allowed_signup_categories: e.target.checked
+                                  ? [...current, cat.custom_id]
+                                  : current.filter(id => id !== cat.custom_id),
+                              };
+                            })}
+                            className="h-4 w-4 rounded border-border accent-primary"
+                          />
+                          <label htmlFor={`cat-${cat.custom_id}`} className="text-sm cursor-pointer flex-1">
+                            {cat.alias}
+                          </label>
+                          <span className="text-xs text-muted-foreground font-mono">{cat.custom_id}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">{t("groups.rules.noCategories")}</p>
+                )}
+                {/* Inline category creation */}
+                <div className="flex gap-2">
+                  <Input
+                    value={newCategoryAlias}
+                    onChange={(e) => setNewCategoryAlias(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryInline()}
+                    placeholder={t("groups.rules.newCategoryPlaceholder")}
+                    className="bg-background border-border"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCreateCategoryInline}
+                    disabled={!newCategoryAlias.trim() || savingCategory}
+                  >
+                    {savingCategory ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setEditGroupDialogOpen(false)} disabled={savingGroup}>
@@ -1087,14 +1415,13 @@ export default function RostersPage() {
                       {automation.action_type === "roster_post" && <MessageSquare className={`w-4 h-4 ${automation.active ? "text-blue-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_signup" && <Unlock className={`w-4 h-4 ${automation.active ? "text-emerald-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_signup_close" && <Lock className={`w-4 h-4 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
-                      {automation.action_type === "recurring_event" && <RefreshCw className={`w-4 h-4 ${automation.active ? "text-purple-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_clear" && <UserMinus className={`w-4 h-4 ${automation.active ? "text-orange-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_archive" && <Archive className={`w-4 h-4 ${automation.active ? "text-slate-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_delete" && <Trash2 className={`w-4 h-4 ${automation.active ? "text-destructive" : "text-muted-foreground"}`} />}
                     </div>
                     <div>
                       <p className="font-medium text-sm">{getAutomationLabel(automation.action_type)}</p>
-                      <p className="text-xs text-muted-foreground">{formatTimestamp(automation.scheduled_time)}</p>
+                      <p className="text-xs text-muted-foreground">{formatOffsetSeconds(automation.offset_seconds, t)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1197,12 +1524,6 @@ export default function RostersPage() {
                         <span>{t("automations.actions.closeSignup")}</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="recurring_event">
-                      <div className="flex items-center gap-2">
-                        <RefreshCw className="w-4 h-4 text-purple-500" />
-                        <span>{t("automations.actions.recurring")}</span>
-                      </div>
-                    </SelectItem>
                     <SelectItem value="roster_clear">
                       <div className="flex items-center gap-2">
                         <UserMinus className="w-4 h-4 text-orange-500" />
@@ -1225,19 +1546,77 @@ export default function RostersPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{t("automations.scheduledTime")}</Label>
-                <Input
-                  type="datetime-local"
-                  value={unixToDatetimeLocal(newAutomation.scheduled_time)}
-                  onChange={(e) =>
-                    setNewAutomation({
-                      ...newAutomation,
-                      scheduled_time: datetimeLocalToUnix(e.target.value) || 0,
-                    })
-                  }
-                  className="bg-background"
-                />
+                <Label>{t("automations.offsetFromEvent")}</Label>
+                <div className="flex gap-2">
+                  <Select
+                    value={newAutomation._offsetDir ?? 'before'}
+                    onValueChange={(v) => {
+                      const dir = v as OffsetDir;
+                      const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
+                      const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
+                      setNewAutomation({ ...newAutomation, _offsetDir: dir, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                    }}
+                  >
+                    <SelectTrigger className="bg-background w-36">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
+                      <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={newAutomation._offsetVal ?? '1'}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 1;
+                      const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
+                      const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
+                      setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                    }}
+                    className="bg-background w-20"
+                  />
+                  <Select
+                    value={newAutomation._offsetUnit ?? 'days'}
+                    onValueChange={(v) => {
+                      const unit = v as OffsetUnit;
+                      const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
+                      const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
+                      setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                    }}
+                  >
+                    <SelectTrigger className="bg-background flex-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
+                      <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
+                      <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+              {newAutomation.action_type === "roster_ping" && (
+                <div className="space-y-2">
+                  <Label>{t("automations.pingType")}</Label>
+                  <Select
+                    value={newAutomation.options?.ping_type ?? ""}
+                    onValueChange={(v) =>
+                      setNewAutomation({ ...newAutomation, options: { ...newAutomation.options, ping_type: v as import("./_lib/types").PingType } })
+                    }
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder={t("automations.pingType")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="signup_reminder">{t("automations.pingType_signup_reminder")}</SelectItem>
+                      <SelectItem value="missing">{t("automations.pingType_missing")}</SelectItem>
+                      <SelectItem value="sub_needed">{t("automations.pingType_sub_needed")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label>{t("automations.channel")}</Label>
                 <ChannelCombobox
@@ -1315,12 +1694,6 @@ export default function RostersPage() {
                         <span>{t("automations.actions.closeSignup")}</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="recurring_event">
-                      <div className="flex items-center gap-2">
-                        <RefreshCw className="w-4 h-4 text-purple-500" />
-                        <span>{t("automations.actions.recurring")}</span>
-                      </div>
-                    </SelectItem>
                     <SelectItem value="roster_clear">
                       <div className="flex items-center gap-2">
                         <UserMinus className="w-4 h-4 text-orange-500" />
@@ -1343,19 +1716,76 @@ export default function RostersPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>{t("automations.scheduledTime")}</Label>
-                <Input
-                  type="datetime-local"
-                  value={editingAutomation ? unixToDatetimeLocal(editingAutomation.scheduled_time) : ""}
-                  onChange={(e) =>
-                    setEditingAutomation(prev => prev ? {
-                      ...prev,
-                      scheduled_time: datetimeLocalToUnix(e.target.value) || 0,
-                    } : null)
-                  }
-                  className="bg-background"
-                />
+                <Label>{t("automations.offsetFromEvent")}</Label>
+                {(() => {
+                  const parsed = parseOffsetSeconds(editingAutomation?.offset_seconds ?? -86400);
+                  return (
+                    <div className="flex gap-2">
+                      <Select
+                        value={parsed.dir}
+                        onValueChange={(v) => {
+                          const dir = v as OffsetDir;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(dir, parsed.val, parsed.unit) } : null);
+                        }}
+                      >
+                        <SelectTrigger className="bg-background w-36">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
+                          <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        type="number"
+                        min={1}
+                        value={parsed.val}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value) || 1;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, val, parsed.unit) } : null);
+                        }}
+                        className="bg-background w-20"
+                      />
+                      <Select
+                        value={parsed.unit}
+                        onValueChange={(v) => {
+                          const unit = v as OffsetUnit;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, parsed.val, unit) } : null);
+                        }}
+                      >
+                        <SelectTrigger className="bg-background flex-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
+                          <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
+                          <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  );
+                })()}
               </div>
+              {editingAutomation?.action_type === "roster_ping" && (
+                <div className="space-y-2">
+                  <Label>{t("automations.pingType")}</Label>
+                  <Select
+                    value={editingAutomation.options?.ping_type ?? ""}
+                    onValueChange={(v) =>
+                      setEditingAutomation(prev => prev ? { ...prev, options: { ...prev.options, ping_type: v as import("./_lib/types").PingType } } : null)
+                    }
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder={t("automations.pingType")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="signup_reminder">{t("automations.pingType_signup_reminder")}</SelectItem>
+                      <SelectItem value="missing">{t("automations.pingType_missing")}</SelectItem>
+                      <SelectItem value="sub_needed">{t("automations.pingType_sub_needed")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
               <div className="space-y-2">
                 <Label>{t("automations.channel")}</Label>
                 <ChannelCombobox

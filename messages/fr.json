@@ -584,6 +584,7 @@
     "groupError": "Échec de sauvegarde du groupe",
     "categoryCreated": "Catégorie créée",
     "categoryUpdated": "Catégorie modifiée",
+    "categoryDeleted": "Catégorie supprimée",
     "categoryError": "Échec de sauvegarde de catégorie",
     "columnsUpdated": "Colonnes mises à jour",
     "columnsError": "Échec de mise à jour des colonnes",
@@ -677,7 +678,19 @@
       "editTitle": "Modifier l'Automatisation",
       "createDesc": "Planifier une action automatique",
       "actionType": "Type d'Action",
-      "scheduledTime": "Date et Heure",
+      "offsetFromEvent": "Timing relatif à l'événement",
+      "offsetBefore": "Avant l'événement",
+      "offsetAfter": "Après l'événement",
+      "offsetUnit_minutes": "minutes",
+      "offsetUnit_hours": "heures",
+      "offsetUnit_days": "jours",
+      "offsetPreview": "Exécution prévue le : {date}",
+      "offsetNoEventDate": "Configurez une date d'événement dans les paramètres pour voir la date d'exécution",
+      "offsetAtStart": "Au début de l'événement",
+      "pingType": "Type de rappel",
+      "pingType_signup_reminder": "Rappel d'inscription",
+      "pingType_missing": "Absent du clan",
+      "pingType_sub_needed": "Remplaçant requis",
       "channel": "Canal Discord",
       "selectChannel": "Sélectionner un canal",
       "channelHint": "Canal où l'action sera postée/exécutée",
@@ -697,7 +710,6 @@
         "post": "Publier le roster",
         "openSignup": "Ouvrir les inscriptions",
         "closeSignup": "Fermer les inscriptions",
-        "recurring": "Événement récurrent",
         "delete": "Supprimer le roster",
         "clear": "Vider les membres",
         "archive": "Archiver le roster"
@@ -707,12 +719,11 @@
         "roster_post": "Publie la liste finale du roster dans le canal sélectionné",
         "roster_signup": "Ouvre les inscriptions pour que les joueurs puissent s'inscrire",
         "roster_signup_close": "Ferme les inscriptions et empêche les nouvelles inscriptions",
-        "recurring_event": "Met à jour automatiquement les dates du roster pour les événements récurrents",
         "roster_delete": "Supprime définitivement le roster et toutes ses données",
         "roster_clear": "Retire tous les membres du roster sans le supprimer",
         "roster_archive": "Archive le roster en le passant en lecture seule"
       },
-      "infoBox": "Les automatisations permettent de planifier des actions comme ouvrir/fermer les inscriptions, poster le roster ou envoyer des rappels à des heures précises. Le bot exécutera automatiquement ces actions dans le canal Discord sélectionné."
+      "infoBox": "Les automatisations se déclenchent par rapport à la date de l'événement. Définissez un offset (ex : 3 jours avant) et le bot exécutera l'action automatiquement — y compris pour les événements récurrents."
     },
     "groups": {
       "title": "Groupes de Rosters",
@@ -731,7 +742,22 @@
       "noAutomations": "Aucune automatisation",
       "noAutomationsHint": "Créez une automatisation pour ce groupe",
       "addAutomation": "Ajouter une automatisation",
-      "deleteConfirm": "Supprimer le groupe \"{name}\" ? Les rosters de ce groupe seront dissociés."
+      "deleteConfirm": "Supprimer le groupe \"{name}\" ? Les rosters de ce groupe seront dissociés.",
+      "rules": {
+        "title": "Règles du groupe",
+        "rulesHint": "Ces règles s'appliquent à tous les rosters du groupe et sont propagées immédiatement.",
+        "maxAccounts": "Max comptes/utilisateur",
+        "maxAccountsBadge": "Max {count}/user",
+        "rosterSize": "Taille du roster",
+        "rosterSizeBadge": "Taille {size}",
+        "minSignups": "Seuil de remplissage",
+        "minSignupsBadge": "Seuil {count}",
+        "categoriesTitle": "Catégories d'inscription",
+        "categoriesHint": "Sélectionnez les catégories disponibles pour ce groupe. Appliquées immédiatement à tous les rosters.",
+        "categoriesBadge": "{count} catégories",
+        "noCategories": "Aucune catégorie pour l'instant.",
+        "newCategoryPlaceholder": "Nom de la nouvelle catégorie…"
+      }
     },
     "categories": {
       "title": "Catégories d'Inscription",
@@ -742,7 +768,7 @@
       "createTitle": "Créer une Catégorie",
       "idLabel": "ID de la Catégorie",
       "nameLabel": "Nom de la Catégorie",
-      "infoBox": "Les catégories permettent aux joueurs d'indiquer leur disponibilité ou rôle lors de l'inscription (ex: 'Disponible', 'Incertain', 'Seulement si besoin'). Vous pouvez filtrer et organiser les membres du roster par leur catégorie d'inscription."
+      "infoBox": "Les catégories permettent aux joueurs d'indiquer leur disponibilité ou rôle lors de l'inscription (ex: 'Disponible', 'Incertain', 'Seulement si besoin'). Les catégories sont partagées sur tous les rosters du serveur. Pour les rosters dans un groupe, configurez les catégories applicables via les paramètres du groupe."
     },
     "settings": {
       "general": "Identité & Configuration",
@@ -761,6 +787,14 @@
       "typeAndScope": "Type & Portée",
       "eventTime": "Date de l'Événement",
       "eventTimeHint": "Date de début de l'événement. Utilisé pour les automatisations et les compteurs.",
+      "recurrenceDays": "Répéter tous les",
+      "recurrenceModeDays": "Tous les N jours",
+      "recurrenceModeMonthly": "Jour du mois",
+      "recurrenceDaysUnit": "jours",
+      "recurrenceDayOfMonthPrefix": "Le",
+      "recurrenceDayOfMonthSuffix": "de chaque mois",
+      "recurrenceDaysHint": "Laissez vide pour un événement unique. Entrez le nombre de jours entre chaque occurrence (ex : 30 pour la CWL mensuelle).",
+      "recurrenceDayOfMonthHint": "Se répète ce jour chaque mois (ex : 1 = 1er).",
       "group": "Groupe",
       "noGroup": "Aucun Groupe",
       "thRequirements": "Exigences d'Hôtel de Ville",
@@ -769,12 +803,13 @@
       "signupLimits": "Limites d'Inscription",
       "rosterSize": "Taille du Roster",
       "rosterSizeHint": "Nombre maximum de membres",
-      "minSignups": "Inscriptions Min",
-      "minSignupsHint": "Inscriptions requises par utilisateur",
+      "minSignups": "Seuil de remplissage",
+      "minSignupsHint": "Nombre minimum d'inscrits pour considérer le roster comme complet",
       "maxAccountsPerUser": "Comptes Max par Utilisateur",
       "maxAccountsHint": "Limite de comptes par utilisateur Discord",
       "allowedCategories": "Catégories Autorisées",
       "allowedCategoriesHint": "Cliquez pour activer/désactiver. Si aucune sélection, toutes sont autorisées.",
+      "categoriesManagedByGroup": "Les catégories d'inscription sont gérées au niveau du groupe. Ouvrez les paramètres du groupe depuis la page Rosters pour configurer les catégories disponibles pour tous les rosters du groupe.",
       "saving": "Sauvegarde...",
       "save": "Sauvegarder"
     }

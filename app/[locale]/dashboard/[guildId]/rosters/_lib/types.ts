@@ -26,7 +26,7 @@ export interface RosterMember {
 
 export interface Roster {
   custom_id: string;
-  server_id: number;
+  server_id: string | number;
   alias: string;
   description?: string | null;
   roster_type: "clan" | "family";
@@ -47,19 +47,27 @@ export interface Roster {
   sort?: string[];
   image?: string | null;
   event_start_time?: number | null;
+  recurrence_days?: number | null;
+  recurrence_day_of_month?: number | null;
   created_at?: string;
   updated_at?: string;
 }
 
+export type PingType = "signup_reminder" | "missing";
+
+export interface RosterAutomationOptions {
+  ping_type?: PingType;
+}
+
 export interface RosterAutomation {
   automation_id: string;
-  server_id: number;
+  server_id: string | number;
   roster_id?: string;
   group_id?: string;
   action_type: AutomationActionType;
-  scheduled_time: number;
+  offset_seconds: number;
   discord_channel_id?: string;
-  options?: Record<string, unknown>;
+  options?: RosterAutomationOptions;
   active: boolean;
   executed: boolean;
   created_at?: number;
@@ -73,7 +81,6 @@ export type AutomationActionType =
   | "roster_signup_close"
   | "roster_post"
   | "roster_ping"
-  | "recurring_event"
   | "roster_delete"
   | "roster_clear"
   | "roster_archive";
@@ -82,11 +89,11 @@ export interface RosterGroup {
   group_id: string;
   alias: string;
   description?: string;
-  server_id: number;
-  max_accounts_per_user?: number;
-  auto_signup_publish?: boolean;
-  auto_registration_close?: boolean;
-  auto_result_publish?: boolean;
+  server_id: string | number;
+  max_accounts_per_user?: number | null;
+  roster_size?: number | null;
+  min_signups?: number | null;
+  allowed_signup_categories?: string[];
   roster_count?: number;
   rosters?: Array<{
     custom_id: string;
@@ -101,7 +108,7 @@ export interface RosterGroup {
 export interface SignupCategory {
   custom_id: string;
   alias: string;
-  server_id: number;
+  server_id: string | number;
   created_at?: number;
 }
 
@@ -181,6 +188,9 @@ export interface EditRosterFormData {
   min_signups: string;
   max_accounts_per_user: string;
   event_start_time: string;
+  recurrence_days: string;
+  recurrence_day_of_month: string;
+  recurrence_mode: 'days' | 'day_of_month';
   columns: string[];
   sort: string[];
   group_id: string;

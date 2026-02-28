@@ -66,11 +66,17 @@ import {
   getSortInternal,
   ROSTER_COLUMNS,
   SORT_OPTIONS,
+  buildOffsetSeconds,
+  parseOffsetSeconds,
+  formatOffsetSeconds,
 } from "../_lib";
+import type { OffsetUnit, OffsetDir } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
 import { generateRosterToken, fetchRosters } from "../_lib/api";
 import type { RosterTokenResult } from "../_lib/api";
 import { useGameConstants } from "../_hooks";
+
+// ────────────────────────────────────────────────────────────────────────────
 
 export default function RosterDetailPage() {
   const params = useParams();
@@ -152,17 +158,23 @@ export default function RosterDetailPage() {
     min_signups: "",
     max_accounts_per_user: "",
     event_start_time: "",
+    recurrence_days: "",
+    recurrence_day_of_month: "",
+    recurrence_mode: "days",
     columns: [],
     sort: [],
     group_id: "",
     allowed_signup_categories: [],
   });
 
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string }>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string; _offsetDir?: 'before' | 'after'; _offsetVal?: string; _offsetUnit?: 'minutes' | 'hours' | 'days' }>({
     action_type: "roster_ping",
-    scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+    offset_seconds: -86400,
     active: true,
     target_type: 'roster',
+    _offsetDir: 'before',
+    _offsetVal: '1',
+    _offsetUnit: 'days',
   });
 
   const [newCategory, setNewCategory] = useState({ custom_id: "", alias: "" });
@@ -210,6 +222,9 @@ export default function RosterDetailPage() {
         min_signups: roster.min_signups?.toString() || "",
         max_accounts_per_user: roster.max_accounts_per_user?.toString() || "",
         event_start_time: unixToDatetimeLocal(roster.event_start_time),
+        recurrence_days: roster.recurrence_days?.toString() || "",
+        recurrence_day_of_month: roster.recurrence_day_of_month?.toString() || "",
+        recurrence_mode: roster.recurrence_day_of_month ? "day_of_month" : "days",
         columns: (roster.columns || []).map(getColumnLabel),
         sort: (roster.sort || []).map(getSortLabel),
         group_id: roster.group_id || "",
@@ -227,6 +242,11 @@ export default function RosterDetailPage() {
 
   // Family clan tags
   const familyClanTags = clans.map(c => c.tag);
+
+  // Categories filtered to only those allowed for this roster
+  const rosterCategories = roster?.allowed_signup_categories?.length
+    ? categories.filter(c => roster.allowed_signup_categories!.includes(c.custom_id))
+    : categories;
 
   // Handlers
   const handleRefresh = async () => {
@@ -260,6 +280,10 @@ export default function RosterDetailPage() {
         min_signups: editData.min_signups ? parseInt(editData.min_signups) : null,
         max_accounts_per_user: editData.max_accounts_per_user ? parseInt(editData.max_accounts_per_user) : null,
         event_start_time: datetimeLocalToUnix(editData.event_start_time),
+        recurrence_days: editData.recurrence_mode === 'days' && editData.recurrence_days
+          ? parseInt(editData.recurrence_days) : null,
+        recurrence_day_of_month: editData.recurrence_mode === 'day_of_month' && editData.recurrence_day_of_month
+          ? parseInt(editData.recurrence_day_of_month) : null,
         columns: editData.columns.map(getColumnInternal),
         sort: editData.sort.map(getSortInternal),
         group_id: editData.group_id || null,
@@ -328,17 +352,18 @@ export default function RosterDetailPage() {
   };
 
   const handleCreateAutomation = async () => {
-    if (!newAutomation.action_type || !newAutomation.scheduled_time) return;
+    if (!newAutomation.action_type) return;
     if (newAutomation.target_type === 'group' && !newAutomation.target_group_id) return;
+    if (newAutomation.action_type === 'roster_ping' && !newAutomation.options?.ping_type) return;
 
     setSaving(true);
     try {
       await createAutomation({
-        server_id: parseInt(guildId),
+        server_id: guildId,
         roster_id: newAutomation.target_type === 'roster' ? rosterId : undefined,
         group_id: newAutomation.target_type === 'group' ? newAutomation.target_group_id : undefined,
         action_type: newAutomation.action_type as AutomationActionType,
-        scheduled_time: newAutomation.scheduled_time,
+        offset_seconds: newAutomation.offset_seconds ?? -86400,
         discord_channel_id: newAutomation.discord_channel_id,
         options: newAutomation.options,
         active: true,
@@ -347,9 +372,12 @@ export default function RosterDetailPage() {
       setCreateAutomationDialogOpen(false);
       setNewAutomation({
         action_type: "roster_ping",
-        scheduled_time: Math.floor(Date.now() / 1000) + 3600,
+        offset_seconds: -86400,
         active: true,
         target_type: 'roster',
+        _offsetDir: 'before',
+        _offsetVal: '1',
+        _offsetUnit: 'days',
       });
     } catch (err) {
       toast({
@@ -391,11 +419,13 @@ export default function RosterDetailPage() {
 
   const handleEditAutomation = async () => {
     if (!editingAutomation) return;
+    if (editingAutomation.action_type === 'roster_ping' && !editingAutomation.options?.ping_type) return;
     try {
       await updateAutomation(editingAutomation.automation_id, {
         action_type: editingAutomation.action_type,
-        scheduled_time: editingAutomation.scheduled_time,
+        offset_seconds: editingAutomation.offset_seconds,
         discord_channel_id: editingAutomation.discord_channel_id,
+        options: editingAutomation.options,
         active: editingAutomation.active,
       });
       toast({ title: t("automationUpdated") });
@@ -412,7 +442,12 @@ export default function RosterDetailPage() {
   const handleCreateCategory = async () => {
     if (!newCategory.alias.trim()) return;
     try {
-      await createCategory(newCategory.alias);
+      const created = await createCategory(newCategory.alias);
+      // Auto-select the new category in allowed_signup_categories
+      setEditData(prev => ({
+        ...prev,
+        allowed_signup_categories: [...prev.allowed_signup_categories, created.custom_id],
+      }));
       toast({ title: t("categoryCreated") });
       setCreateCategoryDialogOpen(false);
       setNewCategory({ custom_id: "", alias: "" });
@@ -549,10 +584,6 @@ export default function RosterDetailPage() {
             <Zap className="w-4 h-4" />
             {t("tabs.automations")}
           </TabsTrigger>
-          <TabsTrigger value="groups" className="gap-2">
-            <Tag className="w-4 h-4" />
-            {t("tabs.categories")}
-          </TabsTrigger>
           <TabsTrigger value="settings" className="gap-2">
             <SettingsIcon className="w-4 h-4" />
             {t("tabs.settings")}
@@ -567,7 +598,7 @@ export default function RosterDetailPage() {
             </p>
             <div className="flex items-center gap-2">
               {/* View Mode Toggle */}
-              {categories.length > 0 && (
+              {rosterCategories.length > 0 && (
                 <div className="flex items-center border border-border rounded-lg p-1">
                   <Button
                     variant={membersViewMode === "list" ? "secondary" : "ghost"}
@@ -699,10 +730,10 @@ export default function RosterDetailPage() {
 
           <Card className="bg-card border-border">
             <CardContent className={membersViewMode === "grouped" ? "p-4" : "p-0"}>
-              {membersViewMode === "grouped" && categories.length > 0 ? (
+              {membersViewMode === "grouped" && rosterCategories.length > 0 ? (
                 <MembersByCategory
                   members={roster.members || []}
-                  categories={categories}
+                  categories={rosterCategories}
                   columns={localColumns}
                   rosterClanTag={roster.clan_tag}
                   familyClans={clans}
@@ -717,7 +748,7 @@ export default function RosterDetailPage() {
                   columns={localColumns}
                   rosterClanTag={roster.clan_tag}
                   familyClans={clans}
-                  categories={categories}
+                  categories={rosterCategories}
                   onRemoveMember={handleRemoveMember}
                   removingMember={removingMember}
                   onCategoryClick={() => setMembersViewMode("grouped")}
@@ -769,7 +800,6 @@ export default function RosterDetailPage() {
                     case "roster_post": return "blue";
                     case "roster_signup": return "emerald";
                     case "roster_signup_close": return "red";
-                    case "recurring_event": return "purple";
                     default: return "gray";
                   }
                 };
@@ -803,7 +833,6 @@ export default function RosterDetailPage() {
                           {automation.action_type === "roster_post" && <MessageSquare className={`w-5 h-5 ${automation.active ? "text-blue-500" : "text-muted-foreground"}`} />}
                           {automation.action_type === "roster_signup" && <Unlock className={`w-5 h-5 ${automation.active ? "text-emerald-500" : "text-muted-foreground"}`} />}
                           {automation.action_type === "roster_signup_close" && <Lock className={`w-5 h-5 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
-                          {automation.action_type === "recurring_event" && <RefreshCw className={`w-5 h-5 ${automation.active ? "text-purple-500" : "text-muted-foreground"}`} />}
                           {automation.action_type === "roster_clear" && <UserMinus className={`w-5 h-5 ${automation.active ? "text-orange-500" : "text-muted-foreground"}`} />}
                           {automation.action_type === "roster_archive" && <Archive className={`w-5 h-5 ${automation.active ? "text-slate-500" : "text-muted-foreground"}`} />}
                           {automation.action_type === "roster_delete" && <Trash2 className={`w-5 h-5 ${automation.active ? "text-destructive" : "text-muted-foreground"}`} />}
@@ -833,8 +862,20 @@ export default function RosterDetailPage() {
                       <div className="space-y-1.5 mb-4">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="w-4 h-4 flex-shrink-0" />
-                          <span className="truncate">{formatTimestamp(automation.scheduled_time)}</span>
+                          <span className="truncate">{formatOffsetSeconds(automation.offset_seconds, t)}</span>
                         </div>
+                        {automation.action_type === "roster_ping" && automation.options?.ping_type && (
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Bell className="w-4 h-4 flex-shrink-0" />
+                            <span className="truncate">{t(`automations.pingType_${automation.options.ping_type}`)}</span>
+                          </div>
+                        )}
+                        {roster?.event_start_time && (
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
+                            <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span className="truncate">{formatTimestamp(roster.event_start_time + automation.offset_seconds)}</span>
+                          </div>
+                        )}
                         {automation.discord_channel_id && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Hash className="w-4 h-4 flex-shrink-0" />
@@ -846,114 +887,41 @@ export default function RosterDetailPage() {
                       </div>
 
                       {/* Actions */}
-                      {automation._isGroupAutomation ? (
-                        <div className="pt-3 border-t border-border/50">
-                          <p className="text-xs text-muted-foreground text-center italic">
-                            {t("automations.groupAutomationHint")}
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1 pt-3 border-t border-border/50">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="flex-1 h-8 text-xs"
-                            onClick={() => handleToggleAutomation(automation.automation_id)}
-                          >
-                            {automation.active ? t("automations.disable") : t("automations.enable")}
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
-                            onClick={() => {
-                              setEditingAutomation(automation);
-                              setEditAutomationDialogOpen(true);
-                            }}
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                            onClick={() => handleDeleteAutomation(automation.automation_id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-1 pt-3 border-t border-border/50">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex-1 h-8 text-xs"
+                          onClick={() => handleToggleAutomation(automation.automation_id)}
+                        >
+                          {automation.active ? t("automations.disable") : t("automations.enable")}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => {
+                            setEditingAutomation(automation);
+                            setEditAutomationDialogOpen(true);
+                          }}
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          onClick={() => handleDeleteAutomation(automation.automation_id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 );
               })}
             </div>
           )}
-        </TabsContent>
-
-        {/* Categories Tab */}
-        <TabsContent value="groups" className="space-y-6">
-          {/* Categories Info Box */}
-          <Alert className="bg-purple-500/5 border-purple-500/20">
-            <Lightbulb className="h-4 w-4 text-purple-500" />
-            <AlertDescription className="text-sm text-muted-foreground">
-              {t("categories.infoBox")}
-            </AlertDescription>
-          </Alert>
-
-          {/* Categories Section */}
-          <Card className="bg-card border-l-4 border-l-purple-500">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <Tag className="w-5 h-5 text-purple-500" />
-                  </div>
-                  {t("categories.title")}
-                </CardTitle>
-                <Button size="sm" variant="outline" onClick={() => setCreateCategoryDialogOpen(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t("categories.create")}
-                </Button>
-              </div>
-              <p className="text-sm text-muted-foreground ml-11">{t("categories.description")}</p>
-            </CardHeader>
-            <CardContent>
-              {categories.length === 0 ? (
-                <div className="text-center py-6 text-muted-foreground">
-                  <Tag className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>{t("categories.noCategories")}</p>
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <Badge
-                      key={category.custom_id}
-                      variant="secondary"
-                      className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
-                    >
-                      {category.alias}
-                      <button
-                        onClick={() => {
-                          setEditingCategory({ custom_id: category.custom_id, alias: category.alias });
-                          setEditCategoryDialogOpen(true);
-                        }}
-                        className="hover:text-foreground transition-colors"
-                      >
-                        <Pencil className="w-3 h-3" />
-                      </button>
-                      <button
-                        onClick={() => deleteCategory(category.custom_id)}
-                        className="hover:text-destructive transition-colors"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
         </TabsContent>
 
         {/* Settings Tab */}
@@ -1099,7 +1067,7 @@ export default function RosterDetailPage() {
                 </div>
               </div>
 
-              {/* Event Time */}
+              {/* Event Time + Recurrence */}
               <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-lg space-y-3">
                 <Label className="flex items-center gap-2 text-sm font-medium">
                   <Calendar className="w-4 h-4 text-amber-500" />
@@ -1118,6 +1086,57 @@ export default function RosterDetailPage() {
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">{t("settings.eventTimeHint")}</p>
+                <div className="flex items-center gap-3 pt-1">
+                  <RefreshCw className="w-4 h-4 text-amber-500 shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="flex gap-2">
+                      <Button type="button" size="sm"
+                        variant={editData.recurrence_mode === 'days' ? 'default' : 'outline'}
+                        className="h-7 text-xs"
+                        onClick={() => setEditData({ ...editData, recurrence_mode: 'days', recurrence_day_of_month: '' })}>
+                        {t("settings.recurrenceModeDays")}
+                      </Button>
+                      <Button type="button" size="sm"
+                        variant={editData.recurrence_mode === 'day_of_month' ? 'default' : 'outline'}
+                        className="h-7 text-xs"
+                        onClick={() => setEditData({ ...editData, recurrence_mode: 'day_of_month', recurrence_days: '' })}>
+                        {t("settings.recurrenceModeMonthly")}
+                      </Button>
+                    </div>
+                    {editData.recurrence_mode === 'days' ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="—"
+                          value={editData.recurrence_days}
+                          onChange={(e) => setEditData({ ...editData, recurrence_days: e.target.value })}
+                          className="bg-background w-24"
+                        />
+                        <span className="text-sm text-muted-foreground">{t("settings.recurrenceDaysUnit")}</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">{t("settings.recurrenceDayOfMonthPrefix")}</span>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={31}
+                          placeholder="1"
+                          value={editData.recurrence_day_of_month}
+                          onChange={(e) => setEditData({ ...editData, recurrence_day_of_month: e.target.value })}
+                          className="bg-background w-20"
+                        />
+                        <span className="text-sm text-muted-foreground">{t("settings.recurrenceDayOfMonthSuffix")}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {editData.recurrence_mode === 'days'
+                    ? t("settings.recurrenceDaysHint")
+                    : t("settings.recurrenceDayOfMonthHint")}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -1223,12 +1242,23 @@ export default function RosterDetailPage() {
               </div>
 
               {/* Allowed Signup Categories */}
-              {categories.length > 0 && (
-                <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg space-y-3">
+              <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg space-y-3">
+                <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-2 text-sm font-medium">
                     <Tag className="w-4 h-4 text-purple-500" />
                     {t("settings.allowedCategories")}
                   </Label>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-purple-500 hover:text-purple-400 hover:bg-purple-500/10"
+                    onClick={() => setCreateCategoryDialogOpen(true)}
+                  >
+                    <Plus className="w-3.5 h-3.5 mr-1" />
+                    {t("categories.create")}
+                  </Button>
+                </div>
+                {categories.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {categories.map((category) => (
                       <Badge
@@ -1251,9 +1281,11 @@ export default function RosterDetailPage() {
                       </Badge>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground">{t("settings.allowedCategoriesHint")}</p>
-                </div>
-              )}
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">{t("categories.noCategories")}</p>
+                )}
+                <p className="text-xs text-muted-foreground">{t("settings.allowedCategoriesHint")}</p>
+              </div>
             </CardContent>
           </Card>
 
@@ -1278,6 +1310,7 @@ export default function RosterDetailPage() {
               )}
             </Button>
           </div>
+
         </TabsContent>
       </Tabs>
 
@@ -1382,12 +1415,6 @@ export default function RosterDetailPage() {
                       <span>{t("automations.actions.closeSignup")}</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="recurring_event">
-                    <div className="flex items-center gap-2">
-                      <RefreshCw className="w-4 h-4 text-purple-500" />
-                      <span>{t("automations.actions.recurring")}</span>
-                    </div>
-                  </SelectItem>
                   <SelectItem value="roster_clear">
                     <div className="flex items-center gap-2">
                       <UserMinus className="w-4 h-4 text-orange-500" />
@@ -1415,19 +1442,87 @@ export default function RosterDetailPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label>{t("automations.scheduledTime")}</Label>
-              <Input
-                type="datetime-local"
-                value={unixToDatetimeLocal(newAutomation.scheduled_time)}
-                onChange={(e) =>
-                  setNewAutomation({
-                    ...newAutomation,
-                    scheduled_time: datetimeLocalToUnix(e.target.value) || 0,
-                  })
-                }
-                className="bg-background"
-              />
+              <Label>{t("automations.offsetFromEvent")}</Label>
+              <div className="flex items-center gap-2">
+                <Select
+                  value={newAutomation._offsetDir ?? 'before'}
+                  onValueChange={(v) => {
+                    const dir = v as OffsetDir;
+                    const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
+                    const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
+                    setNewAutomation({ ...newAutomation, _offsetDir: dir, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                  }}
+                >
+                  <SelectTrigger className="bg-background w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
+                    <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  type="number"
+                  min={1}
+                  value={newAutomation._offsetVal ?? '1'}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value) || 1;
+                    const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
+                    const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
+                    setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                  }}
+                  className="bg-background w-20"
+                />
+                <Select
+                  value={newAutomation._offsetUnit ?? 'days'}
+                  onValueChange={(v) => {
+                    const unit = v as OffsetUnit;
+                    const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
+                    const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
+                    setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                  }}
+                >
+                  <SelectTrigger className="bg-background w-28">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
+                    <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
+                    <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {roster?.event_start_time ? (
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {t("automations.offsetPreview", { date: formatTimestamp(roster.event_start_time + (newAutomation.offset_seconds ?? -86400)) })}
+                </p>
+              ) : (
+                <p className="text-xs text-amber-500 flex items-center gap-1">
+                  <Info className="w-3 h-3" />
+                  {t("automations.offsetNoEventDate")}
+                </p>
+              )}
             </div>
+            {newAutomation.action_type === "roster_ping" && (
+              <div className="space-y-2">
+                <Label>{t("automations.pingType")}</Label>
+                <Select
+                  value={newAutomation.options?.ping_type ?? ""}
+                  onValueChange={(v) =>
+                    setNewAutomation({ ...newAutomation, options: { ...newAutomation.options, ping_type: v as import("../_lib/types").PingType } })
+                  }
+                >
+                  <SelectTrigger className="bg-background">
+                    <SelectValue placeholder={t("automations.pingType")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="signup_reminder">{t("automations.pingType_signup_reminder")}</SelectItem>
+                    <SelectItem value="missing">{t("automations.pingType_missing")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="space-y-2">
               <Label>{t("automations.channel")}</Label>
               <ChannelCombobox
@@ -1520,12 +1615,6 @@ export default function RosterDetailPage() {
                       <span>{t("automations.actions.closeSignup")}</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="recurring_event">
-                    <div className="flex items-center gap-2">
-                      <RefreshCw className="w-4 h-4 text-purple-500" />
-                      <span>{t("automations.actions.recurring")}</span>
-                    </div>
-                  </SelectItem>
                   <SelectItem value="roster_clear">
                     <div className="flex items-center gap-2">
                       <UserMinus className="w-4 h-4 text-orange-500" />
@@ -1553,19 +1642,88 @@ export default function RosterDetailPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label>{t("automations.scheduledTime")}</Label>
-              <Input
-                type="datetime-local"
-                value={editingAutomation ? unixToDatetimeLocal(editingAutomation.scheduled_time) : ""}
-                onChange={(e) =>
-                  setEditingAutomation(prev => prev ? {
-                    ...prev,
-                    scheduled_time: datetimeLocalToUnix(e.target.value) || 0,
-                  } : null)
-                }
-                className="bg-background"
-              />
+              <Label>{t("automations.offsetFromEvent")}</Label>
+              {editingAutomation && (() => {
+                const parsed = parseOffsetSeconds(editingAutomation.offset_seconds ?? 0);
+                return (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Select
+                        value={parsed.dir}
+                        onValueChange={(v) => {
+                          const dir = v as OffsetDir;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(dir, parsed.val, parsed.unit) } : null);
+                        }}
+                      >
+                        <SelectTrigger className="bg-background w-32">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
+                          <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        type="number"
+                        min={1}
+                        value={parsed.val}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value) || 1;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, val, parsed.unit) } : null);
+                        }}
+                        className="bg-background w-20"
+                      />
+                      <Select
+                        value={parsed.unit}
+                        onValueChange={(v) => {
+                          const unit = v as OffsetUnit;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, parsed.val, unit) } : null);
+                        }}
+                      >
+                        <SelectTrigger className="bg-background w-28">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
+                          <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
+                          <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {roster?.event_start_time ? (
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {t("automations.offsetPreview", { date: formatTimestamp(roster.event_start_time + editingAutomation.offset_seconds) })}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-amber-500 flex items-center gap-1">
+                        <Info className="w-3 h-3" />
+                        {t("automations.offsetNoEventDate")}
+                      </p>
+                    )}
+                  </>
+                );
+              })()}
             </div>
+            {editingAutomation?.action_type === "roster_ping" && (
+              <div className="space-y-2">
+                <Label>{t("automations.pingType")}</Label>
+                <Select
+                  value={editingAutomation.options?.ping_type ?? ""}
+                  onValueChange={(v) =>
+                    setEditingAutomation(prev => prev ? { ...prev, options: { ...prev.options, ping_type: v as import("../_lib/types").PingType } } : null)
+                  }
+                >
+                  <SelectTrigger className="bg-background">
+                    <SelectValue placeholder={t("automations.pingType")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="signup_reminder">{t("automations.pingType_signup_reminder")}</SelectItem>
+                    <SelectItem value="missing">{t("automations.pingType_missing")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="space-y-2">
               <Label>{t("automations.channel")}</Label>
               <ChannelCombobox
@@ -1727,14 +1885,13 @@ export default function RosterDetailPage() {
                       {automation.action_type === "roster_post" && <MessageSquare className={`w-4 h-4 ${automation.active ? "text-blue-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_signup" && <Unlock className={`w-4 h-4 ${automation.active ? "text-emerald-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_signup_close" && <Lock className={`w-4 h-4 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
-                      {automation.action_type === "recurring_event" && <RefreshCw className={`w-4 h-4 ${automation.active ? "text-purple-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_clear" && <UserMinus className={`w-4 h-4 ${automation.active ? "text-orange-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_archive" && <Archive className={`w-4 h-4 ${automation.active ? "text-slate-500" : "text-muted-foreground"}`} />}
                       {automation.action_type === "roster_delete" && <Trash2 className={`w-4 h-4 ${automation.active ? "text-destructive" : "text-muted-foreground"}`} />}
                     </div>
                     <div>
                       <p className="font-medium text-sm">{getAutomationLabel(automation.action_type)}</p>
-                      <p className="text-xs text-muted-foreground">{formatTimestamp(automation.scheduled_time)}</p>
+                      <p className="text-xs text-muted-foreground">{formatOffsetSeconds(automation.offset_seconds, t)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

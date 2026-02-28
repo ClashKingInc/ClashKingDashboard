@@ -311,9 +311,10 @@ export async function createAutomation(
 
 export async function updateAutomation(
   automationId: string,
+  serverId: string,
   data: Partial<RosterAutomation>
 ): Promise<RosterAutomation> {
-  const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
+  const response = await fetch(`/api/v2/roster-automation/${automationId}?server_id=${serverId}`, {
     method: 'PATCH',
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
@@ -321,8 +322,8 @@ export async function updateAutomation(
   return handleResponse<RosterAutomation>(response);
 }
 
-export async function deleteAutomation(automationId: string): Promise<void> {
-  const response = await fetch(`/api/v2/roster-automation/${automationId}`, {
+export async function deleteAutomation(automationId: string, serverId: string): Promise<void> {
+  const response = await fetch(`/api/v2/roster-automation/${automationId}?server_id=${serverId}`, {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
