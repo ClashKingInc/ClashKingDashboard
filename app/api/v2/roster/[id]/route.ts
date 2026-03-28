@@ -88,7 +88,16 @@ export async function DELETE(
     const { id } = await params;
     const token = request.headers.get('authorization');
 
-    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}`, {
+    const searchParams = request.nextUrl.searchParams;
+    const server_id = searchParams.get('server_id');
+    const members_only = searchParams.get('members_only');
+
+    const backendParams = new URLSearchParams();
+    if (server_id) backendParams.append('server_id', server_id);
+    if (members_only) backendParams.append('members_only', members_only);
+    const query = backendParams.toString();
+
+    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}${query ? `?${query}` : ''}`, {
       method: 'DELETE',
       headers: {
         'Authorization': token || '',

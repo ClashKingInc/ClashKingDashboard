@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState, useEffect, Fragment } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import React, { useState, useEffect, useMemo } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2, Plus, Users, Trash2, Edit, Shield, Calendar, UserPlus, Search, RefreshCw, X, Filter, Eye, TrendingUp, Target, Star, GitCompare, CheckSquare, Square } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -18,9 +19,6 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -28,387 +26,566 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader2, Plus, Users, Trash2, Edit, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus, Tag, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { useToast } from "@/components/ui/use-toast";
 
-// Type definitions based on ClashKingAPI models
-interface RosterMember {
-  name: string;
-  tag: string;
-  hero_lvs: number;
-  townhall: number;
-  discord: string;
-  current_clan: string;
-  current_clan_tag: string;
-  war_pref: boolean;
-  trophies: number;
-  sub: boolean;
-  signup_group?: string | null;
-  hitrate?: number | null;
-  last_online?: number | null;
-  current_league?: string | null;
-  added_at?: number | null;
-  last_updated?: number | null;
-  member_status: string;
-  error_details?: string | null;
+// Local imports
+import { useRosters } from "./_hooks";
+import { CloneDialog } from "./_components";
+import * as api from "./_lib/api";
+import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData, SignupCategory } from "./_lib/types";
+import { calculateRosterStats, formatThRestriction, getAutomationLabel, buildOffsetSeconds, parseOffsetSeconds, formatOffsetSeconds } from "./_lib/utils";
+import type { OffsetUnit } from "./_lib/utils";
+
+// Roster Card Component
+interface RosterCardProps {
+  roster: Roster;
+  stats: RosterStats;
+  isSelected: boolean;
+  compareMode: boolean;
+  deleting: string | null;
+  groups: RosterGroup[];
+  onSelect: () => void;
+  onView: () => void;
+  onClone: () => void;
+  onDelete: () => void;
+  onMoveToGroup: (groupId: string | null) => void;
 }
 
-interface Roster {
-  custom_id: string;
-  server_id: number;
-  alias: string;
-  roster_type: "clan" | "family";
-  signup_scope: "clan-only" | "family-wide";
-  clan_tag?: string | null;
-  clan_name?: string | null;
-  clan_badge?: string | null;
-  members: RosterMember[];
-  min_th?: number | null;
-  max_th?: number | null;
-  description?: string | null;
-  roster_size?: number | null;
-  min_signups?: number | null;
-  columns?: string[];
-  sort?: string[];
-  image?: string | null;
-  group_id?: string | null;
-  created_at?: string;
-  updated_at?: string;
-}
+function RosterCard({
+  roster,
+  stats,
+  isSelected,
+  compareMode,
+  deleting,
+  groups,
+  onSelect,
+  onView,
+  onClone,
+  onDelete,
+  onMoveToGroup,
+}: RosterCardProps) {
+  const t = useTranslations("RostersPage");
+  return (
+    <Card
+      className={`bg-card border-border transition-all relative ${
+        compareMode
+          ? isSelected
+            ? "ring-2 ring-primary border-primary bg-primary/5 cursor-pointer"
+            : "hover:border-primary/50 hover:bg-primary/5 cursor-pointer"
+          : "hover:border-primary/50"
+      }`}
+      onClick={compareMode ? onSelect : undefined}
+    >
+      {/* Selection indicator in compare mode */}
+      {compareMode && (
+        <div className={`absolute top-3 right-3 z-10 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+          isSelected
+            ? "bg-primary border-primary"
+            : "border-muted-foreground/50 bg-background"
+        }`}>
+          {isSelected && <Check className="w-4 h-4 text-primary-foreground" />}
+        </div>
+      )}
+      <CardHeader className="pb-3">
+        <div className={`flex items-center gap-3 ${compareMode ? "pr-10" : ""}`}>
+          {roster.clan_badge ? (
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
+              <AvatarFallback>{roster.alias.charAt(0)}</AvatarFallback>
+            </Avatar>
+          ) : (
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Users className="h-5 w-5 text-primary" />
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <CardTitle className="text-lg text-foreground truncate">{roster.alias}</CardTitle>
+              <Badge variant={roster.roster_type === "clan" ? "default" : "secondary"} className="text-xs">
+                {roster.roster_type}
+              </Badge>
+            </div>
+            {roster.clan_name && (
+              <p className="text-sm text-muted-foreground truncate">{roster.clan_name}</p>
+            )}
+          </div>
+        </div>
+      </CardHeader>
 
-interface ClanMember {
-  tag: string;
-  name: string;
-  townhall: number;
-  clan_tag: string;
-  clan_name: string;
-}
+      <CardContent className="space-y-4">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p className="text-2xl font-bold text-foreground">{stats.totalMembers}</p>
+            <p className="text-xs text-muted-foreground">{t("rosterCard.members")}</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-orange-400">{stats.avgTh || "-"}</p>
+            <p className="text-xs text-muted-foreground">{t("rosterCard.avgTh")}</p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-green-400">
+              {stats.avgHitrate ? `${stats.avgHitrate}%` : "-"}
+            </p>
+            <p className="text-xs text-muted-foreground">{t("rosterCard.avgHitrate")}</p>
+          </div>
+        </div>
 
-interface Clan {
-  tag: string;
-  name: string;
-  badge_url?: string | null;
+        {/* TH Restriction */}
+        {(roster.min_th || roster.max_th) && (
+          <div className="flex items-center justify-center">
+            <Badge variant="outline" className="text-xs">
+              {formatThRestriction(roster.min_th, roster.max_th)}
+            </Badge>
+          </div>
+        )}
+
+        {/* Member distribution */}
+        {stats.totalMembers > 0 && (
+          <div className="flex justify-center gap-2 text-xs">
+            {stats.inClan > 0 && (
+              <span className="text-green-400">{stats.inClan} {t("rosterCard.clan")}</span>
+            )}
+            {stats.inFamily > 0 && (
+              <span className="text-yellow-400">{stats.inFamily} {t("rosterCard.family")}</span>
+            )}
+            {stats.external > 0 && (
+              <span className="text-red-400">{stats.external} {t("rosterCard.external")}</span>
+            )}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
+          <Button variant="default" size="sm" className="flex-1" onClick={onView}>
+            <Eye className="w-4 h-4 mr-1" />
+            {t("rosterCard.view")}
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {groups.length > 0 && (
+                <>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">{t("rosterCard.moveToGroup")}</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    onClick={() => onMoveToGroup(null)}
+                    className={!roster.group_id ? "font-medium" : ""}
+                  >
+                    <FolderOpen className="w-4 h-4 mr-2 text-muted-foreground" />
+                    {t("rosterCard.noGroup")}
+                  </DropdownMenuItem>
+                  {groups.map((g) => (
+                    <DropdownMenuItem
+                      key={g.group_id}
+                      onClick={() => onMoveToGroup(g.group_id)}
+                      className={roster.group_id === g.group_id ? "font-medium" : ""}
+                    >
+                      <FolderOpen className="w-4 h-4 mr-2 text-indigo-500" />
+                      {g.alias}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              <DropdownMenuItem onClick={onClone}>
+                <Copy className="w-4 h-4 mr-2" />
+                {t("rosterCard.clone")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
+                <Trash2 className="w-4 h-4 mr-2" />
+                {t("rosterCard.delete")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 export default function RostersPage() {
   const params = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { toast } = useToast();
   const guildId = params?.guildId as string;
+  const locale = params?.locale as string;
   const t = useTranslations("RostersPage");
   const tCommon = useTranslations("Common");
 
-  const [loading, setLoading] = useState(true);
-  const [rosters, setRosters] = useState<Roster[]>([]);
-  const [clans, setClans] = useState<Clan[]>([]);
-  const [selectedRoster, setSelectedRoster] = useState<Roster | null>(null);
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [addMembersDialogOpen, setAddMembersDialogOpen] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState<string | null>(null);
+  // Data hook
+  const {
+    rosters,
+    clans,
+    loading,
+    error,
+    refresh,
+    createRoster,
+    deleteRoster,
+    cloneRoster,
+  } = useRosters(guildId);
 
-  // New roster form state
-  const [newRosterData, setNewRosterData] = useState({
+  // Groups state
+  const [groups, setGroups] = useState<RosterGroup[]>([]);
+  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
+  const [editGroupDialogOpen, setEditGroupDialogOpen] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<RosterGroup | null>(null);
+  const [newGroupAlias, setNewGroupAlias] = useState("");
+  const [savingGroup, setSavingGroup] = useState(false);
+  const [deletingGroup, setDeletingGroup] = useState<string | null>(null);
+
+  // Group Automations state
+  const [groupAutomationsDialogOpen, setGroupAutomationsDialogOpen] = useState(false);
+  const [selectedGroupForAutomations, setSelectedGroupForAutomations] = useState<RosterGroup | null>(null);
+  const [groupAutomations, setGroupAutomations] = useState<RosterAutomation[]>([]);
+  const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
+  const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
+  const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { _offsetVal?: string; _offsetUnit?: OffsetUnit }>({
+    action_type: "roster_ping",
+    offset_seconds: -86400,
+    _offsetVal: '1',
+    _offsetUnit: 'days',
+    active: true,
+  });
+  const [savingAutomation, setSavingAutomation] = useState(false);
+  const [channels, setChannels] = useState<DiscordChannel[]>([]);
+  const [categories, setCategories] = useState<SignupCategory[]>([]);
+  const [newCategoryAlias, setNewCategoryAlias] = useState("");
+  const [savingCategory, setSavingCategory] = useState(false);
+  // Category management (standalone, outside group dialog)
+  const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
+  const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
+  const [editingCategoryStandalone, setEditingCategoryStandalone] = useState<SignupCategory | null>(null);
+  const [standaloneNewAlias, setStandaloneNewAlias] = useState("");
+
+  // Fetch groups
+  const refreshGroups = () => {
+    if (guildId) api.fetchGroups(guildId).then(setGroups).catch(() => setGroups([]));
+  };
+
+  const refreshCategories = () => {
+    if (guildId) api.fetchCategories(guildId).then(setCategories).catch(() => setCategories([]));
+  };
+
+  useEffect(() => {
+    refreshGroups();
+    refreshCategories();
+    if (guildId) api.fetchChannels(guildId).then(setChannels).catch(() => setChannels([]));
+  }, [guildId]);
+
+  // Group rosters by group_id
+  const rostersByGroup = useMemo(() => {
+    const grouped: Record<string, Roster[]> = { ungrouped: [] };
+    groups.forEach(g => { grouped[g.group_id] = []; });
+
+    rosters.forEach(roster => {
+      if (roster.group_id && grouped[roster.group_id]) {
+        grouped[roster.group_id].push(roster);
+      } else {
+        grouped.ungrouped.push(roster);
+      }
+    });
+
+    return grouped;
+  }, [rosters, groups]);
+
+  // UI state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [cloneDialogOpen, setCloneDialogOpen] = useState(false);
+  const [rosterToClone, setRosterToClone] = useState<Roster | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [compareMode, setCompareMode] = useState(false);
+  const [selectedRosterIds, setSelectedRosterIds] = useState<string[]>([]);
+
+  // Create form state
+  const [newRosterData, setNewRosterData] = useState<CreateRosterFormData>({
     alias: "",
-    roster_type: "clan" as "clan" | "family",
-    signup_scope: "clan-only" as "clan-only" | "family-wide",
+    roster_type: "clan",
+    signup_scope: "clan-only",
     clan_tag: "",
   });
 
-  // Edit roster form state
-  const [editRosterData, setEditRosterData] = useState({
-    alias: "",
-    description: "",
-    min_th: "",
-    max_th: "",
-    roster_size: "",
-    columns: [] as string[],
-    sort: [] as string[],
-  });
+  // Filter rosters
+  const filteredRosters = rosters.filter(roster =>
+    roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  // Add members state
-  const [bulkTags, setBulkTags] = useState("");
-  const [clanMembers, setClanMembers] = useState<ClanMember[]>([]);
-  const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
-  const [memberSearch, setMemberSearch] = useState("");
+  // Family clan tags for stats calculation
+  const familyClanTags = clans.map(c => c.tag);
 
-  // Filter and search state
-  const [rosterSearch, setRosterSearch] = useState("");
-  const [rosterTypeFilter, setRosterTypeFilter] = useState<"all" | "clan" | "family">("all");
-  const [refreshing, setRefreshing] = useState(false);
+  // Calculate global stats
+  const totalMembers = rosters.reduce((acc, r) => acc + (r.members?.length || 0), 0);
+  const clanRosters = rosters.filter(r => r.roster_type === "clan").length;
+  const familyRosters = rosters.filter(r => r.roster_type === "family").length;
 
-  // Comparison mode state
-  const [comparisonMode, setComparisonMode] = useState(false);
-  const [selectedRosterIds, setSelectedRosterIds] = useState<Set<string>>(new Set());
-  const [compareDialogOpen, setCompareDialogOpen] = useState(false);
-
-  // Cross-roster drag & drop state
-  const [draggedMemberData, setDraggedMemberData] = useState<{
-    memberTag: string;
-    sourceRosterId: string;
-  } | null>(null);
-  const [dropTargetRoster, setDropTargetRoster] = useState<string | null>(null);
-
-  // Fetch rosters and clans
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          router.push(`/${params.locale}/login`);
-          return;
-        }
-
-        // Fetch rosters and clans in parallel
-        const [rostersRes, clansRes] = await Promise.all([
-          fetch(`/api/v2/roster/${guildId}/list`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          }),
-          fetch(`/api/v2/server/${guildId}/clans`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          }),
-        ]);
-
-        if (!rostersRes.ok) {
-          if (rostersRes.status === 401) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
-            router.push(`/${params.locale}/login`);
-            return;
-          }
-          throw new Error("Failed to fetch rosters");
-        }
-
-        const rostersData = await rostersRes.json();
-        setRosters(rostersData.items || rostersData.rosters || rostersData || []);
-
-        if (clansRes.ok) {
-          const clansData = await clansRes.json();
-          setClans(clansData || []);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load rosters. Please try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
+  // Selection handlers
+  const toggleRosterSelection = (rosterId: string) => {
+    setSelectedRosterIds(prev => {
+      if (prev.includes(rosterId)) {
+        return prev.filter(id => id !== rosterId);
       }
-    };
-
-    if (guildId) {
-      fetchData();
-    }
-  }, [guildId, router, toast]);
-
-  // Auto-activate comparison mode if 'compare' query parameter is present
-  useEffect(() => {
-    const compareRosterId = searchParams.get('compare');
-    if (compareRosterId && rosters.length > 0) {
-      // Check if roster exists in the list
-      const rosterExists = rosters.some(r => r.custom_id === compareRosterId);
-      if (rosterExists) {
-        setComparisonMode(true);
-        setSelectedRosterIds(new Set([compareRosterId]));
-
-        // Remove the query parameter from URL
-        const url = new URL(window.location.href);
-        url.searchParams.delete('compare');
-        router.replace(url.pathname);
+      if (prev.length >= 4) {
+        // Max 4 rosters
+        return prev;
       }
-    }
-  }, [rosters, searchParams, router]);
+      return [...prev, rosterId];
+    });
+  };
 
-  // Fetch clan members when opening add members dialog
-  const handleOpenAddMembers = async (roster: Roster) => {
-    setSelectedRoster(roster);
-    setAddMembersDialogOpen(true);
-    setSelectedMembers(new Set());
+  const exitCompareMode = () => {
+    setCompareMode(false);
+    setSelectedRosterIds([]);
+  };
 
-    try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster/server/${guildId}/members`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setClanMembers(data.members || data || []);
-      }
-    } catch (error) {
-      console.error("Error fetching clan members:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load clan members.",
-        variant: "destructive",
-      });
+  const handleCompareRosters = () => {
+    if (selectedRosterIds.length >= 2) {
+      router.push(`/${locale}/dashboard/${guildId}/rosters/compare?ids=${selectedRosterIds.join(',')}`);
     }
   };
 
-  const handleCreateRoster = async () => {
-    setCreating(true);
+  const handleCompareGroup = (groupId: string) => {
+    router.push(`/${locale}/dashboard/${guildId}/rosters/compare?groupId=${groupId}`);
+  };
+
+  const handleCreateGroup = async () => {
+    if (!newGroupAlias.trim()) return;
+    setSavingGroup(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-
-      const rosterData = {
-        ...newRosterData,
-        clan_tag: newRosterData.roster_type === "clan" ? newRosterData.clan_tag : undefined,
-      };
-
-      const response = await fetch(`/api/v2/roster?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify(rosterData)
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create roster");
-      }
-
-      // Refresh rosters list
-      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        setRosters(data.items || data.rosters || data || []);
-      }
-
-      toast({
-        title: "Success",
-        description: "Roster created successfully!",
-      });
-
-      setCreateDialogOpen(false);
-      setNewRosterData({
-        alias: "",
-        roster_type: "clan",
-        signup_scope: "clan-only",
-        clan_tag: "",
-      });
-    } catch (error) {
-      console.error("Error creating roster:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create roster. Please try again.",
-        variant: "destructive",
-      });
+      const created = await api.createGroup(guildId, newGroupAlias.trim());
+      setGroups(prev => [...prev, created]);
+      setCreateGroupDialogOpen(false);
+      setNewGroupAlias("");
+      toast({ title: t("groupCreated") });
+    } catch {
+      toast({ title: t("groupError"), variant: "destructive" });
     } finally {
-      setCreating(false);
+      setSavingGroup(false);
     }
   };
 
-  const handleUpdateRoster = async () => {
-    if (!selectedRoster) return;
-
-    setSaving(true);
+  const handleCreateCategoryInline = async () => {
+    if (!newCategoryAlias.trim()) return;
+    setSavingCategory(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-
-      // Convert display labels back to internal names
-      const updates = {
-        alias: editRosterData.alias,
-        description: editRosterData.description || null,
-        min_th: editRosterData.min_th ? parseInt(editRosterData.min_th) : null,
-        max_th: editRosterData.max_th ? parseInt(editRosterData.max_th) : null,
-        roster_size: editRosterData.roster_size ? parseInt(editRosterData.roster_size) : null,
-        columns: editRosterData.columns.length > 0
-          ? editRosterData.columns.map(col => getInternalColumnName(col))
-          : null,
-        sort: editRosterData.sort.length > 0
-          ? editRosterData.sort.map(field => getInternalSortField(field))
-          : null,
-      };
-
-      const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify(updates)
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update roster");
-      }
-
-      // Refresh rosters list
-      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        setRosters(data.items || data.rosters || data || []);
-      }
-
-      toast({
-        title: "Success",
-        description: "Roster updated successfully!",
-      });
-
-      setEditDialogOpen(false);
-    } catch (error) {
-      console.error("Error updating roster:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update roster. Please try again.",
-        variant: "destructive",
-      });
+      const created = await api.createCategory(guildId, newCategoryAlias.trim());
+      setCategories(prev => [...prev, created]);
+      // Auto-select the new category in the editing group
+      setEditingGroup(prev => prev ? {
+        ...prev,
+        allowed_signup_categories: [...(prev.allowed_signup_categories ?? []), created.custom_id],
+      } : null);
+      setNewCategoryAlias("");
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
     } finally {
-      setSaving(false);
+      setSavingCategory(false);
     }
   };
 
-  const handleDeleteRoster = async (rosterId: string) => {
-    setDeleting(rosterId);
+  const handleEditGroup = async () => {
+    if (!editingGroup?.alias.trim()) return;
+    setSavingGroup(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-
-      const response = await fetch(`/api/v2/roster/${rosterId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` }
+      const updated = await api.updateGroup(editingGroup.group_id, guildId, {
+        alias: editingGroup.alias,
+        max_accounts_per_user: editingGroup.max_accounts_per_user ?? null,
+        roster_size: editingGroup.roster_size ?? null,
+        min_signups: editingGroup.min_signups ?? null,
+        // Only send allowed_signup_categories if it was explicitly set in the dialog
+        // (undefined means user never touched it, so don't cascade)
+        ...(editingGroup.allowed_signup_categories !== undefined && {
+          allowed_signup_categories: editingGroup.allowed_signup_categories,
+        }),
+        ...(editingGroup.default_signup_category !== undefined && {
+          default_signup_category: editingGroup.default_signup_category ?? null,
+        }),
       });
+      setGroups(prev => prev.map(g => g.group_id === updated.group_id ? updated : g));
+      setEditGroupDialogOpen(false);
+      setEditingGroup(null);
+      toast({ title: t("groupUpdated") });
+    } catch {
+      toast({ title: t("groupError"), variant: "destructive" });
+    } finally {
+      setSavingGroup(false);
+    }
+  };
 
-      if (!response.ok) {
-        throw new Error("Failed to delete roster");
-      }
+  const handleDeleteGroup = async (groupId: string, groupAlias: string) => {
+    if (!confirm(t("groups.deleteConfirm", { name: groupAlias }))) return;
+    setDeletingGroup(groupId);
+    try {
+      await api.deleteGroup(groupId, guildId);
+      setGroups(prev => prev.filter(g => g.group_id !== groupId));
+      toast({ title: t("groupDeleted") });
+    } catch {
+      toast({ title: t("groupError"), variant: "destructive" });
+    } finally {
+      setDeletingGroup(null);
+    }
+  };
 
-      // Refresh rosters list
-      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
+  // Category management handlers (standalone, not inside group dialog)
+  const handleCreateCategoryStandalone = async () => {
+    if (!standaloneNewAlias.trim()) return;
+    setSavingCategory(true);
+    try {
+      await api.createCategory(guildId, standaloneNewAlias.trim());
+      refreshCategories();
+      setStandaloneNewAlias("");
+      setCreateCategoryDialogOpen(false);
+      toast({ title: t("categoryCreated") });
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    } finally {
+      setSavingCategory(false);
+    }
+  };
+
+  const handleUpdateCategoryStandalone = async () => {
+    if (!editingCategoryStandalone || !editingCategoryStandalone.alias.trim()) return;
+    setSavingCategory(true);
+    try {
+      await api.updateCategory(editingCategoryStandalone.custom_id, guildId, { alias: editingCategoryStandalone.alias });
+      setCategories(prev => prev.map(c =>
+        c.custom_id === editingCategoryStandalone.custom_id ? { ...c, alias: editingCategoryStandalone.alias } : c
+      ));
+      setEditCategoryDialogOpen(false);
+      setEditingCategoryStandalone(null);
+      toast({ title: t("categoryUpdated") });
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    } finally {
+      setSavingCategory(false);
+    }
+  };
+
+  const handleDeleteCategoryStandalone = async (categoryId: string) => {
+    try {
+      await api.deleteCategory(categoryId, guildId);
+      setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
+      toast({ title: t("categoryDeleted") });
+    } catch {
+      toast({ title: t("categoryError"), variant: "destructive" });
+    }
+  };
+
+  // Group Automation handlers
+  const handleOpenGroupAutomations = async (group: RosterGroup) => {
+    setSelectedGroupForAutomations(group);
+    setGroupAutomationsDialogOpen(true);
+    try {
+      const automations = await api.fetchAutomations(guildId, undefined, group.group_id);
+      setGroupAutomations(automations);
+    } catch {
+      setGroupAutomations([]);
+    }
+  };
+
+  const handleToggleAutomation = async (automationId: string) => {
+    const automation = groupAutomations.find(a => a.automation_id === automationId);
+    if (!automation) return;
+    try {
+      const updated = await api.updateAutomation(automationId, guildId, { active: !automation.active });
+      setGroupAutomations(prev => prev.map(a => a.automation_id === automationId ? updated : a));
+      toast({ title: t("automationUpdated") });
+    } catch {
+      toast({ title: t("automationError"), variant: "destructive" });
+    }
+  };
+
+  const handleDeleteAutomation = async (automationId: string) => {
+    try {
+      await api.deleteAutomation(automationId, guildId);
+      setGroupAutomations(prev => prev.filter(a => a.automation_id !== automationId));
+      toast({ title: t("automationDeleted") });
+    } catch {
+      toast({ title: t("automationError"), variant: "destructive" });
+    }
+  };
+
+  const handleCreateAutomation = async () => {
+    if (!newAutomation.action_type || !selectedGroupForAutomations) return;
+    if (newAutomation.action_type === 'roster_ping' && !newAutomation.options?.ping_type) return;
+    setSavingAutomation(true);
+    try {
+      const created = await api.createAutomation({
+        server_id: guildId,
+        group_id: selectedGroupForAutomations.group_id,
+        action_type: newAutomation.action_type as AutomationActionType,
+        offset_seconds: newAutomation.offset_seconds ?? -86400,
+        discord_channel_id: newAutomation.discord_channel_id,
+        active: true,
       });
+      setGroupAutomations(prev => [...prev, created]);
+      toast({ title: t("automationCreated") });
+      setCreateAutomationDialogOpen(false);
+      setGroupAutomationsDialogOpen(true);
+      setNewAutomation({
+        action_type: "roster_ping",
+        offset_seconds: -86400,
+        _offsetVal: '1',
+        _offsetUnit: 'days',
+        active: true,
+      });
+    } catch {
+      toast({ title: t("automationError"), variant: "destructive" });
+    } finally {
+      setSavingAutomation(false);
+    }
+  };
 
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        setRosters(data.items || data.rosters || data || []);
-      }
+  const handleEditAutomation = async () => {
+    if (!editingAutomation) return;
+    try {
+      if (editingAutomation.action_type === 'roster_ping' && !editingAutomation.options?.ping_type) return;
+      const updated = await api.updateAutomation(editingAutomation.automation_id, guildId, {
+        action_type: editingAutomation.action_type,
+        offset_seconds: editingAutomation.offset_seconds,
+        discord_channel_id: editingAutomation.discord_channel_id,
+        options: editingAutomation.options,
+        active: editingAutomation.active,
+      });
+      setGroupAutomations(prev => prev.map(a => a.automation_id === updated.automation_id ? updated : a));
+      toast({ title: t("automationUpdated") });
+      setEditAutomationDialogOpen(false);
+      setEditingAutomation(null);
+      setGroupAutomationsDialogOpen(true);
+    } catch {
+      toast({ title: t("automationError"), variant: "destructive" });
+    }
+  };
 
+  // Handlers
+  const handleViewRoster = (roster: Roster) => {
+    router.push(`/${locale}/dashboard/${guildId}/rosters/${roster.custom_id}`);
+  };
+
+  const handleDeleteRoster = async (roster: Roster) => {
+    if (!confirm(t("deleteConfirm", { name: roster.alias }))) return;
+
+    setDeleting(roster.custom_id);
+    try {
+      await deleteRoster(roster.custom_id);
       toast({
-        title: "Success",
-        description: "Roster deleted successfully!",
+        title: tCommon("success"),
+        description: t("deleteSuccessDesc", { name: roster.alias }),
       });
-
-      if (selectedRoster?.custom_id === rosterId) {
-        setDetailsDialogOpen(false);
-        setSelectedRoster(null);
-      }
-    } catch (error) {
-      console.error("Error deleting roster:", error);
+    } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to delete roster. Please try again.",
+        title: tCommon("error"),
+        description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
       });
     } finally {
@@ -416,2203 +593,1308 @@ export default function RostersPage() {
     }
   };
 
-  const handleViewRoster = async (roster: Roster) => {
+  const handleMoveRosterToGroup = async (roster: Roster, groupId: string | null) => {
     try {
-      const accessToken = localStorage.getItem("access_token");
-      const response = await fetch(`/api/v2/roster/${roster.custom_id}?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // API returns { roster: {...} } so we need to extract the roster object
-        const fullRoster = data.roster || data;
-        setSelectedRoster(fullRoster);
-        setDetailsDialogOpen(true);
-      } else {
-        console.error("Failed to fetch roster:", response.status, await response.text());
-        setSelectedRoster(roster);
-        setDetailsDialogOpen(true);
-      }
-    } catch (error) {
-      console.error("Error fetching roster details:", error);
-      setSelectedRoster(roster);
-      setDetailsDialogOpen(true);
+      await api.updateRoster(roster.custom_id, guildId, { group_id: groupId });
+      refresh();
+    } catch {
+      toast({ title: t("saveError"), variant: "destructive" });
     }
   };
 
-  const handleOpenEdit = (roster: Roster) => {
-    setSelectedRoster(roster);
-    setEditRosterData({
-      alias: roster.alias,
-      description: roster.description || "",
-      min_th: roster.min_th?.toString() || "",
-      max_th: roster.max_th?.toString() || "",
-      roster_size: roster.roster_size?.toString() || "",
-      columns: (roster.columns || []).map(col => getColumnDisplayLabel(col)),
-      sort: (roster.sort || []).map(field => getSortDisplayLabel(field)),
-    });
-    setEditDialogOpen(true);
+  const handleOpenClone = (roster: Roster) => {
+    setRosterToClone(roster);
+    setCloneDialogOpen(true);
   };
 
-  const handleAddMembers = async () => {
-    if (!selectedRoster) return;
+  const handleCloneRoster = async (data: CloneRosterFormData) => {
+    if (!rosterToClone) return;
 
-    setSaving(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-
-      // Parse bulk tags from textarea
-      const tagsFromTextarea = bulkTags
-        .split(/[\n,\s]+/)
-        .map(t => t.trim())
-        .filter(t => t.length > 0 && t.startsWith("#"));
-
-      // Combine with selected members
-      const allTags = [
-        ...tagsFromTextarea,
-        ...Array.from(selectedMembers)
-      ];
-
-      if (allTags.length === 0) {
-        toast({
-          title: "No members selected",
-          description: "Please select members or enter player tags.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const membersToAdd = allTags.map(tag => ({ tag }));
-
-      const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}/members?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({ add: membersToAdd })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add members");
-      }
-
-      // Refresh roster details
-      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        const updatedRoster = data.roster || data;
-        setSelectedRoster(updatedRoster);
-
-        // Also refresh rosters list
-        const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-        if (listResponse.ok) {
-          const data = await listResponse.json();
-          setRosters(data.items || data.rosters || data || []);
-        }
-      }
-
+      const cloned = await cloneRoster(rosterToClone.custom_id, data);
       toast({
-        title: "Success",
-        description: `Added ${allTags.length} member(s) to roster!`,
+        title: tCommon("success"),
+        description: t("cloneDialog.successDesc", { name: cloned.alias }),
       });
-
-      setAddMembersDialogOpen(false);
-      setBulkTags("");
-      setSelectedMembers(new Set());
-    } catch (error) {
-      console.error("Error adding members:", error);
+    } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to add members. Please try again.",
+        title: tCommon("error"),
+        description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
       });
-    } finally {
-      setSaving(false);
+      throw err;
     }
   };
 
-  const handleRemoveMember = async (memberTag: string) => {
-    if (!selectedRoster) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-
-      const response = await fetch(`/api/v2/roster/${selectedRoster.custom_id}/members?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({ remove: [memberTag] })
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to remove member");
-      }
-
-      // Refresh roster details
-      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        const updatedRoster = data.roster || data;
-        setSelectedRoster(updatedRoster);
-
-        // Also refresh rosters list
-        const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-        if (listResponse.ok) {
-          const data = await listResponse.json();
-          setRosters(data.items || data.rosters || data || []);
-        }
-      }
-
+  const handleCreateRoster = async () => {
+    if (!newRosterData.alias.trim()) {
       toast({
-        title: "Success",
-        description: "Member removed from roster!",
-      });
-    } catch (error) {
-      console.error("Error removing member:", error);
-      toast({
-        title: "Error",
-        description: "Failed to remove member. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleToggleSubstitute = async (memberTag: string, currentSub: boolean) => {
-    if (!selectedRoster) return;
-
-    setSaving(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-
-      const response = await fetch(
-        `/api/v2/roster/${selectedRoster.custom_id}/members/${encodeURIComponent(memberTag)}?server_id=${guildId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`
-          },
-          body: JSON.stringify({ sub: !currentSub })
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update member");
-      }
-
-      // Refresh roster details
-      const refreshResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}?server_id=${guildId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        const updatedRoster = data.roster || data;
-        setSelectedRoster(updatedRoster);
-
-        // Also refresh rosters list
-        const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-        if (listResponse.ok) {
-          const data = await listResponse.json();
-          setRosters(data.items || data.rosters || data || []);
-        }
-      }
-
-      toast({
-        title: "Success",
-        description: `Member ${!currentSub ? "marked" : "unmarked"} as substitute!`,
-      });
-    } catch (error) {
-      console.error("Error toggling substitute:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update member. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleRefreshRoster = async (rosterId?: string) => {
-    setRefreshing(true);
-    try {
-      const accessToken = localStorage.getItem("access_token");
-
-      // Build query params - refresh specific roster or all server rosters
-      const queryParams = rosterId
-        ? `roster_id=${rosterId}`
-        : `server_id=${guildId}`;
-
-      const response = await fetch(`/api/v2/roster/refresh?${queryParams}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to refresh roster data");
-      }
-
-      const result = await response.json();
-
-      // Refresh rosters list
-      const listResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      if (listResponse.ok) {
-        const data = await listResponse.json();
-        setRosters(data.rosters || data || []);
-      }
-
-      // If a specific roster is selected, refresh its details
-      if (selectedRoster && rosterId === selectedRoster.custom_id) {
-        const detailsResponse = await fetch(`/api/v2/roster/${selectedRoster.custom_id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-        if (detailsResponse.ok) {
-          const updatedRoster = await detailsResponse.json();
-          setSelectedRoster(updatedRoster);
-        }
-      }
-
-      toast({
-        title: "Success",
-        description: result.message || "Roster data refreshed successfully!",
-      });
-    } catch (error) {
-      console.error("Error refreshing roster:", error);
-      toast({
-        title: "Error",
-        description: "Failed to refresh roster data. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  // Comparison mode functions
-  const handleToggleRosterSelection = (rosterId: string) => {
-    const newSelection = new Set(selectedRosterIds);
-    if (newSelection.has(rosterId)) {
-      newSelection.delete(rosterId);
-    } else {
-      if (newSelection.size >= 5) {
-        toast({
-          title: "Maximum reached",
-          description: "You can compare up to 5 rosters at a time",
-          variant: "destructive",
-        });
-        return;
-      }
-      newSelection.add(rosterId);
-    }
-    setSelectedRosterIds(newSelection);
-  };
-
-  const handleStartComparison = async () => {
-    if (selectedRosterIds.size < 2) {
-      toast({
-        title: "Select rosters",
-        description: "Please select at least 2 rosters to compare",
+        title: tCommon("error"),
+        description: t("createErrorAlias"),
         variant: "destructive",
       });
       return;
     }
 
-    setCompareDialogOpen(true);
-  };
-
-  const handleExitComparisonMode = () => {
-    setComparisonMode(false);
-    setSelectedRosterIds(new Set());
-  };
-
-  // Get rosters for comparison with full data
-  const getComparisonRosters = () => {
-    return Array.from(selectedRosterIds)
-      .map(id => rosters.find(r => r.custom_id === id))
-      .filter((r): r is Roster => r !== undefined);
-  };
-
-  // Find duplicate members across selected rosters
-  const findDuplicateMembers = (rostersToCompare: Roster[]) => {
-    const memberTags = new Map<string, Set<string>>(); // tag -> set of roster IDs
-
-    rostersToCompare.forEach(roster => {
-      roster.members?.forEach(member => {
-        if (!memberTags.has(member.tag)) {
-          memberTags.set(member.tag, new Set());
-        }
-        memberTags.get(member.tag)!.add(roster.custom_id);
-      });
-    });
-
-    // Return tags that appear in multiple rosters
-    const duplicates = new Set<string>();
-    memberTags.forEach((rosterIds, tag) => {
-      if (rosterIds.size > 1) {
-        duplicates.add(tag);
-      }
-    });
-
-    return duplicates;
-  };
-
-  // Cross-roster drag & drop handlers
-  const handleCrossRosterDragStart = (e: React.DragEvent, memberTag: string, sourceRosterId: string) => {
-    setDraggedMemberData({ memberTag, sourceRosterId });
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", JSON.stringify({ memberTag, sourceRosterId }));
-
-    // Visual feedback
-    (e.currentTarget as HTMLElement).style.opacity = "0.5";
-  };
-
-  const handleCrossRosterDragEnd = (e: React.DragEvent) => {
-    setDraggedMemberData(null);
-    setDropTargetRoster(null);
-    (e.currentTarget as HTMLElement).style.opacity = "1";
-  };
-
-  const handleCrossRosterDragOver = (e: React.DragEvent, targetRosterId: string) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-    setDropTargetRoster(targetRosterId);
-  };
-
-  const handleCrossRosterDragLeave = () => {
-    setDropTargetRoster(null);
-  };
-
-  const handleCrossRosterDrop = async (e: React.DragEvent, targetRosterId: string) => {
-    e.preventDefault();
-    setDropTargetRoster(null);
-
-    if (!draggedMemberData) return;
-
-    const { memberTag, sourceRosterId } = draggedMemberData;
-
-    // Don't do anything if dropping in the same roster
-    if (sourceRosterId === targetRosterId) {
-      setDraggedMemberData(null);
-      return;
-    }
-
-    setSaving(true);
+    setCreating(true);
     try {
-      const accessToken = localStorage.getItem("access_token");
-
-      // Step 1: Remove from source roster
-      await fetch(`/api/v2/roster/${sourceRosterId}/members?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({ remove: [memberTag] })
-      });
-
-      // Step 2: Add to target roster (correct format: add expects array of objects with tag property)
-      await fetch(`/api/v2/roster/${targetRosterId}/members?server_id=${guildId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({ add: [{ tag: memberTag }] })
-      });
-
-      // Step 3: Refresh rosters list to get updated data
-      const refreshResponse = await fetch(`/api/v2/roster/${guildId}/list`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-
-      if (refreshResponse.ok) {
-        const data = await refreshResponse.json();
-        setRosters(data.items || data.rosters || data || []);
-      }
-
+      const rosterName = newRosterData.alias;
+      await createRoster(newRosterData);
       toast({
-        title: "Success",
-        description: `Member transferred between rosters successfully!`,
+        title: tCommon("success"),
+        description: t("createSuccessDesc", { name: rosterName }),
       });
-    } catch (error) {
-      console.error("Error transferring member:", error);
+      setCreateDialogOpen(false);
+      setNewRosterData({
+        alias: "",
+        roster_type: "clan",
+        signup_scope: "clan-only",
+        clan_tag: "",
+      });
+      refresh();
+    } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to transfer member. Please try again.",
+        title: tCommon("error"),
+        description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
       });
     } finally {
-      setSaving(false);
-      setDraggedMemberData(null);
+      setCreating(false);
     }
   };
 
-  // Calculate roster statistics
-  const getRosterStats = (roster: Roster) => {
-    const members = roster.members || [];
-    const memberCount = members.length;
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-14 w-14 rounded-lg" />
+              <div>
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-4 w-64 mt-2" />
+              </div>
+            </div>
+            <Skeleton className="h-10 w-32" />
+          </div>
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-28" />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className="h-64" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-    if (memberCount === 0) {
-      return {
-        avgTownhall: 0,
-        avgHitrate: 0,
-        clanCount: 0,
-        familyCount: 0,
-        externalCount: 0,
-      };
-    }
-
-    const avgTownhall = Math.round(
-      members.reduce((sum, m) => sum + (m.townhall || 0), 0) / memberCount * 10
-    ) / 10;
-
-    const membersWithHitrate = members.filter(m => m.hitrate !== null && m.hitrate !== undefined);
-    const avgHitrate = membersWithHitrate.length > 0
-      ? Math.round(membersWithHitrate.reduce((sum, m) => sum + (m.hitrate || 0), 0) / membersWithHitrate.length)
-      : 0;
-
-    const clanCount = roster.clan_tag
-      ? members.filter(m => m.current_clan_tag === roster.clan_tag).length
-      : 0;
-
-    const familyCount = members.filter(m => {
-      if (!m.current_clan_tag || m.current_clan_tag === "#") return false;
-      if (roster.clan_tag && m.current_clan_tag === roster.clan_tag) return false;
-      return clans.some(clan => clan.tag === m.current_clan_tag);
-    }).length;
-
-    const externalCount = memberCount - clanCount - familyCount;
-
-    return {
-      avgTownhall,
-      avgHitrate,
-      clanCount,
-      familyCount,
-      externalCount,
-    };
-  };
-
-  // Get townhall restriction text
-  const getTownhallRestrictionText = (roster: Roster) => {
-    const { min_th, max_th } = roster;
-
-    if (min_th && max_th) {
-      if (min_th === max_th) {
-        return `TH${min_th} only`;
-      }
-      return `TH${min_th}-${max_th}`;
-    } else if (min_th) {
-      return `TH${min_th}+`;
-    } else if (max_th) {
-      return `TH1-${max_th}`;
-    }
-    return "No restriction";
-  };
-
-  // Helper: Get column display name
-  const getColumnDisplayName = (col: string): string => {
-    const columnNames: Record<string, string> = {
-      'name': 'Name',
-      'townhall': 'TH',
-      'tag': 'Tag',
-      'hitrate': 'Hitrate',
-      'current_clan_tag': 'Clan',
-      'discord': 'Discord',
-      'hero_lvs': 'Heroes',
-      'war_pref': 'War',
-      'trophies': 'Trophies'
-    };
-    return columnNames[col] || col;
-  };
-
-  // Convert internal column names to display labels for settings form
-  const getColumnDisplayLabel = (col: string): string => {
-    const columnLabels: Record<string, string> = {
-      'name': 'Name',
-      'townhall': 'Townhall Level',
-      'tag': 'Tag',
-      'hitrate': '30 Day Hitrate',
-      'current_clan_tag': 'Clan Tag',
-      'discord': 'Discord',
-      'hero_lvs': 'Heroes',
-      'war_pref': 'War Opt',
-      'trophies': 'Trophies'
-    };
-    return columnLabels[col] || col;
-  };
-
-  // Convert display labels to internal column names
-  const getInternalColumnName = (label: string): string => {
-    const internalNames: Record<string, string> = {
-      'Name': 'name',
-      'Townhall Level': 'townhall',
-      'Tag': 'tag',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Discord': 'discord',
-      'Heroes': 'hero_lvs',
-      'War Opt': 'war_pref',
-      'Trophies': 'trophies'
-    };
-    return internalNames[label] || label;
-  };
-
-  // Convert internal sort field names to display labels
-  const getSortDisplayLabel = (field: string): string => {
-    const sortLabels: Record<string, string> = {
-      'townhall': 'Townhall Level',
-      'name': 'Name',
-      'tag': 'Tag',
-      'hero_lvs': 'Heroes',
-      'trophies': 'Trophies',
-      'hitrate': '30 Day Hitrate',
-      'current_clan_tag': 'Clan Tag',
-      'added_at': 'Added At'
-    };
-    return sortLabels[field] || field;
-  };
-
-  // Convert display labels to internal sort field names
-  const getInternalSortField = (label: string): string => {
-    const internalFields: Record<string, string> = {
-      'Townhall Level': 'townhall',
-      'Name': 'name',
-      'Tag': 'tag',
-      'Heroes': 'hero_lvs',
-      'Trophies': 'trophies',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Added At': 'added_at'
-    };
-    return internalFields[label] || label;
-  };
-
-  // Helper: Get display columns from roster config
-  const getDisplayColumns = (roster: Roster): string[] => {
-    if (!roster.columns || roster.columns.length === 0) {
-      return ['name', 'townhall', 'discord', 'trophies'];
-    }
-
-    const reverseColumnMapping: Record<string, string> = {
-      'Name': 'name',
-      'Townhall Level': 'townhall',
-      'Tag': 'tag',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Discord': 'discord',
-      'Heroes': 'hero_lvs',
-      'War Opt': 'war_pref',
-      'Trophies': 'trophies'
-    };
-
-    return roster.columns.map(col => reverseColumnMapping[col] || col);
-  };
-
-  // Helper: Get sort configuration
-  const getSortConfig = (roster: Roster): string[] => {
-    if (!roster.sort || roster.sort.length === 0) {
-      return ['townhall', 'hitrate', 'hero_lvs', 'added_at'];
-    }
-
-    const reverseSortMapping: Record<string, string> = {
-      'Townhall Level': 'townhall',
-      'Name': 'name',
-      'Tag': 'tag',
-      'Heroes': 'hero_lvs',
-      'Trophies': 'trophies',
-      '30 Day Hitrate': 'hitrate',
-      'Clan Tag': 'current_clan_tag',
-      'Added At': 'added_at'
-    };
-
-    return roster.sort.map(field => reverseSortMapping[field] || field);
-  };
-
-  // Helper: Sort members based on configuration
-  const sortMembers = (members: RosterMember[], sortConfig: string[]): RosterMember[] => {
-    return [...members].sort((a, b) => {
-      for (const field of sortConfig) {
-        if (!field) continue;
-
-        let valueA = a[field as keyof RosterMember];
-        let valueB = b[field as keyof RosterMember];
-
-        if (valueA == null && valueB == null) continue;
-        if (valueA == null) return 1;
-        if (valueB == null) return -1;
-
-        const isDateField = field === 'added_at' || field.includes('date') || field.includes('time');
-
-        if (typeof valueA === 'string' && typeof valueB === 'string') {
-          const comparison = isDateField
-            ? valueA.toLowerCase().localeCompare(valueB.toLowerCase())
-            : valueB.toLowerCase().localeCompare(valueA.toLowerCase());
-          if (comparison !== 0) return comparison;
-        } else if (typeof valueA === 'number' && typeof valueB === 'number') {
-          if (valueA !== valueB) {
-            return isDateField ? valueA - valueB : valueB - valueA;
-          }
-        } else {
-          const strA = String(valueA).toLowerCase();
-          const strB = String(valueB).toLowerCase();
-          const comparison = isDateField
-            ? strA.localeCompare(strB)
-            : strB.localeCompare(strA);
-          if (comparison !== 0) return comparison;
-        }
-      }
-      return 0;
-    });
-  };
-
-  // Helper: Group members by signup category
-  const groupMembersByCategory = (members: RosterMember[]) => {
-    const grouped: Record<string, RosterMember[]> = {};
-    const uncategorized: RosterMember[] = [];
-
-    members.forEach(member => {
-      if (!member.signup_group) {
-        uncategorized.push(member);
-      } else {
-        if (!grouped[member.signup_group]) {
-          grouped[member.signup_group] = [];
-        }
-        grouped[member.signup_group].push(member);
-      }
-    });
-
-    return { grouped, uncategorized };
-  };
-
-  // Filter clan members by search
-  const filteredClanMembers = clanMembers.filter(member =>
-    member.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
-    member.tag.toLowerCase().includes(memberSearch.toLowerCase())
-  );
-
-  // Filter rosters by search and type
-  const filteredRosters = Array.isArray(rosters) ? rosters.filter(roster => {
-    const matchesSearch = roster.alias.toLowerCase().includes(rosterSearch.toLowerCase()) ||
-      roster.clan_name?.toLowerCase().includes(rosterSearch.toLowerCase()) ||
-      roster.clan_tag?.toLowerCase().includes(rosterSearch.toLowerCase());
-
-    const matchesType = rosterTypeFilter === "all" || roster.roster_type === rosterTypeFilter;
-
-    return matchesSearch && matchesType;
-  }) : [];
-
-  const totalMembers = Array.isArray(rosters) ? rosters.reduce((sum, r) => sum + (r.members?.length || 0), 0) : 0;
-  const clanRosters = Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "clan").length : 0;
-  const familyRosters = Array.isArray(rosters) ? rosters.filter(r => r.roster_type === "family").length : 0;
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col items-center justify-center h-64 gap-4">
+            <p className="text-destructive">{error}</p>
+            <Button onClick={refresh} variant="outline">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              {t("retry")}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-              <Users className="h-8 w-8 text-primary" />
+              <ClipboardList className="h-8 w-8 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Rosters & Lineups</h1>
-              <p className="text-muted-foreground mt-1">
-                Manage war rosters, lineups, and member assignments
-              </p>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
+              <p className="text-muted-foreground mt-1">{t("description")}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-          {comparisonMode ? (
-            <>
+
+          <div className="flex gap-2">
+            <Button onClick={refresh} variant="outline" size="icon">
+              <RefreshCw className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setCreateGroupDialogOpen(true)}
+              className="gap-2"
+            >
+              <Layers className="h-4 w-4" />
+              {t("groups.create")}
+            </Button>
+            {rosters.length >= 2 && !compareMode && (
               <Button
                 variant="outline"
-                onClick={handleExitComparisonMode}
-                className="border-border"
+                onClick={() => setCompareMode(true)}
+                className="gap-2"
               >
-                <X className="w-4 h-4 mr-2" />
-                Cancel
+                <GitCompare className="h-4 w-4" />
+                {t("compare.enterMode")}
               </Button>
-              <Button
-                onClick={handleStartComparison}
-                disabled={selectedRosterIds.size < 2}
-                className="bg-primary hover:bg-primary/90"
-              >
-                <GitCompare className="w-4 h-4 mr-2" />
-                Compare ({selectedRosterIds.size}/5)
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="outline"
-                onClick={() => setComparisonMode(true)}
-                className="border-border"
-              >
-                <GitCompare className="w-4 h-4 mr-2" />
-                Compare Rosters
-              </Button>
-              <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-primary hover:bg-primary/90">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create Roster
+            )}
+            <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-primary hover:bg-primary/90 gap-2">
+                  <Plus className="h-4 w-4" />
+                  {t("createRoster")}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-card border-border max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>{t("createDialog.title")}</DialogTitle>
+                  <DialogDescription>{t("createDialog.description")}</DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="roster-name">{t("createDialog.aliasLabel")}</Label>
+                    <Input
+                      id="roster-name"
+                      value={newRosterData.alias}
+                      onChange={(e) => setNewRosterData({ ...newRosterData, alias: e.target.value })}
+                      placeholder={t("createDialog.aliasPlaceholder")}
+                      className="bg-background border-border"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>{t("createDialog.typeLabel")}</Label>
+                    <Select
+                      value={newRosterData.roster_type}
+                      onValueChange={(value: "clan" | "family") =>
+                        setNewRosterData({ ...newRosterData, roster_type: value })
+                      }
+                    >
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="clan">{t("createDialog.typeClan")}</SelectItem>
+                        <SelectItem value="family">{t("createDialog.typeFamily")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {newRosterData.roster_type === "clan" && clans.length > 0 && (
+                    <div className="space-y-2">
+                      <Label>{t("createDialog.clanLabel")}</Label>
+                      <Select
+                        value={newRosterData.clan_tag}
+                        onValueChange={(value) =>
+                          setNewRosterData({ ...newRosterData, clan_tag: value })
+                        }
+                      >
+                        <SelectTrigger className="bg-background border-border">
+                          <SelectValue placeholder={t("createDialog.clanPlaceholder")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {clans.map((clan) => (
+                            <SelectItem key={clan.tag} value={clan.tag}>
+                              {clan.name} ({clan.tag})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label>{t("createDialog.signupScopeLabel")}</Label>
+                    <Select
+                      value={newRosterData.signup_scope}
+                      onValueChange={(value: "clan-only" | "family-wide") =>
+                        setNewRosterData({ ...newRosterData, signup_scope: value })
+                      }
+                    >
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="clan-only">{t("createDialog.scopeClanOnly")}</SelectItem>
+                        <SelectItem value="family-wide">{t("createDialog.scopeFamilyWide")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setCreateDialogOpen(false)} disabled={creating}>
+                    {tCommon("cancel")}
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-card border-border">
-                  <DialogHeader>
-                    <DialogTitle className="text-foreground">Create New Roster</DialogTitle>
-                    <DialogDescription className="text-muted-foreground">
-                      Create a new war roster or lineup for your server
-                    </DialogDescription>
-                  </DialogHeader>
-            <div className="space-y-4">
+                  <Button onClick={handleCreateRoster} disabled={creating || !newRosterData.alias.trim()}>
+                    {creating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        {t("createDialog.creating")}
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4 mr-2" />
+                        {t("createDialog.create")}
+                      </>
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* Compare Mode Banner */}
+        {compareMode && (
+          <div className="bg-primary/10 border border-primary/30 rounded-xl p-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/20">
+                  <GitCompare className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">{t("compare.modeTitle")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("compare.modeHint")}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-background rounded-lg">
+                  <Badge variant="default" className="bg-primary">
+                    {selectedRosterIds.length}
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">/ 4 max</span>
+                </div>
+                <Button
+                  variant="default"
+                  onClick={handleCompareRosters}
+                  disabled={selectedRosterIds.length < 2}
+                  className="gap-2"
+                >
+                  <GitCompare className="w-4 h-4" />
+                  {t("compare.button")} ({selectedRosterIds.length})
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={exitCompareMode}
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  {t("compare.exitMode")}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Statistics */}
+        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t("stats.totalRosters")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-blue-500">{rosters.length}</div>
+                <ClipboardList className="h-8 w-8 text-blue-500/50" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-green-500/30 bg-green-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t("stats.totalMembers")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-green-500">{totalMembers}</div>
+                <Users className="h-8 w-8 text-green-500/50" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-orange-500/30 bg-orange-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t("stats.clanRosters")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-orange-500">{clanRosters}</div>
+                <Users className="h-8 w-8 text-orange-500/50" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t("stats.familyRosters")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-bold text-purple-500">{familyRosters}</div>
+                <Users className="h-8 w-8 text-purple-500/50" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Search + Categories */}
+        <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+          <div className="relative max-w-md w-full sm:w-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-background border-border"
+            />
+          </div>
+
+          {/* Categories */}
+          <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0 py-1">
+            <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
+              <Tag className="w-3.5 h-3.5" />
+              <span className="text-xs font-medium">{t("categories.title")}</span>
+            </div>
+            {categories.map((cat) => (
+              <Badge
+                key={cat.custom_id}
+                variant="secondary"
+                className="flex items-center gap-1.5 px-2 py-1 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
+              >
+                {cat.alias}
+                <button
+                  onClick={() => { setEditingCategoryStandalone(cat); setEditCategoryDialogOpen(true); }}
+                  className="hover:text-foreground transition-colors"
+                >
+                  <Pencil className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => handleDeleteCategoryStandalone(cat.custom_id)}
+                  className="hover:text-destructive transition-colors"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </Badge>
+            ))}
+            <Button size="sm" variant="ghost" className="h-6 px-2 text-xs text-muted-foreground" onClick={() => { setStandaloneNewAlias(""); setCreateCategoryDialogOpen(true); }}>
+              <Plus className="w-3 h-3 mr-1" />
+              {t("categories.create")}
+            </Button>
+          </div>
+        </div>
+
+        {/* Rosters Grid */}
+        {filteredRosters.length === 0 ? (
+          <Card className="bg-card border-border">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <ClipboardList className="w-12 h-12 text-muted-foreground mb-4" />
+              <p className="text-foreground font-medium">
+                {searchQuery ? t("noSearchResults") : t("noRosters")}
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {searchQuery ? t("noSearchResultsHint") : t("noRostersHint")}
+              </p>
+              {!searchQuery && (
+                <Button onClick={() => setCreateDialogOpen(true)} className="mt-4">
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("createFirstRoster")}
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-8">
+            {/* Groups */}
+            {groups.map((group) => {
+              const groupRosters = (rostersByGroup[group.group_id] ?? []).filter(roster =>
+                roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
+              );
+              if (groupRosters.length === 0 && searchQuery) return null;
+
+              return (
+                <div key={group.group_id} className="space-y-4">
+                  {/* Group Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-indigo-500/10">
+                        <FolderOpen className="h-5 w-5 text-indigo-500" />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-semibold text-foreground">{group.alias}</h2>
+                        <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                          <p className="text-sm text-muted-foreground">
+                            {groupRosters.length} roster{groupRosters.length > 1 ? "s" : ""}
+                          </p>
+                          {group.max_accounts_per_user && (
+                            <Badge variant="outline" className="text-xs h-5">{t("groups.rules.maxAccountsBadge", { count: group.max_accounts_per_user })}</Badge>
+                          )}
+                          {group.roster_size && (
+                            <Badge variant="outline" className="text-xs h-5">{t("groups.rules.rosterSizeBadge", { size: group.roster_size })}</Badge>
+                          )}
+                          {group.min_signups && (
+                            <Badge variant="outline" className="text-xs h-5">{t("groups.rules.minSignupsBadge", { count: group.min_signups })}</Badge>
+                          )}
+                          {group.allowed_signup_categories && group.allowed_signup_categories.length > 0 && (
+                            <Badge variant="outline" className="text-xs h-5 text-indigo-500 border-indigo-500/30">{t("groups.rules.categoriesBadge", { count: group.allowed_signup_categories.length })}</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {groupRosters.length >= 2 && !compareMode && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleCompareGroup(group.group_id)}
+                          className="gap-2"
+                        >
+                          <GitCompare className="h-4 w-4" />
+                          {t("compare.compareGroup")}
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleOpenGroupAutomations(group)}
+                        className="text-muted-foreground hover:text-amber-500"
+                        title={t("groups.automationsTitle")}
+                      >
+                        <Zap className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => { setEditingGroup(group); setEditGroupDialogOpen(true); }}
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteGroup(group.group_id, group.alias)}
+                        disabled={deletingGroup === group.group_id}
+                        className="text-muted-foreground hover:text-destructive"
+                      >
+                        {deletingGroup === group.group_id
+                          ? <Loader2 className="w-4 h-4 animate-spin" />
+                          : <Trash2 className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Group Rosters Grid */}
+                  {groupRosters.length === 0 ? (
+                    <p className="text-sm text-muted-foreground italic px-1">{t("groups.emptyGroup")}</p>
+                  ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {groupRosters.map((roster) => {
+                      const stats = calculateRosterStats(roster.members, roster.clan_tag, familyClanTags);
+                      const isSelected = selectedRosterIds.includes(roster.custom_id);
+                      return (
+                        <RosterCard
+                          key={roster.custom_id}
+                          roster={roster}
+                          stats={stats}
+                          isSelected={isSelected}
+                          compareMode={compareMode}
+                          deleting={deleting}
+                          groups={groups}
+                          onSelect={() => toggleRosterSelection(roster.custom_id)}
+                          onView={() => handleViewRoster(roster)}
+                          onClone={() => handleOpenClone(roster)}
+                          onDelete={() => handleDeleteRoster(roster)}
+                          onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
+                        />
+                      );
+                    })}
+                  </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Ungrouped rosters */}
+            {(() => {
+              const ungroupedRosters = rostersByGroup.ungrouped.filter(roster =>
+                roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
+              );
+              if (ungroupedRosters.length === 0) return null;
+
+              return (
+                <div className="space-y-4">
+                  {groups.some(g => rostersByGroup[g.group_id]?.length > 0) && (
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-muted">
+                        <ClipboardList className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-semibold text-foreground">{t("ungrouped")}</h2>
+                        <p className="text-sm text-muted-foreground">
+                          {ungroupedRosters.length} roster{ungroupedRosters.length > 1 ? "s" : ""}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {ungroupedRosters.map((roster) => {
+                      const stats = calculateRosterStats(roster.members, roster.clan_tag, familyClanTags);
+                      const isSelected = selectedRosterIds.includes(roster.custom_id);
+                      return (
+                        <RosterCard
+                          key={roster.custom_id}
+                          roster={roster}
+                          stats={stats}
+                          isSelected={isSelected}
+                          compareMode={compareMode}
+                          deleting={deleting}
+                          groups={groups}
+                          onSelect={() => toggleRosterSelection(roster.custom_id)}
+                          onView={() => handleViewRoster(roster)}
+                          onClone={() => handleOpenClone(roster)}
+                          onDelete={() => handleDeleteRoster(roster)}
+                          onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* Create Category Dialog */}
+        <Dialog open={createCategoryDialogOpen} onOpenChange={(open) => { setCreateCategoryDialogOpen(open); if (!open) setStandaloneNewAlias(""); }}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>{t("categories.createTitle")}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label>{t("categories.nameLabel")}</Label>
+              <Input
+                value={standaloneNewAlias}
+                onChange={(e) => setStandaloneNewAlias(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryStandalone()}
+                className="bg-background border-border"
+                placeholder="e.g. Available, Tentative..."
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setCreateCategoryDialogOpen(false)} disabled={savingCategory}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleCreateCategoryStandalone} disabled={!standaloneNewAlias.trim() || savingCategory}>
+                {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {t("categories.create")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Category Dialog */}
+        <Dialog open={editCategoryDialogOpen} onOpenChange={(open) => { setEditCategoryDialogOpen(open); if (!open) setEditingCategoryStandalone(null); }}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>{t("categories.editTitle")}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label>{t("categories.nameLabel")}</Label>
+              <Input
+                value={editingCategoryStandalone?.alias ?? ""}
+                onChange={(e) => setEditingCategoryStandalone(prev => prev ? { ...prev, alias: e.target.value } : null)}
+                onKeyDown={(e) => e.key === "Enter" && handleUpdateCategoryStandalone()}
+                className="bg-background border-border"
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditCategoryDialogOpen(false)} disabled={savingCategory}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleUpdateCategoryStandalone} disabled={!editingCategoryStandalone?.alias.trim() || savingCategory}>
+                {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {tCommon("save")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Clone Dialog */}
+        <CloneDialog
+          open={cloneDialogOpen}
+          onOpenChange={setCloneDialogOpen}
+          roster={rosterToClone}
+          onClone={handleCloneRoster}
+          t={t}
+        />
+
+        {/* Create Group Dialog */}
+        <Dialog open={createGroupDialogOpen} onOpenChange={(open) => { setCreateGroupDialogOpen(open); if (!open) setNewGroupAlias(""); }}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>{t("groups.createTitle")}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label>{t("groups.nameLabel")}</Label>
+              <Input
+                value={newGroupAlias}
+                onChange={(e) => setNewGroupAlias(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleCreateGroup()}
+                className="bg-background border-border"
+                placeholder={t("groups.namePlaceholder")}
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setCreateGroupDialogOpen(false)} disabled={savingGroup}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleCreateGroup} disabled={!newGroupAlias.trim() || savingGroup}>
+                {savingGroup ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {t("groups.create")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Edit Group Dialog */}
+        <Dialog open={editGroupDialogOpen} onOpenChange={(open) => { setEditGroupDialogOpen(open); if (!open) { setEditingGroup(null); setNewCategoryAlias(""); } }}>
+          <DialogContent className="bg-card border-border max-w-lg">
+            <DialogHeader>
+              <DialogTitle>{t("groups.editTitle")}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-5 py-2 max-h-[70vh] overflow-y-auto pr-1">
+              {/* Name */}
               <div className="space-y-2">
-                <Label htmlFor="roster-name" className="text-foreground">Roster Name</Label>
+                <Label>{t("groups.nameLabel")}</Label>
                 <Input
-                  id="roster-name"
-                  placeholder="e.g., CWL Main, War Team A"
-                  value={newRosterData.alias}
-                  onChange={(e) => setNewRosterData({ ...newRosterData, alias: e.target.value })}
-                  className="bg-background border-border text-foreground"
+                  value={editingGroup?.alias || ""}
+                  onChange={(e) => setEditingGroup(prev => prev ? { ...prev, alias: e.target.value } : null)}
+                  className="bg-background border-border"
+                  placeholder={t("groups.namePlaceholder")}
                 />
               </div>
+
+              {/* Rules */}
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold">{t("groups.rules.title")}</Label>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">{t("groups.rules.maxAccounts")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editingGroup?.max_accounts_per_user ?? ""}
+                      onChange={(e) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        max_accounts_per_user: e.target.value ? parseInt(e.target.value) : undefined,
+                      } : null)}
+                      placeholder="∞"
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">{t("groups.rules.rosterSize")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editingGroup?.roster_size ?? ""}
+                      onChange={(e) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        roster_size: e.target.value ? parseInt(e.target.value) : undefined,
+                      } : null)}
+                      placeholder="∞"
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">{t("groups.rules.minSignups")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={editingGroup?.min_signups ?? ""}
+                      onChange={(e) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        min_signups: e.target.value ? parseInt(e.target.value) : undefined,
+                      } : null)}
+                      placeholder="—"
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">{t("groups.rules.rulesHint")}</p>
+              </div>
+
+              {/* Signup Categories */}
+              <div className="space-y-3">
+                <Label className="text-sm font-semibold">{t("groups.rules.categoriesTitle")}</Label>
+                <p className="text-xs text-muted-foreground">{t("groups.rules.categoriesHint")}</p>
+                {/* Existing categories as checkboxes */}
+                {categories.length > 0 ? (
+                  <div className="rounded-lg border border-border divide-y divide-border">
+                    {categories.map((cat) => {
+                      const selected = editingGroup?.allowed_signup_categories?.includes(cat.custom_id) ?? false;
+                      return (
+                        <div key={cat.custom_id} className="flex items-center gap-3 px-3 py-2">
+                          <input
+                            type="checkbox"
+                            id={`cat-${cat.custom_id}`}
+                            checked={selected}
+                            onChange={(e) => setEditingGroup(prev => {
+                              if (!prev) return null;
+                              const current = prev.allowed_signup_categories ?? [];
+                              return {
+                                ...prev,
+                                allowed_signup_categories: e.target.checked
+                                  ? [...current, cat.custom_id]
+                                  : current.filter(id => id !== cat.custom_id),
+                              };
+                            })}
+                            className="h-4 w-4 rounded border-border accent-primary"
+                          />
+                          <label htmlFor={`cat-${cat.custom_id}`} className="text-sm cursor-pointer flex-1">
+                            {cat.alias}
+                          </label>
+                          <span className="text-xs text-muted-foreground font-mono">{cat.custom_id}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">{t("groups.rules.noCategories")}</p>
+                )}
+                {/* Default signup category */}
+                {(editingGroup?.allowed_signup_categories?.length ?? 0) > 0 && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{t("settings.defaultSignupCategory")}</Label>
+                    <Select
+                      value={editingGroup?.default_signup_category ?? "__none__"}
+                      onValueChange={(v) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        default_signup_category: v === "__none__" ? null : v,
+                      } : null)}
+                    >
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue placeholder={t("settings.defaultSignupCategoryNone")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">{t("settings.defaultSignupCategoryNone")}</SelectItem>
+                        {categories
+                          .filter(c => editingGroup?.allowed_signup_categories?.includes(c.custom_id))
+                          .map(c => (
+                            <SelectItem key={c.custom_id} value={c.custom_id}>{c.alias}</SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {/* Inline category creation */}
+                <div className="flex gap-2">
+                  <Input
+                    value={newCategoryAlias}
+                    onChange={(e) => setNewCategoryAlias(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryInline()}
+                    placeholder={t("groups.rules.newCategoryPlaceholder")}
+                    className="bg-background border-border"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCreateCategoryInline}
+                    disabled={!newCategoryAlias.trim() || savingCategory}
+                  >
+                    {savingCategory ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setEditGroupDialogOpen(false)} disabled={savingGroup}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleEditGroup} disabled={!editingGroup?.alias.trim() || savingGroup}>
+                {savingGroup ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {tCommon("save")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Group Automations Dialog */}
+        <Dialog open={groupAutomationsDialogOpen} onOpenChange={(open) => {
+          setGroupAutomationsDialogOpen(open);
+          if (!open) setSelectedGroupForAutomations(null);
+        }}>
+          <DialogContent className="bg-card border-border max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-amber-500" />
+                {t("groups.automationsTitle")} - {selectedGroupForAutomations?.alias}
+              </DialogTitle>
+              <DialogDescription>{t("groups.automationsDesc")}</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+              {groupAutomations.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Zap className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>{t("groups.noAutomations")}</p>
+                  <p className="text-sm mt-1">{t("groups.noAutomationsHint")}</p>
+                </div>
+              ) : groupAutomations.map((automation) => (
+                <div
+                  key={automation.automation_id}
+                  className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${automation.active ? "bg-amber-500/10" : "bg-muted"}`}>
+                      {automation.action_type === "roster_ping" && <Bell className={`w-4 h-4 ${automation.active ? "text-amber-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_post" && <MessageSquare className={`w-4 h-4 ${automation.active ? "text-blue-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_signup" && <Unlock className={`w-4 h-4 ${automation.active ? "text-emerald-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_signup_close" && <Lock className={`w-4 h-4 ${automation.active ? "text-red-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_clear" && <UserMinus className={`w-4 h-4 ${automation.active ? "text-orange-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_archive" && <Archive className={`w-4 h-4 ${automation.active ? "text-slate-500" : "text-muted-foreground"}`} />}
+                      {automation.action_type === "roster_delete" && <Trash2 className={`w-4 h-4 ${automation.active ? "text-destructive" : "text-muted-foreground"}`} />}
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{getAutomationLabel(automation.action_type)}</p>
+                      <p className="text-xs text-muted-foreground">{formatOffsetSeconds(automation.offset_seconds, t)}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {automation.executed ? (
+                      automation.execution_status === "missed" ? (
+                        <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-500 border-amber-500/30">
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          {t("automations.missed")}
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          {t("automations.executed")}
+                          {automation.executed_at && (
+                            <span className="ml-1 opacity-70">
+                              {new Date(automation.executed_at * 1000).toLocaleDateString()}
+                            </span>
+                          )}
+                        </Badge>
+                      )
+                    ) : automation.last_missed_at ? (
+                      <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-500 border-amber-500/30">
+                        <AlertTriangle className="w-3 h-3 mr-1" />
+                        {t("automations.missed")}
+                      </Badge>
+                    ) : automation.last_triggered_at ? (
+                      <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground border-border">
+                        <CheckCircle2 className="w-3 h-3 mr-1" />
+                        {t("automations.lastRun")}
+                        <span className="ml-1 opacity-70">
+                          {new Date(automation.last_triggered_at * 1000).toLocaleDateString()}
+                        </span>
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className={`text-xs ${automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}`}>
+                        {automation.active ? t("automations.active") : t("automations.inactive")}
+                      </Badge>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => handleToggleAutomation(automation.automation_id)}
+                    >
+                      {automation.active ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => {
+                        setEditingAutomation(automation);
+                        setGroupAutomationsDialogOpen(false);
+                        setEditAutomationDialogOpen(true);
+                      }}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      onClick={() => handleDeleteAutomation(automation.automation_id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setGroupAutomationsDialogOpen(false)}>
+                {tCommon("close")}
+              </Button>
+              <Button onClick={() => {
+                setGroupAutomationsDialogOpen(false);
+                setCreateAutomationDialogOpen(true);
+              }}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t("groups.addAutomation")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Create Automation Dialog */}
+        <Dialog open={createAutomationDialogOpen} onOpenChange={(open) => {
+          setCreateAutomationDialogOpen(open);
+          if (!open) setGroupAutomationsDialogOpen(true);
+        }}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>{t("automations.createTitle")}</DialogTitle>
+              <DialogDescription>
+                {t("automations.targetGroup")}: <strong>{selectedGroupForAutomations?.alias}</strong>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="roster-type" className="text-foreground">Roster Type</Label>
+                <Label>{t("automations.actionType")}</Label>
                 <Select
-                  value={newRosterData.roster_type}
-                  onValueChange={(value: "clan" | "family") =>
-                    setNewRosterData({ ...newRosterData, roster_type: value })
+                  value={newAutomation.action_type}
+                  onValueChange={(value) =>
+                    setNewAutomation({ ...newAutomation, action_type: value as AutomationActionType })
                   }
                 >
-                  <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder="Select type" />
+                  <SelectTrigger className="bg-background">
+                    <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-card border-border">
-                    <SelectItem value="clan">Clan-Specific</SelectItem>
-                    <SelectItem value="family">Family-Wide</SelectItem>
+                  <SelectContent>
+                    <SelectItem value="roster_ping">
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-4 h-4 text-amber-500" />
+                        <span>{t("automations.actions.ping")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_post">
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4 text-blue-500" />
+                        <span>{t("automations.actions.post")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_signup">
+                      <div className="flex items-center gap-2">
+                        <Unlock className="w-4 h-4 text-emerald-500" />
+                        <span>{t("automations.actions.openSignup")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_signup_close">
+                      <div className="flex items-center gap-2">
+                        <Lock className="w-4 h-4 text-red-500" />
+                        <span>{t("automations.actions.closeSignup")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_clear">
+                      <div className="flex items-center gap-2">
+                        <UserMinus className="w-4 h-4 text-orange-500" />
+                        <span>{t("automations.actions.clear")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_archive">
+                      <div className="flex items-center gap-2">
+                        <Archive className="w-4 h-4 text-slate-500" />
+                        <span>{t("automations.actions.archive")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_delete">
+                      <div className="flex items-center gap-2">
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                        <span>{t("automations.actions.delete")}</span>
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="signup-scope" className="text-foreground">Signup Scope</Label>
-                <Select
-                  value={newRosterData.signup_scope}
-                  onValueChange={(value: "clan-only" | "family-wide") =>
-                    setNewRosterData({ ...newRosterData, signup_scope: value })
-                  }
-                >
-                  <SelectTrigger className="bg-background border-border text-foreground">
-                    <SelectValue placeholder="Select scope" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border-border">
-                    <SelectItem value="clan-only">Clan Members Only</SelectItem>
-                    <SelectItem value="family-wide">Entire Family</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {newRosterData.roster_type === "clan" && (
-                <div className="space-y-2">
-                  <Label htmlFor="clan-tag" className="text-foreground">Clan</Label>
+                <Label>{t("automations.offsetFromEvent")}</Label>
+                <div className="flex gap-2">
+                  <span className="text-sm text-muted-foreground self-center">{t("automations.offsetBefore")}</span>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={newAutomation._offsetVal ?? '1'}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 1;
+                      const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
+                      setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds('before', val, unit) });
+                    }}
+                    className="bg-background w-20"
+                  />
                   <Select
-                    value={newRosterData.clan_tag}
-                    onValueChange={(value) =>
-                      setNewRosterData({ ...newRosterData, clan_tag: value })
+                    value={newAutomation._offsetUnit ?? 'days'}
+                    onValueChange={(v) => {
+                      const unit = v as OffsetUnit;
+                      const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
+                      setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds('before', val, unit) });
+                    }}
+                  >
+                    <SelectTrigger className="bg-background flex-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
+                      <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
+                      <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              {newAutomation.action_type === "roster_ping" && (
+                <div className="space-y-2">
+                  <Label>{t("automations.pingType")}</Label>
+                  <Select
+                    value={newAutomation.options?.ping_type ?? ""}
+                    onValueChange={(v) =>
+                      setNewAutomation({ ...newAutomation, options: { ...newAutomation.options, ping_type: v as import("./_lib/types").PingType } })
                     }
                   >
-                    <SelectTrigger className="bg-background border-border text-foreground">
-                      <SelectValue placeholder="Select clan" />
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder={t("automations.pingType")} />
                     </SelectTrigger>
-                    <SelectContent className="bg-card border-border">
-                      {clans.map((clan) => (
-                        <SelectItem key={clan.tag} value={clan.tag}>
-                          {clan.name} ({clan.tag})
-                        </SelectItem>
-                      ))}
+                    <SelectContent>
+                      <SelectItem value="signup_reminder">{t("automations.pingType_signup_reminder")}</SelectItem>
+                      <SelectItem value="missing">{t("automations.pingType_missing")}</SelectItem>
+                      <SelectItem value="sub_needed">{t("automations.pingType_sub_needed")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               )}
+              <div className="space-y-2">
+                <Label>{t("automations.channel")}</Label>
+                <ChannelCombobox
+                  channels={channels}
+                  value={newAutomation.discord_channel_id || ""}
+                  onValueChange={(value) =>
+                    setNewAutomation({
+                      ...newAutomation,
+                      discord_channel_id: value === "disabled" ? undefined : value,
+                    })
+                  }
+                  placeholder={t("automations.selectChannel")}
+                  showDisabled={true}
+                />
+                <p className="text-xs text-muted-foreground">{t("automations.channelHint")}</p>
+              </div>
             </div>
             <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setCreateDialogOpen(false)}
-                disabled={creating}
-                className="border-border"
-              >
-                Cancel
+              <Button variant="outline" onClick={() => { setCreateAutomationDialogOpen(false); setGroupAutomationsDialogOpen(true); }}>
+                {tCommon("cancel")}
               </Button>
-              <Button
-                onClick={handleCreateRoster}
-                disabled={creating || !newRosterData.alias || (newRosterData.roster_type === "clan" && !newRosterData.clan_tag)}
-                className="bg-primary hover:bg-primary/90"
-              >
-                {creating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating...
-                  </>
-                ) : (
-                  "Create Roster"
-                )}
+              <Button onClick={handleCreateAutomation} disabled={savingAutomation}>
+                {savingAutomation ? <Loader2 className="w-4 h-4 animate-spin" /> : t("automations.create")}
               </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-            </>
-          )}
-        </div>
-      </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-      {/* Statistics Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Rosters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-12 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-blue-500">{Array.isArray(rosters) ? rosters.length : 0}</div>
-                  <Users className="h-8 w-8 text-blue-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Active rosters configured
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-green-500/30 bg-green-500/5">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total Members</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-12 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-green-500">{totalMembers}</div>
-                  <Shield className="h-8 w-8 text-green-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Across all rosters
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Clan Rosters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-12 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-purple-500">{clanRosters}</div>
-                  <Calendar className="h-8 w-8 text-purple-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Clan-specific lineups
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Family Rosters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-12 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-yellow-500">{familyRosters}</div>
-                  <Target className="h-8 w-8 text-yellow-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Family-wide rosters
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters and Search */}
-      <Card className="bg-card border-border">
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search rosters by name, clan..."
-                value={rosterSearch}
-                onChange={(e) => setRosterSearch(e.target.value)}
-                className="bg-background border-border text-foreground pl-9"
-              />
-            </div>
-            <Select value={rosterTypeFilter} onValueChange={(value: "all" | "clan" | "family") => setRosterTypeFilter(value)}>
-              <SelectTrigger className="w-full sm:w-[180px] bg-background border-border text-foreground">
-                <Filter className="w-4 h-4 mr-2" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-card border-border">
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="clan">Clan Only</SelectItem>
-                <SelectItem value="family">Family Only</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button
-              variant="outline"
-              onClick={() => handleRefreshRoster()}
-              disabled={refreshing}
-              className="border-border"
-            >
-              {refreshing ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Refreshing...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Refresh All
-                </>
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Rosters List */}
-      <Card className="bg-card border-border">
-        <CardHeader>
-          <CardTitle className="text-foreground">
-            All Rosters
-            {!loading && filteredRosters.length !== (Array.isArray(rosters) ? rosters.length : 0) && (
-              <span className="text-sm font-normal text-muted-foreground ml-2">
-                ({filteredRosters.length} of {Array.isArray(rosters) ? rosters.length : 0})
-              </span>
-            )}
-          </CardTitle>
-          <CardDescription className="text-muted-foreground">
-            Manage your war rosters and lineups
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <Card key={i} className="bg-secondary/50 border-border">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Skeleton className="h-12 w-12 rounded-full animate-pulse" />
-                        <div className="space-y-2">
-                          <Skeleton className="h-5 w-32 animate-pulse" />
-                          <Skeleton className="h-4 w-24 animate-pulse" />
-                        </div>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1">
-                        <Skeleton className="h-3 w-16 animate-pulse" />
-                        <Skeleton className="h-6 w-12 animate-pulse" />
-                      </div>
-                      <div className="space-y-1">
-                        <Skeleton className="h-3 w-16 animate-pulse" />
-                        <Skeleton className="h-6 w-12 animate-pulse" />
-                      </div>
-                    </div>
-                    <Skeleton className="h-10 w-full animate-pulse" />
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : filteredRosters.length === 0 ? (
-            (Array.isArray(rosters) ? rosters.length : 0) === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p className="text-lg">No rosters created yet</p>
-                <p className="text-sm">Create your first roster to get started</p>
-              </div>
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p className="text-lg">No rosters match your filters</p>
-                <p className="text-sm">Try adjusting your search or filter criteria</p>
-              </div>
-            )
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredRosters.map((roster) => {
-                const stats = getRosterStats(roster);
-                const thRestriction = getTownhallRestrictionText(roster);
-
-                const isSelected = selectedRosterIds.has(roster.custom_id);
-
-                return (
-                  <Card
-                    key={roster.custom_id}
-                    className={`group bg-gradient-to-br from-card to-secondary/30 border-border hover:border-primary hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 ${
-                      comparisonMode ? 'cursor-pointer' : ''
-                    } ${
-                      isSelected ? 'border-primary border-2 scale-[1.02]' : ''
-                    } ${
-                      !comparisonMode ? 'hover:scale-[1.02]' : ''
-                    } overflow-hidden`}
-                    onClick={() => comparisonMode && handleToggleRosterSelection(roster.custom_id)}
-                  >
-                    <CardHeader className="pb-3 relative">
-                      {/* Decorative gradient bar */}
-                      <div className={`absolute top-0 left-0 right-0 h-1 ${
-                        roster.roster_type === "clan"
-                          ? "bg-gradient-to-r from-blue-500 to-cyan-500"
-                          : "bg-gradient-to-r from-orange-500 to-amber-500"
-                      }`} />
-
-                      {/* Selection checkbox (comparison mode) */}
-                      {comparisonMode && (
-                        <div className="absolute top-3 right-3 z-10">
-                          {isSelected ? (
-                            <CheckSquare className="w-6 h-6 text-primary" />
-                          ) : (
-                            <Square className="w-6 h-6 text-muted-foreground" />
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex items-start justify-between mt-2">
-                        <div className="flex items-center gap-3 flex-1">
-                          {roster.clan_badge ? (
-                            <Avatar className="h-14 w-14 border-2 border-primary/20 shadow-md">
-                              <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
-                              <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
-                                {roster.alias.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                          ) : (
-                            <div className="h-14 w-14 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border-2 border-primary/20">
-                              <Shield className="h-7 w-7 text-primary" />
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <CardTitle className="text-xl text-foreground truncate group-hover:text-primary transition-colors">
-                              {roster.alias}
-                            </CardTitle>
-                            {roster.clan_name && (
-                              <p className="text-sm text-muted-foreground truncate flex items-center gap-1 mt-0.5">
-                                <Star className="h-3 w-3" />
-                                {roster.clan_name}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        <Badge
-                          variant={roster.roster_type === "clan" ? "default" : "secondary"}
-                          className={`shrink-0 ${
-                            roster.roster_type === "clan"
-                              ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0"
-                              : "bg-gradient-to-r from-orange-600 to-amber-600 text-white border-0"
-                          }`}
-                        >
-                          {roster.roster_type.toUpperCase()}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-
-                    <CardContent className="space-y-3">
-                      {/* Member count with progress bar */}
-                      <div className="space-y-1.5">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground flex items-center gap-1.5">
-                            <Users className="h-4 w-4" />
-                            Members
-                          </span>
-                          <span className="font-bold text-foreground">
-                            {roster.roster_size
-                              ? `${roster.members?.length || 0}/${roster.roster_size}`
-                              : roster.members?.length || 0}
-                          </span>
-                        </div>
-                        {roster.roster_size && (
-                          <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all ${
-                                ((roster.members?.length || 0) / roster.roster_size) >= 0.9
-                                  ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                                  : ((roster.members?.length || 0) / roster.roster_size) >= 0.5
-                                  ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                                  : "bg-gradient-to-r from-red-500 to-pink-500"
-                              }`}
-                              style={{ width: `${Math.min(((roster.members?.length || 0) / roster.roster_size) * 100, 100)}%` }}
-                            />
-                          </div>
-                        )}
-                      </div>
-
-                      {/* TH restriction */}
-                      {thRestriction !== "No restriction" && (
-                        <div className="flex items-center justify-between text-sm p-2 bg-primary/5 rounded-md border border-primary/10">
-                          <span className="text-muted-foreground flex items-center gap-1.5">
-                            <Target className="h-4 w-4" />
-                            TH Level
-                          </span>
-                          <span className="font-bold text-primary">{thRestriction}</span>
-                        </div>
-                      )}
-
-                      {/* Stats */}
-                      {roster.members && roster.members.length > 0 && (
-                        <div className="space-y-2 pt-1">
-                          <div className="flex items-center justify-between text-sm p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
-                            <span className="text-muted-foreground flex items-center gap-1.5">
-                              <TrendingUp className="h-4 w-4 text-orange-500" />
-                              Avg TH
-                            </span>
-                            <span className="font-bold text-orange-400">TH{stats.avgTownhall}</span>
-                          </div>
-
-                          {stats.avgHitrate > 0 && (
-                            <div className={`flex items-center justify-between text-sm p-2 rounded-md border ${
-                              stats.avgHitrate >= 80
-                                ? "bg-green-500/10 border-green-500/20"
-                                : stats.avgHitrate >= 60
-                                ? "bg-yellow-500/10 border-yellow-500/20"
-                                : "bg-red-500/10 border-red-500/20"
-                            }`}>
-                              <span className="text-muted-foreground flex items-center gap-1.5">
-                                <Target className={`h-4 w-4 ${
-                                  stats.avgHitrate >= 80 ? "text-green-500" :
-                                  stats.avgHitrate >= 60 ? "text-yellow-500" : "text-red-500"
-                                }`} />
-                                Avg Hitrate
-                              </span>
-                              <span className={`font-bold ${
-                                stats.avgHitrate >= 80 ? "text-green-400" :
-                                stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
-                              }`}>
-                                {stats.avgHitrate}%
-                              </span>
-                            </div>
-                          )}
-
-                          <div className="flex items-center gap-2 pt-1">
-                            {roster.clan_tag && (
-                              <div className="flex-1 text-center p-2 bg-blue-500/10 rounded-md border border-blue-500/20">
-                                <div className="text-xs text-muted-foreground">Clan</div>
-                                <div className="text-lg font-bold text-blue-400">{stats.clanCount}</div>
-                              </div>
-                            )}
-                            <div className="flex-1 text-center p-2 bg-green-500/10 rounded-md border border-green-500/20">
-                              <div className="text-xs text-muted-foreground">Family</div>
-                              <div className="text-lg font-bold text-green-400">{stats.familyCount}</div>
-                            </div>
-                            <div className="flex-1 text-center p-2 bg-red-500/10 rounded-md border border-red-500/20">
-                              <div className="text-xs text-muted-foreground">External</div>
-                              <div className="text-lg font-bold text-red-400">{stats.externalCount}</div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {!comparisonMode && (
-                        <div className="flex gap-2 pt-3 border-t border-border/50">
-                          <Button
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              router.push(`/${params.locale}/dashboard/${guildId}/rosters/${roster.custom_id}`);
-                            }}
-                            className="flex-1 bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all"
-                          >
-                            <Eye className="w-4 h-4 mr-1.5" />
-                            Open Roster
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleOpenEdit(roster);
-                            }}
-                            className="border-border hover:border-primary hover:bg-primary/10"
-                            title="Quick Edit"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteRoster(roster.custom_id);
-                            }}
-                            disabled={deleting === roster.custom_id}
-                            className="border-destructive/50 text-destructive hover:bg-destructive hover:text-white"
-                          >
-                            {deleting === roster.custom_id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="w-4 h-4" />
-                            )}
-                          </Button>
-                        </div>
-                      )}
-                      {comparisonMode && (
-                        <div className="pt-3 border-t border-border/50 text-center text-sm text-muted-foreground">
-                          {isSelected ? "Selected for comparison" : "Click to select"}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Roster Details Dialog */}
-      <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
-        <DialogContent className="bg-card border-border max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">{selectedRoster?.alias}</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              {selectedRoster?.clan_name && `${selectedRoster.clan_name} • `}
-              {selectedRoster?.members?.length || 0} members
-            </DialogDescription>
-          </DialogHeader>
-
-          {selectedRoster && (
+        {/* Edit Automation Dialog */}
+        <Dialog open={editAutomationDialogOpen} onOpenChange={(open) => {
+          setEditAutomationDialogOpen(open);
+          if (!open) { setEditingAutomation(null); setGroupAutomationsDialogOpen(true); }
+        }}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-amber-500" />
+                {t("automations.editTitle")}
+              </DialogTitle>
+            </DialogHeader>
             <div className="space-y-4">
-              {/* Roster Info Card */}
-              <Card className="bg-gradient-to-br from-secondary/30 to-secondary/10 border-border">
-                <CardContent className="pt-6">
-                  <div className="grid gap-4 md:grid-cols-3">
-                    {/* Members Stats */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                        <Users className="w-4 h-4" />
-                        <span>Members</span>
-                      </div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold text-foreground">
-                          {selectedRoster.members?.length || 0}
-                        </span>
-                        {selectedRoster.roster_size && (
-                          <span className="text-muted-foreground">/ {selectedRoster.roster_size}</span>
-                        )}
-                      </div>
-                      {selectedRoster.roster_size && (
-                        <div className="w-full bg-secondary rounded-full h-2 overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all ${
-                              ((selectedRoster.members?.length || 0) / selectedRoster.roster_size) >= 0.9
-                                ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                                : ((selectedRoster.members?.length || 0) / selectedRoster.roster_size) >= 0.5
-                                ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                                : "bg-gradient-to-r from-red-500 to-pink-500"
-                            }`}
-                            style={{ width: `${Math.min(((selectedRoster.members?.length || 0) / selectedRoster.roster_size) * 100, 100)}%` }}
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Performance Stats */}
-                    {selectedRoster.members && selectedRoster.members.length > 0 && (() => {
-                      const stats = getRosterStats(selectedRoster);
-                      return (
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
-                            <span className="text-sm text-muted-foreground">Avg TH</span>
-                            <span className="font-bold text-orange-400">TH{stats.avgTownhall}</span>
-                          </div>
-                          {stats.avgHitrate > 0 && (
-                            <div className={`flex items-center justify-between p-2 rounded-md border ${
-                              stats.avgHitrate >= 80
-                                ? "bg-green-500/10 border-green-500/20"
-                                : stats.avgHitrate >= 60
-                                ? "bg-yellow-500/10 border-yellow-500/20"
-                                : "bg-red-500/10 border-red-500/20"
-                            }`}>
-                              <span className="text-sm text-muted-foreground">Avg Hitrate</span>
-                              <span className={`font-bold ${
-                                stats.avgHitrate >= 80 ? "text-green-400" :
-                                stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
-                              }`}>
-                                {stats.avgHitrate}%
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
-
-                    {/* Distribution & Info */}
-                    <div className="space-y-3">
-                      {selectedRoster.members && selectedRoster.members.length > 0 && (() => {
-                        const stats = getRosterStats(selectedRoster);
-                        return (
-                          <div className="flex items-center gap-2">
-                            {selectedRoster.clan_tag && (
-                              <div className="flex-1 text-center p-2 bg-blue-500/10 rounded-md border border-blue-500/20">
-                                <div className="text-xs text-muted-foreground">Clan</div>
-                                <div className="text-lg font-bold text-blue-400">{stats.clanCount}</div>
-                              </div>
-                            )}
-                            <div className="flex-1 text-center p-2 bg-green-500/10 rounded-md border border-green-500/20">
-                              <div className="text-xs text-muted-foreground">Family</div>
-                              <div className="text-lg font-bold text-green-400">{stats.familyCount}</div>
-                            </div>
-                            <div className="flex-1 text-center p-2 bg-red-500/10 rounded-md border border-red-500/20">
-                              <div className="text-xs text-muted-foreground">External</div>
-                              <div className="text-lg font-bold text-red-400">{stats.externalCount}</div>
-                            </div>
-                          </div>
-                        );
-                      })()}
-
-                      {selectedRoster.description && (
-                        <div className="p-2 bg-secondary/30 rounded-md border border-border">
-                          <p className="text-xs text-muted-foreground italic">{selectedRoster.description}</p>
-                        </div>
-                      )}
-
-                      {(() => {
-                        const thRestriction = getTownhallRestrictionText(selectedRoster);
-                        if (thRestriction !== "No restriction") {
-                          return (
-                            <div className="flex items-center justify-between p-2 bg-primary/5 rounded-md border border-primary/10">
-                              <span className="text-xs text-muted-foreground">TH Restriction</span>
-                              <span className="font-bold text-primary text-xs">{thRestriction}</span>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })()}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => handleOpenAddMembers(selectedRoster)}
-                  className="border-border"
-                >
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Add Members
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleRefreshRoster(selectedRoster.custom_id)}
-                  disabled={refreshing}
-                  className="border-border"
-                >
-                  {refreshing ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Refreshing...
-                    </>
-                  ) : (
-                    <>
-                      <RefreshCw className="w-4 h-4 mr-2" />
-                      Refresh Data
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {(!selectedRoster.members || selectedRoster.members.length === 0) ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Users className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>No members in this roster yet</p>
-                </div>
-              ) : (() => {
-                // Get display configuration
-                const displayColumns = getDisplayColumns(selectedRoster);
-                const sortConfig = getSortConfig(selectedRoster);
-
-                // Sort and group members
-                const sortedMembers = sortMembers(selectedRoster.members, sortConfig);
-                const { grouped, uncategorized } = groupMembersByCategory(sortedMembers);
-
-                // Render cell content based on column type
-                const renderCell = (member: RosterMember, column: string) => {
-                  switch (column) {
-                    case 'townhall':
-                      return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
-                    case 'name':
-                      return (
-                        <span className="font-medium text-foreground">
-                          {member.name}
-                          {member.sub && <span className="text-xs text-yellow-600 ml-1">(Sub)</span>}
-                        </span>
-                      );
-                    case 'tag':
-                      return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
-                    case 'hitrate':
-                      if (member.hitrate !== null && member.hitrate !== undefined) {
-                        const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
-                        return <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>;
-                      }
-                      return <span className="text-muted-foreground">-</span>;
-                    case 'current_clan_tag':
-                      if (member.current_clan_tag && member.current_clan_tag !== '#') {
-                        let colorClass = 'text-red-400';
-                        if (selectedRoster.clan_tag && member.current_clan_tag === selectedRoster.clan_tag) {
-                          colorClass = 'text-green-400';
-                        } else if (clans.some(clan => clan.tag === member.current_clan_tag)) {
-                          colorClass = 'text-yellow-400';
-                        }
-                        return <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>;
-                      }
-                      return <span className="text-muted-foreground">-</span>;
-                    case 'discord':
-                      if (member.discord) {
-                        return <span className="text-blue-400 text-xs">@{member.discord}</span>;
-                      }
-                      return <span className="text-muted-foreground">-</span>;
-                    case 'hero_lvs':
-                      return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;
-                    case 'war_pref':
-                      const warStatus = member.war_pref ? '⚔️ In' : '🚫 Out';
-                      const warColor = member.war_pref ? 'text-green-400' : 'text-red-400';
-                      return <span className={`${warColor} text-xs`}>{warStatus}</span>;
-                    case 'trophies':
-                      return <span className="text-yellow-400">{member.trophies || '-'} 🏆</span>;
-                    default:
-                      return <span className="text-muted-foreground">-</span>;
+              <div className="space-y-2">
+                <Label>{t("automations.actionType")}</Label>
+                <Select
+                  value={editingAutomation?.action_type}
+                  onValueChange={(value) =>
+                    setEditingAutomation(prev => prev ? { ...prev, action_type: value as AutomationActionType } : null)
                   }
-                };
-
-                return (
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-foreground">
-                      Members ({selectedRoster.members.length})
-                    </h3>
-
-                    <div className="border border-border rounded-lg overflow-hidden">
-                      <div className="overflow-x-auto">
-                        <table className="w-full">
-                          <thead className="bg-muted/50">
-                            <tr>
-                              {displayColumns.map(col => (
-                                <th key={col} className="px-3 py-2 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                                  {getColumnDisplayName(col)}
-                                </th>
-                              ))}
-                              <th className="px-3 py-2 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                                Actions
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {/* Uncategorized members */}
-                            {uncategorized.length > 0 && (
-                              <>
-                                <tr className="bg-muted/30 border-y border-border">
-                                  <td colSpan={displayColumns.length + 1} className="px-3 py-3">
-                                    <div className="flex items-center justify-between">
-                                      <h4 className="font-medium text-sm">Uncategorized</h4>
-                                      <span className="text-xs text-muted-foreground">
-                                        {uncategorized.length} member{uncategorized.length !== 1 ? 's' : ''}
-                                      </span>
-                                    </div>
-                                  </td>
-                                </tr>
-                                {uncategorized.map((member) => (
-                                  <tr key={member.tag} className="hover:bg-accent/50 transition-colors border-b border-border">
-                                    {displayColumns.map(col => (
-                                      <td key={col} className="px-3 py-2 text-center text-xs">
-                                        {renderCell(member, col)}
-                                      </td>
-                                    ))}
-                                    <td className="px-3 py-2 text-center">
-                                      <div className="flex items-center justify-center gap-1">
-                                        <Button
-                                          size="sm"
-                                          variant={member.sub ? "default" : "outline"}
-                                          onClick={() => handleToggleSubstitute(member.tag, member.sub)}
-                                          disabled={saving}
-                                          className={member.sub ? "bg-primary" : "border-border"}
-                                          title={member.sub ? "Unmark as substitute" : "Mark as substitute"}
-                                        >
-                                          SUB
-                                        </Button>
-                                        <Button
-                                          size="sm"
-                                          variant="ghost"
-                                          onClick={() => handleRemoveMember(member.tag)}
-                                          disabled={saving}
-                                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                          title="Remove member"
-                                        >
-                                          <X className="w-4 h-4" />
-                                        </Button>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </>
-                            )}
-
-                            {/* Categorized members */}
-                            {Object.entries(grouped).map(([categoryId, categoryMembers]) => (
-                              <Fragment key={categoryId}>
-                                <tr className="bg-muted/30 border-y border-border">
-                                  <td colSpan={displayColumns.length + 1} className="px-3 py-3">
-                                    <div className="flex items-center justify-between">
-                                      <h4 className="font-medium text-sm capitalize">{categoryId}</h4>
-                                      <span className="text-xs text-muted-foreground">
-                                        {categoryMembers.length} member{categoryMembers.length !== 1 ? 's' : ''}
-                                      </span>
-                                    </div>
-                                  </td>
-                                </tr>
-                                {categoryMembers.map((member) => (
-                                  <tr key={member.tag} className="hover:bg-accent/50 transition-colors border-b border-border">
-                                    {displayColumns.map(col => (
-                                      <td key={col} className="px-3 py-2 text-center text-xs">
-                                        {renderCell(member, col)}
-                                      </td>
-                                    ))}
-                                    <td className="px-3 py-2 text-center">
-                                      <div className="flex items-center justify-center gap-1">
-                                        <Button
-                                          size="sm"
-                                          variant={member.sub ? "default" : "outline"}
-                                          onClick={() => handleToggleSubstitute(member.tag, member.sub)}
-                                          disabled={saving}
-                                          className={member.sub ? "bg-primary" : "border-border"}
-                                          title={member.sub ? "Unmark as substitute" : "Mark as substitute"}
-                                        >
-                                          SUB
-                                        </Button>
-                                        <Button
-                                          size="sm"
-                                          variant="ghost"
-                                          onClick={() => handleRemoveMember(member.tag)}
-                                          disabled={saving}
-                                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                          title="Remove member"
-                                        >
-                                          <X className="w-4 h-4" />
-                                        </Button>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </Fragment>
-                            ))}
-                          </tbody>
-                        </table>
+                >
+                  <SelectTrigger className="bg-background">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="roster_ping">
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-4 h-4 text-amber-500" />
+                        <span>{t("automations.actions.ping")}</span>
                       </div>
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Roster Dialog */}
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="bg-card border-border">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Edit Roster</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Update roster settings
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-alias" className="text-foreground">Roster Name</Label>
-              <Input
-                id="edit-alias"
-                value={editRosterData.alias}
-                onChange={(e) => setEditRosterData({ ...editRosterData, alias: e.target.value })}
-                className="bg-background border-border text-foreground"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-description" className="text-foreground">Description</Label>
-              <Textarea
-                id="edit-description"
-                value={editRosterData.description}
-                onChange={(e) => setEditRosterData({ ...editRosterData, description: e.target.value })}
-                className="bg-background border-border text-foreground"
-                rows={3}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-min-th" className="text-foreground">Min TH</Label>
-                <Input
-                  id="edit-min-th"
-                  type="number"
-                  min="1"
-                  max="17"
-                  value={editRosterData.min_th}
-                  onChange={(e) => setEditRosterData({ ...editRosterData, min_th: e.target.value })}
-                  className="bg-background border-border text-foreground"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-max-th" className="text-foreground">Max TH</Label>
-                <Input
-                  id="edit-max-th"
-                  type="number"
-                  min="1"
-                  max="17"
-                  value={editRosterData.max_th}
-                  onChange={(e) => setEditRosterData({ ...editRosterData, max_th: e.target.value })}
-                  className="bg-background border-border text-foreground"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-roster-size" className="text-foreground">Roster Size</Label>
-              <Input
-                id="edit-roster-size"
-                type="number"
-                min="1"
-                value={editRosterData.roster_size}
-                onChange={(e) => setEditRosterData({ ...editRosterData, roster_size: e.target.value })}
-                className="bg-background border-border text-foreground"
-              />
-            </div>
-
-            {/* Display Columns Configuration */}
-            <div className="space-y-3">
-              <Label className="text-foreground">Display Columns (choose up to 4)</Label>
-              <p className="text-xs text-muted-foreground">Select which columns to show in the members table</p>
-              <div className="grid grid-cols-2 gap-3">
-                {['Name', 'Townhall Level', 'Tag', '30 Day Hitrate', 'Clan Tag', 'Discord', 'Heroes', 'War Opt', 'Trophies'].map((column) => (
-                  <div key={column} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id={`column-${column}`}
-                      checked={editRosterData.columns.includes(column)}
-                      onChange={(e) => {
-                        const newColumns = e.target.checked
-                          ? [...editRosterData.columns, column]
-                          : editRosterData.columns.filter(c => c !== column);
-                        setEditRosterData({ ...editRosterData, columns: newColumns.slice(0, 4) });
-                      }}
-                      disabled={editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)}
-                      className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                    />
-                    <label
-                      htmlFor={`column-${column}`}
-                      className={`text-sm ${
-                        editRosterData.columns.length >= 4 && !editRosterData.columns.includes(column)
-                          ? 'text-muted-foreground cursor-not-allowed'
-                          : 'text-foreground cursor-pointer'
-                      }`}
-                    >
-                      {column}
-                    </label>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {editRosterData.columns.length}/4 columns selected
-              </p>
-            </div>
-
-            {/* Sort Configuration */}
-            <div className="space-y-3">
-              <Label className="text-foreground">Sort Order (choose up to 4)</Label>
-              <p className="text-xs text-muted-foreground">Define the sort priority for members</p>
-              <div className="grid grid-cols-2 gap-3">
-                {['Townhall Level', 'Name', 'Tag', 'Heroes', 'Trophies', '30 Day Hitrate', 'Clan Tag', 'Added At'].map((field) => (
-                  <div key={field} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      id={`sort-${field}`}
-                      checked={editRosterData.sort.includes(field)}
-                      onChange={(e) => {
-                        const newSort = e.target.checked
-                          ? [...editRosterData.sort, field]
-                          : editRosterData.sort.filter(s => s !== field);
-                        setEditRosterData({ ...editRosterData, sort: newSort.slice(0, 4) });
-                      }}
-                      disabled={editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)}
-                      className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                    />
-                    <label
-                      htmlFor={`sort-${field}`}
-                      className={`text-sm ${
-                        editRosterData.sort.length >= 4 && !editRosterData.sort.includes(field)
-                          ? 'text-muted-foreground cursor-not-allowed'
-                          : 'text-foreground cursor-pointer'
-                      }`}
-                    >
-                      {field}
-                    </label>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {editRosterData.sort.length}/4 sort fields selected
-                {editRosterData.sort.length > 0 && (
-                  <span className="ml-2">
-                    • Order: {editRosterData.sort.map((s, i) => (
-                      <span key={s} className="text-primary">
-                        {i > 0 && ' → '}
-                        {s}
-                      </span>
-                    ))}
-                  </span>
-                )}
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setEditDialogOpen(false)}
-              disabled={saving}
-              className="border-border"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleUpdateRoster}
-              disabled={saving || !editRosterData.alias}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Add Members Dialog */}
-      <Dialog open={addMembersDialogOpen} onOpenChange={setAddMembersDialogOpen}>
-        <DialogContent className="bg-card border-border max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">Add Members to Roster</DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Select members from your clans or enter player tags
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {/* Bulk tags textarea */}
-            <div className="space-y-2">
-              <Label htmlFor="bulk-tags" className="text-foreground">
-                Player Tags (one per line or comma-separated)
-              </Label>
-              <Textarea
-                id="bulk-tags"
-                placeholder="#ABC123, #DEF456&#10;#GHI789"
-                value={bulkTags}
-                onChange={(e) => setBulkTags(e.target.value)}
-                className="bg-background border-border text-foreground font-mono text-sm"
-                rows={4}
-              />
-            </div>
-
-            {/* Clan members selection */}
-            {clanMembers.length > 0 && (
-              <div className="space-y-2">
-                <Label className="text-foreground">Or Select from Clan Members</Label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search members..."
-                    value={memberSearch}
-                    onChange={(e) => setMemberSearch(e.target.value)}
-                    className="bg-background border-border text-foreground pl-9"
-                  />
-                </div>
-                <div className="border border-border rounded-lg max-h-60 overflow-y-auto">
-                  {filteredClanMembers.map((member) => (
-                    <div
-                      key={member.tag}
-                      className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors ${
-                        selectedMembers.has(member.tag) ? "bg-primary/10" : ""
-                      }`}
-                      onClick={() => {
-                        const newSelected = new Set(selectedMembers);
-                        if (newSelected.has(member.tag)) {
-                          newSelected.delete(member.tag);
-                        } else {
-                          newSelected.add(member.tag);
-                        }
-                        setSelectedMembers(newSelected);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
-                          <span className="text-sm font-bold text-primary">{member.townhall}</span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">{member.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {member.tag} • {member.clan_name}
-                          </p>
-                        </div>
+                    </SelectItem>
+                    <SelectItem value="roster_post">
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4 text-blue-500" />
+                        <span>{t("automations.actions.post")}</span>
                       </div>
-                      {selectedMembers.has(member.tag) && (
-                        <Badge variant="default" className="bg-primary">
-                          Selected
-                        </Badge>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {selectedMembers.size} member(s) selected
-                </p>
+                    </SelectItem>
+                    <SelectItem value="roster_signup">
+                      <div className="flex items-center gap-2">
+                        <Unlock className="w-4 h-4 text-emerald-500" />
+                        <span>{t("automations.actions.openSignup")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_signup_close">
+                      <div className="flex items-center gap-2">
+                        <Lock className="w-4 h-4 text-red-500" />
+                        <span>{t("automations.actions.closeSignup")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_clear">
+                      <div className="flex items-center gap-2">
+                        <UserMinus className="w-4 h-4 text-orange-500" />
+                        <span>{t("automations.actions.clear")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_archive">
+                      <div className="flex items-center gap-2">
+                        <Archive className="w-4 h-4 text-slate-500" />
+                        <span>{t("automations.actions.archive")}</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="roster_delete">
+                      <div className="flex items-center gap-2">
+                        <Trash2 className="w-4 h-4 text-destructive" />
+                        <span>{t("automations.actions.delete")}</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setAddMembersDialogOpen(false);
-                setBulkTags("");
-                setSelectedMembers(new Set());
-              }}
-              disabled={saving}
-              className="border-border"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAddMembers}
-              disabled={saving || (bulkTags.trim().length === 0 && selectedMembers.size === 0)}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Adding...
-                </>
-              ) : (
-                <>
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Add Members
-                </>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Comparison Dialog */}
-      <Dialog open={compareDialogOpen} onOpenChange={setCompareDialogOpen}>
-        <DialogContent className="bg-card border-border max-w-[95vw] max-h-[90vh] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle className="text-foreground flex items-center gap-2">
-              <GitCompare className="w-5 h-5" />
-              Roster Comparison
-            </DialogTitle>
-            <DialogDescription className="text-muted-foreground">
-              Comparing {selectedRosterIds.size} rosters side-by-side • Duplicate members are highlighted • Drag members between rosters to transfer
-            </DialogDescription>
-          </DialogHeader>
-
-          {(() => {
-            const rostersToCompare = getComparisonRosters();
-            const duplicateMembers = findDuplicateMembers(rostersToCompare);
-
-            return (
-              <div className="overflow-x-auto overflow-y-auto max-h-[70vh]">
-                <div className="flex gap-4 min-w-max pb-4">
-                  {rostersToCompare.map((roster) => {
-                    const stats = getRosterStats(roster);
-                    const thRestriction = getTownhallRestrictionText(roster);
-                    const displayColumns = getDisplayColumns(roster);
-                    const sortConfig = getSortConfig(roster);
-                    const sortedMembers = sortMembers(roster.members || [], sortConfig);
-
-                    // Render cell helper
-                    const renderCell = (member: RosterMember, column: string) => {
-                      switch (column) {
-                        case 'townhall':
-                          return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
-                        case 'name':
-                          return (
-                            <span className="font-medium text-foreground">
-                              {member.name}
-                              {member.sub && <span className="text-xs text-yellow-600 ml-1">(Sub)</span>}
-                            </span>
-                          );
-                        case 'tag':
-                          return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
-                        case 'hitrate':
-                          if (member.hitrate !== null && member.hitrate !== undefined) {
-                            const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
-                            return <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>;
-                          }
-                          return <span className="text-muted-foreground">-</span>;
-                        case 'current_clan_tag':
-                          if (member.current_clan_tag && member.current_clan_tag !== '#') {
-                            let colorClass = 'text-red-400';
-                            if (roster.clan_tag && member.current_clan_tag === roster.clan_tag) {
-                              colorClass = 'text-green-400';
-                            } else if (clans.some(clan => clan.tag === member.current_clan_tag)) {
-                              colorClass = 'text-yellow-400';
-                            }
-                            return <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>;
-                          }
-                          return <span className="text-muted-foreground">-</span>;
-                        case 'discord':
-                          if (member.discord) {
-                            return <span className="text-blue-400 text-xs">@{member.discord}</span>;
-                          }
-                          return <span className="text-muted-foreground">-</span>;
-                        case 'hero_lvs':
-                          return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;
-                        case 'war_pref':
-                          const warStatus = member.war_pref ? '⚔️ In' : '🚫 Out';
-                          const warColor = member.war_pref ? 'text-green-400' : 'text-red-400';
-                          return <span className={`${warColor} text-xs`}>{warStatus}</span>;
-                        case 'trophies':
-                          return <span className="text-yellow-400">{member.trophies || '-'} 🏆</span>;
-                        default:
-                          return <span className="text-muted-foreground">-</span>;
-                      }
-                    };
-
-                    return (
-                      <Card key={roster.custom_id} className="bg-card border-border min-w-[400px] flex-shrink-0">
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center gap-3">
-                            {roster.clan_badge ? (
-                              <Avatar className="h-12 w-12 border-2 border-primary/20">
-                                <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
-                                <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                                  {roster.alias.charAt(0)}
-                                </AvatarFallback>
-                              </Avatar>
-                            ) : (
-                              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border-2 border-primary/20">
-                                <Shield className="h-6 w-6 text-primary" />
-                              </div>
-                            )}
-                            <div className="flex-1">
-                              <CardTitle className="text-lg text-foreground">{roster.alias}</CardTitle>
-                              {roster.clan_name && (
-                                <p className="text-xs text-muted-foreground">{roster.clan_name}</p>
-                              )}
-                            </div>
-                            <Badge
-                              variant={roster.roster_type === "clan" ? "default" : "secondary"}
-                              className={`${
-                                roster.roster_type === "clan"
-                                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0"
-                                  : "bg-gradient-to-r from-orange-600 to-amber-600 text-white border-0"
-                              }`}
-                            >
-                              {roster.roster_type.toUpperCase()}
-                            </Badge>
-                          </div>
-                        </CardHeader>
-
-                        <CardContent className="space-y-3">
-                          {/* Stats summary */}
-                          <div className="grid grid-cols-3 gap-2">
-                            <div className="text-center p-2 bg-primary/5 rounded-md border border-primary/10">
-                              <div className="text-2xl font-bold text-primary">{roster.members?.length || 0}</div>
-                              <div className="text-xs text-muted-foreground">Members</div>
-                            </div>
-                            <div className="text-center p-2 bg-orange-500/10 rounded-md border border-orange-500/20">
-                              <div className="text-2xl font-bold text-orange-400">TH{stats.avgTownhall}</div>
-                              <div className="text-xs text-muted-foreground">Avg TH</div>
-                            </div>
-                            {stats.avgHitrate > 0 && (
-                              <div className={`text-center p-2 rounded-md border ${
-                                stats.avgHitrate >= 80
-                                  ? "bg-green-500/10 border-green-500/20"
-                                  : stats.avgHitrate >= 60
-                                  ? "bg-yellow-500/10 border-yellow-500/20"
-                                  : "bg-red-500/10 border-red-500/20"
-                              }`}>
-                                <div className={`text-2xl font-bold ${
-                                  stats.avgHitrate >= 80 ? "text-green-400" :
-                                  stats.avgHitrate >= 60 ? "text-yellow-400" : "text-red-400"
-                                }`}>
-                                  {stats.avgHitrate}%
-                                </div>
-                                <div className="text-xs text-muted-foreground">Hitrate</div>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Members table with drop zone */}
-                          <div
-                            className={`border border-border rounded-lg overflow-hidden max-h-[400px] overflow-y-auto transition-all ${
-                              dropTargetRoster === roster.custom_id
-                                ? 'border-primary border-2 bg-primary/5'
-                                : ''
-                            }`}
-                            onDragOver={(e) => handleCrossRosterDragOver(e, roster.custom_id)}
-                            onDragLeave={handleCrossRosterDragLeave}
-                            onDrop={(e) => handleCrossRosterDrop(e, roster.custom_id)}
-                          >
-                            <table className="w-full">
-                              <thead className="bg-muted/50 sticky top-0">
-                                <tr>
-                                  {displayColumns.map(col => (
-                                    <th key={col} className="px-2 py-1 text-center text-xs font-medium text-muted-foreground uppercase">
-                                      {getColumnDisplayName(col)}
-                                    </th>
-                                  ))}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {sortedMembers.length === 0 ? (
-                                  <tr>
-                                    <td colSpan={displayColumns.length} className="px-2 py-8 text-center text-muted-foreground text-sm">
-                                      {dropTargetRoster === roster.custom_id
-                                        ? 'Drop member here to add to this roster'
-                                        : 'No members'
-                                      }
-                                    </td>
-                                  </tr>
-                                ) : (
-                                  sortedMembers.map((member) => (
-                                    <tr
-                                      key={member.tag}
-                                      draggable={true}
-                                      onDragStart={(e) => handleCrossRosterDragStart(e, member.tag, roster.custom_id)}
-                                      onDragEnd={handleCrossRosterDragEnd}
-                                      className={`border-b border-border transition-colors cursor-move ${
-                                        draggedMemberData?.memberTag === member.tag
-                                          ? 'opacity-50'
-                                          : ''
-                                      } ${
-                                        duplicateMembers.has(member.tag)
-                                          ? 'bg-yellow-500/10 hover:bg-yellow-500/20 border-l-4 border-l-yellow-500'
-                                          : 'hover:bg-accent/50'
-                                      }`}
-                                      title={
-                                        duplicateMembers.has(member.tag)
-                                          ? 'Duplicate member (in multiple rosters) • Drag to transfer to another roster'
-                                          : 'Drag to transfer to another roster'
-                                      }
-                                    >
-                                      {displayColumns.map(col => (
-                                        <td key={col} className="px-2 py-1.5 text-center text-xs">
-                                          {renderCell(member, col)}
-                                        </td>
-                                      ))}
-                                    </tr>
-                                  ))
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-
-                {/* Duplicate summary */}
-                {duplicateMembers.size > 0 && (
-                  <div className="mt-4 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                    <div className="flex items-center gap-2 text-yellow-600 font-medium mb-2">
-                      <TrendingUp className="w-4 h-4" />
-                      {duplicateMembers.size} Duplicate Member{duplicateMembers.size !== 1 ? 's' : ''} Found
+              <div className="space-y-2">
+                <Label>{t("automations.offsetFromEvent")}</Label>
+                {(() => {
+                  const parsed = parseOffsetSeconds(editingAutomation?.offset_seconds ?? -86400);
+                  return (
+                    <div className="flex gap-2">
+                      <span className="text-sm text-muted-foreground self-center">{t("automations.offsetBefore")}</span>
+                      <Input
+                        type="number"
+                        min={1}
+                        value={parsed.val}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value) || 1;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', val, parsed.unit) } : null);
+                        }}
+                        className="bg-background w-20"
+                      />
+                      <Select
+                        value={parsed.unit}
+                        onValueChange={(v) => {
+                          const unit = v as OffsetUnit;
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', parsed.val, unit) } : null);
+                        }}
+                      >
+                        <SelectTrigger className="bg-background flex-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
+                          <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
+                          <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
+                  );
+                })()}
+              </div>
+              {editingAutomation?.action_type === "roster_ping" && (
+                <div className="space-y-2">
+                  <Label>{t("automations.pingType")}</Label>
+                  <Select
+                    value={editingAutomation.options?.ping_type ?? ""}
+                    onValueChange={(v) =>
+                      setEditingAutomation(prev => prev ? { ...prev, options: { ...prev.options, ping_type: v as import("./_lib/types").PingType } } : null)
+                    }
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder={t("automations.pingType")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="signup_reminder">{t("automations.pingType_signup_reminder")}</SelectItem>
+                      <SelectItem value="missing">{t("automations.pingType_missing")}</SelectItem>
+                      <SelectItem value="sub_needed">{t("automations.pingType_sub_needed")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              <div className="space-y-2">
+                <Label>{t("automations.channel")}</Label>
+                <ChannelCombobox
+                  channels={channels}
+                  value={editingAutomation?.discord_channel_id || ""}
+                  onValueChange={(value) =>
+                    setEditingAutomation(prev => prev ? {
+                      ...prev,
+                      discord_channel_id: value === "disabled" ? undefined : value,
+                    } : null)
+                  }
+                  placeholder={t("automations.selectChannel")}
+                  showDisabled={true}
+                />
+                <p className="text-xs text-muted-foreground">{t("automations.channelHint")}</p>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${editingAutomation?.active ? "bg-emerald-500/10" : "bg-muted"}`}>
+                    {editingAutomation?.active ? (
+                      <Play className="w-4 h-4 text-emerald-500" />
+                    ) : (
+                      <Pause className="w-4 h-4 text-muted-foreground" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">{t("automations.activeLabel")}</p>
                     <p className="text-xs text-muted-foreground">
-                      Members highlighted in yellow appear in multiple rosters
+                      {editingAutomation?.active ? t("automations.willExecute") : t("automations.paused")}
                     </p>
                   </div>
-                )}
+                </div>
+                <Switch
+                  checked={editingAutomation?.active ?? false}
+                  onCheckedChange={(checked) =>
+                    setEditingAutomation(prev => prev ? { ...prev, active: checked } : null)
+                  }
+                />
               </div>
-            );
-          })()}
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setCompareDialogOpen(false)}
-              className="border-border"
-            >
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => { setEditAutomationDialogOpen(false); setGroupAutomationsDialogOpen(true); }}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleEditAutomation}>
+                {tCommon("save")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

@@ -33,6 +33,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import {
   Ban,
   Search,
@@ -41,7 +42,6 @@ import {
   Plus,
   Trash2,
   Calendar,
-  User,
   Loader2,
   AlertTriangle,
   Scale,
@@ -724,27 +724,12 @@ export default function BansPage() {
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <div className="flex items-center gap-2">
-                                  {ban.added_by_avatar_url ? (
-                                    <img
-                                      src={ban.added_by_avatar_url}
-                                      alt={ban.added_by_username || String(ban.added_by)}
-                                      className="h-6 w-6 rounded-full"
-                                    />
-                                  ) : (
-                                    <User className="h-4 w-4 text-muted-foreground" />
-                                  )}
-                                  <div className="flex flex-col">
-                                    <span className="text-sm font-medium">
-                                      {ban.added_by_username || ban.added_by}
-                                    </span>
-                                    {ban.added_by_username && (
-                                      <span className="text-[10px] text-muted-foreground leading-none">
-                                        ID: {ban.added_by}
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
+                                <DiscordUserDisplay
+                                  userId={String(ban.added_by)}
+                                  username={ban.added_by_username}
+                                  avatarUrl={ban.added_by_avatar_url}
+                                  size="sm"
+                                />
                               </TableCell>
                               <TableCell>
                                 <div className="text-sm">
@@ -1117,27 +1102,12 @@ export default function BansPage() {
                                   </Badge>
                                 </TableCell>
                                 <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    {strike.added_by_avatar_url ? (
-                                      <img
-                                        src={strike.added_by_avatar_url}
-                                        alt={strike.added_by_username || String(strike.added_by)}
-                                        className="h-6 w-6 rounded-full"
-                                      />
-                                    ) : (
-                                      <User className="h-4 w-4 text-muted-foreground" />
-                                    )}
-                                    <div className="flex flex-col">
-                                      <span className="text-sm font-medium">
-                                        {strike.added_by_username || strike.added_by}
-                                      </span>
-                                      {strike.added_by_username && (
-                                        <span className="text-[10px] text-muted-foreground leading-none">
-                                          ID: {strike.added_by}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
+                                  <DiscordUserDisplay
+                                    userId={String(strike.added_by)}
+                                    username={strike.added_by_username}
+                                    avatarUrl={strike.added_by_avatar_url}
+                                    size="sm"
+                                  />
                                 </TableCell>
                                 <TableCell>
                                   <div className="text-sm">
@@ -1267,23 +1237,12 @@ export default function BansPage() {
                                                       </Badge>
                                                     </TableCell>
                                                     <TableCell className="py-2">
-                                                      <div className="flex items-center gap-1.5">
-                                                        {s.added_by_avatar_url ? (
-                                                          <img src={s.added_by_avatar_url} className="h-4 w-4 rounded-full" />
-                                                        ) : (
-                                                          <User className="h-3 w-3 text-muted-foreground" />
-                                                        )}
-                                                        <div className="flex flex-col">
-                                                          <span className="text-[11px] text-muted-foreground truncate max-w-[80px]">
-                                                            {s.added_by_username || s.added_by}
-                                                          </span>
-                                                          {s.added_by_username && (
-                                                            <span className="text-[9px] text-muted-foreground/70 leading-none">
-                                                              ID: {s.added_by}
-                                                            </span>
-                                                          )}
-                                                        </div>
-                                                      </div>
+                                                      <DiscordUserDisplay
+                                                        userId={String(s.added_by)}
+                                                        username={s.added_by_username}
+                                                        avatarUrl={s.added_by_avatar_url}
+                                                        size="sm"
+                                                      />
                                                     </TableCell>
                                                     <TableCell className="py-2">
                                                       <div className="text-[11px] text-muted-foreground">
