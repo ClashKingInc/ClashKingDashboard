@@ -764,6 +764,7 @@
       "inactive": "Inactive",
       "executed": "Done",
       "missed": "Missed",
+      "lastRun": "Last run",
       "enable": "Enable",
       "disable": "Disable",
       "createTitle": "Create Automation",

@@ -677,6 +677,7 @@
       "inactive": "Inactif",
       "executed": "Exécutée",
       "missed": "Ratée",
+      "lastRun": "Dernière exéc.",
       "enable": "Activer",
       "disable": "Désactiver",
       "createTitle": "Créer une Automatisation",

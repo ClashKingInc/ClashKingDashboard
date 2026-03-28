@@ -1507,9 +1507,9 @@ export default function RostersPage() {
                         {t("automations.missed")}
                       </Badge>
                     ) : automation.last_triggered_at ? (
-                      <Badge variant="secondary" className="text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                      <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground border-border">
                         <CheckCircle2 className="w-3 h-3 mr-1" />
-                        {t("automations.executed")}
+                        {t("automations.lastRun")}
                         <span className="ml-1 opacity-70">
                           {new Date(automation.last_triggered_at * 1000).toLocaleDateString()}
                         </span>

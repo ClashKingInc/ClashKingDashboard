@@ -758,6 +758,7 @@
       "inactive": "Inactief",
       "executed": "Uitgevoerd",
       "missed": "Gemist",
+      "lastRun": "Laatste run",
       "enable": "Inschakelen",
       "disable": "Uitschakelen",
       "createTitle": "Automatisering Maken",

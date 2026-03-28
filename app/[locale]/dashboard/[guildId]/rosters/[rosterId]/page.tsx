@@ -864,33 +864,47 @@ export default function RosterDetailPage() {
                                 )}
                               </Badge>
                             )
-                          ) : automation.last_missed_at ? (
-                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/30">
-                              <AlertTriangle className="w-3 h-3 mr-1" />
-                              {t("automations.missed")}
-                            </Badge>
-                          ) : automation.last_triggered_at ? (
-                            <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
-                              <CheckCircle2 className="w-3 h-3 mr-1" />
-                              {t("automations.executed")}
-                              <span className="ml-1 opacity-70">
-                                {new Date(automation.last_triggered_at * 1000).toLocaleDateString()}
-                              </span>
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="outline"
-                              className={automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}
-                            >
-                              {automation.active ? t("automations.active") : t("automations.inactive")}
-                            </Badge>
-                          )}
+                          ) : (() => {
+                            const currentTrigger = roster?.event_start_time != null
+                              ? roster.event_start_time + automation.offset_seconds
+                              : null;
+                            const isCurrentMissed = currentTrigger != null && (automation.last_missed_at ?? 0) >= currentTrigger;
+                            const isCurrentTriggered = currentTrigger != null && (automation.last_triggered_at ?? 0) >= currentTrigger;
+                            if (isCurrentMissed) return (
+                              <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/30">
+                                <AlertTriangle className="w-3 h-3 mr-1" />
+                                {t("automations.missed")}
+                              </Badge>
+                            );
+                            if (isCurrentTriggered) return (
+                              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                {t("automations.executed")}
+                                <span className="ml-1 opacity-70">
+                                  {new Date(automation.last_triggered_at! * 1000).toLocaleDateString()}
+                                </span>
+                              </Badge>
+                            );
+                            return (
+                              <Badge
+                                variant="outline"
+                                className={automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}
+                              >
+                                {automation.active ? t("automations.active") : t("automations.inactive")}
+                              </Badge>
+                            );
+                          })()}
                         </div>
                       </div>
 
                       {/* Title */}
                       <h4 className="font-semibold text-foreground mb-2">
                         {getAutomationLabel(automation.action_type)}
+                        {automation.action_type === "roster_ping" && automation.options?.ping_type && (
+                          <span className="font-normal text-muted-foreground ml-1.5 text-sm">
+                            · {t(`automations.pingType_${automation.options.ping_type}`)}
+                          </span>
+                        )}
                       </h4>
 
                       {/* Details */}
@@ -899,12 +913,6 @@ export default function RosterDetailPage() {
                           <Clock className="w-4 h-4 flex-shrink-0" />
                           <span className="truncate">{formatOffsetSeconds(automation.offset_seconds, t)}</span>
                         </div>
-                        {automation.action_type === "roster_ping" && automation.options?.ping_type && (
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Bell className="w-4 h-4 flex-shrink-0" />
-                            <span className="truncate">{t(`automations.pingType_${automation.options.ping_type}`)}</span>
-                          </div>
-                        )}
                         {roster?.event_start_time && (
                           <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
                             <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
