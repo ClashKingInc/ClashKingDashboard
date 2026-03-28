@@ -47,7 +47,7 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npx next lint --dir .
+        run: npx next lint
 
   # ─── Build ────────────────────────────────────────────────────────────────
   build:
