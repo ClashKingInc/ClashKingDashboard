@@ -47,7 +47,7 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npx next lint
+        run: npx next lint $GITHUB_WORKSPACE
 
   # ─── Build ────────────────────────────────────────────────────────────────
   build:
