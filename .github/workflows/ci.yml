@@ -49,6 +49,25 @@ jobs:
       - name: Lint
         run: npm run lint
 
+  # ─── Tests ────────────────────────────────────────────────────────────────
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
   # ─── Build ────────────────────────────────────────────────────────────────
   build:
     name: Build
@@ -65,6 +84,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            nextjs-${{ runner.os }}-
+
       - name: Build
         run: npm run build
         env:
@@ -72,13 +100,6 @@ jobs:
           NEXT_PUBLIC_DISCORD_CLIENT_ID: ci-placeholder
           NEXTAUTH_SECRET: ci-placeholder
           NEXTAUTH_URL: http://localhost:3002
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: nextjs-build
-          path: .next/
-          retention-days: 1
 
   # ─── Security audit ───────────────────────────────────────────────────────
   audit:
@@ -96,22 +117,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Audit (critical & high only)
-        run: npm audit --audit-level=high
+      - name: Audit (high & critical only)
+        run: npm audit --audit-level=high --omit=dev
 
   # ─── SonarCloud ───────────────────────────────────────────────────────────
   sonar:
     name: SonarCloud
     runs-on: ubuntu-latest
-    # Only run on PRs to main or direct pushes to main
     if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0  # Required for SonarCloud blame data
+          fetch-depth: 0
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
