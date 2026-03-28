@@ -94,7 +94,7 @@ function DraggableMember({ member, rosterId, isDuplicate }: DraggableMemberProps
         <span className="font-medium text-foreground truncate flex items-center gap-1 text-sm">
           {member.name}
           {isDuplicate && (
-            <Copy className="w-3 h-3 text-yellow-500 shrink-0" title="Dans plusieurs rosters" />
+            <Copy className="w-3 h-3 text-yellow-500 shrink-0" />
           )}
         </span>
         <span className="text-xs text-muted-foreground font-mono">

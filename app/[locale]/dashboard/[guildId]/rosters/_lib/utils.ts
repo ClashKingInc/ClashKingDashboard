@@ -234,10 +234,13 @@ const COLUMN_LABELS: Record<string, string> = {
 const COLUMN_INTERNAL: Record<string, string> = {
   'TH': 'townhall',
   'Town Hall': 'townhall',
+  'Townhall Level': 'townhall',
   'Name': 'name',
   'Tag': 'tag',
+  'Clan Tag': 'current_clan_tag',
   'Hit Rate': 'hitrate',
   'Hitrate': 'hitrate',
+  '30 Day Hitrate': 'hitrate',
   'Clan': 'current_clan_tag',
   'Current Clan': 'current_clan_tag',
   'Discord': 'discord',

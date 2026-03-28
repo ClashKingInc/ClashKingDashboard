@@ -524,6 +524,9 @@
       "view": "Bekijken",
       "edit": "Bewerken",
       "delete": "Verwijderen",
+      "noGroup": "Geen groep",
+      "moveToGroup": "Verplaats naar groep",
+      "clone": "Klonen",
       "allRosters": "Alle Roosters",
       "manageRosters": "Beheer je oorlogsroosters en opstellingen"
     },
@@ -753,6 +756,8 @@
       "emptyHint": "Maak een automatisering om acties te plannen",
       "active": "Actief",
       "inactive": "Inactief",
+      "executed": "Uitgevoerd",
+      "missed": "Gemist",
       "enable": "Inschakelen",
       "disable": "Uitschakelen",
       "createTitle": "Automatisering Maken",
@@ -824,6 +829,7 @@
       "noAutomationsHint": "Maak een automatisering voor deze groep",
       "addAutomation": "Automatisering Toevoegen",
       "deleteConfirm": "Groep \"{name}\" verwijderen? Roosters in deze groep worden ongegroepeerd.",
+      "emptyGroup": "Nog geen roosters in deze groep",
       "rules": {
         "title": "Groepsregels",
         "rulesHint": "Deze regels gelden voor alle roosters in de groep en worden direct doorgevoerd.",
@@ -890,6 +896,9 @@
       "maxAccountsHint": "Limiet accounts per Discord gebruiker",
       "allowedCategories": "Toegestane Categorieën",
       "allowedCategoriesHint": "Klik om te wisselen. Als geen geselecteerd, zijn alle toegestaan.",
+      "defaultSignupCategory": "Standaard inschrijfcategorie",
+      "defaultSignupCategoryNone": "Geen (geen standaard)",
+      "defaultSignupCategoryHint": "Voorgeselecteerde categorie wanneer een lid zich inschrijft.",
       "categoriesManagedByGroup": "Inschrijfcategorieën worden beheerd op groepsniveau. Open de groepsinstellingen via de Rosters pagina om te configureren welke categorieën beschikbaar zijn voor alle roosters in deze groep.",
       "saving": "Opslaan...",
       "save": "Opslaan"

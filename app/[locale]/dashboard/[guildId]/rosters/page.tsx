@@ -26,8 +26,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Plus, Users, Trash2, Edit, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus, Tag } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Edit, Search, RefreshCw, Eye, Copy, ClipboardList, GitCompare, Check, X, FolderOpen, Pencil, Layers, Zap, Bell, Play, Pause, MessageSquare, Lock, Unlock, Archive, UserMinus, Tag, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -37,7 +38,7 @@ import { CloneDialog } from "./_components";
 import * as api from "./_lib/api";
 import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData, SignupCategory } from "./_lib/types";
 import { calculateRosterStats, formatThRestriction, getAutomationLabel, buildOffsetSeconds, parseOffsetSeconds, formatOffsetSeconds } from "./_lib/utils";
-import type { OffsetUnit, OffsetDir } from "./_lib/utils";
+import type { OffsetUnit } from "./_lib/utils";
 
 // Roster Card Component
 interface RosterCardProps {
@@ -46,10 +47,12 @@ interface RosterCardProps {
   isSelected: boolean;
   compareMode: boolean;
   deleting: string | null;
+  groups: RosterGroup[];
   onSelect: () => void;
   onView: () => void;
   onClone: () => void;
   onDelete: () => void;
+  onMoveToGroup: (groupId: string | null) => void;
 }
 
 function RosterCard({
@@ -58,10 +61,12 @@ function RosterCard({
   isSelected,
   compareMode,
   deleting,
+  groups,
   onSelect,
   onView,
   onClone,
   onDelete,
+  onMoveToGroup,
 }: RosterCardProps) {
   const t = useTranslations("RostersPage");
   return (
@@ -156,27 +161,50 @@ function RosterCard({
 
         {/* Actions */}
         <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
-          <Button
-            variant="default"
-            size="sm"
-            className="flex-1"
-            onClick={onView}
-          >
+          <Button variant="default" size="sm" className="flex-1" onClick={onView}>
             <Eye className="w-4 h-4 mr-1" />
             {t("rosterCard.view")}
           </Button>
-          <Button variant="outline" size="sm" onClick={onClone}>
-            <Copy className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onDelete}
-            disabled={deleting === roster.custom_id}
-            className="text-destructive hover:text-destructive"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {groups.length > 0 && (
+                <>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">{t("rosterCard.moveToGroup")}</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    onClick={() => onMoveToGroup(null)}
+                    className={!roster.group_id ? "font-medium" : ""}
+                  >
+                    <FolderOpen className="w-4 h-4 mr-2 text-muted-foreground" />
+                    {t("rosterCard.noGroup")}
+                  </DropdownMenuItem>
+                  {groups.map((g) => (
+                    <DropdownMenuItem
+                      key={g.group_id}
+                      onClick={() => onMoveToGroup(g.group_id)}
+                      className={roster.group_id === g.group_id ? "font-medium" : ""}
+                    >
+                      <FolderOpen className="w-4 h-4 mr-2 text-indigo-500" />
+                      {g.alias}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              <DropdownMenuItem onClick={onClone}>
+                <Copy className="w-4 h-4 mr-2" />
+                {t("rosterCard.clone")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onDelete} className="text-destructive focus:text-destructive">
+                <Trash2 className="w-4 h-4 mr-2" />
+                {t("rosterCard.delete")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardContent>
     </Card>
@@ -220,10 +248,9 @@ export default function RostersPage() {
   const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
   const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { _offsetDir?: OffsetDir; _offsetVal?: string; _offsetUnit?: OffsetUnit }>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { _offsetVal?: string; _offsetUnit?: OffsetUnit }>({
     action_type: "roster_ping",
     offset_seconds: -86400,
-    _offsetDir: 'before',
     _offsetVal: '1',
     _offsetUnit: 'days',
     active: true,
@@ -290,7 +317,7 @@ export default function RostersPage() {
 
   // Filter rosters
   const filteredRosters = rosters.filter(roster =>
-    roster.alias.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -380,6 +407,9 @@ export default function RostersPage() {
         ...(editingGroup.allowed_signup_categories !== undefined && {
           allowed_signup_categories: editingGroup.allowed_signup_categories,
         }),
+        ...(editingGroup.default_signup_category !== undefined && {
+          default_signup_category: editingGroup.default_signup_category ?? null,
+        }),
       });
       setGroups(prev => prev.map(g => g.group_id === updated.group_id ? updated : g));
       setEditGroupDialogOpen(false);
@@ -393,7 +423,7 @@ export default function RostersPage() {
   };
 
   const handleDeleteGroup = async (groupId: string, groupAlias: string) => {
-    if (!confirm(t("groups.deleteConfirm").replace("{name}", groupAlias))) return;
+    if (!confirm(t("groups.deleteConfirm", { name: groupAlias }))) return;
     setDeletingGroup(groupId);
     try {
       await api.deleteGroup(groupId, guildId);
@@ -428,7 +458,9 @@ export default function RostersPage() {
     setSavingCategory(true);
     try {
       await api.updateCategory(editingCategoryStandalone.custom_id, guildId, { alias: editingCategoryStandalone.alias });
-      refreshCategories();
+      setCategories(prev => prev.map(c =>
+        c.custom_id === editingCategoryStandalone.custom_id ? { ...c, alias: editingCategoryStandalone.alias } : c
+      ));
       setEditCategoryDialogOpen(false);
       setEditingCategoryStandalone(null);
       toast({ title: t("categoryUpdated") });
@@ -503,7 +535,6 @@ export default function RostersPage() {
       setNewAutomation({
         action_type: "roster_ping",
         offset_seconds: -86400,
-        _offsetDir: 'before',
         _offsetVal: '1',
         _offsetUnit: 'days',
         active: true,
@@ -542,14 +573,14 @@ export default function RostersPage() {
   };
 
   const handleDeleteRoster = async (roster: Roster) => {
-    if (!confirm(t("deleteConfirm").replace("{name}", roster.alias))) return;
+    if (!confirm(t("deleteConfirm", { name: roster.alias }))) return;
 
     setDeleting(roster.custom_id);
     try {
       await deleteRoster(roster.custom_id);
       toast({
         title: tCommon("success"),
-        description: t("deleteSuccessDesc").replace("{name}", roster.alias),
+        description: t("deleteSuccessDesc", { name: roster.alias }),
       });
     } catch (err) {
       toast({
@@ -559,6 +590,15 @@ export default function RostersPage() {
       });
     } finally {
       setDeleting(null);
+    }
+  };
+
+  const handleMoveRosterToGroup = async (roster: Roster, groupId: string | null) => {
+    try {
+      await api.updateRoster(roster.custom_id, guildId, { group_id: groupId });
+      refresh();
+    } catch {
+      toast({ title: t("saveError"), variant: "destructive" });
     }
   };
 
@@ -574,7 +614,7 @@ export default function RostersPage() {
       const cloned = await cloneRoster(rosterToClone.custom_id, data);
       toast({
         title: tCommon("success"),
-        description: t("cloneDialog.successDesc").replace("{name}", cloned.alias),
+        description: t("cloneDialog.successDesc", { name: cloned.alias }),
       });
     } catch (err) {
       toast({
@@ -598,10 +638,11 @@ export default function RostersPage() {
 
     setCreating(true);
     try {
-      const created = await createRoster(newRosterData);
+      const rosterName = newRosterData.alias;
+      await createRoster(newRosterData);
       toast({
         title: tCommon("success"),
-        description: t("createSuccessDesc").replace("{name}", created.alias),
+        description: t("createSuccessDesc", { name: rosterName }),
       });
       setCreateDialogOpen(false);
       setNewRosterData({
@@ -610,6 +651,7 @@ export default function RostersPage() {
         signup_scope: "clan-only",
         clan_tag: "",
       });
+      refresh();
     } catch (err) {
       toast({
         title: tCommon("error"),
@@ -913,15 +955,50 @@ export default function RostersPage() {
           </Card>
         </div>
 
-        {/* Search */}
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t("searchPlaceholder")}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 bg-background border-border"
-          />
+        {/* Search + Categories */}
+        <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+          <div className="relative max-w-md w-full sm:w-auto">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t("searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-background border-border"
+            />
+          </div>
+
+          {/* Categories */}
+          <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0 py-1">
+            <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
+              <Tag className="w-3.5 h-3.5" />
+              <span className="text-xs font-medium">{t("categories.title")}</span>
+            </div>
+            {categories.map((cat) => (
+              <Badge
+                key={cat.custom_id}
+                variant="secondary"
+                className="flex items-center gap-1.5 px-2 py-1 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
+              >
+                {cat.alias}
+                <button
+                  onClick={() => { setEditingCategoryStandalone(cat); setEditCategoryDialogOpen(true); }}
+                  className="hover:text-foreground transition-colors"
+                >
+                  <Pencil className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => handleDeleteCategoryStandalone(cat.custom_id)}
+                  className="hover:text-destructive transition-colors"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              </Badge>
+            ))}
+            <Button size="sm" variant="ghost" className="h-6 px-2 text-xs text-muted-foreground" onClick={() => { setStandaloneNewAlias(""); setCreateCategoryDialogOpen(true); }}>
+              <Plus className="w-3 h-3 mr-1" />
+              {t("categories.create")}
+            </Button>
+          </div>
         </div>
 
         {/* Rosters Grid */}
@@ -945,13 +1022,13 @@ export default function RostersPage() {
           </Card>
         ) : (
           <div className="space-y-8">
-            {/* Groups with rosters */}
-            {groups.filter(g => rostersByGroup[g.group_id]?.length > 0).map((group) => {
-              const groupRosters = rostersByGroup[group.group_id].filter(roster =>
-                roster.alias.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            {/* Groups */}
+            {groups.map((group) => {
+              const groupRosters = (rostersByGroup[group.group_id] ?? []).filter(roster =>
+                roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
               );
-              if (groupRosters.length === 0) return null;
+              if (groupRosters.length === 0 && searchQuery) return null;
 
               return (
                 <div key={group.group_id} className="space-y-4">
@@ -1026,6 +1103,9 @@ export default function RostersPage() {
                   </div>
 
                   {/* Group Rosters Grid */}
+                  {groupRosters.length === 0 ? (
+                    <p className="text-sm text-muted-foreground italic px-1">{t("groups.emptyGroup")}</p>
+                  ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {groupRosters.map((roster) => {
                       const stats = calculateRosterStats(roster.members, roster.clan_tag, familyClanTags);
@@ -1038,14 +1118,17 @@ export default function RostersPage() {
                           isSelected={isSelected}
                           compareMode={compareMode}
                           deleting={deleting}
+                          groups={groups}
                           onSelect={() => toggleRosterSelection(roster.custom_id)}
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
                           onDelete={() => handleDeleteRoster(roster)}
+                          onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
                         />
                       );
                     })}
                   </div>
+                  )}
                 </div>
               );
             })}
@@ -1053,7 +1136,7 @@ export default function RostersPage() {
             {/* Ungrouped rosters */}
             {(() => {
               const ungroupedRosters = rostersByGroup.ungrouped.filter(roster =>
-                roster.alias.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                roster.alias?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 roster.clan_name?.toLowerCase().includes(searchQuery.toLowerCase())
               );
               if (ungroupedRosters.length === 0) return null;
@@ -1086,10 +1169,12 @@ export default function RostersPage() {
                           isSelected={isSelected}
                           compareMode={compareMode}
                           deleting={deleting}
+                          groups={groups}
                           onSelect={() => toggleRosterSelection(roster.custom_id)}
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
                           onDelete={() => handleDeleteRoster(roster)}
+                          onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
                         />
                       );
                     })}
@@ -1099,58 +1184,6 @@ export default function RostersPage() {
             })()}
           </div>
         )}
-
-        {/* Categories Management */}
-        <Card className="bg-card border-border">
-          <CardHeader className="pb-2 pt-3 px-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-muted-foreground">
-                <Tag className="w-3.5 h-3.5" />
-                <span className="text-xs font-medium">{t("categories.title")}</span>
-                {categories.length > 0 && (
-                  <span className="text-xs opacity-60">({categories.length})</span>
-                )}
-              </div>
-              <Button size="sm" variant="ghost" className="h-6 px-2 text-xs text-muted-foreground" onClick={() => { setStandaloneNewAlias(""); setCreateCategoryDialogOpen(true); }}>
-                <Plus className="w-3 h-3 mr-1" />
-                {t("categories.create")}
-              </Button>
-            </div>
-          </CardHeader>
-          {categories.length > 0 && (
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((cat) => (
-                  <Badge
-                    key={cat.custom_id}
-                    variant="secondary"
-                    className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
-                  >
-                    {cat.alias}
-                    <button
-                      onClick={() => { setEditingCategoryStandalone(cat); setEditCategoryDialogOpen(true); }}
-                      className="hover:text-foreground transition-colors"
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteCategoryStandalone(cat.custom_id)}
-                      className="hover:text-destructive transition-colors"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-              <p className="text-xs text-muted-foreground mt-3">{t("categories.infoBox")}</p>
-            </CardContent>
-          )}
-          {categories.length === 0 && (
-            <CardContent>
-              <p className="text-sm text-muted-foreground italic">{t("categories.noCategories")}</p>
-            </CardContent>
-          )}
-        </Card>
 
         {/* Create Category Dialog */}
         <Dialog open={createCategoryDialogOpen} onOpenChange={(open) => { setCreateCategoryDialogOpen(open); if (!open) setStandaloneNewAlias(""); }}>
@@ -1352,6 +1385,32 @@ export default function RostersPage() {
                 ) : (
                   <p className="text-sm text-muted-foreground italic">{t("groups.rules.noCategories")}</p>
                 )}
+                {/* Default signup category */}
+                {(editingGroup?.allowed_signup_categories?.length ?? 0) > 0 && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{t("settings.defaultSignupCategory")}</Label>
+                    <Select
+                      value={editingGroup?.default_signup_category ?? "__none__"}
+                      onValueChange={(v) => setEditingGroup(prev => prev ? {
+                        ...prev,
+                        default_signup_category: v === "__none__" ? null : v,
+                      } : null)}
+                    >
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue placeholder={t("settings.defaultSignupCategoryNone")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">{t("settings.defaultSignupCategoryNone")}</SelectItem>
+                        {categories
+                          .filter(c => editingGroup?.allowed_signup_categories?.includes(c.custom_id))
+                          .map(c => (
+                            <SelectItem key={c.custom_id} value={c.custom_id}>{c.alias}</SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
                 {/* Inline category creation */}
                 <div className="flex gap-2">
                   <Input
@@ -1425,9 +1484,41 @@ export default function RostersPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={automation.active ? "default" : "secondary"} className="text-xs">
-                      {automation.active ? t("automations.active") : t("automations.inactive")}
-                    </Badge>
+                    {automation.executed ? (
+                      automation.execution_status === "missed" ? (
+                        <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-500 border-amber-500/30">
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          {t("automations.missed")}
+                        </Badge>
+                      ) : (
+                        <Badge variant="secondary" className="text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          {t("automations.executed")}
+                          {automation.executed_at && (
+                            <span className="ml-1 opacity-70">
+                              {new Date(automation.executed_at * 1000).toLocaleDateString()}
+                            </span>
+                          )}
+                        </Badge>
+                      )
+                    ) : automation.last_missed_at ? (
+                      <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-500 border-amber-500/30">
+                        <AlertTriangle className="w-3 h-3 mr-1" />
+                        {t("automations.missed")}
+                      </Badge>
+                    ) : automation.last_triggered_at ? (
+                      <Badge variant="secondary" className="text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                        <CheckCircle2 className="w-3 h-3 mr-1" />
+                        {t("automations.executed")}
+                        <span className="ml-1 opacity-70">
+                          {new Date(automation.last_triggered_at * 1000).toLocaleDateString()}
+                        </span>
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className={`text-xs ${automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}`}>
+                        {automation.active ? t("automations.active") : t("automations.inactive")}
+                      </Badge>
+                    )}
                     <Button
                       variant="ghost"
                       size="sm"
@@ -1548,32 +1639,15 @@ export default function RostersPage() {
               <div className="space-y-2">
                 <Label>{t("automations.offsetFromEvent")}</Label>
                 <div className="flex gap-2">
-                  <Select
-                    value={newAutomation._offsetDir ?? 'before'}
-                    onValueChange={(v) => {
-                      const dir = v as OffsetDir;
-                      const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
-                      const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
-                      setNewAutomation({ ...newAutomation, _offsetDir: dir, offset_seconds: buildOffsetSeconds(dir, val, unit) });
-                    }}
-                  >
-                    <SelectTrigger className="bg-background w-36">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
-                      <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <span className="text-sm text-muted-foreground self-center">{t("automations.offsetBefore")}</span>
                   <Input
                     type="number"
                     min={1}
                     value={newAutomation._offsetVal ?? '1'}
                     onChange={(e) => {
                       const val = parseInt(e.target.value) || 1;
-                      const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
                       const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
-                      setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                      setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds('before', val, unit) });
                     }}
                     className="bg-background w-20"
                   />
@@ -1582,8 +1656,7 @@ export default function RostersPage() {
                     onValueChange={(v) => {
                       const unit = v as OffsetUnit;
                       const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
-                      const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
-                      setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                      setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds('before', val, unit) });
                     }}
                   >
                     <SelectTrigger className="bg-background flex-1">
@@ -1721,28 +1794,14 @@ export default function RostersPage() {
                   const parsed = parseOffsetSeconds(editingAutomation?.offset_seconds ?? -86400);
                   return (
                     <div className="flex gap-2">
-                      <Select
-                        value={parsed.dir}
-                        onValueChange={(v) => {
-                          const dir = v as OffsetDir;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(dir, parsed.val, parsed.unit) } : null);
-                        }}
-                      >
-                        <SelectTrigger className="bg-background w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
-                          <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <span className="text-sm text-muted-foreground self-center">{t("automations.offsetBefore")}</span>
                       <Input
                         type="number"
                         min={1}
                         value={parsed.val}
                         onChange={(e) => {
                           const val = parseInt(e.target.value) || 1;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, val, parsed.unit) } : null);
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', val, parsed.unit) } : null);
                         }}
                         className="bg-background w-20"
                       />
@@ -1750,7 +1809,7 @@ export default function RostersPage() {
                         value={parsed.unit}
                         onValueChange={(v) => {
                           const unit = v as OffsetUnit;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, parsed.val, unit) } : null);
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', parsed.val, unit) } : null);
                         }}
                       >
                         <SelectTrigger className="bg-background flex-1">

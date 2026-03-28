@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -24,7 +25,6 @@ interface MissingMembersDialogProps {
   onLoad: (groupId?: string) => void;
   onAddMembers: (tags: string[]) => Promise<void>;
   groupId?: string | null;
-  t: (key: string, params?: Record<string, unknown>) => string;
 }
 
 export function MissingMembersDialog({
@@ -35,8 +35,8 @@ export function MissingMembersDialog({
   onLoad,
   onAddMembers,
   groupId,
-  t,
 }: MissingMembersDialogProps) {
+  const t = useTranslations("RostersPage");
   const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
   const [adding, setAdding] = useState(false);
   const [viewMode, setViewMode] = useState<'roster' | 'group'>('roster');
@@ -102,7 +102,7 @@ export function MissingMembersDialog({
     }
   };
 
-  const hasError = data?.results?.length > 0 && data.results.every(r => r.state === 'error');
+  const hasError = (data?.results?.length ?? 0) > 0 && data!.results!.every(r => r.state === 'error');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

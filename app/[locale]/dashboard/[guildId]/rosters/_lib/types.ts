@@ -43,6 +43,7 @@ export interface Roster {
   max_accounts_per_user?: number | null;
   th_restriction?: string;
   allowed_signup_categories?: string[];
+  default_signup_category?: string | null;
   columns?: string[];
   sort?: string[];
   image?: string | null;
@@ -70,6 +71,10 @@ export interface RosterAutomation {
   options?: RosterAutomationOptions;
   active: boolean;
   executed: boolean;
+  executed_at?: number | null;
+  last_triggered_at?: number | null;
+  execution_status?: 'triggered' | 'missed';
+  last_missed_at?: number | null;
   created_at?: number;
   updated_at?: number;
   /** Frontend-only: marks automations inherited from a group */
@@ -85,6 +90,7 @@ export type AutomationActionType =
   | "roster_clear"
   | "roster_archive";
 
+
 export interface RosterGroup {
   group_id: string;
   alias: string;
@@ -94,6 +100,7 @@ export interface RosterGroup {
   roster_size?: number | null;
   min_signups?: number | null;
   allowed_signup_categories?: string[];
+  default_signup_category?: string | null;
   roster_count?: number;
   rosters?: Array<{
     custom_id: string;
@@ -191,6 +198,7 @@ export interface EditRosterFormData {
   recurrence_days: string;
   recurrence_day_of_month: string;
   recurrence_mode: 'days' | 'day_of_month';
+  default_signup_category: string;
   columns: string[];
   sort: string[];
   group_id: string;

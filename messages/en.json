@@ -521,6 +521,9 @@
       "view": "View",
       "edit": "Edit",
       "delete": "Delete",
+      "noGroup": "No group",
+      "moveToGroup": "Move to group",
+      "clone": "Clone",
       "allRosters": "All Rosters",
       "manageRosters": "Manage your war rosters and lineups"
     },
@@ -759,6 +762,8 @@
       "emptyHint": "Create an automation to schedule actions",
       "active": "Active",
       "inactive": "Inactive",
+      "executed": "Done",
+      "missed": "Missed",
       "enable": "Enable",
       "disable": "Disable",
       "createTitle": "Create Automation",
@@ -830,6 +835,7 @@
       "noAutomationsHint": "Create an automation for this group",
       "addAutomation": "Add Automation",
       "deleteConfirm": "Delete group \"{name}\"? Rosters in this group will become ungrouped.",
+      "emptyGroup": "No rosters in this group yet",
       "rules": {
         "title": "Group Rules",
         "rulesHint": "These rules apply to all rosters in the group and are propagated immediately.",
@@ -896,6 +902,9 @@
       "maxAccountsHint": "Limit accounts per Discord user",
       "allowedCategories": "Allowed Signup Categories",
       "allowedCategoriesHint": "Click to toggle. If none selected, all categories are allowed.",
+      "defaultSignupCategory": "Default Signup Category",
+      "defaultSignupCategoryNone": "None (no default)",
+      "defaultSignupCategoryHint": "Pre-selected category when a member signs up.",
       "categoriesManagedByGroup": "Signup categories are managed at the group level. Open the group settings from the Rosters page to configure which categories are available for all rosters in this group.",
       "saving": "Saving...",
       "save": "Save Settings"

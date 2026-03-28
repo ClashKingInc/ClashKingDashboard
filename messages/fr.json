@@ -475,6 +475,9 @@
       "view": "Voir",
       "edit": "Modifier",
       "delete": "Supprimer",
+      "noGroup": "Aucun groupe",
+      "moveToGroup": "Déplacer vers un groupe",
+      "clone": "Dupliquer",
       "allRosters": "Toutes les compositions",
       "manageRosters": "Gérez vos compositions de guerre"
     },
@@ -672,6 +675,8 @@
       "emptyHint": "Créez une automatisation pour planifier des actions",
       "active": "Actif",
       "inactive": "Inactif",
+      "executed": "Exécutée",
+      "missed": "Ratée",
       "enable": "Activer",
       "disable": "Désactiver",
       "createTitle": "Créer une Automatisation",
@@ -743,6 +748,7 @@
       "noAutomationsHint": "Créez une automatisation pour ce groupe",
       "addAutomation": "Ajouter une automatisation",
       "deleteConfirm": "Supprimer le groupe \"{name}\" ? Les rosters de ce groupe seront dissociés.",
+      "emptyGroup": "Aucun roster dans ce groupe pour l'instant",
       "rules": {
         "title": "Règles du groupe",
         "rulesHint": "Ces règles s'appliquent à tous les rosters du groupe et sont propagées immédiatement.",
@@ -809,6 +815,9 @@
       "maxAccountsHint": "Limite de comptes par utilisateur Discord",
       "allowedCategories": "Catégories Autorisées",
       "allowedCategoriesHint": "Cliquez pour activer/désactiver. Si aucune sélection, toutes sont autorisées.",
+      "defaultSignupCategory": "Catégorie d'inscription par défaut",
+      "defaultSignupCategoryNone": "Aucune (pas de défaut)",
+      "defaultSignupCategoryHint": "Catégorie pré-sélectionnée lors de l'inscription d'un membre.",
       "categoriesManagedByGroup": "Les catégories d'inscription sont gérées au niveau du groupe. Ouvrez les paramètres du groupe depuis la page Rosters pour configurer les catégories disponibles pour tous les rosters du groupe.",
       "saving": "Sauvegarde...",
       "save": "Sauvegarder"

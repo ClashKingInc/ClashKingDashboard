@@ -71,4 +71,7 @@ Desktop.ini
 *.tmp
 *.bak
 .cache/
+
+# Claude
 .claude/
+CLAUDE.md

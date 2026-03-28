@@ -322,6 +322,7 @@ export async function updateAutomation(
   return handleResponse<RosterAutomation>(response);
 }
 
+
 export async function deleteAutomation(automationId: string, serverId: string): Promise<void> {
   const response = await fetch(`/api/v2/roster-automation/${automationId}?server_id=${serverId}`, {
     method: 'DELETE',

@@ -40,7 +40,8 @@ import {
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
   MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
   Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
-  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X, Copy, ExternalLink, Link2
+  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X, Copy, ExternalLink, Link2,
+  CheckCircle2, AlertTriangle
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
@@ -70,7 +71,7 @@ import {
   parseOffsetSeconds,
   formatOffsetSeconds,
 } from "../_lib";
-import type { OffsetUnit, OffsetDir } from "../_lib";
+import type { OffsetUnit } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
 import { generateRosterToken, fetchRosters } from "../_lib/api";
 import type { RosterTokenResult } from "../_lib/api";
@@ -161,18 +162,18 @@ export default function RosterDetailPage() {
     recurrence_days: "",
     recurrence_day_of_month: "",
     recurrence_mode: "days",
+    default_signup_category: "",
     columns: [],
     sort: [],
     group_id: "",
     allowed_signup_categories: [],
   });
 
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string; _offsetDir?: 'before' | 'after'; _offsetVal?: string; _offsetUnit?: 'minutes' | 'hours' | 'days' }>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string; _offsetVal?: string; _offsetUnit?: 'minutes' | 'hours' | 'days' }>({
     action_type: "roster_ping",
     offset_seconds: -86400,
     active: true,
     target_type: 'roster',
-    _offsetDir: 'before',
     _offsetVal: '1',
     _offsetUnit: 'days',
   });
@@ -225,6 +226,7 @@ export default function RosterDetailPage() {
         recurrence_days: roster.recurrence_days?.toString() || "",
         recurrence_day_of_month: roster.recurrence_day_of_month?.toString() || "",
         recurrence_mode: roster.recurrence_day_of_month ? "day_of_month" : "days",
+        default_signup_category: roster.default_signup_category || "",
         columns: (roster.columns || []).map(getColumnLabel),
         sort: (roster.sort || []).map(getSortLabel),
         group_id: roster.group_id || "",
@@ -236,7 +238,7 @@ export default function RosterDetailPage() {
   // Sync localColumns when roster changes
   React.useEffect(() => {
     if (roster?.columns?.length) {
-      setLocalColumns(roster.columns);
+      setLocalColumns(roster.columns.map(getColumnInternal));
     }
   }, [roster?.columns]);
 
@@ -288,6 +290,7 @@ export default function RosterDetailPage() {
         sort: editData.sort.map(getSortInternal),
         group_id: editData.group_id || null,
         allowed_signup_categories: editData.allowed_signup_categories.length > 0 ? editData.allowed_signup_categories : undefined,
+        default_signup_category: editData.default_signup_category || null,
       });
       toast({ title: t("saveSuccess") });
     } catch (err) {
@@ -335,7 +338,7 @@ export default function RosterDetailPage() {
   };
 
   const handleClearMembers = async () => {
-    if (!confirm(t("clearMembersConfirm").replace("{name}", roster?.alias || ""))) return;
+    if (!confirm(t("clearMembersConfirm", { name: roster?.alias || "" }))) return;
     setClearingMembers(true);
     try {
       await clearMembers();
@@ -375,7 +378,6 @@ export default function RosterDetailPage() {
         offset_seconds: -86400,
         active: true,
         target_type: 'roster',
-        _offsetDir: 'before',
         _offsetVal: '1',
         _offsetUnit: 'days',
       });
@@ -416,6 +418,7 @@ export default function RosterDetailPage() {
       });
     }
   };
+
 
   const handleEditAutomation = async () => {
     if (!editingAutomation) return;
@@ -844,12 +847,44 @@ export default function RosterDetailPage() {
                               {groups.find(g => g.group_id === automation.group_id)?.alias || t("automations.group")}
                             </Badge>
                           )}
-                          <Badge
-                            variant={automation.active ? "default" : "secondary"}
-                            className={automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}
-                          >
-                            {automation.active ? t("automations.active") : t("automations.inactive")}
-                          </Badge>
+                          {automation.executed ? (
+                            automation.execution_status === "missed" ? (
+                              <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/30">
+                                <AlertTriangle className="w-3 h-3 mr-1" />
+                                {t("automations.missed")}
+                              </Badge>
+                            ) : (
+                              <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                {t("automations.executed")}
+                                {automation.executed_at && (
+                                  <span className="ml-1 opacity-70">
+                                    {new Date(automation.executed_at * 1000).toLocaleDateString()}
+                                  </span>
+                                )}
+                              </Badge>
+                            )
+                          ) : automation.last_missed_at ? (
+                            <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/30">
+                              <AlertTriangle className="w-3 h-3 mr-1" />
+                              {t("automations.missed")}
+                            </Badge>
+                          ) : automation.last_triggered_at ? (
+                            <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                              <CheckCircle2 className="w-3 h-3 mr-1" />
+                              {t("automations.executed")}
+                              <span className="ml-1 opacity-70">
+                                {new Date(automation.last_triggered_at * 1000).toLocaleDateString()}
+                              </span>
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="outline"
+                              className={automation.active ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : ""}
+                            >
+                              {automation.active ? t("automations.active") : t("automations.inactive")}
+                            </Badge>
+                          )}
                         </div>
                       </div>
 
@@ -916,6 +951,7 @@ export default function RosterDetailPage() {
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
+
                     </CardContent>
                   </Card>
                 );
@@ -925,86 +961,72 @@ export default function RosterDetailPage() {
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
-          {/* Identity Section */}
-          <Card className="bg-card border-l-4 border-l-blue-500">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <div className="p-2 bg-blue-500/10 rounded-lg">
-                  <Tag className="w-5 h-5 text-blue-500" />
+        <TabsContent value="settings" className="space-y-4">
+          <Card className="bg-card overflow-hidden">
+            <CardContent className="p-0 divide-y divide-border/60">
+
+              {/* Section: Identity */}
+              <div className="p-6 space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                  <Tag className="w-3.5 h-3.5" />
+                  {t("settings.general")}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium">{t("settings.name")}</Label>
+                    <Input
+                      value={editData.alias}
+                      onChange={(e) => setEditData({ ...editData, alias: e.target.value })}
+                      className="bg-muted/30"
+                      placeholder="CWL Week 1"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium">{t("settings.group")}</Label>
+                    <Select
+                      value={editData.group_id || "__none__"}
+                      onValueChange={(value) => setEditData({ ...editData, group_id: value === "__none__" ? "" : value })}
+                    >
+                      <SelectTrigger className="bg-muted/30">
+                        <SelectValue placeholder={t("settings.noGroup")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">{t("settings.noGroup")}</SelectItem>
+                        {groups.map((group) => (
+                          <SelectItem key={group.group_id} value={group.group_id}>
+                            {group.alias}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                {t("settings.general")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Name and Description */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2 text-sm font-medium">
-                    <FileText className="w-4 h-4 text-muted-foreground" />
-                    {t("settings.name")}
-                  </Label>
-                  <Input
-                    value={editData.alias}
-                    onChange={(e) => setEditData({ ...editData, alias: e.target.value })}
-                    className="bg-background/50"
-                    placeholder="CWL Week 1"
+                <div className="space-y-1.5">
+                  <Label className="text-sm font-medium">{t("settings.description")}</Label>
+                  <Textarea
+                    value={editData.description}
+                    onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                    className="bg-muted/30 resize-none"
+                    rows={2}
+                    placeholder={t("settings.descriptionPlaceholder")}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2 text-sm font-medium">
-                    <Layers className="w-4 h-4 text-muted-foreground" />
-                    {t("settings.group")}
-                  </Label>
-                  <Select
-                    value={editData.group_id || "__none__"}
-                    onValueChange={(value) => setEditData({ ...editData, group_id: value === "__none__" ? "" : value })}
-                  >
-                    <SelectTrigger className="bg-background/50">
-                      <SelectValue placeholder={t("settings.noGroup")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="__none__">{t("settings.noGroup")}</SelectItem>
-                      {groups.map((group) => (
-                        <SelectItem key={group.group_id} value={group.group_id}>
-                          {group.alias}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2 text-sm font-medium">
-                  <MessageSquare className="w-4 h-4 text-muted-foreground" />
-                  {t("settings.description")}
-                </Label>
-                <Textarea
-                  value={editData.description}
-                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                  className="bg-background/50 resize-none"
-                  rows={3}
-                  placeholder={t("settings.descriptionPlaceholder")}
-                />
-              </div>
-
-              {/* Type and Scope */}
-              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              {/* Section: Type & Scope */}
+              <div className="p-6 space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5" />
                   {t("settings.typeAndScope")}
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2 text-sm">
-                      <Building2 className="w-4 h-4 text-muted-foreground" />
-                      {t("settings.rosterType")}
-                    </Label>
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium">{t("settings.rosterType")}</Label>
                     <Select
                       value={editData.roster_type}
                       onValueChange={(value: "clan" | "family") => setEditData({ ...editData, roster_type: value })}
                     >
-                      <SelectTrigger className="bg-background">
+                      <SelectTrigger className="bg-muted/30">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -1023,16 +1045,13 @@ export default function RosterDetailPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2 text-sm">
-                      <Globe className="w-4 h-4 text-muted-foreground" />
-                      {t("settings.signupScope")}
-                    </Label>
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium">{t("settings.signupScope")}</Label>
                     <Select
                       value={editData.signup_scope}
                       onValueChange={(value: "clan-only" | "family-wide") => setEditData({ ...editData, signup_scope: value })}
                     >
-                      <SelectTrigger className="bg-background">
+                      <SelectTrigger className="bg-muted/30">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -1042,16 +1061,13 @@ export default function RosterDetailPage() {
                     </Select>
                   </div>
                   {editData.roster_type === "clan" && (
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2 text-sm">
-                        <Shield className="w-4 h-4 text-muted-foreground" />
-                        {t("settings.clan")}
-                      </Label>
+                    <div className="space-y-1.5">
+                      <Label className="text-sm font-medium">{t("settings.clan")}</Label>
                       <Select
                         value={editData.clan_tag}
                         onValueChange={(value) => setEditData({ ...editData, clan_tag: value })}
                       >
-                        <SelectTrigger className="bg-background">
+                        <SelectTrigger className="bg-muted/30">
                           <SelectValue placeholder={t("settings.selectClan")} />
                         </SelectTrigger>
                         <SelectContent>
@@ -1067,38 +1083,44 @@ export default function RosterDetailPage() {
                 </div>
               </div>
 
-              {/* Event Time + Recurrence */}
-              <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-lg space-y-3">
-                <Label className="flex items-center gap-2 text-sm font-medium">
-                  <Calendar className="w-4 h-4 text-amber-500" />
+              {/* Section: Event & Recurrence */}
+              <div className="p-6 space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-amber-500" />
                   {t("settings.eventTime")}
-                </Label>
-                <div className="flex items-center gap-3">
-                  <Input
-                    type="datetime-local"
-                    value={editData.event_start_time}
-                    onChange={(e) => setEditData({ ...editData, event_start_time: e.target.value })}
-                    className="bg-background flex-1"
-                  />
-                  <Badge variant="outline" className="bg-background">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {getTimezoneOffset()}
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground">{t("settings.eventTimeHint")}</p>
-                <div className="flex items-center gap-3 pt-1">
-                  <RefreshCw className="w-4 h-4 text-amber-500 shrink-0" />
-                  <div className="flex-1 space-y-2">
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium">{t("settings.eventTime")}</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="datetime-local"
+                        value={editData.event_start_time}
+                        onChange={(e) => setEditData({ ...editData, event_start_time: e.target.value })}
+                        className="bg-muted/30 flex-1"
+                      />
+                      <Badge variant="outline" className="shrink-0 bg-muted/30">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {getTimezoneOffset()}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{t("settings.eventTimeHint")}</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-sm font-medium flex items-center gap-1.5">
+                      <RefreshCw className="w-3.5 h-3.5 text-amber-500" />
+                      {t("settings.recurrenceDays")}
+                    </Label>
                     <div className="flex gap-2">
                       <Button type="button" size="sm"
                         variant={editData.recurrence_mode === 'days' ? 'default' : 'outline'}
-                        className="h-7 text-xs"
+                        className="h-8 text-xs"
                         onClick={() => setEditData({ ...editData, recurrence_mode: 'days', recurrence_day_of_month: '' })}>
                         {t("settings.recurrenceModeDays")}
                       </Button>
                       <Button type="button" size="sm"
                         variant={editData.recurrence_mode === 'day_of_month' ? 'default' : 'outline'}
-                        className="h-7 text-xs"
+                        className="h-8 text-xs"
                         onClick={() => setEditData({ ...editData, recurrence_mode: 'day_of_month', recurrence_days: '' })}>
                         {t("settings.recurrenceModeMonthly")}
                       </Button>
@@ -1111,7 +1133,7 @@ export default function RosterDetailPage() {
                           placeholder="—"
                           value={editData.recurrence_days}
                           onChange={(e) => setEditData({ ...editData, recurrence_days: e.target.value })}
-                          className="bg-background w-24"
+                          className="bg-muted/30 w-24"
                         />
                         <span className="text-sm text-muted-foreground">{t("settings.recurrenceDaysUnit")}</span>
                       </div>
@@ -1125,129 +1147,94 @@ export default function RosterDetailPage() {
                           placeholder="1"
                           value={editData.recurrence_day_of_month}
                           onChange={(e) => setEditData({ ...editData, recurrence_day_of_month: e.target.value })}
-                          className="bg-background w-20"
+                          className="bg-muted/30 w-20"
                         />
                         <span className="text-sm text-muted-foreground">{t("settings.recurrenceDayOfMonthSuffix")}</span>
                       </div>
                     )}
+                    <p className="text-xs text-muted-foreground">
+                      {editData.recurrence_mode === 'days'
+                        ? t("settings.recurrenceDaysHint")
+                        : t("settings.recurrenceDayOfMonthHint")}
+                    </p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {editData.recurrence_mode === 'days'
-                    ? t("settings.recurrenceDaysHint")
-                    : t("settings.recurrenceDayOfMonthHint")}
-                </p>
               </div>
-            </CardContent>
-          </Card>
 
-          {/* Restrictions Section */}
-          <Card className="bg-card border-l-4 border-l-emerald-500">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <div className="p-2 bg-emerald-500/10 rounded-lg">
-                  <Shield className="w-5 h-5 text-emerald-500" />
-                </div>
-                {t("settings.restrictions")}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Town Hall Requirements */}
-              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                  <Home className="w-4 h-4" />
-                  {t("settings.thRequirements")}
-                </h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm">{t("settings.minTh")}</Label>
+              {/* Section: Restrictions */}
+              <div className="p-6 space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5 text-emerald-500" />
+                  {t("settings.restrictions")}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{t("settings.minTh")}</Label>
                     <Input
                       type="number"
                       min={minTh}
                       max={maxTh}
                       value={editData.min_th}
                       onChange={(e) => setEditData({ ...editData, min_th: e.target.value })}
-                      className="bg-background"
+                      className="bg-muted/30"
                       placeholder={String(minTh)}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm">{t("settings.maxTh")}</Label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{t("settings.maxTh")}</Label>
                     <Input
                       type="number"
                       min={minTh}
                       max={maxTh}
                       value={editData.max_th}
                       onChange={(e) => setEditData({ ...editData, max_th: e.target.value })}
-                      className="bg-background"
+                      className="bg-muted/30"
                       placeholder={String(maxTh)}
                     />
                   </div>
-                </div>
-              </div>
-
-              {/* Signup Limits */}
-              <div className="p-4 bg-muted/30 rounded-lg space-y-4">
-                <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                  <UserCheck className="w-4 h-4" />
-                  {t("settings.signupLimits")}
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2 text-sm">
-                      <Users className="w-4 h-4 text-muted-foreground" />
-                      {t("settings.rosterSize")}
-                    </Label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{t("settings.rosterSize")}</Label>
                     <Input
                       type="number"
                       min={1}
                       value={editData.roster_size}
                       onChange={(e) => setEditData({ ...editData, roster_size: e.target.value })}
-                      className="bg-background"
+                      className="bg-muted/30"
                       placeholder="50"
                     />
-                    <p className="text-xs text-muted-foreground">{t("settings.rosterSizeHint")}</p>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2 text-sm">
-                      <Hash className="w-4 h-4 text-muted-foreground" />
-                      {t("settings.minSignups")}
-                    </Label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{t("settings.minSignups")}</Label>
                     <Input
                       type="number"
                       min={1}
                       value={editData.min_signups}
                       onChange={(e) => setEditData({ ...editData, min_signups: e.target.value })}
-                      className="bg-background"
+                      className="bg-muted/30"
                       placeholder="15"
                     />
-                    <p className="text-xs text-muted-foreground">{t("settings.minSignupsHint")}</p>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2 text-sm">
-                      <UserPlus className="w-4 h-4 text-muted-foreground" />
-                      {t("settings.maxAccountsPerUser")}
-                    </Label>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">{t("settings.maxAccountsPerUser")}</Label>
                     <Input
                       type="number"
                       min={1}
                       value={editData.max_accounts_per_user}
                       onChange={(e) => setEditData({ ...editData, max_accounts_per_user: e.target.value })}
-                      className="bg-background"
+                      className="bg-muted/30"
                       placeholder="2"
                     />
-                    <p className="text-xs text-muted-foreground">{t("settings.maxAccountsHint")}</p>
                   </div>
                 </div>
               </div>
 
-              {/* Allowed Signup Categories */}
-              <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg space-y-3">
+              {/* Section: Signup Categories */}
+              <div className="p-6 space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label className="flex items-center gap-2 text-sm font-medium">
-                    <Tag className="w-4 h-4 text-purple-500" />
+                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-purple-500" />
                     {t("settings.allowedCategories")}
-                  </Label>
+                  </p>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -1285,17 +1272,47 @@ export default function RosterDetailPage() {
                   <p className="text-sm text-muted-foreground italic">{t("categories.noCategories")}</p>
                 )}
                 <p className="text-xs text-muted-foreground">{t("settings.allowedCategoriesHint")}</p>
+
+                {/* Default signup category */}
+                {editData.allowed_signup_categories.length > 0 && (
+                  <div className="space-y-1.5 pt-2">
+                    <Label className="text-sm font-medium">{t("settings.defaultSignupCategory")}</Label>
+                    <Select
+                      value={editData.default_signup_category || "__none__"}
+                      onValueChange={(v) =>
+                        setEditData({ ...editData, default_signup_category: v === "__none__" ? "" : v })
+                      }
+                    >
+                      <SelectTrigger className="bg-muted/30 w-56">
+                        <SelectValue placeholder={t("settings.defaultSignupCategoryNone")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">{t("settings.defaultSignupCategoryNone")}</SelectItem>
+                        {(editData.allowed_signup_categories.length > 0
+                          ? categories.filter((c) => editData.allowed_signup_categories.includes(c.custom_id))
+                          : categories
+                        ).map((c) => (
+                          <SelectItem key={c.custom_id} value={c.custom_id}>
+                            {c.alias}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">{t("settings.defaultSignupCategoryHint")}</p>
+                  </div>
+                )}
               </div>
+
             </CardContent>
           </Card>
 
-          {/* Save Button */}
-          <div className="flex justify-end">
+          {/* Save — sticky at the bottom */}
+          <div className="sticky bottom-4 flex justify-end">
             <Button
               onClick={handleSaveSettings}
               disabled={saving}
               size="lg"
-              className="min-w-[200px]"
+              className="min-w-[200px] shadow-lg"
             >
               {saving ? (
                 <>
@@ -1336,7 +1353,6 @@ export default function RosterDetailPage() {
         onLoad={loadMissingMembers}
         onAddMembers={handleAddMembers}
         groupId={roster?.group_id}
-        t={t}
       />
 
       {/* Create Automation Dialog */}
@@ -1444,32 +1460,15 @@ export default function RosterDetailPage() {
             <div className="space-y-2">
               <Label>{t("automations.offsetFromEvent")}</Label>
               <div className="flex items-center gap-2">
-                <Select
-                  value={newAutomation._offsetDir ?? 'before'}
-                  onValueChange={(v) => {
-                    const dir = v as OffsetDir;
-                    const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
-                    const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
-                    setNewAutomation({ ...newAutomation, _offsetDir: dir, offset_seconds: buildOffsetSeconds(dir, val, unit) });
-                  }}
-                >
-                  <SelectTrigger className="bg-background w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
-                    <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
-                  </SelectContent>
-                </Select>
+                <span className="text-sm text-muted-foreground">{t("automations.offsetBefore")}</span>
                 <Input
                   type="number"
                   min={1}
                   value={newAutomation._offsetVal ?? '1'}
                   onChange={(e) => {
                     const val = parseInt(e.target.value) || 1;
-                    const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
                     const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
-                    setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                    setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds('before', val, unit) });
                   }}
                   className="bg-background w-20"
                 />
@@ -1478,8 +1477,7 @@ export default function RosterDetailPage() {
                   onValueChange={(v) => {
                     const unit = v as OffsetUnit;
                     const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
-                    const dir = (newAutomation._offsetDir ?? 'before') as OffsetDir;
-                    setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds(dir, val, unit) });
+                    setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds('before', val, unit) });
                   }}
                 >
                   <SelectTrigger className="bg-background w-28">
@@ -1648,28 +1646,14 @@ export default function RosterDetailPage() {
                 return (
                   <>
                     <div className="flex items-center gap-2">
-                      <Select
-                        value={parsed.dir}
-                        onValueChange={(v) => {
-                          const dir = v as OffsetDir;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(dir, parsed.val, parsed.unit) } : null);
-                        }}
-                      >
-                        <SelectTrigger className="bg-background w-32">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="before">{t("automations.offsetBefore")}</SelectItem>
-                          <SelectItem value="after">{t("automations.offsetAfter")}</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <span className="text-sm text-muted-foreground">{t("automations.offsetBefore")}</span>
                       <Input
                         type="number"
                         min={1}
                         value={parsed.val}
                         onChange={(e) => {
                           const val = parseInt(e.target.value) || 1;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, val, parsed.unit) } : null);
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', val, parsed.unit) } : null);
                         }}
                         className="bg-background w-20"
                       />
@@ -1677,7 +1661,7 @@ export default function RosterDetailPage() {
                         value={parsed.unit}
                         onValueChange={(v) => {
                           const unit = v as OffsetUnit;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds(parsed.dir, parsed.val, unit) } : null);
+                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', parsed.val, unit) } : null);
                         }}
                       >
                         <SelectTrigger className="bg-background w-28">
