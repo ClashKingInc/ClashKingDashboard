@@ -91,6 +91,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
   }, []);
 
   const switchLocale = (newLocale: string) => {
+    // eslint-disable-next-line react-hooks/immutability
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
     router.refresh();
   };
