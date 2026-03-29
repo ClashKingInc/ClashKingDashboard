@@ -103,7 +103,6 @@ export default function BansPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
       
       const response = await apiCache.get(`bans-${guildId}`, async () => {
         return await apiClient.servers.getBans(guildId);
@@ -138,7 +137,6 @@ export default function BansPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
 
       const response = await apiCache.get(`strikes-${guildId}`, async () => {
         return await apiClient.servers.getStrikes(guildId);
@@ -179,7 +177,6 @@ export default function BansPage() {
 
       if (!token) return;
 
-      apiClient.setAccessToken(token);
 
       // Clean player tag (remove # if present)
       const cleanTag = newBan.player_tag.replace(/^#/, "");
@@ -242,7 +239,6 @@ export default function BansPage() {
 
       if (!token) return;
 
-      apiClient.setAccessToken(token);
 
       // Clean player tag (remove # if present)
       const cleanTag = newStrike.player_tag.replace(/^#/, "");
@@ -299,7 +295,6 @@ export default function BansPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
 
       // Clean player tag (remove # if present)
       const cleanTag = playerTag.replace(/^#/, "");
@@ -346,7 +341,6 @@ export default function BansPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
 
       const response = await apiClient.servers.removeStrike(guildId, strikeId);
 

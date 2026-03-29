@@ -22,8 +22,6 @@ export function BotStats() {
                     return;
                 }
 
-                // Set token for API client
-                apiClient.setAccessToken(token);
 
                 const {data, error} = await apiClient.servers.getBotInfo();
 
