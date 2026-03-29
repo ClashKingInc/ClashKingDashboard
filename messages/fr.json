@@ -1748,7 +1748,8 @@
       "enableToConfig": "Activez ce journal pour le configurer",
       "configuring": "Configuration",
       "on": "Actif",
-      "off": "Inactif"
+      "off": "Inactif",
+      "example": "exemple"
     }
   },
   "GeneralPage": {
