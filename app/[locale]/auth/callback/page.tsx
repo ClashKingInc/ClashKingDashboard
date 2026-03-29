@@ -65,8 +65,6 @@ export default function AuthCallbackPage() {
           localStorage.setItem('device_id', deviceId);
         }
 
-        console.log('🔍 Device ID being sent:', deviceId);
-
         const requestBody = {
           code,
           code_verifier: codeVerifier,
@@ -74,8 +72,6 @@ export default function AuthCallbackPage() {
           device_id: deviceId,
           device_name: 'Dashboard',
         };
-
-        console.log('📤 Request body:', requestBody);
 
         // Call ClashKing API to exchange code for tokens
         const response = await fetch(`${apiUrl}/v2/auth/discord`, {
@@ -103,27 +99,11 @@ export default function AuthCallbackPage() {
         }
 
         const data = await response.json();
-        console.log("✅ Authentication response:", data);
-
-        // Debug: Decode JWT to see what's inside
-        try {
-          const tokenParts = data.access_token.split('.');
-          const payload = JSON.parse(atob(tokenParts[1]));
-          console.log("🔍 JWT Payload:", payload);
-        } catch (e) {
-          console.error("Failed to decode JWT:", e);
-        }
 
         // Store tokens
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("refresh_token", data.refresh_token);
         localStorage.setItem("user", JSON.stringify(data.user));
-
-        console.log("Access Token:", data.access_token);
-        console.log("Refresh Token:", data.refresh_token);
-        console.log("User Info:", data.user);
-
-        console.log("✅ Tokens stored, redirecting to /servers");
 
         // Prefetch guilds to avoid loading screen on servers page
         try {
