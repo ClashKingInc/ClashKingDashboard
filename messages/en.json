@@ -219,17 +219,12 @@
       "name": "Leaderboards",
       "description": "Global rankings"
     },
-    "botStats": {
-      "name": "Bot Stats",
-      "description": "Global bot statistics"
-    },
     "sections": {
       "configuration": "Configuration",
       "clanManagement": "Clan Management",
       "playerManagement": "Player Management",
       "automation": "Automation",
-      "statistics": "Statistics",
-      "system": "System"
+      "statistics": "Statistics"
     },
     "switchServer": "Switch Server",
     "goHome": "Homepage"
@@ -2143,6 +2138,8 @@
       "clansConfiguredDesc": "Clans tracked for this server",
       "activeRosters": "Active Rosters",
       "activeRostersDesc": "War rosters created",
+      "totalAccounts": "Linked Accounts",
+      "totalAccountsDesc": "Total CoC accounts linked",
       "playersTracked": "Players Tracked",
       "globalPlayers": "Total players in database",
       "clansTracked": "Clans Tracked",
@@ -2152,6 +2149,13 @@
       "offline": "Offline",
       "memoryUsage": "Memory: {used}MB ({percent}%)",
       "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Bot Statistics",
+    "clans": {
+      "title": "Your Clans",
+      "description": "{count, plural, one {# clan configured} other {# clans configured}}",
+      "manage": "Manage Clans",
+      "addFirst": "Add Your First Clan"
     },
     "quickStart": {
       "title": "Quick Start",

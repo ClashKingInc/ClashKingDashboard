@@ -219,17 +219,12 @@
       "name": "Ranglijsten",
       "description": "Wereldwijde ranglijsten"
     },
-    "botStats": {
-      "name": "Bot Statistieken",
-      "description": "Wereldwijde bot statistieken"
-    },
     "sections": {
       "configuration": "Configuratie",
       "clanManagement": "Clanbeheer",
       "playerManagement": "Spelerbeheer",
       "automation": "Automatisering",
-      "statistics": "Statistieken",
-      "system": "Systeem"
+      "statistics": "Statistieken"
     },
     "switchServer": "Server Wisselen",
     "goHome": "Homepagina"
@@ -2146,6 +2141,8 @@
       "clansConfiguredDesc": "Clans gevolgd voor deze server",
       "activeRosters": "Actieve Roosters",
       "activeRostersDesc": "Oorlogsroosters aangemaakt",
+      "totalAccounts": "Gekoppelde Accounts",
+      "totalAccountsDesc": "Totaal gekoppelde CoC-accounts",
       "playersTracked": "Gevolgde Spelers",
       "globalPlayers": "Totaal aantal spelers in database",
       "clansTracked": "Gevolgde Clans",
@@ -2155,6 +2152,13 @@
       "offline": "Offline",
       "memoryUsage": "Geheugen: {used}MB ({percent}%)",
       "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Bot Statistieken",
+    "clans": {
+      "title": "Jouw Clans",
+      "description": "{count, plural, one {# clan geconfigureerd} other {# clans geconfigureerd}}",
+      "manage": "Clans Beheren",
+      "addFirst": "Voeg Je Eerste Clan Toe"
     },
     "quickStart": {
       "title": "Snelstart",
