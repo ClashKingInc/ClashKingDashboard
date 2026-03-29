@@ -184,8 +184,8 @@ export default function RolesPage() {
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
   
   // Max levels for Town Hall and Builder Hall
-  const [townHallMaxLevel, setTownHallMaxLevel] = useState<number>(17); // Fallback
-  const [builderHallMaxLevel, setBuilderHallMaxLevel] = useState<number>(10); // Fallback
+  const [townHallMaxLevel, setTownHallMaxLevel] = useState<number>(18); // Fallback — update when new TH is released
+  const [builderHallMaxLevel, setBuilderHallMaxLevel] = useState<number>(10); // Fallback — update when new BH is released
   
   // Get building prefixes from translations
   const thPrefix = t("addRoleDialog.thPrefix");
