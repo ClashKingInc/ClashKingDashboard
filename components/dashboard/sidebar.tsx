@@ -18,7 +18,6 @@ import {
   LayoutDashboard,
   Link2,
   Trophy,
-  Activity,
   LogOut,
   Server,
   Sun,
@@ -195,16 +194,6 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
           nameKey: "leaderboards.name",
           href: `/dashboard/${guildId}/leaderboards`,
           icon: Trophy,
-        },
-      ],
-    },
-    {
-      titleKey: "sections.system",
-      items: [
-        {
-          nameKey: "botStats.name",
-          href: `/dashboard/${guildId}/bot-stats`,
-          icon: Activity,
         },
       ],
     },
