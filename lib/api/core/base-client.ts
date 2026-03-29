@@ -44,10 +44,13 @@ export class BaseApiClient {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        return {
-          error: data?.detail || data?.message || `HTTP ${response.status}`,
-          status: response.status,
-        };
+        const detail = data?.detail;
+        const error = Array.isArray(detail)
+          ? detail.map((e: any) => e.msg ?? String(e)).join(', ')
+          : typeof detail === 'string'
+            ? detail
+            : data?.message || `HTTP ${response.status}`;
+        return { error, status: response.status };
       }
 
       return {

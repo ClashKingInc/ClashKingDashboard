@@ -17,6 +17,16 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -144,6 +154,7 @@ export default function ClansPage() {
   const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [clanToDelete, setClanToDelete] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Dialog states
@@ -294,10 +305,6 @@ export default function ClansPage() {
 
   // Delete clan
   const handleDeleteClan = async (clanTag: string) => {
-    if (!confirm(t("deleteConfirm", { tag: clanTag }))) {
-      return;
-    }
-
     try {
       setSaving(true);
       const accessToken = localStorage.getItem("access_token");
@@ -880,7 +887,7 @@ export default function ClansPage() {
                         variant="outline"
                         size="icon"
                         className="border-border hover:border-destructive hover:bg-destructive/10 hover:text-destructive"
-                        onClick={() => handleDeleteClan(clan.tag || clan.clan_tag || '')}
+                        onClick={() => setClanToDelete(clan.tag || clan.clan_tag || '')}
                         disabled={saving}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -1144,6 +1151,26 @@ export default function ClansPage() {
           </DialogContent>
         </Dialog>
       </div>
+
+      <AlertDialog open={!!clanToDelete} onOpenChange={open => !open && setClanToDelete(null)}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              {t("deleteConfirm", { tag: clanToDelete ?? "" })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              onClick={() => { handleDeleteClan(clanToDelete!); setClanToDelete(null); }}
+            >
+              {tCommon("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

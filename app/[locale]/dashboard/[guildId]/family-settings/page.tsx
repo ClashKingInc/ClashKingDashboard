@@ -223,7 +223,6 @@ export default function FamilySettingsPage() {
         throw new Error("No access token found. Please log in again.");
       }
 
-      apiClient.setAccessToken(token);
       const response = await apiClient.servers.getSettings(guildId);
 
       if (response.error) {
@@ -273,7 +272,6 @@ export default function FamilySettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
       const response = await apiClient.familyRoles.getFamilyRoles(guildId);
 
       if (response.error) {
@@ -301,7 +299,6 @@ export default function FamilySettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
       const response = await apiClient.familyRoles.addFamilyRole(guildId, {
         role: roleId,
         type: roleType,
@@ -332,7 +329,6 @@ export default function FamilySettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
       const response = await apiClient.familyRoles.removeFamilyRole(guildId, roleType, roleId);
 
       if (response.error) {

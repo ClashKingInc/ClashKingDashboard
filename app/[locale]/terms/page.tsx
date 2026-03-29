@@ -26,7 +26,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-bold mb-4 text-foreground">Prohibited Use</h2>
             <p className="mb-4">You may not use the website for any of the following purposes:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li>In any way which causes, or may cause, damage to the website or interferes with any other person's use of the website.</li>
+              <li>In any way which causes, or may cause, damage to the website or interferes with any other person&apos;s use of the website.</li>
               <li>In any way that is illegal, abusive, unlawful, threatening, harmful or otherwise objectionable.</li>
             </ul>
           </section>
@@ -38,7 +38,7 @@ export default function TermsOfServicePage() {
             </p>
             <div className="bg-card p-4 rounded-lg border border-primary/20 text-sm">
               <p>
-                This material is unofficial and is not endorsed by Supercell. For more information see Supercell's Fan Content Policy:{" "}
+                This material is unofficial and is not endorsed by Supercell. For more information see Supercell&apos;s Fan Content Policy:{" "}
                 <Link href="https://www.supercell.com/fan-content-policy" target="_blank" className="text-primary hover:underline">
                   www.supercell.com/fan-content-policy
                 </Link>
@@ -49,7 +49,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-bold mb-4 text-foreground">Liability</h2>
             <p>
-              This website is provided on an 'as is' basis without warranty of any kind. ClashKing provides no guarantee to the availability, accuracy of the information and materials found or offered on the website. ClashKing will not be liable for any indirect or consequential loss or damage arising out of use of ths website. Use of this website is entirely at your own risk.
+              This website is provided on an &apos;as is&apos; basis without warranty of any kind. ClashKing provides no guarantee to the availability, accuracy of the information and materials found or offered on the website. ClashKing will not be liable for any indirect or consequential loss or damage arising out of use of ths website. Use of this website is entirely at your own risk.
             </p>
           </section>
 
