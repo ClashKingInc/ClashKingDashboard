@@ -31,6 +31,16 @@ import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Local imports
 import { useRosters } from "./_hooks";
@@ -240,6 +250,8 @@ export default function RostersPage() {
   const [newGroupAlias, setNewGroupAlias] = useState("");
   const [savingGroup, setSavingGroup] = useState(false);
   const [deletingGroup, setDeletingGroup] = useState<string | null>(null);
+  const [groupToDelete, setGroupToDelete] = useState<{ groupId: string; groupAlias: string } | null>(null);
+  const [rosterToDelete, setRosterToDelete] = useState<Roster | null>(null);
 
   // Group Automations state
   const [groupAutomationsDialogOpen, setGroupAutomationsDialogOpen] = useState(false);
@@ -422,8 +434,7 @@ export default function RostersPage() {
     }
   };
 
-  const handleDeleteGroup = async (groupId: string, groupAlias: string) => {
-    if (!confirm(t("groups.deleteConfirm", { name: groupAlias }))) return;
+  const handleDeleteGroup = async (groupId: string) => {
     setDeletingGroup(groupId);
     try {
       await api.deleteGroup(groupId, guildId);
@@ -573,8 +584,6 @@ export default function RostersPage() {
   };
 
   const handleDeleteRoster = async (roster: Roster) => {
-    if (!confirm(t("deleteConfirm", { name: roster.alias }))) return;
-
     setDeleting(roster.custom_id);
     try {
       await deleteRoster(roster.custom_id);
@@ -1091,7 +1100,7 @@ export default function RostersPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDeleteGroup(group.group_id, group.alias)}
+                        onClick={() => setGroupToDelete({ groupId: group.group_id, groupAlias: group.alias })}
                         disabled={deletingGroup === group.group_id}
                         className="text-muted-foreground hover:text-destructive"
                       >
@@ -1122,7 +1131,7 @@ export default function RostersPage() {
                           onSelect={() => toggleRosterSelection(roster.custom_id)}
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
-                          onDelete={() => handleDeleteRoster(roster)}
+                          onDelete={() => setRosterToDelete(roster)}
                           onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
                         />
                       );
@@ -1173,7 +1182,7 @@ export default function RostersPage() {
                           onSelect={() => toggleRosterSelection(roster.custom_id)}
                           onView={() => handleViewRoster(roster)}
                           onClone={() => handleOpenClone(roster)}
-                          onDelete={() => handleDeleteRoster(roster)}
+                          onDelete={() => setRosterToDelete(roster)}
                           onMoveToGroup={(groupId) => handleMoveRosterToGroup(roster, groupId)}
                         />
                       );
@@ -1896,6 +1905,48 @@ export default function RostersPage() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Delete group confirmation */}
+      <AlertDialog open={!!groupToDelete} onOpenChange={open => !open && setGroupToDelete(null)}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              {t("groups.deleteConfirm", { name: groupToDelete?.groupAlias ?? "" })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              onClick={() => { handleDeleteGroup(groupToDelete!.groupId); setGroupToDelete(null); }}
+            >
+              {tCommon("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete roster confirmation */}
+      <AlertDialog open={!!rosterToDelete} onOpenChange={open => !open && setRosterToDelete(null)}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              {t("deleteConfirm", { name: rosterToDelete?.alias ?? "" })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              onClick={() => { handleDeleteRoster(rosterToDelete!); setRosterToDelete(null); }}
+            >
+              {tCommon("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

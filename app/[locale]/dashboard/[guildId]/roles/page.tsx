@@ -201,12 +201,10 @@ export default function RolesPage() {
       // Load Town Hall max level
       const thEncoded = encodeURIComponent('Town Hall');
       const thUrl = `/api/v2/static/buildings/${thEncoded}/maxlevel`;
-      console.log('Fetching Town Hall max level from:', thUrl);
       const thResponse = await fetch(thUrl);
       if (thResponse.ok) {
         const thData = await thResponse.json();
         setTownHallMaxLevel(thData.max_level);
-        console.log('Town Hall max level loaded:', thData.max_level);
       } else {
         const errorText = await thResponse.text();
         console.error('Failed to load Town Hall max level:', thResponse.status, thResponse.statusText, errorText);
@@ -215,12 +213,10 @@ export default function RolesPage() {
       // Load Builder Hall max level
       const bhEncoded = encodeURIComponent('Builder Hall');
       const bhUrl = `/api/v2/static/buildings/${bhEncoded}/maxlevel`;
-      console.log('Fetching Builder Hall max level from:', bhUrl);
       const bhResponse = await fetch(bhUrl);
       if (bhResponse.ok) {
         const bhData = await bhResponse.json();
         setBuilderHallMaxLevel(bhData.max_level);
-        console.log('Builder Hall max level loaded:', bhData.max_level);
       } else {
         const errorText = await bhResponse.text();
         console.error('Failed to load Builder Hall max level:', bhResponse.status, bhResponse.statusText, errorText);

@@ -80,10 +80,7 @@ export default function GeneralSettingsPage() {
         throw new Error("No access token found. Please log in again.");
       }
 
-      apiClient.setAccessToken(token);
       const response = await apiClient.servers.getSettings(guildId);
-
-      console.log("Settings response:", response);
 
       if (response.error) {
         throw new Error(response.error);
@@ -135,7 +132,6 @@ export default function GeneralSettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
       const response = await apiClient.roles.getAllRoles(guildId);
 
       if (response.error) {
@@ -170,7 +166,6 @@ export default function GeneralSettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
       await apiClient.roles.createRole(guildId, "status", {
         months: newTenureRole.months,
         id: newTenureRole.id,
@@ -193,7 +188,6 @@ export default function GeneralSettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      apiClient.setAccessToken(token);
       await apiClient.roles.deleteRole(guildId, "status", roleId);
 
       await loadTenureRoles();
