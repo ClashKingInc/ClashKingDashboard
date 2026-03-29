@@ -1725,7 +1725,8 @@
       "enableToConfig": "Enable this log to configure it",
       "configuring": "Configuring",
       "on": "On",
-      "off": "Off"
+      "off": "Off",
+      "example": "example"
     }
   },
   "GeneralPage": {

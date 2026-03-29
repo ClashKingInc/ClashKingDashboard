@@ -98,6 +98,7 @@ interface LogTypeDefinition {
   description: string;
   icon: any;
   color: string;
+  exampleLink?: string;
 }
 
 export default function LogsPage() {
@@ -107,8 +108,8 @@ export default function LogsPage() {
   const tCommon = useTranslations("Common");
 
   const CLAN_LOGS: LogTypeDefinition[] = [
-    { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green' },
-    { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red' },
+    { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128182552121839648' },
+    { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128182846218055722' },
     { keys: ['donation_log'], label: t('clanLogs.donationLog.label'), description: t('clanLogs.donationLog.description'), icon: Gift, color: 'purple' },
     { keys: ['clan_achievement_log'], label: t('clanLogs.clanAchievementLog.label'), description: t('clanLogs.clanAchievementLog.description'), icon: Award, color: 'yellow' },
     { keys: ['clan_requirements_log'], label: t('clanLogs.clanRequirementsLog.label'), description: t('clanLogs.clanRequirementsLog.description'), icon: FileCheck, color: 'blue' },
@@ -116,7 +117,7 @@ export default function LogsPage() {
   ];
 
   const WAR_LOGS: LogTypeDefinition[] = [
-    { keys: ['war_log'], label: t('warLogs.warLog.label'), description: t('warLogs.warLog.description'), icon: Swords, color: 'red' },
+    { keys: ['war_log'], label: t('warLogs.warLog.label'), description: t('warLogs.warLog.description'), icon: Swords, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128186867825774672' },
     { keys: ['war_panel'], label: t('warLogs.warPanel.label'), description: t('warLogs.warPanel.description'), icon: ScrollText, color: 'orange' },
     { keys: ['cwl_lineup_change_log'], label: t('warLogs.cwlLineupChangeLog.label'), description: t('warLogs.cwlLineupChangeLog.description'), icon: Users, color: 'blue' },
   ];
@@ -129,15 +130,15 @@ export default function LogsPage() {
   ];
 
   const PLAYER_LOGS: LogTypeDefinition[] = [
-    { keys: ['role_change'], label: t('playerLogs.roleChange.label'), description: t('playerLogs.roleChange.description'), icon: UserCog, color: 'blue' },
-    { keys: ['troop_upgrade'], label: t('playerLogs.troopUpgrade.label'), description: t('playerLogs.troopUpgrade.description'), icon: TrendingUp, color: 'green' },
-    { keys: ['super_troop_boost_log'], label: t('playerLogs.superTroopBoostLog.label'), description: t('playerLogs.superTroopBoostLog.description'), icon: Zap, color: 'yellow' },
-    { keys: ['th_upgrade'], label: t('playerLogs.thUpgrade.label'), description: t('playerLogs.thUpgrade.description'), icon: Castle, color: 'orange' },
-    { keys: ['league_change'], label: t('playerLogs.leagueChange.label'), description: t('playerLogs.leagueChange.description'), icon: Target, color: 'purple' },
-    { keys: ['spell_upgrade'], label: t('playerLogs.spellUpgrade.label'), description: t('playerLogs.spellUpgrade.description'), icon: Star, color: 'blue' },
-    { keys: ['hero_upgrade'], label: t('playerLogs.heroUpgrade.label'), description: t('playerLogs.heroUpgrade.description'), icon: Shield, color: 'red' },
-    { keys: ['hero_equipment_upgrade'], label: t('playerLogs.heroEquipmentUpgrade.label'), description: t('playerLogs.heroEquipmentUpgrade.description'), icon: Shield, color: 'orange' },
-    { keys: ['name_change'], label: t('playerLogs.nameChange.label'), description: t('playerLogs.nameChange.description'), icon: Users, color: 'gray' },
+    { keys: ['role_change'], label: t('playerLogs.roleChange.label'), description: t('playerLogs.roleChange.description'), icon: UserCog, color: 'blue', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['troop_upgrade'], label: t('playerLogs.troopUpgrade.label'), description: t('playerLogs.troopUpgrade.description'), icon: TrendingUp, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['super_troop_boost_log'], label: t('playerLogs.superTroopBoostLog.label'), description: t('playerLogs.superTroopBoostLog.description'), icon: Zap, color: 'yellow', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['th_upgrade'], label: t('playerLogs.thUpgrade.label'), description: t('playerLogs.thUpgrade.description'), icon: Castle, color: 'orange', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['league_change'], label: t('playerLogs.leagueChange.label'), description: t('playerLogs.leagueChange.description'), icon: Target, color: 'purple', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['spell_upgrade'], label: t('playerLogs.spellUpgrade.label'), description: t('playerLogs.spellUpgrade.description'), icon: Star, color: 'blue', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['hero_upgrade'], label: t('playerLogs.heroUpgrade.label'), description: t('playerLogs.heroUpgrade.description'), icon: Shield, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['hero_equipment_upgrade'], label: t('playerLogs.heroEquipmentUpgrade.label'), description: t('playerLogs.heroEquipmentUpgrade.description'), icon: Shield, color: 'orange', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['name_change'], label: t('playerLogs.nameChange.label'), description: t('playerLogs.nameChange.description'), icon: Users, color: 'gray', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
     { keys: ['legend_log_attacks'], label: t('playerLogs.legendLogAttacks.label'), description: t('playerLogs.legendLogAttacks.description'), icon: Trophy, color: 'yellow' },
     { keys: ['legend_log_defenses'], label: t('playerLogs.legendLogDefenses.label'), description: t('playerLogs.legendLogDefenses.description'), icon: Trophy, color: 'blue' },
   ];
@@ -450,7 +451,23 @@ export default function LogsPage() {
               </div>
               <div>
                 <CardTitle className="text-base text-foreground">{logDef.label}</CardTitle>
-                <CardDescription className="text-xs">{logDef.description}</CardDescription>
+                <CardDescription className="text-xs">
+                  {logDef.description}
+                  {logDef.exampleLink && (
+                    <>
+                      {' '}(
+                      <a 
+                        href={logDef.exampleLink.replace('https://discord.com/channels/', 'discord://discord.com/channels/')} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-600 underline"
+                      >
+                        {t('logCard.example')}
+                      </a>
+                      )
+                    </>
+                  )}
+                </CardDescription>
               </div>
             </div>
             <div className="flex items-center gap-3">
