@@ -1040,13 +1040,19 @@
       "description": "Filter oorlogsstatistieken op verschillende criteria",
       "clan": "Clan",
       "allClans": "Alle Clans",
-      "user": "Gebruiker",
-      "userPlaceholder": "Zoek gebruiker...",
       "townHall": "Dorpshuis",
       "allTownHalls": "Alle DH Niveaus",
       "townHallLevel": "DH {level}",
+      "period": "Periode",
+      "last7Days": "Laatste 7 dagen",
+      "last30Days": "Laatste 30 dagen",
+      "last90Days": "Laatste 90 dagen",
+      "last6Months": "Laatste 6 maanden",
+      "lastYear": "Laatste jaar",
+      "custom": "Aangepast",
       "startDate": "Startdatum",
-      "endDate": "Einddatum"
+      "endDate": "Einddatum",
+      "warTypes": "Oorlogstypen"
     },
     "summaryStats": {
       "totalWins": "Totale Overwinningen",
@@ -1060,8 +1066,8 @@
     },
     "charts": {
       "dailyPerformance": {
-        "title": "Oorlogsprestaties (Laatste 7 Dagen)",
-        "description": "Dagelijkse overwinningen, nederlagen en gelijkspel",
+        "title": "Oorlogsprestaties per Week",
+        "description": "Wekelijkse overwinningen, nederlagen en gelijkspel over de geselecteerde periode",
         "wins": "Overwinningen",
         "losses": "Nederlagen",
         "draws": "Gelijkspel"
@@ -1074,7 +1080,7 @@
       },
       "warTypeDistribution": {
         "title": "Oorlogstype Verdeling",
-        "description": "Verdeling van oorlogstypes (Binnenkort beschikbaar)",
+        "description": "Verdeling per oorlogstype",
         "cwl": "CWL",
         "random": "Willekeurig",
         "friendly": "Vriendschappelijk"
@@ -1084,6 +1090,29 @@
         "description": "Beste strijders op totaal aantal sterren",
         "attacksAndStars": "{attacks} aanvallen • {stars} sterren",
         "noData": "Geen spelersgegevens beschikbaar. Probeer je filters aan te passen."
+      },
+      "missedAttacks": {
+        "title": "Gemiste aanvallen",
+        "description": "Spelers die niet al hun aanvallen hebben gebruikt",
+        "attacks": "aanvallen gemist"
+      },
+      "topDefenders": {
+        "title": "Beste Verdedigers",
+        "description": "Beste verdedigers op gemiddeld aantal gegeven sterren",
+        "defensesAndStars": "{defenses} verdedigingen • {stars} sterren gegeven",
+        "noData": "Geen verdedigingsgegevens beschikbaar. Probeer je filters aan te passen."
+      },
+      "worstAttackers": {
+        "title": "Slechtste Aanvallers",
+        "description": "Spelers met het laagste gemiddelde sterren per aanval (min. 3 aanvallen)",
+        "attacksAndStars": "{attacks} aanvallen • {stars} sterren",
+        "noData": "Geen spelersgegevens beschikbaar. Probeer je filters aan te passen."
+      },
+      "worstDefenders": {
+        "title": "Slechtste Verdedigers",
+        "description": "Spelers die de meeste sterren weggaven bij verdediging (min. 3 verdedigingen)",
+        "defensesAndStars": "{defenses} verdedigingen • {stars} sterren weggegeven",
+        "noData": "Geen verdedigingsgegevens beschikbaar. Probeer je filters aan te passen."
       }
     },
     "clanStatsTable": {
@@ -1095,14 +1124,16 @@
         "wars": "Oorlogen",
         "record": "W/V/G",
         "winRate": "Winratio",
-        "avgStars": "Gem. Sterren",
-        "avgDestruction": "Gem. Vernietiging"
+        "avgDestruction": "Gem. Vernietiging",
+        "avgStarsPerAttack": "Sterren / Aanval",
+        "avgDefenseStars": "Sterren/Verd"
       },
       "status": {
         "inWar": "In Oorlog",
         "cwl": "CWL",
         "peace": "Vrede"
-      }
+      },
+      "noData": "Geen clan statistieken beschikbaar. Pas filters toe of wacht tot de gegevens zijn geladen."
     },
     "toast": {
       "errorTitle": "Fout",
@@ -1115,6 +1146,7 @@
   "LeaderboardsPage": {
     "title": "Ranglijsten",
     "description": "Wereldwijde ranglijsten voor Clan Hoofdstad en meer",
+    "comingSoon": "Deze functie komt binnenkort. Kom later terug!",
     "stats": {
       "totalEntries": "Totaal Vermeldingen",
       "type": "Type",
