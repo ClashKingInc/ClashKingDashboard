@@ -1146,6 +1146,7 @@
   "LeaderboardsPage": {
     "title": "Ranglijsten",
     "description": "Wereldwijde ranglijsten voor Clan Hoofdstad en meer",
+    "comingSoon": "Deze functie komt binnenkort. Kom later terug!",
     "stats": {
       "totalEntries": "Totaal Vermeldingen",
       "type": "Type",

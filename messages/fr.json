@@ -1166,6 +1166,7 @@
   "LeaderboardsPage": {
     "title": "Classements",
     "description": "Classements globaux pour la Capitale de Clan et plus",
+    "comingSoon": "Cette fonctionnalité arrive bientôt. Revenez plus tard !",
     "stats": {
       "totalEntries": "Total d'Entrées",
       "type": "Type",

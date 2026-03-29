@@ -1143,6 +1143,7 @@
   "LeaderboardsPage": {
     "title": "Leaderboards",
     "description": "Global leaderboards for Clan Capital and more",
+    "comingSoon": "This feature is coming soon. Check back later!",
     "stats": {
       "totalEntries": "Total Entries",
       "type": "Type",
