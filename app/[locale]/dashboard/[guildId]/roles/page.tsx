@@ -58,6 +58,8 @@ import {
   Crown,
   Check,
   ChevronsUpDown,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
@@ -179,6 +181,8 @@ export default function RolesPage() {
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
   const [newRole, setNewRole] = useState<any>({});
   const [dialogError, setDialogError] = useState<string | null>(null);
+  const [sortCol, setSortCol] = useState<"role" | "criteria" | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   // Dynamic league data loaded from API
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
@@ -583,10 +587,51 @@ export default function RolesPage() {
     }
   };
 
+  const handleSortClick = (col: "role" | "criteria") => {
+    if (sortCol === col) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortCol(col);
+      setSortDir("asc");
+    }
+  };
+
+  const SortIcon = ({ col }: { col: "role" | "criteria" }) => {
+    if (sortCol !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 inline opacity-40" />;
+    return sortDir === "asc"
+      ? <ChevronUp className="ml-1 h-3 w-3 inline" />
+      : <ChevronDown className="ml-1 h-3 w-3 inline" />;
+  };
+
   const renderRolesList = (roleType: RoleType) => {
     const raw = allRoles[roleType] || [];
     const normNum = (v: any) => typeof v === "string" ? parseInt(v.replace(/^\D+/i, "")) : Number(v);
+
+    const getCriteriaLabel = (role: any): string => {
+      switch (roleType) {
+        case "townhall": return role.th ? `TH ${role.th.toString().replace(/^th/i, "")}` : "";
+        case "league": return role.type ? denormalizeLeagueName(role.type) : "";
+        case "builderhall": return role.bh ? `BH ${role.bh.toString().replace(/^bh/i, "")}` : "";
+        case "builder_league": return role.type ? denormalizeLeagueName(role.type) : "";
+        default: return "";
+      }
+    };
+
     const roles = [...raw].sort((a, b) => {
+      const dir = sortDir === "asc" ? 1 : -1;
+      if (sortCol === "role") {
+        const nameA = discordRoles.find((r) => r.id === (a.role_id || a.id))?.name ?? "";
+        const nameB = discordRoles.find((r) => r.id === (b.role_id || b.id))?.name ?? "";
+        return nameA.localeCompare(nameB) * dir;
+      }
+      if (sortCol === "criteria") {
+        const labelA = getCriteriaLabel(a);
+        const labelB = getCriteriaLabel(b);
+        if (roleType === "townhall") return (normNum(a.th) - normNum(b.th)) * dir;
+        if (roleType === "builderhall") return (normNum(a.bh) - normNum(b.bh)) * dir;
+        return labelA.localeCompare(labelB) * dir;
+      }
+      // Default: criteria ascending
       if (roleType === "townhall") return normNum(a.th) - normNum(b.th);
       if (roleType === "builderhall") return normNum(a.bh) - normNum(b.bh);
       return (a.type ?? "").localeCompare(b.type ?? "");
@@ -605,39 +650,26 @@ export default function RolesPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t("configuredRoles.discordRole")}</TableHead>
-            <TableHead>{t("configuredRoles.criteria")}</TableHead>
+            <TableHead
+              className="cursor-pointer select-none hover:text-foreground"
+              onClick={() => handleSortClick("role")}
+            >
+              {t("configuredRoles.discordRole")}<SortIcon col="role" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer select-none hover:text-foreground"
+              onClick={() => handleSortClick("criteria")}
+            >
+              {t("configuredRoles.criteria")}<SortIcon col="criteria" />
+            </TableHead>
             <TableHead className="text-right">{t("configuredRoles.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {roles.map((role: any, index: number) => {
-            // Get the role ID from either role_id or id field (already converted to string in loadData)
             const roleId = role.role_id || role.id;
-
-            // Find matching Discord role by comparing string IDs
             const discordRole = discordRoles.find((r) => r.id === roleId);
-
-            let criteria = "";
-
-            switch (roleType) {
-              case "townhall":
-                // DB stores as "th10", display as "TH 10"
-                criteria = role.th ? `TH ${role.th.toString().replace(/^th/i, "")}` : "";
-                break;
-              case "league":
-                // DB stores in snake_case (e.g., "legend_league"), denormalize for display
-                criteria = role.type ? denormalizeLeagueName(role.type) : "";
-                break;
-              case "builderhall":
-                // DB stores as "bh3", display as "BH 3"
-                criteria = role.bh ? `BH ${role.bh.toString().replace(/^bh/i, "")}` : "";
-                break;
-              case "builder_league":
-                // DB stores in snake_case, denormalize for display
-                criteria = role.type ? denormalizeLeagueName(role.type) : "";
-                break;
-            }
+            const criteria = getCriteriaLabel(role);
 
             return (
               <TableRow key={index}>
