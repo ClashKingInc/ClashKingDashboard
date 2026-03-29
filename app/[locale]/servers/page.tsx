@@ -53,7 +53,6 @@ export default function ServersPage() {
             // Fetch fresh data in background
             const accessToken = localStorage.getItem("access_token");
             if (accessToken) {
-              apiClient.setAccessToken(accessToken);
               const response = await apiClient.servers.getGuilds();
               if (response.data) {
                 const sortedGuilds = response.data.sort((a, b) => {
@@ -77,8 +76,6 @@ export default function ServersPage() {
           return;
         }
 
-        // Set token for API client
-        apiClient.setAccessToken(accessToken);
 
         // Fetch user's guilds using API client
         const response = await apiClient.servers.getGuilds();
@@ -116,7 +113,6 @@ export default function ServersPage() {
   }, [router, locale, t]);
 
   const getGuildIconUrl = (guild: GuildInfo) => {
-    console.log(guild);
     if (!guild.icon) return null;
     if (guild.icon.startsWith('https')) {
       return guild.icon;

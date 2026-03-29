@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users, Shield, ClipboardList } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, Shield, ClipboardList, Link, AlertCircle, RefreshCw } from "lucide-react";
 
 interface ServerStatsProps {
   guildId: string;
@@ -12,143 +13,150 @@ interface ServerStatsProps {
 
 interface Stats {
   linkedPlayers: number;
+  totalAccounts: number;
   clansConfigured: number;
   activeRosters: number;
-  recentWars: number;
 }
 
 export function ServerStats({ guildId }: ServerStatsProps) {
   const t = useTranslations("OverviewPage.stats");
+  const tCommon = useTranslations("Common");
   const [stats, setStats] = useState<Stats>({
     linkedPlayers: 0,
+    totalAccounts: 0,
     clansConfigured: 0,
     activeRosters: 0,
-    recentWars: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const fetchStats = async () => {
+    setIsLoading(true);
+    setHasError(false);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      if (!accessToken) {
+        setIsLoading(false);
+        return;
+      }
+
+      const [clansRes, rostersRes, linksRes] = await Promise.all([
+        fetch(`/api/v2/server/${guildId}/clans`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }),
+        fetch(`/api/v2/roster/${guildId}/list`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }),
+        fetch(`/api/v2/server/${guildId}/links?limit=1&offset=0`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        })
+      ]);
+
+      let linkedPlayers = 0;
+      let totalAccounts = 0;
+      let clansConfigured = 0;
+      let activeRosters = 0;
+
+      if (clansRes.ok) {
+        const clansData = await clansRes.json();
+        clansConfigured = Array.isArray(clansData) ? clansData.length : 0;
+      }
+
+      if (rostersRes.ok) {
+        const rostersData = await rostersRes.json();
+        activeRosters = (rostersData.items || rostersData.rosters || rostersData || []).length;
+      }
+
+      if (linksRes.ok) {
+        const linksData = await linksRes.json();
+        linkedPlayers = linksData.members_with_links || 0;
+        totalAccounts = linksData.total_linked_accounts || 0;
+      }
+
+      setStats({ linkedPlayers, totalAccounts, clansConfigured, activeRosters });
+    } catch (err) {
+      console.error('Failed to fetch server stats:', err);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          console.log('No access token found');
-          setIsLoading(false);
-          return;
-        }
-
-        // Fetch all stats in parallel using the same endpoints as the pages
-        const [clansRes, rostersRes, linksRes] = await Promise.all([
-          fetch(`/api/v2/server/${guildId}/clans`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          }),
-          fetch(`/api/v2/roster/${guildId}/list`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          }),
-          fetch(`/api/v2/server/${guildId}/links?limit=1&offset=0`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          })
-        ]);
-
-        let linkedPlayers = 0;
-        let clansConfigured = 0;
-        let activeRosters = 0;
-
-        // Parse clans
-        if (clansRes.ok) {
-          const clansData = await clansRes.json();
-          clansConfigured = Array.isArray(clansData) ? clansData.length : 0;
-          console.log('🏰 Clans configured:', clansConfigured);
-        }
-
-        // Parse rosters
-        if (rostersRes.ok) {
-          const rostersData = await rostersRes.json();
-          activeRosters = (rostersData.items || rostersData.rosters || rostersData || []).length;
-          console.log('📝 Active rosters:', activeRosters);
-        }
-
-        // Parse links
-        if (linksRes.ok) {
-          const linksData = await linksRes.json();
-          linkedPlayers = linksData.total || 0;
-          console.log('👥 Linked players:', linkedPlayers);
-        }
-
-        setStats({
-          linkedPlayers,
-          clansConfigured,
-          activeRosters,
-          recentWars: 0,
-        });
-      } catch (err) {
-        console.error('Failed to fetch server stats:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchStats();
   }, [guildId]);
 
+  const cards = [
+    {
+      title: t("linkedPlayers"),
+      value: stats.linkedPlayers,
+      desc: t("linkedPlayersDesc"),
+      icon: <Users className="h-4 w-4 text-primary" />,
+    },
+    {
+      title: t("totalAccounts"),
+      value: stats.totalAccounts,
+      desc: t("totalAccountsDesc"),
+      icon: <Link className="h-4 w-4 text-primary" />,
+    },
+    {
+      title: t("clansConfigured"),
+      value: stats.clansConfigured,
+      desc: t("clansConfiguredDesc"),
+      icon: <Shield className="h-4 w-4 text-primary" />,
+    },
+    {
+      title: t("activeRosters"),
+      value: stats.activeRosters,
+      desc: t("activeRostersDesc"),
+      icon: <ClipboardList className="h-4 w-4 text-primary" />,
+    },
+  ];
+
+  if (hasError) {
+    return (
+      <>
+        {cards.map((card) => (
+          <Card key={card.title} className="bg-card border-border">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">{card.title}</CardTitle>
+              <div className="rounded-full bg-destructive/10 p-2">
+                <AlertCircle className="h-4 w-4 text-destructive" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs text-muted-foreground mb-2">{tCommon("loadError")}</p>
+              <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={fetchStats}>
+                <RefreshCw className="h-3 w-3 mr-1" />
+                {tCommon("tryAgain")}
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </>
+    );
+  }
+
   return (
     <>
-      <Card className="bg-card border-border">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-foreground">{t("linkedPlayers")}</CardTitle>
-          <div className="rounded-full bg-primary/10 p-2">
-            <Users className="h-4 w-4 text-primary" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <Skeleton className="h-8 w-20 animate-pulse mb-1" />
-          ) : (
-            <div className="text-2xl font-bold text-foreground">
-              {stats.linkedPlayers.toLocaleString()}
-            </div>
-          )}
-          <p className="text-xs text-muted-foreground">{t("linkedPlayersDesc")}</p>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-card border-border">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-foreground">{t("clansConfigured")}</CardTitle>
-          <div className="rounded-full bg-primary/10 p-2">
-            <Shield className="h-4 w-4 text-primary" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <Skeleton className="h-8 w-20 animate-pulse mb-1" />
-          ) : (
-            <div className="text-2xl font-bold text-foreground">
-              {stats.clansConfigured.toLocaleString()}
-            </div>
-          )}
-          <p className="text-xs text-muted-foreground">{t("clansConfiguredDesc")}</p>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-card border-border">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-foreground">{t("activeRosters")}</CardTitle>
-          <div className="rounded-full bg-primary/10 p-2">
-            <ClipboardList className="h-4 w-4 text-primary" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <Skeleton className="h-8 w-20 animate-pulse mb-1" />
-          ) : (
-            <div className="text-2xl font-bold text-foreground">
-              {stats.activeRosters.toLocaleString()}
-            </div>
-          )}
-          <p className="text-xs text-muted-foreground">{t("activeRostersDesc")}</p>
-        </CardContent>
-      </Card>
+      {cards.map((card) => (
+        <Card key={card.title} className="bg-card border-border">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-foreground">{card.title}</CardTitle>
+            <div className="rounded-full bg-primary/10 p-2">{card.icon}</div>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-8 w-20 animate-pulse mb-1" />
+            ) : (
+              <div className="text-2xl font-bold text-foreground">
+                {card.value.toLocaleString()}
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">{card.desc}</p>
+          </CardContent>
+        </Card>
+      ))}
     </>
   );
 }

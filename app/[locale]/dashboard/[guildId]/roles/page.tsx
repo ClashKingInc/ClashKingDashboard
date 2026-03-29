@@ -58,6 +58,8 @@ import {
   Crown,
   Check,
   ChevronsUpDown,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
@@ -178,13 +180,16 @@ export default function RolesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
   const [newRole, setNewRole] = useState<any>({});
+  const [dialogError, setDialogError] = useState<string | null>(null);
+  const [sortCol, setSortCol] = useState<"role" | "criteria" | null>(null);
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   // Dynamic league data loaded from API
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
   
   // Max levels for Town Hall and Builder Hall
-  const [townHallMaxLevel, setTownHallMaxLevel] = useState<number>(17); // Fallback
-  const [builderHallMaxLevel, setBuilderHallMaxLevel] = useState<number>(10); // Fallback
+  const [townHallMaxLevel, setTownHallMaxLevel] = useState<number>(18); // Fallback — update when new TH is released
+  const [builderHallMaxLevel, setBuilderHallMaxLevel] = useState<number>(10); // Fallback — update when new BH is released
   
   // Get building prefixes from translations
   const thPrefix = t("addRoleDialog.thPrefix");
@@ -201,12 +206,10 @@ export default function RolesPage() {
       // Load Town Hall max level
       const thEncoded = encodeURIComponent('Town Hall');
       const thUrl = `/api/v2/static/buildings/${thEncoded}/maxlevel`;
-      console.log('Fetching Town Hall max level from:', thUrl);
       const thResponse = await fetch(thUrl);
       if (thResponse.ok) {
         const thData = await thResponse.json();
         setTownHallMaxLevel(thData.max_level);
-        console.log('Town Hall max level loaded:', thData.max_level);
       } else {
         const errorText = await thResponse.text();
         console.error('Failed to load Town Hall max level:', thResponse.status, thResponse.statusText, errorText);
@@ -215,12 +218,10 @@ export default function RolesPage() {
       // Load Builder Hall max level
       const bhEncoded = encodeURIComponent('Builder Hall');
       const bhUrl = `/api/v2/static/buildings/${bhEncoded}/maxlevel`;
-      console.log('Fetching Builder Hall max level from:', bhUrl);
       const bhResponse = await fetch(bhUrl);
       if (bhResponse.ok) {
         const bhData = await bhResponse.json();
         setBuilderHallMaxLevel(bhData.max_level);
-        console.log('Builder Hall max level loaded:', bhData.max_level);
       } else {
         const errorText = await bhResponse.text();
         console.error('Failed to load Builder Hall max level:', bhResponse.status, bhResponse.statusText, errorText);
@@ -355,6 +356,37 @@ export default function RolesPage() {
   const handleAddRole = async () => {
     try {
       setError(null);
+      setDialogError(null);
+
+      // Duplicate check before hitting the API
+      const existingRoles: any[] = allRoles[currentRoleType] || [];
+      let matchesCriterion = false;
+      let matchesExact = false;
+
+      if (currentRoleType === "townhall") {
+        matchesCriterion = existingRoles.some((r) => r.th === newRole.th);
+        matchesExact = existingRoles.some((r) => r.th === newRole.th && r.role_id === newRole.role_id);
+      } else if (currentRoleType === "league") {
+        matchesCriterion = existingRoles.some((r) => r.type === newRole.league);
+        matchesExact = existingRoles.some((r) => r.type === newRole.league && r.role_id === newRole.role_id);
+      } else if (currentRoleType === "builderhall") {
+        const normBh = (bh: any) =>
+          typeof bh === "string" ? parseInt(bh.replace(/^bh/i, "")) : Number(bh);
+        matchesCriterion = existingRoles.some((r) => normBh(r.bh) === newRole.bh);
+        matchesExact = existingRoles.some((r) => normBh(r.bh) === newRole.bh && r.role_id === newRole.role_id);
+      } else if (currentRoleType === "builder_league") {
+        matchesCriterion = existingRoles.some((r) => r.type === newRole.builder_league);
+        matchesExact = existingRoles.some((r) => r.type === newRole.builder_league && r.role_id === newRole.role_id);
+      }
+
+      if (matchesExact) {
+        setDialogError(t("addRoleDialog.errorDuplicateExact"));
+        return;
+      }
+      if (matchesCriterion) {
+        setDialogError(t("addRoleDialog.errorDuplicateCriterion"));
+        return;
+      }
 
       // Transform data to match backend format
       let roleData: any = { ...newRole };
@@ -381,7 +413,12 @@ export default function RolesPage() {
         delete roleData.role_id;
       }
 
-      await apiClient.roles.createRole(guildId, currentRoleType, roleData);
+      const result = await apiClient.roles.createRole(guildId, currentRoleType, roleData);
+
+      if (result.error) {
+        setDialogError(result.error);
+        return;
+      }
 
       await loadData();
       setIsAddDialogOpen(false);
@@ -550,8 +587,55 @@ export default function RolesPage() {
     }
   };
 
+  const handleSortClick = (col: "role" | "criteria") => {
+    if (sortCol === col) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortCol(col);
+      setSortDir("asc");
+    }
+  };
+
+  const SortIcon = ({ col }: { col: "role" | "criteria" }) => {
+    if (sortCol !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 inline opacity-40" />;
+    return sortDir === "asc"
+      ? <ChevronUp className="ml-1 h-3 w-3 inline" />
+      : <ChevronDown className="ml-1 h-3 w-3 inline" />;
+  };
+
   const renderRolesList = (roleType: RoleType) => {
-    const roles = allRoles[roleType] || [];
+    const raw = allRoles[roleType] || [];
+    const normNum = (v: any) => typeof v === "string" ? parseInt(v.replace(/^\D+/i, "")) : Number(v);
+
+    const getCriteriaLabel = (role: any): string => {
+      switch (roleType) {
+        case "townhall": return role.th ? `TH ${role.th.toString().replace(/^th/i, "")}` : "";
+        case "league": return role.type ? denormalizeLeagueName(role.type) : "";
+        case "builderhall": return role.bh ? `BH ${role.bh.toString().replace(/^bh/i, "")}` : "";
+        case "builder_league": return role.type ? denormalizeLeagueName(role.type) : "";
+        default: return "";
+      }
+    };
+
+    const roles = [...raw].sort((a, b) => {
+      const dir = sortDir === "asc" ? 1 : -1;
+      if (sortCol === "role") {
+        const nameA = discordRoles.find((r) => r.id === (a.role_id || a.id))?.name ?? "";
+        const nameB = discordRoles.find((r) => r.id === (b.role_id || b.id))?.name ?? "";
+        return nameA.localeCompare(nameB) * dir;
+      }
+      if (sortCol === "criteria") {
+        const labelA = getCriteriaLabel(a);
+        const labelB = getCriteriaLabel(b);
+        if (roleType === "townhall") return (normNum(a.th) - normNum(b.th)) * dir;
+        if (roleType === "builderhall") return (normNum(a.bh) - normNum(b.bh)) * dir;
+        return labelA.localeCompare(labelB) * dir;
+      }
+      // Default: criteria ascending
+      if (roleType === "townhall") return normNum(a.th) - normNum(b.th);
+      if (roleType === "builderhall") return normNum(a.bh) - normNum(b.bh);
+      return (a.type ?? "").localeCompare(b.type ?? "");
+    });
 
     if (roles.length === 0) {
       return (
@@ -566,39 +650,26 @@ export default function RolesPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t("configuredRoles.discordRole")}</TableHead>
-            <TableHead>{t("configuredRoles.criteria")}</TableHead>
+            <TableHead
+              className="cursor-pointer select-none hover:text-foreground"
+              onClick={() => handleSortClick("role")}
+            >
+              {t("configuredRoles.discordRole")}<SortIcon col="role" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer select-none hover:text-foreground"
+              onClick={() => handleSortClick("criteria")}
+            >
+              {t("configuredRoles.criteria")}<SortIcon col="criteria" />
+            </TableHead>
             <TableHead className="text-right">{t("configuredRoles.actions")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {roles.map((role: any, index: number) => {
-            // Get the role ID from either role_id or id field (already converted to string in loadData)
             const roleId = role.role_id || role.id;
-
-            // Find matching Discord role by comparing string IDs
             const discordRole = discordRoles.find((r) => r.id === roleId);
-
-            let criteria = "";
-
-            switch (roleType) {
-              case "townhall":
-                // DB stores as "th10", display as "TH 10"
-                criteria = role.th ? `TH ${role.th.toString().replace(/^th/i, "")}` : "";
-                break;
-              case "league":
-                // DB stores in snake_case (e.g., "legend_league"), denormalize for display
-                criteria = role.type ? denormalizeLeagueName(role.type) : "";
-                break;
-              case "builderhall":
-                // DB stores as "bh3", display as "BH 3"
-                criteria = role.bh ? `BH ${role.bh.toString().replace(/^bh/i, "")}` : "";
-                break;
-              case "builder_league":
-                // DB stores in snake_case, denormalize for display
-                criteria = role.type ? denormalizeLeagueName(role.type) : "";
-                break;
-            }
+            const criteria = getCriteriaLabel(role);
 
             return (
               <TableRow key={index}>
@@ -879,7 +950,7 @@ export default function RolesPage() {
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <CardTitle>{t("configuredRoles.title")}</CardTitle>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <Dialog open={isAddDialogOpen} onOpenChange={(open) => { setIsAddDialogOpen(open); if (!open) setDialogError(null); }}>
                 <DialogTrigger asChild>
                   <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
                     <Plus className="mr-2 h-4 w-4" />
@@ -901,6 +972,7 @@ export default function RolesPage() {
                         onValueChange={(value) => {
                           setCurrentRoleType(value as RoleType);
                           setNewRole({});
+                          setDialogError(null);
                         }}
                       >
                         <SelectTrigger id="role-type">
@@ -919,6 +991,12 @@ export default function RolesPage() {
                     <Separator />
 
                     {renderRoleForm()}
+                    {dialogError && (
+                      <Alert variant="destructive" className="mt-2">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>{dialogError}</AlertDescription>
+                      </Alert>
+                    )}
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>

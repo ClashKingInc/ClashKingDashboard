@@ -10,9 +10,6 @@ export async function GET(
     const { server_id } = await params;
     const token = request.headers.get('authorization');
 
-    console.log('[all-roles] server_id:', server_id, 'token present:', !!token);
-    console.log('[all-roles] Making request to:', `${API_BASE_URL}/v2/server/${server_id}/all-roles`);
-
     const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/all-roles`, {
       method: 'GET',
       headers: {
@@ -21,9 +18,6 @@ export async function GET(
       },
     });
 
-    console.log('[all-roles] Response status:', response.status);
-    console.log('[all-roles] Response headers:', Object.fromEntries(response.headers));
-
     const contentType = response.headers.get('content-type');
     let data;
 
@@ -31,11 +25,8 @@ export async function GET(
       data = await response.json();
     } else {
       const text = await response.text();
-      console.log('[all-roles] Response text:', text);
       data = { error: text || 'Invalid response from API' };
     }
-
-    console.log('[all-roles] Response data:', JSON.stringify(data, null, 2));
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {

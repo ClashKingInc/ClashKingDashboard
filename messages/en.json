@@ -36,7 +36,10 @@
     "name": "Name",
     "description": "Description",
     "createdAt": "Created At",
-    "updatedAt": "Updated At"
+    "updatedAt": "Updated At",
+    "dashboard": "Dashboard",
+    "loadError": "Failed to load data.",
+    "tryAgain": "Try again"
   },
   "Navigation": {
     "features": "Features",
@@ -154,6 +157,18 @@
       }
     }
   },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Not on server",
+    "unknownUser": "Unknown user",
+    "notLinked": "Not linked",
+    "status": {
+      "onServer": "On server",
+      "notOnServer": "Not on server"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "View Discord profile",
+    "idPrefix": "ID: {id}"
+  },
   "Sidebar": {
     "overview": {
       "name": "Overview",
@@ -207,17 +222,12 @@
       "name": "Leaderboards",
       "description": "Global rankings"
     },
-    "botStats": {
-      "name": "Bot Stats",
-      "description": "Global bot statistics"
-    },
     "sections": {
       "configuration": "Configuration",
       "clanManagement": "Clan Management",
       "playerManagement": "Player Management",
       "automation": "Automation",
-      "statistics": "Statistics",
-      "system": "System"
+      "statistics": "Statistics"
     },
     "switchServer": "Switch Server",
     "goHome": "Homepage"
@@ -393,7 +403,16 @@
       "totalRosters": "Total Rosters",
       "totalMembers": "Total Members",
       "clanRosters": "Clan Rosters",
-      "familyRosters": "Family Rosters"
+      "familyRosters": "Family Rosters",
+      "members": "Members",
+      "avgTh": "Avg TH",
+      "avgHitrate": "Avg Hitrate",
+      "distribution": "Distribution",
+      "clan": "Clan",
+      "family": "Family",
+      "external": "External",
+      "thDistribution": "TH Distribution",
+      "capacity": "capacity"
     },
     "filters": {
       "search": "Search rosters...",
@@ -500,19 +519,31 @@
       "view": "View",
       "edit": "Edit",
       "delete": "Delete",
+      "noGroup": "No group",
+      "moveToGroup": "Move to group",
+      "clone": "Clone",
       "allRosters": "All Rosters",
       "manageRosters": "Manage your war rosters and lineups"
     },
     "memberColumns": {
       "name": "Name",
-      "townhall": "Townhall Level",
+      "townhall": "Town Hall",
       "tag": "Tag",
-      "hitrate": "30 Day Hitrate",
-      "currentClanTag": "Clan Tag",
+      "hitrate": "Hit Rate",
+      "current_clan_tag": "Current Clan",
       "discord": "Discord",
-      "heroLvs": "Heroes",
-      "warPref": "War Opt",
-      "trophies": "Trophies"
+      "hero_lvs": "Heroes",
+      "war_pref": "War Opt",
+      "trophies": "Trophies",
+      "signup_group": "Signup Group"
+    },
+    "columns": {
+      "configure": "Columns",
+      "title": "Configure Columns",
+      "description": "Choose which columns to display and their order",
+      "selected": "Selected Columns",
+      "available": "Available Columns",
+      "save": "Save Columns"
     },
     "sortFields": {
       "townhall": "Townhall Level",
@@ -558,7 +589,324 @@
       "rosterRefreshed": "Roster data refreshed successfully!",
       "errorRefreshingRoster": "Failed to refresh roster data. Please try again.",
       "memberTransferred": "Member transferred between rosters successfully!",
-      "errorTransferringMember": "Failed to transfer member. Please try again."
+      "errorTransferringMember": "Failed to transfer member. Please try again.",
+      "rosterCloned": "Roster cloned successfully!",
+      "errorCloningRoster": "Failed to clone roster. Please try again.",
+      "missingMembersAdded": "Added {count} missing member(s) to roster!",
+      "errorLoadingMissingMembers": "Failed to load missing members."
+    },
+    "cloneDialog": {
+      "title": "Clone Roster",
+      "description": "Create a copy of this roster",
+      "aliasLabel": "New Roster Name",
+      "aliasPlaceholder": "Enter name for cloned roster",
+      "copyMembers": "Copy members to new roster",
+      "memberCount": "{count} members",
+      "originalRoster": "Original roster:",
+      "cancel": "Cancel",
+      "cloning": "Cloning...",
+      "clone": "Clone Roster"
+    },
+    "missingMembers": {
+      "title": "Missing Members",
+      "description": "Clan members not registered in this roster",
+      "coverage": "Roster Coverage",
+      "registered": "registered",
+      "missing": "missing",
+      "total": "total",
+      "selectAll": "Select All",
+      "selected": "selected",
+      "addSelected": "Add {count} Member(s)",
+      "button": "Missing Members",
+      "addAll": "Add All",
+      "adding": "Adding...",
+      "close": "Close",
+      "allCaughtUp": "All caught up!",
+      "allCaughtUpDesc": "All clan members are registered in this roster",
+      "clanOnly": "Missing members analysis is only available for clan rosters",
+      "error": "Failed to load missing members",
+      "thisRoster": "This roster",
+      "wholeGroup": "Whole group"
+    },
+    "eventTime": {
+      "label": "Event Start Time",
+      "timezone": "Your timezone",
+      "utc": "UTC",
+      "clear": "Clear"
+    },
+    "bulkValidation": {
+      "valid": "valid",
+      "invalid": "invalid",
+      "invalidTags": "Invalid"
+    },
+    "memberAutocomplete": {
+      "label": "Or Search Server Members",
+      "placeholder": "Click to search members...",
+      "searchPlaceholder": "Search by name, tag or clan...",
+      "loading": "Loading members...",
+      "noResults": "No members found",
+      "groupHeading": "Server Members",
+      "selectedLabel": "Selected Members",
+      "membersSelected": "member(s) selected",
+      "selected": "Selected",
+      "clanMembersLabel": "Or Select from Clan Members"
+    },
+    "retry": "Retry",
+    "back": "Back",
+    "refresh": "Refresh",
+    "createRoster": "Create Roster",
+    "searchPlaceholder": "Search rosters...",
+    "noRosters": "No rosters yet",
+    "noRostersHint": "Create your first roster to get started",
+    "noSearchResults": "No rosters found",
+    "noSearchResultsHint": "Try a different search term",
+    "createFirstRoster": "Create First Roster",
+    "deleteConfirm": "Are you sure you want to delete \"{name}\"?",
+    "deleteSuccess": "Roster Deleted",
+    "deleteSuccessDesc": "Roster \"{name}\" has been deleted",
+    "deleteError": "Failed to delete roster",
+    "createSuccess": "Roster Created",
+    "createSuccessDesc": "Roster \"{name}\" has been created",
+    "createError": "Failed to create roster",
+    "createErrorAlias": "Please enter a roster name",
+    "refreshSuccess": "Roster data refreshed",
+    "refreshError": "Failed to refresh roster",
+    "saveSuccess": "Settings saved",
+    "saveError": "Failed to save settings",
+    "columnsUpdated": "Columns updated",
+    "columnsError": "Failed to update columns",
+    "addMembersSuccess": "Members Added",
+    "addMembersSuccessDesc": "Added {count} member(s) to roster",
+    "addMembersError": "Failed to add members",
+    "removeMemberSuccess": "Member removed",
+    "removeMemberError": "Failed to remove member",
+    "clearMembers": "Clear members",
+    "clearMembersConfirm": "Remove all members from \"{name}\"? This cannot be undone.",
+    "clearMembersSuccess": "All members removed",
+    "clearMembersError": "Failed to clear members",
+    "automationCreated": "Automation created",
+    "automationUpdated": "Automation updated",
+    "automationDeleted": "Automation deleted",
+    "automationError": "Automation error",
+    "groupCreated": "Group created",
+    "groupUpdated": "Group updated",
+    "groupDeleted": "Group deleted",
+    "groupError": "Failed to save group",
+    "categoryCreated": "Category created",
+    "categoryUpdated": "Category updated",
+    "categoryDeleted": "Category deleted",
+    "categoryError": "Failed to save category",
+    "common": {
+      "cancel": "Cancel",
+      "save": "Save",
+      "close": "Close"
+    },
+    "tabs": {
+      "members": "Members",
+      "automations": "Automations",
+      "groups": "Groups",
+      "categories": "Categories",
+      "settings": "Settings"
+    },
+    "members": {
+      "count": "members",
+      "noMembers": "No members in this roster",
+      "noMembersHint": "Add members to get started",
+      "actions": "Actions",
+      "viewList": "List view",
+      "viewGrouped": "View by signup category",
+      "unassigned": "Unassigned",
+      "dragHere": "Drag members here",
+      "clickToGroup": "Click to view by category",
+      "apiErrorTooltip": "Data could not be fetched from the API",
+      "staleDataTooltip": "Data may be outdated, last updated:",
+      "refresh": "Refresh member data",
+      "alsoIn": "Also in",
+      "addCategory": "Add group",
+      "removeCategory": "Remove group"
+    },
+    "addMembers": {
+      "title": "Add Members to Roster",
+      "description": "Select members from your clans or enter player tags",
+      "bulkTagsLabel": "Player Tags (one per line or comma-separated)",
+      "adding": "Adding...",
+      "submit": "Add Members"
+    },
+    "compare": {
+      "enterMode": "Compare",
+      "modeTitle": "Compare Mode",
+      "modeHint": "Click on rosters to select them (2 to 4 rosters)",
+      "exitMode": "Cancel",
+      "selected": "roster(s) selected",
+      "button": "Compare",
+      "title": "Compare Rosters",
+      "dragToMove": "Drag and drop members between rosters to move them",
+      "loadError": "Failed to load rosters",
+      "memberMoved": "Member moved",
+      "memberMovedDesc": "{name} moved from {from} to {to}",
+      "moveError": "Failed to move member",
+      "selectAtLeast2": "Select at least 2 rosters to compare",
+      "moving": "Moving member...",
+      "compareGroup": "Compare Group",
+      "dragToMoveCategory": "Drag members between rosters and categories",
+      "categoryChanged": "Category changed",
+      "categoryChangedDesc": "{name} moved to {category}"
+    },
+    "ungrouped": "Ungrouped",
+    "automations": {
+      "description": "Schedule automated actions for this roster",
+      "create": "Create Automation",
+      "empty": "No automations",
+      "emptyHint": "Create an automation to schedule actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "executed": "Done",
+      "missed": "Missed",
+      "lastRun": "Last run",
+      "enable": "Enable",
+      "disable": "Disable",
+      "createTitle": "Create Automation",
+      "editTitle": "Edit Automation",
+      "createDesc": "Schedule an automated action",
+      "actionType": "Action Type",
+      "offsetFromEvent": "Timing relative to event",
+      "offsetBefore": "Before event",
+      "offsetAfter": "After event",
+      "offsetUnit_minutes": "minutes",
+      "offsetUnit_hours": "hours",
+      "offsetUnit_days": "days",
+      "offsetPreview": "Will execute at: {date}",
+      "offsetNoEventDate": "Set an event start time in settings to preview the execution date",
+      "offsetAtStart": "At event start",
+      "pingType": "Reminder type",
+      "pingType_signup_reminder": "Signup reminder",
+      "pingType_missing": "Missing from clan",
+      "pingType_sub_needed": "Sub needed",
+      "channel": "Discord Channel",
+      "selectChannel": "Select a channel",
+      "channelHint": "Channel where the action will be posted/executed",
+      "activeLabel": "Active",
+      "target": "Target",
+      "targetThisRoster": "This roster",
+      "targetGroups": "Groups",
+      "targetHint": "Apply the automation to this roster only or to all rosters in a group",
+      "group": "Group",
+      "groupAutomationHint": "Manage via Groups tab",
+      "targetRoster": "Roster",
+      "targetGroup": "Group",
+      "willExecute": "Will execute at the scheduled time",
+      "paused": "Paused - will not execute",
+      "actions": {
+        "ping": "Send Reminder",
+        "post": "Post Roster",
+        "openSignup": "Open Signups",
+        "closeSignup": "Close Signups",
+        "delete": "Delete Roster",
+        "clear": "Clear Members",
+        "archive": "Archive Roster"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Sends a reminder to members who haven't signed up or are in the wrong clan",
+        "roster_post": "Posts the final roster list in the selected channel",
+        "roster_signup": "Opens signups so players can register",
+        "roster_signup_close": "Closes signups and prevents new registrations",
+        "roster_delete": "Permanently deletes the roster and all its data",
+        "roster_clear": "Removes all members from the roster without deleting it",
+        "roster_archive": "Archives the roster, making it read-only"
+      },
+      "infoBox": "Automations are triggered relative to the event start time. Set an offset (e.g. 3 days before) and the bot will execute the action at that time automatically — including for recurring events."
+    },
+    "groups": {
+      "title": "Roster Groups",
+      "description": "Organize rosters into groups for better management",
+      "create": "New Group",
+      "noGroups": "No groups created yet",
+      "rostersCount": "rosters",
+      "createTitle": "Create Group",
+      "editTitle": "Edit Group",
+      "nameLabel": "Group Name",
+      "namePlaceholder": "e.g., CWL Groups",
+      "infoBox": "Groups let you organize multiple rosters together (e.g., all CWL rosters). You can assign a roster to a group from the Settings tab, and apply automations to all rosters in a group at once.",
+      "manageAutomations": "Manage automations",
+      "automationsTitle": "Group Automations",
+      "automationsDesc": "These automations apply to all rosters in this group",
+      "noAutomations": "No automations",
+      "noAutomationsHint": "Create an automation for this group",
+      "addAutomation": "Add Automation",
+      "deleteConfirm": "Delete group \"{name}\"? Rosters in this group will become ungrouped.",
+      "emptyGroup": "No rosters in this group yet",
+      "rules": {
+        "title": "Group Rules",
+        "rulesHint": "These rules apply to all rosters in the group and are propagated immediately.",
+        "maxAccounts": "Max accounts/user",
+        "maxAccountsBadge": "Max {count}/user",
+        "rosterSize": "Roster size",
+        "rosterSizeBadge": "Size {size}",
+        "minSignups": "Fill threshold",
+        "minSignupsBadge": "Threshold {count}",
+        "categoriesTitle": "Signup Categories",
+        "categoriesHint": "Select which categories are available for this group. Applied to all rosters immediately.",
+        "categoriesBadge": "{count} categories",
+        "noCategories": "No categories yet.",
+        "newCategoryPlaceholder": "New category name…"
+      }
+    },
+    "categories": {
+      "title": "Signup Categories",
+      "description": "Categories for player signups and roster filtering",
+      "create": "New Category",
+      "noCategories": "No categories created yet",
+      "createTitle": "Create Category",
+      "editTitle": "Edit Category",
+      "idLabel": "Category ID",
+      "nameLabel": "Category Name",
+      "infoBox": "Categories allow players to indicate their availability or role when signing up (e.g., 'Available', 'Tentative', 'Only if needed'). Categories are shared across all rosters on this server. For grouped rosters, configure which categories apply via the group settings."
+    },
+    "settings": {
+      "general": "Identity & Configuration",
+      "restrictions": "Restrictions & Limits",
+      "name": "Roster Name",
+      "rosterType": "Roster Type",
+      "typeClan": "Clan",
+      "typeFamily": "Family",
+      "signupScope": "Signup Scope",
+      "scopeClanOnly": "Clan Only",
+      "scopeFamilyWide": "Family Wide",
+      "clan": "Clan",
+      "selectClan": "Select a clan",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter a description for this roster...",
+      "typeAndScope": "Type & Scope",
+      "eventTime": "Event Start Time",
+      "eventTimeHint": "When the event starts. Used for automations and countdown displays.",
+      "recurrenceDays": "Repeat every",
+      "recurrenceModeDays": "Every N days",
+      "recurrenceModeMonthly": "Day of month",
+      "recurrenceDaysUnit": "days",
+      "recurrenceDayOfMonthPrefix": "On day",
+      "recurrenceDayOfMonthSuffix": "of each month",
+      "recurrenceDaysHint": "Leave empty for a one-time event. Enter the number of days between occurrences (e.g. 30 for monthly CWL).",
+      "recurrenceDayOfMonthHint": "Repeats on this day each month (e.g. 1 = 1st).",
+      "group": "Group",
+      "noGroup": "No Group",
+      "thRequirements": "Town Hall Requirements",
+      "minTh": "Minimum TH",
+      "maxTh": "Maximum TH",
+      "signupLimits": "Signup Limits",
+      "rosterSize": "Roster Size",
+      "rosterSizeHint": "Maximum number of members",
+      "minSignups": "Min Signups",
+      "minSignupsHint": "Required signups per user",
+      "maxAccountsPerUser": "Max Accounts per User",
+      "maxAccountsHint": "Limit accounts per Discord user",
+      "allowedCategories": "Allowed Signup Categories",
+      "allowedCategoriesHint": "Click to toggle. If none selected, all categories are allowed.",
+      "defaultSignupCategory": "Default Signup Category",
+      "defaultSignupCategoryNone": "None (no default)",
+      "defaultSignupCategoryHint": "Pre-selected category when a member signs up.",
+      "categoriesManagedByGroup": "Signup categories are managed at the group level. Open the group settings from the Rosters page to configure which categories are available for all rosters in this group.",
+      "saving": "Saving...",
+      "save": "Save Settings"
     }
   },
   "LinksPage": {
@@ -689,13 +1037,19 @@
       "description": "Filter war statistics by various criteria",
       "clan": "Clan",
       "allClans": "All Clans",
-      "user": "User",
-      "userPlaceholder": "Search user...",
       "townHall": "Town Hall",
       "allTownHalls": "All TH Levels",
       "townHallLevel": "TH {level}",
+      "period": "Period",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days",
+      "last6Months": "Last 6 months",
+      "lastYear": "Last year",
+      "custom": "Custom",
       "startDate": "Start Date",
-      "endDate": "End Date"
+      "endDate": "End Date",
+      "warTypes": "War Types"
     },
     "summaryStats": {
       "totalWins": "Total Wins",
@@ -709,8 +1063,8 @@
     },
     "charts": {
       "dailyPerformance": {
-        "title": "War Performance (Last 7 Days)",
-        "description": "Daily wins, losses, and draws",
+        "title": "War Performance by Week",
+        "description": "Weekly wins, losses, and draws over the selected period",
         "wins": "Wins",
         "losses": "Losses",
         "draws": "Draws"
@@ -723,7 +1077,7 @@
       },
       "warTypeDistribution": {
         "title": "War Type Distribution",
-        "description": "Breakdown of war types (Coming soon)",
+        "description": "Breakdown by war type",
         "cwl": "CWL",
         "random": "Random",
         "friendly": "Friendly"
@@ -733,6 +1087,29 @@
         "description": "Best warriors by total stars",
         "attacksAndStars": "{attacks} attacks • {stars} stars",
         "noData": "No player data available. Try adjusting your filters."
+      },
+      "missedAttacks": {
+        "title": "Missed Attacks",
+        "description": "Players who did not use all their attacks",
+        "attacks": "attacks missed"
+      },
+      "topDefenders": {
+        "title": "Top Defenders",
+        "description": "Best defenders by average stars given up",
+        "defensesAndStars": "{defenses} defenses • {stars} stars given up",
+        "noData": "No defender data available. Try adjusting your filters."
+      },
+      "worstAttackers": {
+        "title": "Worst Attackers",
+        "description": "Players with the lowest average stars per attack (min. 3 attacks)",
+        "attacksAndStars": "{attacks} attacks • {stars} stars",
+        "noData": "No player data available. Try adjusting your filters."
+      },
+      "worstDefenders": {
+        "title": "Worst Defenders",
+        "description": "Players who gave up the most stars on defense (min. 3 defenses)",
+        "defensesAndStars": "{defenses} defenses • {stars} stars given up",
+        "noData": "No defender data available. Try adjusting your filters."
       }
     },
     "clanStatsTable": {
@@ -744,14 +1121,16 @@
         "wars": "Wars",
         "record": "W/L/D",
         "winRate": "Win Rate",
-        "avgStars": "Avg Stars",
-        "avgDestruction": "Avg Destruction"
+        "avgDestruction": "Avg Destruction",
+        "avgStarsPerAttack": "Stars / Attack",
+        "avgDefenseStars": "Stars/Defense"
       },
       "status": {
         "inWar": "In War",
         "cwl": "CWL",
         "peace": "Peace"
-      }
+      },
+      "noData": "No clan statistics available. Try applying filters or wait for data to load."
     },
     "toast": {
       "errorTitle": "Error",
@@ -764,6 +1143,7 @@
   "LeaderboardsPage": {
     "title": "Leaderboards",
     "description": "Global leaderboards for Clan Capital and more",
+    "comingSoon": "This feature is coming soon. Check back later!",
     "stats": {
       "totalEntries": "Total Entries",
       "type": "Type",
@@ -1078,7 +1458,9 @@
       "familyPosition": "Family Position",
       "selectPosition": "Select position",
       "cancel": "Cancel",
-      "addRole": "Add Role"
+      "addRole": "Add Role",
+      "errorDuplicateExact": "This criterion is already linked to this role.",
+      "errorDuplicateCriterion": "This criterion already has a role assigned. Remove the existing one first."
     },
     "infoCard": {
       "title": "💡 How Auto-Roles Work",
@@ -1794,6 +2176,8 @@
       "clansConfiguredDesc": "Clans tracked for this server",
       "activeRosters": "Active Rosters",
       "activeRostersDesc": "War rosters created",
+      "totalAccounts": "Linked Accounts",
+      "totalAccountsDesc": "Total CoC accounts linked",
       "playersTracked": "Players Tracked",
       "globalPlayers": "Total players in database",
       "clansTracked": "Clans Tracked",
@@ -1803,6 +2187,13 @@
       "offline": "Offline",
       "memoryUsage": "Memory: {used}MB ({percent}%)",
       "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Bot Statistics",
+    "clans": {
+      "title": "Your Clans",
+      "description": "{count, plural, one {# clan configured} other {# clans configured}}",
+      "manage": "Manage Clans",
+      "addFirst": "Add Your First Clan"
     },
     "quickStart": {
       "title": "Quick Start",

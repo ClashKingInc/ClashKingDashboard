@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 10
+    groups:
+      # Patch updates grouped together — low risk, auto-merge friendly
+      patch-updates:
+        update-types:
+          - "patch"
+      # Minor updates for non-breaking deps
+      minor-updates:
+        update-types:
+          - "minor"
+    ignore:
+      # Major version bumps reviewed manually
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "09:00"
+      timezone: "Europe/Paris"

@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {useTranslations} from "next-intl";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Users, Shield, Activity} from "lucide-react";
 import {apiClient} from "@/lib/api/client";
 import type {BotInfo} from "@/lib/api/types/server";
@@ -18,15 +19,11 @@ export function BotStats() {
             try {
                 const token = localStorage.getItem("access_token");
                 if (!token) {
-                    console.log('No access token found');
                     setIsLoading(false);
                     return;
                 }
 
-                // Set token for API client
-                apiClient.setAccessToken(token);
 
-                console.log('🔍 Fetching bot info');
                 const {data, error} = await apiClient.servers.getBotInfo();
 
                 if (error || !data) {
@@ -35,10 +32,9 @@ export function BotStats() {
                     return;
                 }
 
-                console.log('✅ Bot info fetched successfully:', data);
                 setBotInfo(data);
             } catch (err) {
-                console.log('Failed to fetch bot info:', err);
+                console.error('Failed to fetch bot info:', err);
             } finally {
                 setIsLoading(false);
             }
@@ -71,7 +67,7 @@ export function BotStats() {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold text-foreground">
-                        {isLoading ? "..." : botInfo?.database.players_tracked.toLocaleString() || "—"}
+                        {isLoading ? <Skeleton className="h-8 w-20 animate-pulse" /> : botInfo?.database.players_tracked.toLocaleString() || "—"}
                     </div>
                     <p className="text-xs text-muted-foreground">{t("globalPlayers")}</p>
                 </CardContent>
@@ -86,7 +82,7 @@ export function BotStats() {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold text-foreground">
-                        {isLoading ? "..." : botInfo?.database.clans_tracked.toLocaleString() || "—"}
+                        {isLoading ? <Skeleton className="h-8 w-20 animate-pulse" /> : botInfo?.database.clans_tracked.toLocaleString() || "—"}
                     </div>
                     <p className="text-xs text-muted-foreground">{t("globalClans")}</p>
                 </CardContent>

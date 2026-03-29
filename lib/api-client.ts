@@ -21,7 +21,6 @@ export class ApiClient {
    */
   async loginWithDiscord(code: string, codeVerifier: string) {
     const deviceId = this.getDeviceId();
-    console.log('🔍 Device ID being sent:', deviceId);
 
     const requestBody = {
       code,
@@ -30,8 +29,6 @@ export class ApiClient {
       device_id: deviceId,
       device_name: 'Dashboard',
     };
-
-    console.log('📤 Request body:', requestBody);
 
     const response = await fetch(`${this.baseUrl}/v2/auth/discord`, {
       method: 'POST',

@@ -66,9 +66,14 @@ next-env.d.ts
 # OS files
 Thumbs.db
 Desktop.ini
+NUL
 
 # Temporary files
 *.tmp
 *.bak
+*.bak.*
 .cache/
+
+# Claude
 .claude/
+CLAUDE.md
