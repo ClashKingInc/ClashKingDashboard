@@ -83,8 +83,6 @@ export default function GeneralSettingsPage() {
       apiClient.setAccessToken(token);
       const response = await apiClient.servers.getSettings(guildId);
 
-      console.log("Settings response:", response);
-
       if (response.error) {
         throw new Error(response.error);
       }

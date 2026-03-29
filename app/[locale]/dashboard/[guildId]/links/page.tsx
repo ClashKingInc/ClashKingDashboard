@@ -137,12 +137,6 @@ export default function LinksManagementPage() {
         }
 
         const data: ServerLinksResponse = await response.json();
-        console.log('📊 Links API Response:', data);
-        console.log('👥 Total members:', data.total_members);
-        console.log('🔗 Members with links:', data.members_with_links);
-        console.log('📝 Total linked accounts:', data.total_linked_accounts);
-        console.log('✅ Verified accounts:', data.verified_accounts);
-
         setLinksData(data);
         setFilteredMembers(data.members || []);
 

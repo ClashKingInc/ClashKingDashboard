@@ -18,7 +18,6 @@ export function BotStats() {
             try {
                 const token = localStorage.getItem("access_token");
                 if (!token) {
-                    console.log('No access token found');
                     setIsLoading(false);
                     return;
                 }
@@ -26,7 +25,6 @@ export function BotStats() {
                 // Set token for API client
                 apiClient.setAccessToken(token);
 
-                console.log('🔍 Fetching bot info');
                 const {data, error} = await apiClient.servers.getBotInfo();
 
                 if (error || !data) {
@@ -35,10 +33,9 @@ export function BotStats() {
                     return;
                 }
 
-                console.log('✅ Bot info fetched successfully:', data);
                 setBotInfo(data);
             } catch (err) {
-                console.log('Failed to fetch bot info:', err);
+                console.error('Failed to fetch bot info:', err);
             } finally {
                 setIsLoading(false);
             }

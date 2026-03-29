@@ -539,7 +539,11 @@
       "discord": "Discord",
       "heroLvs": "Helden",
       "warPref": "Oorlogsvoorkeur",
-      "trophies": "Trofeeën"
+      "trophies": "Trofeeën",
+      "current_clan_tag": "Huidig Clan",
+      "hero_lvs": "Heldenniveaus",
+      "war_pref": "Oorlogsvoorkeur",
+      "signup_group": "Aanmeldingsgroep"
     },
     "sortFields": {
       "townhall": "Stadhuis Niveau",
@@ -583,7 +587,13 @@
       "rosterCloned": "Rooster succesvol gekloond!",
       "errorCloningRoster": "Kan rooster niet klonen. Probeer het opnieuw.",
       "missingMembersAdded": "{count} ontbrekende lid/leden toegevoegd aan rooster!",
-      "errorLoadingMissingMembers": "Kan ontbrekende leden niet laden."
+      "errorLoadingMissingMembers": "Kan ontbrekende leden niet laden.",
+      "substituteMarked": "Lid gemarkeerd als vervanger!",
+      "substituteUnmarked": "Lid niet meer gemarkeerd als vervanger!",
+      "errorUpdatingMember": "Kan lid niet bijwerken. Probeer het opnieuw.",
+      "errorRefreshingRoster": "Kan roostergegevens niet vernieuwen. Probeer het opnieuw.",
+      "memberTransferred": "Lid succesvol overgedragen tussen roosters!",
+      "errorTransferringMember": "Kan lid niet overdragen. Probeer het opnieuw."
     },
     "cloneDialog": {
       "title": "Rooster Klonen",
@@ -645,7 +655,6 @@
     "back": "Terug",
     "refresh": "Vernieuwen",
     "searchPlaceholder": "Roosters zoeken...",
-    "noRostersHint": "Maak je eerste rooster om te beginnen",
     "noSearchResults": "Geen roosters gevonden",
     "noSearchResultsHint": "Probeer een andere zoekterm",
     "createFirstRoster": "Eerste Rooster Maken",

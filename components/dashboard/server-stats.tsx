@@ -32,7 +32,6 @@ export function ServerStats({ guildId }: ServerStatsProps) {
       try {
         const accessToken = localStorage.getItem("access_token");
         if (!accessToken) {
-          console.log('No access token found');
           setIsLoading(false);
           return;
         }
@@ -58,21 +57,18 @@ export function ServerStats({ guildId }: ServerStatsProps) {
         if (clansRes.ok) {
           const clansData = await clansRes.json();
           clansConfigured = Array.isArray(clansData) ? clansData.length : 0;
-          console.log('🏰 Clans configured:', clansConfigured);
         }
 
         // Parse rosters
         if (rostersRes.ok) {
           const rostersData = await rostersRes.json();
           activeRosters = (rostersData.items || rostersData.rosters || rostersData || []).length;
-          console.log('📝 Active rosters:', activeRosters);
         }
 
         // Parse links
         if (linksRes.ok) {
           const linksData = await linksRes.json();
           linkedPlayers = linksData.total || 0;
-          console.log('👥 Linked players:', linkedPlayers);
         }
 
         setStats({

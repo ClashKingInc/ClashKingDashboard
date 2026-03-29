@@ -48,7 +48,7 @@
     "documentation": "Documentation",
     "loginWithDiscord": "Connexion avec Discord",
     "addToDiscord": "Ajouter à Discord",
-    "openDashboard": "Ouvrir le Tableau de Bord", 
+    "openDashboard": "Ouvrir le Tableau de Bord",
     "dashboardSettings": "Paramètres du Tableau de Bord",
     "logout": "Déconnexion",
     "settings": "Paramètres",
@@ -431,7 +431,10 @@
     "filters": {
       "search": "Rechercher des rosters...",
       "type": "Type",
-      "all": "Tous"
+      "all": "Tous",
+      "clan": "Clan",
+      "clear": "Effacer",
+      "family": "Famille"
     },
     "createDialog": {
       "title": "Créer un Nouveau Roster",
@@ -490,7 +493,25 @@
       "rosterCloned": "Roster cloné avec succès !",
       "errorCloningRoster": "Échec du clonage du roster. Veuillez réessayer.",
       "missingMembersAdded": "{count} membre(s) manquant(s) ajouté(s) au roster !",
-      "errorLoadingMissingMembers": "Échec du chargement des membres manquants."
+      "errorLoadingMissingMembers": "Échec du chargement des membres manquants.",
+      "errorTitle": "Erreur",
+      "successTitle": "Succès",
+      "errorLoadingRosters": "Échec du chargement des rosters. Veuillez réessayer.",
+      "errorLoadingMembers": "Échec du chargement des membres du clan.",
+      "errorCreatingRoster": "Échec de la création du roster. Veuillez réessayer.",
+      "rosterUpdated": "Roster mis à jour avec succès !",
+      "errorUpdatingRoster": "Échec de la mise à jour du roster. Veuillez réessayer.",
+      "errorDeletingRoster": "Échec de la suppression du roster. Veuillez réessayer.",
+      "membersAdded": "{count} membre(s) ajouté(s) au roster !",
+      "errorAddingMembers": "Échec de l'ajout des membres. Veuillez réessayer.",
+      "errorRemovingMember": "Échec du retrait du membre. Veuillez réessayer.",
+      "substituteMarked": "Membre marqué comme remplaçant !",
+      "substituteUnmarked": "Membre retiré des remplaçants !",
+      "errorUpdatingMember": "Échec de la mise à jour du membre. Veuillez réessayer.",
+      "rosterRefreshed": "Données du roster actualisées avec succès !",
+      "errorRefreshingRoster": "Échec de l'actualisation des données du roster. Veuillez réessayer.",
+      "memberTransferred": "Membre transféré entre rosters avec succès !",
+      "errorTransferringMember": "Échec du transfert du membre. Veuillez réessayer."
     },
     "cloneDialog": {
       "title": "Cloner le Roster",
@@ -637,7 +658,7 @@
       "staleDataTooltip": "Données potentiellement obsolètes, dernière mise à jour :",
       "refresh": "Rafraîchir les données du membre",
       "alsoIn": "Aussi dans",
-      "addCategory":"Ajouter un groupe",
+      "addCategory": "Ajouter un groupe",
       "removeCategory": "Retirer le groupe"
     },
     "addMembers": {
@@ -822,6 +843,95 @@
       "categoriesManagedByGroup": "Les catégories d'inscription sont gérées au niveau du groupe. Ouvrez les paramètres du groupe depuis la page Rosters pour configurer les catégories disponibles pour tous les rosters du groupe.",
       "saving": "Sauvegarde...",
       "save": "Sauvegarder"
+    },
+    "addMembersDialog": {
+      "title": "Ajouter des Membres au Roster",
+      "description": "Sélectionner des membres de votre clan ou saisir des tags de joueur",
+      "bulkTagsLabel": "Ajout en lot par Tags",
+      "bulkTagsPlaceholder": "Saisissez les tags joueur (un par ligne ou séparés par virgule)",
+      "searchLabel": "Rechercher des Membres",
+      "searchPlaceholder": "Rechercher par nom ou tag...",
+      "selectFromClan": "Sélectionner parmi les Membres du Clan",
+      "selectedCount": "Sélectionné(s)",
+      "noMembers": "Aucun membre disponible",
+      "noMembersSelected": "Aucun membre sélectionné",
+      "noMembersSelectedDesc": "Veuillez sélectionner des membres ou saisir des tags joueur.",
+      "cancel": "Annuler",
+      "adding": "Ajout...",
+      "add": "Ajouter des Membres"
+    },
+    "comparisonMode": {
+      "cancel": "Annuler",
+      "compare": "Comparer",
+      "compareRosters": "Comparer les Rosters",
+      "selectRosters": "Sélectionner des rosters",
+      "selectRostersDesc": "Veuillez sélectionner au moins 2 rosters pour comparer",
+      "maxReached": "Maximum atteint",
+      "maxReachedDesc": "Vous pouvez comparer jusqu'à 5 rosters à la fois"
+    },
+    "detailsDialog": {
+      "title": "Détails du Roster",
+      "edit": "Modifier",
+      "refresh": "Actualiser",
+      "refreshing": "Actualisation...",
+      "delete": "Supprimer",
+      "deleting": "Suppression...",
+      "addMembers": "Ajouter des Membres",
+      "close": "Fermer",
+      "noMembers": "Aucun membre dans ce roster",
+      "noMembersDesc": "Ajoutez des membres pour commencer",
+      "memberCount": "Membres",
+      "thRestriction": "Niveau HdV",
+      "avgTh": "Moy. HdV",
+      "avgHitrate": "Moy. Taux de Réussite",
+      "clan": "Clan",
+      "family": "Famille",
+      "external": "Externe",
+      "substitute": "REM",
+      "removeMember": "Retirer"
+    },
+    "editDialog": {
+      "title": "Modifier le Roster",
+      "description": "Modifier les paramètres et la configuration du roster",
+      "aliasLabel": "Nom du Roster",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Description du roster...",
+      "minThLabel": "Hôtel de Ville Minimum",
+      "minThPlaceholder": "ex: 13",
+      "maxThLabel": "Hôtel de Ville Maximum",
+      "maxThPlaceholder": "ex: 16",
+      "rosterSizeLabel": "Taille du Roster",
+      "rosterSizePlaceholder": "ex: 50",
+      "columnsLabel": "Colonnes d'Affichage",
+      "columnsPlaceholder": "Sélectionner les colonnes à afficher",
+      "sortLabel": "Ordre de Tri",
+      "sortPlaceholder": "Sélectionner les champs de tri",
+      "cancel": "Annuler",
+      "saving": "Sauvegarde...",
+      "save": "Enregistrer les Modifications"
+    },
+    "emptyState": {
+      "noRosters": "Aucun roster créé",
+      "noRostersDesc": "Créez votre premier roster pour commencer",
+      "noMatch": "Aucun roster ne correspond à vos filtres",
+      "noMatchDesc": "Essayez d'ajuster votre recherche ou vos critères de filtre"
+    },
+    "sortFields": {
+      "townhall": "Niveau Hôtel de Ville",
+      "name": "Nom",
+      "tag": "Tag",
+      "heroLvs": "Héros",
+      "trophies": "Trophées",
+      "hitrate": "Taux de Réussite 30 jours",
+      "currentClanTag": "Tag du Clan",
+      "addedAt": "Ajouté le"
+    },
+    "thRestrictions": {
+      "only": "HdV{th} uniquement",
+      "range": "HdV{min}-{max}",
+      "minimum": "HdV{th}+",
+      "maximum": "HdV1-{th}",
+      "noRestriction": "Pas de restriction"
     }
   },
   "LinksPage": {

@@ -122,7 +122,6 @@ export default function WarsPage() {
         }
 
         const clansData = await clansRes.json();
-        console.log('Clans data received:', clansData);
         setClans(clansData || []);
 
         // If we have clans, fetch war data immediately
@@ -152,9 +151,6 @@ export default function WarsPage() {
       const clansToFetch = filters.clan === "all"
         ? clansList.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
         : filters.clan && filters.clan !== "all" ? [filters.clan] : [];
-
-      console.log('Clans:', clansList);
-      console.log('Clans to fetch:', clansToFetch);
 
       // If no clans to fetch, return early
       if (clansToFetch.length === 0) {

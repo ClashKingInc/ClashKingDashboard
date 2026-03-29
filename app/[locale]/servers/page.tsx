@@ -116,7 +116,6 @@ export default function ServersPage() {
   }, [router, locale, t]);
 
   const getGuildIconUrl = (guild: GuildInfo) => {
-    console.log(guild);
     if (!guild.icon) return null;
     if (guild.icon.startsWith('https')) {
       return guild.icon;

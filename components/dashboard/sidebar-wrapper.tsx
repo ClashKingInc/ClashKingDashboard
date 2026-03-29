@@ -28,7 +28,6 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
         apiClient.setAccessToken(token);
 
         // Fetch guild info using the dedicated endpoint
-        console.log(`🔍 Fetching guild info for guildId: ${guildId}`);
         const response = await apiClient.servers.getGuild(guildId);
 
         if (response.error || !response.data) {
