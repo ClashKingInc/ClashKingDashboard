@@ -1102,7 +1102,8 @@
         "inWar": "In Oorlog",
         "cwl": "CWL",
         "peace": "Vrede"
-      }
+      },
+      "noData": "Geen clan statistieken beschikbaar. Pas filters toe of wacht tot de gegevens zijn geladen."
     },
     "toast": {
       "errorTitle": "Fout",

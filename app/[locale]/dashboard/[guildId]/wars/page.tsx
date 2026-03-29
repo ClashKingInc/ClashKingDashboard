@@ -217,7 +217,7 @@ export default function WarsPage() {
           const opponentStars = war.opponent.stars;
 
           totalStars += clanStars;
-          totalDestruction += war.clan.destructionPercentage || war.clan.destruction || 0;
+          totalDestruction += (war.clan.destructionPercentage ?? war.clan.destruction) ?? 0;
 
           if (clanStars > opponentStars) wins++;
           else if (clanStars < opponentStars) losses++;
@@ -403,11 +403,10 @@ export default function WarsPage() {
     draws: day.draws,
   }));
 
-  // War type distribution (placeholder - would need API support)
   const warTypeDistribution = [
-    { name: "CWL", value: 45, color: clashKingColors.primary },
-    { name: "Random", value: 30, color: "#FAA81A" },
-    { name: "Friendly", value: 25, color: "#3BA55D" },
+    { name: t('charts.warTypeDistribution.cwl'), value: 45, color: clashKingColors.primary },
+    { name: t('charts.warTypeDistribution.random'), value: 30, color: "#FAA81A" },
+    { name: t('charts.warTypeDistribution.friendly'), value: 25, color: "#3BA55D" },
   ];
 
 
@@ -468,13 +467,13 @@ export default function WarsPage() {
               <CardContent>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
                   <div className="space-y-2">
-                    <Label htmlFor="clan-filter">Clan</Label>
+                    <Label htmlFor="clan-filter">{t('filters.clan')}</Label>
                     <Select value={filters.clan} onValueChange={(value) => handleFilterChange("clan", value)}>
                       <SelectTrigger id="clan-filter">
-                        <SelectValue placeholder="Select clan" />
+                        <SelectValue placeholder={t('filters.clan')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Clans</SelectItem>
+                        <SelectItem value="all">{t('filters.allClans')}</SelectItem>
                         {clans.map((clan) => (
                           <SelectItem key={clan.tag} value={clan.tag}>
                             {clan.name}
@@ -485,26 +484,26 @@ export default function WarsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="user-filter">User</Label>
+                    <Label htmlFor="user-filter">{t('filters.user')}</Label>
                     <Input
                       id="user-filter"
-                      placeholder="Search user..."
+                      placeholder={t('filters.userPlaceholder')}
                       value={filters.user}
                       onChange={(e) => handleFilterChange("user", e.target.value)}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="th-filter">Town Hall</Label>
+                    <Label htmlFor="th-filter">{t('filters.townHall')}</Label>
                     <Select value={filters.townHall} onValueChange={(value) => handleFilterChange("townHall", value)}>
                       <SelectTrigger id="th-filter">
-                        <SelectValue placeholder="Select TH" />
+                        <SelectValue placeholder={t('filters.townHall')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All TH Levels</SelectItem>
-                        {[16, 15, 14, 13, 12, 11, 10, 9, 8].map((th) => (
+                        <SelectItem value="all">{t('filters.allTownHalls')}</SelectItem>
+                        {[18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8].map((th) => (
                           <SelectItem key={th} value={th.toString()}>
-                            TH {th}
+                            {t('filters.townHallLevel', { level: th })}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -512,7 +511,7 @@ export default function WarsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="start-date">Start Date</Label>
+                    <Label htmlFor="start-date">{t('filters.startDate')}</Label>
                     <Input
                       id="start-date"
                       type="date"
@@ -522,7 +521,7 @@ export default function WarsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="end-date">End Date</Label>
+                    <Label htmlFor="end-date">{t('filters.endDate')}</Label>
                     <Input
                       id="end-date"
                       type="date"
@@ -591,7 +590,7 @@ export default function WarsPage() {
                 <>
                   <Card className="border-green-500/30 bg-green-500/5">
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">Total Wins</CardTitle>
+                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalWins')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -599,14 +598,14 @@ export default function WarsPage() {
                         <Trophy className="h-8 w-8 text-green-500/50" />
                       </div>
                       <p className="text-xs text-muted-foreground mt-2">
-                        Out of {totalWars} total wars
+                        {t('summaryStats.totalWinsDesc', { totalWars })}
                       </p>
                     </CardContent>
                   </Card>
 
                   <Card className="border-red-500/30 bg-red-500/5">
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">Total Losses</CardTitle>
+                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalLosses')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -614,14 +613,14 @@ export default function WarsPage() {
                         <Shield className="h-8 w-8 text-primary/50" />
                       </div>
                       <p className="text-xs text-muted-foreground mt-2">
-                        {totalDraws} draws
+                        {t('summaryStats.totalLossesDesc', { totalDraws })}
                       </p>
                     </CardContent>
                   </Card>
 
                   <Card className="border-yellow-500/30 bg-yellow-500/5">
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">Win Rate</CardTitle>
+                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.winRate')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -629,14 +628,14 @@ export default function WarsPage() {
                         <TrendingUp className="h-8 w-8 text-yellow-500/50" />
                       </div>
                       <p className="text-xs text-muted-foreground mt-2">
-                        Overall performance
+                        {t('summaryStats.winRateDesc')}
                       </p>
                     </CardContent>
                   </Card>
 
                   <Card className="border-blue-500/30 bg-blue-500/5">
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">Active Wars</CardTitle>
+                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.activeWars')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
@@ -644,7 +643,7 @@ export default function WarsPage() {
                         <Star className="h-8 w-8 text-blue-500/50" />
                       </div>
                       <p className="text-xs text-muted-foreground mt-2">
-                        {activeCwl} in CWL
+                        {t('summaryStats.activeWarsDesc', { activeCwl })}
                       </p>
                     </CardContent>
                   </Card>
@@ -679,8 +678,8 @@ export default function WarsPage() {
                 <>
                   <Card className="bg-card border-border">
                     <CardHeader>
-                      <CardTitle>War Performance (Last 7 Days)</CardTitle>
-                      <CardDescription>Daily wins, losses, and draws</CardDescription>
+                      <CardTitle>{t('charts.dailyPerformance.title')}</CardTitle>
+                      <CardDescription>{t('charts.dailyPerformance.description')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <ResponsiveContainer width="100%" height={300}>
@@ -696,9 +695,9 @@ export default function WarsPage() {
                             }}
                           />
                           <Legend />
-                          <Bar dataKey="wins" fill="#3BA55D" name="Wins" />
-                          <Bar dataKey="losses" fill="#ED4245" name="Losses" />
-                          <Bar dataKey="draws" fill="#FAA81A" name="Draws" />
+                          <Bar dataKey="wins" fill="#3BA55D" name={t('charts.dailyPerformance.wins')} />
+                          <Bar dataKey="losses" fill="#ED4245" name={t('charts.dailyPerformance.losses')} />
+                          <Bar dataKey="draws" fill="#FAA81A" name={t('charts.dailyPerformance.draws')} />
                         </BarChart>
                       </ResponsiveContainer>
                     </CardContent>
@@ -706,8 +705,8 @@ export default function WarsPage() {
 
                   <Card className="bg-card border-border">
                     <CardHeader>
-                      <CardTitle>Attack Success Rate by Town Hall</CardTitle>
-                      <CardDescription>3-star rate per TH level</CardDescription>
+                      <CardTitle>{t('charts.thSuccessRate.title')}</CardTitle>
+                      <CardDescription>{t('charts.thSuccessRate.description')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <ResponsiveContainer width="100%" height={300}>
@@ -723,8 +722,8 @@ export default function WarsPage() {
                             }}
                           />
                           <Legend />
-                          <Bar dataKey="success" fill="#3BA55D" name="3-Star %" stackId="a" />
-                          <Bar dataKey="failed" fill="#ED4245" name="Other %" stackId="a" />
+                          <Bar dataKey="success" fill="#3BA55D" name={t('charts.thSuccessRate.threeStarPercent')} stackId="a" />
+                          <Bar dataKey="failed" fill="#ED4245" name={t('charts.thSuccessRate.otherPercent')} stackId="a" />
                         </BarChart>
                       </ResponsiveContainer>
                     </CardContent>
@@ -771,8 +770,8 @@ export default function WarsPage() {
                 <>
                   <Card className="bg-card border-border">
                     <CardHeader>
-                      <CardTitle>War Type Distribution</CardTitle>
-                      <CardDescription>Breakdown of war types (Coming soon)</CardDescription>
+                      <CardTitle>{t('charts.warTypeDistribution.title')}</CardTitle>
+                      <CardDescription>{t('charts.warTypeDistribution.description')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <ResponsiveContainer width="100%" height={300}>
@@ -805,8 +804,8 @@ export default function WarsPage() {
 
                   <Card className="bg-card border-border">
                     <CardHeader>
-                      <CardTitle>Top Performers</CardTitle>
-                      <CardDescription>Best warriors by total stars</CardDescription>
+                      <CardTitle>{t('charts.topPerformers.title')}</CardTitle>
+                      <CardDescription>{t('charts.topPerformers.description')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
@@ -824,7 +823,7 @@ export default function WarsPage() {
                               <div className="flex-1">
                                 <div className="font-medium text-foreground">{player.player_name}</div>
                                 <div className="text-xs text-muted-foreground">
-                                  {player.total_attacks} attacks • {player.total_stars} stars
+                                  {t('charts.topPerformers.attacksAndStars', { attacks: player.total_attacks, stars: player.total_stars })}
                                 </div>
                               </div>
                               <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30">
@@ -834,7 +833,7 @@ export default function WarsPage() {
                           ))
                         ) : (
                           <p className="text-center text-muted-foreground py-8">
-                            No player data available. Try adjusting your filters.
+                            {t('charts.topPerformers.noData')}
                           </p>
                         )}
                       </div>
@@ -847,8 +846,8 @@ export default function WarsPage() {
             {/* Clan Stats Table */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle>Clan War Statistics</CardTitle>
-                <CardDescription>Detailed statistics for each clan</CardDescription>
+                <CardTitle>{t('clanStatsTable.title')}</CardTitle>
+                <CardDescription>{t('clanStatsTable.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {loading && clanStats.length === 0 ? (
@@ -856,13 +855,13 @@ export default function WarsPage() {
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Clan</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Wars</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">W/L/D</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Win Rate</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Avg Stars</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Avg Destruction</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.clan')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.status')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.wars')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.record')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.winRate')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgStars')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgDestruction')}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -900,13 +899,13 @@ export default function WarsPage() {
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Clan</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Wars</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">W/L/D</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Win Rate</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Avg Stars</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Avg Destruction</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.clan')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.status')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.wars')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.record')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.winRate')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgStars')}</th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgDestruction')}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -919,17 +918,17 @@ export default function WarsPage() {
                             <td className="text-center py-3 px-4">
                               {stat.is_in_war && (
                                 <Badge className="bg-green-500/20 text-green-500 border-green-500/30">
-                                  In War
+                                  {t('clanStatsTable.status.inWar')}
                                 </Badge>
                               )}
                               {stat.is_in_cwl && !stat.is_in_war && (
                                 <Badge className="bg-blue-500/20 text-blue-500 border-blue-500/30">
-                                  CWL
+                                  {t('clanStatsTable.status.cwl')}
                                 </Badge>
                               )}
                               {!stat.is_in_war && !stat.is_in_cwl && (
                                 <Badge variant="secondary">
-                                  Peace
+                                  {t('clanStatsTable.status.peace')}
                                 </Badge>
                               )}
                             </td>
@@ -959,7 +958,7 @@ export default function WarsPage() {
                   </div>
                 ) : (
                   <p className="text-center text-muted-foreground py-8">
-                    No clan statistics available. Try applying filters or wait for data to load.
+                    {t('clanStatsTable.noData')}
                   </p>
                 )}
               </CardContent>

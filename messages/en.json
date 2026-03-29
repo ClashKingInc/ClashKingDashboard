@@ -1099,7 +1099,8 @@
         "inWar": "In War",
         "cwl": "CWL",
         "peace": "Peace"
-      }
+      },
+      "noData": "No clan statistics available. Try applying filters or wait for data to load."
     },
     "toast": {
       "errorTitle": "Error",

@@ -1122,7 +1122,8 @@
         "inWar": "En Guerre",
         "cwl": "LDC",
         "peace": "En Paix"
-      }
+      },
+      "noData": "Aucune statistique de clan disponible. Essayez d'appliquer des filtres ou attendez le chargement des données."
     },
     "toast": {
       "errorTitle": "Erreur",
