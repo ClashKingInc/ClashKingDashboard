@@ -44,6 +44,16 @@ import {
   CheckCircle2, AlertTriangle
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
 
 // Local imports
@@ -135,6 +145,7 @@ export default function RosterDetailPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [removingMember, setRemovingMember] = useState<string | null>(null);
   const [clearingMembers, setClearingMembers] = useState(false);
+  const [clearMembersOpen, setClearMembersOpen] = useState(false);
 
   // Dialogs
   const [addMembersDialogOpen, setAddMembersDialogOpen] = useState(false);
@@ -338,7 +349,6 @@ export default function RosterDetailPage() {
   };
 
   const handleClearMembers = async () => {
-    if (!confirm(t("clearMembersConfirm", { name: roster?.alias || "" }))) return;
     setClearingMembers(true);
     try {
       await clearMembers();
@@ -718,7 +728,7 @@ export default function RosterDetailPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleClearMembers}
+                  onClick={() => setClearMembersOpen(true)}
                   disabled={clearingMembers}
                   className="text-destructive hover:text-destructive"
                 >
@@ -1944,6 +1954,26 @@ export default function RosterDetailPage() {
         </DialogContent>
       </Dialog>
       </div>
+
+      <AlertDialog open={clearMembersOpen} onOpenChange={setClearMembersOpen}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">{t("clearMembers")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              {t("clearMembersConfirm", { name: roster?.alias || "" })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              onClick={() => { setClearMembersOpen(false); handleClearMembers(); }}
+            >
+              {t("clearMembers")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

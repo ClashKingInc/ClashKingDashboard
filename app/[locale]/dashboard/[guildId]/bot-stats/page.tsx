@@ -4,10 +4,10 @@ import { BotStats } from "@/components/dashboard/bot-stats";
 import { Activity } from "lucide-react";
 
 interface BotStatsPageProps {
-  params: {
+  params: Promise<{
     guildId: string;
     locale: string;
-  };
+  }>;
 }
 
 export default async function BotStatsPage({ params }: BotStatsPageProps) {

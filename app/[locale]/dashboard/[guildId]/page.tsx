@@ -3,10 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ServerStats } from "@/components/dashboard/server-stats";
 
 interface OverviewPageProps {
-  params: {
+  params: Promise<{
     guildId: string;
     locale: string;
-  };
+  }>;
 }
 
 export default async function OverviewPage({ params }: OverviewPageProps) {
