@@ -409,7 +409,12 @@ export default function RolesPage() {
         delete roleData.role_id;
       }
 
-      await apiClient.roles.createRole(guildId, currentRoleType, roleData);
+      const result = await apiClient.roles.createRole(guildId, currentRoleType, roleData);
+
+      if (result.error) {
+        setDialogError(result.error);
+        return;
+      }
 
       await loadData();
       setIsAddDialogOpen(false);
