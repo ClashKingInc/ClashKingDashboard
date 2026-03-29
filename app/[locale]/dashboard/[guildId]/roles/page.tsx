@@ -584,7 +584,13 @@ export default function RolesPage() {
   };
 
   const renderRolesList = (roleType: RoleType) => {
-    const roles = allRoles[roleType] || [];
+    const raw = allRoles[roleType] || [];
+    const normNum = (v: any) => typeof v === "string" ? parseInt(v.replace(/^\D+/i, "")) : Number(v);
+    const roles = [...raw].sort((a, b) => {
+      if (roleType === "townhall") return normNum(a.th) - normNum(b.th);
+      if (roleType === "builderhall") return normNum(a.bh) - normNum(b.bh);
+      return (a.type ?? "").localeCompare(b.type ?? "");
+    });
 
     if (roles.length === 0) {
       return (
