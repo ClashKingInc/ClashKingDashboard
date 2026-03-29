@@ -178,6 +178,7 @@ export default function RolesPage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
   const [newRole, setNewRole] = useState<any>({});
+  const [dialogError, setDialogError] = useState<string | null>(null);
 
   // Dynamic league data loaded from API
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
@@ -351,6 +352,37 @@ export default function RolesPage() {
   const handleAddRole = async () => {
     try {
       setError(null);
+      setDialogError(null);
+
+      // Duplicate check before hitting the API
+      const existingRoles: any[] = allRoles[currentRoleType] || [];
+      let matchesCriterion = false;
+      let matchesExact = false;
+
+      if (currentRoleType === "townhall") {
+        matchesCriterion = existingRoles.some((r) => r.th === newRole.th);
+        matchesExact = existingRoles.some((r) => r.th === newRole.th && r.role_id === newRole.role_id);
+      } else if (currentRoleType === "league") {
+        matchesCriterion = existingRoles.some((r) => r.type === newRole.league);
+        matchesExact = existingRoles.some((r) => r.type === newRole.league && r.role_id === newRole.role_id);
+      } else if (currentRoleType === "builderhall") {
+        const normBh = (bh: any) =>
+          typeof bh === "string" ? parseInt(bh.replace(/^bh/i, "")) : Number(bh);
+        matchesCriterion = existingRoles.some((r) => normBh(r.bh) === newRole.bh);
+        matchesExact = existingRoles.some((r) => normBh(r.bh) === newRole.bh && r.role_id === newRole.role_id);
+      } else if (currentRoleType === "builder_league") {
+        matchesCriterion = existingRoles.some((r) => r.type === newRole.builder_league);
+        matchesExact = existingRoles.some((r) => r.type === newRole.builder_league && r.role_id === newRole.role_id);
+      }
+
+      if (matchesExact) {
+        setDialogError(t("addRoleDialog.errorDuplicateExact"));
+        return;
+      }
+      if (matchesCriterion) {
+        setDialogError(t("addRoleDialog.errorDuplicateCriterion"));
+        return;
+      }
 
       // Transform data to match backend format
       let roleData: any = { ...newRole };
@@ -875,7 +907,7 @@ export default function RolesPage() {
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <CardTitle>{t("configuredRoles.title")}</CardTitle>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <Dialog open={isAddDialogOpen} onOpenChange={(open) => { setIsAddDialogOpen(open); if (!open) setDialogError(null); }}>
                 <DialogTrigger asChild>
                   <Button className="bg-primary hover:bg-primary/90 w-full md:w-auto">
                     <Plus className="mr-2 h-4 w-4" />
@@ -897,6 +929,7 @@ export default function RolesPage() {
                         onValueChange={(value) => {
                           setCurrentRoleType(value as RoleType);
                           setNewRole({});
+                          setDialogError(null);
                         }}
                       >
                         <SelectTrigger id="role-type">
@@ -915,6 +948,12 @@ export default function RolesPage() {
                     <Separator />
 
                     {renderRoleForm()}
+                    {dialogError && (
+                      <Alert variant="destructive" className="mt-2">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>{dialogError}</AlertDescription>
+                      </Alert>
+                    )}
                   </div>
                   <DialogFooter>
                     <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>

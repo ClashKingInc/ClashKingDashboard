@@ -1426,7 +1426,9 @@
       "familyPosition": "Family Position",
       "selectPosition": "Select position",
       "cancel": "Cancel",
-      "addRole": "Add Role"
+      "addRole": "Add Role",
+      "errorDuplicateExact": "This criterion is already linked to this role.",
+      "errorDuplicateCriterion": "This criterion already has a role assigned. Remove the existing one first."
     },
     "infoCard": {
       "title": "💡 How Auto-Roles Work",

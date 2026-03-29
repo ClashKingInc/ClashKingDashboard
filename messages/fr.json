@@ -1449,7 +1449,9 @@
       "familyPosition": "Position Familiale",
       "selectPosition": "Sélectionner une position",
       "cancel": "Annuler",
-      "addRole": "Ajouter un Rôle"
+      "addRole": "Ajouter un Rôle",
+      "errorDuplicateExact": "Ce critère est déjà lié à ce rôle.",
+      "errorDuplicateCriterion": "Ce critère a déjà un rôle assigné. Supprimez l'existant d'abord."
     },
     "infoCard": {
       "title": "💡 Fonctionnement des Rôles Automatiques",
