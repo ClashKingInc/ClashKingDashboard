@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {useTranslations} from "next-intl";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
+import {Skeleton} from "@/components/ui/skeleton";
 import {Users, Shield, Activity} from "lucide-react";
 import {apiClient} from "@/lib/api/client";
 import type {BotInfo} from "@/lib/api/types/server";
@@ -66,7 +67,7 @@ export function BotStats() {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold text-foreground">
-                        {isLoading ? "..." : botInfo?.database.players_tracked.toLocaleString() || "—"}
+                        {isLoading ? <Skeleton className="h-8 w-20 animate-pulse" /> : botInfo?.database.players_tracked.toLocaleString() || "—"}
                     </div>
                     <p className="text-xs text-muted-foreground">{t("globalPlayers")}</p>
                 </CardContent>
@@ -81,7 +82,7 @@ export function BotStats() {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold text-foreground">
-                        {isLoading ? "..." : botInfo?.database.clans_tracked.toLocaleString() || "—"}
+                        {isLoading ? <Skeleton className="h-8 w-20 animate-pulse" /> : botInfo?.database.clans_tracked.toLocaleString() || "—"}
                     </div>
                     <p className="text-xs text-muted-foreground">{t("globalClans")}</p>
                 </CardContent>

@@ -261,27 +261,6 @@ export function applyThemeVariables(root: HTMLElement = document.documentElement
   });
 }
 
-/**
- * Generate inline styles object with CSS variables
- */
-export function getInlineStyles() {
-  return Object.entries(cssVariables).reduce((acc, [key, value]) => {
-    acc[key] = value;
-    return acc;
-  }, {} as Record<string, string>);
-}
-
-/**
- * Create CSS class with all variables
- */
-export function generateThemeCSS(): string {
-  const variables = Object.entries(cssVariables)
-    .map(([key, value]) => `  ${key}: ${value};`)
-    .join('\n');
-
-  return `:root {\n${variables}\n}`;
-}
-
 // ============================================================================
 // DEFAULT EXPORT
 // ============================================================================
@@ -292,8 +271,6 @@ export const theme = {
   assets: clashKingAssets,
   variables: cssVariables,
   apply: applyThemeVariables,
-  getInlineStyles,
-  generateCSS: generateThemeCSS,
 } as const;
 
 export default theme;
