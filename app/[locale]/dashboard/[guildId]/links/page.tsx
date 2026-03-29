@@ -94,6 +94,7 @@ export default function LinksManagementPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [linksData, setLinksData] = useState<ServerLinksResponse | null>(null);
   const [filteredMembers, setFilteredMembers] = useState<MemberLinks[]>([]);
+  const [guildMemberCount, setGuildMemberCount] = useState<number | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [accountToDelete, setAccountToDelete] = useState<{ userId: string; playerTag: string; playerName: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -125,23 +126,30 @@ export default function LinksManagementPage() {
     const fetchLinksData = async () => {
       setLoading(true);
       try {
+        const token = localStorage.getItem('access_token');
+        const headers = { 'Authorization': `Bearer ${token}` };
         const offset = (currentPage - 1) * itemsPerPage;
-        const response = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
 
-        if (!response.ok) {
+        const [linksResponse, guildResponse] = await Promise.all([
+          fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, { headers }),
+          fetch(`/api/v2/guild/${guildId}`, { headers }),
+        ]);
+
+        if (!linksResponse.ok) {
           throw new Error('Failed to fetch links data');
         }
 
-        const data: ServerLinksResponse = await response.json();
+        const data: ServerLinksResponse = await linksResponse.json();
         setLinksData(data);
         setFilteredMembers(data.members || []);
-
-        // Use total_members for pagination (filtered count before pagination)
         setTotalCount(data.total_members || 0);
+
+        if (guildResponse.ok) {
+          const guildData = await guildResponse.json();
+          if (guildData.member_count) {
+            setGuildMemberCount(guildData.member_count);
+          }
+        }
       } catch (error) {
         console.error('Error fetching links:', error);
       } finally {
@@ -359,7 +367,9 @@ export default function LinksManagementPage() {
             ) : (
               <>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-blue-500">{linksData?.total_members || 0}</div>
+                  <div className="text-3xl font-bold text-blue-500">
+                    {guildMemberCount ?? "—"}
+                  </div>
                   <User className="h-8 w-8 text-blue-500/50" />
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
@@ -390,7 +400,7 @@ export default function LinksManagementPage() {
                   <CheckCircle className="h-8 w-8 text-green-500/50" />
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  {linksData?.total_members ? Math.round((linksData.members_with_links / linksData.total_members) * 100) : 0}% of total
+                  {guildMemberCount ? Math.round((( linksData?.members_with_links ?? 0) / guildMemberCount) * 100) : 0}% of total
                 </p>
               </>
             )}
@@ -998,14 +1008,14 @@ export default function LinksManagementPage() {
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Linked members</span>
                           <span className="text-foreground font-medium">
-                            {linksData?.members_with_links || 0} / {linksData?.total_members || 0}
+                            {linksData?.members_with_links || 0} / {guildMemberCount ?? "—"}
                           </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Coverage rate</span>
                           <span className="text-foreground font-medium">
-                            {linksData?.total_members
-                              ? Math.round((linksData.members_with_links / linksData.total_members) * 100)
+                            {guildMemberCount
+                              ? Math.round(((linksData?.members_with_links ?? 0) / guildMemberCount) * 100)
                               : 0}%
                           </span>
                         </div>
@@ -1013,8 +1023,8 @@ export default function LinksManagementPage() {
                           <div
                             className="bg-primary h-2.5 rounded-full"
                             style={{
-                              width: `${linksData?.total_members
-                                ? (linksData.members_with_links / linksData.total_members) * 100
+                              width: `${guildMemberCount
+                                ? ((linksData?.members_with_links ?? 0) / guildMemberCount) * 100
                                 : 0}%`
                             }}
                           ></div>
@@ -1041,7 +1051,9 @@ export default function LinksManagementPage() {
                     </p>
                     <p>
                       <strong>Members without links:</strong>{' '}
-                      {(linksData?.total_members || 0) - (linksData?.members_with_links || 0)}
+                      {guildMemberCount != null
+                        ? guildMemberCount - (linksData?.members_with_links || 0)
+                        : "—"}
                     </p>
                   </CardContent>
                 </Card>
