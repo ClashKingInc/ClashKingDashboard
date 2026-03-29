@@ -2151,7 +2151,9 @@
       "online": "Online",
       "offline": "Offline",
       "memoryUsage": "Memory: {used}MB ({percent}%)",
-      "cpuUsage": "CPU: {percent}%"
+      "cpuUsage": "CPU: {percent}%",
+      "totalAccounts": "Total Accounts",
+      "totalAccountsDesc": "CoC accounts linked on this server"
     },
     "quickStart": {
       "title": "Quick Start",
@@ -2168,6 +2170,14 @@
         "title": "Set Up Auto Roles",
         "description": "Configure automatic role assignment based on Town Hall, trophies, etc."
       }
+    },
+    "botSection": "Bot Status",
+    "clans": {
+      "title": "Configured Clans",
+      "description": "Clans registered on this server",
+      "manage": "Manage",
+      "noClans": "No clans configured yet",
+      "addClans": "Add Clans"
     }
   },
   "BotStatsPage": {

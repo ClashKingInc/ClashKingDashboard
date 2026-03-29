@@ -2154,7 +2154,9 @@
       "online": "Online",
       "offline": "Offline",
       "memoryUsage": "Geheugen: {used}MB ({percent}%)",
-      "cpuUsage": "CPU: {percent}%"
+      "cpuUsage": "CPU: {percent}%",
+      "totalAccounts": "Totaal Accounts",
+      "totalAccountsDesc": "CoC accounts gekoppeld op deze server"
     },
     "quickStart": {
       "title": "Snelstart",
@@ -2171,6 +2173,14 @@
         "title": "Stel Auto Rollen In",
         "description": "Configureer automatische roltoewijzing op basis van Stadhuis, trofeeën, enz."
       }
+    },
+    "botSection": "Bot Status",
+    "clans": {
+      "title": "Geconfigureerde Clans",
+      "description": "Clans geregistreerd op deze server",
+      "manage": "Beheren",
+      "noClans": "Nog geen clans geconfigureerd",
+      "addClans": "Clans Toevoegen"
     }
   },
   "BotStatsPage": {

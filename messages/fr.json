@@ -2174,7 +2174,9 @@
       "online": "En ligne",
       "offline": "Hors ligne",
       "memoryUsage": "Mémoire : {used}Mo ({percent}%)",
-      "cpuUsage": "CPU : {percent}%"
+      "cpuUsage": "CPU : {percent}%",
+      "totalAccounts": "Total Comptes",
+      "totalAccountsDesc": "Comptes CoC liés sur ce serveur"
     },
     "quickStart": {
       "title": "Démarrage Rapide",
@@ -2191,6 +2193,14 @@
         "title": "Configurer les Rôles Automatiques",
         "description": "Configurez l'attribution automatique des rôles basée sur l'Hôtel de Ville, les trophées, etc."
       }
+    },
+    "botSection": "Statut du Bot",
+    "clans": {
+      "title": "Clans Configurés",
+      "description": "Clans enregistrés sur ce serveur",
+      "manage": "Gérer",
+      "noClans": "Aucun clan configuré",
+      "addClans": "Ajouter des Clans"
     }
   },
   "BotStatsPage": {
