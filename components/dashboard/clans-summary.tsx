@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { clashKingAssets } from "@/lib/theme";
-import { Plus } from "lucide-react";
+import { Plus, AlertCircle, RefreshCw } from "lucide-react";
 
 interface ClansSummaryProps {
   guildId: string;
@@ -26,35 +26,42 @@ interface Clan {
 
 export function ClansSummary({ guildId }: ClansSummaryProps) {
   const t = useTranslations("OverviewPage");
+  const tCommon = useTranslations("Common");
   const locale = useLocale();
   const router = useRouter();
   const [clans, setClans] = useState<Clan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  const fetchClans = async () => {
+    setIsLoading(true);
+    setHasError(false);
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      if (!accessToken) {
+        setIsLoading(false);
+        return;
+      }
+
+      const res = await fetch(`/api/v2/server/${guildId}/clans`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setClans(Array.isArray(data) ? data : []);
+      } else {
+        setHasError(true);
+      }
+    } catch (err) {
+      console.error("Failed to fetch clans:", err);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchClans = async () => {
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          setIsLoading(false);
-          return;
-        }
-
-        const res = await fetch(`/api/v2/server/${guildId}/clans`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setClans(Array.isArray(data) ? data : []);
-        }
-      } catch (err) {
-        console.error("Failed to fetch clans:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchClans();
   }, [guildId]);
 
@@ -70,6 +77,21 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
               <Skeleton key={i} className="h-16 w-32 rounded-lg" />
             ))}
           </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <Card className="bg-card border-border">
+        <CardContent className="flex items-center gap-3 py-6">
+          <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
+          <p className="text-sm text-muted-foreground flex-1">{tCommon("loadError")}</p>
+          <Button variant="outline" size="sm" onClick={fetchClans}>
+            <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+            {tCommon("tryAgain")}
+          </Button>
         </CardContent>
       </Card>
     );

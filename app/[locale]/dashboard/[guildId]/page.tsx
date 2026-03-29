@@ -30,7 +30,7 @@ export default async function OverviewPage({ params }: OverviewPageProps) {
 
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-3">{t("botSection")}</h2>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             <BotStats />
           </div>
         </div>

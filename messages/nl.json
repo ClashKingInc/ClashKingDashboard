@@ -36,7 +36,10 @@
     "name": "Naam",
     "description": "Beschrijving",
     "createdAt": "Aangemaakt op",
-    "updatedAt": "Bijgewerkt op"
+    "updatedAt": "Bijgewerkt op",
+    "dashboard": "Dashboard",
+    "loadError": "Gegevens konden niet worden geladen.",
+    "tryAgain": "Opnieuw proberen"
   },
   "Navigation": {
     "features": "Functies",
@@ -1426,7 +1429,9 @@
       "familyPosition": "Familiepositie",
       "selectPosition": "Selecteer positie",
       "cancel": "Annuleren",
-      "addRole": "Rol Toevoegen"
+      "addRole": "Rol Toevoegen",
+      "errorDuplicateExact": "Dit criterium is al gekoppeld aan deze rol.",
+      "errorDuplicateCriterion": "Dit criterium heeft al een rol toegewezen. Verwijder de bestaande eerst."
     },
     "infoCard": {
       "title": "💡 Hoe Auto-Rollen Werken",

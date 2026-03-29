@@ -36,7 +36,10 @@
     "name": "Nom",
     "description": "Description",
     "createdAt": "Créé le",
-    "updatedAt": "Mis à jour le"
+    "updatedAt": "Mis à jour le",
+    "dashboard": "Tableau de bord",
+    "loadError": "Impossible de charger les données.",
+    "tryAgain": "Réessayer"
   },
   "Navigation": {
     "features": "Fonctionnalités",
@@ -1446,7 +1449,9 @@
       "familyPosition": "Position Familiale",
       "selectPosition": "Sélectionner une position",
       "cancel": "Annuler",
-      "addRole": "Ajouter un Rôle"
+      "addRole": "Ajouter un Rôle",
+      "errorDuplicateExact": "Ce critère est déjà lié à ce rôle.",
+      "errorDuplicateCriterion": "Ce critère a déjà un rôle assigné. Supprimez l'existant d'abord."
     },
     "infoCard": {
       "title": "💡 Fonctionnement des Rôles Automatiques",
