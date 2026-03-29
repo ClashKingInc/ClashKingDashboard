@@ -1037,13 +1037,19 @@
       "description": "Filter war statistics by various criteria",
       "clan": "Clan",
       "allClans": "All Clans",
-      "user": "User",
-      "userPlaceholder": "Search user...",
       "townHall": "Town Hall",
       "allTownHalls": "All TH Levels",
       "townHallLevel": "TH {level}",
+      "period": "Period",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days",
+      "last6Months": "Last 6 months",
+      "lastYear": "Last year",
+      "custom": "Custom",
       "startDate": "Start Date",
-      "endDate": "End Date"
+      "endDate": "End Date",
+      "warTypes": "War Types"
     },
     "summaryStats": {
       "totalWins": "Total Wins",
@@ -1057,8 +1063,8 @@
     },
     "charts": {
       "dailyPerformance": {
-        "title": "War Performance (Last 7 Days)",
-        "description": "Daily wins, losses, and draws",
+        "title": "War Performance by Week",
+        "description": "Weekly wins, losses, and draws over the selected period",
         "wins": "Wins",
         "losses": "Losses",
         "draws": "Draws"
@@ -1071,7 +1077,7 @@
       },
       "warTypeDistribution": {
         "title": "War Type Distribution",
-        "description": "Breakdown of war types (Coming soon)",
+        "description": "Breakdown by war type",
         "cwl": "CWL",
         "random": "Random",
         "friendly": "Friendly"
@@ -1081,6 +1087,29 @@
         "description": "Best warriors by total stars",
         "attacksAndStars": "{attacks} attacks • {stars} stars",
         "noData": "No player data available. Try adjusting your filters."
+      },
+      "missedAttacks": {
+        "title": "Missed Attacks",
+        "description": "Players who did not use all their attacks",
+        "attacks": "attacks missed"
+      },
+      "topDefenders": {
+        "title": "Top Defenders",
+        "description": "Best defenders by average stars given up",
+        "defensesAndStars": "{defenses} defenses • {stars} stars given up",
+        "noData": "No defender data available. Try adjusting your filters."
+      },
+      "worstAttackers": {
+        "title": "Worst Attackers",
+        "description": "Players with the lowest average stars per attack (min. 3 attacks)",
+        "attacksAndStars": "{attacks} attacks • {stars} stars",
+        "noData": "No player data available. Try adjusting your filters."
+      },
+      "worstDefenders": {
+        "title": "Worst Defenders",
+        "description": "Players who gave up the most stars on defense (min. 3 defenses)",
+        "defensesAndStars": "{defenses} defenses • {stars} stars given up",
+        "noData": "No defender data available. Try adjusting your filters."
       }
     },
     "clanStatsTable": {
@@ -1092,8 +1121,9 @@
         "wars": "Wars",
         "record": "W/L/D",
         "winRate": "Win Rate",
-        "avgStars": "Avg Stars",
-        "avgDestruction": "Avg Destruction"
+        "avgDestruction": "Avg Destruction",
+        "avgStarsPerAttack": "Stars / Attack",
+        "avgDefenseStars": "Stars/Defense"
       },
       "status": {
         "inWar": "In War",

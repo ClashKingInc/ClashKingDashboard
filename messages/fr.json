@@ -1060,13 +1060,19 @@
       "description": "Filtrer les statistiques de guerre selon différents critères",
       "clan": "Clan",
       "allClans": "Tous les Clans",
-      "user": "Utilisateur",
-      "userPlaceholder": "Rechercher un utilisateur...",
       "townHall": "Hôtel de Ville",
       "allTownHalls": "Tous les Niveaux d'HDV",
       "townHallLevel": "HDV {level}",
+      "period": "Période",
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "last90Days": "90 derniers jours",
+      "last6Months": "6 derniers mois",
+      "lastYear": "Dernière année",
+      "custom": "Personnalisé",
       "startDate": "Date de Début",
-      "endDate": "Date de Fin"
+      "endDate": "Date de Fin",
+      "warTypes": "Types de Guerre"
     },
     "summaryStats": {
       "totalWins": "Total de Victoires",
@@ -1080,8 +1086,8 @@
     },
     "charts": {
       "dailyPerformance": {
-        "title": "Performance de Guerre (7 Derniers Jours)",
-        "description": "Victoires, défaites et matchs nuls quotidiens",
+        "title": "Performance par Semaine",
+        "description": "Victoires, défaites et matchs nuls par semaine sur la période sélectionnée",
         "wins": "Victoires",
         "losses": "Défaites",
         "draws": "Matchs Nuls"
@@ -1094,7 +1100,7 @@
       },
       "warTypeDistribution": {
         "title": "Distribution des Types de Guerre",
-        "description": "Répartition des types de guerre (Bientôt disponible)",
+        "description": "Répartition par type de guerre",
         "cwl": "LDC",
         "random": "Aléatoire",
         "friendly": "Amicale"
@@ -1104,6 +1110,29 @@
         "description": "Meilleurs guerriers par nombre total d'étoiles",
         "attacksAndStars": "{attacks} attaques • {stars} étoiles",
         "noData": "Aucune donnée de joueur disponible. Essayez d'ajuster vos filtres."
+      },
+      "missedAttacks": {
+        "title": "Attaques manquées",
+        "description": "Joueurs n'ayant pas utilisé toutes leurs attaques",
+        "attacks": "attaques manquées"
+      },
+      "topDefenders": {
+        "title": "Meilleurs Défenseurs",
+        "description": "Meilleurs défenseurs par étoiles données en moyenne",
+        "defensesAndStars": "{defenses} défenses • {stars} étoiles données",
+        "noData": "Aucune donnée de défense disponible. Essayez d'ajuster vos filtres."
+      },
+      "worstAttackers": {
+        "title": "Pires Attaquants",
+        "description": "Joueurs avec la moyenne d'étoiles la plus basse (min. 3 attaques)",
+        "attacksAndStars": "{attacks} attaques • {stars} étoiles",
+        "noData": "Aucune donnée de joueur disponible. Essayez d'ajuster vos filtres."
+      },
+      "worstDefenders": {
+        "title": "Pires Défenseurs",
+        "description": "Joueurs qui ont cédé le plus d'étoiles en défense (min. 3 défenses)",
+        "defensesAndStars": "{defenses} défenses • {stars} étoiles cédées",
+        "noData": "Aucune donnée de défense disponible. Essayez d'ajuster vos filtres."
       }
     },
     "clanStatsTable": {
@@ -1115,8 +1144,9 @@
         "wars": "Guerres",
         "record": "V/D/N",
         "winRate": "Taux de Victoire",
-        "avgStars": "Moy. Étoiles",
-        "avgDestruction": "Moy. Destruction"
+        "avgDestruction": "Moy. Destruction",
+        "avgStarsPerAttack": "Étoiles / Attaque",
+        "avgDefenseStars": "Étoiles/Déf"
       },
       "status": {
         "inWar": "En Guerre",
