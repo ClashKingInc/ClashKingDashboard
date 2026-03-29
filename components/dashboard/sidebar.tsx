@@ -42,6 +42,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import type { UserInfo } from "@/lib/api/types/auth";
+import { clashKingAssets } from "@/lib/theme";
 
 interface SidebarProps {
   guildId: string;
@@ -345,7 +346,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
             <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4}>
               {/* Theme Submenu */}
               <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
-                <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
+                <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:bg-accent/50 cursor-pointer">
                   {mounted && theme === "dark" ? (
                     <Moon className="h-4 w-4" />
                   ) : theme === "light" ? (
@@ -353,42 +354,42 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                   ) : (
                     <Computer className="h-4 w-4" />
                   )}
-                  <span className="hover:!text-primary">{tNav("theme")}</span>
+                  <span className="hover:text-primary">{tNav("theme")}</span>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
                   <DropdownMenuItem
                     onClick={() => setTheme("system")}
-                    className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                    className={`flex items-center space-x-2 hover:bg-accent/50 cursor-pointer ${
                       theme === "system" ? "bg-primary/10 text-primary" : ""
                     }`}
                   >
                     <Computer className="h-4 w-4" />
-                    <span className="hover:!text-primary">{tNav("systemTheme")}</span>
+                    <span className="hover:text-primary">{tNav("systemTheme")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setTheme("light")}
-                    className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                    className={`flex items-center space-x-2 hover:bg-accent/50 cursor-pointer ${
                       theme === "light" ? "bg-primary/10 text-primary" : ""
                     }`}
                   >
                     <Sun className="h-4 w-4" />
-                    <span className="hover:!text-primary">{tNav("lightTheme")}</span>
+                    <span className="hover:text-primary">{tNav("lightTheme")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setTheme("dark")}
-                    className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                    className={`flex items-center space-x-2 hover:bg-accent/50 cursor-pointer ${
                       theme === "dark" ? "bg-primary/10 text-primary" : ""
                     }`}
                   >
                     <Moon className="h-4 w-4" />
-                    <span className="hover:!text-primary">{tNav("darkTheme")}</span>
+                    <span className="hover:text-primary">{tNav("darkTheme")}</span>
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
 
               {/* Language Submenu */}
               <DropdownMenuSub open={openSubmenu === "language"} onOpenChange={(open) => setOpenSubmenu(open ? "language" : null)}>
-                <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
+                <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:bg-accent/50 cursor-pointer">
                   <div className="relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
                     <Image
                       src={`https://flagcdn.com/w40/${languages.find(lang => lang.code === locale)?.flagCode || "us"}.png`}
@@ -397,14 +398,14 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                       className="object-cover"
                     />
                   </div>
-                  <span className="hover:!text-primary">{tNav("language")}</span>
+                  <span className="hover:text-primary">{tNav("language")}</span>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
                   {languages.map((lang) => (
                     <DropdownMenuItem
                       key={lang.code}
                       onClick={() => switchLocale(lang.code)}
-                      className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                      className={`flex items-center space-x-2 hover:bg-accent/50 cursor-pointer ${
                         locale === lang.code ? "bg-primary/10 text-primary" : ""
                       }`}
                     >
@@ -416,7 +417,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                           className="object-cover"
                         />
                       </div>
-                      <span className="hover:!text-primary">{lang.name}</span>
+                      <span className="hover:text-primary">{lang.name}</span>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuSubContent>
@@ -426,13 +427,17 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
         </div>
 
         {/* Branding */}
-        <div className="flex items-center justify-center gap-2">
-          <div className="text-xs font-medium text-muted-foreground">
-            {tCommon("poweredBy")}
-          </div>
-          <div className="text-xs font-bold text-primary">
-            ClashKing
-          </div>
+        <div className="flex items-center justify-center gap-1.5">
+          <span className="text-xs font-medium text-muted-foreground">{tCommon("poweredBy")}</span>
+          <Image
+            src={clashKingAssets.logos.crownRed}
+            alt="ClashKing"
+            width={16}
+            height={16}
+            className="h-4 w-4"
+            unoptimized
+          />
+          <span className="text-xs font-bold text-primary">ClashKing</span>
         </div>
       </div>
     </div>

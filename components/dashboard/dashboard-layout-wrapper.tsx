@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export function DashboardLayoutWrapper({
   sidebar,
@@ -17,6 +18,7 @@ export function DashboardLayoutWrapper({
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
+  const tCommon = useTranslations("Common");
 
   // Auth check
   useEffect(() => {
@@ -32,7 +34,7 @@ export function DashboardLayoutWrapper({
   }, [pathname]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
+    <div className="flex h-screen overflow-hidden bg-background">
       {/* Desktop Sidebar */}
       <div className="hidden md:block h-full">
         {sidebar}
@@ -41,20 +43,21 @@ export function DashboardLayoutWrapper({
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div 
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm" 
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
             onClick={() => setIsSidebarOpen(false)}
           />
           <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-lg animate-in slide-in-from-left duration-200">
-            {/* We don't need a close button here because the sidebar itself usually has a header, 
-                but the sidebar component might not have a close button. 
-                Let's wrap the sidebar content. */}
             <div className="h-full relative">
-                {/* Close button positioned absolutely */}
-                <div className="absolute right-2 top-2 z-50 md:hidden">
-                    {/* We might need to adjust z-index or position depending on sidebar content */}
-                </div>
-                {sidebar}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsSidebarOpen(false)}
+                className="absolute right-2 top-2 z-50 h-8 w-8 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              {sidebar}
             </div>
           </div>
         </div>
@@ -67,7 +70,7 @@ export function DashboardLayoutWrapper({
           <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="-ml-2">
             <Menu className="h-6 w-6" />
           </Button>
-          <span className="ml-2 font-semibold">Dashboard</span>
+          <span className="ml-2 font-semibold">{tCommon("dashboard")}</span>
         </div>
 
         <main className="flex-1 overflow-y-auto">

@@ -36,7 +36,10 @@
     "name": "Name",
     "description": "Description",
     "createdAt": "Created At",
-    "updatedAt": "Updated At"
+    "updatedAt": "Updated At",
+    "dashboard": "Dashboard",
+    "loadError": "Failed to load data.",
+    "tryAgain": "Try again"
   },
   "Navigation": {
     "features": "Features",

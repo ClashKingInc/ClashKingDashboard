@@ -36,7 +36,10 @@
     "name": "Nom",
     "description": "Description",
     "createdAt": "Créé le",
-    "updatedAt": "Mis à jour le"
+    "updatedAt": "Mis à jour le",
+    "dashboard": "Tableau de bord",
+    "loadError": "Impossible de charger les données.",
+    "tryAgain": "Réessayer"
   },
   "Navigation": {
     "features": "Fonctionnalités",

@@ -36,7 +36,10 @@
     "name": "Naam",
     "description": "Beschrijving",
     "createdAt": "Aangemaakt op",
-    "updatedAt": "Bijgewerkt op"
+    "updatedAt": "Bijgewerkt op",
+    "dashboard": "Dashboard",
+    "loadError": "Gegevens konden niet worden geladen.",
+    "tryAgain": "Opnieuw proberen"
   },
   "Navigation": {
     "features": "Functies",
