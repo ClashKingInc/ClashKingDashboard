@@ -206,6 +206,10 @@
       "name": "Tableaux Auto",
       "description": "Classements automatisés"
     },
+    "giveaways": {
+      "name": "Giveaways",
+      "description": "Gestion des giveaways"
+    },
     "links": {
       "name": "Liens",
       "description": "Liaison Joueur-Discord"
@@ -2187,6 +2191,185 @@
       "createFailed": "Échec de la création du tableau automatique. Veuillez réessayer.",
       "updateFailed": "Échec de la mise à jour du tableau automatique. Veuillez réessayer.",
       "deleteFailed": "Échec de la suppression du tableau automatique. Veuillez réessayer."
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Giveaways",
+    "description": "Créez, planifiez et gérez les giveaways de votre serveur.",
+    "create": "Créer un giveaway",
+    "listTitle": "Dashboard giveaways",
+    "listDescription": "Suivez les giveaways planifiés, en cours et terminés au même endroit.",
+    "empty": "Aucun giveaway à afficher pour le moment.",
+    "confirmDeleteTitle": "Supprimer le giveaway",
+    "confirmDelete": "Voulez-vous vraiment supprimer ce giveaway ?",
+    "discardTitle": "Annuler les modifications ?",
+    "discardDescription": "Vous avez des modifications non enregistrées. Si vous fermez maintenant, elles seront perdues.",
+    "discardConfirm": "Annuler les modifications",
+    "formTabs": {
+      "general": "Général",
+      "messages": "Messages",
+      "restrictions": "Restrictions",
+      "advanced": "Avancé"
+    },
+    "tabs": {
+      "ongoing": "En cours",
+      "upcoming": "À venir",
+      "ended": "Terminés"
+    },
+    "stats": {
+      "total": "Giveaways au total",
+      "totalEntries": "Total de participations",
+      "ongoing": "Giveaways en cours",
+      "upcoming": "Giveaways à venir",
+      "ended": "Giveaways terminés"
+    },
+    "statsDescriptions": {
+      "total": "Tous les giveaways configurés sur ce serveur.",
+      "totalEntries": "Participations cumulées sur tous les giveaways.",
+      "ongoing": "Actuellement actifs et ouverts aux participations.",
+      "upcoming": "Planifiés pour plus tard.",
+      "ended": "Giveaways déjà terminés."
+    },
+    "emptyTab": {
+      "title": "Aucun giveaway ici",
+      "ongoing": "Aucun giveaway n'est actuellement en cours.",
+      "upcoming": "Aucun giveaway planifié. Créez-en un pour commencer.",
+      "ended": "Aucun giveaway n'a encore été terminé."
+    },
+    "status": {
+      "scheduled": "Planifié",
+      "ongoing": "En ligne",
+      "ended": "Terminé"
+    },
+    "table": {
+      "giveaway": "Giveaway",
+      "channel": "Canal",
+      "entries": "Participations",
+      "timing": "Timing",
+      "start": "Début",
+      "end": "Fin",
+      "winnersHeader": "Gagnants",
+      "winners": "{count} gagnant{count, plural, one {} other {s}}",
+      "boosters": "{count} boost{count, plural, one {} other {s}}",
+      "noChannel": "Aucun canal",
+      "noChannelHelp": "Aucun canal assigné. Modifiez ce giveaway pour corriger ça.",
+      "endsAt": "Se termine à",
+      "endedAt": "Terminé à",
+      "duplicate": "Dupliquer",
+      "showingEnded": "Affichage de {shown} sur {total} giveaways terminés",
+      "showMore": "Afficher {count} de plus",
+      "pendingUpdate": "Mise à jour en attente",
+      "pendingUpdateHelp": "Ce giveaway a des modifications en attente que le bot appliquera bientôt.",
+      "viewInDiscord": "Voir sur Discord",
+      "reroll": "Relancer les gagnants",
+      "rerolledCount": "{count, plural, one {# relancé} other {# relancés}}"
+    },
+    "dialog": {
+      "createTitle": "Créer un giveaway",
+      "editTitle": "Modifier le giveaway",
+      "description": "Configurez le message, la planification et les conditions.",
+      "create": "Créer le giveaway",
+      "saveChanges": "Enregistrer"
+    },
+    "form": {
+      "prize": "Récompense",
+      "prizePlaceholder": "Exemple : Gold Pass",
+      "channel": "Canal",
+      "channelPlaceholder": "Sélectionnez un canal",
+      "startTime": "Heure de début",
+      "startNow": "Démarrer immédiatement",
+      "endTime": "Heure de fin",
+      "winners": "Nombre de gagnants",
+      "mentions": "Rôles mentionnés",
+      "roleRequirements": "Rôles requis ou exclus",
+      "rolesMode": "Mode des rôles",
+      "rolesModeOptions": {
+        "none": "Aucune restriction",
+        "allow": "Seuls ces rôles peuvent participer",
+        "deny": "Ces rôles ne peuvent pas participer"
+      },
+      "rolesModeHelp": {
+        "none": "Tous les utilisateurs peuvent participer à ce giveaway.",
+        "allow": "Seuls les utilisateurs ayant l'un des rôles sélectionnés peuvent participer.",
+        "deny": "Les utilisateurs ayant l'un des rôles sélectionnés ne peuvent pas participer."
+      },
+      "textAboveEmbed": "Texte au-dessus de l'embed",
+      "textEmbedDefault": "Cliquez sur le bouton ci-dessous pour participer.",
+      "textEndDefault": "Félicitations au(x) gagnant(s) ! Nous vous contacterons prochainement.",
+      "textInEmbed": "Description de l'embed",
+      "textOnEnd": "Message à la fin du giveaway",
+      "image": "Image du giveaway",
+      "removeImage": "Retirer l'image actuelle",
+      "imagePreviewAlt": "Aperçu du giveaway",
+      "previewGiveaway": "Aperçu du giveaway",
+      "previewEnd": "Aperçu du message final",
+      "boosters": "Boosts de participation",
+      "addBooster": "Ajouter un boost",
+      "noBoosters": "Aucun boost configure.",
+      "boosterLabel": "Boost {index}",
+      "boostValue": "Multiplicateur",
+      "boostRoles": "Roles boostes",
+      "requirements": "Conditions de participation",
+      "profilePictureRequired": "Exiger une photo de profil Discord",
+      "cocAccountRequired": "Exiger un compte Clash of Clans lié"
+    },
+    "validation": {
+      "prizeRequired": "La récompense est obligatoire.",
+      "channelRequired": "Le canal est obligatoire.",
+      "startTimeRequired": "L'heure de début est obligatoire si le giveaway ne démarre pas immédiatement.",
+      "endTimeRequired": "L'heure de fin est obligatoire.",
+      "endAfterStart": "L'heure de fin doit être après l'heure de début.",
+      "imageTooLarge": "L'image doit faire moins de 8 Mo."
+    },
+    "preview": {
+      "liveSummary": "Résumé en direct",
+      "discordPreview": "Aperçu Discord",
+      "giveawayTitle": "Aperçu du giveaway",
+      "giveawayDescription": "Voici le rendu du message du giveaway en cours.",
+      "endTitle": "Aperçu du message final",
+      "endDescription": "Voici le message envoyé lorsque le giveaway se termine.",
+      "winnerCount": "Gagnants",
+      "winnerWord": "gagnant{count, plural, one {} other {s}}",
+      "mentionCount": "Rôles mentionnés",
+      "requirementCount": "Conditions",
+      "boosterCount": "Boosts",
+      "profileRequired": "Photo de profil requise",
+      "accountRequired": "Compte CoC lié requis",
+      "rolesAllow": "Participation limitée aux rôles sélectionnés",
+      "rolesDeny": "Rôles sélectionnés exclus",
+      "noChannel": "Aucun canal sélectionné",
+      "noPrize": "La récompense apparaîtra ici",
+      "noEmbedText": "Ajoutez le texte de l'embed pour prévisualiser le giveaway.",
+      "noEndText": "Ajoutez un message de fin pour les gagnants.",
+      "startsAt": "Débute : {date}",
+      "endsAt": "Se termine : {date}",
+      "endsOn": "Se termine le {date}",
+      "endsFooter": "Se termine",
+      "notScheduled": "Non planifié",
+      "schedule": "Planification",
+      "endMessage": "Message gagnant",
+      "endSummary": "{winners} gagnant{winners, plural, one {} other {s}} sera annoncé ici.",
+      "totalParticipants": "Participants au total : {count}",
+      "participate": "Participer",
+      "buttonHint": "Bouton d'action principal affiché sous le message Discord."
+    },
+    "toast": {
+      "errorTitle": "Une erreur est survenue",
+      "successTitle": "Succès",
+      "loadError": "Impossible de charger les giveaways.",
+      "saveError": "Impossible d'enregistrer le giveaway.",
+      "deleteError": "Impossible de supprimer le giveaway.",
+      "created": "Giveaway créé avec succès.",
+      "updated": "Giveaway mis à jour avec succès.",
+      "deleted": "Giveaway supprimé avec succès.",
+      "rerolled": "Gagnants relancés avec succès.",
+      "rerollError": "Impossible de relancer les gagnants."
+    },
+    "reroll": {
+      "title": "Relancer les gagnants",
+      "description": "Sélectionnez les gagnants à remplacer. De nouveaux gagnants seront tirés parmi les participants éligibles.",
+      "selectWinners": "Sélectionnez les gagnants à remplacer :",
+      "confirm": "Relancer {count, plural, one {# gagnant} other {# gagnants}}"
     }
   },
   "OverviewPage": {

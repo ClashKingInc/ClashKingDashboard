@@ -206,6 +206,10 @@
       "name": "Autoboards",
       "description": "Geautomatiseerde ranglijsten"
     },
+    "giveaways": {
+      "name": "Giveaways",
+      "description": "Beheer giveaways"
+    },
     "links": {
       "name": "Koppelingen",
       "description": "Speler-Discord koppeling"
@@ -2167,6 +2171,185 @@
       "createFailed": "Kon autoboard niet maken. Probeer het opnieuw.",
       "updateFailed": "Kon autoboard niet bijwerken. Probeer het opnieuw.",
       "deleteFailed": "Kon autoboard niet verwijderen. Probeer het opnieuw."
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Giveaways",
+    "description": "Maak, plan en beheer giveaways voor je server.",
+    "create": "Giveaway maken",
+    "listTitle": "Giveaway dashboard",
+    "listDescription": "Volg geplande, actieve en afgelopen giveaways op Ã©Ã©n plek.",
+    "empty": "Nog geen giveaways om weer te geven.",
+    "confirmDeleteTitle": "Giveaway verwijderen",
+    "confirmDelete": "Weet je zeker dat je deze giveaway wilt verwijderen?",
+    "discardTitle": "Wijzigingen verwerpen?",
+    "discardDescription": "Je hebt niet-opgeslagen wijzigingen. Als je nu sluit, gaan ze verloren.",
+    "discardConfirm": "Verwerpen",
+    "formTabs": {
+      "general": "Algemeen",
+      "messages": "Berichten",
+      "restrictions": "Beperkingen",
+      "advanced": "Geavanceerd"
+    },
+    "tabs": {
+      "ongoing": "Actief",
+      "upcoming": "Gepland",
+      "ended": "Afgelopen"
+    },
+    "stats": {
+      "total": "Totaal giveaways",
+      "totalEntries": "Totaal deelnames",
+      "ongoing": "Actieve giveaways",
+      "upcoming": "Geplande giveaways",
+      "ended": "Afgelopen giveaways"
+    },
+    "statsDescriptions": {
+      "total": "Alle giveaways die op deze server zijn ingesteld.",
+      "totalEntries": "Gecombineerde deelnames over alle giveaways.",
+      "ongoing": "Momenteel actief en open voor deelname.",
+      "upcoming": "Gepland om later te starten.",
+      "ended": "Giveaways die al zijn afgerond."
+    },
+    "emptyTab": {
+      "title": "Geen giveaways hier",
+      "ongoing": "Er zijn momenteel geen actieve giveaways.",
+      "upcoming": "Geen giveaways gepland. Maak er een om te beginnen.",
+      "ended": "Er zijn nog geen giveaways afgelopen."
+    },
+    "status": {
+      "scheduled": "Gepland",
+      "ongoing": "Live",
+      "ended": "Afgelopen"
+    },
+    "table": {
+      "giveaway": "Giveaway",
+      "channel": "Kanaal",
+      "entries": "Inzendingen",
+      "timing": "Timing",
+      "start": "Start",
+      "end": "Einde",
+      "winnersHeader": "Winnaars",
+      "winners": "{count} winnaar{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "noChannel": "Geen kanaal",
+      "noChannelHelp": "Geen kanaal toegewezen. Bewerk deze giveaway om dit te corrigeren.",
+      "endsAt": "Eindigt om",
+      "endedAt": "Geëindigd om",
+      "duplicate": "Dupliceren",
+      "showingEnded": "Toont {shown} van {total} beëindigde giveaways",
+      "showMore": "{count} meer tonen",
+      "pendingUpdate": "Update in behandeling",
+      "pendingUpdateHelp": "Deze giveaway heeft wijzigingen die de bot binnenkort zal toepassen.",
+      "viewInDiscord": "Bekijk op Discord",
+      "reroll": "Herrol winnaars",
+      "rerolledCount": "{count, plural, one {# hergerold} other {# hergerold}}"
+    },
+    "dialog": {
+      "createTitle": "Giveaway maken",
+      "editTitle": "Giveaway bewerken",
+      "description": "Stel het bericht, de planning en voorwaarden in.",
+      "create": "Giveaway maken",
+      "saveChanges": "Wijzigingen opslaan"
+    },
+    "form": {
+      "prize": "Prijs",
+      "prizePlaceholder": "Bijvoorbeeld: Gold Pass",
+      "channel": "Kanaal",
+      "channelPlaceholder": "Selecteer een kanaal",
+      "startTime": "Starttijd",
+      "startNow": "Direct starten",
+      "endTime": "Eindtijd",
+      "winners": "Aantal winnaars",
+      "mentions": "Vermelde rollen",
+      "roleRequirements": "Vereiste of uitgesloten rollen",
+      "rolesMode": "Rolmodus",
+      "rolesModeOptions": {
+        "none": "Geen rolbeperking",
+        "allow": "Alleen deze rollen mogen meedoen",
+        "deny": "Deze rollen mogen niet meedoen"
+      },
+      "rolesModeHelp": {
+        "none": "Alle gebruikers kunnen meedoen aan dit giveaway.",
+        "allow": "Alleen gebruikers met een van de geselecteerde rollen mogen meedoen.",
+        "deny": "Gebruikers met een van de geselecteerde rollen mogen niet meedoen."
+      },
+      "textAboveEmbed": "Tekst boven embed",
+      "textEmbedDefault": "Klik op de knop hieronder om deel te nemen.",
+      "textInEmbed":"Embedbeschrijving",
+      "textEndDefault": "Gefeliciteerd aan de winnaar(s)! We nemen binnenkort contact met je op.",
+      "textOnEnd": "Bericht bij einde giveaway",
+      "image": "Giveaway-afbeelding",
+      "removeImage": "Huidige afbeelding verwijderen",
+      "imagePreviewAlt": "Voorbeeld giveaway",
+      "previewGiveaway": "Giveaway preview",
+      "previewEnd": "Eindbericht preview",
+      "boosters": "Deelnameboosters",
+      "addBooster": "Booster toevoegen",
+      "noBoosters": "Geen boosters ingesteld.",
+      "boosterLabel": "Booster {index}",
+      "boostValue": "Multiplier",
+      "boostRoles": "Boostrollen",
+      "requirements": "Deelnamevoorwaarden",
+      "profilePictureRequired": "Discord profielfoto verplicht",
+      "cocAccountRequired": "Gekoppeld Clash of Clans-account verplicht"
+    },
+    "validation": {
+      "prizeRequired": "Prijs is verplicht.",
+      "channelRequired": "Kanaal is verplicht.",
+      "startTimeRequired": "Starttijd is verplicht tenzij de giveaway direct start.",
+      "endTimeRequired": "Eindtijd is verplicht.",
+      "endAfterStart": "Eindtijd moet na de starttijd liggen.",
+      "imageTooLarge": "Afbeelding mag maximaal 8 MB zijn."
+    },
+    "preview": {
+      "liveSummary": "Live samenvatting",
+      "discordPreview": "Discord preview",
+      "giveawayTitle": "Giveaway preview",
+      "giveawayDescription": "Zo ziet het actieve giveawaybericht eruit.",
+      "endTitle": "Preview eindbericht",
+      "endDescription": "Dit bericht wordt verstuurd wanneer de giveaway eindigt.",
+      "winnerCount": "Winnaars",
+      "winnerWord": "winnaar{count, plural, one {} other {s}}",
+      "mentionCount": "Vermelde rollen",
+      "requirementCount": "Voorwaarden",
+      "boosterCount": "Boosters",
+      "profileRequired": "Profielfoto verplicht",
+      "accountRequired": "Gekoppeld CoC-account verplicht",
+      "rolesAllow": "Alleen geselecteerde rollen toegestaan",
+      "rolesDeny": "Geselecteerde rollen uitgesloten",
+      "noChannel": "Nog geen kanaal geselecteerd",
+      "noPrize": "Je prijs verschijnt hier",
+      "noEmbedText": "Voeg embedtekst toe om de giveaway body te previewen.",
+      "noEndText": "Voeg een afsluitend bericht toe voor de winnaars.",
+      "startsAt": "Start: {date}",
+      "endsAt": "Einde: {date}",
+      "endsOn": "Eindigt op {date}",
+      "endsFooter": "Eindigt",
+      "notScheduled": "Niet ingepland",
+      "schedule": "Planning",
+      "endMessage": "Winnaarsbericht",
+      "endSummary": "{winners} winnaar{winners, plural, one {} other {s}} wordt hier aangekondigd.",
+      "totalParticipants": "Totaal deelnemers: {count}",
+      "participate": "Deelnemen",
+      "buttonHint": "Primaire actieknop onder het Discord-bericht."
+    },
+    "toast": {
+      "errorTitle": "Er ging iets mis",
+      "successTitle": "Gelukt",
+      "loadError": "Giveaways laden mislukt.",
+      "saveError": "Giveaway opslaan mislukt.",
+      "deleteError": "Giveaway verwijderen mislukt.",
+      "created": "Giveaway succesvol gemaakt.",
+      "updated": "Giveaway succesvol bijgewerkt.",
+      "deleted": "Giveaway succesvol verwijderd.",
+      "rerolled": "Winnaars succesvol hergerold.",
+      "rerollError": "Herrol van winnaars mislukt."
+    },
+    "reroll": {
+      "title": "Herrol winnaars",
+      "description": "Selecteer de winnaars die je wilt vervangen. Nieuwe winnaars worden getrokken uit deelnemers.",
+      "selectWinners": "Selecteer winnaars om te vervangen:",
+      "confirm": "{count, plural, one {# winnaar} other {# winnaars}} herrol"
     }
   },
   "OverviewPage": {
