@@ -2177,7 +2177,17 @@
     "listTitle": "Giveaway dashboard",
     "listDescription": "Track scheduled, live and finished giveaways from one place.",
     "empty": "No giveaways to display yet.",
+    "confirmDeleteTitle": "Delete Giveaway",
     "confirmDelete": "Are you sure you want to delete this giveaway?",
+    "discardTitle": "Discard changes?",
+    "discardDescription": "You have unsaved changes. If you close now, your changes will be lost.",
+    "discardConfirm": "Discard",
+    "formTabs": {
+      "general": "General",
+      "messages": "Messages",
+      "restrictions": "Restrictions",
+      "advanced": "Advanced"
+    },
     "tabs": {
       "ongoing": "Ongoing",
       "upcoming": "Upcoming",
@@ -2185,15 +2195,23 @@
     },
     "stats": {
       "total": "Total giveaways",
+      "totalEntries": "Total entries",
       "ongoing": "Ongoing giveaways",
       "upcoming": "Upcoming giveaways",
       "ended": "Ended giveaways"
     },
     "statsDescriptions": {
       "total": "All giveaways configured on this server.",
+      "totalEntries": "Combined entries across all giveaways.",
       "ongoing": "Currently active and accepting entries.",
       "upcoming": "Scheduled to start later.",
       "ended": "Already completed giveaways."
+    },
+    "emptyTab": {
+      "title": "No giveaways here",
+      "ongoing": "No giveaways are currently running.",
+      "upcoming": "No giveaways are scheduled. Create one to get started.",
+      "ended": "No giveaways have ended yet."
     },
     "status": {
       "scheduled": "Scheduled",
@@ -2204,10 +2222,24 @@
       "giveaway": "Giveaway",
       "channel": "Channel",
       "entries": "Entries",
+      "timing": "Timing",
       "start": "Starts",
       "end": "Ends",
+      "winnersHeader": "Winners",
       "winners": "{count} winner{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}"
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "noChannel": "No channel",
+      "noChannelHelp": "No channel assigned. Edit this giveaway to fix it.",
+      "endsAt": "Ends at",
+      "endedAt": "Ended at",
+      "duplicate": "Duplicate",
+      "showingEnded": "Showing {shown} of {total} ended giveaways",
+      "showMore": "Show {count} more",
+      "pendingUpdate": "Pending update",
+      "pendingUpdateHelp": "This giveaway has pending changes the bot will apply shortly.",
+      "viewInDiscord": "View in Discord",
+      "reroll": "Reroll winners",
+      "rerolledCount": "{count, plural, one {# rerolled} other {# rerolled}}"
     },
     "dialog": {
       "createTitle": "Create giveaway",
@@ -2233,8 +2265,15 @@
         "allow": "Only these roles can enter",
         "deny": "These roles cannot enter"
       },
+      "rolesModeHelp": {
+        "none": "All users can enter this giveaway.",
+        "allow": "Only users with one of the selected roles can enter.",
+        "deny": "Users with any of the selected roles cannot enter."
+      },
       "textAboveEmbed": "Text above embed",
+      "textEmbedDefault": "Click the button below to participate.",
       "textInEmbed": "Embed description",
+      "textEndDefault": "Congratulations to the winner(s)! We will contact you shortly.",
       "textOnEnd": "Message on giveaway end",
       "image": "Giveaway image",
       "removeImage": "Remove current image",
@@ -2256,7 +2295,8 @@
       "channelRequired": "Channel is required.",
       "startTimeRequired": "Start time is required unless the giveaway starts now.",
       "endTimeRequired": "End time is required.",
-      "endAfterStart": "End time must be after the start time."
+      "endAfterStart": "End time must be after the start time.",
+      "imageTooLarge": "Image must be under 8 MB."
     },
     "preview": {
       "liveSummary": "Live summary",
@@ -2298,7 +2338,15 @@
       "deleteError": "Failed to delete the giveaway.",
       "created": "Giveaway created successfully.",
       "updated": "Giveaway updated successfully.",
-      "deleted": "Giveaway deleted successfully."
+      "deleted": "Giveaway deleted successfully.",
+      "rerolled": "Winners rerolled successfully.",
+      "rerollError": "Failed to reroll winners."
+    },
+    "reroll": {
+      "title": "Reroll winners",
+      "description": "Select the winners to replace. New winners will be drawn from eligible participants.",
+      "selectWinners": "Select winners to replace:",
+      "confirm": "Reroll {count, plural, one {# winner} other {# winners}}"
     }
   },
   "OverviewPage": {

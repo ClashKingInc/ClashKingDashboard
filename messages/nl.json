@@ -2180,7 +2180,17 @@
     "listTitle": "Giveaway dashboard",
     "listDescription": "Volg geplande, actieve en afgelopen giveaways op Ã©Ã©n plek.",
     "empty": "Nog geen giveaways om weer te geven.",
+    "confirmDeleteTitle": "Giveaway verwijderen",
     "confirmDelete": "Weet je zeker dat je deze giveaway wilt verwijderen?",
+    "discardTitle": "Wijzigingen verwerpen?",
+    "discardDescription": "Je hebt niet-opgeslagen wijzigingen. Als je nu sluit, gaan ze verloren.",
+    "discardConfirm": "Verwerpen",
+    "formTabs": {
+      "general": "Algemeen",
+      "messages": "Berichten",
+      "restrictions": "Beperkingen",
+      "advanced": "Geavanceerd"
+    },
     "tabs": {
       "ongoing": "Actief",
       "upcoming": "Gepland",
@@ -2188,15 +2198,23 @@
     },
     "stats": {
       "total": "Totaal giveaways",
+      "totalEntries": "Totaal deelnames",
       "ongoing": "Actieve giveaways",
       "upcoming": "Geplande giveaways",
       "ended": "Afgelopen giveaways"
     },
     "statsDescriptions": {
       "total": "Alle giveaways die op deze server zijn ingesteld.",
+      "totalEntries": "Gecombineerde deelnames over alle giveaways.",
       "ongoing": "Momenteel actief en open voor deelname.",
       "upcoming": "Gepland om later te starten.",
       "ended": "Giveaways die al zijn afgerond."
+    },
+    "emptyTab": {
+      "title": "Geen giveaways hier",
+      "ongoing": "Er zijn momenteel geen actieve giveaways.",
+      "upcoming": "Geen giveaways gepland. Maak er een om te beginnen.",
+      "ended": "Er zijn nog geen giveaways afgelopen."
     },
     "status": {
       "scheduled": "Gepland",
@@ -2207,10 +2225,24 @@
       "giveaway": "Giveaway",
       "channel": "Kanaal",
       "entries": "Inzendingen",
+      "timing": "Timing",
       "start": "Start",
       "end": "Einde",
+      "winnersHeader": "Winnaars",
       "winners": "{count} winnaar{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}"
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "noChannel": "Geen kanaal",
+      "noChannelHelp": "Geen kanaal toegewezen. Bewerk deze giveaway om dit te corrigeren.",
+      "endsAt": "Eindigt om",
+      "endedAt": "Geëindigd om",
+      "duplicate": "Dupliceren",
+      "showingEnded": "Toont {shown} van {total} beëindigde giveaways",
+      "showMore": "{count} meer tonen",
+      "pendingUpdate": "Update in behandeling",
+      "pendingUpdateHelp": "Deze giveaway heeft wijzigingen die de bot binnenkort zal toepassen.",
+      "viewInDiscord": "Bekijk op Discord",
+      "reroll": "Herrol winnaars",
+      "rerolledCount": "{count, plural, one {# hergerold} other {# hergerold}}"
     },
     "dialog": {
       "createTitle": "Giveaway maken",
@@ -2236,8 +2268,15 @@
         "allow": "Alleen deze rollen mogen meedoen",
         "deny": "Deze rollen mogen niet meedoen"
       },
+      "rolesModeHelp": {
+        "none": "Alle gebruikers kunnen meedoen aan dit giveaway.",
+        "allow": "Alleen gebruikers met een van de geselecteerde rollen mogen meedoen.",
+        "deny": "Gebruikers met een van de geselecteerde rollen mogen niet meedoen."
+      },
       "textAboveEmbed": "Tekst boven embed",
-      "textInEmbed": "Embedbeschrijving",
+      "textEmbedDefault": "Klik op de knop hieronder om deel te nemen.",
+      "textInEmbed":"Embedbeschrijving",
+      "textEndDefault": "Gefeliciteerd aan de winnaar(s)! We nemen binnenkort contact met je op.",
       "textOnEnd": "Bericht bij einde giveaway",
       "image": "Giveaway-afbeelding",
       "removeImage": "Huidige afbeelding verwijderen",
@@ -2259,7 +2298,8 @@
       "channelRequired": "Kanaal is verplicht.",
       "startTimeRequired": "Starttijd is verplicht tenzij de giveaway direct start.",
       "endTimeRequired": "Eindtijd is verplicht.",
-      "endAfterStart": "Eindtijd moet na de starttijd liggen."
+      "endAfterStart": "Eindtijd moet na de starttijd liggen.",
+      "imageTooLarge": "Afbeelding mag maximaal 8 MB zijn."
     },
     "preview": {
       "liveSummary": "Live samenvatting",
@@ -2301,7 +2341,15 @@
       "deleteError": "Giveaway verwijderen mislukt.",
       "created": "Giveaway succesvol gemaakt.",
       "updated": "Giveaway succesvol bijgewerkt.",
-      "deleted": "Giveaway succesvol verwijderd."
+      "deleted": "Giveaway succesvol verwijderd.",
+      "rerolled": "Winnaars succesvol hergerold.",
+      "rerollError": "Herrol van winnaars mislukt."
+    },
+    "reroll": {
+      "title": "Herrol winnaars",
+      "description": "Selecteer de winnaars die je wilt vervangen. Nieuwe winnaars worden getrokken uit deelnemers.",
+      "selectWinners": "Selecteer winnaars om te vervangen:",
+      "confirm": "{count, plural, one {# winnaar} other {# winnaars}} herrol"
     }
   },
   "OverviewPage": {
