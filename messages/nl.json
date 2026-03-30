@@ -206,6 +206,10 @@
       "name": "Autoboards",
       "description": "Geautomatiseerde ranglijsten"
     },
+    "giveaways": {
+      "name": "Giveaways",
+      "description": "Beheer giveaways"
+    },
     "links": {
       "name": "Koppelingen",
       "description": "Speler-Discord koppeling"
@@ -2167,6 +2171,137 @@
       "createFailed": "Kon autoboard niet maken. Probeer het opnieuw.",
       "updateFailed": "Kon autoboard niet bijwerken. Probeer het opnieuw.",
       "deleteFailed": "Kon autoboard niet verwijderen. Probeer het opnieuw."
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Giveaways",
+    "description": "Maak, plan en beheer giveaways voor je server.",
+    "create": "Giveaway maken",
+    "listTitle": "Giveaway dashboard",
+    "listDescription": "Volg geplande, actieve en afgelopen giveaways op Ã©Ã©n plek.",
+    "empty": "Nog geen giveaways om weer te geven.",
+    "confirmDelete": "Weet je zeker dat je deze giveaway wilt verwijderen?",
+    "tabs": {
+      "ongoing": "Actief",
+      "upcoming": "Gepland",
+      "ended": "Afgelopen"
+    },
+    "stats": {
+      "total": "Totaal giveaways",
+      "ongoing": "Actieve giveaways",
+      "upcoming": "Geplande giveaways",
+      "ended": "Afgelopen giveaways"
+    },
+    "statsDescriptions": {
+      "total": "Alle giveaways die op deze server zijn ingesteld.",
+      "ongoing": "Momenteel actief en open voor deelname.",
+      "upcoming": "Gepland om later te starten.",
+      "ended": "Giveaways die al zijn afgerond."
+    },
+    "status": {
+      "scheduled": "Gepland",
+      "ongoing": "Live",
+      "ended": "Afgelopen"
+    },
+    "table": {
+      "giveaway": "Giveaway",
+      "channel": "Kanaal",
+      "entries": "Inzendingen",
+      "start": "Start",
+      "end": "Einde",
+      "winners": "{count} winnaar{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}"
+    },
+    "dialog": {
+      "createTitle": "Giveaway maken",
+      "editTitle": "Giveaway bewerken",
+      "description": "Stel het bericht, de planning en voorwaarden in.",
+      "create": "Giveaway maken",
+      "saveChanges": "Wijzigingen opslaan"
+    },
+    "form": {
+      "prize": "Prijs",
+      "prizePlaceholder": "Bijvoorbeeld: Gold Pass",
+      "channel": "Kanaal",
+      "channelPlaceholder": "Selecteer een kanaal",
+      "startTime": "Starttijd",
+      "startNow": "Direct starten",
+      "endTime": "Eindtijd",
+      "winners": "Aantal winnaars",
+      "mentions": "Vermelde rollen",
+      "roleRequirements": "Vereiste of uitgesloten rollen",
+      "rolesMode": "Rolmodus",
+      "rolesModeOptions": {
+        "none": "Geen rolbeperking",
+        "allow": "Alleen deze rollen mogen meedoen",
+        "deny": "Deze rollen mogen niet meedoen"
+      },
+      "textAboveEmbed": "Tekst boven embed",
+      "textInEmbed": "Embedbeschrijving",
+      "textOnEnd": "Bericht bij einde giveaway",
+      "image": "Giveaway-afbeelding",
+      "removeImage": "Huidige afbeelding verwijderen",
+      "imagePreviewAlt": "Voorbeeld giveaway",
+      "previewGiveaway": "Giveaway preview",
+      "previewEnd": "Eindbericht preview",
+      "boosters": "Deelnameboosters",
+      "addBooster": "Booster toevoegen",
+      "noBoosters": "Geen boosters ingesteld.",
+      "boosterLabel": "Booster {index}",
+      "boostValue": "Multiplier",
+      "boostRoles": "Boostrollen",
+      "requirements": "Deelnamevoorwaarden",
+      "profilePictureRequired": "Discord profielfoto verplicht",
+      "cocAccountRequired": "Gekoppeld Clash of Clans-account verplicht"
+    },
+    "validation": {
+      "prizeRequired": "Prijs is verplicht.",
+      "channelRequired": "Kanaal is verplicht.",
+      "startTimeRequired": "Starttijd is verplicht tenzij de giveaway direct start.",
+      "endTimeRequired": "Eindtijd is verplicht.",
+      "endAfterStart": "Eindtijd moet na de starttijd liggen."
+    },
+    "preview": {
+      "liveSummary": "Live samenvatting",
+      "discordPreview": "Discord preview",
+      "giveawayTitle": "Giveaway preview",
+      "giveawayDescription": "Zo ziet het actieve giveawaybericht eruit.",
+      "endTitle": "Preview eindbericht",
+      "endDescription": "Dit bericht wordt verstuurd wanneer de giveaway eindigt.",
+      "winnerCount": "Winnaars",
+      "winnerWord": "winnaar{count, plural, one {} other {s}}",
+      "mentionCount": "Vermelde rollen",
+      "requirementCount": "Voorwaarden",
+      "boosterCount": "Boosters",
+      "profileRequired": "Profielfoto verplicht",
+      "accountRequired": "Gekoppeld CoC-account verplicht",
+      "rolesAllow": "Alleen geselecteerde rollen toegestaan",
+      "rolesDeny": "Geselecteerde rollen uitgesloten",
+      "noChannel": "Nog geen kanaal geselecteerd",
+      "noPrize": "Je prijs verschijnt hier",
+      "noEmbedText": "Voeg embedtekst toe om de giveaway body te previewen.",
+      "noEndText": "Voeg een afsluitend bericht toe voor de winnaars.",
+      "startsAt": "Start: {date}",
+      "endsAt": "Einde: {date}",
+      "endsOn": "Eindigt op {date}",
+      "endsFooter": "Eindigt",
+      "notScheduled": "Niet ingepland",
+      "schedule": "Planning",
+      "endMessage": "Winnaarsbericht",
+      "endSummary": "{winners} winnaar{winners, plural, one {} other {s}} wordt hier aangekondigd.",
+      "totalParticipants": "Totaal deelnemers: {count}",
+      "participate": "Deelnemen",
+      "buttonHint": "Primaire actieknop onder het Discord-bericht."
+    },
+    "toast": {
+      "errorTitle": "Er ging iets mis",
+      "successTitle": "Gelukt",
+      "loadError": "Giveaways laden mislukt.",
+      "saveError": "Giveaway opslaan mislukt.",
+      "deleteError": "Giveaway verwijderen mislukt.",
+      "created": "Giveaway succesvol gemaakt.",
+      "updated": "Giveaway succesvol bijgewerkt.",
+      "deleted": "Giveaway succesvol verwijderd."
     }
   },
   "OverviewPage": {

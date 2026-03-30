@@ -206,6 +206,10 @@
       "name": "Tableaux Auto",
       "description": "Classements automatisés"
     },
+    "giveaways": {
+      "name": "Giveaways",
+      "description": "Gestion des giveaways"
+    },
     "links": {
       "name": "Liens",
       "description": "Liaison Joueur-Discord"
@@ -2187,6 +2191,137 @@
       "createFailed": "Échec de la création du tableau automatique. Veuillez réessayer.",
       "updateFailed": "Échec de la mise à jour du tableau automatique. Veuillez réessayer.",
       "deleteFailed": "Échec de la suppression du tableau automatique. Veuillez réessayer."
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Giveaways",
+    "description": "CrÃ©ez, planifiez et gÃ©rez les giveaways de votre serveur.",
+    "create": "CrÃ©er un giveaway",
+    "listTitle": "Dashboard giveaways",
+    "listDescription": "Suivez les giveaways planifiÃ©s, en cours et terminÃ©s au mÃªme endroit.",
+    "empty": "Aucun giveaway Ã  afficher pour le moment.",
+    "confirmDelete": "Voulez-vous vraiment supprimer ce giveaway ?",
+    "tabs": {
+      "ongoing": "En cours",
+      "upcoming": "Ã€ venir",
+      "ended": "TerminÃ©s"
+    },
+    "stats": {
+      "total": "Giveaways au total",
+      "ongoing": "Giveaways en cours",
+      "upcoming": "Giveaways Ã  venir",
+      "ended": "Giveaways terminÃ©s"
+    },
+    "statsDescriptions": {
+      "total": "Tous les giveaways configurÃƒÂ©s sur ce serveur.",
+      "ongoing": "Actuellement actifs et ouverts aux participations.",
+      "upcoming": "PlanifiÃƒÂ©s pour plus tard.",
+      "ended": "Giveaways dÃƒÂ©jÃƒÂ  terminÃƒÂ©s."
+    },
+    "status": {
+      "scheduled": "PlanifiÃ©",
+      "ongoing": "En ligne",
+      "ended": "TerminÃ©"
+    },
+    "table": {
+      "giveaway": "Giveaway",
+      "channel": "Canal",
+      "entries": "Participations",
+      "start": "DÃ©but",
+      "end": "Fin",
+      "winners": "{count} gagnant{count, plural, one {} other {s}}",
+      "boosters": "{count} boost{count, plural, one {} other {s}}"
+    },
+    "dialog": {
+      "createTitle": "CrÃ©er un giveaway",
+      "editTitle": "Modifier le giveaway",
+      "description": "Configurez le message, la planification et les conditions.",
+      "create": "CrÃ©er le giveaway",
+      "saveChanges": "Enregistrer"
+    },
+    "form": {
+      "prize": "RÃ©compense",
+      "prizePlaceholder": "Exemple : Gold Pass",
+      "channel": "Canal",
+      "channelPlaceholder": "SÃ©lectionnez un canal",
+      "startTime": "Heure de dÃ©but",
+      "startNow": "DÃ©marrer immÃ©diatement",
+      "endTime": "Heure de fin",
+      "winners": "Nombre de gagnants",
+      "mentions": "RÃ´les mentionnÃ©s",
+      "roleRequirements": "RÃ´les requis ou exclus",
+      "rolesMode": "Mode des rÃ´les",
+      "rolesModeOptions": {
+        "none": "Aucune restriction",
+        "allow": "Seuls ces rÃ´les peuvent participer",
+        "deny": "Ces rÃ´les ne peuvent pas participer"
+      },
+      "textAboveEmbed": "Texte au-dessus de l'embed",
+      "textInEmbed": "Description de l'embed",
+      "textOnEnd": "Message Ã  la fin du giveaway",
+      "image": "Image du giveaway",
+      "removeImage": "Retirer l'image actuelle",
+      "imagePreviewAlt": "AperÃ§u du giveaway",
+      "previewGiveaway": "AperÃ§u du giveaway",
+      "previewEnd": "AperÃ§u du message final",
+      "boosters": "Boosts de participation",
+      "addBooster": "Ajouter un boost",
+      "noBoosters": "Aucun boost configure.",
+      "boosterLabel": "Boost {index}",
+      "boostValue": "Multiplicateur",
+      "boostRoles": "Roles boostes",
+      "requirements": "Conditions de participation",
+      "profilePictureRequired": "Exiger une photo de profil Discord",
+      "cocAccountRequired": "Exiger un compte Clash of Clans liÃ©"
+    },
+    "validation": {
+      "prizeRequired": "La rÃ©compense est obligatoire.",
+      "channelRequired": "Le canal est obligatoire.",
+      "startTimeRequired": "L'heure de dÃ©but est obligatoire si le giveaway ne dÃ©marre pas immÃ©diatement.",
+      "endTimeRequired": "L'heure de fin est obligatoire.",
+      "endAfterStart": "L'heure de fin doit Ãªtre aprÃ¨s l'heure de dÃ©but."
+    },
+    "preview": {
+      "liveSummary": "RÃ©sumÃ© en direct",
+      "discordPreview": "AperÃ§u Discord",
+      "giveawayTitle": "AperÃ§u du giveaway",
+      "giveawayDescription": "Voici le rendu du message du giveaway en cours.",
+      "endTitle": "AperÃ§u du message final",
+      "endDescription": "Voici le message envoyÃ© lorsque le giveaway se termine.",
+      "winnerCount": "Gagnants",
+      "winnerWord": "gagnant{count, plural, one {} other {s}}",
+      "mentionCount": "RÃ´les mentionnÃ©s",
+      "requirementCount": "Conditions",
+      "boosterCount": "Boosts",
+      "profileRequired": "Photo de profil requise",
+      "accountRequired": "Compte CoC liÃ© requis",
+      "rolesAllow": "Participation limitÃ©e aux rÃ´les sÃ©lectionnÃ©s",
+      "rolesDeny": "RÃ´les sÃ©lectionnÃ©s exclus",
+      "noChannel": "Aucun canal sÃ©lectionnÃ©",
+      "noPrize": "La rÃ©compense apparaÃ®tra ici",
+      "noEmbedText": "Ajoutez le texte de l'embed pour prÃ©visualiser le giveaway.",
+      "noEndText": "Ajoutez un message de fin pour les gagnants.",
+      "startsAt": "DÃ©bute : {date}",
+      "endsAt": "Se termine : {date}",
+      "endsOn": "Se termine le {date}",
+      "endsFooter": "Se termine",
+      "notScheduled": "Non planifiÃ©",
+      "schedule": "Planification",
+      "endMessage": "Message gagnant",
+      "endSummary": "{winners} gagnant{winners, plural, one {} other {s}} sera annoncÃ© ici.",
+      "totalParticipants": "Participants au total : {count}",
+      "participate": "Participer",
+      "buttonHint": "Bouton d'action principal affichÃ© sous le message Discord."
+    },
+    "toast": {
+      "errorTitle": "Une erreur est survenue",
+      "successTitle": "SuccÃ¨s",
+      "loadError": "Impossible de charger les giveaways.",
+      "saveError": "Impossible d'enregistrer le giveaway.",
+      "deleteError": "Impossible de supprimer le giveaway.",
+      "created": "Giveaway crÃ©Ã© avec succÃ¨s.",
+      "updated": "Giveaway mis Ã  jour avec succÃ¨s.",
+      "deleted": "Giveaway supprimÃ© avec succÃ¨s."
     }
   },
   "OverviewPage": {
