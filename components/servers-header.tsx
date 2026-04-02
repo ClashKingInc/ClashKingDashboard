@@ -177,6 +177,7 @@ export function ServersHeader() {
               width={100}
               height={100}
               className="h-7 w-auto"
+              priority
             />
           </Link>
 

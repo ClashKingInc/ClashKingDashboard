@@ -33,6 +33,17 @@ export class BaseApiClient {
       token = localStorage.getItem('access_token') || undefined;
     }
 
+    // If no access token but refresh token exists, try to refresh proactively
+    if (!token && !_isRetry && typeof window !== 'undefined' && !endpoint.startsWith('/v2/auth/')) {
+      const hasRefresh = !!localStorage.getItem('refresh_token');
+      if (hasRefresh) {
+        const refreshed = await this._tryRefreshToken();
+        if (refreshed) {
+          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
+        }
+      }
+    }
+
     if (token && !headers.has('Authorization')) {
       headers.set('Authorization', `Bearer ${token}`);
     }
@@ -46,9 +57,9 @@ export class BaseApiClient {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        // Attempt token refresh on 401, but only once and not for auth endpoints
+        // Attempt token refresh on 401 or 403 (missing/expired token), but only once and not for auth endpoints
         if (
-          response.status === 401 &&
+          (response.status === 401 || response.status === 403) &&
           !_isRetry &&
           !endpoint.startsWith('/v2/auth/') &&
           typeof window !== 'undefined'
@@ -96,6 +107,16 @@ export class BaseApiClient {
       token = localStorage.getItem('access_token') || undefined;
     }
 
+    if (!token && !_isRetry && typeof window !== 'undefined') {
+      const hasRefresh = !!localStorage.getItem('refresh_token');
+      if (hasRefresh) {
+        const refreshed = await this._tryRefreshToken();
+        if (refreshed) {
+          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
+        }
+      }
+    }
+
     // Do NOT set Content-Type — browser sets it with the correct multipart boundary
     const headers: Record<string, string> = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -106,7 +127,7 @@ export class BaseApiClient {
 
       if (!response.ok) {
         if (
-          response.status === 401 &&
+          (response.status === 401 || response.status === 403) &&
           !_isRetry &&
           typeof window !== 'undefined'
         ) {

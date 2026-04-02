@@ -25,6 +25,8 @@ import {
   Moon,
   Computer,
   UserCog,
+  TicketIcon,
+  FileText,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -186,6 +188,16 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
           nameKey: "giveaways.name",
           href: `/dashboard/${guildId}/giveaways`,
           icon: Gift,
+        },
+        {
+          nameKey: "tickets.name",
+          href: `/dashboard/${guildId}/tickets`,
+          icon: TicketIcon,
+        },
+        {
+          nameKey: "embeds.name",
+          href: `/dashboard/${guildId}/embeds`,
+          icon: FileText,
         },
       ],
     },

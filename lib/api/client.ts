@@ -15,6 +15,7 @@ import { UtilityClient } from './clients/utility-client';
 import { RolesClient } from './clients/roles-client';
 import { FamilyRolesClient } from './clients/family-roles-client';
 import { LeaderboardClient } from './clients/leaderboard-client';
+import { TicketsClient } from './clients/tickets-client';
 
 /**
  * Main API client with all endpoints organized by domain
@@ -31,6 +32,7 @@ export class ClashKingApiClient {
   public readonly roles: RolesClient;
   public readonly familyRoles: FamilyRolesClient;
   public readonly leaderboards: LeaderboardClient;
+  public readonly tickets: TicketsClient;
 
   constructor(config: ApiConfig) {
     // Initialize all specialized clients with the same config
@@ -45,6 +47,7 @@ export class ClashKingApiClient {
     this.roles = new RolesClient(config);
     this.familyRoles = new FamilyRolesClient(config);
     this.leaderboards = new LeaderboardClient(config);
+    this.tickets = new TicketsClient(config);
   }
 
   /**
@@ -62,6 +65,7 @@ export class ClashKingApiClient {
     this.roles.setAccessToken(token);
     this.familyRoles.setAccessToken(token);
     this.leaderboards.setAccessToken(token);
+    this.tickets.setAccessToken(token);
   }
 
   /**
@@ -79,6 +83,7 @@ export class ClashKingApiClient {
     this.roles.setRefreshToken(token);
     this.familyRoles.setRefreshToken(token);
     this.leaderboards.setRefreshToken(token);
+    this.tickets.setRefreshToken(token);
   }
 
   /**
@@ -96,6 +101,7 @@ export class ClashKingApiClient {
     this.roles.clearTokens();
     this.familyRoles.clearTokens();
     this.leaderboards.clearTokens();
+    this.tickets.clearTokens();
   }
 
   /**
