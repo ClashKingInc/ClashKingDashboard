@@ -1,10 +1,13 @@
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse } from '../types/common';
 import type {
+  CreateButtonRequest,
+  CreatePanelRequest,
   OpenTicketsResponse,
   ServerEmbedsResponse,
   TicketPanelsResponse,
   UpdateApproveMessagesRequest,
+  UpdateButtonAppearanceRequest,
   UpdateButtonSettingsRequest,
   UpdateOpenTicketClanRequest,
   UpdateOpenTicketStatusRequest,
@@ -15,6 +18,59 @@ import type {
 export class TicketsClient extends BaseApiClient {
   async getPanels(serverId: string | number): Promise<ApiResponse<TicketPanelsResponse>> {
     return this.request(`/v2/server/${serverId}/tickets`, { method: 'GET' });
+  }
+
+  async createPanel(
+    serverId: string | number,
+    data: CreatePanelRequest,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.request(`/v2/server/${serverId}/tickets`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deletePanel(
+    serverId: string | number,
+    panelName: string,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.request(`/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async createButton(
+    serverId: string | number,
+    panelName: string,
+    data: CreateButtonRequest,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.request(
+      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/buttons`,
+      { method: 'POST', body: JSON.stringify(data) },
+    );
+  }
+
+  async deleteButton(
+    serverId: string | number,
+    panelName: string,
+    customId: string,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.request(
+      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/buttons/${encodeURIComponent(customId)}`,
+      { method: 'DELETE' },
+    );
+  }
+
+  async updateButtonAppearance(
+    serverId: string | number,
+    panelName: string,
+    customId: string,
+    data: UpdateButtonAppearanceRequest,
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.request(
+      `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/buttons/${encodeURIComponent(customId)}`,
+      { method: 'PATCH', body: JSON.stringify(data) },
+    );
   }
 
   async updatePanel(

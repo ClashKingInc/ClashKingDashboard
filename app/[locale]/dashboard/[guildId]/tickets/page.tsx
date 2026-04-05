@@ -728,7 +728,7 @@ const BUTTON_STYLE_COLOR: Record<number, string> = {
 };
 
 function ButtonCard({
-  customId, label, style, settings, panelName, guildId, roles, availableEmbeds,
+  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, onDeleted, onAppearanceUpdated,
 }: {
   customId: string;
   label: string;
@@ -738,12 +738,51 @@ function ButtonCard({
   guildId: string;
   roles: DiscordRole[];
   availableEmbeds: string[];
+  onDeleted: () => void;
+  onAppearanceUpdated: (label: string, style: number) => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   const [expanded, setExpanded] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [editAppearanceOpen, setEditAppearanceOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [editLabel, setEditLabel] = useState(label);
+  const [editStyle, setEditStyle] = useState(style);
+  const [isSavingAppearance, setIsSavingAppearance] = useState(false);
+
+  const handleDeleteButton = async () => {
+    setIsDeleting(true);
+    try {
+      const res = await apiClient.tickets.deleteButton(guildId, panelName, customId);
+      if (res.error) throw new Error(res.error);
+      toast({ title: tCommon("success"), description: t("buttonDeleted") });
+      onDeleted();
+    } catch (err) {
+      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+    } finally {
+      setIsDeleting(false);
+      setConfirmDeleteOpen(false);
+    }
+  };
+
+  const handleSaveAppearance = async () => {
+    if (!editLabel.trim()) return;
+    setIsSavingAppearance(true);
+    try {
+      const res = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, { label: editLabel, style: editStyle });
+      if (res.error) throw new Error(res.error);
+      toast({ title: tCommon("success"), description: t("buttonAppearanceSaved") });
+      onAppearanceUpdated(editLabel, editStyle);
+      setEditAppearanceOpen(false);
+    } catch (err) {
+      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+    } finally {
+      setIsSavingAppearance(false);
+    }
+  };
   const [form, setForm] = useState<UpdateButtonSettingsRequest>({
     questions: [...settings.questions, "", "", "", "", ""].slice(0, 5),
     mod_role: [...settings.mod_role],
@@ -826,18 +865,83 @@ function ButtonCard({
 
   const roleOptions = roles.filter((r) => r.name !== "@everyone");
 
+  const STYLE_COLORS: Record<number, string> = { 1: "bg-[#5865F2]", 2: "bg-[#4f545c]", 3: "bg-[#57F287]", 4: "bg-[#ED4245]" };
+
   return (
-    <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
-      <button className="flex w-full flex-wrap items-center gap-3 p-4 text-left transition-colors hover:bg-muted/20" onClick={() => setExpanded((v) => !v)}>
-        <span className={`h-3 w-3 rounded-sm shrink-0 ${BUTTON_STYLE_COLOR[style] ?? "bg-muted"}`} />
-        <span className="min-w-0 flex-1 font-medium">{label}</span>
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          {settings.account_apply && <Badge variant="secondary">{t("badge.accountApply")}</Badge>}
-          {settings.private_thread && <Badge variant="secondary">{t("badge.privateThread")}</Badge>}
-          {settings.th_min > 0 && <Badge variant="secondary">TH{settings.th_min}+</Badge>}
+    <>
+      {/* Edit appearance dialog */}
+      <Dialog open={editAppearanceOpen} onOpenChange={setEditAppearanceOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("editButtonTitle")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label>{t("buttonLabel")}</Label>
+              <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value)} placeholder={t("buttonLabelPlaceholder")} maxLength={80} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t("buttonStyle")}</Label>
+              <div className="flex gap-2">
+                {([1, 2, 3, 4] as const).map((s) => (
+                  <button key={s} type="button" onClick={() => setEditStyle(s)}
+                    className={cn("h-7 w-7 rounded", STYLE_COLORS[s], editStyle === s ? "ring-2 ring-offset-2 ring-offset-background ring-white/80" : "opacity-60 hover:opacity-100")} />
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setEditAppearanceOpen(false)}>{tCommon("cancel")}</Button>
+            <Button onClick={handleSaveAppearance} disabled={isSavingAppearance || !editLabel.trim()}>
+              {isSavingAppearance && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {tCommon("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm delete dialog */}
+      <Dialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("confirmDeleteButton", { label })}</DialogTitle>
+            <DialogDescription>{t("confirmDeleteButtonHint")}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setConfirmDeleteOpen(false)}>{tCommon("cancel")}</Button>
+            <Button variant="destructive" onClick={handleDeleteButton} disabled={isDeleting}>
+              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {tCommon("delete")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
+      <div className="flex w-full flex-wrap items-center gap-3 p-4">
+        <button className="flex flex-1 min-w-0 flex-wrap items-center gap-3 text-left transition-colors hover:text-foreground" onClick={() => setExpanded((v) => !v)}>
+          <span className={`h-3 w-3 rounded-sm shrink-0 ${BUTTON_STYLE_COLOR[style] ?? "bg-muted"}`} />
+          <span className="min-w-0 flex-1 font-medium">{label}</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            {settings.account_apply && <Badge variant="secondary">{t("badge.accountApply")}</Badge>}
+            {settings.private_thread && <Badge variant="secondary">{t("badge.privateThread")}</Badge>}
+            {settings.th_min > 0 && <Badge variant="secondary">TH{settings.th_min}+</Badge>}
+          </div>
+        </button>
+        <div className="flex items-center gap-1 shrink-0">
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground"
+            onClick={() => { setEditLabel(label); setEditStyle(style); setEditAppearanceOpen(true); }}>
+            <Settings className="h-3.5 w-3.5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"
+            onClick={() => setConfirmDeleteOpen(true)}>
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+          <button onClick={() => setExpanded((v) => !v)} className="ml-1 text-muted-foreground hover:text-foreground">
+            {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
         </div>
-        {expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" /> : <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />}
-      </button>
+      </div>
 
       {expanded && (
         <div className="space-y-6 border-t border-border/60 bg-muted/10 p-4">
@@ -1040,6 +1144,7 @@ function ButtonCard({
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -1118,7 +1223,7 @@ function MessagesTab({ panel, guildId }: { panel: TicketPanel; guildId: string }
 }
 
 function PanelCard({
-  panel, categories, textChannels, roles, guildId, availableEmbeds,
+  panel, categories, textChannels, roles, guildId, availableEmbeds, onDeleted,
 }: {
   panel: TicketPanel;
   categories: DiscordChannel[];
@@ -1126,66 +1231,186 @@ function PanelCard({
   roles: DiscordRole[];
   guildId: string;
   availableEmbeds: string[];
+  onDeleted: () => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
+  const tCommon = useTranslations("Common");
+  const { toast } = useToast();
   const [expanded, setExpanded] = useState(false);
+  const [components, setComponents] = useState(panel.components);
+  const [confirmDeletePanelOpen, setConfirmDeletePanelOpen] = useState(false);
+  const [isDeletingPanel, setIsDeletingPanel] = useState(false);
+  const [addButtonOpen, setAddButtonOpen] = useState(false);
+  const [newButtonLabel, setNewButtonLabel] = useState("");
+  const [newButtonStyle, setNewButtonStyle] = useState(2);
+  const [isAddingButton, setIsAddingButton] = useState(false);
+
+  const STYLE_COLORS: Record<number, string> = { 1: "bg-[#5865F2]", 2: "bg-[#4f545c]", 3: "bg-[#57F287]", 4: "bg-[#ED4245]" };
+
+  const handleDeletePanel = async () => {
+    setIsDeletingPanel(true);
+    try {
+      const res = await apiClient.tickets.deletePanel(guildId, panel.name);
+      if (res.error) throw new Error(res.error);
+      toast({ title: tCommon("success"), description: t("panelDeleted") });
+      onDeleted();
+    } catch (err) {
+      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+    } finally {
+      setIsDeletingPanel(false);
+      setConfirmDeletePanelOpen(false);
+    }
+  };
+
+  const handleAddButton = async () => {
+    if (!newButtonLabel.trim()) return;
+    setIsAddingButton(true);
+    try {
+      const res = await apiClient.tickets.createButton(guildId, panel.name, { label: newButtonLabel, style: newButtonStyle });
+      if (res.error) throw new Error(res.error);
+      toast({ title: tCommon("success"), description: t("buttonAdded") });
+      // Reload panel data by fetching fresh panels
+      const panelsRes = await apiClient.tickets.getPanels(guildId);
+      const fresh = panelsRes.data?.items.find(p => p.name === panel.name);
+      if (fresh) setComponents(fresh.components);
+      setAddButtonOpen(false);
+      setNewButtonLabel("");
+      setNewButtonStyle(2);
+    } catch (err) {
+      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+    } finally {
+      setIsAddingButton(false);
+    }
+  };
 
   return (
-    <Card className="border-border/60">
-      <CardHeader className="cursor-pointer select-none" onClick={() => setExpanded((v) => !v)}>
-        <div className="flex items-center justify-between">
-          <div className="space-y-3">
-            <CardTitle className="text-base">{panel.name}</CardTitle>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">{panel.components.length} {t("buttons")}</Badge>
-              <Badge variant="secondary">{panel.approve_messages.length} {t("messages")}</Badge>
-              {panel.embed_name ? <Badge variant="outline">{panel.embed_name}</Badge> : null}
-            </div>
-            <CardDescription>{t("panelHint")}</CardDescription>
-          </div>
-          {expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-        </div>
-      </CardHeader>
+    <>
+      {/* Confirm delete panel dialog */}
+      <Dialog open={confirmDeletePanelOpen} onOpenChange={setConfirmDeletePanelOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("confirmDeletePanel", { name: panel.name })}</DialogTitle>
+            <DialogDescription>{t("confirmDeletePanelHint")}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setConfirmDeletePanelOpen(false)}>{tCommon("cancel")}</Button>
+            <Button variant="destructive" onClick={handleDeletePanel} disabled={isDeletingPanel}>
+              {isDeletingPanel && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {tCommon("delete")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      {expanded && (
-        <CardContent className="space-y-4">
-          <Tabs defaultValue="channels">
-            <TabsList className="mb-4">
-              <TabsTrigger value="channels">{t("tabChannels")}</TabsTrigger>
-              <TabsTrigger value="buttons">{t("tabButtons")}</TabsTrigger>
-              <TabsTrigger value="messages">{t("tabMessages")}</TabsTrigger>
-            </TabsList>
-            <TabsContent value="channels" className="mt-0">
-              <ChannelTab panel={panel} categories={categories} textChannels={textChannels} guildId={guildId} availableEmbeds={availableEmbeds} />
-            </TabsContent>
-            <TabsContent value="buttons" className="mt-0">
-              {panel.components.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 text-muted-foreground gap-2">
-                  <Ticket className="h-8 w-8 opacity-40" />
-                  <p className="text-sm">{t("noButtons")}</p>
+      {/* Add button dialog */}
+      <Dialog open={addButtonOpen} onOpenChange={setAddButtonOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("addButtonTitle")}</DialogTitle>
+            <DialogDescription>{t("addButtonDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label>{t("buttonLabel")}</Label>
+              <Input value={newButtonLabel} onChange={(e) => setNewButtonLabel(e.target.value)} placeholder={t("buttonLabelPlaceholder")} maxLength={80} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>{t("buttonStyle")}</Label>
+              <div className="flex gap-2">
+                {([1, 2, 3, 4] as const).map((s) => (
+                  <button key={s} type="button" onClick={() => setNewButtonStyle(s)}
+                    className={cn("h-7 w-7 rounded", STYLE_COLORS[s], newButtonStyle === s ? "ring-2 ring-offset-2 ring-offset-background ring-white/80" : "opacity-60 hover:opacity-100")} />
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setAddButtonOpen(false)}>{tCommon("cancel")}</Button>
+            <Button onClick={handleAddButton} disabled={isAddingButton || !newButtonLabel.trim()}>
+              {isAddingButton && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t("addButton")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Card className="border-border/60">
+        <CardHeader className="select-none">
+          <div className="flex items-start justify-between gap-3">
+            <button className="flex-1 text-left" onClick={() => setExpanded((v) => !v)}>
+              <div className="space-y-2">
+                <CardTitle className="text-base">{panel.name}</CardTitle>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">{components.length} {t("buttons")}</Badge>
+                  <Badge variant="secondary">{panel.approve_messages.length} {t("messages")}</Badge>
+                  {panel.embed_name ? <Badge variant="outline">{panel.embed_name}</Badge> : null}
                 </div>
-              ) : (
+                <CardDescription>{t("panelHint")}</CardDescription>
+              </div>
+            </button>
+            <div className="flex items-center gap-1 shrink-0 pt-0.5">
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                onClick={(e) => { e.stopPropagation(); setConfirmDeletePanelOpen(true); }}>
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <button onClick={() => setExpanded((v) => !v)} className="text-muted-foreground hover:text-foreground p-1">
+                {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+        </CardHeader>
+
+        {expanded && (
+          <CardContent className="space-y-4">
+            <Tabs defaultValue="channels">
+              <TabsList className="mb-4">
+                <TabsTrigger value="channels">{t("tabChannels")}</TabsTrigger>
+                <TabsTrigger value="buttons">{t("tabButtons")}</TabsTrigger>
+                <TabsTrigger value="messages">{t("tabMessages")}</TabsTrigger>
+              </TabsList>
+              <TabsContent value="channels" className="mt-0">
+                <ChannelTab panel={panel} categories={categories} textChannels={textChannels} guildId={guildId} availableEmbeds={availableEmbeds} />
+              </TabsContent>
+              <TabsContent value="buttons" className="mt-0">
                 <div className="space-y-3">
-                  {panel.components.map((btn) => (
-                    <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
-                      settings={panel.button_settings[btn.custom_id] ?? {
-                        questions: [], mod_role: [], no_ping_mod_role: [],
-                        private_thread: false, th_min: 0, num_apply: 25,
-                        naming: "{ticket_count}-{user}", account_apply: false, player_info: false,
-                        apply_clans: [], roles_to_add: [], roles_to_remove: [], townhall_requirements: {}, new_message: null,
-                      }}
-                      panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} />
-                  ))}
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground">{components.length}/5 {t("buttons")}</p>
+                    <Button variant="outline" size="sm" onClick={() => setAddButtonOpen(true)} disabled={components.length >= 5}>
+                      <Plus className="mr-1.5 h-4 w-4" />{t("addButton")}
+                    </Button>
+                  </div>
+                  {components.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-10 text-muted-foreground gap-2">
+                      <Ticket className="h-8 w-8 opacity-40" />
+                      <p className="text-sm">{t("noButtons")}</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {components.map((btn) => (
+                        <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
+                          settings={panel.button_settings[btn.custom_id] ?? {
+                            questions: [], mod_role: [], no_ping_mod_role: [],
+                            private_thread: false, th_min: 0, num_apply: 25,
+                            naming: "{ticket_count}-{user}", account_apply: false, player_info: false,
+                            apply_clans: [], roles_to_add: [], roles_to_remove: [], townhall_requirements: {}, new_message: null,
+                          }}
+                          panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds}
+                          onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))}
+                          onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </TabsContent>
-            <TabsContent value="messages" className="mt-0">
-              <MessagesTab panel={panel} guildId={guildId} />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      )}
-    </Card>
+              </TabsContent>
+              <TabsContent value="messages" className="mt-0">
+                <MessagesTab panel={panel} guildId={guildId} />
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        )}
+      </Card>
+    </>
   );
 }
 
@@ -1200,6 +1425,9 @@ function ConfigTab({ guildId }: { guildId: string }) {
   const [textChannels, setTextChannels] = useState<DiscordChannel[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [createPanelOpen, setCreatePanelOpen] = useState(false);
+  const [newPanelName, setNewPanelName] = useState("");
+  const [isCreatingPanel, setIsCreatingPanel] = useState(false);
   const loaded = useRef(false);
 
   useEffect(() => {
@@ -1239,6 +1467,26 @@ function ConfigTab({ guildId }: { guildId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId]);
 
+  const handleCreatePanel = async () => {
+    if (!newPanelName.trim()) return;
+    setIsCreatingPanel(true);
+    try {
+      const res = await apiClient.tickets.createPanel(guildId, { name: newPanelName.trim() });
+      if (res.error) throw new Error(res.error);
+      toast({ title: tCommon("success"), description: t("panelCreated", { name: newPanelName.trim() }) });
+      // Fetch fresh panel list
+      const panelsRes = await apiClient.tickets.getPanels(guildId);
+      setPanels(panelsRes.data?.items ?? []);
+      setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+      setCreatePanelOpen(false);
+      setNewPanelName("");
+    } catch (err) {
+      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+    } finally {
+      setIsCreatingPanel(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -1247,24 +1495,57 @@ function ConfigTab({ guildId }: { guildId: string }) {
     );
   }
 
-  if (panels.length === 0) {
-    return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12 text-muted-foreground gap-2">
-          <Settings className="h-10 w-10 opacity-40" />
-          <p>{t("noPanels")}</p>
-          <p className="text-xs">{t("noPanelsHint")}</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      {panels.map((panel) => (
-        <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} />
-      ))}
-    </div>
+    <>
+      {/* Create panel dialog */}
+      <Dialog open={createPanelOpen} onOpenChange={setCreatePanelOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("createPanelTitle")}</DialogTitle>
+            <DialogDescription>{t("createPanelDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5 py-2">
+            <Label>{t("panelNameLabel")}</Label>
+            <Input
+              value={newPanelName}
+              onChange={(e) => setNewPanelName(e.target.value)}
+              placeholder={t("panelNamePlaceholder")}
+              onKeyDown={(e) => { if (e.key === "Enter") handleCreatePanel(); }}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setCreatePanelOpen(false)}>{tCommon("cancel")}</Button>
+            <Button onClick={handleCreatePanel} disabled={isCreatingPanel || !newPanelName.trim()}>
+              {isCreatingPanel && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {tCommon("create")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="space-y-4">
+        <div className="flex justify-end">
+          <Button variant="outline" size="sm" onClick={() => setCreatePanelOpen(true)}>
+            <Plus className="mr-1.5 h-4 w-4" />{t("createPanel")}
+          </Button>
+        </div>
+
+        {panels.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12 text-muted-foreground gap-2">
+              <Settings className="h-10 w-10 opacity-40" />
+              <p>{t("noPanels")}</p>
+              <p className="text-xs">{t("noPanelsHint")}</p>
+            </CardContent>
+          </Card>
+        ) : (
+          panels.map((panel) => (
+            <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds}
+              onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} />
+          ))
+        )}
+      </div>
+    </>
   );
 }
 

@@ -9,24 +9,19 @@ export async function GET(
   try {
     const { server_id } = await params;
     const token = request.headers.get('authorization');
-
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/tickets`, {
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/panel`, {
       method: 'GET',
-      headers: {
-        Authorization: token || '',
-        'Content-Type': 'application/json',
-      },
+      headers: { Authorization: token || '', 'Content-Type': 'application/json' },
     });
-
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('API proxy error (GET /server/{id}/tickets):', error);
-    return NextResponse.json({ error: 'Failed to fetch ticket panels' }, { status: 500 });
+    console.error('API proxy error (GET /server/{id}/panel):', error);
+    return NextResponse.json({ error: 'Failed to fetch panel' }, { status: 500 });
   }
 }
 
-export async function POST(
+export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ server_id: string }> },
 ) {
@@ -34,17 +29,15 @@ export async function POST(
     const { server_id } = await params;
     const token = request.headers.get('authorization');
     const body = await request.json();
-
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/tickets`, {
-      method: 'POST',
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/panel`, {
+      method: 'PUT',
       headers: { Authorization: token || '', 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
-
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('API proxy error (POST /server/{id}/tickets):', error);
-    return NextResponse.json({ error: 'Failed to create ticket panel' }, { status: 500 });
+    console.error('API proxy error (PUT /server/{id}/panel):', error);
+    return NextResponse.json({ error: 'Failed to update panel' }, { status: 500 });
   }
 }

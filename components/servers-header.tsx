@@ -14,6 +14,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
+import { logout } from "@/lib/auth/logout";
 
 export function ServersHeader() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -37,9 +38,7 @@ export function ServersHeader() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
+    logout();
     setUser(null);
     router.push(`/${locale}`);
   };

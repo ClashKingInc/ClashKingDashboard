@@ -141,3 +141,19 @@ export interface UpsertEmbedRequest {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>;
 }
+
+export interface CreatePanelRequest {
+  name: string;
+}
+
+export interface CreateButtonRequest {
+  label: string;
+  style: number;
+  emoji?: { id?: string; name?: string; animated?: boolean } | null;
+}
+
+export interface UpdateButtonAppearanceRequest {
+  label: string;
+  style: number;
+  emoji?: { id?: string; name?: string; animated?: boolean } | null;
+}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -154,8 +155,7 @@ export default function WarsPage() {
 
         if (!clansRes.ok) {
           if (clansRes.status === 401) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
+            logout();
             router.push(`/${params.locale}/login`);
             return;
           }

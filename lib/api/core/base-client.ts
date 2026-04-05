@@ -4,9 +4,11 @@
 
 import type { ApiConfig, ApiResponse } from '../types/common';
 
+// Module-level singleton so all client instances share one refresh attempt
+let _sharedRefreshPromise: Promise<boolean> | null = null;
+
 export class BaseApiClient {
   protected config: ApiConfig;
-  private _isRefreshing = false;
 
   constructor(config: ApiConfig) {
     this.config = config;
@@ -157,12 +159,22 @@ export class BaseApiClient {
 
   /**
    * Attempt to refresh the access token using the stored refresh token.
-   * Returns true if a new access token was obtained and stored.
+   * All client instances share a single in-flight refresh to avoid race conditions.
    */
   private async _tryRefreshToken(): Promise<boolean> {
-    if (this._isRefreshing) return false;
-    this._isRefreshing = true;
+    // If a refresh is already in progress, wait for it instead of starting another
+    if (_sharedRefreshPromise) {
+      return _sharedRefreshPromise;
+    }
 
+    _sharedRefreshPromise = this._doRefresh().finally(() => {
+      _sharedRefreshPromise = null;
+    });
+
+    return _sharedRefreshPromise;
+  }
+
+  private async _doRefresh(): Promise<boolean> {
     try {
       const refreshToken = localStorage.getItem('refresh_token');
       if (!refreshToken) return false;
@@ -178,6 +190,11 @@ export class BaseApiClient {
       if (!response.ok) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user');
+        // Both tokens are invalid — redirect to login preserving locale
+        const pathParts = window.location.pathname.split('/');
+        const locale = pathParts[1] || 'en';
+        window.location.href = `/${locale}/login`;
         return false;
       }
 
@@ -185,14 +202,15 @@ export class BaseApiClient {
       if (data?.access_token) {
         localStorage.setItem('access_token', data.access_token);
         this.config.accessToken = data.access_token;
+        if (data.refresh_token) {
+          localStorage.setItem('refresh_token', data.refresh_token);
+        }
         return true;
       }
 
       return false;
     } catch {
       return false;
-    } finally {
-      this._isRefreshing = false;
     }
   }
 

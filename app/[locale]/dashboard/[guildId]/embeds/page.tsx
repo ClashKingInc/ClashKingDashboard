@@ -4,16 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
-  AlertCircle,
   CheckCircle2,
   ChevronDown,
   Copy,
   ExternalLink,
   FileText,
-  Loader2,
   Plus,
   Settings,
   Trash2,
+  Loader2,
 } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
@@ -31,38 +30,24 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import { EmbedEditor } from "@/components/dashboard/embed-editor";
 import { DiscordEmbedPreview, extractFirstEmbed } from "@/components/dashboard/discord-embed-preview";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
 
-// ─── Discohook helpers ────────────────────────────────────────────────────────
+// ─── Discohook URL builder (kept for list actions) ────────────────────────────
 
 function buildDiscohookUrl(data: Record<string, unknown>): string {
   let payload: unknown;
   if (data.messages) {
     payload = data;
-  } else if (Array.isArray(data.embeds)) {
-    payload = { messages: [{ data: { content: null, embeds: data.embeds } }] };
+  } else if (Array.isArray((data as any).embeds)) {
+    payload = { messages: [{ data: { content: null, embeds: (data as any).embeds } }] };
   } else {
     payload = { messages: [{ data: { content: null, embeds: [data] } }] };
   }
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
   return `https://discohook.app/?data=${encoded}`;
 }
-
-function parseDiscohookUrl(url: string): Record<string, unknown> | null {
-  try {
-    const match = url.match(/[?&]data=([^&\s]+)/);
-    if (!match) return null;
-    const decoded = JSON.parse(decodeURIComponent(escape(atob(match[1]))));
-    if (decoded?.messages) return decoded as Record<string, unknown>;
-    if (Array.isArray(decoded?.embeds) || decoded?.title || decoded?.description) return decoded as Record<string, unknown>;
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-const DISCOHOOK_NEW = "https://discohook.app/";
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -77,14 +62,21 @@ export default function EmbedsPage() {
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedName, setExpandedName] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Name dialog (shown before editor for new embeds)
+  const [nameDialogOpen, setNameDialogOpen] = useState(false);
+  const [pendingName, setPendingName] = useState("");
+
+  // Editor dialog
+  const [editorOpen, setEditorOpen] = useState(false);
   const [editingEmbed, setEditingEmbed] = useState<ServerEmbed | null>(null);
-  const [formName, setFormName] = useState("");
-  const [formUrl, setFormUrl] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [copiedName, setCopiedName] = useState<string | null>(null);
+
+  // Delete
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const [copiedName, setCopiedName] = useState<string | null>(null);
   const loaded = useRef(false);
 
   const load = useCallback(async () => {
@@ -105,43 +97,41 @@ export default function EmbedsPage() {
     load();
   }, [load]);
 
+  // Open "choose name" dialog for new embed
   const openCreate = () => {
-    setEditingEmbed(null);
-    setFormName("");
-    setFormUrl("");
-    setDialogOpen(true);
+    setPendingName("");
+    setNameDialogOpen(true);
   };
 
+  // Confirm name → open editor
+  const confirmName = () => {
+    if (!pendingName.trim()) return;
+    setNameDialogOpen(false);
+    setEditingEmbed(null);
+    setEditorOpen(true);
+  };
+
+  // Open editor for existing embed
   const openEdit = (embed: ServerEmbed) => {
     setEditingEmbed(embed);
-    setFormName(embed.name);
-    setFormUrl(embed.data ? buildDiscohookUrl(embed.data) : "");
-    setDialogOpen(true);
+    setEditorOpen(true);
   };
 
-  const parsedUrl = formUrl.trim() ? parseDiscohookUrl(formUrl.trim()) : null;
-  const urlIsValid = !!parsedUrl;
-  const urlHasInput = formUrl.trim().length > 0;
-
-  const handleSave = async () => {
-    if (!formName.trim()) return;
-    if (!parsedUrl) {
-      toast({ title: tCommon("error"), description: t("invalidDiscohookUrl"), variant: "destructive" });
-      return;
-    }
+  const handleSave = async (data: Record<string, unknown>) => {
+    const name = editingEmbed ? editingEmbed.name : pendingName.trim();
     setIsSaving(true);
     try {
       let res;
       if (editingEmbed) {
-        res = await apiClient.tickets.updateEmbed(guildId, editingEmbed.name, { name: formName.trim(), data: parsedUrl });
+        res = await apiClient.tickets.updateEmbed(guildId, editingEmbed.name, { name, data });
         if (res.error) throw new Error(res.error);
-        toast({ title: tCommon("success"), description: t("embedSaved", { name: formName.trim() }) });
+        toast({ title: tCommon("success"), description: t("embedSaved", { name }) });
       } else {
-        res = await apiClient.tickets.createEmbed(guildId, { name: formName.trim(), data: parsedUrl });
+        res = await apiClient.tickets.createEmbed(guildId, { name, data });
         if (res.error) throw new Error(res.error);
-        toast({ title: tCommon("success"), description: t("embedCreated", { name: formName.trim() }) });
+        toast({ title: tCommon("success"), description: t("embedCreated", { name }) });
       }
-      setDialogOpen(false);
+      setEditorOpen(false);
       await load();
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
@@ -210,34 +200,23 @@ export default function EmbedsPage() {
             {embeds.map((embed) => {
               const preview = embed.data ? extractFirstEmbed(embed.data) : null;
               const isExpanded = expandedName === embed.name;
-
               return (
                 <div key={embed.name} className="rounded-xl border border-border/60 bg-card overflow-hidden">
-                  {/* Row */}
                   <div className="flex items-center gap-3 px-4 py-3">
-                    {/* Toggle preview */}
                     <button
                       onClick={() => setExpandedName(isExpanded ? null : embed.name)}
-                      className={cn(
-                        "flex items-center gap-2 flex-1 min-w-0 text-left group",
-                        !preview && "cursor-default"
-                      )}
+                      className={cn("flex items-center gap-2 flex-1 min-w-0 text-left", !preview && "cursor-default")}
                       disabled={!preview}
                     >
                       <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
                       <span className="flex-1 font-medium text-sm truncate">{embed.name}</span>
                       {preview && (
-                        <ChevronDown className={cn(
-                          "h-4 w-4 text-muted-foreground transition-transform shrink-0",
-                          isExpanded && "rotate-180"
-                        )} />
+                        <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform shrink-0", isExpanded && "rotate-180")} />
                       )}
                     </button>
-
                     {!embed.data && (
                       <span className="text-xs text-muted-foreground italic hidden sm:block">{t("legacyEmbed")}</span>
                     )}
-
                     <div className="flex items-center gap-1 shrink-0">
                       {embed.data && (
                         <>
@@ -256,13 +235,11 @@ export default function EmbedsPage() {
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(embed)} title={t("editEmbed")}>
                         <Settings className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => setDeleteTarget(embed.name)} title={t("deleteEmbed")}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => setDeleteTarget(embed.name)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
-
-                  {/* Preview panel */}
                   {preview && isExpanded && (
                     <div className="border-t border-border/60 px-4 py-3 bg-muted/20">
                       <DiscordEmbedPreview embed={preview} />
@@ -275,66 +252,53 @@ export default function EmbedsPage() {
         )}
       </div>
 
-      {/* Create / Edit dialog */}
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg">
+      {/* Step 1: Name dialog */}
+      <Dialog open={nameDialogOpen} onOpenChange={setNameDialogOpen}>
+        <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>{editingEmbed ? t("editEmbed") : t("newEmbed")}</DialogTitle>
-            <DialogDescription>{t("embedDiscohookHint")}</DialogDescription>
+            <DialogTitle>{t("newEmbed")}</DialogTitle>
+            <DialogDescription>{tPage("nameHint")}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
-            {!editingEmbed && (
-              <div className="space-y-1.5">
-                <Label>{t("embedName")}</Label>
-                <Input
-                  value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
-                  placeholder={t("embedNamePlaceholder")}
-                />
-              </div>
-            )}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label>{t("discohookUrl")}</Label>
-                <Button asChild variant="ghost" size="sm" className="h-6 text-xs gap-1 text-muted-foreground">
-                  <a href={DISCOHOOK_NEW} target="_blank" rel="noreferrer">
-                    <ExternalLink className="h-3 w-3" />
-                    {t("openDiscohook")}
-                  </a>
-                </Button>
-              </div>
-              <div className="relative">
-                <Input
-                  value={formUrl}
-                  onChange={(e) => setFormUrl(e.target.value)}
-                  placeholder="https://discohook.app/?data=..."
-                  className={urlHasInput ? (urlIsValid ? "pr-8 border-green-500/60 focus-visible:ring-green-500/30" : "pr-8 border-destructive/60 focus-visible:ring-destructive/30") : ""}
-                />
-                {urlHasInput && (
-                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
-                    {urlIsValid
-                      ? <CheckCircle2 className="h-4 w-4 text-green-500" />
-                      : <AlertCircle className="h-4 w-4 text-destructive" />}
-                  </div>
-                )}
-              </div>
-              {urlHasInput && !urlIsValid && (
-                <p className="text-xs text-destructive">{t("invalidDiscohookUrl")}</p>
-              )}
-            </div>
+          <div className="space-y-1.5 py-2">
+            <Label>{t("embedName")}</Label>
+            <Input
+              value={pendingName}
+              onChange={e => setPendingName(e.target.value)}
+              placeholder={t("embedNamePlaceholder")}
+              onKeyDown={e => e.key === "Enter" && confirmName()}
+              autoFocus
+            />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>{tCommon("cancel")}</Button>
-            <Button onClick={handleSave} disabled={isSaving || !formName.trim() || !urlIsValid}>
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {tCommon("save")}
-            </Button>
+            <Button variant="outline" onClick={() => setNameDialogOpen(false)}>{tCommon("cancel")}</Button>
+            <Button onClick={confirmName} disabled={!pendingName.trim()}>{tCommon("next")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
+      {/* Step 2: Editor dialog */}
+      <Dialog open={editorOpen} onOpenChange={open => { if (!open && !isSaving) setEditorOpen(false); }}>
+        <DialogContent className="max-w-5xl w-[95vw] h-[90vh] flex flex-col gap-0 p-0 overflow-hidden">
+          <DialogHeader className="px-6 pt-5 pb-4 border-b border-border shrink-0">
+            <DialogTitle>
+              {editingEmbed ? t("editEmbed") : t("newEmbed")}
+              {" "}
+              <span className="text-muted-foreground font-normal">— {editingEmbed?.name ?? pendingName}</span>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 min-h-0">
+            <EmbedEditor
+              initialData={editingEmbed?.data ?? null}
+              onSave={handleSave}
+              isSaving={isSaving}
+              onCancel={() => setEditorOpen(false)}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Delete confirmation */}
-      <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+      <Dialog open={!!deleteTarget} onOpenChange={open => !open && setDeleteTarget(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>{t("confirmDeleteEmbed", { name: deleteTarget ?? "" })}</DialogTitle>
