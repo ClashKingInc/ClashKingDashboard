@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
+import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
@@ -37,9 +38,7 @@ export function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
+    logout();
     setUser(null);
     router.push(`/${locale}`);
   };
@@ -177,6 +176,7 @@ export function Navbar() {
               width={100}
               height={100}
               className="h-7 w-auto"
+              priority
             />
           </Link>
 

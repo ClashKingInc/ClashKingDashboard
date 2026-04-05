@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
   /**
@@ -53,6 +53,13 @@ export class ServerClient extends BaseApiClient {
    */
   async getClanSettings(serverId: string | number, clanTag: string): Promise<ApiResponse<ClanSettings>> {
     return this.request(`/v2/server/${serverId}/clan/${clanTag}/settings`, { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/clans
+   */
+  async getServerClans(serverId: string | number): Promise<ApiResponse<ServerClanListItem[]>> {
+    return this.request(`/v2/server/${serverId}/clans`, { method: 'GET' });
   }
 
   /**

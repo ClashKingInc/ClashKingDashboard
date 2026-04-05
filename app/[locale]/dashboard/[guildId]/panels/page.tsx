@@ -1,0 +1,345 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Loader2, LayoutTemplate, Save } from "lucide-react";
+
+import { apiClient } from "@/lib/api/client";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
+import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { DiscordEmbedPreview, extractFirstEmbed } from "@/components/dashboard/discord-embed-preview";
+import { cn } from "@/lib/utils";
+import { BUTTON_TYPES, BUTTON_COLORS } from "@/lib/api/types/panels";
+import type { ButtonColor, ServerPanel } from "@/lib/api/types/panels";
+import type { ServerEmbed } from "@/lib/api/types/tickets";
+
+// ─── Discord button colour styles ─────────────────────────────────────────────
+
+const DISCORD_BUTTON_STYLE: Record<string, string> = {
+  Blue:  "bg-[#5865f2] hover:bg-[#4752c4] text-white",
+  Green: "bg-[#57f287] hover:bg-[#45c46c] text-black",
+  Grey:  "bg-[#4e5058] hover:bg-[#6d6f78] text-white",
+  Red:   "bg-[#ed4245] hover:bg-[#c03537] text-white",
+};
+
+const COLOR_SWATCH: Record<string, string> = {
+  Blue:  "bg-[#5865f2]",
+  Green: "bg-[#57f287]",
+  Grey:  "bg-[#4e5058]",
+  Red:   "bg-[#ed4245]",
+};
+
+// ─── Button type config (label + emoji) ───────────────────────────────────────
+
+const BUTTON_META: Record<string, { label: string; emoji: string; desc: string }> = {
+  "Link Button":      { label: "Link Account",  emoji: "🔗", desc: "Link a Clash of Clans account" },
+  "Link Help Button": { label: "Help",          emoji: "❓", desc: "Show account linking instructions" },
+  "Refresh Button":   { label: "Refresh Roles", emoji: "🔄", desc: "Refresh Discord roles" },
+  "To-Do Button":     { label: "To-Do List",    emoji: "✅", desc: "Show account tasks" },
+  "Roster Button":    { label: "My Rosters",    emoji: "📅", desc: "Show roster memberships" },
+};
+
+// ─── Channel type ─────────────────────────────────────────────────────────────
+
+interface Channel {
+  id: string;
+  name: string;
+  parent_name?: string;
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+export default function PanelsPage() {
+  const params = useParams();
+  const router = useRouter();
+  const guildId = params.guildId as string;
+  const locale = params.locale as string;
+  const t = useTranslations("PanelsPage");
+  const tCommon = useTranslations("Common");
+  const { toast } = useToast();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Form state
+  const [embedName, setEmbedName] = useState<string>("");
+  const [buttons, setButtons] = useState<string[]>([]);
+  const [buttonColor, setButtonColor] = useState<ButtonColor>("Grey");
+  const [welcomeChannel, setWelcomeChannel] = useState<string>("");
+
+  // Supporting data
+  const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
+
+  const loaded = useRef(false);
+
+  const load = useCallback(async () => {
+    try {
+      const [panelRes, embedsRes, channelsRes] = await Promise.all([
+        apiClient.panels.getPanel(guildId),
+        apiClient.tickets.getEmbeds(guildId),
+        apiClient.servers.getChannels(guildId),
+      ]);
+      if (panelRes.status === 401 || panelRes.status === 403) {
+        router.push(`/${locale}/login`);
+        return;
+      }
+      if (panelRes.data) {
+        const p = panelRes.data as ServerPanel;
+        setEmbedName(p.embed_name ?? "");
+        setButtons(p.buttons ?? []);
+        setButtonColor((p.button_color as ButtonColor) ?? "Grey");
+        setWelcomeChannel(p.welcome_channel ? String(p.welcome_channel) : "");
+      }
+      setEmbeds(embedsRes.data?.items ?? []);
+      setChannels(channelsRes.data ?? []);
+    } catch (err) {
+      toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [guildId, locale, router, toast, tCommon]);
+
+  useEffect(() => {
+    if (loaded.current) return;
+    loaded.current = true;
+    load();
+  }, [load]);
+
+  const toggleButton = (type: string) => {
+    setButtons(prev =>
+      prev.includes(type) ? prev.filter(b => b !== type) : [...prev, type]
+    );
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const res = await apiClient.panels.updatePanel(guildId, {
+        embed_name: embedName || null,
+        buttons,
+        button_color: buttonColor,
+        welcome_channel: welcomeChannel ? parseInt(welcomeChannel, 10) : null,
+      });
+      if (res.error) throw new Error(res.error);
+      toast({ title: tCommon("success"), description: t("saved") });
+    } catch (err) {
+      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Embed preview data
+  const selectedEmbed = embeds.find(e => e.name === embedName);
+  const embedPreview = selectedEmbed?.data ? extractFirstEmbed(selectedEmbed.data) : null;
+  const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+        <div className="mx-auto max-w-4xl space-y-6">
+          <Skeleton className="h-16 w-full" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Skeleton className="h-96 w-full" />
+            <Skeleton className="h-96 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+      <div className="mx-auto max-w-4xl space-y-6">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="rounded-lg border border-primary/20 bg-primary/10 p-3">
+              <LayoutTemplate className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+              <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
+            </div>
+          </div>
+          <Button onClick={handleSave} disabled={isSaving} className="shrink-0">
+            {isSaving
+              ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              : <Save className="mr-2 h-4 w-4" />}
+            {tCommon("save")}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* ── Left: config ── */}
+          <div className="space-y-6">
+
+            {/* Embed */}
+            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
+              <div>
+                <h2 className="text-sm font-semibold">{t("embedSection")}</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("embedHint")}</p>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">{t("embedLabel")}</Label>
+                <select
+                  value={embedName}
+                  onChange={e => setEmbedName(e.target.value)}
+                  className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="">{t("noEmbed")}</option>
+                  {embeds.map(e => (
+                    <option key={e.name} value={e.name}>{e.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
+              <div>
+                <h2 className="text-sm font-semibold">{t("buttonsSection")}</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("buttonsHint")}</p>
+              </div>
+              <div className="space-y-2">
+                {BUTTON_TYPES.map(type => {
+                  const meta = BUTTON_META[type];
+                  const active = buttons.includes(type);
+                  return (
+                    <label
+                      key={type}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors",
+                        active
+                          ? "border-primary/50 bg-primary/5"
+                          : "border-border/60 hover:bg-accent/40"
+                      )}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={active}
+                        onChange={() => toggleButton(type)}
+                        className="h-4 w-4 rounded accent-primary"
+                      />
+                      <span className="text-lg">{meta.emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium">{meta.label}</p>
+                        <p className="text-xs text-muted-foreground">{meta.desc}</p>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Color */}
+            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
+              <div>
+                <h2 className="text-sm font-semibold">{t("colorSection")}</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("colorHint")}</p>
+              </div>
+              <div className="flex gap-3">
+                {BUTTON_COLORS.map(color => (
+                  <button
+                    key={color}
+                    onClick={() => setButtonColor(color)}
+                    className={cn(
+                      "flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
+                      buttonColor === color
+                        ? "border-primary"
+                        : "border-transparent hover:border-border"
+                    )}
+                  >
+                    <div className={cn("h-6 w-10 rounded", COLOR_SWATCH[color])} />
+                    <span className="text-xs font-medium">{t(`color.${color}`)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Welcome channel */}
+            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
+              <div>
+                <h2 className="text-sm font-semibold">{t("welcomeSection")}</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("welcomeHint")}</p>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">{t("welcomeChannel")}</Label>
+                <ChannelCombobox
+                  channels={channels}
+                  value={welcomeChannel}
+                  onValueChange={setWelcomeChannel}
+                  placeholder={t("welcomeChannelPlaceholder")}
+                  showDisabled={false}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ── Right: preview ── */}
+          <div className="space-y-4">
+            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4 sticky top-4">
+              <div>
+                <h2 className="text-sm font-semibold">{t("previewSection")}</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("previewHint")}</p>
+              </div>
+
+              {/* Discord message mockup */}
+              <div className="rounded-lg bg-[#313338] p-4 space-y-3">
+                {/* Bot avatar + name */}
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">CK</div>
+                  <span className="text-sm font-semibold text-white">ClashKing</span>
+                  <span className="text-[10px] bg-[#5865f2] text-white px-1 rounded font-medium">APP</span>
+                </div>
+
+                {/* Embed preview */}
+                {embedPreview ? (
+                  <DiscordEmbedPreview embed={embedPreview} />
+                ) : (
+                  <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
+                    {embedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
+                  </div>
+                )}
+
+                {/* Buttons preview */}
+                {buttons.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {buttons.map(type => {
+                      const meta = BUTTON_META[type];
+                      return (
+                        <button
+                          key={type}
+                          className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", buttonStyle)}
+                        >
+                          <span>{meta.emoji}</span>
+                          <span>{meta.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>
+                )}
+              </div>
+
+              {/* Welcome channel info */}
+              {welcomeChannel && (
+                <div className="rounded-lg border border-border/60 bg-muted/30 px-4 py-3 text-xs text-muted-foreground">
+                  {t("welcomeAutoPost", {
+                    channel: `#${channels.find(c => c.id === welcomeChannel)?.name ?? welcomeChannel}`
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

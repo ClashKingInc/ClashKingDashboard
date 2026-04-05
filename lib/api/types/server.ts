@@ -63,6 +63,11 @@ export interface ClanSettings {
   settings: any;
 }
 
+export interface ServerClanListItem {
+  tag: string;
+  name: string;
+}
+
 export interface BanRequest {
   reason: string | null;
   added_by: number | string; // Allow string for large Discord IDs to preserve precision

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { apiCache } from "@/lib/api-cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -177,8 +178,7 @@ export default function RemindersPage() {
 
         if (!remindersRes.ok) {
           if (remindersRes.status === 401) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
+            logout();
             router.push(`/${params.locale}/login`);
             return;
           }
