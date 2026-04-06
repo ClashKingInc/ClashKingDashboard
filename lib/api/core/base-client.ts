@@ -28,10 +28,10 @@ export class BaseApiClient {
    */
   private async _getToken(isRetry: boolean, isAuthEndpoint = false): Promise<string | undefined> {
     let token = this.config.accessToken;
-    if (!token && typeof window !== 'undefined') {
+    if (!token && typeof globalThis.window !== 'undefined') {
       token = localStorage.getItem('access_token') || undefined;
     }
-    if (!token && !isRetry && !isAuthEndpoint && typeof window !== 'undefined') {
+    if (!token && !isRetry && !isAuthEndpoint && typeof globalThis.window !== 'undefined') {
       const hasRefresh = !!localStorage.getItem('refresh_token');
       if (hasRefresh) {
         const refreshed = await this._tryRefreshToken();
@@ -78,7 +78,7 @@ export class BaseApiClient {
           (response.status === 401 || response.status === 403) &&
           !_isRetry &&
           !endpoint.startsWith('/v2/auth/') &&
-          typeof window !== 'undefined'
+          typeof globalThis.window !== 'undefined'
         ) {
           const refreshed = await this._tryRefreshToken();
           if (refreshed) {
@@ -125,7 +125,7 @@ export class BaseApiClient {
         if (
           (response.status === 401 || response.status === 403) &&
           !_isRetry &&
-          typeof window !== 'undefined'
+          typeof globalThis.window !== 'undefined'
         ) {
           const refreshed = await this._tryRefreshToken();
           if (refreshed) {
@@ -180,9 +180,9 @@ export class BaseApiClient {
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
         // Both tokens are invalid — redirect to login preserving locale
-        const pathParts = window.location.pathname.split('/');
+        const pathParts = globalThis.window.location.pathname.split('/');
         const locale = pathParts[1] || 'en';
-        window.location.href = `/${locale}/login`;
+        globalThis.window.location.href = `/${locale}/login`;
         return false;
       }
 

@@ -453,7 +453,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
     // Remove from local state
     const updatedReminders = { ...reminders };
-    const key = (TAB_TO_REMINDER_KEY[activeTab] ?? "war_reminders") as keyof ServerRemindersResponse;
+    const key = TAB_TO_REMINDER_KEY[activeTab] ?? "war_reminders";
     updatedReminders[key] = updatedReminders[key].filter(r => r.id !== reminder.id);
     setReminders(updatedReminders);
   };
