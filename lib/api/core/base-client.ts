@@ -7,6 +7,13 @@ import type { ApiConfig, ApiResponse } from '../types/common';
 // Module-level singleton so all client instances share one refresh attempt
 let _sharedRefreshPromise: Promise<boolean> | null = null;
 
+function extractErrorMessage(data: any, status: number): string {
+  const detail = data?.detail;
+  if (Array.isArray(detail)) return detail.map((e: any) => e.msg ?? String(e)).join(', ');
+  if (typeof detail === 'string') return detail;
+  return data?.message || `HTTP ${status}`;
+}
+
 export class BaseApiClient {
   protected config: ApiConfig;
 
@@ -72,13 +79,7 @@ export class BaseApiClient {
           }
         }
 
-        const detail = data?.detail;
-        const error = Array.isArray(detail)
-          ? detail.map((e: any) => e.msg ?? String(e)).join(', ')
-          : typeof detail === 'string'
-            ? detail
-            : data?.message || `HTTP ${response.status}`;
-        return { error, status: response.status };
+        return { error: extractErrorMessage(data, response.status), status: response.status };
       }
 
       return {
@@ -139,13 +140,7 @@ export class BaseApiClient {
           }
         }
 
-        const detail = data?.detail;
-        const error = Array.isArray(detail)
-          ? detail.map((e: any) => e.msg ?? String(e)).join(', ')
-          : typeof detail === 'string'
-            ? detail
-            : data?.message || `HTTP ${response.status}`;
-        return { error, status: response.status };
+        return { error: extractErrorMessage(data, response.status), status: response.status };
       }
 
       return { data, status: response.status };

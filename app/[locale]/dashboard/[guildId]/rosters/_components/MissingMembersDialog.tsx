@@ -273,6 +273,9 @@ function RosterResultSection({
               selectedMembers.has(member.tag) ? "bg-primary/10" : ""
             }`}
             onClick={() => onToggle(member.tag)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onToggle(member.tag); }}
+            role="button"
+            tabIndex={0}
           >
             <div className="flex items-center gap-3">
               <Checkbox

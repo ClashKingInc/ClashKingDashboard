@@ -72,7 +72,7 @@ export function ServersHeader() {
             <span className="sr-only">{t("settings")}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={align === "start" ? 0 : 0}>
+        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={0}>
           {/* Theme Submenu */}
           <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
             <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">

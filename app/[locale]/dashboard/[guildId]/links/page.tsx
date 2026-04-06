@@ -606,6 +606,9 @@ export default function LinksManagementPage() {
                         <div
                           className="flex items-center gap-4 p-4 cursor-pointer"
                           onClick={() => toggleMemberExpanded(member.user_id)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMemberExpanded(member.user_id); }}
+                          role="button"
+                          tabIndex={0}
                         >
                           {member.avatar_url ? (
                             <img
@@ -634,6 +637,9 @@ export default function LinksManagementPage() {
                           <div
                             className="px-4 pb-4 flex items-center gap-2 flex-wrap cursor-pointer"
                             onClick={() => toggleMemberExpanded(member.user_id)}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMemberExpanded(member.user_id); }}
+                            role="button"
+                            tabIndex={0}
                           >
                             {previewAccounts.map((account) => (
                               <div

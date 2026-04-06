@@ -46,6 +46,10 @@ export function DashboardLayoutWrapper({
           <div
             className="fixed inset-0 bg-black/80 backdrop-blur-sm"
             onClick={() => setIsSidebarOpen(false)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setIsSidebarOpen(false); }}
+            role="button"
+            tabIndex={0}
+            aria-label="Close sidebar"
           />
           <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-lg animate-in slide-in-from-left duration-200">
             <div className="h-full relative">

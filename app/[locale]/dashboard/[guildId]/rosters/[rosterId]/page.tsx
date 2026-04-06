@@ -117,7 +117,6 @@ export default function RosterDetailPage() {
     loadingMissingMembers,
     loadingServerMembers,
     error,
-    refresh,
     refreshRoster,
     updateRoster,
     addMembers,
@@ -130,9 +129,6 @@ export default function RosterDetailPage() {
     createAutomation,
     updateAutomation,
     deleteAutomation,
-    createGroup,
-    updateGroup,
-    deleteGroup,
     createCategory,
     updateCategory,
     deleteCategory,
@@ -700,6 +696,9 @@ export default function RosterDetailPage() {
                           key={col.value}
                           className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50 cursor-pointer"
                           onClick={() => handleToggleColumn(col.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleToggleColumn(col.value); }}
+                          role="button"
+                          tabIndex={0}
                         >
                           <span className="text-sm text-muted-foreground">{t(`memberColumns.${col.value}`)}</span>
                           <Plus className="w-4 h-4 text-muted-foreground" />

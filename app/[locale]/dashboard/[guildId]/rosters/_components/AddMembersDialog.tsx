@@ -290,6 +290,9 @@ export function AddMembersDialog({
                       selectedMembers.has(member.tag) ? "bg-primary/10" : ""
                     }`}
                     onClick={() => toggleMember(member.tag)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMember(member.tag); }}
+                    role="button"
+                    tabIndex={0}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">

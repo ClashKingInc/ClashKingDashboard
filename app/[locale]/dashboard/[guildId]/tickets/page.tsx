@@ -669,7 +669,7 @@ function ChannelTab({
 
   const catChannels = categories.map((c) => ({ id: c.id, name: c.name }));
   const txtChannels = textChannels.map((c) => ({ id: c.id, name: c.name, parent_name: c.parent_name }));
-  const embedOptions = Array.from(new Set([...(panel.embed_name ? [panel.embed_name] : []), ...availableEmbeds])).sort();
+  const embedOptions = Array.from(new Set([...(panel.embed_name ? [panel.embed_name] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
 
   return (
     <div className="space-y-6">
@@ -800,7 +800,7 @@ function ButtonCard({
     new_message: settings.new_message,
   });
   const [clanTagInput, setClanTagInput] = useState("");
-  const embedOptions = Array.from(new Set([...(settings.new_message ? [settings.new_message] : []), ...availableEmbeds])).sort();
+  const embedOptions = Array.from(new Set([...(settings.new_message ? [settings.new_message] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
 
   const setField = <K extends keyof UpdateButtonSettingsRequest>(key: K, val: UpdateButtonSettingsRequest[K]) =>
     setForm((p) => ({ ...p, [key]: val }));
@@ -1194,7 +1194,7 @@ function MessagesTab({ panel, guildId }: { panel: TicketPanel; guildId: string }
       ) : (
         <div className="space-y-3">
           {messages.map((msg, i) => (
-            <div key={i} className="rounded-lg border border-border p-4 space-y-3">
+            <div key={msg.name || i} className="rounded-lg border border-border p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <Input className="h-8 flex-1 font-medium" value={msg.name}
                   onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, name: e.target.value } : m))}
