@@ -48,8 +48,8 @@ const buildEmptyState = (t: (key: string) => string): FormState => ({
 
 const toInputDate = (iso: string) => !iso ? "" : new Date(new Date(iso).getTime() - new Date(iso).getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 const fmt = (value: string) => !value ? "-" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
-const STATUS_VARIANT: Record<string, string> = { ongoing: "default", scheduled: "secondary" };
-const statusVariant = (status: Giveaway["status"]) => STATUS_VARIANT[status] ?? "outline";
+const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline"> = { ongoing: "default", scheduled: "secondary" };
+const statusVariant = (status: Giveaway["status"]): "default" | "secondary" | "outline" => STATUS_VARIANT[status] ?? "outline";
 const boostChoices = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3];
 
 function fmtRelative(iso: string): string {
