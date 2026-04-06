@@ -603,12 +603,9 @@ export default function LinksManagementPage() {
                         className="border border-border rounded-lg bg-card hover:border-primary/50 transition-colors"
                       >
                         {/* Member Header - Clickable to expand/collapse */}
-                        <div
-                          className="flex items-center gap-4 p-4 cursor-pointer"
+                        <button
+                          className="flex items-center gap-4 p-4 cursor-pointer w-full text-left"
                           onClick={() => toggleMemberExpanded(member.user_id)}
-                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMemberExpanded(member.user_id); }}
-                          role="button"
-                          tabIndex={0}
                         >
                           {member.avatar_url ? (
                             <img
@@ -630,16 +627,13 @@ export default function LinksManagementPage() {
                           ) : (
                             <ChevronDown className="w-5 h-5 text-muted-foreground flex-shrink-0" />
                           )}
-                        </div>
+                        </button>
 
                         {/* Accounts Preview (when collapsed) */}
                         {!isExpanded && member.linked_accounts.length > 0 && (
-                          <div
-                            className="px-4 pb-4 flex items-center gap-2 flex-wrap cursor-pointer"
+                          <button
+                            className="px-4 pb-4 flex items-center gap-2 flex-wrap cursor-pointer w-full text-left"
                             onClick={() => toggleMemberExpanded(member.user_id)}
-                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMemberExpanded(member.user_id); }}
-                            role="button"
-                            tabIndex={0}
                           >
                             {previewAccounts.map((account) => (
                               <div
@@ -664,7 +658,7 @@ export default function LinksManagementPage() {
                                 +{member.linked_accounts.length - 3} more
                               </Badge>
                             )}
-                          </div>
+                          </button>
                         )}
 
                         {/* Expanded Accounts Grid */}

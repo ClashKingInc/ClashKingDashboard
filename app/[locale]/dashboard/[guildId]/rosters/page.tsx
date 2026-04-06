@@ -170,7 +170,7 @@ function RosterCard({
         )}
 
         {/* Actions */}
-        <div className="flex gap-2 pt-2" role="presentation" onClick={(e) => e.stopPropagation()}>
+        <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>
           <Button variant="default" size="sm" className="flex-1" onClick={onView}>
             <Eye className="w-4 h-4 mr-1" />
             {t("rosterCard.view")}

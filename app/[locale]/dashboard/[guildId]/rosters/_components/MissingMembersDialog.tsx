@@ -267,15 +267,12 @@ function RosterResultSection({
       )}
       <div className="border border-border rounded-lg overflow-hidden">
         {result.missing_members.map((member: MissingMember) => (
-          <div
+          <button
             key={member.tag}
-            className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors ${
+            className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
               selectedMembers.has(member.tag) ? "bg-primary/10" : ""
             }`}
             onClick={() => onToggle(member.tag)}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onToggle(member.tag); }}
-            role="button"
-            tabIndex={0}
           >
             <div className="flex items-center gap-3">
               <Checkbox
@@ -294,7 +291,7 @@ function RosterResultSection({
               </div>
             </div>
             <p className="text-sm text-yellow-400">{member.trophies.toLocaleString()}</p>
-          </div>
+          </button>
         ))}
       </div>
     </div>

@@ -692,17 +692,14 @@ export default function RosterDetailPage() {
                     <div className="space-y-1 border-t border-border pt-2">
                       <p className="text-xs font-medium text-muted-foreground px-2 py-1">{t("columns.available")}</p>
                       {ROSTER_COLUMNS.filter(c => !localColumns.includes(c.value)).map((col) => (
-                        <div
+                        <button
                           key={col.value}
-                          className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50 cursor-pointer"
+                          className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50 cursor-pointer w-full text-left"
                           onClick={() => handleToggleColumn(col.value)}
-                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleToggleColumn(col.value); }}
-                          role="button"
-                          tabIndex={0}
                         >
                           <span className="text-sm text-muted-foreground">{t(`memberColumns.${col.value}`)}</span>
                           <Plus className="w-4 h-4 text-muted-foreground" />
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>
