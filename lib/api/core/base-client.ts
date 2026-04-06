@@ -22,6 +22,28 @@ export class BaseApiClient {
   }
 
   /**
+   * Resolve an access token, refreshing proactively if needed.
+   * @param isRetry - skip proactive refresh when already retrying
+   * @param isAuthEndpoint - skip proactive refresh for auth endpoints (no-op refresh loop)
+   */
+  private async _getToken(isRetry: boolean, isAuthEndpoint = false): Promise<string | undefined> {
+    let token = this.config.accessToken;
+    if (!token && typeof window !== 'undefined') {
+      token = localStorage.getItem('access_token') || undefined;
+    }
+    if (!token && !isRetry && !isAuthEndpoint && typeof window !== 'undefined') {
+      const hasRefresh = !!localStorage.getItem('refresh_token');
+      if (hasRefresh) {
+        const refreshed = await this._tryRefreshToken();
+        if (refreshed) {
+          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
+        }
+      }
+    }
+    return token;
+  }
+
+  /**
    * Make an HTTP request, with automatic token refresh on 401
    */
   protected async request<T>(
@@ -36,22 +58,7 @@ export class BaseApiClient {
       headers.set('Content-Type', 'application/json');
     }
 
-    // Get token from config or localStorage (client-side only)
-    let token = this.config.accessToken;
-    if (!token && typeof window !== 'undefined') {
-      token = localStorage.getItem('access_token') || undefined;
-    }
-
-    // If no access token but refresh token exists, try to refresh proactively
-    if (!token && !_isRetry && typeof window !== 'undefined' && !endpoint.startsWith('/v2/auth/')) {
-      const hasRefresh = !!localStorage.getItem('refresh_token');
-      if (hasRefresh) {
-        const refreshed = await this._tryRefreshToken();
-        if (refreshed) {
-          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
-        }
-      }
-    }
+    const token = await this._getToken(_isRetry, endpoint.startsWith('/v2/auth/'));
 
     if (token && !headers.has('Authorization')) {
       headers.set('Authorization', `Bearer ${token}`);
@@ -104,21 +111,7 @@ export class BaseApiClient {
     _isRetry = false
   ): Promise<ApiResponse<T>> {
     const url = `${this.config.baseUrl}${endpoint}`;
-
-    let token = this.config.accessToken;
-    if (!token && typeof window !== 'undefined') {
-      token = localStorage.getItem('access_token') || undefined;
-    }
-
-    if (!token && !_isRetry && typeof window !== 'undefined') {
-      const hasRefresh = !!localStorage.getItem('refresh_token');
-      if (hasRefresh) {
-        const refreshed = await this._tryRefreshToken();
-        if (refreshed) {
-          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
-        }
-      }
-    }
+    const token = await this._getToken(_isRetry);
 
     // Do NOT set Content-Type — browser sets it with the correct multipart boundary
     const headers: Record<string, string> = {};

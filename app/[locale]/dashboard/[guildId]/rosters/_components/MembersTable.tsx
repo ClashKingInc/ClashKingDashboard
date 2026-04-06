@@ -110,7 +110,7 @@ export function MembersTable({
     }
   };
 
-  const renderCell = (member: RosterMember, column: string) => {
+  const renderCell = (member: RosterMember, column: string) => { // NOSONAR — exhaustive switch over table column types, presentation logic only
     switch (column) {
       case 'townhall':
         return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;

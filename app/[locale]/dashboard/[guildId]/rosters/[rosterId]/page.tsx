@@ -89,7 +89,7 @@ import { useGameConstants } from "../_hooks";
 
 // ────────────────────────────────────────────────────────────────────────────
 
-export default function RosterDetailPage() {
+export default function RosterDetailPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();

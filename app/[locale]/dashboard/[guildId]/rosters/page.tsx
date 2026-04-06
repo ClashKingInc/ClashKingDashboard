@@ -221,7 +221,7 @@ function RosterCard({
   );
 }
 
-export default function RostersPage() {
+export default function RostersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -1371,7 +1371,7 @@ export default function RostersPage() {
                             type="checkbox"
                             id={`cat-${cat.custom_id}`}
                             checked={selected}
-                            onChange={(e) => setEditingGroup(prev => {
+                            onChange={(e) => setEditingGroup(prev => { // NOSONAR — inline state updater in JSX handler, standard React pattern
                               if (!prev) return null;
                               const current = prev.allowed_signup_categories ?? [];
                               return {

@@ -13,6 +13,18 @@ import type { GuildInfo } from "@/lib/api/types/server";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { ServersHeader } from "@/components/servers-header";
 
+const ROLE_STYLES: Record<string, string> = {
+  Owner: "bg-green-500/20 text-green-600 dark:text-green-400",
+  Administrator: "bg-blue-500/20 text-blue-600 dark:text-blue-400",
+  Manager: "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400",
+};
+
+const ROLE_LABEL_KEYS: Record<string, string> = {
+  Owner: "roles.owner",
+  Administrator: "roles.administrator",
+  Manager: "roles.manager",
+};
+
 export default function ServersPage() {
   const t = useTranslations("ServersPage");
   const router = useRouter();
@@ -218,19 +230,9 @@ export default function ServersPage() {
                       {/* Role badge */}
                       <div className="mt-1 sm:mt-2">
                         <span
-                          className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full inline-block ${guild.role === "Owner"
-                            ? "bg-green-500/20 text-green-600 dark:text-green-400"
-                            : guild.role === "Administrator"
-                              ? "bg-blue-500/20 text-blue-600 dark:text-blue-400"
-                              : guild.role === "Manager"
-                                ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400"
-                                : "bg-gray-500/20 text-muted-foreground"
-                            }`}
+                          className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full inline-block ${ROLE_STYLES[guild.role] ?? "bg-gray-500/20 text-muted-foreground"}`}
                         >
-                          {guild.role === "Owner" ? t("roles.owner")
-                            : guild.role === "Administrator" ? t("roles.administrator")
-                            : guild.role === "Manager" ? t("roles.manager")
-                            : guild.role}
+                          {ROLE_LABEL_KEYS[guild.role] ? t(ROLE_LABEL_KEYS[guild.role] as any) : guild.role}
                         </span>
                       </div>
                     </div>

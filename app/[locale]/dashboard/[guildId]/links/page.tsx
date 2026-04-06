@@ -84,6 +84,37 @@ interface ServerLinksResponse {
   verified_accounts: number; // Total verified accounts (server-wide, accurate stat)
 }
 
+function filterMembers(
+  members: MemberLinks[],
+  searchQuery: string,
+  filterVerified: "all" | "verified" | "unverified",
+  filterMinAccounts: number
+): MemberLinks[] {
+  let filtered = members;
+  if (searchQuery.trim()) {
+    const query = searchQuery.toLowerCase();
+    filtered = filtered.filter(member =>
+      member.username.toLowerCase().includes(query) ||
+      member.display_name.toLowerCase().includes(query) ||
+      member.linked_accounts.some(acc =>
+        acc.player_name?.toLowerCase().includes(query) ||
+        acc.player_tag.toLowerCase().includes(query)
+      )
+    );
+  }
+  if (filterVerified !== "all") {
+    filtered = filtered.filter(member => {
+      const hasVerified = member.linked_accounts.some(acc => acc.is_verified);
+      const hasUnverified = member.linked_accounts.some(acc => !acc.is_verified);
+      return filterVerified === "verified" ? hasVerified : hasUnverified;
+    });
+  }
+  if (filterMinAccounts > 0) {
+    filtered = filtered.filter(member => member.account_count >= filterMinAccounts);
+  }
+  return filtered;
+}
+
 export default function LinksManagementPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
@@ -165,42 +196,7 @@ export default function LinksManagementPage() {
   // Filter members based on search query and filters
   useEffect(() => {
     if (!linksData) return;
-
-    let filtered = linksData.members;
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(member =>
-        member.username.toLowerCase().includes(query) ||
-        member.display_name.toLowerCase().includes(query) ||
-        member.linked_accounts.some(acc =>
-          acc.player_name?.toLowerCase().includes(query) ||
-          acc.player_tag.toLowerCase().includes(query)
-        )
-      );
-    }
-
-    // Verified filter
-    if (filterVerified !== "all") {
-      filtered = filtered.filter(member => {
-        const hasVerified = member.linked_accounts.some(acc => acc.is_verified);
-        const hasUnverified = member.linked_accounts.some(acc => !acc.is_verified);
-
-        if (filterVerified === "verified") {
-          return hasVerified;
-        } else {
-          return hasUnverified;
-        }
-      });
-    }
-
-    // Min accounts filter
-    if (filterMinAccounts > 0) {
-      filtered = filtered.filter(member => member.account_count >= filterMinAccounts);
-    }
-
-    setFilteredMembers(filtered);
+    setFilteredMembers(filterMembers(linksData.members, searchQuery, filterVerified, filterMinAccounts));
   }, [searchQuery, linksData, filterVerified, filterMinAccounts]);
 
   const handleUnlinkAccount = async () => {

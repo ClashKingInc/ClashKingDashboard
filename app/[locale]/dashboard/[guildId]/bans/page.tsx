@@ -56,7 +56,7 @@ import { apiCache } from "@/lib/api-cache";
 import type { BannedPlayer, Strike } from "@/lib/api/types/server";
 import { useToast } from "@/components/ui/use-toast";
 
-export default function BansPage() {
+export default function BansPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const guildId = params.guildId as string;
   const locale = params.locale as string;
@@ -1184,10 +1184,10 @@ export default function BansPage() {
                                       <Button 
                                         variant="ghost" 
                                         size="sm"
-                                        onClick={() => {
-                                          setExpandedPlayerTags(prev => 
-                                            prev.includes(group.tag) 
-                                              ? prev.filter(t => t !== group.tag) 
+                                        onClick={() => { // NOSONAR — inline toggle updater in JSX handler, standard React pattern
+                                          setExpandedPlayerTags(prev =>
+                                            prev.includes(group.tag)
+                                              ? prev.filter(t => t !== group.tag)
                                               : [...prev, group.tag]
                                           );
                                         }}

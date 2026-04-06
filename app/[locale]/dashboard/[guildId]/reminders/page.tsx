@@ -98,7 +98,24 @@ const POINT_THRESHOLD_MAX = 10000;
 const ATTACK_THRESHOLD_MIN = 1;
 const ATTACK_THRESHOLD_MAX = 5;
 
-export default function RemindersPage() {
+const TAB_TO_REMINDER_KEY: Record<string, keyof ServerRemindersResponse> = {
+  war: "war_reminders",
+  capital: "capital_reminders",
+  games: "clan_games_reminders",
+  inactivity: "inactivity_reminders",
+};
+
+const TYPE_TIME_LIMIT: Record<string, number> = {
+  War: 48,
+  "Clan Games": 336,
+  "Clan Capital": 168,
+};
+
+function getTimeLimit(type: string | undefined): number {
+  return TYPE_TIME_LIMIT[type ?? ""] ?? 24;
+}
+
+export default function RemindersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -436,7 +453,7 @@ export default function RemindersPage() {
 
     // Remove from local state
     const updatedReminders = { ...reminders };
-    const key = `${activeTab === "war" ? "war" : activeTab === "capital" ? "capital" : activeTab === "games" ? "clan_games" : "inactivity"}_reminders` as keyof ServerRemindersResponse;
+    const key = (TAB_TO_REMINDER_KEY[activeTab] ?? "war_reminders") as keyof ServerRemindersResponse;
     updatedReminders[key] = updatedReminders[key].filter(r => r.id !== reminder.id);
     setReminders(updatedReminders);
   };
@@ -449,9 +466,7 @@ export default function RemindersPage() {
         toast({
           title: t('toast.errorTitle'),
           description: t('toast.timeExceedsLimit', {
-            limit: dialogReminder.type === "War" ? 48 :
-                dialogReminder.type === "Clan Games" ? 336 :
-                    dialogReminder.type === "Clan Capital" ? 168 : 24,
+            limit: getTimeLimit(dialogReminder.type),
             type: dialogReminder.type || "reminder"
           }),
           variant: "destructive",

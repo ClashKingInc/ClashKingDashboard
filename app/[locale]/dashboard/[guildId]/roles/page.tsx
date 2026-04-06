@@ -117,6 +117,8 @@ const denormalizeLeagueName = (snakeCaseName: string): string => {
     .join(' ');
 };
 
+const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V"] as const;
+
 function SortIcon({ col, sortCol, sortDir }: { readonly col: "role" | "criteria"; readonly sortCol: string | null; readonly sortDir: string }) {
   if (sortCol !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 inline opacity-40" />;
   return sortDir === "asc"
@@ -143,7 +145,7 @@ export default function RolesPage() {
     }
     const leaguesInTier = [];
     for (let i = tier.range[0]; i <= tier.range[1]; i++) {
-      const roman = i === 1 ? "I" : i === 2 ? "II" : i === 3 ? "III" : i === 4 ? "IV" : "V";
+      const roman = ROMAN_NUMERALS[i - 1];
       leaguesInTier.push({
         value: `${tier.apiName} ${roman}`,
         label: `${tierName} ${roman}`,
