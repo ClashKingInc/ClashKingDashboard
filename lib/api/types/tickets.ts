@@ -127,7 +127,6 @@ export interface UpdateApproveMessagesRequest {
 
 export interface ServerEmbed {
   name: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any> | null;
 }
 
@@ -138,7 +137,6 @@ export interface ServerEmbedsResponse {
 
 export interface UpsertEmbedRequest {
   name: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>;
 }
 
