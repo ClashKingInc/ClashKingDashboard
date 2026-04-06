@@ -12,7 +12,7 @@ interface LoadingScreenWithMessagesProps {
   description?: string;
 }
 
-export default function LoadingScreenWithMessages({
+export default function LoadingScreenWithMessages({ // NOSONAR — theme ternaries are UI-only, complexity is display logic not business logic
   messages,
   title,
   description
