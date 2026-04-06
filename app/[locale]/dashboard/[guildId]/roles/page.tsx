@@ -117,6 +117,15 @@ const denormalizeLeagueName = (snakeCaseName: string): string => {
     .join(' ');
 };
 
+const ROMAN_NUMERALS = ["I", "II", "III", "IV", "V"] as const;
+
+function SortIcon({ col, sortCol, sortDir }: { readonly col: "role" | "criteria"; readonly sortCol: string | null; readonly sortDir: string }) {
+  if (sortCol !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 inline opacity-40" />;
+  return sortDir === "asc"
+    ? <ChevronUp className="ml-1 h-3 w-3 inline" />
+    : <ChevronDown className="ml-1 h-3 w-3 inline" />;
+}
+
 export default function RolesPage() {
   const params = useParams();
   const guildId = params.guildId as string;
@@ -136,7 +145,7 @@ export default function RolesPage() {
     }
     const leaguesInTier = [];
     for (let i = tier.range[0]; i <= tier.range[1]; i++) {
-      const roman = i === 1 ? "I" : i === 2 ? "II" : i === 3 ? "III" : i === 4 ? "IV" : "V";
+      const roman = ROMAN_NUMERALS[i - 1];
       leaguesInTier.push({
         value: `${tier.apiName} ${roman}`,
         label: `${tierName} ${roman}`,
@@ -596,13 +605,6 @@ export default function RolesPage() {
     }
   };
 
-  const SortIcon = ({ col }: { col: "role" | "criteria" }) => {
-    if (sortCol !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 inline opacity-40" />;
-    return sortDir === "asc"
-      ? <ChevronUp className="ml-1 h-3 w-3 inline" />
-      : <ChevronDown className="ml-1 h-3 w-3 inline" />;
-  };
-
   const renderRolesList = (roleType: RoleType) => {
     const raw = allRoles[roleType] || [];
     const normNum = (v: any) => typeof v === "string" ? parseInt(v.replace(/^\D+/i, "")) : Number(v);
@@ -654,13 +656,13 @@ export default function RolesPage() {
               className="cursor-pointer select-none hover:text-foreground"
               onClick={() => handleSortClick("role")}
             >
-              {t("configuredRoles.discordRole")}<SortIcon col="role" />
+              {t("configuredRoles.discordRole")}<SortIcon col="role" sortCol={sortCol} sortDir={sortDir} />
             </TableHead>
             <TableHead
               className="cursor-pointer select-none hover:text-foreground"
               onClick={() => handleSortClick("criteria")}
             >
-              {t("configuredRoles.criteria")}<SortIcon col="criteria" />
+              {t("configuredRoles.criteria")}<SortIcon col="criteria" sortCol={sortCol} sortDir={sortDir} />
             </TableHead>
             <TableHead className="text-right">{t("configuredRoles.actions")}</TableHead>
           </TableRow>
@@ -772,7 +774,7 @@ export default function RolesPage() {
             </CardContent>
           </Card>
 
-          <Card className={`bg-card ${roleSettings.auto_eval_status ? 'border-green-500/30 bg-green-500/5' : 'border-green-500/30 bg-green-500/5'}`}>
+          <Card className="bg-card border-green-500/30 bg-green-500/5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.autoEvaluation")}</CardTitle>
             </CardHeader>

@@ -48,7 +48,11 @@ const buildEmptyState = (t: (key: string) => string): FormState => ({
 
 const toInputDate = (iso: string) => !iso ? "" : new Date(new Date(iso).getTime() - new Date(iso).getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 const fmt = (value: string) => !value ? "-" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
-const statusVariant = (status: Giveaway["status"]) => status === "ongoing" ? "default" : status === "scheduled" ? "secondary" : "outline";
+const statusVariant = (status: Giveaway["status"]): "default" | "secondary" | "outline" => {
+  if (status === "ongoing") return "default";
+  if (status === "scheduled") return "secondary";
+  return "outline";
+};
 const boostChoices = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3];
 
 function fmtRelative(iso: string): string {
@@ -62,7 +66,7 @@ function fmtRelative(iso: string): string {
   return past ? `${d}d ago` : `in ${d}d`;
 }
 
-export default function GiveawaysPage() {
+export default function GiveawaysPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -312,8 +316,8 @@ export default function GiveawaysPage() {
       const overflow = active.length - shown.length;
       return (
         <div className="flex flex-wrap items-center gap-1">
-          {shown.map((w, i) => (
-            <span key={i} className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-medium text-green-400 ring-1 ring-green-500/20">
+          {shown.map((w) => (
+            <span key={w.user_id} className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-medium text-green-400 ring-1 ring-green-500/20">
               <Trophy className="h-2.5 w-2.5" />{w.username ? `@${w.username}` : w.user_id}
             </span>
           ))}
@@ -325,7 +329,7 @@ export default function GiveawaysPage() {
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="space-y-1">
-                    {active.slice(3).map((w, i) => <div key={i}>{w.username ? `@${w.username}` : w.user_id}</div>)}
+                    {active.slice(3).map((w) => <div key={w.user_id}>{w.username ? `@${w.username}` : w.user_id}</div>)}
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -339,7 +343,7 @@ export default function GiveawaysPage() {
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="space-y-1">
-                    {rerolled.map((w, i) => <div key={i} className="line-through opacity-60">{w.username ? `@${w.username}` : w.user_id}</div>)}
+                    {rerolled.map((w) => <div key={w.user_id} className="line-through opacity-60">{w.username ? `@${w.username}` : w.user_id}</div>)}
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -858,7 +862,7 @@ export default function GiveawaysPage() {
               <div className="space-y-3">
                 <p className="text-sm text-muted-foreground">{t("reroll.selectWinners")}</p>
                 <div className="space-y-2">
-                  {rerollTarget.winners_list.filter((w) => w.status === "winner").map((w) => (
+                  {rerollTarget.winners_list.filter((w) => w.status === "winner").map((w) => ( // NOSONAR — JSX nesting from inline dialog structure, standard React pattern
                     <div key={w.user_id} className="flex items-center gap-2">
                       <Checkbox
                         id={`reroll-${w.user_id}`}
