@@ -117,7 +117,7 @@ const denormalizeLeagueName = (snakeCaseName: string): string => {
     .join(' ');
 };
 
-function SortIcon({ col, sortCol, sortDir }: { col: "role" | "criteria"; sortCol: string; sortDir: string }) {
+function SortIcon({ col, sortCol, sortDir }: { col: "role" | "criteria"; sortCol: string | null; sortDir: string }) {
   if (sortCol !== col) return <ChevronsUpDown className="ml-1 h-3 w-3 inline opacity-40" />;
   return sortDir === "asc"
     ? <ChevronUp className="ml-1 h-3 w-3 inline" />
