@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { RoleCombobox } from "@/components/ui/role-combobox";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -925,7 +927,10 @@ export default function ClansPage() {
               <TabsContent value="basic" className="space-y-4">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <Label>{t("memberRole")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("memberRole")}</Label>
+                      <InfoPopover content={t("fieldHelp.memberRole")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
                     <RoleCombobox
                       roles={discordRoles}
                       value={clanSettings?.generalRole?.toString() || 'disabled'}
@@ -935,7 +940,10 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("leaderRole")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("leaderRole")}</Label>
+                      <InfoPopover content={t("fieldHelp.leaderRole")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
                     <RoleCombobox
                       roles={discordRoles}
                       value={clanSettings?.leaderRole?.toString() || 'disabled'}
@@ -945,7 +953,10 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("clanChannel")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("clanChannel")}</Label>
+                      <InfoPopover content={t("fieldHelp.clanChannel")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
                     <ChannelCombobox
                       channels={channels}
                       value={clanSettings.clanChannel?.toString() || 'none'}
@@ -957,7 +968,34 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("category")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("banAlertChannel")}</Label>
+                      <InfoPopover
+                        content={t.rich("fieldHelp.banAlertChannel", {
+                          bansLink: (chunks) => (
+                            <Link href={`/dashboard/${guildId}/bans`} className="font-medium underline underline-offset-2">
+                              {chunks}
+                            </Link>
+                          ),
+                        })}
+                        label={t("fieldHelp.infoButtonLabel")}
+                      />
+                    </div>
+                    <ChannelCombobox
+                      channels={channels}
+                      value={clanSettings.ban_alert_channel?.toString() || 'none'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' || value === 'disabled' ? null : value})}
+                      placeholder={t("selectChannel")}
+                      showDisabled={false}
+                      className="bg-background"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("category")}</Label>
+                      <InfoPopover content={t("fieldHelp.category")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
                     <Input
                       placeholder={t("categoryPlaceholder")}
                       value={clanSettings?.category || ''}
@@ -967,7 +1005,19 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("clanAbbreviation")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("clanAbbreviation")}</Label>
+                      <InfoPopover
+                        content={t.rich("fieldHelp.clanAbbreviation", {
+                          familySettingsLink: (chunks) => (
+                            <Link href={`/dashboard/${guildId}/family-settings`} className="font-medium underline underline-offset-2">
+                              {chunks}
+                            </Link>
+                          ),
+                        })}
+                        label={t("fieldHelp.infoButtonLabel")}
+                      />
+                    </div>
                     <Input
                       placeholder={t("abbreviationPlaceholder")}
                       value={clanSettings?.abbreviation || ''}
@@ -1114,17 +1164,6 @@ export default function ClansPage() {
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>{t("banAlertChannel")}</Label>
-                    <ChannelCombobox
-                      channels={channels}
-                      value={clanSettings.ban_alert_channel?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' || value === 'disabled' ? null : value})}
-                      placeholder={t("selectChannel")}
-                      showDisabled={false}
-                      className="bg-background"
-                    />
-                  </div>
                 </div>
               </TabsContent>
             </Tabs>

@@ -1241,7 +1241,7 @@
     "customizeIntegration": "Pas Discord-integratie-instellingen aan voor deze clan",
     "tabs": {
       "basic": "Discord setup",
-      "war": "Oorlog & meldingen",
+      "war": "Oorlog",
       "advanced": "Welkom & automatisering"
     },
     "memberRole": "Lid Rol",
@@ -1265,6 +1265,15 @@
       "never": "Nooit",
       "always": "Altijd",
       "onJoin": "Bij Deelnemen"
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Toon meer informatie",
+      "memberRole": "De rol die leden van deze clan moeten krijgen. Als de bot de rollen beheert, krijgt iedereen in deze clan deze rol. Handig als je clan-specifieke kanalen gebruikt.",
+      "leaderRole": "De rol die co-leaders en de leider van deze clan krijgen. In een typische Discord kun je hiermee bijvoorbeeld een leiderschat per clan of een gezamenlijke leiderschat voor alle clans maken.",
+      "clanChannel": "Het kanaal dat je kiest is het standaardkanaal waar de bot berichten plaatst. Bijvoorbeeld: hier begroet de bot nieuwe gebruikers als je die optie inschakelt.",
+      "banAlertChannel": "Kies in welk kanaal de bot je waarschuwt wanneer iemand die is geband (zie <bansLink>Bans</bansLink>) je clan binnenkomt.",
+      "clanAbbreviation": "Geef je clan een afkorting zodat leden die in hun naam kunnen krijgen als je hernoemen activeert. Je kunt dit instellen in <familySettingsLink>Familie-instellingen</familySettingsLink>.",
+      "category": "Een manier om je clans te organiseren. Veel clanfamilies hebben 5 of meer clans. Sommige zijn bijvoorbeeld alleen voor CWL of events."
     },
     "greeting": {
       "title": "Welkomstbericht Variabelen",

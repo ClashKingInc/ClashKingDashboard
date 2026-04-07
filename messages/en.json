@@ -1238,7 +1238,7 @@
     "customizeIntegration": "Customize Discord integration settings for this clan",
     "tabs": {
       "basic": "Discord Setup",
-      "war": "War & Alerts",
+      "war": "War",
       "advanced": "Welcome & Automation"
     },
     "memberRole": "Member Role",
@@ -1262,6 +1262,15 @@
       "never": "Never",
       "always": "Always",
       "onJoin": "On Join"
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Show more information",
+      "memberRole": "The role that the members of this clan should receive. So on your discord, if the bot managed the roles, every person in this clan would get this role. Helpful if you are making clan specific channels.",
+      "leaderRole": "The role that co-leaders and the leader of this clan will receive. In a typical Discord server, this is useful for a clan leader chat or one shared leader chat across all clans.",
+      "clanChannel": "The channel you define will be the default channel where the bot writes. For example, this is where it will greet new users if you enable that option.",
+      "banAlertChannel": "Choose which channel the bot should use to warn you when someone who is banned (see <bansLink>Bans</bansLink>) joins your clan.",
+      "clanAbbreviation": "Give your clan an abbreviation so members can have it in their name when rename is enabled. You can configure this format in <familySettingsLink>Family Settings</familySettingsLink>.",
+      "category": "This is a way to organize your clans. Many clan families have 5 or more clans. Sometimes some are only for CWL or Event clans."
     },
     "greeting": {
       "title": "Greeting Placeholders",
