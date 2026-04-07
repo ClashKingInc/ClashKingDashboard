@@ -52,6 +52,7 @@ import {
   Eye
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { apiCache } from "@/lib/api-cache";
 
 // Types based on ClashKingAPI models
 interface MemberCountWarning {
@@ -173,6 +174,35 @@ export default function ClansPage() {
   }>({ war_score: null, war_timer: null });
   const [countdownLoading, setCountdownLoading] = useState<string | null>(null);
 
+  const clansCacheKey = `clans-${guildId}`;
+  const channelsCacheKey = `channels-${guildId}`;
+  const rolesCacheKey = `discord-roles-${guildId}`;
+
+  const fetchClans = async (accessToken: string, forceRefresh = false): Promise<Clan[]> => {
+    if (forceRefresh) {
+      apiCache.invalidate(clansCacheKey);
+    }
+
+    return apiCache.get(clansCacheKey, async () => {
+      const response = await fetch(`/api/v2/server/${guildId}/clans`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        const error = new Error(`Failed to fetch clans: ${response.status}`) as Error & { status?: number };
+        error.status = response.status;
+        throw error;
+      }
+
+      return response.json();
+    });
+  };
+
+  const refreshClans = async (accessToken: string) => {
+    const clansData = await fetchClans(accessToken, true);
+    setClans(clansData || []);
+  };
+
   // Fetch data on mount
   useEffect(() => {
     const fetchData = async () => {
@@ -184,42 +214,40 @@ export default function ClansPage() {
           return;
         }
 
-        // Fetch clans, channels and roles in parallel
-        const [clansRes, channelsRes, rolesRes] = await Promise.all([
-          fetch(`/api/v2/server/${guildId}/clans`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          }),
-          fetch(`/api/v2/server/${guildId}/channels`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          }),
-          fetch(`/api/v2/server/${guildId}/discord-roles`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-          }),
-        ]);
-
-        if (!clansRes.ok) {
-          if (clansRes.status === 401) {
-            logout();
-            router.push(`/${params.locale}/login`);
-            return;
-          }
-          throw new Error(`Failed to fetch clans: ${clansRes.statusText}`);
-        }
-
-        const clansData = await clansRes.json();
+        const clansData = await fetchClans(accessToken);
         setClans(clansData || []);
 
-        if (channelsRes.ok) {
-          const channelsData = await channelsRes.json();
-          setChannels(channelsData || []);
+        const [channelsResult, rolesResult] = await Promise.allSettled([
+          apiCache.get(channelsCacheKey, async () => {
+            const response = await fetch(`/api/v2/server/${guildId}/channels`, {
+              headers: { Authorization: `Bearer ${accessToken}` }
+            });
+            if (!response.ok) throw new Error("Failed to fetch channels");
+            return response.json();
+          }),
+          apiCache.get(rolesCacheKey, async () => {
+            const response = await fetch(`/api/v2/server/${guildId}/discord-roles`, {
+              headers: { Authorization: `Bearer ${accessToken}` }
+            });
+            if (!response.ok) throw new Error("Failed to fetch roles");
+            return response.json();
+          })
+        ]);
+
+        if (channelsResult.status === "fulfilled") {
+          setChannels(channelsResult.value || []);
         }
 
-        if (rolesRes.ok) {
-          const rolesData = await rolesRes.json();
-          setDiscordRoles(rolesData.roles || []);
+        if (rolesResult.status === "fulfilled") {
+          setDiscordRoles(rolesResult.value.roles || []);
         }
       } catch (err) {
         console.error("Error fetching data:", err);
+        if (err instanceof Error && (err as Error & { status?: number }).status === 401) {
+          logout();
+          router.push(`/${params.locale}/login`);
+          return;
+        }
         setError(err instanceof Error ? err.message : "Failed to load clans");
         toast({
           title: tCommon("error"),
@@ -280,14 +308,7 @@ export default function ClansPage() {
         description: t("toast.clanAdded"),
       });
 
-      // Refresh clans list
-      const clansRes = await fetch(`/api/v2/server/${guildId}/clans`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      if (clansRes.ok) {
-        const clansData = await clansRes.json();
-        setClans(clansData || []);
-      }
+      await refreshClans(accessToken || "");
 
       setNewClanTag("");
       setIsAddDialogOpen(false);
@@ -327,14 +348,7 @@ export default function ClansPage() {
         description: t("toast.clanRemoved"),
       });
 
-      // Refresh clans list
-      const clansRes = await fetch(`/api/v2/server/${guildId}/clans`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      if (clansRes.ok) {
-        const clansData = await clansRes.json();
-        setClans(clansData || []);
-      }
+      await refreshClans(accessToken || "");
     } catch (err) {
       console.error("Error deleting clan:", err);
       toast({
@@ -442,14 +456,7 @@ export default function ClansPage() {
         description: t("toast.settingsSaved"),
       });
 
-      // Refresh clans list
-      const clansRes = await fetch(`/api/v2/server/${guildId}/clans`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      if (clansRes.ok) {
-        const clansData = await clansRes.json();
-        setClans(clansData || []);
-      }
+      await refreshClans(accessToken || "");
 
       setIsSettingsDialogOpen(false);
       setSelectedClan(null);
