@@ -1262,9 +1262,9 @@
     "category": "Categorie",
     "autoGreetOption": "Auto Welkomst Optie",
     "autoGreetOptions": {
-      "never": "Nooit",
-      "always": "Altijd",
-      "onJoin": "Bij Deelnemen"
+      "never": "Never",
+      "always": "Every Join",
+      "onJoin": "First Join"
     },
     "fieldHelp": {
       "infoButtonLabel": "Toon meer informatie",

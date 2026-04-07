@@ -1282,9 +1282,9 @@
     "category": "Catégorie",
     "autoGreetOption": "Option d'Accueil Auto",
     "autoGreetOptions": {
-      "never": "Jamais",
-      "always": "Toujours",
-      "onJoin": "À l'Arrivée"
+      "never": "Never",
+      "always": "Every Join",
+      "onJoin": "First Join"
     },
     "fieldHelp": {
       "infoButtonLabel": "Afficher plus d'informations",

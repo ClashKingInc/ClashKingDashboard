@@ -1260,8 +1260,8 @@
     "autoGreetOption": "Auto Greet Option",
     "autoGreetOptions": {
       "never": "Never",
-      "always": "Always",
-      "onJoin": "On Join"
+      "always": "Every Join",
+      "onJoin": "First Join"
     },
     "fieldHelp": {
       "infoButtonLabel": "Show more information",
