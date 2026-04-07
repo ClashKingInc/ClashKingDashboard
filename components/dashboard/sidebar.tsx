@@ -161,7 +161,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
         },
         {
           nameKey: "bans.name",
-          href: `/dashboard/${guildId}/bans`,
+          href: `/dashboard/${guildId}/bans-and-strikes`,
           icon: Ban,
         },
       ],
