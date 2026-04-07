@@ -269,7 +269,7 @@
       "search": "Search by name or tag...",
       "howItWorks": {
         "title": "How Bans Work",
-        "description": "Banned players are prevented from joining any clan linked to this server. The bot will warn you if they join one of the clans. Bans are server-wide and apply to all your clans."
+        "description": "If a banned player joins one of your clans, a warning will be sent to the clan channel you setup in the <clansTab>clans tab</clansTab>. This bot cannot prevent people from joining your clan but it can only give a warning."
       },
       "stats": {
         "total": "Total Bans",

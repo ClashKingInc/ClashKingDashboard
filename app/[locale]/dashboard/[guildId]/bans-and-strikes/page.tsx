@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Fragment } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -808,7 +809,16 @@ export default function BansPage() { // NOSONAR — React page component: comple
                 <AlertCircle className="h-4 w-4 text-blue-500" />
                 <AlertTitle className="text-blue-400">{t("bans.howItWorks.title")}</AlertTitle>
                 <AlertDescription className="text-blue-300">
-                  {t("bans.howItWorks.description")}
+                  {t.rich("bans.howItWorks.description", {
+                    clansTab: (chunks) => (
+                      <Link
+                        href={`/dashboard/${guildId}/clans`}
+                        className="underline font-medium text-blue-200 hover:text-blue-100"
+                      >
+                        {chunks}
+                      </Link>
+                    ),
+                  })}
                 </AlertDescription>
               </Alert>
 
