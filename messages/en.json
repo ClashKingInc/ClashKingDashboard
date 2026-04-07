@@ -1237,9 +1237,9 @@
     "configureClan": "Configure {name} ({tag})",
     "customizeIntegration": "Customize Discord integration settings for this clan",
     "tabs": {
-      "basic": "Basic",
-      "war": "War Settings",
-      "advanced": "Advanced"
+      "basic": "Discord Setup",
+      "war": "War & Alerts",
+      "advanced": "Welcome & Automation"
     },
     "memberRole": "Member Role",
     "leaderRole": "Leader Role",

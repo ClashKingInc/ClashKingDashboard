@@ -1260,9 +1260,9 @@
     "configureClan": "Configurer {name} ({tag})",
     "customizeIntegration": "Personnalisez les paramètres d'intégration Discord pour ce clan",
     "tabs": {
-      "basic": "Basique",
-      "war": "Paramètres de Guerre",
-      "advanced": "Avancé"
+      "basic": "Configuration Discord",
+      "war": "Guerre & alertes",
+      "advanced": "Accueil & automatisation"
     },
     "memberRole": "Rôle de Membre",
     "leaderRole": "Rôle de Chef",

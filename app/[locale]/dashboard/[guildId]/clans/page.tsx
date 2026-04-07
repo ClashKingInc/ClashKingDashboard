@@ -918,8 +918,8 @@ export default function ClansPage() {
             <Tabs defaultValue="basic" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="basic">{t("tabs.basic")}</TabsTrigger>
-                <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
                 <TabsTrigger value="advanced">{t("tabs.advanced")}</TabsTrigger>
+                <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="basic" className="space-y-4">
@@ -957,6 +957,16 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
+                    <Label>{t("category")}</Label>
+                    <Input
+                      placeholder={t("categoryPlaceholder")}
+                      value={clanSettings?.category || ''}
+                      onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
+                      className="bg-background border-border"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label>{t("clanAbbreviation")}</Label>
                     <Input
                       placeholder={t("abbreviationPlaceholder")}
@@ -966,6 +976,23 @@ export default function ClansPage() {
                     />
                   </div>
 
+                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
+                    <div className="space-y-0.5">
+                      <Label>{t("leadershipEval")}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {t("leadershipEvalDescription")}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={clanSettings?.leadership_eval || false}
+                      onCheckedChange={(checked) => setClanSettings({...clanSettings, leadership_eval: checked})}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="advanced" className="space-y-4">
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="greeting-input">{t("greetingMessage")}</Label>
                     <Input
@@ -976,7 +1003,6 @@ export default function ClansPage() {
                       className="bg-background border-border"
                     />
 
-                    {/* Live Preview */}
                     <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
                       <div className="flex items-center gap-2 mb-2">
                         <Eye className="h-4 w-4 text-primary" />
@@ -989,7 +1015,7 @@ export default function ClansPage() {
                         )}
                       </p>
                     </div>
-                    
+
                     <Collapsible
                       open={isGreetingPlaceholdersOpen}
                       onOpenChange={setIsGreetingPlaceholdersOpen}
@@ -1039,17 +1065,21 @@ export default function ClansPage() {
                     </Collapsible>
                   </div>
 
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-                    <div className="space-y-0.5">
-                      <Label>{t("leadershipEval")}</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {t("leadershipEvalDescription")}
-                      </p>
-                    </div>
-                    <Switch
-                      checked={clanSettings?.leadership_eval || false}
-                      onCheckedChange={(checked) => setClanSettings({...clanSettings, leadership_eval: checked})}
-                    />
+                  <div className="space-y-2">
+                    <Label>{t("autoGreetOption")}</Label>
+                    <Select
+                      value={clanSettings?.auto_greet_option || 'Never'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
+                    >
+                      <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-card border-border">
+                        <SelectItem value="Never">{t("autoGreetOptions.never")}</SelectItem>
+                        <SelectItem value="Always">{t("autoGreetOptions.always")}</SelectItem>
+                        <SelectItem value="On Join">{t("autoGreetOptions.onJoin")}</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </TabsContent>
@@ -1094,37 +1124,6 @@ export default function ClansPage() {
                       showDisabled={false}
                       className="bg-background"
                     />
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="advanced" className="space-y-4">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>{t("category")}</Label>
-                    <Input
-                      placeholder={t("categoryPlaceholder")}
-                      value={clanSettings?.category || ''}
-                      onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
-                      className="bg-background border-border"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>{t("autoGreetOption")}</Label>
-                    <Select
-                      value={clanSettings?.auto_greet_option || 'Never'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
-                    >
-                      <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-card border-border">
-                        <SelectItem value="Never">{t("autoGreetOptions.never")}</SelectItem>
-                        <SelectItem value="Always">{t("autoGreetOptions.always")}</SelectItem>
-                        <SelectItem value="On Join">{t("autoGreetOptions.onJoin")}</SelectItem>
-                      </SelectContent>
-                    </Select>
                   </div>
                 </div>
               </TabsContent>

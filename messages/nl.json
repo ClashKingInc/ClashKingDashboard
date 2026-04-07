@@ -1240,9 +1240,9 @@
     "configureClan": "Configureer {name} ({tag})",
     "customizeIntegration": "Pas Discord-integratie-instellingen aan voor deze clan",
     "tabs": {
-      "basic": "Basis",
-      "war": "Oorlogsinstellingen",
-      "advanced": "Geavanceerd"
+      "basic": "Discord setup",
+      "war": "Oorlog & meldingen",
+      "advanced": "Welkom & automatisering"
     },
     "memberRole": "Lid Rol",
     "leaderRole": "Leider Rol",
