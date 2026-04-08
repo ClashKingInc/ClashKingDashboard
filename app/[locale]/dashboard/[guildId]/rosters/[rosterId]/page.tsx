@@ -546,30 +546,53 @@ export default function RosterDetailPage() { // NOSONAR — React page component
             </Card>
           </div>
 
-          <div className="space-y-4">
-            <div className="inline-flex h-10 items-center justify-center rounded-md bg-secondary p-1 text-muted-foreground">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-foreground">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="bg-secondary">
+              <TabsTrigger value="members" className="gap-2">
                 <Users className="w-4 h-4" />
                 {t("tabs.members")}
-              </div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground">
+              </TabsTrigger>
+              <TabsTrigger value="automations" className="gap-2">
                 <Zap className="w-4 h-4" />
                 {t("tabs.automations")}
-              </div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground">
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-2">
                 <SettingsIcon className="w-4 h-4" />
                 {t("tabs.settings")}
-              </div>
-            </div>
-            <Card className="bg-card border-border">
-              <CardContent className="pt-6 space-y-3">
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-10 w-full" />
-              </CardContent>
-            </Card>
-          </div>
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="members" className="space-y-4">
+              <Card className="bg-card border-border">
+                <CardContent className="pt-6 space-y-3">
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="automations" className="space-y-4">
+              <Card className="bg-card border-border">
+                <CardContent className="pt-6 space-y-3">
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="settings" className="space-y-4">
+              <Card className="bg-card border-border">
+                <CardContent className="pt-6 space-y-3">
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     );
