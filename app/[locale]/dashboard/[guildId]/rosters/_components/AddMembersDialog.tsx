@@ -218,7 +218,10 @@ export function AddMembersDialog({
                           key={member.tag}
                           value={`${member.name} ${member.tag} ${member.clan_name}`}
                           onSelect={() => toggleMember(member.tag)}
-                          className={selectedMembers.has(member.tag) ? "bg-primary/10" : ""}
+                          className={selectedMembers.has(member.tag)
+                            ? "bg-destructive/15 text-destructive hover:bg-destructive/15 data-[selected=true]:bg-destructive/15 data-[selected=true]:text-destructive"
+                            : ""
+                          }
                         >
                           <div className="flex items-center gap-3 flex-1">
                             <div className="w-7 h-7 rounded bg-primary/10 flex items-center justify-center shrink-0">
@@ -288,8 +291,10 @@ export function AddMembersDialog({
                 {filteredClanMembers.map((member) => (
                   <button
                     key={member.tag}
-                    className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
-                      selectedMembers.has(member.tag) ? "bg-primary/10" : ""
+                    className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer transition-colors w-full text-left ${
+                      selectedMembers.has(member.tag)
+                        ? "bg-destructive/15 text-destructive hover:bg-destructive/15"
+                        : "hover:bg-secondary/50"
                     }`}
                     onClick={() => toggleMember(member.tag)}
                   >
