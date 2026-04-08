@@ -3,6 +3,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Roster, Clan, CreateRosterFormData, CloneRosterFormData } from '../_lib/types';
 import * as api from '../_lib/api';
+import { apiCache } from '@/lib/api-cache';
+
+const ROSTERS_CACHE_TTL = 60000;
+const CLANS_CACHE_TTL = 120000;
+
+function getRostersCacheKey(serverId: string): string {
+  return `rosters-list-${serverId}`;
+}
+
+function getClansCacheKey(serverId: string): string {
+  return `rosters-clans-${serverId}`;
+}
 
 interface UseRostersResult {
   rosters: Roster[];
@@ -21,16 +33,34 @@ export function useRosters(serverId: string): UseRostersResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadData = useCallback(async () => {
+  const invalidateCache = useCallback(() => {
     if (!serverId) return;
+    apiCache.invalidate(getRostersCacheKey(serverId));
+    apiCache.invalidate(getClansCacheKey(serverId));
+  }, [serverId]);
+
+  const loadData = useCallback(async (forceRefresh = false) => {
+    if (!serverId) return;
+
+    if (forceRefresh) {
+      invalidateCache();
+    }
 
     setLoading(true);
     setError(null);
 
     try {
       const [rostersData, clansData] = await Promise.all([
-        api.fetchRosters(serverId),
-        api.fetchClans(serverId),
+        apiCache.get(
+          getRostersCacheKey(serverId),
+          () => api.fetchRosters(serverId),
+          ROSTERS_CACHE_TTL
+        ),
+        apiCache.get(
+          getClansCacheKey(serverId),
+          () => api.fetchClans(serverId),
+          CLANS_CACHE_TTL
+        ),
       ]);
       setRosters(rostersData);
       setClans(clansData);
@@ -39,7 +69,7 @@ export function useRosters(serverId: string): UseRostersResult {
     } finally {
       setLoading(false);
     }
-  }, [serverId]);
+  }, [serverId, invalidateCache]);
 
   useEffect(() => {
     loadData();
@@ -47,27 +77,34 @@ export function useRosters(serverId: string): UseRostersResult {
 
   const createRoster = useCallback(async (data: CreateRosterFormData): Promise<Roster> => {
     const newRoster = await api.createRoster(serverId, data);
+    apiCache.invalidate(getRostersCacheKey(serverId));
     setRosters(prev => [...prev, newRoster]);
     return newRoster;
   }, [serverId]);
 
   const deleteRoster = useCallback(async (rosterId: string): Promise<void> => {
     await api.deleteRoster(rosterId, serverId);
+    apiCache.invalidate(getRostersCacheKey(serverId));
     setRosters(prev => prev.filter(r => r.custom_id !== rosterId));
   }, [serverId]);
 
   const cloneRoster = useCallback(async (rosterId: string, data: CloneRosterFormData): Promise<Roster> => {
     const clonedRoster = await api.cloneRoster(rosterId, serverId, data);
+    apiCache.invalidate(getRostersCacheKey(serverId));
     setRosters(prev => [...prev, clonedRoster]);
     return clonedRoster;
   }, [serverId]);
+
+  const refresh = useCallback(async (): Promise<void> => {
+    await loadData(true);
+  }, [loadData]);
 
   return {
     rosters,
     clans,
     loading,
     error,
-    refresh: loadData,
+    refresh,
     createRoster,
     deleteRoster,
     cloneRoster,
