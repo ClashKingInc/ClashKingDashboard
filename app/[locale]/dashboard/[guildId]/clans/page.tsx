@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { RoleCombobox } from "@/components/ui/role-combobox";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -918,14 +920,17 @@ export default function ClansPage() {
             <Tabs defaultValue="basic" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="basic">{t("tabs.basic")}</TabsTrigger>
-                <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
                 <TabsTrigger value="advanced">{t("tabs.advanced")}</TabsTrigger>
+                <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="basic" className="space-y-4">
                 <div className="grid gap-4">
                   <div className="space-y-2">
-                    <Label>{t("memberRole")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("memberRole")}</Label>
+                      <InfoPopover content={t("fieldHelp.memberRole")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
                     <RoleCombobox
                       roles={discordRoles}
                       value={clanSettings?.generalRole?.toString() || 'disabled'}
@@ -935,7 +940,10 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("leaderRole")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("leaderRole")}</Label>
+                      <InfoPopover content={t("fieldHelp.leaderRole")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
                     <RoleCombobox
                       roles={discordRoles}
                       value={clanSettings?.leaderRole?.toString() || 'disabled'}
@@ -945,7 +953,10 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("clanChannel")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("clanChannel")}</Label>
+                      <InfoPopover content={t("fieldHelp.clanChannel")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
                     <ChannelCombobox
                       channels={channels}
                       value={clanSettings.clanChannel?.toString() || 'none'}
@@ -957,7 +968,56 @@ export default function ClansPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("clanAbbreviation")}</Label>
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("banAlertChannel")}</Label>
+                      <InfoPopover
+                        content={t.rich("fieldHelp.banAlertChannel", {
+                          bansLink: (chunks) => (
+                            <Link href={`/dashboard/${guildId}/bans`} className="font-medium underline underline-offset-2">
+                              {chunks}
+                            </Link>
+                          ),
+                        })}
+                        label={t("fieldHelp.infoButtonLabel")}
+                      />
+                    </div>
+                    <ChannelCombobox
+                      channels={channels}
+                      value={clanSettings.ban_alert_channel?.toString() || 'none'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' || value === 'disabled' ? null : value})}
+                      placeholder={t("selectChannel")}
+                      showDisabled={false}
+                      className="bg-background"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("category")}</Label>
+                      <InfoPopover content={t("fieldHelp.category")} label={t("fieldHelp.infoButtonLabel")} />
+                    </div>
+                    <Input
+                      placeholder={t("categoryPlaceholder")}
+                      value={clanSettings?.category || ''}
+                      onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
+                      className="bg-background border-border"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <Label>{t("clanAbbreviation")}</Label>
+                      <InfoPopover
+                        content={t.rich("fieldHelp.clanAbbreviation", {
+                          familySettingsLink: (chunks) => (
+                            <Link href={`/dashboard/${guildId}/family-settings`} className="font-medium underline underline-offset-2">
+                              {chunks}
+                            </Link>
+                          ),
+                        })}
+                        label={t("fieldHelp.infoButtonLabel")}
+                      />
+                    </div>
                     <Input
                       placeholder={t("abbreviationPlaceholder")}
                       value={clanSettings?.abbreviation || ''}
@@ -966,6 +1026,23 @@ export default function ClansPage() {
                     />
                   </div>
 
+                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
+                    <div className="space-y-0.5">
+                      <Label>{t("leadershipEval")}</Label>
+                      <p className="text-sm text-muted-foreground">
+                        {t("leadershipEvalDescription")}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={clanSettings?.leadership_eval || false}
+                      onCheckedChange={(checked) => setClanSettings({...clanSettings, leadership_eval: checked})}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="advanced" className="space-y-4">
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="greeting-input">{t("greetingMessage")}</Label>
                     <Input
@@ -976,7 +1053,6 @@ export default function ClansPage() {
                       className="bg-background border-border"
                     />
 
-                    {/* Live Preview */}
                     <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
                       <div className="flex items-center gap-2 mb-2">
                         <Eye className="h-4 w-4 text-primary" />
@@ -989,7 +1065,7 @@ export default function ClansPage() {
                         )}
                       </p>
                     </div>
-                    
+
                     <Collapsible
                       open={isGreetingPlaceholdersOpen}
                       onOpenChange={setIsGreetingPlaceholdersOpen}
@@ -1039,17 +1115,21 @@ export default function ClansPage() {
                     </Collapsible>
                   </div>
 
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-                    <div className="space-y-0.5">
-                      <Label>{t("leadershipEval")}</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {t("leadershipEvalDescription")}
-                      </p>
-                    </div>
-                    <Switch
-                      checked={clanSettings?.leadership_eval || false}
-                      onCheckedChange={(checked) => setClanSettings({...clanSettings, leadership_eval: checked})}
-                    />
+                  <div className="space-y-2">
+                    <Label>{t("autoGreetOption")}</Label>
+                    <Select
+                      value={clanSettings?.auto_greet_option || 'Never'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
+                    >
+                      <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-card border-border">
+                        <SelectItem value="Never">{t("autoGreetOptions.never")}</SelectItem>
+                        <SelectItem value="Always">{t("autoGreetOptions.always")}</SelectItem>
+                        <SelectItem value="On Join">{t("autoGreetOptions.onJoin")}</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </TabsContent>
@@ -1084,48 +1164,6 @@ export default function ClansPage() {
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>{t("banAlertChannel")}</Label>
-                    <ChannelCombobox
-                      channels={channels}
-                      value={clanSettings.ban_alert_channel?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, ban_alert_channel: value === 'none' || value === 'disabled' ? null : value})}
-                      placeholder={t("selectChannel")}
-                      showDisabled={false}
-                      className="bg-background"
-                    />
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="advanced" className="space-y-4">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>{t("category")}</Label>
-                    <Input
-                      placeholder={t("categoryPlaceholder")}
-                      value={clanSettings?.category || ''}
-                      onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
-                      className="bg-background border-border"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>{t("autoGreetOption")}</Label>
-                    <Select
-                      value={clanSettings?.auto_greet_option || 'Never'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, auto_greet_option: value})}
-                    >
-                      <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-card border-border">
-                        <SelectItem value="Never">{t("autoGreetOptions.never")}</SelectItem>
-                        <SelectItem value="Always">{t("autoGreetOptions.always")}</SelectItem>
-                        <SelectItem value="On Join">{t("autoGreetOptions.onJoin")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </div>
               </TabsContent>
             </Tabs>
