@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Fragment } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +34,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import {
   Ban,
@@ -49,6 +55,7 @@ import {
   Users,
   ChevronRight,
   ChevronDown,
+  ExternalLink,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
@@ -90,6 +97,49 @@ export default function BansPage() { // NOSONAR — React page component: comple
   const [activeTab, setActiveTab] = useState("bans");
   const [strikeViewMode, setStrikeViewMode] = useState<"grouped" | "all">("grouped");
   const [expandedPlayerTags, setExpandedPlayerTags] = useState<string[]>([]);
+
+  const getClashProfileUrl = (playerTag: string) => {
+    const cleanTag = playerTag.replace(/^#/, "");
+    return `https://link.clashofclans.com/en/?action=OpenPlayerProfile&tag=%23${encodeURIComponent(cleanTag)}`;
+  };
+
+  const PlayerProfilePopover = ({
+    playerName,
+    playerTag,
+  }: {
+    playerName: string;
+    playerTag: string;
+  }) => (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="text-left cursor-pointer hover:opacity-80 transition-opacity"
+        >
+          <div className="font-medium text-foreground">{playerName}</div>
+          <div className="text-xs text-muted-foreground">{playerTag}</div>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-72 p-4" align="start">
+        <div className="space-y-3">
+          <div>
+            <p className="font-medium text-foreground truncate">{playerName}</p>
+            <p className="text-xs text-muted-foreground">{playerTag}</p>
+          </div>
+          <Button asChild variant="outline" className="w-full gap-2">
+            <a
+              href={getClashProfileUrl(playerTag)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="h-4 w-4" />
+              View clash profile
+            </a>
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
 
   // Fetch bans and strikes on mount
   useEffect(() => {
@@ -703,15 +753,11 @@ export default function BansPage() { // NOSONAR — React page component: comple
                           {filteredBans.map((ban, index) => (
                             <TableRow key={`${ban.VillageTag}-${index}`}>
                               <TableCell>
-                                <div>
-                                  <div className="font-medium text-foreground">
-                                  {ban.VillageName || ban.name || tCommon("unknown")}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {ban.VillageTag}
-                                </div>
-                              </div>
-                            </TableCell>
+                                <PlayerProfilePopover
+                                  playerName={ban.VillageName || ban.name || tCommon("unknown")}
+                                  playerTag={ban.VillageTag}
+                                />
+                              </TableCell>
                             <TableCell className="max-w-xs">
                               <div className="truncate text-sm text-muted-foreground" title={ban.Notes}>
                                 {ban.Notes && ban.Notes !== "No Notes" ? ban.Notes : t("bans.table.noReason")}
@@ -763,7 +809,16 @@ export default function BansPage() { // NOSONAR — React page component: comple
                 <AlertCircle className="h-4 w-4 text-blue-500" />
                 <AlertTitle className="text-blue-400">{t("bans.howItWorks.title")}</AlertTitle>
                 <AlertDescription className="text-blue-300">
-                  {t("bans.howItWorks.description")}
+                  {t.rich("bans.howItWorks.description", {
+                    clansTab: (chunks) => (
+                      <Link
+                        href={`/dashboard/${guildId}/clans`}
+                        className="underline font-medium text-blue-200 hover:text-blue-100"
+                      >
+                        {chunks}
+                      </Link>
+                    ),
+                  })}
                 </AlertDescription>
               </Alert>
 
@@ -1076,15 +1131,11 @@ export default function BansPage() { // NOSONAR — React page component: comple
                             {filteredStrikes.map((strike, index) => (
                               <TableRow key={`${strike.strike_id}-${index}`}>
                                 <TableCell>
-                                  <div>
-                                    <div className="font-medium text-foreground">
-                                    {strike.player_name || tCommon("unknown")}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {strike.tag}
-                                  </div>
-                                </div>
-                              </TableCell>
+                                  <PlayerProfilePopover
+                                    playerName={strike.player_name || tCommon("unknown")}
+                                    playerTag={strike.tag}
+                                  />
+                                </TableCell>
                               <TableCell className="max-w-xs">
                                 <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
                                   {strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}
@@ -1158,14 +1209,10 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                 <Fragment key={`${group.tag}-${index}`}>
                                   <TableRow className={isExpanded ? "border-b-0 bg-muted/30" : ""}>
                                     <TableCell>
-                                      <div>
-                                        <div className="font-medium text-foreground">
-                                          {group.player_name || tCommon("unknown")}
-                                        </div>
-                                        <div className="text-xs text-muted-foreground">
-                                          {group.tag}
-                                        </div>
-                                      </div>
+                                      <PlayerProfilePopover
+                                        playerName={group.player_name || tCommon("unknown")}
+                                        playerTag={group.tag}
+                                      />
                                     </TableCell>
                                     <TableCell className="text-center">
                                       <span className="font-bold">{group.count}</span>

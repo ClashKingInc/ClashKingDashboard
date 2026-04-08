@@ -269,7 +269,7 @@
       "search": "Zoek op naam of tag...",
       "howItWorks": {
         "title": "Hoe bans werken",
-        "description": "Verbannen spelers kunnen geen enkele clan joinen die aan deze server is gekoppeld. De bot zal je waarschuwen als ze een van de clans joinen. Bans zijn serverbreed en gelden voor al je clans."
+        "description": "Als een verbannen speler zich bij een van je clans aansluit, wordt er een waarschuwing gestuurd naar het clankanaal dat je hebt ingesteld in de <clansTab>clans-tab</clansTab>. Deze bot kan niet voorkomen dat mensen je clan joinen, maar kan alleen een waarschuwing geven."
       },
       "stats": {
         "total": "Totaal aantal bans",

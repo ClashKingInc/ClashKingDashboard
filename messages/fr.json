@@ -269,7 +269,7 @@
       "search": "Rechercher par nom ou tag...",
       "howItWorks": {
         "title": "Comment fonctionnent les bannissements",
-        "description": "Les joueurs bannis ne peuvent rejoindre aucun clan lié à ce serveur. Le bot vous avertira s'ils rejoignent l'un des clans. Les bannissements s'appliquent à l'ensemble du serveur et à tous vos clans."
+        "description": "Si un joueur banni rejoint l'un de vos clans, un avertissement sera envoyé dans le canal de clan que vous avez configuré dans l'<clansTab>onglet clans</clansTab>. Ce bot ne peut pas empêcher les joueurs de rejoindre votre clan, il peut seulement envoyer un avertissement."
       },
       "stats": {
         "total": "Total des bannissements",
