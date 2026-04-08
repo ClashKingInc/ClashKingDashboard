@@ -244,30 +244,32 @@ export function AddMembersDialog({
           </div>
 
           {/* Selected members display */}
-          {selectedMembers.size > 0 && (
-            <div className="space-y-2">
-              <Label className="text-foreground">{t("memberAutocomplete.selectedLabel")}</Label>
-              <div className="flex flex-wrap gap-2">
-                {Array.from(selectedMembers).map((tag) => {
-                  const member = serverMembers.find(m => m.tag === tag) || clanMembers.find(m => m.tag === tag);
-                  return (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="flex items-center gap-1 cursor-pointer hover:bg-destructive/20"
-                      onClick={() => toggleMember(tag)}
-                    >
-                      {member ? `${member.name} (TH${member.townhall})` : tag}
-                      <X className="h-3 w-3" />
-                    </Badge>
-                  );
-                })}
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {selectedMembers.size} {t("memberAutocomplete.membersSelected")}
-              </p>
+          <div className="space-y-2">
+            <Label className="text-foreground">{t("memberAutocomplete.selectedLabel")}</Label>
+            <div className="min-h-14 max-h-24 overflow-y-auto rounded-md border border-border bg-background/30 p-2">
+              {selectedMembers.size > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {Array.from(selectedMembers).map((tag) => {
+                    const member = serverMembers.find(m => m.tag === tag) || clanMembers.find(m => m.tag === tag);
+                    return (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="flex items-center gap-1 cursor-pointer hover:bg-destructive/20"
+                        onClick={() => toggleMember(tag)}
+                      >
+                        {member ? `${member.name} (TH${member.townhall})` : tag}
+                        <X className="h-3 w-3" />
+                      </Badge>
+                    );
+                  })}
+                </div>
+              ) : null}
             </div>
-          )}
+            <p className="text-sm text-muted-foreground">
+              {selectedMembers.size} {t("memberAutocomplete.membersSelected")}
+            </p>
+          </div>
 
           {/* Fallback: Clan members list */}
           {serverMembers.length === 0 && clanMembers.length > 0 && (
