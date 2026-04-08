@@ -7,11 +7,40 @@ import type { ApiConfig, ApiResponse } from '../types/common';
 // Module-level singleton so all client instances share one refresh attempt
 let _sharedRefreshPromise: Promise<boolean> | null = null;
 
+function extractErrorMessage(data: any, status: number): string {
+  const detail = data?.detail;
+  if (Array.isArray(detail)) return detail.map((e: any) => e.msg ?? String(e)).join(', ');
+  if (typeof detail === 'string') return detail;
+  return data?.message || `HTTP ${status}`;
+}
+
 export class BaseApiClient {
   protected config: ApiConfig;
 
   constructor(config: ApiConfig) {
     this.config = config;
+  }
+
+  /**
+   * Resolve an access token, refreshing proactively if needed.
+   * @param isRetry - skip proactive refresh when already retrying
+   * @param isAuthEndpoint - skip proactive refresh for auth endpoints (no-op refresh loop)
+   */
+  private async _getToken(isRetry: boolean, isAuthEndpoint = false): Promise<string | undefined> {
+    let token = this.config.accessToken;
+    if (!token && typeof globalThis.window !== 'undefined') {
+      token = localStorage.getItem('access_token') || undefined;
+    }
+    if (!token && !isRetry && !isAuthEndpoint && typeof globalThis.window !== 'undefined') {
+      const hasRefresh = !!localStorage.getItem('refresh_token');
+      if (hasRefresh) {
+        const refreshed = await this._tryRefreshToken();
+        if (refreshed) {
+          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
+        }
+      }
+    }
+    return token;
   }
 
   /**
@@ -29,22 +58,7 @@ export class BaseApiClient {
       headers.set('Content-Type', 'application/json');
     }
 
-    // Get token from config or localStorage (client-side only)
-    let token = this.config.accessToken;
-    if (!token && typeof window !== 'undefined') {
-      token = localStorage.getItem('access_token') || undefined;
-    }
-
-    // If no access token but refresh token exists, try to refresh proactively
-    if (!token && !_isRetry && typeof window !== 'undefined' && !endpoint.startsWith('/v2/auth/')) {
-      const hasRefresh = !!localStorage.getItem('refresh_token');
-      if (hasRefresh) {
-        const refreshed = await this._tryRefreshToken();
-        if (refreshed) {
-          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
-        }
-      }
-    }
+    const token = await this._getToken(_isRetry, endpoint.startsWith('/v2/auth/'));
 
     if (token && !headers.has('Authorization')) {
       headers.set('Authorization', `Bearer ${token}`);
@@ -64,7 +78,7 @@ export class BaseApiClient {
           (response.status === 401 || response.status === 403) &&
           !_isRetry &&
           !endpoint.startsWith('/v2/auth/') &&
-          typeof window !== 'undefined'
+          typeof globalThis.window !== 'undefined'
         ) {
           const refreshed = await this._tryRefreshToken();
           if (refreshed) {
@@ -72,13 +86,7 @@ export class BaseApiClient {
           }
         }
 
-        const detail = data?.detail;
-        const error = Array.isArray(detail)
-          ? detail.map((e: any) => e.msg ?? String(e)).join(', ')
-          : typeof detail === 'string'
-            ? detail
-            : data?.message || `HTTP ${response.status}`;
-        return { error, status: response.status };
+        return { error: extractErrorMessage(data, response.status), status: response.status };
       }
 
       return {
@@ -103,21 +111,7 @@ export class BaseApiClient {
     _isRetry = false
   ): Promise<ApiResponse<T>> {
     const url = `${this.config.baseUrl}${endpoint}`;
-
-    let token = this.config.accessToken;
-    if (!token && typeof window !== 'undefined') {
-      token = localStorage.getItem('access_token') || undefined;
-    }
-
-    if (!token && !_isRetry && typeof window !== 'undefined') {
-      const hasRefresh = !!localStorage.getItem('refresh_token');
-      if (hasRefresh) {
-        const refreshed = await this._tryRefreshToken();
-        if (refreshed) {
-          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
-        }
-      }
-    }
+    const token = await this._getToken(_isRetry);
 
     // Do NOT set Content-Type — browser sets it with the correct multipart boundary
     const headers: Record<string, string> = {};
@@ -131,7 +125,7 @@ export class BaseApiClient {
         if (
           (response.status === 401 || response.status === 403) &&
           !_isRetry &&
-          typeof window !== 'undefined'
+          typeof globalThis.window !== 'undefined'
         ) {
           const refreshed = await this._tryRefreshToken();
           if (refreshed) {
@@ -139,13 +133,7 @@ export class BaseApiClient {
           }
         }
 
-        const detail = data?.detail;
-        const error = Array.isArray(detail)
-          ? detail.map((e: any) => e.msg ?? String(e)).join(', ')
-          : typeof detail === 'string'
-            ? detail
-            : data?.message || `HTTP ${response.status}`;
-        return { error, status: response.status };
+        return { error: extractErrorMessage(data, response.status), status: response.status };
       }
 
       return { data, status: response.status };
@@ -192,9 +180,9 @@ export class BaseApiClient {
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
         // Both tokens are invalid — redirect to login preserving locale
-        const pathParts = window.location.pathname.split('/');
+        const pathParts = globalThis.window.location.pathname.split('/');
         const locale = pathParts[1] || 'en';
-        window.location.href = `/${locale}/login`;
+        globalThis.window.location.href = `/${locale}/login`;
         return false;
       }
 

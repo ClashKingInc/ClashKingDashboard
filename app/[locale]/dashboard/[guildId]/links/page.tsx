@@ -57,6 +57,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { apiCache } from "@/lib/api-cache";
 
 // Type definitions
 interface LinkedAccount {
@@ -82,6 +83,39 @@ interface ServerLinksResponse {
   members_with_links: number; // Total members with links (server-wide, accurate stat)
   total_linked_accounts: number; // Total linked accounts (server-wide, accurate stat)
   verified_accounts: number; // Total verified accounts (server-wide, accurate stat)
+}
+
+const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+function filterMembers(
+  members: MemberLinks[],
+  searchQuery: string,
+  filterVerified: "all" | "verified" | "unverified",
+  filterMinAccounts: number
+): MemberLinks[] {
+  let filtered = members;
+  if (searchQuery.trim()) {
+    const query = searchQuery.toLowerCase();
+    filtered = filtered.filter(member =>
+      member.username.toLowerCase().includes(query) ||
+      member.display_name.toLowerCase().includes(query) ||
+      member.linked_accounts.some(acc =>
+        acc.player_name?.toLowerCase().includes(query) ||
+        acc.player_tag.toLowerCase().includes(query)
+      )
+    );
+  }
+  if (filterVerified !== "all") {
+    filtered = filtered.filter(member => {
+      const hasVerified = member.linked_accounts.some(acc => acc.is_verified);
+      const hasUnverified = member.linked_accounts.some(acc => !acc.is_verified);
+      return filterVerified === "verified" ? hasVerified : hasUnverified;
+    });
+  }
+  if (filterMinAccounts > 0) {
+    filtered = filtered.filter(member => member.account_count >= filterMinAccounts);
+  }
+  return filtered;
 }
 
 export default function LinksManagementPage() {
@@ -129,26 +163,31 @@ export default function LinksManagementPage() {
         const token = localStorage.getItem('access_token');
         const headers = { 'Authorization': `Bearer ${token}` };
         const offset = (currentPage - 1) * itemsPerPage;
+        const linksCacheKey = `links-${guildId}-${itemsPerPage}-${offset}`;
+        const guildCacheKey = `guild-${guildId}`;
 
-        const [linksResponse, guildResponse] = await Promise.all([
-          fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, { headers }),
-          fetch(`/api/v2/guild/${guildId}`, { headers }),
+        const [data, guildData] = await Promise.all([
+          apiCache.get<ServerLinksResponse>(linksCacheKey, async () => {
+            const linksResponse = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, { headers });
+            if (!linksResponse.ok) {
+              throw new Error('Failed to fetch links data');
+            }
+            return linksResponse.json();
+          }),
+          apiCache.get<{ member_count?: number } | null>(guildCacheKey, async () => {
+            const guildResponse = await fetch(`/api/v2/guild/${guildId}`, { headers });
+            if (!guildResponse.ok) {
+              return null;
+            }
+            return guildResponse.json();
+          })
         ]);
-
-        if (!linksResponse.ok) {
-          throw new Error('Failed to fetch links data');
-        }
-
-        const data: ServerLinksResponse = await linksResponse.json();
         setLinksData(data);
         setFilteredMembers(data.members || []);
         setTotalCount(data.total_members || 0);
 
-        if (guildResponse.ok) {
-          const guildData = await guildResponse.json();
-          if (guildData.member_count) {
-            setGuildMemberCount(guildData.member_count);
-          }
+        if (guildData?.member_count) {
+          setGuildMemberCount(guildData.member_count);
         }
       } catch (error) {
         console.error('Error fetching links:', error);
@@ -165,42 +204,7 @@ export default function LinksManagementPage() {
   // Filter members based on search query and filters
   useEffect(() => {
     if (!linksData) return;
-
-    let filtered = linksData.members;
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(member =>
-        member.username.toLowerCase().includes(query) ||
-        member.display_name.toLowerCase().includes(query) ||
-        member.linked_accounts.some(acc =>
-          acc.player_name?.toLowerCase().includes(query) ||
-          acc.player_tag.toLowerCase().includes(query)
-        )
-      );
-    }
-
-    // Verified filter
-    if (filterVerified !== "all") {
-      filtered = filtered.filter(member => {
-        const hasVerified = member.linked_accounts.some(acc => acc.is_verified);
-        const hasUnverified = member.linked_accounts.some(acc => !acc.is_verified);
-
-        if (filterVerified === "verified") {
-          return hasVerified;
-        } else {
-          return hasUnverified;
-        }
-      });
-    }
-
-    // Min accounts filter
-    if (filterMinAccounts > 0) {
-      filtered = filtered.filter(member => member.account_count >= filterMinAccounts);
-    }
-
-    setFilteredMembers(filtered);
+    setFilteredMembers(filterMembers(linksData.members, searchQuery, filterVerified, filterMinAccounts));
   }, [searchQuery, linksData, filterVerified, filterMinAccounts]);
 
   const handleUnlinkAccount = async () => {
@@ -222,20 +226,27 @@ export default function LinksManagementPage() {
         throw new Error('Failed to unlink account');
       }
 
+      apiCache.invalidatePattern(`^${escapeRegex(`links-${guildId}-`)}`);
+
       // Refresh data for current page
       const offset = (currentPage - 1) * itemsPerPage;
-      const refreshResponse = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
+      const refreshKey = `links-${guildId}-${itemsPerPage}-${offset}`;
+      const data = await apiCache.get<ServerLinksResponse>(refreshKey, async () => {
+        const refreshResponse = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+          }
+        });
 
-      if (refreshResponse.ok) {
-        const data: ServerLinksResponse = await refreshResponse.json();
-        setLinksData(data);
-        setFilteredMembers(data.members);
-        setTotalCount(data.total_members || 0);
-      }
+        if (!refreshResponse.ok) {
+          throw new Error('Failed to refresh links data');
+        }
+
+        return refreshResponse.json();
+      });
+      setLinksData(data);
+      setFilteredMembers(data.members);
+      setTotalCount(data.total_members || 0);
 
       setDeleteDialogOpen(false);
       setAccountToDelete(null);
@@ -603,8 +614,8 @@ export default function LinksManagementPage() {
                         className="border border-border rounded-lg bg-card hover:border-primary/50 transition-colors"
                       >
                         {/* Member Header - Clickable to expand/collapse */}
-                        <div
-                          className="flex items-center gap-4 p-4 cursor-pointer"
+                        <button
+                          className="flex items-center gap-4 p-4 cursor-pointer w-full text-left"
                           onClick={() => toggleMemberExpanded(member.user_id)}
                         >
                           {member.avatar_url ? (
@@ -627,12 +638,12 @@ export default function LinksManagementPage() {
                           ) : (
                             <ChevronDown className="w-5 h-5 text-muted-foreground flex-shrink-0" />
                           )}
-                        </div>
+                        </button>
 
                         {/* Accounts Preview (when collapsed) */}
                         {!isExpanded && member.linked_accounts.length > 0 && (
-                          <div
-                            className="px-4 pb-4 flex items-center gap-2 flex-wrap cursor-pointer"
+                          <button
+                            className="px-4 pb-4 flex items-center gap-2 flex-wrap cursor-pointer w-full text-left"
                             onClick={() => toggleMemberExpanded(member.user_id)}
                           >
                             {previewAccounts.map((account) => (
@@ -658,7 +669,7 @@ export default function LinksManagementPage() {
                                 +{member.linked_accounts.length - 3} more
                               </Badge>
                             )}
-                          </div>
+                          </button>
                         )}
 
                         {/* Expanded Accounts Grid */}

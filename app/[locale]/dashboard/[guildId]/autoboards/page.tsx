@@ -100,6 +100,12 @@ const BOARD_TYPE_KEYS = {
 
 const DAY_KEYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "endofseason"];
 
+const LOCALE_MAP: Record<string, string> = {
+  en: "en-US",
+  fr: "fr-FR",
+  nl: "nl-NL",
+};
+
 export default function AutoBoardsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
@@ -232,7 +238,7 @@ export default function AutoBoardsPage() {
     setCreating(true);
     try {
       const locale = params?.locale as string;
-      const apiLocale = locale === 'en' ? 'en-US' : locale === 'fr' ? 'fr-FR' : locale === 'nl' ? 'nl-NL' : 'en-US';
+      const apiLocale = LOCALE_MAP[locale] ?? "en-US";
 
       const autoboardData = {
         type: newType,

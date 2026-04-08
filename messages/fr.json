@@ -269,7 +269,7 @@
       "search": "Rechercher par nom ou tag...",
       "howItWorks": {
         "title": "Comment fonctionnent les bannissements",
-        "description": "Les joueurs bannis ne peuvent rejoindre aucun clan lié à ce serveur. Le bot vous avertira s'ils rejoignent l'un des clans. Les bannissements s'appliquent à l'ensemble du serveur et à tous vos clans."
+        "description": "Si un joueur banni rejoint l'un de vos clans, un avertissement sera envoyé dans le canal de clan que vous avez configuré dans l'<clansTab>onglet clans</clansTab>. Ce bot ne peut pas empêcher les joueurs de rejoindre votre clan, il peut seulement envoyer un avertissement."
       },
       "stats": {
         "total": "Total des bannissements",
@@ -1260,9 +1260,9 @@
     "configureClan": "Configurer {name} ({tag})",
     "customizeIntegration": "Personnalisez les paramètres d'intégration Discord pour ce clan",
     "tabs": {
-      "basic": "Basique",
-      "war": "Paramètres de Guerre",
-      "advanced": "Avancé"
+      "basic": "Configuration Discord",
+      "war": "Guerre",
+      "advanced": "Accueil & automatisation"
     },
     "memberRole": "Rôle de Membre",
     "leaderRole": "Rôle de Chef",
@@ -1282,9 +1282,18 @@
     "category": "Catégorie",
     "autoGreetOption": "Option d'Accueil Auto",
     "autoGreetOptions": {
-      "never": "Jamais",
-      "always": "Toujours",
-      "onJoin": "À l'Arrivée"
+      "never": "Never",
+      "always": "Every Join",
+      "onJoin": "First Join"
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Afficher plus d'informations",
+      "memberRole": "Le role que les membres de ce clan doivent recevoir. Si le bot gère les roles, chaque personne de ce clan recevra ce role. Utile pour créer des salons spécifiques à un clan.",
+      "leaderRole": "Le role que les co-leaders et le leader de ce clan recevront. Sur un serveur Discord classique, c'est utile pour un salon de chefs de clan ou un salon de chefs commun à tous les clans.",
+      "clanChannel": "Le salon que vous définissez devient le salon par défaut où le bot écrit. Par exemple, c'est ici qu'il accueillera les nouveaux utilisateurs si vous activez cette option.",
+      "banAlertChannel": "Choisissez le salon dans lequel le bot vous avertira quand une personne bannie (voir <bansLink>Bans</bansLink>) rejoint votre clan.",
+      "clanAbbreviation": "Donnez une abréviation à votre clan pour que les membres puissent l'avoir dans leur nom quand le renommage est activé. Vous pouvez configurer cela dans <familySettingsLink>Paramètres de famille</familySettingsLink>.",
+      "category": "Un moyen d'organiser vos clans. Beaucoup de familles de clans ont 5 clans ou plus. Certains servent uniquement pour la CWL ou des événements."
     },
     "greeting": {
       "title": "Variables du Message d'Accueil",

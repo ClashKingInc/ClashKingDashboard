@@ -269,7 +269,7 @@
       "search": "Zoek op naam of tag...",
       "howItWorks": {
         "title": "Hoe bans werken",
-        "description": "Verbannen spelers kunnen geen enkele clan joinen die aan deze server is gekoppeld. De bot zal je waarschuwen als ze een van de clans joinen. Bans zijn serverbreed en gelden voor al je clans."
+        "description": "Als een verbannen speler zich bij een van je clans aansluit, wordt er een waarschuwing gestuurd naar het clankanaal dat je hebt ingesteld in de <clansTab>clans-tab</clansTab>. Deze bot kan niet voorkomen dat mensen je clan joinen, maar kan alleen een waarschuwing geven."
       },
       "stats": {
         "total": "Totaal aantal bans",
@@ -1240,9 +1240,9 @@
     "configureClan": "Configureer {name} ({tag})",
     "customizeIntegration": "Pas Discord-integratie-instellingen aan voor deze clan",
     "tabs": {
-      "basic": "Basis",
-      "war": "Oorlogsinstellingen",
-      "advanced": "Geavanceerd"
+      "basic": "Discord setup",
+      "war": "Oorlog",
+      "advanced": "Welkom & automatisering"
     },
     "memberRole": "Lid Rol",
     "leaderRole": "Leider Rol",
@@ -1262,9 +1262,18 @@
     "category": "Categorie",
     "autoGreetOption": "Auto Welkomst Optie",
     "autoGreetOptions": {
-      "never": "Nooit",
-      "always": "Altijd",
-      "onJoin": "Bij Deelnemen"
+      "never": "Never",
+      "always": "Every Join",
+      "onJoin": "First Join"
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Toon meer informatie",
+      "memberRole": "De rol die leden van deze clan moeten krijgen. Als de bot de rollen beheert, krijgt iedereen in deze clan deze rol. Handig als je clan-specifieke kanalen gebruikt.",
+      "leaderRole": "De rol die co-leaders en de leider van deze clan krijgen. In een typische Discord kun je hiermee bijvoorbeeld een leiderschat per clan of een gezamenlijke leiderschat voor alle clans maken.",
+      "clanChannel": "Het kanaal dat je kiest is het standaardkanaal waar de bot berichten plaatst. Bijvoorbeeld: hier begroet de bot nieuwe gebruikers als je die optie inschakelt.",
+      "banAlertChannel": "Kies in welk kanaal de bot je waarschuwt wanneer iemand die is geband (zie <bansLink>Bans</bansLink>) je clan binnenkomt.",
+      "clanAbbreviation": "Geef je clan een afkorting zodat leden die in hun naam kunnen krijgen als je hernoemen activeert. Je kunt dit instellen in <familySettingsLink>Familie-instellingen</familySettingsLink>.",
+      "category": "Een manier om je clans te organiseren. Veel clanfamilies hebben 5 of meer clans. Sommige zijn bijvoorbeeld alleen voor CWL of events."
     },
     "greeting": {
       "title": "Welkomstbericht Variabelen",
