@@ -64,6 +64,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import type {
   RoleType,
   DiscordRole,
@@ -132,6 +133,7 @@ export default function RolesPage() {
   const locale = useLocale();
   const t = useTranslations("RolesPage");
   const tCommon = useTranslations("Common");
+  const rolesCacheKey = `roles-page-data-${guildId}`;
 
   const roleTypes = ROLE_TYPES_CONFIG.map((rt) => ({
     ...rt,
@@ -287,11 +289,18 @@ export default function RolesPage() {
       setIsLoading(true);
       setError(null);
 
-      const [rolesRes, settingsRes, discordRolesRes] = await Promise.all([
-        apiClient.roles.getAllRoles(guildId),
-        apiClient.roles.getRoleSettings(guildId),
-        apiClient.roles.getDiscordRoles(guildId),
-      ]);
+      const { rolesRes, settingsRes, discordRolesRes } = await apiCache.get(
+        rolesCacheKey,
+        async () => {
+          const [rolesRes, settingsRes, discordRolesRes] = await Promise.all([
+            apiClient.roles.getAllRoles(guildId),
+            apiClient.roles.getRoleSettings(guildId),
+            apiClient.roles.getDiscordRoles(guildId),
+          ]);
+
+          return { rolesRes, settingsRes, discordRolesRes };
+        }
+      );
 
       if (rolesRes.data) {
         // Normalize role data from API
@@ -352,6 +361,7 @@ export default function RolesPage() {
         blacklisted_roles: roleSettings.blacklisted_roles,
         role_treatment: roleSettings.role_treatment,
       });
+      apiCache.invalidate(rolesCacheKey);
 
       setOriginalRoleSettings({ ...roleSettings });
       setSaveStatus('saved');
@@ -429,6 +439,7 @@ export default function RolesPage() {
         return;
       }
 
+      apiCache.invalidate(rolesCacheKey);
       await loadData();
       setIsAddDialogOpen(false);
       setNewRole({});
@@ -445,6 +456,7 @@ export default function RolesPage() {
 
       await apiClient.roles.deleteRole(guildId, roleType, roleId);
 
+      apiCache.invalidate(rolesCacheKey);
       await loadData();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
