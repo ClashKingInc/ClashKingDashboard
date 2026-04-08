@@ -695,7 +695,10 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRosters")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-9 w-16" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <ClipboardList className="h-8 w-8 text-blue-500/50" />
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-card border-green-500/30 bg-green-500/5">
@@ -703,7 +706,10 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalMembers")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-9 w-16" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <Users className="h-8 w-8 text-green-500/50" />
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-card border-orange-500/30 bg-orange-500/5">
@@ -711,7 +717,10 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.clanRosters")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-9 w-16" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <Users className="h-8 w-8 text-orange-500/50" />
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-card border-purple-500/30 bg-purple-500/5">
@@ -719,7 +728,10 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.familyRosters")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-9 w-16" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <Users className="h-8 w-8 text-purple-500/50" />
+                </div>
               </CardContent>
             </Card>
           </div>

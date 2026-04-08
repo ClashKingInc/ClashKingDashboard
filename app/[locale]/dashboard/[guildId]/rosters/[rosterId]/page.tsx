@@ -41,7 +41,7 @@ import {
   MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
   Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
   Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X, Copy, ExternalLink, Link2,
-  CheckCircle2, AlertTriangle
+  CheckCircle2, AlertTriangle, Target, TrendingUp
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
@@ -501,7 +501,10 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-8 w-20" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20" />
+                  <Users className="h-8 w-8 text-blue-500/50" />
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-card border-border">
@@ -509,7 +512,10 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgTh")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-8 w-20" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20" />
+                  <Shield className="h-8 w-8 text-orange-500/50" />
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-card border-border">
@@ -517,7 +523,10 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgHitrate")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-8 w-20" />
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20" />
+                  <Target className="h-8 w-8 text-green-500/50" />
+                </div>
               </CardContent>
             </Card>
             <Card className="bg-card border-border">
@@ -531,7 +540,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                     <Skeleton className="h-4 w-20" />
                     <Skeleton className="h-4 w-20" />
                   </div>
-                  <Skeleton className="h-8 w-8 rounded" />
+                  <TrendingUp className="h-8 w-8 text-purple-500/50" />
                 </div>
               </CardContent>
             </Card>
