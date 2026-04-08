@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
   /**
@@ -53,6 +53,13 @@ export class ServerClient extends BaseApiClient {
    */
   async getClanSettings(serverId: string | number, clanTag: string): Promise<ApiResponse<ClanSettings>> {
     return this.request(`/v2/server/${serverId}/clan/${clanTag}/settings`, { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/clans
+   */
+  async getServerClans(serverId: string | number): Promise<ApiResponse<ServerClanListItem[]>> {
+    return this.request(`/v2/server/${serverId}/clans`, { method: 'GET' });
   }
 
   /**
@@ -169,5 +176,50 @@ export class ServerClient extends BaseApiClient {
    */
   async getPlayerStrikeSummary(serverId: string | number, playerTag: string): Promise<ApiResponse<StrikeSummary>> {
     return this.request(`/v2/server/${serverId}/strikes/player/${playerTag}/summary`, { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/discord-roles
+   */
+  async getDiscordRoles(serverId: string | number): Promise<ApiResponse<{ roles: DiscordRole[] }>> {
+    return this.request(`/v2/server/${serverId}/discord-roles`, { method: 'GET' });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/giveaways
+   */
+  async getGiveaways(serverId: string | number): Promise<ApiResponse<GiveawaysResponse>> {
+    return this.request(`/v2/server/${serverId}/giveaways`, { method: 'GET' });
+  }
+
+  /**
+   * POST /v2/server/{server_id}/giveaways
+   */
+  async createGiveaway(serverId: string | number, body: FormData): Promise<ApiResponse<Giveaway>> {
+    return this.requestFormData(`/v2/server/${serverId}/giveaways`, 'POST', body);
+  }
+
+  /**
+   * PUT /v2/server/{server_id}/giveaways/{giveaway_id}
+   */
+  async updateGiveaway(serverId: string | number, giveawayId: string, body: FormData): Promise<ApiResponse<Giveaway>> {
+    return this.requestFormData(`/v2/server/${serverId}/giveaways/${giveawayId}`, 'PUT', body);
+  }
+
+  /**
+   * DELETE /v2/server/{server_id}/giveaways/{giveaway_id}
+   */
+  async deleteGiveaway(serverId: string | number, giveawayId: string): Promise<ApiResponse<void>> {
+    return this.request(`/v2/server/${serverId}/giveaways/${giveawayId}`, { method: 'DELETE' });
+  }
+
+  /**
+   * POST /v2/server/{server_id}/giveaways/{giveaway_id}/reroll
+   */
+  async rerollGiveaway(serverId: string | number, giveawayId: string, userIdsToReplace: string[]): Promise<ApiResponse<GiveawayRerollResponse>> {
+    return this.request(`/v2/server/${serverId}/giveaways/${giveawayId}/reroll`, {
+      method: 'POST',
+      body: JSON.stringify({ user_ids_to_replace: userIdsToReplace }),
+    });
   }
 }

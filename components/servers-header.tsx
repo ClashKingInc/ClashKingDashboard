@@ -14,6 +14,7 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
+import { logout } from "@/lib/auth/logout";
 
 export function ServersHeader() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -37,9 +38,7 @@ export function ServersHeader() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
+    logout();
     setUser(null);
     router.push(`/${locale}`);
   };
@@ -73,7 +72,7 @@ export function ServersHeader() {
             <span className="sr-only">{t("settings")}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={align === "start" ? 0 : 0}>
+        <DropdownMenuContent align={align} className="w-48 bg-popover border border-border shadow-2xl" sideOffset={4} alignOffset={0}>
           {/* Theme Submenu */}
           <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
             <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
@@ -177,6 +176,7 @@ export function ServersHeader() {
               width={100}
               height={100}
               className="h-7 w-auto"
+              priority
             />
           </Link>
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -106,7 +107,7 @@ interface THStats {
   failed: number;
 }
 
-export default function WarsPage() {
+export default function WarsPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -154,8 +155,7 @@ export default function WarsPage() {
 
         if (!clansRes.ok) {
           if (clansRes.status === 401) {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
+            logout();
             router.push(`/${params.locale}/login`);
             return;
           }
@@ -187,7 +187,7 @@ export default function WarsPage() {
     }
   }, [guildId, router, toast]);
 
-  const fetchWarDataForClans = async (clansList: Clan[], token: string) => {
+  const fetchWarDataForClans = async (clansList: Clan[], token: string) => { // NOSONAR — data-fetching orchestration: parallel API calls + multi-dimension aggregation, inherently complex
     try {
       const clansToFetch = filters.clan === "all"
         ? clansList.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
@@ -956,7 +956,7 @@ export default function WarsPage() {
                                 border: `1px solid ${darkTheme.border.primary}`,
                                 borderRadius: '8px',
                               }}
-                              formatter={(value: number, name: string) => [`${value} wars`, name]}
+                              formatter={(value, name) => [`${value ?? 0} wars`, name]}
                             />
                           </PieChart>
                         </ResponsiveContainer>

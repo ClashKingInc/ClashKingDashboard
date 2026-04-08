@@ -14,8 +14,10 @@ import {
   Bell,
   ClipboardList,
   Ban,
+  Gift,
   ChevronDown,
   LayoutDashboard,
+  LayoutTemplate,
   Link2,
   Trophy,
   LogOut,
@@ -24,6 +26,8 @@ import {
   Moon,
   Computer,
   UserCog,
+  TicketIcon,
+  FileText,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,6 +47,7 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { clashKingAssets } from "@/lib/theme";
+import { logout } from "@/lib/auth/logout";
 
 interface SidebarProps {
   guildId: string;
@@ -76,9 +81,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("user");
+    logout();
     setUser(null);
     router.push(`/${locale}`);
   };
@@ -158,7 +161,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
         },
         {
           nameKey: "bans.name",
-          href: `/dashboard/${guildId}/bans`,
+          href: `/dashboard/${guildId}/bans-and-strikes`,
           icon: Ban,
         },
       ],
@@ -180,6 +183,26 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
           nameKey: "autoboards.name",
           href: `/dashboard/${guildId}/autoboards`,
           icon: LayoutDashboard,
+        },
+        {
+          nameKey: "giveaways.name",
+          href: `/dashboard/${guildId}/giveaways`,
+          icon: Gift,
+        },
+        {
+          nameKey: "panels.name",
+          href: `/dashboard/${guildId}/panels`,
+          icon: LayoutTemplate,
+        },
+        {
+          nameKey: "tickets.name",
+          href: `/dashboard/${guildId}/tickets`,
+          icon: TicketIcon,
+        },
+        {
+          nameKey: "embeds.name",
+          href: `/dashboard/${guildId}/embeds`,
+          icon: FileText,
         },
       ],
     },

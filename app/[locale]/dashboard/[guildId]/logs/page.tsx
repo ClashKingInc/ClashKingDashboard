@@ -101,6 +101,20 @@ interface LogTypeDefinition {
   exampleLink?: string;
 }
 
+const LOG_COLOR_MAP: Record<string, { bg: string; text: string }> = {
+  green: { bg: 'bg-green-500/10', text: 'text-green-500' },
+  red: { bg: 'bg-red-500/10', text: 'text-red-500' },
+  purple: { bg: 'bg-purple-500/10', text: 'text-purple-500' },
+  yellow: { bg: 'bg-yellow-500/10', text: 'text-yellow-500' },
+  blue: { bg: 'bg-blue-500/10', text: 'text-blue-500' },
+  orange: { bg: 'bg-orange-500/10', text: 'text-orange-500' },
+  gray: { bg: 'bg-gray-500/10', text: 'text-gray-500' },
+};
+
+function getLogColorClasses(color: string): { bg: string; text: string } {
+  return LOG_COLOR_MAP[color] ?? LOG_COLOR_MAP.gray;
+}
+
 export default function LogsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
@@ -407,18 +421,6 @@ export default function LogsPage() {
     }).length;
   };
 
-  const getColorClasses = (color: string) => {
-    const colorMap: Record<string, { bg: string; text: string }> = {
-      'green': { bg: 'bg-green-500/10', text: 'text-green-500' },
-      'red': { bg: 'bg-red-500/10', text: 'text-red-500' },
-      'purple': { bg: 'bg-purple-500/10', text: 'text-purple-500' },
-      'yellow': { bg: 'bg-yellow-500/10', text: 'text-yellow-500' },
-      'blue': { bg: 'bg-blue-500/10', text: 'text-blue-500' },
-      'orange': { bg: 'bg-orange-500/10', text: 'text-orange-500' },
-      'gray': { bg: 'bg-gray-500/10', text: 'text-gray-500' },
-    };
-    return colorMap[color] || colorMap['gray'];
-  };
 
   // Separate component for LogCard to use hooks properly
   const LogCard = ({ logDef }: { logDef: LogTypeDefinition }) => {
@@ -426,7 +428,7 @@ export default function LogsPage() {
     const isEnabled = isLogEnabled(logDef.keys);
     const selectedChannel = getSelectedChannelForLogs(logDef.keys);
     const selectedThread = getSelectedThreadForLogs(logDef.keys);
-    const colors = getColorClasses(logDef.color);
+    const colors = getLogColorClasses(logDef.color);
     const [showEnableForm, setShowEnableForm] = useState(false);
     const [pendingChannel, setPendingChannel] = useState<string | null>(null);
     const isSaving = saving === logDef.keys[0];

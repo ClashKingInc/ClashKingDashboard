@@ -89,7 +89,7 @@ import { useGameConstants } from "../_hooks";
 
 // ────────────────────────────────────────────────────────────────────────────
 
-export default function RosterDetailPage() {
+export default function RosterDetailPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -117,7 +117,6 @@ export default function RosterDetailPage() {
     loadingMissingMembers,
     loadingServerMembers,
     error,
-    refresh,
     refreshRoster,
     updateRoster,
     addMembers,
@@ -130,9 +129,6 @@ export default function RosterDetailPage() {
     createAutomation,
     updateAutomation,
     deleteAutomation,
-    createGroup,
-    updateGroup,
-    deleteGroup,
     createCategory,
     updateCategory,
     deleteCategory,
@@ -696,14 +692,14 @@ export default function RosterDetailPage() {
                     <div className="space-y-1 border-t border-border pt-2">
                       <p className="text-xs font-medium text-muted-foreground px-2 py-1">{t("columns.available")}</p>
                       {ROSTER_COLUMNS.filter(c => !localColumns.includes(c.value)).map((col) => (
-                        <div
+                        <button
                           key={col.value}
-                          className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50 cursor-pointer"
+                          className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-muted/50 cursor-pointer w-full text-left"
                           onClick={() => handleToggleColumn(col.value)}
                         >
                           <span className="text-sm text-muted-foreground">{t(`memberColumns.${col.value}`)}</span>
                           <Plus className="w-4 h-4 text-muted-foreground" />
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>

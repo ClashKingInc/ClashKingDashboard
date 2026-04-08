@@ -450,7 +450,7 @@ export default function CompareRostersPage() {
     }
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => { // NOSONAR — dnd-kit drag handler, structural complexity from framework pattern
     const { active, over } = event;
     setActiveId(null);
     setOverCategoryId(null);

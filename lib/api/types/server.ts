@@ -63,6 +63,11 @@ export interface ClanSettings {
   settings: any;
 }
 
+export interface ServerClanListItem {
+  tag: string;
+  name: string;
+}
+
 export interface BanRequest {
   reason: string | null;
   added_by: number | string; // Allow string for large Discord IDs to preserve precision
@@ -186,6 +191,72 @@ export interface GuildInfo {
   banner?: string;
   premium_tier?: number;
   boost_count?: number;
+}
+
+/**
+ * Giveaway booster configuration
+ */
+export interface GiveawayBooster {
+  value: number;
+  roles: string[];
+}
+
+/**
+ * A single winner entry in a giveaway's winners_list
+ */
+export interface GiveawayWinner {
+  user_id: string;
+  username: string | null;
+  status: 'winner' | 'rerolled';
+  timestamp: string | null;
+  reason: string | null;
+}
+
+/**
+ * Giveaway information
+ */
+export interface Giveaway {
+  id: string;
+  prize: string;
+  channel_id: string | null;
+  status: 'scheduled' | 'ongoing' | 'ended';
+  start_time: string;
+  end_time: string;
+  winners: number;
+  mentions: string[];
+  text_above_embed: string;
+  text_in_embed: string;
+  text_on_end: string;
+  image_url: string | null;
+  profile_picture_required: boolean;
+  coc_account_required: boolean;
+  roles_mode: 'allow' | 'deny' | 'none';
+  roles: string[];
+  boosters: GiveawayBooster[];
+  entry_count: number;
+  updated: boolean;
+  message_id: string | null;
+  winners_list: GiveawayWinner[];
+}
+
+/**
+ * Giveaways list response
+ */
+export interface GiveawaysResponse {
+  ongoing: Giveaway[];
+  upcoming: Giveaway[];
+  ended: Giveaway[];
+  total: number;
+}
+
+/**
+ * Response from the reroll endpoint
+ */
+export interface GiveawayRerollResponse {
+  message: string;
+  giveaway_id: string;
+  server_id: number;
+  new_winners: string[];
 }
 
 /**

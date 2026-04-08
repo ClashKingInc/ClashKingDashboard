@@ -112,6 +112,17 @@ export function formatTimestamp(unix: number, locale: string = 'en'): string {
 // Roster Statistics
 // ============================================
 
+function classifyMemberLocation(
+  currentClanTag: string | null | undefined,
+  rosterClanTag?: string | null,
+  familyClanTags?: string[]
+): "inClan" | "inFamily" | "external" {
+  if (!currentClanTag) return "external";
+  if (rosterClanTag && currentClanTag === rosterClanTag) return "inClan";
+  if (familyClanTags?.includes(currentClanTag)) return "inFamily";
+  return "external";
+}
+
 /**
  * Calculates roster statistics from members array
  */
@@ -154,17 +165,10 @@ export function calculateRosterStats(
     }
 
     // Location stats
-    if (member.current_clan_tag) {
-      if (rosterClanTag && member.current_clan_tag === rosterClanTag) {
-        inClan++;
-      } else if (familyClanTags?.includes(member.current_clan_tag)) {
-        inFamily++;
-      } else {
-        external++;
-      }
-    } else {
-      external++;
-    }
+    const loc = classifyMemberLocation(member.current_clan_tag, rosterClanTag, familyClanTags);
+    if (loc === "inClan") inClan++;
+    else if (loc === "inFamily") inFamily++;
+    else external++;
 
     // Sub count
     if (member.sub) {
