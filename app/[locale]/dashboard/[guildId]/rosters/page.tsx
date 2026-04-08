@@ -31,6 +31,7 @@ import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { useToast } from "@/components/ui/use-toast";
+import { apiCache } from "@/lib/api-cache";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,6 +50,22 @@ import * as api from "./_lib/api";
 import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData, SignupCategory } from "./_lib/types";
 import { calculateRosterStats, formatThRestriction, getAutomationLabel, buildOffsetSeconds, parseOffsetSeconds, formatOffsetSeconds } from "./_lib/utils";
 import type { OffsetUnit } from "./_lib/utils";
+
+const GROUPS_CACHE_TTL = 60000;
+const CATEGORIES_CACHE_TTL = 60000;
+const CHANNELS_CACHE_TTL = 120000;
+
+function getGroupsCacheKey(guildId: string): string {
+  return `rosters-groups-${guildId}`;
+}
+
+function getCategoriesCacheKey(guildId: string): string {
+  return `rosters-categories-${guildId}`;
+}
+
+function getChannelsCacheKey(guildId: string): string {
+  return `rosters-channels-${guildId}`;
+}
 
 // Roster Card Component
 interface RosterCardProps {
@@ -279,18 +296,43 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [standaloneNewAlias, setStandaloneNewAlias] = useState("");
 
   // Fetch groups
-  const refreshGroups = () => {
-    if (guildId) api.fetchGroups(guildId).then(setGroups).catch(() => setGroups([]));
+  const refreshGroups = (forceRefresh = false) => {
+    if (!guildId) return;
+    if (forceRefresh) {
+      apiCache.invalidate(getGroupsCacheKey(guildId));
+    }
+    apiCache
+      .get(getGroupsCacheKey(guildId), () => api.fetchGroups(guildId), GROUPS_CACHE_TTL)
+      .then(setGroups)
+      .catch(() => setGroups([]));
   };
 
-  const refreshCategories = () => {
-    if (guildId) api.fetchCategories(guildId).then(setCategories).catch(() => setCategories([]));
+  const refreshCategories = (forceRefresh = false) => {
+    if (!guildId) return;
+    if (forceRefresh) {
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
+    }
+    apiCache
+      .get(getCategoriesCacheKey(guildId), () => api.fetchCategories(guildId), CATEGORIES_CACHE_TTL)
+      .then(setCategories)
+      .catch(() => setCategories([]));
+  };
+
+  const refreshChannels = (forceRefresh = false) => {
+    if (!guildId) return;
+    if (forceRefresh) {
+      apiCache.invalidate(getChannelsCacheKey(guildId));
+    }
+    apiCache
+      .get(getChannelsCacheKey(guildId), () => api.fetchChannels(guildId), CHANNELS_CACHE_TTL)
+      .then(setChannels)
+      .catch(() => setChannels([]));
   };
 
   useEffect(() => {
     refreshGroups();
     refreshCategories();
-    if (guildId) api.fetchChannels(guildId).then(setChannels).catch(() => setChannels([]));
+    refreshChannels();
   }, [guildId]);
 
   // Group rosters by group_id
@@ -375,6 +417,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingGroup(true);
     try {
       const created = await api.createGroup(guildId, newGroupAlias.trim());
+      apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => [...prev, created]);
       setCreateGroupDialogOpen(false);
       setNewGroupAlias("");
@@ -391,6 +434,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingCategory(true);
     try {
       const created = await api.createCategory(guildId, newCategoryAlias.trim());
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => [...prev, created]);
       // Auto-select the new category in the editing group
       setEditingGroup(prev => prev ? {
@@ -423,6 +467,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           default_signup_category: editingGroup.default_signup_category ?? null,
         }),
       });
+      apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => prev.map(g => g.group_id === updated.group_id ? updated : g));
       setEditGroupDialogOpen(false);
       setEditingGroup(null);
@@ -438,6 +483,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setDeletingGroup(groupId);
     try {
       await api.deleteGroup(groupId, guildId);
+      apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => prev.filter(g => g.group_id !== groupId));
       toast({ title: t("groupDeleted") });
     } catch {
@@ -453,7 +499,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingCategory(true);
     try {
       await api.createCategory(guildId, standaloneNewAlias.trim());
-      refreshCategories();
+      refreshCategories(true);
       setStandaloneNewAlias("");
       setCreateCategoryDialogOpen(false);
       toast({ title: t("categoryCreated") });
@@ -469,6 +515,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingCategory(true);
     try {
       await api.updateCategory(editingCategoryStandalone.custom_id, guildId, { alias: editingCategoryStandalone.alias });
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => prev.map(c =>
         c.custom_id === editingCategoryStandalone.custom_id ? { ...c, alias: editingCategoryStandalone.alias } : c
       ));
@@ -485,6 +532,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const handleDeleteCategoryStandalone = async (categoryId: string) => {
     try {
       await api.deleteCategory(categoryId, guildId);
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
       toast({ title: t("categoryDeleted") });
     } catch {

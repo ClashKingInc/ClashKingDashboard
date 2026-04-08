@@ -3,9 +3,16 @@
 import { useEffect, useState } from "react";
 import { Sidebar } from "./sidebar";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 
 interface SidebarWrapperProps {
   guildId: string;
+}
+
+const GUILD_INFO_CACHE_TTL = 120000;
+
+function getGuildInfoCacheKey(guildId: string): string {
+  return `guild-info-${guildId}`;
 }
 
 export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
@@ -26,7 +33,11 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
 
 
         // Fetch guild info using the dedicated endpoint
-        const response = await apiClient.servers.getGuild(guildId);
+        const response = await apiCache.get(
+          getGuildInfoCacheKey(guildId),
+          () => apiClient.servers.getGuild(guildId),
+          GUILD_INFO_CACHE_TTL
+        );
 
         if (response.error || !response.data) {
           console.error("Failed to fetch guild info:", {
