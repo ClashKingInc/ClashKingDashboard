@@ -299,7 +299,7 @@ function RosterColumn({
             <CategoryDropZone
               rosterId={roster.custom_id}
               categoryId={null}
-              categoryName="Sans catégorie"
+              categoryName={t("compare.uncategorized")}
               members={membersByCategory.uncategorized || []}
               isOver={
                 overCategoryId ===
@@ -524,7 +524,7 @@ export default function CompareRostersPage() {
 
         const categoryName =
           categories.find((c) => c.custom_id === targetCategoryId)?.alias ||
-          "Sans catégorie";
+          t("compare.uncategorized");
         toast({
           title: t("compare.categoryChanged"),
           description: t("compare.categoryChangedDesc", {
