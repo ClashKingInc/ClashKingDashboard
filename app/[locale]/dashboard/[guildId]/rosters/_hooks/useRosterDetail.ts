@@ -68,6 +68,7 @@ interface UseRosterDetailResult {
 export function useRosterDetail(rosterId: string, serverId: string): UseRosterDetailResult {
   // Ref to always have current group_id without adding roster as a dep to every callback
   const groupIdRef = useRef<string | null | undefined>(undefined);
+  const channelsLoadedRef = useRef(false);
 
   // Data state
   const [roster, setRoster] = useState<Roster | null>(null);
@@ -91,6 +92,10 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
 
   // Error state
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    channelsLoadedRef.current = false;
+  }, [serverId]);
 
   // Load initial data
   const loadData = useCallback(async () => {
@@ -176,17 +181,18 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
 
   // Load Discord channels
   const loadChannels = useCallback(async () => {
-    if (channels.length > 0) return; // Already loaded
+    if (channelsLoadedRef.current) return;
     setLoadingChannels(true);
     try {
       const data = await api.fetchChannels(serverId);
       setChannels(data);
+      channelsLoadedRef.current = true;
     } catch (err) {
       console.error('[useRosterDetail] Failed to load channels:', err);
     } finally {
       setLoadingChannels(false);
     }
-  }, [serverId, channels.length]);
+  }, [serverId]);
 
   // Initial load
   useEffect(() => {
