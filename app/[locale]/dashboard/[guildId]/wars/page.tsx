@@ -956,7 +956,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                                 border: `1px solid ${darkTheme.border.primary}`,
                                 borderRadius: '8px',
                               }}
-                              formatter={(value: number, name: string) => [`${value} wars`, name]}
+                              formatter={(value, name) => [`${value ?? 0} wars`, name]}
                             />
                           </PieChart>
                         </ResponsiveContainer>
