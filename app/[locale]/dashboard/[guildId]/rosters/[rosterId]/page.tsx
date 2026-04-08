@@ -495,9 +495,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <Card className="bg-card border-border">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-3">
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
               </CardHeader>
               <CardContent>
@@ -505,16 +505,24 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               </CardContent>
             </Card>
             <Card className="bg-card border-border">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground">{t("stats.averageTH")}</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground">{t("stats.avgTh")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <Skeleton className="h-8 w-20" />
               </CardContent>
             </Card>
             <Card className="bg-card border-border">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground">{t("stats.clans")}</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground">{t("stats.avgHitrate")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-8 w-20" />
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground">{t("stats.distribution")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <Skeleton className="h-8 w-20" />
@@ -522,17 +530,30 @@ export default function RosterDetailPage() { // NOSONAR — React page component
             </Card>
           </div>
 
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle>{t("tabs.members")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            <div className="inline-flex h-10 items-center justify-center rounded-md bg-secondary p-1 text-muted-foreground">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-foreground">
+                <Users className="w-4 h-4" />
+                {t("tabs.members")}
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground">
+                <Zap className="w-4 h-4" />
+                {t("tabs.automations")}
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-muted-foreground">
+                <SettingsIcon className="w-4 h-4" />
+                {t("tabs.settings")}
+              </div>
+            </div>
+            <Card className="bg-card border-border">
+              <CardContent className="pt-6 space-y-3">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     );
