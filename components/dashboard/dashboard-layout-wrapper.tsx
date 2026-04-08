@@ -43,9 +43,10 @@ export function DashboardLayoutWrapper({
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+          <button
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm cursor-default"
             onClick={() => setIsSidebarOpen(false)}
+            aria-label="Close sidebar"
           />
           <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-lg animate-in slide-in-from-left duration-200">
             <div className="h-full relative">

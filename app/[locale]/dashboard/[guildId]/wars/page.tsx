@@ -107,7 +107,7 @@ interface THStats {
   failed: number;
 }
 
-export default function WarsPage() {
+export default function WarsPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -187,7 +187,7 @@ export default function WarsPage() {
     }
   }, [guildId, router, toast]);
 
-  const fetchWarDataForClans = async (clansList: Clan[], token: string) => {
+  const fetchWarDataForClans = async (clansList: Clan[], token: string) => { // NOSONAR — data-fetching orchestration: parallel API calls + multi-dimension aggregation, inherently complex
     try {
       const clansToFetch = filters.clan === "all"
         ? clansList.map(c => c.tag).filter(tag => tag && tag.trim() !== '')

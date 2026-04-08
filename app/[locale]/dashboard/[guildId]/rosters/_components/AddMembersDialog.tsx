@@ -284,9 +284,9 @@ export function AddMembersDialog({
               </div>
               <div className="border border-border rounded-lg max-h-60 overflow-y-auto">
                 {filteredClanMembers.map((member) => (
-                  <div
+                  <button
                     key={member.tag}
-                    className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors ${
+                    className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
                       selectedMembers.has(member.tag) ? "bg-primary/10" : ""
                     }`}
                     onClick={() => toggleMember(member.tag)}
@@ -307,7 +307,7 @@ export function AddMembersDialog({
                         {t("memberAutocomplete.selected")}
                       </Badge>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

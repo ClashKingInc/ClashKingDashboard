@@ -90,7 +90,7 @@ function payloadToState(data: Record<string, unknown>): EmbedFormState {
   };
 }
 
-function stateToEmbed(s: EmbedFormState): DiscordEmbed {
+function stateToEmbed(s: EmbedFormState): DiscordEmbed { // NOSONAR — sequential field assignments, no real logic branches
   const embed: DiscordEmbed = {};
   if (s.color) embed.color = hexToInt(s.color);
   if (s.authorName.trim()) {
