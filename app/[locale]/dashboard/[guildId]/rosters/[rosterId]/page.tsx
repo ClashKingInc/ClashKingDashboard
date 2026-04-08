@@ -525,7 +525,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.distribution")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-8 w-20" />
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-1 w-full max-w-[140px]">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-20" />
+                  </div>
+                  <Skeleton className="h-8 w-8 rounded" />
+                </div>
               </CardContent>
             </Card>
           </div>
