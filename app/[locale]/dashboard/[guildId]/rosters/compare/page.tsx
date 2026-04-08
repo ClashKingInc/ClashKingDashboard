@@ -178,6 +178,7 @@ interface RosterColumnProps {
   overCategoryId: string | null;
   isLoading: boolean;
   duplicateTags?: Set<string>;
+  t: (key: string) => string;
 }
 
 function RosterColumn({
@@ -187,6 +188,7 @@ function RosterColumn({
   overCategoryId,
   isLoading,
   duplicateTags,
+  t,
 }: RosterColumnProps) {
   const { setNodeRef } = useDroppable({
     id: roster.custom_id,
@@ -708,6 +710,7 @@ export default function CompareRostersPage() {
                   overCategoryId={overCategoryId}
                   isLoading={false}
                   duplicateTags={duplicateTags}
+                  t={t}
                 />
               );
             })}
