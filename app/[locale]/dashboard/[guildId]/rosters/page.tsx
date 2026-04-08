@@ -679,18 +679,49 @@ export default function RostersPage() { // NOSONAR — React page component: com
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Skeleton className="h-14 w-14 rounded-lg" />
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <ClipboardList className="h-8 w-8 text-primary" />
+              </div>
               <div>
-                <Skeleton className="h-8 w-48" />
-                <Skeleton className="h-4 w-64 mt-2" />
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
+                <p className="text-muted-foreground mt-1">{t("description")}</p>
               </div>
             </div>
             <Skeleton className="h-10 w-32" />
           </div>
           <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-28" />
-            ))}
+            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRosters")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-9 w-16" />
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-green-500/30 bg-green-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalMembers")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-9 w-16" />
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-orange-500/30 bg-orange-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.clanRosters")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-9 w-16" />
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.familyRosters")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-9 w-16" />
+              </CardContent>
+            </Card>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
