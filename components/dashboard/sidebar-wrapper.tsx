@@ -34,8 +34,7 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
             }
 
             return response.data;
-          },
-          5 * 60 * 1000
+          }
         );
 
         // Icon URL is already provided by the backend as a full URL

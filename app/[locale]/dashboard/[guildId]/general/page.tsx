@@ -66,7 +66,6 @@ export default function GeneralSettingsPage() {
   const settingsCacheKey = `settings-${guildId}`;
   const discordRolesCacheKey = `discord-roles-${guildId}`;
   const allRolesCacheKey = `all-roles-${guildId}`;
-  const cacheTtl = 5 * 60 * 1000;
 
   // Load settings on mount
   useEffect(() => {
@@ -93,7 +92,7 @@ export default function GeneralSettingsPage() {
         }
 
         return response.data;
-      }, cacheTtl);
+      });
 
       if (settingsData) {
         const newSettings = {
@@ -125,7 +124,7 @@ export default function GeneralSettingsPage() {
           throw new Error(response.error);
         }
         return response.data;
-      }, cacheTtl);
+      });
 
       if (rolesData) {
         setDiscordRoles(rolesData.roles);
@@ -147,7 +146,7 @@ export default function GeneralSettingsPage() {
           throw new Error(response.error);
         }
         return response.data;
-      }, cacheTtl);
+      });
 
       if (allRolesData?.roles?.status) {
         const normalizedRoles = allRolesData.roles.status.map((r: any) => ({
