@@ -17,6 +17,7 @@ import { apiCache } from "@/lib/api-cache";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
+import { useToast } from "@/components/ui/use-toast";
 import type { FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
 
 interface NicknameSettings {
@@ -189,6 +190,7 @@ export default function FamilySettingsPage() {
   const guildId = params.guildId as string;
   const t = useTranslations("FamilySettingsPage");
   const tCommon = useTranslations("Common");
+  const { toast } = useToast();
 
   // Placeholder descriptions from translations
   const PLACEHOLDERS = [
@@ -216,7 +218,6 @@ export default function FamilySettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [isFamilyPlaceholdersOpen, setIsFamilyPlaceholdersOpen] = useState(false);
   const [isNonFamilyPlaceholdersOpen, setIsNonFamilyPlaceholdersOpen] = useState(false);
 
@@ -357,8 +358,10 @@ export default function FamilySettingsPage() {
       // Refresh family roles after update
       await loadFamilyRoles(true);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to add family role");
     } finally {
@@ -384,8 +387,10 @@ export default function FamilySettingsPage() {
       // Refresh family roles after update
       await loadFamilyRoles(true);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to remove family role");
     } finally {
@@ -399,7 +404,6 @@ export default function FamilySettingsPage() {
 
       setIsSaving(true);
       setError(null);
-      setSuccess(false);
 
       await apiClient.servers.updateSettings(guildId, {
         change_nickname: settings.change_nickname,
@@ -412,8 +416,10 @@ export default function FamilySettingsPage() {
 
       setInitialSettings(settings);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to save settings");
       console.error("Failed to save settings:", err);
@@ -475,16 +481,6 @@ export default function FamilySettingsPage() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        {/* Success Alert */}
-        {success && (
-          <Alert className="border-green-500/30 bg-green-500/5">
-            <AlertCircle className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-600">
-              {t("settingsSaved")}
-            </AlertDescription>
           </Alert>
         )}
 
