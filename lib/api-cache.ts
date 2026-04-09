@@ -15,14 +15,7 @@ interface PendingRequest<T> {
 export class ApiCache {
   private cache = new Map<string, CacheEntry<any>>();
   private pendingRequests = new Map<string, PendingRequest<any>>();
-  private requestVersions = new Map<string, number>();
   private readonly defaultTTL = 30000; // 30 seconds
-
-  private bumpVersion(key: string): number {
-    const nextVersion = (this.requestVersions.get(key) ?? 0) + 1;
-    this.requestVersions.set(key, nextVersion);
-    return nextVersion;
-  }
 
   /**
    * Get cached data or execute fetch function
@@ -45,17 +38,13 @@ export class ApiCache {
     }
 
     // Execute fetch and cache result
-    const requestVersion = this.bumpVersion(key);
     const pendingRequest: PendingRequest<T> = {
       promise: Promise.resolve() as Promise<T>,
     };
     const promise = Promise.resolve()
       .then(fetchFn)
       .then((data) => {
-        if (
-          this.requestVersions.get(key) === requestVersion &&
-          this.pendingRequests.get(key) === pendingRequest
-        ) {
+        if (this.pendingRequests.get(key) === pendingRequest) {
           this.cache.set(key, { data, timestamp: Date.now() });
         }
         return data;
@@ -75,7 +64,6 @@ export class ApiCache {
    * Invalidate specific cache entry
    */
   invalidate(key: string): void {
-    this.bumpVersion(key);
     this.cache.delete(key);
     this.pendingRequests.delete(key);
   }
@@ -99,7 +87,6 @@ export class ApiCache {
     }
 
     for (const key of keysToInvalidate) {
-      this.bumpVersion(key);
       this.cache.delete(key);
       this.pendingRequests.delete(key);
     }
@@ -109,15 +96,6 @@ export class ApiCache {
    * Clear all cache
    */
   clear(): void {
-    const keysToInvalidate = new Set([
-      ...this.cache.keys(),
-      ...this.pendingRequests.keys(),
-    ]);
-
-    for (const key of keysToInvalidate) {
-      this.bumpVersion(key);
-    }
-
     this.cache.clear();
     this.pendingRequests.clear();
   }
