@@ -275,9 +275,12 @@
         "total": "Total Bans",
         "recent": "Recent Bans (7 days)",
         "commonReason": "Most Common Reason",
+        "activeOnServer": "Active bans on server",
+        "last7Days": "In the last 7 days",
         "commonReasonValue": "Harassment & Toxicity",
         "noBans": "No bans yet",
-        "percentOfAll": "{percent}% of all bans"
+        "percentOfAll": "{percent}% of all bans",
+        "percentOfAllLabel": "of all bans"
       },
       "list": {
         "title": "Banned Players",
@@ -343,6 +346,9 @@
         "total": "Total Strikes",
         "recent": "Recent Strikes (7 days)",
         "totalWeight": "Total Strike Weight",
+        "activeOnServer": "Active strikes on server",
+        "last7Days": "In the last 7 days",
+        "cumulativeWeight": "Cumulative strike weight",
         "commonReason": "Most Common Reason",
         "commonReasonValue": "Spamming"
       },
