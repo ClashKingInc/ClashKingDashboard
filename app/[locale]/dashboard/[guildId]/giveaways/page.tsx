@@ -691,7 +691,7 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
                       <Checkbox id="startNow" checked={form.startNow} onCheckedChange={(checked) => updateForm((s) => ({ ...s, startNow: Boolean(checked), startTime: Boolean(checked) ? "" : s.startTime }))} />
                       <Label htmlFor="startNow" className="cursor-pointer font-normal">{t("form.startNow")}</Label>
                     </div>
-                    {!form.startNow && <Input type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
+                    {!form.startNow && <Input className="mt-2" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
                   </div>
                   <div className="space-y-2">
                     <Label>{t("form.endTime")}<span className="ml-1 text-destructive">*</span></Label>
@@ -756,7 +756,7 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
                   </div>
                 )}
                 <Separator />
-                <div className="space-y-3">
+                <div className="mt-3 space-y-3">
                   <Label>{t("form.requirements")}</Label>
                   <div className="flex items-center gap-2">
                     <Checkbox id="profileRequired" checked={form.profileRequired} onCheckedChange={(checked) => updateForm((s) => ({ ...s, profileRequired: Boolean(checked) }))} />
