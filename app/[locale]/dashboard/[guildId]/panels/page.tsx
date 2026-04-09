@@ -52,6 +52,17 @@ interface Channel {
   parent_name?: string;
 }
 
+function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
+  if (Array.isArray(payload)) return payload as ServerEmbed[];
+  if (!payload || typeof payload !== "object") return [];
+
+  const obj = payload as { items?: unknown; data?: { items?: unknown } };
+  if (Array.isArray(obj.items)) return obj.items as ServerEmbed[];
+  if (obj.data && Array.isArray(obj.data.items)) return obj.data.items as ServerEmbed[];
+
+  return [];
+}
+
 const BUTTON_SKELETON_KEYS = BUTTON_TYPES.map((type) => `${type}-skeleton`);
 const COLOR_SKELETON_KEYS = BUTTON_COLORS.map((color) => `${color}-skeleton`);
 const PREVIEW_BUTTON_SKELETON_KEYS = ["preview-button-1", "preview-button-2", "preview-button-3"];
@@ -84,7 +95,7 @@ export default function PanelsPage() {
 
   const loaded = useRef(false);
   const panelCacheKey = `panel-${guildId}`;
-  const embedsCacheKey = `embeds-${guildId}`;
+  const embedsCacheKey = `panels-embeds-list-${guildId}`;
   const channelsCacheKey = `channels-${guildId}`;
 
   const showLoadError = useCallback(() => {
@@ -119,7 +130,7 @@ export default function PanelsPage() {
   const loadEmbeds = useCallback(async () => {
     try {
       const embedsRes = await apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId));
-      setEmbeds(embedsRes.data?.items ?? []);
+      setEmbeds(normalizeEmbedsPayload(embedsRes));
     } catch {
       showLoadError();
     } finally {
