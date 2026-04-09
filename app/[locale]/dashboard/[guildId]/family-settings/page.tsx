@@ -468,15 +468,6 @@ export default function FamilySettingsPage() {
               {t("description")}
             </p>
           </div>
-          <Button
-            variant="outline"
-            onClick={handleReset}
-            className="border-border"
-            size="sm"
-          >
-            <RotateCcw className="mr-2 h-4 w-4" />
-            {t("reset")}
-          </Button>
         </div>
 
         {/* Error Alert */}
@@ -515,24 +506,35 @@ export default function FamilySettingsPage() {
                   </div>
                 </div>
                 {isSettingsDirty && (
-                  <Button
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="bg-primary hover:bg-primary/90"
-                    size="sm"
-                  >
-                    {isSaving ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {t("saving")}
-                      </>
-                    ) : (
-                      <>
-                        <Save className="mr-2 h-4 w-4" />
-                        {t("saveChanges")}
-                      </>
-                    )}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={handleReset}
+                      className="border-border"
+                      size="sm"
+                    >
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      {t("reset")}
+                    </Button>
+                    <Button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="bg-primary hover:bg-primary/90"
+                      size="sm"
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t("saving")}
+                        </>
+                      ) : (
+                        <>
+                          <Save className="mr-2 h-4 w-4" />
+                          {t("saveChanges")}
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 )}
               </div>
             </CardHeader>
