@@ -41,7 +41,7 @@ import {
   MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
   Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
   Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X, Copy, ExternalLink, Link2,
-  CheckCircle2, AlertTriangle
+  CheckCircle2, AlertTriangle, Target, TrendingUp
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
@@ -482,9 +482,117 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-32 w-full" />
-          <Skeleton className="h-64 w-full" />
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="icon" disabled>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-8 w-56" />
+                <Skeleton className="h-4 w-44" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            <Card className="bg-card border-blue-500/30 bg-blue-500/5 min-h-[150px]">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20" />
+                  <Users className="h-8 w-8 text-blue-500/50" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-orange-500/30 bg-orange-500/5 min-h-[150px]">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground">{t("stats.avgTh")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20" />
+                  <Shield className="h-8 w-8 text-orange-500/50" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-green-500/30 bg-green-500/5 min-h-[150px]">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground">{t("stats.avgHitrate")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-8 w-20" />
+                  <Target className="h-8 w-8 text-green-500/50" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-purple-500/30 bg-purple-500/5 min-h-[150px]">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm text-muted-foreground">{t("stats.distribution")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-1 w-full max-w-[140px]">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-20" />
+                  </div>
+                  <TrendingUp className="h-8 w-8 text-purple-500/50" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="bg-secondary">
+              <TabsTrigger value="members" className="gap-2">
+                <Users className="w-4 h-4" />
+                {t("tabs.members")}
+              </TabsTrigger>
+              <TabsTrigger value="automations" className="gap-2">
+                <Zap className="w-4 h-4" />
+                {t("tabs.automations")}
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="gap-2">
+                <SettingsIcon className="w-4 h-4" />
+                {t("tabs.settings")}
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="members" className="space-y-4">
+              <Card className="bg-card border-border">
+                <CardContent className="pt-6 space-y-3">
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="automations" className="space-y-4">
+              <Card className="bg-card border-border">
+                <CardContent className="pt-6 space-y-3">
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="settings" className="space-y-4">
+              <Card className="bg-card border-border">
+                <CardContent className="pt-6 space-y-3">
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     );

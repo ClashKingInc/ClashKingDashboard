@@ -770,7 +770,8 @@
       "compareGroup": "Groep vergelijken",
       "dragToMoveCategory": "Sleep leden tussen roosters en categorieën",
       "categoryChanged": "Categorie gewijzigd",
-      "categoryChangedDesc": "{name} verplaatst naar {category}"
+      "categoryChangedDesc": "{name} verplaatst naar {category}",
+      "uncategorized": "Zonder categorie"
     },
     "ungrouped": "Niet gegroepeerd",
     "automations": {

@@ -9,6 +9,12 @@ interface SidebarWrapperProps {
   guildId: string;
 }
 
+const GUILD_INFO_CACHE_TTL = 120000;
+
+function getGuildInfoCacheKey(guildId: string): string {
+  return `guild-info-${guildId}`;
+}
+
 export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [serverInfo, setServerInfo] = useState({
@@ -24,17 +30,19 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
           setIsLoading(false);
           return;
         }
+        // Only cache successful guild responses; ApiResponse errors are resolved values.
         const guild = await apiCache.get(
-          `guild-info-${guildId}`,
+          getGuildInfoCacheKey(guildId),
           async () => {
             const response = await apiClient.servers.getGuild(guildId);
 
             if (response.error || !response.data) {
-              throw new Error(response.error || "Failed to fetch guild info");
+              throw new Error(response.error || `Failed to fetch guild info (${response.status})`);
             }
 
             return response.data;
-          }
+          },
+          GUILD_INFO_CACHE_TTL
         );
 
         // Icon URL is already provided by the backend as a full URL
