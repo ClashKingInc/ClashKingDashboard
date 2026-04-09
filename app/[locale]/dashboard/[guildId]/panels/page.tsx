@@ -232,9 +232,9 @@ export default function PanelsPage() {
                     >
                       <Skeleton className="h-4 w-4 rounded-sm" />
                       <Skeleton className="h-5 w-5 rounded-sm" />
-                      <div className="flex-1 min-w-0 space-y-1.5">
-                        <Skeleton className="h-5 w-28" />
-                        <Skeleton className="h-4 w-52 max-w-full" />
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <Skeleton className="h-[18px] w-28" />
+                        <Skeleton className="h-3.5 w-52 max-w-full" />
                       </div>
                     </div>
                   ))}
