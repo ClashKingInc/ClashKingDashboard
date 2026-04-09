@@ -52,6 +52,10 @@ interface Channel {
   parent_name?: string;
 }
 
+const BUTTON_SKELETON_KEYS = BUTTON_TYPES.map((type) => `${type}-skeleton`);
+const COLOR_SKELETON_KEYS = BUTTON_COLORS.map((color) => `${color}-skeleton`);
+const PREVIEW_BUTTON_SKELETON_KEYS = ["preview-button-1", "preview-button-2", "preview-button-3"];
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function PanelsPage() {
@@ -83,52 +87,60 @@ export default function PanelsPage() {
   const embedsCacheKey = `embeds-${guildId}`;
   const channelsCacheKey = `channels-${guildId}`;
 
+  const showLoadError = useCallback(() => {
+    toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+  }, [toast, tCommon]);
+
+  const applyPanelData = useCallback((panel: ServerPanel) => {
+    setEmbedName(panel.embed_name ?? "");
+    setButtons(panel.buttons ?? []);
+    setButtonColor((panel.button_color as ButtonColor) ?? "Grey");
+    setWelcomeChannel(panel.welcome_channel ? String(panel.welcome_channel) : "");
+  }, []);
+
+  const loadPanel = useCallback(async () => {
+    try {
+      const panelRes = await apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId));
+      if (panelRes.status === 401 || panelRes.status === 403) {
+        router.push(`/${locale}/login`);
+        return;
+      }
+
+      if (panelRes.data) {
+        applyPanelData(panelRes.data as ServerPanel);
+      }
+    } catch {
+      showLoadError();
+    } finally {
+      setIsPanelLoading(false);
+    }
+  }, [applyPanelData, guildId, locale, panelCacheKey, router, showLoadError]);
+
+  const loadEmbeds = useCallback(async () => {
+    try {
+      const embedsRes = await apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId));
+      setEmbeds(embedsRes.data?.items ?? []);
+    } catch {
+      showLoadError();
+    } finally {
+      setIsEmbedsLoading(false);
+    }
+  }, [embedsCacheKey, guildId, showLoadError]);
+
+  const loadChannels = useCallback(async () => {
+    try {
+      const channelsRes = await apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId));
+      setChannels(channelsRes.data ?? []);
+    } catch {
+      showLoadError();
+    } finally {
+      setIsChannelsLoading(false);
+    }
+  }, [channelsCacheKey, guildId, showLoadError]);
+
   const load = useCallback(async () => {
-    const panelPromise = (async () => {
-      try {
-        const panelRes = await apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId));
-        if (panelRes.status === 401 || panelRes.status === 403) {
-          router.push(`/${locale}/login`);
-          return;
-        }
-        if (panelRes.data) {
-          const p = panelRes.data as ServerPanel;
-          setEmbedName(p.embed_name ?? "");
-          setButtons(p.buttons ?? []);
-          setButtonColor((p.button_color as ButtonColor) ?? "Grey");
-          setWelcomeChannel(p.welcome_channel ? String(p.welcome_channel) : "");
-        }
-      } catch (err) {
-        toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
-      } finally {
-        setIsPanelLoading(false);
-      }
-    })();
-
-    const embedsPromise = (async () => {
-      try {
-        const embedsRes = await apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId));
-        setEmbeds(embedsRes.data?.items ?? []);
-      } catch (err) {
-        toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
-      } finally {
-        setIsEmbedsLoading(false);
-      }
-    })();
-
-    const channelsPromise = (async () => {
-      try {
-        const channelsRes = await apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId));
-        setChannels(channelsRes.data ?? []);
-      } catch (err) {
-        toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
-      } finally {
-        setIsChannelsLoading(false);
-      }
-    })();
-
-    await Promise.all([panelPromise, embedsPromise, channelsPromise]);
-  }, [channelsCacheKey, embedsCacheKey, guildId, locale, panelCacheKey, router, toast, tCommon]);
+    await Promise.all([loadPanel(), loadEmbeds(), loadChannels()]);
+  }, [loadChannels, loadEmbeds, loadPanel]);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -166,6 +178,47 @@ export default function PanelsPage() {
   const embedPreview = selectedEmbed?.data ? extractFirstEmbed(selectedEmbed.data) : null;
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
   const resolvedWelcomeChannelName = channels.find(c => c.id === welcomeChannel)?.name;
+  let embedPreviewContent = (
+    <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
+      {embedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
+    </div>
+  );
+  if (isEmbedsLoading) {
+    embedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
+  } else if (embedPreview) {
+    embedPreviewContent = <DiscordEmbedPreview embed={embedPreview} />;
+  }
+
+  let buttonsPreviewContent = <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>;
+  if (isPanelLoading) {
+    buttonsPreviewContent = (
+      <div className="flex flex-wrap gap-2">
+        {PREVIEW_BUTTON_SKELETON_KEYS.map((key) => (
+          <Skeleton key={key} className="h-8 w-28 rounded-md bg-white/10" />
+        ))}
+      </div>
+    );
+  } else if (buttons.length > 0) {
+    buttonsPreviewContent = (
+      <div className="flex flex-wrap gap-2">
+        {buttons.map(type => {
+          const meta = BUTTON_META[type];
+          return (
+            <button
+              key={type}
+              className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", buttonStyle)}
+            >
+              <span>{meta.emoji}</span>
+              <span>{meta.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+  const welcomeAutoPostText = t("welcomeAutoPost", {
+    channel: `#${resolvedWelcomeChannelName ?? welcomeChannel}`
+  });
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
@@ -226,9 +279,9 @@ export default function PanelsPage() {
               </div>
               {isPanelLoading ? (
                 <div className="space-y-2">
-                  {Array.from({ length: BUTTON_TYPES.length }).map((_, idx) => (
+                  {BUTTON_SKELETON_KEYS.map((key) => (
                     <div
-                      key={idx}
+                      key={key}
                       className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3"
                     >
                       <Skeleton className="h-4 w-4 rounded-sm" />
@@ -281,8 +334,8 @@ export default function PanelsPage() {
               </div>
               {isPanelLoading ? (
                 <div className="flex gap-3">
-                  {Array.from({ length: BUTTON_COLORS.length }).map((_, idx) => (
-                    <Skeleton key={idx} className="h-[72px] w-[74px] rounded-lg" />
+                  {COLOR_SKELETON_KEYS.map((key) => (
+                    <Skeleton key={key} className="h-[72px] w-[74px] rounded-lg" />
                   ))}
                 </div>
               ) : (
@@ -359,41 +412,10 @@ export default function PanelsPage() {
                 </div>
 
                 {/* Embed preview */}
-                {isEmbedsLoading ? (
-                  <Skeleton className="h-40 w-full rounded-md" />
-                ) : embedPreview ? (
-                  <DiscordEmbedPreview embed={embedPreview} />
-                ) : (
-                  <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
-                    {embedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
-                  </div>
-                )}
+                {embedPreviewContent}
 
                 {/* Buttons preview */}
-                {isPanelLoading ? (
-                  <div className="flex flex-wrap gap-2">
-                    {Array.from({ length: 3 }).map((_, idx) => (
-                      <Skeleton key={idx} className="h-8 w-28 rounded-md bg-white/10" />
-                    ))}
-                  </div>
-                ) : buttons.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {buttons.map(type => {
-                      const meta = BUTTON_META[type];
-                      return (
-                        <button
-                          key={type}
-                          className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", buttonStyle)}
-                        >
-                          <span>{meta.emoji}</span>
-                          <span>{meta.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>
-                )}
+                {buttonsPreviewContent}
               </div>
 
               {/* Welcome channel info */}
@@ -402,9 +424,7 @@ export default function PanelsPage() {
                   {isChannelsLoading ? (
                     <Skeleton className="h-3.5 w-56 max-w-full" />
                   ) : (
-                    t("welcomeAutoPost", {
-                      channel: `#${resolvedWelcomeChannelName ?? welcomeChannel}`
-                    })
+                    welcomeAutoPostText
                   )}
                 </div>
               )}
