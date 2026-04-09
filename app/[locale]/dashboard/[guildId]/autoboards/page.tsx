@@ -775,24 +775,20 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-8 w-20 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-blue-500">{autoboardsData?.total || 0}</div>
+              )}
+              <LayoutDashboard className="h-8 w-8 text-blue-500/50" />
+            </div>
             {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-              </>
+              <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
             ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-blue-500">{autoboardsData?.total || 0}</div>
-                  <LayoutDashboard className="h-8 w-8 text-blue-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} ${t('used')}` : tCommon("loading")}
-                </p>
-              </>
+              <p className="text-xs text-muted-foreground mt-2">
+                {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} ${t('used')}` : tCommon("loading")}
+              </p>
             )}
           </CardContent>
         </Card>
@@ -804,22 +800,18 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-8 w-16 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-green-500">{autoboardsData?.post_count || 0}</div>
+              )}
+              <Calendar className="h-8 w-8 text-green-500/50" />
+            </div>
             {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-16 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-              </>
+              <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
             ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-green-500">{autoboardsData?.post_count || 0}</div>
-                  <Calendar className="h-8 w-8 text-green-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">{t('scheduledBoards')}</p>
-              </>
+              <p className="text-xs text-muted-foreground mt-2">{t('scheduledBoards')}</p>
             )}
           </CardContent>
         </Card>
@@ -831,22 +823,18 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-8 w-16 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-purple-500">{autoboardsData?.refresh_count || 0}</div>
+              )}
+              <RefreshCw className="h-8 w-8 text-purple-500/50" />
+            </div>
             {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-16 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-              </>
+              <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
             ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-purple-500">{autoboardsData?.refresh_count || 0}</div>
-                  <RefreshCw className="h-8 w-8 text-purple-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">{t('continuousUpdates')}</p>
-              </>
+              <p className="text-xs text-muted-foreground mt-2">{t('continuousUpdates')}</p>
             )}
           </CardContent>
         </Card>
@@ -858,24 +846,20 @@ export default function AutoBoardsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-8 w-16 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-yellow-500">
+                  {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
+                </div>
+              )}
+              <Clock className="h-8 w-8 text-yellow-500/50" />
+            </div>
             {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-16 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-36 mt-2 animate-pulse" />
-              </>
+              <Skeleton className="h-3 w-36 mt-2 animate-pulse" />
             ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-yellow-500">
-                    {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
-                  </div>
-                  <Clock className="h-8 w-8 text-yellow-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">{t('remainingCapacity')}</p>
-              </>
+              <p className="text-xs text-muted-foreground mt-2">{t('remainingCapacity')}</p>
             )}
           </CardContent>
         </Card>
