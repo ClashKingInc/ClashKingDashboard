@@ -1,4 +1,4 @@
-import { SidebarWrapper } from "@/components/dashboard/sidebar-wrapper";
+import { SidebarClient } from "@/components/dashboard/sidebar-client";
 import { DashboardLayoutWrapper } from "@/components/dashboard/dashboard-layout-wrapper";
 
 export default async function DashboardLayout({
@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   const { guildId } = await params;
 
   return (
-    <DashboardLayoutWrapper sidebar={<SidebarWrapper guildId={guildId} />}>
+    <DashboardLayoutWrapper sidebar={<SidebarClient guildId={guildId} />}>
       {children}
     </DashboardLayoutWrapper>
   );
