@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -78,18 +79,26 @@ export default function EmbedsPage() {
 
   const [copiedName, setCopiedName] = useState<string | null>(null);
   const loaded = useRef(false);
+  const embedsCacheKey = `embeds-${guildId}`;
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (forceRefresh = false) => {
+    if (forceRefresh) {
+      apiCache.invalidate(embedsCacheKey);
+    }
+
     try {
-      const res = await apiClient.tickets.getEmbeds(guildId);
-      if (res.error) throw new Error(res.error);
-      setEmbeds(res.data?.items ?? []);
+      const embedsData = await apiCache.get(embedsCacheKey, async () => {
+        const res = await apiClient.tickets.getEmbeds(guildId);
+        if (res.error) throw new Error(res.error);
+        return res.data?.items ?? [];
+      });
+      setEmbeds(embedsData);
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
-  }, [guildId, toast, tCommon]);
+  }, [embedsCacheKey, guildId, toast, tCommon]);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -132,7 +141,7 @@ export default function EmbedsPage() {
         toast({ title: tCommon("success"), description: t("embedCreated", { name }) });
       }
       setEditorOpen(false);
-      await load();
+      await load(true);
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
@@ -148,7 +157,7 @@ export default function EmbedsPage() {
       if (res.error) throw new Error(res.error);
       toast({ title: tCommon("success"), description: t("embedDeleted") });
       setDeleteTarget(null);
-      await load();
+      await load(true);
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {

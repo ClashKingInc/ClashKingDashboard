@@ -17,7 +17,14 @@ import { apiCache } from "@/lib/api-cache";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
+import { useToast } from "@/components/ui/use-toast";
 import type { FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
+
+interface NicknameSettings {
+  change_nickname: boolean;
+  nickname_rule: string;
+  non_family_nickname_rule: string;
+}
 
 // Color classes for role type cards
 const colorClasses: Record<string, { bg: string; text: string; border: string }> = {
@@ -39,6 +46,7 @@ interface FamilyRoleCardProps {
   icon: React.ComponentType<{ className?: string }>;
   color: string;
   discordRoles: Array<{ id: string; name: string; color?: number }>;
+  isRoleDataLoading: boolean;
   isLoading: boolean;
   onAdd: (roleId: string) => Promise<void>;
   onRemove: (roleId: string) => Promise<void>;
@@ -58,13 +66,14 @@ function FamilyRoleCard({
   icon: Icon,
   color,
   discordRoles,
+  isRoleDataLoading,
   isLoading,
   onAdd,
   onRemove,
   t,
 }: FamilyRoleCardProps) {
   const colors = colorClasses[color] || colorClasses.gray;
-  const hasRoles = roleIds.length > 0;
+  const hasRoles = !isRoleDataLoading && roleIds.length > 0;
 
   // Get role details with existence check
   const assignedRoles = roleIds.map((roleId) => {
@@ -109,57 +118,67 @@ function FamilyRoleCard({
 
       {/* Content */}
       <div className="px-3 pb-3 space-y-3">
-        {/* Role Combobox to add */}
-        <RoleCombobox
-          roles={discordRoles}
-          mode="add"
-          excludeRoleIds={roleIds}
-          onAdd={onAdd}
-          addPlaceholder={t("familyRoles.addRole")}
-          disabled={isLoading}
-          showDisabled={false}
-        />
-
-        {/* Assigned roles list */}
-        {hasRoles && (
-          <div className="space-y-1.5">
-            {assignedRoles.map((role) => (
-              <div
-                key={role.id}
-                className={`flex items-center justify-between p-2 rounded-md ${
-                  role.exists ? "bg-background/60" : "bg-orange-500/5 border border-orange-500/20"
-                }`}
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <div
-                    className="w-3 h-3 rounded-full shrink-0"
-                    style={{ backgroundColor: role.exists ? intToHexColor(role.color) : "#f97316" }}
-                  />
-                  <span className={`text-sm truncate ${!role.exists ? "text-orange-600" : "text-foreground"}`}>
-                    {role.exists ? `@${role.name}` : t("familyRoles.deletedRole")}
-                  </span>
-                  {!role.exists && (
-                    <span className="text-xs text-orange-500">({role.id})</span>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => onRemove(role.id)}
-                  disabled={isLoading}
-                  className="p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors shrink-0"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ))}
+        {isRoleDataLoading ? (
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
           </div>
-        )}
+        ) : (
+          <>
+            {/* Role Combobox to add */}
+            <RoleCombobox
+              roles={discordRoles}
+              mode="add"
+              excludeRoleIds={roleIds}
+              onAdd={onAdd}
+              addPlaceholder={t("familyRoles.addRole")}
+              disabled={isLoading}
+              showDisabled={false}
+            />
 
-        {/* Empty state */}
-        {!hasRoles && (
-          <p className="text-xs text-muted-foreground text-center py-1">
-            {t("familyRoles.noRolesConfigured")}
-          </p>
+            {/* Assigned roles list */}
+            {hasRoles && (
+              <div className="space-y-1.5">
+                {assignedRoles.map((role) => (
+                  <div
+                    key={role.id}
+                    className={`flex items-center justify-between p-2 rounded-md ${
+                      role.exists ? "bg-background/60" : "bg-orange-500/5 border border-orange-500/20"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div
+                        className="w-3 h-3 rounded-full shrink-0"
+                        style={{ backgroundColor: role.exists ? intToHexColor(role.color) : "#f97316" }}
+                      />
+                      <span className={`text-sm truncate ${!role.exists ? "text-orange-600" : "text-foreground"}`}>
+                        {role.exists ? `@${role.name}` : t("familyRoles.deletedRole")}
+                      </span>
+                      {!role.exists && (
+                        <span className="text-xs text-orange-500">({role.id})</span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onRemove(role.id)}
+                      disabled={isLoading}
+                      className="p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors shrink-0"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty state */}
+            {!hasRoles && (
+              <p className="text-xs text-muted-foreground text-center py-1">
+                {t("familyRoles.noRolesConfigured")}
+              </p>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -171,6 +190,7 @@ export default function FamilySettingsPage() {
   const guildId = params.guildId as string;
   const t = useTranslations("FamilySettingsPage");
   const tCommon = useTranslations("Common");
+  const { toast } = useToast();
 
   // Placeholder descriptions from translations
   const PLACEHOLDERS = [
@@ -187,17 +207,17 @@ export default function FamilySettingsPage() {
     { key: "{player_clan_abbreviation}", desc: t("nickname.placeholders.playerClanAbbr"), example: "RCS" },
   ];
 
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<NicknameSettings>({
     change_nickname: true,
     nickname_rule: "[{player_clan_abbreviation}] {player_name}",
     non_family_nickname_rule: "{player_name}",
   });
+  const [initialSettings, setInitialSettings] = useState<NicknameSettings | null>(null);
 
   const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [isFamilyPlaceholdersOpen, setIsFamilyPlaceholdersOpen] = useState(false);
   const [isNonFamilyPlaceholdersOpen, setIsNonFamilyPlaceholdersOpen] = useState(false);
 
@@ -206,6 +226,10 @@ export default function FamilySettingsPage() {
   const [isLoadingFamilyRoles, setIsLoadingFamilyRoles] = useState(true);
   const [familyRolesLoading, setFamilyRolesLoading] = useState(false);
 
+  const settingsCacheKey = `settings-${guildId}`;
+  const rolesCacheKey = `discord-roles-${guildId}`;
+  const familyRolesCacheKey = `family-roles-${guildId}`;
+
   // Load settings on mount
   useEffect(() => {
     loadSettings();
@@ -213,7 +237,7 @@ export default function FamilySettingsPage() {
     loadFamilyRoles();
   }, [guildId]);
 
-  const loadSettings = async () => {
+  const loadSettings = async (forceRefresh = false) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -223,18 +247,29 @@ export default function FamilySettingsPage() {
         throw new Error("No access token found. Please log in again.");
       }
 
-      const response = await apiClient.servers.getSettings(guildId);
-
-      if (response.error) {
-        throw new Error(response.error);
+      if (forceRefresh) {
+        apiCache.invalidate(settingsCacheKey);
       }
 
-      if (response.data) {
-        setSettings({
-          change_nickname: response.data.change_nickname ?? true,
-          nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
-          non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
-        });
+      const settingsData = await apiCache.get(settingsCacheKey, async () => {
+        const response = await apiClient.servers.getSettings(guildId);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
+        return response.data;
+      });
+
+      if (settingsData) {
+        const loadedSettings = {
+          change_nickname: settingsData.change_nickname ?? true,
+          nickname_rule: settingsData.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
+          non_family_nickname_rule: settingsData.non_family_nickname_rule ?? "{player_name}",
+        };
+
+        setSettings(loadedSettings);
+        setInitialSettings(loadedSettings);
       }
     } catch (err: any) {
       setError(err.message || "Failed to load settings");
@@ -244,13 +279,17 @@ export default function FamilySettingsPage() {
     }
   };
 
-  const loadDiscordRoles = async () => {
+  const loadDiscordRoles = async (forceRefresh = false) => {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
+      if (forceRefresh) {
+        apiCache.invalidate(rolesCacheKey);
+      }
+
       // Use cache to prevent duplicate requests
-      const rolesData = await apiCache.get(`discord-roles-${guildId}`, async () => {
+      const rolesData = await apiCache.get(rolesCacheKey, async () => {
         const response = await apiClient.roles.getDiscordRoles(guildId);
         if (response.error) {
           throw new Error(response.error);
@@ -266,21 +305,28 @@ export default function FamilySettingsPage() {
     }
   };
 
-  const loadFamilyRoles = async () => {
+  const loadFamilyRoles = async (forceRefresh = false) => {
     try {
       setIsLoadingFamilyRoles(true);
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      const response = await apiClient.familyRoles.getFamilyRoles(guildId);
-
-      if (response.error) {
-        console.error("Failed to load family roles:", response.error);
-        return;
+      if (forceRefresh) {
+        apiCache.invalidate(familyRolesCacheKey);
       }
 
-      if (response.data) {
-        setFamilyRoles(response.data);
+      const familyRolesData = await apiCache.get(familyRolesCacheKey, async () => {
+        const response = await apiClient.familyRoles.getFamilyRoles(guildId);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
+        return response.data;
+      });
+
+      if (familyRolesData) {
+        setFamilyRoles(familyRolesData);
       }
     } catch (err) {
       console.error("Failed to load family roles:", err);
@@ -309,11 +355,13 @@ export default function FamilySettingsPage() {
         return;
       }
 
-      // Reload family roles
-      await loadFamilyRoles();
+      // Refresh family roles after update
+      await loadFamilyRoles(true);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to add family role");
     } finally {
@@ -336,11 +384,13 @@ export default function FamilySettingsPage() {
         return;
       }
 
-      // Reload family roles
-      await loadFamilyRoles();
+      // Refresh family roles after update
+      await loadFamilyRoles(true);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to remove family role");
     } finally {
@@ -350,9 +400,10 @@ export default function FamilySettingsPage() {
 
   const handleSave = async () => {
     try {
+      if (!isSettingsDirty) return;
+
       setIsSaving(true);
       setError(null);
-      setSuccess(false);
 
       await apiClient.servers.updateSettings(guildId, {
         change_nickname: settings.change_nickname,
@@ -361,10 +412,14 @@ export default function FamilySettingsPage() {
       });
 
       // Invalidate cache after saving
-      apiCache.invalidate(`settings-${guildId}`);
+      apiCache.invalidate(settingsCacheKey);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      setInitialSettings(settings);
+
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to save settings");
       console.error("Failed to save settings:", err);
@@ -374,8 +429,14 @@ export default function FamilySettingsPage() {
   };
 
   const handleReset = () => {
-    loadSettings();
+    loadSettings(true);
   };
+
+  const isSettingsDirty =
+    initialSettings !== null &&
+    (settings.change_nickname !== initialSettings.change_nickname ||
+      settings.nickname_rule !== initialSettings.nickname_rule ||
+      settings.non_family_nickname_rule !== initialSettings.non_family_nickname_rule);
 
   // Generate preview of nickname format
   const generatePreview = (format: string): string => {
@@ -413,35 +474,6 @@ export default function FamilySettingsPage() {
               {t("description")}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="border-border"
-              size="sm"
-            >
-              <RotateCcw className="mr-2 h-4 w-4" />
-              {t("reset")}
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="bg-primary hover:bg-primary/90"
-              size="sm"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("saving")}
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  {t("saveChanges")}
-                </>
-              )}
-            </Button>
-          </div>
         </div>
 
         {/* Error Alert */}
@@ -452,31 +484,54 @@ export default function FamilySettingsPage() {
           </Alert>
         )}
 
-        {/* Success Alert */}
-        {success && (
-          <Alert className="border-green-500/30 bg-green-500/5">
-            <AlertCircle className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-600">
-              {t("settingsSaved")}
-            </AlertDescription>
-          </Alert>
-        )}
-
         {/* Full-width cards (Nickname + Family Roles) */}
         <div className="space-y-6">
           {/* Nickname Management */}
           <Card className="bg-card border-border">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <User className="h-4 w-4 text-primary" />
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-foreground">{t("nickname.title")}</CardTitle>
+                    <CardDescription className="text-xs">
+                      {t("nickname.description")}
+                    </CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-foreground">{t("nickname.title")}</CardTitle>
-                  <CardDescription className="text-xs">
-                    {t("nickname.description")}
-                  </CardDescription>
-                </div>
+                {isSettingsDirty && (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={handleReset}
+                      className="border-border"
+                      size="sm"
+                    >
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      {t("reset")}
+                    </Button>
+                    <Button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="bg-primary hover:bg-primary/90"
+                      size="sm"
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t("saving")}
+                        </>
+                      ) : (
+                        <>
+                          <Save className="mr-2 h-4 w-4" />
+                          {t("saveChanges")}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -691,56 +746,34 @@ export default function FamilySettingsPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               {/* Role Type Cards - Similar to LogCards */}
-              {isLoadingFamilyRoles ? (
-                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                    <div key={i} className="rounded-lg border border-border bg-secondary/20 p-3 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 flex-1">
-                          <Skeleton className="h-8 w-8 rounded-lg" />
-                          <div className="flex-1 space-y-2">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-3 w-48" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-8 w-full" />
-                        <Skeleton className="h-8 w-full" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-                  {[
-                    { key: "family", label: t("familyRoles.types.family"), description: t("familyRoles.descriptions.family"), roles: familyRoles?.family_roles || [], icon: Users, color: "green" },
-                    { key: "not_family", label: t("familyRoles.types.notFamily"), description: t("familyRoles.descriptions.notFamily"), roles: familyRoles?.not_family_roles || [], icon: Users, color: "red" },
-                    { key: "only_family", label: t("familyRoles.types.onlyFamily"), description: t("familyRoles.descriptions.onlyFamily"), roles: familyRoles?.only_family_roles || [], icon: Users, color: "blue" },
-                    { key: "family_member", label: t("familyRoles.types.member"), description: t("familyRoles.descriptions.member"), roles: familyRoles?.family_member_roles || [], icon: Shield, color: "gray" },
-                    { key: "family_elder", label: t("familyRoles.types.elder"), description: t("familyRoles.descriptions.elder"), roles: familyRoles?.family_elder_roles || [], icon: Shield, color: "yellow" },
-                    { key: "family_coleader", label: t("familyRoles.types.coLeader"), description: t("familyRoles.descriptions.coLeader"), roles: familyRoles?.family_coleader_roles || [], icon: Shield, color: "orange" },
-                    { key: "family_leader", label: t("familyRoles.types.leader"), description: t("familyRoles.descriptions.leader"), roles: familyRoles?.family_leader_roles || [], icon: Shield, color: "purple" },
-                    { key: "ignored", label: t("familyRoles.types.ignored"), description: t("familyRoles.descriptions.ignored"), roles: familyRoles?.ignored_roles || [], icon: Eye, color: "gray" },
-                  ].map((roleType) => (
-                    <FamilyRoleCard
-                      key={roleType.key}
-                      roleTypeKey={roleType.key as FamilyRoleType}
-                      label={roleType.label}
-                      description={roleType.description}
-                      roleIds={roleType.roles}
-                      icon={roleType.icon}
-                      color={roleType.color}
-                      discordRoles={discordRoles}
-                      isLoading={familyRolesLoading}
-                      onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
-                      onRemove={(roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, roleId)}
-                      t={t}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                {[
+                  { key: "family", label: t("familyRoles.types.family"), description: t("familyRoles.descriptions.family"), roles: familyRoles?.family_roles || [], icon: Users, color: "green" },
+                  { key: "not_family", label: t("familyRoles.types.notFamily"), description: t("familyRoles.descriptions.notFamily"), roles: familyRoles?.not_family_roles || [], icon: Users, color: "red" },
+                  { key: "only_family", label: t("familyRoles.types.onlyFamily"), description: t("familyRoles.descriptions.onlyFamily"), roles: familyRoles?.only_family_roles || [], icon: Users, color: "blue" },
+                  { key: "family_member", label: t("familyRoles.types.member"), description: t("familyRoles.descriptions.member"), roles: familyRoles?.family_member_roles || [], icon: Shield, color: "gray" },
+                  { key: "family_elder", label: t("familyRoles.types.elder"), description: t("familyRoles.descriptions.elder"), roles: familyRoles?.family_elder_roles || [], icon: Shield, color: "yellow" },
+                  { key: "family_coleader", label: t("familyRoles.types.coLeader"), description: t("familyRoles.descriptions.coLeader"), roles: familyRoles?.family_coleader_roles || [], icon: Shield, color: "orange" },
+                  { key: "family_leader", label: t("familyRoles.types.leader"), description: t("familyRoles.descriptions.leader"), roles: familyRoles?.family_leader_roles || [], icon: Shield, color: "purple" },
+                  { key: "ignored", label: t("familyRoles.types.ignored"), description: t("familyRoles.descriptions.ignored"), roles: familyRoles?.ignored_roles || [], icon: Eye, color: "gray" },
+                ].map((roleType) => (
+                  <FamilyRoleCard
+                    key={roleType.key}
+                    roleTypeKey={roleType.key as FamilyRoleType}
+                    label={roleType.label}
+                    description={roleType.description}
+                    roleIds={roleType.roles}
+                    icon={roleType.icon}
+                    color={roleType.color}
+                    discordRoles={discordRoles}
+                    isRoleDataLoading={isLoadingFamilyRoles}
+                    isLoading={familyRolesLoading}
+                    onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
+                    onRemove={(roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, roleId)}
+                    t={t}
+                  />
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>

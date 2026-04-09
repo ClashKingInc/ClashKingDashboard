@@ -30,8 +30,6 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
           setIsLoading(false);
           return;
         }
-
-
         // Fetch guild info using the dedicated endpoint
         const response = await apiCache.get(
           getGuildInfoCacheKey(guildId),
@@ -62,7 +60,7 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
           icon: iconUrl,
         });
       } catch (error) {
-        console.error("Failed to fetch server info:", error);
+        console.error("Failed to fetch server info:", { guildId, error });
       } finally {
         setIsLoading(false);
       }

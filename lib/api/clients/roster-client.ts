@@ -47,7 +47,7 @@ export class RosterClient extends BaseApiClient {
     return this.request(`/v2/roster/${rosterId}${query}`, { method: 'DELETE' });
   }
 
-  async list(serverId: number, groupId?: string, clanTag?: string): Promise<ApiResponse<PaginatedResponse<any>>> {
+  async list(serverId: string | number, groupId?: string, clanTag?: string): Promise<ApiResponse<PaginatedResponse<any>>> {
     const query = this.buildQueryString({ group_id: groupId, clan_tag: clanTag });
     return this.request(`/v2/roster/${serverId}/list${query}`, { method: 'GET' });
   }

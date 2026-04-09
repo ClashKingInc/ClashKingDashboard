@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Loader2, LayoutTemplate, Save } from "lucide-react";
+import { Check, Loader2, LayoutTemplate, Save } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -76,13 +77,16 @@ export default function PanelsPage() {
   const [channels, setChannels] = useState<Channel[]>([]);
 
   const loaded = useRef(false);
+  const panelCacheKey = `panel-${guildId}`;
+  const embedsCacheKey = `embeds-${guildId}`;
+  const channelsCacheKey = `channels-${guildId}`;
 
   const load = useCallback(async () => {
     try {
       const [panelRes, embedsRes, channelsRes] = await Promise.all([
-        apiClient.panels.getPanel(guildId),
-        apiClient.tickets.getEmbeds(guildId),
-        apiClient.servers.getChannels(guildId),
+        apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId)),
+        apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId)),
+        apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId)),
       ]);
       if (panelRes.status === 401 || panelRes.status === 403) {
         router.push(`/${locale}/login`);
@@ -102,7 +106,7 @@ export default function PanelsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [guildId, locale, router, toast, tCommon]);
+  }, [channelsCacheKey, embedsCacheKey, guildId, locale, panelCacheKey, router, toast, tCommon]);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -126,6 +130,7 @@ export default function PanelsPage() {
         welcome_channel: welcomeChannel ? parseInt(welcomeChannel, 10) : null,
       });
       if (res.error) throw new Error(res.error);
+      apiCache.invalidate(panelCacheKey);
       toast({ title: tCommon("success"), description: t("saved") });
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
@@ -249,13 +254,22 @@ export default function PanelsPage() {
                     key={color}
                     onClick={() => setButtonColor(color)}
                     className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
+                      "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
                       buttonColor === color
-                        ? "border-primary"
+                        ? "border-primary bg-primary/10 ring-2 ring-primary/40"
                         : "border-transparent hover:border-border"
                     )}
                   >
-                    <div className={cn("h-6 w-10 rounded", COLOR_SWATCH[color])} />
+                    {buttonColor === color && (
+                      <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
+                    )}
+                    <div
+                      className={cn(
+                        "h-6 w-10 rounded",
+                        COLOR_SWATCH[color],
+                        buttonColor === color && "ring-2 ring-background/70"
+                      )}
+                    />
                     <span className="text-xs font-medium">{t(`color.${color}`)}</span>
                   </button>
                 ))}
