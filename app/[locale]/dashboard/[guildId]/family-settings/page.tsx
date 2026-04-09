@@ -19,6 +19,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import type { FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
 
+interface NicknameSettings {
+  change_nickname: boolean;
+  nickname_rule: string;
+  non_family_nickname_rule: string;
+}
+
 // Color classes for role type cards
 const colorClasses: Record<string, { bg: string; text: string; border: string }> = {
   green: { bg: "bg-green-500/10", text: "text-green-500", border: "border-green-500/30" },
@@ -199,11 +205,12 @@ export default function FamilySettingsPage() {
     { key: "{player_clan_abbreviation}", desc: t("nickname.placeholders.playerClanAbbr"), example: "RCS" },
   ];
 
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState<NicknameSettings>({
     change_nickname: true,
     nickname_rule: "[{player_clan_abbreviation}] {player_name}",
     non_family_nickname_rule: "{player_name}",
   });
+  const [initialSettings, setInitialSettings] = useState<NicknameSettings | null>(null);
 
   const [discordRoles, setDiscordRoles] = useState<Array<{ id: string; name: string; color?: number }>>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -254,11 +261,14 @@ export default function FamilySettingsPage() {
       });
 
       if (settingsData) {
-        setSettings({
+        const loadedSettings = {
           change_nickname: settingsData.change_nickname ?? true,
           nickname_rule: settingsData.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
           non_family_nickname_rule: settingsData.non_family_nickname_rule ?? "{player_name}",
-        });
+        };
+
+        setSettings(loadedSettings);
+        setInitialSettings(loadedSettings);
       }
     } catch (err: any) {
       setError(err.message || "Failed to load settings");
@@ -385,6 +395,8 @@ export default function FamilySettingsPage() {
 
   const handleSave = async () => {
     try {
+      if (!isSettingsDirty) return;
+
       setIsSaving(true);
       setError(null);
       setSuccess(false);
@@ -396,7 +408,9 @@ export default function FamilySettingsPage() {
       });
 
       // Invalidate cache after saving
-      apiCache.invalidate(`settings-${guildId}`);
+      apiCache.invalidate(settingsCacheKey);
+
+      setInitialSettings(settings);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
@@ -411,6 +425,12 @@ export default function FamilySettingsPage() {
   const handleReset = () => {
     loadSettings(true);
   };
+
+  const isSettingsDirty =
+    initialSettings !== null &&
+    (settings.change_nickname !== initialSettings.change_nickname ||
+      settings.nickname_rule !== initialSettings.nickname_rule ||
+      settings.non_family_nickname_rule !== initialSettings.non_family_nickname_rule);
 
   // Generate preview of nickname format
   const generatePreview = (format: string): string => {
@@ -448,35 +468,15 @@ export default function FamilySettingsPage() {
               {t("description")}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="border-border"
-              size="sm"
-            >
-              <RotateCcw className="mr-2 h-4 w-4" />
-              {t("reset")}
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="bg-primary hover:bg-primary/90"
-              size="sm"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("saving")}
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  {t("saveChanges")}
-                </>
-              )}
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            onClick={handleReset}
+            className="border-border"
+            size="sm"
+          >
+            <RotateCcw className="mr-2 h-4 w-4" />
+            {t("reset")}
+          </Button>
         </div>
 
         {/* Error Alert */}
@@ -502,16 +502,38 @@ export default function FamilySettingsPage() {
           {/* Nickname Management */}
           <Card className="bg-card border-border">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <User className="h-4 w-4 text-primary" />
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-foreground">{t("nickname.title")}</CardTitle>
+                    <CardDescription className="text-xs">
+                      {t("nickname.description")}
+                    </CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-foreground">{t("nickname.title")}</CardTitle>
-                  <CardDescription className="text-xs">
-                    {t("nickname.description")}
-                  </CardDescription>
-                </div>
+                {isSettingsDirty && (
+                  <Button
+                    onClick={handleSave}
+                    disabled={isSaving}
+                    className="bg-primary hover:bg-primary/90"
+                    size="sm"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t("saving")}
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        {t("saveChanges")}
+                      </>
+                    )}
+                  </Button>
+                )}
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
