@@ -163,8 +163,15 @@ export default function LogsPage() {
   const [threadsLoaded, setThreadsLoaded] = useState(false);
   const [clanLogs, setClanLogs] = useState<ClanLogsConfig[]>([]);
   const [selectedClan, setSelectedClan] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !guildId) return;
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -201,10 +208,8 @@ export default function LogsPage() {
       }
     };
 
-    if (guildId) {
-      fetchData();
-    }
-  }, [guildId]); // Removed selectedClan dependency - no need to refetch all data when clan changes
+    fetchData();
+  }, [guildId, mounted]); // Removed selectedClan dependency - no need to refetch all data when clan changes
 
   const loadThreadsIfNeeded = async () => {
     if (threadsLoaded) return;
@@ -618,6 +623,48 @@ export default function LogsPage() {
 
   const currentClan = getCurrentClan();
 
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="p-3 rounded-lg bg-blue-500/10 w-fit">
+              <FileText className="h-8 w-8 text-blue-500" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
+              <p className="text-muted-foreground mt-1">{t('description')}</p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="bg-card border-border/50">
+                <CardHeader className="pb-3">
+                  <Skeleton className="h-4 w-24 animate-pulse" />
+                </CardHeader>
+                <CardContent className="h-[96px] flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-9 w-12 animate-pulse" />
+                    <Skeleton className="h-8 w-8 animate-pulse rounded-full" />
+                  </div>
+                  <Skeleton className="h-3 w-28 animate-pulse" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center gap-2 min-h-[58px]">
+            <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
+            <div className="w-full md:w-[300px] h-10">
+              <Skeleton className="h-10 w-full rounded-md border border-border animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -716,13 +763,15 @@ export default function LogsPage() {
 
         {/* Clan Selector */}
         {(loading || clanLogs.length > 0) && (
-          <div className="flex flex-col md:flex-row md:items-center gap-2">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 min-h-[58px]">
             <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
             {loading ? (
-              <Skeleton className="h-10 w-full md:w-[300px] animate-pulse" />
+              <div className="w-full md:w-[300px] h-10">
+                <Skeleton className="h-10 w-full rounded-md border border-border animate-pulse" />
+              </div>
             ) : (
               <Select value={selectedClan} onValueChange={setSelectedClan}>
-                <SelectTrigger className="w-full md:w-[300px]">
+                <SelectTrigger className="w-full md:w-[300px] h-10">
                   <SelectValue placeholder={t('clanSelector.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
