@@ -214,4 +214,4 @@ api.utils.*      // 17 utility methods
 
 ## Examples
 
-See [ENDPOINTS_DOCUMENTATION.md](../../ENDPOINTS_DOCUMENTATION.md) for complete API reference.
+See [ENDPOINTS_DOCUMENTATION.md](../../.claude/ENDPOINTS_DOCUMENTATION.md) for complete API reference.
