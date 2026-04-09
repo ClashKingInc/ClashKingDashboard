@@ -12,8 +12,9 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Save, RotateCcw, AlertCircle, Loader2, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2 } from "lucide-react";
+import { RotateCcw, AlertCircle, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 import ReactMarkdown from "react-markdown";
@@ -52,16 +53,19 @@ export default function GeneralSettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [tempColor, setTempColor] = useState(settings.embed_color);
   const [tempHex, setTempHex] = useState(intToHex(settings.embed_color));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   // Discord Tenure Roles state
   const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; months: number; role_id?: string }>>([]);
   const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
   const [isTenureDialogOpen, setIsTenureDialogOpen] = useState(false);
   const [newTenureRole, setNewTenureRole] = useState<{ months?: number; id?: string }>({});
+  const settingsCacheKey = `settings-${guildId}`;
+  const discordRolesCacheKey = `discord-roles-${guildId}`;
+  const allRolesCacheKey = `all-roles-${guildId}`;
 
   // Load settings on mount
   useEffect(() => {
@@ -80,17 +84,21 @@ export default function GeneralSettingsPage() {
         throw new Error("No access token found. Please log in again.");
       }
 
-      const response = await apiClient.servers.getSettings(guildId);
+      const settingsData = await apiCache.get(settingsCacheKey, async () => {
+        const response = await apiClient.servers.getSettings(guildId);
 
-      if (response.error) {
-        throw new Error(response.error);
-      }
+        if (response.error) {
+          throw new Error(response.error);
+        }
 
-      if (response.data) {
+        return response.data;
+      });
+
+      if (settingsData) {
         const newSettings = {
-          embed_color: response.data.embed_color ?? 14223113,
-          api_token: response.data.api_token ?? true,
-          full_whitelist_role: response.data.full_whitelist_role?.toString(),
+          embed_color: settingsData.embed_color ?? 14223113,
+          api_token: settingsData.api_token ?? true,
+          full_whitelist_role: settingsData.full_whitelist_role?.toString(),
         };
         setSettings(newSettings);
         setTempColor(newSettings.embed_color);
@@ -110,7 +118,7 @@ export default function GeneralSettingsPage() {
       if (!token) return;
 
       // Use cache to prevent duplicate requests
-      const rolesData = await apiCache.get(`discord-roles-${guildId}`, async () => {
+      const rolesData = await apiCache.get(discordRolesCacheKey, async () => {
         const response = await apiClient.roles.getDiscordRoles(guildId);
         if (response.error) {
           throw new Error(response.error);
@@ -132,15 +140,16 @@ export default function GeneralSettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      const response = await apiClient.roles.getAllRoles(guildId);
+      const allRolesData = await apiCache.get(allRolesCacheKey, async () => {
+        const response = await apiClient.roles.getAllRoles(guildId);
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        return response.data;
+      });
 
-      if (response.error) {
-        console.error("Failed to load tenure roles:", response.error);
-        return;
-      }
-
-      if (response.data?.roles?.status) {
-        const normalizedRoles = response.data.roles.status.map((r: any) => ({
+      if (allRolesData?.roles?.status) {
+        const normalizedRoles = allRolesData.roles.status.map((r: any) => ({
           id: String(r.role || r.id),
           months: r.months,
           role_id: String(r.role || r.id),
@@ -171,11 +180,14 @@ export default function GeneralSettingsPage() {
         id: newTenureRole.id,
       });
 
+      apiCache.invalidate(allRolesCacheKey);
       await loadTenureRoles();
       setIsTenureDialogOpen(false);
       setNewTenureRole({});
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to add tenure role");
     }
@@ -190,29 +202,39 @@ export default function GeneralSettingsPage() {
 
       await apiClient.roles.deleteRole(guildId, "status", roleId);
 
+      apiCache.invalidate(allRolesCacheKey);
       await loadTenureRoles();
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to delete tenure role");
     }
   };
 
 
-  const handleSave = async () => {
+  const saveSettings = async (
+    nextSettings: typeof settings,
+    previousSettings?: typeof settings
+  ) => {
     try {
       setIsSaving(true);
       setError(null);
-      setSuccess(false);
 
-      await apiClient.servers.updateSettings(guildId, settings);
+      await apiClient.servers.updateSettings(guildId, nextSettings);
 
       // Invalidate cache after saving
-      apiCache.invalidate(`settings-${guildId}`);
+      apiCache.invalidate(settingsCacheKey);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
+      if (previousSettings) {
+        setSettings(previousSettings);
+      }
       setError(err.message || "Failed to save settings");
       console.error("Failed to save settings:", err);
     } finally {
@@ -220,8 +242,16 @@ export default function GeneralSettingsPage() {
     }
   };
 
-  const handleReset = () => {
-    loadSettings();
+  const applySettingsChange = async (updatedFields: Partial<typeof settings>) => {
+    if (isSaving) {
+      return;
+    }
+
+    const previousSettings = settings;
+    const nextSettings = { ...settings, ...updatedFields };
+
+    setSettings(nextSettings);
+    await saveSettings(nextSettings, previousSettings);
   };
 
   return (
@@ -235,35 +265,6 @@ export default function GeneralSettingsPage() {
               {t("description")}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="border-border"
-              size="sm"
-            >
-              <RotateCcw className="mr-2 h-4 w-4" />
-              {t("reset")}
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="bg-primary hover:bg-primary/90"
-              size="sm"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("saving")}
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  {t("saveChanges")}
-                </>
-              )}
-            </Button>
-          </div>
         </div>
 
         {/* Error Alert */}
@@ -271,16 +272,6 @@ export default function GeneralSettingsPage() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        {/* Success Alert */}
-        {success && (
-          <Alert className="border-green-500/30 bg-green-500/5">
-            <AlertCircle className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-600">
-              {t("settingsSaved")}
-            </AlertDescription>
           </Alert>
         )}
 
@@ -430,10 +421,10 @@ export default function GeneralSettingsPage() {
                             </Button>
                             <Button 
                               onClick={() => {
-                                setSettings({ ...settings, embed_color: tempColor });
+                                void applySettingsChange({ embed_color: tempColor });
                                 setIsDialogOpen(false);
                               }}
-                              disabled={!/^#[0-9A-F]{6}$/i.test(tempHex)}
+                              disabled={!/^#[0-9A-F]{6}$/i.test(tempHex) || isSaving}
                               className="bg-primary hover:bg-primary/90"
                             >
                               {t("appearance.apply")}
@@ -492,9 +483,10 @@ export default function GeneralSettingsPage() {
                 <Switch
                   id="api-token"
                   checked={settings.api_token}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, api_token: checked })
-                  }
+                  disabled={isSaving}
+                  onCheckedChange={(checked) => {
+                    void applySettingsChange({ api_token: checked });
+                  }}
                 />
               </div>
 
@@ -510,11 +502,11 @@ export default function GeneralSettingsPage() {
                 </div>
                 <Select
                   value={settings.full_whitelist_role || "none"}
-                  onValueChange={(value) =>
-                    setSettings({ ...settings, full_whitelist_role: value === "none" ? undefined : value })
-                  }
+                  onValueChange={(value) => {
+                    void applySettingsChange({ full_whitelist_role: value === "none" ? undefined : value });
+                  }}
                 >
-                  <SelectTrigger id="whitelist-role" className="bg-secondary border-border">
+                  <SelectTrigger id="whitelist-role" className="bg-secondary border-border" disabled={isSaving}>
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                   <SelectContent>
