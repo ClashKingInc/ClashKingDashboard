@@ -7,27 +7,31 @@ import {Badge} from "@/components/ui/badge";
 import {Skeleton} from "@/components/ui/skeleton";
 import {Users, Shield, Activity} from "lucide-react";
 import {apiClient} from "@/lib/api/client";
+import {apiCache} from "@/lib/api-cache";
 import type {BotInfo} from "@/lib/api/types/server";
 
 export function BotStats() {
     const t = useTranslations("OverviewPage.stats");
     const [botInfo, setBotInfo] = useState<BotInfo | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const botInfoCacheKey = "overview-bot-info";
 
     useEffect(() => {
         const fetchBotInfo = async () => {
             try {
-                const token = localStorage.getItem("access_token");
-                if (!token) {
+                const hasSession = localStorage.getItem("access_token") || localStorage.getItem("refresh_token");
+                if (!hasSession) {
                     setIsLoading(false);
                     return;
                 }
 
 
-                const {data, error} = await apiClient.servers.getBotInfo();
+                const {data, error, status} = await apiCache.get(botInfoCacheKey, () => apiClient.servers.getBotInfo());
 
                 if (error || !data) {
-                    console.error("Failed to fetch bot info:", {error});
+                    if (status !== 403) {
+                        console.error("Failed to fetch bot info:", {error, status});
+                    }
                     setIsLoading(false);
                     return;
                 }
