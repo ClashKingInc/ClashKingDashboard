@@ -165,6 +165,7 @@ export default function PanelsPage() {
   const selectedEmbed = embeds.find(e => e.name === embedName);
   const embedPreview = selectedEmbed?.data ? extractFirstEmbed(selectedEmbed.data) : null;
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
+  const resolvedWelcomeChannelName = channels.find(c => c.id === welcomeChannel)?.name;
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
@@ -394,10 +395,14 @@ export default function PanelsPage() {
 
               {/* Welcome channel info */}
               {welcomeChannel && (
-                <div className="rounded-lg border border-border/60 bg-muted/30 px-4 py-3 text-xs text-muted-foreground">
-                  {t("welcomeAutoPost", {
-                    channel: `#${channels.find(c => c.id === welcomeChannel)?.name ?? welcomeChannel}`
-                  })}
+                <div className="rounded-lg border border-border/60 bg-muted/30 px-4 py-3 text-xs text-muted-foreground min-h-10 flex items-center">
+                  {isChannelsLoading ? (
+                    <Skeleton className="h-3.5 w-56 max-w-full" />
+                  ) : (
+                    t("welcomeAutoPost", {
+                      channel: `#${resolvedWelcomeChannelName ?? welcomeChannel}`
+                    })
+                  )}
                 </div>
               )}
             </div>
