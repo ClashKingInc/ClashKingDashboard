@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -294,39 +294,69 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
   const [editingCategoryStandalone, setEditingCategoryStandalone] = useState<SignupCategory | null>(null);
   const [standaloneNewAlias, setStandaloneNewAlias] = useState("");
+  const groupsRequestIdRef = useRef(0);
+  const categoriesRequestIdRef = useRef(0);
+  const channelsRequestIdRef = useRef(0);
 
   // Fetch groups
   const refreshGroups = (forceRefresh = false) => {
     if (!guildId) return;
+    const requestId = ++groupsRequestIdRef.current;
     if (forceRefresh) {
       apiCache.invalidate(getGroupsCacheKey(guildId));
     }
     apiCache
       .get(getGroupsCacheKey(guildId), () => api.fetchGroups(guildId), GROUPS_CACHE_TTL)
-      .then(setGroups)
-      .catch(() => setGroups([]));
+      .then((nextGroups) => {
+        if (requestId === groupsRequestIdRef.current) {
+          setGroups(nextGroups);
+        }
+      })
+      .catch(() => {
+        if (requestId === groupsRequestIdRef.current) {
+          setGroups([]);
+        }
+      });
   };
 
   const refreshCategories = (forceRefresh = false) => {
     if (!guildId) return;
+    const requestId = ++categoriesRequestIdRef.current;
     if (forceRefresh) {
       apiCache.invalidate(getCategoriesCacheKey(guildId));
     }
     apiCache
       .get(getCategoriesCacheKey(guildId), () => api.fetchCategories(guildId), CATEGORIES_CACHE_TTL)
-      .then(setCategories)
-      .catch(() => setCategories([]));
+      .then((nextCategories) => {
+        if (requestId === categoriesRequestIdRef.current) {
+          setCategories(nextCategories);
+        }
+      })
+      .catch(() => {
+        if (requestId === categoriesRequestIdRef.current) {
+          setCategories([]);
+        }
+      });
   };
 
   const refreshChannels = (forceRefresh = false) => {
     if (!guildId) return;
+    const requestId = ++channelsRequestIdRef.current;
     if (forceRefresh) {
       apiCache.invalidate(getChannelsCacheKey(guildId));
     }
     apiCache
       .get(getChannelsCacheKey(guildId), () => api.fetchChannels(guildId), CHANNELS_CACHE_TTL)
-      .then(setChannels)
-      .catch(() => setChannels([]));
+      .then((nextChannels) => {
+        if (requestId === channelsRequestIdRef.current) {
+          setChannels(nextChannels);
+        }
+      })
+      .catch(() => {
+        if (requestId === channelsRequestIdRef.current) {
+          setChannels([]);
+        }
+      });
   };
 
   useEffect(() => {

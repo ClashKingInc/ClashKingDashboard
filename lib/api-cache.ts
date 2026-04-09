@@ -54,6 +54,7 @@ class ApiCache {
    */
   invalidate(key: string): void {
     this.cache.delete(key);
+    this.pendingRequests.delete(key);
   }
 
   /**
@@ -64,6 +65,11 @@ class ApiCache {
     for (const key of this.cache.keys()) {
       if (regex.test(key)) {
         this.cache.delete(key);
+      }
+    }
+    for (const key of this.pendingRequests.keys()) {
+      if (regex.test(key)) {
+        this.pendingRequests.delete(key);
       }
     }
   }
