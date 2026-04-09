@@ -323,7 +323,7 @@ export default function PanelsPage() {
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("welcomeChannel")}</Label>
                 {isChannelsLoading ? (
-                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-9 w-full rounded-md border border-border bg-secondary" />
                 ) : (
                   <ChannelCombobox
                     channels={channels}
