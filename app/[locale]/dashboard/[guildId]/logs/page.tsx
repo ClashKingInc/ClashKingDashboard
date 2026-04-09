@@ -163,8 +163,15 @@ export default function LogsPage() {
   const [threadsLoaded, setThreadsLoaded] = useState(false);
   const [clanLogs, setClanLogs] = useState<ClanLogsConfig[]>([]);
   const [selectedClan, setSelectedClan] = useState<string>("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !guildId) return;
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -201,10 +208,8 @@ export default function LogsPage() {
       }
     };
 
-    if (guildId) {
-      fetchData();
-    }
-  }, [guildId]); // Removed selectedClan dependency - no need to refetch all data when clan changes
+    fetchData();
+  }, [guildId, mounted]); // Removed selectedClan dependency - no need to refetch all data when clan changes
 
   const loadThreadsIfNeeded = async () => {
     if (threadsLoaded) return;
@@ -423,8 +428,10 @@ export default function LogsPage() {
 
 
   // Separate component for LogCard to use hooks properly
-  const LogCard = ({ logDef }: { logDef: LogTypeDefinition }) => {
+  const LogCard = ({ logDef, statusLoading = false }: { logDef: LogTypeDefinition; statusLoading?: boolean }) => {
     const Icon = logDef.icon;
+    const currentClan = getCurrentClan();
+    const isStatusLoading = statusLoading || !currentClan;
     const isEnabled = isLogEnabled(logDef.keys);
     const selectedChannel = getSelectedChannelForLogs(logDef.keys);
     const selectedThread = getSelectedThreadForLogs(logDef.keys);
@@ -444,8 +451,8 @@ export default function LogsPage() {
       : [];
 
     return (
-      <Card key={logDef.keys[0]} className="bg-card border-border hover:border-border/80 transition-colors">
-        <CardHeader>
+      <Card key={logDef.keys[0]} className="bg-card border-border hover:border-border/80 transition-colors min-h-[220px]">
+        <CardHeader className="min-h-[96px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${colors.bg}`}>
@@ -473,53 +480,68 @@ export default function LogsPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {isEnabled && !channelExists && !isSaving && (
+              {!isStatusLoading && isEnabled && !channelExists && !isSaving && (
                 <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-500/10 border border-orange-500/30">
                   <AlertCircle className="w-3 h-3 text-orange-500" />
                   <span className="text-xs text-orange-600 font-medium">{t('logCard.issue')}</span>
                 </div>
               )}
-              <Switch
-                checked={Boolean(isEnabled) || showEnableForm}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    setShowEnableForm(true);
-                  } else {
-                    if (showEnableForm && !isEnabled) {
-                      setShowEnableForm(false);
-                    } else {
-                      handleChannelChange(logDef.keys, 'disabled');
-                    }
-                  }
-                }}
-                disabled={isSaving}
-                className={
-                  showEnableForm && !isEnabled
-                    ? 'data-[state=checked]:bg-blue-500'
-                    : isEnabled && !channelExists
-                    ? 'data-[state=checked]:bg-orange-500'
-                    : 'data-[state=checked]:bg-green-500'
-                }
-              />
-              {isSaving ? (
-                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              {isStatusLoading ? (
+                <>
+                  <Skeleton className="h-6 w-11 animate-pulse rounded-full" />
+                  <Skeleton className="h-4 w-12 animate-pulse" />
+                </>
               ) : (
-                <span className={`text-xs font-medium ${
-                  !isEnabled && !showEnableForm ? 'text-muted-foreground' :
-                  showEnableForm && !isEnabled ? 'text-blue-600' :
-                  !channelExists ? 'text-orange-600' :
-                  'text-green-600'
-                }`}>
-                  {!isEnabled && !showEnableForm ? t('logCard.off') :
-                   showEnableForm && !isEnabled ? t('logCard.configuring') :
-                   t('logCard.on')}
-                </span>
+                <>
+                  <Switch
+                    checked={Boolean(isEnabled) || showEnableForm}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setShowEnableForm(true);
+                      } else {
+                        if (showEnableForm && !isEnabled) {
+                          setShowEnableForm(false);
+                        } else {
+                          handleChannelChange(logDef.keys, 'disabled');
+                        }
+                      }
+                    }}
+                    disabled={isSaving}
+                    className={
+                      showEnableForm && !isEnabled
+                        ? 'data-[state=checked]:bg-blue-500'
+                        : isEnabled && !channelExists
+                        ? 'data-[state=checked]:bg-orange-500'
+                        : 'data-[state=checked]:bg-green-500'
+                    }
+                  />
+                  {isSaving ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  ) : (
+                    <span className={`text-xs font-medium ${
+                      !isEnabled && !showEnableForm ? 'text-muted-foreground' :
+                      showEnableForm && !isEnabled ? 'text-blue-600' :
+                      !channelExists ? 'text-orange-600' :
+                      'text-green-600'
+                    }`}>
+                      {!isEnabled && !showEnableForm ? t('logCard.off') :
+                       showEnableForm && !isEnabled ? t('logCard.configuring') :
+                       t('logCard.on')}
+                    </span>
+                  )}
+                </>
               )}
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-3">
-          {!isEnabled && !showEnableForm && !isSaving ? (
+        <CardContent className="space-y-3 min-h-[92px]">
+          {isStatusLoading ? (
+            <div className="space-y-1.5">
+              <Skeleton className="h-4 w-20 animate-pulse" />
+              <Skeleton className="h-10 w-full animate-pulse" />
+              <Skeleton className="h-4 w-28 animate-pulse" />
+            </div>
+          ) : !isEnabled && !showEnableForm && !isSaving ? (
             /* DISABLED STATE: Empty state */
             <div className="text-center py-6 text-muted-foreground text-sm">
               {t('logCard.enableToConfig')}
@@ -601,6 +623,48 @@ export default function LogsPage() {
 
   const currentClan = getCurrentClan();
 
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-background p-4 md:p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex flex-col md:flex-row md:items-center gap-4">
+            <div className="p-3 rounded-lg bg-blue-500/10 w-fit">
+              <FileText className="h-8 w-8 text-blue-500" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
+              <p className="text-muted-foreground mt-1">{t('description')}</p>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="bg-card border-border/50">
+                <CardHeader className="pb-3">
+                  <Skeleton className="h-4 w-24 animate-pulse" />
+                </CardHeader>
+                <CardContent className="h-[96px] flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-9 w-12 animate-pulse" />
+                    <Skeleton className="h-8 w-8 animate-pulse rounded-full" />
+                  </div>
+                  <Skeleton className="h-3 w-28 animate-pulse" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center gap-2 min-h-[58px]">
+            <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
+            <div className="w-full md:w-[300px] h-10">
+              <Skeleton className="h-10 w-full rounded-md border border-border animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -624,26 +688,18 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.activeLogs')}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {loading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-12 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
-                    <Activity className="h-8 w-8 text-blue-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t('stats.activeLogsDesc')}
-                  </p>
-                </>
-              )}
+            <CardContent className="h-[96px] flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                {loading ? (
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                ) : (
+                  <div className="h-9 flex items-center text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
+                )}
+                <Activity className="h-8 w-8 text-blue-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {t('stats.activeLogsDesc')}
+              </p>
             </CardContent>
           </Card>
 
@@ -651,26 +707,18 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.logChannels')}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {loading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-12 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-green-500">{channels.length}</div>
-                    <Hash className="h-8 w-8 text-green-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t('stats.logChannelsDesc')}
-                  </p>
-                </>
-              )}
+            <CardContent className="h-[96px] flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                {loading ? (
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                ) : (
+                  <div className="h-9 flex items-center text-3xl font-bold text-green-500">{channels.length}</div>
+                )}
+                <Hash className="h-8 w-8 text-green-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {t('stats.logChannelsDesc')}
+              </p>
             </CardContent>
           </Card>
 
@@ -678,26 +726,18 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.trackedClans')}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {loading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-12 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
-                    <Users className="h-8 w-8 text-yellow-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t('stats.trackedClansDesc')}
-                  </p>
-                </>
-              )}
+            <CardContent className="h-[96px] flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                {loading ? (
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                ) : (
+                  <div className="h-9 flex items-center text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
+                )}
+                <Users className="h-8 w-8 text-yellow-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {t('stats.trackedClansDesc')}
+              </p>
             </CardContent>
           </Card>
 
@@ -705,46 +745,44 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.issues')}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {loading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-12 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-orange-500">{countLogsWithIssues()}</div>
-                    <AlertCircle className="h-8 w-8 text-orange-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t('stats.issuesDesc')}
-                  </p>
-                </>
-              )}
+            <CardContent className="h-[96px] flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                {loading ? (
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                ) : (
+                  <div className="h-9 flex items-center text-3xl font-bold text-orange-500">{countLogsWithIssues()}</div>
+                )}
+                <AlertCircle className="h-8 w-8 text-orange-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {t('stats.issuesDesc')}
+              </p>
             </CardContent>
           </Card>
         </div>
 
         {/* Clan Selector */}
-        {clanLogs.length > 0 && (
-          <div className="flex flex-col md:flex-row md:items-center gap-2">
+        {(loading || clanLogs.length > 0) && (
+          <div className="flex flex-col md:flex-row md:items-center gap-2 min-h-[58px]">
             <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
-            <Select value={selectedClan} onValueChange={setSelectedClan}>
-              <SelectTrigger className="w-full md:w-[300px]">
-                <SelectValue placeholder={t('clanSelector.placeholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                {clanLogs.map((clan) => (
-                  <SelectItem key={clan.tag} value={clan.tag}>
-                    {clan.name} ({clan.tag})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {loading ? (
+              <div className="w-full md:w-[300px] h-10">
+                <Skeleton className="h-10 w-full rounded-md border border-border animate-pulse" />
+              </div>
+            ) : (
+              <Select value={selectedClan} onValueChange={setSelectedClan}>
+                <SelectTrigger className="w-full md:w-[300px] h-10">
+                  <SelectValue placeholder={t('clanSelector.placeholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {clanLogs.map((clan) => (
+                    <SelectItem key={clan.tag} value={clan.tag}>
+                      {clan.name} ({clan.tag})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         )}
 
@@ -771,116 +809,28 @@ export default function LogsPage() {
           {/* CLAN LOGS TAB */}
           <TabsContent value="clan" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {loading ? (
-                [...Array(6)].map((_, i) => (
-                  <Card key={i} className="bg-card border-border">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Skeleton className="h-10 w-10 rounded-lg animate-pulse" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-32 animate-pulse" />
-                            <Skeleton className="h-4 w-48 animate-pulse" />
-                          </div>
-                        </div>
-                        <Skeleton className="h-6 w-12 animate-pulse" />
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <Skeleton className="h-10 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                CLAN_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)
-              )}
+              {CLAN_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
             </div>
           </TabsContent>
 
           {/* WAR LOGS TAB */}
           <TabsContent value="war" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {loading ? (
-                [...Array(3)].map((_, i) => (
-                  <Card key={i} className="bg-card border-border">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Skeleton className="h-10 w-10 rounded-lg animate-pulse" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-32 animate-pulse" />
-                            <Skeleton className="h-4 w-48 animate-pulse" />
-                          </div>
-                        </div>
-                        <Skeleton className="h-6 w-12 animate-pulse" />
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <Skeleton className="h-10 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                WAR_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)
-              )}
+              {WAR_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
             </div>
           </TabsContent>
 
           {/* CAPITAL LOGS TAB */}
           <TabsContent value="capital" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {loading ? (
-                [...Array(4)].map((_, i) => (
-                  <Card key={i} className="bg-card border-border">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Skeleton className="h-10 w-10 rounded-lg animate-pulse" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-32 animate-pulse" />
-                            <Skeleton className="h-4 w-48 animate-pulse" />
-                          </div>
-                        </div>
-                        <Skeleton className="h-6 w-12 animate-pulse" />
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <Skeleton className="h-10 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                CAPITAL_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)
-              )}
+              {CAPITAL_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
             </div>
           </TabsContent>
 
           {/* PLAYER LOGS TAB */}
           <TabsContent value="player" className="space-y-4">
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
-              {loading ? (
-                [...Array(11)].map((_, i) => (
-                  <Card key={i} className="bg-card border-border">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Skeleton className="h-10 w-10 rounded-lg animate-pulse" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-32 animate-pulse" />
-                            <Skeleton className="h-4 w-48 animate-pulse" />
-                          </div>
-                        </div>
-                        <Skeleton className="h-6 w-12 animate-pulse" />
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <Skeleton className="h-10 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                ))
-              ) : (
-                PLAYER_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} />)
-              )}
+              {PLAYER_LOGS.map(logDef => <LogCard key={logDef.keys[0]} logDef={logDef} statusLoading={loading} />)}
             </div>
           </TabsContent>
         </Tabs>
