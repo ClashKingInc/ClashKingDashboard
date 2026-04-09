@@ -107,7 +107,7 @@ export default function PanelsPage() {
       }
 
       if (panelRes.data) {
-        applyPanelData(panelRes.data as ServerPanel);
+        applyPanelData(panelRes.data);
       }
     } catch {
       showLoadError();
