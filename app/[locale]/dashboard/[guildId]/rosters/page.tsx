@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,10 +50,6 @@ import * as api from "./_lib/api";
 import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData, SignupCategory } from "./_lib/types";
 import { calculateRosterStats, formatThRestriction, getAutomationLabel, buildOffsetSeconds, parseOffsetSeconds, formatOffsetSeconds } from "./_lib/utils";
 import type { OffsetUnit } from "./_lib/utils";
-
-const GROUPS_CACHE_TTL = 60000;
-const CATEGORIES_CACHE_TTL = 60000;
-const CHANNELS_CACHE_TTL = 120000;
 
 function getGroupsCacheKey(guildId: string): string {
   return `rosters-groups-${guildId}`;
@@ -299,14 +295,14 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const channelsRequestIdRef = useRef(0);
 
   // Fetch groups
-  const refreshGroups = (forceRefresh = false) => {
+  const refreshGroups = useCallback((forceRefresh = false) => {
     if (!guildId) return;
     const requestId = ++groupsRequestIdRef.current;
     if (forceRefresh) {
       apiCache.invalidate(getGroupsCacheKey(guildId));
     }
     apiCache
-      .get(getGroupsCacheKey(guildId), () => api.fetchGroups(guildId), GROUPS_CACHE_TTL)
+      .get(getGroupsCacheKey(guildId), () => api.fetchGroups(guildId))
       .then((nextGroups) => {
         if (requestId === groupsRequestIdRef.current) {
           setGroups(nextGroups);
@@ -317,16 +313,16 @@ export default function RostersPage() { // NOSONAR — React page component: com
           setGroups([]);
         }
       });
-  };
+  }, [guildId]);
 
-  const refreshCategories = (forceRefresh = false) => {
+  const refreshCategories = useCallback((forceRefresh = false) => {
     if (!guildId) return;
     const requestId = ++categoriesRequestIdRef.current;
     if (forceRefresh) {
       apiCache.invalidate(getCategoriesCacheKey(guildId));
     }
     apiCache
-      .get(getCategoriesCacheKey(guildId), () => api.fetchCategories(guildId), CATEGORIES_CACHE_TTL)
+      .get(getCategoriesCacheKey(guildId), () => api.fetchCategories(guildId))
       .then((nextCategories) => {
         if (requestId === categoriesRequestIdRef.current) {
           setCategories(nextCategories);
@@ -337,16 +333,16 @@ export default function RostersPage() { // NOSONAR — React page component: com
           setCategories([]);
         }
       });
-  };
+  }, [guildId]);
 
-  const refreshChannels = (forceRefresh = false) => {
+  const refreshChannels = useCallback((forceRefresh = false) => {
     if (!guildId) return;
     const requestId = ++channelsRequestIdRef.current;
     if (forceRefresh) {
       apiCache.invalidate(getChannelsCacheKey(guildId));
     }
     apiCache
-      .get(getChannelsCacheKey(guildId), () => api.fetchChannels(guildId), CHANNELS_CACHE_TTL)
+      .get(getChannelsCacheKey(guildId), () => api.fetchChannels(guildId))
       .then((nextChannels) => {
         if (requestId === channelsRequestIdRef.current) {
           setChannels(nextChannels);
@@ -357,13 +353,13 @@ export default function RostersPage() { // NOSONAR — React page component: com
           setChannels([]);
         }
       });
-  };
+  }, [guildId]);
 
   useEffect(() => {
     refreshGroups();
     refreshCategories();
     refreshChannels();
-  }, [guildId]);
+  }, [refreshGroups, refreshCategories, refreshChannels]);
 
   // Group rosters by group_id
   const rostersByGroup = useMemo(() => {

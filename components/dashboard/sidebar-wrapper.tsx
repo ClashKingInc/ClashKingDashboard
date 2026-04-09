@@ -30,25 +30,20 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
           setIsLoading(false);
           return;
         }
-        // Fetch guild info using the dedicated endpoint
-        const response = await apiCache.get(
+        // Only cache successful guild responses; ApiResponse errors are resolved values.
+        const guild = await apiCache.get(
           getGuildInfoCacheKey(guildId),
-          () => apiClient.servers.getGuild(guildId),
+          async () => {
+            const response = await apiClient.servers.getGuild(guildId);
+
+            if (response.error || !response.data) {
+              throw new Error(response.error || `Failed to fetch guild info (${response.status})`);
+            }
+
+            return response.data;
+          },
           GUILD_INFO_CACHE_TTL
         );
-
-        if (response.error || !response.data) {
-          console.error("Failed to fetch guild info:", {
-            guildId,
-            error: response.error,
-            status: response.status,
-            fullResponse: response
-          });
-          setIsLoading(false);
-          return;
-        }
-
-        const guild = response.data;
 
         // Icon URL is already provided by the backend as a full URL
         const iconUrl = guild.icon?.startsWith('https')
