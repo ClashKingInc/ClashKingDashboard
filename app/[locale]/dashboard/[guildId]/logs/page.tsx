@@ -446,8 +446,8 @@ export default function LogsPage() {
       : [];
 
     return (
-      <Card key={logDef.keys[0]} className="bg-card border-border hover:border-border/80 transition-colors">
-        <CardHeader>
+      <Card key={logDef.keys[0]} className="bg-card border-border hover:border-border/80 transition-colors min-h-[220px]">
+        <CardHeader className="min-h-[96px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`p-2 rounded-lg ${colors.bg}`}>
@@ -529,11 +529,12 @@ export default function LogsPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 min-h-[92px]">
           {isStatusLoading ? (
             <div className="space-y-1.5">
               <Skeleton className="h-4 w-20 animate-pulse" />
               <Skeleton className="h-10 w-full animate-pulse" />
+              <Skeleton className="h-4 w-28 animate-pulse" />
             </div>
           ) : !isEnabled && !showEnableForm && !isSaving ? (
             /* DISABLED STATE: Empty state */
@@ -640,16 +641,16 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.activeLogs')}</CardTitle>
             </CardHeader>
-            <CardContent className="min-h-[74px]">
+            <CardContent className="h-[96px] flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 {loading ? (
                   <Skeleton className="h-9 w-12 animate-pulse" />
                 ) : (
-                  <div className="text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
+                  <div className="h-9 flex items-center text-3xl font-bold text-blue-500">{countActiveLogs()}</div>
                 )}
                 <Activity className="h-8 w-8 text-blue-500/50" />
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-xs text-muted-foreground">
                 {t('stats.activeLogsDesc')}
               </p>
             </CardContent>
@@ -659,16 +660,16 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.logChannels')}</CardTitle>
             </CardHeader>
-            <CardContent className="min-h-[74px]">
+            <CardContent className="h-[96px] flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 {loading ? (
                   <Skeleton className="h-9 w-12 animate-pulse" />
                 ) : (
-                  <div className="text-3xl font-bold text-green-500">{channels.length}</div>
+                  <div className="h-9 flex items-center text-3xl font-bold text-green-500">{channels.length}</div>
                 )}
                 <Hash className="h-8 w-8 text-green-500/50" />
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-xs text-muted-foreground">
                 {t('stats.logChannelsDesc')}
               </p>
             </CardContent>
@@ -678,16 +679,16 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.trackedClans')}</CardTitle>
             </CardHeader>
-            <CardContent className="min-h-[74px]">
+            <CardContent className="h-[96px] flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 {loading ? (
                   <Skeleton className="h-9 w-12 animate-pulse" />
                 ) : (
-                  <div className="text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
+                  <div className="h-9 flex items-center text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
                 )}
                 <Users className="h-8 w-8 text-yellow-500/50" />
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-xs text-muted-foreground">
                 {t('stats.trackedClansDesc')}
               </p>
             </CardContent>
@@ -697,16 +698,16 @@ export default function LogsPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.issues')}</CardTitle>
             </CardHeader>
-            <CardContent className="min-h-[74px]">
+            <CardContent className="h-[96px] flex flex-col justify-between">
               <div className="flex items-center justify-between">
                 {loading ? (
                   <Skeleton className="h-9 w-12 animate-pulse" />
                 ) : (
-                  <div className="text-3xl font-bold text-orange-500">{countLogsWithIssues()}</div>
+                  <div className="h-9 flex items-center text-3xl font-bold text-orange-500">{countLogsWithIssues()}</div>
                 )}
                 <AlertCircle className="h-8 w-8 text-orange-500/50" />
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-xs text-muted-foreground">
                 {t('stats.issuesDesc')}
               </p>
             </CardContent>
