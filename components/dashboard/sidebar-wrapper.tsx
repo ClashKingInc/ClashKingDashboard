@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Sidebar } from "./sidebar";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 
 interface SidebarWrapperProps {
   guildId: string;
@@ -23,23 +24,19 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
           setIsLoading(false);
           return;
         }
+        const guild = await apiCache.get(
+          `guild-info-${guildId}`,
+          async () => {
+            const response = await apiClient.servers.getGuild(guildId);
 
+            if (response.error || !response.data) {
+              throw new Error(response.error || "Failed to fetch guild info");
+            }
 
-        // Fetch guild info using the dedicated endpoint
-        const response = await apiClient.servers.getGuild(guildId);
-
-        if (response.error || !response.data) {
-          console.error("Failed to fetch guild info:", {
-            guildId,
-            error: response.error,
-            status: response.status,
-            fullResponse: response
-          });
-          setIsLoading(false);
-          return;
-        }
-
-        const guild = response.data;
+            return response.data;
+          },
+          5 * 60 * 1000
+        );
 
         // Icon URL is already provided by the backend as a full URL
         const iconUrl = guild.icon?.startsWith('https')
@@ -51,7 +48,7 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
           icon: iconUrl,
         });
       } catch (error) {
-        console.error("Failed to fetch server info:", error);
+        console.error("Failed to fetch server info:", { guildId, error });
       } finally {
         setIsLoading(false);
       }
