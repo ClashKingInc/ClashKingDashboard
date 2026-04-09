@@ -14,6 +14,7 @@ import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RotateCcw, AlertCircle, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 import ReactMarkdown from "react-markdown";
@@ -52,10 +53,10 @@ export default function GeneralSettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [tempColor, setTempColor] = useState(settings.embed_color);
   const [tempHex, setTempHex] = useState(intToHex(settings.embed_color));
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   // Discord Tenure Roles state
   const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; months: number; role_id?: string }>>([]);
@@ -184,8 +185,10 @@ export default function GeneralSettingsPage() {
       await loadTenureRoles();
       setIsTenureDialogOpen(false);
       setNewTenureRole({});
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to add tenure role");
     }
@@ -202,8 +205,10 @@ export default function GeneralSettingsPage() {
 
       apiCache.invalidate(allRolesCacheKey);
       await loadTenureRoles();
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       setError(err.message || "Failed to delete tenure role");
     }
@@ -217,15 +222,16 @@ export default function GeneralSettingsPage() {
     try {
       setIsSaving(true);
       setError(null);
-      setSuccess(false);
 
       await apiClient.servers.updateSettings(guildId, nextSettings);
 
       // Invalidate cache after saving
       apiCache.invalidate(settingsCacheKey);
 
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      toast({
+        title: tCommon("success"),
+        description: t("settingsSaved"),
+      });
     } catch (err: any) {
       if (previousSettings) {
         setSettings(previousSettings);
@@ -267,16 +273,6 @@ export default function GeneralSettingsPage() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        {/* Success Alert */}
-        {success && (
-          <Alert className="border-green-500/30 bg-green-500/5">
-            <AlertCircle className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-600">
-              {t("settingsSaved")}
-            </AlertDescription>
           </Alert>
         )}
 
