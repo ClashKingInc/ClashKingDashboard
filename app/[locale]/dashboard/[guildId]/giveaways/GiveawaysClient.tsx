@@ -81,7 +81,8 @@ interface GiveawaysClientProps {
   };
 }
 
-type TranslationFn = (key: string, values?: Record<string, unknown>) => string;
+type TranslationValues = Record<string, string | number | Date>;
+type TranslationFn = (key: string, values?: TranslationValues) => string;
 
 const MARKDOWN_COMPONENTS: Components = {
   p: ({ children }) => <p className="leading-6 [&:not(:first-child)]:mt-2">{children}</p>,
@@ -117,6 +118,12 @@ function getPreviewStatus(effectiveStart: Date | null, effectiveEnd: Date | null
   if (effectiveEnd && effectiveEnd.getTime() <= now) return "ended";
   if (effectiveStart.getTime() <= now) return "ongoing";
   return "scheduled";
+}
+
+function getEffectiveStart(startNow: boolean, startTime: string): Date | null {
+  if (startNow) return new Date();
+  if (startTime.length > 0) return new Date(startTime);
+  return null;
 }
 
 function validateForm(form: FormState, t: TranslationFn) {
@@ -423,7 +430,7 @@ export default function GiveawaysClient({
   listTitle,
   listDescription,
   tabs,
-}: Readonly<GiveawaysClientProps>) { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
+}: Readonly<GiveawaysClientProps>) { // NOSONAR
   const router = useRouter();
   const { toast } = useToast();
   const t = useTranslations("GiveawaysPage");
@@ -515,7 +522,7 @@ export default function GiveawaysClient({
   };
 
   const selectedChannel = channels.find((c) => c.id === form.channelId);
-  const effectiveStart = form.startNow ? new Date() : (form.startTime ? new Date(form.startTime) : null);
+  const effectiveStart = getEffectiveStart(form.startNow, form.startTime);
   const effectiveEnd = form.endTime ? new Date(form.endTime) : null;
   const previewStatus: Giveaway["status"] = getPreviewStatus(effectiveStart, effectiveEnd);
   const mentionLabels = form.mentions.map((id) => `@${roles.find((role) => role.id === id)?.name || id}`);
