@@ -323,17 +323,20 @@ export default function PanelsPage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("welcomeChannel")}</Label>
-                {isChannelsLoading ? (
-                  <Skeleton className="h-9 w-full rounded-md border border-border bg-secondary" />
-                ) : (
+                <div className="relative">
                   <ChannelCombobox
                     channels={channels}
                     value={welcomeChannel}
                     onValueChange={setWelcomeChannel}
                     placeholder={t("welcomeChannelPlaceholder")}
                     showDisabled={false}
+                    disabled={isChannelsLoading}
+                    className={cn(isChannelsLoading && "opacity-0")}
                   />
-                )}
+                  {isChannelsLoading && (
+                    <Skeleton className="pointer-events-none absolute inset-0 h-9 w-full rounded-md border border-border bg-secondary" />
+                  )}
+                </div>
               </div>
             </div>
           </div>
