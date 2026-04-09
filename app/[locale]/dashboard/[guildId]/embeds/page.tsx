@@ -50,6 +50,17 @@ function buildDiscohookUrl(data: Record<string, unknown>): string {
   return `https://discohook.app/?data=${encoded}`;
 }
 
+function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
+  if (Array.isArray(payload)) return payload as ServerEmbed[];
+  if (!payload || typeof payload !== "object") return [];
+
+  const obj = payload as { items?: unknown; data?: { items?: unknown } };
+  if (Array.isArray(obj.items)) return obj.items as ServerEmbed[];
+  if (obj.data && Array.isArray(obj.data.items)) return obj.data.items as ServerEmbed[];
+
+  return [];
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function EmbedsPage() {
@@ -79,7 +90,7 @@ export default function EmbedsPage() {
 
   const [copiedName, setCopiedName] = useState<string | null>(null);
   const loaded = useRef(false);
-  const embedsCacheKey = `embeds-${guildId}`;
+  const embedsCacheKey = `tickets-embeds-list-${guildId}`;
 
   const load = useCallback(async (forceRefresh = false) => {
     if (forceRefresh) {
@@ -92,7 +103,7 @@ export default function EmbedsPage() {
         if (res.error) throw new Error(res.error);
         return res.data?.items ?? [];
       });
-      setEmbeds(embedsData);
+      setEmbeds(normalizeEmbedsPayload(embedsData));
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
