@@ -189,6 +189,213 @@ interface GiveawaysTableProps {
   onShowMore: () => void;
 }
 
+interface GiveawaysMainContentProps {
+  loading: boolean;
+  statsLabels: GiveawaysClientProps["statsLabels"];
+  statsDescriptions: GiveawaysClientProps["statsDescriptions"];
+  listTitle: string;
+  listDescription: string;
+  tabs: GiveawaysClientProps["tabs"];
+  t: TranslationFn;
+  tCommon: TranslationFn;
+  totalEntries: number;
+  giveaways: { ongoing: Giveaway[]; upcoming: Giveaway[]; ended: Giveaway[]; total: number };
+  activeTab: string;
+  onActiveTabChange: (value: string) => void;
+  shownEnded: number;
+  tableLoading: boolean;
+  guildId: string;
+  channelName: (id: string | null) => string | null;
+  onOpenCreate: () => void;
+  onOpenEdit: (giveaway: Giveaway) => void;
+  onDuplicate: (giveaway: Giveaway) => void;
+  onDelete: (id: string) => void;
+  onOpenReroll: (giveaway: Giveaway) => void;
+  onShowMore: () => void;
+}
+
+function GiveawaysMainContent({
+  loading,
+  statsLabels,
+  statsDescriptions,
+  listTitle,
+  listDescription,
+  tabs,
+  t,
+  tCommon,
+  totalEntries,
+  giveaways,
+  activeTab,
+  onActiveTabChange,
+  shownEnded,
+  tableLoading,
+  guildId,
+  channelName,
+  onOpenCreate,
+  onOpenEdit,
+  onDuplicate,
+  onDelete,
+  onOpenReroll,
+  onShowMore,
+}: Readonly<GiveawaysMainContentProps>) {
+  if (loading) {
+    return (
+      <>
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <Card className="border-blue-500/30 bg-blue-500/5">
+            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.totalEntries}</CardTitle></CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between"><Skeleton className="h-9 w-20" /><Users className="h-8 w-8 text-blue-500/50" /></div>
+              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.totalEntries}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-green-500/30 bg-green-500/5">
+            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.ongoing}</CardTitle></CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><Clock3 className="h-8 w-8 text-green-500/50" /></div>
+              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.ongoing}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-amber-500/30 bg-amber-500/5">
+            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.upcoming}</CardTitle></CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><CalendarRange className="h-8 w-8 text-amber-500/50" /></div>
+              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.upcoming}</p>
+            </CardContent>
+          </Card>
+          <Card className="border-slate-500/30 bg-slate-500/5">
+            <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.ended}</CardTitle></CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><Trophy className="h-8 w-8 text-slate-400/60" /></div>
+              <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.ended}</p>
+            </CardContent>
+          </Card>
+        </div>
+        <Card>
+          <CardHeader><CardTitle>{listTitle}</CardTitle><CardDescription>{listDescription}</CardDescription></CardHeader>
+          <CardContent>
+            <Tabs value="ongoing">
+              <TabsList className="grid w-full grid-cols-3 md:w-auto">
+                <TabsTrigger value="ongoing">{tabs.ongoing}</TabsTrigger>
+                <TabsTrigger value="upcoming">{tabs.upcoming}</TabsTrigger>
+                <TabsTrigger value="ended">{tabs.ended}</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <div className="mt-6 space-y-3">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
+            </div>
+          </CardContent>
+        </Card>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <Card className="border-blue-500/30 bg-blue-500/5">
+          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalEntries")}</CardTitle></CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-blue-500">{totalEntries.toLocaleString()}</div><Users className="h-8 w-8 text-blue-500/50" /></div>
+            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.totalEntries")}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-green-500/30 bg-green-500/5">
+          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.ongoing")}</CardTitle></CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-green-500">{giveaways.ongoing.length}</div><Clock3 className="h-8 w-8 text-green-500/50" /></div>
+            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.ongoing")}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-amber-500/30 bg-amber-500/5">
+          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.upcoming")}</CardTitle></CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-amber-500">{giveaways.upcoming.length}</div><CalendarRange className="h-8 w-8 text-amber-500/50" /></div>
+            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.upcoming")}</p>
+          </CardContent>
+        </Card>
+        <Card className="border-slate-500/30 bg-slate-500/5">
+          <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.ended")}</CardTitle></CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between"><div className="text-3xl font-bold text-slate-300">{giveaways.ended.length}</div><Trophy className="h-8 w-8 text-slate-400/60" /></div>
+            <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.ended")}</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader><CardTitle>{t("listTitle")}</CardTitle><CardDescription>{t("listDescription")}</CardDescription></CardHeader>
+        <CardContent>
+          <Tabs value={activeTab} onValueChange={onActiveTabChange}>
+            <TabsList className="grid w-full grid-cols-3 md:w-auto">
+              <TabsTrigger value="ongoing">{t("tabs.ongoing")}{giveaways.ongoing.length > 0 && <span className="ml-1.5 rounded-full bg-primary/20 px-1.5 py-0.5 text-[10px] font-semibold text-primary">{giveaways.ongoing.length}</span>}</TabsTrigger>
+              <TabsTrigger value="upcoming">{t("tabs.upcoming")}{giveaways.upcoming.length > 0 && <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-500">{giveaways.upcoming.length}</span>}</TabsTrigger>
+              <TabsTrigger value="ended">{t("tabs.ended")}{giveaways.ended.length > 0 && <span className="ml-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">{giveaways.ended.length}</span>}</TabsTrigger>
+            </TabsList>
+            <TabsContent value="ongoing" className="mt-6">
+              <GiveawaysTable
+                items={giveaways.ongoing}
+                tab="ongoing"
+                shownEnded={shownEnded}
+                tableLoading={tableLoading}
+                guildId={guildId}
+                t={t}
+                tCommon={tCommon}
+                channelName={channelName}
+                onOpenCreate={onOpenCreate}
+                onOpenEdit={onOpenEdit}
+                onDuplicate={onDuplicate}
+                onDelete={onDelete}
+                onOpenReroll={onOpenReroll}
+                onShowMore={onShowMore}
+              />
+            </TabsContent>
+            <TabsContent value="upcoming" className="mt-6">
+              <GiveawaysTable
+                items={giveaways.upcoming}
+                tab="upcoming"
+                shownEnded={shownEnded}
+                tableLoading={tableLoading}
+                guildId={guildId}
+                t={t}
+                tCommon={tCommon}
+                channelName={channelName}
+                onOpenCreate={onOpenCreate}
+                onOpenEdit={onOpenEdit}
+                onDuplicate={onDuplicate}
+                onDelete={onDelete}
+                onOpenReroll={onOpenReroll}
+                onShowMore={onShowMore}
+              />
+            </TabsContent>
+            <TabsContent value="ended" className="mt-6">
+              <GiveawaysTable
+                items={giveaways.ended}
+                tab="ended"
+                shownEnded={shownEnded}
+                tableLoading={tableLoading}
+                guildId={guildId}
+                t={t}
+                tCommon={tCommon}
+                channelName={channelName}
+                onOpenCreate={onOpenCreate}
+                onOpenEdit={onOpenEdit}
+                onDuplicate={onDuplicate}
+                onDelete={onDelete}
+                onOpenReroll={onOpenReroll}
+                onShowMore={onShowMore}
+              />
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+
 function GiveawaysTable({
   items,
   tab,
@@ -497,7 +704,7 @@ export default function GiveawaysClient({
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { if (guildId) void load(); }, [guildId]);
+  useEffect(() => { void load(); }, [guildId]);
 
   const channelName = (id: string | null) => id ? (`#${channels.find((c) => c.id === id)?.name || id}`) : null;
 
@@ -656,160 +863,30 @@ export default function GiveawaysClient({
           <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
         </div>
 
-        {loading ? (
-          <>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              <Card className="border-blue-500/30 bg-blue-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.totalEntries}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><Skeleton className="h-9 w-20" /><Users className="h-8 w-8 text-blue-500/50" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.totalEntries}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-green-500/30 bg-green-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.ongoing}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><Clock3 className="h-8 w-8 text-green-500/50" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.ongoing}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-amber-500/30 bg-amber-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.upcoming}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><CalendarRange className="h-8 w-8 text-amber-500/50" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.upcoming}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-slate-500/30 bg-slate-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.ended}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><Skeleton className="h-9 w-16" /><Trophy className="h-8 w-8 text-slate-400/60" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{statsDescriptions.ended}</p>
-                </CardContent>
-              </Card>
-            </div>
-            <Card>
-              <CardHeader><CardTitle>{listTitle}</CardTitle><CardDescription>{listDescription}</CardDescription></CardHeader>
-              <CardContent>
-                <Tabs value="ongoing">
-                  <TabsList className="grid w-full grid-cols-3 md:w-auto">
-                    <TabsTrigger value="ongoing">{tabs.ongoing}</TabsTrigger>
-                    <TabsTrigger value="upcoming">{tabs.upcoming}</TabsTrigger>
-                    <TabsTrigger value="ended">{tabs.ended}</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                <div className="mt-6 space-y-3">
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                </div>
-              </CardContent>
-            </Card>
-          </>
-        ) : (
-          <>
-            {/* Stat cards */}
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-              <Card className="border-blue-500/30 bg-blue-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalEntries")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><div className="text-3xl font-bold text-blue-500">{totalEntries.toLocaleString()}</div><Users className="h-8 w-8 text-blue-500/50" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.totalEntries")}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-green-500/30 bg-green-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.ongoing")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><div className="text-3xl font-bold text-green-500">{giveaways.ongoing.length}</div><Clock3 className="h-8 w-8 text-green-500/50" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.ongoing")}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-amber-500/30 bg-amber-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.upcoming")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><div className="text-3xl font-bold text-amber-500">{giveaways.upcoming.length}</div><CalendarRange className="h-8 w-8 text-amber-500/50" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.upcoming")}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-slate-500/30 bg-slate-500/5">
-                <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.ended")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between"><div className="text-3xl font-bold text-slate-300">{giveaways.ended.length}</div><Trophy className="h-8 w-8 text-slate-400/60" /></div>
-                  <p className="mt-2 text-xs text-muted-foreground">{t("statsDescriptions.ended")}</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Table */}
-            <Card>
-              <CardHeader><CardTitle>{t("listTitle")}</CardTitle><CardDescription>{t("listDescription")}</CardDescription></CardHeader>
-              <CardContent>
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="grid w-full grid-cols-3 md:w-auto">
-                    <TabsTrigger value="ongoing">{t("tabs.ongoing")}{giveaways.ongoing.length > 0 && <span className="ml-1.5 rounded-full bg-primary/20 px-1.5 py-0.5 text-[10px] font-semibold text-primary">{giveaways.ongoing.length}</span>}</TabsTrigger>
-                    <TabsTrigger value="upcoming">{t("tabs.upcoming")}{giveaways.upcoming.length > 0 && <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-500">{giveaways.upcoming.length}</span>}</TabsTrigger>
-                    <TabsTrigger value="ended">{t("tabs.ended")}{giveaways.ended.length > 0 && <span className="ml-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">{giveaways.ended.length}</span>}</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="ongoing" className="mt-6">
-                    <GiveawaysTable
-                      items={giveaways.ongoing}
-                      tab="ongoing"
-                      shownEnded={shownEnded}
-                      tableLoading={tableLoading}
-                      guildId={guildId}
-                      t={t}
-                      tCommon={tCommon}
-                      channelName={channelName}
-                      onOpenCreate={openCreate}
-                      onOpenEdit={openEdit}
-                      onDuplicate={duplicate}
-                      onDelete={setDeleteConfirmId}
-                      onOpenReroll={openRerollDialog}
-                      onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
-                    />
-                  </TabsContent>
-                  <TabsContent value="upcoming" className="mt-6">
-                    <GiveawaysTable
-                      items={giveaways.upcoming}
-                      tab="upcoming"
-                      shownEnded={shownEnded}
-                      tableLoading={tableLoading}
-                      guildId={guildId}
-                      t={t}
-                      tCommon={tCommon}
-                      channelName={channelName}
-                      onOpenCreate={openCreate}
-                      onOpenEdit={openEdit}
-                      onDuplicate={duplicate}
-                      onDelete={setDeleteConfirmId}
-                      onOpenReroll={openRerollDialog}
-                      onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
-                    />
-                  </TabsContent>
-                  <TabsContent value="ended" className="mt-6">
-                    <GiveawaysTable
-                      items={giveaways.ended}
-                      tab="ended"
-                      shownEnded={shownEnded}
-                      tableLoading={tableLoading}
-                      guildId={guildId}
-                      t={t}
-                      tCommon={tCommon}
-                      channelName={channelName}
-                      onOpenCreate={openCreate}
-                      onOpenEdit={openEdit}
-                      onDuplicate={duplicate}
-                      onDelete={setDeleteConfirmId}
-                      onOpenReroll={openRerollDialog}
-                      onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
-                    />
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          </>
-        )}
+        <GiveawaysMainContent
+          loading={loading}
+          statsLabels={statsLabels}
+          statsDescriptions={statsDescriptions}
+          listTitle={listTitle}
+          listDescription={listDescription}
+          tabs={tabs}
+          t={t}
+          tCommon={tCommon}
+          totalEntries={totalEntries}
+          giveaways={giveaways}
+          activeTab={activeTab}
+          onActiveTabChange={setActiveTab}
+          shownEnded={shownEnded}
+          tableLoading={tableLoading}
+          guildId={guildId}
+          channelName={channelName}
+          onOpenCreate={openCreate}
+          onOpenEdit={openEdit}
+          onDuplicate={duplicate}
+          onDelete={setDeleteConfirmId}
+          onOpenReroll={openRerollDialog}
+          onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
+        />
 
         {/* Create / Edit Dialog */}
         <Dialog
