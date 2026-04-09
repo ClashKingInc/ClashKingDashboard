@@ -25,6 +25,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { AlertCircle, CalendarRange, CheckCircle2, Clock3, Copy, ExternalLink, Eye, Gift, Loader2, Pencil, Plus, RefreshCw, ShieldCheck, Sword, Trash2, Trophy, User, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import type { Giveaway } from "@/lib/api/types/server";
 
 type Channel = { id: string; name: string; parent_name?: string };
@@ -98,6 +99,9 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
+  const giveawaysCacheKey = `giveaways-${guildId}`;
+  const channelsCacheKey = `channels-${guildId}`;
+  const rolesCacheKey = `discord-roles-${guildId}`;
 
   const updateForm = (updater: (prev: FormState) => FormState) => {
     setFormModified(true);
@@ -108,10 +112,16 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
     if (isRefresh) setTableLoading(true);
     else setLoading(true);
     try {
+      if (isRefresh) {
+        apiCache.invalidate(giveawaysCacheKey);
+        apiCache.invalidate(channelsCacheKey);
+        apiCache.invalidate(rolesCacheKey);
+      }
+
       const [gRes, cRes, rRes] = await Promise.all([
-        apiClient.servers.getGiveaways(guildId),
-        apiClient.servers.getChannels(guildId),
-        apiClient.servers.getDiscordRoles(guildId),
+        apiCache.get(giveawaysCacheKey, () => apiClient.servers.getGiveaways(guildId)),
+        apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId)),
+        apiCache.get(rolesCacheKey, () => apiClient.servers.getDiscordRoles(guildId)),
       ]);
       if (gRes.status === 401 || gRes.status === 403) { router.push(`/${locale}/login`); return; }
       if (gRes.error || !gRes.data) throw new Error(gRes.error || t("toast.loadError"));
