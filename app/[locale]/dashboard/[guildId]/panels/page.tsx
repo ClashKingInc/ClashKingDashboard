@@ -52,6 +52,10 @@ interface Channel {
   parent_name?: string;
 }
 
+const BUTTON_SKELETON_KEYS = BUTTON_TYPES.map((type) => `${type}-skeleton`);
+const COLOR_SKELETON_KEYS = BUTTON_COLORS.map((color) => `${color}-skeleton`);
+const PREVIEW_BUTTON_SKELETON_KEYS = ["preview-button-1", "preview-button-2", "preview-button-3"];
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function PanelsPage() {
@@ -63,7 +67,9 @@ export default function PanelsPage() {
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isPanelLoading, setIsPanelLoading] = useState(true);
+  const [isEmbedsLoading, setIsEmbedsLoading] = useState(true);
+  const [isChannelsLoading, setIsChannelsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   // Form state
@@ -81,32 +87,60 @@ export default function PanelsPage() {
   const embedsCacheKey = `embeds-${guildId}`;
   const channelsCacheKey = `channels-${guildId}`;
 
-  const load = useCallback(async () => {
+  const showLoadError = useCallback(() => {
+    toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+  }, [toast, tCommon]);
+
+  const applyPanelData = useCallback((panel: ServerPanel) => {
+    setEmbedName(panel.embed_name ?? "");
+    setButtons(panel.buttons ?? []);
+    setButtonColor((panel.button_color as ButtonColor) ?? "Grey");
+    setWelcomeChannel(panel.welcome_channel ? String(panel.welcome_channel) : "");
+  }, []);
+
+  const loadPanel = useCallback(async () => {
     try {
-      const [panelRes, embedsRes, channelsRes] = await Promise.all([
-        apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId)),
-        apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId)),
-        apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId)),
-      ]);
+      const panelRes = await apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId));
       if (panelRes.status === 401 || panelRes.status === 403) {
         router.push(`/${locale}/login`);
         return;
       }
+
       if (panelRes.data) {
-        const p = panelRes.data as ServerPanel;
-        setEmbedName(p.embed_name ?? "");
-        setButtons(p.buttons ?? []);
-        setButtonColor((p.button_color as ButtonColor) ?? "Grey");
-        setWelcomeChannel(p.welcome_channel ? String(p.welcome_channel) : "");
+        applyPanelData(panelRes.data);
       }
-      setEmbeds(embedsRes.data?.items ?? []);
-      setChannels(channelsRes.data ?? []);
-    } catch (err) {
-      toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+    } catch {
+      showLoadError();
     } finally {
-      setIsLoading(false);
+      setIsPanelLoading(false);
     }
-  }, [channelsCacheKey, embedsCacheKey, guildId, locale, panelCacheKey, router, toast, tCommon]);
+  }, [applyPanelData, guildId, locale, panelCacheKey, router, showLoadError]);
+
+  const loadEmbeds = useCallback(async () => {
+    try {
+      const embedsRes = await apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId));
+      setEmbeds(embedsRes.data?.items ?? []);
+    } catch {
+      showLoadError();
+    } finally {
+      setIsEmbedsLoading(false);
+    }
+  }, [embedsCacheKey, guildId, showLoadError]);
+
+  const loadChannels = useCallback(async () => {
+    try {
+      const channelsRes = await apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId));
+      setChannels(channelsRes.data ?? []);
+    } catch {
+      showLoadError();
+    } finally {
+      setIsChannelsLoading(false);
+    }
+  }, [channelsCacheKey, guildId, showLoadError]);
+
+  const load = useCallback(async () => {
+    await Promise.all([loadPanel(), loadEmbeds(), loadChannels()]);
+  }, [loadChannels, loadEmbeds, loadPanel]);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -143,20 +177,48 @@ export default function PanelsPage() {
   const selectedEmbed = embeds.find(e => e.name === embedName);
   const embedPreview = selectedEmbed?.data ? extractFirstEmbed(selectedEmbed.data) : null;
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
+  const resolvedWelcomeChannelName = channels.find(c => c.id === welcomeChannel)?.name;
+  let embedPreviewContent = (
+    <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
+      {embedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
+    </div>
+  );
+  if (isEmbedsLoading) {
+    embedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
+  } else if (embedPreview) {
+    embedPreviewContent = <DiscordEmbedPreview embed={embedPreview} />;
+  }
 
-  if (isLoading) {
-    return (
-      <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
-        <div className="mx-auto max-w-4xl space-y-6">
-          <Skeleton className="h-16 w-full" />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Skeleton className="h-96 w-full" />
-            <Skeleton className="h-96 w-full" />
-          </div>
-        </div>
+  let buttonsPreviewContent = <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>;
+  if (isPanelLoading) {
+    buttonsPreviewContent = (
+      <div className="flex flex-wrap gap-2">
+        {PREVIEW_BUTTON_SKELETON_KEYS.map((key) => (
+          <Skeleton key={key} className="h-8 w-28 rounded-md bg-white/10" />
+        ))}
+      </div>
+    );
+  } else if (buttons.length > 0) {
+    buttonsPreviewContent = (
+      <div className="flex flex-wrap gap-2">
+        {buttons.map(type => {
+          const meta = BUTTON_META[type];
+          return (
+            <button
+              key={type}
+              className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", buttonStyle)}
+            >
+              <span>{meta.emoji}</span>
+              <span>{meta.label}</span>
+            </button>
+          );
+        })}
       </div>
     );
   }
+  const welcomeAutoPostText = t("welcomeAutoPost", {
+    channel: `#${resolvedWelcomeChannelName ?? welcomeChannel}`
+  });
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
@@ -172,7 +234,7 @@ export default function PanelsPage() {
               <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
             </div>
           </div>
-          <Button onClick={handleSave} disabled={isSaving} className="shrink-0">
+          <Button onClick={handleSave} disabled={isSaving || isPanelLoading} className="shrink-0">
             {isSaving
               ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               : <Save className="mr-2 h-4 w-4" />}
@@ -192,16 +254,20 @@ export default function PanelsPage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("embedLabel")}</Label>
-                <select
-                  value={embedName}
-                  onChange={e => setEmbedName(e.target.value)}
-                  className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  <option value="">{t("noEmbed")}</option>
-                  {embeds.map(e => (
-                    <option key={e.name} value={e.name}>{e.name}</option>
-                  ))}
-                </select>
+                {isEmbedsLoading ? (
+                  <Skeleton className="h-9 w-full" />
+                ) : (
+                  <select
+                    value={embedName}
+                    onChange={e => setEmbedName(e.target.value)}
+                    className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="">{t("noEmbed")}</option>
+                    {embeds.map(e => (
+                      <option key={e.name} value={e.name}>{e.name}</option>
+                    ))}
+                  </select>
+                )}
               </div>
             </div>
 
@@ -211,35 +277,53 @@ export default function PanelsPage() {
                 <h2 className="text-sm font-semibold">{t("buttonsSection")}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">{t("buttonsHint")}</p>
               </div>
-              <div className="space-y-2">
-                {BUTTON_TYPES.map(type => {
-                  const meta = BUTTON_META[type];
-                  const active = buttons.includes(type);
-                  return (
-                    <label
-                      key={type}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors",
-                        active
-                          ? "border-primary/50 bg-primary/5"
-                          : "border-border/60 hover:bg-accent/40"
-                      )}
+              {isPanelLoading ? (
+                <div className="space-y-2">
+                  {BUTTON_SKELETON_KEYS.map((key) => (
+                    <div
+                      key={key}
+                      className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3"
                     >
-                      <input
-                        type="checkbox"
-                        checked={active}
-                        onChange={() => toggleButton(type)}
-                        className="h-4 w-4 rounded accent-primary"
-                      />
-                      <span className="text-lg">{meta.emoji}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">{meta.label}</p>
-                        <p className="text-xs text-muted-foreground">{meta.desc}</p>
+                      <Skeleton className="h-4 w-4 rounded-sm" />
+                      <Skeleton className="h-5 w-5 rounded-sm" />
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <Skeleton className="h-[18px] w-28" />
+                        <Skeleton className="h-3.5 w-52 max-w-full" />
                       </div>
-                    </label>
-                  );
-                })}
-              </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {BUTTON_TYPES.map(type => {
+                    const meta = BUTTON_META[type];
+                    const active = buttons.includes(type);
+                    return (
+                      <label
+                        key={type}
+                        className={cn(
+                          "flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors",
+                          active
+                            ? "border-primary/50 bg-primary/5"
+                            : "border-border/60 hover:bg-accent/40"
+                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={active}
+                          onChange={() => toggleButton(type)}
+                          className="h-4 w-4 rounded accent-primary"
+                        />
+                        <span className="text-lg">{meta.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium">{meta.label}</p>
+                          <p className="text-xs text-muted-foreground">{meta.desc}</p>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Color */}
@@ -248,49 +332,64 @@ export default function PanelsPage() {
                 <h2 className="text-sm font-semibold">{t("colorSection")}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">{t("colorHint")}</p>
               </div>
-              <div className="flex gap-3">
-                {BUTTON_COLORS.map(color => (
-                  <button
-                    key={color}
-                    onClick={() => setButtonColor(color)}
-                    className={cn(
-                      "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
-                      buttonColor === color
-                        ? "border-primary bg-primary/10 ring-2 ring-primary/40"
-                        : "border-transparent hover:border-border"
-                    )}
-                  >
-                    {buttonColor === color && (
-                      <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
-                    )}
-                    <div
+              {isPanelLoading ? (
+                <div className="flex gap-3">
+                  {COLOR_SKELETON_KEYS.map((key) => (
+                    <Skeleton key={key} className="h-[72px] w-[74px] rounded-lg" />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  {BUTTON_COLORS.map(color => (
+                    <button
+                      key={color}
+                      onClick={() => setButtonColor(color)}
                       className={cn(
-                        "h-6 w-10 rounded",
-                        COLOR_SWATCH[color],
-                        buttonColor === color && "ring-2 ring-background/70"
+                        "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
+                        buttonColor === color
+                          ? "border-primary bg-primary/10 ring-2 ring-primary/40"
+                          : "border-transparent hover:border-border"
                       )}
-                    />
-                    <span className="text-xs font-medium">{t(`color.${color}`)}</span>
-                  </button>
-                ))}
-              </div>
+                    >
+                      {buttonColor === color && (
+                        <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
+                      )}
+                      <div
+                        className={cn(
+                          "h-6 w-10 rounded",
+                          COLOR_SWATCH[color],
+                          buttonColor === color && "ring-2 ring-background/70"
+                        )}
+                      />
+                      <span className="text-xs font-medium">{t(`color.${color}`)}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Welcome channel */}
             <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
               <div>
                 <h2 className="text-sm font-semibold">{t("welcomeSection")}</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">{t("welcomeHint")}</p>
+                <p className="mt-0.5 min-h-4 text-xs leading-4 text-muted-foreground">{t("welcomeHint")}</p>
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("welcomeChannel")}</Label>
-                <ChannelCombobox
-                  channels={channels}
-                  value={welcomeChannel}
-                  onValueChange={setWelcomeChannel}
-                  placeholder={t("welcomeChannelPlaceholder")}
-                  showDisabled={false}
-                />
+                <div className="relative">
+                  <ChannelCombobox
+                    channels={channels}
+                    value={welcomeChannel}
+                    onValueChange={setWelcomeChannel}
+                    placeholder={t("welcomeChannelPlaceholder")}
+                    showDisabled={false}
+                    disabled={isChannelsLoading}
+                    className={cn(isChannelsLoading && "opacity-0")}
+                  />
+                  {isChannelsLoading && (
+                    <Skeleton className="pointer-events-none absolute inset-0 h-9 w-full rounded-md border border-border bg-secondary" />
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -313,41 +412,20 @@ export default function PanelsPage() {
                 </div>
 
                 {/* Embed preview */}
-                {embedPreview ? (
-                  <DiscordEmbedPreview embed={embedPreview} />
-                ) : (
-                  <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
-                    {embedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
-                  </div>
-                )}
+                {embedPreviewContent}
 
                 {/* Buttons preview */}
-                {buttons.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {buttons.map(type => {
-                      const meta = BUTTON_META[type];
-                      return (
-                        <button
-                          key={type}
-                          className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", buttonStyle)}
-                        >
-                          <span>{meta.emoji}</span>
-                          <span>{meta.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>
-                )}
+                {buttonsPreviewContent}
               </div>
 
               {/* Welcome channel info */}
               {welcomeChannel && (
-                <div className="rounded-lg border border-border/60 bg-muted/30 px-4 py-3 text-xs text-muted-foreground">
-                  {t("welcomeAutoPost", {
-                    channel: `#${channels.find(c => c.id === welcomeChannel)?.name ?? welcomeChannel}`
-                  })}
+                <div className="rounded-lg border border-border/60 bg-muted/30 px-4 py-3 text-xs text-muted-foreground min-h-10 flex items-center">
+                  {isChannelsLoading ? (
+                    <Skeleton className="h-3.5 w-56 max-w-full" />
+                  ) : (
+                    welcomeAutoPostText
+                  )}
                 </div>
               )}
             </div>
