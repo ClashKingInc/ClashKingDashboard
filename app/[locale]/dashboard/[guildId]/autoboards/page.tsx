@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -36,6 +36,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { apiCache } from "@/lib/api-cache";
 
 // Type definitions
 interface Channel {
@@ -155,31 +156,81 @@ export default function AutoBoardsPage() {
   const [editChannel, setEditChannel] = useState("");
   const [editDays, setEditDays] = useState<string[]>([]);
 
+  const autoboardsCacheKey = `autoboards-${guildId}`;
+  const channelsCacheKey = `channels-${guildId}`;
+
+  const fetchAutoboards = useCallback(async (
+    accessToken: string,
+    forceRefresh = false
+  ): Promise<ServerAutoBoardsResponse> => {
+    if (forceRefresh) {
+      apiCache.invalidate(autoboardsCacheKey);
+    }
+
+    return apiCache.get(autoboardsCacheKey, async () => {
+      const response = await fetch(`/api/v2/server/${guildId}/autoboards`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch autoboards: ${response.status}`);
+      }
+
+      return response.json();
+    });
+  }, [autoboardsCacheKey, guildId]);
+
+  const fetchChannels = useCallback(async (
+    accessToken: string,
+    forceRefresh = false
+  ): Promise<Channel[]> => {
+    if (forceRefresh) {
+      apiCache.invalidate(channelsCacheKey);
+    }
+
+    return apiCache.get(channelsCacheKey, async () => {
+      const response = await fetch(`/api/v2/server/${guildId}/channels`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch channels: ${response.status}`);
+      }
+
+      return response.json();
+    });
+  }, [channelsCacheKey, guildId]);
+
+  const refreshAutoboards = useCallback(async (accessToken: string) => {
+    const freshAutoboards = await fetchAutoboards(accessToken, true);
+    setAutoboardsData(freshAutoboards);
+  }, [fetchAutoboards]);
+
   // Fetch autoboards and channels
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const token = `Bearer ${localStorage.getItem('access_token')}`;
-
-        const [autoboardsRes, channelsRes] = await Promise.all([
-          fetch(`/api/v2/server/${guildId}/autoboards`, {
-            headers: { 'Authorization': token }
-          }),
-          fetch(`/api/v2/server/${guildId}/channels`, {
-            headers: { 'Authorization': token }
-          })
-        ]);
-
-        if (autoboardsRes.ok) {
-          const autoboardsData: ServerAutoBoardsResponse = await autoboardsRes.json();
-          setAutoboardsData(autoboardsData);
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) {
+          setAutoboardsData(null);
+          setChannels([]);
+          return;
         }
 
-        if (channelsRes.ok) {
-          const channelsData: Channel[] = await channelsRes.json();
+        const [autoboardsResult, channelsResult] = await Promise.allSettled([
+          fetchAutoboards(accessToken),
+          fetchChannels(accessToken),
+        ]);
+
+        if (autoboardsResult.status === "fulfilled") {
+          setAutoboardsData(autoboardsResult.value);
+        }
+
+        if (channelsResult.status === "fulfilled") {
+          const channelsData = channelsResult.value;
           // Filter to only text channels
-          const textChannels = channelsData.filter(ch => ch.type === 'text' || ch.type === '0');
+          const textChannels = channelsData.filter(ch => ch.type === "text" || ch.type === "0");
           setChannels(textChannels);
         }
       } catch (error) {
@@ -192,7 +243,7 @@ export default function AutoBoardsPage() {
     if (guildId) {
       fetchData();
     }
-  }, [guildId]);
+  }, [guildId, fetchAutoboards, fetchChannels]);
 
   const handleDayToggle = (day: string) => {
     setSelectedDays(prev =>
@@ -264,16 +315,9 @@ export default function AutoBoardsPage() {
         throw new Error(error.detail || t('alerts.createFailed'));
       }
 
-      // Refresh autoboards list
-      const refreshResponse = await fetch(`/api/v2/server/${guildId}/autoboards`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-
-      if (refreshResponse.ok) {
-        const data: ServerAutoBoardsResponse = await refreshResponse.json();
-        setAutoboardsData(data);
+      const accessToken = localStorage.getItem("access_token");
+      if (accessToken) {
+        await refreshAutoboards(accessToken);
       }
 
       setCreateDialogOpen(false);
@@ -330,16 +374,9 @@ export default function AutoBoardsPage() {
         throw new Error(error.detail || t('alerts.updateFailed'));
       }
 
-      // Refresh autoboards list
-      const refreshResponse = await fetch(`/api/v2/server/${guildId}/autoboards`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-
-      if (refreshResponse.ok) {
-        const data: ServerAutoBoardsResponse = await refreshResponse.json();
-        setAutoboardsData(data);
+      const accessToken = localStorage.getItem("access_token");
+      if (accessToken) {
+        await refreshAutoboards(accessToken);
       }
 
       setEditDialogOpen(false);
@@ -370,16 +407,9 @@ export default function AutoBoardsPage() {
         throw new Error(t('alerts.deleteFailed'));
       }
 
-      // Refresh autoboards list
-      const refreshResponse = await fetch(`/api/v2/server/${guildId}/autoboards`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-
-      if (refreshResponse.ok) {
-        const data: ServerAutoBoardsResponse = await refreshResponse.json();
-        setAutoboardsData(data);
+      const accessToken = localStorage.getItem("access_token");
+      if (accessToken) {
+        await refreshAutoboards(accessToken);
       }
     } catch (error) {
       console.error('Error deleting autoboard:', error);
