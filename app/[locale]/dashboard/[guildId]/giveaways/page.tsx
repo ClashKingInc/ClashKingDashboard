@@ -179,6 +179,14 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
   );
   const discordTimestamp = effectiveEnd ? fmt(effectiveEnd.toISOString()) : "-";
   const winnerCount = Number(form.winners || 1);
+  const winnersCount = Number(form.winners);
+  const hasRequiredFields =
+    form.prize.trim().length > 0 &&
+    !!form.channelId &&
+    (form.startNow || !!form.startTime) &&
+    !!form.endTime &&
+    Number.isFinite(winnersCount) &&
+    winnersCount >= 1;
 
   const totalEntries = [...giveaways.ongoing, ...giveaways.upcoming, ...giveaways.ended]
     .reduce((sum, g) => sum + (g.entry_count || 0), 0);
@@ -668,17 +676,17 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
               <TabsContent value="general" className="mt-4 space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label>{t("form.prize")}</Label>
+                    <Label>{t("form.prize")}<span className="ml-1 text-destructive">*</span></Label>
                     <Input value={form.prize} onChange={(e) => updateForm((s) => ({ ...s, prize: e.target.value }))} placeholder={t("form.prizePlaceholder")} />
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("form.channel")}</Label>
+                    <Label>{t("form.channel")}<span className="ml-1 text-destructive">*</span></Label>
                     <ChannelCombobox channels={channels} value={form.channelId} onValueChange={(value) => updateForm((s) => ({ ...s, channelId: value }))} placeholder={t("form.channelPlaceholder")} showDisabled={false} />
                   </div>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label>{t("form.startTime")}</Label>
+                    <Label>{t("form.startTime")}<span className="ml-1 text-destructive">*</span></Label>
                     <div className="flex items-center gap-2">
                       <Checkbox id="startNow" checked={form.startNow} onCheckedChange={(checked) => updateForm((s) => ({ ...s, startNow: Boolean(checked), startTime: Boolean(checked) ? "" : s.startTime }))} />
                       <Label htmlFor="startNow" className="cursor-pointer font-normal">{t("form.startNow")}</Label>
@@ -686,13 +694,13 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
                     {!form.startNow && <Input type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
                   </div>
                   <div className="space-y-2">
-                    <Label>{t("form.endTime")}</Label>
+                    <Label>{t("form.endTime")}<span className="ml-1 text-destructive">*</span></Label>
                     <Input type="datetime-local" value={form.endTime} onChange={(e) => updateForm((s) => ({ ...s, endTime: e.target.value }))} />
                   </div>
                 </div>
                 <div className="md:w-1/2 md:pr-2">
                   <div className="space-y-2">
-                    <Label>{t("form.winners")}</Label>
+                    <Label>{t("form.winners")}<span className="ml-1 text-destructive">*</span></Label>
                     <Input type="number" min="1" max="100" value={form.winners} onChange={(e) => updateForm((s) => ({ ...s, winners: e.target.value }))} />
                   </div>
                 </div>
@@ -821,7 +829,7 @@ export default function GiveawaysPage() { // NOSONAR — React page component: c
 
             <DialogFooter>
               <Button variant="outline" onClick={() => handleDialogOpenChange(false)} disabled={saving}>{tCommon("cancel")}</Button>
-              <Button onClick={submit} disabled={saving}>
+              <Button onClick={submit} disabled={saving || !hasRequiredFields}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {editingId ? t("dialog.saveChanges") : t("dialog.create")}
               </Button>
