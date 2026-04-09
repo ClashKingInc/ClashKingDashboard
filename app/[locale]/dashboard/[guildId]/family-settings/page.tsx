@@ -206,6 +206,10 @@ export default function FamilySettingsPage() {
   const [isLoadingFamilyRoles, setIsLoadingFamilyRoles] = useState(true);
   const [familyRolesLoading, setFamilyRolesLoading] = useState(false);
 
+  const settingsCacheKey = `settings-${guildId}`;
+  const rolesCacheKey = `discord-roles-${guildId}`;
+  const familyRolesCacheKey = `family-roles-${guildId}`;
+
   // Load settings on mount
   useEffect(() => {
     loadSettings();
@@ -213,7 +217,7 @@ export default function FamilySettingsPage() {
     loadFamilyRoles();
   }, [guildId]);
 
-  const loadSettings = async () => {
+  const loadSettings = async (forceRefresh = false) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -223,17 +227,25 @@ export default function FamilySettingsPage() {
         throw new Error("No access token found. Please log in again.");
       }
 
-      const response = await apiClient.servers.getSettings(guildId);
-
-      if (response.error) {
-        throw new Error(response.error);
+      if (forceRefresh) {
+        apiCache.invalidate(settingsCacheKey);
       }
 
-      if (response.data) {
+      const settingsData = await apiCache.get(settingsCacheKey, async () => {
+        const response = await apiClient.servers.getSettings(guildId);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
+        return response.data;
+      });
+
+      if (settingsData) {
         setSettings({
-          change_nickname: response.data.change_nickname ?? true,
-          nickname_rule: response.data.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
-          non_family_nickname_rule: response.data.non_family_nickname_rule ?? "{player_name}",
+          change_nickname: settingsData.change_nickname ?? true,
+          nickname_rule: settingsData.nickname_rule ?? "[{player_clan_abbreviation}] {player_name}",
+          non_family_nickname_rule: settingsData.non_family_nickname_rule ?? "{player_name}",
         });
       }
     } catch (err: any) {
@@ -244,13 +256,17 @@ export default function FamilySettingsPage() {
     }
   };
 
-  const loadDiscordRoles = async () => {
+  const loadDiscordRoles = async (forceRefresh = false) => {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
+      if (forceRefresh) {
+        apiCache.invalidate(rolesCacheKey);
+      }
+
       // Use cache to prevent duplicate requests
-      const rolesData = await apiCache.get(`discord-roles-${guildId}`, async () => {
+      const rolesData = await apiCache.get(rolesCacheKey, async () => {
         const response = await apiClient.roles.getDiscordRoles(guildId);
         if (response.error) {
           throw new Error(response.error);
@@ -266,21 +282,28 @@ export default function FamilySettingsPage() {
     }
   };
 
-  const loadFamilyRoles = async () => {
+  const loadFamilyRoles = async (forceRefresh = false) => {
     try {
       setIsLoadingFamilyRoles(true);
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      const response = await apiClient.familyRoles.getFamilyRoles(guildId);
-
-      if (response.error) {
-        console.error("Failed to load family roles:", response.error);
-        return;
+      if (forceRefresh) {
+        apiCache.invalidate(familyRolesCacheKey);
       }
 
-      if (response.data) {
-        setFamilyRoles(response.data);
+      const familyRolesData = await apiCache.get(familyRolesCacheKey, async () => {
+        const response = await apiClient.familyRoles.getFamilyRoles(guildId);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
+        return response.data;
+      });
+
+      if (familyRolesData) {
+        setFamilyRoles(familyRolesData);
       }
     } catch (err) {
       console.error("Failed to load family roles:", err);
@@ -309,8 +332,8 @@ export default function FamilySettingsPage() {
         return;
       }
 
-      // Reload family roles
-      await loadFamilyRoles();
+      // Refresh family roles after update
+      await loadFamilyRoles(true);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
@@ -336,8 +359,8 @@ export default function FamilySettingsPage() {
         return;
       }
 
-      // Reload family roles
-      await loadFamilyRoles();
+      // Refresh family roles after update
+      await loadFamilyRoles(true);
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
@@ -374,7 +397,7 @@ export default function FamilySettingsPage() {
   };
 
   const handleReset = () => {
-    loadSettings();
+    loadSettings(true);
   };
 
   // Generate preview of nickname format
