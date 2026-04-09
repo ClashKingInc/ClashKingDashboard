@@ -11,6 +11,14 @@ import {
   getSortLabel,
   getSortInternal,
   calculateRosterStats,
+  unixToDatetimeLocal,
+  datetimeLocalToUnix,
+  getTimezoneOffset,
+  getUserTimezone,
+  formatTimestamp,
+  getAutomationIcon,
+  getAutomationLabel,
+  formatOffsetSeconds,
 } from "./utils";
 
 // ─── validatePlayerTag ────────────────────────────────────────────────────────
@@ -266,5 +274,106 @@ describe("calculateRosterStats", () => {
     ];
     const stats = calculateRosterStats(members);
     expect(stats.avgHitrate).toBe(70);
+  });
+});
+
+// --- unixToDatetimeLocal ---
+
+describe("unixToDatetimeLocal", () => {
+  it("returns empty for null", () => { expect(unixToDatetimeLocal(null)).toBe(""); });
+  it("returns empty for undefined", () => { expect(unixToDatetimeLocal(undefined)).toBe(""); });
+  it("returns empty for 0", () => { expect(unixToDatetimeLocal(0)).toBe(""); });
+  it("returns datetime-local string for valid timestamp", () => {
+    expect(unixToDatetimeLocal(1700000000)).toMatch(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}$/);
+  });
+});
+
+describe("datetimeLocalToUnix", () => {
+  it("returns null for empty string", () => { expect(datetimeLocalToUnix("")).toBeNull(); });
+  it("returns unix timestamp for valid input", () => {
+    const r = datetimeLocalToUnix("2024-01-01T00:00");
+    expect(typeof r).toBe("number");
+    expect(r).toBeGreaterThan(0);
+  });
+});
+
+describe("getTimezoneOffset", () => {
+  it("returns UTC+HH:MM or UTC-HH:MM", () => {
+    expect(getTimezoneOffset()).toMatch(/^UTC[+-][0-9]{2}:[0-9]{2}$/);
+  });
+});
+
+describe("getUserTimezone", () => {
+  it("returns a non-empty string", () => {
+    const r = getUserTimezone();
+    expect(typeof r).toBe("string");
+    expect(r.length).toBeGreaterThan(0);
+  });
+});
+
+describe("formatTimestamp", () => {
+  it("returns a non-empty string", () => {
+    expect(formatTimestamp(1700000000).length).toBeGreaterThan(0);
+  });
+  it("accepts a custom locale", () => {
+    expect(formatTimestamp(1700000000, "fr").length).toBeGreaterThan(0);
+  });
+});
+
+describe("formatOffsetSeconds", () => {
+  const t = (key: string) => ({
+    "automations.offsetAtStart": "at start",
+    "automations.offsetUnit_minutes": "minutes",
+    "automations.offsetUnit_hours": "hours",
+    "automations.offsetUnit_days": "days",
+    "automations.offsetBefore": "Before",
+    "automations.offsetAfter": "After",
+  } as Record<string, string>)[key] ?? key;
+
+  it("returns at-start for 0", () => { expect(formatOffsetSeconds(0, t)).toBe("at start"); });
+  it("formats before/hours", () => {
+    const r = formatOffsetSeconds(-3600, t);
+    expect(r).toContain("hours");
+    expect(r.toLowerCase()).toContain("before");
+  });
+  it("formats after/minutes", () => {
+    const r = formatOffsetSeconds(1800, t);
+    expect(r).toContain("minutes");
+    expect(r.toLowerCase()).toContain("after");
+  });
+  it("formats days", () => { expect(formatOffsetSeconds(-86400, t)).toContain("days"); });
+});
+
+describe("getAutomationIcon", () => {
+  it("roster_ping -> Bell", () => { expect(getAutomationIcon("roster_ping")).toBe("Bell"); });
+  it("roster_post -> MessageSquare", () => { expect(getAutomationIcon("roster_post")).toBe("MessageSquare"); });
+  it("roster_signup -> Unlock", () => { expect(getAutomationIcon("roster_signup")).toBe("Unlock"); });
+  it("roster_signup_close -> Lock", () => { expect(getAutomationIcon("roster_signup_close")).toBe("Lock"); });
+  it("roster_delete -> Trash2", () => { expect(getAutomationIcon("roster_delete")).toBe("Trash2"); });
+  it("roster_clear -> X", () => { expect(getAutomationIcon("roster_clear")).toBe("X"); });
+  it("roster_archive -> Archive", () => { expect(getAutomationIcon("roster_archive")).toBe("Archive"); });
+});
+
+describe("getAutomationLabel", () => {
+  it("roster_ping", () => { expect(getAutomationLabel("roster_ping")).toBe("Ping Roster"); });
+  it("roster_post", () => { expect(getAutomationLabel("roster_post")).toBe("Post Roster"); });
+  it("roster_signup", () => { expect(getAutomationLabel("roster_signup")).toBe("Open Signup"); });
+  it("roster_signup_close", () => { expect(getAutomationLabel("roster_signup_close")).toBe("Close Signup"); });
+  it("roster_delete", () => { expect(getAutomationLabel("roster_delete")).toBe("Delete Roster"); });
+  it("roster_clear", () => { expect(getAutomationLabel("roster_clear")).toBe("Clear Roster"); });
+  it("roster_archive", () => { expect(getAutomationLabel("roster_archive")).toBe("Archive Roster"); });
+});
+
+describe("calculateRosterStats — extra branches", () => {
+  it("zero stats for undefined members", () => {
+    expect(calculateRosterStats(undefined).totalMembers).toBe(0);
+  });
+  it("null clan tag -> external", () => {
+    const s = calculateRosterStats([{ name: "A", tag: "#AAA", townhall: 14, current_clan_tag: null }], "#CLAN");
+    expect(s.external).toBe(1);
+  });
+  it("avgHitrate 0 when all hitrates are null", () => {
+    const s = calculateRosterStats([{ name: "A", tag: "#AAA", townhall: 14, hitrate: null }]);
+    expect(s.avgHitrate).toBe(0);
   });
 });
