@@ -74,7 +74,7 @@ export function DashboardLayoutWrapper({
           <span className="ml-2 font-semibold">{tCommon("dashboard")}</span>
         </div>
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
           {children}
         </main>
       </div>
