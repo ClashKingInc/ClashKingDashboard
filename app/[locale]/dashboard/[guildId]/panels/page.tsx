@@ -319,7 +319,7 @@ export default function PanelsPage() {
             <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
               <div>
                 <h2 className="text-sm font-semibold">{t("welcomeSection")}</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">{t("welcomeHint")}</p>
+                <p className="mt-0.5 min-h-4 text-xs leading-4 text-muted-foreground">{t("welcomeHint")}</p>
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("welcomeChannel")}</Label>
