@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,6 +31,7 @@ import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { useToast } from "@/components/ui/use-toast";
+import { apiCache } from "@/lib/api-cache";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,6 +50,18 @@ import * as api from "./_lib/api";
 import type { Roster, RosterGroup, RosterStats, RosterAutomation, AutomationActionType, DiscordChannel, CreateRosterFormData, CloneRosterFormData, SignupCategory } from "./_lib/types";
 import { calculateRosterStats, formatThRestriction, getAutomationLabel, buildOffsetSeconds, parseOffsetSeconds, formatOffsetSeconds } from "./_lib/utils";
 import type { OffsetUnit } from "./_lib/utils";
+
+function getGroupsCacheKey(guildId: string): string {
+  return `rosters-groups-${guildId}`;
+}
+
+function getCategoriesCacheKey(guildId: string): string {
+  return `rosters-categories-${guildId}`;
+}
+
+function getChannelsCacheKey(guildId: string): string {
+  return `rosters-channels-${guildId}`;
+}
 
 // Roster Card Component
 interface RosterCardProps {
@@ -277,21 +290,76 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
   const [editingCategoryStandalone, setEditingCategoryStandalone] = useState<SignupCategory | null>(null);
   const [standaloneNewAlias, setStandaloneNewAlias] = useState("");
+  const groupsRequestIdRef = useRef(0);
+  const categoriesRequestIdRef = useRef(0);
+  const channelsRequestIdRef = useRef(0);
 
   // Fetch groups
-  const refreshGroups = () => {
-    if (guildId) api.fetchGroups(guildId).then(setGroups).catch(() => setGroups([]));
-  };
+  const refreshGroups = useCallback((forceRefresh = false) => {
+    if (!guildId) return;
+    const requestId = ++groupsRequestIdRef.current;
+    if (forceRefresh) {
+      apiCache.invalidate(getGroupsCacheKey(guildId));
+    }
+    apiCache
+      .get(getGroupsCacheKey(guildId), () => api.fetchGroups(guildId))
+      .then((nextGroups) => {
+        if (requestId === groupsRequestIdRef.current) {
+          setGroups(nextGroups);
+        }
+      })
+      .catch(() => {
+        if (requestId === groupsRequestIdRef.current) {
+          setGroups([]);
+        }
+      });
+  }, [guildId]);
 
-  const refreshCategories = () => {
-    if (guildId) api.fetchCategories(guildId).then(setCategories).catch(() => setCategories([]));
-  };
+  const refreshCategories = useCallback((forceRefresh = false) => {
+    if (!guildId) return;
+    const requestId = ++categoriesRequestIdRef.current;
+    if (forceRefresh) {
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
+    }
+    apiCache
+      .get(getCategoriesCacheKey(guildId), () => api.fetchCategories(guildId))
+      .then((nextCategories) => {
+        if (requestId === categoriesRequestIdRef.current) {
+          setCategories(nextCategories);
+        }
+      })
+      .catch(() => {
+        if (requestId === categoriesRequestIdRef.current) {
+          setCategories([]);
+        }
+      });
+  }, [guildId]);
+
+  const refreshChannels = useCallback((forceRefresh = false) => {
+    if (!guildId) return;
+    const requestId = ++channelsRequestIdRef.current;
+    if (forceRefresh) {
+      apiCache.invalidate(getChannelsCacheKey(guildId));
+    }
+    apiCache
+      .get(getChannelsCacheKey(guildId), () => api.fetchChannels(guildId))
+      .then((nextChannels) => {
+        if (requestId === channelsRequestIdRef.current) {
+          setChannels(nextChannels);
+        }
+      })
+      .catch(() => {
+        if (requestId === channelsRequestIdRef.current) {
+          setChannels([]);
+        }
+      });
+  }, [guildId]);
 
   useEffect(() => {
     refreshGroups();
     refreshCategories();
-    if (guildId) api.fetchChannels(guildId).then(setChannels).catch(() => setChannels([]));
-  }, [guildId]);
+    refreshChannels();
+  }, [refreshGroups, refreshCategories, refreshChannels]);
 
   // Group rosters by group_id
   const rostersByGroup = useMemo(() => {
@@ -375,6 +443,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingGroup(true);
     try {
       const created = await api.createGroup(guildId, newGroupAlias.trim());
+      apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => [...prev, created]);
       setCreateGroupDialogOpen(false);
       setNewGroupAlias("");
@@ -391,6 +460,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingCategory(true);
     try {
       const created = await api.createCategory(guildId, newCategoryAlias.trim());
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => [...prev, created]);
       // Auto-select the new category in the editing group
       setEditingGroup(prev => prev ? {
@@ -423,6 +493,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           default_signup_category: editingGroup.default_signup_category ?? null,
         }),
       });
+      apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => prev.map(g => g.group_id === updated.group_id ? updated : g));
       setEditGroupDialogOpen(false);
       setEditingGroup(null);
@@ -438,6 +509,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setDeletingGroup(groupId);
     try {
       await api.deleteGroup(groupId, guildId);
+      apiCache.invalidate(getGroupsCacheKey(guildId));
       setGroups(prev => prev.filter(g => g.group_id !== groupId));
       toast({ title: t("groupDeleted") });
     } catch {
@@ -453,7 +525,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingCategory(true);
     try {
       await api.createCategory(guildId, standaloneNewAlias.trim());
-      refreshCategories();
+      refreshCategories(true);
       setStandaloneNewAlias("");
       setCreateCategoryDialogOpen(false);
       toast({ title: t("categoryCreated") });
@@ -469,6 +541,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     setSavingCategory(true);
     try {
       await api.updateCategory(editingCategoryStandalone.custom_id, guildId, { alias: editingCategoryStandalone.alias });
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => prev.map(c =>
         c.custom_id === editingCategoryStandalone.custom_id ? { ...c, alias: editingCategoryStandalone.alias } : c
       ));
@@ -485,6 +558,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const handleDeleteCategoryStandalone = async (categoryId: string) => {
     try {
       await api.deleteCategory(categoryId, guildId);
+      apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
       toast({ title: t("categoryDeleted") });
     } catch {
@@ -679,18 +753,61 @@ export default function RostersPage() { // NOSONAR — React page component: com
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Skeleton className="h-14 w-14 rounded-lg" />
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+                <ClipboardList className="h-8 w-8 text-primary" />
+              </div>
               <div>
-                <Skeleton className="h-8 w-48" />
-                <Skeleton className="h-4 w-64 mt-2" />
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
+                <p className="text-muted-foreground mt-1">{t("description")}</p>
               </div>
             </div>
             <Skeleton className="h-10 w-32" />
           </div>
           <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-28" />
-            ))}
+            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRosters")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <ClipboardList className="h-8 w-8 text-blue-500/50" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-green-500/30 bg-green-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalMembers")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <Users className="h-8 w-8 text-green-500/50" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-orange-500/30 bg-orange-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.clanRosters")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <Users className="h-8 w-8 text-orange-500/50" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.familyRosters")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-9 w-16" />
+                  <Users className="h-8 w-8 text-purple-500/50" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (

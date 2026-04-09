@@ -218,7 +218,10 @@ export function AddMembersDialog({
                           key={member.tag}
                           value={`${member.name} ${member.tag} ${member.clan_name}`}
                           onSelect={() => toggleMember(member.tag)}
-                          className={selectedMembers.has(member.tag) ? "bg-primary/10" : ""}
+                          className={selectedMembers.has(member.tag)
+                            ? "bg-destructive/15 text-destructive hover:bg-destructive/15 data-[selected=true]:bg-destructive/15 data-[selected=true]:text-destructive"
+                            : ""
+                          }
                         >
                           <div className="flex items-center gap-3 flex-1">
                             <div className="w-7 h-7 rounded bg-primary/10 flex items-center justify-center shrink-0">
@@ -244,30 +247,32 @@ export function AddMembersDialog({
           </div>
 
           {/* Selected members display */}
-          {selectedMembers.size > 0 && (
-            <div className="space-y-2">
-              <Label className="text-foreground">{t("memberAutocomplete.selectedLabel")}</Label>
-              <div className="flex flex-wrap gap-2">
-                {Array.from(selectedMembers).map((tag) => {
-                  const member = serverMembers.find(m => m.tag === tag) || clanMembers.find(m => m.tag === tag);
-                  return (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="flex items-center gap-1 cursor-pointer hover:bg-destructive/20"
-                      onClick={() => toggleMember(tag)}
-                    >
-                      {member ? `${member.name} (TH${member.townhall})` : tag}
-                      <X className="h-3 w-3" />
-                    </Badge>
-                  );
-                })}
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {selectedMembers.size} {t("memberAutocomplete.membersSelected")}
-              </p>
+          <div className="space-y-2">
+            <Label className="text-foreground">{t("memberAutocomplete.selectedLabel")}</Label>
+            <div className="min-h-14 max-h-24 overflow-y-auto rounded-md border border-border bg-background/30 p-2">
+              {selectedMembers.size > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {Array.from(selectedMembers).map((tag) => {
+                    const member = serverMembers.find(m => m.tag === tag) || clanMembers.find(m => m.tag === tag);
+                    return (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="flex items-center gap-1 cursor-pointer hover:bg-destructive/20"
+                        onClick={() => toggleMember(tag)}
+                      >
+                        {member ? `${member.name} (TH${member.townhall})` : tag}
+                        <X className="h-3 w-3" />
+                      </Badge>
+                    );
+                  })}
+                </div>
+              ) : null}
             </div>
-          )}
+            <p className="text-sm text-muted-foreground">
+              {selectedMembers.size} {t("memberAutocomplete.membersSelected")}
+            </p>
+          </div>
 
           {/* Fallback: Clan members list */}
           {serverMembers.length === 0 && clanMembers.length > 0 && (
@@ -286,8 +291,10 @@ export function AddMembersDialog({
                 {filteredClanMembers.map((member) => (
                   <button
                     key={member.tag}
-                    className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
-                      selectedMembers.has(member.tag) ? "bg-primary/10" : ""
+                    className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer transition-colors w-full text-left ${
+                      selectedMembers.has(member.tag)
+                        ? "bg-destructive/15 text-destructive hover:bg-destructive/15"
+                        : "hover:bg-secondary/50"
                     }`}
                     onClick={() => toggleMember(member.tag)}
                   >

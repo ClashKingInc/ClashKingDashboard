@@ -701,7 +701,8 @@
       "compareGroup": "Comparer le groupe",
       "dragToMoveCategory": "Glissez les membres entre rosters et catégories",
       "categoryChanged": "Catégorie modifiée",
-      "categoryChangedDesc": "{name} déplacé vers {category}"
+      "categoryChangedDesc": "{name} déplacé vers {category}",
+      "uncategorized": "Sans catégorie"
     },
     "ungrouped": "Sans groupe",
     "automations": {

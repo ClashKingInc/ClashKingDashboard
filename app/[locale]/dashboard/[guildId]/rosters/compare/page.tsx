@@ -178,6 +178,7 @@ interface RosterColumnProps {
   overCategoryId: string | null;
   isLoading: boolean;
   duplicateTags?: Set<string>;
+  t: (key: string) => string;
 }
 
 function RosterColumn({
@@ -187,6 +188,7 @@ function RosterColumn({
   overCategoryId,
   isLoading,
   duplicateTags,
+  t,
 }: RosterColumnProps) {
   const { setNodeRef } = useDroppable({
     id: roster.custom_id,
@@ -299,7 +301,7 @@ function RosterColumn({
             <CategoryDropZone
               rosterId={roster.custom_id}
               categoryId={null}
-              categoryName="Sans catégorie"
+              categoryName={t("compare.uncategorized")}
               members={membersByCategory.uncategorized || []}
               isOver={
                 overCategoryId ===
@@ -524,7 +526,7 @@ export default function CompareRostersPage() {
 
         const categoryName =
           categories.find((c) => c.custom_id === targetCategoryId)?.alias ||
-          "Sans catégorie";
+          t("compare.uncategorized");
         toast({
           title: t("compare.categoryChanged"),
           description: t("compare.categoryChangedDesc", {
@@ -708,6 +710,7 @@ export default function CompareRostersPage() {
                   overCategoryId={overCategoryId}
                   isLoading={false}
                   duplicateTags={duplicateTags}
+                  t={t}
                 />
               );
             })}

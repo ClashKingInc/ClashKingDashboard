@@ -767,7 +767,8 @@
       "compareGroup": "Compare Group",
       "dragToMoveCategory": "Drag members between rosters and categories",
       "categoryChanged": "Category changed",
-      "categoryChangedDesc": "{name} moved to {category}"
+      "categoryChangedDesc": "{name} moved to {category}",
+      "uncategorized": "Uncategorized"
     },
     "ungrouped": "Ungrouped",
     "automations": {

@@ -223,6 +223,18 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
     },
   ];
 
+  const normalizedPathname = pathname.replace(/^\/[a-z]{2}(?=\/)/, "").replace(/\/$/, "") || "/";
+
+  const isNavItemActive = (href: string) => {
+    const normalizedHref = href.replace(/\/$/, "") || "/";
+
+    if (normalizedHref === `/dashboard/${guildId}`) {
+      return normalizedPathname === normalizedHref;
+    }
+
+    return normalizedPathname === normalizedHref || normalizedPathname.startsWith(`${normalizedHref}/`);
+  };
+
   return (
     <div className="flex h-full w-64 flex-col bg-card border-r border-border">
       {/* Server Header */}
@@ -321,7 +333,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
             {/* Section Items */}
             <div className="space-y-1">
               {section.items.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive = isNavItemActive(item.href);
                 return (
                   <Link
                     key={item.nameKey}

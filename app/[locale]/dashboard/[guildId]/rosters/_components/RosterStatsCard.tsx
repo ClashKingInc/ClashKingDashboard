@@ -26,7 +26,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
   return (
     <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       {/* Members */}
-      <Card className="bg-card border-blue-500/30 bg-blue-500/5">
+      <Card className="bg-card border-blue-500/30 bg-blue-500/5 min-h-[150px]">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t("stats.members")}
@@ -51,7 +51,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
       </Card>
 
       {/* Average TH */}
-      <Card className="bg-card border-orange-500/30 bg-orange-500/5">
+      <Card className="bg-card border-orange-500/30 bg-orange-500/5 min-h-[150px]">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t("stats.avgTh")}
@@ -73,7 +73,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
       </Card>
 
       {/* Average Hitrate */}
-      <Card className="bg-card border-green-500/30 bg-green-500/5">
+      <Card className="bg-card border-green-500/30 bg-green-500/5 min-h-[150px]">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t("stats.avgHitrate")}
@@ -90,7 +90,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
       </Card>
 
       {/* Member Distribution */}
-      <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+      <Card className="bg-card border-purple-500/30 bg-purple-500/5 min-h-[150px]">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t("stats.distribution")}

@@ -5,9 +5,6 @@ import type { Roster, Clan, CreateRosterFormData, CloneRosterFormData } from '..
 import * as api from '../_lib/api';
 import { apiCache } from '@/lib/api-cache';
 
-const ROSTERS_CACHE_TTL = 60000;
-const CLANS_CACHE_TTL = 120000;
-
 function getRostersCacheKey(serverId: string): string {
   return `rosters-list-${serverId}`;
 }
@@ -53,13 +50,11 @@ export function useRosters(serverId: string): UseRostersResult {
       const [rostersData, clansData] = await Promise.all([
         apiCache.get(
           getRostersCacheKey(serverId),
-          () => api.fetchRosters(serverId),
-          ROSTERS_CACHE_TTL
+          () => api.fetchRosters(serverId)
         ),
         apiCache.get(
           getClansCacheKey(serverId),
-          () => api.fetchClans(serverId),
-          CLANS_CACHE_TTL
+          () => api.fetchClans(serverId)
         ),
       ]);
       setRosters(rostersData);
