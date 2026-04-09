@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Loader2, LayoutTemplate, Save } from "lucide-react";
+import { Check, Loader2, LayoutTemplate, Save } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
@@ -254,13 +254,22 @@ export default function PanelsPage() {
                     key={color}
                     onClick={() => setButtonColor(color)}
                     className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
+                      "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
                       buttonColor === color
-                        ? "border-primary"
+                        ? "border-primary bg-primary/10 ring-2 ring-primary/40"
                         : "border-transparent hover:border-border"
                     )}
                   >
-                    <div className={cn("h-6 w-10 rounded", COLOR_SWATCH[color])} />
+                    {buttonColor === color && (
+                      <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
+                    )}
+                    <div
+                      className={cn(
+                        "h-6 w-10 rounded",
+                        COLOR_SWATCH[color],
+                        buttonColor === color && "ring-2 ring-background/70"
+                      )}
+                    />
                     <span className="text-xs font-medium">{t(`color.${color}`)}</span>
                   </button>
                 ))}
