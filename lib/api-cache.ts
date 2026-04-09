@@ -101,4 +101,5 @@ export class ApiCache {
   }
 }
 
+export { ApiCache };
 export const apiCache = new ApiCache();
