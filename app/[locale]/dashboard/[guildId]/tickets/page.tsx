@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -394,18 +395,39 @@ function TicketsTab({
   const [selectedTicket, setSelectedTicket] = useState<OpenTicket | null>(null);
   const [manageOpen, setManageOpen] = useState(false);
 
+  const ticketsCacheKey = `open-tickets-${guildId}`;
+  const clansCacheKey = `clans-${guildId}`;
+
+  const fetchTicketsData = async (forceRefresh = false) => {
+    if (forceRefresh) {
+      apiCache.invalidate(ticketsCacheKey);
+      apiCache.invalidate(clansCacheKey);
+    }
+
+    return apiCache.get(ticketsCacheKey, async () => {
+      const [response, clansResponse] = await Promise.all([
+        apiClient.tickets.getOpenTickets(guildId),
+        apiCache.get(clansCacheKey, () => apiClient.servers.getServerClans(guildId)),
+      ]);
+
+      if (response.error) throw new Error(response.error);
+      if (clansResponse.error) throw new Error(clansResponse.error);
+
+      return {
+        tickets: response.data?.items ?? [],
+        clans: clansResponse.data ?? [],
+      };
+    });
+  };
+
   const fetchTickets = async (isRefresh = false) => {
     if (isRefresh) setIsRefreshing(true);
     else setIsLoading(true);
+
     try {
-      const [response, clansResponse] = await Promise.all([
-        apiClient.tickets.getOpenTickets(guildId),
-        apiClient.servers.getServerClans(guildId),
-      ]);
-      if (response.error) throw new Error(response.error);
-      if (clansResponse.error) throw new Error(clansResponse.error);
-      setAllTickets(response.data?.items ?? []);
-      setClans(clansResponse.data ?? []);
+      const data = await fetchTicketsData(isRefresh);
+      setAllTickets(data.tickets);
+      setClans(data.clans);
     } catch (err) {
       toast({
         title: tCommon("error"),
