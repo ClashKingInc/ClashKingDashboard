@@ -63,7 +63,9 @@ export default function PanelsPage() {
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isPanelLoading, setIsPanelLoading] = useState(true);
+  const [isEmbedsLoading, setIsEmbedsLoading] = useState(true);
+  const [isChannelsLoading, setIsChannelsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   // Form state
@@ -82,30 +84,50 @@ export default function PanelsPage() {
   const channelsCacheKey = `channels-${guildId}`;
 
   const load = useCallback(async () => {
-    try {
-      const [panelRes, embedsRes, channelsRes] = await Promise.all([
-        apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId)),
-        apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId)),
-        apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId)),
-      ]);
-      if (panelRes.status === 401 || panelRes.status === 403) {
-        router.push(`/${locale}/login`);
-        return;
+    const panelPromise = (async () => {
+      try {
+        const panelRes = await apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId));
+        if (panelRes.status === 401 || panelRes.status === 403) {
+          router.push(`/${locale}/login`);
+          return;
+        }
+        if (panelRes.data) {
+          const p = panelRes.data as ServerPanel;
+          setEmbedName(p.embed_name ?? "");
+          setButtons(p.buttons ?? []);
+          setButtonColor((p.button_color as ButtonColor) ?? "Grey");
+          setWelcomeChannel(p.welcome_channel ? String(p.welcome_channel) : "");
+        }
+      } catch (err) {
+        toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+      } finally {
+        setIsPanelLoading(false);
       }
-      if (panelRes.data) {
-        const p = panelRes.data as ServerPanel;
-        setEmbedName(p.embed_name ?? "");
-        setButtons(p.buttons ?? []);
-        setButtonColor((p.button_color as ButtonColor) ?? "Grey");
-        setWelcomeChannel(p.welcome_channel ? String(p.welcome_channel) : "");
+    })();
+
+    const embedsPromise = (async () => {
+      try {
+        const embedsRes = await apiCache.get(embedsCacheKey, () => apiClient.tickets.getEmbeds(guildId));
+        setEmbeds(embedsRes.data?.items ?? []);
+      } catch (err) {
+        toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+      } finally {
+        setIsEmbedsLoading(false);
       }
-      setEmbeds(embedsRes.data?.items ?? []);
-      setChannels(channelsRes.data ?? []);
-    } catch (err) {
-      toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
-    } finally {
-      setIsLoading(false);
-    }
+    })();
+
+    const channelsPromise = (async () => {
+      try {
+        const channelsRes = await apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId));
+        setChannels(channelsRes.data ?? []);
+      } catch (err) {
+        toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
+      } finally {
+        setIsChannelsLoading(false);
+      }
+    })();
+
+    await Promise.all([panelPromise, embedsPromise, channelsPromise]);
   }, [channelsCacheKey, embedsCacheKey, guildId, locale, panelCacheKey, router, toast, tCommon]);
 
   useEffect(() => {
@@ -144,20 +166,6 @@ export default function PanelsPage() {
   const embedPreview = selectedEmbed?.data ? extractFirstEmbed(selectedEmbed.data) : null;
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
 
-  if (isLoading) {
-    return (
-      <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
-        <div className="mx-auto max-w-4xl space-y-6">
-          <Skeleton className="h-16 w-full" />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Skeleton className="h-96 w-full" />
-            <Skeleton className="h-96 w-full" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-4xl space-y-6">
@@ -172,7 +180,7 @@ export default function PanelsPage() {
               <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
             </div>
           </div>
-          <Button onClick={handleSave} disabled={isSaving} className="shrink-0">
+          <Button onClick={handleSave} disabled={isSaving || isPanelLoading} className="shrink-0">
             {isSaving
               ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               : <Save className="mr-2 h-4 w-4" />}
@@ -192,16 +200,20 @@ export default function PanelsPage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("embedLabel")}</Label>
-                <select
-                  value={embedName}
-                  onChange={e => setEmbedName(e.target.value)}
-                  className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  <option value="">{t("noEmbed")}</option>
-                  {embeds.map(e => (
-                    <option key={e.name} value={e.name}>{e.name}</option>
-                  ))}
-                </select>
+                {isEmbedsLoading ? (
+                  <Skeleton className="h-9 w-full" />
+                ) : (
+                  <select
+                    value={embedName}
+                    onChange={e => setEmbedName(e.target.value)}
+                    className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="">{t("noEmbed")}</option>
+                    {embeds.map(e => (
+                      <option key={e.name} value={e.name}>{e.name}</option>
+                    ))}
+                  </select>
+                )}
               </div>
             </div>
 
@@ -211,35 +223,43 @@ export default function PanelsPage() {
                 <h2 className="text-sm font-semibold">{t("buttonsSection")}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">{t("buttonsHint")}</p>
               </div>
-              <div className="space-y-2">
-                {BUTTON_TYPES.map(type => {
-                  const meta = BUTTON_META[type];
-                  const active = buttons.includes(type);
-                  return (
-                    <label
-                      key={type}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors",
-                        active
-                          ? "border-primary/50 bg-primary/5"
-                          : "border-border/60 hover:bg-accent/40"
-                      )}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={active}
-                        onChange={() => toggleButton(type)}
-                        className="h-4 w-4 rounded accent-primary"
-                      />
-                      <span className="text-lg">{meta.emoji}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">{meta.label}</p>
-                        <p className="text-xs text-muted-foreground">{meta.desc}</p>
-                      </div>
-                    </label>
-                  );
-                })}
-              </div>
+              {isPanelLoading ? (
+                <div className="space-y-2">
+                  {Array.from({ length: BUTTON_TYPES.length }).map((_, idx) => (
+                    <Skeleton key={idx} className="h-[74px] w-full rounded-lg" />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {BUTTON_TYPES.map(type => {
+                    const meta = BUTTON_META[type];
+                    const active = buttons.includes(type);
+                    return (
+                      <label
+                        key={type}
+                        className={cn(
+                          "flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors",
+                          active
+                            ? "border-primary/50 bg-primary/5"
+                            : "border-border/60 hover:bg-accent/40"
+                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={active}
+                          onChange={() => toggleButton(type)}
+                          className="h-4 w-4 rounded accent-primary"
+                        />
+                        <span className="text-lg">{meta.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium">{meta.label}</p>
+                          <p className="text-xs text-muted-foreground">{meta.desc}</p>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Color */}
@@ -248,32 +268,40 @@ export default function PanelsPage() {
                 <h2 className="text-sm font-semibold">{t("colorSection")}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">{t("colorHint")}</p>
               </div>
-              <div className="flex gap-3">
-                {BUTTON_COLORS.map(color => (
-                  <button
-                    key={color}
-                    onClick={() => setButtonColor(color)}
-                    className={cn(
-                      "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
-                      buttonColor === color
-                        ? "border-primary bg-primary/10 ring-2 ring-primary/40"
-                        : "border-transparent hover:border-border"
-                    )}
-                  >
-                    {buttonColor === color && (
-                      <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
-                    )}
-                    <div
+              {isPanelLoading ? (
+                <div className="flex gap-3">
+                  {Array.from({ length: BUTTON_COLORS.length }).map((_, idx) => (
+                    <Skeleton key={idx} className="h-[72px] w-[74px] rounded-lg" />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  {BUTTON_COLORS.map(color => (
+                    <button
+                      key={color}
+                      onClick={() => setButtonColor(color)}
                       className={cn(
-                        "h-6 w-10 rounded",
-                        COLOR_SWATCH[color],
-                        buttonColor === color && "ring-2 ring-background/70"
+                        "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
+                        buttonColor === color
+                          ? "border-primary bg-primary/10 ring-2 ring-primary/40"
+                          : "border-transparent hover:border-border"
                       )}
-                    />
-                    <span className="text-xs font-medium">{t(`color.${color}`)}</span>
-                  </button>
-                ))}
-              </div>
+                    >
+                      {buttonColor === color && (
+                        <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
+                      )}
+                      <div
+                        className={cn(
+                          "h-6 w-10 rounded",
+                          COLOR_SWATCH[color],
+                          buttonColor === color && "ring-2 ring-background/70"
+                        )}
+                      />
+                      <span className="text-xs font-medium">{t(`color.${color}`)}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Welcome channel */}
@@ -284,13 +312,17 @@ export default function PanelsPage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("welcomeChannel")}</Label>
-                <ChannelCombobox
-                  channels={channels}
-                  value={welcomeChannel}
-                  onValueChange={setWelcomeChannel}
-                  placeholder={t("welcomeChannelPlaceholder")}
-                  showDisabled={false}
-                />
+                {isChannelsLoading ? (
+                  <Skeleton className="h-10 w-full" />
+                ) : (
+                  <ChannelCombobox
+                    channels={channels}
+                    value={welcomeChannel}
+                    onValueChange={setWelcomeChannel}
+                    placeholder={t("welcomeChannelPlaceholder")}
+                    showDisabled={false}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -313,7 +345,9 @@ export default function PanelsPage() {
                 </div>
 
                 {/* Embed preview */}
-                {embedPreview ? (
+                {isEmbedsLoading ? (
+                  <Skeleton className="h-40 w-full rounded-md" />
+                ) : embedPreview ? (
                   <DiscordEmbedPreview embed={embedPreview} />
                 ) : (
                   <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
@@ -322,7 +356,13 @@ export default function PanelsPage() {
                 )}
 
                 {/* Buttons preview */}
-                {buttons.length > 0 ? (
+                {isPanelLoading ? (
+                  <div className="flex flex-wrap gap-2">
+                    {Array.from({ length: 3 }).map((_, idx) => (
+                      <Skeleton key={idx} className="h-8 w-28 rounded-md bg-white/10" />
+                    ))}
+                  </div>
+                ) : buttons.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {buttons.map(type => {
                       const meta = BUTTON_META[type];
