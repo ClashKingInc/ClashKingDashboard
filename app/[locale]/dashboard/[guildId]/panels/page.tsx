@@ -226,7 +226,17 @@ export default function PanelsPage() {
               {isPanelLoading ? (
                 <div className="space-y-2">
                   {Array.from({ length: BUTTON_TYPES.length }).map((_, idx) => (
-                    <Skeleton key={idx} className="h-[74px] w-full rounded-lg" />
+                    <div
+                      key={idx}
+                      className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3"
+                    >
+                      <Skeleton className="h-4 w-4 rounded-sm" />
+                      <Skeleton className="h-5 w-5 rounded-sm" />
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        <Skeleton className="h-4 w-28" />
+                        <Skeleton className="h-3 w-52 max-w-full" />
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
