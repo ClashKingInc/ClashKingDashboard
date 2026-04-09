@@ -8,7 +8,7 @@ interface GiveawaysPageProps {
   }>;
 }
 
-export default async function GiveawaysPage({ params }: GiveawaysPageProps) {
+export default async function GiveawaysPage({ params }: Readonly<GiveawaysPageProps>) {
   const { guildId, locale } = await params;
   const t = await getTranslations("GiveawaysPage");
 

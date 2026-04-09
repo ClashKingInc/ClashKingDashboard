@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
+import type { Components } from "react-markdown";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,8 +48,6 @@ const buildEmptyState = (t: (key: string) => string): FormState => ({
   rolesMode: "none", roles: [], imageFile: null, imagePreview: null, removeImage: false, boosters: [],
 });
 
-const toInputDate = (iso: string) => !iso ? "" : new Date(new Date(iso).getTime() - new Date(iso).getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-const fmt = (value: string) => !value ? "-" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 const statusVariant = (status: Giveaway["status"]): "default" | "secondary" | "outline" => {
   if (status === "ongoing") return "default";
   if (status === "scheduled") return "secondary";
@@ -82,6 +81,79 @@ interface GiveawaysClientProps {
   };
 }
 
+type TranslationFn = (key: string, values?: Record<string, unknown>) => string;
+
+const MARKDOWN_COMPONENTS: Components = {
+  p: ({ children }) => <p className="leading-6 [&:not(:first-child)]:mt-2">{children}</p>,
+  strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+  em: ({ children }) => <em className="italic">{children}</em>,
+  ul: ({ children }) => <ul className="ml-5 list-disc space-y-1">{children}</ul>,
+  ol: ({ children }) => <ol className="ml-5 list-decimal space-y-1">{children}</ol>,
+  a: ({ href, children }) => <a href={href} className="text-sky-300 underline" target="_blank" rel="noreferrer">{children}</a>,
+  code: ({ children }) => <code className="rounded bg-white/10 px-1 py-0.5 text-[0.9em]">{children}</code>,
+};
+
+function renderMarkdown(value: string, fallback?: string) {
+  return <ReactMarkdown components={MARKDOWN_COMPONENTS}>{(value || fallback || "").replaceAll("\n", "  \n")}</ReactMarkdown>;
+}
+
+function toInputDate(iso: string) {
+  if (iso) {
+    return new Date(new Date(iso).getTime() - new Date(iso).getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  }
+  return "";
+}
+
+function fmt(value: string) {
+  if (value) {
+    return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+  }
+  return "-";
+}
+
+function getPreviewStatus(effectiveStart: Date | null, effectiveEnd: Date | null): Giveaway["status"] {
+  if (effectiveStart === null) return "scheduled";
+  const now = Date.now();
+  if (effectiveEnd && effectiveEnd.getTime() <= now) return "ended";
+  if (effectiveStart.getTime() <= now) return "ongoing";
+  return "scheduled";
+}
+
+function validateForm(form: FormState, t: TranslationFn) {
+  if (form.prize.trim().length === 0) throw new Error(t("validation.prizeRequired"));
+  if (form.channelId.length === 0) throw new Error(t("validation.channelRequired"));
+  if (!form.startNow && form.startTime.length === 0) throw new Error(t("validation.startTimeRequired"));
+  if (form.endTime.length === 0) throw new Error(t("validation.endTimeRequired"));
+  if (!form.startNow && form.startTime && new Date(form.endTime).getTime() <= new Date(form.startTime).getTime()) {
+    throw new Error(t("validation.endAfterStart"));
+  }
+}
+
+function buildGiveawayBody(form: FormState) {
+  const body = new FormData();
+  body.append("prize", form.prize.trim());
+  if (form.startNow) {
+    body.append("now", "true");
+  } else {
+    body.append("start_time", new Date(form.startTime).toISOString());
+  }
+  body.append("end_time", new Date(form.endTime).toISOString());
+  body.append("winners", form.winners || "1");
+  body.append("channel_id", form.channelId);
+  body.append("mentions_json", JSON.stringify(form.mentions));
+  body.append("roles_json", JSON.stringify(form.rolesMode === "none" ? [] : form.roles));
+  body.append("boosters_json", JSON.stringify(form.boosters.filter((b) => b.roles.length > 0).map((b) => ({ value: b.value, roles: b.roles }))));
+  body.append("roles_mode", form.rolesMode);
+  body.append("text_above_embed", form.textAbove);
+  body.append("text_in_embed", form.textEmbed);
+  body.append("text_on_end", form.textEnd);
+  if (form.profileRequired) body.append("profile_picture_required", "true");
+  if (form.accountRequired) body.append("coc_account_required", "true");
+  if (form.removeImage) body.append("remove_image", "true");
+  if (form.imageFile) body.append("image", form.imageFile);
+  return body;
+}
+
 function fmtRelative(iso: string): string {
   const diff = new Date(iso).getTime() - Date.now();
   const abs = Math.abs(diff);
@@ -91,6 +163,254 @@ function fmtRelative(iso: string): string {
   if (abs < 86_400_000) { const h = Math.floor(abs / 3_600_000); return past ? `${h}h ago` : `in ${h}h`; }
   const d = Math.floor(abs / 86_400_000);
   return past ? `${d}d ago` : `in ${d}d`;
+}
+
+interface GiveawaysTableProps {
+  items: Giveaway[];
+  tab: "ongoing" | "upcoming" | "ended";
+  shownEnded: number;
+  tableLoading: boolean;
+  guildId: string;
+  t: TranslationFn;
+  tCommon: TranslationFn;
+  channelName: (id: string | null) => string | null;
+  onOpenCreate: () => void;
+  onOpenEdit: (giveaway: Giveaway) => void;
+  onDuplicate: (giveaway: Giveaway) => void;
+  onDelete: (id: string) => void;
+  onOpenReroll: (giveaway: Giveaway) => void;
+  onShowMore: () => void;
+}
+
+function GiveawaysTable({
+  items,
+  tab,
+  shownEnded,
+  tableLoading,
+  guildId,
+  t,
+  tCommon,
+  channelName,
+  onOpenCreate,
+  onOpenEdit,
+  onDuplicate,
+  onDelete,
+  onOpenReroll,
+  onShowMore,
+}: Readonly<GiveawaysTableProps>) {
+  const isEnded = tab === "ended";
+  const displayItems = isEnded ? items.slice(0, shownEnded) : items;
+  const hasMore = isEnded && items.length > shownEnded;
+
+  if (items.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border p-10 text-center">
+        <Gift className="h-8 w-8 text-muted-foreground/40" />
+        <div>
+          <p className="text-sm font-medium text-foreground">{t("emptyTab.title")}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t(`emptyTab.${tab}`)}</p>
+        </div>
+        {!isEnded && (
+          <Button size="sm" onClick={onOpenCreate}>
+            <Plus className="mr-2 h-4 w-4" />{t("create")}
+          </Button>
+        )}
+      </div>
+    );
+  }
+
+  const activeWinnersLabel = (g: Giveaway) => {
+    const active = g.winners_list.filter((w) => w.status === "winner");
+    const rerolled = g.winners_list.filter((w) => w.status === "rerolled");
+    if (active.length === 0 && rerolled.length === 0) return null;
+    const shown = active.slice(0, 3);
+    const overflow = active.length - shown.length;
+    return (
+      <div className="flex flex-wrap items-center gap-1">
+        {shown.map((w) => (
+          <span key={w.user_id} className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-medium text-green-400 ring-1 ring-green-500/20">
+            <Trophy className="h-2.5 w-2.5" />{w.username ? `@${w.username}` : w.user_id}
+          </span>
+        ))}
+        {overflow > 0 && (
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-default rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">+{overflow}</span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <div className="space-y-1">
+                  {active.slice(3).map((w) => <div key={w.user_id}>{w.username ? `@${w.username}` : w.user_id}</div>)}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+        {rerolled.length > 0 && (
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-default rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground line-through">{t("table.rerolledCount", { count: rerolled.length })}</span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <div className="space-y-1">
+                  {rerolled.map((w) => <div key={w.user_id} className="line-through opacity-60">{w.username ? `@${w.username}` : w.user_id}</div>)}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className={cn("space-y-3", tableLoading && "pointer-events-none opacity-50 transition-opacity")}>
+      <div className="overflow-x-auto rounded-xl border border-border bg-card">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/40">
+            <tr className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              <th className="px-4 py-3">{t("table.giveaway")}</th>
+              <th className="px-4 py-3">{t("table.channel")}</th>
+              <th className="px-4 py-3">{isEnded ? t("table.winnersHeader") : t("table.entries")}</th>
+              <th className="px-4 py-3">{t("table.timing")}</th>
+              <th className="px-4 py-3" />
+            </tr>
+          </thead>
+          <tbody>
+            {displayItems.map((g) => {
+              const ch = channelName(g.channel_id);
+              return (
+                <tr key={g.id} className="border-t border-border/60 hover:bg-muted/20 transition-colors align-middle">
+                  <td className="px-4 py-3 max-w-xs">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-medium text-foreground truncate">{g.prize}</span>
+                      {tab === "ongoing" && g.updated && (
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-400 text-[10px] cursor-default shrink-0">
+                                {t("table.pendingUpdate")}
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>{t("table.pendingUpdateHelp")}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                    </div>
+                    <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1"><Trophy className="h-3 w-3" />{t("table.winners", { count: g.winners })}</span>
+                      {g.profile_picture_required && (
+                        <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><User className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("preview.profileRequired")}</TooltipContent></Tooltip></TooltipProvider>
+                      )}
+                      {g.coc_account_required && (
+                        <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><Sword className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("preview.accountRequired")}</TooltipContent></Tooltip></TooltipProvider>
+                      )}
+                      {g.boosters.length > 0 && (
+                        <TooltipProvider delayDuration={200}><Tooltip><TooltipTrigger asChild><CheckCircle2 className="h-3 w-3" /></TooltipTrigger><TooltipContent>{t("table.boosters", { count: g.boosters.length })}</TooltipContent></Tooltip></TooltipProvider>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">
+                    {ch ? (
+                      <span>{ch}</span>
+                    ) : (
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="flex items-center gap-1 text-destructive/60"><AlertCircle className="h-3.5 w-3.5" />{t("table.noChannel")}</span>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("table.noChannelHelp")}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    {isEnded ? (activeWinnersLabel(g) ?? <span className="text-xs text-muted-foreground">—</span>) : (
+                      <span className="flex items-center gap-1.5 text-sm text-muted-foreground tabular-nums"><Users className="h-3.5 w-3.5 shrink-0" />{g.entry_count}</span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {tab === "ongoing" && <div><div className="text-sm font-medium text-green-500">{fmtRelative(g.end_time)}</div><div className="text-xs text-muted-foreground">{fmt(g.end_time)}</div></div>}
+                    {tab === "upcoming" && <div><div className="text-sm text-foreground">{fmtRelative(g.start_time)}</div><div className="text-xs text-muted-foreground">{fmt(g.start_time)}</div></div>}
+                    {tab === "ended" && <div><div className="text-sm text-muted-foreground">{fmt(g.end_time)}</div><div className="text-xs text-muted-foreground/60">{fmtRelative(g.end_time)}</div></div>}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1 justify-end">
+                      {g.message_id && g.channel_id && (
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => window.open(`https://discord.com/channels/${guildId}/${g.channel_id}/${g.message_id}`, "_blank", "noreferrer")}>
+                                <ExternalLink className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>{t("table.viewInDiscord")}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                      {isEnded && g.winners_list.some((w) => w.status === "winner") && (
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onOpenReroll(g)}>
+                                <RefreshCw className="h-4 w-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>{t("table.reroll")}</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onOpenEdit(g)}>
+                              {isEnded ? <Eye className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>{isEnded ? tCommon("view") : tCommon("edit")}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDuplicate(g)}>
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("table.duplicate")}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => onDelete(g.id)}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>{tCommon("delete")}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      {isEnded && (
+        <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
+          <span>{t("table.showingEnded", { shown: displayItems.length, total: items.length })}</span>
+          {hasMore && (
+            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={onShowMore}>
+              {t("table.showMore", { count: Math.min(ENDED_LIMIT, items.length - shownEnded) })}
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function GiveawaysClient({
@@ -103,7 +423,7 @@ export default function GiveawaysClient({
   listTitle,
   listDescription,
   tabs,
-}: GiveawaysClientProps) { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
+}: Readonly<GiveawaysClientProps>) { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const router = useRouter();
   const { toast } = useToast();
   const t = useTranslations("GiveawaysPage");
@@ -179,10 +499,13 @@ export default function GiveawaysClient({
     setForm(buildEmptyState(t)); setFormModified(false); setActiveFormTab("general");
   };
 
-  const handleDialogOpenChange = (open: boolean) => {
-    if (!open && formModified) setDiscardConfirmOpen(true);
-    else if (!open) reset();
-    else setDialogOpen(true);
+  const openDialog = () => setDialogOpen(true);
+  const closeDialog = () => {
+    if (formModified) {
+      setDiscardConfirmOpen(true);
+      return;
+    }
+    reset();
   };
 
   const openCreate = () => {
@@ -194,22 +517,10 @@ export default function GiveawaysClient({
   const selectedChannel = channels.find((c) => c.id === form.channelId);
   const effectiveStart = form.startNow ? new Date() : (form.startTime ? new Date(form.startTime) : null);
   const effectiveEnd = form.endTime ? new Date(form.endTime) : null;
-  const previewStatus: Giveaway["status"] = !effectiveStart ? "scheduled" : effectiveEnd && effectiveEnd.getTime() <= Date.now() ? "ended" : effectiveStart.getTime() <= Date.now() ? "ongoing" : "scheduled";
+  const previewStatus: Giveaway["status"] = getPreviewStatus(effectiveStart, effectiveEnd);
   const mentionLabels = form.mentions.map((id) => `@${roles.find((role) => role.id === id)?.name || id}`);
   const roleRestrictionLabels = form.roles.map((id) => `@${roles.find((role) => role.id === id)?.name || id}`);
   const previewParticipantCount = editingEntryCount;
-  const markdownComponents = {
-    p: ({ children }: any) => <p className="leading-6 [&:not(:first-child)]:mt-2">{children}</p>,
-    strong: ({ children }: any) => <strong className="font-semibold text-white">{children}</strong>,
-    em: ({ children }: any) => <em className="italic">{children}</em>,
-    ul: ({ children }: any) => <ul className="ml-5 list-disc space-y-1">{children}</ul>,
-    ol: ({ children }: any) => <ol className="ml-5 list-decimal space-y-1">{children}</ol>,
-    a: ({ href, children }: any) => <a href={href} className="text-sky-300 underline" target="_blank" rel="noreferrer">{children}</a>,
-    code: ({ children }: any) => <code className="rounded bg-white/10 px-1 py-0.5 text-[0.9em]">{children}</code>,
-  };
-  const renderMarkdown = (value: string, fallback?: string) => (
-    <ReactMarkdown components={markdownComponents}>{(value || fallback || "").replace(/\n/g, "  \n")}</ReactMarkdown>
-  );
   const discordTimestamp = effectiveEnd ? fmt(effectiveEnd.toISOString()) : "-";
   const winnerCount = Number(form.winners || 1);
   const winnersCount = Number(form.winners);
@@ -275,32 +586,20 @@ export default function GiveawaysClient({
   const addBooster = () => updateForm((s) => ({ ...s, boosters: [...s.boosters, { id: crypto.randomUUID(), value: 1.25, roles: [] }] }));
   const updateBooster = (index: number, next: Booster) => updateForm((s) => ({ ...s, boosters: s.boosters.map((b, i) => i === index ? next : b) }));
   const removeBooster = (index: number) => updateForm((s) => ({ ...s, boosters: s.boosters.filter((_, i) => i !== index) }));
+  const openRerollDialog = (giveaway: Giveaway) => {
+    setRerollTarget(giveaway);
+    setRerollSelected([]);
+    setRerollDialogOpen(true);
+  };
+  const toggleRerollSelection = (userId: string, checked: boolean) => {
+    setRerollSelected((prev) => (checked ? [...prev, userId] : prev.filter((id) => id !== userId)));
+  };
 
   const submit = async () => {
     try {
-      if (!form.prize.trim()) throw new Error(t("validation.prizeRequired"));
-      if (!form.channelId) throw new Error(t("validation.channelRequired"));
-      if (!form.startNow && !form.startTime) throw new Error(t("validation.startTimeRequired"));
-      if (!form.endTime) throw new Error(t("validation.endTimeRequired"));
-      if (!form.startNow && form.startTime && new Date(form.endTime).getTime() <= new Date(form.startTime).getTime()) throw new Error(t("validation.endAfterStart"));
+      validateForm(form, t);
       setSaving(true);
-      const body = new FormData();
-      body.append("prize", form.prize.trim());
-      if (form.startNow) body.append("now", "true"); else body.append("start_time", new Date(form.startTime).toISOString());
-      body.append("end_time", new Date(form.endTime).toISOString());
-      body.append("winners", form.winners || "1");
-      body.append("channel_id", form.channelId);
-      body.append("mentions_json", JSON.stringify(form.mentions));
-      body.append("roles_json", JSON.stringify(form.rolesMode === "none" ? [] : form.roles));
-      body.append("boosters_json", JSON.stringify(form.boosters.filter((b) => b.roles.length > 0).map((b) => ({ value: b.value, roles: b.roles }))));
-      body.append("roles_mode", form.rolesMode);
-      body.append("text_above_embed", form.textAbove);
-      body.append("text_in_embed", form.textEmbed);
-      body.append("text_on_end", form.textEnd);
-      if (form.profileRequired) body.append("profile_picture_required", "true");
-      if (form.accountRequired) body.append("coc_account_required", "true");
-      if (form.removeImage) body.append("remove_image", "true");
-      if (form.imageFile) body.append("image", form.imageFile);
+      const body = buildGiveawayBody(form);
       const res = editingId
         ? await apiClient.servers.updateGiveaway(guildId, editingId, body)
         : await apiClient.servers.createGiveaway(guildId, body);
@@ -337,274 +636,6 @@ export default function GiveawaysClient({
     } catch (error) {
       toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.rerollError"), variant: "destructive" });
     } finally { setRerolling(false); }
-  };
-
-  const table = (items: Giveaway[], tab: "ongoing" | "upcoming" | "ended") => {
-    const isEnded = tab === "ended";
-    const displayItems = isEnded ? items.slice(0, shownEnded) : items;
-    const hasMore = isEnded && items.length > shownEnded;
-
-    if (items.length === 0) return (
-      <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border p-10 text-center">
-        <Gift className="h-8 w-8 text-muted-foreground/40" />
-        <div>
-          <p className="text-sm font-medium text-foreground">{t("emptyTab.title")}</p>
-          <p className="mt-1 text-xs text-muted-foreground">{t(`emptyTab.${tab}`)}</p>
-        </div>
-        {!isEnded && (
-          <Button size="sm" onClick={openCreate}>
-            <Plus className="mr-2 h-4 w-4" />{t("create")}
-          </Button>
-        )}
-      </div>
-    );
-
-    const activeWinnersLabel = (g: Giveaway) => {
-      const active = g.winners_list.filter((w) => w.status === "winner");
-      const rerolled = g.winners_list.filter((w) => w.status === "rerolled");
-      if (active.length === 0 && rerolled.length === 0) return null;
-      const shown = active.slice(0, 3);
-      const overflow = active.length - shown.length;
-      return (
-        <div className="flex flex-wrap items-center gap-1">
-          {shown.map((w) => (
-            <span key={w.user_id} className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-medium text-green-400 ring-1 ring-green-500/20">
-              <Trophy className="h-2.5 w-2.5" />{w.username ? `@${w.username}` : w.user_id}
-            </span>
-          ))}
-          {overflow > 0 && (
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-default rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">+{overflow}</span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div className="space-y-1">
-                    {active.slice(3).map((w) => <div key={w.user_id}>{w.username ? `@${w.username}` : w.user_id}</div>)}
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          {rerolled.length > 0 && (
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="cursor-default rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground line-through">{t("table.rerolledCount", { count: rerolled.length })}</span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div className="space-y-1">
-                    {rerolled.map((w) => <div key={w.user_id} className="line-through opacity-60">{w.username ? `@${w.username}` : w.user_id}</div>)}
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
-      );
-    };
-
-    return (
-      <div className={cn("space-y-3", tableLoading && "pointer-events-none opacity-50 transition-opacity")}>
-        <div className="overflow-x-auto rounded-xl border border-border bg-card">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/40">
-              <tr className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                <th className="px-4 py-3">{t("table.giveaway")}</th>
-                <th className="px-4 py-3">{t("table.channel")}</th>
-                <th className="px-4 py-3">{isEnded ? t("table.winnersHeader") : t("table.entries")}</th>
-                <th className="px-4 py-3">{t("table.timing")}</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {displayItems.map((g) => {
-                const ch = channelName(g.channel_id);
-                return (
-                  <tr key={g.id} className="border-t border-border/60 hover:bg-muted/20 transition-colors align-middle">
-                    {/* Giveaway */}
-                    <td className="px-4 py-3 max-w-xs">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-foreground truncate">{g.prize}</span>
-                        {tab === "ongoing" && g.updated && (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Badge variant="outline" className="border-amber-500/50 bg-amber-500/10 text-amber-400 text-[10px] cursor-default shrink-0">
-                                  {t("table.pendingUpdate")}
-                                </Badge>
-                              </TooltipTrigger>
-                              <TooltipContent>{t("table.pendingUpdateHelp")}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                      </div>
-                      <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1"><Trophy className="h-3 w-3" />{t("table.winners", { count: g.winners })}</span>
-                        {g.profile_picture_required && (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild><User className="h-3 w-3" /></TooltipTrigger>
-                              <TooltipContent>{t("preview.profileRequired")}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        {g.coc_account_required && (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild><Sword className="h-3 w-3" /></TooltipTrigger>
-                              <TooltipContent>{t("preview.accountRequired")}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        {g.boosters.length > 0 && (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild><CheckCircle2 className="h-3 w-3" /></TooltipTrigger>
-                              <TooltipContent>{t("table.boosters", { count: g.boosters.length })}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                      </div>
-                    </td>
-                    {/* Channel */}
-                    <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">
-                      {ch ? (
-                        <span>{ch}</span>
-                      ) : (
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span className="flex items-center gap-1 text-destructive/60">
-                                <AlertCircle className="h-3.5 w-3.5" />{t("table.noChannel")}
-                              </span>
-                            </TooltipTrigger>
-                            <TooltipContent>{t("table.noChannelHelp")}</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                    </td>
-                    {/* Entries or Winners */}
-                    <td className="px-4 py-3">
-                      {isEnded ? (
-                        activeWinnersLabel(g) ?? <span className="text-xs text-muted-foreground">—</span>
-                      ) : (
-                        <span className="flex items-center gap-1.5 text-sm text-muted-foreground tabular-nums">
-                          <Users className="h-3.5 w-3.5 shrink-0" />{g.entry_count}
-                        </span>
-                      )}
-                    </td>
-                    {/* Timing */}
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      {tab === "ongoing" && (
-                        <div>
-                          <div className="text-sm font-medium text-green-500">{fmtRelative(g.end_time)}</div>
-                          <div className="text-xs text-muted-foreground">{fmt(g.end_time)}</div>
-                        </div>
-                      )}
-                      {tab === "upcoming" && (
-                        <div>
-                          <div className="text-sm text-foreground">{fmtRelative(g.start_time)}</div>
-                          <div className="text-xs text-muted-foreground">{fmt(g.start_time)}</div>
-                        </div>
-                      )}
-                      {tab === "ended" && (
-                        <div>
-                          <div className="text-sm text-muted-foreground">{fmt(g.end_time)}</div>
-                          <div className="text-xs text-muted-foreground/60">{fmtRelative(g.end_time)}</div>
-                        </div>
-                      )}
-                    </td>
-                    {/* Actions */}
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 justify-end">
-                        {g.message_id && g.channel_id && (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => window.open(`https://discord.com/channels/${guildId}/${g.channel_id}/${g.message_id}`, "_blank", "noreferrer")}>
-                                  <ExternalLink className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>{t("table.viewInDiscord")}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        {isEnded && g.winners_list.some((w) => w.status === "winner") && (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setRerollTarget(g); setRerollSelected([]); setRerollDialogOpen(true); }}>
-                                  <RefreshCw className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>{t("table.reroll")}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        {isEnded ? (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(g)}>
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>{tCommon("view")}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        ) : (
-                          <TooltipProvider delayDuration={200}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(g)}>
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>{tCommon("edit")}</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => duplicate(g)}>
-                                <Copy className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>{t("table.duplicate")}</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => setDeleteConfirmId(g.id)}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>{tCommon("delete")}</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        {isEnded && (
-          <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
-            <span>{t("table.showingEnded", { shown: displayItems.length, total: items.length })}</span>
-            {hasMore && (
-              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setShownEnded((n) => n + ENDED_LIMIT)}>
-                {t("table.showMore", { count: Math.min(ENDED_LIMIT, items.length - shownEnded) })}
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
-    );
   };
 
   return (
@@ -713,9 +744,60 @@ export default function GiveawaysClient({
                     <TabsTrigger value="upcoming">{t("tabs.upcoming")}{giveaways.upcoming.length > 0 && <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-500">{giveaways.upcoming.length}</span>}</TabsTrigger>
                     <TabsTrigger value="ended">{t("tabs.ended")}{giveaways.ended.length > 0 && <span className="ml-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">{giveaways.ended.length}</span>}</TabsTrigger>
                   </TabsList>
-                  <TabsContent value="ongoing" className="mt-6">{table(giveaways.ongoing, "ongoing")}</TabsContent>
-                  <TabsContent value="upcoming" className="mt-6">{table(giveaways.upcoming, "upcoming")}</TabsContent>
-                  <TabsContent value="ended" className="mt-6">{table(giveaways.ended, "ended")}</TabsContent>
+                  <TabsContent value="ongoing" className="mt-6">
+                    <GiveawaysTable
+                      items={giveaways.ongoing}
+                      tab="ongoing"
+                      shownEnded={shownEnded}
+                      tableLoading={tableLoading}
+                      guildId={guildId}
+                      t={t}
+                      tCommon={tCommon}
+                      channelName={channelName}
+                      onOpenCreate={openCreate}
+                      onOpenEdit={openEdit}
+                      onDuplicate={duplicate}
+                      onDelete={setDeleteConfirmId}
+                      onOpenReroll={openRerollDialog}
+                      onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
+                    />
+                  </TabsContent>
+                  <TabsContent value="upcoming" className="mt-6">
+                    <GiveawaysTable
+                      items={giveaways.upcoming}
+                      tab="upcoming"
+                      shownEnded={shownEnded}
+                      tableLoading={tableLoading}
+                      guildId={guildId}
+                      t={t}
+                      tCommon={tCommon}
+                      channelName={channelName}
+                      onOpenCreate={openCreate}
+                      onOpenEdit={openEdit}
+                      onDuplicate={duplicate}
+                      onDelete={setDeleteConfirmId}
+                      onOpenReroll={openRerollDialog}
+                      onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
+                    />
+                  </TabsContent>
+                  <TabsContent value="ended" className="mt-6">
+                    <GiveawaysTable
+                      items={giveaways.ended}
+                      tab="ended"
+                      shownEnded={shownEnded}
+                      tableLoading={tableLoading}
+                      guildId={guildId}
+                      t={t}
+                      tCommon={tCommon}
+                      channelName={channelName}
+                      onOpenCreate={openCreate}
+                      onOpenEdit={openEdit}
+                      onDuplicate={duplicate}
+                      onDelete={setDeleteConfirmId}
+                      onOpenReroll={openRerollDialog}
+                      onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
+                    />
+                  </TabsContent>
                 </Tabs>
               </CardContent>
             </Card>
@@ -723,7 +805,16 @@ export default function GiveawaysClient({
         )}
 
         {/* Create / Edit Dialog */}
-        <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
+        <Dialog
+          open={dialogOpen}
+          onOpenChange={(open) => {
+            if (open) {
+              openDialog();
+              return;
+            }
+            closeDialog();
+          }}
+        >
           <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
             <DialogHeader>
               <DialogTitle>{editingId ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
@@ -766,7 +857,7 @@ export default function GiveawaysClient({
                   <div className="space-y-2">
                     <Label>{t("form.startTime")}<span className="ml-1 text-destructive">*</span></Label>
                     <div className="flex items-center gap-2">
-                      <Checkbox id="startNow" checked={form.startNow} onCheckedChange={(checked) => updateForm((s) => ({ ...s, startNow: Boolean(checked), startTime: Boolean(checked) ? "" : s.startTime }))} />
+                      <Checkbox id="startNow" checked={form.startNow} onCheckedChange={(checked) => updateForm((s) => ({ ...s, startNow: checked === true, startTime: checked === true ? "" : s.startTime }))} />
                       <Label htmlFor="startNow" className="cursor-pointer font-normal">{t("form.startNow")}</Label>
                     </div>
                     {!form.startNow && <Input className="mt-2" type="datetime-local" value={form.startTime} onChange={(e) => updateForm((s) => ({ ...s, startTime: e.target.value }))} />}
@@ -837,11 +928,11 @@ export default function GiveawaysClient({
                 <div className="mt-3 space-y-3">
                   <Label>{t("form.requirements")}</Label>
                   <div className="flex items-center gap-2">
-                    <Checkbox id="profileRequired" checked={form.profileRequired} onCheckedChange={(checked) => updateForm((s) => ({ ...s, profileRequired: Boolean(checked) }))} />
+                    <Checkbox id="profileRequired" checked={form.profileRequired} onCheckedChange={(checked) => updateForm((s) => ({ ...s, profileRequired: checked === true }))} />
                     <Label htmlFor="profileRequired" className="cursor-pointer font-normal">{t("form.profilePictureRequired")}</Label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Checkbox id="accountRequired" checked={form.accountRequired} onCheckedChange={(checked) => updateForm((s) => ({ ...s, accountRequired: Boolean(checked) }))} />
+                    <Checkbox id="accountRequired" checked={form.accountRequired} onCheckedChange={(checked) => updateForm((s) => ({ ...s, accountRequired: checked === true }))} />
                     <Label htmlFor="accountRequired" className="cursor-pointer font-normal">{t("form.cocAccountRequired")}</Label>
                   </div>
                 </div>
@@ -860,7 +951,7 @@ export default function GiveawaysClient({
                   }} />
                   {form.imageFile && <p className="text-xs text-muted-foreground">{(form.imageFile.size / 1024 / 1024).toFixed(2)} MB</p>}
                   <div className="flex items-center gap-2">
-                    <Checkbox id="removeImage" checked={form.removeImage} onCheckedChange={(checked) => updateForm((s) => ({ ...s, removeImage: Boolean(checked), imageFile: Boolean(checked) ? null : s.imageFile, imagePreview: Boolean(checked) ? null : s.imagePreview }))} />
+                    <Checkbox id="removeImage" checked={form.removeImage} onCheckedChange={(checked) => updateForm((s) => ({ ...s, removeImage: checked === true, imageFile: checked === true ? null : s.imageFile, imagePreview: checked === true ? null : s.imagePreview }))} />
                     <Label htmlFor="removeImage" className="cursor-pointer font-normal">{t("form.removeImage")}</Label>
                   </div>
                   {form.imagePreview && !form.removeImage && <Image src={form.imagePreview} alt={t("form.imagePreviewAlt")} width={640} height={240} unoptimized className="max-h-40 w-full rounded-lg border border-border object-cover" />}
@@ -906,7 +997,7 @@ export default function GiveawaysClient({
             </Tabs>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => handleDialogOpenChange(false)} disabled={saving}>{tCommon("cancel")}</Button>
+              <Button variant="outline" onClick={closeDialog} disabled={saving}>{tCommon("cancel")}</Button>
               <Button onClick={submit} disabled={saving || !hasRequiredFields}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {editingId ? t("dialog.saveChanges") : t("dialog.create")}
@@ -963,7 +1054,7 @@ export default function GiveawaysClient({
                       <Checkbox
                         id={`reroll-${w.user_id}`}
                         checked={rerollSelected.includes(w.user_id)}
-                        onCheckedChange={(checked) => setRerollSelected((prev) => checked ? [...prev, w.user_id] : prev.filter((id) => id !== w.user_id))}
+                        onCheckedChange={(checked) => toggleRerollSelection(w.user_id, checked === true)}
                       />
                       <Label htmlFor={`reroll-${w.user_id}`} className="cursor-pointer text-sm">{w.username ? `@${w.username}` : w.user_id}</Label>
                     </div>
