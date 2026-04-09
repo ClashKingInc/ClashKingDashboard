@@ -275,9 +275,12 @@
         "total": "Totaal aantal bans",
         "recent": "Recente bans (7 dagen)",
         "commonReason": "Meest voorkomende reden",
+        "activeOnServer": "Actieve bans op deze server",
+        "last7Days": "In de afgelopen 7 dagen",
         "commonReasonValue": "Intimidatie & Toxiciteit",
         "noBans": "Nog geen bans",
-        "percentOfAll": "{percent}% van alle bans"
+        "percentOfAll": "{percent}% van alle bans",
+        "percentOfAllLabel": "van alle bans"
       },
       "list": {
         "title": "Verbannen spelers",
@@ -343,6 +346,9 @@
         "total": "Totaal aantal strikes",
         "recent": "Recente strikes (7 dagen)",
         "totalWeight": "Totaal strikegewicht",
+        "activeOnServer": "Actieve strikes op deze server",
+        "last7Days": "In de afgelopen 7 dagen",
+        "cumulativeWeight": "Cumulatief strikegewicht",
         "commonReason": "Meest voorkomende reden",
         "commonReasonValue": "Spammen"
       },

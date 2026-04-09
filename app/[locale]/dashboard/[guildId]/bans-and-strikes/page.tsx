@@ -475,6 +475,13 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
   // Calculate strike statistics
   const totalStrikeWeight = strikes.reduce((sum, strike) => sum + strike.strike_weight, 0);
+  const recentBans = bans.filter((b) => {
+    const days = Math.floor(
+      (new Date().getTime() - new Date(b.DateCreated).getTime()) /
+      (1000 * 60 * 60 * 24)
+    );
+    return days <= 7;
+  }).length;
   const recentStrikes = strikes.filter((s) => {
     const days = Math.floor(
       (new Date().getTime() - new Date(s.date_created).getTime()) /
@@ -526,25 +533,18 @@ export default function BansPage() { // NOSONAR — React page component: comple
                     {t("bans.stats.total")}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  {isLoadingBans ? (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-8 w-20 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-blue-500">{bans.length}</div>
-                        <UserX className="h-8 w-8 text-blue-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Active bans on server
-                      </p>
-                    </>
-                  )}
+                <CardContent className="h-[84px] flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    {isLoadingBans ? (
+                      <Skeleton className="h-8 w-20 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-blue-500">{bans.length}</div>
+                    )}
+                    <UserX className="h-8 w-8 text-blue-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t("bans.stats.activeOnServer")}
+                  </p>
                 </CardContent>
               </Card>
 
@@ -554,33 +554,18 @@ export default function BansPage() { // NOSONAR — React page component: comple
                     {t("bans.stats.recent")}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  {isLoadingBans ? (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-8 w-20 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-green-500">
-                          {bans.filter((b) => {
-                            const days = Math.floor(
-                              (new Date().getTime() - new Date(b.DateCreated).getTime()) /
-                              (1000 * 60 * 60 * 24)
-                            );
-                            return days <= 7;
-                          }).length}
-                        </div>
-                        <Calendar className="h-8 w-8 text-green-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        In the last 7 days
-                      </p>
-                    </>
-                  )}
+                <CardContent className="h-[84px] flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    {isLoadingBans ? (
+                      <Skeleton className="h-8 w-20 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-green-500">{recentBans}</div>
+                    )}
+                    <Calendar className="h-8 w-8 text-green-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t("bans.stats.last7Days")}
+                  </p>
                 </CardContent>
               </Card>
 
@@ -590,31 +575,29 @@ export default function BansPage() { // NOSONAR — React page component: comple
                     {t("bans.stats.commonReason")}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  {isLoadingBans ? (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-8 w-32 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
+                <CardContent className="h-[84px] flex flex-col justify-between">
+                  <div className="flex items-center justify-between gap-3">
+                    {isLoadingBans ? (
+                      <Skeleton className="h-8 w-32 animate-pulse" />
+                    ) : bans.length > 0 ? (
+                      <div className="text-sm font-medium text-purple-500 truncate">
+                        {t("bans.stats.commonReasonValue")}
                       </div>
-                    </>
-                  ) : bans.length > 0 ? (
-                    <>
-                      <div className="flex items-center justify-between">
-                        <div className="text-sm font-medium text-purple-500 truncate">
-                          {t("bans.stats.commonReasonValue")}
-                        </div>
-                        <AlertCircle className="h-8 w-8 text-purple-500/50" />
+                    ) : (
+                      <div className="text-sm font-medium text-muted-foreground">
+                        {t("bans.stats.noBans")}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t("bans.stats.percentOfAll", { percent: Math.round((1 / bans.length) * 100) })}
-                      </p>
-                    </>
-                  ) : (
-                    <div className="text-sm font-medium text-muted-foreground">
-                      {t("bans.stats.noBans")}
-                    </div>
-                  )}
+                    )}
+                    <AlertCircle className="h-8 w-8 text-purple-500/50 shrink-0" />
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+                    {isLoadingBans ? (
+                      <Skeleton className="h-3 w-8 animate-pulse" />
+                    ) : (
+                      <span>{`${bans.length > 0 ? Math.round((1 / bans.length) * 100) : 0}%`}</span>
+                    )}
+                    <span>{t("bans.stats.percentOfAllLabel")}</span>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -854,25 +837,18 @@ export default function BansPage() { // NOSONAR — React page component: comple
                       {t("strikes.stats.total")}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {isLoadingStrikes ? (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <Skeleton className="h-8 w-20 animate-pulse" />
-                          <Skeleton className="h-8 w-8 animate-pulse" />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <div className="text-3xl font-bold text-blue-500">{strikes.length}</div>
-                          <AlertTriangle className="h-8 w-8 text-blue-500/50" />
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Active strikes on server
-                        </p>
-                      </>
-                    )}
+                  <CardContent className="h-[84px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      {isLoadingStrikes ? (
+                        <Skeleton className="h-8 w-20 animate-pulse" />
+                      ) : (
+                        <div className="text-3xl font-bold text-blue-500">{strikes.length}</div>
+                      )}
+                      <AlertTriangle className="h-8 w-8 text-blue-500/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {t("strikes.stats.activeOnServer")}
+                    </p>
                   </CardContent>
                 </Card>
 
@@ -882,25 +858,18 @@ export default function BansPage() { // NOSONAR — React page component: comple
                       {t("strikes.stats.recent")}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {isLoadingStrikes ? (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <Skeleton className="h-8 w-20 animate-pulse" />
-                          <Skeleton className="h-8 w-8 animate-pulse" />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <div className="text-3xl font-bold text-green-500">{recentStrikes}</div>
-                          <Calendar className="h-8 w-8 text-green-500/50" />
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          In the last 7 days
-                        </p>
-                      </>
-                    )}
+                  <CardContent className="h-[84px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      {isLoadingStrikes ? (
+                        <Skeleton className="h-8 w-20 animate-pulse" />
+                      ) : (
+                        <div className="text-3xl font-bold text-green-500">{recentStrikes}</div>
+                      )}
+                      <Calendar className="h-8 w-8 text-green-500/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {t("strikes.stats.last7Days")}
+                    </p>
                   </CardContent>
                 </Card>
 
@@ -910,25 +879,18 @@ export default function BansPage() { // NOSONAR — React page component: comple
                       {t("strikes.stats.totalWeight")}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {isLoadingStrikes ? (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <Skeleton className="h-8 w-20 animate-pulse" />
-                          <Skeleton className="h-8 w-8 animate-pulse" />
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <div className="text-3xl font-bold text-purple-500">{totalStrikeWeight}</div>
-                          <Scale className="h-8 w-8 text-purple-500/50" />
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Cumulative strike weight
-                        </p>
-                      </>
-                    )}
+                  <CardContent className="h-[84px] flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      {isLoadingStrikes ? (
+                        <Skeleton className="h-8 w-20 animate-pulse" />
+                      ) : (
+                        <div className="text-3xl font-bold text-purple-500">{totalStrikeWeight}</div>
+                      )}
+                      <Scale className="h-8 w-8 text-purple-500/50" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {t("strikes.stats.cumulativeWeight")}
+                    </p>
                   </CardContent>
                 </Card>
               </div>

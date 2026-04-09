@@ -275,9 +275,12 @@
         "total": "Total des bannissements",
         "recent": "Bannissements récents (7 jours)",
         "commonReason": "Raison la plus fréquente",
+        "activeOnServer": "Bannissements actifs sur le serveur",
+        "last7Days": "Au cours des 7 derniers jours",
         "commonReasonValue": "Harcèlement et toxicité",
         "noBans": "Aucun bannissement pour le moment",
-        "percentOfAll": "{percent}% de tous les bannissements"
+        "percentOfAll": "{percent}% de tous les bannissements",
+        "percentOfAllLabel": "de tous les bannissements"
       },
       "list": {
         "title": "Joueurs bannis",
@@ -343,6 +346,9 @@
         "total": "Total des avertissements",
         "recent": "Avertissements récents (7 jours)",
         "totalWeight": "Poids total des avertissements",
+        "activeOnServer": "Avertissements actifs sur le serveur",
+        "last7Days": "Au cours des 7 derniers jours",
+        "cumulativeWeight": "Poids cumulé des avertissements",
         "commonReason": "Raison la plus fréquente",
         "commonReasonValue": "Spam"
       },
