@@ -93,6 +93,17 @@ interface Channel {
   parent_name?: string;
 }
 
+function normalizeChannelsPayload(payload: unknown): Channel[] {
+  if (Array.isArray(payload)) return payload as Channel[];
+  if (!payload || typeof payload !== "object") return [];
+
+  const obj = payload as { data?: unknown; items?: unknown };
+  if (Array.isArray(obj.data)) return obj.data as Channel[];
+  if (Array.isArray(obj.items)) return obj.items as Channel[];
+
+  return [];
+}
+
 const POINT_THRESHOLD_MIN = 0;
 const POINT_THRESHOLD_MAX = 10000;
 const ATTACK_THRESHOLD_MIN = 1;
@@ -144,6 +155,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("war");
   const newReminderRef = useRef<HTMLDivElement>(null);
+  const channelsCacheKey = `reminders-channels-${guildId}`;
 
   // Dialog state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -175,7 +187,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
               'Content-Type': 'application/json',
             },
           }),
-          apiCache.get(`channels-${guildId}`, async () => {
+          apiCache.get(channelsCacheKey, async () => {
             const res = await fetch(`/api/v2/server/${guildId}/channels`, {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -209,12 +221,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         }
 
         // Parse channels
-        if (Array.isArray(channelsRes)) {
-          setChannels(channelsRes);
-        } else {
-          console.error('Channels data is not an array:', channelsRes);
-          setChannels([]);
-        }
+        setChannels(normalizeChannelsPayload(channelsRes));
 
         // Parse reminders
         const remindersData: ServerRemindersResponse = await remindersRes.json();
@@ -240,7 +247,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (guildId) {
       fetchReminders();
     }
-  }, [guildId, router, toast]);
+  }, [channelsCacheKey, guildId, router, toast]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
