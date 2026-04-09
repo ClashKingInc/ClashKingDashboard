@@ -122,7 +122,7 @@ export function ServerStats({ guildId }: ServerStatsProps) {
     return (
       <>
         {cards.map((card) => (
-          <Card key={card.title} className="bg-card border-border">
+          <Card key={card.title} className="bg-card border-border h-full min-h-[144px]">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-foreground">{card.title}</CardTitle>
               <div className="rounded-full bg-destructive/10 p-2">
@@ -144,13 +144,13 @@ export function ServerStats({ guildId }: ServerStatsProps) {
 
   return (
     <>
-      {cards.map((card) => (
-        <Card key={card.title} className="bg-card border-border">
+        {cards.map((card) => (
+        <Card key={card.title} className="bg-card border-border h-full min-h-[144px]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-foreground">{card.title}</CardTitle>
             <div className="rounded-full bg-primary/10 p-2">{card.icon}</div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-[84px]">
             {isLoading ? (
               <Skeleton className="h-8 w-20 animate-pulse mb-1" />
             ) : (
