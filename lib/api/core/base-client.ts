@@ -73,9 +73,9 @@ export class BaseApiClient {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        // Attempt token refresh on 401 or 403 (missing/expired token), but only once and not for auth endpoints
+        // Only retry on 401. A 403 is often a real permissions failure and should not trigger refresh.
         if (
-          (response.status === 401 || response.status === 403) &&
+          response.status === 401 &&
           !_isRetry &&
           !endpoint.startsWith('/v2/auth/') &&
           typeof globalThis.window !== 'undefined'
@@ -123,7 +123,7 @@ export class BaseApiClient {
 
       if (!response.ok) {
         if (
-          (response.status === 401 || response.status === 403) &&
+          response.status === 401 &&
           !_isRetry &&
           typeof globalThis.window !== 'undefined'
         ) {

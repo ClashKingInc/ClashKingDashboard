@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Users, Shield, ClipboardList, Link, AlertCircle, RefreshCw } from "lucide-react";
+import { apiCache } from "@/lib/api-cache";
+import { apiClient } from "@/lib/api/client";
 
 interface ServerStatsProps {
   guildId: string;
@@ -21,6 +23,9 @@ interface Stats {
 export function ServerStats({ guildId }: ServerStatsProps) {
   const t = useTranslations("OverviewPage.stats");
   const tCommon = useTranslations("Common");
+  const clansCacheKey = `overview-clans-${guildId}`;
+  const rostersCacheKey = `overview-rosters-${guildId}`;
+  const linksCacheKey = `overview-links-${guildId}`;
   const [stats, setStats] = useState<Stats>({
     linkedPlayers: 0,
     totalAccounts: 0,
@@ -30,26 +35,27 @@ export function ServerStats({ guildId }: ServerStatsProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async (forceRefresh = false) => {
     setIsLoading(true);
     setHasError(false);
+
+    if (forceRefresh) {
+      apiCache.invalidate(clansCacheKey);
+      apiCache.invalidate(rostersCacheKey);
+      apiCache.invalidate(linksCacheKey);
+    }
+
     try {
-      const accessToken = localStorage.getItem("access_token");
-      if (!accessToken) {
+      const hasSession = localStorage.getItem("access_token") || localStorage.getItem("refresh_token");
+      if (!hasSession) {
         setIsLoading(false);
         return;
       }
 
       const [clansRes, rostersRes, linksRes] = await Promise.all([
-        fetch(`/api/v2/server/${guildId}/clans`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        }),
-        fetch(`/api/v2/roster/${guildId}/list`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        }),
-        fetch(`/api/v2/server/${guildId}/links?limit=1&offset=0`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        })
+        apiCache.get(clansCacheKey, () => apiClient.servers.getServerClans(guildId)),
+        apiCache.get(rostersCacheKey, () => apiClient.rosters.list(guildId)),
+        apiCache.get(linksCacheKey, () => apiClient.servers.getServerLinks(guildId, { limit: 1, offset: 0 })),
       ]);
 
       let linkedPlayers = 0;
@@ -57,21 +63,20 @@ export function ServerStats({ guildId }: ServerStatsProps) {
       let clansConfigured = 0;
       let activeRosters = 0;
 
-      if (clansRes.ok) {
-        const clansData = await clansRes.json();
-        clansConfigured = Array.isArray(clansData) ? clansData.length : 0;
-      }
+      if (clansRes.error) throw new Error(clansRes.error);
+      if (rostersRes.error) throw new Error(rostersRes.error);
+      if (linksRes.error) throw new Error(linksRes.error);
 
-      if (rostersRes.ok) {
-        const rostersData = await rostersRes.json();
-        activeRosters = (rostersData.items || rostersData.rosters || rostersData || []).length;
-      }
+      const clansData = clansRes.data;
+      const rostersData = rostersRes.data;
+      const linksData = linksRes.data as
+        | { members_with_links?: number; total_linked_accounts?: number }
+        | undefined;
 
-      if (linksRes.ok) {
-        const linksData = await linksRes.json();
-        linkedPlayers = linksData.members_with_links || 0;
-        totalAccounts = linksData.total_linked_accounts || 0;
-      }
+      clansConfigured = Array.isArray(clansData) ? clansData.length : 0;
+      activeRosters = (rostersData?.items || (rostersData as { rosters?: unknown[] } | undefined)?.rosters || []).length;
+      linkedPlayers = linksData?.members_with_links || 0;
+      totalAccounts = linksData?.total_linked_accounts || 0;
 
       setStats({ linkedPlayers, totalAccounts, clansConfigured, activeRosters });
     } catch (err) {
@@ -80,11 +85,11 @@ export function ServerStats({ guildId }: ServerStatsProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [clansCacheKey, guildId, linksCacheKey, rostersCacheKey]);
 
   useEffect(() => {
     fetchStats();
-  }, [guildId]);
+  }, [fetchStats]);
 
   const cards = [
     {
@@ -117,7 +122,7 @@ export function ServerStats({ guildId }: ServerStatsProps) {
     return (
       <>
         {cards.map((card) => (
-          <Card key={card.title} className="bg-card border-border">
+          <Card key={card.title} className="bg-card border-border h-full min-h-[144px]">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-foreground">{card.title}</CardTitle>
               <div className="rounded-full bg-destructive/10 p-2">
@@ -126,7 +131,7 @@ export function ServerStats({ guildId }: ServerStatsProps) {
             </CardHeader>
             <CardContent>
               <p className="text-xs text-muted-foreground mb-2">{tCommon("loadError")}</p>
-              <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={fetchStats}>
+              <Button variant="ghost" size="sm" className="h-7 px-2 text-xs" onClick={() => fetchStats(true)}>
                 <RefreshCw className="h-3 w-3 mr-1" />
                 {tCommon("tryAgain")}
               </Button>
@@ -139,13 +144,13 @@ export function ServerStats({ guildId }: ServerStatsProps) {
 
   return (
     <>
-      {cards.map((card) => (
-        <Card key={card.title} className="bg-card border-border">
+        {cards.map((card) => (
+        <Card key={card.title} className="bg-card border-border h-full min-h-[144px]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-foreground">{card.title}</CardTitle>
             <div className="rounded-full bg-primary/10 p-2">{card.icon}</div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="min-h-[84px]">
             {isLoading ? (
               <Skeleton className="h-8 w-20 animate-pulse mb-1" />
             ) : (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
@@ -10,6 +10,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { clashKingAssets } from "@/lib/theme";
 import { Plus, AlertCircle, RefreshCw } from "lucide-react";
+import { apiCache } from "@/lib/api-cache";
+import { apiClient } from "@/lib/api/client";
 
 interface ClansSummaryProps {
   guildId: string;
@@ -29,41 +31,42 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
   const tCommon = useTranslations("Common");
   const locale = useLocale();
   const router = useRouter();
+  const clansCacheKey = `overview-clans-${guildId}`;
   const [clans, setClans] = useState<Clan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
-  const fetchClans = async () => {
+  const fetchClans = useCallback(async (forceRefresh = false) => {
     setIsLoading(true);
     setHasError(false);
+
+    if (forceRefresh) {
+      apiCache.invalidate(clansCacheKey);
+    }
+
     try {
-      const accessToken = localStorage.getItem("access_token");
-      if (!accessToken) {
+      const hasSession = localStorage.getItem("access_token") || localStorage.getItem("refresh_token");
+      if (!hasSession) {
         setIsLoading(false);
         return;
       }
 
-      const res = await fetch(`/api/v2/server/${guildId}/clans`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const res = await apiCache.get(clansCacheKey, () => apiClient.servers.getServerClans(guildId));
 
-      if (res.ok) {
-        const data = await res.json();
-        setClans(Array.isArray(data) ? data : []);
-      } else {
-        setHasError(true);
-      }
+      if (res.error) throw new Error(res.error);
+
+      setClans(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to fetch clans:", err);
       setHasError(true);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [clansCacheKey, guildId]);
 
   useEffect(() => {
     fetchClans();
-  }, [guildId]);
+  }, [fetchClans]);
 
   if (isLoading) {
     return (
@@ -88,7 +91,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
         <CardContent className="flex items-center gap-3 py-6">
           <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0" />
           <p className="text-sm text-muted-foreground flex-1">{tCommon("loadError")}</p>
-          <Button variant="outline" size="sm" onClick={fetchClans}>
+          <Button variant="outline" size="sm" onClick={() => fetchClans(true)}>
             <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
             {tCommon("tryAgain")}
           </Button>
