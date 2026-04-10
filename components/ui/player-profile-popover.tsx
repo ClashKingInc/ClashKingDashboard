@@ -39,8 +39,19 @@ export function PlayerProfilePopover({
   children,
   triggerClassName = "text-left cursor-pointer hover:opacity-80 transition-opacity",
   showTagInTrigger = true,
-}: PlayerProfilePopoverProps) {
+}: Readonly<PlayerProfilePopoverProps>) {
   const tCommon = useTranslations("Common");
+  const hasDetails =
+    clanName !== undefined ||
+    townhallLevel !== undefined ||
+    trophies !== undefined ||
+    warPreference !== undefined ||
+    signupGroup !== undefined ||
+    heroLevels !== undefined ||
+    hitrate !== undefined;
+
+  const warPreferenceLabel =
+    warPreference == null ? "-" : (warPreference ? "In" : "Out");
 
   return (
     <Popover>
@@ -62,12 +73,12 @@ export function PlayerProfilePopover({
             <p className="font-medium text-foreground truncate">{playerName}</p>
             <p className="text-xs text-muted-foreground">{playerTag}</p>
           </div>
-          {(clanName !== undefined || townhallLevel !== undefined || trophies !== undefined || warPreference !== undefined || signupGroup !== undefined || heroLevels !== undefined || hitrate !== undefined) && (
+          {hasDetails && (
             <div className="space-y-1.5 text-xs">
               {clanName !== undefined && (
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-muted-foreground">Clan</span>
-                  <span className="text-foreground truncate">{clanName || "-"}</span>
+                  <span className="text-foreground truncate">{clanName ?? "-"}</span>
                 </div>
               )}
               {townhallLevel !== undefined && (
@@ -85,13 +96,13 @@ export function PlayerProfilePopover({
               {warPreference !== undefined && (
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-muted-foreground">Oorlogsvoorkeur</span>
-                  <span className="text-foreground">{warPreference == null ? "-" : warPreference ? "In" : "Out"}</span>
+                  <span className="text-foreground">{warPreferenceLabel}</span>
                 </div>
               )}
               {signupGroup !== undefined && (
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-muted-foreground">Aanmeldingsgroep</span>
-                  <span className="text-foreground">{signupGroup || "-"}</span>
+                  <span className="text-foreground">{signupGroup ?? "-"}</span>
                 </div>
               )}
               {heroLevels !== undefined && (

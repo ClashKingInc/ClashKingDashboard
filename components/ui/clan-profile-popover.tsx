@@ -28,7 +28,7 @@ export function ClanProfilePopover({
   children,
   triggerClassName = "text-left cursor-pointer hover:opacity-80 transition-opacity",
   showTagInTrigger = true,
-}: ClanProfilePopoverProps) {
+}: Readonly<ClanProfilePopoverProps>) {
   const tCommon = useTranslations("Common");
 
   return (

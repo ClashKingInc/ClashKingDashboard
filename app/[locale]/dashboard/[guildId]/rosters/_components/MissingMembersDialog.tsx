@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Loader2, UserMinus, CheckCircle2, UserPlus, Layers, User } from "lucide-react";
+import { Loader2, UserMinus, CheckCircle2, UserPlus, Layers, User, Check } from "lucide-react";
 import type { MissingMembersResult, MissingMembersRosterResult, MissingMember } from "../_lib/types";
 
 interface MissingMembersDialogProps {
@@ -272,27 +272,25 @@ function RosterResultSection({
       )}
       <div className="border border-border rounded-lg overflow-hidden">
         {result.missing_members.map((member: MissingMember) => (
-          <div
+          <button
             key={member.tag}
+            type="button"
             className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
               selectedMembers.has(member.tag) ? "bg-primary/10" : ""
             }`}
-            role="button"
-            tabIndex={0}
             onClick={() => onToggle(member.tag)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onToggle(member.tag);
-              }
-            }}
           >
             <div className="flex items-center gap-3">
-              <Checkbox
-                checked={selectedMembers.has(member.tag)}
-                onCheckedChange={() => onToggle(member.tag)}
-                onClick={(e) => e.stopPropagation()}
-              />
+              <span
+                className={`grid place-content-center h-4 w-4 shrink-0 rounded-sm border ${
+                  selectedMembers.has(member.tag)
+                    ? "bg-primary border-primary text-primary-foreground"
+                    : "border-border bg-background"
+                }`}
+                aria-hidden="true"
+              >
+                {selectedMembers.has(member.tag) && <Check className="h-3 w-3" />}
+              </span>
               <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
                 <span className="text-sm font-bold text-primary">{member.townhall}</span>
               </div>
@@ -304,7 +302,7 @@ function RosterResultSection({
               </div>
             </div>
             <p className="text-sm text-yellow-400">{member.trophies.toLocaleString()}</p>
-          </div>
+          </button>
         ))}
       </div>
     </div>
