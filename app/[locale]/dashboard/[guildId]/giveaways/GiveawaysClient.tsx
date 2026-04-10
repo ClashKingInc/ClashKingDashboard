@@ -27,6 +27,11 @@ import { AlertCircle, CalendarRange, CheckCircle2, Clock3, Copy, ExternalLink, E
 import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
+import {
+  dashboardCacheKeys,
+  normalizeChannelsPayload,
+  normalizeDiscordRolesPayload,
+} from "@/lib/dashboard-cache";
 import type { Giveaway } from "@/lib/api/types/server";
 
 type Channel = { id: string; name: string; parent_name?: string };
@@ -667,8 +672,8 @@ export default function GiveawaysClient({
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
   const giveawaysCacheKey = `giveaways-${guildId}`;
-  const channelsCacheKey = `channels-${guildId}`;
-  const rolesCacheKey = `discord-roles-${guildId}`;
+  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
+  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
 
   const updateForm = (updater: (prev: FormState) => FormState) => {
     setFormModified(true);
@@ -685,16 +690,24 @@ export default function GiveawaysClient({
         apiCache.invalidate(rolesCacheKey);
       }
 
-      const [gRes, cRes, rRes] = await Promise.all([
+      const [gRes, channelsPayload, rolesPayload] = await Promise.all([
         apiCache.get(giveawaysCacheKey, () => apiClient.servers.getGiveaways(guildId)),
-        apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId)),
-        apiCache.get(rolesCacheKey, () => apiClient.servers.getDiscordRoles(guildId)),
+        apiCache.get(channelsCacheKey, async () => {
+          const response = await apiClient.servers.getChannels(guildId);
+          if (response.error) throw new Error(response.error);
+          return response.data;
+        }),
+        apiCache.get(rolesCacheKey, async () => {
+          const response = await apiClient.servers.getDiscordRoles(guildId);
+          if (response.error) throw new Error(response.error);
+          return response.data;
+        }),
       ]);
       if (gRes.status === 401 || gRes.status === 403) { router.push(`/${locale}/login`); return; }
       if (gRes.error || !gRes.data) throw new Error(gRes.error || t("toast.loadError"));
       setGiveaways({ ongoing: gRes.data.ongoing || [], upcoming: gRes.data.upcoming || [], ended: gRes.data.ended || [], total: gRes.data.total || 0 });
-      setChannels(Array.isArray(cRes.data) ? cRes.data : []);
-      setRoles(Array.isArray(rRes.data?.roles) ? rRes.data.roles : []);
+      setChannels(normalizeChannelsPayload(channelsPayload));
+      setRoles(normalizeDiscordRolesPayload(rolesPayload));
     } catch (error) {
       toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
     } finally {

@@ -14,6 +14,11 @@ import { Save, RotateCcw, AlertCircle, Loader2, User, Shield, Eye, ChevronDown, 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
+import {
+  dashboardCacheKeys,
+  normalizeDiscordRolesPayload,
+  normalizeServerSettingsPayload,
+} from "@/lib/dashboard-cache";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
@@ -226,8 +231,8 @@ export default function FamilySettingsPage() {
   const [isLoadingFamilyRoles, setIsLoadingFamilyRoles] = useState(true);
   const [familyRolesLoading, setFamilyRolesLoading] = useState(false);
 
-  const settingsCacheKey = `settings-${guildId}`;
-  const rolesCacheKey = `discord-roles-${guildId}`;
+  const settingsCacheKey = dashboardCacheKeys.settings(guildId);
+  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
   const familyRolesCacheKey = `family-roles-${guildId}`;
 
   // Load settings on mount
@@ -251,7 +256,7 @@ export default function FamilySettingsPage() {
         apiCache.invalidate(settingsCacheKey);
       }
 
-      const settingsData = await apiCache.get(settingsCacheKey, async () => {
+      const settingsPayload = await apiCache.get(settingsCacheKey, async () => {
         const response = await apiClient.servers.getSettings(guildId);
 
         if (response.error) {
@@ -260,6 +265,7 @@ export default function FamilySettingsPage() {
 
         return response.data;
       });
+      const settingsData = normalizeServerSettingsPayload(settingsPayload);
 
       if (settingsData) {
         const loadedSettings = {
@@ -289,17 +295,14 @@ export default function FamilySettingsPage() {
       }
 
       // Use cache to prevent duplicate requests
-      const rolesData = await apiCache.get(rolesCacheKey, async () => {
+      const rolesPayload = await apiCache.get(rolesCacheKey, async () => {
         const response = await apiClient.roles.getDiscordRoles(guildId);
         if (response.error) {
           throw new Error(response.error);
         }
         return response.data;
       });
-
-      if (rolesData) {
-        setDiscordRoles(rolesData.roles);
-      }
+      setDiscordRoles(normalizeDiscordRolesPayload(rolesPayload));
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
     }

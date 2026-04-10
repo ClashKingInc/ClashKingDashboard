@@ -37,6 +37,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { apiCache } from "@/lib/api-cache";
+import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
 
 // Type definitions
 interface Channel {
@@ -157,7 +158,7 @@ export default function AutoBoardsPage() {
   const [editDays, setEditDays] = useState<string[]>([]);
 
   const autoboardsCacheKey = `autoboards-${guildId}`;
-  const channelsCacheKey = `channels-${guildId}`;
+  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
 
   const fetchAutoboards = useCallback(async (
     accessToken: string,
@@ -228,7 +229,7 @@ export default function AutoBoardsPage() {
         }
 
         if (channelsResult.status === "fulfilled") {
-          const channelsData = channelsResult.value;
+          const channelsData = normalizeChannelsPayload(channelsResult.value);
           // Filter to only text channels
           const textChannels = channelsData.filter(ch => ch.type === "text" || ch.type === "0");
           setChannels(textChannels);

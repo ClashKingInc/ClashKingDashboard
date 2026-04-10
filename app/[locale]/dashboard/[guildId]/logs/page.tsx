@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { apiCache } from "@/lib/api-cache";
+import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -179,7 +180,7 @@ export default function LogsPage() {
 
         // Use cache to prevent duplicate requests
         const [channelsData, clanLogsData] = await Promise.all([
-          apiCache.get(`channels-${guildId}`, async () => {
+          apiCache.get(dashboardCacheKeys.channels(guildId), async () => {
             const res = await fetch(`/api/v2/server/${guildId}/channels`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -195,7 +196,7 @@ export default function LogsPage() {
           })
         ]);
 
-        setChannels(channelsData);
+        setChannels(normalizeChannelsPayload(channelsData));
         setClanLogs(clanLogsData);
 
         if (clanLogsData.length > 0 && !selectedClan) {

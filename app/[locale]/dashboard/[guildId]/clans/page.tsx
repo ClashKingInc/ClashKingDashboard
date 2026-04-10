@@ -55,6 +55,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { apiCache } from "@/lib/api-cache";
+import { dashboardCacheKeys, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
 
 // Types based on ClashKingAPI models
 interface MemberCountWarning {
@@ -177,8 +178,8 @@ export default function ClansPage() {
   const [countdownLoading, setCountdownLoading] = useState<string | null>(null);
 
   const clansCacheKey = `clans-${guildId}`;
-  const channelsCacheKey = `channels-${guildId}`;
-  const rolesCacheKey = `discord-roles-${guildId}`;
+  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
+  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
 
   const fetchClans = async (accessToken: string, forceRefresh = false): Promise<Clan[]> => {
     if (forceRefresh) {
@@ -241,7 +242,7 @@ export default function ClansPage() {
         }
 
         if (rolesResult.status === "fulfilled") {
-          setDiscordRoles(rolesResult.value.roles || []);
+          setDiscordRoles(normalizeDiscordRolesPayload(rolesResult.value));
         }
       } catch (err) {
         console.error("Error fetching data:", err);
