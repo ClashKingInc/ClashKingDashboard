@@ -56,7 +56,6 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
   const router = useRouter();
   const locale = (params.locale as string) || "en";
   const t = useTranslations("Sidebar");
-  const tNav = useTranslations("Navigation");
   const tCommon = useTranslations("Common");
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

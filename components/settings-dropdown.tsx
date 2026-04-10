@@ -45,7 +45,7 @@ export function SettingsDropdown({
   itemClassName,
   textClassName,
   selectedItemClassName = "bg-primary/10 text-primary",
-}: SettingsDropdownProps) {
+}: Readonly<SettingsDropdownProps>) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const t = useTranslations("Navigation");
@@ -78,6 +78,11 @@ export function SettingsDropdown({
     ? resolveBrowserLocale(navigator.languages)
     : locale;
   const currentLanguage = LANGUAGE_OPTIONS.find((lang) => lang.code === currentLocale) ?? LANGUAGE_OPTIONS[0];
+  const themeIcon = theme === "dark"
+    ? <Moon className="h-4 w-4" />
+    : theme === "light"
+      ? <Sun className="h-4 w-4" />
+      : <Computer className="h-4 w-4" />;
 
   return (
     <DropdownMenu modal={false}>
@@ -90,13 +95,7 @@ export function SettingsDropdown({
       <DropdownMenuContent align={align} className={menuClassName} sideOffset={4} alignOffset={0}>
         <DropdownMenuSub open={openSubmenu === "theme"} onOpenChange={(open) => setOpenSubmenu(open ? "theme" : null)}>
           <DropdownMenuSubTrigger className={subTriggerClassName}>
-            {mounted && theme === "dark" ? (
-              <Moon className="h-4 w-4" />
-            ) : theme === "light" ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Computer className="h-4 w-4" />
-            )}
+            {mounted ? themeIcon : <Computer className="h-4 w-4" />}
             <span className={textClassName}>{t("theme")}</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
@@ -169,4 +168,3 @@ export function SettingsDropdown({
     </DropdownMenu>
   );
 }
-
