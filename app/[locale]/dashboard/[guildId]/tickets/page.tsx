@@ -818,7 +818,7 @@ function ButtonCard({
     apply_clans: [...(settings.apply_clans ?? [])],
     roles_to_add: [...(settings.roles_to_add ?? [])],
     roles_to_remove: [...(settings.roles_to_remove ?? [])],
-    townhall_requirements: { ...(settings.townhall_requirements ?? {}) },
+    townhall_requirements: { ...settings.townhall_requirements },
     new_message: settings.new_message,
   });
   const [clanTagInput, setClanTagInput] = useState("");

@@ -114,7 +114,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const roleTypes = ROLE_TYPES_CONFIG.map((rt) => ({
     ...rt,
-    label: t(`roleTypes.${rt.value.replace(/_([a-z])/g, (g) => g[1].toUpperCase())}`),
+    label: t(`roleTypes.${rt.value.replaceAll(/_([a-z])/g, (g) => g[1].toUpperCase())}`),
   }));
 
   const builderLeagues = BUILDER_LEAGUE_TIERS.flatMap((tier) => {

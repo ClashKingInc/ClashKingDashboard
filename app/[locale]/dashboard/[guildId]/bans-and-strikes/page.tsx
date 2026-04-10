@@ -658,8 +658,8 @@ export default function BansPage() { // NOSONAR — React page component: comple
               <CardContent>
                   {isLoadingBans ? (
                     <div className="space-y-3">
-                      {[...Array(3)].map((_, i) => (
-                        <div key={i} className="flex items-center gap-4">
+                      {["a", "b", "c"].map(id => (
+                        <div key={id} className="flex items-center gap-4">
                           <Skeleton className="h-12 w-full" />
                         </div>
                       ))}
@@ -988,7 +988,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                     </Dialog>
                   </div>
                   <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto">
-                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as any)} className="md:hidden w-full">
+                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as "grouped" | "all")} className="md:hidden w-full">
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="grouped">
                           <Users className="h-4 w-4 mr-2" />
@@ -1016,8 +1016,8 @@ export default function BansPage() { // NOSONAR — React page component: comple
                 <CardContent>
                   {isLoadingStrikes ? (
                     <div className="space-y-3">
-                      {[...Array(3)].map((_, i) => (
-                        <div key={i} className="flex items-center gap-4">
+                      {["a", "b", "c"].map(id => (
+                        <div key={id} className="flex items-center gap-4">
                           <Skeleton className="h-12 w-full" />
                         </div>
                       ))}

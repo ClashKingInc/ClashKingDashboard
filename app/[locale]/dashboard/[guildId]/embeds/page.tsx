@@ -209,7 +209,7 @@ export default function EmbedsPage() {
           <div className="space-y-2">
             {["a", "b", "c"].map(id => <Skeleton key={id} className="h-14 w-full" />)}
           </div>
-        ) : embeds.length === 0 ? (
+        ) : embeds.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-muted-foreground gap-2">
             <FileText className="h-10 w-10 opacity-40" />
             <p className="text-sm font-medium">{t("noEmbeds")}</p>

@@ -508,7 +508,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       toast({ title: t("categoryCreated") });
       setCreateCategoryDialogOpen(false);
       setNewCategory({ custom_id: "", alias: "" });
-    } catch (err) {
+    } catch {
       toast({ title: t("categoryError"), variant: "destructive" });
     }
   };
@@ -520,7 +520,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       toast({ title: t("categoryUpdated") });
       setEditCategoryDialogOpen(false);
       setEditingCategory(null);
-    } catch (err) {
+    } catch {
       toast({ title: t("categoryError"), variant: "destructive" });
     }
   };

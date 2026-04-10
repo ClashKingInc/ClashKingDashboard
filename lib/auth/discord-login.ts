@@ -33,7 +33,7 @@ export async function initiateDiscordLogin(locale: string = 'en') {
     discordAuthUrl.searchParams.append("code_challenge_method", "S256");
 
     // Redirect to Discord
-    window.location.href = discordAuthUrl.toString();
+    globalThis.window.location.href = discordAuthUrl.toString();
   } catch (error) {
     console.error("Failed to initiate Discord login:", error);
     alert("Failed to initiate Discord login. Please try again.");
