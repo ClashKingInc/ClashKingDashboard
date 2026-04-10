@@ -818,10 +818,12 @@
     "categories": {
       "title": "Catégories d'Inscription",
       "description": "Catégories pour les inscriptions et le filtrage des rosters",
+      "manage": "Gérer les catégories",
       "create": "Nouvelle Catégorie",
       "noCategories": "Aucune catégorie créée",
       "editTitle": "Modifier la Catégorie",
       "createTitle": "Créer une Catégorie",
+      "deleteConfirm": "Supprimer la catégorie \"{name}\" ?",
       "idLabel": "ID de la Catégorie",
       "nameLabel": "Nom de la Catégorie",
       "infoBox": "Les catégories permettent aux joueurs d'indiquer leur disponibilité ou rôle lors de l'inscription (ex: 'Disponible', 'Incertain', 'Seulement si besoin'). Les catégories sont partagées sur tous les rosters du serveur. Pour les rosters dans un groupe, configurez les catégories applicables via les paramètres du groupe."

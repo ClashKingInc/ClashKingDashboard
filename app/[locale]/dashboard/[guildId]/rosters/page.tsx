@@ -265,6 +265,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [deletingGroup, setDeletingGroup] = useState<string | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<{ groupId: string; groupAlias: string } | null>(null);
   const [rosterToDelete, setRosterToDelete] = useState<Roster | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<{ categoryId: string; categoryAlias: string } | null>(null);
 
   // Group Automations state
   const [groupAutomationsDialogOpen, setGroupAutomationsDialogOpen] = useState(false);
@@ -286,10 +287,10 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [newCategoryAlias, setNewCategoryAlias] = useState("");
   const [savingCategory, setSavingCategory] = useState(false);
   // Category management (standalone, outside group dialog)
-  const [createCategoryDialogOpen, setCreateCategoryDialogOpen] = useState(false);
-  const [editCategoryDialogOpen, setEditCategoryDialogOpen] = useState(false);
-  const [editingCategoryStandalone, setEditingCategoryStandalone] = useState<SignupCategory | null>(null);
+  const [manageCategoriesDialogOpen, setManageCategoriesDialogOpen] = useState(false);
   const [standaloneNewAlias, setStandaloneNewAlias] = useState("");
+  const [categoryAliasesById, setCategoryAliasesById] = useState<Record<string, string>>({});
+  const [editingStandaloneCategoryId, setEditingStandaloneCategoryId] = useState<string | null>(null);
   const groupsRequestIdRef = useRef(0);
   const categoriesRequestIdRef = useRef(0);
   const channelsRequestIdRef = useRef(0);
@@ -360,6 +361,13 @@ export default function RostersPage() { // NOSONAR — React page component: com
     refreshCategories();
     refreshChannels();
   }, [refreshGroups, refreshCategories, refreshChannels]);
+
+  useEffect(() => {
+    if (!manageCategoriesDialogOpen) return;
+    setCategoryAliasesById(
+      Object.fromEntries(categories.map((cat) => [cat.custom_id, cat.alias]))
+    );
+  }, [categories, manageCategoriesDialogOpen]);
 
   // Group rosters by group_id
   const rostersByGroup = useMemo(() => {
@@ -527,7 +535,6 @@ export default function RostersPage() { // NOSONAR — React page component: com
       await api.createCategory(guildId, standaloneNewAlias.trim());
       refreshCategories(true);
       setStandaloneNewAlias("");
-      setCreateCategoryDialogOpen(false);
       toast({ title: t("categoryCreated") });
     } catch {
       toast({ title: t("categoryError"), variant: "destructive" });
@@ -536,17 +543,17 @@ export default function RostersPage() { // NOSONAR — React page component: com
     }
   };
 
-  const handleUpdateCategoryStandalone = async () => {
-    if (!editingCategoryStandalone || !editingCategoryStandalone.alias.trim()) return;
+  const handleUpdateCategoryStandalone = async (categoryId: string) => {
+    const nextAlias = categoryAliasesById[categoryId]?.trim();
+    if (!nextAlias) return;
     setSavingCategory(true);
     try {
-      await api.updateCategory(editingCategoryStandalone.custom_id, guildId, { alias: editingCategoryStandalone.alias });
+      await api.updateCategory(categoryId, guildId, { alias: nextAlias });
       apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => prev.map(c =>
-        c.custom_id === editingCategoryStandalone.custom_id ? { ...c, alias: editingCategoryStandalone.alias } : c
+        c.custom_id === categoryId ? { ...c, alias: nextAlias } : c
       ));
-      setEditCategoryDialogOpen(false);
-      setEditingCategoryStandalone(null);
+      setEditingStandaloneCategoryId(null);
       toast({ title: t("categoryUpdated") });
     } catch {
       toast({ title: t("categoryError"), variant: "destructive" });
@@ -560,6 +567,11 @@ export default function RostersPage() { // NOSONAR — React page component: com
       await api.deleteCategory(categoryId, guildId);
       apiCache.invalidate(getCategoriesCacheKey(guildId));
       setCategories(prev => prev.filter(c => c.custom_id !== categoryId));
+      setCategoryAliasesById(prev => {
+        const next = { ...prev };
+        delete next[categoryId];
+        return next;
+      });
       toast({ title: t("categoryDeleted") });
     } catch {
       toast({ title: t("categoryError"), variant: "destructive" });
@@ -1125,26 +1137,22 @@ export default function RostersPage() { // NOSONAR — React page component: com
               <Badge
                 key={cat.custom_id}
                 variant="secondary"
-                className="flex items-center gap-1.5 px-2 py-1 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
+                className="px-2 py-1 bg-purple-500/10 hover:bg-purple-500/20 transition-colors"
               >
                 {cat.alias}
-                <button
-                  onClick={() => { setEditingCategoryStandalone(cat); setEditCategoryDialogOpen(true); }}
-                  className="hover:text-foreground transition-colors"
-                >
-                  <Pencil className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={() => handleDeleteCategoryStandalone(cat.custom_id)}
-                  className="hover:text-destructive transition-colors"
-                >
-                  <Trash2 className="w-3 h-3" />
-                </button>
               </Badge>
             ))}
-            <Button size="sm" variant="ghost" className="h-6 px-2 text-xs text-muted-foreground" onClick={() => { setStandaloneNewAlias(""); setCreateCategoryDialogOpen(true); }}>
-              <Plus className="w-3 h-3 mr-1" />
-              {t("categories.create")}
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-7 px-2 text-xs"
+              onClick={() => {
+                setStandaloneNewAlias("");
+                setManageCategoriesDialogOpen(true);
+              }}
+            >
+              <Pencil className="w-3 h-3 mr-1" />
+              {t("categories.manage")}
             </Button>
           </div>
         </div>
@@ -1333,58 +1341,102 @@ export default function RostersPage() { // NOSONAR — React page component: com
           </div>
         )}
 
-        {/* Create Category Dialog */}
-        <Dialog open={createCategoryDialogOpen} onOpenChange={(open) => { setCreateCategoryDialogOpen(open); if (!open) setStandaloneNewAlias(""); }}>
-          <DialogContent className="bg-card border-border">
+        {/* Manage Categories Dialog */}
+        <Dialog open={manageCategoriesDialogOpen} onOpenChange={(open) => {
+          setManageCategoriesDialogOpen(open);
+          if (!open) {
+            setStandaloneNewAlias("");
+            setEditingStandaloneCategoryId(null);
+          }
+        }}>
+          <DialogContent className="bg-card border-border max-w-2xl">
             <DialogHeader>
-              <DialogTitle>{t("categories.createTitle")}</DialogTitle>
+              <DialogTitle>{t("categories.manage")}</DialogTitle>
+              <DialogDescription>{t("categories.description")}</DialogDescription>
             </DialogHeader>
-            <div className="space-y-2 py-2">
-              <Label>{t("categories.nameLabel")}</Label>
-              <Input
-                value={standaloneNewAlias}
-                onChange={(e) => setStandaloneNewAlias(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryStandalone()}
-                className="bg-background border-border"
-                placeholder="e.g. Available, Tentative..."
-                autoFocus
-              />
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setCreateCategoryDialogOpen(false)} disabled={savingCategory}>
-                {tCommon("cancel")}
-              </Button>
-              <Button onClick={handleCreateCategoryStandalone} disabled={!standaloneNewAlias.trim() || savingCategory}>
-                {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                {t("categories.create")}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label>{t("categories.createTitle")}</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={standaloneNewAlias}
+                    onChange={(e) => setStandaloneNewAlias(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCreateCategoryStandalone()}
+                    className="bg-background border-border"
+                    placeholder={t("groups.rules.newCategoryPlaceholder")}
+                    autoFocus
+                  />
+                  <Button onClick={handleCreateCategoryStandalone} disabled={!standaloneNewAlias.trim() || savingCategory}>
+                    {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
+                    {t("categories.create")}
+                  </Button>
+                </div>
+              </div>
 
-        {/* Edit Category Dialog */}
-        <Dialog open={editCategoryDialogOpen} onOpenChange={(open) => { setEditCategoryDialogOpen(open); if (!open) setEditingCategoryStandalone(null); }}>
-          <DialogContent className="bg-card border-border">
-            <DialogHeader>
-              <DialogTitle>{t("categories.editTitle")}</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 py-2">
-              <Label>{t("categories.nameLabel")}</Label>
-              <Input
-                value={editingCategoryStandalone?.alias ?? ""}
-                onChange={(e) => setEditingCategoryStandalone(prev => prev ? { ...prev, alias: e.target.value } : null)}
-                onKeyDown={(e) => e.key === "Enter" && handleUpdateCategoryStandalone()}
-                className="bg-background border-border"
-                autoFocus
-              />
+              <div className="space-y-2">
+                <Label>{t("categories.editTitle")}</Label>
+                {categories.length > 0 ? (
+                  <div className="rounded-lg border border-border divide-y divide-border">
+                    {categories.map((cat) => (
+                      <div key={cat.custom_id} className="flex flex-col sm:flex-row sm:items-center gap-2 px-3 py-2">
+                        {editingStandaloneCategoryId === cat.custom_id ? (
+                          <Input
+                            value={categoryAliasesById[cat.custom_id] ?? ""}
+                            onChange={(e) => setCategoryAliasesById(prev => ({ ...prev, [cat.custom_id]: e.target.value }))}
+                            onKeyDown={(e) => e.key === "Enter" && handleUpdateCategoryStandalone(cat.custom_id)}
+                            className="bg-background border-border"
+                            autoFocus
+                          />
+                        ) : (
+                          <div className="h-10 w-full flex items-center px-3 rounded-md border border-border bg-muted/20 text-sm">
+                            {cat.alias}
+                          </div>
+                        )}
+                        <div className="flex items-center justify-end gap-2 w-full sm:w-auto sm:shrink-0 sm:ml-auto">
+                          {editingStandaloneCategoryId === cat.custom_id ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleUpdateCategoryStandalone(cat.custom_id)}
+                              disabled={!categoryAliasesById[cat.custom_id]?.trim() || savingCategory}
+                            >
+                              <Pencil className="w-4 h-4 mr-1" />
+                              {tCommon("save")}
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setEditingStandaloneCategoryId(cat.custom_id)}
+                              disabled={savingCategory}
+                              className="text-muted-foreground hover:text-foreground"
+                              title={t("categories.editTitle")}
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setCategoryToDelete({ categoryId: cat.custom_id, categoryAlias: cat.alias })}
+                            disabled={savingCategory}
+                            className="text-muted-foreground hover:text-destructive"
+                            title={tCommon("delete")}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">{t("categories.noCategories")}</p>
+                )}
+              </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEditCategoryDialogOpen(false)} disabled={savingCategory}>
-                {tCommon("cancel")}
-              </Button>
-              <Button onClick={handleUpdateCategoryStandalone} disabled={!editingCategoryStandalone?.alias.trim() || savingCategory}>
-                {savingCategory ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                {tCommon("save")}
+              <Button variant="outline" onClick={() => setManageCategoriesDialogOpen(false)}>
+                {tCommon("close")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -2044,6 +2096,30 @@ export default function RostersPage() { // NOSONAR — React page component: com
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Delete category confirmation */}
+      <AlertDialog open={!!categoryToDelete} onOpenChange={open => !open && setCategoryToDelete(null)}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">{tCommon("confirm")}</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              {t("categories.deleteConfirm", { name: categoryToDelete?.categoryAlias ?? "" })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90"
+              onClick={() => {
+                handleDeleteCategoryStandalone(categoryToDelete!.categoryId);
+                setCategoryToDelete(null);
+              }}
+            >
+              {tCommon("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Delete group confirmation */}
       <AlertDialog open={!!groupToDelete} onOpenChange={open => !open && setGroupToDelete(null)}>
