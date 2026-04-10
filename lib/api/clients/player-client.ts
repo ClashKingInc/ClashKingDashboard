@@ -8,7 +8,6 @@ import type {
   PlayerLocation,
   PlayerSorted,
   PlayerSummaryTop,
-  PlayerList,
 } from '../types/player';
 
 export class PlayerClient extends BaseApiClient {

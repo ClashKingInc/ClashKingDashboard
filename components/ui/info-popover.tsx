@@ -5,8 +5,8 @@ import { CircleHelp } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface InfoPopoverProps {
-  content: ReactNode;
-  label?: string;
+  readonly content: ReactNode;
+  readonly label?: string;
 }
 
 export function InfoPopover({ content, label = "More information" }: InfoPopoverProps) {

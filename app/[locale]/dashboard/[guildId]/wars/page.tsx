@@ -113,11 +113,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   const { toast } = useToast();
   const guildId = params?.guildId as string;
   const t = useTranslations("WarsPage");
-  const tCommon = useTranslations("Common");
-
   const [loading, setLoading] = useState(true);
   const [clans, setClans] = useState<Clan[]>([]);
-  const [warSummaries, setWarSummaries] = useState<WarSummary[]>([]);
   const [clanStats, setClanStats] = useState<ComputedClanStats[]>([]);
   const [topPerformers, setTopPerformers] = useState<PlayerStats[]>([]);
   const [worstAttackers, setWorstAttackers] = useState<PlayerStats[]>([]);
@@ -240,7 +237,6 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       ]);
 
       const summaries: WarSummary[] = warSummaryRes.items || [];
-      setWarSummaries(summaries);
 
       // Combine historical wars, filtering by selected war types
       const allHistoricalWars: War[] = historicalWars.flatMap(result => result.items || []).filter(war => {
@@ -321,7 +317,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.stats?.attacks ?? 0) > 0)
         .sort((a, b) => {
           const starDiff = (b.stats?.avg_stars ?? 0) - (a.stats?.avg_stars ?? 0);
-          return starDiff !== 0 ? starDiff : (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0);
+          return starDiff === 0 ? (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0) : starDiff;
         })
         .slice(0, 20);
       setTopPerformers(topByStars);
@@ -338,7 +334,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.defense?.defenses ?? 0) > 0)
         .sort((a, b) => {
           const starDiff = (a.defense?.avg_stars_given ?? 999) - (b.defense?.avg_stars_given ?? 999);
-          return starDiff !== 0 ? starDiff : (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0);
+          return starDiff === 0 ? (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0) : starDiff;
         })
         .slice(0, 20)
         .map(p => ({
@@ -355,7 +351,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.stats?.attacks ?? 0) >= 3)
         .sort((a, b) => {
           const starDiff = (a.stats?.avg_stars ?? 0) - (b.stats?.avg_stars ?? 0);
-          return starDiff !== 0 ? starDiff : (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0);
+          return starDiff === 0 ? (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0) : starDiff;
         })
         .slice(0, 20);
       setWorstAttackers(worstByStars);
@@ -365,7 +361,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.defense?.defenses ?? 0) >= 3)
         .sort((a, b) => {
           const starDiff = (b.defense?.avg_stars_given ?? 0) - (a.defense?.avg_stars_given ?? 0);
-          return starDiff !== 0 ? starDiff : (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0);
+          return starDiff === 0 ? (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0) : starDiff;
         })
         .slice(0, 20)
         .map(p => ({
@@ -440,7 +436,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         ? rawDate.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:$5:$6')
         : rawDate;
       const parsed = new Date(normalized);
-      if (isNaN(parsed.getTime())) return;
+      if (Number.isNaN(parsed.getTime())) return;
 
       const weekKey = getWeekKey(parsed);
       if (!weekMap.has(weekKey)) {

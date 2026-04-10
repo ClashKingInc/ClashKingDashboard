@@ -17,18 +17,18 @@ import type { RosterMember, Clan, SignupCategory } from "../_lib/types";
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
 
 interface MembersTableProps {
-  members: RosterMember[];
-  columns: string[];
-  rosterClanTag?: string | null;
-  familyClans: Clan[];
-  categories?: SignupCategory[];
-  groupDuplicateMap?: Record<string, string[]>;
-  onRemoveMember: (tag: string) => void;
-  removingMember?: string | null;
-  onCategoryClick?: () => void;
-  onUpdateMemberCategory?: (tag: string, categoryId: string | null) => Promise<void>;
-  onRefreshMember?: (tag: string) => Promise<void>;
-  t: (key: string) => string;
+  readonly members: RosterMember[];
+  readonly columns: string[];
+  readonly rosterClanTag?: string | null;
+  readonly familyClans: Clan[];
+  readonly categories?: SignupCategory[];
+  readonly groupDuplicateMap?: Record<string, string[]>;
+  readonly onRemoveMember: (tag: string) => void;
+  readonly removingMember?: string | null;
+  readonly onCategoryClick?: () => void;
+  readonly onUpdateMemberCategory?: (tag: string, categoryId: string | null) => Promise<void>;
+  readonly onRefreshMember?: (tag: string) => Promise<void>;
+  readonly t: (key: string) => string;
 }
 
 export function MembersTable({
@@ -45,7 +45,7 @@ export function MembersTable({
   onRefreshMember,
   t,
 }: MembersTableProps) {
-  const familyClanTags = familyClans.map(c => c.tag);
+  const familyClanTags = new Set(familyClans.map(c => c.tag));
   const getClanBadgeUrl = (clanTag?: string | null): string | null => {
     if (!clanTag) return null;
     const clan = familyClans.find((c) => c.tag === clanTag);
@@ -139,7 +139,7 @@ export function MembersTable({
   const getClanColorClass = (clanTag?: string | null): string => {
     if (!clanTag || clanTag === '#') return 'text-red-400';
     if (rosterClanTag && clanTag === rosterClanTag) return 'text-green-400';
-    if (familyClanTags.includes(clanTag)) return 'text-yellow-400';
+    if (familyClanTags.has(clanTag)) return 'text-yellow-400';
     return 'text-red-400';
   };
 

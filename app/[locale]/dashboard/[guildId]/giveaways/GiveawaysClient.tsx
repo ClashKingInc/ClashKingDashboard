@@ -632,7 +632,7 @@ function GiveawaysTable({
   );
 }
 
-export default function GiveawaysClient({
+export default function GiveawaysClient({ // NOSONAR — complexity comes from aggregate giveaway form state management, not a single logic unit
   guildId,
   locale,
   title,

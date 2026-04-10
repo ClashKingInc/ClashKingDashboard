@@ -38,25 +38,25 @@ import { cn } from "@/lib/utils";
 import type { RosterMember, SignupCategory, Clan } from "../_lib/types";
 
 interface MembersByCategoryProps {
-  members: RosterMember[];
-  categories: SignupCategory[];
-  columns: string[];
-  rosterClanTag?: string | null;
-  familyClans: Clan[];
-  onRemoveMember: (tag: string) => void;
-  onUpdateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
-  removingMember?: string | null;
-  t: (key: string) => string;
+  readonly members: RosterMember[];
+  readonly categories: SignupCategory[];
+  readonly columns: string[];
+  readonly rosterClanTag?: string | null;
+  readonly familyClans: Clan[];
+  readonly onRemoveMember: (tag: string) => void;
+  readonly onUpdateMemberCategory: (memberTag: string, categoryId: string | null) => Promise<void>;
+  readonly removingMember?: string | null;
+  readonly t: (key: string) => string;
 }
 
 interface DraggableMemberProps {
-  member: RosterMember;
-  columns: string[];
-  rosterClanTag?: string | null;
-  familyClans: Clan[];
-  familyClanTags: string[];
-  onRemove: () => void;
-  isRemoving: boolean;
+  readonly member: RosterMember;
+  readonly columns: string[];
+  readonly rosterClanTag?: string | null;
+  readonly familyClans: Clan[];
+  readonly familyClanTags: string[];
+  readonly onRemove: () => void;
+  readonly isRemoving: boolean;
 }
 
 function DraggableMember({
@@ -285,17 +285,17 @@ function DraggableMember({
 }
 
 interface CategorySectionProps {
-  categoryId: string | null;
-  categoryName: string;
-  members: RosterMember[];
-  columns: string[];
-  rosterClanTag?: string | null;
-  familyClans: Clan[];
-  familyClanTags: string[];
-  onRemoveMember: (tag: string) => void;
-  removingMember?: string | null;
-  isOver: boolean;
-  t: (key: string) => string;
+  readonly categoryId: string | null;
+  readonly categoryName: string;
+  readonly members: RosterMember[];
+  readonly columns: string[];
+  readonly rosterClanTag?: string | null;
+  readonly familyClans: Clan[];
+  readonly familyClanTags: string[];
+  readonly onRemoveMember: (tag: string) => void;
+  readonly removingMember?: string | null;
+  readonly isOver: boolean;
+  readonly t: (key: string) => string;
 }
 
 function CategorySection({
@@ -480,9 +480,7 @@ export function MembersByCategory({
     let targetCategoryId: string | null = null;
     const overId = over.id as string;
 
-    if (overId === "__unassigned__") {
-      targetCategoryId = null;
-    } else if (categories.some((c) => c.custom_id === overId)) {
+    if (overId !== "__unassigned__" && categories.some((c) => c.custom_id === overId)) {
       targetCategoryId = overId;
     } else {
       // Dropped on a member, use their category

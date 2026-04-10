@@ -10,14 +10,14 @@ import type { Roster } from "../_lib/types";
 import { calculateRosterStats, formatThRestriction } from "../_lib/utils";
 
 interface RosterCardProps {
-  roster: Roster;
-  familyClanTags?: string[];
-  onView: (roster: Roster) => void;
-  onEdit: (roster: Roster) => void;
-  onDelete: (roster: Roster) => void;
-  onClone: (roster: Roster) => void;
-  deleting?: boolean;
-  t: (key: string) => string;
+  readonly roster: Roster;
+  readonly familyClanTags?: string[];
+  readonly onView: (roster: Roster) => void;
+  readonly onEdit: (roster: Roster) => void;
+  readonly onDelete: (roster: Roster) => void;
+  readonly onClone: (roster: Roster) => void;
+  readonly deleting?: boolean;
+  readonly t: (key: string) => string;
 }
 
 export function RosterCard({

@@ -26,12 +26,12 @@ interface Player {
 }
 
 interface PlayerSearchComboboxProps {
-  guildId: string;
-  value: string;        // selected player tag
-  onChange: (tag: string, name: string) => void;
-  onClear: () => void;
-  placeholder: string;
-  selectedName?: string;
+  readonly guildId: string;
+  readonly value: string;        // selected player tag
+  readonly onChange: (tag: string, name: string) => void;
+  readonly onClear: () => void;
+  readonly placeholder: string;
+  readonly selectedName?: string;
 }
 
 export function PlayerSearchCombobox({

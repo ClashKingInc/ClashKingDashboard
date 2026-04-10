@@ -18,13 +18,13 @@ import { Loader2, UserMinus, CheckCircle2, UserPlus, Layers, User, Check } from 
 import type { MissingMembersResult, MissingMembersRosterResult, MissingMember } from "../_lib/types";
 
 interface MissingMembersDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  data: MissingMembersResult | null;
-  loading: boolean;
-  onLoad: (groupId?: string) => void;
-  onAddMembers: (tags: string[]) => Promise<void>;
-  groupId?: string | null;
+  readonly open: boolean;
+  readonly onOpenChange: (open: boolean) => void;
+  readonly data: MissingMembersResult | null;
+  readonly loading: boolean;
+  readonly onLoad: (groupId?: string) => void;
+  readonly onAddMembers: (tags: string[]) => Promise<void>;
+  readonly groupId?: string | null;
 }
 
 export function MissingMembersDialog({
@@ -236,10 +236,10 @@ function RosterResultSection({
   selectedMembers,
   onToggle,
 }: {
-  result: MissingMembersRosterResult;
-  showHeader: boolean;
-  selectedMembers: Set<string>;
-  onToggle: (tag: string) => void;
+  readonly result: MissingMembersRosterResult;
+  readonly showHeader: boolean;
+  readonly selectedMembers: Set<string>;
+  readonly onToggle: (tag: string) => void;
 }) {
   if (result.state === 'error' || !result.missing_members?.length) return null;
 

@@ -33,7 +33,7 @@ export function normalizePlayerTag(tag: string): string {
  */
 export function parseBulkTags(input: string): { valid: string[]; invalid: string[] } {
   const tags = input
-    .split(/[\n,\s]+/)
+    .split(/[,\s]+/)
     .map(t => t.trim().toUpperCase())
     .filter(t => t.length > 0)
     .map(t => t.startsWith('#') ? t : '#' + t);

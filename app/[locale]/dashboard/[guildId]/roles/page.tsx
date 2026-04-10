@@ -7,25 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoleCombobox } from "@/components/ui/role-combobox";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -55,8 +40,6 @@ import {
   Trophy,
   Hammer,
   Award,
-  Crown,
-  Check,
   ChevronsUpDown,
   ChevronUp,
   ChevronDown,
@@ -68,14 +51,8 @@ import { apiCache } from "@/lib/api-cache";
 import type {
   RoleType,
   DiscordRole,
-  TownhallRole,
-  LeagueRole,
-  BuilderHallRole,
-  StatusRole,
-  FamilyPositionRole,
   RoleSettings,
 } from "@/lib/api/types/roles";
-import { LetterCaseUppercaseIcon } from "@radix-ui/react-icons";
 
 const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "townhall", icon: Users },
@@ -127,7 +104,7 @@ function SortIcon({ col, sortCol, sortDir }: { readonly col: "role" | "criteria"
     : <ChevronDown className="ml-1 h-3 w-3 inline" />;
 }
 
-export default function RolesPage() {
+export default function RolesPage() { // NOSONAR — complexity comes from aggregate role-type handling, not a single logic unit
   const params = useParams();
   const guildId = params.guildId as string;
   const locale = useLocale();
@@ -310,7 +287,7 @@ export default function RolesPage() {
           townhall: rolesRes.data.roles.townhall?.map((r: any) => ({
             ...r,
             role_id: String(r.role || r.role_id),
-            th: typeof r.th === 'string' ? parseInt(r.th.replace(/^th/i, '')) : r.th,
+            th: typeof r.th === 'string' ? Number.parseInt(r.th.replace(/^th/i, '')) : r.th,
           })) || [],
           league: rolesRes.data.roles.league?.map((r: any) => ({
             ...r,
@@ -390,7 +367,7 @@ export default function RolesPage() {
         matchesExact = existingRoles.some((r) => r.type === newRole.league && r.role_id === newRole.role_id);
       } else if (currentRoleType === "builderhall") {
         const normBh = (bh: any) =>
-          typeof bh === "string" ? parseInt(bh.replace(/^bh/i, "")) : Number(bh);
+          typeof bh === "string" ? Number.parseInt(bh.replace(/^bh/i, "")) : Number(bh);
         matchesCriterion = existingRoles.some((r) => normBh(r.bh) === newRole.bh);
         matchesExact = existingRoles.some((r) => normBh(r.bh) === newRole.bh && r.role_id === newRole.role_id);
       } else if (currentRoleType === "builder_league") {
@@ -474,7 +451,7 @@ export default function RolesPage() {
               <Label htmlFor="th">{t("addRoleDialog.townHallLevel")}</Label>
               <Select
                 value={newRole.th?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, th: parseInt(value) })}
+                onValueChange={(value) => setNewRole({ ...newRole, th: Number.parseInt(value) })}
               >
                 <SelectTrigger id="th">
                   <SelectValue placeholder={t("addRoleDialog.selectThLevel")} />
@@ -542,7 +519,7 @@ export default function RolesPage() {
               <Label htmlFor="bh">{t("addRoleDialog.builderHallLevel")}</Label>
               <Select
                 value={newRole.bh?.toString()}
-                onValueChange={(value) => setNewRole({ ...newRole, bh: parseInt(value) })}
+                onValueChange={(value) => setNewRole({ ...newRole, bh: Number.parseInt(value) })}
               >
                 <SelectTrigger id="bh">
                   <SelectValue placeholder={t("addRoleDialog.selectBhLevel")} />
@@ -619,7 +596,7 @@ export default function RolesPage() {
 
   const renderRolesList = (roleType: RoleType) => {
     const raw = allRoles[roleType] || [];
-    const normNum = (v: any) => typeof v === "string" ? parseInt(v.replace(/^\D+/i, "")) : Number(v);
+    const normNum = (v: any) => typeof v === "string" ? Number.parseInt(v.replace(/^\D+/i, "")) : Number(v);
 
     const getCriteriaLabel = (role: any): string => {
       switch (roleType) {
@@ -1008,7 +985,7 @@ export default function RolesPage() {
             <Tabs defaultValue="townhall" className="w-full">
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 h-auto">
                 {isLoading ? (
-                  [...Array(7)].map((_, i) => (
+                  Array.from({ length: 7 }).map((_, i) => (
                     <Skeleton key={i} className="h-10 w-full animate-pulse" />
                   ))
                 ) : (

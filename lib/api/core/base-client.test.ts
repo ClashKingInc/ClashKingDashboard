@@ -353,3 +353,134 @@ describe("BaseApiClient — requestFormData", () => {
     expect(options.headers["Content-Type"]).toBeUndefined();
   });
 });
+
+// ─── _doRefresh edge cases ────────────────────────────────────────────────────
+
+describe('BaseApiClient — _doRefresh edge cases', () => {
+  let client: TestClient;
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    localStorage.clear();
+    client = new TestClient({ baseUrl: 'http://api.example.com', accessToken: 'tok' });
+    fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    localStorage.clear();
+  });
+
+  it('clears tokens when refresh endpoint returns non-OK', async () => {
+    localStorage.setItem('refresh_token', 'ref_tok');
+    localStorage.setItem('access_token', 'old_tok');
+    localStorage.setItem('user', '{}');
+    fetchMock
+      .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) })
+      .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) });
+    await client.req('/protected').catch(() => null);
+    expect(localStorage.getItem('access_token')).toBeNull();
+    expect(localStorage.getItem('refresh_token')).toBeNull();
+    expect(localStorage.getItem('user')).toBeNull();
+  });
+
+  it('stores new refresh_token when rotation is included in refresh response', async () => {
+    localStorage.setItem('refresh_token', 'old_ref');
+    fetchMock
+      .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) })
+      .mockResolvedValueOnce({
+        ok: true, status: 200,
+        json: vi.fn().mockResolvedValue({ access_token: 'new_tok', refresh_token: 'new_ref' }),
+      })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({}) });
+    await client.req('/protected');
+    expect(localStorage.getItem('refresh_token')).toBe('new_ref');
+  });
+
+  it('does not retry when refresh response has no access_token', async () => {
+    localStorage.setItem('refresh_token', 'ref_tok');
+    fetchMock
+      .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ message: 'ok' }) });
+    const result = await client.req('/protected');
+    expect(result.status).toBe(401);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('returns error gracefully when network fails during refresh', async () => {
+    localStorage.setItem('refresh_token', 'ref_tok');
+    fetchMock
+      .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) })
+      .mockRejectedValueOnce(new Error('Network down'));
+    const result = await client.req('/protected');
+    expect(result.status).toBe(401);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('BaseApiClient — requestFormData 401 retry', () => {
+  let client: TestClient;
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    localStorage.clear();
+    client = new TestClient({ baseUrl: 'http://api.example.com', accessToken: 'tok' });
+    fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    localStorage.clear();
+  });
+
+  it('retries requestFormData on 401 when refresh succeeds', async () => {
+    localStorage.setItem('refresh_token', 'ref_tok');
+    fetchMock
+      .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ access_token: 'new_tok' }) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ uploaded: true }) });
+    const result = await client.reqFormData('/upload', 'POST', new FormData());
+    expect(result.data).toEqual({ uploaded: true });
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe('BaseApiClient — proactive token refresh', () => {
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    localStorage.clear();
+    fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    localStorage.clear();
+  });
+
+  it('proactively refreshes when no access_token exists but refresh_token is stored', async () => {
+    const clientNoToken = new TestClient({ baseUrl: 'http://api.example.com' });
+    localStorage.setItem('refresh_token', 'ref_tok');
+    fetchMock
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ access_token: 'fresh_tok' }) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ id: 99 }) });
+    const result = await clientNoToken.req('/players');
+    expect(result.data).toEqual({ id: 99 });
+    const [, opts] = fetchMock.mock.calls[1] as [string, RequestInit & { headers: Headers }];
+    expect((opts.headers as Headers).get('Authorization')).toBe('Bearer fresh_tok');
+  });
+
+  it('proceeds without token when proactive refresh returns no access_token', async () => {
+    const clientNoToken = new TestClient({ baseUrl: 'http://api.example.com' });
+    localStorage.setItem('refresh_token', 'ref_tok');
+    fetchMock
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ message: 'no token' }) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({ id: 1 }) });
+    const result = await clientNoToken.req('/players');
+    expect(result.data).toEqual({ id: 1 });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+});

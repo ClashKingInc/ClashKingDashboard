@@ -37,7 +37,7 @@ function extractUserId(value: string | null | undefined): string | null {
   if (!value) return null;
 
   // Check for mention format <@123> or <@!123>
-  const mentionMatch = value.match(/<@!?(\d+)>/);
+  const mentionMatch = /<@!?(\d+)>/.exec(value);
   if (mentionMatch) {
     return mentionMatch[1];
   }
@@ -50,7 +50,7 @@ function extractUserId(value: string | null | undefined): string | null {
   return null;
 }
 
-export function DiscordUserDisplay({
+export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-format Discord ID resolution, not a single logic unit
   userId,
   username,
   avatarUrl,

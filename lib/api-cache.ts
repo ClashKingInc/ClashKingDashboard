@@ -13,8 +13,8 @@ interface PendingRequest<T> {
 }
 
 export class ApiCache {
-  private cache = new Map<string, CacheEntry<any>>();
-  private pendingRequests = new Map<string, PendingRequest<any>>();
+  private readonly cache = new Map<string, CacheEntry<any>>();
+  private readonly pendingRequests = new Map<string, PendingRequest<any>>();
   private readonly defaultTTL = 30000; // 30 seconds
 
   /**
