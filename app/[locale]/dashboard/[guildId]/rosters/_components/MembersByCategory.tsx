@@ -126,6 +126,13 @@ function DraggableMember({
           <PlayerProfilePopover
             playerName={member.name || member.tag}
             playerTag={member.tag}
+            clanName={member.current_clan}
+            townhallLevel={member.townhall}
+            trophies={member.trophies}
+            warPreference={member.war_pref}
+            signupGroup={member.signup_group}
+            heroLevels={member.hero_lvs}
+            hitrate={member.hitrate}
             showTagInTrigger={false}
             triggerClassName="font-medium text-foreground truncate block text-left cursor-pointer hover:opacity-80 transition-opacity"
           >
@@ -134,9 +141,23 @@ function DraggableMember({
             </span>
           </PlayerProfilePopover>
           {columns.includes('tag') && (
-            <span className="text-xs text-muted-foreground font-mono">
-              {member.tag}
-            </span>
+            <PlayerProfilePopover
+              playerName={member.name || member.tag}
+              playerTag={member.tag}
+              clanName={member.current_clan}
+              townhallLevel={member.townhall}
+              trophies={member.trophies}
+              warPreference={member.war_pref}
+              signupGroup={member.signup_group}
+              heroLevels={member.hero_lvs}
+              hitrate={member.hitrate}
+              showTagInTrigger={false}
+              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <span className="text-xs text-muted-foreground font-mono">
+                {member.tag}
+              </span>
+            </PlayerProfilePopover>
           )}
         </div>
 

@@ -133,6 +133,13 @@ export function MembersTable({
             <PlayerProfilePopover
               playerName={member.name || member.tag}
               playerTag={member.tag}
+              clanName={member.current_clan}
+              townhallLevel={member.townhall}
+              trophies={member.trophies}
+              warPreference={member.war_pref}
+              signupGroup={member.signup_group}
+              heroLevels={member.hero_lvs}
+              hitrate={member.hitrate}
               showTagInTrigger={false}
               triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
             >
@@ -157,7 +164,23 @@ export function MembersTable({
       }
 
       case 'tag':
-        return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
+        return (
+          <PlayerProfilePopover
+            playerName={member.name || member.tag}
+            playerTag={member.tag}
+            clanName={member.current_clan}
+            townhallLevel={member.townhall}
+            trophies={member.trophies}
+            warPreference={member.war_pref}
+            signupGroup={member.signup_group}
+            heroLevels={member.hero_lvs}
+            hitrate={member.hitrate}
+            showTagInTrigger={false}
+            triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>
+          </PlayerProfilePopover>
+        );
 
       case 'hitrate':
         if (member.hitrate !== null && member.hitrate !== undefined) {
