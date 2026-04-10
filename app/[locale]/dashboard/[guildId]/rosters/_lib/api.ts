@@ -54,8 +54,9 @@ export async function fetchRosters(serverId: string, groupId?: string): Promise<
   const response = await fetch(url, {
     headers: getAuthHeaders(),
   });
-  const data = await handleResponse<{ items?: Roster[] } | Roster[]>(response);
-  return Array.isArray(data) ? data : data.items || [];
+  const data = await handleResponse<{ items?: Roster[]; rosters?: Roster[] } | Roster[]>(response);
+  if (Array.isArray(data)) return data;
+  return data.rosters || data.items || [];
 }
 
 export async function fetchRoster(rosterId: string, serverId: string): Promise<Roster> {
