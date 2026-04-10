@@ -279,7 +279,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       ? sanitizeColumns(normalizedApiColumns, allowedColumns, fallback)
       : fallback;
 
-    if (typeof globalThis.window !== "undefined") {
+    if (globalThis.window !== undefined) {
       const raw = localStorage.getItem(columnsStorageKey);
       if (raw) {
         try {
@@ -299,7 +299,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
   // Persist local columns immediately so refresh keeps same order/selection
   React.useEffect(() => {
-    if (!columnsInitialized || typeof globalThis.window === "undefined") return;
+    if (!columnsInitialized || globalThis.window === undefined) return;
     localStorage.setItem(columnsStorageKey, JSON.stringify(localColumns));
   }, [columnsInitialized, columnsStorageKey, localColumns]);
 

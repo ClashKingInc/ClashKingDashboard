@@ -50,8 +50,12 @@ export function PlayerProfilePopover({
     heroLevels !== undefined ||
     hitrate !== undefined;
 
-  const warPreferenceLabel =
-    warPreference == null ? "-" : (warPreference ? "In" : "Out");
+  let warPreferenceLabel = "-";
+  if (warPreference === true) {
+    warPreferenceLabel = "In";
+  } else if (warPreference === false) {
+    warPreferenceLabel = "Out";
+  }
 
   return (
     <Popover>
@@ -108,7 +112,7 @@ export function PlayerProfilePopover({
               {heroLevels !== undefined && (
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-muted-foreground">Heldenniveaus</span>
-                  <span className="text-foreground">{heroLevels == null ? "-" : heroLevels}</span>
+                  <span className="text-foreground">{heroLevels ?? "-"}</span>
                 </div>
               )}
               {hitrate !== undefined && (
