@@ -763,26 +763,18 @@ export default function RolesPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRoles")}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-16 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-blue-500">{totalRoles}</div>
-                    <Shield className="h-8 w-8 text-blue-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t("stats.totalRolesDesc")}
-                  </p>
-                </>
-              )}
+            <CardContent className="h-[84px] flex flex-col justify-between">
+              <div className="flex h-10 items-center justify-between">
+                {isLoading ? (
+                  <Skeleton className="h-9 w-16 animate-pulse" />
+                ) : (
+                  <div className="flex h-8 items-center text-3xl font-bold text-blue-500">{totalRoles}</div>
+                )}
+                <Shield className="h-8 w-8 shrink-0 text-blue-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {t("stats.totalRolesDesc")}
+              </p>
             </CardContent>
           </Card>
 
@@ -790,28 +782,20 @@ export default function RolesPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.autoEvaluation")}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-20 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
+            <CardContent className="h-[84px] flex flex-col justify-between">
+              <div className="flex h-10 items-center justify-between">
+                {isLoading ? (
+                  <Skeleton className="h-9 w-20 animate-pulse" />
+                ) : (
+                  <div className={`flex h-8 items-center text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-green-500/50'}`}>
+                    {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
                   </div>
-                  <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className={`text-3xl font-bold ${roleSettings.auto_eval_status ? 'text-green-500' : 'text-green-500/50'}`}>
-                      {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
-                    </div>
-                    <Settings className={`h-8 w-8 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-green-500/30'}`} />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
-                  </p>
-                </>
-              )}
+                )}
+                <Settings className={`h-8 w-8 shrink-0 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-green-500/30'}`} />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
+              </p>
             </CardContent>
           </Card>
 
@@ -819,26 +803,18 @@ export default function RolesPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.activeTypes")}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-12 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-purple-500">{activeRoleTypes}/{totalRoleTypes}</div>
-                    <Trophy className="h-8 w-8 text-purple-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t("stats.activeTypesDesc")}
-                  </p>
-                </>
-              )}
+            <CardContent className="h-[84px] flex flex-col justify-between">
+              <div className="flex h-10 items-center justify-between">
+                {isLoading ? (
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                ) : (
+                  <div className="flex h-8 items-center text-3xl font-bold text-purple-500">{activeRoleTypes}/{totalRoleTypes}</div>
+                )}
+                <Trophy className="h-8 w-8 shrink-0 text-purple-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {t("stats.activeTypesDesc")}
+              </p>
             </CardContent>
           </Card>
 
@@ -846,26 +822,18 @@ export default function RolesPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.discordRoles")}</CardTitle>
             </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-9 w-12 animate-pulse" />
-                    <Skeleton className="h-8 w-8 animate-pulse" />
-                  </div>
-                  <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-yellow-500">{discordRoles.length}</div>
-                    <Users className="h-8 w-8 text-yellow-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t("stats.discordRolesDesc")}
-                  </p>
-                </>
-              )}
+            <CardContent className="h-[84px] flex flex-col justify-between">
+              <div className="flex h-10 items-center justify-between">
+                {isLoading ? (
+                  <Skeleton className="h-9 w-12 animate-pulse" />
+                ) : (
+                  <div className="flex h-8 items-center text-3xl font-bold text-yellow-500">{discordRoles.length}</div>
+                )}
+                <Users className="h-8 w-8 shrink-0 text-yellow-500/50" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {t("stats.discordRolesDesc")}
+              </p>
             </CardContent>
           </Card>
         </div>
