@@ -870,7 +870,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                         )}
                       </CardDescription>
                     </div>
-                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as "grouped" | "individual")} className="hidden md:block">
+                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as "grouped" | "all")} className="hidden md:block">
                       <TabsList className="grid grid-cols-2 w-fit">
                         <TabsTrigger value="grouped">
                           <Users className="h-4 w-4 mr-2" />

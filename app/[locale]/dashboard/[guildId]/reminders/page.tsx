@@ -366,8 +366,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
   const isTimeValid = (time: string, type: string): boolean => {
     if (!time) return false;
-    const hours = Number.Number.parseFloat(time);
-    if (Number.Number.isNaN(hours) || hours <= 0) return false;
+    const hours = Number.parseFloat(time);
+    if (Number.isNaN(hours) || hours <= 0) return false;
     const max = getMaxHours(type);
     if (max === 0) return true; // Inactivity
     return hours <= max;
