@@ -534,13 +534,15 @@ export default function BansPage() { // NOSONAR — React page component: comple
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[84px] flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
+                  <div className="flex h-10 items-center justify-between">
                     {isLoadingBans ? (
                       <Skeleton className="h-8 w-20 animate-pulse" />
                     ) : (
-                      <div className="text-3xl font-bold text-blue-500">{bans.length}</div>
+                      <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-blue-500">
+                        {bans.length}
+                      </div>
                     )}
-                    <UserX className="h-8 w-8 text-blue-500/50" />
+                    <UserX className="h-8 w-8 shrink-0 text-blue-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     {t("bans.stats.activeOnServer")}
@@ -555,13 +557,15 @@ export default function BansPage() { // NOSONAR — React page component: comple
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="h-[84px] flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
+                  <div className="flex h-10 items-center justify-between">
                     {isLoadingBans ? (
                       <Skeleton className="h-8 w-20 animate-pulse" />
                     ) : (
-                      <div className="text-3xl font-bold text-green-500">{recentBans}</div>
+                      <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-green-500">
+                        {recentBans}
+                      </div>
                     )}
-                    <Calendar className="h-8 w-8 text-green-500/50" />
+                    <Calendar className="h-8 w-8 shrink-0 text-green-500/50" />
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
                     {t("bans.stats.last7Days")}
@@ -838,13 +842,15 @@ export default function BansPage() { // NOSONAR — React page component: comple
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="h-[84px] flex flex-col justify-between">
-                    <div className="flex items-center justify-between">
+                    <div className="flex h-10 items-center justify-between">
                       {isLoadingStrikes ? (
                         <Skeleton className="h-8 w-20 animate-pulse" />
                       ) : (
-                        <div className="text-3xl font-bold text-blue-500">{strikes.length}</div>
+                        <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-blue-500">
+                          {strikes.length}
+                        </div>
                       )}
-                      <AlertTriangle className="h-8 w-8 text-blue-500/50" />
+                      <AlertTriangle className="h-8 w-8 shrink-0 text-blue-500/50" />
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
                       {t("strikes.stats.activeOnServer")}
@@ -859,13 +865,15 @@ export default function BansPage() { // NOSONAR — React page component: comple
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="h-[84px] flex flex-col justify-between">
-                    <div className="flex items-center justify-between">
+                    <div className="flex h-10 items-center justify-between">
                       {isLoadingStrikes ? (
                         <Skeleton className="h-8 w-20 animate-pulse" />
                       ) : (
-                        <div className="text-3xl font-bold text-green-500">{recentStrikes}</div>
+                        <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-green-500">
+                          {recentStrikes}
+                        </div>
                       )}
-                      <Calendar className="h-8 w-8 text-green-500/50" />
+                      <Calendar className="h-8 w-8 shrink-0 text-green-500/50" />
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
                       {t("strikes.stats.last7Days")}
