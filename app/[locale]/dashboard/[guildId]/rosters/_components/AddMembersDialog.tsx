@@ -32,15 +32,15 @@ import type { ClanMember, RosterMember } from "../_lib/types";
 import { parseBulkTags } from "../_lib/utils";
 
 interface AddMembersDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAddMembers: (tags: string[]) => Promise<void>;
-  serverMembers: ClanMember[];
-  clanMembers: ClanMember[];
-  existingMembers?: RosterMember[];
-  loadServerMembers: () => void;
-  loadingServerMembers: boolean;
-  t: (key: string) => string;
+  readonly open: boolean;
+  readonly onOpenChange: (open: boolean) => void;
+  readonly onAddMembers: (tags: string[]) => Promise<void>;
+  readonly serverMembers: ClanMember[];
+  readonly clanMembers: ClanMember[];
+  readonly existingMembers?: RosterMember[];
+  readonly loadServerMembers: () => void;
+  readonly loadingServerMembers: boolean;
+  readonly t: (key: string) => string;
 }
 
 export function AddMembersDialog({

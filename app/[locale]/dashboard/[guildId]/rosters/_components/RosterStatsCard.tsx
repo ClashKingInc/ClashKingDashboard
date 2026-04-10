@@ -9,9 +9,9 @@ import type { Roster } from "../_lib/types";
 import { calculateRosterStats, formatThRestriction } from "../_lib/utils";
 
 interface RosterStatsCardProps {
-  roster: Roster;
-  familyClanTags?: string[];
-  t: (key: string) => string;
+  readonly roster: Roster;
+  readonly familyClanTags?: string[];
+  readonly t: (key: string) => string;
 }
 
 export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsCardProps) {

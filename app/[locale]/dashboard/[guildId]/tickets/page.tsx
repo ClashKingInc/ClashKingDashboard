@@ -90,7 +90,7 @@ const getTicketDiscordUrl = (ticket: OpenTicket) =>
 const getTranscriptUrl = (ticket: OpenTicket) =>
   `https://cdn.clashking.xyz/transcript-channel-${ticket.channel}.html`;
 
-function TicketAccountsCell({ ticket }: { ticket: OpenTicket }) {
+function TicketAccountsCell({ ticket }: { readonly ticket: OpenTicket }) {
   const accounts = ticket.linked_accounts ?? [];
 
   if (accounts.length === 0) {
@@ -129,12 +129,12 @@ function TicketManageDialog({
   clans,
   onSaved,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  ticket: OpenTicket | null;
-  guildId: string;
-  clans: ServerClanListItem[];
-  onSaved: () => Promise<void>;
+  readonly open: boolean;
+  readonly onOpenChange: (open: boolean) => void;
+  readonly ticket: OpenTicket | null;
+  readonly guildId: string;
+  readonly clans: ServerClanListItem[];
+  readonly onSaved: () => Promise<void>;
 }) {
   const t = useTranslations("TicketsPage");
   const tCommon = useTranslations("Common");
@@ -381,7 +381,7 @@ const STAT_CARD_CONFIGS: StatCardConfig[] = [
 function TicketsTab({
   guildId,
 }: {
-  guildId: string;
+  readonly guildId: string;
 }) {
   const t = useTranslations("TicketsPage");
   const tCommon = useTranslations("Common");
@@ -644,11 +644,11 @@ function TicketsTab({
 function ChannelTab({
   panel, categories, textChannels, guildId, availableEmbeds,
 }: {
-  panel: TicketPanel;
-  categories: DiscordChannel[];
-  textChannels: DiscordChannel[];
-  guildId: string;
-  availableEmbeds: string[];
+  readonly panel: TicketPanel;
+  readonly categories: DiscordChannel[];
+  readonly textChannels: DiscordChannel[];
+  readonly guildId: string;
+  readonly availableEmbeds: string[];
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
@@ -752,16 +752,16 @@ const BUTTON_STYLE_COLOR: Record<number, string> = {
 function ButtonCard({
   customId, label, style, settings, panelName, guildId, roles, availableEmbeds, onDeleted, onAppearanceUpdated,
 }: {
-  customId: string;
-  label: string;
-  style: number;
-  settings: TicketButtonSettings;
-  panelName: string;
-  guildId: string;
-  roles: DiscordRole[];
-  availableEmbeds: string[];
-  onDeleted: () => void;
-  onAppearanceUpdated: (label: string, style: number) => void;
+  readonly customId: string;
+  readonly label: string;
+  readonly style: number;
+  readonly settings: TicketButtonSettings;
+  readonly panelName: string;
+  readonly guildId: string;
+  readonly roles: DiscordRole[];
+  readonly availableEmbeds: string[];
+  readonly onDeleted: () => void;
+  readonly onAppearanceUpdated: (label: string, style: number) => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
@@ -1170,7 +1170,7 @@ function ButtonCard({
   );
 }
 
-function MessagesTab({ panel, guildId }: { panel: TicketPanel; guildId: string }) {
+function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly guildId: string }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
@@ -1222,12 +1222,12 @@ function MessagesTab({ panel, guildId }: { panel: TicketPanel; guildId: string }
                   onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, name: e.target.value } : m))} // NOSONAR — inline state updater in map, standard React pattern
                   placeholder={t("messageName")} />
                 <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                  onClick={() => setMessages((p) => p.filter((_, idx) => idx !== i))}>
+                  onClick={() => setMessages((p) => p.filter((_, idx) => idx !== i))}> {/* NOSONAR — JSX inline handler nesting is structural, not logic complexity */}
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
               <Textarea value={msg.message}
-                onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, message: e.target.value } : m))}
+                onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, message: e.target.value } : m))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                 placeholder={t("messageContent")} rows={3} />
             </div>
           ))}
@@ -1247,13 +1247,13 @@ function MessagesTab({ panel, guildId }: { panel: TicketPanel; guildId: string }
 function PanelCard({
   panel, categories, textChannels, roles, guildId, availableEmbeds, onDeleted,
 }: {
-  panel: TicketPanel;
-  categories: DiscordChannel[];
-  textChannels: DiscordChannel[];
-  roles: DiscordRole[];
-  guildId: string;
-  availableEmbeds: string[];
-  onDeleted: () => void;
+  readonly panel: TicketPanel;
+  readonly categories: DiscordChannel[];
+  readonly textChannels: DiscordChannel[];
+  readonly roles: DiscordRole[];
+  readonly guildId: string;
+  readonly availableEmbeds: string[];
+  readonly onDeleted: () => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
@@ -1418,7 +1418,7 @@ function PanelCard({
                           }}
                           panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds}
                           onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))}
-                          onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))}
+                          onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
                       ))}
                     </div>
@@ -1436,7 +1436,7 @@ function PanelCard({
   );
 }
 
-function ConfigTab({ guildId }: { guildId: string }) {
+function ConfigTab({ guildId }: { readonly guildId: string }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
@@ -1563,7 +1563,8 @@ function ConfigTab({ guildId }: { guildId: string }) {
         ) : (
           panels.map((panel) => (
             <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds}
-              onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} />
+              onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
+            />
           ))
         )}
       </div>

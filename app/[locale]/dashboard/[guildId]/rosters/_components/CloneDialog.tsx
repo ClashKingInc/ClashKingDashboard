@@ -17,11 +17,11 @@ import { Loader2, Copy } from "lucide-react";
 import type { Roster, CloneRosterFormData } from "../_lib/types";
 
 interface CloneDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  roster: Roster | null;
-  onClone: (data: CloneRosterFormData) => Promise<void>;
-  t: (key: string) => string;
+  readonly open: boolean;
+  readonly onOpenChange: (open: boolean) => void;
+  readonly roster: Roster | null;
+  readonly onClone: (data: CloneRosterFormData) => Promise<void>;
+  readonly t: (key: string) => string;
 }
 
 export function CloneDialog({

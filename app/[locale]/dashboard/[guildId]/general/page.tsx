@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/dialog";
 
 const hexToInt = (hex: string): number => {
-  return parseInt(hex.replace("#", ""), 16);
+  return Number.parseInt(hex.replace("#", ""), 16);
 };
 
 const intToHex = (int: number): string => {
@@ -569,7 +569,7 @@ export default function GeneralSettingsPage() {
                       type="number"
                       min="1"
                       value={newTenureRole.months || ""}
-                      onChange={(e) => setNewTenureRole({ ...newTenureRole, months: parseInt(e.target.value) || undefined })}
+                      onChange={(e) => setNewTenureRole({ ...newTenureRole, months: Number.parseInt(e.target.value) || undefined })}
                       placeholder="6"
                     />
                   </div>
@@ -653,7 +653,7 @@ export default function GeneralSettingsPage() {
                             <div
                               className="w-3 h-3 rounded-full"
                               style={{
-                                backgroundColor: discordRole && discordRole.color !== undefined && discordRole.color !== 0
+                                backgroundColor: discordRole?.color
                                   ? `#${discordRole.color.toString(16).padStart(6, "0")}`
                                   : "#99AAB5"
                               }}
