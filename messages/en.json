@@ -40,7 +40,9 @@
     "dashboard": "Dashboard",
     "loadError": "Failed to load data.",
     "tryAgain": "Try again",
-    "create": "Create"
+    "create": "Create",
+    "viewClashProfile": "View Clash profile",
+    "openInGame": "Open in game"
   },
   "Navigation": {
     "features": "Features",
@@ -554,7 +556,8 @@
       "townhall": "Town Hall",
       "tag": "Tag",
       "hitrate": "Hit Rate",
-      "current_clan_tag": "Current Clan",
+      "current_clan": "Current Clan",
+      "current_clan_tag": "Clan Tag",
       "discord": "Discord",
       "hero_lvs": "Heroes",
       "war_pref": "War Opt",
@@ -567,7 +570,8 @@
       "description": "Choose which columns to display and their order",
       "selected": "Selected Columns",
       "available": "Available Columns",
-      "save": "Save Columns"
+      "save": "Save Columns",
+      "reset": "Reset Columns"
     },
     "sortFields": {
       "townhall": "Townhall Level",
@@ -693,6 +697,7 @@
     "createSuccessDesc": "Roster \"{name}\" has been created",
     "createError": "Failed to create roster",
     "createErrorAlias": "Please enter a roster name",
+    "createErrorClan": "Please select a clan",
     "refreshSuccess": "Roster data refreshed",
     "refreshError": "Failed to refresh roster",
     "saveSuccess": "Settings saved",

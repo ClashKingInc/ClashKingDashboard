@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import {
   Popover,
   PopoverContent,
@@ -44,6 +46,11 @@ export function MembersTable({
   t,
 }: MembersTableProps) {
   const familyClanTags = familyClans.map(c => c.tag);
+  const getClanBadgeUrl = (clanTag?: string | null): string | null => {
+    if (!clanTag) return null;
+    const clan = familyClans.find((c) => c.tag === clanTag);
+    return clan?.badge_url || clan?.badge || null;
+  };
   const [refreshingMember, setRefreshingMember] = useState<string | null>(null);
   const [categoryPopoverTag, setCategoryPopoverTag] = useState<string | null>(null);
   const [updatingCategory, setUpdatingCategory] = useState<string | null>(null);
@@ -66,6 +73,7 @@ export function MembersTable({
       case 'tag': return member.tag?.toLowerCase() ?? '';
       case 'hitrate': return member.hitrate ?? -1;
       case 'trophies': return member.trophies ?? 0;
+      case 'current_clan': return member.current_clan?.toLowerCase() ?? '';
       case 'current_clan_tag': return member.current_clan_tag?.toLowerCase() ?? '';
       case 'discord': return member.discord_username?.toLowerCase() ?? '';
       case 'hero_lvs': return member.hero_lvs ?? '';
@@ -110,10 +118,60 @@ export function MembersTable({
     }
   };
 
+  const withPlayerPopover = (member: RosterMember, content: React.ReactNode) => (
+    <PlayerProfilePopover
+      playerName={member.name || member.tag}
+      playerTag={member.tag}
+      clanName={member.current_clan}
+      townhallLevel={member.townhall}
+      trophies={member.trophies}
+      warPreference={member.war_pref}
+      signupGroup={member.signup_group}
+      heroLevels={member.hero_lvs}
+      hitrate={member.hitrate}
+      showTagInTrigger={false}
+      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+    >
+      {content}
+    </PlayerProfilePopover>
+  );
+
+  const getClanColorClass = (clanTag?: string | null): string => {
+    if (!clanTag || clanTag === '#') return 'text-red-400';
+    if (rosterClanTag && clanTag === rosterClanTag) return 'text-green-400';
+    if (familyClanTags.includes(clanTag)) return 'text-yellow-400';
+    return 'text-red-400';
+  };
+
+  const renderClanCell = (
+    member: RosterMember,
+    content: (colorClass: string) => React.ReactNode,
+  ) => {
+    if (!member.current_clan_tag || member.current_clan_tag === '#') {
+      return <span className="text-muted-foreground">-</span>;
+    }
+
+    const colorClass = getClanColorClass(member.current_clan_tag);
+    return (
+      <ClanProfilePopover
+        clanName={member.current_clan || member.current_clan_tag}
+        clanTag={member.current_clan_tag}
+        clanBadgeUrl={getClanBadgeUrl(member.current_clan_tag)}
+        showTagInTrigger={false}
+        triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+      >
+        {content(colorClass)}
+      </ClanProfilePopover>
+    );
+  };
+
   const renderCell = (member: RosterMember, column: string) => { // NOSONAR — exhaustive switch over table column types, presentation logic only
     switch (column) {
       case 'townhall':
-        return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
+        return withPlayerPopover(
+          member,
+          <span className="text-orange-400 font-medium">TH{member.townhall}</span>
+        );
 
       case 'name': {
         const now = Math.floor(Date.now() / 1000);
@@ -122,7 +180,10 @@ export function MembersTable({
         const duplicateRosters = groupDuplicateMap[member.tag];
         return (
           <span className="font-medium text-foreground flex items-center gap-1.5">
-            {member.name}
+            {withPlayerPopover(
+              member,
+              <span className="font-medium text-foreground">{member.name || member.tag}</span>
+            )}
             {duplicateRosters?.length > 0 && (
               <span title={`${t("members.alsoIn")}: ${duplicateRosters.join(', ')}`}>
                 <Copy className="w-3.5 h-3.5 text-blue-400 shrink-0" />
@@ -142,26 +203,34 @@ export function MembersTable({
       }
 
       case 'tag':
-        return <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>;
+        return withPlayerPopover(
+          member,
+            <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>
+        );
 
       case 'hitrate':
         if (member.hitrate !== null && member.hitrate !== undefined) {
           const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
-          return <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>;
+          return withPlayerPopover(
+            member,
+            <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>
+          );
         }
         return <span className="text-muted-foreground">-</span>;
 
+      case 'current_clan':
+        return renderClanCell(
+          member,
+          (colorClass) => (
+            <span className={`${colorClass} font-medium truncate`}>{member.current_clan || member.current_clan_tag}</span>
+          )
+        );
+
       case 'current_clan_tag':
-        if (member.current_clan_tag && member.current_clan_tag !== '#') {
-          let colorClass = 'text-red-400';
-          if (rosterClanTag && member.current_clan_tag === rosterClanTag) {
-            colorClass = 'text-green-400';
-          } else if (familyClanTags.includes(member.current_clan_tag)) {
-            colorClass = 'text-yellow-400';
-          }
-          return <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>;
-        }
-        return <span className="text-muted-foreground">-</span>;
+        return renderClanCell(
+          member,
+          (colorClass) => <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>
+        );
 
       case 'discord':
         return (
@@ -174,16 +243,25 @@ export function MembersTable({
         );
 
       case 'hero_lvs':
-        return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;
+        return withPlayerPopover(
+          member,
+          <span className="text-purple-400">{member.hero_lvs || '-'}</span>
+        );
 
       case 'trophies':
-        return <span className="text-yellow-400">{member.trophies?.toLocaleString() || '-'}</span>;
+        return withPlayerPopover(
+          member,
+          <span className="text-yellow-400">{member.trophies?.toLocaleString() || '-'}</span>
+        );
 
       case 'war_pref':
-        return member.war_pref ? (
-          <Badge variant="default" className="bg-green-600 text-xs">In</Badge>
-        ) : (
-          <Badge variant="secondary" className="text-xs">Out</Badge>
+        return withPlayerPopover(
+          member,
+          member.war_pref ? (
+            <Badge variant="default" className="bg-green-600 text-xs">In</Badge>
+          ) : (
+            <Badge variant="secondary" className="text-xs">Out</Badge>
+          )
         );
 
       case 'signup_group': {

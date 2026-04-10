@@ -40,7 +40,9 @@
     "dashboard": "Tableau de bord",
     "loadError": "Impossible de charger les données.",
     "tryAgain": "Réessayer",
-    "create": "Créer"
+    "create": "Créer",
+    "viewClashProfile": "Voir le profil Clash",
+    "openInGame": "Ouvrir dans le jeu"
   },
   "Navigation": {
     "features": "Fonctionnalités",
@@ -607,6 +609,7 @@
     "createSuccessDesc": "Le roster \"{name}\" a été créé",
     "createError": "Échec de la création",
     "createErrorAlias": "Veuillez entrer un nom de roster",
+    "createErrorClan": "Veuillez sélectionner un clan",
     "refreshSuccess": "Données actualisées",
     "refreshError": "Échec de l'actualisation",
     "saveSuccess": "Paramètres sauvegardés",
@@ -639,7 +642,8 @@
       "townhall": "Hôtel de Ville",
       "tag": "Tag",
       "hitrate": "Taux de Réussite",
-      "current_clan_tag": "Clan Actuel",
+      "current_clan": "Clan Actuel",
+      "current_clan_tag": "Tag de Clan",
       "discord": "Discord",
       "hero_lvs": "Héros",
       "war_pref": "Préf. Guerre",
@@ -652,7 +656,8 @@
       "description": "Choisir les colonnes à afficher et leur ordre",
       "selected": "Colonnes Sélectionnées",
       "available": "Colonnes Disponibles",
-      "save": "Sauvegarder"
+      "save": "Sauvegarder",
+      "reset": "Réinitialiser les colonnes"
     },
     "common": {
       "cancel": "Annuler",

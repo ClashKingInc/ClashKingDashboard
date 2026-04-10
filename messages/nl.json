@@ -40,7 +40,9 @@
     "dashboard": "Dashboard",
     "loadError": "Gegevens konden niet worden geladen.",
     "tryAgain": "Opnieuw proberen",
-    "create": "Aanmaken"
+    "create": "Aanmaken",
+    "viewClashProfile": "Bekijk Clash-profiel",
+    "openInGame": "Open in game"
   },
   "Navigation": {
     "features": "Functies",
@@ -557,12 +559,13 @@
       "townhall": "Stadhuis Niveau",
       "tag": "Tag",
       "hitrate": "30 Dagen Trefferscore",
+      "current_clan": "Huidige clan",
       "currentClanTag": "Clan Tag",
       "discord": "Discord",
       "heroLvs": "Helden",
       "warPref": "Oorlogsvoorkeur",
       "trophies": "Trofeeën",
-      "current_clan_tag": "Huidig Clan",
+      "current_clan_tag": "Clan Tag",
       "hero_lvs": "Heldenniveaus",
       "war_pref": "Oorlogsvoorkeur",
       "signup_group": "Aanmeldingsgroep"
@@ -688,6 +691,7 @@
     "createSuccessDesc": "Rooster \"{name}\" is gemaakt",
     "createError": "Maken mislukt",
     "createErrorAlias": "Voer een roosternaam in",
+    "createErrorClan": "Selecteer een clan",
     "refreshSuccess": "Gegevens vernieuwd",
     "refreshError": "Vernieuwen mislukt",
     "saveSuccess": "Instellingen opgeslagen",
@@ -721,7 +725,8 @@
       "description": "Kies welke kolommen te tonen en hun volgorde",
       "selected": "Geselecteerde Kolommen",
       "available": "Beschikbare Kolommen",
-      "save": "Opslaan"
+      "save": "Opslaan",
+      "reset": "Reset kolommen"
     },
     "common": {
       "cancel": "Annuleren",

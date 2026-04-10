@@ -24,6 +24,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import {
   ChevronDown,
   ChevronRight,
@@ -51,6 +53,7 @@ interface DraggableMemberProps {
   member: RosterMember;
   columns: string[];
   rosterClanTag?: string | null;
+  familyClans: Clan[];
   familyClanTags: string[];
   onRemove: () => void;
   isRemoving: boolean;
@@ -60,6 +63,7 @@ function DraggableMember({
   member,
   columns,
   rosterClanTag,
+  familyClans,
   familyClanTags,
   onRemove,
   isRemoving,
@@ -85,6 +89,30 @@ function DraggableMember({
     return "text-red-400";
   };
 
+  const clanBadgeUrl = useMemo(() => {
+    if (!member.current_clan_tag) return null;
+    const clan = familyClans.find((c) => c.tag === member.current_clan_tag);
+    return clan?.badge_url || clan?.badge || null;
+  }, [member.current_clan_tag, familyClans]);
+
+  const withPlayerPopover = (content: React.ReactNode) => (
+    <PlayerProfilePopover
+      playerName={member.name || member.tag}
+      playerTag={member.tag}
+      clanName={member.current_clan}
+      townhallLevel={member.townhall}
+      trophies={member.trophies}
+      warPreference={member.war_pref}
+      signupGroup={member.signup_group}
+      heroLevels={member.hero_lvs}
+      hitrate={member.hitrate}
+      showTagInTrigger={false}
+      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+    >
+      {content}
+    </PlayerProfilePopover>
+  );
+
   return (
     <div
       ref={setNodeRef}
@@ -106,28 +134,81 @@ function DraggableMember({
       <div className="flex-1 flex items-center gap-4 min-w-0">
         {/* TH — always shown */}
         {columns.includes('townhall') && (
-          <span className="text-orange-400 font-medium text-sm w-10 shrink-0">
-            TH{member.townhall}
-          </span>
+          withPlayerPopover(
+            <span className="text-orange-400 font-medium text-sm w-10 shrink-0">
+              TH{member.townhall}
+            </span>
+          )
         )}
 
         {/* Name — always shown */}
         <div className="flex-1 min-w-0">
-          <span className="font-medium text-foreground truncate block">
-            {member.name}
-          </span>
-          {columns.includes('tag') && (
-            <span className="text-xs text-muted-foreground font-mono">
-              {member.tag}
+          <PlayerProfilePopover
+            playerName={member.name || member.tag}
+            playerTag={member.tag}
+            clanName={member.current_clan}
+            townhallLevel={member.townhall}
+            trophies={member.trophies}
+            warPreference={member.war_pref}
+            signupGroup={member.signup_group}
+            heroLevels={member.hero_lvs}
+            hitrate={member.hitrate}
+            showTagInTrigger={false}
+            triggerClassName="font-medium text-foreground truncate block text-left cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <span className="font-medium text-foreground truncate block">
+              {member.name || member.tag}
             </span>
+          </PlayerProfilePopover>
+          {columns.includes('tag') && (
+            <PlayerProfilePopover
+              playerName={member.name || member.tag}
+              playerTag={member.tag}
+              clanName={member.current_clan}
+              townhallLevel={member.townhall}
+              trophies={member.trophies}
+              warPreference={member.war_pref}
+              signupGroup={member.signup_group}
+              heroLevels={member.hero_lvs}
+              hitrate={member.hitrate}
+              showTagInTrigger={false}
+              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <span className="text-xs text-muted-foreground font-mono">
+                {member.tag}
+              </span>
+            </PlayerProfilePopover>
           )}
         </div>
 
-        {/* Clan */}
+        {/* Clan Name */}
+        {columns.includes('current_clan') && member.current_clan_tag && member.current_clan_tag !== "#" && (
+          <ClanProfilePopover
+            clanName={member.current_clan || member.current_clan_tag}
+            clanTag={member.current_clan_tag}
+            clanBadgeUrl={clanBadgeUrl}
+            showTagInTrigger={false}
+            triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity max-w-[160px] shrink-0"
+          >
+            <span className={cn("font-medium truncate", getClanColor())}>
+              {member.current_clan || member.current_clan_tag}
+            </span>
+          </ClanProfilePopover>
+        )}
+
+        {/* Clan Tag */}
         {columns.includes('current_clan_tag') && member.current_clan_tag && member.current_clan_tag !== "#" && (
-          <span className={cn("text-xs font-mono shrink-0", getClanColor())}>
-            {member.current_clan_tag}
-          </span>
+          <ClanProfilePopover
+            clanName={member.current_clan || member.current_clan_tag}
+            clanTag={member.current_clan_tag}
+            clanBadgeUrl={clanBadgeUrl}
+            showTagInTrigger={false}
+            triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity shrink-0"
+          >
+            <span className={cn("text-xs font-mono shrink-0", getClanColor())}>
+              {member.current_clan_tag}
+            </span>
+          </ClanProfilePopover>
         )}
 
         {/* Discord */}
@@ -144,25 +225,49 @@ function DraggableMember({
 
         {/* Hitrate */}
         {columns.includes('hitrate') && member.hitrate !== null && member.hitrate !== undefined && (
-          <span
-            className={cn(
-              "text-sm font-medium w-12 text-right shrink-0",
-              member.hitrate >= 80
-                ? "text-green-400"
-                : member.hitrate >= 60
-                ? "text-yellow-400"
-                : "text-red-400"
-            )}
-          >
-            {member.hitrate}%
-          </span>
+          withPlayerPopover(
+            <span
+              className={cn(
+                "text-sm font-medium w-12 text-right shrink-0",
+                member.hitrate >= 80
+                  ? "text-green-400"
+                  : member.hitrate >= 60
+                  ? "text-yellow-400"
+                  : "text-red-400"
+              )}
+            >
+              {member.hitrate}%
+            </span>
+          )
         )}
 
         {/* Trophies */}
         {columns.includes('trophies') && member.trophies != null && (
-          <span className="text-yellow-400 text-sm shrink-0">
-            {member.trophies.toLocaleString()}
-          </span>
+          withPlayerPopover(
+            <span className="text-yellow-400 text-sm shrink-0">
+              {member.trophies.toLocaleString()}
+            </span>
+          )
+        )}
+
+        {/* Hero Levels */}
+        {columns.includes('hero_lvs') && member.hero_lvs != null && (
+          withPlayerPopover(
+            <span className="text-purple-400 text-sm shrink-0">
+              {member.hero_lvs}
+            </span>
+          )
+        )}
+
+        {/* War Preference */}
+        {columns.includes('war_pref') && (
+          withPlayerPopover(
+            member.war_pref ? (
+              <Badge variant="default" className="bg-green-600 text-xs shrink-0">In</Badge>
+            ) : (
+              <Badge variant="secondary" className="text-xs shrink-0">Out</Badge>
+            )
+          )
         )}
       </div>
 
@@ -185,6 +290,7 @@ interface CategorySectionProps {
   members: RosterMember[];
   columns: string[];
   rosterClanTag?: string | null;
+  familyClans: Clan[];
   familyClanTags: string[];
   onRemoveMember: (tag: string) => void;
   removingMember?: string | null;
@@ -198,6 +304,7 @@ function CategorySection({
   members,
   columns,
   rosterClanTag,
+  familyClans,
   familyClanTags,
   onRemoveMember,
   removingMember,
@@ -265,6 +372,7 @@ function CategorySection({
                   member={member}
                   columns={columns}
                   rosterClanTag={rosterClanTag}
+                  familyClans={familyClans}
                   familyClanTags={familyClanTags}
                   onRemove={() => onRemoveMember(member.tag)}
                   isRemoving={removingMember === member.tag}
@@ -421,6 +529,7 @@ export function MembersByCategory({
             members={membersByCategory[category.custom_id] || []}
             columns={columns}
             rosterClanTag={rosterClanTag}
+            familyClans={familyClans}
             familyClanTags={familyClanTags}
             onRemoveMember={onRemoveMember}
             removingMember={removingMember}
@@ -436,6 +545,7 @@ export function MembersByCategory({
           members={membersByCategory.__unassigned__ || []}
           columns={columns}
           rosterClanTag={rosterClanTag}
+          familyClans={familyClans}
           familyClanTags={familyClanTags}
           onRemoveMember={onRemoveMember}
           removingMember={removingMember}

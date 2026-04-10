@@ -718,6 +718,14 @@ export default function RostersPage() { // NOSONAR — React page component: com
       });
       return;
     }
+    if (newRosterData.roster_type === "clan" && clans.length > 0 && !newRosterData.clan_tag) {
+      toast({
+        title: tCommon("error"),
+        description: t("createErrorClan"),
+        variant: "destructive",
+      });
+      return;
+    }
 
     setCreating(true);
     try {
@@ -745,6 +753,12 @@ export default function RostersPage() { // NOSONAR — React page component: com
       setCreating(false);
     }
   };
+
+  const isCreateRosterValid =
+    newRosterData.alias.trim().length > 0 &&
+    newRosterData.roster_type.length > 0 &&
+    newRosterData.signup_scope.length > 0 &&
+    (newRosterData.roster_type !== "clan" || clans.length === 0 || newRosterData.clan_tag.length > 0);
 
   // Loading state
   if (loading) {
@@ -888,7 +902,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="roster-name">{t("createDialog.aliasLabel")}</Label>
+                    <Label htmlFor="roster-name">
+                      {t("createDialog.aliasLabel")} <span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="roster-name"
                       value={newRosterData.alias}
@@ -899,7 +915,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
                   </div>
 
                   <div className="space-y-2">
-                    <Label>{t("createDialog.typeLabel")}</Label>
+                    <Label>
+                      {t("createDialog.typeLabel")} <span className="text-destructive">*</span>
+                    </Label>
                     <Select
                       value={newRosterData.roster_type}
                       onValueChange={(value: "clan" | "family") =>
@@ -918,7 +936,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
 
                   {newRosterData.roster_type === "clan" && clans.length > 0 && (
                     <div className="space-y-2">
-                      <Label>{t("createDialog.clanLabel")}</Label>
+                      <Label>
+                        {t("createDialog.clanLabel")} <span className="text-destructive">*</span>
+                      </Label>
                       <Select
                         value={newRosterData.clan_tag}
                         onValueChange={(value) =>
@@ -940,7 +960,9 @@ export default function RostersPage() { // NOSONAR — React page component: com
                   )}
 
                   <div className="space-y-2">
-                    <Label>{t("createDialog.signupScopeLabel")}</Label>
+                    <Label>
+                      {t("createDialog.signupScopeLabel")} <span className="text-destructive">*</span>
+                    </Label>
                     <Select
                       value={newRosterData.signup_scope}
                       onValueChange={(value: "clan-only" | "family-wide") =>
@@ -962,7 +984,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                   <Button variant="outline" onClick={() => setCreateDialogOpen(false)} disabled={creating}>
                     {tCommon("cancel")}
                   </Button>
-                  <Button onClick={handleCreateRoster} disabled={creating || !newRosterData.alias.trim()}>
+                  <Button onClick={handleCreateRoster} disabled={creating || !isCreateRosterValid}>
                     {creating ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />

@@ -33,7 +33,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div>
               <div className="text-3xl font-bold text-blue-500">{stats.totalMembers}</div>
               {roster.roster_size && (
@@ -45,7 +45,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
                 </div>
               )}
             </div>
-            <Users className="h-8 w-8 text-blue-500/50" />
+            <Users className="h-8 w-8 text-blue-500/50 shrink-0" />
           </div>
         </CardContent>
       </Card>
@@ -58,7 +58,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div>
               <div className="text-3xl font-bold text-orange-500">{stats.avgTh || "-"}</div>
               {(roster.min_th || roster.max_th) && (
@@ -67,7 +67,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
                 </Badge>
               )}
             </div>
-            <Shield className="h-8 w-8 text-orange-500/50" />
+            <Shield className="h-8 w-8 text-orange-500/50 shrink-0" />
           </div>
         </CardContent>
       </Card>
@@ -80,11 +80,11 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div className="text-3xl font-bold text-green-500">
               {stats.avgHitrate ? `${stats.avgHitrate}%` : "-"}
             </div>
-            <Target className="h-8 w-8 text-green-500/50" />
+            <Target className="h-8 w-8 text-green-500/50 shrink-0" />
           </div>
         </CardContent>
       </Card>
@@ -97,7 +97,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1 text-sm">
               <span className="text-green-400">{stats.inClan} {t("stats.clan")}</span>
               <span className="text-yellow-400">{stats.inFamily} {t("stats.family")}</span>
@@ -106,7 +106,7 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
                 <span className="text-yellow-600">+{stats.subs} subs</span>
               )}
             </div>
-            <TrendingUp className="h-8 w-8 text-purple-500/50" />
+            <TrendingUp className="h-8 w-8 text-purple-500/50 shrink-0" />
           </div>
         </CardContent>
       </Card>

@@ -89,6 +89,31 @@ import { useGameConstants } from "../_hooks";
 
 // ────────────────────────────────────────────────────────────────────────────
 
+function normalizeClanColumns(cols: string[] | undefined): string[] {
+  if (!cols || cols.length === 0) return [];
+  const hasClanName = cols.includes("current_clan");
+  const hasClanTag = cols.includes("current_clan_tag");
+  if (hasClanTag && !hasClanName) {
+    return cols.map((c) => (c === "current_clan_tag" ? "current_clan" : c));
+  }
+  return cols;
+}
+
+function sanitizeColumns(cols: string[], allowed: string[], fallback: string[]): string[] {
+  const seen = new Set<string>();
+  const cleaned: string[] = [];
+
+  for (const col of cols) {
+    if (!allowed.includes(col) || seen.has(col)) continue;
+    seen.add(col);
+    cleaned.push(col);
+  }
+
+  return cleaned.length > 0 ? cleaned : fallback;
+}
+
+const DEFAULT_COLUMNS = ['townhall', 'name', 'hitrate', 'current_clan', 'signup_group'];
+
 export default function RosterDetailPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
@@ -211,13 +236,15 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   }, [roster?.group_id, guildId, rosterId]);
 
   // Column configuration state
-  const defaultColumns = ['townhall', 'name', 'tag', 'hitrate', 'current_clan_tag'];
-  const [localColumns, setLocalColumns] = useState<string[]>(defaultColumns);
+  const [localColumns, setLocalColumns] = useState<string[]>(DEFAULT_COLUMNS);
   const [columnPopoverOpen, setColumnPopoverOpen] = useState(false);
+  const [columnsInitialized, setColumnsInitialized] = useState(false);
+  const columnsStorageKey = `roster-columns-${guildId}-${rosterId}`;
 
   // Sync edit form with roster data
   React.useEffect(() => {
     if (roster) {
+      const normalizedColumns = normalizeClanColumns(roster.columns || []);
       setEditData({
         alias: roster.alias,
         description: roster.description || "",
@@ -234,7 +261,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         recurrence_day_of_month: roster.recurrence_day_of_month?.toString() || "",
         recurrence_mode: roster.recurrence_day_of_month ? "day_of_month" : "days",
         default_signup_category: roster.default_signup_category || "",
-        columns: (roster.columns || []).map(getColumnLabel),
+        columns: normalizedColumns.map(getColumnLabel),
         sort: (roster.sort || []).map(getSortLabel),
         group_id: roster.group_id || "",
         allowed_signup_categories: roster.allowed_signup_categories || [],
@@ -242,12 +269,39 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     }
   }, [roster]);
 
-  // Sync localColumns when roster changes
+  // Initialize local columns from localStorage (fallback to API/default)
   React.useEffect(() => {
-    if (roster?.columns?.length) {
-      setLocalColumns(roster.columns.map(getColumnInternal));
+    const allowedColumns = ROSTER_COLUMNS.map((c) => c.value);
+    const normalizedApiColumns = normalizeClanColumns(roster?.columns).map(getColumnInternal);
+    const fallback = sanitizeColumns(DEFAULT_COLUMNS, allowedColumns, DEFAULT_COLUMNS);
+
+    let resolved = normalizedApiColumns.length
+      ? sanitizeColumns(normalizedApiColumns, allowedColumns, fallback)
+      : fallback;
+
+    if (globalThis.window !== undefined) {
+      const raw = localStorage.getItem(columnsStorageKey);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            resolved = sanitizeColumns(parsed as string[], allowedColumns, resolved);
+          }
+        } catch {
+          // Ignore malformed storage and use API/default fallback.
+        }
+      }
     }
-  }, [roster?.columns]);
+
+    setLocalColumns(resolved);
+    setColumnsInitialized(true);
+  }, [columnsStorageKey, roster?.columns]);
+
+  // Persist local columns immediately so refresh keeps same order/selection
+  React.useEffect(() => {
+    if (!columnsInitialized || globalThis.window === undefined) return;
+    localStorage.setItem(columnsStorageKey, JSON.stringify(localColumns));
+  }, [columnsInitialized, columnsStorageKey, localColumns]);
 
   // Family clan tags
   const familyClanTags = clans.map(c => c.tag);
@@ -501,9 +555,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <Skeleton className="h-8 w-20" />
-                  <Users className="h-8 w-8 text-blue-500/50" />
+                  <Users className="h-8 w-8 text-blue-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -512,9 +566,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgTh")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <Skeleton className="h-8 w-20" />
-                  <Shield className="h-8 w-8 text-orange-500/50" />
+                  <Shield className="h-8 w-8 text-orange-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -523,9 +577,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgHitrate")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <Skeleton className="h-8 w-20" />
-                  <Target className="h-8 w-8 text-green-500/50" />
+                  <Target className="h-8 w-8 text-green-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -534,13 +588,13 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.distribution")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <div className="flex flex-col gap-1 w-full max-w-[140px]">
                     <Skeleton className="h-4 w-20" />
                     <Skeleton className="h-4 w-20" />
                     <Skeleton className="h-4 w-20" />
                   </div>
-                  <TrendingUp className="h-8 w-8 text-purple-500/50" />
+                  <TrendingUp className="h-8 w-8 text-purple-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -637,14 +691,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     });
   };
 
-  const handleSaveColumns = async () => {
-    try {
-      await updateRoster({ columns: localColumns });
-      toast({ title: t("columnsUpdated") });
-      setColumnPopoverOpen(false);
-    } catch (err) {
-      toast({ title: t("columnsError"), variant: "destructive" });
-    }
+  const isDefaultColumns =
+    localColumns.length === DEFAULT_COLUMNS.length &&
+    localColumns.every((col, index) => col === DEFAULT_COLUMNS[index]);
+
+  const handleResetColumns = () => {
+    setLocalColumns([...DEFAULT_COLUMNS]);
   };
 
   return (
@@ -812,8 +864,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                     </div>
                   </div>
                   <div className="p-2 border-t border-border">
-                    <Button size="sm" className="w-full" onClick={handleSaveColumns}>
-                      {t("columns.save")}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="w-full"
+                      onClick={handleResetColumns}
+                      disabled={isDefaultColumns}
+                    >
+                      {t("columns.reset")}
                     </Button>
                   </div>
                 </PopoverContent>

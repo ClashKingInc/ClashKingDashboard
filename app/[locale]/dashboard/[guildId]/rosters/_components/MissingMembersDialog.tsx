@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Loader2, UserMinus, CheckCircle2, UserPlus, Layers, User } from "lucide-react";
+import { Loader2, UserMinus, CheckCircle2, UserPlus, Layers, User, Check } from "lucide-react";
 import type { MissingMembersResult, MissingMembersRosterResult, MissingMember } from "../_lib/types";
 
 interface MissingMembersDialogProps {
@@ -165,9 +165,14 @@ export function MissingMembersDialog({
                   {t("missingMembers.selectAll")} ({allMissingMembers.length})
                 </label>
               </div>
-              {selectedMembers.size > 0 && (
-                <Badge variant="secondary">{selectedMembers.size} {t("missingMembers.selected")}</Badge>
-              )}
+              <Badge
+                variant="secondary"
+                className={`min-w-[110px] justify-center tabular-nums ${
+                  selectedMembers.size > 0 ? "" : "invisible"
+                }`}
+              >
+                {selectedMembers.size} {t("missingMembers.selected")}
+              </Badge>
             </div>
 
             {/* Results — one section per roster (errors silently skipped) */}
@@ -191,7 +196,7 @@ export function MissingMembersDialog({
           </div>
         )}
 
-        <DialogFooter className="gap-2">
+        <DialogFooter className="gap-2 sticky bottom-0 z-10 bg-card border-t border-border pt-3 -mx-6 px-6 pb-1">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
@@ -212,10 +217,10 @@ export function MissingMembersDialog({
               <Button
                 onClick={handleAddSelected}
                 disabled={adding || selectedMembers.size === 0}
-                className="bg-primary hover:bg-primary/90"
+                className="bg-primary hover:bg-primary/90 min-w-[170px] justify-center tabular-nums"
               >
                 {adding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <UserPlus className="w-4 h-4 mr-2" />}
-                {t("missingMembers.addSelected")} ({selectedMembers.size})
+                {t("missingMembers.addSelected", { count: selectedMembers.size })}
               </Button>
             </>
           )}
@@ -269,24 +274,30 @@ function RosterResultSection({
         {result.missing_members.map((member: MissingMember) => (
           <button
             key={member.tag}
+            type="button"
             className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
               selectedMembers.has(member.tag) ? "bg-primary/10" : ""
             }`}
             onClick={() => onToggle(member.tag)}
           >
             <div className="flex items-center gap-3">
-              <Checkbox
-                checked={selectedMembers.has(member.tag)}
-                onCheckedChange={() => onToggle(member.tag)}
-                onClick={(e) => e.stopPropagation()}
-              />
+              <span
+                className={`grid place-content-center h-4 w-4 shrink-0 rounded-sm border ${
+                  selectedMembers.has(member.tag)
+                    ? "bg-primary border-primary text-primary-foreground"
+                    : "border-border bg-background"
+                }`}
+                aria-hidden="true"
+              >
+                {selectedMembers.has(member.tag) && <Check className="h-3 w-3" />}
+              </span>
               <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
                 <span className="text-sm font-bold text-primary">{member.townhall}</span>
               </div>
               <div>
                 <p className="font-medium text-foreground">{member.name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {member.tag} • {member.role}
+                  {member.tag} • TH{member.townhall} • {member.role}
                 </p>
               </div>
             </div>
