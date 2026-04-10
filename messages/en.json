@@ -252,6 +252,7 @@
   "BansPage": {
     "title": "Moderation",
     "description": "Manage player bans and strikes",
+    "viewClashProfile": "View Clash profile",
     "tabs": {
       "bans": "Bans",
       "strikes": "Strikes"

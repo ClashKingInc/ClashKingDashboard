@@ -133,7 +133,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
               rel="noopener noreferrer"
             >
               <ExternalLink className="h-4 w-4" />
-              View clash profile
+              {t("viewClashProfile")}
             </a>
           </Button>
         </div>

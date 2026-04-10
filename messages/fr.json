@@ -252,6 +252,7 @@
   "BansPage": {
     "title": "Modération",
     "description": "Gérer les bannissements et les avertissements des joueurs",
+    "viewClashProfile": "Voir le profil Clash",
     "tabs": {
       "bans": "Bannissements",
       "strikes": "Avertissements"
