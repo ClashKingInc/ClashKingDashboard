@@ -555,9 +555,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <Skeleton className="h-8 w-20" />
-                  <Users className="h-8 w-8 text-blue-500/50" />
+                  <Users className="h-8 w-8 text-blue-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -566,9 +566,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgTh")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <Skeleton className="h-8 w-20" />
-                  <Shield className="h-8 w-8 text-orange-500/50" />
+                  <Shield className="h-8 w-8 text-orange-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -577,9 +577,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgHitrate")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <Skeleton className="h-8 w-20" />
-                  <Target className="h-8 w-8 text-green-500/50" />
+                  <Target className="h-8 w-8 text-green-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
@@ -588,13 +588,13 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.distribution")}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <div className="flex flex-col gap-1 w-full max-w-[140px]">
                     <Skeleton className="h-4 w-20" />
                     <Skeleton className="h-4 w-20" />
                     <Skeleton className="h-4 w-20" />
                   </div>
-                  <TrendingUp className="h-8 w-8 text-purple-500/50" />
+                  <TrendingUp className="h-8 w-8 text-purple-500/50 shrink-0" />
                 </div>
               </CardContent>
             </Card>
