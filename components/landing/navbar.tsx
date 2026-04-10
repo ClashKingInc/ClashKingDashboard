@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Menu, X, LogOut, ArrowRight, ChevronDown, Settings, Sun, Moon, Computer } from "lucide-react";
+import { Menu, X, LogOut, ArrowRight, ChevronDown, Settings, Sun, Moon, Computer, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
+import { LANGUAGE_OPTIONS, LOCALE_MODE_COOKIE, getLocaleModeFromCookie, resolveBrowserLocale, type LocaleMode } from "@/lib/locale-preference";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,22 +48,37 @@ export function Navbar() {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+    const [localeMode, setLocaleMode] = useState<LocaleMode>("manual");
     const t = useTranslations("Navigation");
 
     useEffect(() => {
       setMounted(true);
+      const currentMode = getLocaleModeFromCookie(document.cookie);
+      setLocaleMode(currentMode);
+
+      if (currentMode === "browser") {
+        const browserLocale = resolveBrowserLocale(navigator.languages);
+        if (browserLocale !== locale) {
+          document.cookie = `NEXT_LOCALE=${browserLocale}; path=/; max-age=31536000; SameSite=Lax`;
+          router.refresh();
+        }
+      }
     }, []);
 
-    const switchLocale = (newLocale: string) => {
+    const applyLocale = (newLocale: string, mode: LocaleMode) => {
+      document.cookie = `${LOCALE_MODE_COOKIE}=${mode}; path=/; max-age=31536000; SameSite=Lax`;
       document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+      setLocaleMode(mode);
       router.refresh();
     };
 
-    const languages = [
-      { code: "en", name: "English", flagCode: "us" },
-      { code: "fr", name: "Français", flagCode: "fr" },
-      { code: "nl", name: "Nederlands", flagCode: "nl" },
-    ];
+    const switchLocale = (newLocale: string) => applyLocale(newLocale, "manual");
+    const switchToBrowserLocale = () => applyLocale(resolveBrowserLocale(navigator.languages), "browser");
+
+    const currentLocale = mounted && localeMode === "browser"
+      ? resolveBrowserLocale(navigator.languages)
+      : locale;
+    const currentLanguage = LANGUAGE_OPTIONS.find((lang) => lang.code === currentLocale) ?? LANGUAGE_OPTIONS[0];
 
     return (
       <DropdownMenu modal={false}>
@@ -121,7 +137,7 @@ export function Navbar() {
             <DropdownMenuSubTrigger className="flex items-center space-x-2 hover:!bg-transparent cursor-pointer">
               <div className="relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
                 <Image
-                  src={`https://flagcdn.com/w40/${languages.find(lang => lang.code === locale)?.flagCode || "us"}.png`}
+                  src={`https://flagcdn.com/w40/${currentLanguage.flagCode}.png`}
                   alt="Current language"
                   fill
                   sizes="20px"
@@ -131,12 +147,21 @@ export function Navbar() {
               <span className="hover:!text-primary">{t("language")}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="bg-card border border-border shadow-2xl" sideOffset={2} alignOffset={-5}>
-              {languages.map((lang) => (
+              <DropdownMenuItem
+                onClick={switchToBrowserLocale}
+                className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
+                  localeMode === "browser" ? "bg-primary/10 text-primary" : ""
+                }`}
+              >
+                <Globe className="h-4 w-4" />
+                <span className="hover:!text-primary">{t("browserLanguage")}</span>
+              </DropdownMenuItem>
+              {LANGUAGE_OPTIONS.map((lang) => (
                 <DropdownMenuItem
                   key={lang.code}
                   onClick={() => switchLocale(lang.code)}
                   className={`flex items-center space-x-2 hover:!bg-transparent cursor-pointer ${
-                    locale === lang.code ? "bg-primary/10 text-primary" : ""
+                    localeMode === "manual" && locale === lang.code ? "bg-primary/10 text-primary" : ""
                   }`}
                 >
                   <div className="mr-2 relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">
