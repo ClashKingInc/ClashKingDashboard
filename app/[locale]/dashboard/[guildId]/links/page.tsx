@@ -368,26 +368,19 @@ export default function LinksManagementPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Members</CardTitle>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-9 w-20 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-blue-500">
+                  {guildMemberCount ?? "—"}
                 </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-blue-500">
-                    {guildMemberCount ?? "—"}
-                  </div>
-                  <User className="h-8 w-8 text-blue-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Server members total
-                </p>
-              </>
-            )}
+              )}
+              <User className="h-8 w-8 text-blue-500/50" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Server members total
+            </p>
           </CardContent>
         </Card>
 
@@ -396,25 +389,22 @@ export default function LinksManagementPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Members with Links</CardTitle>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-green-500">{linksData?.members_with_links || 0}</div>
-                  <CheckCircle className="h-8 w-8 text-green-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {guildMemberCount ? Math.round((( linksData?.members_with_links ?? 0) / guildMemberCount) * 100) : 0}% of total
-                </p>
-              </>
-            )}
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-9 w-20 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-green-500">{linksData?.members_with_links || 0}</div>
+              )}
+              <CheckCircle className="h-8 w-8 text-green-500/50" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              {loading ? (
+                <span className="inline-block h-3 w-8 align-middle rounded bg-muted animate-pulse" />
+              ) : (
+                `${guildMemberCount ? Math.round((( linksData?.members_with_links ?? 0) / guildMemberCount) * 100) : 0}%`
+              )}{" "}
+              of total
+            </p>
           </CardContent>
         </Card>
 
@@ -423,25 +413,23 @@ export default function LinksManagementPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Linked Accounts</CardTitle>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-purple-500">{linksData?.total_linked_accounts || 0}</div>
-                  <Link className="h-8 w-8 text-purple-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Avg: {linksData?.members_with_links ? (linksData.total_linked_accounts / linksData.members_with_links).toFixed(1) : 0} per member
-                </p>
-              </>
-            )}
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-9 w-20 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-purple-500">{linksData?.total_linked_accounts || 0}</div>
+              )}
+              <Link className="h-8 w-8 text-purple-500/50" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Avg:{" "}
+              {loading ? (
+                <span className="inline-block h-3 w-8 align-middle rounded bg-muted animate-pulse" />
+              ) : (
+                linksData?.members_with_links ? (linksData.total_linked_accounts / linksData.members_with_links).toFixed(1) : 0
+              )}{" "}
+              per member
+            </p>
           </CardContent>
         </Card>
 
@@ -450,25 +438,22 @@ export default function LinksManagementPage() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Verified Accounts</CardTitle>
           </CardHeader>
           <CardContent>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20 animate-pulse" />
-                  <Skeleton className="h-8 w-8 animate-pulse" />
-                </div>
-                <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
-              </>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold text-yellow-500">{linksData?.verified_accounts || 0}</div>
-                  <Shield className="h-8 w-8 text-yellow-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {linksData?.total_linked_accounts ? Math.round((linksData.verified_accounts / linksData.total_linked_accounts) * 100) : 0}% verified
-                </p>
-              </>
-            )}
+            <div className="flex items-center justify-between">
+              {loading ? (
+                <Skeleton className="h-9 w-20 animate-pulse" />
+              ) : (
+                <div className="text-3xl font-bold text-yellow-500">{linksData?.verified_accounts || 0}</div>
+              )}
+              <Shield className="h-8 w-8 text-yellow-500/50" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              {loading ? (
+                <span className="inline-block h-3 w-8 align-middle rounded bg-muted animate-pulse" />
+              ) : (
+                `${linksData?.total_linked_accounts ? Math.round((linksData.verified_accounts / linksData.total_linked_accounts) * 100) : 0}%`
+              )}{" "}
+              verified
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -490,7 +475,13 @@ export default function LinksManagementPage() {
               </TabsTrigger>
               <TabsTrigger value="pending">
                 <Clock className="h-4 w-4 mr-2" />
-                Pending ({pendingVerifications.length})
+                Pending{" ("}
+                {loading ? (
+                  <span className="inline-block h-3 w-6 align-middle rounded bg-muted animate-pulse" />
+                ) : (
+                  pendingVerifications.length
+                )}
+                {")"}
               </TabsTrigger>
               <TabsTrigger value="bulk">
                 <Settings className="h-4 w-4 mr-2" />
