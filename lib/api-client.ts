@@ -99,7 +99,7 @@ export class ApiClient {
    */
   private getDeviceId(): string | null {
     // Only works in browser context
-    if (typeof globalThis.window === 'undefined') {
+    if (globalThis.window === undefined) {
       return null;
     }
 
