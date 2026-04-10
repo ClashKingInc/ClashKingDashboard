@@ -32,15 +32,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import {
-  Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
+  Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap,
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
-  MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
-  Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
-  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X, Copy, ExternalLink, Link2,
+  MessageSquare, UserMinus, Building2, Hash, Shield,
+  Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
+  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive,
   CheckCircle2, AlertTriangle, Target, TrendingUp
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -57,7 +56,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 
 // Local imports
-import { useRosterDetail } from "../_hooks";
+import { useRosterDetail, useGameConstants } from "../_hooks";
 import {
   RosterStatsCard,
   MembersTable,
@@ -76,16 +75,13 @@ import {
   getSortLabel,
   getSortInternal,
   ROSTER_COLUMNS,
-  SORT_OPTIONS,
   buildOffsetSeconds,
   parseOffsetSeconds,
   formatOffsetSeconds,
 } from "../_lib";
 import type { OffsetUnit } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
-import { generateRosterToken, fetchRosters } from "../_lib/api";
-import type { RosterTokenResult } from "../_lib/api";
-import { useGameConstants } from "../_hooks";
+import { fetchRosters } from "../_lib/api";
 
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -121,7 +117,6 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
   const guildId = params.guildId as string;
   const rosterId = params.rosterId as string;
-  const locale = params.locale as string;
   const t = useTranslations("RostersPage");
 
   // Game constants
@@ -156,7 +151,6 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     deleteAutomation,
     createCategory,
     updateCategory,
-    deleteCategory,
   } = useRosterDetail(rosterId, guildId);
 
   // UI State

@@ -324,7 +324,6 @@ export default function CompareRostersPage() {
   const { toast } = useToast();
 
   const guildId = params.guildId as string;
-  const locale = params.locale as string;
   const t = useTranslations("RostersPage");
 
   // Parse roster IDs or group ID from URL

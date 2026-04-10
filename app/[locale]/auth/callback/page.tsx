@@ -57,7 +57,7 @@ export default function AuthCallbackPage() {
           } else {
             // Fallback UUID v4 generator for HTTP contexts
             deviceId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-              const r = Math.random() * 16 | 0;
+              const r = Math.trunc(Math.random() * 16);
               const v = c === 'x' ? r : (r & 0x3 | 0x8);
               return v.toString(16);
             });
@@ -68,7 +68,7 @@ export default function AuthCallbackPage() {
         const requestBody = {
           code,
           code_verifier: codeVerifier,
-          redirect_uri: window.location.origin + '/auth/callback',
+          redirect_uri: globalThis.location.origin + '/auth/callback',
           device_id: deviceId,
           device_name: 'Dashboard',
         };
@@ -111,7 +111,7 @@ export default function AuthCallbackPage() {
           const guildsResponse = await apiClient.servers.getGuilds();
           if (guildsResponse.data) {
             // Sort guilds: servers with bot first, then by name
-            const sortedGuilds = guildsResponse.data.sort((a, b) => {
+            const sortedGuilds = guildsResponse.data.toSorted((a, b) => {
               // Primary sort: has_bot (true first)
               if (a.has_bot && !b.has_bot) return -1;
               if (!a.has_bot && b.has_bot) return 1;

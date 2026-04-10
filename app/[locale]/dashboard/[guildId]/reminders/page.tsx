@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
@@ -25,7 +25,6 @@ import {
 import {
   Bell,
   Target,
-  Users,
   Calendar,
   Clock,
   Plus,
@@ -35,9 +34,7 @@ import {
   Loader2,
   Castle,
   UserX,
-  Shield,
   Activity,
-  Hash,
   Edit2
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -132,8 +129,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const { toast } = useToast();
   const guildId = params.guildId as string;
   const t = useTranslations("RemindersPage");
-  const tCommon = useTranslations("Common");
-
   const reminderTypes = [
     { value: "War", label: t('types.war'), icon: Target, color: "text-red-500", tabIcon: Target },
     { value: "Clan Capital", label: t('types.capital'), icon: Castle, color: "text-purple-500", tabIcon: Castle },

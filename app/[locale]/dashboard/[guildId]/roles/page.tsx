@@ -7,25 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoleCombobox } from "@/components/ui/role-combobox";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -55,8 +40,6 @@ import {
   Trophy,
   Hammer,
   Award,
-  Crown,
-  Check,
   ChevronsUpDown,
   ChevronUp,
   ChevronDown,
@@ -68,14 +51,8 @@ import { apiCache } from "@/lib/api-cache";
 import type {
   RoleType,
   DiscordRole,
-  TownhallRole,
-  LeagueRole,
-  BuilderHallRole,
-  StatusRole,
-  FamilyPositionRole,
   RoleSettings,
 } from "@/lib/api/types/roles";
-import { LetterCaseUppercaseIcon } from "@radix-ui/react-icons";
 
 const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "townhall", icon: Users },

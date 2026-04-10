@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
-import type { UserInfo } from "@/lib/api/types/auth";
 import { ServersHeader } from "@/components/servers-header";
 
 const ROLE_STYLES: Record<string, string> = {
@@ -34,19 +32,7 @@ export default function ServersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [permissionMessage, setPermissionMessage] = useState<string | null>(null);
-  const [user, setUser] = useState<UserInfo | null>(null);
-
   useEffect(() => {
-    // Load user data from localStorage
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (err) {
-        console.error("Error parsing user data:", err);
-      }
-    }
-
     const fetchGuilds = async () => {
       setPermissionMessage(null);
       setError(null);
@@ -67,7 +53,7 @@ export default function ServersPage() {
             if (accessToken) {
               const response = await apiClient.servers.getGuilds();
               if (response.data) {
-                const sortedGuilds = response.data.sort((a, b) => {
+                const sortedGuilds = response.data.toSorted((a, b) => {
                   if (a.has_bot && !b.has_bot) return -1;
                   if (!a.has_bot && b.has_bot) return 1;
                   return a.name.localeCompare(b.name);
@@ -103,7 +89,7 @@ export default function ServersPage() {
         }
 
         // Sort guilds: servers with bot first, then by name
-        const sortedGuilds = response.data.sort((a, b) => {
+        const sortedGuilds = response.data.toSorted((a, b) => {
           // Primary sort: has_bot (true first)
           if (a.has_bot && !b.has_bot) return -1;
           if (!a.has_bot && b.has_bot) return 1;

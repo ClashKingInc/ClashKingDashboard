@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -22,12 +20,10 @@ import {
   XCircle,
   Link,
   Download,
-  Filter,
   BarChart3,
   Users,
   Settings,
   Clock,
-  Plus,
   ChevronDown,
   ChevronUp,
   MoreVertical
@@ -42,15 +38,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -121,9 +108,6 @@ function filterMembers(
 export default function LinksManagementPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
-  const t = useTranslations("LinksPage");
-  const tCommon = useTranslations("Common");
-
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [linksData, setLinksData] = useState<ServerLinksResponse | null>(null);
@@ -148,12 +132,6 @@ export default function LinksManagementPage() {
 
   // Expanded members state
   const [expandedMembers, setExpandedMembers] = useState<Set<string>>(new Set());
-
-  // Link account dialog states
-  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-  const [newPlayerTag, setNewPlayerTag] = useState("");
-  const [newApiToken, setNewApiToken] = useState("");
-  const [linking, setLinking] = useState(false);
 
   // Fetch links data
   useEffect(() => {

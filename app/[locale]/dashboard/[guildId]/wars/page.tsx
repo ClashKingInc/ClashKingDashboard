@@ -113,11 +113,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   const { toast } = useToast();
   const guildId = params?.guildId as string;
   const t = useTranslations("WarsPage");
-  const tCommon = useTranslations("Common");
-
   const [loading, setLoading] = useState(true);
   const [clans, setClans] = useState<Clan[]>([]);
-  const [warSummaries, setWarSummaries] = useState<WarSummary[]>([]);
   const [clanStats, setClanStats] = useState<ComputedClanStats[]>([]);
   const [topPerformers, setTopPerformers] = useState<PlayerStats[]>([]);
   const [worstAttackers, setWorstAttackers] = useState<PlayerStats[]>([]);
@@ -240,7 +237,6 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       ]);
 
       const summaries: WarSummary[] = warSummaryRes.items || [];
-      setWarSummaries(summaries);
 
       // Combine historical wars, filtering by selected war types
       const allHistoricalWars: War[] = historicalWars.flatMap(result => result.items || []).filter(war => {

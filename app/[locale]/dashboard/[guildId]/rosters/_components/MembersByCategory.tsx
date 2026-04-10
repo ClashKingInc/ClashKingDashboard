@@ -480,9 +480,7 @@ export function MembersByCategory({
     let targetCategoryId: string | null = null;
     const overId = over.id as string;
 
-    if (overId === "__unassigned__") {
-      targetCategoryId = null;
-    } else if (categories.some((c) => c.custom_id === overId)) {
+    if (overId !== "__unassigned__" && categories.some((c) => c.custom_id === overId)) {
       targetCategoryId = overId;
     } else {
       // Dropped on a member, use their category
