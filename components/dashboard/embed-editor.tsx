@@ -37,10 +37,10 @@ interface EmbedFormState {
 }
 
 export interface EmbedEditorProps {
-  initialData?: Record<string, unknown> | null;
-  onSave: (data: Record<string, unknown>) => Promise<void>;
-  isSaving: boolean;
-  onCancel: () => void;
+  readonly initialData?: Record<string, unknown> | null;
+  readonly onSave: (data: Record<string, unknown>) => Promise<void>;
+  readonly isSaving: boolean;
+  readonly onCancel: () => void;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -69,7 +69,7 @@ function defaultState(): EmbedFormState {
 function payloadToState(data: Record<string, unknown>): EmbedFormState {
   const embed = extractFirstEmbed(data) as any ?? {};
   return {
-    color: embed.color != null ? intToHex(embed.color as number) : "#5865f2",
+    color: embed.color == null ? "#5865f2" : intToHex(embed.color as number),
     authorName: embed.author?.name ?? "",
     authorIconUrl: embed.author?.icon_url ?? "",
     authorUrl: embed.author?.url ?? "",
@@ -124,7 +124,7 @@ function parseDiscohookUrl(url: string): Record<string, unknown> | null {
   try {
     const match = /[?&]data=([^&\s]+)/.exec(url);
     if (!match) return null;
-    return JSON.parse(decodeURIComponent(escape(atob(match[1]))));
+    return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(match[1]), c => c.charCodeAt(0))));
   } catch { return null; }
 }
 

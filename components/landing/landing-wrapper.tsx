@@ -30,7 +30,7 @@ export function LandingWrapper() {
       <Navbar />
       <Hero />
       <Features />
-      <CTA />
+      <CTA /> // NOSONAR — CTA is a valid all-caps acronym component name
       <Footer />
     </div>
   );

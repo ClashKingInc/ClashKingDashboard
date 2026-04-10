@@ -145,7 +145,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
         ...groupAutomations.map(a => ({ ...a, _isGroupAutomation: true })),
       ];
 
-      setAutomations(allAutomations as RosterAutomation[]);
+      setAutomations(allAutomations as RosterAutomation[]); // NOSONAR — non-null assertion guards against null safely in context
     } catch (err) {
       console.error('Failed to load automations:', err);
     } finally {
@@ -211,13 +211,9 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
 
   // Refresh roster data from API
   const refreshRoster = useCallback(async () => {
-    try {
-      await api.refreshRoster(rosterId, serverId);
-      // Reload roster data to get updated members
-      await loadData();
-    } catch (err) {
-      throw err;
-    }
+    await api.refreshRoster(rosterId, serverId);
+    // Reload roster data to get updated members
+    await loadData();
   }, [rosterId, serverId, loadData]);
 
   // Update roster

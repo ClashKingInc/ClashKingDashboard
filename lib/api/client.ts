@@ -141,7 +141,7 @@ export function createApiClient(
  * For server-side requests, use the backend URL directly
  */
 export const apiClient = createApiClient(
-  globalThis.window !== undefined
-    ? '/api'  // Client-side: use Next.js API routes
-    : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',  // Server-side: use backend directly
+  globalThis.window === undefined
+    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'  // Server-side: use backend directly
+    : '/api',  // Client-side: use Next.js API routes
 );

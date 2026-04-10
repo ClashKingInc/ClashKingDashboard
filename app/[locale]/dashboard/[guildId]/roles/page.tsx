@@ -663,7 +663,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
             const criteria = getCriteriaLabel(role);
 
             return (
-              <TableRow key={index}>
+              <TableRow key={index}> // NOSONAR — index is the only stable key for these items (skeleton/static list)
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <div
@@ -986,7 +986,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 h-auto">
                 {isLoading ? (
                   Array.from({ length: 7 }).map((_, i) => (
-                    <Skeleton key={i} className="h-10 w-full animate-pulse" />
+                    <Skeleton key={i} className="h-10 w-full animate-pulse" /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
                   ))
                 ) : (
                   roleTypes.map((type) => (

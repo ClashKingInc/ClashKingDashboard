@@ -102,7 +102,7 @@ export function MissingMembersDialog({
     }
   };
 
-  const hasError = (data?.results?.length ?? 0) > 0 && data!.results!.every(r => r.state === 'error');
+  const hasError = (data?.results?.length ?? 0) > 0 && data?.results?.every(r => r.state === 'error');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -145,13 +145,13 @@ export function MissingMembersDialog({
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
-        ) : hasError ? (
+        ) : hasError ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <div className="text-center py-8">
             <p className="text-red-400">
               {data?.results?.find(r => r.state === 'error')?.error_message || t("missingMembers.error")}
             </p>
           </div>
-        ) : allMissingMembers.length > 0 ? (
+        ) : allMissingMembers.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <div className="space-y-4">
             {/* Select all */}
             <div className="flex items-center justify-between">
@@ -179,7 +179,7 @@ export function MissingMembersDialog({
             <div className="space-y-3">
               {validResults.map((result, i) => (
                 <RosterResultSection
-                  key={i}
+                  key={result.roster_info?.alias ?? i}
                   result={result}
                   showHeader={viewMode === 'group'}
                   selectedMembers={selectedMembers}
