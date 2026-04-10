@@ -430,6 +430,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                       src={`https://flagcdn.com/w40/${languages.find(lang => lang.code === locale)?.flagCode || "us"}.png`}
                       alt="Current language"
                       fill
+                      sizes="20px"
                       className="object-cover"
                     />
                   </div>
@@ -449,6 +450,7 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
                           src={`https://flagcdn.com/w40/${lang.flagCode}.png`}
                           alt={lang.name}
                           fill
+                          sizes="20px"
                           className="object-cover"
                         />
                       </div>
