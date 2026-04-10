@@ -118,10 +118,31 @@ export function MembersTable({
     }
   };
 
+  const withPlayerPopover = (member: RosterMember, content: React.ReactNode) => (
+    <PlayerProfilePopover
+      playerName={member.name || member.tag}
+      playerTag={member.tag}
+      clanName={member.current_clan}
+      townhallLevel={member.townhall}
+      trophies={member.trophies}
+      warPreference={member.war_pref}
+      signupGroup={member.signup_group}
+      heroLevels={member.hero_lvs}
+      hitrate={member.hitrate}
+      showTagInTrigger={false}
+      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+    >
+      {content}
+    </PlayerProfilePopover>
+  );
+
   const renderCell = (member: RosterMember, column: string) => { // NOSONAR — exhaustive switch over table column types, presentation logic only
     switch (column) {
       case 'townhall':
-        return <span className="text-orange-400 font-medium">TH{member.townhall}</span>;
+        return withPlayerPopover(
+          member,
+          <span className="text-orange-400 font-medium">TH{member.townhall}</span>
+        );
 
       case 'name': {
         const now = Math.floor(Date.now() / 1000);
@@ -185,7 +206,10 @@ export function MembersTable({
       case 'hitrate':
         if (member.hitrate !== null && member.hitrate !== undefined) {
           const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
-          return <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>;
+          return withPlayerPopover(
+            member,
+            <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>
+          );
         }
         return <span className="text-muted-foreground">-</span>;
 
@@ -244,16 +268,25 @@ export function MembersTable({
         );
 
       case 'hero_lvs':
-        return <span className="text-purple-400">{member.hero_lvs || '-'}</span>;
+        return withPlayerPopover(
+          member,
+          <span className="text-purple-400">{member.hero_lvs || '-'}</span>
+        );
 
       case 'trophies':
-        return <span className="text-yellow-400">{member.trophies?.toLocaleString() || '-'}</span>;
+        return withPlayerPopover(
+          member,
+          <span className="text-yellow-400">{member.trophies?.toLocaleString() || '-'}</span>
+        );
 
       case 'war_pref':
-        return member.war_pref ? (
-          <Badge variant="default" className="bg-green-600 text-xs">In</Badge>
-        ) : (
-          <Badge variant="secondary" className="text-xs">Out</Badge>
+        return withPlayerPopover(
+          member,
+          member.war_pref ? (
+            <Badge variant="default" className="bg-green-600 text-xs">In</Badge>
+          ) : (
+            <Badge variant="secondary" className="text-xs">Out</Badge>
+          )
         );
 
       case 'signup_group': {

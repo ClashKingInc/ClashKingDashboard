@@ -95,6 +95,24 @@ function DraggableMember({
     return clan?.badge_url || clan?.badge || null;
   }, [member.current_clan_tag, familyClans]);
 
+  const withPlayerPopover = (content: React.ReactNode) => (
+    <PlayerProfilePopover
+      playerName={member.name || member.tag}
+      playerTag={member.tag}
+      clanName={member.current_clan}
+      townhallLevel={member.townhall}
+      trophies={member.trophies}
+      warPreference={member.war_pref}
+      signupGroup={member.signup_group}
+      heroLevels={member.hero_lvs}
+      hitrate={member.hitrate}
+      showTagInTrigger={false}
+      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+    >
+      {content}
+    </PlayerProfilePopover>
+  );
+
   return (
     <div
       ref={setNodeRef}
@@ -116,9 +134,11 @@ function DraggableMember({
       <div className="flex-1 flex items-center gap-4 min-w-0">
         {/* TH — always shown */}
         {columns.includes('townhall') && (
-          <span className="text-orange-400 font-medium text-sm w-10 shrink-0">
-            TH{member.townhall}
-          </span>
+          withPlayerPopover(
+            <span className="text-orange-400 font-medium text-sm w-10 shrink-0">
+              TH{member.townhall}
+            </span>
+          )
         )}
 
         {/* Name — always shown */}
@@ -205,25 +225,49 @@ function DraggableMember({
 
         {/* Hitrate */}
         {columns.includes('hitrate') && member.hitrate !== null && member.hitrate !== undefined && (
-          <span
-            className={cn(
-              "text-sm font-medium w-12 text-right shrink-0",
-              member.hitrate >= 80
-                ? "text-green-400"
-                : member.hitrate >= 60
-                ? "text-yellow-400"
-                : "text-red-400"
-            )}
-          >
-            {member.hitrate}%
-          </span>
+          withPlayerPopover(
+            <span
+              className={cn(
+                "text-sm font-medium w-12 text-right shrink-0",
+                member.hitrate >= 80
+                  ? "text-green-400"
+                  : member.hitrate >= 60
+                  ? "text-yellow-400"
+                  : "text-red-400"
+              )}
+            >
+              {member.hitrate}%
+            </span>
+          )
         )}
 
         {/* Trophies */}
         {columns.includes('trophies') && member.trophies != null && (
-          <span className="text-yellow-400 text-sm shrink-0">
-            {member.trophies.toLocaleString()}
-          </span>
+          withPlayerPopover(
+            <span className="text-yellow-400 text-sm shrink-0">
+              {member.trophies.toLocaleString()}
+            </span>
+          )
+        )}
+
+        {/* Hero Levels */}
+        {columns.includes('hero_lvs') && member.hero_lvs != null && (
+          withPlayerPopover(
+            <span className="text-purple-400 text-sm shrink-0">
+              {member.hero_lvs}
+            </span>
+          )
+        )}
+
+        {/* War Preference */}
+        {columns.includes('war_pref') && (
+          withPlayerPopover(
+            member.war_pref ? (
+              <Badge variant="default" className="bg-green-600 text-xs shrink-0">In</Badge>
+            ) : (
+              <Badge variant="secondary" className="text-xs shrink-0">Out</Badge>
+            )
+          )
         )}
       </div>
 
