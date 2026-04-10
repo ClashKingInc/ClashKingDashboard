@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
 
     // Forward all query parameters
     const queryString = searchParams.toString();
-    const url = `${API_BASE_URL}/v2/war/clan/stats${queryString ? `?${queryString}` : ''}`;
+    const queryPart = queryString ? `?${queryString}` : '';
+    const url = `${API_BASE_URL}/v2/war/clan/stats${queryPart}`;
 
     const response = await fetch(url, {
       method: 'GET',

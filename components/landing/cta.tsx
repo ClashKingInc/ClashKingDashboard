@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { SERVER_COUNT } from "@/lib/constants";
 
-export function CTA() {
+export function CtaSection() {
   const t = useTranslations("HomePage.cta");
 
   return (

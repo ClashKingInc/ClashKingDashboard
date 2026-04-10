@@ -89,7 +89,7 @@ export function RoleCombobox({
               <Plus className="h-4 w-4" />
               {addPlaceholder || t("addRole")}
             </span>
-          ) : selectedRole ? (
+          ) : selectedRole ? ( // NOSONAR — JSX nested ternary for multi-branch display state
             <span className="flex items-center gap-2 truncate">
               <span
                 className="w-3 h-3 rounded-full shrink-0"

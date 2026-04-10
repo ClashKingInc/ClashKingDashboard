@@ -204,7 +204,8 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
         throw new Error('Failed to unlink account');
       }
 
-      apiCache.invalidatePattern(`^${escapeRegex(`links-${guildId}-`)}`);
+      const cachePrefix = `links-${guildId}-`;
+      apiCache.invalidatePattern(`^${escapeRegex(cachePrefix)}`);
 
       // Refresh data for current page
       const offset = (currentPage - 1) * itemsPerPage;
@@ -263,7 +264,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
+    const url = globalThis.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `server-${guildId}-links.csv`;
@@ -275,7 +276,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
 
     const jsonContent = JSON.stringify(linksData, null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
+    const url = globalThis.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `server-${guildId}-links.json`;
@@ -513,7 +514,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                       <SelectItem value="unverified">Unverified Only</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={filterMinAccounts.toString()} onValueChange={(v) => setFilterMinAccounts(parseInt(v))}>
+                  <Select value={filterMinAccounts.toString()} onValueChange={(v) => setFilterMinAccounts(Number.parseInt(v))}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Min accounts" />
                     </SelectTrigger>
@@ -581,7 +582,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                       </Card>
                     ))}
                   </div>
-                ) : filteredMembers.length === 0 ? (
+                ) : filteredMembers.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
                   <div className="text-center py-12 text-muted-foreground border border-border rounded-lg bg-secondary/20">
                     <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p className="text-lg font-medium">No members found</p>
@@ -1049,9 +1050,9 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                     </p>
                     <p>
                       <strong>Members without links:</strong>{' '}
-                      {guildMemberCount != null
-                        ? guildMemberCount - (linksData?.members_with_links || 0)
-                        : "—"}
+                      {guildMemberCount == null
+                        ? "—"
+                        : guildMemberCount - (linksData?.members_with_links || 0)}
                     </p>
                   </CardContent>
                 </Card>

@@ -102,7 +102,7 @@ export function BotStats() {
                 <CardContent className="min-h-[84px]">
                     <div className="flex items-center gap-2">
                         <Badge className={statusStyles.badgeBg}>
-                            {isLoading ? "..." : isOnline ? t("online") : t("offline")}
+                            {isLoading ? "..." : isOnline ? t("online") : t("offline") /* NOSONAR — JSX nested ternary for multi-branch display state */}
                         </Badge>
                     </div>
                     <div className="mt-2 min-h-[40px] space-y-1">
@@ -111,7 +111,7 @@ export function BotStats() {
                                 <Skeleton className="h-3 w-full animate-pulse" />
                                 <Skeleton className="h-3 w-3/4 animate-pulse" />
                             </>
-                        ) : botInfo?.system ? (
+                        ) : botInfo?.system ? ( // NOSONAR — JSX nested ternary for multi-branch display state
                             <>
                                 <p className="text-xs text-muted-foreground">
                                     {t("memoryUsage", {

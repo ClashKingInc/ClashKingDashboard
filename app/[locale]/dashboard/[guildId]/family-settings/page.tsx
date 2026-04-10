@@ -160,7 +160,7 @@ function FamilyRoleCard({
                       <span className={`text-sm truncate ${!role.exists ? "text-orange-600" : "text-foreground"}`}>
                         {role.exists ? `@${role.name}` : t("familyRoles.deletedRole")}
                       </span>
-                      {!role.exists && (
+                      {role.exists ? null : (
                         <span className="text-xs text-orange-500">({role.id})</span>
                       )}
                     </div>

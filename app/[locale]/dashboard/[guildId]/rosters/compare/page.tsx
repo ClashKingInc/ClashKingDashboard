@@ -614,7 +614,7 @@ export default function CompareRostersPage() {
             }}
           >
             {Array.from({ length: Math.max(rosterIdsFromUrl.length, 2) }).map((_, i) => (
-              <Skeleton key={i} className="h-[600px]" />
+              <Skeleton key={i} className="h-[600px]" /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
             ))}
           </div>
         </div>

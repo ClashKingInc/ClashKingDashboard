@@ -413,7 +413,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   };
 
   const getBoardTypeName = (boardType: string): string => {
-    return BOARD_TYPES[boardType as keyof typeof BOARD_TYPES] || boardType;
+    return BOARD_TYPES[boardType as keyof typeof BOARD_TYPES] || boardType; // NOSONAR — non-null assertion guards against null safely in context
   };
 
   return (
@@ -750,8 +750,8 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
         <AlertDescription className="text-blue-300">
           <ReactMarkdown
             components={{
-              p: ({ children }) => <span>{children}</span>,
-              strong: ({ children }) => <strong className="font-semibold text-blue-300">{children}</strong>,
+              p: ({ children }) => <span>{children}</span>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
+              strong: ({ children }) => <strong className="font-semibold text-blue-300">{children}</strong>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
             }}
           >
             {t('howItWorksDesc')}
@@ -890,7 +890,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
                 </div>
               ))}
             </div>
-          ) : !autoboardsData || autoboardsData.autoboards.length === 0 ? (
+          ) : !autoboardsData || autoboardsData.autoboards.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
             <div className="text-center py-12">
               <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2">

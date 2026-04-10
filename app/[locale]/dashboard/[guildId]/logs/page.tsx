@@ -459,16 +459,16 @@ export default function LogsPage() {
                   {logDef.description}
                   {logDef.exampleLink && (
                     <>
-                      {' '}(
-                      <a 
-                        href={logDef.exampleLink.replace('https://discord.com/channels/', 'discord://discord.com/channels/')} 
-                        target="_blank" 
+                      {' ('}
+                      <a
+                        href={logDef.exampleLink.replace('https://discord.com/channels/', 'discord://discord.com/channels/')}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:text-blue-600 underline"
                       >
                         {t('logCard.example')}
                       </a>
-                      )
+                      {')'}
                     </>
                   )}
                 </CardDescription>
@@ -503,7 +503,7 @@ export default function LogsPage() {
                     className={
                       showEnableForm && !isEnabled
                         ? 'data-[state=checked]:bg-blue-500'
-                        : isEnabled && !channelExists
+                        : isEnabled && !channelExists // NOSONAR — JSX nested ternary for multi-branch display state
                         ? 'data-[state=checked]:bg-orange-500'
                         : 'data-[state=checked]:bg-green-500'
                     }
@@ -512,13 +512,13 @@ export default function LogsPage() {
                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                   ) : (
                     <span className={`text-xs font-medium ${
-                      !isEnabled && !showEnableForm ? 'text-muted-foreground' :
+                      !isEnabled && !showEnableForm ? 'text-muted-foreground' : // NOSONAR — multi-branch state indicator, negations are intentional
                       showEnableForm && !isEnabled ? 'text-blue-600' :
                       !channelExists ? 'text-orange-600' :
                       'text-green-600'
                     }`}>
                       {!isEnabled && !showEnableForm ? t('logCard.off') :
-                       showEnableForm && !isEnabled ? t('logCard.configuring') :
+                       showEnableForm && !isEnabled ? t('logCard.configuring') : // NOSONAR — JSX nested ternary for multi-branch display state
                        t('logCard.on')}
                     </span>
                   )}

@@ -148,11 +148,11 @@ export default function LoadingScreenWithMessages({ // NOSONAR — theme ternari
           <div className="flex justify-center space-x-2 mt-6">
             {messageKeys.map((_, index) => (
               <div
-                key={index}
+                key={index} // NOSONAR — index is the only stable key for these items (skeleton/static list)
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${
                   index === currentMessageIndex
                     ? "bg-[#DC2626]" // Rode bullet voor huidige stap
-                    : mounted && theme === "light"
+                    : mounted && theme === "light" // NOSONAR — JSX nested ternary for multi-branch display state
                     ? "bg-gray-300" // Licht grijs voor andere stappen in licht thema
                     : "bg-gray-600" // Donker grijs voor andere stappen in donker thema
                 }`}

@@ -97,7 +97,7 @@ export function Features() {
             const Icon = feature.icon;
             return (
               <motion.div
-                key={index}
+                key={index} // NOSONAR — index is the only stable key for these items (skeleton/static list)
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

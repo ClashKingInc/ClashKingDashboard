@@ -17,7 +17,7 @@ export async function initiateDiscordLogin(locale: string = 'en') {
 
     // Build Discord OAuth2 URL with PKCE
     // Use a single redirect URI without locale for easier Discord configuration
-    const redirectUri = window.location.origin + '/auth/callback';
+    const redirectUri = globalThis.window.location.origin + '/auth/callback';
     const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
 
     if (!clientId) {

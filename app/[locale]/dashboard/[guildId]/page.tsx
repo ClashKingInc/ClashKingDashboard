@@ -4,7 +4,7 @@ import { ClansSummary } from "@/components/dashboard/clans-summary";
 import { BotStats } from "@/components/dashboard/bot-stats";
 
 interface OverviewPageProps {
-  params: Promise<{
+  readonly params: Promise<{
     guildId: string;
     locale: string;
   }>;

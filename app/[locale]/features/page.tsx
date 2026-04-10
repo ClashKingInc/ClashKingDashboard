@@ -85,7 +85,7 @@ export default function FeaturesPage() {
                 {feature.items.length > 0 && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
                     {feature.items.map((item, i) => (
-                      <div key={i} className="flex items-start gap-3">
+                      <div key={item} className="flex items-start gap-3">
                         <CheckCircle2 className="text-primary mt-1 flex-shrink-0" size={18} />
                         <span className="text-muted-foreground text-sm md:text-base">{item}</span>
                       </div>

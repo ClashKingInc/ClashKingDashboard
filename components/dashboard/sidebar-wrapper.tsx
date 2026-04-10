@@ -6,7 +6,7 @@ import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 
 interface SidebarWrapperProps {
-  guildId: string;
+  readonly guildId: string;
 }
 
 const GUILD_INFO_CACHE_TTL = 120000;

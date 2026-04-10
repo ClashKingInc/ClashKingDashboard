@@ -210,7 +210,7 @@ export function MembersTable({
 
       case 'hitrate':
         if (member.hitrate !== null && member.hitrate !== undefined) {
-          const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
+          const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400'; // NOSONAR — JSX nested ternary for multi-branch display state
           return withPlayerPopover(
             member,
             <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>
@@ -359,7 +359,7 @@ export function MembersTable({
                   >
                     {t(`memberColumns.${col}`)}
                     {isSorted ? (
-                      sortDirection === 'asc'
+                      sortDirection === 'asc' // NOSONAR — JSX nested ternary for multi-branch display state
                         ? <ChevronUp className="w-3.5 h-3.5" />
                         : <ChevronDown className="w-3.5 h-3.5" />
                     ) : (

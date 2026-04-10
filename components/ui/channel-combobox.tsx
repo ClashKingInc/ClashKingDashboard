@@ -26,13 +26,13 @@ interface Channel {
 }
 
 interface ChannelComboboxProps {
-  channels: Channel[]
-  value: string
-  onValueChange: (value: string) => void
-  placeholder?: string
-  disabled?: boolean
-  className?: string
-  showDisabled?: boolean
+  readonly channels: Channel[]
+  readonly value: string
+  readonly onValueChange: (value: string) => void
+  readonly placeholder?: string
+  readonly disabled?: boolean
+  readonly className?: string
+  readonly showDisabled?: boolean
 }
 
 export function ChannelCombobox({

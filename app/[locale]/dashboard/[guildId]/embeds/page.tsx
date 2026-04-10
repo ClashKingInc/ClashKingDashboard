@@ -46,7 +46,7 @@ function buildDiscohookUrl(data: Record<string, unknown>): string {
   } else {
     payload = { messages: [{ data: { content: null, embeds: [data] } }] };
   }
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const encoded = btoa(Array.from(new TextEncoder().encode(JSON.stringify(payload)), b => String.fromCodePoint(b)).join(''));
   return `https://discohook.app/?data=${encoded}`;
 }
 
@@ -207,7 +207,7 @@ export default function EmbedsPage() {
         {/* Embed list */}
         {isLoading ? (
           <div className="space-y-2">
-            {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}
+            {["a", "b", "c"].map(id => <Skeleton key={id} className="h-14 w-full" />)}
           </div>
         ) : embeds.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-muted-foreground gap-2">
