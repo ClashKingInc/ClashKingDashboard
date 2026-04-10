@@ -34,7 +34,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
@@ -264,27 +263,25 @@ export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: Si
 
               {/* User Info & Logout */}
               {user && (
-                <>
-                  <div className="flex items-center justify-between p-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Avatar className="h-8 w-8 border border-border">
-                        <AvatarImage src={user.avatar_url} alt={user.username} />
-                        <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm font-medium text-foreground truncate">
-                        {user.username}
-                      </span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleLogout}
-                      className="h-8 w-8 text-muted-foreground hover:bg-muted/60 hover:text-primary"
-                    >
-                      <LogOut className="h-4 w-4" />
-                    </Button>
+                <div className="flex items-center justify-between p-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Avatar className="h-8 w-8 border border-border">
+                      <AvatarImage src={user.avatar_url} alt={user.username} />
+                      <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium text-foreground truncate">
+                      {user.username}
+                    </span>
                   </div>
-                </>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLogout}
+                    className="h-8 w-8 text-muted-foreground hover:bg-muted/60 hover:text-primary"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </div>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

@@ -20,9 +20,6 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
     ? Math.min(100, (stats.totalMembers / roster.roster_size) * 100)
     : 0;
 
-  // Get max TH count for scaling the distribution bars
-  const maxThCount = Math.max(...Object.values(stats.thDistribution), 1);
-
   return (
     <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       {/* Members */}

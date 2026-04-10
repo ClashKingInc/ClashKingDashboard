@@ -7,7 +7,6 @@ import { apiCache } from "@/lib/api-cache";
 import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,7 +22,6 @@ import {
   TrendingUp,
   Trophy,
   Activity,
-  Bell,
   Hash,
   Loader2,
   Shield,
@@ -120,8 +118,6 @@ export default function LogsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("LogsPage");
-  const tCommon = useTranslations("Common");
-
   const CLAN_LOGS: LogTypeDefinition[] = [
     { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128182552121839648' },
     { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128182846218055722' },
@@ -444,8 +440,6 @@ export default function LogsPage() {
     // Check if the selected channel exists in the available channels list
     // If log is enabled but no channel, it's also an issue
     const channelExists = selectedChannel && channels.some(ch => ch.id === selectedChannel);
-    const selectedChannelData = selectedChannel ? channels.find(ch => ch.id === selectedChannel) : null;
-
     // Filter threads for the selected channel
     const channelThreads = selectedChannel
       ? threads.filter(t => t.parent_channel_id === selectedChannel)
@@ -621,8 +615,6 @@ export default function LogsPage() {
       </Card>
     );
   };
-
-  const currentClan = getCurrentClan();
 
   if (!mounted) {
     return (

@@ -6,7 +6,7 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export class ApiClient {
-  private baseUrl: string;
+  private readonly baseUrl: string;
 
   constructor(baseUrl: string | undefined = API_URL) {
     if (!baseUrl) {
@@ -25,7 +25,7 @@ export class ApiClient {
     const requestBody = {
       code,
       code_verifier: codeVerifier,
-      redirect_uri: window.location.origin + '/auth/callback',
+      redirect_uri: globalThis.location.origin + '/auth/callback',
       device_id: deviceId,
       device_name: 'Dashboard',
     };
@@ -99,7 +99,7 @@ export class ApiClient {
    */
   private getDeviceId(): string | null {
     // Only works in browser context
-    if (typeof window === 'undefined') {
+    if (typeof globalThis.window === 'undefined') {
       return null;
     }
 
@@ -112,7 +112,7 @@ export class ApiClient {
       } else {
         // Fallback UUID v4 generator for HTTP contexts
         deviceId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          const r = Math.random() * 16 | 0;
+          const r = Math.trunc(Math.random() * 16);
           const v = c === 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
