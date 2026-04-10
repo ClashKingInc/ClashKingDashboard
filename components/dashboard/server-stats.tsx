@@ -10,7 +10,7 @@ import { apiCache } from "@/lib/api-cache";
 import { apiClient } from "@/lib/api/client";
 
 interface ServerStatsProps {
-  guildId: string;
+  readonly guildId: string;
 }
 
 interface Stats {

@@ -5,10 +5,10 @@ import { routing } from '@/i18n/routing';
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  readonly children: React.ReactNode;
+  readonly params : Promise<{ locale: string }>;
 }) {
   // Await params as it's a Promise in Next.js 16
   const { locale } = await params;

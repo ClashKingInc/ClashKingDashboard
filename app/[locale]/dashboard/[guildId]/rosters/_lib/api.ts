@@ -26,7 +26,7 @@ export interface RosterTokenResult {
 // ============================================
 
 function getAuthHeaders(): HeadersInit {
-  const token = globalThis.window !== undefined ? localStorage.getItem('access_token') : null;
+  const token = globalThis.window === undefined ? null : localStorage.getItem('access_token');
   return {
     'Content-Type': 'application/json',
     Authorization: token ? `Bearer ${token}` : '',
@@ -49,7 +49,8 @@ export async function fetchRosters(serverId: string, groupId?: string): Promise<
   const params = new URLSearchParams();
   if (groupId) params.append('group_id', groupId);
   const queryString = params.toString();
-  const url = `/api/v2/roster/${serverId}/list${queryString ? `?${queryString}` : ''}`;
+  const querySuffix = queryString ? `?${queryString}` : '';
+  const url = `/api/v2/roster/${serverId}/list${querySuffix}`;
 
   const response = await fetch(url, {
     headers: getAuthHeaders(),

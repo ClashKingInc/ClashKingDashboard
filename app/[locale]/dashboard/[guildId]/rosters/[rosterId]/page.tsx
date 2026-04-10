@@ -453,7 +453,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     try {
       await updateAutomation(automationId, { active: !automation.active });
       toast({ title: t("automationUpdated") });
-    } catch (err) {
+    } catch {
       toast({
         title: t("automationError"),
         variant: "destructive",
@@ -465,7 +465,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     try {
       await deleteAutomation(automationId);
       toast({ title: t("automationDeleted") });
-    } catch (err) {
+    } catch {
       toast({
         title: t("automationError"),
         variant: "destructive",
@@ -488,7 +488,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       toast({ title: t("automationUpdated") });
       setEditAutomationDialogOpen(false);
       setEditingAutomation(null);
-    } catch (err) {
+    } catch {
       toast({
         title: t("automationError"),
         variant: "destructive",
@@ -508,19 +508,19 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       toast({ title: t("categoryCreated") });
       setCreateCategoryDialogOpen(false);
       setNewCategory({ custom_id: "", alias: "" });
-    } catch (err) {
+    } catch {
       toast({ title: t("categoryError"), variant: "destructive" });
     }
   };
 
   const handleEditCategory = async () => {
-    if (!editingCategory || !editingCategory.alias.trim()) return;
+    if (!editingCategory?.alias.trim()) return;
     try {
       await updateCategory(editingCategory.custom_id, { alias: editingCategory.alias });
       toast({ title: t("categoryUpdated") });
       setEditCategoryDialogOpen(false);
       setEditingCategory(null);
-    } catch (err) {
+    } catch {
       toast({ title: t("categoryError"), variant: "destructive" });
     }
   };
@@ -986,7 +986,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   <Card
                     key={automation.automation_id}
                     className={`bg-card border-l-4 transition-all hover:shadow-md ${
-                      !automation.active ? "border-l-muted opacity-60" : ""
+                      automation.active ? "" : "border-l-muted opacity-60"
                     }`}
                     style={{ borderLeftColor: getBorderColor() }}
                   >
@@ -1014,7 +1014,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                             </Badge>
                           )}
                           {automation.executed ? (
-                            automation.execution_status === "missed" ? (
+                            automation.execution_status === "missed" ? ( // NOSONAR — JSX nested ternary for multi-branch display state
                               <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/30">
                                 <AlertTriangle className="w-3 h-3 mr-1" />
                                 {t("automations.missed")}
@@ -1031,9 +1031,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                               </Badge>
                             )
                           ) : (() => {
-                            const currentTrigger = roster?.event_start_time != null
-                              ? roster.event_start_time + automation.offset_seconds
-                              : null;
+            const currentTrigger = roster?.event_start_time == null
+              ? null
+              : roster.event_start_time + automation.offset_seconds;
                             const isCurrentMissed = currentTrigger != null && (automation.last_missed_at ?? 0) >= currentTrigger;
                             const isCurrentTriggered = currentTrigger != null && (automation.last_triggered_at ?? 0) >= currentTrigger;
                             if (isCurrentMissed) return (

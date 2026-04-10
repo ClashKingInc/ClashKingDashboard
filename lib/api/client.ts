@@ -134,14 +134,20 @@ export function createApiClient(
 }
 
 /**
+ * Returns the base URL depending on whether code runs server-side or client-side.
+ * Exported for testability.
+ */
+export function getDefaultBaseUrl(): string {
+  return globalThis.window === undefined
+    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'  // Server-side: use backend directly
+    : '/api';  // Client-side: use Next.js API routes
+}
+
+/**
  * Default API client instance
  * Uses environment variables for configuration
  *
  * For client-side requests, use the Next.js API routes (/api) as proxy
  * For server-side requests, use the backend URL directly
  */
-export const apiClient = createApiClient(
-  globalThis.window !== undefined
-    ? '/api'  // Client-side: use Next.js API routes
-    : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',  // Server-side: use backend directly
-);
+export const apiClient = createApiClient(getDefaultBaseUrl());

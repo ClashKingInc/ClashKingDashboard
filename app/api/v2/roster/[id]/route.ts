@@ -97,7 +97,8 @@ export async function DELETE(
     if (members_only) backendParams.append('members_only', members_only);
     const query = backendParams.toString();
 
-    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}${query ? `?${query}` : ''}`, {
+    const queryPart = query ? `?${query}` : '';
+    const response = await fetch(`${API_BASE_URL}/v2/roster/${id}${queryPart}`, {
       method: 'DELETE',
       headers: {
         'Authorization': token || '',

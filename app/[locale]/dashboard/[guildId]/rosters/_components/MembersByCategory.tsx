@@ -231,7 +231,7 @@ function DraggableMember({
                 "text-sm font-medium w-12 text-right shrink-0",
                 member.hitrate >= 80
                   ? "text-green-400"
-                  : member.hitrate >= 60
+                  : member.hitrate >= 60 // NOSONAR — JSX nested ternary for multi-branch display state
                   ? "text-yellow-400"
                   : "text-red-400"
               )}

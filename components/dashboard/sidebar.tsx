@@ -43,10 +43,10 @@ import { logout } from "@/lib/auth/logout";
 import { SettingsDropdown } from "@/components/settings-dropdown";
 
 interface SidebarProps {
-  guildId: string;
-  guildName: string;
-  guildIcon?: string;
-  isLoading?: boolean;
+  readonly guildId: string;
+  readonly guildName: string;
+  readonly guildIcon?: string;
+  readonly isLoading?: boolean;
 }
 
 export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: SidebarProps) {

@@ -5,8 +5,8 @@ export default async function DashboardLayout({
   children,
   params,
 }: {
-  children: React.ReactNode;
-  params: Promise<{ guildId: string }>;
+  readonly children: React.ReactNode;
+  readonly params: Promise<{ guildId: string }>;
 }) {
   const { guildId } = await params;
 
