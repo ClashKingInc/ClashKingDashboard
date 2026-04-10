@@ -78,11 +78,12 @@ export function SettingsDropdown({
     ? resolveBrowserLocale(navigator.languages)
     : locale;
   const currentLanguage = LANGUAGE_OPTIONS.find((lang) => lang.code === currentLocale) ?? LANGUAGE_OPTIONS[0];
-  const themeIcon = theme === "dark"
-    ? <Moon className="h-4 w-4" />
-    : theme === "light"
-      ? <Sun className="h-4 w-4" />
-      : <Computer className="h-4 w-4" />;
+  let themeIcon = <Computer className="h-4 w-4" />;
+  if (theme === "dark") {
+    themeIcon = <Moon className="h-4 w-4" />;
+  } else if (theme === "light") {
+    themeIcon = <Sun className="h-4 w-4" />;
+  }
 
   return (
     <DropdownMenu modal={false}>
