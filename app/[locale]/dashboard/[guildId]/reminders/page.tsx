@@ -689,31 +689,23 @@ export default function RemindersPage() { // NOSONAR — React page component: c
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.totalReminders')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <Skeleton className="h-8 w-16 animate-pulse" />
-                      <Skeleton className="h-8 w-8 animate-pulse" />
+              <CardContent className="h-[84px] flex flex-col justify-between">
+                <div className="flex h-10 items-center justify-between">
+                  {loading ? (
+                    <Skeleton className="h-8 w-16 animate-pulse" />
+                  ) : (
+                    <div className="flex h-8 items-center text-3xl font-bold text-blue-500">
+                      {reminders.war_reminders.length +
+                          reminders.capital_reminders.length +
+                          reminders.clan_games_reminders.length +
+                          reminders.inactivity_reminders.length}
                     </div>
-                    <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <div className="text-3xl font-bold text-blue-500">
-                        {reminders.war_reminders.length +
-                            reminders.capital_reminders.length +
-                            reminders.clan_games_reminders.length +
-                            reminders.inactivity_reminders.length}
-                      </div>
-                      <Activity className="h-8 w-8 text-blue-500/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t('stats.totalRemindersDesc')}
-                    </p>
-                  </>
-                )}
+                  )}
+                  <Activity className="h-8 w-8 shrink-0 text-blue-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {t('stats.totalRemindersDesc')}
+                </p>
               </CardContent>
             </Card>
 
@@ -721,26 +713,18 @@ export default function RemindersPage() { // NOSONAR — React page component: c
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.warReminders')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <Skeleton className="h-8 w-12 animate-pulse" />
-                      <Skeleton className="h-8 w-8 animate-pulse" />
-                    </div>
-                    <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <div className="text-3xl font-bold text-green-500">{reminders.war_reminders.length}</div>
-                      <Target className="h-8 w-8 text-green-500/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t('stats.warRemindersDesc')}
-                    </p>
-                  </>
-                )}
+              <CardContent className="h-[84px] flex flex-col justify-between">
+                <div className="flex h-10 items-center justify-between">
+                  {loading ? (
+                    <Skeleton className="h-8 w-12 animate-pulse" />
+                  ) : (
+                    <div className="flex h-8 items-center text-3xl font-bold text-green-500">{reminders.war_reminders.length}</div>
+                  )}
+                  <Target className="h-8 w-8 shrink-0 text-green-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {t('stats.warRemindersDesc')}
+                </p>
               </CardContent>
             </Card>
 
@@ -748,26 +732,18 @@ export default function RemindersPage() { // NOSONAR — React page component: c
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.capitalReminders')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <Skeleton className="h-8 w-12 animate-pulse" />
-                      <Skeleton className="h-8 w-8 animate-pulse" />
-                    </div>
-                    <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <div className="text-3xl font-bold text-purple-500">{reminders.capital_reminders.length}</div>
-                      <Castle className="h-8 w-8 text-purple-500/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t('stats.capitalRemindersDesc')}
-                    </p>
-                  </>
-                )}
+              <CardContent className="h-[84px] flex flex-col justify-between">
+                <div className="flex h-10 items-center justify-between">
+                  {loading ? (
+                    <Skeleton className="h-8 w-12 animate-pulse" />
+                  ) : (
+                    <div className="flex h-8 items-center text-3xl font-bold text-purple-500">{reminders.capital_reminders.length}</div>
+                  )}
+                  <Castle className="h-8 w-8 shrink-0 text-purple-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {t('stats.capitalRemindersDesc')}
+                </p>
               </CardContent>
             </Card>
 
@@ -775,28 +751,20 @@ export default function RemindersPage() { // NOSONAR — React page component: c
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.otherReminders')}</CardTitle>
               </CardHeader>
-              <CardContent>
-                {loading ? (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <Skeleton className="h-8 w-12 animate-pulse" />
-                      <Skeleton className="h-8 w-8 animate-pulse" />
+              <CardContent className="h-[84px] flex flex-col justify-between">
+                <div className="flex h-10 items-center justify-between">
+                  {loading ? (
+                    <Skeleton className="h-8 w-12 animate-pulse" />
+                  ) : (
+                    <div className="flex h-8 items-center text-3xl font-bold text-yellow-500">
+                      {reminders.clan_games_reminders.length + reminders.inactivity_reminders.length}
                     </div>
-                    <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-center justify-between">
-                      <div className="text-3xl font-bold text-yellow-500">
-                        {reminders.clan_games_reminders.length + reminders.inactivity_reminders.length}
-                      </div>
-                      <Bell className="h-8 w-8 text-yellow-500/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t('stats.otherRemindersDesc')}
-                    </p>
-                  </>
-                )}
+                  )}
+                  <Bell className="h-8 w-8 shrink-0 text-yellow-500/50" />
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {t('stats.otherRemindersDesc')}
+                </p>
               </CardContent>
             </Card>
           </div>
