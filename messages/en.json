@@ -697,6 +697,7 @@
     "createSuccessDesc": "Roster \"{name}\" has been created",
     "createError": "Failed to create roster",
     "createErrorAlias": "Please enter a roster name",
+    "createErrorClan": "Please select a clan",
     "refreshSuccess": "Roster data refreshed",
     "refreshError": "Failed to refresh roster",
     "saveSuccess": "Settings saved",

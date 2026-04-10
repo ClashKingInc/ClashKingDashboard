@@ -691,6 +691,7 @@
     "createSuccessDesc": "Rooster \"{name}\" is gemaakt",
     "createError": "Maken mislukt",
     "createErrorAlias": "Voer een roosternaam in",
+    "createErrorClan": "Selecteer een clan",
     "refreshSuccess": "Gegevens vernieuwd",
     "refreshError": "Vernieuwen mislukt",
     "saveSuccess": "Instellingen opgeslagen",

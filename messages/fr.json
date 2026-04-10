@@ -609,6 +609,7 @@
     "createSuccessDesc": "Le roster \"{name}\" a été créé",
     "createError": "Échec de la création",
     "createErrorAlias": "Veuillez entrer un nom de roster",
+    "createErrorClan": "Veuillez sélectionner un clan",
     "refreshSuccess": "Données actualisées",
     "refreshError": "Échec de l'actualisation",
     "saveSuccess": "Paramètres sauvegardés",
