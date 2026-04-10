@@ -7,6 +7,7 @@ import { Check, Loader2, LayoutTemplate, Save } from "lucide-react";
 
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
+import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -96,7 +97,7 @@ export default function PanelsPage() {
   const loaded = useRef(false);
   const panelCacheKey = `panel-${guildId}`;
   const embedsCacheKey = `panels-embeds-list-${guildId}`;
-  const channelsCacheKey = `channels-${guildId}`;
+  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
 
   const showLoadError = useCallback(() => {
     toast({ title: tCommon("error"), description: tCommon("loadError"), variant: "destructive" });
@@ -140,8 +141,14 @@ export default function PanelsPage() {
 
   const loadChannels = useCallback(async () => {
     try {
-      const channelsRes = await apiCache.get(channelsCacheKey, () => apiClient.servers.getChannels(guildId));
-      setChannels(channelsRes.data ?? []);
+      const channelsPayload = await apiCache.get(channelsCacheKey, async () => {
+        const response = await apiClient.servers.getChannels(guildId);
+        if (response.error) {
+          throw new Error(response.error);
+        }
+        return response.data;
+      });
+      setChannels(normalizeChannelsPayload(channelsPayload));
     } catch {
       showLoadError();
     } finally {

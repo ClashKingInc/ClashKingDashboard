@@ -17,6 +17,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
+import {
+  dashboardCacheKeys,
+  normalizeAllRolesPayload,
+  normalizeDiscordRolesPayload,
+  normalizeServerSettingsPayload,
+} from "@/lib/dashboard-cache";
 import ReactMarkdown from "react-markdown";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -63,9 +69,9 @@ export default function GeneralSettingsPage() {
   const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
   const [isTenureDialogOpen, setIsTenureDialogOpen] = useState(false);
   const [newTenureRole, setNewTenureRole] = useState<{ months?: number; id?: string }>({});
-  const settingsCacheKey = `settings-${guildId}`;
-  const discordRolesCacheKey = `discord-roles-${guildId}`;
-  const allRolesCacheKey = `all-roles-${guildId}`;
+  const settingsCacheKey = dashboardCacheKeys.settings(guildId);
+  const discordRolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
+  const allRolesCacheKey = dashboardCacheKeys.allRoles(guildId);
 
   // Load settings on mount
   useEffect(() => {
@@ -84,7 +90,7 @@ export default function GeneralSettingsPage() {
         throw new Error("No access token found. Please log in again.");
       }
 
-      const settingsData = await apiCache.get(settingsCacheKey, async () => {
+      const settingsPayload = await apiCache.get(settingsCacheKey, async () => {
         const response = await apiClient.servers.getSettings(guildId);
 
         if (response.error) {
@@ -93,6 +99,7 @@ export default function GeneralSettingsPage() {
 
         return response.data;
       });
+      const settingsData = normalizeServerSettingsPayload(settingsPayload);
 
       if (settingsData) {
         const newSettings = {
@@ -118,17 +125,14 @@ export default function GeneralSettingsPage() {
       if (!token) return;
 
       // Use cache to prevent duplicate requests
-      const rolesData = await apiCache.get(discordRolesCacheKey, async () => {
+      const rolesPayload = await apiCache.get(discordRolesCacheKey, async () => {
         const response = await apiClient.roles.getDiscordRoles(guildId);
         if (response.error) {
           throw new Error(response.error);
         }
         return response.data;
       });
-
-      if (rolesData) {
-        setDiscordRoles(rolesData.roles);
-      }
+      setDiscordRoles(normalizeDiscordRolesPayload(rolesPayload));
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
     }
@@ -140,13 +144,14 @@ export default function GeneralSettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      const allRolesData = await apiCache.get(allRolesCacheKey, async () => {
+      const allRolesPayload = await apiCache.get(allRolesCacheKey, async () => {
         const response = await apiClient.roles.getAllRoles(guildId);
         if (response.error) {
           throw new Error(response.error);
         }
         return response.data;
       });
+      const allRolesData = normalizeAllRolesPayload(allRolesPayload);
 
       if (allRolesData?.roles?.status) {
         const normalizedRoles = allRolesData.roles.status.map((r: any) => ({
