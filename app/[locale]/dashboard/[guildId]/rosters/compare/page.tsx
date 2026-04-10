@@ -613,7 +613,7 @@ export default function CompareRostersPage() {
               gridTemplateColumns: `repeat(${Math.max(rosterIdsFromUrl.length, 2)}, 1fr)`,
             }}
           >
-            {[...new Array(Math.max(rosterIdsFromUrl.length, 2))].map((_, i) => (
+            {Array.from({ length: Math.max(rosterIdsFromUrl.length, 2) }).map((_, i) => (
               <Skeleton key={i} className="h-[600px]" />
             ))}
           </div>
