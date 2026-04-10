@@ -102,7 +102,7 @@ export function BotStats() {
                 <CardContent className="min-h-[84px]">
                     <div className="flex items-center gap-2">
                         <Badge className={statusStyles.badgeBg}>
-                            {isLoading ? "..." : isOnline ? t("online") : t("offline")} // NOSONAR — JSX nested ternary for multi-branch display state
+                            {isLoading ? "..." : isOnline ? t("online") : t("offline") /* NOSONAR — JSX nested ternary for multi-branch display state */}
                         </Badge>
                     </div>
                     <div className="mt-2 min-h-[40px] space-y-1">

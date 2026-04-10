@@ -663,7 +663,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
             const criteria = getCriteriaLabel(role);
 
             return (
-              <TableRow key={index}> // NOSONAR — index is the only stable key for these items (skeleton/static list)
+              <TableRow key={roleId}>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <div

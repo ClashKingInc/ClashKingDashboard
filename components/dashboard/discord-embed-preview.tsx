@@ -167,7 +167,7 @@ function renderMarkdown(text: string): React.ReactNode {
 
 function renderLines(text: string): React.ReactNode {
   return text.split("\n").map((line, i, arr) => (
-    <span key={i}> // NOSONAR — index is the only stable key for these items (skeleton/static list)
+    <span key={`line-${i}`}>
       {renderMarkdown(line)}
       {i < arr.length - 1 && <br />}
     </span>

@@ -183,7 +183,7 @@ function RosterCard({
         )}
 
         {/* Actions */}
-        <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}> // NOSONAR — stopPropagation wrapper div — keyboard handled by inner button children
+        <div className="flex gap-2 pt-2" onClick={(e) => e.stopPropagation()}>{/* NOSONAR — stopPropagation wrapper div — keyboard handled by inner button children */}
           <Button variant="default" size="sm" className="flex-1" onClick={onView}>
             <Eye className="w-4 h-4 mr-1" />
             {t("rosterCard.view")}

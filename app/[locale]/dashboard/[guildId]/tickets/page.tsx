@@ -1512,7 +1512,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        {Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-24 w-full" />)} // NOSONAR — index is the only stable key for these items (skeleton/static list)
+        {["a", "b"].map(id => <Skeleton key={id} className="h-24 w-full" />)}
       </div>
     );
   }

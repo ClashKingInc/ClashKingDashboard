@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { createApiClient } from './client';
+import { describe, it, expect, afterEach } from 'vitest';
+import { createApiClient, getDefaultBaseUrl } from './client';
 
 describe('createApiClient', () => {
   it('creates a client with the provided baseUrl', () => {
@@ -59,5 +59,24 @@ describe('ClashKingApiClient — getConfig', () => {
   it('returns the baseUrl from the auth client', () => {
     const client = createApiClient('http://api.example.com');
     expect(client.getConfig().baseUrl).toBe('http://api.example.com');
+  });
+});
+
+describe('getDefaultBaseUrl', () => {
+  afterEach(() => {
+    // Restore window to undefined (Node.js / test environment default)
+    Reflect.deleteProperty(globalThis, 'window');
+  });
+
+  it('returns backend URL when running server-side (window undefined)', () => {
+    Reflect.deleteProperty(globalThis, 'window');
+    const url = getDefaultBaseUrl();
+    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000');
+  });
+
+  it('returns /api when running client-side (window defined)', () => {
+    (globalThis as Record<string, unknown>).window = {};
+    const url = getDefaultBaseUrl();
+    expect(url).toBe('/api');
   });
 });

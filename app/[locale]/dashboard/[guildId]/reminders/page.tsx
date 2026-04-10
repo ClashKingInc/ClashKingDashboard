@@ -351,7 +351,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
   // Extract hours number from "X hr" format
   const extractHours = (timeString: string): string => {
-    const match = /^(d+(?:.d+)?)s+hr$/.exec(timeString ?? '');
+    const match = /^(\d+(?:\.\d+)?)\s+hr$/.exec(timeString ?? ''); // NOSONAR — anchored regex, backtracking is bounded by ^ and $
     return match ? match[1] : timeString;
   };
 
@@ -882,7 +882,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                         <CardContent className="py-12 text-center">
                           <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                           <h3 className="text-lg font-semibold text-foreground mb-2">
-                            {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders')} // NOSONAR — JSX nested ternary for multi-branch display state
+                            {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders') /* NOSONAR — JSX nested ternary for multi-branch display state */}
                           </h3>
                           <p className="text-muted-foreground mb-4">
                             {t('empty.getStarted')}
@@ -975,7 +975,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                         <div className="flex gap-2 flex-wrap">
                                           {reminder.war_types.map((type) => (
                                               <Badge key={type} variant="secondary">
-                                                {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')} // NOSONAR — JSX nested ternary for multi-branch display state
+                                                {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
                                               </Badge>
                                           ))}
                                         </div>
@@ -1143,7 +1143,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                   updateDialogField("war_types", updated);
                                 }}
                             >
-                              {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')} // NOSONAR — JSX nested ternary for multi-branch display state
+                              {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
                             </Badge>
                         ))}
                       </div>

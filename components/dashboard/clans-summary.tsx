@@ -112,7 +112,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
             ["quickStart.step2.title", "quickStart.step2.description"],
             ["quickStart.step3.title", "quickStart.step3.description"],
           ] as const).map(([titleKey, descKey], idx) => (
-            <div key={idx} className="flex items-start gap-4"> // NOSONAR — index is the only stable key for these items (skeleton/static list)
+            <div key={titleKey} className="flex items-start gap-4">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold flex-shrink-0">
                 {idx + 1}
               </div>

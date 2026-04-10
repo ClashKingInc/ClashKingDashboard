@@ -459,16 +459,16 @@ export default function LogsPage() {
                   {logDef.description}
                   {logDef.exampleLink && (
                     <>
-                      {' '}(
-                      <a 
-                        href={logDef.exampleLink.replace('https://discord.com/channels/', 'discord://discord.com/channels/')} 
-                        target="_blank" 
+                      {' ('}
+                      <a
+                        href={logDef.exampleLink.replace('https://discord.com/channels/', 'discord://discord.com/channels/')}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:text-blue-600 underline"
                       >
                         {t('logCard.example')}
-                      </a> // NOSONAR — spacing is explicit via JSX text node
-                      )
+                      </a>
+                      {')'}
                     </>
                   )}
                 </CardDescription>

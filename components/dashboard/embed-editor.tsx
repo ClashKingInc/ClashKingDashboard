@@ -124,7 +124,7 @@ function parseDiscohookUrl(url: string): Record<string, unknown> | null {
   try {
     const match = /[?&]data=([^&\s]+)/.exec(url);
     if (!match) return null;
-    return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(match[1]), c => c.charCodeAt(0))));
+    return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(match[1]), c => c.codePointAt(0) ?? 0)));
   } catch { return null; }
 }
 
