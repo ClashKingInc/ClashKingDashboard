@@ -160,7 +160,7 @@ export default function ClansPage() {
       if (p.key === "{clan_name}" && clanName) {
         example = clanName;
       }
-            preview = preview.replaceAll(new RegExp(p.key.replaceAll(/[.*+?^${}()|[]\]/g, String.raw`preview = preview.replace(new RegExp(p.key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), example);`), "g"), example);
+            preview = preview.replaceAll(new RegExp(p.key.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`), "g"), example);
     });
     return preview;
   };

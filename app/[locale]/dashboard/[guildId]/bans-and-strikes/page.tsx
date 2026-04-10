@@ -195,7 +195,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
         if (typeof response.error === 'string') {
           errorMessage = response.error;
-        } else if (Array.isnew Array(response.error)) {
+        } else if (Array.isArray(response.error)) {
           errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');
@@ -258,7 +258,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
         if (typeof response.error === 'string') {
           errorMessage = response.error;
-        } else if (Array.isnew Array(response.error)) {
+        } else if (Array.isArray(response.error)) {
           errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');
@@ -309,7 +309,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
         if (typeof response.error === 'string') {
           errorMessage = response.error;
-        } else if (Array.isnew Array(response.error)) {
+        } else if (Array.isArray(response.error)) {
           errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');
@@ -352,7 +352,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
         if (typeof response.error === 'string') {
           errorMessage = response.error;
-        } else if (Array.isnew Array(response.error)) {
+        } else if (Array.isArray(response.error)) {
           errorMessage = (response.error as any[]).map((e: any) =>
             typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
           ).join(', ');

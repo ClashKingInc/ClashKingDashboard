@@ -5,7 +5,7 @@ import { routing } from '@/i18n/routing';
 
 export default async function LocaleLayout({
   children,
-  readonly params 
+  params,
 }: {
   readonly children: React.ReactNode;
   readonly params : Promise<{ locale: string }>;
