@@ -659,7 +659,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                   {isLoadingBans ? (
                     <div className="space-y-3">
                       {[...Array(3)].map((_, i) => (
-                        <div key={i} className="flex items-center gap-4"> // NOSONAR — index is the only stable key for these items (skeleton/static list)
+                        <div key={i} className="flex items-center gap-4">
                           <Skeleton className="h-12 w-full" />
                         </div>
                       ))}
@@ -1017,7 +1017,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                   {isLoadingStrikes ? (
                     <div className="space-y-3">
                       {[...Array(3)].map((_, i) => (
-                        <div key={i} className="flex items-center gap-4"> // NOSONAR — index is the only stable key for these items (skeleton/static list)
+                        <div key={i} className="flex items-center gap-4">
                           <Skeleton className="h-12 w-full" />
                         </div>
                       ))}
