@@ -46,7 +46,7 @@ export interface EmbedEditorProps {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function hexToInt(hex: string): number {
-  return parseInt(hex.replace("#", ""), 16);
+  return Number.parseInt(hex.replace("#", ""), 16);
 }
 
 function intToHex(color: number): string {
@@ -122,19 +122,19 @@ export function stateToPayload(s: EmbedFormState): Record<string, unknown> {
 
 function parseDiscohookUrl(url: string): Record<string, unknown> | null {
   try {
-    const match = url.match(/[?&]data=([^&\s]+)/);
+    const match = /[?&]data=([^&\s]+)/.exec(url);
     if (!match) return null;
     return JSON.parse(decodeURIComponent(escape(atob(match[1]))));
   } catch { return null; }
 }
 
 function uid(): string {
-  return Math.random().toString(36).slice(2, 9);
+  return Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionLabel({ children }: { readonly children: React.ReactNode }) {
   return (
     <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
       {children}
@@ -142,7 +142,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({ label, hint, children }: { readonly label: string; readonly hint?: string; readonly children: React.ReactNode }) {
   return (
     <div className="space-y-1">
       <Label className="text-xs">{label}</Label>
@@ -152,7 +152,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   );
 }
 
-function CharCount({ value, max }: { value: string; max: number }) {
+function CharCount({ value, max }: { readonly value: string; readonly max: number }) {
   const len = value.length;
   return (
     <span className={cn("text-[11px] tabular-nums", len > max ? "text-destructive" : "text-muted-foreground")}>

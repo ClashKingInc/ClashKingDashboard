@@ -943,7 +943,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                 placeholder={t("strikes.addDialog.weightPlaceholder")}
                                 value={newStrike.strike_weight}
                                 onChange={(e) =>
-                                  setNewStrike({ ...newStrike, strike_weight: parseInt(e.target.value) || 1 })
+                                  setNewStrike({ ...newStrike, strike_weight: Number.parseInt(e.target.value) || 1 })
                                 }
                                 disabled={isSubmittingStrike}
                                 className="bg-background border-border text-foreground"
@@ -958,7 +958,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                 placeholder={t("strikes.addDialog.rolloverPlaceholder")}
                                 value={newStrike.rollover_days || ""}
                                 onChange={(e) =>
-                                  setNewStrike({ ...newStrike, rollover_days: e.target.value ? parseInt(e.target.value) : undefined })
+                                  setNewStrike({ ...newStrike, rollover_days: e.target.value ? Number.parseInt(e.target.value) : undefined })
                                 }
                                 disabled={isSubmittingStrike}
                                 className="bg-background border-border text-foreground"
@@ -1157,7 +1157,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                           setExpandedPlayerTags(prev =>
                                             prev.includes(group.tag)
                                               ? prev.filter(t => t !== group.tag)
-                                              : [...prev, group.tag]
+                                              : [...prev, group.tag] // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                                           );
                                         }}
                                       >

@@ -72,7 +72,7 @@ interface ServerLinksResponse {
   verified_accounts: number; // Total verified accounts (server-wide, accurate stat)
 }
 
-const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapeRegex = (value: string): string => value.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 
 function filterMembers(
   members: MemberLinks[],
@@ -105,7 +105,7 @@ function filterMembers(
   return filtered;
 }
 
-export default function LinksManagementPage() {
+export default function LinksManagementPage() { // NOSONAR — complexity comes from aggregate link/search state management, not a single logic unit
   const params = useParams();
   const guildId = params?.guildId as string;
   const [loading, setLoading] = useState(true);

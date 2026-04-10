@@ -26,7 +26,7 @@ export interface RosterTokenResult {
 // ============================================
 
 function getAuthHeaders(): HeadersInit {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  const token = globalThis.window !== undefined ? localStorage.getItem('access_token') : null;
   return {
     'Content-Type': 'application/json',
     Authorization: token ? `Bearer ${token}` : '',

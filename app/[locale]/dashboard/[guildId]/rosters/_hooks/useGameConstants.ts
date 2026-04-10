@@ -63,9 +63,7 @@ export function useGameConstants() {
     }
 
     // Use shared promise to avoid duplicate requests
-    if (!fetchPromise) {
-      fetchPromise = fetchGameConstants();
-    }
+    fetchPromise ??= fetchGameConstants();
 
     fetchPromise.then((data) => {
       setConstants(data);

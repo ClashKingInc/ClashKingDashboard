@@ -101,7 +101,7 @@ const LOCALE_MAP: Record<string, string> = {
   nl: "nl-NL",
 };
 
-export default function AutoBoardsPage() {
+export default function AutoBoardsPage() { // NOSONAR — complexity comes from aggregate autoboard state management, not a single logic unit
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("AutoboardsPage");

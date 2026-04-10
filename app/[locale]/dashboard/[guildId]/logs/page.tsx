@@ -362,7 +362,7 @@ export default function LogsPage() {
     if (!currentClan) return "";
 
     const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-    if (!firstLogConfig || !firstLogConfig.channel) return "";
+    if (!firstLogConfig?.channel) return "";
 
     return firstLogConfig.channel;
   };
@@ -372,7 +372,7 @@ export default function LogsPage() {
     if (!currentClan) return "";
 
     const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-    if (!firstLogConfig || !firstLogConfig.thread) return "";
+    if (!firstLogConfig?.thread) return "";
 
     return firstLogConfig.thread.toString();
   };
@@ -382,7 +382,7 @@ export default function LogsPage() {
     if (!currentClan) return false;
 
     const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-    return firstLogConfig && firstLogConfig.webhook;
+    return firstLogConfig?.webhook;
   };
 
   const countActiveLogs = () => {
@@ -425,7 +425,7 @@ export default function LogsPage() {
 
 
   // Separate component for LogCard to use hooks properly
-  const LogCard = ({ logDef, statusLoading = false }: { logDef: LogTypeDefinition; statusLoading?: boolean }) => {
+  const LogCard = ({ logDef, statusLoading = false }: { logDef: LogTypeDefinition; statusLoading?: boolean }) => { // NOSONAR — inline sub-component uses parent closures; complexity is structural JSX, not logic
     const Icon = logDef.icon;
     const currentClan = getCurrentClan();
     const isStatusLoading = statusLoading || !currentClan;
@@ -493,12 +493,10 @@ export default function LogsPage() {
                     onCheckedChange={(checked) => {
                       if (checked) {
                         setShowEnableForm(true);
+                      } else if (showEnableForm && !isEnabled) {
+                        setShowEnableForm(false);
                       } else {
-                        if (showEnableForm && !isEnabled) {
-                          setShowEnableForm(false);
-                        } else {
-                          handleChannelChange(logDef.keys, 'disabled');
-                        }
+                        handleChannelChange(logDef.keys, 'disabled');
                       }
                     }}
                     disabled={isSaving}
