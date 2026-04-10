@@ -252,6 +252,7 @@
   "BansPage": {
     "title": "Moderatie",
     "description": "Beheer spelersbans en strikes",
+    "viewClashProfile": "Bekijk Clash-profiel",
     "tabs": {
       "bans": "Bans",
       "strikes": "Strikes"
