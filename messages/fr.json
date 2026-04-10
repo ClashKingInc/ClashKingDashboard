@@ -62,7 +62,8 @@
     "systemTheme": "Suivre le Système",
     "lightTheme": "Thème Clair",
     "darkTheme": "Thème Sombre",
-    "language": "Langue"
+    "language": "Langue",
+    "browserLanguage": "Langue du navigateur"
   },
   "HomePage": {
     "badge": "Plus de {serverCount} serveurs utilisent déjà ClashKing",
