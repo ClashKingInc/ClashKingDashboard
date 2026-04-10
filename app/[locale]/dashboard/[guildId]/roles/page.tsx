@@ -900,13 +900,17 @@ export default function RolesPage() {
                   {t("settings.enableAutoEvalDesc")}
                 </p>
               </div>
-              <Switch
-                id="auto-eval"
-                checked={roleSettings.auto_eval_status}
-                onCheckedChange={(checked) =>
-                  setRoleSettings({ ...roleSettings, auto_eval_status: checked })
-                }
-              />
+              {isLoading ? (
+                <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
+              ) : (
+                <Switch
+                  id="auto-eval"
+                  checked={roleSettings.auto_eval_status}
+                  onCheckedChange={(checked) =>
+                    setRoleSettings({ ...roleSettings, auto_eval_status: checked })
+                  }
+                />
+              )}
             </div>
 
             <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
@@ -916,13 +920,17 @@ export default function RolesPage() {
                   {t("settings.autoNicknameDesc")}
                 </p>
               </div>
-              <Switch
-                id="auto-nickname"
-                checked={roleSettings.auto_eval_nickname}
-                onCheckedChange={(checked) =>
-                  setRoleSettings({ ...roleSettings, auto_eval_nickname: checked })
-                }
-              />
+              {isLoading ? (
+                <Skeleton className="h-6 w-11 rounded-full animate-pulse" />
+              ) : (
+                <Switch
+                  id="auto-nickname"
+                  checked={roleSettings.auto_eval_nickname}
+                  onCheckedChange={(checked) =>
+                    setRoleSettings({ ...roleSettings, auto_eval_nickname: checked })
+                  }
+                />
+              )}
             </div>
           </CardContent>
         </Card>
