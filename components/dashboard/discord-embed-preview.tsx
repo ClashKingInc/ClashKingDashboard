@@ -68,68 +68,94 @@ export function extractFirstEmbed(data: Record<string, unknown>): DiscordEmbed |
 }
 
 /** Very minimal markdown: **bold**, *italic*, __underline__, `code`, [text](url) */
+type MarkdownParseResult = {
+  node: React.ReactNode;
+  nextIndex: number;
+};
+
+type MarkdownParser = (text: string, start: number, key: number) => MarkdownParseResult | null;
+
+function parseDelimited(
+  text: string,
+  start: number,
+  open: string,
+  close: string
+): { content: string; nextIndex: number } | null {
+  if (!text.startsWith(open, start)) return null;
+  const end = text.indexOf(close, start + open.length);
+  if (end <= start + open.length) return null;
+  return { content: text.slice(start + open.length, end), nextIndex: end + close.length };
+}
+
+const parseBold: MarkdownParser = (text, start, key) => {
+  const parsed = parseDelimited(text, start, "**", "**");
+  if (!parsed) return null;
+  return { node: <strong key={key}>{parsed.content}</strong>, nextIndex: parsed.nextIndex };
+};
+
+const parseUnderline: MarkdownParser = (text, start, key) => {
+  const parsed = parseDelimited(text, start, "__", "__");
+  if (!parsed) return null;
+  return { node: <u key={key}>{parsed.content}</u>, nextIndex: parsed.nextIndex };
+};
+
+const parseItalic: MarkdownParser = (text, start, key) => {
+  const parsed = parseDelimited(text, start, "*", "*");
+  if (!parsed) return null;
+  return { node: <em key={key}>{parsed.content}</em>, nextIndex: parsed.nextIndex };
+};
+
+const parseCode: MarkdownParser = (text, start, key) => {
+  const parsed = parseDelimited(text, start, "`", "`");
+  if (!parsed) return null;
+  return {
+    node: (
+      <code key={key} className="rounded bg-[#2b2d31] px-1 text-[0.85em] font-mono">
+        {parsed.content}
+      </code>
+    ),
+    nextIndex: parsed.nextIndex,
+  };
+};
+
+const parseLink: MarkdownParser = (text, start, key) => {
+  if (text[start] !== "[") return null;
+  const labelEnd = text.indexOf("]", start + 1);
+  if (labelEnd <= start + 1 || text[labelEnd + 1] !== "(") return null;
+  const urlEnd = text.indexOf(")", labelEnd + 2);
+  if (urlEnd <= labelEnd + 2) return null;
+
+  const label = text.slice(start + 1, labelEnd);
+  const url = text.slice(labelEnd + 2, urlEnd);
+  return {
+    node: (
+      <a key={key} href={url} target="_blank" rel="noreferrer" className="text-[#00a8fc] hover:underline">
+        {label}
+      </a>
+    ),
+    nextIndex: urlEnd + 1,
+  };
+};
+
+const MARKDOWN_PARSERS: MarkdownParser[] = [parseBold, parseUnderline, parseItalic, parseCode, parseLink];
+
 function renderMarkdown(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
   let i = 0;
   let key = 0;
 
   while (i < text.length) {
-    if (text.startsWith("**", i)) {
-      const end = text.indexOf("**", i + 2);
-      if (end > i + 2) {
-        parts.push(<strong key={key++}>{text.slice(i + 2, end)}</strong>);
-        i = end + 2;
-        continue;
-      }
+    let parsed: MarkdownParseResult | null = null;
+    for (const parser of MARKDOWN_PARSERS) {
+      parsed = parser(text, i, key);
+      if (parsed) break;
     }
 
-    if (text.startsWith("__", i)) {
-      const end = text.indexOf("__", i + 2);
-      if (end > i + 2) {
-        parts.push(<u key={key++}>{text.slice(i + 2, end)}</u>);
-        i = end + 2;
-        continue;
-      }
-    }
-
-    if (text[i] === "*") {
-      const end = text.indexOf("*", i + 1);
-      if (end > i + 1) {
-        parts.push(<em key={key++}>{text.slice(i + 1, end)}</em>);
-        i = end + 1;
-        continue;
-      }
-    }
-
-    if (text[i] === "`") {
-      const end = text.indexOf("`", i + 1);
-      if (end > i + 1) {
-        parts.push(
-          <code key={key++} className="rounded bg-[#2b2d31] px-1 text-[0.85em] font-mono">
-            {text.slice(i + 1, end)}
-          </code>
-        );
-        i = end + 1;
-        continue;
-      }
-    }
-
-    if (text[i] === "[") {
-      const labelEnd = text.indexOf("]", i + 1);
-      if (labelEnd > i + 1 && text[labelEnd + 1] === "(") {
-        const urlEnd = text.indexOf(")", labelEnd + 2);
-        if (urlEnd > labelEnd + 2) {
-          const label = text.slice(i + 1, labelEnd);
-          const url = text.slice(labelEnd + 2, urlEnd);
-          parts.push(
-            <a key={key++} href={url} target="_blank" rel="noreferrer" className="text-[#00a8fc] hover:underline">
-              {label}
-            </a>
-          );
-          i = urlEnd + 1;
-          continue;
-        }
-      }
+    if (parsed) {
+      parts.push(parsed.node);
+      key += 1;
+      i = parsed.nextIndex;
+      continue;
     }
 
     parts.push(text[i]);
