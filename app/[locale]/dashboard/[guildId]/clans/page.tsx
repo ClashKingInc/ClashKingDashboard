@@ -118,6 +118,17 @@ interface DiscordRole {
   color: number;
 }
 
+function normalizeClansPayload(payload: unknown): Clan[] {
+  if (Array.isArray(payload)) return payload as Clan[];
+  if (payload && typeof payload === "object") {
+    const maybeCollection = payload as { items?: unknown; clans?: unknown; data?: unknown };
+    if (Array.isArray(maybeCollection.items)) return maybeCollection.items as Clan[];
+    if (Array.isArray(maybeCollection.clans)) return maybeCollection.clans as Clan[];
+    if (Array.isArray(maybeCollection.data)) return maybeCollection.data as Clan[];
+  }
+  return [];
+}
+
 export default function ClansPage() {
   const params = useParams();
   const router = useRouter();
@@ -197,13 +208,14 @@ export default function ClansPage() {
         throw error;
       }
 
-      return response.json();
+      const payload = await response.json();
+      return normalizeClansPayload(payload);
     });
   };
 
   const refreshClans = async (accessToken: string) => {
     const clansData = await fetchClans(accessToken, true);
-    setClans(clansData || []);
+    setClans(clansData);
   };
 
   // Fetch data on mount
@@ -218,7 +230,7 @@ export default function ClansPage() {
         }
 
         const clansData = await fetchClans(accessToken);
-        setClans(clansData || []);
+        setClans(clansData);
 
         const [channelsResult, rolesResult] = await Promise.allSettled([
           apiCache.get(channelsCacheKey, async () => {

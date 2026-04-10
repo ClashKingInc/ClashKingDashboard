@@ -32,15 +32,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import {
-  Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap, FolderTree,
+  Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap,
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
-  MessageSquare, UserMinus, Building2, Globe, Hash, Shield, UserCheck,
-  Layers, Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
-  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive, X, Copy, ExternalLink, Link2,
+  MessageSquare, UserMinus, Building2, Hash, Shield,
+  Tag, FileText, Home, Pencil, Columns3, ChevronUp, ChevronDown, GripVertical,
+  Info, Lightbulb, Play, Pause, List, LayoutGrid, Archive,
   CheckCircle2, AlertTriangle, Target, TrendingUp
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -57,7 +56,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 
 // Local imports
-import { useRosterDetail } from "../_hooks";
+import { useRosterDetail, useGameConstants } from "../_hooks";
 import {
   RosterStatsCard,
   MembersTable,
@@ -76,16 +75,13 @@ import {
   getSortLabel,
   getSortInternal,
   ROSTER_COLUMNS,
-  SORT_OPTIONS,
   buildOffsetSeconds,
   parseOffsetSeconds,
   formatOffsetSeconds,
 } from "../_lib";
 import type { OffsetUnit } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
-import { generateRosterToken, fetchRosters } from "../_lib/api";
-import type { RosterTokenResult } from "../_lib/api";
-import { useGameConstants } from "../_hooks";
+import { fetchRosters } from "../_lib/api";
 
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -121,7 +117,6 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
   const guildId = params.guildId as string;
   const rosterId = params.rosterId as string;
-  const locale = params.locale as string;
   const t = useTranslations("RostersPage");
 
   // Game constants
@@ -156,7 +151,6 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     deleteAutomation,
     createCategory,
     updateCategory,
-    deleteCategory,
   } = useRosterDetail(rosterId, guildId);
 
   // UI State
@@ -337,16 +331,16 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         roster_type: editData.roster_type,
         signup_scope: editData.signup_scope,
         clan_tag: editData.clan_tag || null,
-        min_th: editData.min_th ? parseInt(editData.min_th) : null,
-        max_th: editData.max_th ? parseInt(editData.max_th) : null,
-        roster_size: editData.roster_size ? parseInt(editData.roster_size) : null,
-        min_signups: editData.min_signups ? parseInt(editData.min_signups) : null,
-        max_accounts_per_user: editData.max_accounts_per_user ? parseInt(editData.max_accounts_per_user) : null,
+        min_th: editData.min_th ? Number.parseInt(editData.min_th) : null,
+        max_th: editData.max_th ? Number.parseInt(editData.max_th) : null,
+        roster_size: editData.roster_size ? Number.parseInt(editData.roster_size) : null,
+        min_signups: editData.min_signups ? Number.parseInt(editData.min_signups) : null,
+        max_accounts_per_user: editData.max_accounts_per_user ? Number.parseInt(editData.max_accounts_per_user) : null,
         event_start_time: datetimeLocalToUnix(editData.event_start_time),
         recurrence_days: editData.recurrence_mode === 'days' && editData.recurrence_days
-          ? parseInt(editData.recurrence_days) : null,
+          ? Number.parseInt(editData.recurrence_days) : null,
         recurrence_day_of_month: editData.recurrence_mode === 'day_of_month' && editData.recurrence_day_of_month
-          ? parseInt(editData.recurrence_day_of_month) : null,
+          ? Number.parseInt(editData.recurrence_day_of_month) : null,
         columns: editData.columns.map(getColumnInternal),
         sort: editData.sort.map(getSortInternal),
         group_id: editData.group_id || null,
@@ -1646,7 +1640,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   min={1}
                   value={newAutomation._offsetVal ?? '1'}
                   onChange={(e) => {
-                    const val = parseInt(e.target.value) || 1;
+                    const val = Number.parseInt(e.target.value) || 1;
                     const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
                     setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds('before', val, unit) });
                   }}
@@ -1656,7 +1650,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   value={newAutomation._offsetUnit ?? 'days'}
                   onValueChange={(v) => {
                     const unit = v as OffsetUnit;
-                    const val = parseInt(newAutomation._offsetVal ?? '1') || 1;
+                    const val = Number.parseInt(newAutomation._offsetVal ?? '1') || 1;
                     setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds('before', val, unit) });
                   }}
                 >
@@ -1832,7 +1826,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                         min={1}
                         value={parsed.val}
                         onChange={(e) => {
-                          const val = parseInt(e.target.value) || 1;
+                          const val = Number.parseInt(e.target.value) || 1;
                           setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', val, parsed.unit) } : null);
                         }}
                         className="bg-background w-20"

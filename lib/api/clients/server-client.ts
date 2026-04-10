@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordChannel, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
 
 export class ServerClient extends BaseApiClient {
   /**

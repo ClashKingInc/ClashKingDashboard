@@ -2,15 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { clashKingAssets } from "@/lib/theme";
 
 export function Footer() {
-  const params = useParams();
-  const locale = (params?.locale as string) || "en";
   const t = useTranslations("HomePage.footer");
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);

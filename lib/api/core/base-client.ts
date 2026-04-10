@@ -28,10 +28,10 @@ export class BaseApiClient {
    */
   private async _getToken(isRetry: boolean, isAuthEndpoint = false): Promise<string | undefined> {
     let token = this.config.accessToken;
-    if (!token && typeof globalThis.window !== 'undefined') {
+    if (!token && globalThis.window !== undefined) {
       token = localStorage.getItem('access_token') || undefined;
     }
-    if (!token && !isRetry && !isAuthEndpoint && typeof globalThis.window !== 'undefined') {
+    if (!token && !isRetry && !isAuthEndpoint && globalThis.window !== undefined) {
       const hasRefresh = !!localStorage.getItem('refresh_token');
       if (hasRefresh) {
         const refreshed = await this._tryRefreshToken();
@@ -78,7 +78,7 @@ export class BaseApiClient {
           response.status === 401 &&
           !_isRetry &&
           !endpoint.startsWith('/v2/auth/') &&
-          typeof globalThis.window !== 'undefined'
+          globalThis.window !== undefined
         ) {
           const refreshed = await this._tryRefreshToken();
           if (refreshed) {
@@ -125,7 +125,7 @@ export class BaseApiClient {
         if (
           response.status === 401 &&
           !_isRetry &&
-          typeof globalThis.window !== 'undefined'
+          globalThis.window !== undefined
         ) {
           const refreshed = await this._tryRefreshToken();
           if (refreshed) {

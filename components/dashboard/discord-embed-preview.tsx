@@ -177,8 +177,8 @@ function renderLines(text: string): React.ReactNode {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface Props {
-  embed: DiscordEmbed;
-  className?: string;
+  readonly embed: DiscordEmbed;
+  readonly className?: string;
 }
 
 export function DiscordEmbedPreview({ embed, className }: Props) {

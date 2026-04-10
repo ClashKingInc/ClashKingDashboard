@@ -46,9 +46,9 @@ import type { Roster, RosterMember, SignupCategory } from "../_lib/types";
 
 // Draggable member item
 interface DraggableMemberProps {
-  member: RosterMember;
-  rosterId: string;
-  isDuplicate?: boolean;
+  readonly member: RosterMember;
+  readonly rosterId: string;
+  readonly isDuplicate?: boolean;
 }
 
 function DraggableMember({ member, rosterId, isDuplicate }: DraggableMemberProps) {
@@ -107,13 +107,13 @@ function DraggableMember({ member, rosterId, isDuplicate }: DraggableMemberProps
 
 // Category drop zone within a roster
 interface CategoryDropZoneProps {
-  rosterId: string;
-  categoryId: string | null;
-  categoryName: string;
-  members: RosterMember[];
-  isOver: boolean;
-  color?: string;
-  duplicateTags?: Set<string>;
+  readonly rosterId: string;
+  readonly categoryId: string | null;
+  readonly categoryName: string;
+  readonly members: RosterMember[];
+  readonly isOver: boolean;
+  readonly color?: string;
+  readonly duplicateTags?: Set<string>;
 }
 
 function CategoryDropZone({
@@ -172,13 +172,13 @@ function CategoryDropZone({
 
 // Roster column with categories
 interface RosterColumnProps {
-  roster: Roster;
-  members: RosterMember[];
-  categories: SignupCategory[];
-  overCategoryId: string | null;
-  isLoading: boolean;
-  duplicateTags?: Set<string>;
-  t: (key: string) => string;
+  readonly roster: Roster;
+  readonly members: RosterMember[];
+  readonly categories: SignupCategory[];
+  readonly overCategoryId: string | null;
+  readonly isLoading: boolean;
+  readonly duplicateTags?: Set<string>;
+  readonly t: (key: string) => string;
 }
 
 function RosterColumn({
@@ -324,7 +324,6 @@ export default function CompareRostersPage() {
   const { toast } = useToast();
 
   const guildId = params.guildId as string;
-  const locale = params.locale as string;
   const t = useTranslations("RostersPage");
 
   // Parse roster IDs or group ID from URL
@@ -614,7 +613,7 @@ export default function CompareRostersPage() {
               gridTemplateColumns: `repeat(${Math.max(rosterIdsFromUrl.length, 2)}, 1fr)`,
             }}
           >
-            {[...Array(Math.max(rosterIdsFromUrl.length, 2))].map((_, i) => (
+            {Array.from({ length: Math.max(rosterIdsFromUrl.length, 2) }).map((_, i) => (
               <Skeleton key={i} className="h-[600px]" />
             ))}
           </div>
