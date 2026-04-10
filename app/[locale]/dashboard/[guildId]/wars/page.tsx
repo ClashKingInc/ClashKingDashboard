@@ -37,7 +37,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { darkTheme, clashKingColors } from "@/lib/theme";
-import type { War } from "@/lib/api/types/war";
+import type { War, WarSummary } from "@/lib/api/types/war";
 
 interface PlayerStats {
   tag: string;
@@ -235,6 +235,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
           )
         )
       ]);
+
+      const summaries: WarSummary[] = warSummaryRes.items || [];
 
       // Combine historical wars, filtering by selected war types
       const allHistoricalWars: War[] = historicalWars.flatMap(result => result.items || []).filter(war => {
