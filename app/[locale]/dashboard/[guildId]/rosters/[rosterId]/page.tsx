@@ -500,48 +500,40 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20" />
-                  <Users className="h-8 w-8 text-blue-500/50" />
-                </div>
+              <CardContent className="relative pr-14">
+                <Skeleton className="h-8 w-20" />
+                <Users className="absolute right-0 top-0 h-8 w-8 text-blue-500/50" />
               </CardContent>
             </Card>
             <Card className="bg-card border-orange-500/30 bg-orange-500/5 min-h-[150px]">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgTh")}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20" />
-                  <Shield className="h-8 w-8 text-orange-500/50" />
-                </div>
+              <CardContent className="relative pr-14">
+                <Skeleton className="h-8 w-20" />
+                <Shield className="absolute right-0 top-0 h-8 w-8 text-orange-500/50" />
               </CardContent>
             </Card>
             <Card className="bg-card border-green-500/30 bg-green-500/5 min-h-[150px]">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.avgHitrate")}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <Skeleton className="h-8 w-20" />
-                  <Target className="h-8 w-8 text-green-500/50" />
-                </div>
+              <CardContent className="relative pr-14">
+                <Skeleton className="h-8 w-20" />
+                <Target className="absolute right-0 top-0 h-8 w-8 text-green-500/50" />
               </CardContent>
             </Card>
             <Card className="bg-card border-purple-500/30 bg-purple-500/5 min-h-[150px]">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.distribution")}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col gap-1 w-full max-w-[140px]">
-                    <Skeleton className="h-4 w-20" />
-                    <Skeleton className="h-4 w-20" />
-                    <Skeleton className="h-4 w-20" />
-                  </div>
-                  <TrendingUp className="h-8 w-8 text-purple-500/50" />
+              <CardContent className="relative pr-14">
+                <div className="flex flex-col gap-1 w-full max-w-[140px]">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-20" />
                 </div>
+                <TrendingUp className="absolute right-0 top-0 h-8 w-8 text-purple-500/50" />
               </CardContent>
             </Card>
           </div>
