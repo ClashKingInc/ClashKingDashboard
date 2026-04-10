@@ -40,7 +40,8 @@
     "dashboard": "Dashboard",
     "loadError": "Failed to load data.",
     "tryAgain": "Try again",
-    "create": "Create"
+    "create": "Create",
+    "viewClashProfile": "View Clash profile"
   },
   "Navigation": {
     "features": "Features",

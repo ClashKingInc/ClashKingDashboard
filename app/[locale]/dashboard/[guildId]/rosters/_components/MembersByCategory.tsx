@@ -24,6 +24,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import {
   ChevronDown,
   ChevronRight,
@@ -113,9 +114,16 @@ function DraggableMember({
 
         {/* Name — always shown */}
         <div className="flex-1 min-w-0">
-          <span className="font-medium text-foreground truncate block">
-            {member.name}
-          </span>
+          <PlayerProfilePopover
+            playerName={member.name || member.tag}
+            playerTag={member.tag}
+            showTagInTrigger={false}
+            triggerClassName="font-medium text-foreground truncate block text-left cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <span className="font-medium text-foreground truncate block">
+              {member.name || member.tag}
+            </span>
+          </PlayerProfilePopover>
           {columns.includes('tag') && (
             <span className="text-xs text-muted-foreground font-mono">
               {member.tag}

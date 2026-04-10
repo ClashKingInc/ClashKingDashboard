@@ -40,7 +40,8 @@
     "dashboard": "Dashboard",
     "loadError": "Gegevens konden niet worden geladen.",
     "tryAgain": "Opnieuw proberen",
-    "create": "Aanmaken"
+    "create": "Aanmaken",
+    "viewClashProfile": "Bekijk Clash-profiel"
   },
   "Navigation": {
     "features": "Functies",

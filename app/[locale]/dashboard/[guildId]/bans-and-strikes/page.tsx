@@ -34,12 +34,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import {
   Ban,
   Search,
@@ -55,7 +51,6 @@ import {
   Users,
   ChevronRight,
   ChevronDown,
-  ExternalLink,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
@@ -97,49 +92,6 @@ export default function BansPage() { // NOSONAR — React page component: comple
   const [activeTab, setActiveTab] = useState("bans");
   const [strikeViewMode, setStrikeViewMode] = useState<"grouped" | "all">("grouped");
   const [expandedPlayerTags, setExpandedPlayerTags] = useState<string[]>([]);
-
-  const getClashProfileUrl = (playerTag: string) => {
-    const cleanTag = playerTag.replace(/^#/, "");
-    return `https://link.clashofclans.com/en/?action=OpenPlayerProfile&tag=%23${encodeURIComponent(cleanTag)}`;
-  };
-
-  const PlayerProfilePopover = ({
-    playerName,
-    playerTag,
-  }: {
-    playerName: string;
-    playerTag: string;
-  }) => (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="text-left cursor-pointer hover:opacity-80 transition-opacity"
-        >
-          <div className="font-medium text-foreground">{playerName}</div>
-          <div className="text-xs text-muted-foreground">{playerTag}</div>
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-72 p-4" align="start">
-        <div className="space-y-3">
-          <div>
-            <p className="font-medium text-foreground truncate">{playerName}</p>
-            <p className="text-xs text-muted-foreground">{playerTag}</p>
-          </div>
-          <Button asChild variant="outline" className="w-full gap-2">
-            <a
-              href={getClashProfileUrl(playerTag)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <ExternalLink className="h-4 w-4" />
-              {t("viewClashProfile")}
-            </a>
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
 
   // Fetch bans and strikes on mount
   useEffect(() => {

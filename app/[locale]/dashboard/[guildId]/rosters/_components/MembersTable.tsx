@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import {
   Popover,
   PopoverContent,
@@ -122,7 +123,14 @@ export function MembersTable({
         const duplicateRosters = groupDuplicateMap[member.tag];
         return (
           <span className="font-medium text-foreground flex items-center gap-1.5">
-            {member.name}
+            <PlayerProfilePopover
+              playerName={member.name || member.tag}
+              playerTag={member.tag}
+              showTagInTrigger={false}
+              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <span className="font-medium text-foreground">{member.name || member.tag}</span>
+            </PlayerProfilePopover>
             {duplicateRosters?.length > 0 && (
               <span title={`${t("members.alsoIn")}: ${duplicateRosters.join(', ')}`}>
                 <Copy className="w-3.5 h-3.5 text-blue-400 shrink-0" />

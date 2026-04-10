@@ -40,7 +40,8 @@
     "dashboard": "Tableau de bord",
     "loadError": "Impossible de charger les données.",
     "tryAgain": "Réessayer",
-    "create": "Créer"
+    "create": "Créer",
+    "viewClashProfile": "Voir le profil Clash"
   },
   "Navigation": {
     "features": "Fonctionnalités",
