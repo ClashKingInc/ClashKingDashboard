@@ -41,7 +41,8 @@
     "loadError": "Impossible de charger les données.",
     "tryAgain": "Réessayer",
     "create": "Créer",
-    "viewClashProfile": "Voir le profil Clash"
+    "viewClashProfile": "Voir le profil Clash",
+    "openInGame": "Ouvrir dans le jeu"
   },
   "Navigation": {
     "features": "Fonctionnalités",
@@ -640,7 +641,8 @@
       "townhall": "Hôtel de Ville",
       "tag": "Tag",
       "hitrate": "Taux de Réussite",
-      "current_clan_tag": "Clan Actuel",
+      "current_clan": "Clan Actuel",
+      "current_clan_tag": "Tag de Clan",
       "discord": "Discord",
       "hero_lvs": "Héros",
       "war_pref": "Préf. Guerre",

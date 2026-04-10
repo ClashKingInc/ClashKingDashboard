@@ -41,7 +41,8 @@
     "loadError": "Failed to load data.",
     "tryAgain": "Try again",
     "create": "Create",
-    "viewClashProfile": "View Clash profile"
+    "viewClashProfile": "View Clash profile",
+    "openInGame": "Open in game"
   },
   "Navigation": {
     "features": "Features",
@@ -555,7 +556,8 @@
       "townhall": "Town Hall",
       "tag": "Tag",
       "hitrate": "Hit Rate",
-      "current_clan_tag": "Current Clan",
+      "current_clan": "Current Clan",
+      "current_clan_tag": "Clan Tag",
       "discord": "Discord",
       "hero_lvs": "Heroes",
       "war_pref": "War Opt",

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import {
   Popover,
   PopoverContent,
@@ -45,6 +46,11 @@ export function MembersTable({
   t,
 }: MembersTableProps) {
   const familyClanTags = familyClans.map(c => c.tag);
+  const getClanBadgeUrl = (clanTag?: string | null): string | null => {
+    if (!clanTag) return null;
+    const clan = familyClans.find((c) => c.tag === clanTag);
+    return clan?.badge_url || clan?.badge || null;
+  };
   const [refreshingMember, setRefreshingMember] = useState<string | null>(null);
   const [categoryPopoverTag, setCategoryPopoverTag] = useState<string | null>(null);
   const [updatingCategory, setUpdatingCategory] = useState<string | null>(null);
@@ -67,6 +73,7 @@ export function MembersTable({
       case 'tag': return member.tag?.toLowerCase() ?? '';
       case 'hitrate': return member.hitrate ?? -1;
       case 'trophies': return member.trophies ?? 0;
+      case 'current_clan': return member.current_clan?.toLowerCase() ?? '';
       case 'current_clan_tag': return member.current_clan_tag?.toLowerCase() ?? '';
       case 'discord': return member.discord_username?.toLowerCase() ?? '';
       case 'hero_lvs': return member.hero_lvs ?? '';
@@ -159,6 +166,28 @@ export function MembersTable({
         }
         return <span className="text-muted-foreground">-</span>;
 
+      case 'current_clan':
+        if (member.current_clan_tag && member.current_clan_tag !== '#') {
+          let colorClass = 'text-red-400';
+          if (rosterClanTag && member.current_clan_tag === rosterClanTag) {
+            colorClass = 'text-green-400';
+          } else if (familyClanTags.includes(member.current_clan_tag)) {
+            colorClass = 'text-yellow-400';
+          }
+          return (
+            <ClanProfilePopover
+              clanName={member.current_clan || member.current_clan_tag}
+              clanTag={member.current_clan_tag}
+              clanBadgeUrl={getClanBadgeUrl(member.current_clan_tag)}
+              showTagInTrigger={false}
+              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <span className={`${colorClass} font-medium truncate`}>{member.current_clan || member.current_clan_tag}</span>
+            </ClanProfilePopover>
+          );
+        }
+        return <span className="text-muted-foreground">-</span>;
+
       case 'current_clan_tag':
         if (member.current_clan_tag && member.current_clan_tag !== '#') {
           let colorClass = 'text-red-400';
@@ -167,7 +196,17 @@ export function MembersTable({
           } else if (familyClanTags.includes(member.current_clan_tag)) {
             colorClass = 'text-yellow-400';
           }
-          return <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>;
+          return (
+            <ClanProfilePopover
+              clanName={member.current_clan || member.current_clan_tag}
+              clanTag={member.current_clan_tag}
+              clanBadgeUrl={getClanBadgeUrl(member.current_clan_tag)}
+              showTagInTrigger={false}
+              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>
+            </ClanProfilePopover>
+          );
         }
         return <span className="text-muted-foreground">-</span>;
 

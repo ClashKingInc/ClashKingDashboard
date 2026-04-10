@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import {
   ChevronDown,
   ChevronRight,
@@ -52,6 +53,7 @@ interface DraggableMemberProps {
   member: RosterMember;
   columns: string[];
   rosterClanTag?: string | null;
+  familyClans: Clan[];
   familyClanTags: string[];
   onRemove: () => void;
   isRemoving: boolean;
@@ -61,6 +63,7 @@ function DraggableMember({
   member,
   columns,
   rosterClanTag,
+  familyClans,
   familyClanTags,
   onRemove,
   isRemoving,
@@ -85,6 +88,12 @@ function DraggableMember({
     if (familyClanTags.includes(member.current_clan_tag)) return "text-yellow-400";
     return "text-red-400";
   };
+
+  const clanBadgeUrl = useMemo(() => {
+    if (!member.current_clan_tag) return null;
+    const clan = familyClans.find((c) => c.tag === member.current_clan_tag);
+    return clan?.badge_url || clan?.badge || null;
+  }, [member.current_clan_tag, familyClans]);
 
   return (
     <div
@@ -131,11 +140,34 @@ function DraggableMember({
           )}
         </div>
 
-        {/* Clan */}
+        {/* Clan Name */}
+        {columns.includes('current_clan') && member.current_clan_tag && member.current_clan_tag !== "#" && (
+          <ClanProfilePopover
+            clanName={member.current_clan || member.current_clan_tag}
+            clanTag={member.current_clan_tag}
+            clanBadgeUrl={clanBadgeUrl}
+            showTagInTrigger={false}
+            triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity max-w-[160px] shrink-0"
+          >
+            <span className={cn("font-medium truncate", getClanColor())}>
+              {member.current_clan || member.current_clan_tag}
+            </span>
+          </ClanProfilePopover>
+        )}
+
+        {/* Clan Tag */}
         {columns.includes('current_clan_tag') && member.current_clan_tag && member.current_clan_tag !== "#" && (
-          <span className={cn("text-xs font-mono shrink-0", getClanColor())}>
-            {member.current_clan_tag}
-          </span>
+          <ClanProfilePopover
+            clanName={member.current_clan || member.current_clan_tag}
+            clanTag={member.current_clan_tag}
+            clanBadgeUrl={clanBadgeUrl}
+            showTagInTrigger={false}
+            triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity shrink-0"
+          >
+            <span className={cn("text-xs font-mono shrink-0", getClanColor())}>
+              {member.current_clan_tag}
+            </span>
+          </ClanProfilePopover>
         )}
 
         {/* Discord */}
@@ -193,6 +225,7 @@ interface CategorySectionProps {
   members: RosterMember[];
   columns: string[];
   rosterClanTag?: string | null;
+  familyClans: Clan[];
   familyClanTags: string[];
   onRemoveMember: (tag: string) => void;
   removingMember?: string | null;
@@ -206,6 +239,7 @@ function CategorySection({
   members,
   columns,
   rosterClanTag,
+  familyClans,
   familyClanTags,
   onRemoveMember,
   removingMember,
@@ -273,6 +307,7 @@ function CategorySection({
                   member={member}
                   columns={columns}
                   rosterClanTag={rosterClanTag}
+                  familyClans={familyClans}
                   familyClanTags={familyClanTags}
                   onRemove={() => onRemoveMember(member.tag)}
                   isRemoving={removingMember === member.tag}
@@ -429,6 +464,7 @@ export function MembersByCategory({
             members={membersByCategory[category.custom_id] || []}
             columns={columns}
             rosterClanTag={rosterClanTag}
+            familyClans={familyClans}
             familyClanTags={familyClanTags}
             onRemoveMember={onRemoveMember}
             removingMember={removingMember}
@@ -444,6 +480,7 @@ export function MembersByCategory({
           members={membersByCategory.__unassigned__ || []}
           columns={columns}
           rosterClanTag={rosterClanTag}
+          familyClans={familyClans}
           familyClanTags={familyClanTags}
           onRemoveMember={onRemoveMember}
           removingMember={removingMember}

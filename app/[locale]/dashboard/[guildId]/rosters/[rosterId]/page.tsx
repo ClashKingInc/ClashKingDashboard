@@ -89,6 +89,16 @@ import { useGameConstants } from "../_hooks";
 
 // ────────────────────────────────────────────────────────────────────────────
 
+function normalizeClanColumns(cols: string[] | undefined): string[] {
+  if (!cols || cols.length === 0) return [];
+  const hasClanName = cols.includes("current_clan");
+  const hasClanTag = cols.includes("current_clan_tag");
+  if (hasClanTag && !hasClanName) {
+    return cols.map((c) => (c === "current_clan_tag" ? "current_clan" : c));
+  }
+  return cols;
+}
+
 export default function RosterDetailPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
@@ -211,13 +221,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   }, [roster?.group_id, guildId, rosterId]);
 
   // Column configuration state
-  const defaultColumns = ['townhall', 'name', 'tag', 'hitrate', 'current_clan_tag'];
+  const defaultColumns = ['townhall', 'name', 'tag', 'hitrate', 'current_clan'];
   const [localColumns, setLocalColumns] = useState<string[]>(defaultColumns);
   const [columnPopoverOpen, setColumnPopoverOpen] = useState(false);
 
   // Sync edit form with roster data
   React.useEffect(() => {
     if (roster) {
+      const normalizedColumns = normalizeClanColumns(roster.columns || []);
       setEditData({
         alias: roster.alias,
         description: roster.description || "",
@@ -234,7 +245,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         recurrence_day_of_month: roster.recurrence_day_of_month?.toString() || "",
         recurrence_mode: roster.recurrence_day_of_month ? "day_of_month" : "days",
         default_signup_category: roster.default_signup_category || "",
-        columns: (roster.columns || []).map(getColumnLabel),
+        columns: normalizedColumns.map(getColumnLabel),
         sort: (roster.sort || []).map(getSortLabel),
         group_id: roster.group_id || "",
         allowed_signup_categories: roster.allowed_signup_categories || [],
@@ -244,8 +255,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
   // Sync localColumns when roster changes
   React.useEffect(() => {
-    if (roster?.columns?.length) {
-      setLocalColumns(roster.columns.map(getColumnInternal));
+    const normalizedColumns = normalizeClanColumns(roster?.columns);
+    if (normalizedColumns.length) {
+      setLocalColumns(normalizedColumns.map(getColumnInternal));
     }
   }, [roster?.columns]);
 
