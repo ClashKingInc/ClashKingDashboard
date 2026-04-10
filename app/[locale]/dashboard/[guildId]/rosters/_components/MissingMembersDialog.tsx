@@ -196,7 +196,7 @@ export function MissingMembersDialog({
           </div>
         )}
 
-        <DialogFooter className="gap-2">
+        <DialogFooter className="gap-2 sticky bottom-0 z-10 bg-card border-t border-border pt-3 -mx-6 px-6 pb-1">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
@@ -299,7 +299,7 @@ function RosterResultSection({
               <div>
                 <p className="font-medium text-foreground">{member.name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {member.tag} • {member.role}
+                  {member.tag} • TH{member.townhall} • {member.role}
                 </p>
               </div>
             </div>
