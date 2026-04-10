@@ -62,7 +62,8 @@
     "systemTheme": "Systeem volgen",
     "lightTheme": "Wit thema",
     "darkTheme": "Donker thema",
-    "language": "Taal"
+    "language": "Taal",
+    "browserLanguage": "Browsertaal"
   },
   "HomePage": {
     "badge": "{serverCount}+ servers gebruiken ClashKing al",

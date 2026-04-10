@@ -68,6 +68,7 @@ export function LanguageSwitcher() {
                 src={`https://flagcdn.com/w40/${lang.flagCode}.png`}
                 alt={lang.name}
                 fill
+                sizes="20px"
                 className="object-cover"
               />
             </div>
