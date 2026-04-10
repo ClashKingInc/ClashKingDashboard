@@ -836,9 +836,11 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   disabled={clearingMembers}
                   className="text-destructive hover:text-destructive"
                 >
-                  {clearingMembers
-                    ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    : <Trash2 className="w-4 h-4 mr-2" />}
+                  <span className="mr-2 inline-flex h-4 w-4 items-center justify-center shrink-0">
+                    {clearingMembers
+                      ? <Loader2 className="w-4 h-4 animate-spin" />
+                      : <Trash2 className="w-4 h-4" />}
+                  </span>
                   {t("clearMembers")}
                 </Button>
               )}
@@ -1436,17 +1438,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               size="lg"
               className="min-w-[200px] shadow-lg"
             >
-              {saving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {t("settings.saving")}
-                </>
-              ) : (
-                <>
-                  <SettingsIcon className="w-4 h-4 mr-2" />
-                  {t("settings.save")}
-                </>
-              )}
+              <span className="mr-2 inline-flex h-4 w-4 items-center justify-center shrink-0">
+                {saving ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <SettingsIcon className="w-4 h-4" />
+                )}
+              </span>
+              {saving ? t("settings.saving") : t("settings.save")}
             </Button>
           </div>
 
@@ -1665,7 +1664,10 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               {t("common.cancel")}
             </Button>
             <Button onClick={handleCreateAutomation} disabled={saving}>
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : t("automations.create")}
+              <span className="mr-2 inline-flex h-4 w-4 items-center justify-center shrink-0">
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+              </span>
+              {t("automations.create")}
             </Button>
           </DialogFooter>
         </DialogContent>
