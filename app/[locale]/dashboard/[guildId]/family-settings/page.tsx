@@ -157,7 +157,7 @@ function FamilyRoleCard({
                         className="w-3 h-3 rounded-full shrink-0"
                         style={{ backgroundColor: role.exists ? intToHexColor(role.color) : "#f97316" }}
                       />
-                      <span className={`text-sm truncate ${!role.exists ? "text-orange-600" : "text-foreground"}`}>
+                      <span className={`text-sm truncate ${role.exists ? "text-foreground" : "text-orange-600"}`}>
                         {role.exists ? `@${role.name}` : t("familyRoles.deletedRole")}
                       </span>
                       {role.exists ? null : (

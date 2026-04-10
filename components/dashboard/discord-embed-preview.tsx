@@ -167,7 +167,7 @@ function renderMarkdown(text: string): React.ReactNode {
 
 function renderLines(text: string): React.ReactNode {
   return text.split("\n").map((line, i, arr) => (
-    <span key={`line-${i}`}>
+    <span key={`line-${i}`}>{/* NOSONAR — index is the only stable key for text line fragments */}
       {renderMarkdown(line)}
       {i < arr.length - 1 && <br />}
     </span>

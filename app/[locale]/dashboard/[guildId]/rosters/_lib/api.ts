@@ -49,7 +49,8 @@ export async function fetchRosters(serverId: string, groupId?: string): Promise<
   const params = new URLSearchParams();
   if (groupId) params.append('group_id', groupId);
   const queryString = params.toString();
-  const url = `/api/v2/roster/${serverId}/list${queryString ? `?${queryString}` : ''}`;
+  const querySuffix = queryString ? `?${queryString}` : '';
+  const url = `/api/v2/roster/${serverId}/list${querySuffix}`;
 
   const response = await fetch(url, {
     headers: getAuthHeaders(),

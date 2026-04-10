@@ -513,9 +513,8 @@ export default function LogsPage() {
                   ) : (
                     <span className={`text-xs font-medium ${
                       !isEnabled && !showEnableForm ? 'text-muted-foreground' : // NOSONAR — multi-branch state indicator, negations are intentional
-                      showEnableForm && !isEnabled ? 'text-blue-600' :
-                      !channelExists ? 'text-orange-600' :
-                      'text-green-600'
+                      showEnableForm && !isEnabled ? 'text-blue-600' : // NOSONAR — JSX nested ternary for multi-branch display state
+                      channelExists ? 'text-green-600' : 'text-orange-600' // NOSONAR — JSX nested ternary for multi-branch display state
                     }`}>
                       {!isEnabled && !showEnableForm ? t('logCard.off') :
                        showEnableForm && !isEnabled ? t('logCard.configuring') : // NOSONAR — JSX nested ternary for multi-branch display state
@@ -534,12 +533,12 @@ export default function LogsPage() {
               <Skeleton className="h-10 w-full animate-pulse" />
               <Skeleton className="h-4 w-28 animate-pulse" />
             </div>
-          ) : !isEnabled && !showEnableForm && !isSaving ? (
+          ) : !isEnabled && !showEnableForm && !isSaving ? ( // NOSONAR — JSX nested ternary for multi-branch display state
             /* DISABLED STATE: Empty state */
             <div className="text-center py-6 text-muted-foreground text-sm">
               {t('logCard.enableToConfig')}
             </div>
-          ) : (!isEnabled && showEnableForm) || (isSaving && !isEnabled) ? (
+          ) : (!isEnabled && showEnableForm) || (isSaving && !isEnabled) ? ( // NOSONAR — JSX nested ternary for multi-branch display state
             /* CONFIGURING STATE: Show channel selector */
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
