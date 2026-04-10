@@ -136,6 +136,35 @@ export function MembersTable({
     </PlayerProfilePopover>
   );
 
+  const getClanColorClass = (clanTag?: string | null): string => {
+    if (!clanTag || clanTag === '#') return 'text-red-400';
+    if (rosterClanTag && clanTag === rosterClanTag) return 'text-green-400';
+    if (familyClanTags.includes(clanTag)) return 'text-yellow-400';
+    return 'text-red-400';
+  };
+
+  const renderClanCell = (
+    member: RosterMember,
+    content: (colorClass: string) => React.ReactNode,
+  ) => {
+    if (!member.current_clan_tag || member.current_clan_tag === '#') {
+      return <span className="text-muted-foreground">-</span>;
+    }
+
+    const colorClass = getClanColorClass(member.current_clan_tag);
+    return (
+      <ClanProfilePopover
+        clanName={member.current_clan || member.current_clan_tag}
+        clanTag={member.current_clan_tag}
+        clanBadgeUrl={getClanBadgeUrl(member.current_clan_tag)}
+        showTagInTrigger={false}
+        triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+      >
+        {content(colorClass)}
+      </ClanProfilePopover>
+    );
+  };
+
   const renderCell = (member: RosterMember, column: string) => { // NOSONAR — exhaustive switch over table column types, presentation logic only
     switch (column) {
       case 'townhall':
@@ -151,21 +180,10 @@ export function MembersTable({
         const duplicateRosters = groupDuplicateMap[member.tag];
         return (
           <span className="font-medium text-foreground flex items-center gap-1.5">
-            <PlayerProfilePopover
-              playerName={member.name || member.tag}
-              playerTag={member.tag}
-              clanName={member.current_clan}
-              townhallLevel={member.townhall}
-              trophies={member.trophies}
-              warPreference={member.war_pref}
-              signupGroup={member.signup_group}
-              heroLevels={member.hero_lvs}
-              hitrate={member.hitrate}
-              showTagInTrigger={false}
-              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-            >
+            {withPlayerPopover(
+              member,
               <span className="font-medium text-foreground">{member.name || member.tag}</span>
-            </PlayerProfilePopover>
+            )}
             {duplicateRosters?.length > 0 && (
               <span title={`${t("members.alsoIn")}: ${duplicateRosters.join(', ')}`}>
                 <Copy className="w-3.5 h-3.5 text-blue-400 shrink-0" />
@@ -185,22 +203,9 @@ export function MembersTable({
       }
 
       case 'tag':
-        return (
-          <PlayerProfilePopover
-            playerName={member.name || member.tag}
-            playerTag={member.tag}
-            clanName={member.current_clan}
-            townhallLevel={member.townhall}
-            trophies={member.trophies}
-            warPreference={member.war_pref}
-            signupGroup={member.signup_group}
-            heroLevels={member.hero_lvs}
-            hitrate={member.hitrate}
-            showTagInTrigger={false}
-            triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-          >
+        return withPlayerPopover(
+          member,
             <span className="font-mono text-muted-foreground text-xs">{member.tag}</span>
-          </PlayerProfilePopover>
         );
 
       case 'hitrate':
@@ -214,48 +219,18 @@ export function MembersTable({
         return <span className="text-muted-foreground">-</span>;
 
       case 'current_clan':
-        if (member.current_clan_tag && member.current_clan_tag !== '#') {
-          let colorClass = 'text-red-400';
-          if (rosterClanTag && member.current_clan_tag === rosterClanTag) {
-            colorClass = 'text-green-400';
-          } else if (familyClanTags.includes(member.current_clan_tag)) {
-            colorClass = 'text-yellow-400';
-          }
-          return (
-            <ClanProfilePopover
-              clanName={member.current_clan || member.current_clan_tag}
-              clanTag={member.current_clan_tag}
-              clanBadgeUrl={getClanBadgeUrl(member.current_clan_tag)}
-              showTagInTrigger={false}
-              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-            >
-              <span className={`${colorClass} font-medium truncate`}>{member.current_clan || member.current_clan_tag}</span>
-            </ClanProfilePopover>
-          );
-        }
-        return <span className="text-muted-foreground">-</span>;
+        return renderClanCell(
+          member,
+          (colorClass) => (
+            <span className={`${colorClass} font-medium truncate`}>{member.current_clan || member.current_clan_tag}</span>
+          )
+        );
 
       case 'current_clan_tag':
-        if (member.current_clan_tag && member.current_clan_tag !== '#') {
-          let colorClass = 'text-red-400';
-          if (rosterClanTag && member.current_clan_tag === rosterClanTag) {
-            colorClass = 'text-green-400';
-          } else if (familyClanTags.includes(member.current_clan_tag)) {
-            colorClass = 'text-yellow-400';
-          }
-          return (
-            <ClanProfilePopover
-              clanName={member.current_clan || member.current_clan_tag}
-              clanTag={member.current_clan_tag}
-              clanBadgeUrl={getClanBadgeUrl(member.current_clan_tag)}
-              showTagInTrigger={false}
-              triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-            >
-              <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>
-            </ClanProfilePopover>
-          );
-        }
-        return <span className="text-muted-foreground">-</span>;
+        return renderClanCell(
+          member,
+          (colorClass) => <span className={`${colorClass} font-mono text-xs`}>{member.current_clan_tag}</span>
+        );
 
       case 'discord':
         return (
