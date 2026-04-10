@@ -99,6 +99,21 @@ function normalizeClanColumns(cols: string[] | undefined): string[] {
   return cols;
 }
 
+function sanitizeColumns(cols: string[], allowed: string[], fallback: string[]): string[] {
+  const seen = new Set<string>();
+  const cleaned: string[] = [];
+
+  for (const col of cols) {
+    if (!allowed.includes(col) || seen.has(col)) continue;
+    seen.add(col);
+    cleaned.push(col);
+  }
+
+  return cleaned.length > 0 ? cleaned : fallback;
+}
+
+const DEFAULT_COLUMNS = ['townhall', 'name', 'tag', 'hitrate', 'current_clan'];
+
 export default function RosterDetailPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
@@ -221,9 +236,10 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   }, [roster?.group_id, guildId, rosterId]);
 
   // Column configuration state
-  const defaultColumns = ['townhall', 'name', 'tag', 'hitrate', 'current_clan'];
-  const [localColumns, setLocalColumns] = useState<string[]>(defaultColumns);
+  const [localColumns, setLocalColumns] = useState<string[]>(DEFAULT_COLUMNS);
   const [columnPopoverOpen, setColumnPopoverOpen] = useState(false);
+  const [columnsInitialized, setColumnsInitialized] = useState(false);
+  const columnsStorageKey = `roster-columns-${guildId}-${rosterId}`;
 
   // Sync edit form with roster data
   React.useEffect(() => {
@@ -253,13 +269,39 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     }
   }, [roster]);
 
-  // Sync localColumns when roster changes
+  // Initialize local columns from localStorage (fallback to API/default)
   React.useEffect(() => {
-    const normalizedColumns = normalizeClanColumns(roster?.columns);
-    if (normalizedColumns.length) {
-      setLocalColumns(normalizedColumns.map(getColumnInternal));
+    const allowedColumns = ROSTER_COLUMNS.map((c) => c.value);
+    const normalizedApiColumns = normalizeClanColumns(roster?.columns).map(getColumnInternal);
+    const fallback = sanitizeColumns(DEFAULT_COLUMNS, allowedColumns, DEFAULT_COLUMNS);
+
+    let resolved = normalizedApiColumns.length
+      ? sanitizeColumns(normalizedApiColumns, allowedColumns, fallback)
+      : fallback;
+
+    if (typeof window !== "undefined") {
+      const raw = localStorage.getItem(columnsStorageKey);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            resolved = sanitizeColumns(parsed as string[], allowedColumns, resolved);
+          }
+        } catch {
+          // Ignore malformed storage and use API/default fallback.
+        }
+      }
     }
-  }, [roster?.columns]);
+
+    setLocalColumns(resolved);
+    setColumnsInitialized(true);
+  }, [columnsStorageKey, roster?.columns]);
+
+  // Persist local columns immediately so refresh keeps same order/selection
+  React.useEffect(() => {
+    if (!columnsInitialized || typeof window === "undefined") return;
+    localStorage.setItem(columnsStorageKey, JSON.stringify(localColumns));
+  }, [columnsInitialized, columnsStorageKey, localColumns]);
 
   // Family clan tags
   const familyClanTags = clans.map(c => c.tag);
@@ -649,16 +691,6 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     });
   };
 
-  const handleSaveColumns = async () => {
-    try {
-      await updateRoster({ columns: localColumns });
-      toast({ title: t("columnsUpdated") });
-      setColumnPopoverOpen(false);
-    } catch (err) {
-      toast({ title: t("columnsError"), variant: "destructive" });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -822,11 +854,6 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                         </button>
                       ))}
                     </div>
-                  </div>
-                  <div className="p-2 border-t border-border">
-                    <Button size="sm" className="w-full" onClick={handleSaveColumns}>
-                      {t("columns.save")}
-                    </Button>
                   </div>
                 </PopoverContent>
               </Popover>
