@@ -70,21 +70,72 @@ export function extractFirstEmbed(data: Record<string, unknown>): DiscordEmbed |
 /** Very minimal markdown: **bold**, *italic*, __underline__, `code`, [text](url) */
 function renderMarkdown(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
-  // Split on markdown tokens with a simple regex
-  const regex = /\*\*(.+?)\*\*|\*(.+?)\*|__(.+?)__|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\)/g;
-  let last = 0;
-  let match: RegExpExecArray | null;
+  let i = 0;
   let key = 0;
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > last) parts.push(text.slice(last, match.index));
-    if (match[1] !== undefined) parts.push(<strong key={key++}>{match[1]}</strong>);
-    else if (match[2] !== undefined) parts.push(<em key={key++}>{match[2]}</em>);
-    else if (match[3] !== undefined) parts.push(<u key={key++}>{match[3]}</u>);
-    else if (match[4] !== undefined) parts.push(<code key={key++} className="rounded bg-[#2b2d31] px-1 text-[0.85em] font-mono">{match[4]}</code>);
-    else if (match[5] !== undefined) parts.push(<a key={key++} href={match[6]} target="_blank" rel="noreferrer" className="text-[#00a8fc] hover:underline">{match[5]}</a>);
-    last = match.index + match[0].length;
+
+  while (i < text.length) {
+    if (text.startsWith("**", i)) {
+      const end = text.indexOf("**", i + 2);
+      if (end > i + 2) {
+        parts.push(<strong key={key++}>{text.slice(i + 2, end)}</strong>);
+        i = end + 2;
+        continue;
+      }
+    }
+
+    if (text.startsWith("__", i)) {
+      const end = text.indexOf("__", i + 2);
+      if (end > i + 2) {
+        parts.push(<u key={key++}>{text.slice(i + 2, end)}</u>);
+        i = end + 2;
+        continue;
+      }
+    }
+
+    if (text[i] === "*") {
+      const end = text.indexOf("*", i + 1);
+      if (end > i + 1) {
+        parts.push(<em key={key++}>{text.slice(i + 1, end)}</em>);
+        i = end + 1;
+        continue;
+      }
+    }
+
+    if (text[i] === "`") {
+      const end = text.indexOf("`", i + 1);
+      if (end > i + 1) {
+        parts.push(
+          <code key={key++} className="rounded bg-[#2b2d31] px-1 text-[0.85em] font-mono">
+            {text.slice(i + 1, end)}
+          </code>
+        );
+        i = end + 1;
+        continue;
+      }
+    }
+
+    if (text[i] === "[") {
+      const labelEnd = text.indexOf("]", i + 1);
+      if (labelEnd > i + 1 && text[labelEnd + 1] === "(") {
+        const urlEnd = text.indexOf(")", labelEnd + 2);
+        if (urlEnd > labelEnd + 2) {
+          const label = text.slice(i + 1, labelEnd);
+          const url = text.slice(labelEnd + 2, urlEnd);
+          parts.push(
+            <a key={key++} href={url} target="_blank" rel="noreferrer" className="text-[#00a8fc] hover:underline">
+              {label}
+            </a>
+          );
+          i = urlEnd + 1;
+          continue;
+        }
+      }
+    }
+
+    parts.push(text[i]);
+    i += 1;
   }
-  if (last < text.length) parts.push(text.slice(last));
+
   return <>{parts}</>;
 }
 
