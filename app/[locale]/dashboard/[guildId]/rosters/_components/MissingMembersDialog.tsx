@@ -165,9 +165,14 @@ export function MissingMembersDialog({
                   {t("missingMembers.selectAll")} ({allMissingMembers.length})
                 </label>
               </div>
-              {selectedMembers.size > 0 && (
-                <Badge variant="secondary">{selectedMembers.size} {t("missingMembers.selected")}</Badge>
-              )}
+              <Badge
+                variant="secondary"
+                className={`min-w-[110px] justify-center tabular-nums ${
+                  selectedMembers.size > 0 ? "" : "invisible"
+                }`}
+              >
+                {selectedMembers.size} {t("missingMembers.selected")}
+              </Badge>
             </div>
 
             {/* Results — one section per roster (errors silently skipped) */}
@@ -212,10 +217,10 @@ export function MissingMembersDialog({
               <Button
                 onClick={handleAddSelected}
                 disabled={adding || selectedMembers.size === 0}
-                className="bg-primary hover:bg-primary/90"
+                className="bg-primary hover:bg-primary/90 min-w-[170px] justify-center tabular-nums"
               >
                 {adding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <UserPlus className="w-4 h-4 mr-2" />}
-                {t("missingMembers.addSelected")} ({selectedMembers.size})
+                {t("missingMembers.addSelected", { count: selectedMembers.size })}
               </Button>
             </>
           )}
@@ -267,12 +272,20 @@ function RosterResultSection({
       )}
       <div className="border border-border rounded-lg overflow-hidden">
         {result.missing_members.map((member: MissingMember) => (
-          <button
+          <div
             key={member.tag}
             className={`flex items-center justify-between p-3 border-b border-border last:border-0 cursor-pointer hover:bg-secondary/50 transition-colors w-full text-left ${
               selectedMembers.has(member.tag) ? "bg-primary/10" : ""
             }`}
+            role="button"
+            tabIndex={0}
             onClick={() => onToggle(member.tag)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onToggle(member.tag);
+              }
+            }}
           >
             <div className="flex items-center gap-3">
               <Checkbox
@@ -291,7 +304,7 @@ function RosterResultSection({
               </div>
             </div>
             <p className="text-sm text-yellow-400">{member.trophies.toLocaleString()}</p>
-          </button>
+          </div>
         ))}
       </div>
     </div>
