@@ -344,6 +344,24 @@ export default function LinksManagementPage() {
       .map(acc => ({ ...acc, user: member }))
   ) || [];
 
+  const membersWithLinks = linksData?.members_with_links ?? 0;
+  const totalLinkedAccounts = linksData?.total_linked_accounts ?? 0;
+  const verifiedAccounts = linksData?.verified_accounts ?? 0;
+
+  const linkedCoveragePercent = guildMemberCount
+    ? Math.round((membersWithLinks / guildMemberCount) * 100)
+    : 0;
+  const linkedCoverageLabel = `${linkedCoveragePercent}%`;
+
+  const avgAccountsPerMember = membersWithLinks > 0
+    ? (totalLinkedAccounts / membersWithLinks).toFixed(1)
+    : "0";
+
+  const verifiedPercent = totalLinkedAccounts > 0
+    ? Math.round((verifiedAccounts / totalLinkedAccounts) * 100)
+    : 0;
+  const verifiedPercentLabel = `${verifiedPercent}%`;
+
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -393,7 +411,7 @@ export default function LinksManagementPage() {
               {loading ? (
                 <Skeleton className="h-9 w-20 animate-pulse" />
               ) : (
-                <div className="text-3xl font-bold text-green-500">{linksData?.members_with_links || 0}</div>
+                <div className="text-3xl font-bold text-green-500">{membersWithLinks}</div>
               )}
               <CheckCircle className="h-8 w-8 text-green-500/50" />
             </div>
@@ -401,7 +419,7 @@ export default function LinksManagementPage() {
               {loading ? (
                 <span className="inline-block h-3 w-8 align-middle rounded bg-muted animate-pulse" />
               ) : (
-                `${guildMemberCount ? Math.round((( linksData?.members_with_links ?? 0) / guildMemberCount) * 100) : 0}%`
+                linkedCoverageLabel
               )}{" "}
               of total
             </p>
@@ -417,7 +435,7 @@ export default function LinksManagementPage() {
               {loading ? (
                 <Skeleton className="h-9 w-20 animate-pulse" />
               ) : (
-                <div className="text-3xl font-bold text-purple-500">{linksData?.total_linked_accounts || 0}</div>
+                <div className="text-3xl font-bold text-purple-500">{totalLinkedAccounts}</div>
               )}
               <Link className="h-8 w-8 text-purple-500/50" />
             </div>
@@ -426,7 +444,7 @@ export default function LinksManagementPage() {
               {loading ? (
                 <span className="inline-block h-3 w-8 align-middle rounded bg-muted animate-pulse" />
               ) : (
-                linksData?.members_with_links ? (linksData.total_linked_accounts / linksData.members_with_links).toFixed(1) : 0
+                avgAccountsPerMember
               )}{" "}
               per member
             </p>
@@ -442,7 +460,7 @@ export default function LinksManagementPage() {
               {loading ? (
                 <Skeleton className="h-9 w-20 animate-pulse" />
               ) : (
-                <div className="text-3xl font-bold text-yellow-500">{linksData?.verified_accounts || 0}</div>
+                <div className="text-3xl font-bold text-yellow-500">{verifiedAccounts}</div>
               )}
               <Shield className="h-8 w-8 text-yellow-500/50" />
             </div>
@@ -450,7 +468,7 @@ export default function LinksManagementPage() {
               {loading ? (
                 <span className="inline-block h-3 w-8 align-middle rounded bg-muted animate-pulse" />
               ) : (
-                `${linksData?.total_linked_accounts ? Math.round((linksData.verified_accounts / linksData.total_linked_accounts) * 100) : 0}%`
+                verifiedPercentLabel
               )}{" "}
               verified
             </p>
