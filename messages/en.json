@@ -570,7 +570,8 @@
       "description": "Choose which columns to display and their order",
       "selected": "Selected Columns",
       "available": "Available Columns",
-      "save": "Save Columns"
+      "save": "Save Columns",
+      "reset": "Reset Columns"
     },
     "sortFields": {
       "townhall": "Townhall Level",

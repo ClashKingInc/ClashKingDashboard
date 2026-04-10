@@ -112,7 +112,7 @@ function sanitizeColumns(cols: string[], allowed: string[], fallback: string[]):
   return cleaned.length > 0 ? cleaned : fallback;
 }
 
-const DEFAULT_COLUMNS = ['townhall', 'name', 'tag', 'hitrate', 'current_clan'];
+const DEFAULT_COLUMNS = ['townhall', 'name', 'hitrate', 'current_clan', 'signup_group'];
 
 export default function RosterDetailPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
@@ -691,6 +691,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     });
   };
 
+  const isDefaultColumns =
+    localColumns.length === DEFAULT_COLUMNS.length &&
+    localColumns.every((col, index) => col === DEFAULT_COLUMNS[index]);
+
+  const handleResetColumns = () => {
+    setLocalColumns([...DEFAULT_COLUMNS]);
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -854,6 +862,17 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                         </button>
                       ))}
                     </div>
+                  </div>
+                  <div className="p-2 border-t border-border">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="w-full"
+                      onClick={handleResetColumns}
+                      disabled={isDefaultColumns}
+                    >
+                      {t("columns.reset")}
+                    </Button>
                   </div>
                 </PopoverContent>
               </Popover>

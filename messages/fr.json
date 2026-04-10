@@ -655,7 +655,8 @@
       "description": "Choisir les colonnes à afficher et leur ordre",
       "selected": "Colonnes Sélectionnées",
       "available": "Colonnes Disponibles",
-      "save": "Sauvegarder"
+      "save": "Sauvegarder",
+      "reset": "Réinitialiser les colonnes"
     },
     "common": {
       "cancel": "Annuler",

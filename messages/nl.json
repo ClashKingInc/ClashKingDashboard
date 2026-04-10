@@ -724,7 +724,8 @@
       "description": "Kies welke kolommen te tonen en hun volgorde",
       "selected": "Geselecteerde Kolommen",
       "available": "Beschikbare Kolommen",
-      "save": "Opslaan"
+      "save": "Opslaan",
+      "reset": "Reset kolommen"
     },
     "common": {
       "cancel": "Annuleren",
