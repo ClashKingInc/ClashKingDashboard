@@ -10,7 +10,7 @@ export async function DELETE(
     const { server_id, clan_tag } = await params;
     const token = request.headers.get('authorization');
 
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clans/${encodeURIComponent(clan_tag)}`, {
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clan/${encodeURIComponent(clan_tag)}`, {
       method: 'DELETE',
       headers: {
         'Authorization': token || '',

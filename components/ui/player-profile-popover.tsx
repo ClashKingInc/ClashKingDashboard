@@ -88,7 +88,18 @@ export function PlayerProfilePopover({
               {townhallLevel !== undefined && (
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-muted-foreground">Stadhuis niveau</span>
-                  <span className="text-foreground">{townhallLevel == null ? "-" : `TH${townhallLevel}`}</span>
+                  {townhallLevel == null ? (
+                    <span className="text-foreground">-</span>
+                  ) : (
+                    <div className="flex items-center gap-1.5">
+                      <img
+                        src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${townhallLevel}.png`}
+                        alt={`TH${townhallLevel}`}
+                        className="w-6 h-6 object-contain"
+                      />
+                      <span className="text-foreground">TH{townhallLevel}</span>
+                    </div>
+                  )}
                 </div>
               )}
               {trophies !== undefined && (

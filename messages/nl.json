@@ -631,7 +631,8 @@
       "originalRoster": "Origineel rooster:",
       "cancel": "Annuleren",
       "cloning": "Klonen...",
-      "clone": "Rooster Klonen"
+      "clone": "Rooster Klonen",
+      "copyMembersHint": "Leden worden gekopieerd uit het originele roster"
     },
     "missingMembers": {
       "title": "Ontbrekende Leden",
@@ -2556,7 +2557,7 @@
       },
       "textAboveEmbed": "Tekst boven embed",
       "textEmbedDefault": "Klik op de knop hieronder om deel te nemen.",
-      "textInEmbed":"Embedbeschrijving",
+      "textInEmbed": "Embedbeschrijving",
       "textEndDefault": "Gefeliciteerd aan de winnaar(s)! We nemen binnenkort contact met je op.",
       "textOnEnd": "Bericht bij einde giveaway",
       "image": "Giveaway-afbeelding",

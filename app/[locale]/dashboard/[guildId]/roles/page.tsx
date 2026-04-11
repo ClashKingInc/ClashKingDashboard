@@ -663,7 +663,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
             const criteria = getCriteriaLabel(role);
 
             return (
-              <TableRow key={roleId}>
+              <TableRow key={`${roleId}-${index}`}>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <div
