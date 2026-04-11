@@ -537,9 +537,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               </Button>
               <div className="flex items-center gap-3 min-w-0">
                 <Skeleton className="h-12 w-12 rounded-full shrink-0" />
-                <div className="space-y-2 min-w-0">
-                  <Skeleton className="h-8 w-56 max-w-[60vw] md:max-w-none" />
-                  <Skeleton className="h-4 w-44 max-w-[45vw] md:max-w-none" />
+                <div className="space-y-1.5 min-w-0">
+                  <Skeleton className="h-7 w-56 max-w-[60vw] md:max-w-none" />
+                  <Skeleton className="h-3 w-40 max-w-[45vw] md:max-w-none" />
                 </div>
               </div>
             </div>
