@@ -763,14 +763,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
         {/* Members Tab */}
         <TabsContent value="members" className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <p className="text-muted-foreground">
               {roster.members?.length || 0} {t("members.count")}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {/* View Mode Toggle */}
               {rosterCategories.length > 0 && (
-                <div className="flex items-center border border-border rounded-lg p-1">
+                <div className="flex items-center border border-border rounded-lg p-1 shrink-0">
                   <Button
                     variant={membersViewMode === "list" ? "secondary" : "ghost"}
                     size="sm"
@@ -793,7 +793,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               )}
               <Popover open={columnPopoverOpen} onOpenChange={setColumnPopoverOpen}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="shrink-0 whitespace-nowrap">
                     <Columns3 className="w-4 h-4 mr-2" />
                     {t("columns.configure")}
                   </Button>
@@ -883,6 +883,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   variant="outline"
                   size="sm"
                   onClick={() => setMissingMembersDialogOpen(true)}
+                  className="shrink-0 whitespace-nowrap"
                 >
                   <UserMinus className="w-4 h-4 mr-2" />
                   {t("missingMembers.button")}
@@ -894,7 +895,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   size="sm"
                   onClick={() => setClearMembersOpen(true)}
                   disabled={clearingMembers}
-                  className="text-destructive hover:text-destructive"
+                  className="text-destructive hover:text-destructive shrink-0 whitespace-nowrap"
                 >
                   {clearingMembers
                     ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
