@@ -710,7 +710,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                   size="sm"
                                 />
                               </TableCell>
-                              <TableCell>
+                              <TableCell className="whitespace-nowrap">
                                 <div className="text-sm">
                                   {new Date(ban.DateCreated).toLocaleDateString(locale)}
                                 </div>
@@ -1076,7 +1076,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                     size="sm"
                                   />
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="whitespace-nowrap">
                                   <div className="text-sm">
                                     {new Date(strike.date_created).toLocaleDateString(locale)}
                                   </div>
@@ -1089,7 +1089,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                     })}
                                   </div>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="whitespace-nowrap">
                                   {strike.rollover_date ? (
                                     <div className="text-sm text-muted-foreground">
                                       {new Date(strike.rollover_date * 1000).toLocaleDateString(locale)}
@@ -1144,7 +1144,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                         {group.total_weight}
                                       </Badge>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="whitespace-nowrap">
                                       <div className="text-sm">
                                         {new Date(group.last_strike).toLocaleDateString(locale)}
                                       </div>
@@ -1207,12 +1207,12 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                                         size="sm"
                                                       />
                                                     </TableCell>
-                                                    <TableCell className="py-2">
+                                                    <TableCell className="py-2 whitespace-nowrap">
                                                       <div className="text-[11px] text-muted-foreground">
                                                         {new Date(s.date_created).toLocaleDateString(locale)}
                                                       </div>
                                                     </TableCell>
-                                                    <TableCell className="py-2">
+                                                    <TableCell className="py-2 whitespace-nowrap">
                                                       <div className="text-[11px] text-muted-foreground">
                                                         {s.rollover_date ? (
                                                           new Date(s.rollover_date * 1000).toLocaleDateString(locale)
