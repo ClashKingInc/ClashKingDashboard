@@ -640,7 +640,11 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary/50 border border-border text-sm"
                               >
                                 {account.town_hall && (
-                                  <span className="font-bold text-primary">TH{account.town_hall}</span>
+                                  <img
+                                    src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${account.town_hall}.png`}
+                                    alt={`TH${account.town_hall}`}
+                                    className="w-5 h-5 object-contain flex-shrink-0"
+                                  />
                                 )}
                                 <span className="text-foreground font-medium max-w-[120px] truncate">
                                   {account.player_name || account.player_tag}
@@ -671,8 +675,12 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                                 >
                                   <div className="flex items-start gap-2">
                                     {account.town_hall && (
-                                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                        <span className="text-sm font-bold text-primary">TH{account.town_hall}</span>
+                                      <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <img
+                                          src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${account.town_hall}.png`}
+                                          alt={`TH${account.town_hall}`}
+                                          className="w-10 h-10 object-contain"
+                                        />
                                       </div>
                                     )}
                                     <div className="flex-1 min-w-0">
@@ -810,8 +818,12 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                             </div>
                             <div className="flex items-center gap-2 ml-8">
                               {item.town_hall && (
-                                <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center">
-                                  <span className="text-xs font-bold text-primary">{item.town_hall}</span>
+                                <div className="w-6 h-6 flex items-center justify-center">
+                                  <img
+                                    src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${item.town_hall}.png`}
+                                    alt={`TH${item.town_hall}`}
+                                    className="w-6 h-6 object-contain"
+                                  />
                                 </div>
                               )}
                               <span className="text-foreground">{item.player_name || item.player_tag}</span>
@@ -983,7 +995,14 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                           const count = linksData?.members.flatMap(m => m.linked_accounts).filter(a => a.town_hall === th).length || 0;
                           return (
                             <div key={th} className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">TH {th}</span>
+                              <div className="flex items-center gap-1.5 text-muted-foreground">
+                                <img
+                                  src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${th}.png`}
+                                  alt={`TH${th}`}
+                                  className="w-5 h-5 object-contain"
+                                />
+                                <span>TH {th}</span>
+                              </div>
                               <span className="text-foreground font-medium">{count}</span>
                             </div>
                           );

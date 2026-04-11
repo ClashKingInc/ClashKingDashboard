@@ -170,7 +170,14 @@ export function MembersTable({
       case 'townhall':
         return withPlayerPopover(
           member,
-          <span className="text-orange-400 font-medium">TH{member.townhall}</span>
+          <div className="flex items-center gap-1.5">
+              <img
+                src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${member.townhall}.png`}
+                alt={`TH${member.townhall}`}
+                className="w-7 h-7 object-contain"
+              />
+              <span className="text-orange-400 font-medium">TH{member.townhall}</span>
+            </div>
         );
 
       case 'name': {
