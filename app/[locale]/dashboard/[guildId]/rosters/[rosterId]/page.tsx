@@ -544,8 +544,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 w-full md:w-auto md:flex">
-              <Skeleton className="h-10 w-full md:w-28" />
-              <Skeleton className="h-10 w-full md:w-36" />
+              <Skeleton className="h-9 w-full md:w-28" />
+              <Skeleton className="h-9 w-full md:w-36" />
             </div>
           </div>
 
