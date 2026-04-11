@@ -1349,7 +1349,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
             setEditingStandaloneCategoryId(null);
           }
         }}>
-          <DialogContent className="bg-card border-border w-[calc(100vw-1.5rem)] sm:w-full sm:max-w-2xl">
+          <DialogContent className="bg-card border-border w-[calc(100vw-0.75rem)] sm:w-full sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>{t("categories.manage")}</DialogTitle>
               <DialogDescription>{t("categories.description")}</DialogDescription>
