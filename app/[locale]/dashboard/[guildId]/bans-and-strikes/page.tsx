@@ -1148,6 +1148,14 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                       <div className="text-sm">
                                         {new Date(group.last_strike).toLocaleDateString(locale)}
                                       </div>
+                                      <div className="text-xs text-muted-foreground">
+                                        {t("strikes.table.daysAgo", {
+                                          days: Math.floor(
+                                            (Date.now() - new Date(group.last_strike).getTime()) /
+                                            (1000 * 60 * 60 * 24)
+                                          )
+                                        })}
+                                      </div>
                                     </TableCell>
                                     <TableCell className="text-right">
                                       <Button 
