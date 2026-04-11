@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useParams } from "next/navigation";
@@ -14,6 +14,7 @@ export function DashboardLayoutWrapper({
   readonly children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const mainContentRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const params = useParams();
@@ -31,6 +32,8 @@ export function DashboardLayoutWrapper({
   // Close sidebar on route change
   useEffect(() => {
     setIsSidebarOpen(false);
+    // App routes render inside a custom scroll container, so reset that container on navigation.
+    mainContentRef.current?.scrollTo({ top: 0, behavior: "auto" });
   }, [pathname]);
 
   return (
@@ -74,7 +77,7 @@ export function DashboardLayoutWrapper({
           <span className="ml-2 font-semibold">{tCommon("dashboard")}</span>
         </div>
 
-        <main className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
+        <main ref={mainContentRef} className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
           {children}
         </main>
       </div>
