@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useParams } from "next/navigation";
@@ -14,7 +14,6 @@ export function DashboardLayoutWrapper({
   readonly children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const mobileHeaderRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const params = useParams();
@@ -33,31 +32,6 @@ export function DashboardLayoutWrapper({
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [pathname]);
-
-  // Keep the current mobile header height in a CSS variable so pages can offset reliably.
-  useEffect(() => {
-    const headerEl = mobileHeaderRef.current;
-    if (!headerEl) return;
-
-    const root = document.documentElement;
-    const updateHeaderHeight = () => {
-      root.style.setProperty("--dashboard-mobile-header-height", `${headerEl.getBoundingClientRect().height}px`);
-    };
-
-    updateHeaderHeight();
-
-    let observer: ResizeObserver | null = null;
-    if (typeof ResizeObserver !== "undefined") {
-      observer = new ResizeObserver(updateHeaderHeight);
-      observer.observe(headerEl);
-    }
-
-    window.addEventListener("resize", updateHeaderHeight);
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener("resize", updateHeaderHeight);
-    };
-  }, [pathname, tCommon]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -93,7 +67,7 @@ export function DashboardLayoutWrapper({
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Mobile Header */}
-        <div ref={mobileHeaderRef} className="md:hidden flex items-center p-4 border-b bg-card text-card-foreground">
+        <div className="md:hidden flex items-center p-4 border-b bg-card text-card-foreground">
           <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="-ml-2">
             <Menu className="h-6 w-6" />
           </Button>

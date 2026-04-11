@@ -528,7 +528,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-background px-4 pb-4 pt-[calc(var(--dashboard-mobile-header-height,56px)+0.5rem)] md:p-6">
+      <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto space-y-6">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 min-w-0">
@@ -655,7 +655,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   // Error state
   if (error || !roster) {
     return (
-      <div className="min-h-screen bg-background px-4 pb-4 pt-[calc(var(--dashboard-mobile-header-height,56px)+0.5rem)] md:p-6">
+      <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto flex flex-col items-center justify-center h-64 gap-4">
           <p className="text-destructive">{error || "Roster not found"}</p>
           <Button onClick={() => router.back()} variant="outline">
@@ -700,7 +700,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 pb-4 pt-[calc(var(--dashboard-mobile-header-height,56px)+0.5rem)] md:p-6">
+    <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
