@@ -172,6 +172,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   );
   const [importUrl, setImportUrl] = useState("");
   const [importError, setImportError] = useState(false);
+  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
 
   const set = <K extends keyof EmbedFormState>(key: K, value: EmbedFormState[K]) =>
     setState(prev => ({ ...prev, [key]: value }));
@@ -219,10 +220,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   return (
     <div className="flex flex-col h-full min-h-0">
       {/* Two-column body */}
-      <div className="flex flex-1 gap-0 min-h-0 overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
 
         {/* ── Left: form ── */}
-        <div className="w-[45%] overflow-y-auto border-r border-border pr-6 pl-6 py-5 space-y-5">
+        <div className="w-full overflow-y-auto border-b border-border px-4 py-5 space-y-5 md:w-[45%] md:border-b-0 md:border-r md:px-6">
 
           {/* Import from Discohook */}
           <div className="rounded-lg border border-border/60 bg-muted/30 p-3 space-y-2">
@@ -411,8 +412,35 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
         </div>
 
         {/* ── Right: preview ── */}
-        <div className="flex-1 overflow-y-auto bg-muted/10 flex flex-col">
-          <div className="p-5 sticky top-0">
+        <div className="flex flex-1 flex-col bg-muted/10">
+          <button
+            type="button"
+            className="flex items-center justify-between border-b border-border px-4 py-3 text-left md:hidden"
+            onClick={() => setIsMobilePreviewOpen(prev => !prev)}
+          >
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {t("preview")}
+            </span>
+            {isMobilePreviewOpen ? (
+              <ChevronUp className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            )}
+          </button>
+
+          {isMobilePreviewOpen && (
+            <div className="border-b border-border p-4 md:hidden">
+              {hasContent ? (
+                <DiscordEmbedPreview embed={preview} />
+              ) : (
+                <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
+                  {t("previewEmpty")}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="hidden p-5 md:sticky md:top-0 md:block">
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
               {t("preview")}
             </p>
