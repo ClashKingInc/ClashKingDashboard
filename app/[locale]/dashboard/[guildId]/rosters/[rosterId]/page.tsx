@@ -543,7 +543,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
             </div>
           </div>
 
-          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
             <Card className="bg-card border-blue-500/30 bg-blue-500/5 min-h-[150px]">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
