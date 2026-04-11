@@ -795,19 +795,19 @@ export default function ClansPage() {
         <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
           <DialogContent className="bg-card border-border max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="pr-8 text-base leading-tight sm:text-lg">
                 {t("configureClan", { 
                   name: selectedClan?.name || selectedClan?.clan_name || 'Unknown', 
                   tag: selectedClan?.tag || selectedClan?.clan_tag || 'Unknown' 
                 })}
               </DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-sm">
                 {t("customizeIntegration")}
               </DialogDescription>
             </DialogHeader>
 
             <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid h-auto w-full grid-cols-1 sm:grid-cols-3">
                 <TabsTrigger value="basic">{t("tabs.basic")}</TabsTrigger>
                 <TabsTrigger value="advanced">{t("tabs.advanced")}</TabsTrigger>
                 <TabsTrigger value="war">{t("tabs.war")}</TabsTrigger>
