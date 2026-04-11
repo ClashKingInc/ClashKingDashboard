@@ -537,8 +537,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               </Button>
               <div className="flex items-center gap-3 min-w-0">
                 <Skeleton className="h-12 w-12 rounded-full shrink-0" />
-                <div className="space-y-1.5 min-w-0">
-                  <Skeleton className="h-7 w-56 max-w-[60vw] md:max-w-none" />
+                <div className="min-w-0 h-12 flex flex-col justify-center gap-1.5">
+                  <Skeleton className="h-6 w-56 max-w-[60vw] md:max-w-none" />
                   <Skeleton className="h-3 w-40 max-w-[45vw] md:max-w-none" />
                 </div>
               </div>
@@ -719,10 +719,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <Users className="h-6 w-6 text-primary" />
               </div>
             )}
-            <div className="min-w-0">
-              <h1 className="text-2xl font-bold text-foreground truncate">{roster.alias}</h1>
-              {roster.clan_name && (
-                <p className="text-muted-foreground truncate">{roster.clan_name}</p>
+            <div className="min-w-0 h-12 flex flex-col justify-center gap-1">
+              <h1 className="text-2xl leading-7 font-bold text-foreground truncate">{roster.alias}</h1>
+              {roster.clan_name ? (
+                <p className="text-muted-foreground leading-4 truncate">{roster.clan_name}</p>
+              ) : (
+                <p className="leading-4 opacity-0 select-none">.</p>
               )}
             </div>
           </div>
