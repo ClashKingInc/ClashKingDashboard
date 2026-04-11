@@ -6,12 +6,12 @@ export default async function DashboardLayout({
   params,
 }: {
   readonly children: React.ReactNode;
-  readonly params: Promise<{ guildId: string }>;
+  readonly params: Promise<{ locale: string; guildId: string }>;
 }) {
-  const { guildId } = await params;
+  const { locale, guildId } = await params;
 
   return (
-    <DashboardLayoutWrapper sidebar={<SidebarClient guildId={guildId} />}>
+    <DashboardLayoutWrapper sidebar={<SidebarClient guildId={guildId} locale={locale} />}>
       {children}
     </DashboardLayoutWrapper>
   );
