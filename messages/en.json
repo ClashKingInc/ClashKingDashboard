@@ -885,10 +885,12 @@
     "categories": {
       "title": "Signup Categories",
       "description": "Categories for player signups and roster filtering",
+      "manage": "Manage Categories",
       "create": "New Category",
       "noCategories": "No categories created yet",
       "createTitle": "Create Category",
       "editTitle": "Edit Category",
+      "deleteConfirm": "Delete category \"{name}\"?",
       "idLabel": "Category ID",
       "nameLabel": "Category Name",
       "infoBox": "Categories allow players to indicate their availability or role when signing up (e.g., 'Available', 'Tentative', 'Only if needed'). Categories are shared across all rosters on this server. For grouped rosters, configure which categories apply via the group settings."

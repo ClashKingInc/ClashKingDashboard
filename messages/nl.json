@@ -888,10 +888,12 @@
     "categories": {
       "title": "Aanmeldcategorieën",
       "description": "Categorieën voor speler aanmeldingen en rooster filtering",
+      "manage": "Categorieën beheren",
       "create": "Nieuwe Categorie",
       "noCategories": "Nog geen categorieën aangemaakt",
       "editTitle": "Categorie Bewerken",
       "createTitle": "Categorie Maken",
+      "deleteConfirm": "Categorie \"{name}\" verwijderen?",
       "idLabel": "Categorie ID",
       "nameLabel": "Categorienaam",
       "infoBox": "Categorieën stellen spelers in staat om hun beschikbaarheid of rol aan te geven bij inschrijving (bijv. 'Beschikbaar', 'Onzeker', 'Alleen indien nodig'). Categorieën zijn gedeeld over alle roosters op deze server. Voor gegroepeerde roosters, configureer welke categorieën van toepassing zijn via de groepsinstellingen."
