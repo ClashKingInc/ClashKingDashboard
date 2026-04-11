@@ -760,7 +760,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
       </Alert>
 
       {/* Statistics Cards */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Card className="bg-card border-blue-500/30 bg-blue-500/5">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
