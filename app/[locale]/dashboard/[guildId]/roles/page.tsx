@@ -722,7 +722,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <div className="flex items-start gap-4 md:items-center">
           <div className="p-3 rounded-lg bg-purple-500/10">
             <Shield className="h-8 w-8 text-purple-500" />
           </div>
