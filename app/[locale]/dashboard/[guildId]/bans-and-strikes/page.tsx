@@ -525,7 +525,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+              <Card className="col-span-2 bg-card border-purple-500/30 bg-purple-500/5 lg:col-span-1">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {t("bans.stats.commonReason")}
@@ -786,7 +786,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
             {/* Strikes Tab */}
             <TabsContent value="strikes" className="space-y-6">
               {/* Stats Cards */}
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
                 <Card className="bg-card border-blue-500/30 bg-blue-500/5">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -833,7 +833,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                   </CardContent>
                 </Card>
 
-                <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+                <Card className="col-span-2 bg-card border-purple-500/30 bg-purple-500/5 lg:col-span-1">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       {t("strikes.stats.totalWeight")}
