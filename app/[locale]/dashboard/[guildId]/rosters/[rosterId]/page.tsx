@@ -530,16 +530,22 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" disabled>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-12 w-12 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-8 w-56" />
-                <Skeleton className="h-4 w-44" />
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <Button variant="ghost" size="icon" disabled>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div className="flex items-center gap-3 min-w-0">
+                <Skeleton className="h-12 w-12 rounded-full shrink-0" />
+                <div className="space-y-2 min-w-0">
+                  <Skeleton className="h-8 w-56 max-w-[60vw] md:max-w-none" />
+                  <Skeleton className="h-4 w-44 max-w-[45vw] md:max-w-none" />
+                </div>
               </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 w-full md:w-auto md:flex">
+              <Skeleton className="h-10 w-full md:w-28" />
+              <Skeleton className="h-10 w-full md:w-36" />
             </div>
           </div>
 
