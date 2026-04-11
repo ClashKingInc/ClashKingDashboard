@@ -77,13 +77,13 @@ export function CloneDialog({
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="clone-name" className="text-foreground">
-              {t("cloneDialog.newNameLabel")}
+              {t("cloneDialog.aliasLabel")}
             </Label>
             <Input
               id="clone-name"
               value={cloneData.new_alias}
               onChange={(e) => setCloneData({ ...cloneData, new_alias: e.target.value })}
-              placeholder={t("cloneDialog.newNamePlaceholder")}
+              placeholder={t("cloneDialog.aliasPlaceholder")}
               className="bg-background border-border text-foreground"
             />
           </div>
@@ -100,7 +100,7 @@ export function CloneDialog({
               htmlFor="copy-members"
               className="text-foreground cursor-pointer"
             >
-              {t("cloneDialog.copyMembersLabel")}
+              {t("cloneDialog.copyMembers")}
             </Label>
           </div>
           <p className="text-xs text-muted-foreground">
@@ -130,7 +130,7 @@ export function CloneDialog({
             ) : (
               <>
                 <Copy className="w-4 h-4 mr-2" />
-                {t("cloneDialog.submit")}
+                {t("cloneDialog.clone")}
               </>
             )}
           </Button>

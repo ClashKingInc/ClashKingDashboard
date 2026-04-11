@@ -634,7 +634,8 @@
       "originalRoster": "Original roster:",
       "cancel": "Cancel",
       "cloning": "Cloning...",
-      "clone": "Clone Roster"
+      "clone": "Clone Roster",
+      "copyMembersHint": "Members will be copied from the original roster"
     },
     "missingMembers": {
       "title": "Missing Members",

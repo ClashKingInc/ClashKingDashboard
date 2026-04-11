@@ -4,6 +4,7 @@ import {
   darkTheme,
   cssVariables,
   applyThemeVariables,
+  townHallImageUrl,
   theme,
 } from "./theme";
 
@@ -75,6 +76,20 @@ describe("cssVariables", () => {
   it("contains transition variables", () => {
     expect(cssVariables["--transition-fast"]).toBeDefined();
     expect(cssVariables["--transition-normal"]).toBeDefined();
+  });
+});
+
+describe("townHallImageUrl", () => {
+  it("returns the correct URL for a given level", () => {
+    expect(townHallImageUrl(15)).toBe(
+      "https://assets.clashk.ing/home-base/town-hall-pics/town-hall-15.png"
+    );
+  });
+
+  it("works for level 1", () => {
+    expect(townHallImageUrl(1)).toBe(
+      "https://assets.clashk.ing/home-base/town-hall-pics/town-hall-1.png"
+    );
   });
 });
 
