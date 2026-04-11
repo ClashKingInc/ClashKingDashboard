@@ -17,18 +17,18 @@ import type { RosterMember, Clan, SignupCategory } from "../_lib/types";
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
 
 interface MembersTableProps {
-  members: RosterMember[];
-  columns: string[];
-  rosterClanTag?: string | null;
-  familyClans: Clan[];
-  categories?: SignupCategory[];
-  groupDuplicateMap?: Record<string, string[]>;
-  onRemoveMember: (tag: string) => void;
-  removingMember?: string | null;
-  onCategoryClick?: () => void;
-  onUpdateMemberCategory?: (tag: string, categoryId: string | null) => Promise<void>;
-  onRefreshMember?: (tag: string) => Promise<void>;
-  t: (key: string) => string;
+  readonly members: RosterMember[];
+  readonly columns: string[];
+  readonly rosterClanTag?: string | null;
+  readonly familyClans: Clan[];
+  readonly categories?: SignupCategory[];
+  readonly groupDuplicateMap?: Record<string, string[]>;
+  readonly onRemoveMember: (tag: string) => void;
+  readonly removingMember?: string | null;
+  readonly onCategoryClick?: () => void;
+  readonly onUpdateMemberCategory?: (tag: string, categoryId: string | null) => Promise<void>;
+  readonly onRefreshMember?: (tag: string) => Promise<void>;
+  readonly t: (key: string) => string;
 }
 
 export function MembersTable({
@@ -45,7 +45,7 @@ export function MembersTable({
   onRefreshMember,
   t,
 }: MembersTableProps) {
-  const familyClanTags = familyClans.map(c => c.tag);
+  const familyClanTags = new Set(familyClans.map(c => c.tag));
   const getClanBadgeUrl = (clanTag?: string | null): string | null => {
     if (!clanTag) return null;
     const clan = familyClans.find((c) => c.tag === clanTag);
@@ -139,7 +139,7 @@ export function MembersTable({
   const getClanColorClass = (clanTag?: string | null): string => {
     if (!clanTag || clanTag === '#') return 'text-red-400';
     if (rosterClanTag && clanTag === rosterClanTag) return 'text-green-400';
-    if (familyClanTags.includes(clanTag)) return 'text-yellow-400';
+    if (familyClanTags.has(clanTag)) return 'text-yellow-400';
     return 'text-red-400';
   };
 
@@ -210,7 +210,7 @@ export function MembersTable({
 
       case 'hitrate':
         if (member.hitrate !== null && member.hitrate !== undefined) {
-          const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400';
+          const hitColor = member.hitrate >= 80 ? 'text-green-400' : member.hitrate >= 60 ? 'text-yellow-400' : 'text-red-400'; // NOSONAR — JSX nested ternary for multi-branch display state
           return withPlayerPopover(
             member,
             <span className={`${hitColor} font-medium`}>{member.hitrate}%</span>
@@ -359,7 +359,7 @@ export function MembersTable({
                   >
                     {t(`memberColumns.${col}`)}
                     {isSorted ? (
-                      sortDirection === 'asc'
+                      sortDirection === 'asc' // NOSONAR — JSX nested ternary for multi-branch display state
                         ? <ChevronUp className="w-3.5 h-3.5" />
                         : <ChevronDown className="w-3.5 h-3.5" />
                     ) : (

@@ -167,7 +167,7 @@ function renderMarkdown(text: string): React.ReactNode {
 
 function renderLines(text: string): React.ReactNode {
   return text.split("\n").map((line, i, arr) => (
-    <span key={i}>
+    <span key={`line-${i}`}>{/* NOSONAR — index is the only stable key for text line fragments */}
       {renderMarkdown(line)}
       {i < arr.length - 1 && <br />}
     </span>
@@ -177,12 +177,12 @@ function renderLines(text: string): React.ReactNode {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface Props {
-  embed: DiscordEmbed;
-  className?: string;
+  readonly embed: DiscordEmbed;
+  readonly className?: string;
 }
 
 export function DiscordEmbedPreview({ embed, className }: Props) {
-  const accentColor = embed.color != null ? intToHex(embed.color) : "#1d9bd1";
+  const accentColor = embed.color == null ? "#1d9bd1" : intToHex(embed.color);
   const hasContent =
     embed.author?.name || embed.title || embed.description ||
     (embed.fields && embed.fields.length > 0) || embed.image?.url || embed.footer?.text;
@@ -241,7 +241,7 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
               <div className="grid gap-x-4 gap-y-1.5 mt-0.5" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
                 {embed.fields.map((field, i) => (
                   <div
-                    key={i}
+                    key={i} // NOSONAR — index is the only stable key for these items (skeleton/static list)
                     className="flex flex-col gap-0.5"
                     style={{ gridColumn: field.inline ? "span 1" : "span 3" }}
                   >

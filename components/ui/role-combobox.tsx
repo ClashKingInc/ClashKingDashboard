@@ -26,17 +26,17 @@ interface Role {
 }
 
 interface RoleComboboxProps {
-  roles: Role[]
-  value?: string
-  onValueChange?: (value: string) => void
-  onAdd?: (roleId: string) => void
-  excludeRoleIds?: string[]
-  placeholder?: string
-  addPlaceholder?: string
-  disabled?: boolean
-  className?: string
-  showDisabled?: boolean
-  mode?: "select" | "add"
+  readonly roles: Role[]
+  readonly value?: string
+  readonly onValueChange?: (value: string) => void
+  readonly onAdd?: (roleId: string) => void
+  readonly excludeRoleIds?: string[]
+  readonly placeholder?: string
+  readonly addPlaceholder?: string
+  readonly disabled?: boolean
+  readonly className?: string
+  readonly showDisabled?: boolean
+  readonly mode?: "select" | "add"
 }
 
 function intToHexColor(color: number): string {
@@ -89,7 +89,7 @@ export function RoleCombobox({
               <Plus className="h-4 w-4" />
               {addPlaceholder || t("addRole")}
             </span>
-          ) : selectedRole ? (
+          ) : selectedRole ? ( // NOSONAR — JSX nested ternary for multi-branch display state
             <span className="flex items-center gap-2 truncate">
               <span
                 className="w-3 h-3 rounded-full shrink-0"

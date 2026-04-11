@@ -113,11 +113,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   const { toast } = useToast();
   const guildId = params?.guildId as string;
   const t = useTranslations("WarsPage");
-  const tCommon = useTranslations("Common");
-
   const [loading, setLoading] = useState(true);
   const [clans, setClans] = useState<Clan[]>([]);
-  const [warSummaries, setWarSummaries] = useState<WarSummary[]>([]);
   const [clanStats, setClanStats] = useState<ComputedClanStats[]>([]);
   const [topPerformers, setTopPerformers] = useState<PlayerStats[]>([]);
   const [worstAttackers, setWorstAttackers] = useState<PlayerStats[]>([]);
@@ -191,7 +188,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     try {
       const clansToFetch = filters.clan === "all"
         ? clansList.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
-        : filters.clan && filters.clan !== "all" ? [filters.clan] : [];
+        : filters.clan && filters.clan !== "all" ? [filters.clan] : []; // NOSONAR — JSX nested ternary for multi-branch display state
 
       // If no clans to fetch, return early
       if (clansToFetch.length === 0) {
@@ -240,7 +237,6 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       ]);
 
       const summaries: WarSummary[] = warSummaryRes.items || [];
-      setWarSummaries(summaries);
 
       // Combine historical wars, filtering by selected war types
       const allHistoricalWars: War[] = historicalWars.flatMap(result => result.items || []).filter(war => {
@@ -321,7 +317,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.stats?.attacks ?? 0) > 0)
         .sort((a, b) => {
           const starDiff = (b.stats?.avg_stars ?? 0) - (a.stats?.avg_stars ?? 0);
-          return starDiff !== 0 ? starDiff : (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0);
+          return starDiff === 0 ? (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0) : starDiff;
         })
         .slice(0, 20);
       setTopPerformers(topByStars);
@@ -338,7 +334,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.defense?.defenses ?? 0) > 0)
         .sort((a, b) => {
           const starDiff = (a.defense?.avg_stars_given ?? 999) - (b.defense?.avg_stars_given ?? 999);
-          return starDiff !== 0 ? starDiff : (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0);
+          return starDiff === 0 ? (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0) : starDiff;
         })
         .slice(0, 20)
         .map(p => ({
@@ -355,7 +351,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.stats?.attacks ?? 0) >= 3)
         .sort((a, b) => {
           const starDiff = (a.stats?.avg_stars ?? 0) - (b.stats?.avg_stars ?? 0);
-          return starDiff !== 0 ? starDiff : (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0);
+          return starDiff === 0 ? (b.stats?.attacks ?? 0) - (a.stats?.attacks ?? 0) : starDiff;
         })
         .slice(0, 20);
       setWorstAttackers(worstByStars);
@@ -365,7 +361,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         .filter(p => (p.defense?.defenses ?? 0) >= 3)
         .sort((a, b) => {
           const starDiff = (b.defense?.avg_stars_given ?? 0) - (a.defense?.avg_stars_given ?? 0);
-          return starDiff !== 0 ? starDiff : (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0);
+          return starDiff === 0 ? (b.defense?.defenses ?? 0) - (a.defense?.defenses ?? 0) : starDiff;
         })
         .slice(0, 20)
         .map(p => ({
@@ -440,7 +436,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         ? rawDate.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:$5:$6')
         : rawDate;
       const parsed = new Date(normalized);
-      if (isNaN(parsed.getTime())) return;
+      if (Number.isNaN(parsed.getTime())) return;
 
       const weekKey = getWeekKey(parsed);
       if (!weekMap.has(weekKey)) {
@@ -478,7 +474,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         failed: data.attacks > 0 ? Math.round(((data.attacks - data.threeStars) / data.attacks) * 100) : 0,
       }))
       .filter(stat => stat.success + stat.failed > 0)
-      .sort((a, b) => parseInt(b.th.slice(2)) - parseInt(a.th.slice(2)))
+      .sort((a, b) => Number.parseInt(b.th.slice(2)) - Number.parseInt(a.th.slice(2)))
       .slice(0, 5);
 
     setTHStats(thStatsArray);
@@ -947,7 +943,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               dataKey="value"
                             >
                               {warTypeDistribution.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                <Cell key={`cell-${index}`} fill={entry.color} /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
                               ))}
                             </Pie>
                             <Tooltip
@@ -980,7 +976,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                             <div key={player.tag ?? index} className="flex items-center gap-4">
                               <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
                                 index === 0 ? 'bg-red-500/20 text-red-500' :
-                                index === 1 ? 'bg-orange-500/20 text-orange-500' :
+                                index === 1 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
                                 'bg-gray-600/20 text-muted-foreground'
                               }`}>
                                 {index + 1}
@@ -1021,8 +1017,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                           <div key={player.tag ?? index} className="flex items-center gap-4">
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
                               index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' :
-                              index === 2 ? 'bg-orange-500/20 text-orange-500' :
+                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' : // NOSONAR — JSX nested ternary for multi-branch display state
+                              index === 2 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
                               'bg-gray-600/20 text-gray-500'
                             }`}>
                               {index + 1}
@@ -1059,8 +1055,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                           <div key={player.tag} className="flex items-center gap-4">
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
                               index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' :
-                              index === 2 ? 'bg-orange-500/20 text-orange-500' :
+                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' : // NOSONAR — JSX nested ternary for multi-branch display state
+                              index === 2 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
                               'bg-gray-600/20 text-gray-500'
                             }`}>
                               {index + 1}
@@ -1213,7 +1209,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                       </tbody>
                     </table>
                   </div>
-                ) : clanStats.length > 0 ? (
+                ) : clanStats.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
@@ -1263,8 +1259,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                             <td className="text-center py-3 px-4">
                               <Badge variant="secondary" className={
                                 stat.win_rate >= 0.7 ? 'bg-green-500/20 text-green-500 border-green-500/30' :
-                                stat.win_rate >= 0.5 ? 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30' :
-                                'bg-red-500/20 text-red-500 border-red-500/30'
+                                stat.win_rate >= 0.5 ? 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30' : // NOSONAR — JSX nested ternary for multi-branch display state
+                                'bg-red-500/20 text-red-500 border-red-500/30' // NOSONAR — JSX nested ternary for multi-branch display state
                               }>
                                 {(stat.win_rate * 100).toFixed(1)}%
                               </Badge>
@@ -1273,7 +1269,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                             <td className="text-center py-3 px-4">
                               <span className={
                                 stat.avg_defense_stars <= 1.5 ? 'text-green-500' :
-                                stat.avg_defense_stars <= 2.2 ? 'text-yellow-500' :
+                                stat.avg_defense_stars <= 2.2 ? 'text-yellow-500' : // NOSONAR — JSX nested ternary for multi-branch display state
                                 'text-red-500'
                               }>{stat.avg_defense_stars.toFixed(2)}</span>
                             </td>

@@ -44,18 +44,18 @@ const colorClasses: Record<string, { bg: string; text: string; border: string }>
 
 // FamilyRoleCard component - supports multiple roles per type
 interface FamilyRoleCardProps {
-  roleTypeKey: FamilyRoleType;
-  label: string;
-  description: string;
-  roleIds: string[];
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-  discordRoles: Array<{ id: string; name: string; color?: number }>;
-  isRoleDataLoading: boolean;
-  isLoading: boolean;
-  onAdd: (roleId: string) => Promise<void>;
-  onRemove: (roleId: string) => Promise<void>;
-  t: (key: string) => string;
+  readonly roleTypeKey: FamilyRoleType;
+  readonly label: string;
+  readonly description: string;
+  readonly roleIds: string[];
+  readonly icon: React.ComponentType<{ className?: string }>;
+  readonly color: string;
+  readonly discordRoles: Array<{ id: string; name: string; color?: number }>;
+  readonly isRoleDataLoading: boolean;
+  readonly isLoading: boolean;
+  readonly onAdd: (roleId: string) => Promise<void>;
+  readonly onRemove: (roleId: string) => Promise<void>;
+  readonly t: (key: string) => string;
 }
 
 function intToHexColor(color: number): string {
@@ -157,10 +157,10 @@ function FamilyRoleCard({
                         className="w-3 h-3 rounded-full shrink-0"
                         style={{ backgroundColor: role.exists ? intToHexColor(role.color) : "#f97316" }}
                       />
-                      <span className={`text-sm truncate ${!role.exists ? "text-orange-600" : "text-foreground"}`}>
+                      <span className={`text-sm truncate ${role.exists ? "text-foreground" : "text-orange-600"}`}>
                         {role.exists ? `@${role.name}` : t("familyRoles.deletedRole")}
                       </span>
-                      {!role.exists && (
+                      {role.exists ? null : (
                         <span className="text-xs text-orange-500">({role.id})</span>
                       )}
                     </div>
@@ -460,7 +460,7 @@ export default function FamilySettingsPage() {
 
     let preview = format;
     Object.entries(examples).forEach(([key, value]) => {
-      preview = preview.replace(new RegExp(key, "g"), value);
+      preview = preview.replaceAll(new RegExp(key, "g"), value);
     });
 
     return preview;

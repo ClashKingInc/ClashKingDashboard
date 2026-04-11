@@ -6,15 +6,15 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const validateReminderTime = (time: string, type: string): { valid: boolean; error?: string } => {
   // Check format is "X hr" or "X.X hr"
   const regex = /^(\d+(?:\.\d+)?)\s+hr$/;
-  const match = time.match(regex);
+  const match = regex.exec(time);
 
   if (!match) {
     return { valid: false, error: "Time must be in format 'X hr' where X is a number" };
   }
 
-  const hours = parseFloat(match[1]);
+  const hours = Number.parseFloat(match[1]);
 
-  if (isNaN(hours) || hours <= 0) {
+  if (Number.isNaN(hours) || hours <= 0) {
     return { valid: false, error: "Time must be a positive number" };
   }
 

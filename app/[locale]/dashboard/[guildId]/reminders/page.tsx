@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
@@ -25,7 +25,6 @@ import {
 import {
   Bell,
   Target,
-  Users,
   Calendar,
   Clock,
   Plus,
@@ -35,17 +34,16 @@ import {
   Loader2,
   Castle,
   UserX,
-  Shield,
   Activity,
-  Hash,
   Edit2
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 // API types based on ClashKingAPI reminders endpoints
+type ReminderType = "War" | "Clan Capital" | "Clan Games" | "Inactivity";
 interface ReminderConfig {
   id: string;
-  type: "War" | "Clan Capital" | "Clan Games" | "Inactivity";
+  type: ReminderType;
   clan_tag?: string;
   channel_id?: string;
   time: string;
@@ -132,8 +130,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const { toast } = useToast();
   const guildId = params.guildId as string;
   const t = useTranslations("RemindersPage");
-  const tCommon = useTranslations("Common");
-
   const reminderTypes = [
     { value: "War", label: t('types.war'), icon: Target, color: "text-red-500", tabIcon: Target },
     { value: "Clan Capital", label: t('types.capital'), icon: Castle, color: "text-purple-500", tabIcon: Castle },
@@ -274,8 +270,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
     // Sort by time
     const sorted = [...currentReminders].sort((a, b) => {
-      const hoursA = parseFloat(extractHours(a.time));
-      const hoursB = parseFloat(extractHours(b.time));
+      const hoursA = Number.parseFloat(extractHours(a.time));
+      const hoursB = Number.parseFloat(extractHours(b.time));
 
       // For inactivity: ascending order (soonest first)
       // For others: descending order (furthest first)
@@ -303,7 +299,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       channel_id: "",
       time: "",
       custom_text: "",
-      clan_tag: selectedClan !== "all" ? selectedClan : clans[0]?.tag || "",
+      clan_tag: selectedClan === "all" ? clans[0]?.tag || "" : selectedClan,
       war_types: activeTab === "war" ? ["Random", "Friendly", "CWL"] : undefined,
       townhall_filter: [],
       roles: [],
@@ -324,7 +320,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
     // Extract the number from "X hr" format for display in input
     let displayTime = reminder.time;
-    const timeMatch = reminder.time?.match(/^(\d+(?:\.\d+)?)\s+hr$/);
+    const timeMatch = /^(\d+(?:\.\d+)?)\s+hr$/.exec(reminder.time ?? '');
     if (timeMatch) {
       displayTime = timeMatch[1];
     }
@@ -355,7 +351,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
   // Extract hours number from "X hr" format
   const extractHours = (timeString: string): string => {
-    const match = timeString?.match(/^(\d+(?:\.\d+)?)\s+hr$/);
+    const match = /^(\d+(?:\.\d+)?)\s+hr$/.exec(timeString ?? ''); // NOSONAR — anchored regex, backtracking is bounded by ^ and $
     return match ? match[1] : timeString;
   };
 
@@ -370,8 +366,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
   const isTimeValid = (time: string, type: string): boolean => {
     if (!time) return false;
-    const hours = parseFloat(time);
-    if (isNaN(hours) || hours <= 0) return false;
+    const hours = Number.parseFloat(time);
+    if (Number.isNaN(hours) || hours <= 0) return false;
     const max = getMaxHours(type);
     if (max === 0) return true; // Inactivity
     return hours <= max;
@@ -392,8 +388,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (!timeString) return false;
 
     // Parse as decimal number (hours)
-    const hours = parseFloat(timeString);
-    if (isNaN(hours) || hours <= 0) return false;
+    const hours = Number.parseFloat(timeString);
+    if (Number.isNaN(hours) || hours <= 0) return false;
 
     // Define max hours based on type
     let maxHours: number;
@@ -466,7 +462,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   };
 
   // Save a single reminder from dialog
-  const handleSaveReminder = async () => {
+  const handleSaveReminder = async () => { // NOSONAR — complexity comes from multi-type reminder validation, not a single logic unit
     try {
       // Validate time based on reminder type
       if (!validateTime(dialogReminder.time || "", dialogReminder.type || "")) {
@@ -650,7 +646,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
             </CardHeader>
             <CardContent>
               <Button
-                  onClick={() => window.location.reload()}
+                  onClick={() => globalThis.window.location.reload()}
                   className="w-full"
               >
                 {t('actions.retry')}
@@ -803,9 +799,9 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 {t('tabs.war')}
                 {reminders.war_reminders.length > 0 && (
                     <Badge variant="secondary" className="ml-1 bg-red-500/20 text-red-500">
-                      {selectedClan !== "all"
-                          ? reminders.war_reminders.filter(r => r.clan_tag === selectedClan).length
-                          : reminders.war_reminders.length}
+                      {selectedClan === "all"
+                          ? reminders.war_reminders.length
+                          : reminders.war_reminders.filter(r => r.clan_tag === selectedClan).length}
                     </Badge>
                 )}
               </TabsTrigger>
@@ -814,9 +810,9 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 {t('tabs.capital')}
                 {reminders.capital_reminders.length > 0 && (
                     <Badge variant="secondary" className="ml-1 bg-purple-500/20 text-purple-500">
-                      {selectedClan !== "all"
-                          ? reminders.capital_reminders.filter(r => r.clan_tag === selectedClan).length
-                          : reminders.capital_reminders.length}
+                      {selectedClan === "all"
+                          ? reminders.capital_reminders.length
+                          : reminders.capital_reminders.filter(r => r.clan_tag === selectedClan).length}
                     </Badge>
                 )}
               </TabsTrigger>
@@ -825,9 +821,9 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 {t('tabs.clanGames')}
                 {reminders.clan_games_reminders.length > 0 && (
                     <Badge variant="secondary" className="ml-1 bg-green-500/20 text-green-500">
-                      {selectedClan !== "all"
-                          ? reminders.clan_games_reminders.filter(r => r.clan_tag === selectedClan).length
-                          : reminders.clan_games_reminders.length}
+                      {selectedClan === "all"
+                          ? reminders.clan_games_reminders.length
+                          : reminders.clan_games_reminders.filter(r => r.clan_tag === selectedClan).length}
                     </Badge>
                 )}
               </TabsTrigger>
@@ -836,9 +832,9 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 {t('tabs.inactivity')}
                 {reminders.inactivity_reminders.length > 0 && (
                     <Badge variant="secondary" className="ml-1 bg-orange-500/20 text-orange-500">
-                      {selectedClan !== "all"
-                          ? reminders.inactivity_reminders.filter(r => r.clan_tag === selectedClan).length
-                          : reminders.inactivity_reminders.length}
+                      {selectedClan === "all"
+                          ? reminders.inactivity_reminders.length
+                          : reminders.inactivity_reminders.filter(r => r.clan_tag === selectedClan).length}
                     </Badge>
                 )}
               </TabsTrigger>
@@ -881,12 +877,12 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                             </Card>
                         ))}
                       </div>
-                  ) : currentReminders.length === 0 ? (
+                  ) : currentReminders.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
                       <Card className="bg-card border-border">
                         <CardContent className="py-12 text-center">
                           <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                           <h3 className="text-lg font-semibold text-foreground mb-2">
-                            {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders')}
+                            {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders') /* NOSONAR — JSX nested ternary for multi-branch display state */}
                           </h3>
                           <p className="text-muted-foreground mb-4">
                             {t('empty.getStarted')}
@@ -979,7 +975,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                         <div className="flex gap-2 flex-wrap">
                                           {reminder.war_types.map((type) => (
                                               <Badge key={type} variant="secondary">
-                                                {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
+                                                {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
                                               </Badge>
                                           ))}
                                         </div>
@@ -1116,7 +1112,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                       placeholder={
                         dialogReminder.type === "Clan Games"
                             ? t('card.customMessagePlaceholderClanGames')
-                            : dialogReminder.type === "Inactivity"
+                            : dialogReminder.type === "Inactivity" // NOSONAR — JSX nested ternary for multi-branch display state
                                 ? t('card.customMessagePlaceholderInactivity')
                                 : t('card.customMessagePlaceholder')
                       }
@@ -1147,7 +1143,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                   updateDialogField("war_types", updated);
                                 }}
                             >
-                              {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl')}
+                              {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
                             </Badge>
                         ))}
                       </div>
@@ -1165,7 +1161,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                           placeholder=""
                           value={dialogReminder.point_threshold ?? ""}
                           onChange={(e) => {
-                            const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                            const value = e.target.value === "" ? undefined : Number.parseInt(e.target.value);
                             setPointThresholdTouched(true);
                             updateDialogField("point_threshold", value);
                           }}
@@ -1198,7 +1194,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                           placeholder=""
                           value={dialogReminder.attack_threshold ?? ""}
                           onChange={(e) => {
-                            const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                            const value = e.target.value === "" ? undefined : Number.parseInt(e.target.value);
                             setAttackThresholdTouched(true);
                             updateDialogField("attack_threshold", value);
                           }}

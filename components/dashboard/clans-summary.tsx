@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,7 +13,7 @@ import { apiCache } from "@/lib/api-cache";
 import { apiClient } from "@/lib/api/client";
 
 interface ClansSummaryProps {
-  guildId: string;
+  readonly guildId: string;
 }
 
 interface Clan {
@@ -113,7 +112,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
             ["quickStart.step2.title", "quickStart.step2.description"],
             ["quickStart.step3.title", "quickStart.step3.description"],
           ] as const).map(([titleKey, descKey], idx) => (
-            <div key={idx} className="flex items-start gap-4">
+            <div key={titleKey} className="flex items-start gap-4">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold flex-shrink-0">
                 {idx + 1}
               </div>

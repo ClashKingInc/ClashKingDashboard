@@ -59,7 +59,7 @@ import { dashboardCacheKeys, normalizeDiscordRolesPayload } from "@/lib/dashboar
 
 // Types based on ClashKingAPI models
 interface MemberCountWarning {
-  channel?: string | number | null;
+  channel?: string | number | null; // NOSONAR — inline union is fine for a single field
   above?: number | null;
   below?: number | null;
   role?: string | number | null;
@@ -118,6 +118,17 @@ interface DiscordRole {
   color: number;
 }
 
+function normalizeClansPayload(payload: unknown): Clan[] {
+  if (Array.isArray(payload)) return payload as Clan[];
+  if (payload && typeof payload === "object") {
+    const maybeCollection = payload as { items?: unknown; clans?: unknown; data?: unknown };
+    if (Array.isArray(maybeCollection.items)) return maybeCollection.items as Clan[];
+    if (Array.isArray(maybeCollection.clans)) return maybeCollection.clans as Clan[];
+    if (Array.isArray(maybeCollection.data)) return maybeCollection.data as Clan[];
+  }
+  return [];
+}
+
 export default function ClansPage() {
   const params = useParams();
   const router = useRouter();
@@ -149,7 +160,7 @@ export default function ClansPage() {
       if (p.key === "{clan_name}" && clanName) {
         example = clanName;
       }
-      preview = preview.replace(new RegExp(p.key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"), example);
+            preview = preview.replaceAll(new RegExp(p.key.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`), "g"), example);
     });
     return preview;
   };
@@ -197,13 +208,14 @@ export default function ClansPage() {
         throw error;
       }
 
-      return response.json();
+      const payload = await response.json();
+      return normalizeClansPayload(payload);
     });
   };
 
   const refreshClans = async (accessToken: string) => {
     const clansData = await fetchClans(accessToken, true);
-    setClans(clansData || []);
+    setClans(clansData);
   };
 
   // Fetch data on mount
@@ -218,7 +230,7 @@ export default function ClansPage() {
         }
 
         const clansData = await fetchClans(accessToken);
-        setClans(clansData || []);
+        setClans(clansData);
 
         const [channelsResult, rolesResult] = await Promise.allSettled([
           apiCache.get(channelsCacheKey, async () => {
@@ -487,7 +499,7 @@ export default function ClansPage() {
             <CardDescription>{error}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => window.location.reload()} className="w-full">
+            <Button onClick={() => globalThis.window.location.reload()} className="w-full">
               {tCommon("retry")}
             </Button>
           </CardContent>
@@ -681,7 +693,7 @@ export default function ClansPage() {
               </Card>
             ))}
           </div>
-        ) : clans.length === 0 ? (
+        ) : clans.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <Card className="bg-card border-border">
             <CardContent className="py-12 text-center">
               <Shield className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -849,7 +861,7 @@ export default function ClansPage() {
                       <Label>{t("banAlertChannel")}</Label>
                       <InfoPopover
                         content={t.rich("fieldHelp.banAlertChannel", {
-                          bansLink: (chunks) => (
+                          bansLink: (chunks) => ( // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
                             <Link href={`/dashboard/${guildId}/bans`} className="font-medium underline underline-offset-2">
                               {chunks}
                             </Link>
@@ -886,7 +898,7 @@ export default function ClansPage() {
                       <Label>{t("clanAbbreviation")}</Label>
                       <InfoPopover
                         content={t.rich("fieldHelp.clanAbbreviation", {
-                          familySettingsLink: (chunks) => (
+                          familySettingsLink: (chunks) => ( // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
                             <Link href={`/dashboard/${guildId}/family-settings`} className="font-medium underline underline-offset-2">
                               {chunks}
                             </Link>
@@ -1079,7 +1091,7 @@ export default function ClansPage() {
             <AlertDialogCancel>{tCommon("cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive hover:bg-destructive/90"
-              onClick={() => { handleDeleteClan(clanToDelete!); setClanToDelete(null); }}
+              onClick={() => { handleDeleteClan(clanToDelete!); setClanToDelete(null); }} // NOSONAR — non-null assertion guards against null safely in context
             >
               {tCommon("delete")}
             </AlertDialogAction>

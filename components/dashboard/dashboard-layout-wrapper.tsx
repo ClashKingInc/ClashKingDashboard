@@ -10,8 +10,8 @@ export function DashboardLayoutWrapper({
   sidebar,
   children,
 }: {
-  sidebar: React.ReactNode;
-  children: React.ReactNode;
+  readonly sidebar: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();

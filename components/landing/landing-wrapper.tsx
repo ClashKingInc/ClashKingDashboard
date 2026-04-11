@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
 import { Navbar } from "./navbar";
 import { Hero } from "./hero";
 import { Features } from "./features";
-import { CTA } from "./cta";
+import { CtaSection } from "./cta";
 import { Footer } from "./footer";
 
 export function LandingWrapper() {
-  const router = useRouter();
-  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +30,7 @@ export function LandingWrapper() {
       <Navbar />
       <Hero />
       <Features />
-      <CTA />
+      <CtaSection />
       <Footer />
     </div>
   );

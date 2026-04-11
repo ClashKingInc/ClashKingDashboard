@@ -179,7 +179,7 @@ export default function PanelsPage() {
         embed_name: embedName || null,
         buttons,
         button_color: buttonColor,
-        welcome_channel: welcomeChannel ? parseInt(welcomeChannel, 10) : null,
+        welcome_channel: welcomeChannel ? Number.parseInt(welcomeChannel, 10) : null,
       });
       if (res.error) throw new Error(res.error);
       apiCache.invalidate(panelCacheKey);

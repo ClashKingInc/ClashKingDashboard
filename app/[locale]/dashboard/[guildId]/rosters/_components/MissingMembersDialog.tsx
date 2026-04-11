@@ -18,13 +18,13 @@ import { Loader2, UserMinus, CheckCircle2, UserPlus, Layers, User, Check } from 
 import type { MissingMembersResult, MissingMembersRosterResult, MissingMember } from "../_lib/types";
 
 interface MissingMembersDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  data: MissingMembersResult | null;
-  loading: boolean;
-  onLoad: (groupId?: string) => void;
-  onAddMembers: (tags: string[]) => Promise<void>;
-  groupId?: string | null;
+  readonly open: boolean;
+  readonly onOpenChange: (open: boolean) => void;
+  readonly data: MissingMembersResult | null;
+  readonly loading: boolean;
+  readonly onLoad: (groupId?: string) => void;
+  readonly onAddMembers: (tags: string[]) => Promise<void>;
+  readonly groupId?: string | null;
 }
 
 export function MissingMembersDialog({
@@ -102,7 +102,7 @@ export function MissingMembersDialog({
     }
   };
 
-  const hasError = (data?.results?.length ?? 0) > 0 && data!.results!.every(r => r.state === 'error');
+  const hasError = (data?.results?.length ?? 0) > 0 && data?.results?.every(r => r.state === 'error');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -145,13 +145,13 @@ export function MissingMembersDialog({
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
-        ) : hasError ? (
+        ) : hasError ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <div className="text-center py-8">
             <p className="text-red-400">
               {data?.results?.find(r => r.state === 'error')?.error_message || t("missingMembers.error")}
             </p>
           </div>
-        ) : allMissingMembers.length > 0 ? (
+        ) : allMissingMembers.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
           <div className="space-y-4">
             {/* Select all */}
             <div className="flex items-center justify-between">
@@ -179,7 +179,7 @@ export function MissingMembersDialog({
             <div className="space-y-3">
               {validResults.map((result, i) => (
                 <RosterResultSection
-                  key={i}
+                  key={result.roster_info?.alias ?? i}
                   result={result}
                   showHeader={viewMode === 'group'}
                   selectedMembers={selectedMembers}
@@ -236,10 +236,10 @@ function RosterResultSection({
   selectedMembers,
   onToggle,
 }: {
-  result: MissingMembersRosterResult;
-  showHeader: boolean;
-  selectedMembers: Set<string>;
-  onToggle: (tag: string) => void;
+  readonly result: MissingMembersRosterResult;
+  readonly showHeader: boolean;
+  readonly selectedMembers: Set<string>;
+  readonly onToggle: (tag: string) => void;
 }) {
   if (result.state === 'error' || !result.missing_members?.length) return null;
 

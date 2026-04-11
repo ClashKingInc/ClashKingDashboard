@@ -9,9 +9,9 @@ import type { Roster } from "../_lib/types";
 import { calculateRosterStats, formatThRestriction } from "../_lib/utils";
 
 interface RosterStatsCardProps {
-  roster: Roster;
-  familyClanTags?: string[];
-  t: (key: string) => string;
+  readonly roster: Roster;
+  readonly familyClanTags?: string[];
+  readonly t: (key: string) => string;
 }
 
 export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsCardProps) {
@@ -19,9 +19,6 @@ export function RosterStatsCard({ roster, familyClanTags = [], t }: RosterStatsC
   const capacityPercent = roster.roster_size
     ? Math.min(100, (stats.totalMembers / roster.roster_size) * 100)
     : 0;
-
-  // Get max TH count for scaling the distribution bars
-  const maxThCount = Math.max(...Object.values(stats.thDistribution), 1);
 
   return (
     <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

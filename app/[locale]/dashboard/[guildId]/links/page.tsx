@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -22,12 +20,10 @@ import {
   XCircle,
   Link,
   Download,
-  Filter,
   BarChart3,
   Users,
   Settings,
   Clock,
-  Plus,
   ChevronDown,
   ChevronUp,
   MoreVertical
@@ -42,15 +38,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -85,7 +72,7 @@ interface ServerLinksResponse {
   verified_accounts: number; // Total verified accounts (server-wide, accurate stat)
 }
 
-const escapeRegex = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapeRegex = (value: string): string => value.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 
 function filterMembers(
   members: MemberLinks[],
@@ -118,12 +105,9 @@ function filterMembers(
   return filtered;
 }
 
-export default function LinksManagementPage() {
+export default function LinksManagementPage() { // NOSONAR — complexity comes from aggregate link/search state management, not a single logic unit
   const params = useParams();
   const guildId = params?.guildId as string;
-  const t = useTranslations("LinksPage");
-  const tCommon = useTranslations("Common");
-
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [linksData, setLinksData] = useState<ServerLinksResponse | null>(null);
@@ -148,12 +132,6 @@ export default function LinksManagementPage() {
 
   // Expanded members state
   const [expandedMembers, setExpandedMembers] = useState<Set<string>>(new Set());
-
-  // Link account dialog states
-  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-  const [newPlayerTag, setNewPlayerTag] = useState("");
-  const [newApiToken, setNewApiToken] = useState("");
-  const [linking, setLinking] = useState(false);
 
   // Fetch links data
   useEffect(() => {
@@ -226,7 +204,8 @@ export default function LinksManagementPage() {
         throw new Error('Failed to unlink account');
       }
 
-      apiCache.invalidatePattern(`^${escapeRegex(`links-${guildId}-`)}`);
+      const cachePrefix = `links-${guildId}-`;
+      apiCache.invalidatePattern(`^${escapeRegex(cachePrefix)}`);
 
       // Refresh data for current page
       const offset = (currentPage - 1) * itemsPerPage;
@@ -285,7 +264,7 @@ export default function LinksManagementPage() {
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
+    const url = globalThis.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `server-${guildId}-links.csv`;
@@ -297,7 +276,7 @@ export default function LinksManagementPage() {
 
     const jsonContent = JSON.stringify(linksData, null, 2);
     const blob = new Blob([jsonContent], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
+    const url = globalThis.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `server-${guildId}-links.json`;
@@ -535,7 +514,7 @@ export default function LinksManagementPage() {
                       <SelectItem value="unverified">Unverified Only</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={filterMinAccounts.toString()} onValueChange={(v) => setFilterMinAccounts(parseInt(v))}>
+                  <Select value={filterMinAccounts.toString()} onValueChange={(v) => setFilterMinAccounts(Number.parseInt(v))}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="Min accounts" />
                     </SelectTrigger>
@@ -603,7 +582,7 @@ export default function LinksManagementPage() {
                       </Card>
                     ))}
                   </div>
-                ) : filteredMembers.length === 0 ? (
+                ) : filteredMembers.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
                   <div className="text-center py-12 text-muted-foreground border border-border rounded-lg bg-secondary/20">
                     <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p className="text-lg font-medium">No members found</p>
@@ -1071,9 +1050,9 @@ export default function LinksManagementPage() {
                     </p>
                     <p>
                       <strong>Members without links:</strong>{' '}
-                      {guildMemberCount != null
-                        ? guildMemberCount - (linksData?.members_with_links || 0)
-                        : "—"}
+                      {guildMemberCount == null
+                        ? "—"
+                        : guildMemberCount - (linksData?.members_with_links || 0)}
                     </p>
                   </CardContent>
                 </Card>

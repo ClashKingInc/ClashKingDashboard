@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,8 +20,6 @@ const languages = [
 ];
 
 export function LanguageSwitcher() {
-  const params = useParams();
-  const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("LanguageSwitcher");
   const locale = useLocale();
@@ -68,6 +66,7 @@ export function LanguageSwitcher() {
                 src={`https://flagcdn.com/w40/${lang.flagCode}.png`}
                 alt={lang.name}
                 fill
+                sizes="20px"
                 className="object-cover"
               />
             </div>

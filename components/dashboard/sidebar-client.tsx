@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { SidebarWrapper } from "./sidebar-wrapper";
 
 interface SidebarClientProps {
-  guildId: string;
+  readonly guildId: string;
 }
 
 export function SidebarClient({ guildId }: SidebarClientProps) {
