@@ -260,7 +260,7 @@ export default function PanelsPage() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {/* ── Left: config ── */}
           <div className="space-y-6">
 
@@ -414,7 +414,7 @@ export default function PanelsPage() {
 
           {/* ── Right: preview ── */}
           <div className="space-y-4">
-            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4 sticky top-4">
+            <div className="space-y-4 rounded-xl border border-border/60 bg-card p-5 xl:sticky xl:top-4">
               <div>
                 <h2 className="text-sm font-semibold">{t("previewSection")}</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">{t("previewHint")}</p>
