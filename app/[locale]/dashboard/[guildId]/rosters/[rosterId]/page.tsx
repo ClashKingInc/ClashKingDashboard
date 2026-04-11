@@ -1350,7 +1350,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   <Shield className="w-3.5 h-3.5 text-emerald-500" />
                   {t("settings.restrictions")}
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                   <div className="space-y-1.5">
                     <Label className="text-xs text-muted-foreground">{t("settings.minTh")}</Label>
                     <Input
