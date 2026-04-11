@@ -789,7 +789,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
             </div>
             <Skeleton className="h-10 w-32" />
           </div>
-          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
             <Card className="bg-card border-blue-500/30 bg-blue-500/5">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRosters")}</CardTitle>
@@ -877,14 +877,14 @@ export default function RostersPage() { // NOSONAR — React page component: com
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button onClick={refresh} variant="outline" size="icon">
+          <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <Button onClick={refresh} variant="outline" size="icon" className="shrink-0">
               <RefreshCw className="w-4 h-4" />
             </Button>
             <Button
               variant="outline"
               onClick={() => setCreateGroupDialogOpen(true)}
-              className="gap-2"
+              className="gap-2 shrink-0"
             >
               <Layers className="h-4 w-4" />
               {t("groups.create")}
@@ -893,7 +893,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
               <Button
                 variant="outline"
                 onClick={() => setCompareMode(true)}
-                className="gap-2"
+                className="gap-2 shrink-0"
               >
                 <GitCompare className="h-4 w-4" />
                 {t("compare.enterMode")}
@@ -901,7 +901,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
             )}
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90 gap-2">
+                <Button className="bg-primary hover:bg-primary/90 gap-2 shrink-0">
                   <Plus className="h-4 w-4" />
                   {t("createRoster")}
                 </Button>
@@ -1057,7 +1057,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
         )}
 
         {/* Statistics */}
-        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -1349,7 +1349,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
             setEditingStandaloneCategoryId(null);
           }
         }}>
-          <DialogContent className="bg-card border-border max-w-2xl">
+          <DialogContent className="bg-card border-border w-[calc(100vw-0.75rem)] sm:w-full sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>{t("categories.manage")}</DialogTitle>
               <DialogDescription>{t("categories.description")}</DialogDescription>
@@ -1394,37 +1394,50 @@ export default function RostersPage() { // NOSONAR — React page component: com
                         )}
                         <div className="flex items-center justify-end gap-2 w-full sm:w-auto sm:shrink-0 sm:ml-auto">
                           {editingStandaloneCategoryId === cat.custom_id ? (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleUpdateCategoryStandalone(cat.custom_id)}
-                              disabled={!categoryAliasesById[cat.custom_id]?.trim() || savingCategory}
-                            >
-                              <Pencil className="w-4 h-4 mr-1" />
-                              {tCommon("save")}
-                            </Button>
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleUpdateCategoryStandalone(cat.custom_id)}
+                                disabled={!categoryAliasesById[cat.custom_id]?.trim() || savingCategory}
+                                className="gap-1.5"
+                              >
+                                <Pencil className="w-4 h-4" />
+                                {tCommon("save")}
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setEditingStandaloneCategoryId(null)}
+                                disabled={savingCategory}
+                              >
+                                {tCommon("cancel")}
+                              </Button>
+                            </>
                           ) : (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setEditingStandaloneCategoryId(cat.custom_id)}
-                              disabled={savingCategory}
-                              className="text-muted-foreground hover:text-foreground"
-                              title={t("categories.editTitle")}
-                            >
-                              <Pencil className="w-4 h-4" />
-                            </Button>
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setEditingStandaloneCategoryId(cat.custom_id)}
+                                disabled={savingCategory}
+                                className="gap-1.5"
+                              >
+                                <Pencil className="w-4 h-4" />
+                                {tCommon("edit")}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setCategoryToDelete({ categoryId: cat.custom_id, categoryAlias: cat.alias })}
+                                disabled={savingCategory}
+                                className="gap-1.5 text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                {tCommon("delete")}
+                              </Button>
+                            </>
                           )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setCategoryToDelete({ categoryId: cat.custom_id, categoryAlias: cat.alias })}
-                            disabled={savingCategory}
-                            className="text-muted-foreground hover:text-destructive"
-                            title={tCommon("delete")}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
                         </div>
                       </div>
                     ))}
