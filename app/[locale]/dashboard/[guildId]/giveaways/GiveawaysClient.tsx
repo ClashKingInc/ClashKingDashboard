@@ -932,7 +932,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
             </div>
 
             <Tabs value={activeFormTab} onValueChange={setActiveFormTab}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-4">
                 <TabsTrigger value="general">{t("formTabs.general")}</TabsTrigger>
                 <TabsTrigger value="messages">{t("formTabs.messages")}</TabsTrigger>
                 <TabsTrigger value="restrictions">{t("formTabs.restrictions")}</TabsTrigger>
