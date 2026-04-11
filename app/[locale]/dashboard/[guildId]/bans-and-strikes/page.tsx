@@ -478,7 +478,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
           {/* Bans Tab */}
           <TabsContent value="bans" className="space-y-6">
             {/* Stats Cards */}
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
               <Card className="bg-card border-blue-500/30 bg-blue-500/5">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -525,7 +525,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                 </CardContent>
               </Card>
 
-              <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+              <Card className="col-span-2 bg-card border-purple-500/30 bg-purple-500/5 lg:col-span-1">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {t("bans.stats.commonReason")}
@@ -710,7 +710,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                   size="sm"
                                 />
                               </TableCell>
-                              <TableCell>
+                              <TableCell className="whitespace-nowrap">
                                 <div className="text-sm">
                                   {new Date(ban.DateCreated).toLocaleDateString(locale)}
                                 </div>
@@ -786,7 +786,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
             {/* Strikes Tab */}
             <TabsContent value="strikes" className="space-y-6">
               {/* Stats Cards */}
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
                 <Card className="bg-card border-blue-500/30 bg-blue-500/5">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -833,7 +833,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                   </CardContent>
                 </Card>
 
-                <Card className="bg-card border-purple-500/30 bg-purple-500/5">
+                <Card className="col-span-2 bg-card border-purple-500/30 bg-purple-500/5 lg:col-span-1">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       {t("strikes.stats.totalWeight")}
@@ -1076,7 +1076,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                     size="sm"
                                   />
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="whitespace-nowrap">
                                   <div className="text-sm">
                                     {new Date(strike.date_created).toLocaleDateString(locale)}
                                   </div>
@@ -1089,7 +1089,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                     })}
                                   </div>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="whitespace-nowrap">
                                   {strike.rollover_date ? (
                                     <div className="text-sm text-muted-foreground">
                                       {new Date(strike.rollover_date * 1000).toLocaleDateString(locale)}
@@ -1144,9 +1144,17 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                         {group.total_weight}
                                       </Badge>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="whitespace-nowrap">
                                       <div className="text-sm">
                                         {new Date(group.last_strike).toLocaleDateString(locale)}
+                                      </div>
+                                      <div className="text-xs text-muted-foreground">
+                                        {t("strikes.table.daysAgo", {
+                                          days: Math.floor(
+                                            (Date.now() - new Date(group.last_strike).getTime()) /
+                                            (1000 * 60 * 60 * 24)
+                                          )
+                                        })}
                                       </div>
                                     </TableCell>
                                     <TableCell className="text-right">
@@ -1207,12 +1215,12 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                                         size="sm"
                                                       />
                                                     </TableCell>
-                                                    <TableCell className="py-2">
+                                                    <TableCell className="py-2 whitespace-nowrap">
                                                       <div className="text-[11px] text-muted-foreground">
                                                         {new Date(s.date_created).toLocaleDateString(locale)}
                                                       </div>
                                                     </TableCell>
-                                                    <TableCell className="py-2">
+                                                    <TableCell className="py-2 whitespace-nowrap">
                                                       <div className="text-[11px] text-muted-foreground">
                                                         {s.rollover_date ? (
                                                           new Date(s.rollover_date * 1000).toLocaleDateString(locale)

@@ -680,7 +680,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           </div>
 
           {/* Statistics Overview */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <div className="grid grid-cols-2 gap-6 lg:grid-cols-4 mb-8">
             <Card className="bg-card border-blue-500/30 bg-blue-500/5">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.totalReminders')}</CardTitle>

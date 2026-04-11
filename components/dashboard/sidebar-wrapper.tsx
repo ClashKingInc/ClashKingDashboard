@@ -7,6 +7,7 @@ import { apiCache } from "@/lib/api-cache";
 
 interface SidebarWrapperProps {
   readonly guildId: string;
+  readonly locale: string;
 }
 
 const GUILD_INFO_CACHE_TTL = 120000;
@@ -15,7 +16,7 @@ function getGuildInfoCacheKey(guildId: string): string {
   return `guild-info-${guildId}`;
 }
 
-export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
+export function SidebarWrapper({ guildId, locale }: SidebarWrapperProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [serverInfo, setServerInfo] = useState({
     name: "My Server",
@@ -67,6 +68,7 @@ export function SidebarWrapper({ guildId }: SidebarWrapperProps) {
   return (
     <Sidebar
       guildId={guildId}
+      locale={locale}
       guildName={serverInfo.name}
       guildIcon={serverInfo.icon}
       isLoading={isLoading}

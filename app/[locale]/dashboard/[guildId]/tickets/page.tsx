@@ -490,7 +490,7 @@ function TicketsTab({
       />
 
       {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {STAT_CARD_CONFIGS.map(({ key, labelKey, icon: Icon, borderClass, bgClass, textClass, iconClass, ringClass }) => (
           <button key={key} onClick={() => setStatusFilter(key)} className="text-left focus:outline-none">
             <Card className={cn(

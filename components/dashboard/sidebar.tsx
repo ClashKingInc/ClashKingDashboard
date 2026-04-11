@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useParams, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -44,16 +44,15 @@ import { SettingsDropdown } from "@/components/settings-dropdown";
 
 interface SidebarProps {
   readonly guildId: string;
+  readonly locale: string;
   readonly guildName: string;
   readonly guildIcon?: string;
   readonly isLoading?: boolean;
 }
 
-export function Sidebar({ guildId, guildName, guildIcon, isLoading = false }: SidebarProps) {
+export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = false }: SidebarProps) {
   const pathname = usePathname();
-  const params = useParams();
   const router = useRouter();
-  const locale = (params.locale as string) || "en";
   const t = useTranslations("Sidebar");
   const tCommon = useTranslations("Common");
 

@@ -530,20 +530,26 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" disabled>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-12 w-12 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-8 w-56" />
-                <Skeleton className="h-4 w-44" />
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <Button variant="ghost" size="icon" disabled>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div className="flex items-center gap-3 min-w-0">
+                <Skeleton className="h-12 w-12 rounded-full shrink-0" />
+                <div className="min-w-0 h-12 flex flex-col justify-center gap-1.5">
+                  <Skeleton className="h-6 w-56 max-w-[60vw] md:max-w-none" />
+                  <Skeleton className="h-3 w-40 max-w-[45vw] md:max-w-none" />
+                </div>
               </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 w-full md:w-auto md:flex">
+              <Skeleton className="h-9 w-full md:w-28" />
+              <Skeleton className="h-9 w-full md:w-36" />
             </div>
           </div>
 
-          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
             <Card className="bg-card border-blue-500/30 bg-blue-500/5 min-h-[150px]">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm text-muted-foreground">{t("stats.members")}</CardTitle>
@@ -697,12 +703,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3 min-w-0">
           <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             {roster.clan_badge ? (
               <Avatar className="h-12 w-12">
                 <AvatarImage src={roster.clan_badge} alt={roster.clan_name || ""} />
@@ -713,20 +719,22 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                 <Users className="h-6 w-6 text-primary" />
               </div>
             )}
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">{roster.alias}</h1>
-              {roster.clan_name && (
-                <p className="text-muted-foreground">{roster.clan_name}</p>
+            <div className="min-w-0 h-12 flex flex-col justify-center gap-1">
+              <h1 className="text-2xl leading-7 font-bold text-foreground truncate">{roster.alias}</h1>
+              {roster.clan_name ? (
+                <p className="text-muted-foreground leading-4 truncate">{roster.clan_name}</p>
+              ) : (
+                <p className="leading-4 opacity-0 select-none">.</p>
               )}
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleRefresh} disabled={refreshing}>
+        <div className="grid grid-cols-2 gap-2 w-full md:w-auto md:flex">
+          <Button variant="outline" onClick={handleRefresh} disabled={refreshing} className="w-full md:w-auto">
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
             {t("refresh")}
           </Button>
-          <Button onClick={() => setAddMembersDialogOpen(true)}>
+          <Button onClick={() => setAddMembersDialogOpen(true)} className="w-full md:w-auto">
             <UserPlus className="w-4 h-4 mr-2" />
             {t("addMembers.submit")}
           </Button>
@@ -755,14 +763,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
         {/* Members Tab */}
         <TabsContent value="members" className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <p className="text-muted-foreground">
               {roster.members?.length || 0} {t("members.count")}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {/* View Mode Toggle */}
               {rosterCategories.length > 0 && (
-                <div className="flex items-center border border-border rounded-lg p-1">
+                <div className="flex items-center border border-border rounded-lg p-1 shrink-0">
                   <Button
                     variant={membersViewMode === "list" ? "secondary" : "ghost"}
                     size="sm"
@@ -785,7 +793,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               )}
               <Popover open={columnPopoverOpen} onOpenChange={setColumnPopoverOpen}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="shrink-0 whitespace-nowrap">
                     <Columns3 className="w-4 h-4 mr-2" />
                     {t("columns.configure")}
                   </Button>
@@ -875,6 +883,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   variant="outline"
                   size="sm"
                   onClick={() => setMissingMembersDialogOpen(true)}
+                  className="shrink-0 whitespace-nowrap"
                 >
                   <UserMinus className="w-4 h-4 mr-2" />
                   {t("missingMembers.button")}
@@ -886,7 +895,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   size="sm"
                   onClick={() => setClearMembersOpen(true)}
                   disabled={clearingMembers}
-                  className="text-destructive hover:text-destructive"
+                  className="text-destructive hover:text-destructive shrink-0 whitespace-nowrap"
                 >
                   {clearingMembers
                     ? <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -1341,7 +1350,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   <Shield className="w-3.5 h-3.5 text-emerald-500" />
                   {t("settings.restrictions")}
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                   <div className="space-y-1.5">
                     <Label className="text-xs text-muted-foreground">{t("settings.minTh")}</Label>
                     <Input

@@ -246,7 +246,7 @@ function GiveawaysMainContent({
   if (loading) {
     return (
       <>
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
           <Card className="border-blue-500/30 bg-blue-500/5">
             <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{statsLabels.totalEntries}</CardTitle></CardHeader>
             <CardContent>
@@ -300,7 +300,7 @@ function GiveawaysMainContent({
 
   return (
     <>
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
         <Card className="border-blue-500/30 bg-blue-500/5">
           <CardHeader className="pb-3"><CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalEntries")}</CardTitle></CardHeader>
           <CardContent>
@@ -932,7 +932,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
             </div>
 
             <Tabs value={activeFormTab} onValueChange={setActiveFormTab}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-4">
                 <TabsTrigger value="general">{t("formTabs.general")}</TabsTrigger>
                 <TabsTrigger value="messages">{t("formTabs.messages")}</TabsTrigger>
                 <TabsTrigger value="restrictions">{t("formTabs.restrictions")}</TabsTrigger>
