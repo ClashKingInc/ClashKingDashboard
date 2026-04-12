@@ -1074,9 +1074,10 @@
       "description": "Filter oorlogsstatistieken op verschillende criteria",
       "clan": "Clan",
       "allClans": "Alle Clans",
-      "townHall": "Dorpshuis",
-      "allTownHalls": "Alle DH Niveaus",
-      "townHallLevel": "DH {level}",
+      "townHall": "Stadhuis",
+      "townHallShort": "SH",
+      "allTownHalls": "Alle SH Niveaus",
+      "townHallLevel": "SH {level}",
       "period": "Periode",
       "last7Days": "Laatste 7 dagen",
       "last30Days": "Laatste 30 dagen",
@@ -1107,8 +1108,8 @@
         "draws": "Gelijkspel"
       },
       "thSuccessRate": {
-        "title": "Aanval Succesratio per Dorpshuis",
-        "description": "3-sterren ratio per DH niveau",
+        "title": "Aanval Succesratio per Stadhuis",
+        "description": "3-sterren ratio per SH niveau",
         "threeStarPercent": "3-Sterren %",
         "otherPercent": "Andere %"
       },
