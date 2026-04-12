@@ -124,6 +124,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   const [warTypeCounts, setWarTypeCounts] = useState<WarTypeCounts>({ random: 0, friendly: 0, cwl: 0 });
   const [dailyStats, setDailyStats] = useState<DailyWarStats[]>([]);
   const [thStats, setTHStats] = useState<THStats[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const [filters, setFilters] = useState({
     clan: "all",
@@ -133,6 +134,20 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     endDate: "",
     warTypes: { random: true, friendly: true, cwl: true },
   });
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 640px)");
+    const onChange = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
+    };
+
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener("change", onChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", onChange);
+    };
+  }, []);
 
   // Fetch clans and war data on mount
   useEffect(() => {
@@ -837,10 +852,22 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                       <CardDescription>{t('charts.dailyPerformance.description')}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={dailyChartData}>
+                        <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                          data={dailyChartData}
+                          margin={isMobile ? { top: 40, right: 8, left: -20, bottom: 24 } : { top: 12, right: 16, left: 0, bottom: 8 }}
+                        >
                           <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
-                          <XAxis dataKey="name" stroke={darkTheme.text.secondary} />
+                          <XAxis
+                            dataKey="name"
+                            stroke={darkTheme.text.secondary}
+                            tick={{ fontSize: isMobile ? 11 : 12 }}
+                            angle={isMobile ? -30 : 0}
+                            textAnchor={isMobile ? "end" : "middle"}
+                            height={isMobile ? 52 : 30}
+                            tickMargin={isMobile ? 8 : 4}
+                            minTickGap={isMobile ? 12 : 20}
+                          />
                           <YAxis stroke={darkTheme.text.secondary} />
                           <Tooltip
                             contentStyle={{
@@ -849,7 +876,10 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               borderRadius: '8px',
                             }}
                           />
-                          <Legend />
+                          <Legend
+                            verticalAlign={isMobile ? "top" : "bottom"}
+                            wrapperStyle={isMobile ? { paddingBottom: 8, fontSize: "12px" } : undefined}
+                          />
                           <Bar dataKey="wins" fill="#3BA55D" name={t('charts.dailyPerformance.wins')} />
                           <Bar dataKey="losses" fill="#ED4245" name={t('charts.dailyPerformance.losses')} />
                           <Bar dataKey="draws" fill="#FAA81A" name={t('charts.dailyPerformance.draws')} />
