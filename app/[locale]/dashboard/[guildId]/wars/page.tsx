@@ -269,11 +269,13 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         ? Math.floor(new Date(filters.endDate).getTime() / 1000)
         : Math.floor(now / 1000);
       const warTypesMask = `${filters.warTypes.random ? 1 : 0}${filters.warTypes.friendly ? 1 : 0}${filters.warTypes.cwl ? 1 : 0}`;
+      const timeRangeCacheKey = filters.datePreset === "custom"
+        ? `custom:${filters.startDate || "none"}:${filters.endDate || "none"}`
+        : `preset:${filters.datePreset}:bucket:${Math.floor(now / 30000)}`;
       const warsDataCacheKey = [
         `wars-data-${guildId}`,
         `clans:${[...clansToFetch].sort().join(",")}`,
-        `start:${startTs}`,
-        `end:${endTs}`,
+        `range:${timeRangeCacheKey}`,
         `th:${filters.townHall}`,
         `types:${warTypesMask}`,
       ].join("|");
