@@ -80,6 +80,10 @@ interface WarListResponse {
   items?: War[];
 }
 
+interface WarSummaryResponse {
+  items?: WarSummary[];
+}
+
 function normalizeClansPayload(payload: unknown): Clan[] {
   if (Array.isArray(payload)) return payload as Clan[];
   if (payload && typeof payload === "object") {
@@ -274,41 +278,59 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         : `preset:${filters.datePreset}:bucket:${Math.floor(now / 30000)}`;
       const warsDataCacheKey = [
         `wars-data-${guildId}`,
-        `clans:${[...clansToFetch].sort().join(",")}`,
+        `clans:${[...clansToFetch].sort((a, b) => a.localeCompare(b)).join(",")}`,
         `range:${timeRangeCacheKey}`,
         `th:${filters.townHall}`,
         `types:${warTypesMask}`,
       ].join("|");
+
+      const fetchWarSummary = async (): Promise<WarSummaryResponse> => {
+        const response = await fetch('/api/v2/war/war-summary', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ clan_tags: clansToFetch }),
+        });
+
+        if (!response.ok) {
+          return { items: [] };
+        }
+
+        return response.json();
+      };
+
+      const fetchHistoricalWars = async (): Promise<WarListResponse[]> =>
+        Promise.all(
+          clansToFetch.map(async (tag) => {
+            const response = await fetch(
+              `/api/v2/war/${encodeURIComponent(tag)}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100&include_cwl=${filters.warTypes.cwl}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (!response.ok) {
+              return { items: [] };
+            }
+
+            return response.json();
+          })
+        );
 
       // Fetch war summaries (includes current war + CWL info) and player stats in parallel
       const { summaries, playerStats, historicalWars } = await apiCache.get(
         warsDataCacheKey,
         async () => {
           const [warSummaryRes, playerStatsRes, historicalWarsRes] = await Promise.all([
-            fetch('/api/v2/war/war-summary', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ clan_tags: clansToFetch }),
-            }).then(res => res.ok ? res.json() : { items: [] }),
-
+            fetchWarSummary(),
             fetchPlayerStats(clansToFetch, token, startTs, endTs),
-
-            Promise.all(
-              clansToFetch.map(tag =>
-                fetch(`/api/v2/war/${encodeURIComponent(tag)}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100&include_cwl=${filters.warTypes.cwl}`, {
-                  headers: { Authorization: `Bearer ${token}` }
-                }).then(res => res.ok ? res.json() : { items: [] })
-              )
-            )
+            fetchHistoricalWars(),
           ]);
 
           return {
-            summaries: (warSummaryRes.items || []) as WarSummary[],
+            summaries: warSummaryRes.items || [],
             playerStats: playerStatsRes,
-            historicalWars: historicalWarsRes as WarListResponse[],
+            historicalWars: historicalWarsRes,
           };
         }
       );
@@ -329,7 +351,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
 
       clansToFetch.forEach((clanTag, index) => {
         const summary = summaries.find(s => s.clan_tag === clanTag || s.war_info?.clan?.tag === clanTag);
-        const clanWars = (historicalWars[index]?.items || []) as War[];
+        const clanWars = historicalWars[index]?.items || [];
         const clanName = clansList.find(c => c.tag === clanTag)?.name || clanTag;
 
         let wins = 0, losses = 0, draws = 0;
