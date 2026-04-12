@@ -25,10 +25,10 @@ import {
   UserCog,
   TicketIcon,
   FileText,
+  Crown,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,7 +38,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import type { UserInfo } from "@/lib/api/types/auth";
-import { clashKingAssets } from "@/lib/theme";
 import { logout } from "@/lib/auth/logout";
 import { SettingsDropdown } from "@/components/settings-dropdown";
 
@@ -353,19 +352,12 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
         {/* Branding */}
         <Link
           href={`/dashboard/${guildId}/support-us`}
-          className="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-xs leading-none transition-colors hover:bg-accent/40"
+          className="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium leading-5 transition-colors hover:bg-accent/40"
         >
-          <span className="font-medium text-muted-foreground leading-none">{tCommon("poweredBy")}</span>
-          <span className="inline-flex items-center gap-1 leading-none">
-            <Image
-              src={clashKingAssets.logos.crownRed}
-              alt="ClashKing"
-              width={14}
-              height={14}
-              className="h-[14px] w-[14px] shrink-0"
-              unoptimized
-            />
-            <span className="font-bold text-primary leading-none">ClashKing</span>
+          <span className="text-muted-foreground">{tCommon("poweredBy")}</span>
+          <span className="inline-flex items-center gap-1 font-bold text-primary">
+            <Crown className="h-3.5 w-3.5 fill-primary text-primary" aria-hidden />
+            <span>ClashKing</span>
           </span>
         </Link>
       </div>
