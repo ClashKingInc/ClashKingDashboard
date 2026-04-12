@@ -32,7 +32,7 @@ export function Footer() {
               width={140}
               height={40}
               className="mb-4"
-              style={{ height: "auto" }}
+              style={{ width: "auto", height: "auto" }}
             />
             <p className="text-muted-foreground text-sm">
               {t("tagline")}
