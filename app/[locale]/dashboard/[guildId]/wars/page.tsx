@@ -152,7 +152,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   });
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 640px)");
+    const mediaQuery = globalThis.matchMedia("(max-width: 640px)");
     const onChange = (event: MediaQueryListEvent) => {
       setIsMobile(event.matches);
     };
@@ -631,7 +631,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
 
   const handleClanStatsSort = (key: ClanStatsSortKey) => {
     setClanStatsSort((current) => {
-      if (!current || current.key !== key) {
+      if (current?.key !== key) {
         return { key, direction: "asc" };
       }
       return { key, direction: current.direction === "asc" ? "desc" : "asc" };
@@ -639,13 +639,26 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   };
 
   const getClanStatsSortIcon = (key: ClanStatsSortKey) => {
-    if (!clanStatsSort || clanStatsSort.key !== key) {
+    if (clanStatsSort?.key !== key) {
       return <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/70" />;
     }
     if (clanStatsSort.direction === "asc") {
       return <ChevronUp className="h-3.5 w-3.5 text-foreground" />;
     }
     return <ChevronDown className="h-3.5 w-3.5 text-foreground" />;
+  };
+
+  const getMissedRankClassName = (index: number): string => {
+    if (index === 0) return "bg-red-500/20 text-red-500";
+    if (index === 1) return "bg-orange-500/20 text-orange-500";
+    return "bg-gray-600/20 text-muted-foreground";
+  };
+
+  const getPodiumRankClassName = (index: number): string => {
+    if (index === 0) return "bg-yellow-500/20 text-yellow-500";
+    if (index === 1) return "bg-gray-400/20 text-muted-foreground";
+    if (index === 2) return "bg-orange-500/20 text-orange-500";
+    return "bg-gray-600/20 text-gray-500";
   };
 
 
@@ -976,9 +989,12 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                   <CardDescription>{t('charts.warTypeDistribution.description')}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {isInitialLoading ? (
-                    <Skeleton className="h-64 w-full animate-pulse" />
-                  ) : warTypeDistribution.length > 0 ? (
+                  {(() => {
+                    if (isInitialLoading) {
+                      return <Skeleton className="h-64 w-full animate-pulse" />;
+                    }
+                    if (warTypeDistribution.length > 0) {
+                      return (
                         <ResponsiveContainer width="100%" height={300}>
                           <PieChart margin={isMobile ? { top: 8, right: 8, bottom: 36, left: 8 } : { top: 8, right: 16, bottom: 8, left: 16 }}>
                             <Pie
@@ -1016,11 +1032,14 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                             />
                           </PieChart>
                         </ResponsiveContainer>
-                      ) : (
-                        <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
-                          {t('charts.topPerformers.noData')}
-                        </p>
-                      )}
+                      );
+                    }
+                    return (
+                      <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
+                        {t('charts.topPerformers.noData')}
+                      </p>
+                    );
+                  })()}
                 </CardContent>
               </Card>
 
@@ -1030,28 +1049,29 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                   <CardDescription>{t('charts.missedAttacks.description')}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {isInitialLoading ? (
-                    <div className="space-y-4">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="flex items-center gap-4">
-                          <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
-                          <div className="flex-1 space-y-2">
-                            <Skeleton className="h-4 w-32 animate-pulse" />
-                            <Skeleton className="h-3 w-24 animate-pulse" />
-                          </div>
-                          <Skeleton className="h-6 w-20 animate-pulse" />
+                  {(() => {
+                    if (isInitialLoading) {
+                      return (
+                        <div className="space-y-4">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <div key={i} className="flex items-center gap-4">
+                              <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                              <div className="flex-1 space-y-2">
+                                <Skeleton className="h-4 w-32 animate-pulse" />
+                                <Skeleton className="h-3 w-24 animate-pulse" />
+                              </div>
+                              <Skeleton className="h-6 w-20 animate-pulse" />
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  ) : missedAttackers.length > 0 ? (
+                      );
+                    }
+                    if (missedAttackers.length > 0) {
+                      return (
                         <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
                           {missedAttackers.map((player, index) => (
                             <div key={player.tag ?? index} className="flex items-center gap-4">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
-                                index === 0 ? 'bg-red-500/20 text-red-500' :
-                                index === 1 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
-                                'bg-gray-600/20 text-muted-foreground'
-                              }`}>
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${getMissedRankClassName(index)}`}>
                                 {index + 1}
                               </div>
                               <div className="flex-1 min-w-0">
@@ -1076,11 +1096,14 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                             </div>
                           ))}
                         </div>
-                      ) : (
-                        <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
-                          {t('charts.topPerformers.noData')}
-                        </p>
-                      )}
+                      );
+                    }
+                    return (
+                      <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
+                        {t('charts.topPerformers.noData')}
+                      </p>
+                    );
+                  })()}
                 </CardContent>
               </Card>
             </div>
@@ -1093,60 +1116,63 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.topPerformers.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {isInitialLoading ? (
-                      <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div key={i} className="flex items-center gap-4">
-                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
-                            <div className="flex-1 space-y-2">
-                              <Skeleton className="h-4 w-36 animate-pulse" />
-                              <Skeleton className="h-3 w-28 animate-pulse" />
-                            </div>
-                            <Skeleton className="h-6 w-16 animate-pulse" />
-                          </div>
-                        ))}
-                      </div>
-                    ) : topPerformers.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {topPerformers.map((player, index) => (
-                          <div key={player.tag ?? index} className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
-                              index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              index === 2 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              'bg-gray-600/20 text-gray-500'
-                            }`}>
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                {player.tag ? (
-                                  <PlayerProfilePopover
-                                    playerName={player.name}
-                                    playerTag={player.tag}
-                                    townhallLevel={player.townhall}
-                                    showTagInTrigger={false}
-                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-                                  >
-                                    <span className="font-medium text-foreground truncate">{player.name}</span>
-                                  </PlayerProfilePopover>
-                                ) : (
-                                  <div className="font-medium text-foreground truncate">{player.name}</div>
-                                )}
-                                <div className="text-xs text-muted-foreground">
-                                  {t('charts.topPerformers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
                                 </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30 shrink-0">
-                              {(player.stats?.avg_stars ?? 0).toFixed(2)}★
-                            </Badge>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.topPerformers.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (topPerformers.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {topPerformers.map((player, index) => (
+                              <div key={player.tag ?? index} className="flex items-center gap-4">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${getPodiumRankClassName(index)}`}>
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.topPerformers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30 shrink-0">
+                                  {(player.stats?.avg_stars ?? 0).toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.topPerformers.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
 
@@ -1156,60 +1182,63 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.topDefenders.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {isInitialLoading ? (
-                      <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div key={i} className="flex items-center gap-4">
-                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
-                            <div className="flex-1 space-y-2">
-                              <Skeleton className="h-4 w-36 animate-pulse" />
-                              <Skeleton className="h-3 w-28 animate-pulse" />
-                            </div>
-                            <Skeleton className="h-6 w-16 animate-pulse" />
-                          </div>
-                        ))}
-                      </div>
-                    ) : topDefenders.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {topDefenders.map((player, index) => (
-                          <div key={player.tag} className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
-                              index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              index === 2 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              'bg-gray-600/20 text-gray-500'
-                            }`}>
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                {player.tag ? (
-                                  <PlayerProfilePopover
-                                    playerName={player.name}
-                                    playerTag={player.tag}
-                                    townhallLevel={player.townhall}
-                                    showTagInTrigger={false}
-                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-                                  >
-                                    <span className="font-medium text-foreground truncate">{player.name}</span>
-                                  </PlayerProfilePopover>
-                                ) : (
-                                  <div className="font-medium text-foreground truncate">{player.name}</div>
-                                )}
-                                <div className="text-xs text-muted-foreground">
-                                  {t('charts.topDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
                                 </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30 shrink-0">
-                              {player.avg_stars_given.toFixed(2)}★
-                            </Badge>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.topDefenders.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (topDefenders.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {topDefenders.map((player, index) => (
+                              <div key={player.tag} className="flex items-center gap-4">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${getPodiumRankClassName(index)}`}>
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.topDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30 shrink-0">
+                                  {player.avg_stars_given.toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.topDefenders.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               </div>
@@ -1222,55 +1251,63 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.worstAttackers.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {isInitialLoading ? (
-                      <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div key={i} className="flex items-center gap-4">
-                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
-                            <div className="flex-1 space-y-2">
-                              <Skeleton className="h-4 w-36 animate-pulse" />
-                              <Skeleton className="h-3 w-28 animate-pulse" />
-                            </div>
-                            <Skeleton className="h-6 w-16 animate-pulse" />
-                          </div>
-                        ))}
-                      </div>
-                    ) : worstAttackers.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {worstAttackers.map((player, index) => (
-                          <div key={player.tag ?? index} className="flex items-center gap-4">
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                {player.tag ? (
-                                  <PlayerProfilePopover
-                                    playerName={player.name}
-                                    playerTag={player.tag}
-                                    townhallLevel={player.townhall}
-                                    showTagInTrigger={false}
-                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-                                  >
-                                    <span className="font-medium text-foreground truncate">{player.name}</span>
-                                  </PlayerProfilePopover>
-                                ) : (
-                                  <div className="font-medium text-foreground truncate">{player.name}</div>
-                                )}
-                                <div className="text-xs text-muted-foreground">
-                                  {t('charts.worstAttackers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
                                 </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
-                              {(player.stats?.avg_stars ?? 0).toFixed(2)}★
-                            </Badge>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.worstAttackers.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (worstAttackers.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {worstAttackers.map((player, index) => (
+                              <div key={player.tag ?? index} className="flex items-center gap-4">
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.worstAttackers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
+                                  {(player.stats?.avg_stars ?? 0).toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.worstAttackers.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
 
@@ -1280,55 +1317,63 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.worstDefenders.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {isInitialLoading ? (
-                      <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div key={i} className="flex items-center gap-4">
-                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
-                            <div className="flex-1 space-y-2">
-                              <Skeleton className="h-4 w-36 animate-pulse" />
-                              <Skeleton className="h-3 w-28 animate-pulse" />
-                            </div>
-                            <Skeleton className="h-6 w-16 animate-pulse" />
-                          </div>
-                        ))}
-                      </div>
-                    ) : worstDefenders.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {worstDefenders.map((player, index) => (
-                          <div key={player.tag} className="flex items-center gap-4">
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                {player.tag ? (
-                                  <PlayerProfilePopover
-                                    playerName={player.name}
-                                    playerTag={player.tag}
-                                    townhallLevel={player.townhall}
-                                    showTagInTrigger={false}
-                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
-                                  >
-                                    <span className="font-medium text-foreground truncate">{player.name}</span>
-                                  </PlayerProfilePopover>
-                                ) : (
-                                  <div className="font-medium text-foreground truncate">{player.name}</div>
-                                )}
-                                <div className="text-xs text-muted-foreground">
-                                  {t('charts.worstDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
                                 </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
-                              {player.avg_stars_given.toFixed(2)}★
-                            </Badge>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.worstDefenders.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (worstDefenders.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {worstDefenders.map((player, index) => (
+                              <div key={player.tag} className="flex items-center gap-4">
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.worstDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
+                                  {player.avg_stars_given.toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.worstDefenders.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               </div>
