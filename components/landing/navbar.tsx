@@ -15,6 +15,7 @@ import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { SettingsDropdown } from "@/components/settings-dropdown";
+import { isDeveloperUserId } from "@/lib/internal/developer-access";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -113,6 +114,14 @@ export function Navbar() {
                       <span className="hover:!text-primary">{t("openDashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
+                  {isDeveloperUserId(user.user_id) ? (
+                    <DropdownMenuItem asChild className="hover:!bg-transparent">
+                      <Link href="/internal" className="flex items-center space-x-2">
+                        <ArrowRight className="h-4 w-4" />
+                        <span className="hover:!text-primary">Internal</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  ) : null}
                   <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 hover:!bg-transparent">
                     <LogOut className="h-4 w-4 text-destructive" />
                     <span className="hover:!text-primary">{t("logout")}</span>
@@ -193,6 +202,13 @@ export function Navbar() {
                       {t("openDashboard")}
                     </Button>
                   </Link>
+                  {isDeveloperUserId(user.user_id) ? (
+                    <Link href="/internal" className="block">
+                      <Button variant="outline" className="w-full border-border">
+                        Internal
+                      </Button>
+                    </Link>
+                  ) : null}
                 </div>
               ) : (
                 <div className="space-y-2">
