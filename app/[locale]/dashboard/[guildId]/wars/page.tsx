@@ -730,13 +730,13 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     )}
                     <Trophy className="h-8 w-8 text-green-500/50" />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <div className="text-xs text-muted-foreground mt-2">
                     {isInitialLoading ? (
                       <Skeleton className="h-3 w-28 animate-pulse" />
                     ) : (
                       t('summaryStats.totalWinsDesc', { totalWars })
                     )}
-                  </p>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -753,13 +753,13 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     )}
                     <Shield className="h-8 w-8 text-primary/50" />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <div className="text-xs text-muted-foreground mt-2">
                     {isInitialLoading ? (
                       <Skeleton className="h-3 w-20 animate-pulse" />
                     ) : (
                       t('summaryStats.totalLossesDesc', { totalDraws })
                     )}
-                  </p>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -795,13 +795,13 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     )}
                     <Star className="h-8 w-8 text-blue-500/50" />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <div className="text-xs text-muted-foreground mt-2">
                     {isInitialLoading ? (
                       <Skeleton className="h-3 w-24 animate-pulse" />
                     ) : (
                       t('summaryStats.activeWarsDesc', { activeCwl })
                     )}
-                  </p>
+                  </div>
                 </CardContent>
               </Card>
             </div>
