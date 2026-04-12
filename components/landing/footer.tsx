@@ -59,7 +59,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={`/support`} className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href={`/support-us`} className="text-muted-foreground hover:text-primary transition-colors">
                   {t("about.support")}
                 </Link>
               </li>

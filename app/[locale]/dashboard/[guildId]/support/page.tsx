@@ -1,9 +1,10 @@
-import { SupportContent } from "@/components/support/support-content";
+import { redirect } from "next/navigation";
 
-export default function DashboardSupportPage() {
-  return (
-    <div className="min-h-screen bg-background">
-      <SupportContent compact />
-    </div>
-  );
+interface DashboardSupportRedirectPageProps {
+  readonly params: Promise<{ locale: string; guildId: string }>;
+}
+
+export default async function DashboardSupportRedirectPage({ params }: DashboardSupportRedirectPageProps) {
+  const { locale, guildId } = await params;
+  redirect(`/${locale}/dashboard/${guildId}/support-us`);
 }

@@ -1,15 +1,10 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { Navbar } from "@/components/landing/navbar";
-import { Footer } from "@/components/landing/footer";
-import { SupportContent } from "@/components/support/support-content";
+interface SupportRedirectPageProps {
+  readonly params: Promise<{ locale: string }>;
+}
 
-export default function SupportPage() {
-  return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <SupportContent />
-      <Footer />
-    </div>
-  );
+export default async function SupportRedirectPage({ params }: SupportRedirectPageProps) {
+  const { locale } = await params;
+  redirect(`/${locale}/support-us`);
 }
