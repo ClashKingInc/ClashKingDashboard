@@ -11,7 +11,10 @@ export default async function DashboardLayout({
   const { locale, guildId } = await params;
 
   return (
-    <DashboardLayoutWrapper sidebar={<SidebarClient guildId={guildId} locale={locale} />}>
+    <DashboardLayoutWrapper
+      sidebar={<SidebarClient guildId={guildId} locale={locale} />}
+      mobileHeader={<SidebarClient guildId={guildId} locale={locale} variant="mobile-header" />}
+    >
       {children}
     </DashboardLayoutWrapper>
   );
