@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const CLASHKING_PROXY_BASE_URL = 'https://proxy.clashk.ing';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ clanTag: string }> }
 ) {
   try {
-    const token = request.headers.get('authorization');
     const { clanTag } = await params;
 
     const response = await fetch(
-      `${API_BASE_URL}/v2/clan/${encodeURIComponent(decodeURIComponent(clanTag))}/members`,
+      `${CLASHKING_PROXY_BASE_URL}/v1/clans/${encodeURIComponent(decodeURIComponent(clanTag))}/members`,
       {
         method: 'GET',
-        headers: {
-          'Authorization': token || '',
-          'Content-Type': 'application/json',
-        },
         cache: 'no-store',
       }
     );

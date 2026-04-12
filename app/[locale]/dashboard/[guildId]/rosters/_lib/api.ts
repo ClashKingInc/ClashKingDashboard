@@ -261,7 +261,7 @@ export async function fetchServerMembers(serverId: string): Promise<ClanMember[]
 }
 
 export async function fetchClanMembers(clanTag: string): Promise<ClanMember[]> {
-  const response = await fetch(`/api/v2/clan/${encodeURIComponent(clanTag)}/members`, {
+  const response = await fetch(`https://proxy.clashk.ing/v1/clans/${encodeURIComponent(clanTag)}/members`, {
     headers: getAuthHeaders(),
   });
   const data = await handleResponse<{ members?: ClanMember[]; clan_tag?: string } | ClanMember[]>(response);
