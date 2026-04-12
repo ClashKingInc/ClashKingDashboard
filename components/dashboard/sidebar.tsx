@@ -209,7 +209,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
   return (
     <div className="flex h-full w-64 flex-col bg-card border-r border-border">
       {/* Server Header */}
-      <div className="border-b border-border">
+      <div className="hidden border-b border-border md:block">
         {isLoading ? (
           <div className="p-4">
             <div className="flex items-center gap-3">

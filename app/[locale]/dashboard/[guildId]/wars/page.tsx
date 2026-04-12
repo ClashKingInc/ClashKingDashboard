@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
@@ -21,7 +21,10 @@ import {
   Download,
   TrendingUp,
   Star,
-  Loader2
+  Loader2,
+  ArrowUpDown,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import {
   BarChart,
@@ -37,6 +40,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { darkTheme, clashKingColors } from "@/lib/theme";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import type { War, WarSummary } from "@/lib/api/types/war";
 
 interface PlayerStats {
@@ -107,6 +112,16 @@ interface THStats {
   failed: number;
 }
 
+type ClanStatsSortKey =
+  | "clan"
+  | "status"
+  | "wars"
+  | "record"
+  | "winRate"
+  | "avgStarsPerAttack"
+  | "avgDefenseStars"
+  | "avgDestruction";
+
 export default function WarsPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
@@ -124,6 +139,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   const [warTypeCounts, setWarTypeCounts] = useState<WarTypeCounts>({ random: 0, friendly: 0, cwl: 0 });
   const [dailyStats, setDailyStats] = useState<DailyWarStats[]>([]);
   const [thStats, setTHStats] = useState<THStats[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [clanStatsSort, setClanStatsSort] = useState<{ key: ClanStatsSortKey; direction: "asc" | "desc" } | null>(null);
 
   const [filters, setFilters] = useState({
     clan: "all",
@@ -133,6 +150,20 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     endDate: "",
     warTypes: { random: true, friendly: true, cwl: true },
   });
+
+  useEffect(() => {
+    const mediaQuery = globalThis.matchMedia("(max-width: 640px)");
+    const onChange = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
+    };
+
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener("change", onChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", onChange);
+    };
+  }, []);
 
   // Fetch clans and war data on mount
   useEffect(() => {
@@ -469,7 +500,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
 
     const thStatsArray = Array.from(thMap.entries())
       .map(([th, data]) => ({
-        th: `TH${th}`,
+        th: `${t('filters.townHallShort')}${th}`,
         success: data.attacks > 0 ? Math.round((data.threeStars / data.attacks) * 100) : 0,
         failed: data.attacks > 0 ? Math.round(((data.attacks - data.threeStars) / data.attacks) * 100) : 0,
       }))
@@ -537,6 +568,98 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     { name: t('charts.warTypeDistribution.cwl'), value: warTypeCounts.cwl, color: clashKingColors.primary },
     { name: t('charts.warTypeDistribution.friendly'), value: warTypeCounts.friendly, color: "#3BA55D" },
   ].filter(e => e.value > 0) : [];
+
+  const clanBadgeByTag = useMemo(() => {
+    const badgeMap = new Map<string, string | null>();
+    clans.forEach((clan) => {
+      badgeMap.set(clan.tag, clan.badge_url ?? null);
+    });
+    return badgeMap;
+  }, [clans]);
+
+  const isInitialLoading = loading && clanStats.length === 0;
+
+  const sortedClanStats = useMemo(() => {
+    if (!clanStatsSort) return clanStats;
+
+    const statusRank = (stat: ComputedClanStats): number => {
+      if (stat.is_in_war) return 2;
+      if (stat.is_in_cwl) return 1;
+      return 0;
+    };
+
+    const directionMultiplier = clanStatsSort.direction === "asc" ? 1 : -1;
+    const sorted = [...clanStats];
+
+    sorted.sort((a, b) => {
+      let comparison = 0;
+
+      switch (clanStatsSort.key) {
+        case "clan":
+          comparison = a.clan_name.localeCompare(b.clan_name);
+          break;
+        case "status":
+          comparison = statusRank(a) - statusRank(b);
+          break;
+        case "wars":
+          comparison = a.total_wars - b.total_wars;
+          break;
+        case "record":
+          comparison = a.wins - b.wins;
+          if (comparison === 0) comparison = a.losses - b.losses;
+          if (comparison === 0) comparison = a.draws - b.draws;
+          break;
+        case "winRate":
+          comparison = a.win_rate - b.win_rate;
+          break;
+        case "avgStarsPerAttack":
+          comparison = a.avg_stars_per_attack - b.avg_stars_per_attack;
+          break;
+        case "avgDefenseStars":
+          comparison = a.avg_defense_stars - b.avg_defense_stars;
+          break;
+        case "avgDestruction":
+          comparison = a.avg_destruction - b.avg_destruction;
+          break;
+      }
+
+      return comparison * directionMultiplier;
+    });
+
+    return sorted;
+  }, [clanStats, clanStatsSort]);
+
+  const handleClanStatsSort = (key: ClanStatsSortKey) => {
+    setClanStatsSort((current) => {
+      if (current?.key !== key) {
+        return { key, direction: "asc" };
+      }
+      return { key, direction: current.direction === "asc" ? "desc" : "asc" };
+    });
+  };
+
+  const getClanStatsSortIcon = (key: ClanStatsSortKey) => {
+    if (clanStatsSort?.key !== key) {
+      return <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/70" />;
+    }
+    if (clanStatsSort.direction === "asc") {
+      return <ChevronUp className="h-3.5 w-3.5 text-foreground" />;
+    }
+    return <ChevronDown className="h-3.5 w-3.5 text-foreground" />;
+  };
+
+  const getMissedRankClassName = (index: number): string => {
+    if (index === 0) return "bg-red-500/20 text-red-500";
+    if (index === 1) return "bg-orange-500/20 text-orange-500";
+    return "bg-gray-600/20 text-muted-foreground";
+  };
+
+  const getPodiumRankClassName = (index: number): string => {
+    if (index === 0) return "bg-yellow-500/20 text-yellow-500";
+    if (index === 1) return "bg-gray-400/20 text-muted-foreground";
+    if (index === 2) return "bg-orange-500/20 text-orange-500";
+    return "bg-gray-600/20 text-gray-500";
+  };
 
 
   return (
@@ -689,158 +812,123 @@ export default function WarsPage() { // NOSONAR — React page component: comple
             </Card>
 
             {/* Summary Stats */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {loading && clanStats.length === 0 ? (
-                <>
-                  <Card className="border-green-500/30 bg-green-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-24 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-16 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="border-red-500/30 bg-red-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-28 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-16 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-20 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="border-yellow-500/30 bg-yellow-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-20 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-16 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="border-blue-500/30 bg-blue-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-24 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-12 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                </>
-              ) : (
-                <>
-                  <Card className="border-green-500/30 bg-green-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalWins')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-green-500">{totalWins}</div>
-                        <Trophy className="h-8 w-8 text-green-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.totalWinsDesc', { totalWars })}
-                      </p>
-                    </CardContent>
-                  </Card>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+              <Card className="border-green-500/30 bg-green-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalWins')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-16 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-green-500">{totalWins}</div>
+                    )}
+                    <Trophy className="h-8 w-8 text-green-500/50" />
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-3 w-28 animate-pulse" />
+                    ) : (
+                      t('summaryStats.totalWinsDesc', { totalWars })
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
 
-                  <Card className="border-red-500/30 bg-red-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalLosses')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-primary">{totalLosses}</div>
-                        <Shield className="h-8 w-8 text-primary/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.totalLossesDesc', { totalDraws })}
-                      </p>
-                    </CardContent>
-                  </Card>
+              <Card className="border-red-500/30 bg-red-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalLosses')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-16 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-primary">{totalLosses}</div>
+                    )}
+                    <Shield className="h-8 w-8 text-primary/50" />
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-3 w-20 animate-pulse" />
+                    ) : (
+                      t('summaryStats.totalLossesDesc', { totalDraws })
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
 
-                  <Card className="border-yellow-500/30 bg-yellow-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.winRate')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-yellow-500">{overallWinRate}%</div>
-                        <TrendingUp className="h-8 w-8 text-yellow-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.winRateDesc')}
-                      </p>
-                    </CardContent>
-                  </Card>
+              <Card className="border-yellow-500/30 bg-yellow-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.winRate')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-16 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-yellow-500">{overallWinRate}%</div>
+                    )}
+                    <TrendingUp className="h-8 w-8 text-yellow-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t('summaryStats.winRateDesc')}
+                  </p>
+                </CardContent>
+              </Card>
 
-                  <Card className="border-blue-500/30 bg-blue-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.activeWars')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-blue-500">{activeWars}</div>
-                        <Star className="h-8 w-8 text-blue-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.activeWarsDesc', { activeCwl })}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </>
-              )}
+              <Card className="border-blue-500/30 bg-blue-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.activeWars')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-12 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-blue-500">{activeWars}</div>
+                    )}
+                    <Star className="h-8 w-8 text-blue-500/50" />
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-3 w-24 animate-pulse" />
+                    ) : (
+                      t('summaryStats.activeWarsDesc', { activeCwl })
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Charts Row 1 */}
             <div className="grid gap-6 lg:grid-cols-2">
-              {loading && clanStats.length === 0 ? (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-48 animate-pulse" />
-                      <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <Skeleton className="h-64 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-56 animate-pulse" />
-                      <Skeleton className="h-4 w-48 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <Skeleton className="h-64 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                </>
-              ) : (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.dailyPerformance.title')}</CardTitle>
-                      <CardDescription>{t('charts.dailyPerformance.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={dailyChartData}>
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.dailyPerformance.title')}</CardTitle>
+                  <CardDescription>{t('charts.dailyPerformance.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isInitialLoading ? (
+                    <Skeleton className="h-64 w-full animate-pulse" />
+                  ) : (
+                        <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                          data={dailyChartData}
+                          margin={isMobile ? { top: 40, right: 8, left: -20, bottom: 24 } : { top: 12, right: 16, left: 0, bottom: 8 }}
+                        >
                           <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
-                          <XAxis dataKey="name" stroke={darkTheme.text.secondary} />
+                          <XAxis
+                            dataKey="name"
+                            stroke={darkTheme.text.secondary}
+                            tick={{ fontSize: isMobile ? 11 : 12 }}
+                            angle={isMobile ? -30 : 0}
+                            textAnchor={isMobile ? "end" : "middle"}
+                            height={isMobile ? 52 : 30}
+                            tickMargin={isMobile ? 8 : 4}
+                            minTickGap={isMobile ? 12 : 20}
+                          />
                           <YAxis stroke={darkTheme.text.secondary} />
                           <Tooltip
                             contentStyle={{
@@ -849,21 +937,28 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               borderRadius: '8px',
                             }}
                           />
-                          <Legend />
+                          <Legend
+                            verticalAlign={isMobile ? "top" : "bottom"}
+                            wrapperStyle={isMobile ? { paddingBottom: 8, fontSize: "12px" } : undefined}
+                          />
                           <Bar dataKey="wins" fill="#3BA55D" name={t('charts.dailyPerformance.wins')} />
                           <Bar dataKey="losses" fill="#ED4245" name={t('charts.dailyPerformance.losses')} />
                           <Bar dataKey="draws" fill="#FAA81A" name={t('charts.dailyPerformance.draws')} />
                         </BarChart>
                       </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
+                  )}
+                </CardContent>
+              </Card>
 
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.thSuccessRate.title')}</CardTitle>
-                      <CardDescription>{t('charts.thSuccessRate.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.thSuccessRate.title')}</CardTitle>
+                  <CardDescription>{t('charts.thSuccessRate.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isInitialLoading ? (
+                    <Skeleton className="h-64 w-full animate-pulse" />
+                  ) : (
                       <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={thStats} layout="vertical">
                           <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
@@ -881,64 +976,34 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                           <Bar dataKey="failed" fill="#ED4245" name={t('charts.thSuccessRate.otherPercent')} stackId="a" />
                         </BarChart>
                       </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-                </>
-              )}
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Charts Row 2: War Type Distribution + Missed Attacks */}
             <div className="grid gap-6 lg:grid-cols-2">
-              {loading && clanStats.length === 0 ? (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-40 animate-pulse" />
-                      <Skeleton className="h-4 w-56 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <Skeleton className="h-64 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-36 animate-pulse" />
-                      <Skeleton className="h-4 w-48 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div key={i} className="flex items-center gap-4">
-                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
-                            <div className="flex-1 space-y-2">
-                              <Skeleton className="h-4 w-32 animate-pulse" />
-                              <Skeleton className="h-3 w-24 animate-pulse" />
-                            </div>
-                            <Skeleton className="h-6 w-20 animate-pulse" />
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </>
-              ) : (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.warTypeDistribution.title')}</CardTitle>
-                      <CardDescription>{t('charts.warTypeDistribution.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {warTypeDistribution.length > 0 ? (
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.warTypeDistribution.title')}</CardTitle>
+                  <CardDescription>{t('charts.warTypeDistribution.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    if (isInitialLoading) {
+                      return <Skeleton className="h-64 w-full animate-pulse" />;
+                    }
+                    if (warTypeDistribution.length > 0) {
+                      return (
                         <ResponsiveContainer width="100%" height={300}>
-                          <PieChart>
+                          <PieChart margin={isMobile ? { top: 8, right: 8, bottom: 36, left: 8 } : { top: 8, right: 16, bottom: 8, left: 16 }}>
                             <Pie
                               data={warTypeDistribution}
                               cx="50%"
-                              cy="50%"
-                              labelLine={false}
-                              label={({ name, value }) => `${name}: ${value} (${totalWarTypeCount > 0 ? Math.round(value / totalWarTypeCount * 100) : 0}%)`}
-                              outerRadius={90}
+                              cy={isMobile ? "45%" : "50%"}
+                              labelLine={!isMobile}
+                              label={isMobile ? false : ({ name, value }) => `${name}: ${value} (${totalWarTypeCount > 0 ? Math.round(value / totalWarTypeCount * 100) : 0}%)`}
+                              outerRadius={isMobile ? 78 : 90}
                               fill="#8884d8"
                               dataKey="value"
                             >
@@ -954,36 +1019,76 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               }}
                               formatter={(value, name) => [`${value ?? 0} wars`, name]}
                             />
+                            <Legend
+                              verticalAlign="bottom"
+                              align="center"
+                              wrapperStyle={{ fontSize: "12px" }}
+                              formatter={(value) => {
+                                const item = warTypeDistribution.find((entry) => entry.name === value);
+                                const itemValue = item?.value ?? 0;
+                                const percentage = totalWarTypeCount > 0 ? Math.round((itemValue / totalWarTypeCount) * 100) : 0;
+                                return `${value}: ${itemValue} (${percentage}%)`;
+                              }}
+                            />
                           </PieChart>
                         </ResponsiveContainer>
-                      ) : (
-                        <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
-                          {t('charts.topPerformers.noData')}
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
+                      );
+                    }
+                    return (
+                      <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
+                        {t('charts.topPerformers.noData')}
+                      </p>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
 
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.missedAttacks.title')}</CardTitle>
-                      <CardDescription>{t('charts.missedAttacks.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {missedAttackers.length > 0 ? (
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.missedAttacks.title')}</CardTitle>
+                  <CardDescription>{t('charts.missedAttacks.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    if (isInitialLoading) {
+                      return (
+                        <div className="space-y-4">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <div key={i} className="flex items-center gap-4">
+                              <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                              <div className="flex-1 space-y-2">
+                                <Skeleton className="h-4 w-32 animate-pulse" />
+                                <Skeleton className="h-3 w-24 animate-pulse" />
+                              </div>
+                              <Skeleton className="h-6 w-20 animate-pulse" />
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }
+                    if (missedAttackers.length > 0) {
+                      return (
                         <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
                           {missedAttackers.map((player, index) => (
                             <div key={player.tag ?? index} className="flex items-center gap-4">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
-                                index === 0 ? 'bg-red-500/20 text-red-500' :
-                                index === 1 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
-                                'bg-gray-600/20 text-muted-foreground'
-                              }`}>
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${getMissedRankClassName(index)}`}>
                                 {index + 1}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="font-medium text-foreground truncate">{player.name}</div>
-                                <div className="text-xs text-muted-foreground">TH{player.townhall}</div>
+                                {player.tag ? (
+                                  <PlayerProfilePopover
+                                    playerName={player.name}
+                                    playerTag={player.tag}
+                                    townhallLevel={player.townhall}
+                                    showTagInTrigger={false}
+                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="font-medium text-foreground truncate">{player.name}</span>
+                                  </PlayerProfilePopover>
+                                ) : (
+                                  <div className="font-medium text-foreground truncate">{player.name}</div>
+                                )}
+                                <div className="text-xs text-muted-foreground">{t('filters.townHallShort')}{player.townhall}</div>
                               </div>
                               <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
                                 -{player.missed?.all ?? 0}
@@ -991,55 +1096,83 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                             </div>
                           ))}
                         </div>
-                      ) : (
-                        <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
-                          {t('charts.topPerformers.noData')}
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                </>
-              )}
+                      );
+                    }
+                    return (
+                      <p className="text-center text-muted-foreground py-8 h-[300px] flex items-center justify-center">
+                        {t('charts.topPerformers.noData')}
+                      </p>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Top Performers + Top Defenders side by side */}
-            {!loading && (topPerformers.length > 0 || topDefenders.length > 0) && (
-              <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle>{t('charts.topPerformers.title')}</CardTitle>
                     <CardDescription>{t('charts.topPerformers.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {topPerformers.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {topPerformers.map((player, index) => (
-                          <div key={player.tag ?? index} className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
-                              index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              index === 2 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              'bg-gray-600/20 text-gray-500'
-                            }`}>
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.topPerformers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
+                                </div>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
                               </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30 shrink-0">
-                              {(player.stats?.avg_stars ?? 0).toFixed(2)}★
-                            </Badge>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.topPerformers.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (topPerformers.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {topPerformers.map((player, index) => (
+                              <div key={player.tag ?? index} className="flex items-center gap-4">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${getPodiumRankClassName(index)}`}>
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.topPerformers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30 shrink-0">
+                                  {(player.stats?.avg_stars ?? 0).toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.topPerformers.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
 
@@ -1049,73 +1182,132 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.topDefenders.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {topDefenders.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {topDefenders.map((player, index) => (
-                          <div key={player.tag} className="flex items-center gap-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${
-                              index === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                              index === 1 ? 'bg-gray-400/20 text-muted-foreground' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              index === 2 ? 'bg-orange-500/20 text-orange-500' : // NOSONAR — JSX nested ternary for multi-branch display state
-                              'bg-gray-600/20 text-gray-500'
-                            }`}>
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.topDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
+                                </div>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
                               </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30 shrink-0">
-                              {player.avg_stars_given.toFixed(2)}★
-                            </Badge>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.topDefenders.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (topDefenders.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {topDefenders.map((player, index) => (
+                              <div key={player.tag} className="flex items-center gap-4">
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 ${getPodiumRankClassName(index)}`}>
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.topDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30 shrink-0">
+                                  {player.avg_stars_given.toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.topDefenders.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               </div>
-            )}
 
             {/* Worst Attackers + Worst Defenders side by side */}
-            {!loading && (worstAttackers.length > 0 || worstDefenders.length > 0) && (
-              <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle>{t('charts.worstAttackers.title')}</CardTitle>
                     <CardDescription>{t('charts.worstAttackers.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {worstAttackers.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {worstAttackers.map((player, index) => (
-                          <div key={player.tag ?? index} className="flex items-center gap-4">
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.worstAttackers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
+                                </div>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
                               </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
-                              {(player.stats?.avg_stars ?? 0).toFixed(2)}★
-                            </Badge>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.worstAttackers.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (worstAttackers.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {worstAttackers.map((player, index) => (
+                              <div key={player.tag ?? index} className="flex items-center gap-4">
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.worstAttackers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
+                                  {(player.stats?.avg_stars ?? 0).toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.worstAttackers.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
 
@@ -1125,34 +1317,66 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.worstDefenders.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {worstDefenders.length > 0 ? (
-                      <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
-                        {worstDefenders.map((player, index) => (
-                          <div key={player.tag} className="flex items-center gap-4">
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.worstDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                    {(() => {
+                      if (isInitialLoading) {
+                        return (
+                          <div className="space-y-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <div key={i} className="flex items-center gap-4">
+                                <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-2">
+                                  <Skeleton className="h-4 w-36 animate-pulse" />
+                                  <Skeleton className="h-3 w-28 animate-pulse" />
+                                </div>
+                                <Skeleton className="h-6 w-16 animate-pulse" />
                               </div>
-                            </div>
-                            <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
-                              {player.avg_stars_given.toFixed(2)}★
-                            </Badge>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-center text-muted-foreground py-8">
-                        {t('charts.worstDefenders.noData')}
-                      </p>
-                    )}
+                        );
+                      }
+                      if (worstDefenders.length > 0) {
+                        return (
+                          <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
+                            {worstDefenders.map((player, index) => (
+                              <div key={player.tag} className="flex items-center gap-4">
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 bg-gray-600/20 text-gray-500">
+                                  {index + 1}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  {player.tag ? (
+                                    <PlayerProfilePopover
+                                      playerName={player.name}
+                                      playerTag={player.tag}
+                                      townhallLevel={player.townhall}
+                                      showTagInTrigger={false}
+                                      triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                    >
+                                      <span className="font-medium text-foreground truncate">{player.name}</span>
+                                    </PlayerProfilePopover>
+                                  ) : (
+                                    <div className="font-medium text-foreground truncate">{player.name}</div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {t('charts.worstDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                                  </div>
+                                </div>
+                                <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
+                                  {player.avg_stars_given.toFixed(2)}★
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return (
+                        <p className="text-center text-muted-foreground py-8">
+                          {t('charts.worstDefenders.noData')}
+                        </p>
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               </div>
-            )}
 
             {/* Clan Stats Table */}
             <Card className="bg-card border-border">
@@ -1214,22 +1438,70 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.clan')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.status')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.wars')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.record')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.winRate')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgStarsPerAttack')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgDefenseStars')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgDestruction')}</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("clan")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.clan')}
+                              {getClanStatsSortIcon("clan")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("status")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.status')}
+                              {getClanStatsSortIcon("status")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("wars")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.wars')}
+                              {getClanStatsSortIcon("wars")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("record")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.record')}
+                              {getClanStatsSortIcon("record")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("winRate")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.winRate')}
+                              {getClanStatsSortIcon("winRate")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("avgStarsPerAttack")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.avgStarsPerAttack')}
+                              {getClanStatsSortIcon("avgStarsPerAttack")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("avgDefenseStars")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.avgDefenseStars')}
+                              {getClanStatsSortIcon("avgDefenseStars")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("avgDestruction")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.avgDestruction')}
+                              {getClanStatsSortIcon("avgDestruction")}
+                            </button>
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {clanStats.map((stat) => (
+                        {sortedClanStats.map((stat) => (
                           <tr key={stat.clan_tag} className="border-b border-border/50 hover:bg-muted/50">
                             <td className="py-3 px-4">
-                              <div className="font-medium text-foreground">{stat.clan_name}</div>
-                              <div className="text-xs text-muted-foreground">{stat.clan_tag}</div>
+                              <ClanProfilePopover
+                                clanName={stat.clan_name}
+                                clanTag={stat.clan_tag}
+                                clanBadgeUrl={clanBadgeByTag.get(stat.clan_tag)}
+                                showTagInTrigger={false}
+                                triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                              >
+                                <div className="font-medium text-foreground">{stat.clan_name}</div>
+                                <div className="text-xs text-muted-foreground">{stat.clan_tag}</div>
+                              </ClanProfilePopover>
                             </td>
                             <td className="text-center py-3 px-4">
                               {stat.is_in_war && (

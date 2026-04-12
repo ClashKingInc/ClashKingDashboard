@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { Sidebar } from "./sidebar";
+import { MobileServerDropdown } from "./mobile-server-dropdown";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 
 interface SidebarWrapperProps {
   readonly guildId: string;
   readonly locale: string;
+  readonly variant?: "sidebar" | "mobile-header";
 }
 
 const GUILD_INFO_CACHE_TTL = 120000;
@@ -16,7 +18,7 @@ function getGuildInfoCacheKey(guildId: string): string {
   return `guild-info-${guildId}`;
 }
 
-export function SidebarWrapper({ guildId, locale }: SidebarWrapperProps) {
+export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: SidebarWrapperProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [serverInfo, setServerInfo] = useState({
     name: "My Server",
@@ -64,6 +66,17 @@ export function SidebarWrapper({ guildId, locale }: SidebarWrapperProps) {
 
     fetchServerInfo();
   }, [guildId]);
+
+  if (variant === "mobile-header") {
+    return (
+      <MobileServerDropdown
+        locale={locale}
+        guildName={serverInfo.name}
+        guildIcon={serverInfo.icon}
+        isLoading={isLoading}
+      />
+    );
+  }
 
   return (
     <Sidebar

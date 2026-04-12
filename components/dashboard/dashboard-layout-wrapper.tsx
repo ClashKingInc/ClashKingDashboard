@@ -8,9 +8,11 @@ import { useTranslations } from "next-intl";
 
 export function DashboardLayoutWrapper({
   sidebar,
+  mobileHeader,
   children,
 }: {
   readonly sidebar: React.ReactNode;
+  readonly mobileHeader?: React.ReactNode;
   readonly children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -57,7 +59,7 @@ export function DashboardLayoutWrapper({
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsSidebarOpen(false)}
-                className="absolute right-2 top-2 z-50 h-8 w-8 text-muted-foreground hover:text-foreground"
+                className="absolute right-2 top-2 z-50 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -74,7 +76,9 @@ export function DashboardLayoutWrapper({
           <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="-ml-2">
             <Menu className="h-6 w-6" />
           </Button>
-          <span className="ml-2 font-semibold">{tCommon("dashboard")}</span>
+          <div className="ml-2 min-w-0 flex-1">
+            {mobileHeader ?? <span className="font-semibold">{tCommon("dashboard")}</span>}
+          </div>
         </div>
 
         <main ref={mainContentRef} className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">

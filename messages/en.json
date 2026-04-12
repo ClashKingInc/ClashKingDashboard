@@ -1072,6 +1072,7 @@
       "clan": "Clan",
       "allClans": "All Clans",
       "townHall": "Town Hall",
+      "townHallShort": "TH",
       "allTownHalls": "All TH Levels",
       "townHallLevel": "TH {level}",
       "period": "Period",
