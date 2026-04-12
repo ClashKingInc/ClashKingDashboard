@@ -1095,6 +1095,7 @@
       "clan": "Clan",
       "allClans": "Tous les Clans",
       "townHall": "Hôtel de Ville",
+      "townHallShort": "HDV",
       "allTownHalls": "Tous les Niveaux d'HDV",
       "townHallLevel": "HDV {level}",
       "period": "Période",

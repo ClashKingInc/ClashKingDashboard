@@ -486,7 +486,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
 
     const thStatsArray = Array.from(thMap.entries())
       .map(([th, data]) => ({
-        th: `TH${th}`,
+        th: `${t('filters.townHallShort')}${th}`,
         success: data.attacks > 0 ? Math.round((data.threeStars / data.attacks) * 100) : 0,
         failed: data.attacks > 0 ? Math.round(((data.attacks - data.threeStars) / data.attacks) * 100) : 0,
       }))
@@ -985,7 +985,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                                 ) : (
                                   <div className="font-medium text-foreground truncate">{player.name}</div>
                                 )}
-                                <div className="text-xs text-muted-foreground">TH{player.townhall}</div>
+                                <div className="text-xs text-muted-foreground">{t('filters.townHallShort')}{player.townhall}</div>
                               </div>
                               <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
                                 -{player.missed?.all ?? 0}
