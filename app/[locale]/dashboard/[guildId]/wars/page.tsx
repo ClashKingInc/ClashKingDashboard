@@ -21,7 +21,10 @@ import {
   Download,
   TrendingUp,
   Star,
-  Loader2
+  Loader2,
+  ArrowUpDown,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import {
   BarChart,
@@ -109,6 +112,16 @@ interface THStats {
   failed: number;
 }
 
+type ClanStatsSortKey =
+  | "clan"
+  | "status"
+  | "wars"
+  | "record"
+  | "winRate"
+  | "avgStarsPerAttack"
+  | "avgDefenseStars"
+  | "avgDestruction";
+
 export default function WarsPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
@@ -127,6 +140,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   const [dailyStats, setDailyStats] = useState<DailyWarStats[]>([]);
   const [thStats, setTHStats] = useState<THStats[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [clanStatsSort, setClanStatsSort] = useState<{ key: ClanStatsSortKey; direction: "asc" | "desc" } | null>(null);
 
   const [filters, setFilters] = useState({
     clan: "all",
@@ -564,6 +578,75 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   }, [clans]);
 
   const isInitialLoading = loading && clanStats.length === 0;
+
+  const sortedClanStats = useMemo(() => {
+    if (!clanStatsSort) return clanStats;
+
+    const statusRank = (stat: ComputedClanStats): number => {
+      if (stat.is_in_war) return 2;
+      if (stat.is_in_cwl) return 1;
+      return 0;
+    };
+
+    const directionMultiplier = clanStatsSort.direction === "asc" ? 1 : -1;
+    const sorted = [...clanStats];
+
+    sorted.sort((a, b) => {
+      let comparison = 0;
+
+      switch (clanStatsSort.key) {
+        case "clan":
+          comparison = a.clan_name.localeCompare(b.clan_name);
+          break;
+        case "status":
+          comparison = statusRank(a) - statusRank(b);
+          break;
+        case "wars":
+          comparison = a.total_wars - b.total_wars;
+          break;
+        case "record":
+          comparison = a.wins - b.wins;
+          if (comparison === 0) comparison = a.losses - b.losses;
+          if (comparison === 0) comparison = a.draws - b.draws;
+          break;
+        case "winRate":
+          comparison = a.win_rate - b.win_rate;
+          break;
+        case "avgStarsPerAttack":
+          comparison = a.avg_stars_per_attack - b.avg_stars_per_attack;
+          break;
+        case "avgDefenseStars":
+          comparison = a.avg_defense_stars - b.avg_defense_stars;
+          break;
+        case "avgDestruction":
+          comparison = a.avg_destruction - b.avg_destruction;
+          break;
+      }
+
+      return comparison * directionMultiplier;
+    });
+
+    return sorted;
+  }, [clanStats, clanStatsSort]);
+
+  const handleClanStatsSort = (key: ClanStatsSortKey) => {
+    setClanStatsSort((current) => {
+      if (!current || current.key !== key) {
+        return { key, direction: "asc" };
+      }
+      return { key, direction: current.direction === "asc" ? "desc" : "asc" };
+    });
+  };
+
+  const getClanStatsSortIcon = (key: ClanStatsSortKey) => {
+    if (!clanStatsSort || clanStatsSort.key !== key) {
+      return <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/70" />;
+    }
+    if (clanStatsSort.direction === "asc") {
+      return <ChevronUp className="h-3.5 w-3.5 text-foreground" />;
+    }
+    return <ChevronDown className="h-3.5 w-3.5 text-foreground" />;
+  };
 
 
   return (
@@ -1310,18 +1393,58 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <table className="w-full">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.clan')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.status')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.wars')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.record')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.winRate')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgStarsPerAttack')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgDefenseStars')}</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">{t('clanStatsTable.headers.avgDestruction')}</th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("clan")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.clan')}
+                              {getClanStatsSortIcon("clan")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("status")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.status')}
+                              {getClanStatsSortIcon("status")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("wars")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.wars')}
+                              {getClanStatsSortIcon("wars")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("record")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.record')}
+                              {getClanStatsSortIcon("record")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("winRate")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.winRate')}
+                              {getClanStatsSortIcon("winRate")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("avgStarsPerAttack")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.avgStarsPerAttack')}
+                              {getClanStatsSortIcon("avgStarsPerAttack")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("avgDefenseStars")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.avgDefenseStars')}
+                              {getClanStatsSortIcon("avgDefenseStars")}
+                            </button>
+                          </th>
+                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">
+                            <button type="button" onClick={() => handleClanStatsSort("avgDestruction")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
+                              {t('clanStatsTable.headers.avgDestruction')}
+                              {getClanStatsSortIcon("avgDestruction")}
+                            </button>
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {clanStats.map((stat) => (
+                        {sortedClanStats.map((stat) => (
                           <tr key={stat.clan_tag} className="border-b border-border/50 hover:bg-muted/50">
                             <td className="py-3 px-4">
                               <ClanProfilePopover
