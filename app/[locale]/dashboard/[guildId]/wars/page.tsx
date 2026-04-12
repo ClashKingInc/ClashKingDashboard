@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
@@ -37,6 +37,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { darkTheme, clashKingColors } from "@/lib/theme";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import type { War, WarSummary } from "@/lib/api/types/war";
 
 interface PlayerStats {
@@ -553,6 +555,14 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     { name: t('charts.warTypeDistribution.friendly'), value: warTypeCounts.friendly, color: "#3BA55D" },
   ].filter(e => e.value > 0) : [];
 
+  const clanBadgeByTag = useMemo(() => {
+    const badgeMap = new Map<string, string | null>();
+    clans.forEach((clan) => {
+      badgeMap.set(clan.tag, clan.badge_url ?? null);
+    });
+    return badgeMap;
+  }, [clans]);
+
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -1012,7 +1022,19 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                                 {index + 1}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <div className="font-medium text-foreground truncate">{player.name}</div>
+                                {player.tag ? (
+                                  <PlayerProfilePopover
+                                    playerName={player.name}
+                                    playerTag={player.tag}
+                                    townhallLevel={player.townhall}
+                                    showTagInTrigger={false}
+                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="font-medium text-foreground truncate">{player.name}</span>
+                                  </PlayerProfilePopover>
+                                ) : (
+                                  <div className="font-medium text-foreground truncate">{player.name}</div>
+                                )}
                                 <div className="text-xs text-muted-foreground">TH{player.townhall}</div>
                               </div>
                               <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
@@ -1054,10 +1076,22 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               {index + 1}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.topPerformers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
-                              </div>
+                                {player.tag ? (
+                                  <PlayerProfilePopover
+                                    playerName={player.name}
+                                    playerTag={player.tag}
+                                    townhallLevel={player.townhall}
+                                    showTagInTrigger={false}
+                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="font-medium text-foreground truncate">{player.name}</span>
+                                  </PlayerProfilePopover>
+                                ) : (
+                                  <div className="font-medium text-foreground truncate">{player.name}</div>
+                                )}
+                                <div className="text-xs text-muted-foreground">
+                                  {t('charts.topPerformers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                                </div>
                             </div>
                             <Badge variant="secondary" className="bg-green-500/20 text-green-500 border-green-500/30 shrink-0">
                               {(player.stats?.avg_stars ?? 0).toFixed(2)}★
@@ -1092,10 +1126,22 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               {index + 1}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.topDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
-                              </div>
+                                {player.tag ? (
+                                  <PlayerProfilePopover
+                                    playerName={player.name}
+                                    playerTag={player.tag}
+                                    townhallLevel={player.townhall}
+                                    showTagInTrigger={false}
+                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="font-medium text-foreground truncate">{player.name}</span>
+                                  </PlayerProfilePopover>
+                                ) : (
+                                  <div className="font-medium text-foreground truncate">{player.name}</div>
+                                )}
+                                <div className="text-xs text-muted-foreground">
+                                  {t('charts.topDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                                </div>
                             </div>
                             <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30 shrink-0">
                               {player.avg_stars_given.toFixed(2)}★
@@ -1130,10 +1176,22 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               {index + 1}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.worstAttackers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
-                              </div>
+                                {player.tag ? (
+                                  <PlayerProfilePopover
+                                    playerName={player.name}
+                                    playerTag={player.tag}
+                                    townhallLevel={player.townhall}
+                                    showTagInTrigger={false}
+                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="font-medium text-foreground truncate">{player.name}</span>
+                                  </PlayerProfilePopover>
+                                ) : (
+                                  <div className="font-medium text-foreground truncate">{player.name}</div>
+                                )}
+                                <div className="text-xs text-muted-foreground">
+                                  {t('charts.worstAttackers.attacksAndStars', { attacks: player.stats?.attacks ?? 0, stars: player.stats?.stars ?? 0 })}
+                                </div>
                             </div>
                             <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
                               {(player.stats?.avg_stars ?? 0).toFixed(2)}★
@@ -1163,10 +1221,22 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                               {index + 1}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-foreground truncate">{player.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {t('charts.worstDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
-                              </div>
+                                {player.tag ? (
+                                  <PlayerProfilePopover
+                                    playerName={player.name}
+                                    playerTag={player.tag}
+                                    townhallLevel={player.townhall}
+                                    showTagInTrigger={false}
+                                    triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="font-medium text-foreground truncate">{player.name}</span>
+                                  </PlayerProfilePopover>
+                                ) : (
+                                  <div className="font-medium text-foreground truncate">{player.name}</div>
+                                )}
+                                <div className="text-xs text-muted-foreground">
+                                  {t('charts.worstDefenders.defensesAndStars', { defenses: player.defenses, stars: Math.round(player.defenses * player.avg_stars_given) })}
+                                </div>
                             </div>
                             <Badge variant="secondary" className="bg-red-500/20 text-red-500 border-red-500/30 shrink-0">
                               {player.avg_stars_given.toFixed(2)}★
@@ -1258,8 +1328,16 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                         {clanStats.map((stat) => (
                           <tr key={stat.clan_tag} className="border-b border-border/50 hover:bg-muted/50">
                             <td className="py-3 px-4">
-                              <div className="font-medium text-foreground">{stat.clan_name}</div>
-                              <div className="text-xs text-muted-foreground">{stat.clan_tag}</div>
+                              <ClanProfilePopover
+                                clanName={stat.clan_name}
+                                clanTag={stat.clan_tag}
+                                clanBadgeUrl={clanBadgeByTag.get(stat.clan_tag)}
+                                showTagInTrigger={false}
+                                triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                              >
+                                <div className="font-medium text-foreground">{stat.clan_name}</div>
+                                <div className="text-xs text-muted-foreground">{stat.clan_tag}</div>
+                              </ClanProfilePopover>
                             </td>
                             <td className="text-center py-3 px-4">
                               {stat.is_in_war && (
