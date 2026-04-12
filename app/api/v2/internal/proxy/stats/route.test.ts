@@ -89,7 +89,7 @@ describe("internal proxy stats route", () => {
 
   // ── Happy path ───────────────────────────────────────────────
 
-  it("proxies the upstream response for an authorised developer", async () => {
+  it("proxies the upstream response for an authorized developer", async () => {
     // /v2/auth/me
     fetchMock.mockResolvedValueOnce({
       ok: true,
