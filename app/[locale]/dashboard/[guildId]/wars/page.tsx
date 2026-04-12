@@ -689,7 +689,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
             </Card>
 
             {/* Summary Stats */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
               {loading && clanStats.length === 0 ? (
                 <>
                   <Card className="border-green-500/30 bg-green-500/5">
