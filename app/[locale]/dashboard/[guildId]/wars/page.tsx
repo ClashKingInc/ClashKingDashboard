@@ -563,6 +563,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     return badgeMap;
   }, [clans]);
 
+  const isInitialLoading = loading && clanStats.length === 0;
+
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -715,153 +717,94 @@ export default function WarsPage() { // NOSONAR — React page component: comple
 
             {/* Summary Stats */}
             <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-              {loading && clanStats.length === 0 ? (
-                <>
-                  <Card className="border-green-500/30 bg-green-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-24 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-16 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="border-red-500/30 bg-red-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-28 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-16 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-20 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="border-yellow-500/30 bg-yellow-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-20 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-16 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="border-blue-500/30 bg-blue-500/5">
-                    <CardHeader className="pb-3">
-                      <Skeleton className="h-4 w-24 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <Skeleton className="h-9 w-12 animate-pulse" />
-                        <Skeleton className="h-8 w-8 animate-pulse" />
-                      </div>
-                      <Skeleton className="h-3 w-24 mt-2 animate-pulse" />
-                    </CardContent>
-                  </Card>
-                </>
-              ) : (
-                <>
-                  <Card className="border-green-500/30 bg-green-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalWins')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-green-500">{totalWins}</div>
-                        <Trophy className="h-8 w-8 text-green-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.totalWinsDesc', { totalWars })}
-                      </p>
-                    </CardContent>
-                  </Card>
+              <Card className="border-green-500/30 bg-green-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalWins')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-16 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-green-500">{totalWins}</div>
+                    )}
+                    <Trophy className="h-8 w-8 text-green-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t('summaryStats.totalWinsDesc', { totalWars })}
+                  </p>
+                </CardContent>
+              </Card>
 
-                  <Card className="border-red-500/30 bg-red-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalLosses')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-primary">{totalLosses}</div>
-                        <Shield className="h-8 w-8 text-primary/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.totalLossesDesc', { totalDraws })}
-                      </p>
-                    </CardContent>
-                  </Card>
+              <Card className="border-red-500/30 bg-red-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.totalLosses')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-16 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-primary">{totalLosses}</div>
+                    )}
+                    <Shield className="h-8 w-8 text-primary/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t('summaryStats.totalLossesDesc', { totalDraws })}
+                  </p>
+                </CardContent>
+              </Card>
 
-                  <Card className="border-yellow-500/30 bg-yellow-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.winRate')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-yellow-500">{overallWinRate}%</div>
-                        <TrendingUp className="h-8 w-8 text-yellow-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.winRateDesc')}
-                      </p>
-                    </CardContent>
-                  </Card>
+              <Card className="border-yellow-500/30 bg-yellow-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.winRate')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-16 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-yellow-500">{overallWinRate}%</div>
+                    )}
+                    <TrendingUp className="h-8 w-8 text-yellow-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t('summaryStats.winRateDesc')}
+                  </p>
+                </CardContent>
+              </Card>
 
-                  <Card className="border-blue-500/30 bg-blue-500/5">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.activeWars')}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-3xl font-bold text-blue-500">{activeWars}</div>
-                        <Star className="h-8 w-8 text-blue-500/50" />
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {t('summaryStats.activeWarsDesc', { activeCwl })}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </>
-              )}
+              <Card className="border-blue-500/30 bg-blue-500/5">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{t('summaryStats.activeWars')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    {isInitialLoading ? (
+                      <Skeleton className="h-9 w-12 animate-pulse" />
+                    ) : (
+                      <div className="text-3xl font-bold text-blue-500">{activeWars}</div>
+                    )}
+                    <Star className="h-8 w-8 text-blue-500/50" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    {t('summaryStats.activeWarsDesc', { activeCwl })}
+                  </p>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Charts Row 1 */}
             <div className="grid gap-6 lg:grid-cols-2">
-              {loading && clanStats.length === 0 ? (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-48 animate-pulse" />
-                      <Skeleton className="h-4 w-64 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <Skeleton className="h-64 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-56 animate-pulse" />
-                      <Skeleton className="h-4 w-48 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <Skeleton className="h-64 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                </>
-              ) : (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.dailyPerformance.title')}</CardTitle>
-                      <CardDescription>{t('charts.dailyPerformance.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.dailyPerformance.title')}</CardTitle>
+                  <CardDescription>{t('charts.dailyPerformance.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isInitialLoading ? (
+                    <Skeleton className="h-64 w-full animate-pulse" />
+                  ) : (
                         <ResponsiveContainer width="100%" height={300}>
                         <BarChart
                           data={dailyChartData}
@@ -895,15 +838,19 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                           <Bar dataKey="draws" fill="#FAA81A" name={t('charts.dailyPerformance.draws')} />
                         </BarChart>
                       </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
+                  )}
+                </CardContent>
+              </Card>
 
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.thSuccessRate.title')}</CardTitle>
-                      <CardDescription>{t('charts.thSuccessRate.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.thSuccessRate.title')}</CardTitle>
+                  <CardDescription>{t('charts.thSuccessRate.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isInitialLoading ? (
+                    <Skeleton className="h-64 w-full animate-pulse" />
+                  ) : (
                       <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={thStats} layout="vertical">
                           <CartesianGrid strokeDasharray="3 3" stroke={darkTheme.border.primary} />
@@ -921,55 +868,22 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                           <Bar dataKey="failed" fill="#ED4245" name={t('charts.thSuccessRate.otherPercent')} stackId="a" />
                         </BarChart>
                       </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
-                </>
-              )}
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Charts Row 2: War Type Distribution + Missed Attacks */}
             <div className="grid gap-6 lg:grid-cols-2">
-              {loading && clanStats.length === 0 ? (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-40 animate-pulse" />
-                      <Skeleton className="h-4 w-56 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <Skeleton className="h-64 w-full animate-pulse" />
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <Skeleton className="h-6 w-36 animate-pulse" />
-                      <Skeleton className="h-4 w-48 mt-2 animate-pulse" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div key={i} className="flex items-center gap-4">
-                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
-                            <div className="flex-1 space-y-2">
-                              <Skeleton className="h-4 w-32 animate-pulse" />
-                              <Skeleton className="h-3 w-24 animate-pulse" />
-                            </div>
-                            <Skeleton className="h-6 w-20 animate-pulse" />
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </>
-              ) : (
-                <>
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.warTypeDistribution.title')}</CardTitle>
-                      <CardDescription>{t('charts.warTypeDistribution.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {warTypeDistribution.length > 0 ? (
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.warTypeDistribution.title')}</CardTitle>
+                  <CardDescription>{t('charts.warTypeDistribution.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isInitialLoading ? (
+                    <Skeleton className="h-64 w-full animate-pulse" />
+                  ) : warTypeDistribution.length > 0 ? (
                         <ResponsiveContainer width="100%" height={300}>
                           <PieChart margin={isMobile ? { top: 8, right: 8, bottom: 36, left: 8 } : { top: 8, right: 16, bottom: 8, left: 16 }}>
                             <Pie
@@ -1012,16 +926,29 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                           {t('charts.topPerformers.noData')}
                         </p>
                       )}
-                    </CardContent>
-                  </Card>
+                </CardContent>
+              </Card>
 
-                  <Card className="bg-card border-border">
-                    <CardHeader>
-                      <CardTitle>{t('charts.missedAttacks.title')}</CardTitle>
-                      <CardDescription>{t('charts.missedAttacks.description')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {missedAttackers.length > 0 ? (
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>{t('charts.missedAttacks.title')}</CardTitle>
+                  <CardDescription>{t('charts.missedAttacks.description')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isInitialLoading ? (
+                    <div className="space-y-4">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="flex items-center gap-4">
+                          <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                          <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-32 animate-pulse" />
+                            <Skeleton className="h-3 w-24 animate-pulse" />
+                          </div>
+                          <Skeleton className="h-6 w-20 animate-pulse" />
+                        </div>
+                      ))}
+                    </div>
+                  ) : missedAttackers.length > 0 ? (
                         <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
                           {missedAttackers.map((player, index) => (
                             <div key={player.tag ?? index} className="flex items-center gap-4">
@@ -1059,22 +986,32 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                           {t('charts.topPerformers.noData')}
                         </p>
                       )}
-                    </CardContent>
-                  </Card>
-                </>
-              )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Top Performers + Top Defenders side by side */}
-            {!loading && (topPerformers.length > 0 || topDefenders.length > 0) && (
-              <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle>{t('charts.topPerformers.title')}</CardTitle>
                     <CardDescription>{t('charts.topPerformers.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {topPerformers.length > 0 ? (
+                    {isInitialLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className="flex items-center gap-4">
+                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <Skeleton className="h-4 w-36 animate-pulse" />
+                              <Skeleton className="h-3 w-28 animate-pulse" />
+                            </div>
+                            <Skeleton className="h-6 w-16 animate-pulse" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : topPerformers.length > 0 ? (
                       <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
                         {topPerformers.map((player, index) => (
                           <div key={player.tag ?? index} className="flex items-center gap-4">
@@ -1124,7 +1061,20 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.topDefenders.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {topDefenders.length > 0 ? (
+                    {isInitialLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className="flex items-center gap-4">
+                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <Skeleton className="h-4 w-36 animate-pulse" />
+                              <Skeleton className="h-3 w-28 animate-pulse" />
+                            </div>
+                            <Skeleton className="h-6 w-16 animate-pulse" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : topDefenders.length > 0 ? (
                       <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
                         {topDefenders.map((player, index) => (
                           <div key={player.tag} className="flex items-center gap-4">
@@ -1168,18 +1118,29 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                   </CardContent>
                 </Card>
               </div>
-            )}
 
             {/* Worst Attackers + Worst Defenders side by side */}
-            {!loading && (worstAttackers.length > 0 || worstDefenders.length > 0) && (
-              <div className="grid gap-6 lg:grid-cols-2">
+            <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="bg-card border-border">
                   <CardHeader>
                     <CardTitle>{t('charts.worstAttackers.title')}</CardTitle>
                     <CardDescription>{t('charts.worstAttackers.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {worstAttackers.length > 0 ? (
+                    {isInitialLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className="flex items-center gap-4">
+                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <Skeleton className="h-4 w-36 animate-pulse" />
+                              <Skeleton className="h-3 w-28 animate-pulse" />
+                            </div>
+                            <Skeleton className="h-6 w-16 animate-pulse" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : worstAttackers.length > 0 ? (
                       <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
                         {worstAttackers.map((player, index) => (
                           <div key={player.tag ?? index} className="flex items-center gap-4">
@@ -1224,7 +1185,20 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardDescription>{t('charts.worstDefenders.description')}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {worstDefenders.length > 0 ? (
+                    {isInitialLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className="flex items-center gap-4">
+                            <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+                            <div className="flex-1 space-y-2">
+                              <Skeleton className="h-4 w-36 animate-pulse" />
+                              <Skeleton className="h-3 w-28 animate-pulse" />
+                            </div>
+                            <Skeleton className="h-6 w-16 animate-pulse" />
+                          </div>
+                        ))}
+                      </div>
+                    ) : worstDefenders.length > 0 ? (
                       <div className="overflow-y-auto max-h-[340px] pr-1 space-y-4">
                         {worstDefenders.map((player, index) => (
                           <div key={player.tag} className="flex items-center gap-4">
@@ -1263,7 +1237,6 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                   </CardContent>
                 </Card>
               </div>
-            )}
 
             {/* Clan Stats Table */}
             <Card className="bg-card border-border">
