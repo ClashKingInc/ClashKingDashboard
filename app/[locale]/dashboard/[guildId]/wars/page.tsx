@@ -971,14 +971,14 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                     <CardContent>
                       {warTypeDistribution.length > 0 ? (
                         <ResponsiveContainer width="100%" height={300}>
-                          <PieChart>
+                          <PieChart margin={isMobile ? { top: 8, right: 8, bottom: 36, left: 8 } : { top: 8, right: 16, bottom: 8, left: 16 }}>
                             <Pie
                               data={warTypeDistribution}
                               cx="50%"
-                              cy="50%"
-                              labelLine={false}
-                              label={({ name, value }) => `${name}: ${value} (${totalWarTypeCount > 0 ? Math.round(value / totalWarTypeCount * 100) : 0}%)`}
-                              outerRadius={90}
+                              cy={isMobile ? "45%" : "50%"}
+                              labelLine={!isMobile}
+                              label={isMobile ? false : ({ name, value }) => `${name}: ${value} (${totalWarTypeCount > 0 ? Math.round(value / totalWarTypeCount * 100) : 0}%)`}
+                              outerRadius={isMobile ? 78 : 90}
                               fill="#8884d8"
                               dataKey="value"
                             >
@@ -993,6 +993,17 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                                 borderRadius: '8px',
                               }}
                               formatter={(value, name) => [`${value ?? 0} wars`, name]}
+                            />
+                            <Legend
+                              verticalAlign="bottom"
+                              align="center"
+                              wrapperStyle={{ fontSize: "12px" }}
+                              formatter={(value) => {
+                                const item = warTypeDistribution.find((entry) => entry.name === value);
+                                const itemValue = item?.value ?? 0;
+                                const percentage = totalWarTypeCount > 0 ? Math.round((itemValue / totalWarTypeCount) * 100) : 0;
+                                return `${value}: ${itemValue} (${percentage}%)`;
+                              }}
                             />
                           </PieChart>
                         </ResponsiveContainer>
