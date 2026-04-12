@@ -352,12 +352,14 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
         {/* Branding */}
         <Link
           href={`/dashboard/${guildId}/support-us`}
-          className="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium leading-5 transition-colors hover:bg-accent/40"
+          className="flex h-5 items-center justify-center gap-1.5 rounded-md px-2 py-1 text-xs leading-none transition-colors hover:bg-accent/40"
         >
-          <span className="text-muted-foreground">{tCommon("poweredBy")}</span>
-          <span className="inline-flex items-center gap-1 font-bold text-primary">
-            <Crown className="h-3.5 w-3.5 fill-primary text-primary" aria-hidden />
-            <span>ClashKing</span>
+          <span className="flex h-4 items-center text-muted-foreground">
+            {tCommon("poweredBy")}
+          </span>
+          <span className="flex h-4 items-center gap-1 font-bold text-primary">
+            <Crown className="h-3 w-3 shrink-0 fill-primary text-primary" aria-hidden />
+            <span className="leading-none">ClashKing</span>
           </span>
         </Link>
       </div>
