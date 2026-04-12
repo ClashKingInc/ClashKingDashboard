@@ -59,7 +59,7 @@ export function SupportContent({ compact = false }: SupportContentProps) {
               {t("creatorCode.ctaGame")} <ExternalLink size={18} />
             </Link>
             <Link
-              href="https://store.supercell.com/nl/clashofclans?boost=clashking"
+              href="https://store.supercell.com/en/clashofclans?boost=clashking"
               target="_blank"
               className="w-full bg-muted text-foreground px-6 py-3 rounded-lg font-bold text-center hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
             >
