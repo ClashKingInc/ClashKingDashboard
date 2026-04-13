@@ -870,7 +870,6 @@ function TicketPanelTab({
                     getPreviewButtonClass(button.style),
                   )}
                 >
-                  {button.emoji?.name ? <span className="leading-none">{button.emoji.name}</span> : null}
                   <span>{button.label}</span>
                 </span>
               ))}
@@ -1006,6 +1005,23 @@ const BUTTON_STYLE_COLOR: Record<number, string> = {
   4: "bg-[#ED4245]",
 };
 
+const createDefaultButtonSettings = (): TicketButtonSettings => ({
+  questions: [],
+  mod_role: [],
+  no_ping_mod_role: [],
+  private_thread: false,
+  th_min: 0,
+  num_apply: 25,
+  naming: "{ticket_count}-{user}",
+  account_apply: false,
+  player_info: false,
+  apply_clans: [],
+  roles_to_add: [],
+  roles_to_remove: [],
+  townhall_requirements: {},
+  new_message: null,
+});
+
 function ButtonCard({
   customId, label, style, settings, panelName, guildId, roles, availableEmbeds, onDeleted, onAppearanceUpdated,
 }: {
@@ -1051,7 +1067,10 @@ function ButtonCard({
     if (!editLabel.trim()) return;
     setIsSavingAppearance(true);
     try {
-      const res = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, { label: editLabel, style: editStyle });
+      const res = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
+        label: editLabel,
+        style: editStyle,
+      });
       if (res.error) throw new Error(res.error);
       toast({ title: tCommon("success"), description: t("buttonAppearanceSaved") });
       onAppearanceUpdated(editLabel, editStyle);
@@ -1548,7 +1567,11 @@ function PanelCard({
     if (!newButtonLabel.trim()) return;
     setIsAddingButton(true);
     try {
-      const res = await apiClient.tickets.createButton(guildId, panel.name, { label: newButtonLabel, style: newButtonStyle });
+      const res = await apiClient.tickets.createButton(guildId, panel.name, {
+        label: newButtonLabel,
+        style: newButtonStyle,
+        emoji: { name: "📩" },
+      });
       if (res.error) throw new Error(res.error);
       toast({ title: tCommon("success"), description: t("buttonAdded") });
       // Reload panel data by fetching fresh panels
@@ -1672,12 +1695,7 @@ function PanelCard({
                     <div className="space-y-3">
                       {components.map((btn) => (
                         <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
-                          settings={panel.button_settings[btn.custom_id] ?? {
-                            questions: [], mod_role: [], no_ping_mod_role: [],
-                            private_thread: false, th_min: 0, num_apply: 25,
-                            naming: "{ticket_count}-{user}", account_apply: false, player_info: false,
-                            apply_clans: [], roles_to_add: [], roles_to_remove: [], townhall_requirements: {}, new_message: null,
-                          }}
+                          settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
                           panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds}
                           onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
                           onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
