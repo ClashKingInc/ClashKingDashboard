@@ -49,22 +49,52 @@ function intToHex(color: number): string {
 }
 
 /** Extract the first embed from any Discohook-compatible payload shape */
-export function extractFirstEmbed(data: Record<string, unknown>): DiscordEmbed | null {
+function isDiscordEmbed(value: unknown): value is DiscordEmbed {
+  if (!value || typeof value !== "object") return false;
+  const embed = value as Record<string, unknown>;
+  return Boolean(
+    embed.title ||
+    embed.description ||
+    embed.author ||
+    embed.fields ||
+    embed.image ||
+    embed.thumbnail ||
+    embed.footer ||
+    embed.url ||
+    embed.timestamp
+  );
+}
+
+/** Extract all embeds from any Discohook-compatible payload shape */
+export function extractEmbeds(data: Record<string, unknown>): DiscordEmbed[] {
   // Full Discohook payload: { messages: [{ data: { embeds: [...] } }] }
   const messages = (data as any)?.messages;
   if (Array.isArray(messages) && messages.length > 0) {
-    const embeds = messages[0]?.data?.embeds;
-    if (Array.isArray(embeds) && embeds.length > 0) return embeds[0] as DiscordEmbed;
+    const flattenedEmbeds = messages.flatMap((message: any) => {
+      const embeds = message?.data?.embeds;
+      return Array.isArray(embeds) ? embeds : [];
+    });
+    if (flattenedEmbeds.length > 0) {
+      return flattenedEmbeds.filter(isDiscordEmbed);
+    }
   }
+
   // { embeds: [...] }
   if (Array.isArray((data as any).embeds) && (data as any).embeds.length > 0) {
-    return (data as any).embeds[0] as DiscordEmbed;
+    return (data as any).embeds.filter(isDiscordEmbed);
   }
+
   // Raw embed object
-  if ((data as any).title || (data as any).description || (data as any).author) {
-    return data as unknown as DiscordEmbed;
+  if (isDiscordEmbed(data)) {
+    return [data];
   }
-  return null;
+
+  return [];
+}
+
+/** Extract the first embed from any Discohook-compatible payload shape */
+export function extractFirstEmbed(data: Record<string, unknown>): DiscordEmbed | null {
+  return extractEmbeds(data)[0] ?? null;
 }
 
 /** Very minimal markdown: **bold**, *italic*, __underline__, `code`, [text](url) */
