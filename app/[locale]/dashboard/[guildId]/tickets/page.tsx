@@ -1521,9 +1521,10 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   type EditableApproveMessage = ApproveMessage & { localId: string };
+  const localIdCounterRef = useRef(0);
   const makeLocalId = () => (
     globalThis.crypto?.randomUUID?.()
-    ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+    ?? `${Date.now().toString(36)}-${(localIdCounterRef.current++).toString(36)}`
   );
   const [messages, setMessages] = useState<EditableApproveMessage[]>(
     (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })),
