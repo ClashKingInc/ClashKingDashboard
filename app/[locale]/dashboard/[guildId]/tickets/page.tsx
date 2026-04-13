@@ -986,6 +986,7 @@ function ButtonCard({
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>{t("editButtonTitle")}</DialogTitle>
+            <DialogDescription>{t("addButtonDescription")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1.5">
