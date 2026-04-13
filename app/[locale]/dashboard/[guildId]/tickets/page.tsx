@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import { cn } from "@/lib/utils";
 import type {
   ApproveMessage,
@@ -84,11 +85,17 @@ interface DiscordRole {
   color?: number;
 }
 
+const getTicketsPanelsCacheKey = (guildId: string) => `ticket-panels-${guildId}`;
+const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildId}`;
+const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
+
 const getTicketDiscordUrl = (ticket: OpenTicket) =>
   `https://discord.com/channels/${ticket.server}/${ticket.channel}`;
 
+const TRANSCRIPT_BASE_URL = (process.env.NEXT_PUBLIC_TRANSCRIPT_BASE_URL ?? "https://cdn.clashk.ing").replace(/\/+$/, "");
+
 const getTranscriptUrl = (ticket: OpenTicket) =>
-  `https://cdn.clashking.xyz/transcript-channel-${ticket.channel}.html`;
+  `${TRANSCRIPT_BASE_URL}/transcript-channel-${ticket.channel}.html`;
 
 function TicketAccountsCell({ ticket }: { readonly ticket: OpenTicket }) {
   const accounts = ticket.linked_accounts ?? [];
@@ -397,6 +404,7 @@ function TicketsTab({
 
   const ticketsCacheKey = `open-tickets-${guildId}`;
   const clansCacheKey = `clans-${guildId}`;
+  const ticketStatusQueries: UpdateOpenTicketStatusRequest["status"][] = ["open", "sleep", "closed", "delete"];
 
   const fetchTicketsData = async (forceRefresh = false) => {
     if (forceRefresh) {
@@ -405,16 +413,36 @@ function TicketsTab({
     }
 
     return apiCache.get(ticketsCacheKey, async () => {
-      const [response, clansResponse] = await Promise.all([
+      const [response, statusResponses, clansResponse] = await Promise.all([
         apiClient.tickets.getOpenTickets(guildId),
+        Promise.allSettled(ticketStatusQueries.map((status) => apiClient.tickets.getOpenTickets(guildId, status))),
         apiCache.get(clansCacheKey, () => apiClient.servers.getServerClans(guildId)),
       ]);
 
-      if (response.error) throw new Error(response.error);
       if (clansResponse.error) throw new Error(clansResponse.error);
 
+      const ticketsByChannel = new Map<string, OpenTicket>();
+      const addTickets = (items: OpenTicket[]) => {
+        for (const ticket of items) {
+          ticketsByChannel.set(ticket.channel, ticket);
+        }
+      };
+
+      if (!response.error) {
+        addTickets(response.data?.items ?? []);
+      }
+
+      for (const statusResponse of statusResponses) {
+        if (statusResponse.status !== "fulfilled" || statusResponse.value.error) continue;
+        addTickets(statusResponse.value.data?.items ?? []);
+      }
+
+      if (ticketsByChannel.size === 0 && response.error) {
+        throw new Error(response.error);
+      }
+
       return {
-        tickets: response.data?.items ?? [],
+        tickets: Array.from(ticketsByChannel.values()),
         clans: clansResponse.data ?? [],
       };
     });
@@ -477,6 +505,8 @@ function TicketsTab({
       : statusFilter === "closed" // NOSONAR — JSX nested ternary for multi-branch display state
         ? allTickets.filter((t) => t.status === "closed" || t.status === "delete")
         : allTickets.filter((t) => t.status === statusFilter);
+
+  const clanByTag = new Map(clans.map((clan) => [clan.tag, clan]));
 
   return (
     <div className="space-y-6">
@@ -580,7 +610,28 @@ function TicketsTab({
                         avatarUrl={ticket.discord_avatar_url}
                       />
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{ticket.set_clan ?? "—"}</TableCell>
+                    <TableCell>
+                      {ticket.set_clan ? (
+                        <ClanProfilePopover
+                          clanName={clanByTag.get(ticket.set_clan)?.name ?? ticket.set_clan}
+                          clanTag={ticket.set_clan}
+                          clanBadgeUrl={
+                            clanByTag.get(ticket.set_clan)?.badge_url
+                            ?? clanByTag.get(ticket.set_clan)?.clan_badge_url
+                            ?? clanByTag.get(ticket.set_clan)?.badge
+                            ?? null
+                          }
+                          showTagInTrigger={false}
+                          triggerClassName="text-left cursor-pointer hover:opacity-80 transition-opacity"
+                        >
+                          <span className="text-xs font-medium text-foreground">
+                            {clanByTag.get(ticket.set_clan)?.name ?? ticket.set_clan}
+                          </span>
+                        </ClanProfilePopover>
+                      ) : (
+                        <span className="font-mono text-xs text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
                     <TableCell className="font-mono text-xs text-muted-foreground">{ticket.apply_account ?? "—"}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
@@ -1274,6 +1325,7 @@ function PanelCard({
     try {
       const res = await apiClient.tickets.deletePanel(guildId, panel.name);
       if (res.error) throw new Error(res.error);
+      apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
       toast({ title: tCommon("success"), description: t("panelDeleted") });
       onDeleted();
     } catch (err) {
@@ -1292,7 +1344,8 @@ function PanelCard({
       if (res.error) throw new Error(res.error);
       toast({ title: tCommon("success"), description: t("buttonAdded") });
       // Reload panel data by fetching fresh panels
-      const panelsRes = await apiClient.tickets.getPanels(guildId);
+      apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
+      const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
       const fresh = panelsRes.data?.items.find(p => p.name === panel.name);
       if (fresh) setComponents(fresh.components);
       setAddButtonOpen(false);
@@ -1460,9 +1513,9 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
       setIsLoading(true);
       try {
         const [panelsRes, channelsRes, rolesRes] = await Promise.all([
-          apiClient.tickets.getPanels(guildId),
-          apiClient.servers.getChannels(guildId),
-          apiClient.servers.getDiscordRoles(guildId),
+          apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId)),
+          apiCache.get(getServerChannelsCacheKey(guildId), () => apiClient.servers.getChannels(guildId)),
+          apiCache.get(getServerRolesCacheKey(guildId), () => apiClient.servers.getDiscordRoles(guildId)),
         ]);
         if (panelsRes.error) throw new Error(panelsRes.error);
         if (channelsRes.error) throw new Error(channelsRes.error);
@@ -1497,7 +1550,8 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
       if (res.error) throw new Error(res.error);
       toast({ title: tCommon("success"), description: t("panelCreated", { name: newPanelName.trim() }) });
       // Fetch fresh panel list
-      const panelsRes = await apiClient.tickets.getPanels(guildId);
+      apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
+      const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
       setPanels(panelsRes.data?.items ?? []);
       setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
       setCreatePanelOpen(false);
