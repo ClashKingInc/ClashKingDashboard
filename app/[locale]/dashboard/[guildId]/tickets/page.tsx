@@ -517,12 +517,16 @@ function TicketsTab({
         addTickets(response.data?.items ?? []);
       }
 
+      const hasSuccessfulFallbackQuery = statusResponses.some(
+        (statusResponse) => statusResponse.status === "fulfilled" && !statusResponse.value.error
+      );
+
       for (const statusResponse of statusResponses) {
         if (statusResponse.status !== "fulfilled" || statusResponse.value.error) continue;
         addTickets(statusResponse.value.data?.items ?? []);
       }
 
-      if (ticketsByChannel.size === 0 && response.error) {
+      if (ticketsByChannel.size === 0 && response.error && !hasSuccessfulFallbackQuery) {
         throw new Error(response.error);
       }
 
@@ -850,6 +854,7 @@ function TicketPanelTab({
         };
         const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
         if (res.error) throw new Error(res.error);
+        apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
         setDidAutoSave(true);
         hasPendingUserChange.current = false;
       } catch (err) {
@@ -1008,6 +1013,7 @@ function PanelSettingsTab({
         };
         const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
         if (res.error) throw new Error(res.error);
+        apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
         setDidAutoSave(true);
         hasPendingUserChange.current = false;
       } catch (err) {
