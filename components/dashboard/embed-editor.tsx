@@ -37,6 +37,7 @@ interface EmbedFormState {
 }
 
 type SectionKey = "color" | "author" | "body" | "fields" | "images" | "footer";
+const MAX_DISCORD_EMBEDS_PER_MESSAGE = 10;
 
 export interface EmbedEditorProps {
   readonly initialData?: Record<string, unknown> | null;
@@ -141,7 +142,10 @@ function hasMeaningfulEmbedContent(embed: DiscordEmbed): boolean {
 
 /** Outputs the Discohook-compatible payload stored in MongoDB */
 export function stateToPayload(states: EmbedFormState[]): Record<string, unknown> {
-  const embeds = states.map(stateToEmbed).filter(hasMeaningfulEmbedContent);
+  const embeds = states
+    .map(stateToEmbed)
+    .filter(hasMeaningfulEmbedContent)
+    .slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
   return {
     embeds,
     messages: [{ data: { content: null, embeds } }],
@@ -264,6 +268,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
 
   const addEmbed = () => {
+    if (embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return;
     setEmbeds(prev => {
       setActiveEmbedIndex(prev.length);
       return [...prev, defaultState()];
@@ -350,8 +355,14 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
           {/* Embed selector */}
           <div className="rounded-lg border border-border/60 bg-muted/20 p-3 space-y-2">
             <div className="flex items-center justify-between">
-              <SectionLabel>Embeds</SectionLabel>
-              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={addEmbed}>
+              <SectionLabel>{`Embeds (${embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</SectionLabel>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 text-xs"
+                onClick={addEmbed}
+                disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}
+              >
                 <Plus className="h-3.5 w-3.5 mr-1" />Add Embed
               </Button>
             </div>
