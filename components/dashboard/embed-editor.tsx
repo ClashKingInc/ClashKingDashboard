@@ -70,7 +70,7 @@ function defaultState(): EmbedFormState {
 
 function embedToState(embed: DiscordEmbed): EmbedFormState {
   return {
-    color: embed.color == null ? "#5865f2" : intToHex(embed.color as number),
+    color: typeof embed.color === "number" ? intToHex(embed.color) : "#5865f2",
     authorName: embed.author?.name ?? "",
     authorIconUrl: embed.author?.icon_url ?? "",
     authorUrl: embed.author?.url ?? "",
@@ -160,6 +160,23 @@ function uid(): string {
   return Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 }
 
+function patchField(fields: FieldState[], id: string, patch: Partial<FieldState>): FieldState[] {
+  return fields.map((field) => (field.id === id ? { ...field, ...patch } : field));
+}
+
+function removeFieldById(fields: FieldState[], id: string): FieldState[] {
+  return fields.filter((field) => field.id !== id);
+}
+
+function reorderFieldById(fields: FieldState[], id: string, dir: -1 | 1): FieldState[] {
+  const arr = [...fields];
+  const idx = arr.findIndex((field) => field.id === id);
+  const next = idx + dir;
+  if (idx === -1 || next < 0 || next >= arr.length) return fields;
+  [arr[idx], arr[next]] = [arr[next], arr[idx]];
+  return arr;
+}
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function SectionLabel({ children }: { readonly children: React.ReactNode }) {
@@ -240,6 +257,9 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const setActiveField = <K extends keyof EmbedFormState>(key: K, value: EmbedFormState[K]) =>
     setEmbeds(prev => prev.map((embed, i) => i === activeEmbedIndex ? { ...embed, [key]: value } : embed));
 
+  const updateActiveEmbed = (updater: (embed: EmbedFormState) => EmbedFormState) =>
+    setEmbeds((prev) => prev.map((embed, i) => (i === activeEmbedIndex ? updater(embed) : embed)));
+
   const toggleSection = (section: SectionKey) =>
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
 
@@ -266,34 +286,20 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
 
   const addField = () => {
     if (activeEmbed.fields.length >= 25) return;
-    setEmbeds(prev => prev.map((embed, i) => i === activeEmbedIndex
-      ? { ...embed, fields: [...embed.fields, { id: uid(), name: "", value: "", inline: false }] }
-      : embed
-    ));
+    updateActiveEmbed((embed) => ({
+      ...embed,
+      fields: [...embed.fields, { id: uid(), name: "", value: "", inline: false }],
+    }));
   };
 
   const updateField = (id: string, patch: Partial<FieldState>) =>
-    setEmbeds(prev => prev.map((embed, i) => i === activeEmbedIndex
-      ? { ...embed, fields: embed.fields.map(f => f.id === id ? { ...f, ...patch } : f) }
-      : embed
-    ));
+    updateActiveEmbed((embed) => ({ ...embed, fields: patchField(embed.fields, id, patch) }));
 
   const removeField = (id: string) =>
-    setEmbeds(prev => prev.map((embed, i) => i === activeEmbedIndex
-      ? { ...embed, fields: embed.fields.filter(f => f.id !== id) }
-      : embed
-    ));
+    updateActiveEmbed((embed) => ({ ...embed, fields: removeFieldById(embed.fields, id) }));
 
   const moveField = (id: string, dir: -1 | 1) =>
-    setEmbeds(prev => prev.map((embed, i) => {
-      if (i !== activeEmbedIndex) return embed;
-      const arr = [...embed.fields];
-      const idx = arr.findIndex(f => f.id === id);
-      const next = idx + dir;
-      if (next < 0 || next >= arr.length) return embed;
-      [arr[idx], arr[next]] = [arr[next], arr[idx]];
-      return { ...embed, fields: arr };
-    }));
+    updateActiveEmbed((embed) => ({ ...embed, fields: reorderFieldById(embed.fields, id, dir) }));
 
   // ── Import ──────────────────────────────────────────────────────────────────
 
