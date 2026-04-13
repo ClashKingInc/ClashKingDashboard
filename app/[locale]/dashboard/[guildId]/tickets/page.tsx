@@ -55,7 +55,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
-import { DiscordEmbedPreview, extractEmbeds } from "@/components/dashboard/discord-embed-preview";
+import { DiscordEmbedPreview, extractEmbeds, type DiscordEmbed } from "@/components/dashboard/discord-embed-preview";
 import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { cn } from "@/lib/utils";
 import type {
@@ -776,7 +776,6 @@ function TicketPanelTab({
   readonly embeds: ServerEmbed[];
 }) {
   const t = useTranslations("TicketsSettingsPage");
-  const tCommon = useTranslations("Common");
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [didAutoSave, setDidAutoSave] = useState(false);
@@ -788,6 +787,21 @@ function TicketPanelTab({
   const selectedEmbedData = toEmbedDataRecord(selectedEmbed?.data);
   const embedPreviews = selectedEmbedData ? extractEmbeds(selectedEmbedData) : [];
   const previewButtons = panel.components ?? [];
+  const autoSaveStatusText = isSaving ? t("autoSaveSaving") : (didAutoSave ? t("autoSaveSaved") : "");
+
+  const getEmbedPreviewKey = (embed: DiscordEmbed): string => {
+    return JSON.stringify({
+      title: embed.title ?? "",
+      description: embed.description ?? "",
+      url: embed.url ?? "",
+      color: embed.color ?? "",
+      author: embed.author?.name ?? "",
+      footer: embed.footer?.text ?? "",
+      image: embed.image?.url ?? "",
+      thumbnail: embed.thumbnail?.url ?? "",
+      fields: embed.fields?.map((field) => `${field.name}:${field.value}:${field.inline ? "1" : "0"}`) ?? [],
+    });
+  };
 
   const getPreviewButtonClass = (style: number): string => {
     switch (style) {
@@ -844,7 +858,7 @@ function TicketPanelTab({
         <div className="rounded-xl border border-border/60 bg-card p-4 space-y-1.5">
           <Label className="text-sm">{t("panelEmbed")}</Label>
           <p className="text-xs text-muted-foreground">
-            {t("panelEmbedHint")} {isSaving ? t("autoSaveSaving") : didAutoSave ? t("autoSaveSaved") : ""}
+            {t("panelEmbedHint")} {autoSaveStatusText}
           </p>
           <Select value={embedName} onValueChange={(value) => {
             hasPendingUserChange.current = true;
@@ -866,12 +880,20 @@ function TicketPanelTab({
           <Label className="text-sm">{t("panelEmbedPreview")}</Label>
           {embedPreviews.length > 0 ? (
             <div className="space-y-2">
-              {embedPreviews.map((embed, index) => (
-                <DiscordEmbedPreview
-                  key={`${selectedEmbed?.name ?? "ticket-panel-embed"}-${index}`} // NOSONAR — index keeps duplicate embed cards with identical content distinct
-                  embed={embed}
-                />
-              ))}
+              {(() => {
+                const duplicateCounts = new Map<string, number>();
+                return embedPreviews.map((embed) => {
+                  const baseKey = getEmbedPreviewKey(embed);
+                  const occurrence = duplicateCounts.get(baseKey) ?? 0;
+                  duplicateCounts.set(baseKey, occurrence + 1);
+                  return (
+                    <DiscordEmbedPreview
+                      key={`${selectedEmbed?.name ?? "ticket-panel-embed"}-${baseKey}-${occurrence}`}
+                      embed={embed}
+                    />
+                  );
+                });
+              })()}
             </div>
           ) : (
             <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
@@ -930,6 +952,7 @@ function PanelSettingsTab({
     setDidAutoSave(false);
     setForm((p) => ({ ...p, [key]: val }));
   };
+  const autoSaveStatusText = isSaving ? t("autoSaveSaving") : (didAutoSave ? t("autoSaveSaved") : "");
 
   useEffect(() => {
     setForm({
@@ -993,7 +1016,7 @@ function PanelSettingsTab({
   return (
     <div className="space-y-6">
       <p className="text-xs text-muted-foreground">
-        {isSaving ? t("autoSaveSaving") : didAutoSave ? t("autoSaveSaved") : ""}
+        {autoSaveStatusText}
       </p>
       <div className="rounded-xl border border-border/60 bg-card p-4">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("categories")}</p>
