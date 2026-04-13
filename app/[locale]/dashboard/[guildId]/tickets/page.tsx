@@ -164,6 +164,16 @@ const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
   return typeof data === "object" ? (data as Record<string, unknown>) : null;
 };
 
+const getAutoSaveStatusText = (
+  isSaving: boolean,
+  didAutoSave: boolean,
+  t: (key: string) => string,
+): string => {
+  if (isSaving) return t("autoSaveSaving");
+  if (didAutoSave) return t("autoSaveSaved");
+  return "";
+};
+
 const getTicketDiscordUrl = (ticket: OpenTicket) =>
   `https://discord.com/channels/${ticket.server}/${ticket.channel}`;
 
@@ -787,7 +797,7 @@ function TicketPanelTab({
   const selectedEmbedData = toEmbedDataRecord(selectedEmbed?.data);
   const embedPreviews = selectedEmbedData ? extractEmbeds(selectedEmbedData) : [];
   const previewButtons = panel.components ?? [];
-  const autoSaveStatusText = isSaving ? t("autoSaveSaving") : (didAutoSave ? t("autoSaveSaved") : "");
+  const autoSaveStatusText = getAutoSaveStatusText(isSaving, didAutoSave, t);
 
   const getEmbedPreviewKey = (embed: DiscordEmbed): string => {
     return JSON.stringify({
@@ -952,7 +962,7 @@ function PanelSettingsTab({
     setDidAutoSave(false);
     setForm((p) => ({ ...p, [key]: val }));
   };
-  const autoSaveStatusText = isSaving ? t("autoSaveSaving") : (didAutoSave ? t("autoSaveSaved") : "");
+  const autoSaveStatusText = getAutoSaveStatusText(isSaving, didAutoSave, t);
 
   useEffect(() => {
     setForm({
@@ -1504,8 +1514,19 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
-  const [messages, setMessages] = useState<ApproveMessage[]>(panel.approve_messages ?? []);
+  type EditableApproveMessage = ApproveMessage & { localId: string };
+  const makeLocalId = () => (
+    globalThis.crypto?.randomUUID?.()
+    ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+  );
+  const [messages, setMessages] = useState<EditableApproveMessage[]>(
+    (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })),
+  );
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setMessages((panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })));
+  }, [panel.approve_messages]);
 
   const handleSave = async () => {
     const valid = messages.filter((m) => m.name.trim());
@@ -1515,7 +1536,8 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
     }
     setIsSaving(true);
     try {
-      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: valid } as UpdateApproveMessagesRequest);
+      const payloadMessages = valid.map(({ name, message }) => ({ name, message }));
+      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages } as UpdateApproveMessagesRequest);
       if (res.error) throw new Error(res.error);
       setMessages(valid);
       toast({ title: tCommon("success"), description: t("messagesSaved") });
@@ -1533,7 +1555,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
           <p className="text-sm font-medium">{t("approveMessages")}</p>
           <p className="text-xs text-muted-foreground">{t("approveMessagesHint")}</p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => setMessages((p) => [...p, { name: "", message: "" }])} disabled={messages.length >= 25}>
+        <Button variant="outline" size="sm" onClick={() => setMessages((p) => [...p, { name: "", message: "", localId: makeLocalId() }])} disabled={messages.length >= 25}>
           <Plus className="mr-1.5 h-4 w-4" />{t("addMessage")}
         </Button>
       </div>
@@ -1546,7 +1568,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
       ) : (
         <div className="space-y-3">
           {messages.map((msg, i) => (
-            <div key={`message-${i}`} className="rounded-lg border border-border p-4 space-y-3">
+            <div key={msg.localId} className="rounded-lg border border-border p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <Input className="h-8 flex-1 font-medium" value={msg.name}
                   onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, name: e.target.value } : m))} // NOSONAR — inline state updater in map, standard React pattern
