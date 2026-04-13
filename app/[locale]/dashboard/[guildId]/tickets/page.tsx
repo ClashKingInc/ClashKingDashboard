@@ -93,6 +93,14 @@ const getTicketsEmbedsCacheKey = (guildId: string) => `ticket-embeds-${guildId}`
 const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildId}`;
 const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
 
+const stripTrailingSlashes = (value: string): string => {
+  let normalized = value;
+  while (normalized.endsWith("/")) {
+    normalized = normalized.slice(0, -1);
+  }
+  return normalized;
+};
+
 const getChannelTypeToken = (channel: DiscordChannel): string => {
   const rawType = (channel as { channel_type?: string | number; channelType?: string | number }).channel_type
     ?? (channel as { channelType?: string | number }).channelType
@@ -159,7 +167,7 @@ const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
 const getTicketDiscordUrl = (ticket: OpenTicket) =>
   `https://discord.com/channels/${ticket.server}/${ticket.channel}`;
 
-const TRANSCRIPT_BASE_URL = (process.env.NEXT_PUBLIC_TRANSCRIPT_BASE_URL ?? "https://cdn.clashk.ing").replace(/\/+$/, "");
+const TRANSCRIPT_BASE_URL = stripTrailingSlashes(process.env.NEXT_PUBLIC_TRANSCRIPT_BASE_URL ?? "https://cdn.clashk.ing");
 
 const getTranscriptUrl = (ticket: OpenTicket) =>
   `${TRANSCRIPT_BASE_URL}/transcript-channel-${ticket.channel}.html`;
@@ -1110,7 +1118,8 @@ function ButtonCard({
     setForm((p) => ({ ...p, [type]: p[type].filter((r) => r !== id) }));
 
   const addClanTag = () => {
-    const tag = clanTagInput.trim().toUpperCase().replace(/^#?/, "#");
+    const normalizedTag = clanTagInput.trim().toUpperCase();
+    const tag = normalizedTag.startsWith("#") ? normalizedTag : `#${normalizedTag}`;
     if (!tag || tag === "#" || form.apply_clans.includes(tag)) { setClanTagInput(""); return; }
     setForm((p) => ({ ...p, apply_clans: [...p.apply_clans, tag] }));
     setClanTagInput("");
