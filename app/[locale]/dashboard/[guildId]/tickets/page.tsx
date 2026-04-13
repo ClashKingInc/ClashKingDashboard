@@ -55,11 +55,13 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { DiscordEmbedPreview, extractEmbeds } from "@/components/dashboard/discord-embed-preview";
 import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { cn } from "@/lib/utils";
 import type {
   ApproveMessage,
   OpenTicket,
+  ServerEmbed,
   THRequirement,
   TicketButtonSettings,
   TicketPanel,
@@ -87,6 +89,7 @@ interface DiscordRole {
 }
 
 const getTicketsPanelsCacheKey = (guildId: string) => `ticket-panels-${guildId}`;
+const getTicketsEmbedsCacheKey = (guildId: string) => `ticket-embeds-${guildId}`;
 const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildId}`;
 const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
 
@@ -120,6 +123,37 @@ const normalizeTicketChannels = (payload: unknown): DiscordChannel[] => {
   }
 
   return [];
+};
+
+const normalizeTicketEmbeds = (payload: unknown): ServerEmbed[] => {
+  if (Array.isArray(payload)) {
+    return payload as ServerEmbed[];
+  }
+
+  if (!payload || typeof payload !== "object") {
+    return [];
+  }
+
+  const obj = payload as { items?: unknown; data?: { items?: unknown } };
+  if (Array.isArray(obj.items)) return obj.items as ServerEmbed[];
+  if (obj.data && Array.isArray(obj.data.items)) return obj.data.items as ServerEmbed[];
+
+  return [];
+};
+
+const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
+  if (!data) return null;
+
+  if (typeof data === "string") {
+    try {
+      const parsed = JSON.parse(data) as unknown;
+      return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  return typeof data === "object" ? (data as Record<string, unknown>) : null;
 };
 
 const getTicketDiscordUrl = (ticket: OpenTicket) =>
@@ -725,19 +759,143 @@ function TicketsTab({
 
 // ─── Configuration tab ───────────────────────────────────────────────────────
 
-function ChannelTab({
-  panel, categories, textChannels, guildId, availableEmbeds,
+function TicketPanelTab({
+  panel, guildId, availableEmbeds, embeds,
 }: {
   readonly panel: TicketPanel;
-  readonly categories: DiscordChannel[];
-  readonly textChannels: DiscordChannel[];
   readonly guildId: string;
   readonly availableEmbeds: string[];
+  readonly embeds: ServerEmbed[];
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const [didAutoSave, setDidAutoSave] = useState(false);
+  const [embedName, setEmbedName] = useState(panel.embed_name ?? "disabled");
+  const skipNextAutosave = useRef(true);
+  const embedOptions = Array.from(new Set([...(panel.embed_name ? [panel.embed_name] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
+  const selectedEmbed = embeds.find((embed) => embed.name === (embedName === "disabled" ? null : embedName));
+  const selectedEmbedData = toEmbedDataRecord(selectedEmbed?.data);
+  const embedPreviews = selectedEmbedData ? extractEmbeds(selectedEmbedData) : [];
+  const previewButtons = panel.components ?? [];
+
+  const getPreviewButtonClass = (style: number): string => {
+    switch (style) {
+      case 1:
+        return "bg-[#5865f2] hover:bg-[#4752c4] text-white";
+      case 3:
+        return "bg-[#3ba55d] hover:bg-[#2d7d46] text-white";
+      case 4:
+        return "bg-[#ed4245] hover:bg-[#c03537] text-white";
+      default:
+        return "bg-[#4e5058] hover:bg-[#6d6f78] text-white";
+    }
+  };
+
+  useEffect(() => {
+    setEmbedName(panel.embed_name ?? "disabled");
+    setDidAutoSave(false);
+    skipNextAutosave.current = true;
+  }, [panel.name, panel.embed_name]);
+
+  useEffect(() => {
+    if (skipNextAutosave.current) {
+      skipNextAutosave.current = false;
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSaving(true);
+      try {
+        const payload: UpdateTicketPanelRequest = {
+          embed_name: embedName === "disabled" ? null : embedName,
+        };
+        const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
+        if (res.error) throw new Error(res.error);
+        setDidAutoSave(true);
+      } catch (err) {
+        toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
+      } finally {
+        setIsSaving(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [embedName, guildId, panel.name, t, toast]);
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+        <div className="rounded-xl border border-border/60 bg-card p-4 space-y-1.5">
+          <Label className="text-sm">{t("panelEmbed")}</Label>
+          <p className="text-xs text-muted-foreground">
+            {t("panelEmbedHint")} {isSaving ? t("autoSaveSaving") : didAutoSave ? t("autoSaveSaved") : ""}
+          </p>
+          <Select value={embedName} onValueChange={setEmbedName}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("selectEmbed")} />
+            </SelectTrigger>
+            <SelectContent>
+              {embedOptions.map((embed) => (
+                <SelectItem key={embed} value={embed}>{embed}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="rounded-xl border border-border/60 bg-card p-4 space-y-2">
+          <Label className="text-sm">{t("panelEmbedPreview")}</Label>
+          {embedPreviews.length > 0 ? (
+            <div className="space-y-2">
+              {embedPreviews.map((embed, index) => (
+                <DiscordEmbedPreview
+                  key={`${selectedEmbed?.name ?? "ticket-panel-embed"}-${index}`} // NOSONAR — index keeps duplicate embed cards with identical content distinct
+                  embed={embed}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
+              {t("panelEmbedPreviewEmpty")}
+            </div>
+          )}
+
+          {previewButtons.length > 0 ? (
+            <div className="pt-2 flex flex-wrap gap-2">
+              {previewButtons.map((button) => (
+                <span
+                  key={button.custom_id}
+                  className={cn(
+                    "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
+                    getPreviewButtonClass(button.style),
+                  )}
+                >
+                  {button.emoji?.name ? <span className="leading-none">{button.emoji.name}</span> : null}
+                  <span>{button.label}</span>
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PanelSettingsTab({
+  panel, categories, textChannels, guildId,
+}: {
+  readonly panel: TicketPanel;
+  readonly categories: DiscordChannel[];
+  readonly textChannels: DiscordChannel[];
+  readonly guildId: string;
+}) {
+  const t = useTranslations("TicketsSettingsPage");
+  const tCommon = useTranslations("Common");
+  const { toast } = useToast();
+  const [isSaving, setIsSaving] = useState(false);
+  const [didAutoSave, setDidAutoSave] = useState(false);
+  const skipNextAutosave = useRef(true);
   const [form, setForm] = useState({
     open_category: panel.open_category ?? "disabled",
     sleep_category: panel.sleep_category ?? "disabled",
@@ -745,55 +903,70 @@ function ChannelTab({
     status_change_log: panel.status_change_log ?? "disabled",
     ticket_button_click_log: panel.ticket_button_click_log ?? "disabled",
     ticket_close_log: panel.ticket_close_log ?? "disabled",
-    embed_name: panel.embed_name ?? "disabled",
   });
 
   const toNullable = (v: string) => (v === "disabled" ? null : v);
   const set = (key: keyof typeof form) => (val: string) => setForm((p) => ({ ...p, [key]: val }));
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      const payload: UpdateTicketPanelRequest = {
-        open_category: toNullable(form.open_category),
-        sleep_category: toNullable(form.sleep_category),
-        closed_category: toNullable(form.closed_category),
-        status_change_log: toNullable(form.status_change_log),
-        ticket_button_click_log: toNullable(form.ticket_button_click_log),
-        ticket_close_log: toNullable(form.ticket_close_log),
-        embed_name: toNullable(form.embed_name),
-      };
-      const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
-      if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("savedSuccess", { panel: panel.name }) });
-    } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
-    } finally {
-      setIsSaving(false);
+  useEffect(() => {
+    setForm({
+      open_category: panel.open_category ?? "disabled",
+      sleep_category: panel.sleep_category ?? "disabled",
+      closed_category: panel.closed_category ?? "disabled",
+      status_change_log: panel.status_change_log ?? "disabled",
+      ticket_button_click_log: panel.ticket_button_click_log ?? "disabled",
+      ticket_close_log: panel.ticket_close_log ?? "disabled",
+    });
+    setDidAutoSave(false);
+    skipNextAutosave.current = true;
+  }, [
+    panel.name,
+    panel.open_category,
+    panel.sleep_category,
+    panel.closed_category,
+    panel.status_change_log,
+    panel.ticket_button_click_log,
+    panel.ticket_close_log,
+  ]);
+
+  useEffect(() => {
+    if (skipNextAutosave.current) {
+      skipNextAutosave.current = false;
+      return;
     }
-  };
+
+    const timer = setTimeout(async () => {
+      setIsSaving(true);
+      try {
+        const payload: UpdateTicketPanelRequest = {
+          open_category: toNullable(form.open_category),
+          sleep_category: toNullable(form.sleep_category),
+          closed_category: toNullable(form.closed_category),
+          status_change_log: toNullable(form.status_change_log),
+          ticket_button_click_log: toNullable(form.ticket_button_click_log),
+          ticket_close_log: toNullable(form.ticket_close_log),
+        };
+        const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
+        if (res.error) throw new Error(res.error);
+        setDidAutoSave(true);
+      } catch (err) {
+        toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
+      } finally {
+        setIsSaving(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [form, guildId, panel.name, t, toast]);
 
   const catChannels = categories.map((c) => ({ id: c.id, name: c.name }));
   const txtChannels = textChannels.map((c) => ({ id: c.id, name: c.name, parent_name: c.parent_name }));
-  const embedOptions = Array.from(new Set([...(panel.embed_name ? [panel.embed_name] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-border/60 bg-card p-4 space-y-1.5">
-        <Label className="text-sm">{t("panelEmbed")}</Label>
-        <p className="text-xs text-muted-foreground">{t("panelEmbedHint")}</p>
-        <Select value={form.embed_name} onValueChange={set("embed_name")}>
-          <SelectTrigger>
-            <SelectValue placeholder={t("selectEmbed")} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="disabled">{t("defaultEmbed")}</SelectItem>
-            {embedOptions.map((embed) => (
-              <SelectItem key={embed} value={embed}>{embed}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <p className="text-xs text-muted-foreground">
+        {isSaving ? t("autoSaveSaving") : didAutoSave ? t("autoSaveSaved") : ""}
+      </p>
       <div className="rounded-xl border border-border/60 bg-card p-4">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("categories")}</p>
         <div className="grid gap-3 sm:grid-cols-3">
@@ -821,12 +994,6 @@ function ChannelTab({
             </div>
           ))}
         </div>
-      </div>
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isSaving}>
-          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {tCommon("save")}
-        </Button>
       </div>
     </div>
   );
@@ -1336,7 +1503,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
 }
 
 function PanelCard({
-  panel, categories, textChannels, roles, guildId, availableEmbeds, onDeleted,
+  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, onDeleted,
 }: {
   readonly panel: TicketPanel;
   readonly categories: DiscordChannel[];
@@ -1344,6 +1511,7 @@ function PanelCard({
   readonly roles: DiscordRole[];
   readonly guildId: string;
   readonly availableEmbeds: string[];
+  readonly embeds: ServerEmbed[];
   readonly onDeleted: () => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
@@ -1477,14 +1645,15 @@ function PanelCard({
 
         {expanded && (
           <CardContent className="space-y-4">
-            <Tabs defaultValue="channels">
+            <Tabs defaultValue="ticket-panel">
               <TabsList className="mb-4">
-                <TabsTrigger value="channels">{t("tabChannels")}</TabsTrigger>
+                <TabsTrigger value="ticket-panel">{t("tabChannels")}</TabsTrigger>
                 <TabsTrigger value="buttons">{t("tabButtons")}</TabsTrigger>
                 <TabsTrigger value="messages">{t("tabMessages")}</TabsTrigger>
+                <TabsTrigger value="settings">{t("tabSettings")}</TabsTrigger>
               </TabsList>
-              <TabsContent value="channels" className="mt-0" forceMount>
-                <ChannelTab panel={panel} categories={categories} textChannels={textChannels} guildId={guildId} availableEmbeds={availableEmbeds} />
+              <TabsContent value="ticket-panel" className="mt-0" forceMount>
+                <TicketPanelTab panel={panel} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds} />
               </TabsContent>
               <TabsContent value="buttons" className="mt-0" forceMount>
                 <div className="space-y-3">
@@ -1521,6 +1690,9 @@ function PanelCard({
               <TabsContent value="messages" className="mt-0" forceMount>
                 <MessagesTab panel={panel} guildId={guildId} />
               </TabsContent>
+              <TabsContent value="settings" className="mt-0" forceMount>
+                <PanelSettingsTab panel={panel} categories={categories} textChannels={textChannels} guildId={guildId} />
+              </TabsContent>
             </Tabs>
           </CardContent>
         )}
@@ -1535,6 +1707,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
   const { toast } = useToast();
 
   const [panels, setPanels] = useState<TicketPanel[]>([]);
+  const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
   const [availableEmbeds, setAvailableEmbeds] = useState<string[]>([]);
   const [categories, setCategories] = useState<DiscordChannel[]>([]);
   const [textChannels, setTextChannels] = useState<DiscordChannel[]>([]);
@@ -1552,17 +1725,20 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
     const load = async () => {
       setIsLoading(true);
       try {
-        const [panelsRes, channelsRes, rolesRes] = await Promise.all([
+        const [panelsRes, embedsRes, channelsRes, rolesRes] = await Promise.all([
           apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId)),
+          apiCache.get(getTicketsEmbedsCacheKey(guildId), () => apiClient.tickets.getEmbeds(guildId)),
           apiCache.get(getServerChannelsCacheKey(guildId), () => apiClient.servers.getChannels(guildId)),
           apiCache.get(getServerRolesCacheKey(guildId), () => apiClient.servers.getDiscordRoles(guildId)),
         ]);
         if (panelsRes.error) throw new Error(panelsRes.error);
+        if (embedsRes.error) throw new Error(embedsRes.error);
         if (channelsRes.error) throw new Error(channelsRes.error);
         if (rolesRes.error) throw new Error(rolesRes.error);
 
         setPanels(panelsRes.data?.items ?? []);
         setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+        setEmbeds(normalizeTicketEmbeds(embedsRes.data));
         let all = normalizeTicketChannels(channelsRes.data);
 
         // Retry uncached once if we ended up with an empty list (stale/invalid cache payload).
@@ -1669,7 +1845,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
           </Card>
         ) : (
           panels.map((panel) => (
-            <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds}
+            <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
               onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
             />
           ))
