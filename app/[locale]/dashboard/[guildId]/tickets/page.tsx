@@ -782,6 +782,7 @@ function TicketPanelTab({
   const [didAutoSave, setDidAutoSave] = useState(false);
   const [embedName, setEmbedName] = useState(panel.embed_name ?? "disabled");
   const skipNextAutosave = useRef(true);
+  const hasPendingUserChange = useRef(false);
   const embedOptions = Array.from(new Set([...(panel.embed_name ? [panel.embed_name] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
   const selectedEmbed = embeds.find((embed) => embed.name === (embedName === "disabled" ? null : embedName));
   const selectedEmbedData = toEmbedDataRecord(selectedEmbed?.data);
@@ -805,11 +806,15 @@ function TicketPanelTab({
     setEmbedName(panel.embed_name ?? "disabled");
     setDidAutoSave(false);
     skipNextAutosave.current = true;
+    hasPendingUserChange.current = false;
   }, [panel.name, panel.embed_name]);
 
   useEffect(() => {
     if (skipNextAutosave.current) {
       skipNextAutosave.current = false;
+      return;
+    }
+    if (!hasPendingUserChange.current) {
       return;
     }
 
@@ -822,6 +827,7 @@ function TicketPanelTab({
         const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
         if (res.error) throw new Error(res.error);
         setDidAutoSave(true);
+        hasPendingUserChange.current = false;
       } catch (err) {
         toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
       } finally {
@@ -840,11 +846,16 @@ function TicketPanelTab({
           <p className="text-xs text-muted-foreground">
             {t("panelEmbedHint")} {isSaving ? t("autoSaveSaving") : didAutoSave ? t("autoSaveSaved") : ""}
           </p>
-          <Select value={embedName} onValueChange={setEmbedName}>
+          <Select value={embedName} onValueChange={(value) => {
+            hasPendingUserChange.current = true;
+            setDidAutoSave(false);
+            setEmbedName(value);
+          }}>
             <SelectTrigger>
               <SelectValue placeholder={t("selectEmbed")} />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="disabled">{t("defaultEmbed")}</SelectItem>
               {embedOptions.map((embed) => (
                 <SelectItem key={embed} value={embed}>{embed}</SelectItem>
               ))}
@@ -903,6 +914,7 @@ function PanelSettingsTab({
   const [isSaving, setIsSaving] = useState(false);
   const [didAutoSave, setDidAutoSave] = useState(false);
   const skipNextAutosave = useRef(true);
+  const hasPendingUserChange = useRef(false);
   const [form, setForm] = useState({
     open_category: panel.open_category ?? "disabled",
     sleep_category: panel.sleep_category ?? "disabled",
@@ -913,7 +925,11 @@ function PanelSettingsTab({
   });
 
   const toNullable = (v: string) => (v === "disabled" ? null : v);
-  const set = (key: keyof typeof form) => (val: string) => setForm((p) => ({ ...p, [key]: val }));
+  const set = (key: keyof typeof form) => (val: string) => {
+    hasPendingUserChange.current = true;
+    setDidAutoSave(false);
+    setForm((p) => ({ ...p, [key]: val }));
+  };
 
   useEffect(() => {
     setForm({
@@ -926,6 +942,7 @@ function PanelSettingsTab({
     });
     setDidAutoSave(false);
     skipNextAutosave.current = true;
+    hasPendingUserChange.current = false;
   }, [
     panel.name,
     panel.open_category,
@@ -939,6 +956,9 @@ function PanelSettingsTab({
   useEffect(() => {
     if (skipNextAutosave.current) {
       skipNextAutosave.current = false;
+      return;
+    }
+    if (!hasPendingUserChange.current) {
       return;
     }
 
@@ -956,6 +976,7 @@ function PanelSettingsTab({
         const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
         if (res.error) throw new Error(res.error);
         setDidAutoSave(true);
+        hasPendingUserChange.current = false;
       } catch (err) {
         toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
       } finally {
