@@ -55,6 +55,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { cn } from "@/lib/utils";
 import type {
   ApproveMessage,
@@ -75,7 +76,7 @@ import type { ServerClanListItem } from "@/lib/api/types/server";
 interface DiscordChannel {
   id: string;
   name: string;
-  type: number;
+  type: number | string;
   parent_name?: string;
 }
 
@@ -88,6 +89,38 @@ interface DiscordRole {
 const getTicketsPanelsCacheKey = (guildId: string) => `ticket-panels-${guildId}`;
 const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildId}`;
 const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
+
+const getChannelTypeToken = (channel: DiscordChannel): string => {
+  const rawType = (channel as { channel_type?: string | number; channelType?: string | number }).channel_type
+    ?? (channel as { channelType?: string | number }).channelType
+    ?? channel.type;
+  return String(rawType).toLowerCase();
+};
+
+const isCategoryChannel = (channel: DiscordChannel): boolean => {
+  const token = getChannelTypeToken(channel);
+  return token === "4" || token.includes("category");
+};
+
+const isTextLikeChannel = (channel: DiscordChannel): boolean => {
+  const token = getChannelTypeToken(channel);
+  return token === "0" || token === "11" || token === "5" || token.includes("text") || token.includes("news");
+};
+
+const normalizeTicketChannels = (payload: unknown): DiscordChannel[] => {
+  const normalized = normalizeChannelsPayload(payload) as DiscordChannel[];
+  if (normalized.length > 0) {
+    return normalized;
+  }
+
+  if (payload && typeof payload === "object") {
+    const obj = payload as { items?: unknown; results?: unknown };
+    if (Array.isArray(obj.items)) return obj.items as DiscordChannel[];
+    if (Array.isArray(obj.results)) return obj.results as DiscordChannel[];
+  }
+
+  return [];
+};
 
 const getTicketDiscordUrl = (ticket: OpenTicket) =>
   `https://discord.com/channels/${ticket.server}/${ticket.channel}`;
@@ -767,7 +800,13 @@ function ChannelTab({
           {(["open_category", "sleep_category", "closed_category"] as const).map((key) => (
             <div key={key} className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-3">
               <Label className="text-sm">{t(key)}</Label>
-              <ChannelCombobox channels={catChannels} value={form[key]} onValueChange={set(key)} placeholder={t("selectCategory")} />
+              <ChannelCombobox
+                channels={catChannels}
+                value={form[key]}
+                onValueChange={set(key)}
+                placeholder={t("selectCategory")}
+                searchPlaceholder={tCommon("searchCategories")}
+              />
             </div>
           ))}
         </div>
@@ -1523,9 +1562,22 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
 
         setPanels(panelsRes.data?.items ?? []);
         setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
-        const all: DiscordChannel[] = channelsRes.data ?? [];
-        setCategories(all.filter((c) => c.type === 4));
-        setTextChannels(all.filter((c) => c.type === 0 || c.type === 11));
+        let all = normalizeTicketChannels(channelsRes.data);
+
+        // Retry uncached once if we ended up with an empty list (stale/invalid cache payload).
+        if (all.length === 0) {
+          apiCache.invalidate(getServerChannelsCacheKey(guildId));
+          const uncachedChannelsRes = await apiClient.servers.getChannels(guildId);
+          if (!uncachedChannelsRes.error) {
+            all = normalizeTicketChannels(uncachedChannelsRes.data);
+          }
+        }
+
+        const categoryChannels = all.filter(isCategoryChannel);
+        const logChannels = all.filter(isTextLikeChannel);
+
+        setCategories(categoryChannels);
+        setTextChannels(logChannels);
         setRoles(rolesRes.data?.roles ?? []);
       } catch (err) {
         toast({
