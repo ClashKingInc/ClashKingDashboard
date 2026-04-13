@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
-import { DiscordEmbedPreview, extractFirstEmbed } from "@/components/dashboard/discord-embed-preview";
+import { DiscordEmbedPreview, extractEmbeds } from "@/components/dashboard/discord-embed-preview";
 import { cn } from "@/lib/utils";
 import { BUTTON_TYPES, BUTTON_COLORS } from "@/lib/api/types/panels";
 import type { ButtonColor, ServerPanel } from "@/lib/api/types/panels";
@@ -193,7 +193,7 @@ export default function PanelsPage() {
 
   // Embed preview data
   const selectedEmbed = embeds.find(e => e.name === embedName);
-  const embedPreview = selectedEmbed?.data ? extractFirstEmbed(selectedEmbed.data) : null;
+  const embedPreviews = selectedEmbed?.data ? extractEmbeds(selectedEmbed.data) : [];
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
   const resolvedWelcomeChannelName = channels.find(c => c.id === welcomeChannel)?.name;
   let embedPreviewContent = (
@@ -203,8 +203,17 @@ export default function PanelsPage() {
   );
   if (isEmbedsLoading) {
     embedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
-  } else if (embedPreview) {
-    embedPreviewContent = <DiscordEmbedPreview embed={embedPreview} />;
+  } else if (embedPreviews.length > 0) {
+    embedPreviewContent = (
+      <div className="space-y-2">
+        {embedPreviews.map((embed, i) => (
+          <DiscordEmbedPreview
+            key={`${selectedEmbed?.name ?? "embed"}-${embed.title ?? "embed"}-${i}`} // NOSONAR — index keeps duplicate embed titles distinct
+            embed={embed}
+          />
+        ))}
+      </div>
+    );
   }
 
   let buttonsPreviewContent = <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>;

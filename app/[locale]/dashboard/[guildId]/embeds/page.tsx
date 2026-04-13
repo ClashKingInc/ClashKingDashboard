@@ -32,7 +32,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { EmbedEditor } from "@/components/dashboard/embed-editor";
-import { DiscordEmbedPreview, extractFirstEmbed } from "@/components/dashboard/discord-embed-preview";
+import { DiscordEmbedPreview, extractEmbeds } from "@/components/dashboard/discord-embed-preview";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
 
 // ─── Discohook URL builder (kept for list actions) ────────────────────────────
@@ -218,19 +218,20 @@ export default function EmbedsPage() {
         ) : (
           <div className="space-y-2">
             {embeds.map((embed) => {
-              const preview = embed.data ? extractFirstEmbed(embed.data) : null;
+              const previews = embed.data ? extractEmbeds(embed.data) : [];
+              const hasPreview = previews.length > 0;
               const isExpanded = expandedName === embed.name;
               return (
                 <div key={embed.name} className="rounded-xl border border-border/60 bg-card overflow-hidden">
                   <div className="flex items-center gap-3 px-4 py-3">
                     <button
                       onClick={() => setExpandedName(isExpanded ? null : embed.name)}
-                      className={cn("flex items-center gap-2 flex-1 min-w-0 text-left", !preview && "cursor-default")}
-                      disabled={!preview}
+                      className={cn("flex items-center gap-2 flex-1 min-w-0 text-left", !hasPreview && "cursor-default")}
+                      disabled={!hasPreview}
                     >
                       <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
                       <span className="flex-1 font-medium text-sm truncate">{embed.name}</span>
-                      {preview && (
+                      {hasPreview && (
                         <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform shrink-0", isExpanded && "rotate-180")} />
                       )}
                     </button>
@@ -260,9 +261,16 @@ export default function EmbedsPage() {
                       </Button>
                     </div>
                   </div>
-                  {preview && isExpanded && (
+                  {hasPreview && isExpanded && (
                     <div className="border-t border-border/60 px-4 py-3 bg-muted/20">
-                      <DiscordEmbedPreview embed={preview} />
+                      <div className="space-y-2">
+                        {previews.map((preview, i) => (
+                          <DiscordEmbedPreview
+                            key={`${embed.name}-${preview.title ?? "embed"}-${i}`} // NOSONAR — index keeps duplicate embed titles distinct
+                            embed={preview}
+                          />
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
