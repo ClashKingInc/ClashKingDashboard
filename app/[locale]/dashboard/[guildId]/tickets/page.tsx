@@ -1482,10 +1482,10 @@ function PanelCard({
                 <TabsTrigger value="buttons">{t("tabButtons")}</TabsTrigger>
                 <TabsTrigger value="messages">{t("tabMessages")}</TabsTrigger>
               </TabsList>
-              <TabsContent value="channels" className="mt-0">
+              <TabsContent value="channels" className="mt-0" forceMount>
                 <ChannelTab panel={panel} categories={categories} textChannels={textChannels} guildId={guildId} availableEmbeds={availableEmbeds} />
               </TabsContent>
-              <TabsContent value="buttons" className="mt-0">
+              <TabsContent value="buttons" className="mt-0" forceMount>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <p className="text-xs text-muted-foreground">{components.length}/5 {t("buttons")}</p>
@@ -1517,7 +1517,7 @@ function PanelCard({
                   )}
                 </div>
               </TabsContent>
-              <TabsContent value="messages" className="mt-0">
+              <TabsContent value="messages" className="mt-0" forceMount>
                 <MessagesTab panel={panel} guildId={guildId} />
               </TabsContent>
             </Tabs>
