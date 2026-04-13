@@ -1306,7 +1306,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
       ) : (
         <div className="space-y-3">
           {messages.map((msg, i) => (
-            <div key={msg.name || i} className="rounded-lg border border-border p-4 space-y-3">
+            <div key={`message-${i}`} className="rounded-lg border border-border p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <Input className="h-8 flex-1 font-medium" value={msg.name}
                   onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, name: e.target.value } : m))} // NOSONAR — inline state updater in map, standard React pattern
