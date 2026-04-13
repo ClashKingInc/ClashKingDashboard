@@ -268,8 +268,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
 
   const addEmbed = () => {
-    if (embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return;
     setEmbeds(prev => {
+      if (prev.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return prev;
       setActiveEmbedIndex(prev.length);
       return [...prev, defaultState()];
     });

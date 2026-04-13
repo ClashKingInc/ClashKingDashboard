@@ -53,7 +53,15 @@ function isDiscordEmbed(value: unknown): value is DiscordEmbed {
   if (!value || typeof value !== "object") return false;
   const embed = value as Record<string, unknown>;
   return Boolean(
-    embed.title || embed.description || embed.author || embed.fields || embed.image || embed.thumbnail || embed.footer
+    embed.title ||
+    embed.description ||
+    embed.author ||
+    embed.fields ||
+    embed.image ||
+    embed.thumbnail ||
+    embed.footer ||
+    embed.url ||
+    embed.timestamp
   );
 }
 
