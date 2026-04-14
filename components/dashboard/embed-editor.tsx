@@ -131,6 +131,7 @@ function extractMessageContent(data: Record<string, unknown>): string {
     for (const message of messages) {
       const content = (message as { data?: { content?: unknown } })?.data?.content;
       if (typeof content === "string") {
+        if (content.trim().length === 0) continue;
         return content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
       }
     }
@@ -138,6 +139,7 @@ function extractMessageContent(data: Record<string, unknown>): string {
 
   const topLevelContent = (data as { content?: unknown }).content;
   if (typeof topLevelContent === "string") {
+    if (topLevelContent.trim().length === 0) return "";
     return topLevelContent.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
   }
 
