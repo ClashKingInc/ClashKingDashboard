@@ -285,14 +285,14 @@ type SeriesPoint = {
   proxyFailures: number;
 };
 
-type InternalMetricsSectionsProps = {
+type InternalMetricsSectionsProps = Readonly<{
   hasSeriesData: boolean;
   isLoading: boolean;
   oneMinuteWindow: StatsWindow | null;
   seriesPoints: SeriesPoint[];
   summaryCards: SummaryCard[];
   stats: StatsResponse | null;
-};
+}>;
 
 function InternalMetricsSections({
   hasSeriesData,
