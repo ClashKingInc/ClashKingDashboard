@@ -641,6 +641,10 @@ export function InternalDashboard() {
   }, [locale, router]);
 
   useEffect(() => {
+    if (isForbidden) {
+      return;
+    }
+
     const intervalId = globalThis.setInterval(() => {
       setRefreshTick((value) => value + 1);
     }, liveMode ? LIVE_REFRESH_MS : DEFAULT_REFRESH_MS);
@@ -648,7 +652,7 @@ export function InternalDashboard() {
     return () => {
       globalThis.clearInterval(intervalId);
     };
-  }, [liveMode]);
+  }, [isForbidden, liveMode]);
 
   useEffect(() => {
     const accessToken = globalThis.localStorage.getItem("access_token");
