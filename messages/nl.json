@@ -2551,6 +2551,7 @@
       "showMore": "{count} meer tonen",
       "pendingUpdate": "Update in behandeling",
       "pendingUpdateHelp": "Deze giveaway heeft wijzigingen die de bot binnenkort zal toepassen.",
+      "openInDiscord": "Open in Discord",
       "viewInDiscord": "Bekijk op Discord",
       "reroll": "Herrol winnaars",
       "rerolledCount": "{count, plural, one {# hergerold} other {# hergerold}}"

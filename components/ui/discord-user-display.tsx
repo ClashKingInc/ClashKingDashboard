@@ -27,6 +27,8 @@ export interface DiscordUserDisplayProps {
   showPopover?: boolean;
   /** Additional class name */
   className?: string;
+  /** Optional custom trigger content (used instead of default avatar+name trigger) */
+  triggerContent?: React.ReactNode;
 }
 
 /**
@@ -58,6 +60,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
   size = "sm",
   showPopover = true,
   className,
+  triggerContent,
 }: DiscordUserDisplayProps) {
   const t = useTranslations("DiscordUserDisplay");
   const [copied, setCopied] = React.useState(false);
@@ -96,7 +99,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
     }
   };
 
-  const displayContent = (
+  const defaultDisplayContent = (
     <div
       className={cn(
         "flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity",
@@ -137,6 +140,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
       </span>
     </div>
   );
+  const displayContent = triggerContent ?? defaultDisplayContent;
 
   if (!showPopover) {
     return displayContent;
