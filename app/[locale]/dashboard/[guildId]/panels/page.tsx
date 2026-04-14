@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
-import { DiscordMessagePreview, extractEmbeds } from "@/components/dashboard/discord-embed-preview";
+import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile } from "@/components/dashboard/discord-embed-preview";
 import { cn } from "@/lib/utils";
 import { BUTTON_TYPES, BUTTON_COLORS } from "@/lib/api/types/panels";
 import type { ButtonColor, ServerPanel } from "@/lib/api/types/panels";
@@ -194,6 +194,9 @@ export default function PanelsPage() {
   // Embed preview data
   const selectedEmbed = embeds.find(e => e.name === embedName);
   const embedPreviews = selectedEmbed?.data ? extractEmbeds(selectedEmbed.data) : [];
+  const messageContent = selectedEmbed?.data ? extractMessageContent(selectedEmbed.data) : null;
+  const messageProfile = selectedEmbed?.data ? extractMessageProfile(selectedEmbed.data) : null;
+  const hasMessageProfile = Boolean(messageProfile?.name || messageProfile?.avatar_url);
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
   const resolvedWelcomeChannelName = channels.find(c => c.id === welcomeChannel)?.name;
   let embedPreviewContent = (
@@ -203,9 +206,13 @@ export default function PanelsPage() {
   );
   if (isEmbedsLoading) {
     embedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
-  } else if (embedPreviews.length > 0) {
+  } else if (embedPreviews.length > 0 || Boolean(messageContent) || hasMessageProfile) {
     embedPreviewContent = (
-      <DiscordMessagePreview embeds={embedPreviews} />
+      <DiscordMessagePreview
+        profile={messageProfile}
+        content={messageContent}
+        embeds={embedPreviews}
+      />
     );
   }
 
