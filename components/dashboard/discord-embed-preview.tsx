@@ -98,6 +98,51 @@ export interface DiscordMessageProfile {
   avatar_url?: string;
 }
 
+type UnknownRecord = Record<string, unknown>;
+
+function profileFromPair(name: unknown, avatarUrl: unknown): DiscordMessageProfile | null {
+  const normalizedName = typeof name === "string" ? name : undefined;
+  const normalizedAvatarUrl = typeof avatarUrl === "string" ? avatarUrl : undefined;
+  if (!normalizedName && !normalizedAvatarUrl) return null;
+  return { name: normalizedName, avatar_url: normalizedAvatarUrl };
+}
+
+function profileFromMessageData(message: UnknownRecord): DiscordMessageProfile | null {
+  const messageData = (message.data ?? null) as UnknownRecord | null;
+  if (!messageData) return null;
+
+  const directProfile = profileFromPair(messageData.username, messageData.avatar_url);
+  if (directProfile) return directProfile;
+
+  const messageAuthor = (messageData.author ?? null) as UnknownRecord | null;
+  if (!messageAuthor) return null;
+  return profileFromPair(messageAuthor.name, messageAuthor.icon_url);
+}
+
+function profileFromMessageLevel(message: UnknownRecord): DiscordMessageProfile | null {
+  const directProfile = profileFromPair(message.username, message.avatar_url);
+  if (directProfile) return directProfile;
+
+  const nestedProfile = (message.profile ?? null) as UnknownRecord | null;
+  if (!nestedProfile) return null;
+  return profileFromPair(nestedProfile.name, nestedProfile.avatar_url);
+}
+
+function profileFromMessage(message: unknown): DiscordMessageProfile | null {
+  if (!message || typeof message !== "object") return null;
+  const messageRecord = message as UnknownRecord;
+  return profileFromMessageData(messageRecord) ?? profileFromMessageLevel(messageRecord);
+}
+
+function profileFromTopLevel(data: UnknownRecord): DiscordMessageProfile | null {
+  const nestedProfile = (data.profile ?? null) as UnknownRecord | null;
+  if (nestedProfile) {
+    const profile = profileFromPair(nestedProfile.name, nestedProfile.avatar_url);
+    if (profile) return profile;
+  }
+  return profileFromPair(data.username, data.avatar_url);
+}
+
 export function extractMessageContent(data: Record<string, unknown>): string | null {
   const messages = (data as { messages?: unknown }).messages;
   if (Array.isArray(messages) && messages.length > 0) {
@@ -123,72 +168,12 @@ export function extractMessageProfile(data: Record<string, unknown>): DiscordMes
   const messages = (data as { messages?: unknown }).messages;
   if (Array.isArray(messages)) {
     for (const message of messages) {
-      const dataUsername = (message as { data?: { username?: unknown } })?.data?.username;
-      const dataAvatarUrl = (message as { data?: { avatar_url?: unknown } })?.data?.avatar_url;
-      if (typeof dataUsername === "string" || typeof dataAvatarUrl === "string") {
-        return {
-          name: typeof dataUsername === "string" ? dataUsername : undefined,
-          avatar_url: typeof dataAvatarUrl === "string" ? dataAvatarUrl : undefined,
-        };
-      }
-
-      const dataAuthor = (message as { data?: { author?: unknown } })?.data?.author;
-      if (dataAuthor && typeof dataAuthor === "object") {
-        const authorName = (dataAuthor as { name?: unknown }).name;
-        const authorIcon = (dataAuthor as { icon_url?: unknown }).icon_url;
-        if (typeof authorName === "string" || typeof authorIcon === "string") {
-          return {
-            name: typeof authorName === "string" ? authorName : undefined,
-            avatar_url: typeof authorIcon === "string" ? authorIcon : undefined,
-          };
-        }
-      }
-
-      const username = (message as { username?: unknown }).username;
-      const avatarUrl = (message as { avatar_url?: unknown }).avatar_url;
-      if (typeof username === "string" || typeof avatarUrl === "string") {
-        return {
-          name: typeof username === "string" ? username : undefined,
-          avatar_url: typeof avatarUrl === "string" ? avatarUrl : undefined,
-        };
-      }
-
-      const profile = (message as { profile?: unknown })?.profile;
-      if (profile && typeof profile === "object") {
-        const name = (profile as { name?: unknown }).name;
-        const avatarProfileUrl = (profile as { avatar_url?: unknown }).avatar_url;
-        if (typeof name === "string" || typeof avatarProfileUrl === "string") {
-          return {
-            name: typeof name === "string" ? name : undefined,
-            avatar_url: typeof avatarProfileUrl === "string" ? avatarProfileUrl : undefined,
-          };
-        }
-      }
+      const messageProfile = profileFromMessage(message);
+      if (messageProfile) return messageProfile;
     }
   }
 
-  const topLevelProfile = (data as { profile?: unknown }).profile;
-  if (topLevelProfile && typeof topLevelProfile === "object") {
-    const name = (topLevelProfile as { name?: unknown }).name;
-    const avatarUrl = (topLevelProfile as { avatar_url?: unknown }).avatar_url;
-    if (typeof name === "string" || typeof avatarUrl === "string") {
-      return {
-        name: typeof name === "string" ? name : undefined,
-        avatar_url: typeof avatarUrl === "string" ? avatarUrl : undefined,
-      };
-    }
-  }
-
-  const topLevelName = (data as { username?: unknown }).username;
-  const topLevelAvatar = (data as { avatar_url?: unknown }).avatar_url;
-  if (typeof topLevelName === "string" || typeof topLevelAvatar === "string") {
-    return {
-      name: typeof topLevelName === "string" ? topLevelName : undefined,
-      avatar_url: typeof topLevelAvatar === "string" ? topLevelAvatar : undefined,
-    };
-  }
-
-  return null;
+  return profileFromTopLevel(data);
 }
 
 /** Extract the first embed from any Discohook-compatible payload shape */

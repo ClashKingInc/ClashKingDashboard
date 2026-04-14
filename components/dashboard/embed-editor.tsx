@@ -56,6 +56,8 @@ interface MessageProfileState {
   avatarUrl: string;
 }
 
+const EMPTY_MESSAGE_PROFILE: MessageProfileState = { name: "", avatarUrl: "" };
+
 function createCollapsedSectionState(): Record<SectionKey, boolean> {
   return {
     author: false,
@@ -197,7 +199,7 @@ function hasMeaningfulEmbedContent(embed: DiscordEmbed): boolean {
 }
 
 /** Outputs the Discohook-compatible payload stored in MongoDB */
-export function stateToPayload(states: EmbedFormState[], content = "", profile: MessageProfileState = { name: "", avatarUrl: "" }): Record<string, unknown> {
+export function stateToPayload(states: EmbedFormState[], content = "", profile: MessageProfileState = EMPTY_MESSAGE_PROFILE): Record<string, unknown> {
   const embeds = states
     .map(stateToEmbed)
     .filter(hasMeaningfulEmbedContent)
