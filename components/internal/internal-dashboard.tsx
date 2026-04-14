@@ -659,14 +659,6 @@ export function InternalDashboard() {
     const user = parseStoredUser();
     if (user) {
       setStoredUser(user);
-      if (!isDeveloperUserId(user.user_id)) {
-        setIsForbidden(true);
-        setIsLoading(false);
-        setIsRefreshing(false);
-        setError(null);
-        setStats(null);
-        return;
-      }
     }
 
     let isCancelled = false;

@@ -160,6 +160,7 @@ describe("internal proxy stats route", () => {
         .mockResolvedValue({ user_id: "506210109790093342" }),
     });
     fetchMock.mockResolvedValueOnce({
+      ok: true,
       status: 200,
       json: vi.fn().mockRejectedValue(new SyntaxError("not json")),
     });
@@ -168,7 +169,7 @@ describe("internal proxy stats route", () => {
       makeRequest(undefined, { authorization: "Bearer dev" })
     );
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(502);
     await expect(response.json()).resolves.toEqual({
       error: "Invalid response from proxy stats upstream",
     });
