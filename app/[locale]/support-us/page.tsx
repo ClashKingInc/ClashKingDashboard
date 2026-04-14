@@ -1,5 +1,3 @@
-"use client";
-
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { SupportContent } from "@/components/support/support-content";

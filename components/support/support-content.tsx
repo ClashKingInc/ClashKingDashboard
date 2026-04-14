@@ -34,6 +34,7 @@ export function SupportContent({ compact = false }: SupportContentProps) {
           <Link
             href="https://support.clashk.ing/"
             target="_blank"
+            rel="noopener noreferrer"
             className="bg-primary text-white px-6 py-3 rounded-lg font-bold text-center hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
           >
             {t("patreon.cta")} <ExternalLink size={18} />
@@ -54,6 +55,7 @@ export function SupportContent({ compact = false }: SupportContentProps) {
             <Link
               href="https://link.clashofclans.com/en/?action=SupportCreator&id=Clashking"
               target="_blank"
+              rel="noopener noreferrer"
               className="w-full bg-muted text-foreground px-6 py-3 rounded-lg font-bold text-center hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
             >
               {t("creatorCode.ctaGame")} <ExternalLink size={18} />
@@ -61,6 +63,7 @@ export function SupportContent({ compact = false }: SupportContentProps) {
             <Link
               href="https://store.supercell.com/en/clashofclans?boost=clashking"
               target="_blank"
+              rel="noopener noreferrer"
               className="w-full bg-muted text-foreground px-6 py-3 rounded-lg font-bold text-center hover:bg-muted/80 transition-colors flex items-center justify-center gap-2"
             >
               {t("creatorCode.ctaStore")} <ExternalLink size={18} />
