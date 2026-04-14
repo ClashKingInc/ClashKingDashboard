@@ -1,9 +1,13 @@
 "use client";
 
-import { type ComponentType, useEffect, useRef, useState } from "react";
+import { type ComponentType, type Dispatch, type ReactNode, type SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
+  ArrowDown,
+  ArrowUp,
+  AlertCircle,
   AlertTriangle,
   CheckCircle2,
   ChevronDown,
@@ -27,6 +31,7 @@ import { apiCache } from "@/lib/api-cache";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -55,6 +60,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { DiscordEmbedPreview, extractEmbeds, type DiscordEmbed } from "@/components/dashboard/discord-embed-preview";
 import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { cn } from "@/lib/utils";
@@ -92,6 +98,8 @@ const getTicketsPanelsCacheKey = (guildId: string) => `ticket-panels-${guildId}`
 const getTicketsEmbedsCacheKey = (guildId: string) => `ticket-embeds-${guildId}`;
 const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildId}`;
 const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
+const MAX_APPROVE_MESSAGE_NAME_LENGTH = 100;
+const MAX_APPROVE_MESSAGE_CONTENT_LENGTH = 2000;
 
 const stripTrailingSlashes = (value: string): string => {
   let normalized = value;
@@ -182,23 +190,54 @@ const TRANSCRIPT_BASE_URL = stripTrailingSlashes(process.env.NEXT_PUBLIC_TRANSCR
 const getTranscriptUrl = (ticket: OpenTicket) =>
   `${TRANSCRIPT_BASE_URL}/transcript-channel-${ticket.channel}.html`;
 
-function TicketAccountsCell({ ticket }: { readonly ticket: OpenTicket }) {
+const DEFAULT_PREVIEW_ACCENT = "#3ba55d";
+
+function TicketAccountsCell({
+  ticket,
+  fallbackAccountName,
+}: {
+  readonly ticket: OpenTicket;
+  readonly fallbackAccountName?: string | null;
+}) {
   const accounts = ticket.linked_accounts ?? [];
 
   if (accounts.length === 0) {
-    return <span className="font-mono text-xs text-muted-foreground">{ticket.apply_account ?? "—"}</span>;
+    if (!ticket.apply_account) {
+      return <span className="text-xs text-muted-foreground">—</span>;
+    }
+
+    const normalizedTag = normalizePlayerTag(ticket.apply_account);
+    const playerName = fallbackAccountName ?? normalizedTag;
+
+    return (
+      <PlayerProfilePopover
+        playerName={playerName}
+        playerTag={normalizedTag}
+        showTagInTrigger={false}
+        triggerClassName="text-left hover:opacity-80 transition-opacity"
+      >
+        <span className="text-xs font-medium text-foreground underline-offset-2 hover:underline">
+          {playerName}
+        </span>
+      </PlayerProfilePopover>
+    );
   }
 
   return (
     <div className="space-y-1">
       {accounts.slice(0, 2).map((account) => (
         <div key={account.player_tag} className="text-xs leading-tight">
-          <span className="font-medium text-foreground">
-            {account.player_name ?? account.player_tag}
-          </span>
-          <span className="ml-2 font-mono text-muted-foreground">
-            {account.player_tag}
-          </span>
+          <PlayerProfilePopover
+            playerName={account.player_name ?? account.player_tag}
+            playerTag={account.player_tag}
+            townhallLevel={account.town_hall}
+            showTagInTrigger={false}
+            triggerClassName="text-left hover:opacity-80 transition-opacity"
+          >
+            <span className="font-medium text-foreground underline-offset-2 hover:underline">
+              {account.player_name ?? account.player_tag}
+            </span>
+          </PlayerProfilePopover>
           {account.town_hall ? (
             <Badge variant="outline" className="ml-2 h-5 px-1.5 text-[10px]">
               TH{account.town_hall}
@@ -212,6 +251,12 @@ function TicketAccountsCell({ ticket }: { readonly ticket: OpenTicket }) {
     </div>
   );
 }
+
+const normalizePlayerTag = (value: string): string => {
+  const trimmed = value.trim();
+  const withoutPrefix = trimmed.replace(/^#/, "");
+  return `#${withoutPrefix.toUpperCase()}`;
+};
 
 function TicketManageDialog({
   open,
@@ -304,7 +349,7 @@ function TicketManageDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="bg-card border-border sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t("manage.title", { number: ticket.number })}</DialogTitle>
           <DialogDescription>{t("manage.description")}</DialogDescription>
@@ -320,21 +365,29 @@ function TicketManageDialog({
           </div>
 
           <div className="grid gap-3 text-sm sm:grid-cols-3">
-            <div className="rounded-lg border bg-muted/20 p-3">
+            <div className="rounded-lg border border-border bg-background p-3">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.panel")}</p>
               <p className="mt-1 font-medium">{ticket.panel}</p>
             </div>
-            <div className="rounded-lg border bg-muted/20 p-3">
+            <div className="rounded-lg border border-border bg-background p-3">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.user")}</p>
-              <p className="mt-1 font-mono text-xs">{ticket.user}</p>
+              <div className="mt-1">
+                <DiscordUserDisplay
+                  userId={ticket.user}
+                  username={ticket.discord_display_name ?? ticket.discord_username}
+                  avatarUrl={ticket.discord_avatar_url}
+                />
+              </div>
             </div>
-            <div className="rounded-lg border bg-muted/20 p-3">
+            <div className="rounded-lg border border-border bg-background p-3">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.account")}</p>
-              <p className="mt-1 font-mono text-xs">{ticket.apply_account ?? "—"}</p>
+              <div className="mt-1">
+                <TicketAccountsCell ticket={ticket} />
+              </div>
             </div>
           </div>
 
-          <div className="rounded-xl border bg-card p-4">
+          <div className="rounded-xl border border-border bg-background p-4">
             <div className="mb-3">
               <Label className="text-sm font-medium">{t("manage.statusLabel")}</Label>
             </div>
@@ -360,7 +413,7 @@ function TicketManageDialog({
             </div>
           </div>
 
-          <div className="rounded-xl border bg-card p-4">
+          <div className="rounded-xl border border-border bg-background p-4">
             <div className="mb-3">
               <Label className="text-sm font-medium">{t("manage.clanLabel")}</Label>
             </div>
@@ -408,6 +461,8 @@ function TicketManageDialog({
 // ─── Tickets tab ─────────────────────────────────────────────────────────────
 
 type StatusFilter = "all" | "open" | "sleep" | "closed";
+type TicketSortKey = "number" | "panel" | "status" | "user" | "clan" | "account";
+type SortDirection = "asc" | "desc";
 
 const STATUS_BADGE_CLASS: Record<string, string> = {
   open: "border-green-500/40 bg-green-500/10 text-green-500",
@@ -486,6 +541,9 @@ function TicketsTab({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<OpenTicket | null>(null);
   const [manageOpen, setManageOpen] = useState(false);
+  const [sortKey, setSortKey] = useState<TicketSortKey>("number");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [accountNameByTag, setAccountNameByTag] = useState<Record<string, string | null>>({});
 
   const ticketsCacheKey = `open-tickets-${guildId}`;
   const clansCacheKey = `clans-${guildId}`;
@@ -507,9 +565,29 @@ function TicketsTab({
       if (clansResponse.error) throw new Error(clansResponse.error);
 
       const ticketsByChannel = new Map<string, OpenTicket>();
+      const mergeTicket = (existing: OpenTicket, incoming: OpenTicket): OpenTicket => {
+        const existingLinkedCount = existing.linked_accounts?.length ?? 0;
+        const incomingLinkedCount = incoming.linked_accounts?.length ?? 0;
+
+        return {
+          ...existing,
+          ...incoming,
+          discord_username: incoming.discord_username ?? existing.discord_username,
+          discord_display_name: incoming.discord_display_name ?? existing.discord_display_name,
+          discord_avatar_url: incoming.discord_avatar_url ?? existing.discord_avatar_url,
+          apply_account: incoming.apply_account ?? existing.apply_account,
+          linked_accounts: incomingLinkedCount > 0
+            ? incoming.linked_accounts
+            : existingLinkedCount > 0
+              ? existing.linked_accounts
+              : incoming.linked_accounts ?? existing.linked_accounts,
+        };
+      };
+
       const addTickets = (items: OpenTicket[]) => {
         for (const ticket of items) {
-          ticketsByChannel.set(ticket.channel, ticket);
+          const existing = ticketsByChannel.get(ticket.channel);
+          ticketsByChannel.set(ticket.channel, existing ? mergeTicket(existing, ticket) : ticket);
         }
       };
 
@@ -581,21 +659,171 @@ function TicketsTab({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId]);
 
+  const fallbackAccountTags = useMemo(() => {
+    const tags = new Set<string>();
+    for (const ticket of allTickets) {
+      const hasLinkedAccounts = (ticket.linked_accounts?.length ?? 0) > 0;
+      if (hasLinkedAccounts || !ticket.apply_account) continue;
+      tags.add(normalizePlayerTag(ticket.apply_account));
+    }
+    return Array.from(tags);
+  }, [allTickets]);
+
+  useEffect(() => {
+    setAccountNameByTag((prev) => {
+      const next = { ...prev };
+      let hasChanges = false;
+      for (const ticket of allTickets) {
+        for (const account of ticket.linked_accounts ?? []) {
+          if (!account.player_name) continue;
+          const normalizedTag = normalizePlayerTag(account.player_tag);
+          if (next[normalizedTag] === account.player_name) continue;
+          next[normalizedTag] = account.player_name;
+          hasChanges = true;
+        }
+      }
+      return hasChanges ? next : prev;
+    });
+  }, [allTickets]);
+
+  useEffect(() => {
+    const tagsToFetch = fallbackAccountTags.filter((tag) => accountNameByTag[tag] === undefined);
+    if (tagsToFetch.length === 0) return;
+
+    let cancelled = false;
+
+    const loadFallbackAccountNames = async () => {
+      const responses = await Promise.allSettled(
+        tagsToFetch.map(async (tag) => {
+          const cleanTag = tag.replace(/^#/, "");
+          const primaryResponse = await apiClient.players.getPlayerInfo(tag);
+          const fallbackResponse = primaryResponse.error
+            ? await apiClient.players.getPlayerInfo(cleanTag)
+            : primaryResponse;
+          const payload = fallbackResponse.data as
+            | { name?: string; player_name?: string; data?: { name?: string; player_name?: string }; items?: Array<{ name?: string; player_name?: string }> }
+            | undefined;
+          const resolvedName =
+            payload?.name
+            ?? payload?.player_name
+            ?? payload?.data?.name
+            ?? payload?.data?.player_name
+            ?? payload?.items?.[0]?.name
+            ?? payload?.items?.[0]?.player_name
+            ?? null;
+          return {
+            tag,
+            name: fallbackResponse.error ? null : resolvedName,
+          };
+        }),
+      );
+
+      if (cancelled) return;
+
+      setAccountNameByTag((prev) => {
+        const next = { ...prev };
+        let hasChanges = false;
+        for (const response of responses) {
+          if (response.status !== "fulfilled") continue;
+          if (next[response.value.tag] === response.value.name) continue;
+          next[response.value.tag] = response.value.name;
+          hasChanges = true;
+        }
+        return hasChanges ? next : prev;
+      });
+    };
+
+    void loadFallbackAccountNames();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [accountNameByTag, fallbackAccountTags]);
+
   const counts: Record<StatusFilter, number> = {
     all: allTickets.length,
     open: allTickets.filter((t) => t.status === "open").length,
     sleep: allTickets.filter((t) => t.status === "sleep").length,
     closed: allTickets.filter((t) => t.status === "closed" || t.status === "delete").length,
   };
+  const clanByTag = useMemo(() => new Map(clans.map((clan) => [clan.tag, clan])), [clans]);
 
-  const displayed =
-    statusFilter === "all"
-      ? allTickets
-      : statusFilter === "closed" // NOSONAR — JSX nested ternary for multi-branch display state
-        ? allTickets.filter((t) => t.status === "closed" || t.status === "delete")
-        : allTickets.filter((t) => t.status === statusFilter);
+  const displayed = useMemo(() => {
+    const filtered =
+      statusFilter === "all"
+        ? allTickets
+        : statusFilter === "closed" // NOSONAR — JSX nested ternary for multi-branch display state
+          ? allTickets.filter((t) => t.status === "closed" || t.status === "delete")
+          : allTickets.filter((t) => t.status === statusFilter);
 
-  const clanByTag = new Map(clans.map((clan) => [clan.tag, clan]));
+    const statusOrder: Record<OpenTicket["status"], number> = {
+      open: 0,
+      sleep: 1,
+      closed: 2,
+      delete: 3,
+    };
+
+    const getPrimaryAccountName = (ticket: OpenTicket): string => {
+      const firstLinkedAccount = ticket.linked_accounts?.[0];
+      if (firstLinkedAccount?.player_name) return firstLinkedAccount.player_name;
+      if (firstLinkedAccount?.player_tag) return firstLinkedAccount.player_tag;
+      if (!ticket.apply_account) return "";
+      const normalizedTag = normalizePlayerTag(ticket.apply_account);
+      return accountNameByTag[normalizedTag] ?? normalizedTag;
+    };
+
+    return [...filtered].sort((a, b) => {
+      let compare = 0;
+
+      switch (sortKey) {
+        case "number":
+          compare = a.number - b.number;
+          break;
+        case "panel":
+          compare = a.panel.localeCompare(b.panel, undefined, { sensitivity: "base" });
+          break;
+        case "status":
+          compare = statusOrder[a.status] - statusOrder[b.status];
+          break;
+        case "user": {
+          const userA = a.discord_display_name ?? a.discord_username ?? a.user;
+          const userB = b.discord_display_name ?? b.discord_username ?? b.user;
+          compare = userA.localeCompare(userB, undefined, { sensitivity: "base" });
+          break;
+        }
+        case "clan": {
+          const clanA = clanByTag.get(a.set_clan ?? "")?.name ?? a.set_clan ?? "";
+          const clanB = clanByTag.get(b.set_clan ?? "")?.name ?? b.set_clan ?? "";
+          compare = clanA.localeCompare(clanB, undefined, { sensitivity: "base" });
+          break;
+        }
+        case "account":
+          compare = getPrimaryAccountName(a).localeCompare(getPrimaryAccountName(b), undefined, { sensitivity: "base" });
+          break;
+      }
+
+      return sortDirection === "asc" ? compare : -compare;
+    });
+  }, [accountNameByTag, allTickets, clanByTag, sortDirection, sortKey, statusFilter]);
+
+  const handleSort = (key: TicketSortKey) => {
+    if (sortKey === key) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortKey(key);
+    setSortDirection("asc");
+  };
+
+  const renderSortIndicator = (key: TicketSortKey) => {
+    if (sortKey !== key) {
+      return <ChevronDown className="h-3.5 w-3.5 opacity-30" />;
+    }
+
+    return sortDirection === "asc"
+      ? <ChevronUp className="h-3.5 w-3.5" />
+      : <ChevronDown className="h-3.5 w-3.5" />;
+  };
 
   return (
     <div className="space-y-6">
@@ -664,12 +892,66 @@ function TicketsTab({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-14">{t("table.number")}</TableHead>
-                  <TableHead>{t("table.panel")}</TableHead>
-                  <TableHead>{tCommon("status")}</TableHead>
-                  <TableHead>{t("table.user")}</TableHead>
-                  <TableHead>{t("table.clan")}</TableHead>
-                  <TableHead>{t("table.account")}</TableHead>
+                  <TableHead className="w-14">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-medium text-left"
+                      onClick={() => handleSort("number")}
+                    >
+                      {t("table.number")}
+                      {renderSortIndicator("number")}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-medium text-left"
+                      onClick={() => handleSort("panel")}
+                    >
+                      {t("table.panel")}
+                      {renderSortIndicator("panel")}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-medium text-left"
+                      onClick={() => handleSort("status")}
+                    >
+                      {tCommon("status")}
+                      {renderSortIndicator("status")}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-medium text-left"
+                      onClick={() => handleSort("user")}
+                    >
+                      {t("table.user")}
+                      {renderSortIndicator("user")}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-medium text-left"
+                      onClick={() => handleSort("clan")}
+                    >
+                      {t("table.clan")}
+                      {renderSortIndicator("clan")}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-medium text-left"
+                      onClick={() => handleSort("account")}
+                    >
+                      {t("table.account")}
+                      {renderSortIndicator("account")}
+                    </button>
+                  </TableHead>
                   <TableHead className="text-right">{t("table.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -721,7 +1003,16 @@ function TicketsTab({
                         <span className="font-mono text-xs text-muted-foreground">—</span>
                       )}
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{ticket.apply_account ?? "—"}</TableCell>
+                    <TableCell>
+                      <TicketAccountsCell
+                        ticket={ticket}
+                        fallbackAccountName={
+                          ticket.apply_account
+                            ? accountNameByTag[normalizePlayerTag(ticket.apply_account)]
+                            : undefined
+                        }
+                      />
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         {ticket.channel_exists ? (
@@ -782,14 +1073,17 @@ function TicketsTab({
 // ─── Configuration tab ───────────────────────────────────────────────────────
 
 function TicketPanelTab({
-  panel, guildId, availableEmbeds, embeds,
+  panel, guildId, availableEmbeds, embeds, previewButtons, onOpenButtonsTab,
 }: {
   readonly panel: TicketPanel;
   readonly guildId: string;
   readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
+  readonly previewButtons: TicketButton[];
+  readonly onOpenButtonsTab: () => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
+  const tCommon = useTranslations("Common");
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [didAutoSave, setDidAutoSave] = useState(false);
@@ -800,8 +1094,23 @@ function TicketPanelTab({
   const selectedEmbed = embeds.find((embed) => embed.name === (embedName === "disabled" ? null : embedName));
   const selectedEmbedData = toEmbedDataRecord(selectedEmbed?.data);
   const embedPreviews = selectedEmbedData ? extractEmbeds(selectedEmbedData) : [];
-  const previewButtons = panel.components ?? [];
   const autoSaveStatusText = getAutoSaveStatusText(isSaving, didAutoSave, t);
+  const embedsInfoTemplate = t("panelEmbedInfoLine1", { dashboardLabel: tCommon("dashboard") });
+  const buttonsInfoTemplate = t("panelEmbedInfoLine2");
+
+  const renderTemplateWithPlaceholder = (template: string, slot: ReactNode) => {
+    const parts = template.split("%s");
+    if (parts.length < 2) {
+      return <>{template} {slot}</>;
+    }
+    return (
+      <>
+        {parts[0]}
+        {slot}
+        {parts.slice(1).join("%s")}
+      </>
+    );
+  };
 
   const getEmbedPreviewKey = (embed: DiscordEmbed): string => {
     return JSON.stringify({
@@ -890,6 +1199,32 @@ function TicketPanelTab({
               ))}
             </SelectContent>
           </Select>
+
+          <Alert className="mt-3 border-blue-500/30 bg-blue-500/5 text-xs">
+            <AlertCircle className="h-4 w-4 text-blue-500" />
+            <AlertDescription className="text-blue-300">
+              <p>
+              {renderTemplateWithPlaceholder(
+                embedsInfoTemplate,
+                <Link href="../embeds" className="font-medium text-blue-400 underline underline-offset-2 hover:text-blue-300">
+                  {t("embeds")}
+                </Link>,
+              )}
+              </p>
+              <p className="mt-1.5">
+              {renderTemplateWithPlaceholder(
+                buttonsInfoTemplate,
+                <button
+                  type="button"
+                  onClick={onOpenButtonsTab}
+                  className="font-medium text-blue-400 underline underline-offset-2 hover:text-blue-300"
+                >
+                  {t("tabButtons")}
+                </button>,
+              )}
+              </p>
+            </AlertDescription>
+          </Alert>
         </div>
         <div className="rounded-xl border border-border/60 bg-card p-4 space-y-2">
           <Label className="text-sm">{t("panelEmbedPreview")}</Label>
@@ -1091,7 +1426,7 @@ const createDefaultButtonSettings = (): TicketButtonSettings => ({
 });
 
 function ButtonCard({
-  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, onDeleted, onAppearanceUpdated,
+  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, onDeleted, onAppearanceUpdated,
 }: {
   readonly customId: string;
   readonly label: string;
@@ -1101,20 +1436,26 @@ function ButtonCard({
   readonly guildId: string;
   readonly roles: DiscordRole[];
   readonly availableEmbeds: string[];
+  readonly embeds: ServerEmbed[];
   readonly onDeleted: () => void;
   readonly onAppearanceUpdated: (label: string, style: number) => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
-  const [expanded, setExpanded] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [editAppearanceOpen, setEditAppearanceOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [editLabel, setEditLabel] = useState(label);
   const [editStyle, setEditStyle] = useState(style);
-  const [isSavingAppearance, setIsSavingAppearance] = useState(false);
+  const [settingsSection, setSettingsSection] = useState<"general" | "requirements" | "embeds">("general");
+
+  useEffect(() => {
+    if (settingsOpen) {
+      setSettingsSection("general");
+    }
+  }, [settingsOpen]);
 
   const handleDeleteButton = async () => {
     setIsDeleting(true);
@@ -1131,24 +1472,6 @@ function ButtonCard({
     }
   };
 
-  const handleSaveAppearance = async () => {
-    if (!editLabel.trim()) return;
-    setIsSavingAppearance(true);
-    try {
-      const res = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
-        label: editLabel,
-        style: editStyle,
-      });
-      if (res.error) throw new Error(res.error);
-      toast({ title: tCommon("success"), description: t("buttonAppearanceSaved") });
-      onAppearanceUpdated(editLabel, editStyle);
-      setEditAppearanceOpen(false);
-    } catch (err) {
-      toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
-    } finally {
-      setIsSavingAppearance(false);
-    }
-  };
   const [form, setForm] = useState<UpdateButtonSettingsRequest>({
     questions: [...settings.questions, "", "", "", "", ""].slice(0, 5),
     mod_role: [...settings.mod_role],
@@ -1167,6 +1490,9 @@ function ButtonCard({
   });
   const [clanTagInput, setClanTagInput] = useState("");
   const embedOptions = Array.from(new Set([...(settings.new_message ? [settings.new_message] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
+  const selectedButtonEmbed = embeds.find((embed) => embed.name === (form.new_message ?? ""));
+  const selectedButtonEmbedData = toEmbedDataRecord(selectedButtonEmbed?.data);
+  const buttonEmbedPreviews = selectedButtonEmbedData ? extractEmbeds(selectedButtonEmbedData) : [];
 
   const setField = <K extends keyof UpdateButtonSettingsRequest>(key: K, val: UpdateButtonSettingsRequest[K]) =>
     setForm((p) => ({ ...p, [key]: val }));
@@ -1215,14 +1541,24 @@ function ButtonCard({
     }));
 
   const handleSave = async () => {
+    if (!editLabel.trim()) return;
     setIsSaving(true);
     try {
-      const res = await apiClient.tickets.updateButtonSettings(guildId, panelName, customId, {
+      const appearanceRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
+        label: editLabel,
+        style: editStyle,
+      });
+      if (appearanceRes.error) throw new Error(appearanceRes.error);
+
+      const settingsRes = await apiClient.tickets.updateButtonSettings(guildId, panelName, customId, {
         ...form,
         questions: form.questions.filter(Boolean),
       });
-      if (res.error) throw new Error(res.error);
+      if (settingsRes.error) throw new Error(settingsRes.error);
+
+      onAppearanceUpdated(editLabel, editStyle);
       toast({ title: tCommon("success"), description: t("buttonSaved", { label }) });
+      setSettingsOpen(false);
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
@@ -1231,37 +1567,331 @@ function ButtonCard({
   };
 
   const roleOptions = roles.filter((r) => r.name !== "@everyone");
+  const namingPlaceholders = [
+    "{ticket_count}",
+    "{user}",
+    "{account_name}",
+    "{account_th}",
+    "{ticket_status}",
+    "{emoji_status}",
+  ] as const;
 
   const STYLE_COLORS: Record<number, string> = { 1: "bg-[#5865F2]", 2: "bg-[#4f545c]", 3: "bg-[#57F287]", 4: "bg-[#ED4245]" };
 
   return (
     <>
-      {/* Edit appearance dialog */}
-      <Dialog open={editAppearanceOpen} onOpenChange={setEditAppearanceOpen}>
-        <DialogContent className="sm:max-w-sm">
+      {/* Settings dialog */}
+      <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
+        <DialogContent className="bg-card border-border sm:max-w-5xl max-h-[85vh] flex flex-col overflow-hidden">
           <DialogHeader>
             <DialogTitle>{t("editButtonTitle")}</DialogTitle>
-            <DialogDescription>{t("addButtonDescription")}</DialogDescription>
+            <DialogDescription className="sr-only">{t("editButtonDescription")}</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-1.5">
-              <Label>{t("buttonLabel")}</Label>
-              <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value)} placeholder={t("buttonLabelPlaceholder")} maxLength={80} />
-            </div>
-            <div className="space-y-1.5">
-              <Label>{t("buttonStyle")}</Label>
-              <div className="flex gap-2">
-                {([1, 2, 3, 4] as const).map((s) => (
-                  <button key={s} type="button" onClick={() => setEditStyle(s)}
-                    className={cn("h-7 w-7 rounded", STYLE_COLORS[s], editStyle === s ? "ring-2 ring-offset-2 ring-offset-background ring-white/80" : "opacity-60 hover:opacity-100")} />
+          <Tabs
+            value={settingsSection}
+            onValueChange={(value) => setSettingsSection(value as "general" | "requirements" | "embeds")}
+            className="mt-2 flex-1 min-h-0 flex flex-col overflow-hidden"
+          >
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 border border-border bg-background p-1 sm:grid-cols-3 sm:gap-0 sm:p-0">
+              <TabsTrigger value="general" className="h-auto px-3 py-2 text-center text-sm leading-snug data-[state=active]:bg-muted">
+                General
+              </TabsTrigger>
+              <TabsTrigger value="requirements" className="h-auto px-3 py-2 text-center text-sm leading-snug data-[state=active]:bg-muted">
+                Requirements
+              </TabsTrigger>
+              <TabsTrigger value="embeds" className="h-auto px-3 py-2 text-center text-sm leading-snug data-[state=active]:bg-muted">
+                Embeds and Questions
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="general" className="mt-4 h-[52vh] overflow-y-auto pr-1 space-y-4">
+              <div className="space-y-4 rounded-xl border border-border bg-background p-4">
+                <div className="space-y-1.5">
+                  <Label>{t("buttonLabel")}</Label>
+                  <Input value={editLabel} onChange={(e) => setEditLabel(e.target.value)} placeholder={t("buttonLabelPlaceholder")} maxLength={80} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>{t("buttonStyle")}</Label>
+                  <div className="flex gap-2">
+                    {([1, 2, 3, 4] as const).map((s) => (
+                      <button key={s} type="button" onClick={() => setEditStyle(s)}
+                        className={cn("h-7 w-7 rounded", STYLE_COLORS[s], editStyle === s ? "ring-2 ring-offset-2 ring-offset-background ring-white/80" : "opacity-60 hover:opacity-100")} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {(["mod_role", "no_ping_mod_role"] as const).map((type) => (
+                  <div key={type} className="space-y-2 rounded-xl border border-border bg-background p-4">
+                    <Label className="text-sm font-medium">{t(type === "mod_role" ? "modRoles" : "noPingRoles")}</Label>
+                    <p className="text-xs text-muted-foreground">{t(type === "mod_role" ? "modRolesHint" : "noPingRolesHint")}</p>
+                    <div className="flex flex-wrap gap-2 min-h-[28px]">
+                      {form[type].map((id) => {
+                        const role = roleOptions.find((r) => r.id === id);
+                        return (
+                          <Badge key={id} variant="secondary" className="flex items-center gap-1">
+                            @{role?.name ?? id}
+                            <button onClick={() => removeRole(type, id)}><X className="h-3 w-3" /></button>
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={form[type]} onAdd={addRole(type)} />
+                  </div>
                 ))}
               </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setEditAppearanceOpen(false)}>{tCommon("cancel")}</Button>
-            <Button onClick={handleSaveAppearance} disabled={isSavingAppearance || !editLabel.trim()}>
-              {isSavingAppearance && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                {(["roles_to_add", "roles_to_remove"] as const).map((type) => (
+                  <div key={type} className="space-y-2 rounded-xl border border-border bg-background p-4">
+                    <Label className="text-sm font-medium">{t(type === "roles_to_add" ? "rolesToAdd" : "rolesToRemove")}</Label>
+                    <p className="text-xs text-muted-foreground">{t(type === "roles_to_add" ? "rolesToAddHint" : "rolesToRemoveHint")}</p>
+                    <div className="flex flex-wrap gap-2 min-h-[28px]">
+                      {form[type].map((id) => {
+                        const role = roleOptions.find((r) => r.id === id);
+                        return (
+                          <Badge key={id} variant="secondary" className="flex items-center gap-1">
+                            @{role?.name ?? id}
+                            <button onClick={() => removeRole(type, id)}><X className="h-3 w-3" /></button>
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                    <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={form[type]} onAdd={addRole(type)} />
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {([
+                  ["private_thread", "privateThread", "privateThreadHint"],
+                  ["player_info", "playerInfo", "playerInfoHint"],
+                ] as const).map(([field, labelKey, hintKey]) => (
+                  <div key={field} className="flex items-center justify-between rounded-xl border border-border bg-background p-3">
+                    <div>
+                      <p className="text-sm font-medium">{t(labelKey)}</p>
+                      <p className="text-xs text-muted-foreground">{t(hintKey)}</p>
+                    </div>
+                    <Switch
+                      checked={form[field] as boolean}
+                      onCheckedChange={(v) => setField(field, v)}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-xl border border-border bg-background p-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="ticket-naming-convention" className="text-sm font-medium">{t("naming")}</Label>
+                  <Input
+                    id="ticket-naming-convention"
+                    value={form.naming}
+                    onChange={(e) => setField("naming", e.target.value)}
+                    placeholder="{ticket_count}-{user}"
+                    className="font-mono text-sm"
+                  />
+                </div>
+                <p className="mt-3 text-xs font-medium text-muted-foreground">{t("namingPlaceholders")}</p>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {namingPlaceholders.map((placeholder) => (
+                    <Badge
+                      key={placeholder}
+                      variant="secondary"
+                      className="cursor-pointer font-mono text-xs hover:bg-primary/20"
+                      onClick={() => {
+                        const input = document.getElementById("ticket-naming-convention") as HTMLInputElement | null;
+                        if (!input) return;
+                        const start = input.selectionStart ?? form.naming.length;
+                        const end = input.selectionEnd ?? form.naming.length;
+                        const nextValue =
+                          form.naming.substring(0, start)
+                          + placeholder
+                          + form.naming.substring(end);
+                        setField("naming", nextValue);
+                        setTimeout(() => {
+                          input.focus();
+                          const cursor = start + placeholder.length;
+                          input.setSelectionRange(cursor, cursor);
+                        }, 0);
+                      }}
+                    >
+                      {placeholder}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="requirements" className="mt-4 h-[52vh] overflow-y-auto pr-1 space-y-4">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="space-y-2 rounded-xl border border-border bg-background p-4 sm:col-span-3">
+                  <Label className="text-sm font-medium">{t("applyClans")}</Label>
+                  <p className="text-xs text-muted-foreground">{t("applyClansHint")}</p>
+                  <div className="flex flex-wrap gap-2 min-h-[28px]">
+                    {form.apply_clans.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="flex items-center gap-1 font-mono">
+                        {tag}
+                        <button onClick={() => removeClanTag(tag)}><X className="h-3 w-3" /></button>
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      value={clanTagInput}
+                      onChange={(e) => setClanTagInput(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addClanTag(); } }}
+                      placeholder={t("clanTagPlaceholder")}
+                      className="font-mono"
+                    />
+                    <Button variant="outline" size="sm" onClick={addClanTag} type="button">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 rounded-xl border border-border bg-background p-4">
+                  <Label className="text-sm font-medium">{t("thMin")}</Label>
+                  <Input type="number" min={0} max={17} value={form.th_min} onChange={(e) => setField("th_min", Number(e.target.value))} />
+                </div>
+                <div className="space-y-1.5 rounded-xl border border-border bg-background p-4">
+                  <Label className="text-sm font-medium">{t("numApply")}</Label>
+                  <Input type="number" min={1} max={25} value={form.num_apply} onChange={(e) => setField("num_apply", Number(e.target.value))} />
+                  <p className="text-xs text-muted-foreground">{t("numApplyHint")}</p>
+                </div>
+
+                <div className="flex items-center justify-between rounded-xl border border-border bg-background p-3">
+                  <div>
+                    <p className="text-sm font-medium">{t("accountApply")}</p>
+                    <p className="text-xs text-muted-foreground">{t("accountApplyHint")}</p>
+                  </div>
+                  <Switch
+                    checked={form.account_apply}
+                    onCheckedChange={(v) => setField("account_apply", v)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2 rounded-xl border border-border bg-background p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-sm font-medium">{t("thRequirements")}</Label>
+                    <p className="text-xs text-muted-foreground">{t("thRequirementsHint")}</p>
+                    <p className="mt-1 text-xs text-muted-foreground/70">{t("thHeroLegend")}</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={addTHRow} type="button"
+                    disabled={Object.keys(form.townhall_requirements).length >= 15}>
+                    <Plus className="mr-1.5 h-4 w-4" />{t("addThLevel")}
+                  </Button>
+                </div>
+                {Object.keys(form.townhall_requirements).length > 0 && (
+                  <div className="overflow-x-auto rounded-lg border border-border">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-border bg-muted/50">
+                          <th className="px-3 py-2 text-left font-medium text-xs text-muted-foreground">{t("thLevel")}</th>
+                          {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((h) => (
+                            <th key={h} className="px-3 py-2 text-center font-medium text-xs text-muted-foreground">{h}</th>
+                          ))}
+                          <th className="px-3 py-2" />
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(form.townhall_requirements)
+                          .sort(([a], [b]) => Number(a) - Number(b))
+                          .map(([th, reqs]) => (
+                            <tr key={th} className="border-b border-border last:border-0">
+                              <td className="px-3 py-2 font-semibold">TH{th}</td>
+                              {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((hero) => (
+                                <td key={hero} className="px-2 py-1.5">
+                                  <Input
+                                    type="number" min={0} max={100}
+                                    value={reqs[hero] ?? 0}
+                                    onChange={(e) => setTHField(th, hero, Number(e.target.value))}
+                                    className="h-8 w-16 text-center px-1"
+                                  />
+                                </td>
+                              ))}
+                              <td className="px-2 py-1.5">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                  onClick={() => removeTHRow(th)}>
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </td>
+                            </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="embeds" className="mt-4 h-[52vh] overflow-y-auto pr-1 space-y-4">
+              <div className="space-y-4">
+                <div className="rounded-xl border border-border bg-background p-4">
+                  <div className="grid gap-4 lg:grid-cols-2 items-start">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">{t("ticketOpenEmbed")}</Label>
+                      <p className="text-xs text-muted-foreground">{t("ticketOpenEmbedHint")}</p>
+                      <Select
+                        value={form.new_message ?? "disabled"}
+                        onValueChange={(value) => setField("new_message", value === "disabled" ? null : value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={t("selectEmbed")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="disabled">{t("noCustomMessage")}</SelectItem>
+                          {embedOptions.map((embed) => (
+                            <SelectItem key={embed} value={embed}>{embed}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Preview</Label>
+                  <div className="space-y-2">
+                    {form.new_message === null ? (
+                      <div className="rounded-md border-l-4 bg-[#2b2d31]/70 p-3 text-sm leading-relaxed text-slate-100 whitespace-pre-line" style={{ borderLeftColor: DEFAULT_PREVIEW_ACCENT }}>
+                        {"This ticket will be handled shortly!\nPlease be patient."}
+                      </div>
+                    ) : buttonEmbedPreviews.length > 0 ? (
+                      <div className="space-y-2">
+                        {buttonEmbedPreviews.map((embed, i) => (
+                          <DiscordEmbedPreview
+                            key={`${selectedButtonEmbed?.name ?? "button-embed"}-${i}`}
+                            embed={embed}
+                          />
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
+                            {t("panelEmbedPreviewEmpty")}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2 rounded-xl border border-border bg-background p-4">
+                  <Label className="text-sm font-medium">{t("questions")}</Label>
+                  <p className="text-xs text-muted-foreground">{t("questionsHint")}</p>
+                  <div className="space-y-2">
+                    {form.questions.map((q, i) => (
+                      <Input key={i} value={q} onChange={(e) => setQuestion(i, e.target.value)} placeholder={`${t("question")} ${i + 1}`} /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+          <DialogFooter className="pt-3 mt-2 border-t border-border/70">
+            <Button variant="ghost" onClick={() => setSettingsOpen(false)}>{tCommon("cancel")}</Button>
+            <Button onClick={handleSave} disabled={isSaving || !editLabel.trim()}>
+              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("save")}
             </Button>
           </DialogFooter>
@@ -1286,8 +1916,8 @@ function ButtonCard({
       </Dialog>
 
       <div className="overflow-hidden rounded-xl border border-border/60 bg-card">
-      <div className="flex w-full flex-wrap items-center gap-3 p-4">
-        <button className="flex flex-1 min-w-0 flex-wrap items-center gap-3 text-left transition-colors hover:text-foreground" onClick={() => setExpanded((v) => !v)}>
+        <div className="flex w-full flex-wrap items-center gap-3 p-4">
+          <div className="flex flex-1 min-w-0 flex-wrap items-center gap-3">
           <span className={`h-3 w-3 rounded-sm shrink-0 ${BUTTON_STYLE_COLOR[style] ?? "bg-muted"}`} />
           <span className="min-w-0 flex-1 font-medium">{label}</span>
           <div className="flex flex-wrap items-center gap-2 text-xs">
@@ -1295,223 +1925,19 @@ function ButtonCard({
             {settings.private_thread && <Badge variant="secondary">{t("badge.privateThread")}</Badge>}
             {settings.th_min > 0 && <Badge variant="secondary">TH{settings.th_min}+</Badge>}
           </div>
-        </button>
-        <div className="flex items-center gap-1 shrink-0">
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground"
-            onClick={() => { setEditLabel(label); setEditStyle(style); setEditAppearanceOpen(true); }}>
-            <Settings className="h-3.5 w-3.5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"
-            onClick={() => setConfirmDeleteOpen(true)}>
-            <Trash2 className="h-3.5 w-3.5" />
-          </Button>
-          <button onClick={() => setExpanded((v) => !v)} className="ml-1 text-muted-foreground hover:text-foreground">
-            {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          </button>
         </div>
-      </div>
-
-      {expanded && (
-        <div className="space-y-6 border-t border-border/60 bg-muted/10 p-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            {(["mod_role", "no_ping_mod_role"] as const).map((type) => (
-              <div key={type} className="space-y-2 rounded-xl border border-border/60 bg-card p-4">
-                <Label className="text-sm font-medium">{t(type === "mod_role" ? "modRoles" : "noPingRoles")}</Label>
-                <p className="text-xs text-muted-foreground">{t(type === "mod_role" ? "modRolesHint" : "noPingRolesHint")}</p>
-                <div className="flex flex-wrap gap-2 min-h-[28px]">
-                  {form[type].map((id) => {
-                    const role = roleOptions.find((r) => r.id === id);
-                    return (
-                      <Badge key={id} variant="secondary" className="flex items-center gap-1">
-                        @{role?.name ?? id}
-                        <button onClick={() => removeRole(type, id)}><X className="h-3 w-3" /></button>
-                      </Badge>
-                    );
-                  })}
-                </div>
-                <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={form[type]} onAdd={addRole(type)} />
-              </div>
-            ))}
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {(["roles_to_add", "roles_to_remove"] as const).map((type) => (
-              <div key={type} className="space-y-2 rounded-xl border border-border/60 bg-card p-4">
-                <Label className="text-sm font-medium">{t(type === "roles_to_add" ? "rolesToAdd" : "rolesToRemove")}</Label>
-                <p className="text-xs text-muted-foreground">{t(type === "roles_to_add" ? "rolesToAddHint" : "rolesToRemoveHint")}</p>
-                <div className="flex flex-wrap gap-2 min-h-[28px]">
-                  {form[type].map((id) => {
-                    const role = roleOptions.find((r) => r.id === id);
-                    return (
-                      <Badge key={id} variant="secondary" className="flex items-center gap-1">
-                        @{role?.name ?? id}
-                        <button onClick={() => removeRole(type, id)}><X className="h-3 w-3" /></button>
-                      </Badge>
-                    );
-                  })}
-                </div>
-                <RoleCombobox roles={roleOptions} mode="add" excludeRoleIds={form[type]} onAdd={addRole(type)} />
-              </div>
-            ))}
-          </div>
-
-          <div className="space-y-2 rounded-xl border border-border/60 bg-card p-4">
-            <Label className="text-sm font-medium">{t("applyClans")}</Label>
-            <p className="text-xs text-muted-foreground">{t("applyClansHint")}</p>
-            <div className="flex flex-wrap gap-2 min-h-[28px]">
-              {form.apply_clans.map((tag) => (
-                <Badge key={tag} variant="secondary" className="flex items-center gap-1 font-mono">
-                  {tag}
-                  <button onClick={() => removeClanTag(tag)}><X className="h-3 w-3" /></button>
-                </Badge>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <Input
-                value={clanTagInput}
-                onChange={(e) => setClanTagInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addClanTag(); } }}
-                placeholder={t("clanTagPlaceholder")}
-                className="font-mono"
-              />
-              <Button variant="outline" size="sm" onClick={addClanTag} type="button">
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-2 rounded-xl border border-border/60 bg-card p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-sm font-medium">{t("thRequirements")}</Label>
-                <p className="text-xs text-muted-foreground">{t("thRequirementsHint")}</p>
-                <p className="mt-1 text-xs text-muted-foreground/70">{t("thHeroLegend")}</p>
-              </div>
-              <Button variant="outline" size="sm" onClick={addTHRow} type="button"
-                disabled={Object.keys(form.townhall_requirements).length >= 15}>
-                <Plus className="mr-1.5 h-4 w-4" />{t("addThLevel")}
-              </Button>
-            </div>
-            {Object.keys(form.townhall_requirements).length > 0 && (
-              <div className="overflow-x-auto rounded-lg border border-border">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border bg-muted/50">
-                      <th className="px-3 py-2 text-left font-medium text-xs text-muted-foreground">{t("thLevel")}</th>
-                      {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((h) => (
-                        <th key={h} className="px-3 py-2 text-center font-medium text-xs text-muted-foreground">{h}</th>
-                      ))}
-                      <th className="px-3 py-2" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(form.townhall_requirements)
-                      .sort(([a], [b]) => Number(a) - Number(b))
-                      .map(([th, reqs]) => (
-                        <tr key={th} className="border-b border-border last:border-0">
-                          <td className="px-3 py-2 font-semibold">TH{th}</td>
-                          {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((hero) => (
-                            <td key={hero} className="px-2 py-1.5">
-                              <Input
-                                type="number" min={0} max={100}
-                                value={reqs[hero] ?? 0}
-                                onChange={(e) => setTHField(th, hero, Number(e.target.value))}
-                                className="h-8 w-16 text-center px-1"
-                              />
-                            </td>
-                          ))}
-                          <td className="px-2 py-1.5">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                              onClick={() => removeTHRow(th)}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </td>
-                        </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="space-y-2 rounded-xl border border-border/60 bg-card p-4">
-              <Label className="text-sm font-medium">{t("ticketOpenEmbed")}</Label>
-              <p className="text-xs text-muted-foreground">{t("ticketOpenEmbedHint")}</p>
-              <Select
-                value={form.new_message ?? "disabled"}
-                onValueChange={(value) => setField("new_message", value === "disabled" ? null : value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("selectEmbed")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="disabled">{t("noCustomMessage")}</SelectItem>
-                  {embedOptions.map((embed) => (
-                    <SelectItem key={embed} value={embed}>{embed}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2 rounded-xl border border-border/60 bg-card p-4">
-              <Label className="text-sm font-medium">{t("questions")}</Label>
-              <p className="text-xs text-muted-foreground">{t("questionsHint")}</p>
-              <div className="space-y-2">
-                {form.questions.map((q, i) => (
-                  <Input key={i} value={q} onChange={(e) => setQuestion(i, e.target.value)} placeholder={`${t("question")} ${i + 1}`} /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-3">
-            {([
-              ["private_thread", "privateThread", "privateThreadHint"],
-              ["account_apply", "accountApply", "accountApplyHint"],
-              ["player_info", "playerInfo", "playerInfoHint"],
-            ] as const).map(([field, labelKey, hintKey]) => (
-              <div key={field} className="flex items-center justify-between rounded-xl border border-border/60 bg-card p-3">
-                <div>
-                  <p className="text-sm font-medium">{t(labelKey)}</p>
-                  <p className="text-xs text-muted-foreground">{t(hintKey)}</p>
-                </div>
-                <Switch
-                  checked={form[field] as boolean}
-                  onCheckedChange={(v) => setField(field, v)}
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="rounded-xl border border-border/60 bg-card p-4">
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium">{t("thMin")}</Label>
-                <Input type="number" min={0} max={17} value={form.th_min} onChange={(e) => setField("th_min", Number(e.target.value))} />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium">{t("numApply")}</Label>
-                <Input type="number" min={1} max={25} value={form.num_apply} onChange={(e) => setField("num_apply", Number(e.target.value))} />
-                <p className="text-xs text-muted-foreground">{t("numApplyHint")}</p>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium">{t("naming")}</Label>
-                <Input value={form.naming} onChange={(e) => setField("naming", e.target.value)} placeholder="{ticket_count}-{user}" />
-              </div>
-            </div>
-            <p className="mt-3 text-xs text-muted-foreground">{t("namingVariables")}</p>
-          </div>
-
-          <div className="flex justify-end">
-            <Button onClick={handleSave} disabled={isSaving}>
-              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {tCommon("save")}
+          <div className="flex items-center gap-1 shrink-0">
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground"
+              onClick={() => { setEditLabel(label); setEditStyle(style); setSettingsOpen(true); }}>
+              <Settings className="h-3.5 w-3.5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"
+              onClick={() => setConfirmDeleteOpen(true)}>
+              <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
-      )}
-    </div>
+      </div>
     </>
   );
 }
@@ -1530,10 +1956,70 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
     (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })),
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [expandedPreviewIds, setExpandedPreviewIds] = useState<Set<string>>(new Set());
+  const [expandedEditorIds, setExpandedEditorIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    setMessages((panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })));
+    const nextMessages = (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() }));
+    setMessages(nextMessages);
+    setExpandedPreviewIds(new Set());
+    setExpandedEditorIds(new Set());
   }, [panel.approve_messages]);
+
+  const toggleExpanded = (setter: Dispatch<SetStateAction<Set<string>>>, localId: string) => {
+    setter((prev) => {
+      const next = new Set(prev);
+      if (next.has(localId)) next.delete(localId);
+      else next.add(localId);
+      return next;
+    });
+  };
+
+  const updateMessageField = (index: number, field: "name" | "message", value: string) => {
+    const limitedValue = field === "name"
+      ? value.slice(0, MAX_APPROVE_MESSAGE_NAME_LENGTH)
+      : value.slice(0, MAX_APPROVE_MESSAGE_CONTENT_LENGTH);
+    setMessages((prev) => prev.map((msg, idx) => (idx === index ? { ...msg, [field]: limitedValue } : msg)));
+  };
+
+  const addMessage = () => {
+    if (messages.length >= 25) return;
+    const localId = makeLocalId();
+    setMessages((prev) => [...prev, { name: "", message: "", localId }]);
+    setExpandedEditorIds((prev) => {
+      const next = new Set(prev);
+      next.add(localId);
+      return next;
+    });
+  };
+
+  const removeMessage = (index: number) => {
+    const localId = messages[index]?.localId;
+    setMessages((prev) => prev.filter((_, idx) => idx !== index));
+    if (!localId) return;
+    setExpandedPreviewIds((prev) => {
+      const next = new Set(prev);
+      next.delete(localId);
+      return next;
+    });
+    setExpandedEditorIds((prev) => {
+      const next = new Set(prev);
+      next.delete(localId);
+      return next;
+    });
+  };
+
+  const moveMessage = (index: number, direction: "up" | "down") => {
+    setMessages((prev) => {
+      const target = direction === "up" ? index - 1 : index + 1;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      const [item] = next.splice(index, 1);
+      next.splice(target, 0, item);
+      return next;
+    });
+  };
 
   const handleSave = async () => {
     const valid = messages.filter((m) => m.name.trim());
@@ -1547,6 +2033,9 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
       const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages } as UpdateApproveMessagesRequest);
       if (res.error) throw new Error(res.error);
       setMessages(valid);
+      setExpandedPreviewIds(new Set());
+      setExpandedEditorIds(new Set());
+      setEditOpen(false);
       toast({ title: tCommon("success"), description: t("messagesSaved") });
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
@@ -1556,50 +2045,164 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium">{t("approveMessages")}</p>
-          <p className="text-xs text-muted-foreground">{t("approveMessagesHint")}</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => setMessages((p) => [...p, { name: "", message: "", localId: makeLocalId() }])} disabled={messages.length >= 25}>
-          <Plus className="mr-1.5 h-4 w-4" />{t("addMessage")}
-        </Button>
-      </div>
+    <>
+      <Dialog open={editOpen} onOpenChange={(open) => {
+        setEditOpen(open);
+        if (open) {
+          setExpandedEditorIds(new Set());
+        }
+      }}>
+        <DialogContent className="bg-card border-border sm:max-w-3xl max-h-[85vh] flex flex-col overflow-hidden">
+          <DialogHeader>
+            <DialogTitle>{t("editMessagesTitle")}</DialogTitle>
+            <DialogDescription>{t("editMessagesDescription")}</DialogDescription>
+          </DialogHeader>
 
-      {messages.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-10 text-muted-foreground gap-2">
-          <MessageSquare className="h-8 w-8 opacity-40" />
-          <p className="text-sm">{t("noMessages")}</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {messages.map((msg, i) => (
-            <div key={msg.localId} className="rounded-lg border border-border p-4 space-y-3">
-              <div className="flex items-center gap-2">
-                <Input className="h-8 flex-1 font-medium" value={msg.name}
-                  onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, name: e.target.value } : m))} // NOSONAR — inline state updater in map, standard React pattern
-                  placeholder={t("messageName")} />
-                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                  onClick={() => setMessages((p) => p.filter((_, idx) => idx !== i))}> {/* NOSONAR — JSX inline handler nesting is structural, not logic complexity */}
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <Textarea value={msg.message}
-                onChange={(e) => setMessages((p) => p.map((m, idx) => idx === i ? { ...m, message: e.target.value } : m))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
-                placeholder={t("messageContent")} rows={3} />
+          <div className="space-y-4 overflow-y-auto pr-1">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs text-muted-foreground">{t("messagesMaxHint")}</p>
+              <Button variant="outline" size="sm" onClick={addMessage} disabled={messages.length >= 25}>
+                <Plus className="mr-1.5 h-4 w-4" />{t("addMessage")}
+              </Button>
             </div>
-          ))}
-        </div>
-      )}
 
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isSaving}>
-          {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {tCommon("save")}
-        </Button>
+            <div className="rounded-xl border border-border bg-background p-4">
+              {messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-10 text-muted-foreground gap-2">
+                  <MessageSquare className="h-8 w-8 opacity-40" />
+                  <p className="text-sm">{t("noMessages")}</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {messages.map((msg, i) => {
+                    const isExpanded = expandedEditorIds.has(msg.localId);
+                    return (
+                      <div key={msg.localId} className="rounded-lg border border-border bg-card p-3">
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            className="flex flex-1 items-center gap-2 text-left"
+                            onClick={() => toggleExpanded(setExpandedEditorIds, msg.localId)}
+                          >
+                            {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                            <span className="text-sm font-medium text-muted-foreground truncate">{msg.name.trim() || `${t("messageName")} ${i + 1}`}</span>
+                          </button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                            onClick={() => removeMessage(i)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
+                            onClick={() => moveMessage(i, "up")}
+                            disabled={i === 0}
+                          >
+                            <ArrowUp className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
+                            onClick={() => moveMessage(i, "down")}
+                            disabled={i === messages.length - 1}
+                          >
+                            <ArrowDown className="h-4 w-4" />
+                          </Button>
+                        </div>
+
+                        {isExpanded ? (
+                          <div className="mt-3 space-y-3">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-xs font-medium text-muted-foreground">{t("messageName")}</p>
+                              <p className="text-xs text-muted-foreground">({msg.name.length}/{MAX_APPROVE_MESSAGE_NAME_LENGTH})</p>
+                            </div>
+                            <Input
+                              className="h-9 bg-background border-border font-medium"
+                              value={msg.name}
+                              onChange={(e) => updateMessageField(i, "name", e.target.value)}
+                              placeholder={t("messageName")}
+                              maxLength={MAX_APPROVE_MESSAGE_NAME_LENGTH}
+                            />
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-xs font-medium text-muted-foreground">{t("contentLabel")}</p>
+                              <p className="text-xs text-muted-foreground">({msg.message.length}/{MAX_APPROVE_MESSAGE_CONTENT_LENGTH})</p>
+                            </div>
+                            <Textarea
+                              className="bg-background border-border"
+                              value={msg.message}
+                              onChange={(e) => updateMessageField(i, "message", e.target.value)}
+                              placeholder={t("messageContent")}
+                              rows={4}
+                              maxLength={MAX_APPROVE_MESSAGE_CONTENT_LENGTH}
+                            />
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter className="pt-3 mt-2 border-t border-border/70">
+            <Button variant="ghost" onClick={() => setEditOpen(false)}>{tCommon("cancel")}</Button>
+            <Button onClick={handleSave} disabled={isSaving}>
+              {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {tCommon("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium">{t("approveMessages")}</p>
+            <p className="text-xs text-muted-foreground">{t("approveMessagesHint")}</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
+            {t("editMessagesButton")}
+          </Button>
+        </div>
+
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-10 text-muted-foreground gap-2">
+            <MessageSquare className="h-8 w-8 opacity-40" />
+            <p className="text-sm">{t("noMessages")}</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {messages.map((msg, i) => {
+              const isExpanded = expandedPreviewIds.has(msg.localId);
+              return (
+                <div key={msg.localId} className="rounded-lg border border-border p-3">
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-2 text-left"
+                    onClick={() => toggleExpanded(setExpandedPreviewIds, msg.localId)}
+                  >
+                    {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                    <span className="flex-1 truncate text-sm font-medium text-muted-foreground">{msg.name.trim() || `${t("messageName")} ${i + 1}`}</span>
+                  </button>
+                  {isExpanded ? (
+                    <div className="mt-2">
+                      <p className="mb-1 text-xs font-medium text-muted-foreground">{t("contentLabel")}</p>
+                      <p className="whitespace-pre-wrap text-sm text-muted-foreground">{msg.message || t("messageContent")}</p>
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 }
 
@@ -1626,6 +2229,7 @@ function PanelCard({
   const [newButtonLabel, setNewButtonLabel] = useState("");
   const [newButtonStyle, setNewButtonStyle] = useState(2);
   const [isAddingButton, setIsAddingButton] = useState(false);
+  const [activeConfigTab, setActiveConfigTab] = useState("ticket-panel");
 
   const STYLE_COLORS: Record<number, string> = { 1: "bg-[#5865F2]", 2: "bg-[#4f545c]", 3: "bg-[#57F287]", 4: "bg-[#ED4245]" };
 
@@ -1750,15 +2354,22 @@ function PanelCard({
 
         {expanded && (
           <CardContent className="space-y-4">
-            <Tabs defaultValue="ticket-panel">
-              <TabsList className="mb-4">
-                <TabsTrigger value="ticket-panel">{t("tabChannels")}</TabsTrigger>
-                <TabsTrigger value="buttons">{t("tabButtons")}</TabsTrigger>
-                <TabsTrigger value="messages">{t("tabMessages")}</TabsTrigger>
-                <TabsTrigger value="settings">{t("tabSettings")}</TabsTrigger>
+            <Tabs value={activeConfigTab} onValueChange={setActiveConfigTab}>
+              <TabsList className="mb-4 grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-4 sm:gap-0 sm:p-0">
+                <TabsTrigger value="ticket-panel" className="h-auto px-3 py-2 text-sm">{t("tabChannels")}</TabsTrigger>
+                <TabsTrigger value="buttons" className="h-auto px-3 py-2 text-sm">{t("tabButtons")}</TabsTrigger>
+                <TabsTrigger value="messages" className="h-auto px-3 py-2 text-sm">{t("tabMessages")}</TabsTrigger>
+                <TabsTrigger value="settings" className="h-auto px-3 py-2 text-sm">{t("tabSettings")}</TabsTrigger>
               </TabsList>
               <TabsContent value="ticket-panel" className="mt-0" forceMount>
-                <TicketPanelTab panel={panel} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds} />
+                <TicketPanelTab
+                  panel={panel}
+                  guildId={guildId}
+                  availableEmbeds={availableEmbeds}
+                  embeds={embeds}
+                  previewButtons={components}
+                  onOpenButtonsTab={() => setActiveConfigTab("buttons")}
+                />
               </TabsContent>
               <TabsContent value="buttons" className="mt-0" forceMount>
                 <div className="space-y-3">
@@ -1778,7 +2389,7 @@ function PanelCard({
                       {components.map((btn) => (
                         <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
                           settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
-                          panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds}
+                          panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} embeds={embeds}
                           onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
                           onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
