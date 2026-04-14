@@ -123,14 +123,44 @@ export function extractMessageProfile(data: Record<string, unknown>): DiscordMes
   const messages = (data as { messages?: unknown }).messages;
   if (Array.isArray(messages)) {
     for (const message of messages) {
+      const dataUsername = (message as { data?: { username?: unknown } })?.data?.username;
+      const dataAvatarUrl = (message as { data?: { avatar_url?: unknown } })?.data?.avatar_url;
+      if (typeof dataUsername === "string" || typeof dataAvatarUrl === "string") {
+        return {
+          name: typeof dataUsername === "string" ? dataUsername : undefined,
+          avatar_url: typeof dataAvatarUrl === "string" ? dataAvatarUrl : undefined,
+        };
+      }
+
+      const dataAuthor = (message as { data?: { author?: unknown } })?.data?.author;
+      if (dataAuthor && typeof dataAuthor === "object") {
+        const authorName = (dataAuthor as { name?: unknown }).name;
+        const authorIcon = (dataAuthor as { icon_url?: unknown }).icon_url;
+        if (typeof authorName === "string" || typeof authorIcon === "string") {
+          return {
+            name: typeof authorName === "string" ? authorName : undefined,
+            avatar_url: typeof authorIcon === "string" ? authorIcon : undefined,
+          };
+        }
+      }
+
+      const username = (message as { username?: unknown }).username;
+      const avatarUrl = (message as { avatar_url?: unknown }).avatar_url;
+      if (typeof username === "string" || typeof avatarUrl === "string") {
+        return {
+          name: typeof username === "string" ? username : undefined,
+          avatar_url: typeof avatarUrl === "string" ? avatarUrl : undefined,
+        };
+      }
+
       const profile = (message as { profile?: unknown })?.profile;
       if (profile && typeof profile === "object") {
         const name = (profile as { name?: unknown }).name;
-        const avatarUrl = (profile as { avatar_url?: unknown }).avatar_url;
-        if (typeof name === "string" || typeof avatarUrl === "string") {
+        const avatarProfileUrl = (profile as { avatar_url?: unknown }).avatar_url;
+        if (typeof name === "string" || typeof avatarProfileUrl === "string") {
           return {
             name: typeof name === "string" ? name : undefined,
-            avatar_url: typeof avatarUrl === "string" ? avatarUrl : undefined,
+            avatar_url: typeof avatarProfileUrl === "string" ? avatarProfileUrl : undefined,
           };
         }
       }
