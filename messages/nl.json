@@ -2267,6 +2267,8 @@
   "TicketsSettingsPage": {
     "panelEmbed": "Paneel-embed",
     "panelEmbedHint": "Embed die wordt gebruikt wanneer het ticketpaneel in Discord wordt geplaatst.",
+    "panelEmbedInfoLine1": "Om een nieuwe embed te maken of een bestaande aan te passen, ga naar de %s pagina in {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Om knoppen toe te voegen of aan te passen, ga naar %s binnen dit ticket.",
     "panelEmbedPreview": "Embed voorbeeld",
     "panelEmbedPreviewEmpty": "Geen embedvoorbeeld beschikbaar voor de geselecteerde paneel-embed.",
     "ticketOpenEmbed": "Ticket open embed",
@@ -2320,16 +2322,17 @@
     "addButton": "Knop toevoegen",
     "addButtonTitle": "Knop toevoegen",
     "addButtonDescription": "Stel het uiterlijk van de nieuwe knop in.",
-    "buttonLabel": "Label",
+    "buttonLabel": "Knoptekstlabel",
     "buttonLabelPlaceholder": "bijv. Aanmelden",
-    "buttonStyle": "Kleur",
+    "buttonStyle": "Knopkleur",
     "buttonStyleBlue": "Blauw",
     "buttonStyleGrey": "Grijs",
     "buttonStyleGreen": "Groen",
     "buttonStyleRed": "Rood",
     "buttonAdded": "Knop toegevoegd.",
     "buttonDeleted": "Knop verwijderd.",
-    "editButtonTitle": "Knopuiterlijk bewerken",
+    "editButtonTitle": "Knopinstellingen bewerken",
+    "editButtonDescription": "Configureer deze ticketknop.",
     "buttonAppearanceSaved": "Uiterlijk opgeslagen.",
     "confirmDeleteButton": "Knop \"{label}\" verwijderen?",
     "confirmDeleteButtonHint": "Dit verwijdert de knop en alle bijbehorende instellingen (rollen, vragen, etc.).",
@@ -2349,6 +2352,7 @@
     "thMin": "Min. Stadhuis",
     "numApply": "Max. accounts",
     "naming": "Naamgevingsconventie",
+    "namingPlaceholders": "Naamgevingsplaceholders",
     "namingVariables": "Variabelen: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
     "buttonSaved": "Knop \"{label}\" opgeslagen.",
     "badge": {
@@ -2357,9 +2361,14 @@
     },
     "approveMessages": "Goedkeurings- / weigeringsberichten",
     "approveMessagesHint": "Vooraf geschreven berichten die het personeel naar kandidaten kan sturen (max 25).",
+    "messagesMaxHint": "Je kunt maximaal 25 berichten toevoegen.",
+    "editMessagesButton": "Berichten bewerken",
+    "editMessagesTitle": "Vooraf geschreven berichten bewerken",
+    "editMessagesDescription": "Voeg vooraf geschreven ticketberichten toe, verwijder ze of pas ze aan.",
     "addMessage": "Bericht toevoegen",
     "noMessages": "Nog geen berichten. Voeg er een toe.",
     "messageName": "Berichtnaam",
+    "contentLabel": "Inhoud",
     "messageContent": "Berichtinhoud...",
     "messageNameRequired": "Alle berichten moeten een naam hebben.",
     "messagesSaved": "Goedkeuringsberichten opgeslagen.",
@@ -2707,3 +2716,4 @@
     "goHome": "Ga naar Home"
   }
 }
+
