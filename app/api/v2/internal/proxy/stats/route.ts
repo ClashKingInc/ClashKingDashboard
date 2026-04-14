@@ -34,6 +34,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    if (!meData || typeof meData !== "object") {
+      return NextResponse.json(
+        { error: "Invalid response from auth upstream" },
+        { status: 502 }
+      );
+    }
+
     if (!isDeveloperUserId(meData?.user_id)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -56,8 +63,15 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json().catch(() => null);
 
+    if (!data) {
+      return NextResponse.json(
+        { error: "Invalid response from proxy stats upstream" },
+        { status: response.ok ? 502 : response.status }
+      );
+    }
+
     return NextResponse.json(
-      data ?? { error: "Invalid response from proxy stats upstream" },
+      data,
       { status: response.status }
     );
   } catch (error) {
