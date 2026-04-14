@@ -2418,6 +2418,8 @@
     "importFromDiscohook": "Import from Discohook",
     "copyDiscohookUrl": "Copy Discohook URL",
     "openInDiscohook": "Open in Discohook",
+    "content": "Content",
+    "contentPlaceholder": "Message content shown above embeds...",
     "import": "Import",
     "importError": "Invalid Discohook URL.",
     "colorSection": "Color",

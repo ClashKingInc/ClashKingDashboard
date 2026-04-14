@@ -46,6 +46,7 @@ interface EmbedFormState {
 
 type SectionKey = "color" | "author" | "body" | "fields" | "images" | "footer";
 const MAX_DISCORD_EMBEDS_PER_MESSAGE = 10;
+const MAX_DISCORD_MESSAGE_CONTENT_LENGTH = 2000;
 
 export interface EmbedEditorProps {
   readonly initialData?: Record<string, unknown> | null;
@@ -100,10 +101,30 @@ function embedToState(embed: DiscordEmbed): EmbedFormState {
   };
 }
 
-function payloadToEditorState(data: Record<string, unknown>): { embeds: EmbedFormState[] } {
+function extractMessageContent(data: Record<string, unknown>): string {
+  const messages = (data as { messages?: unknown }).messages;
+  if (Array.isArray(messages)) {
+    for (const message of messages) {
+      const content = (message as { data?: { content?: unknown } })?.data?.content;
+      if (typeof content === "string") {
+        return content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
+      }
+    }
+  }
+
+  const topLevelContent = (data as { content?: unknown }).content;
+  if (typeof topLevelContent === "string") {
+    return topLevelContent.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
+  }
+
+  return "";
+}
+
+function payloadToEditorState(data: Record<string, unknown>): { embeds: EmbedFormState[]; content: string } {
   const embeds = extractEmbeds(data);
-  if (embeds.length === 0) return { embeds: [defaultState()] };
-  return { embeds: embeds.map(embedToState) };
+  const content = extractMessageContent(data);
+  if (embeds.length === 0) return { embeds: [defaultState()], content };
+  return { embeds: embeds.map(embedToState), content };
 }
 
 function stateToEmbed(s: EmbedFormState): DiscordEmbed { // NOSONAR — sequential field assignments, no real logic branches
@@ -149,14 +170,15 @@ function hasMeaningfulEmbedContent(embed: DiscordEmbed): boolean {
 }
 
 /** Outputs the Discohook-compatible payload stored in MongoDB */
-export function stateToPayload(states: EmbedFormState[]): Record<string, unknown> {
+export function stateToPayload(states: EmbedFormState[], content = ""): Record<string, unknown> {
   const embeds = states
     .map(stateToEmbed)
     .filter(hasMeaningfulEmbedContent)
     .slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
+  const normalizedContent = content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
   return {
     embeds,
-    messages: [{ data: { content: null, embeds } }],
+    messages: [{ data: { content: normalizedContent || null, embeds } }],
   };
 }
 
@@ -273,6 +295,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [importExportOpen, setImportExportOpen] = useState(false);
   const [copiedDiscohook, setCopiedDiscohook] = useState(false);
+  const [content, setContent] = useState(() => parsedInitialData?.content ?? "");
 
   const activeEmbed = embeds[activeEmbedIndex] ?? defaultState();
 
@@ -333,18 +356,19 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setImportError(false);
     setImportUrl("");
     setEmbeds(editorState.embeds);
+    setContent(editorState.content);
     setActiveEmbedIndex(0);
     setImportExportOpen(false);
   };
 
   // ── Save ────────────────────────────────────────────────────────────────────
 
-  const handleSave = () => onSave(stateToPayload(embeds));
+  const handleSave = () => onSave(stateToPayload(embeds, content));
 
-  const discohookPayload = stateToPayload(embeds);
+  const discohookPayload = stateToPayload(embeds, content);
   const discohookUrl = buildDiscohookUrl(discohookPayload);
   const previewEmbeds = embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent);
-  const hasContent = previewEmbeds.length > 0;
+  const hasContent = previewEmbeds.length > 0 || content.trim().length > 0;
 
   const handleCopyDiscohookUrl = async () => {
     await navigator.clipboard.writeText(discohookUrl);
@@ -363,6 +387,21 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
           <Button size="sm" variant="secondary" className="h-8" onClick={() => setImportExportOpen(true)}>
             <Link2 className="h-3.5 w-3.5 mr-1" />{t("importExport")}
           </Button>
+
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs">{t("content")}</Label>
+              <CharCount value={content} max={MAX_DISCORD_MESSAGE_CONTENT_LENGTH} />
+            </div>
+            <Textarea
+              value={content}
+              onChange={(event) => setContent(event.target.value.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH))}
+              maxLength={MAX_DISCORD_MESSAGE_CONTENT_LENGTH}
+              rows={4}
+              className={compactTextareaClassName}
+              placeholder={t("contentPlaceholder")}
+            />
+          </div>
 
           <Separator />
 
@@ -588,6 +627,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
             <div className="border-b border-border p-4 md:hidden">
               {hasContent ? (
                 <div className="space-y-2">
+                  {content.trim().length > 0 && (
+                    <p className="whitespace-pre-wrap break-words text-sm text-foreground">
+                      {content}
+                    </p>
+                  )}
                   {previewEmbeds.map((embed, i) => (
                     <DiscordEmbedPreview
                       key={`${embed.title ?? "embed"}-${i}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
@@ -609,6 +653,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
             </p>
             {hasContent ? (
               <div className="space-y-2">
+                {content.trim().length > 0 && (
+                  <p className="whitespace-pre-wrap break-words text-sm text-foreground">
+                    {content}
+                  </p>
+                )}
                 {previewEmbeds.map((embed, i) => (
                   <DiscordEmbedPreview
                     key={`${embed.title ?? "embed"}-${i}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
