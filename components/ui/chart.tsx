@@ -1,10 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Legend as RechartsLegend,
-  Tooltip as RechartsTooltip,
-} from "recharts";
+export { Tooltip as ChartTooltip, Legend as ChartLegend } from "recharts";
 import { cn } from "@/lib/utils";
 
 export type ChartConfig = Record<
@@ -126,9 +123,10 @@ export function ChartContainer({
       height: chartHeight,
     })
     : children;
+  const contextValue = React.useMemo(() => ({ config }), [config]);
 
   return (
-    <ChartContext.Provider value={{ config }}>
+    <ChartContext.Provider value={contextValue}>
       <div
         ref={containerRef}
         data-chart={chartId}
@@ -156,9 +154,6 @@ export function ChartContainer({
   );
 }
 
-export const ChartTooltip = RechartsTooltip;
-export const ChartLegend = RechartsLegend;
-
 export function ChartTooltipContent({
   active,
   payload,
@@ -181,11 +176,10 @@ export function ChartTooltipContent({
     return null;
   }
 
-  const resolvedLabel = hideLabel
-    ? null
-    : labelFormatter
-      ? labelFormatter(label, payload)
-      : label;
+  let resolvedLabel: React.ReactNode = null;
+  if (!hideLabel) {
+    resolvedLabel = labelFormatter ? labelFormatter(label, payload) : label;
+  }
 
   return (
     <div className={cn("grid min-w-[10rem] gap-2 rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-xl", className)}>

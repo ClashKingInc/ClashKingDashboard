@@ -71,6 +71,15 @@ const ENDPOINT_WINDOW_OPTIONS: EndpointBreakdownWindow[] = ["24h", "7d"];
 const WINDOW_ORDER = ["10s", "1m", "5m", "15m", "1h", "6h", "12h", "24h"];
 const DEFAULT_REFRESH_MS = 60000;
 const LIVE_REFRESH_MS = 10000;
+const LOADING_CARD_KEYS = [
+  "requests",
+  "avg-rps",
+  "latency",
+  "server-errors",
+  "proxy-failures",
+] as const;
+const WINDOW_SKELETON_KEYS = ["w1", "w2", "w3", "w4", "w5", "w6"] as const;
+const ENDPOINT_SKELETON_KEYS = ["e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8"] as const;
 
 const trafficChartConfig = {
   requests: {
@@ -219,11 +228,33 @@ function formatCompactAxisNumber(value: number): string {
   }).format(value);
 }
 
+function formatRequestsTooltipValue(value: unknown): React.ReactNode {
+  return (
+    <>
+      <span className="text-muted-foreground">Requests</span>
+      <span className="ml-auto font-mono font-medium text-foreground">
+        {formatInteger(normalizeTooltipNumber(value))}
+      </span>
+    </>
+  );
+}
+
+function formatLatencyTooltipValue(value: unknown): React.ReactNode {
+  return (
+    <>
+      <span className="text-muted-foreground">Latency</span>
+      <span className="ml-auto font-mono font-medium text-foreground">
+        {formatLatency(normalizeTooltipNumber(value))}
+      </span>
+    </>
+  );
+}
+
 function LoadingCards() {
   return (
     <>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <Card key={`internal-loading-card-${index}`} className="border-border bg-card/95">
+      {LOADING_CARD_KEYS.map((key) => (
+        <Card key={`internal-loading-card-${key}`} className="border-border bg-card/95">
           <CardHeader className="pb-3">
             <Skeleton className="h-4 w-24" />
           </CardHeader>
@@ -233,6 +264,349 @@ function LoadingCards() {
           </CardContent>
         </Card>
       ))}
+    </>
+  );
+}
+
+type SummaryCard = {
+  title: string;
+  value: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+};
+
+type SeriesPoint = {
+  label: string;
+  fullLabel: string;
+  requests: number;
+  latency: number | null;
+  errors4xx: number;
+  errors5xx: number;
+  proxyFailures: number;
+};
+
+type InternalMetricsSectionsProps = {
+  hasSeriesData: boolean;
+  isLoading: boolean;
+  oneMinuteWindow: StatsWindow | null;
+  seriesPoints: SeriesPoint[];
+  summaryCards: SummaryCard[];
+  stats: StatsResponse | null;
+};
+
+function InternalMetricsSections({
+  hasSeriesData,
+  isLoading,
+  oneMinuteWindow,
+  seriesPoints,
+  summaryCards,
+  stats,
+}: InternalMetricsSectionsProps) {
+  const endpointRows = stats?.endpoint_breakdown?.endpoints ?? [];
+  const hasEndpointRows = endpointRows.length > 0;
+
+  let endpointContent: React.ReactNode;
+  if (isLoading && !stats) {
+    endpointContent = (
+      <div className="space-y-3">
+        {ENDPOINT_SKELETON_KEYS.map((key) => (
+          <Skeleton key={`endpoint-skeleton-${key}`} className="h-10 w-full" />
+        ))}
+      </div>
+    );
+  } else if (hasEndpointRows) {
+    endpointContent = (
+      <div className="space-y-2">
+        {endpointRows.map((endpoint) => (
+          <div
+            key={endpoint.endpoint}
+            className="grid grid-cols-[minmax(0,1fr)_72px] items-start gap-3 rounded-xl border border-border bg-background/60 px-4 py-3"
+          >
+            <p className="break-words font-mono text-xs text-foreground sm:text-sm">
+              {endpoint.endpoint}
+            </p>
+            <p className="text-right text-sm font-semibold text-foreground">
+              {formatInteger(endpoint.requests)}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  } else {
+    endpointContent = (
+      <div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
+        No endpoint breakdown returned for the current query.
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        {isLoading && !stats ? (
+          <LoadingCards />
+        ) : (
+          summaryCards.map((card) => {
+            const Icon = card.icon;
+
+            return (
+              <Card key={card.title} className="border-border bg-card/95">
+                <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
+                  <div className="space-y-1">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">{card.title}</CardTitle>
+                    <CardDescription>{card.description}</CardDescription>
+                  </div>
+                  <div className="rounded-full bg-primary/10 p-2">
+                    <Icon className="h-4 w-4 text-primary" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-semibold tracking-tight text-foreground">{card.value}</div>
+                </CardContent>
+              </Card>
+            );
+          })
+        )}
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <Card className="border-border bg-card/95">
+          <CardHeader>
+            <CardTitle>Summary Windows</CardTitle>
+            <CardDescription>Rolling request, latency, and error windows always returned by the stats API.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isLoading && !stats ? (
+              <div className="space-y-3">
+                {WINDOW_SKELETON_KEYS.map((key) => (
+                  <Skeleton key={`window-skeleton-${key}`} className="h-10 w-full" />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="hidden grid-cols-[96px_repeat(6,minmax(0,1fr))] gap-3 border-b border-border pb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground lg:grid">
+                  <div>Window</div>
+                  <div className="text-right">Requests</div>
+                  <div className="text-right">Avg RPS</div>
+                  <div className="text-right">Latency</div>
+                  <div className="text-right">4xx</div>
+                  <div className="text-right">5xx</div>
+                  <div className="text-right">Proxy Failures</div>
+                </div>
+                {WINDOW_ORDER.map((windowKey) => {
+                  const windowStats = getWindowValue(stats, windowKey);
+
+                  return (
+                    <div
+                      key={windowKey}
+                      className="rounded-xl border border-border bg-background/60 p-4"
+                    >
+                      <div className="grid gap-3 lg:grid-cols-[96px_repeat(6,minmax(0,1fr))] lg:items-center">
+                        <div className="text-sm font-semibold text-foreground">{windowKey}</div>
+                        <div className="grid grid-cols-2 gap-3 text-sm lg:contents">
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Requests</p>
+                            <p className="text-right text-foreground">{formatInteger(windowStats?.requests)}</p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Avg RPS</p>
+                            <p className="text-right text-foreground">{formatDecimal(windowStats?.avg_rps, 2)}</p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Latency</p>
+                            <p className="text-right text-foreground">{formatLatency(windowStats?.avg_latency_ms)}</p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">4xx</p>
+                            <p className="text-right text-foreground">{formatInteger(windowStats?.status_counts["4xx"])}</p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">5xx</p>
+                            <p className="text-right text-foreground">{formatInteger(windowStats?.status_counts["5xx"])}</p>
+                          </div>
+                          <div>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Proxy Failures</p>
+                            <p className="text-right text-foreground">{formatInteger(windowStats?.proxy_failures)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card/95">
+          <CardHeader>
+            <CardTitle>Request Mix</CardTitle>
+            <CardDescription>Current one minute HTTP class totals and proxy failure count.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-2">
+            {[
+              { label: "2xx", value: oneMinuteWindow?.status_counts["2xx"], tone: "text-emerald-500" },
+              { label: "3xx", value: oneMinuteWindow?.status_counts["3xx"], tone: "text-sky-500" },
+              { label: "4xx", value: oneMinuteWindow?.status_counts["4xx"], tone: "text-amber-500" },
+              { label: "5xx", value: oneMinuteWindow?.status_counts["5xx"], tone: "text-rose-500" },
+              { label: "Proxy failures", value: oneMinuteWindow?.proxy_failures, tone: "text-violet-500" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-xl border border-border bg-background/70 p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{item.label}</p>
+                <p className={`mt-3 text-3xl font-semibold ${item.tone}`}>{formatInteger(item.value)}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-2">
+        <Card className="border-border bg-card/95">
+          <CardHeader>
+            <CardTitle>Traffic</CardTitle>
+            <CardDescription>Request volume from <code>series_data.points[].requests</code>.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {hasSeriesData ? (
+              <ChartContainer config={trafficChartConfig} className="h-[320px] w-full">
+                <AreaChart accessibilityLayer data={seriesPoints} margin={{ left: 4, right: 12, top: 8 }}>
+                  <defs>
+                    <linearGradient id="trafficFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--color-requests)" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="var(--color-requests)" stopOpacity={0.04} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid vertical={false} />
+                  <XAxis dataKey="label" tickLine={false} axisLine={false} minTickGap={28} tickMargin={10} />
+                  <YAxis tickLine={false} axisLine={false} tickMargin={8} width={56} tickFormatter={formatCompactAxisNumber} />
+                  <ChartTooltip
+                    cursor={false}
+                    content={(
+                      <ChartTooltipContent
+                        formatter={formatRequestsTooltipValue}
+                        labelFormatter={(label, payload) => getTooltipFullLabel(payload, label)}
+                      />
+                    )}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="requests"
+                    stroke="var(--color-requests)"
+                    fill="url(#trafficFill)"
+                    strokeWidth={2}
+                    activeDot={{ r: 4 }}
+                  />
+                </AreaChart>
+              </ChartContainer>
+            ) : (
+              <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
+                No series data returned for the current query.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card/95">
+          <CardHeader>
+            <CardTitle>Latency</CardTitle>
+            <CardDescription>Average latency from <code>series_data.points[].avg_latency_ms</code>.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {hasSeriesData ? (
+              <ChartContainer config={latencyChartConfig} className="h-[320px] w-full">
+                <AreaChart accessibilityLayer data={seriesPoints} margin={{ left: 4, right: 12, top: 8 }}>
+                  <defs>
+                    <linearGradient id="latencyFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--color-latency)" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="var(--color-latency)" stopOpacity={0.03} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid vertical={false} />
+                  <XAxis dataKey="label" tickLine={false} axisLine={false} minTickGap={28} tickMargin={10} />
+                  <YAxis tickLine={false} axisLine={false} tickMargin={8} width={56} tickFormatter={formatCompactAxisNumber} />
+                  <ChartTooltip
+                    cursor={false}
+                    content={(
+                      <ChartTooltipContent
+                        formatter={formatLatencyTooltipValue}
+                        labelFormatter={(label, payload) => getTooltipFullLabel(payload, label)}
+                      />
+                    )}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="latency"
+                    stroke="var(--color-latency)"
+                    fill="url(#latencyFill)"
+                    strokeWidth={2}
+                    connectNulls={false}
+                    activeDot={{ r: 4 }}
+                  />
+                </AreaChart>
+              </ChartContainer>
+            ) : (
+              <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
+                No series data returned for the current query.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
+        <Card className="border-border bg-card/95">
+          <CardHeader>
+            <CardTitle>Error Profile</CardTitle>
+            <CardDescription>
+              Stacked 4xx and 5xx counts with proxy failures overlaid from the selected series query.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {hasSeriesData ? (
+              <ChartContainer config={errorChartConfig} className="h-[340px] w-full">
+                <ComposedChart accessibilityLayer data={seriesPoints} margin={{ left: 4, right: 12, top: 8 }}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis dataKey="label" tickLine={false} axisLine={false} minTickGap={28} tickMargin={10} />
+                  <YAxis tickLine={false} axisLine={false} tickMargin={8} width={56} tickFormatter={formatCompactAxisNumber} />
+                  <ChartTooltip
+                    content={(
+                      <ChartTooltipContent
+                        labelFormatter={(label, payload) => getTooltipFullLabel(payload, label)}
+                      />
+                    )}
+                  />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar dataKey="errors4xx" stackId="errors" fill="var(--color-errors4xx)" name="errors4xx" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="errors5xx" stackId="errors" fill="var(--color-errors5xx)" name="errors5xx" radius={[4, 4, 0, 0]} />
+                  <Line
+                    type="monotone"
+                    dataKey="proxyFailures"
+                    stroke="var(--color-proxyFailures)"
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                    name="proxyFailures"
+                  />
+                </ComposedChart>
+              </ChartContainer>
+            ) : (
+              <div className="flex min-h-[340px] items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
+                No series data returned for the current query.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border bg-card/95">
+          <CardHeader>
+            <CardTitle>Normalized Top Endpoints</CardTitle>
+            <CardDescription>
+              Normalized endpoint counts from <code>endpoint_breakdown.endpoints</code>.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>{endpointContent}</CardContent>
+        </Card>
+      </section>
     </>
   );
 }
@@ -251,6 +625,10 @@ export function InternalDashboard() {
   const [refreshTick, setRefreshTick] = useState(0);
   const [liveMode, setLiveMode] = useState(false);
   const hasLoadedStatsRef = useRef(false);
+  const seriesSelectId = "internal-series";
+  const lookbackSelectId = "internal-lookback";
+  const endpointWindowSelectId = "internal-endpoints-window";
+  const endpointLimitId = "internal-endpoint-limit";
 
   useEffect(() => {
     const accessToken = globalThis.localStorage.getItem("access_token");
@@ -450,7 +828,9 @@ export function InternalDashboard() {
 
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <div className="space-y-2">
-              <label className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Series</label>
+              <label htmlFor={seriesSelectId} className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                Series
+              </label>
               <Select
                 value={query.series}
                 onValueChange={(value) => {
@@ -466,7 +846,7 @@ export function InternalDashboard() {
                   }));
                 }}
               >
-                <SelectTrigger className="border-border bg-background">
+                <SelectTrigger id={seriesSelectId} className="border-border bg-background">
                   <SelectValue placeholder="Select interval" />
                 </SelectTrigger>
                 <SelectContent>
@@ -480,14 +860,16 @@ export function InternalDashboard() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Lookback</label>
+              <label htmlFor={lookbackSelectId} className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                Lookback
+              </label>
               <Select
                 value={query.lookback}
                 onValueChange={(value) =>
                   setQuery((current) => ({ ...current, lookback: value as StatsLookback }))
                 }
               >
-                <SelectTrigger className="border-border bg-background">
+                <SelectTrigger id={lookbackSelectId} className="border-border bg-background">
                   <SelectValue placeholder="Select lookback" />
                 </SelectTrigger>
                 <SelectContent>
@@ -501,14 +883,16 @@ export function InternalDashboard() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Endpoints Window</label>
+              <label htmlFor={endpointWindowSelectId} className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                Endpoints Window
+              </label>
               <Select
                 value={query.endpoints}
                 onValueChange={(value) =>
                   setQuery((current) => ({ ...current, endpoints: value as EndpointBreakdownWindow }))
                 }
               >
-                <SelectTrigger className="border-border bg-background">
+                <SelectTrigger id={endpointWindowSelectId} className="border-border bg-background">
                   <SelectValue placeholder="Select window" />
                 </SelectTrigger>
                 <SelectContent>
@@ -522,8 +906,11 @@ export function InternalDashboard() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">Endpoint Limit</label>
+              <label htmlFor={endpointLimitId} className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                Endpoint Limit
+              </label>
               <Input
+                id={endpointLimitId}
                 type="number"
                 min={1}
                 max={100}
@@ -583,317 +970,16 @@ export function InternalDashboard() {
           </Alert>
         ) : null}
 
-        {!isForbidden ? (
-          <>
-            <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-              {isLoading && !stats ? (
-                <LoadingCards />
-              ) : (
-                summaryCards.map((card) => {
-                  const Icon = card.icon;
-
-                  return (
-                    <Card key={card.title} className="border-border bg-card/95">
-                      <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
-                        <div className="space-y-1">
-                          <CardTitle className="text-sm font-medium text-muted-foreground">{card.title}</CardTitle>
-                          <CardDescription>{card.description}</CardDescription>
-                        </div>
-                        <div className="rounded-full bg-primary/10 p-2">
-                          <Icon className="h-4 w-4 text-primary" />
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-2xl font-semibold tracking-tight text-foreground">{card.value}</div>
-                      </CardContent>
-                    </Card>
-                  );
-                })
-              )}
-            </section>
-
-            <section className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-              <Card className="border-border bg-card/95">
-                <CardHeader>
-                  <CardTitle>Summary Windows</CardTitle>
-                  <CardDescription>Rolling request, latency, and error windows always returned by the stats API.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {isLoading && !stats ? (
-                    <div className="space-y-3">
-                      {Array.from({ length: 6 }).map((_, index) => (
-                        <Skeleton key={`window-skeleton-${index}`} className="h-10 w-full" />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <div className="hidden grid-cols-[96px_repeat(6,minmax(0,1fr))] gap-3 border-b border-border pb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground lg:grid">
-                        <div>Window</div>
-                        <div className="text-right">Requests</div>
-                        <div className="text-right">Avg RPS</div>
-                        <div className="text-right">Latency</div>
-                        <div className="text-right">4xx</div>
-                        <div className="text-right">5xx</div>
-                        <div className="text-right">Proxy Failures</div>
-                      </div>
-                      {WINDOW_ORDER.map((windowKey) => {
-                        const windowStats = getWindowValue(stats, windowKey);
-
-                        return (
-                          <div
-                            key={windowKey}
-                            className="rounded-xl border border-border bg-background/60 p-4"
-                          >
-                            <div className="grid gap-3 lg:grid-cols-[96px_repeat(6,minmax(0,1fr))] lg:items-center">
-                              <div className="text-sm font-semibold text-foreground">{windowKey}</div>
-                              <div className="grid grid-cols-2 gap-3 text-sm lg:contents">
-                                <div>
-                                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Requests</p>
-                                  <p className="text-right text-foreground">{formatInteger(windowStats?.requests)}</p>
-                                </div>
-                                <div>
-                                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Avg RPS</p>
-                                  <p className="text-right text-foreground">{formatDecimal(windowStats?.avg_rps, 2)}</p>
-                                </div>
-                                <div>
-                                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Latency</p>
-                                  <p className="text-right text-foreground">{formatLatency(windowStats?.avg_latency_ms)}</p>
-                                </div>
-                                <div>
-                                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">4xx</p>
-                                  <p className="text-right text-foreground">{formatInteger(windowStats?.status_counts["4xx"])}</p>
-                                </div>
-                                <div>
-                                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">5xx</p>
-                                  <p className="text-right text-foreground">{formatInteger(windowStats?.status_counts["5xx"])}</p>
-                                </div>
-                                <div>
-                                  <p className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground lg:hidden">Proxy Failures</p>
-                                  <p className="text-right text-foreground">{formatInteger(windowStats?.proxy_failures)}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="border-border bg-card/95">
-                <CardHeader>
-                  <CardTitle>Request Mix</CardTitle>
-                  <CardDescription>Current one minute HTTP class totals and proxy failure count.</CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4 sm:grid-cols-2">
-                  {[
-                    { label: "2xx", value: oneMinuteWindow?.status_counts["2xx"], tone: "text-emerald-500" },
-                    { label: "3xx", value: oneMinuteWindow?.status_counts["3xx"], tone: "text-sky-500" },
-                    { label: "4xx", value: oneMinuteWindow?.status_counts["4xx"], tone: "text-amber-500" },
-                    { label: "5xx", value: oneMinuteWindow?.status_counts["5xx"], tone: "text-rose-500" },
-                    { label: "Proxy failures", value: oneMinuteWindow?.proxy_failures, tone: "text-violet-500" },
-                  ].map((item) => (
-                    <div key={item.label} className="rounded-xl border border-border bg-background/70 p-4">
-                      <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">{item.label}</p>
-                      <p className={`mt-3 text-3xl font-semibold ${item.tone}`}>{formatInteger(item.value)}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </section>
-
-            <section className="grid gap-6 xl:grid-cols-2">
-              <Card className="border-border bg-card/95">
-                <CardHeader>
-                  <CardTitle>Traffic</CardTitle>
-                  <CardDescription>Request volume from <code>series_data.points[].requests</code>.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {hasSeriesData ? (
-                    <ChartContainer config={trafficChartConfig} className="h-[320px] w-full">
-                      <AreaChart accessibilityLayer data={seriesPoints} margin={{ left: 4, right: 12, top: 8 }}>
-                        <defs>
-                          <linearGradient id="trafficFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="var(--color-requests)" stopOpacity={0.35} />
-                            <stop offset="100%" stopColor="var(--color-requests)" stopOpacity={0.04} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid vertical={false} />
-                        <XAxis dataKey="label" tickLine={false} axisLine={false} minTickGap={28} tickMargin={10} />
-                        <YAxis tickLine={false} axisLine={false} tickMargin={8} width={56} tickFormatter={formatCompactAxisNumber} />
-                        <ChartTooltip
-                          cursor={false}
-                          content={(
-                            <ChartTooltipContent
-                              formatter={(value) => (
-                                <>
-                                  <span className="text-muted-foreground">Requests</span>
-                                  <span className="ml-auto font-mono font-medium text-foreground">
-                                    {formatInteger(normalizeTooltipNumber(value))}
-                                  </span>
-                                </>
-                              )}
-                              labelFormatter={(label, payload) => getTooltipFullLabel(payload, label)}
-                            />
-                          )}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="requests"
-                          stroke="var(--color-requests)"
-                          fill="url(#trafficFill)"
-                          strokeWidth={2}
-                          activeDot={{ r: 4 }}
-                        />
-                      </AreaChart>
-                    </ChartContainer>
-                  ) : (
-                    <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
-                      No series data returned for the current query.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="border-border bg-card/95">
-                <CardHeader>
-                  <CardTitle>Latency</CardTitle>
-                  <CardDescription>Average latency from <code>series_data.points[].avg_latency_ms</code>.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {hasSeriesData ? (
-                    <ChartContainer config={latencyChartConfig} className="h-[320px] w-full">
-                      <AreaChart accessibilityLayer data={seriesPoints} margin={{ left: 4, right: 12, top: 8 }}>
-                        <defs>
-                          <linearGradient id="latencyFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="var(--color-latency)" stopOpacity={0.3} />
-                            <stop offset="100%" stopColor="var(--color-latency)" stopOpacity={0.03} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid vertical={false} />
-                        <XAxis dataKey="label" tickLine={false} axisLine={false} minTickGap={28} tickMargin={10} />
-                        <YAxis tickLine={false} axisLine={false} tickMargin={8} width={56} tickFormatter={formatCompactAxisNumber} />
-                        <ChartTooltip
-                          cursor={false}
-                          content={(
-                            <ChartTooltipContent
-                              formatter={(value) => (
-                                <>
-                                  <span className="text-muted-foreground">Latency</span>
-                                  <span className="ml-auto font-mono font-medium text-foreground">
-                                    {formatLatency(normalizeTooltipNumber(value))}
-                                  </span>
-                                </>
-                              )}
-                              labelFormatter={(label, payload) => getTooltipFullLabel(payload, label)}
-                            />
-                          )}
-                        />
-                        <Area
-                          type="monotone"
-                          dataKey="latency"
-                          stroke="var(--color-latency)"
-                          fill="url(#latencyFill)"
-                          strokeWidth={2}
-                          connectNulls={false}
-                          activeDot={{ r: 4 }}
-                        />
-                      </AreaChart>
-                    </ChartContainer>
-                  ) : (
-                    <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
-                      No series data returned for the current query.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </section>
-
-            <section className="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-              <Card className="border-border bg-card/95">
-                <CardHeader>
-                  <CardTitle>Error Profile</CardTitle>
-                  <CardDescription>
-                    Stacked 4xx and 5xx counts with proxy failures overlaid from the selected series query.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {hasSeriesData ? (
-                    <ChartContainer config={errorChartConfig} className="h-[340px] w-full">
-                      <ComposedChart accessibilityLayer data={seriesPoints} margin={{ left: 4, right: 12, top: 8 }}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis dataKey="label" tickLine={false} axisLine={false} minTickGap={28} tickMargin={10} />
-                        <YAxis tickLine={false} axisLine={false} tickMargin={8} width={56} tickFormatter={formatCompactAxisNumber} />
-                        <ChartTooltip
-                          content={(
-                            <ChartTooltipContent
-                              labelFormatter={(label, payload) => getTooltipFullLabel(payload, label)}
-                            />
-                          )}
-                        />
-                        <ChartLegend content={<ChartLegendContent />} />
-                        <Bar dataKey="errors4xx" stackId="errors" fill="var(--color-errors4xx)" name="errors4xx" radius={[4, 4, 0, 0]} />
-                        <Bar dataKey="errors5xx" stackId="errors" fill="var(--color-errors5xx)" name="errors5xx" radius={[4, 4, 0, 0]} />
-                        <Line
-                          type="monotone"
-                          dataKey="proxyFailures"
-                          stroke="var(--color-proxyFailures)"
-                          strokeWidth={2}
-                          dot={false}
-                          activeDot={{ r: 4 }}
-                          name="proxyFailures"
-                        />
-                      </ComposedChart>
-                    </ChartContainer>
-                  ) : (
-                    <div className="flex min-h-[340px] items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
-                      No series data returned for the current query.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="border-border bg-card/95">
-                <CardHeader>
-                  <CardTitle>Normalized Top Endpoints</CardTitle>
-                  <CardDescription>
-                    Normalized endpoint counts from <code>endpoint_breakdown.endpoints</code>.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {isLoading && !stats ? (
-                    <div className="space-y-3">
-                      {Array.from({ length: 8 }).map((_, index) => (
-                        <Skeleton key={`endpoint-skeleton-${index}`} className="h-10 w-full" />
-                      ))}
-                    </div>
-                  ) : stats?.endpoint_breakdown?.endpoints?.length ? (
-                    <div className="space-y-2">
-                      {stats.endpoint_breakdown.endpoints.map((endpoint) => (
-                        <div
-                          key={endpoint.endpoint}
-                          className="grid grid-cols-[minmax(0,1fr)_72px] items-start gap-3 rounded-xl border border-border bg-background/60 px-4 py-3"
-                        >
-                          <p className="break-words font-mono text-xs text-foreground sm:text-sm">
-                            {endpoint.endpoint}
-                          </p>
-                          <p className="text-right text-sm font-semibold text-foreground">
-                            {formatInteger(endpoint.requests)}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
-                      No endpoint breakdown returned for the current query.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </section>
-          </>
-        ) : null}
+        {isForbidden ? null : (
+          <InternalMetricsSections
+            hasSeriesData={hasSeriesData}
+            isLoading={isLoading}
+            oneMinuteWindow={oneMinuteWindow}
+            seriesPoints={seriesPoints}
+            summaryCards={summaryCards}
+            stats={stats}
+          />
+        )}
       </div>
     </div>
   );
