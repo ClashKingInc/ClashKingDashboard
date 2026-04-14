@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, ChevronDown, ChevronUp, Copy, ExternalLink, Plus, Trash2, Link2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Plus, Trash2, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,6 +29,8 @@ interface FieldState {
 }
 
 interface EmbedFormState {
+  editorId: string;
+  openSections: Record<SectionKey, boolean>;
   color: string;
   authorName: string;
   authorIconUrl: string;
@@ -44,9 +46,19 @@ interface EmbedFormState {
   includeTimestamp: boolean;
 }
 
-type SectionKey = "color" | "author" | "body" | "fields" | "images" | "footer";
+type SectionKey = "author" | "body" | "fields" | "images" | "footer";
 const MAX_DISCORD_EMBEDS_PER_MESSAGE = 10;
 const MAX_DISCORD_MESSAGE_CONTENT_LENGTH = 2000;
+
+function createCollapsedSectionState(): Record<SectionKey, boolean> {
+  return {
+    author: false,
+    body: false,
+    fields: false,
+    images: false,
+    footer: false,
+  };
+}
 
 export interface EmbedEditorProps {
   readonly initialData?: Record<string, unknown> | null;
@@ -67,6 +79,8 @@ function intToHex(color: number): string {
 
 function defaultState(): EmbedFormState {
   return {
+    editorId: uid(),
+    openSections: createCollapsedSectionState(),
     color: "#5865f2",
     authorName: "", authorIconUrl: "", authorUrl: "",
     title: "", titleUrl: "",
@@ -80,6 +94,8 @@ function defaultState(): EmbedFormState {
 
 function embedToState(embed: DiscordEmbed): EmbedFormState {
   return {
+    editorId: uid(),
+    openSections: createCollapsedSectionState(),
     color: typeof embed.color === "number" ? intToHex(embed.color) : "#5865f2",
     authorName: embed.author?.name ?? "",
     authorIconUrl: embed.author?.icon_url ?? "",
@@ -177,6 +193,7 @@ export function stateToPayload(states: EmbedFormState[], content = ""): Record<s
     .slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
   const normalizedContent = content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
   return {
+    content: normalizedContent || null,
     embeds,
     messages: [{ data: { content: normalizedContent || null, embeds } }],
   };
@@ -229,7 +246,7 @@ function SectionLabel({ children }: { readonly children: React.ReactNode }) {
 function Field({ label, hint, children }: { readonly label: string; readonly hint?: string; readonly children: React.ReactNode }) {
   return (
     <div className="space-y-1">
-      <Label className="text-xs">{label}</Label>
+      {label ? <Label className="text-xs">{label}</Label> : null}
       {children}
       {hint && <p className="text-[11px] text-muted-foreground">{hint}</p>}
     </div>
@@ -254,16 +271,16 @@ interface CollapsibleSectionProps {
 
 function CollapsibleSection({ title, open, onToggle, children }: CollapsibleSectionProps) {
   return (
-    <div className="rounded-lg border border-border/80 bg-card">
+    <div className="border-b border-border/80">
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-3 py-2 text-left"
+        className="flex w-full items-center gap-2 px-3 py-2 text-left"
       >
-        <SectionLabel>{title}</SectionLabel>
-        {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+        {open ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+        <span className="text-sm font-medium text-foreground">{title}</span>
       </button>
-      {open && <div className="px-3 pb-3">{children}</div>}
+      {open && <div className="px-3 pb-3 pl-9">{children}</div>}
     </div>
   );
 }
@@ -281,15 +298,9 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const [embeds, setEmbeds] = useState<EmbedFormState[]>(() =>
     parsedInitialData ? parsedInitialData.embeds : [defaultState()]
   );
-  const [activeEmbedIndex, setActiveEmbedIndex] = useState(0);
-  const [openSections, setOpenSections] = useState<Record<SectionKey, boolean>>({
-    color: true,
-    author: true,
-    body: true,
-    fields: true,
-    images: true,
-    footer: true,
-  });
+  const [expandedEmbedId, setExpandedEmbedId] = useState<string | null>(() => (
+    (parsedInitialData?.embeds[0]?.editorId) ?? null
+  ));
   const [importUrl, setImportUrl] = useState("");
   const [importError, setImportError] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
@@ -297,55 +308,98 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const [copiedDiscohook, setCopiedDiscohook] = useState(false);
   const [content, setContent] = useState(() => parsedInitialData?.content ?? "");
 
-  const activeEmbed = embeds[activeEmbedIndex] ?? defaultState();
+  const updateEmbed = (embedId: string, updater: (embed: EmbedFormState) => EmbedFormState) =>
+    setEmbeds((prev) => prev.map((embed) => (embed.editorId === embedId ? updater(embed) : embed)));
 
-  const setActiveField = <K extends keyof EmbedFormState>(key: K, value: EmbedFormState[K]) =>
-    setEmbeds(prev => prev.map((embed, i) => i === activeEmbedIndex ? { ...embed, [key]: value } : embed));
+  const setEmbedField = <K extends Exclude<keyof EmbedFormState, "editorId" | "openSections" | "fields">>(
+    embedId: string,
+    key: K,
+    value: EmbedFormState[K],
+  ) => {
+    updateEmbed(embedId, (embed) => ({ ...embed, [key]: value }));
+  };
 
-  const updateActiveEmbed = (updater: (embed: EmbedFormState) => EmbedFormState) =>
-    setEmbeds((prev) => prev.map((embed, i) => (i === activeEmbedIndex ? updater(embed) : embed)));
-
-  const toggleSection = (section: SectionKey) =>
-    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
+  const toggleSection = (embedId: string, section: SectionKey) => {
+    updateEmbed(embedId, (embed) => ({
+      ...embed,
+      openSections: {
+        ...embed.openSections,
+        [section]: !embed.openSections[section],
+      },
+    }));
+  };
 
   const addEmbed = () => {
-    setEmbeds(prev => {
+    setEmbeds((prev) => {
       if (prev.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return prev;
-      setActiveEmbedIndex(prev.length);
-      return [...prev, defaultState()];
+      const nextEmbed = defaultState();
+      setExpandedEmbedId(nextEmbed.editorId);
+      return [...prev, nextEmbed];
     });
   };
 
-  const removeActiveEmbed = () => {
-    setEmbeds(prev => {
+  const removeEmbed = (embedId: string) => {
+    setEmbeds((prev) => {
       if (prev.length <= 1) {
-        setActiveEmbedIndex(0);
-        return [defaultState()];
+        const replacement = defaultState();
+        setExpandedEmbedId(replacement.editorId);
+        return [replacement];
       }
-      const nextEmbeds = prev.filter((_, i) => i !== activeEmbedIndex);
-      setActiveEmbedIndex(Math.max(0, activeEmbedIndex - 1));
+      const removedIndex = prev.findIndex((embed) => embed.editorId === embedId);
+      const nextEmbeds = prev.filter((embed) => embed.editorId !== embedId);
+      if (expandedEmbedId === embedId) {
+        const fallback = nextEmbeds[Math.max(0, removedIndex - 1)] ?? nextEmbeds[0] ?? null;
+        setExpandedEmbedId(fallback?.editorId ?? null);
+      }
       return nextEmbeds;
+    });
+  };
+
+  const duplicateEmbed = (embedId: string) => {
+    setEmbeds((prev) => {
+      if (prev.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return prev;
+      const index = prev.findIndex((embed) => embed.editorId === embedId);
+      if (index === -1) return prev;
+      const duplicated = duplicateEmbedState(prev[index]);
+      setExpandedEmbedId(duplicated.editorId);
+      return [...prev.slice(0, index + 1), duplicated, ...prev.slice(index + 1)];
+    });
+  };
+
+  const moveEmbed = (embedId: string, direction: -1 | 1) => {
+    setEmbeds((prev) => {
+      const index = prev.findIndex((embed) => embed.editorId === embedId);
+      const targetIndex = index + direction;
+      if (index < 0 || targetIndex < 0 || targetIndex >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+      return next;
     });
   };
 
   // ── Field management ────────────────────────────────────────────────────────
 
-  const addField = () => {
-    if (activeEmbed.fields.length >= 25) return;
-    updateActiveEmbed((embed) => ({
-      ...embed,
-      fields: [...embed.fields, { id: uid(), name: "", value: "", inline: false }],
-    }));
+  const addField = (embedId: string) => {
+    updateEmbed(embedId, (embed) => {
+      if (embed.fields.length >= 25) return embed;
+      return {
+        ...embed,
+        fields: [...embed.fields, { id: uid(), name: "", value: "", inline: false }],
+      };
+    });
   };
 
-  const updateField = (id: string, patch: Partial<FieldState>) =>
-    updateActiveEmbed((embed) => ({ ...embed, fields: patchField(embed.fields, id, patch) }));
+  const updateField = (embedId: string, fieldId: string, patch: Partial<FieldState>) =>
+    updateEmbed(embedId, (embed) => ({
+      ...embed,
+      fields: patchField(embed.fields, fieldId, patch),
+    }));
 
-  const removeField = (id: string) =>
-    updateActiveEmbed((embed) => ({ ...embed, fields: removeFieldById(embed.fields, id) }));
+  const removeField = (embedId: string, fieldId: string) =>
+    updateEmbed(embedId, (embed) => ({ ...embed, fields: removeFieldById(embed.fields, fieldId) }));
 
-  const moveField = (id: string, dir: -1 | 1) =>
-    updateActiveEmbed((embed) => ({ ...embed, fields: reorderFieldById(embed.fields, id, dir) }));
+  const moveField = (embedId: string, fieldId: string, dir: -1 | 1) =>
+    updateEmbed(embedId, (embed) => ({ ...embed, fields: reorderFieldById(embed.fields, fieldId, dir) }));
 
   // ── Import ──────────────────────────────────────────────────────────────────
 
@@ -357,7 +411,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setImportUrl("");
     setEmbeds(editorState.embeds);
     setContent(editorState.content);
-    setActiveEmbedIndex(0);
+    setExpandedEmbedId(editorState.embeds[0]?.editorId ?? null);
     setImportExportOpen(false);
   };
 
@@ -382,11 +436,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
 
         {/* ── Left: form ── */}
-        <div className="w-full overflow-y-auto border-b border-border bg-card px-4 py-5 space-y-5 md:w-[45%] md:border-b-0 md:border-r md:px-6">
+        <div className="w-full overflow-y-auto border-b border-border bg-card px-4 py-5 space-y-5 md:w-[52%] md:border-b-0 md:border-r md:px-6">
 
           <Button size="sm" variant="secondary" className="h-8" onClick={() => setImportExportOpen(true)}>
             <Link2 className="h-3.5 w-3.5 mr-1" />{t("importExport")}
           </Button>
+
+          <Separator />
 
           <div className="space-y-1">
             <div className="flex items-center justify-between">
@@ -403,10 +459,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
             />
           </div>
 
-          <Separator />
-
-          {/* Embed selector */}
-          <div className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <SectionLabel>{`Embeds (${embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</SectionLabel>
               <Button
@@ -419,188 +472,200 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                 <Plus className="h-3.5 w-3.5 mr-1" />Add Embed
               </Button>
             </div>
-            <div className="space-y-1.5">
-              {embeds.map((embed, i) => {
-                const label = embed.title.trim() || embed.description.trim().slice(0, 40) || `Embed ${i + 1}`;
-                const isActive = i === activeEmbedIndex;
-                return (
-                  <button
-                    key={`${label}-${i}`} // NOSONAR — index keeps duplicate labels distinct
-                    type="button"
-                    className={cn(
-                      "w-full rounded-md border px-2 py-1.5 text-left text-xs transition-colors",
-                      isActive ? "border-primary/60 bg-primary/10" : "border-border/80 hover:bg-accent/20"
-                    )}
-                    onClick={() => setActiveEmbedIndex(i)}
-                  >
-                    {`Embed ${i + 1}: ${label}`}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="flex items-center justify-end">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="h-7 px-2 text-xs text-muted-foreground hover:text-destructive"
-                onClick={removeActiveEmbed}
-                disabled={embeds.length <= 1}
-              >
-                <Trash2 className="h-3.5 w-3.5 mr-1" />Remove Active
-              </Button>
-            </div>
-          </div>
-
-          <CollapsibleSection title={t("colorSection")} open={openSections.color} onToggle={() => toggleSection("color")}>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={activeEmbed.color || "#5865f2"}
-                onChange={e => setActiveField("color", e.target.value)}
-                className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5"
-              />
-              <Input
-                value={activeEmbed.color}
-                onChange={e => {
-                  const v = e.target.value;
-                  if (/^#[0-9a-fA-F]{0,6}$/.test(v)) setActiveField("color", v);
-                }}
-                className={cn(inputClassName, "font-mono text-sm w-28")}
-                maxLength={7}
-              />
-            </div>
-          </CollapsibleSection>
-
-          <CollapsibleSection title={t("authorSection")} open={openSections.author} onToggle={() => toggleSection("author")}>
-            <div className="space-y-3">
-              <Field label={t("authorName")}>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs text-muted-foreground" />
-                  <CharCount value={activeEmbed.authorName} max={256} />
-                </div>
-                <Input value={activeEmbed.authorName} onChange={e => setActiveField("authorName", e.target.value)} maxLength={256} className={compactInputClassName} />
-              </Field>
-              <Field label={t("authorIconUrl")}>
-                <Input value={activeEmbed.authorIconUrl} onChange={e => setActiveField("authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-              </Field>
-              <Field label={t("authorUrl")}>
-                <Input value={activeEmbed.authorUrl} onChange={e => setActiveField("authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-              </Field>
-            </div>
-          </CollapsibleSection>
-
-          <CollapsibleSection title={t("bodySection")} open={openSections.body} onToggle={() => toggleSection("body")}>
-            <div className="space-y-3">
-              <Field label={t("title")}>
-                <div className="flex justify-between items-center mb-1">
-                  <span />
-                  <CharCount value={activeEmbed.title} max={256} />
-                </div>
-                <Input value={activeEmbed.title} onChange={e => setActiveField("title", e.target.value)} maxLength={256} className={compactInputClassName} />
-              </Field>
-              <Field label={t("titleUrl")}>
-                <Input value={activeEmbed.titleUrl} onChange={e => setActiveField("titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-              </Field>
-              <Field label={t("description")}>
-                <div className="flex justify-end mb-1">
-                  <CharCount value={activeEmbed.description} max={4096} />
-                </div>
-                <Textarea
-                  value={activeEmbed.description}
-                  onChange={e => setActiveField("description", e.target.value)}
-                  maxLength={4096}
-                  rows={5}
-                  className={compactTextareaClassName}
-                  placeholder={t("descriptionPlaceholder")}
-                />
-              </Field>
-            </div>
-          </CollapsibleSection>
-
-          <CollapsibleSection title={`${t("fieldsSection")} (${activeEmbed.fields.length}/25)`} open={openSections.fields} onToggle={() => toggleSection("fields")}>
-            <div className="space-y-3">
-              <div className="flex items-center justify-end">
-                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={addField} disabled={activeEmbed.fields.length >= 25}>
-                  <Plus className="h-3.5 w-3.5 mr-1" />{t("addField")}
-                </Button>
-              </div>
-              {activeEmbed.fields.map((field, idx) => (
-                <div key={field.id} className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-medium text-muted-foreground">{t("field")} {idx + 1}</span>
+            {embeds.map((embed, index) => {
+              const label = embed.title.trim() || embed.description.trim().slice(0, 40) || `Embed ${index + 1}`;
+              const isExpanded = expandedEmbedId === embed.editorId;
+              return (
+                <div
+                  key={embed.editorId}
+                  className={cn(
+                    "rounded-lg border bg-card",
+                    isExpanded ? "border-primary/60" : "border-border/80",
+                  )}
+                >
+                  <div className="flex items-center gap-2 px-3 py-2">
+                    <button
+                      type="button"
+                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                      onClick={() => setExpandedEmbedId((prev) => (prev === embed.editorId ? null : embed.editorId))}
+                    >
+                      {isExpanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                      <span className="truncate text-base font-semibold">{`Embed ${index + 1} - ${label}`}</span>
+                    </button>
                     <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(field.id, -1)} disabled={idx === 0}>
-                        <ChevronUp className="h-3.5 w-3.5" />
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, -1)} disabled={index === 0}>
+                        <ChevronUp className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(field.id, 1)} disabled={idx === activeEmbed.fields.length - 1}>
-                        <ChevronDown className="h-3.5 w-3.5" />
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, 1)} disabled={index === embeds.length - 1}>
+                        <ChevronDown className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeField(field.id)}>
-                        <Trash2 className="h-3.5 w-3.5" />
+                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => duplicateEmbed(embed.editorId)} disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}>
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeEmbed(embed.editorId)} disabled={embeds.length <= 1}>
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <Label className="text-xs">{t("fieldName")}</Label>
-                      <CharCount value={field.name} max={256} />
-                    </div>
-                    <Input value={field.name} onChange={e => updateField(field.id, { name: e.target.value })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <Label className="text-xs">{t("fieldValue")}</Label>
-                      <CharCount value={field.value} max={1024} />
-                    </div>
-                    <Textarea value={field.value} onChange={e => updateField(field.id, { value: e.target.value })} maxLength={1024} rows={2} className={cn(inputClassName, "text-xs resize-none")} />
-                  </div>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={field.inline}
-                      onChange={e => updateField(field.id, { inline: e.target.checked })}
-                      className="h-3.5 w-3.5 rounded border-input accent-primary"
-                    />
-                    <span className="text-xs text-muted-foreground">{t("fieldInline")}</span>
-                  </label>
-                </div>
-              ))}
-            </div>
-          </CollapsibleSection>
+                  {isExpanded && (
+                    <div className="border-t border-border/80">
+                      <CollapsibleSection title={t("authorSection")} open={embed.openSections.author} onToggle={() => toggleSection(embed.editorId, "author")}>
+                        <div className="space-y-3">
+                          <Field label="">
+                            <div className="mb-1 flex items-center justify-between">
+                              <Label className="text-xs">{t("authorName")}</Label>
+                              <CharCount value={embed.authorName} max={256} />
+                            </div>
+                            <Input value={embed.authorName} onChange={e => setEmbedField(embed.editorId, "authorName", e.target.value)} maxLength={256} className={compactInputClassName} />
+                          </Field>
+                          <Field label={t("authorUrl")}>
+                            <Input value={embed.authorUrl} onChange={e => setEmbedField(embed.editorId, "authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                          </Field>
+                          <Field label={t("authorIconUrl")}>
+                            <Input value={embed.authorIconUrl} onChange={e => setEmbedField(embed.editorId, "authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                          </Field>
+                        </div>
+                      </CollapsibleSection>
 
-          <CollapsibleSection title={t("imagesSection")} open={openSections.images} onToggle={() => toggleSection("images")}>
-            <div className="space-y-3">
-              <Field label={t("thumbnailUrl")}>
-                <Input value={activeEmbed.thumbnailUrl} onChange={e => setActiveField("thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-              </Field>
-              <Field label={t("imageUrl")}>
-                <Input value={activeEmbed.imageUrl} onChange={e => setActiveField("imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-              </Field>
-            </div>
-          </CollapsibleSection>
+                      <CollapsibleSection title={t("bodySection")} open={embed.openSections.body} onToggle={() => toggleSection(embed.editorId, "body")}>
+                        <div className="space-y-3">
+                          <Field label="">
+                            <div className="mb-1 flex items-center justify-between">
+                              <Label className="text-xs">{t("title")}</Label>
+                              <CharCount value={embed.title} max={256} />
+                            </div>
+                            <Input value={embed.title} onChange={e => setEmbedField(embed.editorId, "title", e.target.value)} maxLength={256} className={compactInputClassName} />
+                          </Field>
+                          <Field label={t("titleUrl")}>
+                            <Input value={embed.titleUrl} onChange={e => setEmbedField(embed.editorId, "titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                          </Field>
+                          <Field label={t("sidebarColor")}>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="color"
+                                value={embed.color || "#5865f2"}
+                                onChange={e => setEmbedField(embed.editorId, "color", e.target.value)}
+                                className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5"
+                              />
+                              <Input
+                                value={embed.color}
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setEmbedField(embed.editorId, "color", value);
+                                }}
+                                className={cn(inputClassName, "font-mono text-sm w-28")}
+                                maxLength={7}
+                              />
+                            </div>
+                          </Field>
+                          <Field label="">
+                            <div className="mb-1 flex items-center justify-between">
+                              <Label className="text-xs">{t("description")}</Label>
+                              <CharCount value={embed.description} max={4096} />
+                            </div>
+                            <Textarea
+                              value={embed.description}
+                              onChange={e => setEmbedField(embed.editorId, "description", e.target.value)}
+                              maxLength={4096}
+                              rows={5}
+                              className={compactTextareaClassName}
+                              placeholder={t("descriptionPlaceholder")}
+                            />
+                          </Field>
+                        </div>
+                      </CollapsibleSection>
 
-          <CollapsibleSection title={t("footerSection")} open={openSections.footer} onToggle={() => toggleSection("footer")}>
-            <div className="space-y-3">
-              <Field label={t("footerText")}>
-                <div className="flex justify-end mb-1">
-                  <CharCount value={activeEmbed.footerText} max={2048} />
+                      <CollapsibleSection title={`${t("fieldsSection")} (${embed.fields.length}/25)`} open={embed.openSections.fields} onToggle={() => toggleSection(embed.editorId, "fields")}>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-end">
+                            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => addField(embed.editorId)} disabled={embed.fields.length >= 25}>
+                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addField")}
+                            </Button>
+                          </div>
+                          {embed.fields.map((field, fieldIndex) => (
+                            <div key={field.id} className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-xs font-medium text-muted-foreground">{t("field")} {fieldIndex + 1}</span>
+                                <div className="flex items-center gap-1">
+                                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, -1)} disabled={fieldIndex === 0}>
+                                    <ChevronUp className="h-3.5 w-3.5" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, 1)} disabled={fieldIndex === embed.fields.length - 1}>
+                                    <ChevronDown className="h-3.5 w-3.5" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeField(embed.editorId, field.id)}>
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between">
+                                  <Label className="text-xs">{t("fieldName")}</Label>
+                                  <CharCount value={field.name} max={256} />
+                                </div>
+                                <Input value={field.name} onChange={e => updateField(embed.editorId, field.id, { name: e.target.value })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} />
+                              </div>
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between">
+                                  <Label className="text-xs">{t("fieldValue")}</Label>
+                                  <CharCount value={field.value} max={1024} />
+                                </div>
+                                <Textarea value={field.value} onChange={e => updateField(embed.editorId, field.id, { value: e.target.value })} maxLength={1024} rows={2} className={cn(inputClassName, "text-xs resize-none")} />
+                              </div>
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={field.inline}
+                                  onChange={e => updateField(embed.editorId, field.id, { inline: e.target.checked })}
+                                  className="h-3.5 w-3.5 rounded border-input accent-primary"
+                                />
+                                <span className="text-xs text-muted-foreground">{t("fieldInline")}</span>
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </CollapsibleSection>
+
+                      <CollapsibleSection title={t("imagesSection")} open={embed.openSections.images} onToggle={() => toggleSection(embed.editorId, "images")}>
+                        <div className="space-y-3">
+                          <Field label={t("thumbnailUrl")}>
+                            <Input value={embed.thumbnailUrl} onChange={e => setEmbedField(embed.editorId, "thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                          </Field>
+                          <Field label={t("imageUrl")}>
+                            <Input value={embed.imageUrl} onChange={e => setEmbedField(embed.editorId, "imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                          </Field>
+                        </div>
+                      </CollapsibleSection>
+
+                      <CollapsibleSection title={t("footerSection")} open={embed.openSections.footer} onToggle={() => toggleSection(embed.editorId, "footer")}>
+                        <div className="space-y-3">
+                          <Field label="">
+                            <div className="mb-1 flex items-center justify-between">
+                              <Label className="text-xs">{t("footerText")}</Label>
+                              <CharCount value={embed.footerText} max={2048} />
+                            </div>
+                            <Input value={embed.footerText} onChange={e => setEmbedField(embed.editorId, "footerText", e.target.value)} maxLength={2048} className={compactInputClassName} />
+                          </Field>
+                          <Field label={t("footerIconUrl")}>
+                            <Input value={embed.footerIconUrl} onChange={e => setEmbedField(embed.editorId, "footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                          </Field>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={embed.includeTimestamp}
+                              onChange={e => setEmbedField(embed.editorId, "includeTimestamp", e.target.checked)}
+                              className="h-3.5 w-3.5 rounded border-input accent-primary"
+                            />
+                            <span className="text-sm">{t("timestamp")}</span>
+                          </label>
+                        </div>
+                      </CollapsibleSection>
+                    </div>
+                  )}
                 </div>
-                <Input value={activeEmbed.footerText} onChange={e => setActiveField("footerText", e.target.value)} maxLength={2048} className={compactInputClassName} />
-              </Field>
-              <Field label={t("footerIconUrl")}>
-                <Input value={activeEmbed.footerIconUrl} onChange={e => setActiveField("footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-              </Field>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={activeEmbed.includeTimestamp}
-                  onChange={e => setActiveField("includeTimestamp", e.target.checked)}
-                  className="h-3.5 w-3.5 rounded border-input accent-primary"
-                />
-                <span className="text-sm">{t("timestamp")}</span>
-              </label>
-            </div>
-          </CollapsibleSection>
+              );
+            })}
+          </div>
 
           {/* Bottom padding */}
           <div className="h-4" />
@@ -723,4 +788,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
       </Dialog>
     </div>
   );
+}
+
+function duplicateEmbedState(embed: EmbedFormState): EmbedFormState {
+  return {
+    ...embed,
+    editorId: uid(),
+    openSections: createCollapsedSectionState(),
+    fields: embed.fields.map((field) => ({ ...field, id: uid() })),
+  };
 }

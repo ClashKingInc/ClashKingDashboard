@@ -29,7 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { EmbedEditor } from "@/components/dashboard/embed-editor";
-import { DiscordEmbedPreview, extractEmbeds } from "@/components/dashboard/discord-embed-preview";
+import { DiscordEmbedPreview, extractEmbeds, extractMessageContent } from "@/components/dashboard/discord-embed-preview";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
 
 function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
@@ -193,7 +193,8 @@ export default function EmbedsPage() {
           <div className="space-y-2">
             {embeds.map((embed) => {
               const previews = embed.data ? extractEmbeds(embed.data) : [];
-              const hasPreview = previews.length > 0;
+              const messageContent = embed.data ? extractMessageContent(embed.data) : null;
+              const hasPreview = previews.length > 0 || Boolean(messageContent);
               const isExpanded = expandedName === embed.name;
               return (
                 <div key={embed.name} className="rounded-xl border border-border/60 bg-card overflow-hidden">
@@ -224,6 +225,11 @@ export default function EmbedsPage() {
                   {hasPreview && isExpanded && (
                     <div className="border-t border-border/60 px-4 py-3 bg-muted/20">
                       <div className="space-y-2">
+                        {messageContent && (
+                          <p className="whitespace-pre-wrap break-words text-sm text-foreground">
+                            {messageContent}
+                          </p>
+                        )}
                         {previews.map((preview, i) => (
                           <DiscordEmbedPreview
                             key={`${embed.name}-${preview.title ?? "embed"}-${i}`} // NOSONAR — index keeps duplicate embed titles distinct
@@ -266,7 +272,7 @@ export default function EmbedsPage() {
 
       {/* Step 2: Editor dialog */}
       <Dialog open={editorOpen} onOpenChange={open => { if (!open && !isSaving) setEditorOpen(false); }}>
-        <DialogContent className="bg-card border-border max-w-5xl w-[95vw] h-[90vh] flex flex-col gap-0 p-0 overflow-hidden">
+        <DialogContent className="bg-card border-border max-w-6xl w-[97vw] h-[92vh] flex flex-col gap-0 p-0 overflow-hidden">
           <DialogHeader className="bg-card px-6 pt-5 pb-4 border-b border-border shrink-0">
             <DialogTitle>
               {editingEmbed ? t("editEmbed") : t("newEmbed")}

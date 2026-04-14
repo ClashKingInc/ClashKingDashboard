@@ -92,6 +92,27 @@ export function extractEmbeds(data: Record<string, unknown>): DiscordEmbed[] {
   return [];
 }
 
+export function extractMessageContent(data: Record<string, unknown>): string | null {
+  const messages = (data as { messages?: unknown }).messages;
+  if (Array.isArray(messages) && messages.length > 0) {
+    for (const message of messages) {
+      const content = (message as { data?: { content?: unknown } })?.data?.content;
+      if (typeof content === "string") {
+        const trimmed = content.trim();
+        if (trimmed.length > 0) return content;
+      }
+    }
+  }
+
+  const topLevelContent = (data as { content?: unknown }).content;
+  if (typeof topLevelContent === "string") {
+    const trimmed = topLevelContent.trim();
+    if (trimmed.length > 0) return topLevelContent;
+  }
+
+  return null;
+}
+
 /** Extract the first embed from any Discohook-compatible payload shape */
 export function extractFirstEmbed(data: Record<string, unknown>): DiscordEmbed | null {
   return extractEmbeds(data)[0] ?? null;
