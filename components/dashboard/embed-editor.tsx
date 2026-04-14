@@ -207,14 +207,22 @@ export function stateToPayload(states: EmbedFormState[], content = "", profile: 
     name: profile.name.slice(0, MAX_PROFILE_NAME_LENGTH).trim() || null,
     avatar_url: profile.avatarUrl.trim() || null,
   };
+  const messageEntry: {
+    data: {
+      content: string | null;
+      embeds: DiscordEmbed[];
+      username?: string;
+      avatar_url?: string;
+    };
+  } = {
+    data: { content: normalizedContent || null, embeds },
+  };
+  if (normalizedProfile.name) messageEntry.data.username = normalizedProfile.name;
+  if (normalizedProfile.avatar_url) messageEntry.data.avatar_url = normalizedProfile.avatar_url;
 
   return {
-    content: normalizedContent || null,
-    profile: normalizedProfile,
-    username: normalizedProfile.name,
-    avatar_url: normalizedProfile.avatar_url,
-    embeds,
-    messages: [{ profile: normalizedProfile, data: { content: normalizedContent || null, embeds } }],
+    version: "d2",
+    messages: [messageEntry],
   };
 }
 
