@@ -193,6 +193,20 @@ const getTranscriptUrl = (ticket: OpenTicket) =>
 
 const DEFAULT_PREVIEW_ACCENT = "#3ba55d";
 
+const normalizeOptionalText = (value: string | null | undefined): string | null => {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
+
+const pickFirstNonEmptyText = (...values: Array<string | null | undefined>): string | null => {
+  for (const value of values) {
+    const normalized = normalizeOptionalText(value);
+    if (normalized) return normalized;
+  }
+  return null;
+};
+
 function TicketAccountsCell({
   ticket,
   fallbackAccountName,
@@ -579,10 +593,10 @@ function TicketsTab({
         return {
           ...existing,
           ...incoming,
-          discord_username: incoming.discord_username ?? existing.discord_username,
-          discord_display_name: incoming.discord_display_name ?? existing.discord_display_name,
-          discord_avatar_url: incoming.discord_avatar_url ?? existing.discord_avatar_url,
-          apply_account: incoming.apply_account ?? existing.apply_account,
+          discord_username: pickFirstNonEmptyText(incoming.discord_username, existing.discord_username),
+          discord_display_name: pickFirstNonEmptyText(incoming.discord_display_name, existing.discord_display_name),
+          discord_avatar_url: pickFirstNonEmptyText(incoming.discord_avatar_url, existing.discord_avatar_url),
+          apply_account: pickFirstNonEmptyText(incoming.apply_account, existing.apply_account),
           linked_accounts: mergedLinkedAccounts,
         };
       };
@@ -611,8 +625,41 @@ function TicketsTab({
         throw new Error(response.error);
       }
 
+      const userIdentityById = new Map<string, {
+        readonly username: string | null;
+        readonly displayName: string | null;
+        readonly avatarUrl: string | null;
+      }>();
+
+      for (const ticket of ticketsByChannel.values()) {
+        const userId = normalizeOptionalText(ticket.user);
+        if (!userId) continue;
+
+        const existingIdentity = userIdentityById.get(userId);
+        userIdentityById.set(userId, {
+          username: pickFirstNonEmptyText(existingIdentity?.username, ticket.discord_username),
+          displayName: pickFirstNonEmptyText(existingIdentity?.displayName, ticket.discord_display_name),
+          avatarUrl: pickFirstNonEmptyText(existingIdentity?.avatarUrl, ticket.discord_avatar_url),
+        });
+      }
+
+      const mergedTickets = Array.from(ticketsByChannel.values()).map((ticket) => {
+        const userId = normalizeOptionalText(ticket.user);
+        if (!userId) return ticket;
+
+        const identity = userIdentityById.get(userId);
+        if (!identity) return ticket;
+
+        return {
+          ...ticket,
+          discord_username: pickFirstNonEmptyText(ticket.discord_username, identity.username),
+          discord_display_name: pickFirstNonEmptyText(ticket.discord_display_name, identity.displayName),
+          discord_avatar_url: pickFirstNonEmptyText(ticket.discord_avatar_url, identity.avatarUrl),
+        };
+      });
+
       return {
-        tickets: Array.from(ticketsByChannel.values()),
+        tickets: mergedTickets,
         clans: clansResponse.data ?? [],
       };
     });
@@ -662,16 +709,6 @@ function TicketsTab({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId]);
 
-  const fallbackAccountTags = useMemo(() => {
-    const tags = new Set<string>();
-    for (const ticket of allTickets) {
-      const hasLinkedAccounts = (ticket.linked_accounts?.length ?? 0) > 0;
-      if (hasLinkedAccounts || !ticket.apply_account) continue;
-      tags.add(normalizePlayerTag(ticket.apply_account));
-    }
-    return Array.from(tags);
-  }, [allTickets]);
-
   useEffect(() => {
     setAccountNameByTag((prev) => {
       const next = { ...prev };
@@ -688,60 +725,6 @@ function TicketsTab({
       return hasChanges ? next : prev;
     });
   }, [allTickets]);
-
-  useEffect(() => {
-    const tagsToFetch = fallbackAccountTags.filter((tag) => accountNameByTag[tag] === undefined);
-    if (tagsToFetch.length === 0) return;
-
-    let cancelled = false;
-
-    const loadFallbackAccountNames = async () => {
-      const responses = await Promise.allSettled(
-        tagsToFetch.map(async (tag) => {
-          const cleanTag = tag.replace(/^#/, "");
-          const primaryResponse = await apiClient.players.getPlayerInfo(tag);
-          const fallbackResponse = primaryResponse.error
-            ? await apiClient.players.getPlayerInfo(cleanTag)
-            : primaryResponse;
-          const payload = fallbackResponse.data as
-            | { name?: string; player_name?: string; data?: { name?: string; player_name?: string }; items?: Array<{ name?: string; player_name?: string }> }
-            | undefined;
-          const resolvedName =
-            payload?.name
-            ?? payload?.player_name
-            ?? payload?.data?.name
-            ?? payload?.data?.player_name
-            ?? payload?.items?.[0]?.name
-            ?? payload?.items?.[0]?.player_name
-            ?? null;
-          return {
-            tag,
-            name: fallbackResponse.error ? null : resolvedName,
-          };
-        }),
-      );
-
-      if (cancelled) return;
-
-      setAccountNameByTag((prev) => {
-        const next = { ...prev };
-        let hasChanges = false;
-        for (const response of responses) {
-          if (response.status !== "fulfilled") continue;
-          if (next[response.value.tag] === response.value.name) continue;
-          next[response.value.tag] = response.value.name;
-          hasChanges = true;
-        }
-        return hasChanges ? next : prev;
-      });
-    };
-
-    void loadFallbackAccountNames();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [accountNameByTag, fallbackAccountTags]);
 
   const counts: Record<StatusFilter, number> = {
     all: allTickets.length,
@@ -1428,6 +1411,23 @@ const createDefaultButtonSettings = (): TicketButtonSettings => ({
   new_message: null,
 });
 
+const createSettingsForm = (settings: TicketButtonSettings): UpdateButtonSettingsRequest => ({
+  questions: [...settings.questions, "", "", "", "", ""].slice(0, 5),
+  mod_role: [...settings.mod_role],
+  no_ping_mod_role: [...settings.no_ping_mod_role],
+  private_thread: settings.private_thread,
+  th_min: settings.th_min,
+  num_apply: settings.num_apply,
+  naming: settings.naming || "{ticket_count}-{user}",
+  account_apply: settings.account_apply,
+  player_info: settings.player_info,
+  apply_clans: [...(settings.apply_clans ?? [])],
+  roles_to_add: [...(settings.roles_to_add ?? [])],
+  roles_to_remove: [...(settings.roles_to_remove ?? [])],
+  townhall_requirements: { ...settings.townhall_requirements },
+  new_message: settings.new_message,
+});
+
 function ButtonCard({
   customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, onDeleted, onAppearanceUpdated,
 }: {
@@ -1454,12 +1454,6 @@ function ButtonCard({
   const [editStyle, setEditStyle] = useState(style);
   const [settingsSection, setSettingsSection] = useState<"general" | "requirements" | "embeds">("general");
 
-  useEffect(() => {
-    if (settingsOpen) {
-      setSettingsSection("general");
-    }
-  }, [settingsOpen]);
-
   const handleDeleteButton = async () => {
     setIsDeleting(true);
     try {
@@ -1475,23 +1469,16 @@ function ButtonCard({
     }
   };
 
-  const [form, setForm] = useState<UpdateButtonSettingsRequest>({
-    questions: [...settings.questions, "", "", "", "", ""].slice(0, 5),
-    mod_role: [...settings.mod_role],
-    no_ping_mod_role: [...settings.no_ping_mod_role],
-    private_thread: settings.private_thread,
-    th_min: settings.th_min,
-    num_apply: settings.num_apply,
-    naming: settings.naming || "{ticket_count}-{user}",
-    account_apply: settings.account_apply,
-    player_info: settings.player_info,
-    apply_clans: [...(settings.apply_clans ?? [])],
-    roles_to_add: [...(settings.roles_to_add ?? [])],
-    roles_to_remove: [...(settings.roles_to_remove ?? [])],
-    townhall_requirements: { ...settings.townhall_requirements },
-    new_message: settings.new_message,
-  });
+  const [form, setForm] = useState<UpdateButtonSettingsRequest>(() => createSettingsForm(settings));
   const [clanTagInput, setClanTagInput] = useState("");
+
+  useEffect(() => {
+    setSettingsSection("general");
+    setEditLabel(label);
+    setEditStyle(style);
+    setForm(createSettingsForm(settings));
+    setClanTagInput("");
+  }, [settingsOpen, label, style, settings]);
   const embedOptions = Array.from(new Set([...(settings.new_message ? [settings.new_message] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
   const selectedButtonEmbed = embeds.find((embed) => embed.name === (form.new_message ?? ""));
   const selectedButtonEmbedData = toEmbedDataRecord(selectedButtonEmbed?.data);
