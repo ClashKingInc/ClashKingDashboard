@@ -2,8 +2,16 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { ChevronDown, ChevronUp, Plus, Trash2, Link2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, Copy, ExternalLink, Plus, Trash2, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -160,6 +168,11 @@ function parseDiscohookUrl(url: string): Record<string, unknown> | null {
   } catch { return null; }
 }
 
+function buildDiscohookUrl(data: Record<string, unknown>): string {
+  const encoded = btoa(Array.from(new TextEncoder().encode(JSON.stringify(data)), (byte) => String.fromCodePoint(byte)).join(""));
+  return `https://discohook.app/?data=${encoded}`;
+}
+
 function uid(): string {
   return Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 }
@@ -255,6 +268,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const [importUrl, setImportUrl] = useState("");
   const [importError, setImportError] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
+  const [importExportOpen, setImportExportOpen] = useState(false);
+  const [copiedDiscohook, setCopiedDiscohook] = useState(false);
 
   const activeEmbed = embeds[activeEmbedIndex] ?? defaultState();
 
@@ -316,39 +331,35 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setImportUrl("");
     setEmbeds(editorState.embeds);
     setActiveEmbedIndex(0);
+    setImportExportOpen(false);
   };
 
   // ── Save ────────────────────────────────────────────────────────────────────
 
   const handleSave = () => onSave(stateToPayload(embeds));
 
+  const discohookPayload = stateToPayload(embeds);
+  const discohookUrl = buildDiscohookUrl(discohookPayload);
   const previewEmbeds = embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent);
   const hasContent = previewEmbeds.length > 0;
 
+  const handleCopyDiscohookUrl = async () => {
+    await navigator.clipboard.writeText(discohookUrl);
+    setCopiedDiscohook(true);
+    setTimeout(() => setCopiedDiscohook(false), 2000);
+  };
+
   return (
-    <div className="flex flex-col h-full min-h-0">
+    <div className="flex flex-col h-full min-h-0 bg-background text-foreground">
       {/* Two-column body */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
 
         {/* ── Left: form ── */}
-        <div className="w-full overflow-y-auto border-b border-border px-4 py-5 space-y-5 md:w-[45%] md:border-b-0 md:border-r md:px-6">
+        <div className="w-full overflow-y-auto border-b border-border bg-card px-4 py-5 space-y-5 md:w-[45%] md:border-b-0 md:border-r md:px-6">
 
-          {/* Import from Discohook */}
-          <div className="rounded-lg border border-border/60 bg-muted/30 p-3 space-y-2">
-            <SectionLabel>{t("importSection")}</SectionLabel>
-            <div className="flex gap-2">
-              <Input
-                value={importUrl}
-                onChange={e => { setImportUrl(e.target.value); setImportError(false); }}
-                placeholder="https://discohook.app/?data=..."
-                className={cn("text-xs h-8", importError && "border-destructive")}
-              />
-              <Button size="sm" variant="secondary" className="h-8 shrink-0" onClick={handleImport}>
-                <Link2 className="h-3.5 w-3.5 mr-1" />{t("import")}
-              </Button>
-            </div>
-            {importError && <p className="text-xs text-destructive">{t("importError")}</p>}
-          </div>
+          <Button size="sm" variant="secondary" className="h-8" onClick={() => setImportExportOpen(true)}>
+            <Link2 className="h-3.5 w-3.5 mr-1" />{t("importExport")}
+          </Button>
 
           <Separator />
 
@@ -554,7 +565,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
         </div>
 
         {/* ── Right: preview ── */}
-        <div className="flex flex-1 flex-col bg-muted/10">
+        <div className="flex flex-1 flex-col bg-muted/30">
           <button
             type="button"
             className="flex items-center justify-between border-b border-border px-4 py-3 text-left md:hidden"
@@ -619,6 +630,45 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
           {tCommon("save")}
         </Button>
       </div>
+
+      <Dialog open={importExportOpen} onOpenChange={setImportExportOpen}>
+        <DialogContent className="bg-card border-border sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("importExport")}</DialogTitle>
+            <DialogDescription>{t("importExportDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs">{t("importFromDiscohook")}</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={importUrl}
+                  onChange={e => { setImportUrl(e.target.value); setImportError(false); }}
+                  placeholder="https://discohook.app/?data=..."
+                  className={cn("text-xs h-8", importError && "border-destructive")}
+                />
+                <Button size="sm" variant="secondary" className="h-8 shrink-0" onClick={handleImport}>
+                  <Link2 className="h-3.5 w-3.5 mr-1" />{t("import")}
+                </Button>
+              </div>
+              {importError && <p className="text-xs text-destructive">{t("importError")}</p>}
+            </div>
+            <Button type="button" variant="outline" className="w-full justify-start" onClick={handleCopyDiscohookUrl}>
+              {copiedDiscohook ? <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> : <Copy className="h-4 w-4 mr-2" />}
+              {t("copyDiscohookUrl")}
+            </Button>
+            <Button type="button" asChild variant="outline" className="w-full justify-start">
+              <a href={discohookUrl} target="_blank" rel="noreferrer">
+                <ExternalLink className="h-4 w-4 mr-2" />
+                {t("openInDiscohook")}
+              </a>
+            </Button>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setImportExportOpen(false)}>{tCommon("close")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

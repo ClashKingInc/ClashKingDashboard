@@ -1428,6 +1428,24 @@ const createSettingsForm = (settings: TicketButtonSettings): UpdateButtonSetting
   new_message: settings.new_message,
 });
 
+const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): TicketButtonSettings => ({
+  ...createDefaultButtonSettings(),
+  questions: form.questions.filter((question) => question.trim().length > 0),
+  mod_role: [...form.mod_role],
+  no_ping_mod_role: [...form.no_ping_mod_role],
+  private_thread: form.private_thread,
+  th_min: form.th_min,
+  num_apply: form.num_apply,
+  naming: form.naming,
+  account_apply: form.account_apply,
+  player_info: form.player_info,
+  apply_clans: [...form.apply_clans],
+  roles_to_add: [...form.roles_to_add],
+  roles_to_remove: [...form.roles_to_remove],
+  townhall_requirements: { ...form.townhall_requirements },
+  new_message: form.new_message,
+});
+
 function ButtonCard({
   customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, onDeleted, onAppearanceUpdated,
 }: {
@@ -1453,6 +1471,7 @@ function ButtonCard({
   const [editLabel, setEditLabel] = useState(label);
   const [editStyle, setEditStyle] = useState(style);
   const [settingsSection, setSettingsSection] = useState<"general" | "requirements" | "embeds">("general");
+  const [latestSettings, setLatestSettings] = useState<TicketButtonSettings>(settings);
 
   const handleDeleteButton = async () => {
     setIsDeleting(true);
@@ -1473,12 +1492,18 @@ function ButtonCard({
   const [clanTagInput, setClanTagInput] = useState("");
 
   useEffect(() => {
+    if (settingsOpen) return;
+    setLatestSettings(settings);
+  }, [settings, settingsOpen]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
     setSettingsSection("general");
     setEditLabel(label);
     setEditStyle(style);
-    setForm(createSettingsForm(settings));
+    setForm(createSettingsForm(latestSettings));
     setClanTagInput("");
-  }, [settingsOpen, label, style, settings]);
+  }, [settingsOpen, label, style, latestSettings]);
   const embedOptions = Array.from(new Set([...(settings.new_message ? [settings.new_message] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
   const selectedButtonEmbed = embeds.find((embed) => embed.name === (form.new_message ?? ""));
   const selectedButtonEmbedData = toEmbedDataRecord(selectedButtonEmbed?.data);
@@ -1550,6 +1575,7 @@ function ButtonCard({
         questions: form.questions.filter(Boolean),
       });
       if (settingsRes.error) throw new Error(settingsRes.error);
+      setLatestSettings(createButtonSettingsFromForm(form));
 
       if (didChangeAppearance) {
         onAppearanceUpdated(editLabel, editStyle);
@@ -1976,7 +2002,10 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   const [editOpen, setEditOpen] = useState(false);
   const [expandedPreviewIds, setExpandedPreviewIds] = useState<Set<string>>(new Set());
   const [expandedEditorIds, setExpandedEditorIds] = useState<Set<string>>(new Set());
-  const cloneMessages = (items: EditableApproveMessage[]): EditableApproveMessage[] => items.map((item) => ({ ...item }));
+  const cloneMessages = useCallback(
+    (items: EditableApproveMessage[]): EditableApproveMessage[] => items.map((item) => ({ ...item })),
+    [],
+  );
 
   useEffect(() => {
     const nextMessages = (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() }));
@@ -1984,7 +2013,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
     setDraftMessages(cloneMessages(nextMessages));
     setExpandedPreviewIds(new Set());
     setExpandedEditorIds(new Set());
-  }, [panel.approve_messages]);
+  }, [panel.approve_messages, cloneMessages]);
 
   const toggleExpanded = (setter: Dispatch<SetStateAction<Set<string>>>, localId: string) => {
     setter((prev) => {

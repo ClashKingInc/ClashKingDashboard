@@ -2416,6 +2416,11 @@
   },
   "EmbedEditor": {
     "importSection": "Importeren vanuit Discohook",
+    "importExport": "Import & export",
+    "importExportDescription": "Importeer een embed vanuit Discohook of exporteer je huidige embed naar Discohook.",
+    "importFromDiscohook": "Importeren vanuit Discohook",
+    "copyDiscohookUrl": "Discohook-URL kopiëren",
+    "openInDiscohook": "Openen in Discohook",
     "import": "Importeren",
     "importError": "Ongeldige Discohook-URL.",
     "colorSection": "Kleur",

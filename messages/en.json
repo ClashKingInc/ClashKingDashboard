@@ -2413,6 +2413,11 @@
   },
   "EmbedEditor": {
     "importSection": "Import from Discohook",
+    "importExport": "Import & export",
+    "importExportDescription": "Import an embed from Discohook or export your current embed to Discohook.",
+    "importFromDiscohook": "Import from Discohook",
+    "copyDiscohookUrl": "Copy Discohook URL",
+    "openInDiscohook": "Open in Discohook",
     "import": "Import",
     "importError": "Invalid Discohook URL.",
     "colorSection": "Color",
