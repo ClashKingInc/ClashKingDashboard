@@ -59,6 +59,7 @@ export default function LoginPage() {
                 width={150}
                 height={44}
                 loading="eager"
+                style={{ width: "auto", height: "auto" }}
               />
             )}
           </div>
