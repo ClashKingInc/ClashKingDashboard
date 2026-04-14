@@ -30,6 +30,7 @@ interface ChannelComboboxProps {
   readonly value: string
   readonly onValueChange: (value: string) => void
   readonly placeholder?: string
+  readonly searchPlaceholder?: string
   readonly disabled?: boolean
   readonly className?: string
   readonly showDisabled?: boolean
@@ -40,6 +41,7 @@ export function ChannelCombobox({
   value,
   onValueChange,
   placeholder = "Select channel",
+  searchPlaceholder,
   disabled = false,
   className,
   showDisabled = true,
@@ -73,7 +75,7 @@ export function ChannelCombobox({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">
         <Command>
-          <CommandInput placeholder={t("searchChannels")} />
+          <CommandInput placeholder={searchPlaceholder ?? t("searchChannels")} />
           <CommandList>
             <CommandEmpty className="py-3">
               {t("noChannelFound")}

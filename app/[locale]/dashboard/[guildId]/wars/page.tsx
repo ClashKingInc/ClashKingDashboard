@@ -42,6 +42,7 @@ import {
 import { darkTheme, clashKingColors } from "@/lib/theme";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { apiCache } from "@/lib/api-cache";
 import type { War, WarSummary } from "@/lib/api/types/war";
 
 interface PlayerStats {
@@ -73,6 +74,25 @@ interface Clan {
   tag: string;
   name: string;
   badge_url?: string | null;
+}
+
+interface WarListResponse {
+  items?: War[];
+}
+
+interface WarSummaryResponse {
+  items?: WarSummary[];
+}
+
+function normalizeClansPayload(payload: unknown): Clan[] {
+  if (Array.isArray(payload)) return payload as Clan[];
+  if (payload && typeof payload === "object") {
+    const maybeCollection = payload as { items?: unknown; clans?: unknown; data?: unknown };
+    if (Array.isArray(maybeCollection.items)) return maybeCollection.items as Clan[];
+    if (Array.isArray(maybeCollection.clans)) return maybeCollection.clans as Clan[];
+    if (Array.isArray(maybeCollection.data)) return maybeCollection.data as Clan[];
+  }
+  return [];
 }
 
 interface ComputedClanStats {
@@ -151,6 +171,8 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     warTypes: { random: true, friendly: true, cwl: true },
   });
 
+  const clansCacheKey = `wars-clans-${guildId}`;
+
   useEffect(() => {
     const mediaQuery = globalThis.matchMedia("(max-width: 640px)");
     const onChange = (event: MediaQueryListEvent) => {
@@ -167,6 +189,22 @@ export default function WarsPage() { // NOSONAR — React page component: comple
 
   // Fetch clans and war data on mount
   useEffect(() => {
+    const fetchClans = async (accessToken: string): Promise<Clan[]> =>
+      apiCache.get(clansCacheKey, async () => {
+        const clansRes = await fetch(`/api/v2/server/${guildId}/clans`, {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+
+        if (!clansRes.ok) {
+          const error = new Error("Failed to fetch clans") as Error & { status?: number };
+          error.status = clansRes.status;
+          throw error;
+        }
+
+        const clansPayload = await clansRes.json();
+        return normalizeClansPayload(clansPayload);
+      });
+
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -176,21 +214,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
           return;
         }
 
-        // Fetch clans first
-        const clansRes = await fetch(`/api/v2/server/${guildId}/clans`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-
-        if (!clansRes.ok) {
-          if (clansRes.status === 401) {
-            logout();
-            router.push(`/${params.locale}/login`);
-            return;
-          }
-          throw new Error("Failed to fetch clans");
-        }
-
-        const clansData = await clansRes.json();
+        const clansData = await fetchClans(accessToken);
         setClans(clansData || []);
 
         // If we have clans, fetch war data immediately
@@ -201,6 +225,11 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+        if (error instanceof Error && (error as Error & { status?: number }).status === 401) {
+          logout();
+          router.push(`/${params.locale}/login`);
+          return;
+        }
         toast({
           title: t('toast.errorTitle'),
           description: t('toast.errorLoadingClans'),
@@ -243,31 +272,68 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       const endTs = filters.datePreset === "custom" && filters.endDate
         ? Math.floor(new Date(filters.endDate).getTime() / 1000)
         : Math.floor(now / 1000);
+      const warTypesMask = `${filters.warTypes.random ? 1 : 0}${filters.warTypes.friendly ? 1 : 0}${filters.warTypes.cwl ? 1 : 0}`;
+      const timeRangeCacheKey = filters.datePreset === "custom"
+        ? `custom:${filters.startDate || "none"}:${filters.endDate || "none"}`
+        : `preset:${filters.datePreset}:bucket:${Math.floor(now / 30000)}`;
+      const warsDataCacheKey = [
+        `wars-data-${guildId}`,
+        `clans:${[...clansToFetch].sort((a, b) => a.localeCompare(b)).join(",")}`,
+        `range:${timeRangeCacheKey}`,
+        `th:${filters.townHall}`,
+        `types:${warTypesMask}`,
+      ].join("|");
 
-      // Fetch war summaries (includes current war + CWL info) and player stats in parallel
-      const [warSummaryRes, playerStatsRes, historicalWars] = await Promise.all([
-        fetch('/api/v2/war/war-summary', {
+      const fetchWarSummary = async (): Promise<WarSummaryResponse> => {
+        const response = await fetch('/api/v2/war/war-summary', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ clan_tags: clansToFetch }),
-        }).then(res => res.ok ? res.json() : { items: [] }),
+        });
 
-        fetchPlayerStats(clansToFetch, token, startTs, endTs),
+        if (!response.ok) {
+          return { items: [] };
+        }
 
-        // Fetch historical wars for statistics
+        return response.json();
+      };
+
+      const fetchHistoricalWars = async (): Promise<WarListResponse[]> =>
         Promise.all(
-          clansToFetch.map(tag =>
-            fetch(`/api/v2/war/${encodeURIComponent(tag)}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100&include_cwl=${filters.warTypes.cwl}`, {
-              headers: { Authorization: `Bearer ${token}` }
-            }).then(res => res.ok ? res.json() : { items: [] })
-          )
-        )
-      ]);
+          clansToFetch.map(async (tag) => {
+            const response = await fetch(
+              `/api/v2/war/${encodeURIComponent(tag)}/previous?timestamp_start=${startTs}&timestamp_end=${endTs}&limit=100&include_cwl=${filters.warTypes.cwl}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-      const summaries: WarSummary[] = warSummaryRes.items || [];
+            if (!response.ok) {
+              return { items: [] };
+            }
+
+            return response.json();
+          })
+        );
+
+      // Fetch war summaries (includes current war + CWL info) and player stats in parallel
+      const { summaries, playerStats, historicalWars } = await apiCache.get(
+        warsDataCacheKey,
+        async () => {
+          const [warSummaryRes, playerStatsRes, historicalWarsRes] = await Promise.all([
+            fetchWarSummary(),
+            fetchPlayerStats(clansToFetch, token, startTs, endTs),
+            fetchHistoricalWars(),
+          ]);
+
+          return {
+            summaries: warSummaryRes.items || [],
+            playerStats: playerStatsRes,
+            historicalWars: historicalWarsRes,
+          };
+        }
+      );
 
       // Combine historical wars, filtering by selected war types
       const allHistoricalWars: War[] = historicalWars.flatMap(result => result.items || []).filter(war => {
@@ -285,7 +351,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
 
       clansToFetch.forEach((clanTag, index) => {
         const summary = summaries.find(s => s.clan_tag === clanTag || s.war_info?.clan?.tag === clanTag);
-        const clanWars = (historicalWars[index]?.items || []) as War[];
+        const clanWars = historicalWars[index]?.items || [];
         const clanName = clansList.find(c => c.tag === clanTag)?.name || clanTag;
 
         let wins = 0, losses = 0, draws = 0;
@@ -344,7 +410,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       setWarTypeCounts(counts);
 
       // Top performers — sorted by avg stars per attack
-      const topByStars = [...playerStatsRes]
+      const topByStars = [...playerStats]
         .filter(p => (p.stats?.attacks ?? 0) > 0)
         .sort((a, b) => {
           const starDiff = (b.stats?.avg_stars ?? 0) - (a.stats?.avg_stars ?? 0);
@@ -354,14 +420,14 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       setTopPerformers(topByStars);
 
       // Missed attackers — sorted by total missed attacks desc
-      const missed = [...playerStatsRes]
+      const missed = [...playerStats]
         .filter(p => (p.missed?.all ?? 0) > 0)
         .sort((a, b) => (b.missed?.all ?? 0) - (a.missed?.all ?? 0))
         .slice(0, 20);
       setMissedAttackers(missed);
 
       // Top defenders — from playerStatsRes.defense (computed backend-side)
-      const topDefs = [...playerStatsRes]
+      const topDefs = [...playerStats]
         .filter(p => (p.defense?.defenses ?? 0) > 0)
         .sort((a, b) => {
           const starDiff = (a.defense?.avg_stars_given ?? 999) - (b.defense?.avg_stars_given ?? 999);
@@ -378,7 +444,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       setTopDefenders(topDefs);
 
       // Worst attackers — lowest avg stars, min 3 attacks to filter noise
-      const worstByStars = [...playerStatsRes]
+      const worstByStars = [...playerStats]
         .filter(p => (p.stats?.attacks ?? 0) >= 3)
         .sort((a, b) => {
           const starDiff = (a.stats?.avg_stars ?? 0) - (b.stats?.avg_stars ?? 0);
@@ -388,7 +454,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       setWorstAttackers(worstByStars);
 
       // Worst defenders — highest avg stars given up, min 3 defenses
-      const worstDefs = [...playerStatsRes]
+      const worstDefs = [...playerStats]
         .filter(p => (p.defense?.defenses ?? 0) >= 3)
         .sort((a, b) => {
           const starDiff = (b.defense?.avg_stars_given ?? 0) - (a.defense?.avg_stars_given ?? 0);
@@ -405,7 +471,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       setWorstDefenders(worstDefs);
 
       // Calculate TH stats from player data
-      calculateTHStats(playerStatsRes);
+      calculateTHStats(playerStats);
 
     } catch (error) {
       console.error("Error fetching war data:", error);
