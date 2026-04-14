@@ -69,6 +69,7 @@ import type {
   OpenTicket,
   ServerEmbed,
   THRequirement,
+  TicketButton,
   TicketButtonSettings,
   TicketPanel,
   UpdateApproveMessagesRequest,
@@ -568,6 +569,12 @@ function TicketsTab({
       const mergeTicket = (existing: OpenTicket, incoming: OpenTicket): OpenTicket => {
         const existingLinkedCount = existing.linked_accounts?.length ?? 0;
         const incomingLinkedCount = incoming.linked_accounts?.length ?? 0;
+        let mergedLinkedAccounts = incoming.linked_accounts ?? existing.linked_accounts;
+        if (incomingLinkedCount > 0) {
+          mergedLinkedAccounts = incoming.linked_accounts;
+        } else if (existingLinkedCount > 0) {
+          mergedLinkedAccounts = existing.linked_accounts;
+        }
 
         return {
           ...existing,
@@ -576,11 +583,7 @@ function TicketsTab({
           discord_display_name: incoming.discord_display_name ?? existing.discord_display_name,
           discord_avatar_url: incoming.discord_avatar_url ?? existing.discord_avatar_url,
           apply_account: incoming.apply_account ?? existing.apply_account,
-          linked_accounts: incomingLinkedCount > 0
-            ? incoming.linked_accounts
-            : existingLinkedCount > 0
-              ? existing.linked_accounts
-              : incoming.linked_accounts ?? existing.linked_accounts,
+          linked_accounts: mergedLinkedAccounts,
         };
       };
 
@@ -1853,25 +1856,33 @@ function ButtonCard({
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Preview</Label>
                   <div className="space-y-2">
-                    {form.new_message === null ? (
-                      <div className="rounded-md border-l-4 bg-[#2b2d31]/70 p-3 text-sm leading-relaxed text-slate-100 whitespace-pre-line" style={{ borderLeftColor: DEFAULT_PREVIEW_ACCENT }}>
-                        {"This ticket will be handled shortly!\nPlease be patient."}
-                      </div>
-                    ) : buttonEmbedPreviews.length > 0 ? (
-                      <div className="space-y-2">
-                        {buttonEmbedPreviews.map((embed, i) => (
-                          <DiscordEmbedPreview
-                            key={`${selectedButtonEmbed?.name ?? "button-embed"}-${i}`}
-                            embed={embed}
-                          />
+                    {(() => {
+                      if (form.new_message === null) {
+                        return (
+                          <div className="rounded-md border-l-4 bg-[#2b2d31]/70 p-3 text-sm leading-relaxed text-slate-100 whitespace-pre-line" style={{ borderLeftColor: DEFAULT_PREVIEW_ACCENT }}>
+                            {"This ticket will be handled shortly!\nPlease be patient."}
+                          </div>
+                        );
+                      }
+                      if (buttonEmbedPreviews.length > 0) {
+                        return (
+                          <div className="space-y-2">
+                            {buttonEmbedPreviews.map((embed, i) => (
+                              <DiscordEmbedPreview
+                                key={`${selectedButtonEmbed?.name ?? "button-embed"}-${i}`}
+                                embed={embed}
+                              />
                             ))}
                           </div>
-                        ) : (
-                          <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
-                            {t("panelEmbedPreviewEmpty")}
-                          </div>
-                        )}
-                      </div>
+                        );
+                      }
+                      return (
+                        <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
+                          {t("panelEmbedPreviewEmpty")}
+                        </div>
+                      );
+                    })()}
+                  </div>
                     </div>
                   </div>
                 </div>
