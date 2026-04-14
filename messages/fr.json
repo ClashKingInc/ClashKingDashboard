@@ -2571,6 +2571,7 @@
       "showMore": "Afficher {count} de plus",
       "pendingUpdate": "Mise à jour en attente",
       "pendingUpdateHelp": "Ce giveaway a des modifications en attente que le bot appliquera bientôt.",
+      "openInDiscord": "Ouvrir dans Discord",
       "viewInDiscord": "Voir sur Discord",
       "reroll": "Relancer les gagnants",
       "rerolledCount": "{count, plural, one {# relancé} other {# relancés}}"

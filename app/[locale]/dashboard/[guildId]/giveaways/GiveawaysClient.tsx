@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -21,7 +21,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
+import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { AlertCircle, CalendarRange, CheckCircle2, Clock3, Copy, ExternalLink, Eye, Gift, Loader2, Pencil, Plus, RefreshCw, ShieldCheck, Sword, Trash2, Trophy, User, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -217,6 +219,41 @@ interface GiveawaysMainContentProps {
   onDelete: (id: string) => void;
   onOpenReroll: (giveaway: Giveaway) => void;
   onShowMore: () => void;
+}
+
+interface DiscordOpenPopoverProps {
+  trigger: ReactNode;
+  title: string;
+  description?: string;
+  url: string;
+  buttonLabel: string;
+}
+
+function DiscordOpenPopover({
+  trigger,
+  title,
+  description,
+  url,
+  buttonLabel,
+}: Readonly<DiscordOpenPopoverProps>) {
+  const openDiscord = () => window.open(url, "_blank", "noreferrer");
+  return (
+    <Popover>
+      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+      <PopoverContent className="w-72 p-3" align="start">
+        <div className="space-y-3">
+          <div>
+            <p className="truncate text-sm font-medium text-foreground">{title}</p>
+            {description ? <p className="mt-1 text-xs text-muted-foreground">{description}</p> : null}
+          </div>
+          <Button variant="outline" className="w-full gap-2" onClick={openDiscord}>
+            <ExternalLink className="h-4 w-4" />
+            {buttonLabel}
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 function GiveawaysMainContent({
@@ -447,9 +484,20 @@ function GiveawaysTable({
     return (
       <div className="flex flex-wrap items-center gap-1">
         {shown.map((w) => (
-          <span key={w.user_id} className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-medium text-green-400 ring-1 ring-green-500/20">
-            <Trophy className="h-2.5 w-2.5" />{w.username ? `@${w.username}` : w.user_id}
-          </span>
+          <DiscordUserDisplay
+            key={w.user_id}
+            userId={w.user_id}
+            username={w.username}
+            size="sm"
+            triggerContent={(
+              <button
+                type="button"
+                className="inline-flex items-center gap-0.5 rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-medium text-green-400 ring-1 ring-green-500/20 transition-opacity hover:opacity-80"
+              >
+                <Trophy className="h-2.5 w-2.5" />{w.username ? `@${w.username}` : w.user_id}
+              </button>
+            )}
+          />
         ))}
         {overflow > 0 && (
           <TooltipProvider delayDuration={200}>
@@ -532,7 +580,20 @@ function GiveawaysTable({
                   </td>
                   <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">
                     {ch ? (
-                      <span>{ch}</span>
+                      <DiscordOpenPopover
+                        title={ch}
+                        description={t("table.channel")}
+                        url={`https://discord.com/channels/${guildId}/${g.channel_id}`}
+                        buttonLabel={t("table.openInDiscord")}
+                        trigger={(
+                          <button
+                            type="button"
+                            className="max-w-[240px] truncate text-left text-sm text-muted-foreground transition-colors hover:text-foreground"
+                          >
+                            {ch}
+                          </button>
+                        )}
+                      />
                     ) : (
                       <TooltipProvider delayDuration={200}>
                         <Tooltip>
