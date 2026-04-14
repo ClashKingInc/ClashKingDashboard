@@ -1546,12 +1546,17 @@ function ButtonCard({
   const handleSave = async () => {
     if (!editLabel.trim()) return;
     setIsSaving(true);
+    let appearanceUpdated = false;
+    const didChangeAppearance = editLabel !== label || editStyle !== style;
     try {
-      const appearanceRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
-        label: editLabel,
-        style: editStyle,
-      });
-      if (appearanceRes.error) throw new Error(appearanceRes.error);
+      if (didChangeAppearance) {
+        const appearanceRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
+          label: editLabel,
+          style: editStyle,
+        });
+        if (appearanceRes.error) throw new Error(appearanceRes.error);
+        appearanceUpdated = true;
+      }
 
       const settingsRes = await apiClient.tickets.updateButtonSettings(guildId, panelName, customId, {
         ...form,
@@ -1559,10 +1564,21 @@ function ButtonCard({
       });
       if (settingsRes.error) throw new Error(settingsRes.error);
 
-      onAppearanceUpdated(editLabel, editStyle);
-      toast({ title: tCommon("success"), description: t("buttonSaved", { label }) });
+      if (didChangeAppearance) {
+        onAppearanceUpdated(editLabel, editStyle);
+      }
+      toast({ title: tCommon("success"), description: t("buttonSaved", { label: editLabel }) });
       setSettingsOpen(false);
     } catch (err) {
+      if (appearanceUpdated) {
+        const rollbackRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
+          label,
+          style,
+        });
+        if (!rollbackRes.error) {
+          onAppearanceUpdated(label, style);
+        }
+      }
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsSaving(false);
@@ -1966,14 +1982,19 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   const [messages, setMessages] = useState<EditableApproveMessage[]>(
     (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })),
   );
+  const [draftMessages, setDraftMessages] = useState<EditableApproveMessage[]>(
+    (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })),
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [expandedPreviewIds, setExpandedPreviewIds] = useState<Set<string>>(new Set());
   const [expandedEditorIds, setExpandedEditorIds] = useState<Set<string>>(new Set());
+  const cloneMessages = (items: EditableApproveMessage[]): EditableApproveMessage[] => items.map((item) => ({ ...item }));
 
   useEffect(() => {
     const nextMessages = (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() }));
     setMessages(nextMessages);
+    setDraftMessages(cloneMessages(nextMessages));
     setExpandedPreviewIds(new Set());
     setExpandedEditorIds(new Set());
   }, [panel.approve_messages]);
@@ -1991,13 +2012,13 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
     const limitedValue = field === "name"
       ? value.slice(0, MAX_APPROVE_MESSAGE_NAME_LENGTH)
       : value.slice(0, MAX_APPROVE_MESSAGE_CONTENT_LENGTH);
-    setMessages((prev) => prev.map((msg, idx) => (idx === index ? { ...msg, [field]: limitedValue } : msg)));
+    setDraftMessages((prev) => prev.map((msg, idx) => (idx === index ? { ...msg, [field]: limitedValue } : msg)));
   };
 
   const addMessage = () => {
-    if (messages.length >= 25) return;
+    if (draftMessages.length >= 25) return;
     const localId = makeLocalId();
-    setMessages((prev) => [...prev, { name: "", message: "", localId }]);
+    setDraftMessages((prev) => [...prev, { name: "", message: "", localId }]);
     setExpandedEditorIds((prev) => {
       const next = new Set(prev);
       next.add(localId);
@@ -2006,8 +2027,8 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   };
 
   const removeMessage = (index: number) => {
-    const localId = messages[index]?.localId;
-    setMessages((prev) => prev.filter((_, idx) => idx !== index));
+    const localId = draftMessages[index]?.localId;
+    setDraftMessages((prev) => prev.filter((_, idx) => idx !== index));
     if (!localId) return;
     setExpandedPreviewIds((prev) => {
       const next = new Set(prev);
@@ -2022,7 +2043,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   };
 
   const moveMessage = (index: number, direction: "up" | "down") => {
-    setMessages((prev) => {
+    setDraftMessages((prev) => {
       const target = direction === "up" ? index - 1 : index + 1;
       if (target < 0 || target >= prev.length) return prev;
       const next = [...prev];
@@ -2033,8 +2054,8 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   };
 
   const handleSave = async () => {
-    const valid = messages.filter((m) => m.name.trim());
-    if (valid.length !== messages.length) {
+    const valid = draftMessages.filter((m) => m.name.trim());
+    if (valid.length !== draftMessages.length) {
       toast({ title: tCommon("error"), description: t("messageNameRequired"), variant: "destructive" });
       return;
     }
@@ -2044,6 +2065,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
       const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages } as UpdateApproveMessagesRequest);
       if (res.error) throw new Error(res.error);
       setMessages(valid);
+      setDraftMessages(cloneMessages(valid));
       setExpandedPreviewIds(new Set());
       setExpandedEditorIds(new Set());
       setEditOpen(false);
@@ -2060,8 +2082,12 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
       <Dialog open={editOpen} onOpenChange={(open) => {
         setEditOpen(open);
         if (open) {
+          setDraftMessages(cloneMessages(messages));
           setExpandedEditorIds(new Set());
+          return;
         }
+        setDraftMessages(cloneMessages(messages));
+        setExpandedEditorIds(new Set());
       }}>
         <DialogContent className="bg-card border-border sm:max-w-3xl max-h-[85vh] flex flex-col overflow-hidden">
           <DialogHeader>
@@ -2072,20 +2098,20 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
           <div className="space-y-4 overflow-y-auto pr-1">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">{t("messagesMaxHint")}</p>
-              <Button variant="outline" size="sm" onClick={addMessage} disabled={messages.length >= 25}>
+              <Button variant="outline" size="sm" onClick={addMessage} disabled={draftMessages.length >= 25}>
                 <Plus className="mr-1.5 h-4 w-4" />{t("addMessage")}
               </Button>
             </div>
 
             <div className="rounded-xl border border-border bg-background p-4">
-              {messages.length === 0 ? (
+              {draftMessages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-10 text-muted-foreground gap-2">
                   <MessageSquare className="h-8 w-8 opacity-40" />
                   <p className="text-sm">{t("noMessages")}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {messages.map((msg, i) => {
+                  {draftMessages.map((msg, i) => {
                     const isExpanded = expandedEditorIds.has(msg.localId);
                     return (
                       <div key={msg.localId} className="rounded-lg border border-border bg-card p-3">
@@ -2120,7 +2146,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                             size="icon"
                             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground"
                             onClick={() => moveMessage(i, "down")}
-                            disabled={i === messages.length - 1}
+                            disabled={i === draftMessages.length - 1}
                           >
                             <ArrowDown className="h-4 w-4" />
                           </Button>
