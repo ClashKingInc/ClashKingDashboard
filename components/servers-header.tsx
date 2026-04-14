@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { LogOut, ChevronDown, Home, ShieldAlert } from "lucide-react";
+import { LogOut, ChevronDown, Home } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTranslations } from "next-intl";
@@ -13,7 +13,6 @@ import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { logout } from "@/lib/auth/logout";
 import { SettingsDropdown } from "@/components/settings-dropdown";
-import { isDeveloperUserId } from "@/lib/internal/developer-access";
 
 export function ServersHeader() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -94,14 +93,6 @@ export function ServersHeader() {
                     <span className="hover:!text-primary">{t("Sidebar.goHome")}</span>
                   </Link>
                 </DropdownMenuItem>
-                {isDeveloperUserId(user.user_id) ? (
-                  <DropdownMenuItem asChild className="hover:!bg-transparent">
-                    <Link href="/internal" className="flex items-center space-x-2">
-                      <ShieldAlert className="h-4 w-4" />
-                      <span className="hover:!text-primary">Internal</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ) : null}
                 <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 hover:!bg-transparent">
                   <LogOut className="h-4 w-4 text-destructive" />
                   <span className="hover:!text-primary">{t("Navigation.logout")}</span>
