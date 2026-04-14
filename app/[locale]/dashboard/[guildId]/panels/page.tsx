@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
-import { DiscordEmbedPreview, extractEmbeds } from "@/components/dashboard/discord-embed-preview";
+import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile } from "@/components/dashboard/discord-embed-preview";
 import { cn } from "@/lib/utils";
 import { BUTTON_TYPES, BUTTON_COLORS } from "@/lib/api/types/panels";
 import type { ButtonColor, ServerPanel } from "@/lib/api/types/panels";
@@ -194,6 +194,9 @@ export default function PanelsPage() {
   // Embed preview data
   const selectedEmbed = embeds.find(e => e.name === embedName);
   const embedPreviews = selectedEmbed?.data ? extractEmbeds(selectedEmbed.data) : [];
+  const messageContent = selectedEmbed?.data ? extractMessageContent(selectedEmbed.data) : null;
+  const messageProfile = selectedEmbed?.data ? extractMessageProfile(selectedEmbed.data) : null;
+  const hasMessageProfile = Boolean(messageProfile?.name || messageProfile?.avatar_url);
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
   const resolvedWelcomeChannelName = channels.find(c => c.id === welcomeChannel)?.name;
   let embedPreviewContent = (
@@ -203,16 +206,13 @@ export default function PanelsPage() {
   );
   if (isEmbedsLoading) {
     embedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
-  } else if (embedPreviews.length > 0) {
+  } else if (embedPreviews.length > 0 || Boolean(messageContent) || hasMessageProfile) {
     embedPreviewContent = (
-      <div className="space-y-2">
-        {embedPreviews.map((embed, i) => (
-          <DiscordEmbedPreview
-            key={`${selectedEmbed?.name ?? "embed"}-${embed.title ?? "embed"}-${i}`} // NOSONAR — index keeps duplicate embed titles distinct
-            embed={embed}
-          />
-        ))}
-      </div>
+      <DiscordMessagePreview
+        profile={messageProfile}
+        content={messageContent}
+        embeds={embedPreviews}
+      />
     );
   }
 
@@ -249,7 +249,7 @@ export default function PanelsPage() {
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-4xl space-y-6">
+      <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
@@ -269,7 +269,7 @@ export default function PanelsPage() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.25fr]">
           {/* ── Left: config ── */}
           <div className="space-y-6">
 
@@ -431,18 +431,13 @@ export default function PanelsPage() {
 
               {/* Discord message mockup */}
               <div className="rounded-lg bg-[#313338] p-4 space-y-3">
-                {/* Bot avatar + name */}
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">CK</div>
-                  <span className="text-sm font-semibold text-white">ClashKing</span>
-                  <span className="text-[10px] bg-[#5865f2] text-white px-1 rounded font-medium">APP</span>
-                </div>
-
                 {/* Embed preview */}
                 {embedPreviewContent}
 
                 {/* Buttons preview */}
-                {buttonsPreviewContent}
+                <div className="pl-12">
+                  {buttonsPreviewContent}
+                </div>
               </div>
 
               {/* Welcome channel info */}

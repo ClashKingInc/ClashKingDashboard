@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { clashKingAssets } from "@/lib/theme";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -90,6 +91,89 @@ export function extractEmbeds(data: Record<string, unknown>): DiscordEmbed[] {
   }
 
   return [];
+}
+
+export interface DiscordMessageProfile {
+  name?: string;
+  avatar_url?: string;
+}
+
+type UnknownRecord = Record<string, unknown>;
+
+function profileFromPair(name: unknown, avatarUrl: unknown): DiscordMessageProfile | null {
+  const normalizedName = typeof name === "string" ? name : undefined;
+  const normalizedAvatarUrl = typeof avatarUrl === "string" ? avatarUrl : undefined;
+  if (!normalizedName && !normalizedAvatarUrl) return null;
+  return { name: normalizedName, avatar_url: normalizedAvatarUrl };
+}
+
+function profileFromMessageData(message: UnknownRecord): DiscordMessageProfile | null {
+  const messageData = (message.data ?? null) as UnknownRecord | null;
+  if (!messageData) return null;
+
+  const directProfile = profileFromPair(messageData.username, messageData.avatar_url);
+  if (directProfile) return directProfile;
+
+  const messageAuthor = (messageData.author ?? null) as UnknownRecord | null;
+  if (!messageAuthor) return null;
+  return profileFromPair(messageAuthor.name, messageAuthor.icon_url);
+}
+
+function profileFromMessageLevel(message: UnknownRecord): DiscordMessageProfile | null {
+  const directProfile = profileFromPair(message.username, message.avatar_url);
+  if (directProfile) return directProfile;
+
+  const nestedProfile = (message.profile ?? null) as UnknownRecord | null;
+  if (!nestedProfile) return null;
+  return profileFromPair(nestedProfile.name, nestedProfile.avatar_url);
+}
+
+function profileFromMessage(message: unknown): DiscordMessageProfile | null {
+  if (!message || typeof message !== "object") return null;
+  const messageRecord = message as UnknownRecord;
+  return profileFromMessageData(messageRecord) ?? profileFromMessageLevel(messageRecord);
+}
+
+function profileFromTopLevel(data: UnknownRecord): DiscordMessageProfile | null {
+  const nestedProfile = (data.profile ?? null) as UnknownRecord | null;
+  if (nestedProfile) {
+    const profile = profileFromPair(nestedProfile.name, nestedProfile.avatar_url);
+    if (profile) return profile;
+  }
+  return profileFromPair(data.username, data.avatar_url);
+}
+
+export function extractMessageContent(data: Record<string, unknown>): string | null {
+  const messages = (data as { messages?: unknown }).messages;
+  if (Array.isArray(messages) && messages.length > 0) {
+    for (const message of messages) {
+      const content = (message as { data?: { content?: unknown } })?.data?.content;
+      if (typeof content === "string") {
+        const trimmed = content.trim();
+        if (trimmed.length > 0) return content;
+      }
+    }
+  }
+
+  const topLevelContent = (data as { content?: unknown }).content;
+  if (typeof topLevelContent === "string") {
+    const trimmed = topLevelContent.trim();
+    if (trimmed.length > 0) return topLevelContent;
+  }
+
+  return null;
+}
+
+export function extractMessageProfile(data: Record<string, unknown>): DiscordMessageProfile | null {
+  const messages = (data as { messages?: unknown }).messages;
+  if (Array.isArray(messages)) {
+    for (const message of messages) {
+      const messageProfile = profileFromMessage(message);
+      if (messageProfile) return messageProfile;
+    }
+  }
+
+  return profileFromTopLevel(data);
 }
 
 /** Extract the first embed from any Discohook-compatible payload shape */
@@ -316,6 +400,47 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
             </span>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+interface DiscordMessagePreviewProps {
+  readonly profile?: DiscordMessageProfile | null;
+  readonly content?: string | null;
+  readonly embeds: DiscordEmbed[];
+  readonly className?: string;
+}
+
+export function DiscordMessagePreview({ profile, content, embeds, className }: DiscordMessagePreviewProps) {
+  const displayName = profile?.name?.trim() || "ClashKing";
+  const avatarUrl = profile?.avatar_url?.trim() || clashKingAssets.logos.botApp;
+  const messageContent = content?.trim() ? content : null;
+
+  return (
+    <div className={cn("max-w-[520px]", messageContent ? "space-y-2" : "space-y-0", className)}>
+      <div className="flex items-start gap-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={avatarUrl} alt="" className="mt-0.5 h-10 w-10 rounded-full object-cover" />
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="truncate text-sm font-semibold text-foreground">{displayName}</span>
+            <span className="rounded bg-[#5865F2] px-1 py-0.5 text-[10px] font-semibold text-white">APP</span>
+          </div>
+          {messageContent && (
+            <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
+              {messageContent}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="space-y-2 pl-12">
+        {embeds.map((embed, index) => (
+          <DiscordEmbedPreview
+            key={`${embed.title ?? "embed"}-${index}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
+            embed={embed}
+          />
+        ))}
       </div>
     </div>
   );
