@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
   Legend as RechartsLegend,
-  ResponsiveContainer,
   Tooltip as RechartsTooltip,
 } from "recharts";
 import { cn } from "@/lib/utils";
@@ -72,6 +71,8 @@ export function ChartContainer({
   config: ChartConfig;
 }) {
   const chartId = React.useId();
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const [size, setSize] = React.useState({ width: 0, height: 0 });
 
   const style = React.useMemo(() => {
     return Object.entries(config).reduce<Record<string, string>>((acc, [key, value]) => {
@@ -82,12 +83,57 @@ export function ChartContainer({
     }, {});
   }, [config]);
 
+  React.useEffect(() => {
+    const element = containerRef.current;
+    if (!element) {
+      return;
+    }
+
+    const updateSize = () => {
+      const { width, height } = element.getBoundingClientRect();
+      const roundedWidth = Math.max(0, Math.floor(width));
+      const roundedHeight = Math.max(0, Math.floor(height));
+
+      setSize((current) => {
+        if (current.width === roundedWidth && current.height === roundedHeight) {
+          return current;
+        }
+
+        return { width: roundedWidth, height: roundedHeight };
+      });
+    };
+
+    updateSize();
+
+    if (typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    const observer = new ResizeObserver(updateSize);
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const hasValidSize = size.width > 0 && size.height > 0;
+  const chartWidth = Math.max(1, size.width);
+  const chartHeight = Math.max(220, size.height);
+  const chartChild = React.isValidElement(children)
+    ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+      width: chartWidth,
+      height: chartHeight,
+    })
+    : children;
+
   return (
     <ChartContext.Provider value={{ config }}>
       <div
+        ref={containerRef}
         data-chart={chartId}
         className={cn(
-          "min-h-[220px] w-full",
+          "min-h-[220px] min-w-0 w-full",
           "[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground",
           "[&_.recharts-cartesian-grid_line]:stroke-border/60",
           "[&_.recharts-curve.recharts-tooltip-cursor]:stroke-border",
@@ -100,9 +146,11 @@ export function ChartContainer({
         style={style}
         {...props}
       >
-        <ResponsiveContainer width="100%" height="100%">
-          {children}
-        </ResponsiveContainer>
+        {hasValidSize ? (
+          chartChild
+        ) : (
+          <div aria-hidden className="h-full w-full" />
+        )}
       </div>
     </ChartContext.Provider>
   );
