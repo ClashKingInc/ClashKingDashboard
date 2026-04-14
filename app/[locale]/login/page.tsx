@@ -58,9 +58,7 @@ export default function LoginPage() {
                 alt="ClashKing"
                 width={150}
                 height={44}
-                className="h-11 w-auto"
                 loading="eager"
-                style={{ width: "auto" }}
               />
             )}
           </div>
