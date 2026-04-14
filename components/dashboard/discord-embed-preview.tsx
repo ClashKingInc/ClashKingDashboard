@@ -433,7 +433,7 @@ export function DiscordMessagePreview({ profile, content, embeds, className }: D
   const messageContent = content?.trim() ? content : null;
 
   return (
-    <div className={cn("max-w-[520px] space-y-2", className)}>
+    <div className={cn("max-w-[520px]", messageContent ? "space-y-2" : "space-y-0", className)}>
       <div className="flex items-start gap-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={avatarUrl} alt="" className="mt-0.5 h-10 w-10 rounded-full object-cover" />
