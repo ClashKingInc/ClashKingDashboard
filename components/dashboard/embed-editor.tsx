@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { DiscordEmbedPreview, extractEmbeds, type DiscordEmbed } from "./discord-embed-preview";
+import { DiscordMessagePreview, extractEmbeds, extractMessageProfile, type DiscordEmbed } from "./discord-embed-preview";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -49,6 +49,12 @@ interface EmbedFormState {
 type SectionKey = "author" | "body" | "fields" | "images" | "footer";
 const MAX_DISCORD_EMBEDS_PER_MESSAGE = 10;
 const MAX_DISCORD_MESSAGE_CONTENT_LENGTH = 2000;
+const MAX_PROFILE_NAME_LENGTH = 80;
+
+interface MessageProfileState {
+  name: string;
+  avatarUrl: string;
+}
 
 function createCollapsedSectionState(): Record<SectionKey, boolean> {
   return {
@@ -136,11 +142,16 @@ function extractMessageContent(data: Record<string, unknown>): string {
   return "";
 }
 
-function payloadToEditorState(data: Record<string, unknown>): { embeds: EmbedFormState[]; content: string } {
+function payloadToEditorState(data: Record<string, unknown>): { embeds: EmbedFormState[]; content: string; profile: MessageProfileState } {
   const embeds = extractEmbeds(data);
   const content = extractMessageContent(data);
-  if (embeds.length === 0) return { embeds: [defaultState()], content };
-  return { embeds: embeds.map(embedToState), content };
+  const profile = extractMessageProfile(data);
+  const mappedProfile: MessageProfileState = {
+    name: (profile?.name ?? "").slice(0, MAX_PROFILE_NAME_LENGTH),
+    avatarUrl: profile?.avatar_url ?? "",
+  };
+  if (embeds.length === 0) return { embeds: [defaultState()], content, profile: mappedProfile };
+  return { embeds: embeds.map(embedToState), content, profile: mappedProfile };
 }
 
 function stateToEmbed(s: EmbedFormState): DiscordEmbed { // NOSONAR — sequential field assignments, no real logic branches
@@ -186,16 +197,24 @@ function hasMeaningfulEmbedContent(embed: DiscordEmbed): boolean {
 }
 
 /** Outputs the Discohook-compatible payload stored in MongoDB */
-export function stateToPayload(states: EmbedFormState[], content = ""): Record<string, unknown> {
+export function stateToPayload(states: EmbedFormState[], content = "", profile: MessageProfileState = { name: "", avatarUrl: "" }): Record<string, unknown> {
   const embeds = states
     .map(stateToEmbed)
     .filter(hasMeaningfulEmbedContent)
     .slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
   const normalizedContent = content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
+  const normalizedProfile = {
+    name: profile.name.slice(0, MAX_PROFILE_NAME_LENGTH).trim() || null,
+    avatar_url: profile.avatarUrl.trim() || null,
+  };
+
   return {
     content: normalizedContent || null,
+    profile: normalizedProfile,
+    username: normalizedProfile.name,
+    avatar_url: normalizedProfile.avatar_url,
     embeds,
-    messages: [{ data: { content: normalizedContent || null, embeds } }],
+    messages: [{ profile: normalizedProfile, data: { content: normalizedContent || null, embeds } }],
   };
 }
 
@@ -307,6 +326,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const [importExportOpen, setImportExportOpen] = useState(false);
   const [copiedDiscohook, setCopiedDiscohook] = useState(false);
   const [content, setContent] = useState(() => parsedInitialData?.content ?? "");
+  const [profile, setProfile] = useState<MessageProfileState>(() => parsedInitialData?.profile ?? { name: "", avatarUrl: "" });
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const updateEmbed = (embedId: string, updater: (embed: EmbedFormState) => EmbedFormState) =>
     setEmbeds((prev) => prev.map((embed) => (embed.editorId === embedId ? updater(embed) : embed)));
@@ -411,18 +432,23 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setImportUrl("");
     setEmbeds(editorState.embeds);
     setContent(editorState.content);
+    setProfile(editorState.profile);
     setExpandedEmbedId(editorState.embeds[0]?.editorId ?? null);
     setImportExportOpen(false);
   };
 
   // ── Save ────────────────────────────────────────────────────────────────────
 
-  const handleSave = () => onSave(stateToPayload(embeds, content));
+  const handleSave = () => onSave(stateToPayload(embeds, content, profile));
 
-  const discohookPayload = stateToPayload(embeds, content);
+  const discohookPayload = stateToPayload(embeds, content, profile);
   const discohookUrl = buildDiscohookUrl(discohookPayload);
   const previewEmbeds = embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent);
-  const hasContent = previewEmbeds.length > 0 || content.trim().length > 0;
+  const hasContent =
+    previewEmbeds.length > 0 ||
+    content.trim().length > 0 ||
+    profile.name.trim().length > 0 ||
+    profile.avatarUrl.trim().length > 0;
 
   const handleCopyDiscohookUrl = async () => {
     await navigator.clipboard.writeText(discohookUrl);
@@ -458,6 +484,31 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
               placeholder={t("contentPlaceholder")}
             />
           </div>
+
+          <CollapsibleSection title={t("profileSection")} open={profileOpen} onToggle={() => setProfileOpen((prev) => !prev)}>
+            <div className="space-y-3">
+              <Field label="">
+                <div className="mb-1 flex items-center justify-between">
+                  <Label className="text-xs">{t("profileName")}</Label>
+                  <CharCount value={profile.name} max={MAX_PROFILE_NAME_LENGTH} />
+                </div>
+                <Input
+                  value={profile.name}
+                  onChange={(event) => setProfile((prev) => ({ ...prev, name: event.target.value.slice(0, MAX_PROFILE_NAME_LENGTH) }))}
+                  maxLength={MAX_PROFILE_NAME_LENGTH}
+                  className={compactInputClassName}
+                />
+              </Field>
+              <Field label={t("profileAvatarUrl")}>
+                <Input
+                  value={profile.avatarUrl}
+                  onChange={(event) => setProfile((prev) => ({ ...prev, avatarUrl: event.target.value }))}
+                  placeholder="https://..."
+                  className={compactInputClassName}
+                />
+              </Field>
+            </div>
+          </CollapsibleSection>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -691,19 +742,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
           {isMobilePreviewOpen && (
             <div className="border-b border-border p-4 md:hidden">
               {hasContent ? (
-                <div className="space-y-2">
-                  {content.trim().length > 0 && (
-                    <p className="whitespace-pre-wrap break-words text-sm text-foreground">
-                      {content}
-                    </p>
-                  )}
-                  {previewEmbeds.map((embed, i) => (
-                    <DiscordEmbedPreview
-                      key={`${embed.title ?? "embed"}-${i}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
-                      embed={embed}
-                    />
-                  ))}
-                </div>
+                <DiscordMessagePreview
+                  profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
+                  content={content}
+                  embeds={previewEmbeds}
+                />
               ) : (
                 <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
                   {t("previewEmpty")}
@@ -717,19 +760,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
               {t("preview")}
             </p>
             {hasContent ? (
-              <div className="space-y-2">
-                {content.trim().length > 0 && (
-                  <p className="whitespace-pre-wrap break-words text-sm text-foreground">
-                    {content}
-                  </p>
-                )}
-                {previewEmbeds.map((embed, i) => (
-                  <DiscordEmbedPreview
-                    key={`${embed.title ?? "embed"}-${i}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
-                    embed={embed}
-                  />
-                ))}
-              </div>
+              <DiscordMessagePreview
+                profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
+                content={content}
+                embeds={previewEmbeds}
+              />
             ) : (
               <div className="flex items-center justify-center h-40 rounded-xl border border-dashed border-border text-muted-foreground text-sm">
                 {t("previewEmpty")}

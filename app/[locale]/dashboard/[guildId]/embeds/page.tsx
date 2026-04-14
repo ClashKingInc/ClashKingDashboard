@@ -29,7 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { EmbedEditor } from "@/components/dashboard/embed-editor";
-import { DiscordEmbedPreview, extractEmbeds, extractMessageContent } from "@/components/dashboard/discord-embed-preview";
+import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile } from "@/components/dashboard/discord-embed-preview";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
 
 function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
@@ -194,7 +194,8 @@ export default function EmbedsPage() {
             {embeds.map((embed) => {
               const previews = embed.data ? extractEmbeds(embed.data) : [];
               const messageContent = embed.data ? extractMessageContent(embed.data) : null;
-              const hasPreview = previews.length > 0 || Boolean(messageContent);
+              const profile = embed.data ? extractMessageProfile(embed.data) : null;
+              const hasPreview = previews.length > 0 || Boolean(messageContent) || Boolean(profile?.name || profile?.avatar_url);
               const isExpanded = expandedName === embed.name;
               return (
                 <div key={embed.name} className="rounded-xl border border-border/60 bg-card overflow-hidden">
@@ -224,19 +225,12 @@ export default function EmbedsPage() {
                   </div>
                   {hasPreview && isExpanded && (
                     <div className="border-t border-border/60 px-4 py-3 bg-muted/20">
-                      <div className="space-y-2">
-                        {messageContent && (
-                          <p className="whitespace-pre-wrap break-words text-sm text-foreground">
-                            {messageContent}
-                          </p>
-                        )}
-                        {previews.map((preview, i) => (
-                          <DiscordEmbedPreview
-                            key={`${embed.name}-${preview.title ?? "embed"}-${i}`} // NOSONAR — index keeps duplicate embed titles distinct
-                            embed={preview}
-                          />
-                        ))}
-                      </div>
+                      <DiscordMessagePreview
+                        profile={profile}
+                        content={messageContent}
+                        embeds={previews}
+                        className="max-w-none"
+                      />
                     </div>
                   )}
                 </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { clashKingAssets } from "@/lib/theme";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -92,6 +93,11 @@ export function extractEmbeds(data: Record<string, unknown>): DiscordEmbed[] {
   return [];
 }
 
+export interface DiscordMessageProfile {
+  name?: string;
+  avatar_url?: string;
+}
+
 export function extractMessageContent(data: Record<string, unknown>): string | null {
   const messages = (data as { messages?: unknown }).messages;
   if (Array.isArray(messages) && messages.length > 0) {
@@ -108,6 +114,48 @@ export function extractMessageContent(data: Record<string, unknown>): string | n
   if (typeof topLevelContent === "string") {
     const trimmed = topLevelContent.trim();
     if (trimmed.length > 0) return topLevelContent;
+  }
+
+  return null;
+}
+
+export function extractMessageProfile(data: Record<string, unknown>): DiscordMessageProfile | null {
+  const messages = (data as { messages?: unknown }).messages;
+  if (Array.isArray(messages)) {
+    for (const message of messages) {
+      const profile = (message as { profile?: unknown })?.profile;
+      if (profile && typeof profile === "object") {
+        const name = (profile as { name?: unknown }).name;
+        const avatarUrl = (profile as { avatar_url?: unknown }).avatar_url;
+        if (typeof name === "string" || typeof avatarUrl === "string") {
+          return {
+            name: typeof name === "string" ? name : undefined,
+            avatar_url: typeof avatarUrl === "string" ? avatarUrl : undefined,
+          };
+        }
+      }
+    }
+  }
+
+  const topLevelProfile = (data as { profile?: unknown }).profile;
+  if (topLevelProfile && typeof topLevelProfile === "object") {
+    const name = (topLevelProfile as { name?: unknown }).name;
+    const avatarUrl = (topLevelProfile as { avatar_url?: unknown }).avatar_url;
+    if (typeof name === "string" || typeof avatarUrl === "string") {
+      return {
+        name: typeof name === "string" ? name : undefined,
+        avatar_url: typeof avatarUrl === "string" ? avatarUrl : undefined,
+      };
+    }
+  }
+
+  const topLevelName = (data as { username?: unknown }).username;
+  const topLevelAvatar = (data as { avatar_url?: unknown }).avatar_url;
+  if (typeof topLevelName === "string" || typeof topLevelAvatar === "string") {
+    return {
+      name: typeof topLevelName === "string" ? topLevelName : undefined,
+      avatar_url: typeof topLevelAvatar === "string" ? topLevelAvatar : undefined,
+    };
   }
 
   return null;
@@ -337,6 +385,47 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
             </span>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+interface DiscordMessagePreviewProps {
+  readonly profile?: DiscordMessageProfile | null;
+  readonly content?: string | null;
+  readonly embeds: DiscordEmbed[];
+  readonly className?: string;
+}
+
+export function DiscordMessagePreview({ profile, content, embeds, className }: DiscordMessagePreviewProps) {
+  const displayName = profile?.name?.trim() || "ClashKing";
+  const avatarUrl = profile?.avatar_url?.trim() || clashKingAssets.logos.botApp;
+  const messageContent = content?.trim() ? content : null;
+
+  return (
+    <div className={cn("max-w-[520px] space-y-2", className)}>
+      <div className="flex items-start gap-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={avatarUrl} alt="" className="mt-0.5 h-10 w-10 rounded-full object-cover" />
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="truncate text-sm font-semibold text-foreground">{displayName}</span>
+            <span className="rounded bg-[#5865F2] px-1 py-0.5 text-[10px] font-semibold text-white">APP</span>
+          </div>
+          {messageContent && (
+            <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
+              {messageContent}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="space-y-2 pl-12">
+        {embeds.map((embed, index) => (
+          <DiscordEmbedPreview
+            key={`${embed.title ?? "embed"}-${index}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
+            embed={embed}
+          />
+        ))}
       </div>
     </div>
   );
