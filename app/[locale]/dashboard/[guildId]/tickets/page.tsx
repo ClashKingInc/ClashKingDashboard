@@ -189,7 +189,7 @@ const getTicketDiscordUrl = (ticket: OpenTicket) =>
 const TRANSCRIPT_BASE_URL = stripTrailingSlashes(process.env.NEXT_PUBLIC_TRANSCRIPT_BASE_URL ?? "https://cdn.clashk.ing");
 
 const getTranscriptUrl = (ticket: OpenTicket) =>
-  `${TRANSCRIPT_BASE_URL}/transcript-channel-${ticket.channel}.html`;
+  `${TRANSCRIPT_BASE_URL}/transcript-${ticket.channel}.html`;
 
 const DEFAULT_PREVIEW_ACCENT = "#3ba55d";
 
