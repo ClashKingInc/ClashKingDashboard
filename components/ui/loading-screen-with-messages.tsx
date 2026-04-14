@@ -79,6 +79,8 @@ export default function LoadingScreenWithMessages({ // NOSONAR — theme ternari
                 width={80}
                 height={80}
                 className="object-contain"
+                loading="eager"
+                style={{ width: "auto", height: "auto" }}
               />
             ) : (
               <div className={`w-20 h-20 rounded-none animate-pulse ${
@@ -96,6 +98,7 @@ export default function LoadingScreenWithMessages({ // NOSONAR — theme ternari
                 width={120}
                 height={32}
                 className="object-contain"
+                style={{ width: "auto", height: "auto" }}
               />
             ) : (
               <div className={`w-30 h-8 rounded animate-pulse ${
