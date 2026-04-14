@@ -266,7 +266,7 @@ export default function EmbedsPage() {
 
       {/* Step 2: Editor dialog */}
       <Dialog open={editorOpen} onOpenChange={open => { if (!open && !isSaving) setEditorOpen(false); }}>
-        <DialogContent className="bg-background border-border max-w-5xl w-[95vw] h-[90vh] flex flex-col gap-0 p-0 overflow-hidden">
+        <DialogContent className="bg-card border-border max-w-5xl w-[95vw] h-[90vh] flex flex-col gap-0 p-0 overflow-hidden">
           <DialogHeader className="bg-card px-6 pt-5 pb-4 border-b border-border shrink-0">
             <DialogTitle>
               {editingEmbed ? t("editEmbed") : t("newEmbed")}

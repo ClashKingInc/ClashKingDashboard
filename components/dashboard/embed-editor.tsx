@@ -232,7 +232,7 @@ interface CollapsibleSectionProps {
 
 function CollapsibleSection({ title, open, onToggle, children }: CollapsibleSectionProps) {
   return (
-    <div className="rounded-lg border border-border/60 bg-card/40">
+    <div className="rounded-lg border border-border/80 bg-card">
       <button
         type="button"
         onClick={onToggle}
@@ -252,6 +252,9 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const t = useTranslations("EmbedEditor");
   const tCommon = useTranslations("Common");
   const parsedInitialData = initialData ? payloadToEditorState(initialData) : null;
+  const inputClassName = "bg-background border-border/80";
+  const compactInputClassName = `${inputClassName} h-8 text-sm`;
+  const compactTextareaClassName = `${inputClassName} text-sm resize-none`;
 
   const [embeds, setEmbeds] = useState<EmbedFormState[]>(() =>
     parsedInitialData ? parsedInitialData.embeds : [defaultState()]
@@ -350,7 +353,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   };
 
   return (
-    <div className="flex flex-col h-full min-h-0 bg-background text-foreground">
+    <div className="flex flex-col h-full min-h-0 bg-card text-card-foreground">
       {/* Two-column body */}
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
 
@@ -364,7 +367,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
           <Separator />
 
           {/* Embed selector */}
-          <div className="rounded-lg border border-border/60 bg-muted/20 p-3 space-y-2">
+          <div className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
             <div className="flex items-center justify-between">
               <SectionLabel>{`Embeds (${embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</SectionLabel>
               <Button
@@ -387,7 +390,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                     type="button"
                     className={cn(
                       "w-full rounded-md border px-2 py-1.5 text-left text-xs transition-colors",
-                      isActive ? "border-primary/60 bg-primary/10" : "border-border/60 hover:bg-accent/40"
+                      isActive ? "border-primary/60 bg-primary/10" : "border-border/80 hover:bg-accent/20"
                     )}
                     onClick={() => setActiveEmbedIndex(i)}
                   >
@@ -423,7 +426,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   const v = e.target.value;
                   if (/^#[0-9a-fA-F]{0,6}$/.test(v)) setActiveField("color", v);
                 }}
-                className="font-mono text-sm w-28"
+                className={cn(inputClassName, "font-mono text-sm w-28")}
                 maxLength={7}
               />
             </div>
@@ -436,13 +439,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   <span className="text-xs text-muted-foreground" />
                   <CharCount value={activeEmbed.authorName} max={256} />
                 </div>
-                <Input value={activeEmbed.authorName} onChange={e => setActiveField("authorName", e.target.value)} maxLength={256} className="h-8 text-sm" />
+                <Input value={activeEmbed.authorName} onChange={e => setActiveField("authorName", e.target.value)} maxLength={256} className={compactInputClassName} />
               </Field>
               <Field label={t("authorIconUrl")}>
-                <Input value={activeEmbed.authorIconUrl} onChange={e => setActiveField("authorIconUrl", e.target.value)} placeholder="https://..." className="h-8 text-sm" />
+                <Input value={activeEmbed.authorIconUrl} onChange={e => setActiveField("authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
               </Field>
               <Field label={t("authorUrl")}>
-                <Input value={activeEmbed.authorUrl} onChange={e => setActiveField("authorUrl", e.target.value)} placeholder="https://..." className="h-8 text-sm" />
+                <Input value={activeEmbed.authorUrl} onChange={e => setActiveField("authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
               </Field>
             </div>
           </CollapsibleSection>
@@ -454,10 +457,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   <span />
                   <CharCount value={activeEmbed.title} max={256} />
                 </div>
-                <Input value={activeEmbed.title} onChange={e => setActiveField("title", e.target.value)} maxLength={256} className="h-8 text-sm" />
+                <Input value={activeEmbed.title} onChange={e => setActiveField("title", e.target.value)} maxLength={256} className={compactInputClassName} />
               </Field>
               <Field label={t("titleUrl")}>
-                <Input value={activeEmbed.titleUrl} onChange={e => setActiveField("titleUrl", e.target.value)} placeholder="https://..." className="h-8 text-sm" />
+                <Input value={activeEmbed.titleUrl} onChange={e => setActiveField("titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
               </Field>
               <Field label={t("description")}>
                 <div className="flex justify-end mb-1">
@@ -468,7 +471,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   onChange={e => setActiveField("description", e.target.value)}
                   maxLength={4096}
                   rows={5}
-                  className="text-sm resize-none"
+                  className={compactTextareaClassName}
                   placeholder={t("descriptionPlaceholder")}
                 />
               </Field>
@@ -483,7 +486,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                 </Button>
               </div>
               {activeEmbed.fields.map((field, idx) => (
-                <div key={field.id} className="rounded-lg border border-border/60 bg-muted/20 p-3 space-y-2">
+                <div key={field.id} className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-medium text-muted-foreground">{t("field")} {idx + 1}</span>
                     <div className="flex items-center gap-1">
@@ -503,14 +506,14 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                       <Label className="text-xs">{t("fieldName")}</Label>
                       <CharCount value={field.name} max={256} />
                     </div>
-                    <Input value={field.name} onChange={e => updateField(field.id, { name: e.target.value })} maxLength={256} className="h-7 text-xs" />
+                    <Input value={field.name} onChange={e => updateField(field.id, { name: e.target.value })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} />
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between">
                       <Label className="text-xs">{t("fieldValue")}</Label>
                       <CharCount value={field.value} max={1024} />
                     </div>
-                    <Textarea value={field.value} onChange={e => updateField(field.id, { value: e.target.value })} maxLength={1024} rows={2} className="text-xs resize-none" />
+                    <Textarea value={field.value} onChange={e => updateField(field.id, { value: e.target.value })} maxLength={1024} rows={2} className={cn(inputClassName, "text-xs resize-none")} />
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -529,10 +532,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
           <CollapsibleSection title={t("imagesSection")} open={openSections.images} onToggle={() => toggleSection("images")}>
             <div className="space-y-3">
               <Field label={t("thumbnailUrl")}>
-                <Input value={activeEmbed.thumbnailUrl} onChange={e => setActiveField("thumbnailUrl", e.target.value)} placeholder="https://..." className="h-8 text-sm" />
+                <Input value={activeEmbed.thumbnailUrl} onChange={e => setActiveField("thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
               </Field>
               <Field label={t("imageUrl")}>
-                <Input value={activeEmbed.imageUrl} onChange={e => setActiveField("imageUrl", e.target.value)} placeholder="https://..." className="h-8 text-sm" />
+                <Input value={activeEmbed.imageUrl} onChange={e => setActiveField("imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
               </Field>
             </div>
           </CollapsibleSection>
@@ -543,10 +546,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                 <div className="flex justify-end mb-1">
                   <CharCount value={activeEmbed.footerText} max={2048} />
                 </div>
-                <Input value={activeEmbed.footerText} onChange={e => setActiveField("footerText", e.target.value)} maxLength={2048} className="h-8 text-sm" />
+                <Input value={activeEmbed.footerText} onChange={e => setActiveField("footerText", e.target.value)} maxLength={2048} className={compactInputClassName} />
               </Field>
               <Field label={t("footerIconUrl")}>
-                <Input value={activeEmbed.footerIconUrl} onChange={e => setActiveField("footerIconUrl", e.target.value)} placeholder="https://..." className="h-8 text-sm" />
+                <Input value={activeEmbed.footerIconUrl} onChange={e => setActiveField("footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
               </Field>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -565,7 +568,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
         </div>
 
         {/* ── Right: preview ── */}
-        <div className="flex flex-1 flex-col bg-muted/30">
+        <div className="flex flex-1 flex-col bg-card">
           <button
             type="button"
             className="flex items-center justify-between border-b border-border px-4 py-3 text-left md:hidden"
@@ -645,7 +648,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   value={importUrl}
                   onChange={e => { setImportUrl(e.target.value); setImportError(false); }}
                   placeholder="https://discohook.app/?data=..."
-                  className={cn("text-xs h-8", importError && "border-destructive")}
+                  className={cn(inputClassName, "text-xs h-8", importError && "border-destructive")}
                 />
                 <Button size="sm" variant="secondary" className="h-8 shrink-0" onClick={handleImport}>
                   <Link2 className="h-3.5 w-3.5 mr-1" />{t("import")}
