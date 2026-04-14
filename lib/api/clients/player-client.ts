@@ -67,7 +67,7 @@ export class PlayerClient extends BaseApiClient {
    * Get player information from COC wrapper
    */
   async getPlayerInfo(playerTag: string): Promise<ApiResponse<{ name: string; tag: string; town_hall_level?: number }>> {
-    return this.request(`/v2/player/${playerTag}`, {
+    return this.request(`/v2/player/${encodeURIComponent(playerTag)}`, {
       method: 'GET',
     });
   }

@@ -4,10 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
-  CheckCircle2,
   ChevronDown,
-  Copy,
-  ExternalLink,
   FileText,
   Plus,
   Settings,
@@ -32,23 +29,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { EmbedEditor } from "@/components/dashboard/embed-editor";
-import { DiscordEmbedPreview, extractFirstEmbed } from "@/components/dashboard/discord-embed-preview";
+import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile } from "@/components/dashboard/discord-embed-preview";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
-
-// ─── Discohook URL builder (kept for list actions) ────────────────────────────
-
-function buildDiscohookUrl(data: Record<string, unknown>): string {
-  let payload: unknown;
-  if (data.messages) {
-    payload = data;
-  } else if (Array.isArray((data as any).embeds)) {
-    payload = { messages: [{ data: { content: null, embeds: (data as any).embeds } }] };
-  } else {
-    payload = { messages: [{ data: { content: null, embeds: [data] } }] };
-  }
-  const encoded = btoa(Array.from(new TextEncoder().encode(JSON.stringify(payload)), b => String.fromCodePoint(b)).join(''));
-  return `https://discohook.app/?data=${encoded}`;
-}
 
 function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
   if (Array.isArray(payload)) return payload as ServerEmbed[];
@@ -88,7 +70,6 @@ export default function EmbedsPage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const [copiedName, setCopiedName] = useState<string | null>(null);
   const loaded = useRef(false);
   const embedsCacheKey = `tickets-embeds-list-${guildId}`;
 
@@ -176,13 +157,6 @@ export default function EmbedsPage() {
     }
   };
 
-  const copyDiscohookUrl = async (embed: ServerEmbed) => {
-    if (!embed.data) return;
-    await navigator.clipboard.writeText(buildDiscohookUrl(embed.data));
-    setCopiedName(embed.name);
-    setTimeout(() => setCopiedName(null), 2000);
-  };
-
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-3xl space-y-6">
@@ -218,19 +192,22 @@ export default function EmbedsPage() {
         ) : (
           <div className="space-y-2">
             {embeds.map((embed) => {
-              const preview = embed.data ? extractFirstEmbed(embed.data) : null;
+              const previews = embed.data ? extractEmbeds(embed.data) : [];
+              const messageContent = embed.data ? extractMessageContent(embed.data) : null;
+              const profile = embed.data ? extractMessageProfile(embed.data) : null;
+              const hasPreview = previews.length > 0 || Boolean(messageContent) || Boolean(profile?.name || profile?.avatar_url);
               const isExpanded = expandedName === embed.name;
               return (
                 <div key={embed.name} className="rounded-xl border border-border/60 bg-card overflow-hidden">
                   <div className="flex items-center gap-3 px-4 py-3">
                     <button
                       onClick={() => setExpandedName(isExpanded ? null : embed.name)}
-                      className={cn("flex items-center gap-2 flex-1 min-w-0 text-left", !preview && "cursor-default")}
-                      disabled={!preview}
+                      className={cn("flex items-center gap-2 flex-1 min-w-0 text-left", !hasPreview && "cursor-default")}
+                      disabled={!hasPreview}
                     >
                       <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
                       <span className="flex-1 font-medium text-sm truncate">{embed.name}</span>
-                      {preview && (
+                      {hasPreview && (
                         <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform shrink-0", isExpanded && "rotate-180")} />
                       )}
                     </button>
@@ -238,20 +215,6 @@ export default function EmbedsPage() {
                       <span className="text-xs text-muted-foreground italic hidden sm:block">{t("legacyEmbed")}</span>
                     )}
                     <div className="flex items-center gap-1 shrink-0">
-                      {embed.data && (
-                        <>
-                          <Button asChild variant="ghost" size="icon" className="h-8 w-8" title={t("openInDiscohook")}>
-                            <a href={buildDiscohookUrl(embed.data)} target="_blank" rel="noreferrer">
-                              <ExternalLink className="h-4 w-4" />
-                            </a>
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyDiscohookUrl(embed)} title={t("copyDiscohookUrl")}>
-                            {copiedName === embed.name
-                              ? <CheckCircle2 className="h-4 w-4 text-green-500" />
-                              : <Copy className="h-4 w-4" />}
-                          </Button>
-                        </>
-                      )}
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(embed)} title={t("editEmbed")}>
                         <Settings className="h-4 w-4" />
                       </Button>
@@ -260,9 +223,14 @@ export default function EmbedsPage() {
                       </Button>
                     </div>
                   </div>
-                  {preview && isExpanded && (
+                  {hasPreview && isExpanded && (
                     <div className="border-t border-border/60 px-4 py-3 bg-muted/20">
-                      <DiscordEmbedPreview embed={preview} />
+                      <DiscordMessagePreview
+                        profile={profile}
+                        content={messageContent}
+                        embeds={previews}
+                        className="max-w-none"
+                      />
                     </div>
                   )}
                 </div>
@@ -298,13 +266,16 @@ export default function EmbedsPage() {
 
       {/* Step 2: Editor dialog */}
       <Dialog open={editorOpen} onOpenChange={open => { if (!open && !isSaving) setEditorOpen(false); }}>
-        <DialogContent className="max-w-5xl w-[95vw] h-[90vh] flex flex-col gap-0 p-0 overflow-hidden">
-          <DialogHeader className="px-6 pt-5 pb-4 border-b border-border shrink-0">
+        <DialogContent className="bg-card border-border max-w-6xl w-[97vw] h-[92vh] flex flex-col gap-0 p-0 overflow-hidden">
+          <DialogHeader className="bg-card px-6 pt-5 pb-4 border-b border-border shrink-0">
             <DialogTitle>
               {editingEmbed ? t("editEmbed") : t("newEmbed")}
               {" "}
               <span className="text-muted-foreground font-normal">— {editingEmbed?.name ?? pendingName}</span>
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              {editingEmbed ? t("editEmbed") : t("newEmbed")}
+            </DialogDescription>
           </DialogHeader>
           <div className="flex-1 min-h-0">
             <EmbedEditor
