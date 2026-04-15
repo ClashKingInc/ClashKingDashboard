@@ -2426,6 +2426,7 @@
     "profileSection": "Profiel",
     "profileName": "Naam",
     "profileAvatarUrl": "Avatar URL",
+    "profileUnsupportedWarning": "Let op: de bot ondersteunt het aanpassen van dit profiel momenteel nog niet.",
     "import": "Importeren",
     "importError": "Ongeldige Discohook-URL.",
     "colorSection": "Kleur",
@@ -2728,4 +2729,6 @@
     "goHome": "Ga naar Home"
   }
 }
+
+
 

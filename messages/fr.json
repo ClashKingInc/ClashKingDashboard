@@ -2446,6 +2446,7 @@
     "profileSection": "Profil",
     "profileName": "Nom",
     "profileAvatarUrl": "URL de l'avatar",
+    "profileUnsupportedWarning": "Attention : le bot ne prend actuellement pas en charge la modification de ce profil.",
     "import": "Importer",
     "importError": "URL Discohook invalide.",
     "colorSection": "Couleur",
@@ -2748,4 +2749,6 @@
     "goHome": "Retour à l'Accueil"
   }
 }
+
+
 
