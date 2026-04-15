@@ -1957,14 +1957,18 @@
     "authenticatingDescription": "Even geduld terwijl we je inloggen met Discord",
     "authenticationFailed": "Authenticatie Mislukt",
     "tryAgain": "Probeer Opnieuw",
-    "loadingVillages": "Inloggen met discord...",
+    "backToHome": "Terug naar het hoofdscherm",
+    "errorCancelled": "Inloggen in Discord is geannuleerd. Probeer het opnieuw wanneer je er klaar voor bent.",
+    "errorDiscordFailedWithReason": "Discord-authenticatie mislukt: {reason}",
+    "errorNoAuthorizationCode": "Geen autorisatiecode ontvangen van Discord.",
+    "errorCodeVerifierMissing": "Code verifier niet gevonden. Probeer opnieuw in te loggen.",
+    "errorAuthenticateFailed": "Authenticatie met Discord is mislukt.",
+    "loadingVillages": "Inloggen met Discord...",
     "loadingClanData": "Laden van server lijst...",
     "loadingWarStats": "Bijna klaar..."
   },
   "LoginPage": {
-    "backToHome": "Terug naar Home",
-    "redirecting": "Doorverwijzen naar Discord...",
-    "redirectingDescription": "Je wordt doorverwezen naar Discord om het inlogproces te voltooien"
+    "redirecting": "Doorverwijzen naar Discord..."
   },
   "FeaturesPage": {
     "hero": {

@@ -1954,14 +1954,18 @@
     "authenticatingDescription": "Please wait while we log you in with Discord",
     "authenticationFailed": "Authentication Failed",
     "tryAgain": "Try Again",
+    "backToHome": "Back to Home",
+    "errorCancelled": "Login cancelled in Discord. Please try again when you're ready.",
+    "errorDiscordFailedWithReason": "Discord authentication failed: {reason}",
+    "errorNoAuthorizationCode": "No authorization code received from Discord.",
+    "errorCodeVerifierMissing": "Code verifier not found. Please try logging in again.",
+    "errorAuthenticateFailed": "Failed to authenticate with Discord.",
     "loadingVillages": "Logging in with Discord...",
     "loadingClanData": "Loading server list...",
     "loadingWarStats": "Almost ready..."
   },
   "LoginPage": {
-    "backToHome": "Back to Home",
-    "redirecting": "Redirecting to Discord...",
-    "redirectingDescription": "You will be redirected to Discord to complete the login process"
+    "redirecting": "Redirecting to Discord..."
   },
   "FeaturesPage": {
     "hero": {

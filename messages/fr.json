@@ -1977,14 +1977,18 @@
     "authenticatingDescription": "Veuillez patienter pendant que nous vous connectons avec Discord",
     "authenticationFailed": "Échec de l'Authentification",
     "tryAgain": "Réessayer",
+    "backToHome": "Retour à l'accueil",
+    "errorCancelled": "La connexion dans Discord a été annulée. Réessayez quand vous êtes prêt.",
+    "errorDiscordFailedWithReason": "Échec de l'authentification Discord : {reason}",
+    "errorNoAuthorizationCode": "Aucun code d'autorisation reçu de Discord.",
+    "errorCodeVerifierMissing": "Code verifier introuvable. Veuillez réessayer de vous connecter.",
+    "errorAuthenticateFailed": "Échec de l'authentification avec Discord.",
     "loadingVillages": "Connexion avec Discord...",
     "loadingClanData": "Chargement de la liste des serveurs...",
     "loadingWarStats": "Presque prêt..."
   },
   "LoginPage": {
-    "backToHome": "Retour à l'Accueil",
-    "redirecting": "Redirection vers Discord...",
-    "redirectingDescription": "Vous allez être redirigé vers Discord pour compléter le processus de connexion"
+    "redirecting": "Redirection vers Discord..."
   },
   "FeaturesPage": {
     "hero": {
