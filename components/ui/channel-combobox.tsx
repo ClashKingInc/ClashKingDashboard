@@ -51,6 +51,12 @@ export function ChannelCombobox({
 
   const selectedChannel = channels.find((channel) => String(channel.id) === String(value))
   const isDisabledValue = value === "disabled"
+  let buttonLabel: React.ReactNode = placeholder
+  if (selectedChannel) {
+    buttonLabel = <span className="truncate">#{selectedChannel.name}</span>
+  } else if (isDisabledValue) {
+    buttonLabel = t("disabled") || "Disabled"
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -66,13 +72,7 @@ export function ChannelCombobox({
           )}
           disabled={disabled}
         >
-          {selectedChannel ? (
-            <span className="truncate">#{selectedChannel.name}</span>
-          ) : isDisabledValue ? (
-            t("disabled") || "Disabled"
-          ) : (
-            placeholder
-          )}
+          {buttonLabel}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

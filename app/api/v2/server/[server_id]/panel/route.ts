@@ -4,12 +4,12 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 function normalizePanelResponseJson(raw: string): string {
   // Preserve Discord snowflake precision by keeping welcome_channel as a string.
-  return raw.replace(/("welcome_channel"\s*:\s*)(\d{15,})/g, '$1"$2"');
+  return raw.replaceAll(/("welcome_channel"\s*:\s*)(\d{15,})/g, '$1"$2"');
 }
 
 function normalizePanelRequestJson(raw: string): string {
   // Backend expects numeric/null; convert quoted numeric snowflakes to raw numbers.
-  return raw.replace(/("welcome_channel"\s*:\s*)"(\d{15,})"/g, '$1$2');
+  return raw.replaceAll(/("welcome_channel"\s*:\s*)"(\d{15,})"/g, '$1$2');
 }
 
 export async function GET(

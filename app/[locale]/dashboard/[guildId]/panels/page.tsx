@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Check, Loader2, LayoutTemplate, Save } from "lucide-react";
@@ -80,6 +80,97 @@ function normalizeWelcomeChannelForApi(value: string): string | null {
 const BUTTON_SKELETON_KEYS = BUTTON_TYPES.map((type) => `${type}-skeleton`);
 const COLOR_SKELETON_KEYS = BUTTON_COLORS.map((color) => `${color}-skeleton`);
 const PREVIEW_BUTTON_SKELETON_KEYS = ["preview-button-1", "preview-button-2", "preview-button-3"];
+const UNKNOWN_BUTTON_META = { label: "Unknown", emoji: "🔘", desc: "" };
+
+function orderButtonsForPreview(selectedButtons: string[]) {
+  const knownOrdered = BUTTON_TYPES.filter((type) => selectedButtons.includes(type));
+  const unknown = selectedButtons.filter((type) => !BUTTON_TYPES.includes(type as (typeof BUTTON_TYPES)[number]));
+  return [...knownOrdered, ...unknown];
+}
+
+function buildEmbedPreviewContent({
+  isEmbedsLoading,
+  embedName,
+  embedPreviews,
+  messageContent,
+  messageProfile,
+  hasMessageProfile,
+  previewEmbedNoDataText,
+  previewNoEmbedText,
+}: {
+  isEmbedsLoading: boolean;
+  embedName: string;
+  embedPreviews: ReturnType<typeof extractEmbeds>;
+  messageContent: ReturnType<typeof extractMessageContent>;
+  messageProfile: ReturnType<typeof extractMessageProfile>;
+  hasMessageProfile: boolean;
+  previewEmbedNoDataText: string;
+  previewNoEmbedText: string;
+}): ReactNode {
+  if (isEmbedsLoading) {
+    return <Skeleton className="h-40 w-full rounded-md" />;
+  }
+
+  if (embedPreviews.length > 0 || Boolean(messageContent) || hasMessageProfile) {
+    return (
+      <DiscordMessagePreview
+        profile={messageProfile}
+        content={messageContent}
+        embeds={embedPreviews}
+      />
+    );
+  }
+
+  return (
+    <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
+      {embedName ? previewEmbedNoDataText : previewNoEmbedText}
+    </div>
+  );
+}
+
+function buildButtonsPreviewContent({
+  isPanelLoading,
+  selectedButtons,
+  buttonStyle,
+  previewNoButtonsText,
+}: {
+  isPanelLoading: boolean;
+  selectedButtons: string[];
+  buttonStyle: string;
+  previewNoButtonsText: string;
+}): ReactNode {
+  if (isPanelLoading) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {PREVIEW_BUTTON_SKELETON_KEYS.map((key) => (
+          <Skeleton key={key} className="h-8 w-28 rounded-md bg-white/10" />
+        ))}
+      </div>
+    );
+  }
+
+  const orderedButtons = orderButtonsForPreview(selectedButtons);
+  if (orderedButtons.length === 0) {
+    return <div className="text-xs text-white/30 italic">{previewNoButtonsText}</div>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {orderedButtons.map(type => {
+        const meta = BUTTON_META[type] ?? { ...UNKNOWN_BUTTON_META, label: type };
+        return (
+          <button
+            key={type}
+            className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", buttonStyle)}
+          >
+            <span>{meta.emoji}</span>
+            <span>{meta.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -190,12 +281,6 @@ export default function PanelsPage() {
     );
   };
 
-  const orderButtonsForPreview = (selectedButtons: string[]) => {
-    const knownOrdered = BUTTON_TYPES.filter((type) => selectedButtons.includes(type));
-    const unknown = selectedButtons.filter((type) => !BUTTON_TYPES.includes(type as (typeof BUTTON_TYPES)[number]));
-    return [...knownOrdered, ...unknown];
-  };
-
   const openEditDialog = () => {
     setDraftEmbedName(embedName);
     setDraftButtons(buttons);
@@ -266,101 +351,44 @@ export default function PanelsPage() {
   const messageProfile = selectedEmbed?.data ? extractMessageProfile(selectedEmbed.data) : null;
   const hasMessageProfile = Boolean(messageProfile?.name || messageProfile?.avatar_url);
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
-  let embedPreviewContent = (
-    <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
-      {embedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
-    </div>
-  );
-  if (isEmbedsLoading) {
-    embedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
-  } else if (embedPreviews.length > 0 || Boolean(messageContent) || hasMessageProfile) {
-    embedPreviewContent = (
-      <DiscordMessagePreview
-        profile={messageProfile}
-        content={messageContent}
-        embeds={embedPreviews}
-      />
-    );
-  }
-
-  const orderedButtons = orderButtonsForPreview(buttons);
-  let buttonsPreviewContent = <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>;
-  if (isPanelLoading) {
-    buttonsPreviewContent = (
-      <div className="flex flex-wrap gap-2">
-        {PREVIEW_BUTTON_SKELETON_KEYS.map((key) => (
-          <Skeleton key={key} className="h-8 w-28 rounded-md bg-white/10" />
-        ))}
-      </div>
-    );
-  } else if (orderedButtons.length > 0) {
-    buttonsPreviewContent = (
-      <div className="flex flex-wrap gap-2">
-        {orderedButtons.map(type => {
-          const meta = BUTTON_META[type] ?? { label: type, emoji: "🔘", desc: "" };
-          return (
-            <button
-              key={type}
-              className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", buttonStyle)}
-            >
-              <span>{meta.emoji}</span>
-              <span>{meta.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
+  const embedPreviewContent = buildEmbedPreviewContent({
+    isEmbedsLoading,
+    embedName,
+    embedPreviews,
+    messageContent,
+    messageProfile,
+    hasMessageProfile,
+    previewEmbedNoDataText: t("previewEmbedNoData"),
+    previewNoEmbedText: t("previewNoEmbed"),
+  });
+  const buttonsPreviewContent = buildButtonsPreviewContent({
+    isPanelLoading,
+    selectedButtons: buttons,
+    buttonStyle,
+    previewNoButtonsText: t("previewNoButtons"),
+  });
   const draftSelectedEmbed = embeds.find(e => e.name === draftEmbedName);
   const draftEmbedPreviews = draftSelectedEmbed?.data ? extractEmbeds(draftSelectedEmbed.data) : [];
   const draftMessageContent = draftSelectedEmbed?.data ? extractMessageContent(draftSelectedEmbed.data) : null;
   const draftMessageProfile = draftSelectedEmbed?.data ? extractMessageProfile(draftSelectedEmbed.data) : null;
   const draftHasMessageProfile = Boolean(draftMessageProfile?.name || draftMessageProfile?.avatar_url);
   const draftButtonStyle = DISCORD_BUTTON_STYLE[draftButtonColor] ?? DISCORD_BUTTON_STYLE.Grey;
-  let draftEmbedPreviewContent = (
-    <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
-      {draftEmbedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
-    </div>
-  );
-  if (isEmbedsLoading) {
-    draftEmbedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
-  } else if (draftEmbedPreviews.length > 0 || Boolean(draftMessageContent) || draftHasMessageProfile) {
-    draftEmbedPreviewContent = (
-      <DiscordMessagePreview
-        profile={draftMessageProfile}
-        content={draftMessageContent}
-        embeds={draftEmbedPreviews}
-      />
-    );
-  }
-  const orderedDraftButtons = orderButtonsForPreview(draftButtons);
-  let draftButtonsPreviewContent = <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>;
-  if (isPanelLoading) {
-    draftButtonsPreviewContent = (
-      <div className="flex flex-wrap gap-2">
-        {PREVIEW_BUTTON_SKELETON_KEYS.map((key) => (
-          <Skeleton key={key} className="h-8 w-28 rounded-md bg-white/10" />
-        ))}
-      </div>
-    );
-  } else if (orderedDraftButtons.length > 0) {
-    draftButtonsPreviewContent = (
-      <div className="flex flex-wrap gap-2">
-        {orderedDraftButtons.map(type => {
-          const meta = BUTTON_META[type] ?? { label: type, emoji: "🔘", desc: "" };
-          return (
-            <button
-              key={type}
-              className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", draftButtonStyle)}
-            >
-              <span>{meta.emoji}</span>
-              <span>{meta.label}</span>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
+  const draftEmbedPreviewContent = buildEmbedPreviewContent({
+    isEmbedsLoading,
+    embedName: draftEmbedName,
+    embedPreviews: draftEmbedPreviews,
+    messageContent: draftMessageContent,
+    messageProfile: draftMessageProfile,
+    hasMessageProfile: draftHasMessageProfile,
+    previewEmbedNoDataText: t("previewEmbedNoData"),
+    previewNoEmbedText: t("previewNoEmbed"),
+  });
+  const draftButtonsPreviewContent = buildButtonsPreviewContent({
+    isPanelLoading,
+    selectedButtons: draftButtons,
+    buttonStyle: draftButtonStyle,
+    previewNoButtonsText: t("previewNoButtons"),
+  });
   const isWelcomeChannelResolving = isChannelsLoading || isPanelLoading;
   const isWelcomeSelectionResolved =
     welcomeChannel === "" ||

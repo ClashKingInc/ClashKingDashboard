@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 function normalizePanelResponseJson(raw: string): string {
-  return raw.replace(/("welcome_channel"\s*:\s*)(\d{15,})/g, '$1"$2"');
+  return raw.replaceAll(/("welcome_channel"\s*:\s*)(\d{15,})/g, '$1"$2"');
 }
 
 function normalizePanelRequestJson(raw: string): string {
-  return raw.replace(/("welcome_channel"\s*:\s*)"(\d{15,})"/g, '$1$2');
+  return raw.replaceAll(/("welcome_channel"\s*:\s*)"(\d{15,})"/g, '$1$2');
 }
 
 export async function GET(
