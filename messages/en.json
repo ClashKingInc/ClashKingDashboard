@@ -2427,6 +2427,7 @@
     "profileSection": "Profile",
     "profileName": "Name",
     "profileAvatarUrl": "Avatar URL",
+    "profileUnsupportedWarning": "Warning: the bot currently does not support updating this profile.",
     "import": "Import",
     "importError": "Invalid Discohook URL.",
     "colorSection": "Color",
@@ -2729,4 +2730,6 @@
     "goHome": "Go to Home"
   }
 }
+
+
 
