@@ -49,7 +49,8 @@ export function ChannelCombobox({
   const t = useTranslations("Common")
   const [open, setOpen] = React.useState(false)
 
-  const selectedChannel = channels.find((channel) => channel.id === value)
+  const selectedChannel = channels.find((channel) => String(channel.id) === String(value))
+  const isDisabledValue = value === "disabled"
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -67,6 +68,8 @@ export function ChannelCombobox({
         >
           {selectedChannel ? (
             <span className="truncate">#{selectedChannel.name}</span>
+          ) : isDisabledValue ? (
+            t("disabled") || "Disabled"
           ) : (
             placeholder
           )}
@@ -110,7 +113,7 @@ export function ChannelCombobox({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === channel.id ? "opacity-100" : "opacity-0"
+                      String(value) === String(channel.id) ? "opacity-100" : "opacity-0"
                     )}
                   />
                   <div className="flex flex-col">

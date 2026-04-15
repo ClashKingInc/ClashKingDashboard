@@ -9,6 +9,14 @@ import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
@@ -64,6 +72,11 @@ function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
   return [];
 }
 
+function normalizeWelcomeChannelForApi(value: string): string | null {
+  if (!value || value === "disabled") return null;
+  return value;
+}
+
 const BUTTON_SKELETON_KEYS = BUTTON_TYPES.map((type) => `${type}-skeleton`);
 const COLOR_SKELETON_KEYS = BUTTON_COLORS.map((color) => `${color}-skeleton`);
 const PREVIEW_BUTTON_SKELETON_KEYS = ["preview-button-1", "preview-button-2", "preview-button-3"];
@@ -83,12 +96,17 @@ export default function PanelsPage() {
   const [isEmbedsLoading, setIsEmbedsLoading] = useState(true);
   const [isChannelsLoading, setIsChannelsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isSavingWelcomeChannel, setIsSavingWelcomeChannel] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   // Form state
   const [embedName, setEmbedName] = useState<string>("");
   const [buttons, setButtons] = useState<string[]>([]);
   const [buttonColor, setButtonColor] = useState<ButtonColor>("Grey");
   const [welcomeChannel, setWelcomeChannel] = useState<string>("");
+  const [draftEmbedName, setDraftEmbedName] = useState<string>("");
+  const [draftButtons, setDraftButtons] = useState<string[]>([]);
+  const [draftButtonColor, setDraftButtonColor] = useState<ButtonColor>("Grey");
 
   // Supporting data
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
@@ -166,24 +184,74 @@ export default function PanelsPage() {
     load();
   }, [load]);
 
-  const toggleButton = (type: string) => {
-    setButtons(prev =>
+  const toggleDraftButton = (type: string) => {
+    setDraftButtons(prev =>
       prev.includes(type) ? prev.filter(b => b !== type) : [...prev, type]
     );
+  };
+
+  const orderButtonsForPreview = (selectedButtons: string[]) => {
+    const knownOrdered = BUTTON_TYPES.filter((type) => selectedButtons.includes(type));
+    const unknown = selectedButtons.filter((type) => !BUTTON_TYPES.includes(type as (typeof BUTTON_TYPES)[number]));
+    return [...knownOrdered, ...unknown];
+  };
+
+  const openEditDialog = () => {
+    setDraftEmbedName(embedName);
+    setDraftButtons(buttons);
+    setDraftButtonColor(buttonColor);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleWelcomeChannelChange = async (nextChannel: string) => {
+    const previousChannel = welcomeChannel;
+    setWelcomeChannel(nextChannel);
+    setIsSavingWelcomeChannel(true);
+
+    try {
+      const res = await apiClient.panels.updatePanel(guildId, {
+        embed_name: embedName || null,
+        buttons,
+        button_color: buttonColor,
+        welcome_channel: normalizeWelcomeChannelForApi(nextChannel),
+      });
+
+      if (res.error) throw new Error(res.error);
+      apiCache.invalidate(panelCacheKey);
+      toast({
+        title: tCommon("success"),
+        description: !nextChannel || nextChannel === "disabled"
+          ? t("welcomeAutosaveDisabled")
+          : t("welcomeAutosaveSuccess"),
+      });
+    } catch (err) {
+      setWelcomeChannel(previousChannel);
+      toast({
+        title: tCommon("error"),
+        description: err instanceof Error ? err.message : tCommon("loadError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSavingWelcomeChannel(false);
+    }
   };
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
       const res = await apiClient.panels.updatePanel(guildId, {
-        embed_name: embedName || null,
-        buttons,
-        button_color: buttonColor,
-        welcome_channel: welcomeChannel ? Number.parseInt(welcomeChannel, 10) : null,
+        embed_name: draftEmbedName || null,
+        buttons: draftButtons,
+        button_color: draftButtonColor,
+        welcome_channel: normalizeWelcomeChannelForApi(welcomeChannel),
       });
       if (res.error) throw new Error(res.error);
+      setEmbedName(draftEmbedName);
+      setButtons(draftButtons);
+      setButtonColor(draftButtonColor);
       apiCache.invalidate(panelCacheKey);
       toast({ title: tCommon("success"), description: t("saved") });
+      setIsEditDialogOpen(false);
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
@@ -198,7 +266,6 @@ export default function PanelsPage() {
   const messageProfile = selectedEmbed?.data ? extractMessageProfile(selectedEmbed.data) : null;
   const hasMessageProfile = Boolean(messageProfile?.name || messageProfile?.avatar_url);
   const buttonStyle = DISCORD_BUTTON_STYLE[buttonColor] ?? DISCORD_BUTTON_STYLE.Grey;
-  const resolvedWelcomeChannelName = channels.find(c => c.id === welcomeChannel)?.name;
   let embedPreviewContent = (
     <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
       {embedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
@@ -216,6 +283,7 @@ export default function PanelsPage() {
     );
   }
 
+  const orderedButtons = orderButtonsForPreview(buttons);
   let buttonsPreviewContent = <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>;
   if (isPanelLoading) {
     buttonsPreviewContent = (
@@ -225,11 +293,11 @@ export default function PanelsPage() {
         ))}
       </div>
     );
-  } else if (buttons.length > 0) {
+  } else if (orderedButtons.length > 0) {
     buttonsPreviewContent = (
       <div className="flex flex-wrap gap-2">
-        {buttons.map(type => {
-          const meta = BUTTON_META[type];
+        {orderedButtons.map(type => {
+          const meta = BUTTON_META[type] ?? { label: type, emoji: "🔘", desc: "" };
           return (
             <button
               key={type}
@@ -243,15 +311,68 @@ export default function PanelsPage() {
       </div>
     );
   }
-  const welcomeAutoPostText = t("welcomeAutoPost", {
-    channel: `#${resolvedWelcomeChannelName ?? welcomeChannel}`
-  });
+  const draftSelectedEmbed = embeds.find(e => e.name === draftEmbedName);
+  const draftEmbedPreviews = draftSelectedEmbed?.data ? extractEmbeds(draftSelectedEmbed.data) : [];
+  const draftMessageContent = draftSelectedEmbed?.data ? extractMessageContent(draftSelectedEmbed.data) : null;
+  const draftMessageProfile = draftSelectedEmbed?.data ? extractMessageProfile(draftSelectedEmbed.data) : null;
+  const draftHasMessageProfile = Boolean(draftMessageProfile?.name || draftMessageProfile?.avatar_url);
+  const draftButtonStyle = DISCORD_BUTTON_STYLE[draftButtonColor] ?? DISCORD_BUTTON_STYLE.Grey;
+  let draftEmbedPreviewContent = (
+    <div className="rounded border border-dashed border-white/20 p-4 text-center text-xs text-white/40">
+      {draftEmbedName ? t("previewEmbedNoData") : t("previewNoEmbed")}
+    </div>
+  );
+  if (isEmbedsLoading) {
+    draftEmbedPreviewContent = <Skeleton className="h-40 w-full rounded-md" />;
+  } else if (draftEmbedPreviews.length > 0 || Boolean(draftMessageContent) || draftHasMessageProfile) {
+    draftEmbedPreviewContent = (
+      <DiscordMessagePreview
+        profile={draftMessageProfile}
+        content={draftMessageContent}
+        embeds={draftEmbedPreviews}
+      />
+    );
+  }
+  const orderedDraftButtons = orderButtonsForPreview(draftButtons);
+  let draftButtonsPreviewContent = <div className="text-xs text-white/30 italic">{t("previewNoButtons")}</div>;
+  if (isPanelLoading) {
+    draftButtonsPreviewContent = (
+      <div className="flex flex-wrap gap-2">
+        {PREVIEW_BUTTON_SKELETON_KEYS.map((key) => (
+          <Skeleton key={key} className="h-8 w-28 rounded-md bg-white/10" />
+        ))}
+      </div>
+    );
+  } else if (orderedDraftButtons.length > 0) {
+    draftButtonsPreviewContent = (
+      <div className="flex flex-wrap gap-2">
+        {orderedDraftButtons.map(type => {
+          const meta = BUTTON_META[type] ?? { label: type, emoji: "🔘", desc: "" };
+          return (
+            <button
+              key={type}
+              className={cn("flex items-center gap-1.5 rounded px-4 py-1.5 text-sm font-medium transition-colors pointer-events-none", draftButtonStyle)}
+            >
+              <span>{meta.emoji}</span>
+              <span>{meta.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+  const isWelcomeChannelResolving = isChannelsLoading || isPanelLoading;
+  const isWelcomeSelectionResolved =
+    welcomeChannel === "" ||
+    welcomeChannel === "disabled" ||
+    channels.some((channel) => String(channel.id) === String(welcomeChannel));
+  const shouldShowWelcomeChannelSkeleton = isWelcomeChannelResolving || !isWelcomeSelectionResolved;
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
       <div className="mx-auto max-w-6xl space-y-6">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
           <div className="flex items-start gap-3">
             <div className="rounded-lg border border-primary/20 bg-primary/10 p-3">
               <LayoutTemplate className="h-8 w-8 text-primary" />
@@ -261,141 +382,11 @@ export default function PanelsPage() {
               <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
             </div>
           </div>
-          <Button onClick={handleSave} disabled={isSaving || isPanelLoading} className="shrink-0">
-            {isSaving
-              ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              : <Save className="mr-2 h-4 w-4" />}
-            {tCommon("save")}
-          </Button>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.25fr]">
-          {/* ── Left: config ── */}
+          {/* ── Left: welcome channel ── */}
           <div className="space-y-6">
-
-            {/* Embed */}
-            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
-              <div>
-                <h2 className="text-sm font-semibold">{t("embedSection")}</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">{t("embedHint")}</p>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">{t("embedLabel")}</Label>
-                {isEmbedsLoading ? (
-                  <Skeleton className="h-9 w-full" />
-                ) : (
-                  <select
-                    value={embedName}
-                    onChange={e => setEmbedName(e.target.value)}
-                    className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  >
-                    <option value="">{t("noEmbed")}</option>
-                    {embeds.map(e => (
-                      <option key={e.name} value={e.name}>{e.name}</option>
-                    ))}
-                  </select>
-                )}
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
-              <div>
-                <h2 className="text-sm font-semibold">{t("buttonsSection")}</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">{t("buttonsHint")}</p>
-              </div>
-              {isPanelLoading ? (
-                <div className="space-y-2">
-                  {BUTTON_SKELETON_KEYS.map((key) => (
-                    <div
-                      key={key}
-                      className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3"
-                    >
-                      <Skeleton className="h-4 w-4 rounded-sm" />
-                      <Skeleton className="h-5 w-5 rounded-sm" />
-                      <div className="flex-1 min-w-0 space-y-1">
-                        <Skeleton className="h-[18px] w-28" />
-                        <Skeleton className="h-3.5 w-52 max-w-full" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {BUTTON_TYPES.map(type => {
-                    const meta = BUTTON_META[type];
-                    const active = buttons.includes(type);
-                    return (
-                      <label
-                        key={type}
-                        className={cn(
-                          "flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors",
-                          active
-                            ? "border-primary/50 bg-primary/5"
-                            : "border-border/60 hover:bg-accent/40"
-                        )}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={active}
-                          onChange={() => toggleButton(type)}
-                          className="h-4 w-4 rounded accent-primary"
-                        />
-                        <span className="text-lg">{meta.emoji}</span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium">{meta.label}</p>
-                          <p className="text-xs text-muted-foreground">{meta.desc}</p>
-                        </div>
-                      </label>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {/* Color */}
-            <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
-              <div>
-                <h2 className="text-sm font-semibold">{t("colorSection")}</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">{t("colorHint")}</p>
-              </div>
-              {isPanelLoading ? (
-                <div className="flex gap-3">
-                  {COLOR_SKELETON_KEYS.map((key) => (
-                    <Skeleton key={key} className="h-[72px] w-[74px] rounded-lg" />
-                  ))}
-                </div>
-              ) : (
-                <div className="flex gap-3">
-                  {BUTTON_COLORS.map(color => (
-                    <button
-                      key={color}
-                      onClick={() => setButtonColor(color)}
-                      className={cn(
-                        "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
-                        buttonColor === color
-                          ? "border-primary bg-primary/10 ring-2 ring-primary/40"
-                          : "border-transparent hover:border-border"
-                      )}
-                    >
-                      {buttonColor === color && (
-                        <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
-                      )}
-                      <div
-                        className={cn(
-                          "h-6 w-10 rounded",
-                          COLOR_SWATCH[color],
-                          buttonColor === color && "ring-2 ring-background/70"
-                        )}
-                      />
-                      <span className="text-xs font-medium">{t(`color.${color}`)}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Welcome channel */}
             <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
               <div>
                 <h2 className="text-sm font-semibold">{t("welcomeSection")}</h2>
@@ -403,21 +394,29 @@ export default function PanelsPage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">{t("welcomeChannel")}</Label>
-                <div className="relative">
-                  <ChannelCombobox
-                    channels={channels}
-                    value={welcomeChannel}
-                    onValueChange={setWelcomeChannel}
-                    placeholder={t("welcomeChannelPlaceholder")}
-                    showDisabled={false}
-                    disabled={isChannelsLoading}
-                    className={cn(isChannelsLoading && "opacity-0")}
-                  />
-                  {isChannelsLoading && (
-                    <Skeleton className="pointer-events-none absolute inset-0 h-9 w-full rounded-md border border-border bg-secondary" />
+                <div className="relative h-9">
+                  {!shouldShowWelcomeChannelSkeleton && (
+                    <ChannelCombobox
+                      channels={channels}
+                      value={welcomeChannel}
+                      onValueChange={handleWelcomeChannelChange}
+                      placeholder={t("welcomeChannelPlaceholder")}
+                      showDisabled
+                      disabled={isSavingWelcomeChannel}
+                    />
+                  )}
+                  {shouldShowWelcomeChannelSkeleton && (
+                    <Skeleton className="pointer-events-none absolute inset-0 h-full w-full rounded-md border border-border bg-secondary" />
                   )}
                 </div>
               </div>
+              <Button
+                onClick={openEditDialog}
+                disabled={isPanelLoading || isEmbedsLoading}
+                className="w-full sm:w-auto"
+              >
+                {t("editPanelButton")}
+              </Button>
             </div>
           </div>
 
@@ -440,19 +439,168 @@ export default function PanelsPage() {
                 </div>
               </div>
 
-              {/* Welcome channel info */}
-              {welcomeChannel && (
-                <div className="rounded-lg border border-border/60 bg-muted/30 px-4 py-3 text-xs text-muted-foreground min-h-10 flex items-center">
-                  {isChannelsLoading ? (
-                    <Skeleton className="h-3.5 w-56 max-w-full" />
-                  ) : (
-                    welcomeAutoPostText
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>
+
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="bg-card border-border max-w-6xl w-[97vw] h-[92vh] overflow-hidden p-0">
+            <DialogHeader className="border-b border-border px-6 pt-5 pb-4">
+              <DialogTitle>{t("editDialogTitle")}</DialogTitle>
+              <DialogDescription>{t("editDialogDescription")}</DialogDescription>
+            </DialogHeader>
+
+            <div className="grid h-full min-h-0 grid-cols-1 gap-6 overflow-y-auto p-6 lg:grid-cols-[1fr_1.25fr]">
+              <div className="space-y-6">
+                <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
+                  <div>
+                    <h2 className="text-sm font-semibold">{t("embedSection")}</h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("embedHint")}</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">{t("embedLabel")}</Label>
+                    {isEmbedsLoading ? (
+                      <Skeleton className="h-9 w-full" />
+                    ) : (
+                      <select
+                        value={draftEmbedName}
+                        onChange={e => setDraftEmbedName(e.target.value)}
+                        className="w-full h-9 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <option value="">{t("noEmbed")}</option>
+                        {embeds.map(e => (
+                          <option key={e.name} value={e.name}>{e.name}</option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
+                  <div>
+                    <h2 className="text-sm font-semibold">{t("buttonsSection")}</h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("buttonsHint")}</p>
+                  </div>
+                  {isPanelLoading ? (
+                    <div className="space-y-2">
+                      {BUTTON_SKELETON_KEYS.map((key) => (
+                        <div
+                          key={key}
+                          className="flex items-center gap-3 rounded-lg border border-border/60 px-4 py-3"
+                        >
+                          <Skeleton className="h-4 w-4 rounded-sm" />
+                          <Skeleton className="h-5 w-5 rounded-sm" />
+                          <div className="flex-1 min-w-0 space-y-1">
+                            <Skeleton className="h-[18px] w-28" />
+                            <Skeleton className="h-3.5 w-52 max-w-full" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {BUTTON_TYPES.map(type => {
+                        const meta = BUTTON_META[type];
+                        const active = draftButtons.includes(type);
+                        return (
+                          <label
+                            key={type}
+                            className={cn(
+                              "flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-colors",
+                              active
+                                ? "border-primary/50 bg-primary/5"
+                                : "border-border/60 hover:bg-accent/40"
+                            )}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={active}
+                              onChange={() => toggleDraftButton(type)}
+                              className="h-4 w-4 rounded accent-primary"
+                            />
+                            <span className="text-lg">{meta.emoji}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium">{meta.label}</p>
+                              <p className="text-xs text-muted-foreground">{meta.desc}</p>
+                            </div>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4">
+                  <div>
+                    <h2 className="text-sm font-semibold">{t("colorSection")}</h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("colorHint")}</p>
+                  </div>
+                  {isPanelLoading ? (
+                    <div className="flex gap-3">
+                      {COLOR_SKELETON_KEYS.map((key) => (
+                        <Skeleton key={key} className="h-[72px] w-[74px] rounded-lg" />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex gap-3">
+                      {BUTTON_COLORS.map(color => (
+                        <button
+                          key={color}
+                          onClick={() => setDraftButtonColor(color)}
+                          className={cn(
+                            "relative flex flex-col items-center gap-1.5 rounded-lg p-3 border-2 transition-all",
+                            draftButtonColor === color
+                              ? "border-primary bg-primary/10 ring-2 ring-primary/40"
+                              : "border-transparent hover:border-border"
+                          )}
+                        >
+                          {draftButtonColor === color && (
+                            <Check className="absolute right-1.5 top-1.5 h-3.5 w-3.5 text-primary" />
+                          )}
+                          <div
+                            className={cn(
+                              "h-6 w-10 rounded",
+                              COLOR_SWATCH[color],
+                              draftButtonColor === color && "ring-2 ring-background/70"
+                            )}
+                          />
+                          <span className="text-xs font-medium">{t(`color.${color}`)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="rounded-xl border border-border/60 bg-card p-5 space-y-4 lg:sticky lg:top-0">
+                  <div>
+                    <h2 className="text-sm font-semibold">{t("previewSection")}</h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">{t("previewHint")}</p>
+                  </div>
+                  <div className="rounded-lg bg-[#313338] p-4 space-y-3">
+                    {draftEmbedPreviewContent}
+                    <div className="pl-12">
+                      {draftButtonsPreviewContent}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="border-t border-border px-6 py-4">
+              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} disabled={isSaving}>
+                {tCommon("cancel")}
+              </Button>
+              <Button onClick={handleSave} disabled={isSaving || isPanelLoading}>
+                {isSaving
+                  ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  : <Save className="mr-2 h-4 w-4" />}
+                {tCommon("save")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
