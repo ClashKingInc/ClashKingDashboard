@@ -19,7 +19,7 @@ describe("panel route", () => {
   it("forwards GET requests to the backend with the auth header", async () => {
     fetchMock.mockResolvedValue({
       status: 200,
-      json: vi.fn().mockResolvedValue({ ok: true }),
+      text: vi.fn().mockResolvedValue(JSON.stringify({ ok: true })),
     });
 
     const request = new Request("http://localhost/api/v2/server/123/panel", {
@@ -47,7 +47,7 @@ describe("panel route", () => {
   it("forwards PUT requests including the JSON body", async () => {
     fetchMock.mockResolvedValue({
       status: 202,
-      json: vi.fn().mockResolvedValue({ saved: true }),
+      text: vi.fn().mockResolvedValue(JSON.stringify({ saved: true })),
     });
 
     const request = new Request("http://localhost/api/v2/server/123/panel", {
@@ -76,6 +76,38 @@ describe("panel route", () => {
     );
     await expect(response.json()).resolves.toEqual({ saved: true });
     expect(response.status).toBe(202);
+  });
+
+  it("preserves welcome_channel precision in responses and unquotes it for backend PUT", async () => {
+    fetchMock.mockResolvedValue({
+      status: 200,
+      text: vi.fn().mockResolvedValue('{"welcome_channel":1234567890123456789,"saved":true}'),
+    });
+
+    const request = new Request("http://localhost/api/v2/server/123/panel", {
+      method: "PUT",
+      headers: {
+        authorization: "Bearer xyz",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ welcome_channel: "1234567890123456789" }),
+    });
+
+    const response = await PUT(request as any, {
+      params: Promise.resolve({ server_id: "123" }),
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8000/v2/server/123/panel",
+      expect.objectContaining({
+        method: "PUT",
+        body: '{"welcome_channel":1234567890123456789}',
+      })
+    );
+    await expect(response.json()).resolves.toEqual({
+      welcome_channel: "1234567890123456789",
+      saved: true,
+    });
   });
 
   it("returns a 500 response when the backend call fails", async () => {

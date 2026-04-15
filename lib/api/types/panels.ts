@@ -15,12 +15,12 @@ export interface ServerPanel {
   embed_name: string | null;
   buttons: string[];
   button_color: string;
-  welcome_channel: number | null;
+  welcome_channel: string | number | null;
 }
 
 export interface UpdatePanelRequest {
   embed_name: string | null;
   buttons: string[];
   button_color: string;
-  welcome_channel: number | null;
+  welcome_channel: string | null;
 }
