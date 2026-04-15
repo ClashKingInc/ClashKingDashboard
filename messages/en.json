@@ -1965,9 +1965,7 @@
     "loadingWarStats": "Almost ready..."
   },
   "LoginPage": {
-    "backToHome": "Back to Home",
-    "redirecting": "Redirecting to Discord...",
-    "redirectingDescription": "You will be redirected to Discord to complete the login process"
+    "redirecting": "Redirecting to Discord..."
   },
   "FeaturesPage": {
     "hero": {

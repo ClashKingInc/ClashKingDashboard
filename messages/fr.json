@@ -1988,9 +1988,7 @@
     "loadingWarStats": "Presque prêt..."
   },
   "LoginPage": {
-    "backToHome": "Retour à l'Accueil",
-    "redirecting": "Redirection vers Discord...",
-    "redirectingDescription": "Vous allez être redirigé vers Discord pour compléter le processus de connexion"
+    "redirecting": "Redirection vers Discord..."
   },
   "FeaturesPage": {
     "hero": {
