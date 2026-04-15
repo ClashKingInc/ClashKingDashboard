@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,13 +15,29 @@ export default function AuthCallbackPage() {
   const locale = params.locale as string;
   const [status, setStatus] = useState<"loading" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
+  const hasHandledCallbackRef = useRef(false);
 
   useEffect(() => {
+    if (hasHandledCallbackRef.current) {
+      return;
+    }
+
+    hasHandledCallbackRef.current = true;
+
     const code = searchParams.get("code");
     const errorParam = searchParams.get("error");
+    const errorDescription = searchParams.get("error_description");
 
     if (errorParam) {
-      setError(`Discord authentication failed: ${errorParam}`);
+      // User canceled the Discord authorization flow.
+      if (errorParam === "access_denied") {
+        sessionStorage.removeItem("discord_code_verifier");
+        setError("Login cancelled in Discord. Please try again when you're ready.");
+        setStatus("error");
+        return;
+      }
+
+      setError(`Discord authentication failed: ${errorDescription || errorParam}`);
       setStatus("error");
       return;
     }
