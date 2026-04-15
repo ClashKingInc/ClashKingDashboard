@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams, useParams } from "next/navigation";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTheme } from "next-themes";
 import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messages";
 import { apiClient } from "@/lib/api/client";
+import { clashKingAssets } from "@/lib/theme";
 
 export default function AuthCallbackPage() {
   const t = useTranslations("AuthCallback");
@@ -15,7 +17,13 @@ export default function AuthCallbackPage() {
   const locale = params.locale as string;
   const [status, setStatus] = useState<"loading" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const hasHandledCallbackRef = useRef(false);
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (hasHandledCallbackRef.current) {
@@ -32,18 +40,18 @@ export default function AuthCallbackPage() {
       // User canceled the Discord authorization flow.
       if (errorParam === "access_denied") {
         sessionStorage.removeItem("discord_code_verifier");
-        setError("Login cancelled in Discord. Please try again when you're ready.");
+        setError(t("errorCancelled"));
         setStatus("error");
         return;
       }
 
-      setError(`Discord authentication failed: ${errorDescription || errorParam}`);
+      setError(t("errorDiscordFailedWithReason", { reason: errorDescription || errorParam }));
       setStatus("error");
       return;
     }
 
     if (!code) {
-      setError("No authorization code received from Discord");
+      setError(t("errorNoAuthorizationCode"));
       setStatus("error");
       return;
     }
@@ -60,7 +68,7 @@ export default function AuthCallbackPage() {
         // Retrieve code_verifier from sessionStorage
         const codeVerifier = sessionStorage.getItem('discord_code_verifier');
         if (!codeVerifier) {
-          throw new Error("Code verifier not found. Please try logging in again.");
+          throw new Error(t("errorCodeVerifierMissing"));
         }
 
         // Get device ID (or generate one)
@@ -149,13 +157,13 @@ export default function AuthCallbackPage() {
         router.push(`/${locale}/servers`);
       } catch (err) {
         console.error("Authentication error:", err);
-        setError(err instanceof Error ? err.message : "Failed to authenticate with Discord");
+        setError(err instanceof Error ? err.message : t("errorAuthenticateFailed"));
         setStatus("error");
       }
     };
 
-    authenticateWithDiscord();
-  }, [searchParams, router, locale]);
+    void authenticateWithDiscord();
+  }, [searchParams, router, locale, t]);
 
   if (status === "loading") {
     return (
@@ -169,22 +177,79 @@ export default function AuthCallbackPage() {
     );
   }
 
+  const mainLogoUrl = mounted && theme === "light"
+    ? clashKingAssets.logos.whiteBgPng
+    : clashKingAssets.logos.darkBgPng;
+
+  const textLogoUrl = mounted && theme === "light"
+    ? clashKingAssets.logos.textWhiteBg
+    : clashKingAssets.logos.textDarkBg;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
-      <Card className="w-full max-w-md border-2 border-[#DC2626] bg-[#1F1F1F]/95">
-        <CardHeader className="text-center">
-          <CardTitle className="text-[#EF4444]">{t("authenticationFailed")}</CardTitle>
-          <CardDescription className="text-gray-400">{error}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center">
-          <button
-            onClick={() => router.push(`/${locale}/login`)}
-            className="px-4 py-2 bg-[#DC2626] hover:bg-[#EF4444] text-white rounded-lg transition-colors"
-          >
-            {t("tryAgain")}
-          </button>
-        </CardContent>
-      </Card>
+    <div
+      className={`flex min-h-screen items-center justify-center ${
+        mounted && theme === "light"
+          ? "bg-gradient-to-br from-gray-100 via-white to-gray-100"
+          : "bg-gradient-to-br from-gray-900 via-black to-gray-900"
+      }`}
+    >
+      <div className="w-full max-w-md px-6">
+        <div className="flex flex-col items-center">
+          <div className="w-20 h-20 rounded-none flex items-center justify-center">
+            {mounted ? (
+              <Image
+                src={mainLogoUrl}
+                alt="ClashKing Logo"
+                width={80}
+                height={80}
+                className="object-contain"
+                priority
+                style={{ width: 80, height: 80 }}
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-none animate-pulse bg-gray-700" />
+            )}
+          </div>
+
+          <div className="mt-4 h-8 flex items-center justify-center">
+            {mounted ? (
+              <Image
+                src={textLogoUrl}
+                alt="ClashKing Text"
+                width={120}
+                height={32}
+                className="object-contain"
+                priority
+                style={{ width: 120, height: 32 }}
+              />
+            ) : (
+              <div className="w-30 h-8 rounded animate-pulse bg-gray-700" />
+            )}
+          </div>
+
+          <div className="h-24" />
+
+          <div className="w-full rounded-xl border border-[#DC2626]/70 bg-[#1F1F1F]/95 p-6 text-center shadow-xl">
+            <h1 className="text-2xl font-bold text-[#EF4444]">{t("authenticationFailed")}</h1>
+            <p className="mt-3 text-sm text-gray-300">{error}</p>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={() => router.push(`/${locale}/login`)}
+                className="rounded-lg bg-[#DC2626] px-4 py-2 text-white transition-colors hover:bg-[#EF4444]"
+              >
+                {t("tryAgain")}
+              </button>
+              <button
+                onClick={() => router.push(`/${locale}`)}
+                className="rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-neutral-800"
+              >
+                {t("backToHome")}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
