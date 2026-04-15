@@ -24,7 +24,7 @@ import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile } from "@/components/dashboard/discord-embed-preview";
 import { cn } from "@/lib/utils";
 import { BUTTON_TYPES, BUTTON_COLORS } from "@/lib/api/types/panels";
-import type { ButtonColor, ServerPanel } from "@/lib/api/types/panels";
+import type { ButtonColor, ServerPanel, UpdatePanelRequest } from "@/lib/api/types/panels";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
 
 // ─── Discord button colour styles ─────────────────────────────────────────────
@@ -60,6 +60,8 @@ interface Channel {
   name: string;
   parent_name?: string;
 }
+
+type PanelUpdatePayload = UpdatePanelRequest & { button_color: ButtonColor };
 
 function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
   if (Array.isArray(payload)) return payload as ServerEmbed[];
@@ -204,6 +206,13 @@ export default function PanelsPage() {
   const [channels, setChannels] = useState<Channel[]>([]);
 
   const loaded = useRef(false);
+  const panelSnapshotRef = useRef<PanelUpdatePayload>({
+    embed_name: null,
+    buttons: [],
+    button_color: "Grey",
+    welcome_channel: null,
+  });
+  const panelUpdateQueueRef = useRef(Promise.resolve<void>(undefined));
   const panelCacheKey = `panel-${guildId}`;
   const embedsCacheKey = `panels-embeds-list-${guildId}`;
   const channelsCacheKey = dashboardCacheKeys.channels(guildId);
@@ -213,11 +222,44 @@ export default function PanelsPage() {
   }, [toast, tCommon]);
 
   const applyPanelData = useCallback((panel: ServerPanel) => {
-    setEmbedName(panel.embed_name ?? "");
-    setButtons(panel.buttons ?? []);
-    setButtonColor((panel.button_color as ButtonColor) ?? "Grey");
-    setWelcomeChannel(panel.welcome_channel ? String(panel.welcome_channel) : "");
+    const nextPayload: PanelUpdatePayload = {
+      embed_name: panel.embed_name ?? null,
+      buttons: panel.buttons ?? [],
+      button_color: (panel.button_color as ButtonColor) ?? "Grey",
+      welcome_channel: panel.welcome_channel ? String(panel.welcome_channel) : null,
+    };
+    panelSnapshotRef.current = { ...nextPayload, buttons: [...nextPayload.buttons] };
+    setEmbedName(nextPayload.embed_name ?? "");
+    setButtons(nextPayload.buttons);
+    setButtonColor(nextPayload.button_color);
+    setWelcomeChannel(nextPayload.welcome_channel ?? "");
   }, []);
+
+  const queuePanelUpdate = useCallback(
+    async (buildPayload: (snapshot: PanelUpdatePayload) => PanelUpdatePayload) => {
+      const run = async () => {
+        const nextPayload = buildPayload(panelSnapshotRef.current);
+        const requestPayload: UpdatePanelRequest = {
+          embed_name: nextPayload.embed_name,
+          buttons: nextPayload.buttons,
+          button_color: nextPayload.button_color,
+          welcome_channel: nextPayload.welcome_channel,
+        };
+        const res = await apiClient.panels.updatePanel(guildId, requestPayload);
+        if (res.error) throw new Error(res.error);
+        panelSnapshotRef.current = { ...nextPayload, buttons: [...nextPayload.buttons] };
+        apiCache.invalidate(panelCacheKey);
+      };
+
+      const queuedRun = panelUpdateQueueRef.current.then(run, run);
+      panelUpdateQueueRef.current = queuedRun.then(
+        () => undefined,
+        () => undefined
+      );
+      return queuedRun;
+    },
+    [guildId, panelCacheKey]
+  );
 
   const loadPanel = useCallback(async () => {
     try {
@@ -294,15 +336,11 @@ export default function PanelsPage() {
     setIsSavingWelcomeChannel(true);
 
     try {
-      const res = await apiClient.panels.updatePanel(guildId, {
-        embed_name: embedName || null,
-        buttons,
-        button_color: buttonColor,
-        welcome_channel: normalizeWelcomeChannelForApi(nextChannel),
-      });
-
-      if (res.error) throw new Error(res.error);
-      apiCache.invalidate(panelCacheKey);
+      const nextWelcomeChannel = normalizeWelcomeChannelForApi(nextChannel);
+      await queuePanelUpdate((snapshot) => ({
+        ...snapshot,
+        welcome_channel: nextWelcomeChannel,
+      }));
       toast({
         title: tCommon("success"),
         description: !nextChannel || nextChannel === "disabled"
@@ -324,17 +362,16 @@ export default function PanelsPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const res = await apiClient.panels.updatePanel(guildId, {
+      await queuePanelUpdate((snapshot) => ({
+        ...snapshot,
         embed_name: draftEmbedName || null,
         buttons: draftButtons,
         button_color: draftButtonColor,
         welcome_channel: normalizeWelcomeChannelForApi(welcomeChannel),
-      });
-      if (res.error) throw new Error(res.error);
+      }));
       setEmbedName(draftEmbedName);
       setButtons(draftButtons);
       setButtonColor(draftButtonColor);
-      apiCache.invalidate(panelCacheKey);
       toast({ title: tCommon("success"), description: t("saved") });
       setIsEditDialogOpen(false);
     } catch (err) {
@@ -390,11 +427,7 @@ export default function PanelsPage() {
     previewNoButtonsText: t("previewNoButtons"),
   });
   const isWelcomeChannelResolving = isChannelsLoading || isPanelLoading;
-  const isWelcomeSelectionResolved =
-    welcomeChannel === "" ||
-    welcomeChannel === "disabled" ||
-    channels.some((channel) => String(channel.id) === String(welcomeChannel));
-  const shouldShowWelcomeChannelSkeleton = isWelcomeChannelResolving || !isWelcomeSelectionResolved;
+  const shouldShowWelcomeChannelSkeleton = isWelcomeChannelResolving;
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
