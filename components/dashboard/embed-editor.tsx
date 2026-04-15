@@ -499,7 +499,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
 
           <CollapsibleSection title={t("profileSection")} open={profileOpen} onToggle={() => setProfileOpen((prev) => !prev)}>
             <div className="space-y-3">
-              <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+              <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-100">
                 {t("profileUnsupportedWarning")}
               </div>
               <Field label="">
