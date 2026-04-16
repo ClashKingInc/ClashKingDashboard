@@ -35,7 +35,7 @@ function wait(ms: number): Promise<void> {
   });
 }
 
-function waitForRetryBackoff(ms: number, signal?: AbortSignal): Promise<boolean> {
+function waitForRetryBackoff(ms: number, signal?: AbortSignal | null): Promise<boolean> {
   if (!signal) return wait(ms).then(() => true);
   if (signal.aborted) return Promise.resolve(false);
 
