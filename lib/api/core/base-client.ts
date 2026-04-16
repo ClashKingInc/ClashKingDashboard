@@ -35,6 +35,26 @@ function wait(ms: number): Promise<void> {
   });
 }
 
+function waitForRetryBackoff(ms: number, signal?: AbortSignal): Promise<boolean> {
+  if (!signal) return wait(ms).then(() => true);
+  if (signal.aborted) return Promise.resolve(false);
+
+  return new Promise((resolve) => {
+    const timeoutId = setTimeout(() => {
+      signal.removeEventListener('abort', onAbort);
+      resolve(true);
+    }, ms);
+
+    const onAbort = () => {
+      clearTimeout(timeoutId);
+      signal.removeEventListener('abort', onAbort);
+      resolve(false);
+    };
+
+    signal.addEventListener('abort', onAbort, { once: true });
+  });
+}
+
 function isAbortError(error: unknown): boolean {
   if (typeof error !== 'object' || error === null) return false;
   return 'name' in error && (error as { name?: string }).name === 'AbortError';
@@ -166,7 +186,12 @@ export class BaseApiClient {
 
     if (!canRetry) return undefined;
 
-    await wait(250 * (retryState.transientRetried + 1));
+    const shouldRetry = await waitForRetryBackoff(
+      250 * (retryState.transientRetried + 1),
+      options.signal
+    );
+    if (!shouldRetry) return undefined;
+
     return this.request<T>(endpoint, options, {
       ...retryState,
       transientRetried: retryState.transientRetried + 1,
@@ -186,7 +211,12 @@ export class BaseApiClient {
       !isAbortError(error);
     if (!canRetry) return undefined;
 
-    await wait(250 * (retryState.transientRetried + 1));
+    const shouldRetry = await waitForRetryBackoff(
+      250 * (retryState.transientRetried + 1),
+      options.signal
+    );
+    if (!shouldRetry) return undefined;
+
     return this.request<T>(endpoint, options, {
       ...retryState,
       transientRetried: retryState.transientRetried + 1,
