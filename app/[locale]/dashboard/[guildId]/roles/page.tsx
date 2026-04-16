@@ -990,7 +990,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                   ))
                 ) : (
                   roleTypes.map((type) => (
-                    <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm h-full py-2 px-1 md:px-2">
+                    <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm h-full py-2 px-1 md:px-2 whitespace-normal">
                       <type.icon className="mr-1 lg:mr-2 h-3.5 w-3.5 lg:h-4 lg:w-4 shrink-0" />
                       <span className="leading-tight">{type.label}</span>
                     </TabsTrigger>
