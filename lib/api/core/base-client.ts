@@ -35,6 +35,11 @@ function wait(ms: number): Promise<void> {
   });
 }
 
+function isAbortError(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null) return false;
+  return 'name' in error && (error as { name?: string }).name === 'AbortError';
+}
+
 export class BaseApiClient {
   protected config: ApiConfig;
 
@@ -110,7 +115,7 @@ export class BaseApiClient {
         status: response.status,
       };
     } catch (error) {
-      const transientRetry = await this._retryOnNetworkException<T>(endpoint, options, method, state);
+      const transientRetry = await this._retryOnNetworkException<T>(endpoint, options, method, state, error);
       if (transientRetry) return transientRetry;
 
       return {
@@ -172,9 +177,13 @@ export class BaseApiClient {
     endpoint: string,
     options: RequestInit,
     method: string,
-    retryState: RequestRetryState
+    retryState: RequestRetryState,
+    error: unknown
   ): Promise<ApiResponse<T> | undefined> {
-    const canRetry = method === 'GET' && retryState.transientRetried < MAX_TRANSIENT_GET_RETRIES;
+    const canRetry =
+      method === 'GET' &&
+      retryState.transientRetried < MAX_TRANSIENT_GET_RETRIES &&
+      !isAbortError(error);
     if (!canRetry) return undefined;
 
     await wait(250 * (retryState.transientRetried + 1));

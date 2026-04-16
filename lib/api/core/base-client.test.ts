@@ -317,6 +317,17 @@ describe("BaseApiClient — request", () => {
     expect(result.data).toEqual({ recovered: true });
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
+
+  it("does not retry aborted GET requests", async () => {
+    const abortError = new Error("Aborted");
+    abortError.name = "AbortError";
+    fetchMock.mockRejectedValueOnce(abortError);
+
+    const result = await client.req("/players");
+    expect(result.error).toBe("Aborted");
+    expect(result.status).toBe(0);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
 });
 
 // ─── requestFormData ─────────────────────────────────────────────────────────
