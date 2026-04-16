@@ -70,8 +70,9 @@ export class BaseApiClient {
   protected async request<T>(
     endpoint: string,
     options: RequestInit = {},
-    retryState: RequestRetryState = { authRetried: false, transientRetried: 0 }
+    retryState?: RequestRetryState
   ): Promise<ApiResponse<T>> {
+    const state = this._resolveRetryState(retryState);
     const url = `${this.config.baseUrl}${endpoint}`;
     const headers = new Headers(options.headers);
     const method = getRequestMethod(options);
@@ -80,7 +81,7 @@ export class BaseApiClient {
       headers.set('Content-Type', 'application/json');
     }
 
-    const token = await this._getToken(retryState.authRetried, endpoint.startsWith('/v2/auth/'));
+    const token = await this._getToken(state.authRetried, endpoint.startsWith('/v2/auth/'));
 
     if (token && !headers.has('Authorization')) {
       headers.set('Authorization', `Bearer ${token}`);
@@ -95,32 +96,11 @@ export class BaseApiClient {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        // Only retry on 401. A 403 is often a real permissions failure and should not trigger refresh.
-        if (
-          response.status === 401 &&
-          !retryState.authRetried &&
-          !endpoint.startsWith('/v2/auth/') &&
-          globalThis.window !== undefined
-        ) {
-          const refreshed = await this._tryRefreshToken();
-          if (refreshed) {
-            return this.request<T>(endpoint, options, {
-              ...retryState,
-              authRetried: true,
-            });
-          }
-        }
+        const authRetry = await this._retryOnUnauthorized<T>(endpoint, options, response.status, state);
+        if (authRetry) return authRetry;
 
-        if (
-          canRetryTransientError(method, response.status) &&
-          retryState.transientRetried < MAX_TRANSIENT_GET_RETRIES
-        ) {
-          await wait(250 * (retryState.transientRetried + 1));
-          return this.request<T>(endpoint, options, {
-            ...retryState,
-            transientRetried: retryState.transientRetried + 1,
-          });
-        }
+        const transientRetry = await this._retryOnTransientFailure<T>(endpoint, options, method, response.status, state);
+        if (transientRetry) return transientRetry;
 
         return { error: extractErrorMessage(data, response.status), status: response.status };
       }
@@ -130,19 +110,78 @@ export class BaseApiClient {
         status: response.status,
       };
     } catch (error) {
-      if (method === 'GET' && retryState.transientRetried < MAX_TRANSIENT_GET_RETRIES) {
-        await wait(250 * (retryState.transientRetried + 1));
-        return this.request<T>(endpoint, options, {
-          ...retryState,
-          transientRetried: retryState.transientRetried + 1,
-        });
-      }
+      const transientRetry = await this._retryOnNetworkException<T>(endpoint, options, method, state);
+      if (transientRetry) return transientRetry;
 
       return {
         error: error instanceof Error ? error.message : 'Network error',
         status: 0,
       };
     }
+  }
+
+  private _resolveRetryState(retryState?: RequestRetryState): RequestRetryState {
+    return retryState ?? { authRetried: false, transientRetried: 0 };
+  }
+
+  // A concrete ApiResponse is always truthy; undefined signals "no retry performed".
+  private async _retryOnUnauthorized<T>(
+    endpoint: string,
+    options: RequestInit,
+    status: number,
+    retryState: RequestRetryState
+  ): Promise<ApiResponse<T> | undefined> {
+    const shouldRetryAuth =
+      status === 401 &&
+      !retryState.authRetried &&
+      !endpoint.startsWith('/v2/auth/') &&
+      globalThis.window !== undefined;
+
+    if (!shouldRetryAuth) return undefined;
+
+    const refreshed = await this._tryRefreshToken();
+    if (!refreshed) return undefined;
+
+    return this.request<T>(endpoint, options, {
+      ...retryState,
+      authRetried: true,
+    });
+  }
+
+  private async _retryOnTransientFailure<T>(
+    endpoint: string,
+    options: RequestInit,
+    method: string,
+    status: number,
+    retryState: RequestRetryState
+  ): Promise<ApiResponse<T> | undefined> {
+    const canRetry =
+      canRetryTransientError(method, status) &&
+      retryState.transientRetried < MAX_TRANSIENT_GET_RETRIES;
+
+    if (!canRetry) return undefined;
+
+    await wait(250 * (retryState.transientRetried + 1));
+    return this.request<T>(endpoint, options, {
+      ...retryState,
+      transientRetried: retryState.transientRetried + 1,
+    });
+  }
+
+  private async _retryOnNetworkException<T>(
+    endpoint: string,
+    options: RequestInit,
+    method: string,
+    retryState: RequestRetryState
+  ): Promise<ApiResponse<T> | undefined> {
+    const canRetry = method === 'GET' && retryState.transientRetried < MAX_TRANSIENT_GET_RETRIES;
+    if (!canRetry) return undefined;
+
+    await wait(250 * (retryState.transientRetried + 1));
+    return this.request<T>(endpoint, options, {
+      ...retryState,
+      transientRetried: retryState.transientRetried + 1,
+    });
   }
 
   /**
