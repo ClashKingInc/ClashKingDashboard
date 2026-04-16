@@ -272,6 +272,51 @@ describe("BaseApiClient — request", () => {
     expect(result.data).toEqual({ id: 42 });
     expect(fetchMock).toHaveBeenCalledTimes(3);
   });
+
+  it("retries one time on transient 500 for GET requests", async () => {
+    fetchMock
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: vi.fn().mockResolvedValue({ detail: "Temporary upstream issue" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({ recovered: true }),
+      });
+
+    const result = await client.req("/players");
+    expect(result.data).toEqual({ recovered: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry transient 500 for non-GET requests", async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: vi.fn().mockResolvedValue({ detail: "Temporary upstream issue" }),
+    });
+
+    const result = await client.req("/players", { method: "POST" });
+    expect(result.error).toBe("Temporary upstream issue");
+    expect(result.status).toBe(500);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("retries one time on transient network failure for GET requests", async () => {
+    fetchMock
+      .mockRejectedValueOnce(new Error("Network error"))
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({ recovered: true }),
+      });
+
+    const result = await client.req("/players");
+    expect(result.data).toEqual({ recovered: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
 });
 
 // ─── requestFormData ─────────────────────────────────────────────────────────
