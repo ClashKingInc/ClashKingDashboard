@@ -986,7 +986,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 h-auto">
                 {isLoading ? (
                   Array.from({ length: roleTypes.length }).map((_, i) => (
-                    <Skeleton key={i} className="h-10 w-full animate-pulse" /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
+                    <Skeleton key={i} className="h-9 w-full rounded-md animate-pulse" /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
                   ))
                 ) : (
                   roleTypes.map((type) => (
