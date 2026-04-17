@@ -2,9 +2,9 @@
 
 This file gives repository-specific guidance for AI coding agents working in this project.
 
-## About ClashKingDashboard
+## About ClashKing Dashboard
 
-ClashKingDashboard is the web control panel for configuring ClashKing bot settings for Discord servers in a clear and user-friendly way.
+ClashKing Dashboard is the web control panel for configuring ClashKing bot settings for Discord servers in a clear and user-friendly way.
 
 ## Primary goals
 
