@@ -79,7 +79,7 @@ export function Navbar() {
             <Link href={`/help`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="text-foreground hover:text-primary transition-colors font-medium">
+            <Link href={`/support-us`} className="text-foreground hover:text-primary transition-colors font-medium">
               {t("support")}
             </Link>
           </div>
@@ -152,7 +152,7 @@ export function Navbar() {
             <Link href={`/help`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("help")}
             </Link>
-            <Link href={`/support`} className="block py-2 text-foreground hover:text-primary font-medium">
+            <Link href={`/support-us`} className="block py-2 text-foreground hover:text-primary font-medium">
               {t("support")}
             </Link>
             <div className="pt-4 space-y-2">

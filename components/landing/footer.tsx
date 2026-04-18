@@ -32,6 +32,7 @@ export function Footer() {
               width={140}
               height={40}
               className="mb-4"
+              style={{ width: "auto", height: "auto" }}
             />
             <p className="text-muted-foreground text-sm">
               {t("tagline")}
@@ -58,7 +59,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={`/support`} className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href={`/support-us`} className="text-muted-foreground hover:text-primary transition-colors">
                   {t("about.support")}
                 </Link>
               </li>

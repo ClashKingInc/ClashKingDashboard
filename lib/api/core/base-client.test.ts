@@ -272,6 +272,106 @@ describe("BaseApiClient — request", () => {
     expect(result.data).toEqual({ id: 42 });
     expect(fetchMock).toHaveBeenCalledTimes(3);
   });
+
+  it("retries one time on transient 500 for GET requests", async () => {
+    fetchMock
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: vi.fn().mockResolvedValue({ detail: "Temporary upstream issue" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({ recovered: true }),
+      });
+
+    const result = await client.req("/players");
+    expect(result.data).toEqual({ recovered: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry transient 500 for non-GET requests", async () => {
+    fetchMock.mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: vi.fn().mockResolvedValue({ detail: "Temporary upstream issue" }),
+    });
+
+    const result = await client.req("/players", { method: "POST" });
+    expect(result.error).toBe("Temporary upstream issue");
+    expect(result.status).toBe(500);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("retries one time on transient network failure for GET requests", async () => {
+    fetchMock
+      .mockRejectedValueOnce(new Error("Network error"))
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({ recovered: true }),
+      });
+
+    const result = await client.req("/players");
+    expect(result.data).toEqual({ recovered: true });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not retry aborted GET requests", async () => {
+    const abortError = new Error("Aborted");
+    abortError.name = "AbortError";
+    fetchMock.mockRejectedValueOnce(abortError);
+
+    const result = await client.req("/players");
+    expect(result.error).toBe("Aborted");
+    expect(result.status).toBe(0);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not retry transient 500 when signal aborts during backoff", async () => {
+    vi.useFakeTimers();
+    try {
+      const controller = new AbortController();
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: vi.fn().mockResolvedValue({ detail: "Temporary upstream issue" }),
+      });
+
+      const pending = client.req("/players", { signal: controller.signal });
+      await Promise.resolve();
+      controller.abort();
+      await vi.runAllTimersAsync();
+
+      const result = await pending;
+      expect(result.error).toBe("Temporary upstream issue");
+      expect(result.status).toBe(500);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("does not retry transient network error when signal aborts during backoff", async () => {
+    vi.useFakeTimers();
+    try {
+      const controller = new AbortController();
+      fetchMock.mockRejectedValueOnce(new Error("Network error"));
+
+      const pending = client.req("/players", { signal: controller.signal });
+      await Promise.resolve();
+      controller.abort();
+      await vi.runAllTimersAsync();
+
+      const result = await pending;
+      expect(result.error).toBe("Network error");
+      expect(result.status).toBe(0);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
 
 // ─── requestFormData ─────────────────────────────────────────────────────────
