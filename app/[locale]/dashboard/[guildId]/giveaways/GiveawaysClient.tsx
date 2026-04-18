@@ -929,14 +929,19 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground md:text-3xl">{title}</h1>
-            <p className="mt-1 text-muted-foreground">{description}</p>
+       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+              <Gift className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
+              <p className="text-muted-foreground mt-1">{t("description")}</p>
+            </div>
           </div>
           <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
         </div>
-
+        
         <GiveawaysMainContent
           loading={loading}
           statsLabels={statsLabels}

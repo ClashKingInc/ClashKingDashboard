@@ -346,8 +346,8 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-center gap-3">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30 w-fit">
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
             <Link className="h-8 w-8 text-primary" />
           </div>
           <div>
@@ -357,7 +357,6 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
             </p>
           </div>
         </div>
-
       {/* Statistics Cards */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Card className="bg-card border-blue-500/30 bg-blue-500/5">

@@ -660,18 +660,17 @@ export default function LogsPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center gap-4">
-          <div className="p-3 rounded-lg bg-blue-500/10 w-fit">
-            <FileText className="h-8 w-8 text-blue-500" />
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+            <FileText className="h-8 w-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('title')}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
             <p className="text-muted-foreground mt-1">
-              {t('description')}
+              {t("description")}
             </p>
           </div>
         </div>
-
         {/* Statistics Overview */}
         <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4 mb-8">
           <Card className="bg-card border-blue-500/30 bg-blue-500/5">
