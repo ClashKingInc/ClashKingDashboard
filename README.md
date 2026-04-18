@@ -260,21 +260,13 @@ The dashboard connects to ClashKingAPI endpoints. See [.claude/context.md](./.cl
 ```bash
 vercel --prod
 ```
-
-### Docker
-
-```bash
-docker build -t clashking-dashboard .
-docker run -p 3002:3002 clashking-dashboard
-```
-
 ### Environment Variables
 
 Required for production:
 
 ```bash
-NEXT_PUBLIC_API_URL=https://api.clashk.ing
-NEXT_PUBLIC_DISCORD_CLIENT_ID=your_discord_client_id
+NEXT_PUBLIC_API_URL=https://go.api.clashk.ing
+NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227
 ```
 
 ## Contributing
