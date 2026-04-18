@@ -174,11 +174,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   // Dynamic league data loaded from API
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
-  
+
   // Max levels for Town Hall and Builder Hall
   const [townHallMaxLevel, setTownHallMaxLevel] = useState<number>(18); // Fallback — update when new TH is released
   const [builderHallMaxLevel, setBuilderHallMaxLevel] = useState<number>(10); // Fallback — update when new BH is released
-  
+
   // Get building prefixes from translations
   const thPrefix = t("addRoleDialog.thPrefix");
   const bhPrefix = t("addRoleDialog.bhPrefix");
@@ -188,7 +188,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     loadLeagues();
     loadMaxLevels();
   }, [guildId, locale]);
-  
+
   const loadMaxLevels = async () => {
     try {
       // Load Town Hall max level
@@ -202,7 +202,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         const errorText = await thResponse.text();
         console.error('Failed to load Town Hall max level:', thResponse.status, thResponse.statusText, errorText);
       }
-      
+
       // Load Builder Hall max level
       const bhEncoded = encodeURIComponent('Builder Hall');
       const bhUrl = `/api/v2/static/buildings/${bhEncoded}/maxlevel`;
@@ -984,19 +984,16 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
               <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 h-auto">
-                {isLoading ? (
-                  Array.from({ length: 7 }).map((_, i) => (
-                    <Skeleton key={i} className="h-10 w-full animate-pulse" /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
-                  ))
-                ) : (
-                  roleTypes.map((type) => (
-                    <TabsTrigger key={type.value} value={type.value} className="text-xs lg:text-sm">
-                      <type.icon className="mr-1 lg:mr-2 h-3 w-3 lg:h-4 lg:w-4" />
-                      <span className="hidden sm:inline">{type.label}</span>
-                      <span className="sm:hidden">{type.label.split(' ')[0]}</span>
-                    </TabsTrigger>
-                  ))
-                )}
+                {roleTypes.map((type) => (
+                  <TabsTrigger
+                    key={type.value}
+                    value={type.value}
+                    className="text-xs lg:text-sm whitespace-normal break-words text-center leading-tight"
+                  >
+                    <type.icon className="mr-1 lg:mr-2 h-3.5 w-3.5 lg:h-4 lg:w-4 shrink-0" />
+                    <span className="leading-tight">{type.label}</span>
+                  </TabsTrigger>
+                ))}
               </TabsList>
 
               {roleTypes.map((type) => (
