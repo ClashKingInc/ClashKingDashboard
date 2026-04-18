@@ -59,12 +59,6 @@ export default function AuthCallbackPage() {
     // Exchange code for token via API
     const authenticateWithDiscord = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-        if (!apiUrl) {
-          throw new Error("API URL is not set in environment variables.");
-        }
-
         // Retrieve code_verifier from sessionStorage
         const codeVerifier = sessionStorage.getItem('discord_code_verifier');
         if (!codeVerifier) {
@@ -98,41 +92,21 @@ export default function AuthCallbackPage() {
           device_name: 'Dashboard',
         };
 
-        // Call ClashKing API to exchange code for tokens
-        const response = await fetch(`${apiUrl}/v2/auth/discord`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('API Error Response:', {
-            status: response.status,
-            statusText: response.statusText,
-            body: errorText
-          });
-          let errorData;
-          try {
-            errorData = JSON.parse(errorText);
-          } catch {
-            errorData = { detail: errorText };
-          }
-          throw new Error(errorData.detail || errorData.message || `Authentication failed: ${response.statusText}`);
+        const response = await apiClient.auth.authenticateWithDiscord(requestBody);
+        if (response.error || !response.data) {
+          throw new Error(response.error || t("errorAuthenticateFailed"));
         }
-
-        const data = await response.json();
+        const data = response.data;
 
         // Store tokens
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("refresh_token", data.refresh_token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        apiClient.setAccessToken(data.access_token);
+        apiClient.setRefreshToken(data.refresh_token);
 
         // Prefetch guilds to avoid loading screen on servers page
         try {
-          apiClient.setAccessToken(data.access_token);
           const guildsResponse = await apiClient.servers.getGuilds();
           if (guildsResponse.data) {
             // Sort guilds: servers with bot first, then by name
