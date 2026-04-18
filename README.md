@@ -202,23 +202,23 @@ API Docs: http://localhost:8000/docs
 - **Privacy** (`/privacy`) - Privacy policy page
 - **Support** (`/support`) - Support page
 - **Terms** (`/terms`) - Terms and conditions page
-- **Dashboard Overview** (`/[guildId]`) - Server dashboard overview
-- **Autoboards** (`/[guildId]/autoboards`) - Auto-board configuration
-- **Bans and Strikes** (`/[guildId]/bans-and-strikes`) - Ban and strike management
-- **Clan Management** (`/[guildId]/clans`) - View and configure clans
-- **Embeds** (`/[guildId]/embeds`) - Custom embed management
-- **Family Settings** (`/[guildId]/family-settings`) - Family-level server settings
-- **General Settings** (`/[guildId]/general`) - Core server settings
-- **Giveaways** (`/[guildId]/giveaways`) - Giveaway management
-- **Leaderboards** (`/[guildId]/leaderboards`) - Leaderboard views
-- **Links** (`/[guildId]/links`) - Player account links
-- **Logs** (`/[guildId]/logs`) - Log configuration
-- **Panels** (`/[guildId]/panels`) - Panel configuration
-- **Reminders** (`/[guildId]/reminders`) - Reminder settings
-- **Roles** (`/[guildId]/roles`) - Role configuration
-- **Rosters** (`/[guildId]/rosters`) - Roster management
-- **Tickets** (`/[guildId]/tickets`) - Ticket system settings
-- **Wars** (`/[guildId]/wars`) - War data and summaries
+- **Dashboard Overview** (`/dashboard/[guildId]`) - Server dashboard overview
+- **Autoboards** (`/dashboard/[guildId]/autoboards`) - Auto-board configuration
+- **Bans and Strikes** (`/dashboard/[guildId]/bans-and-strikes`) - Ban and strike management
+- **Clan Management** (`/dashboard/[guildId]/clans`) - View and configure clans
+- **Embeds** (`/dashboard/[guildId]/embeds`) - Custom embed management
+- **Family Settings** (`/dashboard/[guildId]/family-settings`) - Family-level server settings
+- **General Settings** (`/dashboard/[guildId]/general`) - Core server settings
+- **Giveaways** (`/dashboard/[guildId]/giveaways`) - Giveaway management
+- **Leaderboards** (`/dashboard/[guildId]/leaderboards`) - Leaderboard views
+- **Links** (`/dashboard/[guildId]/links`) - Player account links
+- **Logs** (`/dashboard/[guildId]/logs`) - Log configuration
+- **Panels** (`/dashboard/[guildId]/panels`) - Panel configuration
+- **Reminders** (`/dashboard/[guildId]/reminders`) - Reminder settings
+- **Roles** (`/dashboard/[guildId]/roles`) - Role configuration
+- **Rosters** (`/dashboard/[guildId]/rosters`) - Roster management
+- **Tickets** (`/dashboard/[guildId]/tickets`) - Ticket system settings
+- **Wars** (`/dashboard/[guildId]/wars`) - War data and summaries
 
 ### Planned Pages
 
