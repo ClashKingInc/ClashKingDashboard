@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -21,9 +21,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { AlertCircle, CalendarRange, CheckCircle2, Clock3, Copy, ExternalLink, Eye, Gift, Loader2, Pencil, Plus, RefreshCw, ShieldCheck, Sword, Trash2, Trophy, User, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -219,41 +219,6 @@ interface GiveawaysMainContentProps {
   onDelete: (id: string) => void;
   onOpenReroll: (giveaway: Giveaway) => void;
   onShowMore: () => void;
-}
-
-interface DiscordOpenPopoverProps {
-  trigger: ReactNode;
-  title: string;
-  description?: string;
-  url: string;
-  buttonLabel: string;
-}
-
-function DiscordOpenPopover({
-  trigger,
-  title,
-  description,
-  url,
-  buttonLabel,
-}: Readonly<DiscordOpenPopoverProps>) {
-  const openDiscord = () => window.open(url, "_blank", "noreferrer");
-  return (
-    <Popover>
-      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent className="w-72 p-3" align="start">
-        <div className="space-y-3">
-          <div>
-            <p className="truncate text-sm font-medium text-foreground">{title}</p>
-            {description ? <p className="mt-1 text-xs text-muted-foreground">{description}</p> : null}
-          </div>
-          <Button variant="outline" className="w-full gap-2" onClick={openDiscord}>
-            <ExternalLink className="h-4 w-4" />
-            {buttonLabel}
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
 }
 
 function GiveawaysMainContent({
@@ -585,7 +550,7 @@ function GiveawaysTable({
                         title={ch}
                         description={t("table.channel")}
                         url={`https://discord.com/channels/${guildId}/${g.channel_id}`}
-                        buttonLabel={t("table.openInDiscord")}
+                        buttonLabel={tCommon("openChannelInDiscord")}
                         trigger={(
                           <button
                             type="button"

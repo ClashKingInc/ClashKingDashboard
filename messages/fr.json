@@ -44,6 +44,7 @@
     "create": "Créer",
     "viewClashProfile": "Voir le profil Clash",
     "openInGame": "Ouvrir dans le jeu",
+    "openChannelInDiscord": "Ouvrir ce canal dans Discord",
     "playerProfile": {
       "clan": "Clan",
       "townHallLevel": "Niveau d'hotel de ville",
@@ -2153,6 +2154,7 @@
     "autoRefresh": "Actualisation Auto",
     "autoRefreshDesc": "Actualisation Auto - Mises à jour continues (30-60 min)",
     "channel": "Canal",
+    "channelDeleted": "Le canal a été supprimé.",
     "selectChannel": "Sélectionner un canal",
     "channelDesc": "Le canal où le tableau automatique sera publié",
     "boardType": "Type de Tableau",
@@ -2169,6 +2171,9 @@
     "howItWorks": "Comment Fonctionnent les Tableaux Automatiques",
     "howItWorksDesc": "Les tableaux automatiques peuvent publier de nouveaux tableaux selon un calendrier ou actualiser en continu les tableaux existants avec des données à jour. Choisissez **Publication Auto** pour créer de nouveaux tableaux quotidiennement à des jours spécifiques, ou **Actualisation Auto** pour maintenir un tableau à jour toutes les 30-60 minutes.",
     "totalAutoboards": "Total de Tableaux Automatiques",
+    "totalShort": "Total",
+    "postShort": "Post",
+    "refreshShort": "Refresh",
     "used": "utilisés",
     "scheduledBoards": "Tableaux programmés",
     "continuousUpdates": "Mises à jour continues",
@@ -2185,6 +2190,8 @@
     "tips": "💡 Astuces Tableaux Automatiques",
     "noChannels": "Aucun canal disponible",
     "activeAutoboardsCount": "{count} tableau{count, plural, one {} other {x}} automatique{count, plural, one {} other {s}} actif{count, plural, one {} other {s}}",
+    "noAutoboardsForFilter": "Aucun tableau automatique dans ce filtre",
+    "noAutoboardsForFilterDesc": "Essayez un autre filtre ou créez un nouveau tableau automatique.",
     "tipsContent": {
       "type": {
         "title": "Choisissez le bon type :",
@@ -2246,7 +2253,9 @@
       "selectDays": "Veuillez sélectionner au moins un jour pour la publication automatique",
       "createFailed": "Échec de la création du tableau automatique. Veuillez réessayer.",
       "updateFailed": "Échec de la mise à jour du tableau automatique. Veuillez réessayer.",
-      "deleteFailed": "Échec de la suppression du tableau automatique. Veuillez réessayer."
+      "deleteFailed": "Échec de la suppression du tableau automatique. Veuillez réessayer.",
+      "deleteConfirmTitle": "Supprimer ce tableau automatique ?",
+      "deleteConfirmDescription": "Voulez-vous vraiment supprimer ce tableau automatique ? Cette action est irréversible."
     }
   },
   "TicketsPage": {
