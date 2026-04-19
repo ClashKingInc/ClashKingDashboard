@@ -61,11 +61,10 @@ export function PlayerProfilePopover({
     warPreferenceLabel = tCommon("playerProfile.warPreferenceOut");
   }
 
-  const clanLabel = clanName && clanTag
-    ? clanName === clanTag
-      ? clanName
-      : `${clanName} (${clanTag})`
-    : clanName ?? clanTag ?? "-";
+  let clanLabel = clanName ?? clanTag ?? "-";
+  if (clanName && clanTag && clanName !== clanTag) {
+    clanLabel = `${clanName} (${clanTag})`;
+  }
 
   return (
     <Popover>

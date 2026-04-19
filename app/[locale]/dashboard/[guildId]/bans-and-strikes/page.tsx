@@ -162,7 +162,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
         throw new Error(response.error || "Failed to fetch server clans");
       }
 
-      const clans = (response.data || []) as ServerClanListItem[];
+      const clans = response.data ?? [];
       const nextClanNameByTag = clans.reduce<Record<string, string>>((acc, clan) => {
         const normalizedTag = normalizeClanTag(clan.tag);
         if (!normalizedTag || !clan.name) {
