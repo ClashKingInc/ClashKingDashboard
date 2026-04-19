@@ -930,7 +930,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="mx-auto max-w-7xl space-y-6">
        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3">
             <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
               <Gift className="h-8 w-8 text-primary" />
             </div>

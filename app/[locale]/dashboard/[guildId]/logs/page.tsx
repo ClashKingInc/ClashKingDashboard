@@ -660,7 +660,7 @@ export default function LogsPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
             <FileText className="h-8 w-8 text-primary" />
           </div>
