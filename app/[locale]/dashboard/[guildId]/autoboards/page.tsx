@@ -473,6 +473,169 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
     return allAutoboards;
   }, [allAutoboards, boardFilter]);
 
+  const renderAutoboardsListContent = () => {
+    if (loading) {
+      return (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center gap-4 p-4 border border-border rounded-lg">
+              <Skeleton className="h-14 w-14 rounded-lg" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-5 w-48" />
+                <Skeleton className="h-4 w-64" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-8 w-20" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (allAutoboards.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">
+            {t('noAutoboards')}
+          </h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            {t('noAutoboardsDesc')}
+          </p>
+          <Button
+            onClick={() => setCreateDialogOpen(true)}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {t('createAutoboard')}
+          </Button>
+        </div>
+      );
+    }
+
+    if (filteredAutoboards.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <LayoutDashboard className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <h3 className="mb-2 text-lg font-semibold text-foreground">
+            {t('noAutoboardsForFilter')}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t('noAutoboardsForFilterDesc')}
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-3">
+        {filteredAutoboards.map((autoboard) => {
+          const channelState = getChannelState(autoboard.channel_id);
+          const channelLabel = channelState.label;
+
+          return (
+            <div
+              key={autoboard.id}
+              className="flex flex-col gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-secondary/50 md:flex-row md:items-center md:justify-between"
+            >
+              <div className="flex items-center gap-4 flex-1 w-full">
+                <div className={`p-3 rounded-lg ${autoboard.type === 'post' ? 'bg-green-500/10 border border-green-500/30' : 'bg-purple-500/10 border border-purple-500/30'}`}>
+                  {autoboard.type === 'post' ? (
+                    <Calendar className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <RefreshCw className="h-5 w-5 text-purple-500" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-foreground">
+                      {getBoardTypeName(autoboard.board_type)}
+                    </h3>
+                    <Badge
+                      variant={autoboard.type === 'post' ? 'default' : 'secondary'}
+                      className={autoboard.type === 'post' ? 'cursor-default bg-green-600 text-white hover:bg-green-600 hover:text-white' : 'cursor-default bg-purple-600 text-white hover:bg-purple-600 hover:text-white'}
+                    >
+                      {autoboard.type === 'post' ? t('autoPost') : t('autoRefresh')}
+                    </Badge>
+                  </div>
+                  {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('postsOn')} {autoboard.days.map(d => getDayLabel(d)).join(', ')}
+                    </p>
+                  )}
+                  {autoboard.type === 'refresh' && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('updatesEvery')}
+                    </p>
+                  )}
+                  {channelLabel && autoboard.channel_id && (
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <span>{t('channel')}:</span>
+                      <DiscordOpenPopover
+                        title={channelLabel}
+                        description={t('channel')}
+                        url={`https://discord.com/channels/${guildId}/${autoboard.channel_id}`}
+                        buttonLabel={tCommon('openChannelInDiscord')}
+                        trigger={(
+                          <button
+                            type="button"
+                            className="max-w-[260px] truncate text-left text-sm text-muted-foreground transition-colors hover:text-foreground"
+                          >
+                            {channelLabel}
+                          </button>
+                        )}
+                      />
+                    </div>
+                  )}
+                  {!channelLabel && channelState.isDeleted && autoboard.channel_id && (
+                    <div className="flex items-center gap-1 text-sm">
+                      <span className="text-muted-foreground">{t('channel')}:</span>
+                      <span className="font-medium text-orange-500">{t('channelDeleted')}</span>
+                    </div>
+                  )}
+                  {autoboard.created_at && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('created')} {new Date(autoboard.created_at).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="order-first flex items-center gap-2 self-start md:order-none md:self-auto">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => openEditDialog(autoboard)}
+                  className="text-primary hover:text-primary hover:bg-primary/10"
+                >
+                  <Pencil className="w-4 h-4 mr-1" />
+                  {t('edit')}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setDeleteConfirmId(autoboard.id)}
+                  disabled={deleting === autoboard.id}
+                  className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                >
+                  {deleting === autoboard.id ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      {t('remove')}
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -973,154 +1136,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
           </Tabs>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4 p-4 border border-border rounded-lg">
-                  <Skeleton className="h-14 w-14 rounded-lg" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-5 w-48" />
-                    <Skeleton className="h-4 w-64" />
-                  </div>
-                  <div className="flex gap-2">
-                    <Skeleton className="h-8 w-16" />
-                    <Skeleton className="h-8 w-20" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : allAutoboards.length === 0 ? (
-            <div className="text-center py-12">
-              <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">
-                {t('noAutoboards')}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t('noAutoboardsDesc')}
-              </p>
-              <Button
-                onClick={() => setCreateDialogOpen(true)}
-                className="bg-primary hover:bg-primary/90"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                {t('createAutoboard')}
-              </Button>
-            </div>
-          ) : filteredAutoboards.length === 0 ? (
-            <div className="text-center py-12">
-              <LayoutDashboard className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-              <h3 className="mb-2 text-lg font-semibold text-foreground">
-                {t('noAutoboardsForFilter')}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {t('noAutoboardsForFilterDesc')}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {filteredAutoboards.map((autoboard) => {
-                const channelState = getChannelState(autoboard.channel_id);
-                const channelLabel = channelState.label;
-
-                return (
-                  <div
-                    key={autoboard.id}
-                    className="flex flex-col gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-secondary/50 md:flex-row md:items-center md:justify-between"
-                  >
-                    <div className="flex items-center gap-4 flex-1 w-full">
-                      <div className={`p-3 rounded-lg ${autoboard.type === 'post' ? 'bg-green-500/10 border border-green-500/30' : 'bg-purple-500/10 border border-purple-500/30'}`}>
-                        {autoboard.type === 'post' ? (
-                          <Calendar className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <RefreshCw className="h-5 w-5 text-purple-500" />
-                        )}
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-foreground">
-                            {getBoardTypeName(autoboard.board_type)}
-                          </h3>
-                          <Badge
-                            variant={autoboard.type === 'post' ? 'default' : 'secondary'}
-                            className={autoboard.type === 'post' ? 'cursor-default bg-green-600 text-white hover:bg-green-600 hover:text-white' : 'cursor-default bg-purple-600 text-white hover:bg-purple-600 hover:text-white'}
-                          >
-                            {autoboard.type === 'post' ? t('autoPost') : t('autoRefresh')}
-                          </Badge>
-                        </div>
-                        {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
-                          <p className="text-sm text-muted-foreground">
-                            {t('postsOn')} {autoboard.days.map(d => getDayLabel(d)).join(', ')}
-                          </p>
-                        )}
-                        {autoboard.type === 'refresh' && (
-                          <p className="text-sm text-muted-foreground">
-                            {t('updatesEvery')}
-                          </p>
-                        )}
-                        {channelLabel && autoboard.channel_id && (
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <span>{t('channel')}:</span>
-                            <DiscordOpenPopover
-                              title={channelLabel}
-                              description={t('channel')}
-                              url={`https://discord.com/channels/${guildId}/${autoboard.channel_id}`}
-                              buttonLabel={tCommon('openChannelInDiscord')}
-                              trigger={(
-                                <button
-                                  type="button"
-                                  className="max-w-[260px] truncate text-left text-sm text-muted-foreground transition-colors hover:text-foreground"
-                                >
-                                  {channelLabel}
-                                </button>
-                              )}
-                            />
-                          </div>
-                        )}
-                        {!channelLabel && channelState.isDeleted && autoboard.channel_id && (
-                          <div className="flex items-center gap-1 text-sm">
-                            <span className="text-muted-foreground">{t('channel')}:</span>
-                            <span className="font-medium text-orange-500">{t('channelDeleted')}</span>
-                          </div>
-                        )}
-                        {autoboard.created_at && (
-                          <p className="text-xs text-muted-foreground">
-                            {t('created')} {new Date(autoboard.created_at).toLocaleDateString()}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="order-first flex items-center gap-2 self-start md:order-none md:self-auto">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => openEditDialog(autoboard)}
-                        className="text-primary hover:text-primary hover:bg-primary/10"
-                      >
-                        <Pencil className="w-4 h-4 mr-1" />
-                        {t('edit')}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setDeleteConfirmId(autoboard.id)}
-                        disabled={deleting === autoboard.id}
-                        className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                      >
-                        {deleting === autoboard.id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <>
-                            <Trash2 className="w-4 h-4 mr-1" />
-                            {t('remove')}
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          {renderAutoboardsListContent()}
         </CardContent>
       </Card>
 
