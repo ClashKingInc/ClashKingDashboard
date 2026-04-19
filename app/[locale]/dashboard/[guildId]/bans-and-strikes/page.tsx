@@ -55,7 +55,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
-import type { BannedPlayer, ServerClanListItem, Strike } from "@/lib/api/types/server";
+import type { BannedPlayer, Strike } from "@/lib/api/types/server";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function BansPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
