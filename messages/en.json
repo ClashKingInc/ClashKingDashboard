@@ -44,6 +44,7 @@
     "create": "Create",
     "viewClashProfile": "View Clash profile",
     "openInGame": "Open in game",
+    "openChannelInDiscord": "Open this channel in Discord",
     "playerProfile": {
       "clan": "Clan",
       "townHallLevel": "Town Hall level",
@@ -2130,6 +2131,7 @@
     "autoRefresh": "Auto Refresh",
     "autoRefreshDesc": "Auto Refresh - Continuous updates (30-60 min)",
     "channel": "Channel",
+    "channelDeleted": "Channel was deleted.",
     "selectChannel": "Select a channel",
     "channelDesc": "The channel where the autoboard will be posted",
     "boardType": "Board Type",
@@ -2146,6 +2148,9 @@
     "howItWorks": "How AutoBoards Work",
     "howItWorksDesc": "AutoBoards can automatically post new boards on a schedule or continuously refresh existing boards with up-to-date data. Choose **Auto Post** to create new boards daily at specific days, or **Auto Refresh** to keep a board updated every 30-60 minutes.",
     "totalAutoboards": "Total AutoBoards",
+    "totalShort": "Total",
+    "postShort": "Post",
+    "refreshShort": "Refresh",
     "used": "used",
     "scheduledBoards": "Scheduled boards",
     "continuousUpdates": "Continuous updates",
@@ -2162,6 +2167,8 @@
     "tips": "💡 AutoBoard Tips",
     "noChannels": "No channels available",
     "activeAutoboardsCount": "{count} active autoboard{count, plural, one {} other {s}}",
+    "noAutoboardsForFilter": "No AutoBoards in this filter",
+    "noAutoboardsForFilterDesc": "Try another filter or create a new AutoBoard.",
     "tipsContent": {
       "type": {
         "title": "Choose the right type:",
@@ -2223,7 +2230,9 @@
       "selectDays": "Please select at least one day for auto-post",
       "createFailed": "Failed to create autoboard. Please try again.",
       "updateFailed": "Failed to update autoboard. Please try again.",
-      "deleteFailed": "Failed to delete autoboard. Please try again."
+      "deleteFailed": "Failed to delete autoboard. Please try again.",
+      "deleteConfirmTitle": "Remove AutoBoard?",
+      "deleteConfirmDescription": "Are you sure you want to remove this AutoBoard? This action cannot be undone."
     }
   },
   "TicketsPage": {
