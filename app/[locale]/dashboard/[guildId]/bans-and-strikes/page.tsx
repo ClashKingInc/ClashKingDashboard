@@ -55,7 +55,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
-import type { BannedPlayer, Strike } from "@/lib/api/types/server";
+import type { BannedPlayer, ServerClanListItem, Strike } from "@/lib/api/types/server";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function BansPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
@@ -92,12 +92,28 @@ export default function BansPage() { // NOSONAR — React page component: comple
   const [activeTab, setActiveTab] = useState("bans");
   const [strikeViewMode, setStrikeViewMode] = useState<"grouped" | "all">("grouped");
   const [expandedPlayerTags, setExpandedPlayerTags] = useState<string[]>([]);
+  const [clanNameByTag, setClanNameByTag] = useState<Record<string, string>>({});
 
   // Fetch bans and strikes on mount
   useEffect(() => {
     fetchBans();
     fetchStrikes();
+    fetchServerClans();
   }, [guildId]);
+
+  const normalizeClanTag = (tag?: string | null) => {
+    if (!tag) return "";
+    const trimmed = tag.trim().toUpperCase();
+    if (!trimmed) return "";
+    return trimmed.startsWith("#") ? trimmed : `#${trimmed}`;
+  };
+
+  const resolveClanName = (clanName?: string | null, clanTag?: string | null) => {
+    if (clanName) return clanName;
+    const normalizedTag = normalizeClanTag(clanTag);
+    if (!normalizedTag) return null;
+    return clanNameByTag[normalizedTag] ?? null;
+  };
 
   const fetchBans = async () => {
     try {
@@ -130,6 +146,35 @@ export default function BansPage() { // NOSONAR — React page component: comple
       });
     } finally {
       setIsLoadingBans(false);
+    }
+  };
+
+  const fetchServerClans = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      const response = await apiCache.get(`server-clans-${guildId}`, async () => {
+        return await apiClient.servers.getServerClans(guildId);
+      });
+
+      if (response.error) {
+        throw new Error(response.error || "Failed to fetch server clans");
+      }
+
+      const clans = (response.data || []) as ServerClanListItem[];
+      const nextClanNameByTag = clans.reduce<Record<string, string>>((acc, clan) => {
+        const normalizedTag = normalizeClanTag(clan.tag);
+        if (!normalizedTag || !clan.name) {
+          return acc;
+        }
+        acc[normalizedTag] = clan.name;
+        return acc;
+      }, {});
+
+      setClanNameByTag(nextClanNameByTag);
+    } catch (error) {
+      console.error("Error fetching server clans:", error);
     }
   };
 
@@ -402,6 +447,9 @@ export default function BansPage() { // NOSONAR — React page component: comple
         acc[tag] = {
           tag: tag,
           player_name: strike.player_name,
+          clan_name: strike.clan_name,
+          town_hall: strike.town_hall,
+          trophies: strike.trophies,
           total_weight: 0,
           count: 0,
           last_strike: strike.date_created,
@@ -418,6 +466,9 @@ export default function BansPage() { // NOSONAR — React page component: comple
     }, {} as Record<string, {
       tag: string,
       player_name?: string,
+      clan_name?: string | null,
+      town_hall?: number | null,
+      trophies?: number | null,
       total_weight: number,
       count: number,
       last_strike: string,
@@ -693,8 +744,12 @@ export default function BansPage() { // NOSONAR — React page component: comple
                             <TableRow key={`${ban.VillageTag}-${index}`}>
                               <TableCell>
                                 <PlayerProfilePopover
-                                  playerName={ban.VillageName || ban.name || tCommon("unknown")}
+                                  playerName={ban.name || ban.VillageName || tCommon("unknown")}
                                   playerTag={ban.VillageTag}
+                                  clanName={resolveClanName(ban.clan_name, ban.clan_tag)}
+                                  clanTag={ban.clan_tag ?? null}
+                                  townhallLevel={ban.town_hall ?? null}
+                                  trophies={ban.trophies ?? null}
                                 />
                               </TableCell>
                             <TableCell className="max-w-xs">
@@ -1056,6 +1111,10 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                   <PlayerProfilePopover
                                     playerName={strike.player_name || tCommon("unknown")}
                                     playerTag={strike.tag}
+                                    clanName={resolveClanName(strike.clan_name, strike.clan_tag)}
+                                    clanTag={strike.clan_tag ?? null}
+                                    townhallLevel={strike.town_hall ?? null}
+                                    trophies={strike.trophies ?? null}
                                   />
                                 </TableCell>
                               <TableCell className="max-w-xs">
@@ -1134,6 +1193,10 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                       <PlayerProfilePopover
                                         playerName={group.player_name || tCommon("unknown")}
                                         playerTag={group.tag}
+                                        clanName={resolveClanName(group.clan_name, group.strikes[0]?.clan_tag)}
+                                        clanTag={group.strikes[0]?.clan_tag ?? null}
+                                        townhallLevel={group.town_hall ?? null}
+                                        trophies={group.trophies ?? null}
                                       />
                                     </TableCell>
                                     <TableCell className="text-center">

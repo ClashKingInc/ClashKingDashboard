@@ -43,7 +43,18 @@
     "tryAgain": "Opnieuw proberen",
     "create": "Aanmaken",
     "viewClashProfile": "Bekijk Clash-profiel",
-    "openInGame": "Open in game"
+    "openInGame": "Open in game",
+    "playerProfile": {
+      "clan": "Clan",
+      "townHallLevel": "Stadhuis niveau",
+      "trophies": "Trofeeen",
+      "warPreference": "Oorlogsvoorkeur",
+      "warPreferenceIn": "In",
+      "warPreferenceOut": "Uit",
+      "signupGroup": "Aanmeldingsgroep",
+      "heroLevels": "Heldenniveaus",
+      "hitrate30d": "30 dagen trefferscore"
+    }
   },
   "Navigation": {
     "features": "Functies",
@@ -2241,11 +2252,13 @@
     "cleanup": "Opschonen",
     "transcript": "Transcript",
     "missingChannel": "Kanaal verwijderd",
+    "missingChannelCleanup": "Kanaal verwijderd, opschonen vereist",
     "openInDiscord": "Openen in Discord",
     "table": {
       "number": "#",
       "panel": "Paneel",
       "user": "Gebruikers-ID",
+      "category": "Categorie",
       "clan": "Clan",
       "account": "Account",
       "actions": "Acties"

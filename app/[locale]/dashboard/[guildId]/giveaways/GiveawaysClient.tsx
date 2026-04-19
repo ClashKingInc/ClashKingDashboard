@@ -488,6 +488,7 @@ function GiveawaysTable({
             key={w.user_id}
             userId={w.user_id}
             username={w.username}
+            avatarUrl={w.avatar_url}
             size="sm"
             triggerContent={(
               <button

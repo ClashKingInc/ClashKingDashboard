@@ -43,7 +43,18 @@
     "tryAgain": "Réessayer",
     "create": "Créer",
     "viewClashProfile": "Voir le profil Clash",
-    "openInGame": "Ouvrir dans le jeu"
+    "openInGame": "Ouvrir dans le jeu",
+    "playerProfile": {
+      "clan": "Clan",
+      "townHallLevel": "Niveau d'hotel de ville",
+      "trophies": "Trophees",
+      "warPreference": "Preference de guerre",
+      "warPreferenceIn": "Inclus",
+      "warPreferenceOut": "Exclu",
+      "signupGroup": "Groupe d'inscription",
+      "heroLevels": "Niveaux des heros",
+      "hitrate30d": "Taux de reussite sur 30 jours"
+    }
   },
   "Navigation": {
     "features": "Fonctionnalités",
@@ -2261,11 +2272,13 @@
     "cleanup": "Nettoyer",
     "transcript": "Transcription",
     "missingChannel": "Salon supprimé",
+    "missingChannelCleanup": "Salon supprimé, nettoyage requis",
     "openInDiscord": "Ouvrir dans Discord",
     "table": {
       "number": "#",
       "panel": "Panneau",
       "user": "ID utilisateur",
+      "category": "Catégorie",
       "clan": "Clan",
       "account": "Compte",
       "actions": "Actions"

@@ -77,6 +77,8 @@ export interface OpenTicket {
   number: number;
   apply_account: string | null;
   panel: string;
+  category_id: string | null;
+  category_name: string | null;
   set_clan: string | null;
   linked_accounts?: LinkedAccount[] | null;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ExternalLink } from "lucide-react";
@@ -10,6 +10,7 @@ interface PlayerProfilePopoverProps {
   playerName: string;
   playerTag: string;
   clanName?: string | null;
+  clanTag?: string | null;
   townhallLevel?: number | null;
   trophies?: number | null;
   warPreference?: boolean | null;
@@ -30,6 +31,7 @@ export function PlayerProfilePopover({
   playerName,
   playerTag,
   clanName,
+  clanTag,
   townhallLevel,
   trophies,
   warPreference,
@@ -41,8 +43,10 @@ export function PlayerProfilePopover({
   showTagInTrigger = true,
 }: Readonly<PlayerProfilePopoverProps>) {
   const tCommon = useTranslations("Common");
+  const locale = useLocale();
   const hasDetails =
     clanName !== undefined ||
+    clanTag !== undefined ||
     townhallLevel !== undefined ||
     trophies !== undefined ||
     warPreference !== undefined ||
@@ -52,10 +56,16 @@ export function PlayerProfilePopover({
 
   let warPreferenceLabel = "-";
   if (warPreference === true) {
-    warPreferenceLabel = "In";
+    warPreferenceLabel = tCommon("playerProfile.warPreferenceIn");
   } else if (warPreference === false) {
-    warPreferenceLabel = "Out";
+    warPreferenceLabel = tCommon("playerProfile.warPreferenceOut");
   }
+
+  const clanLabel = clanName && clanTag
+    ? clanName === clanTag
+      ? clanName
+      : `${clanName} (${clanTag})`
+    : clanName ?? clanTag ?? "-";
 
   return (
     <Popover>
@@ -79,15 +89,15 @@ export function PlayerProfilePopover({
           </div>
           {hasDetails && (
             <div className="space-y-1.5 text-xs">
-              {clanName !== undefined && (
+              {(clanName !== undefined || clanTag !== undefined) && (
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">Clan</span>
-                  <span className="text-foreground truncate">{clanName ?? "-"}</span>
+                  <span className="text-muted-foreground">{tCommon("playerProfile.clan")}</span>
+                  <span className="text-foreground truncate">{clanLabel}</span>
                 </div>
               )}
               {townhallLevel !== undefined && (
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">Stadhuis niveau</span>
+                  <span className="text-muted-foreground">{tCommon("playerProfile.townHallLevel")}</span>
                   {townhallLevel == null ? (
                     <span className="text-foreground">-</span>
                   ) : (
@@ -104,33 +114,33 @@ export function PlayerProfilePopover({
               )}
               {trophies !== undefined && (
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">Trofeeen</span>
+                  <span className="text-muted-foreground">{tCommon("playerProfile.trophies")}</span>
                   <span className="text-foreground">{trophies == null ? "-" : trophies.toLocaleString()}</span>
                 </div>
               )}
               {warPreference !== undefined && (
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">Oorlogsvoorkeur</span>
+                  <span className="text-muted-foreground">{tCommon("playerProfile.warPreference")}</span>
                   <span className="text-foreground">{warPreferenceLabel}</span>
                 </div>
               )}
               {signupGroup !== undefined && (
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">Aanmeldingsgroep</span>
+                  <span className="text-muted-foreground">{tCommon("playerProfile.signupGroup")}</span>
                   <span className="text-foreground">{signupGroup ?? "-"}</span>
                 </div>
               )}
               {heroLevels !== undefined && (
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">Heldenniveaus</span>
+                  <span className="text-muted-foreground">{tCommon("playerProfile.heroLevels")}</span>
                   <span className="text-foreground">{heroLevels ?? "-"}</span>
                 </div>
               )}
               {hitrate !== undefined && (
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-muted-foreground">30 dagen trefferscore</span>
+                  <span className="text-muted-foreground">{tCommon("playerProfile.hitrate30d")}</span>
                   <span className="text-foreground">
-                    {hitrate == null ? "-" : `${new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 2 }).format(hitrate)}%`}
+                    {hitrate == null ? "-" : `${new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(hitrate)}%`}
                   </span>
                 </div>
               )}
