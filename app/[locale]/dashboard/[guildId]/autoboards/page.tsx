@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -415,6 +415,18 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   const getBoardTypeName = (boardType: string): string => {
     return BOARD_TYPES[boardType as keyof typeof BOARD_TYPES] || boardType; // NOSONAR — non-null assertion guards against null safely in context
   };
+
+  const channelById = useMemo(
+    () => new Map(channels.map((channel) => [channel.id, channel])),
+    [channels],
+  );
+
+  const getChannelLabel = useCallback((channelId: string | null): string | null => {
+    if (!channelId) return null;
+    const channel = channelById.get(channelId);
+    if (!channel) return channelId;
+    return channel.parent_name ? `${channel.parent_name} / #${channel.name}` : `#${channel.name}`;
+  }, [channelById]);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -943,6 +955,11 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
                         {autoboard.type === 'refresh' && (
                           <p className="text-sm text-muted-foreground">
                             {t('updatesEvery')}
+                          </p>
+                        )}
+                        {autoboard.channel_id && (
+                          <p className="text-sm text-muted-foreground">
+                            {t('channel')}: {getChannelLabel(autoboard.channel_id)}
                           </p>
                         )}
                         {autoboard.created_at && (

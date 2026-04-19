@@ -92,8 +92,11 @@ export interface BannedPlayer {
   DateCreated: string;
   server: number;
   rollover_date?: number | null;
+  town_hall?: number | null;
+  trophies?: number | null;
   clan_tag?: string | null;
   clan_name?: string | null;
+  current_role?: string | null;
   image_url?: string;
   edited_by?: Array<{
     user: number | string; // Can be string to preserve precision for large Discord IDs
@@ -140,6 +143,11 @@ export interface Strike {
   rollover_date?: number;
   image?: string;
   player_name?: string;
+  town_hall?: number | null;
+  trophies?: number | null;
+  clan_tag?: string | null;
+  clan_name?: string | null;
+  current_role?: string | null;
 }
 
 /**
@@ -210,6 +218,7 @@ export interface GiveawayBooster {
 export interface GiveawayWinner {
   user_id: string;
   username: string | null;
+  avatar_url?: string | null;
   status: 'winner' | 'rerolled';
   timestamp: string | null;
   reason: string | null;

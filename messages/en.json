@@ -43,7 +43,18 @@
     "tryAgain": "Try again",
     "create": "Create",
     "viewClashProfile": "View Clash profile",
-    "openInGame": "Open in game"
+    "openInGame": "Open in game",
+    "playerProfile": {
+      "clan": "Clan",
+      "townHallLevel": "Town Hall level",
+      "trophies": "Trophies",
+      "warPreference": "War preference",
+      "warPreferenceIn": "In",
+      "warPreferenceOut": "Out",
+      "signupGroup": "Signup group",
+      "heroLevels": "Hero levels",
+      "hitrate30d": "30 day hit rate"
+    }
   },
   "Navigation": {
     "features": "Features",
@@ -2238,11 +2249,13 @@
     "cleanup": "Cleanup",
     "transcript": "Transcript",
     "missingChannel": "Channel deleted",
+    "missingChannelCleanup": "Channel deleted, cleanup required",
     "openInDiscord": "Open in Discord",
     "table": {
       "number": "#",
       "panel": "Panel",
       "user": "User ID",
+      "category": "Category",
       "clan": "Clan",
       "account": "Account",
       "actions": "Actions"

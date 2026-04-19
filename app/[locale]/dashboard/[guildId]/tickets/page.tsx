@@ -476,7 +476,7 @@ function TicketManageDialog({
 // ─── Tickets tab ─────────────────────────────────────────────────────────────
 
 type StatusFilter = "all" | "open" | "sleep" | "closed";
-type TicketSortKey = "number" | "panel" | "status" | "user" | "clan" | "account";
+type TicketSortKey = "number" | "panel" | "status" | "user" | "category" | "clan" | "account";
 type SortDirection = "asc" | "desc";
 
 const STATUS_BADGE_CLASS: Record<string, string> = {
@@ -551,6 +551,7 @@ function TicketsTab({
 
   const [allTickets, setAllTickets] = useState<OpenTicket[]>([]);
   const [clans, setClans] = useState<ServerClanListItem[]>([]);
+  const [categoryNameById, setCategoryNameById] = useState<Record<string, string>>({});
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("open");
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -568,13 +569,15 @@ function TicketsTab({
     if (forceRefresh) {
       apiCache.invalidate(ticketsCacheKey);
       apiCache.invalidate(clansCacheKey);
+      apiCache.invalidate(getServerChannelsCacheKey(guildId));
     }
 
     return apiCache.get(ticketsCacheKey, async () => {
-      const [response, statusResponses, clansResponse] = await Promise.all([
+      const [response, statusResponses, clansResponse, channelsResponse] = await Promise.all([
         apiClient.tickets.getOpenTickets(guildId),
         Promise.allSettled(ticketStatusQueries.map((status) => apiClient.tickets.getOpenTickets(guildId, status))),
         apiCache.get(clansCacheKey, () => apiClient.servers.getServerClans(guildId)),
+        apiCache.get(getServerChannelsCacheKey(guildId), () => apiClient.servers.getChannels(guildId)),
       ]);
 
       if (clansResponse.error) throw new Error(clansResponse.error);
@@ -597,6 +600,8 @@ function TicketsTab({
           discord_display_name: pickFirstNonEmptyText(incoming.discord_display_name, existing.discord_display_name),
           discord_avatar_url: pickFirstNonEmptyText(incoming.discord_avatar_url, existing.discord_avatar_url),
           apply_account: pickFirstNonEmptyText(incoming.apply_account, existing.apply_account),
+          category_id: pickFirstNonEmptyText(incoming.category_id, existing.category_id),
+          category_name: pickFirstNonEmptyText(incoming.category_name, existing.category_name),
           linked_accounts: mergedLinkedAccounts,
         };
       };
@@ -658,9 +663,16 @@ function TicketsTab({
         };
       });
 
+      const categoryNames = Object.fromEntries(
+        normalizeTicketChannels(channelsResponse.data)
+          .filter(isCategoryChannel)
+          .map((channel) => [channel.id, channel.name] as const),
+      );
+
       return {
         tickets: mergedTickets,
         clans: clansResponse.data ?? [],
+        categoryNames,
       };
     });
   };
@@ -673,6 +685,7 @@ function TicketsTab({
       const data = await fetchTicketsData(isRefresh);
       setAllTickets(data.tickets);
       setClans(data.clans);
+      setCategoryNameById(data.categoryNames);
     } catch (err) {
       toast({
         title: tCommon("error"),
@@ -733,6 +746,10 @@ function TicketsTab({
     closed: allTickets.filter((t) => t.status === "closed" || t.status === "delete").length,
   };
   const clanByTag = useMemo(() => new Map(clans.map((clan) => [clan.tag, clan])), [clans]);
+  const getTicketCategoryLabel = useCallback(
+    (ticket: OpenTicket): string => ticket.category_name ?? (ticket.category_id ? categoryNameById[ticket.category_id] : undefined) ?? ticket.category_id ?? "",
+    [categoryNameById],
+  );
 
   const displayed = useMemo(() => {
     const filtered =
@@ -777,6 +794,12 @@ function TicketsTab({
           compare = userA.localeCompare(userB, undefined, { sensitivity: "base" });
           break;
         }
+        case "category": {
+          const categoryA = getTicketCategoryLabel(a);
+          const categoryB = getTicketCategoryLabel(b);
+          compare = categoryA.localeCompare(categoryB, undefined, { sensitivity: "base" });
+          break;
+        }
         case "clan": {
           const clanA = clanByTag.get(a.set_clan ?? "")?.name ?? a.set_clan ?? "";
           const clanB = clanByTag.get(b.set_clan ?? "")?.name ?? b.set_clan ?? "";
@@ -790,7 +813,7 @@ function TicketsTab({
 
       return sortDirection === "asc" ? compare : -compare;
     });
-  }, [accountNameByTag, allTickets, clanByTag, sortDirection, sortKey, statusFilter]);
+  }, [accountNameByTag, allTickets, clanByTag, getTicketCategoryLabel, sortDirection, sortKey, statusFilter]);
 
   const handleSort = (key: TicketSortKey) => {
     if (sortKey === key) {
@@ -922,6 +945,16 @@ function TicketsTab({
                     <button
                       type="button"
                       className="inline-flex items-center gap-1 font-medium text-left"
+                      onClick={() => handleSort("category")}
+                    >
+                      {t("table.category")}
+                      {renderSortIndicator("category")}
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 font-medium text-left"
                       onClick={() => handleSort("clan")}
                     >
                       {t("table.clan")}
@@ -954,7 +987,10 @@ function TicketsTab({
                           {t(`status.${ticket.status}`)}
                         </Badge>
                         {!ticket.channel_exists && ticket.status !== "delete" && (
-                          <span title={t("missingChannel")} className="text-amber-500">
+                          <span
+                            title={t("missingChannelCleanup")}
+                            className="text-amber-500"
+                          >
                             <AlertTriangle className="h-3.5 w-3.5" />
                           </span>
                         )}
@@ -966,6 +1002,11 @@ function TicketsTab({
                         username={ticket.discord_display_name ?? ticket.discord_username}
                         avatarUrl={ticket.discord_avatar_url}
                       />
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-xs text-muted-foreground">
+                        {getTicketCategoryLabel(ticket) || "—"}
+                      </span>
                     </TableCell>
                     <TableCell>
                       {ticket.set_clan ? (
