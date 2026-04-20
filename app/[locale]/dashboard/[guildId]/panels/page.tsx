@@ -426,8 +426,7 @@ export default function PanelsPage() {
     buttonStyle: draftButtonStyle,
     previewNoButtonsText: t("previewNoButtons"),
   });
-  const isWelcomeChannelResolving = isChannelsLoading || isPanelLoading;
-  const shouldShowWelcomeChannelSkeleton = isWelcomeChannelResolving;
+  const shouldShowWelcomeChannelSkeleton = isChannelsLoading;
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">

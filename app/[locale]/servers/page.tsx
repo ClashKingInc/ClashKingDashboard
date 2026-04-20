@@ -122,6 +122,14 @@ export default function ServersPage() {
 
   const handleGuildClick = (guild: GuildInfo) => {
     if (guild.has_bot) {
+      sessionStorage.setItem(
+        "selected_guild",
+        JSON.stringify({
+          id: guild.id,
+          name: guild.name,
+          icon: getGuildIconUrl(guild) || undefined,
+        })
+      );
       router.push(`/${locale}/dashboard/${guild.id}`);
     }
   };

@@ -2101,7 +2101,7 @@
   },
   "ServersPage": {
     "title": "Selecteer een Server",
-    "description": "Kies een server om ClashKing bot instellingen te configureren",
+    "description": "Kies een server om ClashKing bot instellingen te configureren. Je moet de eigenaar of een beheerder van de Discord-server zijn.",
     "backToHome": "Terug naar Home",
     "backToLogin": "Terug naar Login",
     "error": "Fout",

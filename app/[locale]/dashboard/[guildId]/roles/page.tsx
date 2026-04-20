@@ -61,6 +61,13 @@ const ROLE_TYPES_CONFIG: Array<{ value: RoleType; icon: any }> = [
   { value: "builder_league", icon: Award },
 ];
 
+const ROLE_TYPE_COUNT_BADGE_CLASS: Record<"townhall" | "league" | "builderhall" | "builder_league", string> = {
+  townhall: "bg-blue-600",
+  league: "bg-green-600",
+  builderhall: "bg-amber-600",
+  builder_league: "bg-purple-600",
+};
+
 const BUILDER_LEAGUE_TIERS = [
   { id: "diamond", apiName: "Diamond", range: null },
   { id: "ruby", apiName: "Ruby", range: [1, 3] },
@@ -355,25 +362,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setDialogError(null);
 
       // Duplicate check before hitting the API
-      const existingRoles: any[] = allRoles[currentRoleType] || [];
-      let matchesCriterion = false;
-      let matchesExact = false;
-
-      if (currentRoleType === "townhall") {
-        matchesCriterion = existingRoles.some((r) => r.th === newRole.th);
-        matchesExact = existingRoles.some((r) => r.th === newRole.th && r.role_id === newRole.role_id);
-      } else if (currentRoleType === "league") {
-        matchesCriterion = existingRoles.some((r) => r.type === newRole.league);
-        matchesExact = existingRoles.some((r) => r.type === newRole.league && r.role_id === newRole.role_id);
-      } else if (currentRoleType === "builderhall") {
-        const normBh = (bh: any) =>
-          typeof bh === "string" ? Number.parseInt(bh.replace(/^bh/i, "")) : Number(bh);
-        matchesCriterion = existingRoles.some((r) => normBh(r.bh) === newRole.bh);
-        matchesExact = existingRoles.some((r) => normBh(r.bh) === newRole.bh && r.role_id === newRole.role_id);
-      } else if (currentRoleType === "builder_league") {
-        matchesCriterion = existingRoles.some((r) => r.type === newRole.builder_league);
-        matchesExact = existingRoles.some((r) => r.type === newRole.builder_league && r.role_id === newRole.role_id);
-      }
+      const { matchesCriterion, matchesExact } = getRoleDuplicateState();
 
       if (matchesExact) {
         setDialogError(t("addRoleDialog.errorDuplicateExact"));
@@ -443,14 +432,15 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   };
 
   const renderRoleForm = () => {
+    const duplicateExactSelected = duplicateState.matchesExact;
     switch (currentRoleType) {
       case "townhall":
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="th">{t("addRoleDialog.townHallLevel")}</Label>
+              <Label htmlFor="th">{t("addRoleDialog.townHallLevel")}<span className="ml-1 text-destructive">*</span></Label>
               <Select
-                value={newRole.th?.toString()}
+                value={newRole.th !== undefined && newRole.th !== null ? newRole.th.toString() : ""}
                 onValueChange={(value) => setNewRole({ ...newRole, th: Number.parseInt(value) })}
               >
                 <SelectTrigger id="th">
@@ -466,7 +456,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}<span className="ml-1 text-destructive">*</span></Label>
               <RoleCombobox
                 roles={discordRoles}
                 value={newRole.role_id?.toString() || ""}
@@ -474,6 +464,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 placeholder={t("addRoleDialog.selectRole")}
                 showDisabled={false}
               />
+              {duplicateExactSelected && (
+                <p className="text-xs text-destructive">{t("addRoleDialog.errorDuplicateExact")}</p>
+              )}
             </div>
           </>
         );
@@ -482,9 +475,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="league">{t("addRoleDialog.league")}</Label>
+              <Label htmlFor="league">{t("addRoleDialog.league")}<span className="ml-1 text-destructive">*</span></Label>
               <Select
-                value={newRole.league}
+                value={newRole.league ?? ""}
                 onValueChange={(value) => setNewRole({ ...newRole, league: value })}
               >
                 <SelectTrigger id="league">
@@ -500,7 +493,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}<span className="ml-1 text-destructive">*</span></Label>
               <RoleCombobox
                 roles={discordRoles}
                 value={newRole.role_id?.toString() || ""}
@@ -508,6 +501,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 placeholder={t("addRoleDialog.selectRole")}
                 showDisabled={false}
               />
+              {duplicateExactSelected && (
+                <p className="text-xs text-destructive">{t("addRoleDialog.errorDuplicateExact")}</p>
+              )}
             </div>
           </>
         );
@@ -516,9 +512,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="bh">{t("addRoleDialog.builderHallLevel")}</Label>
+              <Label htmlFor="bh">{t("addRoleDialog.builderHallLevel")}<span className="ml-1 text-destructive">*</span></Label>
               <Select
-                value={newRole.bh?.toString()}
+                value={newRole.bh !== undefined && newRole.bh !== null ? newRole.bh.toString() : ""}
                 onValueChange={(value) => setNewRole({ ...newRole, bh: Number.parseInt(value) })}
               >
                 <SelectTrigger id="bh">
@@ -534,7 +530,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}<span className="ml-1 text-destructive">*</span></Label>
               <RoleCombobox
                 roles={discordRoles}
                 value={newRole.role_id?.toString() || ""}
@@ -542,6 +538,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 placeholder={t("addRoleDialog.selectRole")}
                 showDisabled={false}
               />
+              {duplicateExactSelected && (
+                <p className="text-xs text-destructive">{t("addRoleDialog.errorDuplicateExact")}</p>
+              )}
             </div>
           </>
         );
@@ -550,9 +549,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         return (
           <>
             <div className="space-y-2">
-              <Label htmlFor="builder_league">{t("addRoleDialog.builderLeague")}</Label>
+              <Label htmlFor="builder_league">{t("addRoleDialog.builderLeague")}<span className="ml-1 text-destructive">*</span></Label>
               <Select
-                value={newRole.builder_league}
+                value={newRole.builder_league ?? ""}
                 onValueChange={(value) => setNewRole({ ...newRole, builder_league: value })}
               >
                 <SelectTrigger id="builder_league">
@@ -568,7 +567,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="role">{t("addRoleDialog.discordRole")}</Label>
+              <Label htmlFor="role">{t("addRoleDialog.discordRole")}<span className="ml-1 text-destructive">*</span></Label>
               <RoleCombobox
                 roles={discordRoles}
                 value={newRole.role_id?.toString() || ""}
@@ -576,6 +575,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 placeholder={t("addRoleDialog.selectRole")}
                 showDisabled={false}
               />
+              {duplicateExactSelected && (
+                <p className="text-xs text-destructive">{t("addRoleDialog.errorDuplicateExact")}</p>
+              )}
             </div>
           </>
         );
@@ -702,12 +704,39 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const activeRoleTypes = Object.entries(allRoles).filter(([_, roles]: [string, any]) => roles.length > 0).length;
   const totalRoleTypes = 4; // townhall, league, builderhall, builder_league
 
+  const getRoleDuplicateState = () => {
+    const existingRoles: any[] = allRoles[currentRoleType] || [];
+    let matchesCriterion = false;
+    let matchesExact = false;
+
+    if (currentRoleType === "townhall") {
+      matchesCriterion = existingRoles.some((r) => r.th === newRole.th);
+      matchesExact = existingRoles.some((r) => r.th === newRole.th && r.role_id === newRole.role_id);
+    } else if (currentRoleType === "league") {
+      matchesCriterion = existingRoles.some((r) => r.type === newRole.league);
+      matchesExact = existingRoles.some((r) => r.type === newRole.league && r.role_id === newRole.role_id);
+    } else if (currentRoleType === "builderhall") {
+      const normBh = (bh: any) =>
+        typeof bh === "string" ? Number.parseInt(bh.replace(/^bh/i, "")) : Number(bh);
+      matchesCriterion = existingRoles.some((r) => normBh(r.bh) === newRole.bh);
+      matchesExact = existingRoles.some((r) => normBh(r.bh) === newRole.bh && r.role_id === newRole.role_id);
+    } else if (currentRoleType === "builder_league") {
+      matchesCriterion = existingRoles.some((r) => r.type === newRole.builder_league);
+      matchesExact = existingRoles.some((r) => r.type === newRole.builder_league && r.role_id === newRole.role_id);
+    }
+
+    return { matchesCriterion, matchesExact };
+  };
+
+  const duplicateState = getRoleDuplicateState();
+
   const hasChanged = roleSettings.auto_eval_status !== originalRoleSettings.auto_eval_status ||
     roleSettings.auto_eval_nickname !== originalRoleSettings.auto_eval_nickname;
 
   const isAddRoleDisabled = () => {
     const hasRole = !!newRole.role_id;
     if (!hasRole) return true;
+    if (duplicateState.matchesExact) return true;
 
     switch (currentRoleType) {
       case "townhall": return !newRole.th;
@@ -933,7 +962,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                   </DialogHeader>
                   <div className="space-y-4 py-4">
                     <div className="space-y-2">
-                      <Label htmlFor="role-type">{t("addRoleDialog.roleType")}</Label>
+                      <Label htmlFor="role-type">{t("addRoleDialog.roleType")}<span className="ml-1 text-destructive">*</span></Label>
                       <Select
                         value={currentRoleType}
                         onValueChange={(value) => {
@@ -983,15 +1012,20 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="townhall" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 h-auto">
+              <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
                 {roleTypes.map((type) => (
                   <TabsTrigger
                     key={type.value}
                     value={type.value}
-                    className="text-xs lg:text-sm whitespace-normal break-words text-center leading-tight"
+                    className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
                   >
-                    <type.icon className="mr-1 lg:mr-2 h-3.5 w-3.5 lg:h-4 lg:w-4 shrink-0" />
-                    <span className="leading-tight">{type.label}</span>
+                    <type.icon className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{type.label}</span>
+                    <span
+                      className={`inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] px-1 text-[11px] font-semibold leading-none text-white shadow-sm ${ROLE_TYPE_COUNT_BADGE_CLASS[type.value as "townhall" | "league" | "builderhall" | "builder_league"]}`}
+                    >
+                      {isLoading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : (allRoles[type.value]?.length ?? 0)}
+                    </span>
                   </TabsTrigger>
                 ))}
               </TabsList>

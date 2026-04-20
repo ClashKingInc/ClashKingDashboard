@@ -47,18 +47,24 @@ export function BotStats() {
         fetchBotInfo();
     }, []);
 
-    const isOnline = !isLoading && botInfo;
-    const statusStyles = isOnline
+    const isOnline = Boolean(!isLoading && botInfo);
+    const statusStyles = isLoading
         ? {
-            iconBg: "bg-green-500/10",
-            iconColor: "text-green-500",
-            badgeBg: "bg-green-500 hover:bg-green-600"
+            iconBg: "bg-muted",
+            iconColor: "text-muted-foreground/60",
+            badgeBg: "",
         }
-        : {
-            iconBg: "bg-red-500/10",
-            iconColor: "text-red-500",
-            badgeBg: "bg-red-500 hover:bg-red-600"
-        };
+        : isOnline
+            ? {
+                iconBg: "bg-green-500/10",
+                iconColor: "text-green-500",
+                badgeBg: "bg-green-500 hover:bg-green-600"
+            }
+            : {
+                iconBg: "bg-red-500/10",
+                iconColor: "text-red-500",
+                badgeBg: "bg-red-500 hover:bg-red-600"
+            };
 
     return (
         <>
@@ -101,9 +107,13 @@ export function BotStats() {
                 </CardHeader>
                 <CardContent className="min-h-[84px]">
                     <div className="flex items-center gap-2">
-                        <Badge className={statusStyles.badgeBg}>
-                            {isLoading ? "..." : isOnline ? t("online") : t("offline") /* NOSONAR — JSX nested ternary for multi-branch display state */}
-                        </Badge>
+                        {isLoading ? (
+                            <Skeleton className="h-6 w-20 rounded-full animate-pulse" />
+                        ) : (
+                            <Badge className={statusStyles.badgeBg}>
+                                {isOnline ? t("online") : t("offline")}
+                            </Badge>
+                        )}
                     </div>
                     <div className="mt-2 min-h-[40px] space-y-1">
                         {isLoading ? (

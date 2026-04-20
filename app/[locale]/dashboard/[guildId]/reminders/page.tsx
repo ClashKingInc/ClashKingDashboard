@@ -658,6 +658,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   }
 
   const currentReminders = getCurrentReminders();
+  const getVisibleCount = (items: ReminderConfig[]) => (
+    selectedClan === "all" ? items.length : items.filter((reminder) => reminder.clan_tag === selectedClan).length
+  );
+  const warReminderCount = getVisibleCount(reminders.war_reminders);
+  const capitalReminderCount = getVisibleCount(reminders.capital_reminders);
+  const gamesReminderCount = getVisibleCount(reminders.clan_games_reminders);
+  const inactivityReminderCount = getVisibleCount(reminders.inactivity_reminders);
 
   return (
       <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
@@ -793,50 +800,34 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-[800px] h-auto">
-              <TabsTrigger value="war" className="gap-2">
-                <Target className="h-4 w-4" />
-                {t('tabs.war')}
-                {reminders.war_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-red-500/20 text-red-500">
-                      {selectedClan === "all"
-                          ? reminders.war_reminders.length
-                          : reminders.war_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
+              <TabsTrigger value="war" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Target className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.war')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-red-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : warReminderCount}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="capital" className="gap-2">
-                <Castle className="h-4 w-4" />
-                {t('tabs.capital')}
-                {reminders.capital_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-purple-500/20 text-purple-500">
-                      {selectedClan === "all"
-                          ? reminders.capital_reminders.length
-                          : reminders.capital_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+              <TabsTrigger value="capital" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Castle className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.capital')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-purple-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : capitalReminderCount}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="games" className="gap-2">
-                <Calendar className="h-4 w-4" />
-                {t('tabs.clanGames')}
-                {reminders.clan_games_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-green-500/20 text-green-500">
-                      {selectedClan === "all"
-                          ? reminders.clan_games_reminders.length
-                          : reminders.clan_games_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+              <TabsTrigger value="games" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Calendar className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.clanGames')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : gamesReminderCount}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="inactivity" className="gap-2">
-                <UserX className="h-4 w-4" />
-                {t('tabs.inactivity')}
-                {reminders.inactivity_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-orange-500/20 text-orange-500">
-                      {selectedClan === "all"
-                          ? reminders.inactivity_reminders.length
-                          : reminders.inactivity_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+              <TabsTrigger value="inactivity" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <UserX className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.inactivity')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-orange-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : inactivityReminderCount}
+                </span>
               </TabsTrigger>
             </TabsList>
 
