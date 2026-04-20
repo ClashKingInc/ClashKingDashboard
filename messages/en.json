@@ -2098,7 +2098,7 @@
   },
   "ServersPage": {
     "title": "Select a Server",
-    "description": "Choose a server to configure ClashKing bot settings",
+    "description": "Choose a server to configure ClashKing bot settings. You must be the Discord server owner or an administrator.",
     "backToHome": "Back to Home",
     "backToLogin": "Back to Login",
     "error": "Error",

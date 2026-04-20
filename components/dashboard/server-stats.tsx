@@ -151,13 +151,15 @@ export function ServerStats({ guildId }: ServerStatsProps) {
             <div className="rounded-full bg-primary/10 p-2">{card.icon}</div>
           </CardHeader>
           <CardContent className="min-h-[84px]">
-            {isLoading ? (
-              <Skeleton className="h-8 w-20 animate-pulse mb-1" />
-            ) : (
-              <div className="text-2xl font-bold text-foreground">
-                {card.value.toLocaleString()}
-              </div>
-            )}
+            <div className="mb-1 flex h-8 items-center">
+              {isLoading ? (
+                <Skeleton className="h-8 w-20 animate-pulse" />
+              ) : (
+                <div className="text-2xl font-bold text-foreground">
+                  {card.value.toLocaleString()}
+                </div>
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">{card.desc}</p>
           </CardContent>
         </Card>

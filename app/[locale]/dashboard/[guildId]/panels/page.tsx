@@ -186,6 +186,7 @@ export default function PanelsPage() {
   const { toast } = useToast();
 
   const [isPanelLoading, setIsPanelLoading] = useState(true);
+  const [isPanelSnapshotInitialized, setIsPanelSnapshotInitialized] = useState(false);
   const [isEmbedsLoading, setIsEmbedsLoading] = useState(true);
   const [isChannelsLoading, setIsChannelsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -233,6 +234,7 @@ export default function PanelsPage() {
     setButtons(nextPayload.buttons);
     setButtonColor(nextPayload.button_color);
     setWelcomeChannel(nextPayload.welcome_channel ?? "");
+    setIsPanelSnapshotInitialized(true);
   }, []);
 
   const queuePanelUpdate = useCallback(
@@ -271,6 +273,9 @@ export default function PanelsPage() {
 
       if (panelRes.data) {
         applyPanelData(panelRes.data);
+      } else {
+        // No panel configured yet; treat the default snapshot as initialized.
+        setIsPanelSnapshotInitialized(true);
       }
     } catch {
       showLoadError();
@@ -331,6 +336,10 @@ export default function PanelsPage() {
   };
 
   const handleWelcomeChannelChange = async (nextChannel: string) => {
+    if (isPanelLoading || !isPanelSnapshotInitialized) {
+      return;
+    }
+
     const previousChannel = welcomeChannel;
     setWelcomeChannel(nextChannel);
     setIsSavingWelcomeChannel(true);
@@ -341,11 +350,12 @@ export default function PanelsPage() {
         ...snapshot,
         welcome_channel: nextWelcomeChannel,
       }));
+      const autosaveDescription = !nextChannel || nextChannel === "disabled"
+        ? t("welcomeAutosaveDisabled")
+        : t("welcomeAutosaveSuccess");
       toast({
         title: tCommon("success"),
-        description: !nextChannel || nextChannel === "disabled"
-          ? t("welcomeAutosaveDisabled")
-          : t("welcomeAutosaveSuccess"),
+        description: autosaveDescription,
       });
     } catch (err) {
       setWelcomeChannel(previousChannel);
@@ -426,8 +436,7 @@ export default function PanelsPage() {
     buttonStyle: draftButtonStyle,
     previewNoButtonsText: t("previewNoButtons"),
   });
-  const isWelcomeChannelResolving = isChannelsLoading || isPanelLoading;
-  const shouldShowWelcomeChannelSkeleton = isWelcomeChannelResolving;
+  const shouldShowWelcomeChannelSkeleton = isChannelsLoading || isPanelLoading || !isPanelSnapshotInitialized;
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">

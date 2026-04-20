@@ -875,7 +875,10 @@ function TicketsTab({
           <div className="space-y-1">
             <CardTitle className="text-base">{t("tabTickets")}</CardTitle>
             <CardDescription>
-              {t("showing", { count: displayed.length, total: allTickets.length })}
+              {isLoading
+                ? <Skeleton className="h-4 w-40 animate-pulse" />
+                : t("showing", { count: displayed.length, total: allTickets.length })
+              }
             </CardDescription>
           </div>
           <Button variant="outline" size="icon" onClick={() => fetchTickets(true)} disabled={isRefreshing}>

@@ -282,10 +282,25 @@ function GiveawaysMainContent({
           <CardHeader><CardTitle>{listTitle}</CardTitle><CardDescription>{listDescription}</CardDescription></CardHeader>
           <CardContent>
             <Tabs value="ongoing">
-              <TabsList className="grid w-full grid-cols-3 md:w-auto">
-                <TabsTrigger value="ongoing">{tabs.ongoing}</TabsTrigger>
-                <TabsTrigger value="upcoming">{tabs.upcoming}</TabsTrigger>
-                <TabsTrigger value="ended">{tabs.ended}</TabsTrigger>
+              <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
+                <TabsTrigger value="ongoing" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                  <span className="truncate">{tabs.ongoing}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="upcoming" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                  <span className="truncate">{tabs.upcoming}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="ended" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                  <span className="truncate">{tabs.ended}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-slate-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
+                  </span>
+                </TabsTrigger>
               </TabsList>
             </Tabs>
             <div className="mt-6 space-y-3">
@@ -337,10 +352,25 @@ function GiveawaysMainContent({
         <CardHeader><CardTitle>{t("listTitle")}</CardTitle><CardDescription>{t("listDescription")}</CardDescription></CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={onActiveTabChange}>
-            <TabsList className="grid w-full grid-cols-3 md:w-auto">
-              <TabsTrigger value="ongoing">{t("tabs.ongoing")}{giveaways.ongoing.length > 0 && <span className="ml-1.5 rounded-full bg-primary/20 px-1.5 py-0.5 text-[10px] font-semibold text-primary">{giveaways.ongoing.length}</span>}</TabsTrigger>
-              <TabsTrigger value="upcoming">{t("tabs.upcoming")}{giveaways.upcoming.length > 0 && <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-500">{giveaways.upcoming.length}</span>}</TabsTrigger>
-              <TabsTrigger value="ended">{t("tabs.ended")}{giveaways.ended.length > 0 && <span className="ml-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">{giveaways.ended.length}</span>}</TabsTrigger>
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
+              <TabsTrigger value="ongoing" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <span className="truncate">{t("tabs.ongoing")}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {giveaways.ongoing.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="upcoming" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <span className="truncate">{t("tabs.upcoming")}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {giveaways.upcoming.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="ended" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <span className="truncate">{t("tabs.ended")}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-slate-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {giveaways.ended.length}
+                </span>
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="ongoing" className="mt-6">
               <GiveawaysTable
