@@ -184,17 +184,13 @@ const getTranscriptUrl = (ticket: OpenTicket) =>
 const DEFAULT_PREVIEW_ACCENT = "#3ba55d";
 const CANCEL_BUTTON_CLASS = "!bg-black !text-white hover:!bg-zinc-900";
 const CLASHKING_RED_BUTTON_CLASS = "bg-red-600 hover:bg-red-700 text-white";
+const DEFAULT_TICKET_MESSAGE_SELECT_VALUE = "__ck_default_ticket_message__";
+const LEGACY_DISABLED_EMBED_TOKEN = "disabled";
 
 const normalizeOptionalText = (value: string | null | undefined): string | null => {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
-};
-
-const normalizeTicketMessageEmbedName = (value: string | null | undefined): string | null => {
-  const normalized = normalizeOptionalText(value);
-  if (!normalized) return null;
-  return normalized.toLowerCase() === "disabled" ? null : normalized;
 };
 
 const pickFirstNonEmptyText = (...values: Array<string | null | undefined>): string | null => {
@@ -1578,7 +1574,7 @@ const createSettingsForm = (settings: TicketButtonSettings): UpdateButtonSetting
   roles_to_add: [...(settings.roles_to_add ?? [])],
   roles_to_remove: [...(settings.roles_to_remove ?? [])],
   townhall_requirements: { ...settings.townhall_requirements },
-  new_message: normalizeTicketMessageEmbedName(settings.new_message),
+  new_message: settings.new_message ?? null,
 });
 
 const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): TicketButtonSettings => ({
@@ -1596,7 +1592,7 @@ const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): Ticket
   roles_to_add: [...form.roles_to_add],
   roles_to_remove: [...form.roles_to_remove],
   townhall_requirements: { ...form.townhall_requirements },
-  new_message: normalizeTicketMessageEmbedName(form.new_message),
+  new_message: form.new_message ?? null,
 });
 
 function ButtonCard({
@@ -1657,13 +1653,18 @@ function ButtonCard({
     setForm(createSettingsForm(latestSettings));
     setClanTagInput("");
   }, [settingsOpen, label, style, latestSettings]);
-  const embedOptions = Array.from(new Set([...(settings.new_message ? [settings.new_message] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
-  const normalizedButtonEmbedName = normalizeTicketMessageEmbedName(form.new_message);
-  const selectedButtonEmbed = embeds.find((embed) => embed.name === (normalizedButtonEmbedName ?? ""));
+  const hasEmbedNamedLegacyDisabled = embeds.some((embed) => embed.name === LEGACY_DISABLED_EMBED_TOKEN);
+  const hasLegacyDisabledToken = form.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasEmbedNamedLegacyDisabled;
+  const effectiveButtonEmbedName = hasLegacyDisabledToken ? null : (form.new_message ?? null);
+  const embedOptions = Array.from(new Set([
+    ...(settings.new_message && (settings.new_message !== LEGACY_DISABLED_EMBED_TOKEN || hasEmbedNamedLegacyDisabled) ? [settings.new_message] : []),
+    ...availableEmbeds,
+  ])).sort((a, b) => a.localeCompare(b));
+  const selectedButtonEmbed = embeds.find((embed) => embed.name === (effectiveButtonEmbedName ?? ""));
   const selectedButtonEmbedData = toEmbedDataRecord(selectedButtonEmbed?.data);
   const buttonEmbedPreviews = selectedButtonEmbedData ? extractEmbeds(selectedButtonEmbedData) : [];
   const buttonMessageContentPreview = selectedButtonEmbedData ? extractMessageContent(selectedButtonEmbedData) : null;
-  const isUsingDefaultTicketMessage = normalizedButtonEmbedName === null;
+  const isUsingDefaultTicketMessage = effectiveButtonEmbedName === null;
 
   const setField = <K extends keyof UpdateButtonSettingsRequest>(key: K, val: UpdateButtonSettingsRequest[K]) =>
     setForm((p) => ({ ...p, [key]: val }));
@@ -1716,6 +1717,14 @@ function ButtonCard({
     setIsSaving(true);
     let appearanceUpdated = false;
     const didChangeAppearance = editLabel !== label || editStyle !== style;
+    const normalizedNewMessage = form.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasEmbedNamedLegacyDisabled
+      ? null
+      : (form.new_message ?? null);
+    const payloadForm: UpdateButtonSettingsRequest = {
+      ...form,
+      new_message: normalizedNewMessage,
+      questions: form.questions.filter(Boolean),
+    };
     try {
       if (didChangeAppearance) {
         const appearanceRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
@@ -1726,12 +1735,9 @@ function ButtonCard({
         appearanceUpdated = true;
       }
 
-      const settingsRes = await apiClient.tickets.updateButtonSettings(guildId, panelName, customId, {
-        ...form,
-        questions: form.questions.filter(Boolean),
-      });
+      const settingsRes = await apiClient.tickets.updateButtonSettings(guildId, panelName, customId, payloadForm);
       if (settingsRes.error) throw new Error(settingsRes.error);
-      setLatestSettings(createButtonSettingsFromForm(form));
+      setLatestSettings(createButtonSettingsFromForm(payloadForm));
 
       if (didChangeAppearance) {
         onAppearanceUpdated(editLabel, editStyle);
@@ -2023,14 +2029,14 @@ function ButtonCard({
                       <Label className="text-sm font-medium">{t("ticketOpenEmbed")}</Label>
                       <p className="text-xs text-muted-foreground">{t("ticketOpenEmbedHint")}</p>
                       <Select
-                        value={normalizedButtonEmbedName ?? "disabled"}
-                        onValueChange={(value) => setField("new_message", value === "disabled" ? null : value)}
+                        value={effectiveButtonEmbedName ?? DEFAULT_TICKET_MESSAGE_SELECT_VALUE}
+                        onValueChange={(value) => setField("new_message", value === DEFAULT_TICKET_MESSAGE_SELECT_VALUE ? null : value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder={t("selectEmbed")} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="disabled">{t("noCustomMessage")}</SelectItem>
+                          <SelectItem value={DEFAULT_TICKET_MESSAGE_SELECT_VALUE}>{t("noCustomMessage")}</SelectItem>
                           {embedOptions.map((embed) => (
                             <SelectItem key={embed} value={embed}>{embed}</SelectItem>
                           ))}
