@@ -28,8 +28,8 @@ function getStoredGuildInfo(guildId: string): CachedGuildInfo | null {
   try {
     const stored = sessionStorage.getItem("selected_guild");
     if (!stored) return null;
-    const parsed = JSON.parse(stored) as Partial<CachedGuildInfo>;
-    if (!parsed || parsed.id !== guildId || typeof parsed.name !== "string") {
+    const parsed = JSON.parse(stored) as Partial<CachedGuildInfo> | null;
+    if (parsed?.id !== guildId || typeof parsed?.name !== "string") {
       return null;
     }
     return {
