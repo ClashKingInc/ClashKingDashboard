@@ -768,7 +768,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
             <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                  <div className="flex flex-col md:flex-row md:items-start gap-4">
                     <div>
                       <CardTitle>{t("bans.list.title")}</CardTitle>
                       <CardDescription>
@@ -1105,7 +1105,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
               <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                  <div className="flex flex-col md:flex-row md:items-start gap-4">
                     <div>
                       <CardTitle>{t("strikes.list.title")}</CardTitle>
                       <CardDescription>
