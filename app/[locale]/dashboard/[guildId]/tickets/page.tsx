@@ -1712,48 +1712,68 @@ function ButtonCard({
       },
     }));
 
+  const buildButtonSettingsPayload = (sourceForm: UpdateButtonSettingsRequest): UpdateButtonSettingsRequest => {
+    const normalizedNewMessage = sourceForm.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasEmbedNamedLegacyDisabled
+      ? null
+      : (sourceForm.new_message ?? null);
+
+    return {
+      ...sourceForm,
+      new_message: normalizedNewMessage,
+      questions: sourceForm.questions.filter(Boolean),
+    };
+  };
+
+  const updateAppearanceIfNeeded = async (shouldUpdateAppearance: boolean): Promise<boolean> => {
+    if (!shouldUpdateAppearance) return false;
+
+    const appearanceRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
+      label: editLabel,
+      style: editStyle,
+    });
+    if (appearanceRes.error) throw new Error(appearanceRes.error);
+    return true;
+  };
+
+  const saveButtonSettings = async (payloadForm: UpdateButtonSettingsRequest): Promise<void> => {
+    const settingsRes = await apiClient.tickets.updateButtonSettings(guildId, panelName, customId, payloadForm);
+    if (settingsRes.error) throw new Error(settingsRes.error);
+  };
+
+  const syncAppearanceIfNeeded = (shouldSyncAppearance: boolean) => {
+    if (!shouldSyncAppearance) return;
+    onAppearanceUpdated(editLabel, editStyle);
+  };
+
+  const rollbackAppearanceIfNeeded = async (didUpdateAppearance: boolean): Promise<void> => {
+    if (!didUpdateAppearance) return;
+
+    const rollbackRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
+      label,
+      style,
+    });
+    if (!rollbackRes.error) {
+      onAppearanceUpdated(label, style);
+    }
+  };
+
   const handleSave = async () => {
     if (!editLabel.trim()) return;
+
     setIsSaving(true);
-    let appearanceUpdated = false;
     const didChangeAppearance = editLabel !== label || editStyle !== style;
-    const normalizedNewMessage = form.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasEmbedNamedLegacyDisabled
-      ? null
-      : (form.new_message ?? null);
-    const payloadForm: UpdateButtonSettingsRequest = {
-      ...form,
-      new_message: normalizedNewMessage,
-      questions: form.questions.filter(Boolean),
-    };
+    const payloadForm = buildButtonSettingsPayload(form);
+    let appearanceUpdated = false;
+
     try {
-      if (didChangeAppearance) {
-        const appearanceRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
-          label: editLabel,
-          style: editStyle,
-        });
-        if (appearanceRes.error) throw new Error(appearanceRes.error);
-        appearanceUpdated = true;
-      }
-
-      const settingsRes = await apiClient.tickets.updateButtonSettings(guildId, panelName, customId, payloadForm);
-      if (settingsRes.error) throw new Error(settingsRes.error);
+      appearanceUpdated = await updateAppearanceIfNeeded(didChangeAppearance);
+      await saveButtonSettings(payloadForm);
       setLatestSettings(createButtonSettingsFromForm(payloadForm));
-
-      if (didChangeAppearance) {
-        onAppearanceUpdated(editLabel, editStyle);
-      }
+      syncAppearanceIfNeeded(didChangeAppearance);
       toast({ title: tCommon("success"), description: t("buttonSaved", { label: editLabel }) });
       setSettingsOpen(false);
     } catch (err) {
-      if (appearanceUpdated) {
-        const rollbackRes = await apiClient.tickets.updateButtonAppearance(guildId, panelName, customId, {
-          label,
-          style,
-        });
-        if (!rollbackRes.error) {
-          onAppearanceUpdated(label, style);
-        }
-      }
+      await rollbackAppearanceIfNeeded(appearanceUpdated);
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsSaving(false);
