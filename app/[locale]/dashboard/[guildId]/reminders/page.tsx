@@ -192,15 +192,23 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           throw new Error("API URL is not configured");
         }
 
-        // Fetch clans, channels, and reminders in parallel
-        const [clansRes, channelsRes, remindersRes] = await Promise.all([
-          apiCache.get(clansCacheKey, async () => {
+        const clansPromise = apiCache
+          .get(clansCacheKey, async () => {
             const response = await apiClient.servers.getServerClans(guildId);
             if (response.error) {
               throw new Error(response.error || 'Failed to fetch clans');
             }
             return response.data ?? [];
-          }),
+          })
+          .catch((clanError) => {
+            // Keep reminders usable even if clan metadata is temporarily unavailable.
+            console.warn("Failed to fetch clans for reminders page:", clanError);
+            return [] as Clan[];
+          });
+
+        // Fetch clans, channels, and reminders in parallel
+        const [clansRes, channelsRes, remindersRes] = await Promise.all([
+          clansPromise,
           apiCache.get(channelsCacheKey, async () => {
             const res = await fetch(`/api/v2/server/${guildId}/channels`, {
               headers: {
