@@ -1268,6 +1268,15 @@
     "configuredBadge": "Geconfigureerd",
     "setupRequired": "Configuratie Vereist",
     "configure": "Configureren",
+    "sorting": {
+      "label": "Sorteer clans",
+      "sortBy": "Sorteer op",
+      "toggleDirection": "Wissel sorteerrichting",
+      "added": "Toegevoegd op",
+      "name": "Clannaam",
+      "level": "Clanniveau",
+      "members": "Leden"
+    },
     "configureClan": "Configureer {name} ({tag})",
     "customizeIntegration": "Pas Discord-integratie-instellingen aan voor deze clan",
     "tabs": {

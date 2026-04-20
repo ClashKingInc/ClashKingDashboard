@@ -1288,6 +1288,15 @@
     "configuredBadge": "Configuré",
     "setupRequired": "Configuration Requise",
     "configure": "Configurer",
+    "sorting": {
+      "label": "Trier les clans",
+      "sortBy": "Trier par",
+      "toggleDirection": "Inverser le sens du tri",
+      "added": "Ajouté le",
+      "name": "Nom du clan",
+      "level": "Niveau du clan",
+      "members": "Membres"
+    },
     "configureClan": "Configurer {name} ({tag})",
     "customizeIntegration": "Personnalisez les paramètres d'intégration Discord pour ce clan",
     "tabs": {
