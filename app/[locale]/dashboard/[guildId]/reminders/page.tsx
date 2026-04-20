@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
@@ -125,6 +125,15 @@ const TYPE_TIME_LIMIT: Record<string, number> = {
   "Clan Games": 336,
   "Clan Capital": 168,
 };
+
+function formatChannelLabel(channel: Channel | undefined): string | null {
+  if (!channel) return null;
+  if (channel.parent_name) {
+    return `${channel.parent_name} / #${channel.name}`;
+  }
+
+  return `#${channel.name}`;
+}
 
 function getTimeLimit(type: string | undefined): number {
   return TYPE_TIME_LIMIT[type ?? ""] ?? 24;
@@ -289,6 +298,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     });
 
     return sorted;
+  };
+
+  const getEmptyStateTitle = (tab: string): string => {
+    if (tab === "war") return t('empty.noWarReminders');
+    if (tab === "capital") return t('empty.noCapitalReminders');
+    if (tab === "games") return t('empty.noClanGamesReminders');
+    return t('empty.noInactivityReminders');
   };
 
   // Add a new reminder
@@ -888,7 +904,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                         <CardContent className="py-12 text-center">
                           <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                           <h3 className="text-lg font-semibold text-foreground mb-2">
-                            {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders') /* NOSONAR — JSX nested ternary for multi-branch display state */}
+                            {getEmptyStateTitle(tab)}
                           </h3>
                           <p className="text-muted-foreground mb-4">
                             {t('empty.getStarted')}
@@ -906,13 +922,33 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                           const typeInfo = reminderTypes.find(t => t.value === reminder.type);
                           const TypeIcon = typeInfo?.icon || Bell;
                           const selectedChannel = channels.find(c => c.id === reminder.channel_id);
-                          const channelLabel = selectedChannel
-                            ? selectedChannel.parent_name
-                              ? `${selectedChannel.parent_name} / #${selectedChannel.name}`
-                              : `#${selectedChannel.name}`
-                            : null;
+                          const channelLabel = formatChannelLabel(selectedChannel);
                           const clan = clans.find(c => c.tag === reminder.clan_tag);
                           const clanName = clan?.name;
+
+                          let channelValueNode: ReactNode;
+                          if (channelLabel && reminder.channel_id) {
+                            channelValueNode = (
+                              <DiscordOpenPopover
+                                title={channelLabel}
+                                description={t('card.channel')}
+                                url={`https://discord.com/channels/${guildId}/${reminder.channel_id}`}
+                                buttonLabel={tCommon('openChannelInDiscord')}
+                                trigger={(
+                                  <button
+                                    type="button"
+                                    className="max-w-full truncate text-left text-sm font-medium text-foreground underline-offset-2 transition-colors hover:text-primary hover:underline"
+                                  >
+                                    {channelLabel}
+                                  </button>
+                                )}
+                              />
+                            );
+                          } else if (reminder.channel_id) {
+                            channelValueNode = <span className="text-sm font-medium text-orange-500">{reminder.channel_id}</span>;
+                          } else {
+                            channelValueNode = <span className="text-sm font-medium text-muted-foreground">{t('card.notSet')}</span>;
+                          }
 
                           return (
                               <Card
@@ -965,26 +1001,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                     <div className="space-y-1">
                                       <Label className="block text-sm text-muted-foreground">{t('card.channel')}</Label>
                                       <div className="pt-0.5">
-                                        {channelLabel && reminder.channel_id ? (
-                                          <DiscordOpenPopover
-                                            title={channelLabel}
-                                            description={t('card.channel')}
-                                            url={`https://discord.com/channels/${guildId}/${reminder.channel_id}`}
-                                            buttonLabel={tCommon('openChannelInDiscord')}
-                                            trigger={(
-                                              <button
-                                                type="button"
-                                                className="max-w-full truncate text-left text-sm font-medium text-foreground underline-offset-2 transition-colors hover:text-primary hover:underline"
-                                              >
-                                                {channelLabel}
-                                              </button>
-                                            )}
-                                          />
-                                        ) : reminder.channel_id ? (
-                                          <span className="text-sm font-medium text-orange-500">{reminder.channel_id}</span>
-                                        ) : (
-                                          <span className="text-sm font-medium text-muted-foreground">{t('card.notSet')}</span>
-                                        )}
+                                        {channelValueNode}
                                       </div>
                                     </div>
 

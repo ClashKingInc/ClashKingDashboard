@@ -309,8 +309,8 @@ export default function ClansPage() {
       const isValidDirection = parsedPreference.direction === "asc" || parsedPreference.direction === "desc";
 
       if (isValidField && isValidDirection) {
-        setClanSortField(parsedPreference.field);
-        setClanSortDirection(parsedPreference.direction);
+        setClanSortField(parsedPreference.field as ClanSortField);
+        setClanSortDirection(parsedPreference.direction as SortDirection);
       }
     } catch {
       localStorage.removeItem(sortPreferenceStorageKey);
@@ -533,27 +533,6 @@ export default function ClansPage() {
     }
   };
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <Card className="max-w-md border-destructive">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-destructive" />
-              <CardTitle className="text-destructive">{tCommon("error")}</CardTitle>
-            </div>
-            <CardDescription>{error}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => globalThis.window.location.reload()} className="w-full">
-              {tCommon("retry")}
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   const sortedClans = useMemo(() => {
     const clansToSort = [...clans];
     const directionMultiplier = clanSortDirection === "asc" ? 1 : -1;
@@ -587,6 +566,27 @@ export default function ClansPage() {
   const configuredClans = clans.filter(c =>
     c.settings?.clanChannel || c.settings?.generalRole
   ).length;
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <Card className="max-w-md border-destructive">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+              <CardTitle className="text-destructive">{tCommon("error")}</CardTitle>
+            </div>
+            <CardDescription>{error}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => globalThis.window.location.reload()} className="w-full">
+              {tCommon("retry")}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
