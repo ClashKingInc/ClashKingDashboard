@@ -61,7 +61,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
-import { DiscordEmbedPreview, extractEmbeds, type DiscordEmbed } from "@/components/dashboard/discord-embed-preview";
+import { DiscordEmbedPreview, extractEmbeds, extractMessageContent, type DiscordEmbed } from "@/components/dashboard/discord-embed-preview";
 import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { cn } from "@/lib/utils";
 import type {
@@ -173,16 +173,6 @@ const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
   return typeof data === "object" ? (data as Record<string, unknown>) : null;
 };
 
-const getAutoSaveStatusText = (
-  isSaving: boolean,
-  didAutoSave: boolean,
-  t: (key: string) => string,
-): string => {
-  if (isSaving) return t("autoSaveSaving");
-  if (didAutoSave) return t("autoSaveSaved");
-  return "";
-};
-
 const getTicketDiscordUrl = (ticket: OpenTicket) =>
   `https://discord.com/channels/${ticket.server}/${ticket.channel}`;
 
@@ -192,11 +182,19 @@ const getTranscriptUrl = (ticket: OpenTicket) =>
   `${TRANSCRIPT_BASE_URL}/transcript-${ticket.channel}.html`;
 
 const DEFAULT_PREVIEW_ACCENT = "#3ba55d";
+const CANCEL_BUTTON_CLASS = "!bg-black !text-white hover:!bg-zinc-900";
+const CLASHKING_RED_BUTTON_CLASS = "bg-red-600 hover:bg-red-700 text-white";
 
 const normalizeOptionalText = (value: string | null | undefined): string | null => {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
+};
+
+const normalizeTicketMessageEmbedName = (value: string | null | undefined): string | null => {
+  const normalized = normalizeOptionalText(value);
+  if (!normalized) return null;
+  return normalized.toLowerCase() === "disabled" ? null : normalized;
 };
 
 const pickFirstNonEmptyText = (...values: Array<string | null | undefined>): string | null => {
@@ -466,7 +464,7 @@ function TicketManageDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
+          <Button className={CANCEL_BUTTON_CLASS} onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -1115,16 +1113,18 @@ function TicketPanelTab({
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
-  const [isSaving, setIsSaving] = useState(false);
-  const [didAutoSave, setDidAutoSave] = useState(false);
+  const [isSavingEmbed, setIsSavingEmbed] = useState(false);
   const [embedName, setEmbedName] = useState(panel.embed_name ?? "disabled");
-  const skipNextAutosave = useRef(true);
-  const hasPendingUserChange = useRef(false);
+  const [embedDialogOpen, setEmbedDialogOpen] = useState(false);
+  const [draftEmbedName, setDraftEmbedName] = useState(panel.embed_name ?? "disabled");
   const embedOptions = Array.from(new Set([...(panel.embed_name ? [panel.embed_name] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
   const selectedEmbed = embeds.find((embed) => embed.name === (embedName === "disabled" ? null : embedName));
   const selectedEmbedData = toEmbedDataRecord(selectedEmbed?.data);
   const embedPreviews = selectedEmbedData ? extractEmbeds(selectedEmbedData) : [];
-  const autoSaveStatusText = getAutoSaveStatusText(isSaving, didAutoSave, t);
+  const draftSelectedEmbed = embeds.find((embed) => embed.name === (draftEmbedName === "disabled" ? null : draftEmbedName));
+  const draftSelectedEmbedData = toEmbedDataRecord(draftSelectedEmbed?.data);
+  const draftEmbedPreviews = draftSelectedEmbedData ? extractEmbeds(draftSelectedEmbedData) : [];
+  const hasDraftChanges = draftEmbedName !== embedName;
   const embedsInfoTemplate = t("panelEmbedInfoLine1", { dashboardLabel: tCommon("dashboard") });
   const buttonsInfoTemplate = t("panelEmbedInfoLine2");
 
@@ -1169,66 +1169,160 @@ function TicketPanelTab({
     }
   };
 
+  const renderEmbedPreviewList = (previewEmbeds: DiscordEmbed[], keyPrefix: string): ReactNode => {
+    if (previewEmbeds.length === 0) {
+      return (
+        <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
+          {t("panelEmbedPreviewEmpty")}
+        </div>
+      );
+    }
+
+    const duplicateCounts = new Map<string, number>();
+    return (
+      <div className="space-y-2">
+        {previewEmbeds.map((embed) => {
+          const baseKey = getEmbedPreviewKey(embed);
+          const occurrence = duplicateCounts.get(baseKey) ?? 0;
+          duplicateCounts.set(baseKey, occurrence + 1);
+          return (
+            <DiscordEmbedPreview
+              key={`${keyPrefix}-${baseKey}-${occurrence}`}
+              embed={embed}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
   useEffect(() => {
-    setEmbedName(panel.embed_name ?? "disabled");
-    setDidAutoSave(false);
-    skipNextAutosave.current = true;
-    hasPendingUserChange.current = false;
+    const currentEmbedName = panel.embed_name ?? "disabled";
+    setEmbedName(currentEmbedName);
+    setDraftEmbedName(currentEmbedName);
+    setEmbedDialogOpen(false);
   }, [panel.name, panel.embed_name]);
 
-  useEffect(() => {
-    if (skipNextAutosave.current) {
-      skipNextAutosave.current = false;
-      return;
-    }
-    if (!hasPendingUserChange.current) {
+  const openEmbedDialog = () => {
+    setDraftEmbedName(embedName);
+    setEmbedDialogOpen(true);
+  };
+
+  const handleSaveEmbed = async () => {
+    if (!hasDraftChanges) {
+      setEmbedDialogOpen(false);
       return;
     }
 
-    const timer = setTimeout(async () => {
-      setIsSaving(true);
-      try {
-        const payload: UpdateTicketPanelRequest = {
-          embed_name: embedName === "disabled" ? null : embedName,
-        };
-        const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
-        if (res.error) throw new Error(res.error);
-        apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
-        setDidAutoSave(true);
-        hasPendingUserChange.current = false;
-      } catch (err) {
-        toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
-      } finally {
-        setIsSaving(false);
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [embedName, guildId, panel.name, t, toast]);
+    setIsSavingEmbed(true);
+    try {
+      const payload: UpdateTicketPanelRequest = {
+        embed_name: draftEmbedName === "disabled" ? null : draftEmbedName,
+      };
+      const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
+      if (res.error) throw new Error(res.error);
+      apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
+      setEmbedName(draftEmbedName);
+      setEmbedDialogOpen(false);
+      toast({ title: tCommon("success"), description: t("savedSuccess", { panel: panel.name }) });
+    } catch (err) {
+      toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
+    } finally {
+      setIsSavingEmbed(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
+      <Dialog
+        open={embedDialogOpen}
+        onOpenChange={(open) => {
+          setEmbedDialogOpen(open);
+          if (open) {
+            setDraftEmbedName(embedName);
+          }
+        }}
+      >
+        <DialogContent className="bg-card border-border sm:max-w-4xl max-h-[85vh] flex flex-col overflow-hidden">
+          <DialogHeader>
+            <DialogTitle>{t("panelEmbed")}</DialogTitle>
+            <DialogDescription>{t("panelEmbedHint")}</DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 lg:grid-cols-2 lg:items-start overflow-y-auto pr-1">
+            <div className="space-y-1.5">
+              <Label className="text-sm">{t("panelEmbed")}</Label>
+              <Select value={draftEmbedName} onValueChange={setDraftEmbedName}>
+                <SelectTrigger
+                  className={cn(
+                    draftEmbedName !== "disabled" && "!border-red-600 focus-visible:!ring-red-600/30",
+                  )}
+                >
+                  <SelectValue placeholder={t("selectEmbed")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="disabled">{t("defaultEmbed")}</SelectItem>
+                  {embedOptions.map((embed) => (
+                    <SelectItem key={embed} value={embed}>{embed}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">{t("panelEmbedHint")}</p>
+            </div>
+
+            <div className="space-y-2 lg:max-h-[58vh] lg:overflow-y-auto lg:pr-1">
+              <Label className="text-sm">{t("panelEmbedPreview")}</Label>
+              {renderEmbedPreviewList(draftEmbedPreviews, draftSelectedEmbed?.name ?? "ticket-panel-embed-draft")}
+              {previewButtons.length > 0 ? (
+                <div className="pt-2 flex flex-wrap gap-2">
+                  {previewButtons.map((button) => (
+                    <span
+                      key={`draft-${button.custom_id}`}
+                      className={cn(
+                        "inline-flex h-8 items-center gap-1.5 rounded px-3 text-xs font-medium transition-colors",
+                        getPreviewButtonClass(button.style),
+                      )}
+                    >
+                      <span>{button.label}</span>
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button className={CANCEL_BUTTON_CLASS} onClick={() => setEmbedDialogOpen(false)}>{tCommon("cancel")}</Button>
+            <Button onClick={handleSaveEmbed} disabled={isSavingEmbed || !hasDraftChanges}>
+              {isSavingEmbed && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {tCommon("save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
         <div className="rounded-xl border border-border/60 bg-card p-4 space-y-1.5">
-          <Label className="text-sm">{t("panelEmbed")}</Label>
-          <p className="text-xs text-muted-foreground">
-            {t("panelEmbedHint")} {autoSaveStatusText}
-          </p>
-          <Select value={embedName} onValueChange={(value) => {
-            hasPendingUserChange.current = true;
-            setDidAutoSave(false);
-            setEmbedName(value);
-          }}>
-            <SelectTrigger>
-              <SelectValue placeholder={t("selectEmbed")} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="disabled">{t("defaultEmbed")}</SelectItem>
-              {embedOptions.map((embed) => (
-                <SelectItem key={embed} value={embed}>{embed}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="space-y-1.5">
+            <Label className="text-sm">{t("panelEmbed")}</Label>
+            <p className="text-xs text-muted-foreground">{t("panelEmbedHint")}</p>
+          </div>
+
+          <div className="grid gap-2 pt-1 sm:grid-cols-4 sm:items-stretch">
+            <div
+              className="sm:col-span-3 h-9 rounded-md border border-border/60 bg-muted/20 px-3 flex items-center"
+            >
+              <p className="truncate text-sm font-medium">
+                {embedName === "disabled" ? t("defaultEmbed") : embedName}
+              </p>
+            </div>
+            <Button
+              onClick={openEmbedDialog}
+              className={cn("sm:col-span-1 h-9", CLASHKING_RED_BUTTON_CLASS)}
+            >
+              {tCommon("edit")}
+            </Button>
+          </div>
 
           <Alert className="mt-3 border-blue-500/30 bg-blue-500/5 text-xs">
             <AlertCircle className="h-4 w-4 text-blue-500" />
@@ -1246,7 +1340,10 @@ function TicketPanelTab({
                 buttonsInfoTemplate,
                 <button
                   type="button"
-                  onClick={onOpenButtonsTab}
+                  onClick={() => {
+                    setEmbedDialogOpen(false);
+                    onOpenButtonsTab();
+                  }}
                   className="font-medium text-blue-400 underline underline-offset-2 hover:text-blue-300"
                 >
                   {t("tabButtons")}
@@ -1258,28 +1355,7 @@ function TicketPanelTab({
         </div>
         <div className="rounded-xl border border-border/60 bg-card p-4 space-y-2">
           <Label className="text-sm">{t("panelEmbedPreview")}</Label>
-          {embedPreviews.length > 0 ? (
-            <div className="space-y-2">
-              {(() => {
-                const duplicateCounts = new Map<string, number>();
-                return embedPreviews.map((embed) => {
-                  const baseKey = getEmbedPreviewKey(embed);
-                  const occurrence = duplicateCounts.get(baseKey) ?? 0;
-                  duplicateCounts.set(baseKey, occurrence + 1);
-                  return (
-                    <DiscordEmbedPreview
-                      key={`${selectedEmbed?.name ?? "ticket-panel-embed"}-${baseKey}-${occurrence}`}
-                      embed={embed}
-                    />
-                  );
-                });
-              })()}
-            </div>
-          ) : (
-            <div className="rounded-lg border border-dashed border-border p-4 text-xs text-muted-foreground">
-              {t("panelEmbedPreviewEmpty")}
-            </div>
-          )}
+          {renderEmbedPreviewList(embedPreviews, selectedEmbed?.name ?? "ticket-panel-embed")}
 
           {previewButtons.length > 0 ? (
             <div className="pt-2 flex flex-wrap gap-2">
@@ -1313,11 +1389,15 @@ function PanelSettingsTab({
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
-  const [isSaving, setIsSaving] = useState(false);
-  const [didAutoSave, setDidAutoSave] = useState(false);
-  const skipNextAutosave = useRef(true);
-  const hasPendingUserChange = useRef(false);
-  const [form, setForm] = useState({
+  type PanelSettingsForm = {
+    open_category: string;
+    sleep_category: string;
+    closed_category: string;
+    status_change_log: string;
+    ticket_button_click_log: string;
+    ticket_close_log: string;
+  };
+  const createFormState = (): PanelSettingsForm => ({
     open_category: panel.open_category ?? "disabled",
     sleep_category: panel.sleep_category ?? "disabled",
     closed_category: panel.closed_category ?? "disabled",
@@ -1325,25 +1405,35 @@ function PanelSettingsTab({
     ticket_button_click_log: panel.ticket_button_click_log ?? "disabled",
     ticket_close_log: panel.ticket_close_log ?? "disabled",
   });
+  const skipNextAutosave = useRef(true);
+  const hasPendingUserChange = useRef(false);
+  const [form, setForm] = useState<PanelSettingsForm>(() => createFormState());
+  const lastSavedFormRef = useRef<PanelSettingsForm>(createFormState());
 
   const toNullable = (v: string) => (v === "disabled" ? null : v);
-  const set = (key: keyof typeof form) => (val: string) => {
+  const set = (key: keyof PanelSettingsForm) => (val: string) => {
     hasPendingUserChange.current = true;
-    setDidAutoSave(false);
     setForm((p) => ({ ...p, [key]: val }));
   };
-  const autoSaveStatusText = getAutoSaveStatusText(isSaving, didAutoSave, t);
+
+  const getSavedValueLabel = (key: keyof PanelSettingsForm, value: string): string => {
+    if (value === "disabled") {
+      return tCommon("disabled");
+    }
+
+    if (key === "open_category" || key === "sleep_category" || key === "closed_category") {
+      return categories.find((channel) => channel.id === value)?.name ?? value;
+    }
+
+    const channel = textChannels.find((item) => item.id === value);
+    if (!channel) return value;
+    return channel.parent_name ? `${channel.parent_name} / #${channel.name}` : `#${channel.name}`;
+  };
 
   useEffect(() => {
-    setForm({
-      open_category: panel.open_category ?? "disabled",
-      sleep_category: panel.sleep_category ?? "disabled",
-      closed_category: panel.closed_category ?? "disabled",
-      status_change_log: panel.status_change_log ?? "disabled",
-      ticket_button_click_log: panel.ticket_button_click_log ?? "disabled",
-      ticket_close_log: panel.ticket_close_log ?? "disabled",
-    });
-    setDidAutoSave(false);
+    const initialForm = createFormState();
+    setForm(initialForm);
+    lastSavedFormRef.current = initialForm;
     skipNextAutosave.current = true;
     hasPendingUserChange.current = false;
   }, [
@@ -1366,39 +1456,58 @@ function PanelSettingsTab({
     }
 
     const timer = setTimeout(async () => {
-      setIsSaving(true);
+      const settingFields: Array<keyof PanelSettingsForm> = [
+        "open_category",
+        "sleep_category",
+        "closed_category",
+        "status_change_log",
+        "ticket_button_click_log",
+        "ticket_close_log",
+      ];
+      const nextForm: PanelSettingsForm = { ...form };
+      const changedFields = settingFields.filter((field) => lastSavedFormRef.current[field] !== nextForm[field]);
+
+      if (changedFields.length === 0) {
+        hasPendingUserChange.current = false;
+        return;
+      }
+
       try {
         const payload: UpdateTicketPanelRequest = {
-          open_category: toNullable(form.open_category),
-          sleep_category: toNullable(form.sleep_category),
-          closed_category: toNullable(form.closed_category),
-          status_change_log: toNullable(form.status_change_log),
-          ticket_button_click_log: toNullable(form.ticket_button_click_log),
-          ticket_close_log: toNullable(form.ticket_close_log),
+          open_category: toNullable(nextForm.open_category),
+          sleep_category: toNullable(nextForm.sleep_category),
+          closed_category: toNullable(nextForm.closed_category),
+          status_change_log: toNullable(nextForm.status_change_log),
+          ticket_button_click_log: toNullable(nextForm.ticket_button_click_log),
+          ticket_close_log: toNullable(nextForm.ticket_close_log),
         };
         const res = await apiClient.tickets.updatePanel(guildId, panel.name, payload);
         if (res.error) throw new Error(res.error);
         apiCache.invalidate(getTicketsPanelsCacheKey(guildId));
-        setDidAutoSave(true);
         hasPendingUserChange.current = false;
+        lastSavedFormRef.current = nextForm;
+
+        const changedDetails = changedFields
+          .map((field) => `${t(field)}: ${getSavedValueLabel(field, nextForm[field])}`)
+          .join(" • ");
+
+        toast({
+          title: tCommon("success"),
+          description: `${t("savedSuccess", { panel: panel.name })} • ${changedDetails}`,
+        });
       } catch (err) {
         toast({ title: t("autoSaveErrorTitle"), description: err instanceof Error ? err.message : t("autoSaveErrorDescription"), variant: "destructive" });
-      } finally {
-        setIsSaving(false);
       }
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [form, guildId, panel.name, t, toast]);
+  }, [form, guildId, panel.name, t, tCommon, toast, categories, textChannels]);
 
   const catChannels = categories.map((c) => ({ id: c.id, name: c.name }));
   const txtChannels = textChannels.map((c) => ({ id: c.id, name: c.name, parent_name: c.parent_name }));
 
   return (
     <div className="space-y-6">
-      <p className="text-xs text-muted-foreground">
-        {autoSaveStatusText}
-      </p>
       <div className="rounded-xl border border-border/60 bg-card p-4">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("categories")}</p>
         <div className="grid gap-3 sm:grid-cols-3">
@@ -1469,7 +1578,7 @@ const createSettingsForm = (settings: TicketButtonSettings): UpdateButtonSetting
   roles_to_add: [...(settings.roles_to_add ?? [])],
   roles_to_remove: [...(settings.roles_to_remove ?? [])],
   townhall_requirements: { ...settings.townhall_requirements },
-  new_message: settings.new_message,
+  new_message: normalizeTicketMessageEmbedName(settings.new_message),
 });
 
 const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): TicketButtonSettings => ({
@@ -1487,7 +1596,7 @@ const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): Ticket
   roles_to_add: [...form.roles_to_add],
   roles_to_remove: [...form.roles_to_remove],
   townhall_requirements: { ...form.townhall_requirements },
-  new_message: form.new_message,
+  new_message: normalizeTicketMessageEmbedName(form.new_message),
 });
 
 function ButtonCard({
@@ -1549,9 +1658,12 @@ function ButtonCard({
     setClanTagInput("");
   }, [settingsOpen, label, style, latestSettings]);
   const embedOptions = Array.from(new Set([...(settings.new_message ? [settings.new_message] : []), ...availableEmbeds])).sort((a, b) => a.localeCompare(b));
-  const selectedButtonEmbed = embeds.find((embed) => embed.name === (form.new_message ?? ""));
+  const normalizedButtonEmbedName = normalizeTicketMessageEmbedName(form.new_message);
+  const selectedButtonEmbed = embeds.find((embed) => embed.name === (normalizedButtonEmbedName ?? ""));
   const selectedButtonEmbedData = toEmbedDataRecord(selectedButtonEmbed?.data);
   const buttonEmbedPreviews = selectedButtonEmbedData ? extractEmbeds(selectedButtonEmbedData) : [];
+  const buttonMessageContentPreview = selectedButtonEmbedData ? extractMessageContent(selectedButtonEmbedData) : null;
+  const isUsingDefaultTicketMessage = normalizedButtonEmbedName === null;
 
   const setField = <K extends keyof UpdateButtonSettingsRequest>(key: K, val: UpdateButtonSettingsRequest[K]) =>
     setForm((p) => ({ ...p, [key]: val }));
@@ -1668,14 +1780,14 @@ function ButtonCard({
             onValueChange={(value) => setSettingsSection(value as "general" | "requirements" | "embeds")}
             className="mt-2 flex-1 min-h-0 flex flex-col overflow-hidden"
           >
-            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 border border-border bg-background p-1 sm:grid-cols-3 sm:gap-0 sm:p-0">
-              <TabsTrigger value="general" className="h-auto px-3 py-2 text-center text-sm leading-snug data-[state=active]:bg-muted">
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
+              <TabsTrigger value="general" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
                 General
               </TabsTrigger>
-              <TabsTrigger value="requirements" className="h-auto px-3 py-2 text-center text-sm leading-snug data-[state=active]:bg-muted">
+              <TabsTrigger value="requirements" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
                 Requirements
               </TabsTrigger>
-              <TabsTrigger value="embeds" className="h-auto px-3 py-2 text-center text-sm leading-snug data-[state=active]:bg-muted">
+              <TabsTrigger value="embeds" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
                 Embeds and Questions
               </TabsTrigger>
             </TabsList>
@@ -1911,7 +2023,7 @@ function ButtonCard({
                       <Label className="text-sm font-medium">{t("ticketOpenEmbed")}</Label>
                       <p className="text-xs text-muted-foreground">{t("ticketOpenEmbedHint")}</p>
                       <Select
-                        value={form.new_message ?? "disabled"}
+                        value={normalizedButtonEmbedName ?? "disabled"}
                         onValueChange={(value) => setField("new_message", value === "disabled" ? null : value)}
                       >
                         <SelectTrigger>
@@ -1930,7 +2042,7 @@ function ButtonCard({
                   <Label className="text-sm font-medium">Preview</Label>
                   <div className="space-y-2">
                     {(() => {
-                      if (form.new_message === null) {
+                      if (isUsingDefaultTicketMessage) {
                         return (
                           <div className="rounded-md border-l-4 bg-[#2b2d31]/70 p-3 text-sm leading-relaxed text-slate-100 whitespace-pre-line" style={{ borderLeftColor: DEFAULT_PREVIEW_ACCENT }}>
                             {"This ticket will be handled shortly!\nPlease be patient."}
@@ -1946,6 +2058,13 @@ function ButtonCard({
                                 embed={embed}
                               />
                             ))}
+                          </div>
+                        );
+                      }
+                      if (buttonMessageContentPreview) {
+                        return (
+                          <div className="rounded-md border-l-4 bg-[#2b2d31]/70 p-3 text-sm leading-relaxed text-slate-100 whitespace-pre-line" style={{ borderLeftColor: DEFAULT_PREVIEW_ACCENT }}>
+                            {buttonMessageContentPreview}
                           </div>
                         );
                       }
@@ -1973,7 +2092,7 @@ function ButtonCard({
             </TabsContent>
           </Tabs>
           <DialogFooter className="pt-3 mt-2 border-t border-border/70">
-            <Button variant="ghost" onClick={() => setSettingsOpen(false)}>{tCommon("cancel")}</Button>
+            <Button className={CANCEL_BUTTON_CLASS} onClick={() => setSettingsOpen(false)}>{tCommon("cancel")}</Button>
             <Button onClick={handleSave} disabled={isSaving || !editLabel.trim()}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("save")}
@@ -1990,7 +2109,7 @@ function ButtonCard({
             <DialogDescription>{t("confirmDeleteButtonHint")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConfirmDeleteOpen(false)}>{tCommon("cancel")}</Button>
+            <Button className={CANCEL_BUTTON_CLASS} onClick={() => setConfirmDeleteOpen(false)}>{tCommon("cancel")}</Button>
             <Button variant="destructive" onClick={handleDeleteButton} disabled={isDeleting}>
               {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("delete")}
@@ -2015,7 +2134,7 @@ function ButtonCard({
               onClick={() => { setEditLabel(label); setEditStyle(style); setSettingsOpen(true); }}>
               <Settings className="h-3.5 w-3.5" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive"
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive/80 hover:bg-destructive/10 hover:text-destructive"
               onClick={() => setConfirmDeleteOpen(true)}>
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
@@ -2158,7 +2277,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
           <div className="space-y-4 overflow-y-auto pr-1">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">{t("messagesMaxHint")}</p>
-              <Button variant="outline" size="sm" onClick={addMessage} disabled={draftMessages.length >= 25}>
+              <Button size="sm" className={CLASHKING_RED_BUTTON_CLASS} onClick={addMessage} disabled={draftMessages.length >= 25}>
                 <Plus className="mr-1.5 h-4 w-4" />{t("addMessage")}
               </Button>
             </div>
@@ -2187,7 +2306,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                            className="h-8 w-8 shrink-0 text-destructive/80 hover:bg-destructive/10 hover:text-destructive"
                             onClick={() => removeMessage(i)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -2248,7 +2367,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
           </div>
 
           <DialogFooter className="pt-3 mt-2 border-t border-border/70">
-            <Button variant="ghost" onClick={() => setEditOpen(false)}>{tCommon("cancel")}</Button>
+            <Button className={CANCEL_BUTTON_CLASS} onClick={() => setEditOpen(false)}>{tCommon("cancel")}</Button>
             <Button onClick={handleSave} disabled={isSaving}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("save")}
@@ -2263,7 +2382,11 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
             <p className="text-sm font-medium">{t("approveMessages")}</p>
             <p className="text-xs text-muted-foreground">{t("approveMessagesHint")}</p>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}>
+          <Button
+            size="sm"
+            onClick={() => setEditOpen(true)}
+            className={CLASHKING_RED_BUTTON_CLASS}
+          >
             {t("editMessagesButton")}
           </Button>
         </div>
@@ -2382,7 +2505,7 @@ function PanelCard({
             <DialogDescription>{t("confirmDeletePanelHint")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setConfirmDeletePanelOpen(false)}>{tCommon("cancel")}</Button>
+            <Button className={CANCEL_BUTTON_CLASS} onClick={() => setConfirmDeletePanelOpen(false)}>{tCommon("cancel")}</Button>
             <Button variant="destructive" onClick={handleDeletePanel} disabled={isDeletingPanel}>
               {isDeletingPanel && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("delete")}
@@ -2414,8 +2537,8 @@ function PanelCard({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setAddButtonOpen(false)}>{tCommon("cancel")}</Button>
-            <Button onClick={handleAddButton} disabled={isAddingButton || !newButtonLabel.trim()}>
+            <Button className={CANCEL_BUTTON_CLASS} onClick={() => setAddButtonOpen(false)}>{tCommon("cancel")}</Button>
+            <Button className={CLASHKING_RED_BUTTON_CLASS} onClick={handleAddButton} disabled={isAddingButton || !newButtonLabel.trim()}>
               {isAddingButton && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {t("addButton")}
             </Button>
@@ -2438,7 +2561,7 @@ function PanelCard({
               </div>
             </button>
             <div className="flex items-center gap-1 shrink-0 pt-0.5">
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive"
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive/80 hover:bg-destructive/10 hover:text-destructive"
                 onClick={(e) => { e.stopPropagation(); setConfirmDeletePanelOpen(true); }}>
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -2452,11 +2575,41 @@ function PanelCard({
         {expanded && (
           <CardContent className="space-y-4">
             <Tabs value={activeConfigTab} onValueChange={setActiveConfigTab}>
-              <TabsList className="mb-4 grid h-auto w-full grid-cols-2 gap-1 p-1 sm:grid-cols-4 sm:gap-0 sm:p-0">
-                <TabsTrigger value="ticket-panel" className="h-auto px-3 py-2 text-sm">{t("tabChannels")}</TabsTrigger>
-                <TabsTrigger value="buttons" className="h-auto px-3 py-2 text-sm">{t("tabButtons")}</TabsTrigger>
-                <TabsTrigger value="messages" className="h-auto px-3 py-2 text-sm">{t("tabMessages")}</TabsTrigger>
-                <TabsTrigger value="settings" className="h-auto px-3 py-2 text-sm">{t("tabSettings")}</TabsTrigger>
+              <TabsList className="mb-4 grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
+                <TabsTrigger
+                  value="ticket-panel"
+                  className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+                >
+                  <Ticket className="h-3.5 w-3.5 shrink-0 text-blue-500" />
+                  <span className="truncate">{t("tabChannels")}</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="buttons"
+                  className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+                >
+                  <Plus className="h-3.5 w-3.5 shrink-0 text-green-500" />
+                  <span className="truncate">{t("tabButtons")}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    {components.length}
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="messages"
+                  className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+                >
+                  <MessageSquare className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+                  <span className="truncate">{t("tabMessages")}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    {panel.approve_messages.length}
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="settings"
+                  className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+                >
+                  <Settings className="h-3.5 w-3.5 shrink-0 text-purple-500" />
+                  <span className="truncate">{t("tabSettings")}</span>
+                </TabsTrigger>
               </TabsList>
               <TabsContent value="ticket-panel" className="mt-0" forceMount>
                 <TicketPanelTab
@@ -2472,7 +2625,12 @@ function PanelCard({
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <p className="text-xs text-muted-foreground">{components.length}/5 {t("buttons")}</p>
-                    <Button variant="outline" size="sm" onClick={() => setAddButtonOpen(true)} disabled={components.length >= 5}>
+                    <Button
+                      size="sm"
+                      onClick={() => setAddButtonOpen(true)}
+                      disabled={components.length >= 5}
+                      className={CLASHKING_RED_BUTTON_CLASS}
+                    >
                       <Plus className="mr-1.5 h-4 w-4" />{t("addButton")}
                     </Button>
                   </div>
@@ -2627,8 +2785,8 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
             />
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setCreatePanelOpen(false)}>{tCommon("cancel")}</Button>
-            <Button onClick={handleCreatePanel} disabled={isCreatingPanel || !newPanelName.trim()}>
+            <Button className={CANCEL_BUTTON_CLASS} onClick={() => setCreatePanelOpen(false)}>{tCommon("cancel")}</Button>
+            <Button className={CLASHKING_RED_BUTTON_CLASS} onClick={handleCreatePanel} disabled={isCreatingPanel || !newPanelName.trim()}>
               {isCreatingPanel && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {tCommon("create")}
             </Button>
@@ -2638,7 +2796,11 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
 
       <div className="space-y-4">
         <div className="flex justify-end">
-          <Button variant="outline" size="sm" onClick={() => setCreatePanelOpen(true)}>
+          <Button
+            size="sm"
+            onClick={() => setCreatePanelOpen(true)}
+            className={CLASHKING_RED_BUTTON_CLASS}
+          >
             <Plus className="mr-1.5 h-4 w-4" />{t("createPanel")}
           </Button>
         </div>
@@ -2683,15 +2845,27 @@ export default function TicketsPage() {
           </div>
         </div>
 
-        <Tabs defaultValue="tickets">
-          <TabsList>
-            <TabsTrigger value="tickets">{t("tabTickets")}</TabsTrigger>
-            <TabsTrigger value="configuration">{t("tabConfiguration")}</TabsTrigger>
+        <Tabs defaultValue="tickets" className="space-y-6">
+          <TabsList className="grid h-auto w-full max-w-md grid-cols-2 gap-1 rounded-lg border border-border bg-muted p-1 sm:gap-0">
+            <TabsTrigger
+              value="tickets"
+              className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+            >
+              <Ticket className="h-3.5 w-3.5 shrink-0 text-blue-500" />
+              <span className="truncate">{t("tabTickets")}</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="configuration"
+              className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+            >
+              <Settings className="h-3.5 w-3.5 shrink-0 text-purple-500" />
+              <span className="truncate">{t("tabConfiguration")}</span>
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="tickets" className="mt-6">
+          <TabsContent value="tickets" className="mt-0">
             <TicketsTab guildId={guildId} />
           </TabsContent>
-          <TabsContent value="configuration" className="mt-6">
+          <TabsContent value="configuration" className="mt-0">
             <ConfigTab guildId={guildId} />
           </TabsContent>
         </Tabs>
