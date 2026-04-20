@@ -723,8 +723,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-start gap-4 md:items-center">
-          <div className="p-3 rounded-lg bg-purple-500/10">
-            <Shield className="h-8 w-8 text-purple-500" />
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+            <Shield className="h-8 w-8 text-primary" />
           </div>
           <div>
             <h1 className="text-3xl font-bold text-foreground">{t("title")}</h1>

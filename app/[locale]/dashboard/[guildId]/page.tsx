@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { ServerStats } from "@/components/dashboard/server-stats";
 import { ClansSummary } from "@/components/dashboard/clans-summary";
 import { BotStats } from "@/components/dashboard/bot-stats";
+import { DashboardIcon } from "@radix-ui/react-icons";
 
 interface OverviewPageProps {
   readonly params: Promise<{
@@ -17,9 +18,14 @@ export default async function OverviewPage({ params }: OverviewPageProps) {
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("description")}</p>
+        <div className="flex items-start gap-3">
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+            <DashboardIcon className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
+            <p className="text-muted-foreground mt-1">{t("description")}</p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
