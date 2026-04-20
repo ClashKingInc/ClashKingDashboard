@@ -167,7 +167,7 @@ Open [http://localhost:3002](http://localhost:3002) to view the dashboard.
 
 ## Running with the API
 
-⚠️ **Important:** The dashboard requires the `v2` branch of ClashKingAPI. You can run it locally or you can use the beta branch of ClashKing [(See enviroment variables)](#environment-variables)
+⚠️ **Important:** The dashboard requires the `v2` branch of ClashKingAPI. You can run it locally or you can use the beta branch of ClashKing [(See environment variables)](#environment-variables)
 
 ### Quick Start
 
