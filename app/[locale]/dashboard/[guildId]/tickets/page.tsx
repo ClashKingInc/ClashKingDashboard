@@ -1653,11 +1653,12 @@ function ButtonCard({
     setForm(createSettingsForm(latestSettings));
     setClanTagInput("");
   }, [settingsOpen, label, style, latestSettings]);
-  const hasEmbedNamedLegacyDisabled = embeds.some((embed) => embed.name === LEGACY_DISABLED_EMBED_TOKEN);
-  const hasLegacyDisabledToken = form.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasEmbedNamedLegacyDisabled;
+  const hasDisabledEmbedOption = availableEmbeds.includes(LEGACY_DISABLED_EMBED_TOKEN)
+    || settings.new_message === LEGACY_DISABLED_EMBED_TOKEN;
+  const hasLegacyDisabledToken = form.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasDisabledEmbedOption;
   const effectiveButtonEmbedName = hasLegacyDisabledToken ? null : (form.new_message ?? null);
   const embedOptions = Array.from(new Set([
-    ...(settings.new_message && (settings.new_message !== LEGACY_DISABLED_EMBED_TOKEN || hasEmbedNamedLegacyDisabled) ? [settings.new_message] : []),
+    ...(settings.new_message && (settings.new_message !== LEGACY_DISABLED_EMBED_TOKEN || hasDisabledEmbedOption) ? [settings.new_message] : []),
     ...availableEmbeds,
   ])).sort((a, b) => a.localeCompare(b));
   const selectedButtonEmbed = embeds.find((embed) => embed.name === (effectiveButtonEmbedName ?? ""));
@@ -1713,7 +1714,7 @@ function ButtonCard({
     }));
 
   const buildButtonSettingsPayload = (sourceForm: UpdateButtonSettingsRequest): UpdateButtonSettingsRequest => {
-    const normalizedNewMessage = sourceForm.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasEmbedNamedLegacyDisabled
+    const normalizedNewMessage = sourceForm.new_message === LEGACY_DISABLED_EMBED_TOKEN && !hasDisabledEmbedOption
       ? null
       : (sourceForm.new_message ?? null);
 
