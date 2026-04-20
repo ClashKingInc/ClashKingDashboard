@@ -465,28 +465,31 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
-              <TabsTrigger value="overview">
-                <Users className="h-4 w-4 mr-2" />
-                Overview
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
+              <TabsTrigger value="overview" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Users className="h-3.5 w-3.5 shrink-0 text-blue-500" />
+                <span className="truncate">Overview</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-blue-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : membersWithLinks}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="pending">
-                <Clock className="h-4 w-4 mr-2" />
-                Pending{" ("}
-                {loading ? (
-                  <span className="inline-block h-3 w-6 align-middle rounded bg-muted animate-pulse" />
-                ) : (
-                  pendingVerifications.length
-                )}
-                {")"}
+              <TabsTrigger value="pending" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Clock className="h-3.5 w-3.5 shrink-0 text-yellow-500" />
+                <span className="truncate">Pending</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-yellow-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : pendingVerifications.length}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="bulk">
-                <Settings className="h-4 w-4 mr-2" />
-                Bulk Actions
+              <TabsTrigger value="bulk" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Settings className="h-3.5 w-3.5 shrink-0 text-purple-500" />
+                <span className="truncate">Bulk Actions</span>
               </TabsTrigger>
-              <TabsTrigger value="analytics">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Analytics
+              <TabsTrigger value="analytics" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <BarChart3 className="h-3.5 w-3.5 shrink-0 text-green-500" />
+                <span className="truncate">Analytics</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : totalLinkedAccounts}
+                </span>
               </TabsTrigger>
             </TabsList>
 

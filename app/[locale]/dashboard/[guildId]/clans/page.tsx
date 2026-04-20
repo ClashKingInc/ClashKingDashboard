@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { logout } from "@/lib/auth/logout";
@@ -17,7 +17,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -49,6 +48,8 @@ import {
   Loader2,
   AlertCircle,
   Save,
+  ArrowDown,
+  ArrowUp,
   ChevronDown,
   ChevronRight,
   Eye
@@ -129,6 +130,9 @@ function normalizeClansPayload(payload: unknown): Clan[] {
   return [];
 }
 
+type ClanSortField = "added" | "name" | "level" | "members";
+type SortDirection = "asc" | "desc";
+
 export default function ClansPage() {
   const params = useParams();
   const router = useRouter();
@@ -172,6 +176,8 @@ export default function ClansPage() {
   const [saving, setSaving] = useState(false);
   const [clanToDelete, setClanToDelete] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [clanSortField, setClanSortField] = useState<ClanSortField>("added");
+  const [clanSortDirection, setClanSortDirection] = useState<SortDirection>("asc");
 
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -188,7 +194,8 @@ export default function ClansPage() {
   }>({ war_score: null, war_timer: null });
   const [countdownLoading, setCountdownLoading] = useState<string | null>(null);
 
-  const clansCacheKey = `clans-${guildId}`;
+  const clansCacheKey = `dashboard-server-clans-${guildId}`;
+  const sortPreferenceStorageKey = `clans-sort-preference-${guildId}`;
   const channelsCacheKey = dashboardCacheKeys.channels(guildId);
   const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
 
@@ -197,7 +204,7 @@ export default function ClansPage() {
       apiCache.invalidate(clansCacheKey);
     }
 
-    return apiCache.get(clansCacheKey, async () => {
+    const cachedOrFetched = await apiCache.get(clansCacheKey, async () => {
       const response = await fetch(`/api/v2/server/${guildId}/clans`, {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
@@ -211,11 +218,14 @@ export default function ClansPage() {
       const payload = await response.json();
       return normalizeClansPayload(payload);
     });
+
+    // Normalize again to protect against stale cache entries written by older code paths.
+    return normalizeClansPayload(cachedOrFetched);
   };
 
   const refreshClans = async (accessToken: string) => {
     const clansData = await fetchClans(accessToken, true);
-    setClans(clansData);
+    setClans(normalizeClansPayload(clansData));
   };
 
   // Fetch data on mount
@@ -230,7 +240,7 @@ export default function ClansPage() {
         }
 
         const clansData = await fetchClans(accessToken);
-        setClans(clansData);
+          setClans(normalizeClansPayload(clansData));
 
         const [channelsResult, rolesResult] = await Promise.allSettled([
           apiCache.get(channelsCacheKey, async () => {
@@ -279,6 +289,42 @@ export default function ClansPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [guildId]);
+
+  useEffect(() => {
+    if (!guildId) return;
+
+    const storedPreference = localStorage.getItem(sortPreferenceStorageKey);
+    if (!storedPreference) return;
+
+    try {
+      const parsedPreference = JSON.parse(storedPreference) as {
+        field?: unknown;
+        direction?: unknown;
+      };
+
+      const isValidField = parsedPreference.field === "added"
+        || parsedPreference.field === "name"
+        || parsedPreference.field === "level"
+        || parsedPreference.field === "members";
+      const isValidDirection = parsedPreference.direction === "asc" || parsedPreference.direction === "desc";
+
+      if (isValidField && isValidDirection) {
+        setClanSortField(parsedPreference.field);
+        setClanSortDirection(parsedPreference.direction);
+      }
+    } catch {
+      localStorage.removeItem(sortPreferenceStorageKey);
+    }
+  }, [guildId, sortPreferenceStorageKey]);
+
+  useEffect(() => {
+    if (!guildId) return;
+
+    localStorage.setItem(
+      sortPreferenceStorageKey,
+      JSON.stringify({ field: clanSortField, direction: clanSortDirection }),
+    );
+  }, [clanSortDirection, clanSortField, guildId, sortPreferenceStorageKey]);
 
   // Add clan
   const handleAddClan = async () => {
@@ -508,6 +554,35 @@ export default function ClansPage() {
     );
   }
 
+  const sortedClans = useMemo(() => {
+    const clansToSort = [...clans];
+    const directionMultiplier = clanSortDirection === "asc" ? 1 : -1;
+
+    const clanOrderByTag = new Map(clans.map((clan, index) => [clan.tag || clan.clan_tag || String(index), index]));
+    const getClanName = (clan: Clan) => (clan.name || clan.clan_name || "").toLowerCase();
+    const getClanLevel = (clan: Clan) => clan.level ?? clan.clanLevel ?? 0;
+    const getClanMembers = (clan: Clan) => clan.member_count ?? clan.members ?? 0;
+    const getClanOrder = (clan: Clan) => clanOrderByTag.get(clan.tag || clan.clan_tag || "") ?? Number.MAX_SAFE_INTEGER;
+
+    clansToSort.sort((a, b) => {
+      if (clanSortField === "added") {
+        return (getClanOrder(a) - getClanOrder(b)) * directionMultiplier;
+      }
+
+      if (clanSortField === "name") {
+        return getClanName(a).localeCompare(getClanName(b)) * directionMultiplier;
+      }
+
+      if (clanSortField === "level") {
+        return (getClanLevel(a) - getClanLevel(b)) * directionMultiplier;
+      }
+
+      return (getClanMembers(a) - getClanMembers(b)) * directionMultiplier;
+    });
+
+    return clansToSort;
+  }, [clanSortDirection, clanSortField, clans]);
+
   const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || clan.members || 0), 0);
   const configuredClans = clans.filter(c =>
     c.settings?.clanChannel || c.settings?.generalRole
@@ -532,12 +607,6 @@ export default function ClansPage() {
 
           {/* Add Clan Dialog */}
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/90 gap-2">
-                <Plus className="h-4 w-4" />
-                {t("addClan")}
-              </Button>
-            </DialogTrigger>
             <DialogContent className="bg-card border-border max-w-2xl">
               <DialogHeader>
                 <DialogTitle>{t("addNewClan")}</DialogTitle>
@@ -653,6 +722,54 @@ export default function ClansPage() {
           </Card>
         </div>
 
+        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          {(loading || clans.length > 0) && (
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Label className="text-sm text-muted-foreground">{t("sorting.label")}</Label>
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-9 w-9 animate-pulse" />
+                  <Skeleton className="h-9 w-[220px] animate-pulse" />
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9"
+                    aria-label={t("sorting.toggleDirection")}
+                    onClick={() => setClanSortDirection((current) => (current === "asc" ? "desc" : "asc"))}
+                  >
+                    {clanSortDirection === "asc" ? (
+                      <ArrowUp className="h-4 w-4" />
+                    ) : (
+                      <ArrowDown className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Select value={clanSortField} onValueChange={(value) => setClanSortField(value as ClanSortField)}>
+                    <SelectTrigger className="w-full min-w-[220px] border-border bg-background sm:w-[220px]">
+                      <SelectValue placeholder={t("sorting.sortBy")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="added">{t("sorting.added")}</SelectItem>
+                      <SelectItem value="name">
+                        {t("sorting.name")}
+                      </SelectItem>
+                      <SelectItem value="level">{t("sorting.level")}</SelectItem>
+                      <SelectItem value="members">{t("sorting.members")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+          )}
+
+          <Button onClick={() => setIsAddDialogOpen(true)} className="w-full gap-2 bg-primary hover:bg-primary/90 md:w-auto">
+            <Plus className="h-4 w-4" />
+            {t("addClan")}
+          </Button>
+        </div>
+
         {/* Clans Grid */}
         {loading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -709,7 +826,7 @@ export default function ClansPage() {
           </Card>
         ) : (
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {clans.map((clan) => {
+            {sortedClans.map((clan) => {
               const isConfigured = !!(clan.settings?.clanChannel || clan.settings?.generalRole);
 
               return (

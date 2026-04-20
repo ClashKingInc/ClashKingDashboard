@@ -423,6 +423,18 @@ export default function LogsPage() {
     }).length;
   };
 
+  const countActiveLogsByDefinitions = (logDefinitions: LogTypeDefinition[]) => {
+    const currentClan = getCurrentClan();
+    if (!currentClan) return 0;
+
+    return logDefinitions.filter((definition) => {
+      return definition.keys.some((key) => {
+        const config = currentClan[key as keyof ClanLogsConfig];
+        return Boolean(config && typeof config === 'object' && config.webhook);
+      });
+    }).length;
+  };
+
 
   // Separate component for LogCard to use hooks properly
   const LogCard = ({ logDef, statusLoading = false }: { logDef: LogTypeDefinition; statusLoading?: boolean }) => { // NOSONAR — inline sub-component uses parent closures; complexity is structural JSX, not logic
@@ -777,22 +789,34 @@ export default function LogsPage() {
         )}
 
         <Tabs defaultValue="clan" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:w-[800px] bg-secondary h-auto p-1">
-            <TabsTrigger value="clan" className="data-[state=active]:bg-background">
-              <Users className="mr-2 h-4 w-4" />
-              {t('tabs.clan')}
+          <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
+            <TabsTrigger value="clan" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+              <Users className="h-3.5 w-3.5 shrink-0 text-blue-500" />
+              <span className="truncate">{t('tabs.clan')}</span>
+              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-blue-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(CLAN_LOGS)}
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="war" className="data-[state=active]:bg-background">
-              <Swords className="mr-2 h-4 w-4" />
-              {t('tabs.war')}
+            <TabsTrigger value="war" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+              <Swords className="h-3.5 w-3.5 shrink-0 text-red-500" />
+              <span className="truncate">{t('tabs.war')}</span>
+              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-red-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(WAR_LOGS)}
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="capital" className="data-[state=active]:bg-background">
-              <Castle className="mr-2 h-4 w-4" />
-              {t('tabs.capital')}
+            <TabsTrigger value="capital" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+              <Castle className="h-3.5 w-3.5 shrink-0 text-purple-500" />
+              <span className="truncate">{t('tabs.capital')}</span>
+              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-purple-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(CAPITAL_LOGS)}
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="player" className="data-[state=active]:bg-background">
-              <TrendingUp className="mr-2 h-4 w-4" />
-              {t('tabs.player')}
+            <TabsTrigger value="player" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+              <TrendingUp className="h-3.5 w-3.5 shrink-0 text-orange-500" />
+              <span className="truncate">{t('tabs.player')}</span>
+              <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-orange-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : countActiveLogsByDefinitions(PLAYER_LOGS)}
+              </span>
             </TabsTrigger>
           </TabsList>
 
