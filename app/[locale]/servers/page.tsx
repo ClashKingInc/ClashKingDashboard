@@ -187,7 +187,7 @@ export default function ServersPage() {
               <Card
                 key={guild.id}
                 className={`border-2 bg-card/95 backdrop-blur transition-all duration-300 ${guild.has_bot
-                  ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30 cursor-pointer"
+                  ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30"
                   : "border-border opacity-75"
                   } rounded-xl overflow-hidden`}
               >
