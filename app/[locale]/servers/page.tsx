@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
@@ -31,7 +37,9 @@ export default function ServersPage() {
   const [guilds, setGuilds] = useState<GuildInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [permissionMessage, setPermissionMessage] = useState<string | null>(null);
+  const [permissionMessage, setPermissionMessage] = useState<string | null>(
+    null,
+  );
   useEffect(() => {
     const fetchGuilds = async () => {
       setPermissionMessage(null);
@@ -40,13 +48,13 @@ export default function ServersPage() {
 
       try {
         // Check for prefetched guilds from auth callback
-        const prefetched = sessionStorage.getItem('prefetched_guilds');
+        const prefetched = sessionStorage.getItem("prefetched_guilds");
         if (prefetched) {
           try {
             const guildsData = JSON.parse(prefetched);
             setGuilds(guildsData);
             setLoading(false);
-            sessionStorage.removeItem('prefetched_guilds'); // Clean up
+            sessionStorage.removeItem("prefetched_guilds"); // Clean up
 
             // Fetch fresh data in background
             const accessToken = localStorage.getItem("access_token");
@@ -63,7 +71,7 @@ export default function ServersPage() {
             }
             return;
           } catch (err) {
-            console.error('Error parsing prefetched guilds:', err);
+            console.error("Error parsing prefetched guilds:", err);
             // Fall through to normal fetch
           }
         }
@@ -73,7 +81,6 @@ export default function ServersPage() {
           router.push(`/${locale}/login`);
           return;
         }
-
 
         // Fetch user's guilds using API client
         const response = await apiClient.servers.getGuilds();
@@ -112,10 +119,9 @@ export default function ServersPage() {
 
   const getGuildIconUrl = (guild: GuildInfo) => {
     if (!guild.icon) return null;
-    if (guild.icon.startsWith('https')) {
+    if (guild.icon.startsWith("https")) {
       return guild.icon;
-    }
-    else {
+    } else {
       return null;
     }
   };
@@ -128,7 +134,7 @@ export default function ServersPage() {
           id: guild.id,
           name: guild.name,
           icon: getGuildIconUrl(guild) || undefined,
-        })
+        }),
       );
       router.push(`/${locale}/dashboard/${guild.id}`);
     }
@@ -150,7 +156,9 @@ export default function ServersPage() {
         <Card className="max-w-md border-2 border-primary bg-card/95">
           <CardHeader>
             <CardTitle className="text-destructive">{t("error")}</CardTitle>
-            <CardDescription className="text-muted-foreground">{error}</CardDescription>
+            <CardDescription className="text-muted-foreground">
+              {error}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Button
@@ -186,20 +194,21 @@ export default function ServersPage() {
             {guilds.map((guild) => (
               <Card
                 key={guild.id}
-                className={`border-2 bg-card/95 backdrop-blur transition-all duration-300 ${guild.has_bot
-                  ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30 cursor-pointer"
-                  : "border-border opacity-75"
-                  } rounded-xl overflow-hidden`}
-                onClick={() => handleGuildClick(guild)}
+                className={`border-2 bg-card/95 backdrop-blur transition-all duration-300 ${
+                  guild.has_bot
+                    ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30 cursor-pointer"
+                    : "border-border opacity-75"
+                } rounded-xl overflow-hidden`}
               >
                 <CardHeader className="flex flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6">
                   {/* Left side: avatar + info */}
                   <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <Avatar
-                      className={`h-12 w-12 sm:h-16 sm:w-16 border-2 transition-transform duration-300 flex-shrink-0 ${guild.has_bot
-                        ? "border-primary group-hover:scale-105"
-                        : "border-border"
-                        }`}
+                      className={`h-12 w-12 sm:h-16 sm:w-16 border-2 transition-transform duration-300 flex-shrink-0 ${
+                        guild.has_bot
+                          ? "border-primary group-hover:scale-105"
+                          : "border-border"
+                      }`}
                     >
                       <AvatarImage src={getGuildIconUrl(guild) || undefined} />
                       <AvatarFallback className="text-xl sm:text-2xl bg-muted text-foreground">
@@ -226,7 +235,9 @@ export default function ServersPage() {
                         <span
                           className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 sm:py-1 rounded-full inline-block ${ROLE_STYLES[guild.role] ?? "bg-gray-500/20 text-muted-foreground"}`}
                         >
-                          {ROLE_LABEL_KEYS[guild.role] ? t(ROLE_LABEL_KEYS[guild.role] as any) : guild.role}
+                          {ROLE_LABEL_KEYS[guild.role]
+                            ? t(ROLE_LABEL_KEYS[guild.role] as any)
+                            : guild.role}
                         </span>
                       </div>
                     </div>
@@ -237,6 +248,7 @@ export default function ServersPage() {
                     {guild.has_bot ? (
                       <Button
                         className="w-24 sm:w-28 bg-green-600 hover:bg-green-700 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
+                        onClick={() => handleGuildClick(guild)}
                       >
                         {t("configure")}
                       </Button>
@@ -262,7 +274,9 @@ export default function ServersPage() {
           {guilds.length === 0 && (
             <Card className="border-2 border-border bg-card/95 backdrop-blur">
               <CardHeader className="text-center py-12">
-                <CardTitle className="text-foreground mb-2">{t("noServers.title")}</CardTitle>
+                <CardTitle className="text-foreground mb-2">
+                  {t("noServers.title")}
+                </CardTitle>
                 <CardDescription className="text-muted-foreground">
                   {permissionMessage || t("noServers.description")}
                 </CardDescription>
