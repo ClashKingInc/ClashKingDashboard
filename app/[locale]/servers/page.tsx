@@ -187,10 +187,9 @@ export default function ServersPage() {
               <Card
                 key={guild.id}
                 className={`border-2 bg-card/95 backdrop-blur transition-all duration-300 ${guild.has_bot
-                  ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30 cursor-pointer"
+                  ? "border-border hover:border-primary hover:shadow-[0_0_10px_var(--primary)]/30"
                   : "border-border opacity-75"
                   } rounded-xl overflow-hidden`}
-                onClick={() => handleGuildClick(guild)}
               >
                 <CardHeader className="flex flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6">
                   {/* Left side: avatar + info */}
@@ -236,6 +235,7 @@ export default function ServersPage() {
                   <div className="flex-shrink-0">
                     {guild.has_bot ? (
                       <Button
+                        onClick={() => handleGuildClick(guild)}
                         className="w-24 sm:w-28 bg-green-600 hover:bg-green-700 text-white cursor-pointer text-xs sm:text-sm h-9 sm:h-10"
                       >
                         {t("configure")}
