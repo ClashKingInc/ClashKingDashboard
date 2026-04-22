@@ -159,21 +159,20 @@ export default function EmbedsPage() {
 
   return (
     <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl space-y-6">
+      <div className="mx-auto max-w-4xl space-y-6">
         {/* Header */}
-        <div className="flex items-start gap-3">
-          <div className="rounded-lg border border-primary/20 bg-primary/10 p-3">
-            <FileText className="h-8 w-8 text-primary" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div className="flex items-start gap-3">
+            <div className="rounded-lg border border-primary/20 bg-primary/10 p-3">
+              <FileText className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground md:text-3xl">{tPage("title")}</h1>
+              <p className="mt-1 text-sm text-muted-foreground">{tPage("description")}</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-foreground md:text-3xl">{tPage("title")}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">{tPage("description")}</p>
-          </div>
-        </div>
-
-        {/* Actions bar */}
-        <div className="flex justify-end">
-          <Button onClick={openCreate}>
+          {/* Actions bar */}
+          <Button onClick={openCreate} className="w-full md:w-auto">
             <Plus className="mr-1.5 h-4 w-4" />{t("newEmbed")}
           </Button>
         </div>
