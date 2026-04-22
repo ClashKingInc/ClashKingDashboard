@@ -22,8 +22,15 @@ import {
   LOCALE_MODE_COOKIE,
   getLocaleModeFromCookie,
   resolveBrowserLocale,
+  type SupportedLocale,
   type LocaleMode,
 } from "@/lib/locale-preference";
+
+const BROWSER_LANGUAGE_LABEL_BY_LOCALE: Record<SupportedLocale, string> = {
+  en: "Browser Language",
+  fr: "Langue du navigateur",
+  nl: "Browsertaal",
+};
 
 interface SettingsDropdownProps {
   locale: string;
@@ -74,8 +81,10 @@ export function SettingsDropdown({
     router.refresh();
   };
 
+  const browserLocale = mounted ? resolveBrowserLocale(navigator.languages) : "en";
+  const browserLanguageLabel = BROWSER_LANGUAGE_LABEL_BY_LOCALE[browserLocale];
   const currentLocale = mounted && localeMode === "browser"
-    ? resolveBrowserLocale(navigator.languages)
+    ? browserLocale
     : locale;
   const currentLanguage = LANGUAGE_OPTIONS.find((lang) => lang.code === currentLocale) ?? LANGUAGE_OPTIONS[0];
   let themeIcon = <Computer className="h-4 w-4" />;
@@ -143,7 +152,7 @@ export function SettingsDropdown({
               className={cn(itemClassName, localeMode === "browser" && selectedItemClassName)}
             >
               <Globe className="h-4 w-4" />
-              <span className={textClassName}>{t("browserLanguage")}</span>
+              <span className={textClassName}>{browserLanguageLabel}</span>
             </DropdownMenuItem>
             {LANGUAGE_OPTIONS.map((lang) => (
               <DropdownMenuItem

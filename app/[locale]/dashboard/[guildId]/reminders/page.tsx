@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { apiCache } from "@/lib/api-cache";
+import { apiClient } from "@/lib/api/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
+import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import {
   Dialog,
   DialogContent,
@@ -82,6 +85,9 @@ interface CreateReminderRequest {
 interface Clan {
   tag: string;
   name: string;
+  badge_url?: string | null;
+  clan_badge_url?: string | null;
+  badge?: string | null;
 }
 
 interface Channel {
@@ -120,6 +126,15 @@ const TYPE_TIME_LIMIT: Record<string, number> = {
   "Clan Capital": 168,
 };
 
+function formatChannelLabel(channel: Channel | undefined): string | null {
+  if (!channel) return null;
+  if (channel.parent_name) {
+    return `${channel.parent_name} / #${channel.name}`;
+  }
+
+  return `#${channel.name}`;
+}
+
 function getTimeLimit(type: string | undefined): number {
   return TYPE_TIME_LIMIT[type ?? ""] ?? 24;
 }
@@ -130,6 +145,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const { toast } = useToast();
   const guildId = params.guildId as string;
   const t = useTranslations("RemindersPage");
+  const tCommon = useTranslations("Common");
   const reminderTypes = [
     { value: "War", label: t('types.war'), icon: Target, color: "text-red-500", tabIcon: Target },
     { value: "Clan Capital", label: t('types.capital'), icon: Castle, color: "text-purple-500", tabIcon: Castle },
@@ -152,6 +168,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [activeTab, setActiveTab] = useState<string>("war");
   const newReminderRef = useRef<HTMLDivElement>(null);
   const channelsCacheKey = `reminders-channels-${guildId}`;
+  const clansCacheKey = `reminders-clans-${guildId}`;
 
   // Dialog state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -175,14 +192,23 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           throw new Error("API URL is not configured");
         }
 
+        const clansPromise = apiCache
+          .get(clansCacheKey, async () => {
+            const response = await apiClient.servers.getServerClans(guildId);
+            if (response.error) {
+              throw new Error(response.error || 'Failed to fetch clans');
+            }
+            return response.data ?? [];
+          })
+          .catch((clanError) => {
+            // Keep reminders usable even if clan metadata is temporarily unavailable.
+            console.warn("Failed to fetch clans for reminders page:", clanError);
+            return [] as Clan[];
+          });
+
         // Fetch clans, channels, and reminders in parallel
         const [clansRes, channelsRes, remindersRes] = await Promise.all([
-          fetch(`/api/v2/server/${guildId}/clans-basic`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          }),
+          clansPromise,
           apiCache.get(channelsCacheKey, async () => {
             const res = await fetch(`/api/v2/server/${guildId}/channels`, {
               headers: {
@@ -211,10 +237,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         }
 
         // Parse clans
-        if (clansRes.ok) {
-          const clansData = await clansRes.json();
-          setClans(clansData || []);
-        }
+        setClans(clansRes || []);
 
         // Parse channels
         setChannels(normalizeChannelsPayload(channelsRes));
@@ -243,7 +266,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (guildId) {
       fetchReminders();
     }
-  }, [channelsCacheKey, guildId, router, toast]);
+  }, [channelsCacheKey, clansCacheKey, guildId, router, toast]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
@@ -283,6 +306,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     });
 
     return sorted;
+  };
+
+  const getEmptyStateTitle = (tab: string): string => {
+    if (tab === "war") return t('empty.noWarReminders');
+    if (tab === "capital") return t('empty.noCapitalReminders');
+    if (tab === "games") return t('empty.noClanGamesReminders');
+    return t('empty.noInactivityReminders');
   };
 
   // Add a new reminder
@@ -658,6 +688,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   }
 
   const currentReminders = getCurrentReminders();
+  const getVisibleCount = (items: ReminderConfig[]) => (
+    selectedClan === "all" ? items.length : items.filter((reminder) => reminder.clan_tag === selectedClan).length
+  );
+  const warReminderCount = getVisibleCount(reminders.war_reminders);
+  const capitalReminderCount = getVisibleCount(reminders.capital_reminders);
+  const gamesReminderCount = getVisibleCount(reminders.clan_games_reminders);
+  const inactivityReminderCount = getVisibleCount(reminders.inactivity_reminders);
 
   return (
       <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
@@ -766,77 +803,70 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           </div>
 
           {/* Clan Selector and Add Button */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-            <Button onClick={addReminder} className="gap-2 w-full md:w-auto">
-              <Plus className="h-4 w-4" />
-              {t('actions.addReminder')}
-            </Button>
-            {clans.length > 0 && (
-                <div className="flex items-center gap-2 w-full md:w-auto">
-                  <Label className="text-sm text-muted-foreground whitespace-nowrap">{t('clanSelector.label')}</Label>
-                  <Select value={selectedClan} onValueChange={setSelectedClan}>
-                    <SelectTrigger className="w-full md:w-[250px]">
-                      <SelectValue placeholder={t('clanSelector.placeholder')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t('clanSelector.allClans')}</SelectItem>
-                      {clans.map((clan) => (
+          <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            {(loading || clans.length > 0) && (
+              <div className="flex w-full items-center gap-2 md:w-auto">
+                {loading ? (
+                  <>
+                    <Skeleton className="h-3.5 w-24" />
+                    <Skeleton className="h-9 w-full md:w-[250px]" />
+                  </>
+                ) : (
+                  <>
+                    <Label className="whitespace-nowrap text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
+                    <Select value={selectedClan} onValueChange={setSelectedClan}>
+                      <SelectTrigger className="w-full md:w-[250px]">
+                        <SelectValue placeholder={t('clanSelector.placeholder')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">{t('clanSelector.allClans')}</SelectItem>
+                        {clans.map((clan) => (
                           <SelectItem key={clan.tag} value={clan.tag}>
                             {clan.name} ({clan.tag})
                           </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </>
+                )}
+              </div>
             )}
+            <Button onClick={addReminder} className="w-full gap-2 md:w-auto md:shrink-0">
+              <Plus className="h-4 w-4" />
+              {t('actions.addReminder')}
+            </Button>
           </div>
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:w-[800px] h-auto">
-              <TabsTrigger value="war" className="gap-2">
-                <Target className="h-4 w-4" />
-                {t('tabs.war')}
-                {reminders.war_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-red-500/20 text-red-500">
-                      {selectedClan === "all"
-                          ? reminders.war_reminders.length
-                          : reminders.war_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
+              <TabsTrigger value="war" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Target className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.war')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-red-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : warReminderCount}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="capital" className="gap-2">
-                <Castle className="h-4 w-4" />
-                {t('tabs.capital')}
-                {reminders.capital_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-purple-500/20 text-purple-500">
-                      {selectedClan === "all"
-                          ? reminders.capital_reminders.length
-                          : reminders.capital_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+              <TabsTrigger value="capital" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Castle className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.capital')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-purple-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : capitalReminderCount}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="games" className="gap-2">
-                <Calendar className="h-4 w-4" />
-                {t('tabs.clanGames')}
-                {reminders.clan_games_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-green-500/20 text-green-500">
-                      {selectedClan === "all"
-                          ? reminders.clan_games_reminders.length
-                          : reminders.clan_games_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+              <TabsTrigger value="games" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <Calendar className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.clanGames')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : gamesReminderCount}
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="inactivity" className="gap-2">
-                <UserX className="h-4 w-4" />
-                {t('tabs.inactivity')}
-                {reminders.inactivity_reminders.length > 0 && (
-                    <Badge variant="secondary" className="ml-1 bg-orange-500/20 text-orange-500">
-                      {selectedClan === "all"
-                          ? reminders.inactivity_reminders.length
-                          : reminders.inactivity_reminders.filter(r => r.clan_tag === selectedClan).length}
-                    </Badge>
-                )}
+              <TabsTrigger value="inactivity" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <UserX className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{t('tabs.inactivity')}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-orange-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : inactivityReminderCount}
+                </span>
               </TabsTrigger>
             </TabsList>
 
@@ -882,7 +912,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                         <CardContent className="py-12 text-center">
                           <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                           <h3 className="text-lg font-semibold text-foreground mb-2">
-                            {tab === "war" ? t('empty.noWarReminders') : tab === "capital" ? t('empty.noCapitalReminders') : tab === "games" ? t('empty.noClanGamesReminders') : t('empty.noInactivityReminders') /* NOSONAR — JSX nested ternary for multi-branch display state */}
+                            {getEmptyStateTitle(tab)}
                           </h3>
                           <p className="text-muted-foreground mb-4">
                             {t('empty.getStarted')}
@@ -899,8 +929,34 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                           const isNew = reminder.id.startsWith('temp-');
                           const typeInfo = reminderTypes.find(t => t.value === reminder.type);
                           const TypeIcon = typeInfo?.icon || Bell;
-                          const channelName = channels.find(c => c.id === reminder.channel_id)?.name;
-                          const clanName = clans.find(c => c.tag === reminder.clan_tag)?.name;
+                          const selectedChannel = channels.find(c => c.id === reminder.channel_id);
+                          const channelLabel = formatChannelLabel(selectedChannel);
+                          const clan = clans.find(c => c.tag === reminder.clan_tag);
+                          const clanName = clan?.name;
+
+                          let channelValueNode: ReactNode;
+                          if (channelLabel && reminder.channel_id) {
+                            channelValueNode = (
+                              <DiscordOpenPopover
+                                title={channelLabel}
+                                description={t('card.channel')}
+                                url={`https://discord.com/channels/${guildId}/${reminder.channel_id}`}
+                                buttonLabel={tCommon('openChannelInDiscord')}
+                                trigger={(
+                                  <button
+                                    type="button"
+                                    className="max-w-full truncate text-left text-sm font-medium text-foreground underline-offset-2 transition-colors hover:text-primary hover:underline"
+                                  >
+                                    {channelLabel}
+                                  </button>
+                                )}
+                              />
+                            );
+                          } else if (reminder.channel_id) {
+                            channelValueNode = <span className="text-sm font-medium text-orange-500">{reminder.channel_id}</span>;
+                          } else {
+                            channelValueNode = <span className="text-sm font-medium text-muted-foreground">{t('card.notSet')}</span>;
+                          }
 
                           return (
                               <Card
@@ -951,13 +1007,36 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                                 <CardContent className="space-y-4">
                                   <div className="grid gap-4 md:grid-cols-2">
                                     <div className="space-y-1">
-                                      <Label className="text-sm text-muted-foreground">{t('card.channel')}</Label>
-                                      <p className="text-sm font-medium">{channelName || reminder.channel_id || t('card.notSet')}</p>
+                                      <Label className="block text-sm text-muted-foreground">{t('card.channel')}</Label>
+                                      <div className="pt-0.5">
+                                        {channelValueNode}
+                                      </div>
                                     </div>
 
                                     <div className="space-y-1">
-                                      <Label className="text-sm text-muted-foreground">{t('card.clan')}</Label>
-                                      <p className="text-sm font-medium">{clanName ? `${clanName} (${reminder.clan_tag})` : reminder.clan_tag || t('card.notSet')}</p>
+                                      <Label className="block text-sm text-muted-foreground">{t('card.clan')}</Label>
+                                      <div className="pt-0.5">
+                                        {reminder.clan_tag ? (
+                                          <ClanProfilePopover
+                                            clanName={clanName || reminder.clan_tag}
+                                            clanTag={reminder.clan_tag}
+                                            clanBadgeUrl={
+                                              clan?.badge_url
+                                              ?? clan?.clan_badge_url
+                                              ?? clan?.badge
+                                              ?? null
+                                            }
+                                            showTagInTrigger={false}
+                                            triggerClassName="text-left cursor-pointer transition-opacity hover:opacity-80"
+                                          >
+                                            <span className="text-sm font-medium text-foreground underline-offset-2 hover:underline">
+                                              {clanName ? `${clanName} (${reminder.clan_tag})` : reminder.clan_tag}
+                                            </span>
+                                          </ClanProfilePopover>
+                                        ) : (
+                                          <span className="text-sm font-medium text-muted-foreground">{t('card.notSet')}</span>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
 

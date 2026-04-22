@@ -43,7 +43,19 @@
     "tryAgain": "Opnieuw proberen",
     "create": "Aanmaken",
     "viewClashProfile": "Bekijk Clash-profiel",
-    "openInGame": "Open in game"
+    "openInGame": "Open in game",
+    "openChannelInDiscord": "Open dit kanaal in Discord",
+    "playerProfile": {
+      "clan": "Clan",
+      "townHallLevel": "Stadhuis niveau",
+      "trophies": "Trofeeen",
+      "warPreference": "Oorlogsvoorkeur",
+      "warPreferenceIn": "In",
+      "warPreferenceOut": "Uit",
+      "signupGroup": "Aanmeldingsgroep",
+      "heroLevels": "Heldenniveaus",
+      "hitrate30d": "30 dagen trefferscore"
+    }
   },
   "Navigation": {
     "features": "Functies",
@@ -1256,6 +1268,15 @@
     "configuredBadge": "Geconfigureerd",
     "setupRequired": "Configuratie Vereist",
     "configure": "Configureren",
+    "sorting": {
+      "label": "Sorteer clans",
+      "sortBy": "Sorteer op",
+      "toggleDirection": "Wissel sorteerrichting",
+      "added": "Toegevoegd op",
+      "name": "Clannaam",
+      "level": "Clanniveau",
+      "members": "Leden"
+    },
     "configureClan": "Configureer {name} ({tag})",
     "customizeIntegration": "Pas Discord-integratie-instellingen aan voor deze clan",
     "tabs": {
@@ -2089,7 +2110,7 @@
   },
   "ServersPage": {
     "title": "Selecteer een Server",
-    "description": "Kies een server om ClashKing bot instellingen te configureren",
+    "description": "Kies een server om ClashKing bot instellingen te configureren. Je moet de eigenaar of een beheerder van de Discord-server zijn.",
     "backToHome": "Terug naar Home",
     "backToLogin": "Terug naar Login",
     "error": "Fout",
@@ -2122,6 +2143,7 @@
     "autoRefresh": "Auto Refresh",
     "autoRefreshDesc": "Auto Refresh - Continue updates (30-60 min)",
     "channel": "Kanaal",
+    "channelDeleted": "Kanaal is verwijderd.",
     "selectChannel": "Selecteer een kanaal",
     "channelDesc": "Het kanaal waar het autoboard wordt gepost",
     "boardType": "Bordtype",
@@ -2138,6 +2160,9 @@
     "howItWorks": "Hoe AutoBoards Werken",
     "howItWorksDesc": "AutoBoards kunnen automatisch nieuwe borden posten volgens een schema of bestaande borden continu vernieuwen met actuele gegevens. Kies **Auto Post** om dagelijks nieuwe borden te maken op specifieke dagen, of **Auto Refresh** om een bord elke 30-60 minuten bij te werken.",
     "totalAutoboards": "Totaal AutoBoards",
+    "totalShort": "Totaal",
+    "postShort": "Post",
+    "refreshShort": "Refresh",
     "used": "gebruikt",
     "scheduledBoards": "Geplande borden",
     "continuousUpdates": "Continue updates",
@@ -2154,6 +2179,8 @@
     "tips": "💡 AutoBoard Tips",
     "noChannels": "Geen kanalen beschikbaar",
     "activeAutoboardsCount": "{count} actieve autoboard{count, plural, one {} other {s}}",
+    "noAutoboardsForFilter": "Geen AutoBoards in dit filter",
+    "noAutoboardsForFilterDesc": "Probeer een ander filter of maak een nieuw AutoBoard.",
     "tipsContent": {
       "type": {
         "title": "Kies het juiste type:",
@@ -2215,7 +2242,9 @@
       "selectDays": "Selecteer minstens één dag voor auto-post",
       "createFailed": "Kon autoboard niet maken. Probeer het opnieuw.",
       "updateFailed": "Kon autoboard niet bijwerken. Probeer het opnieuw.",
-      "deleteFailed": "Kon autoboard niet verwijderen. Probeer het opnieuw."
+      "deleteFailed": "Kon autoboard niet verwijderen. Probeer het opnieuw.",
+      "deleteConfirmTitle": "AutoBoard verwijderen?",
+      "deleteConfirmDescription": "Weet je zeker dat je dit AutoBoard wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
     }
   },
   "TicketsPage": {
@@ -2241,11 +2270,13 @@
     "cleanup": "Opschonen",
     "transcript": "Transcript",
     "missingChannel": "Kanaal verwijderd",
+    "missingChannelCleanup": "Kanaal verwijderd, opschonen vereist",
     "openInDiscord": "Openen in Discord",
     "table": {
       "number": "#",
       "panel": "Paneel",
       "user": "Gebruikers-ID",
+      "category": "Categorie",
       "clan": "Clan",
       "account": "Account",
       "actions": "Acties"

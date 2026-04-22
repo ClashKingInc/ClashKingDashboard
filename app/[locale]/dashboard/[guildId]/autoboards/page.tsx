@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,9 +15,18 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -29,6 +38,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { apiCache } from "@/lib/api-cache";
 import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
 
@@ -101,6 +112,8 @@ const LOCALE_MAP: Record<string, string> = {
   nl: "nl-NL",
 };
 
+type BoardFilter = "all" | "post" | "refresh";
+
 export default function AutoBoardsPage() { // NOSONAR — complexity comes from aggregate autoboard state management, not a single logic unit
   const params = useParams();
   const guildId = params?.guildId as string;
@@ -130,6 +143,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   // Channels state
   const [channels, setChannels] = useState<Channel[]>([]);
@@ -148,6 +162,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   const [editBoardType, setEditBoardType] = useState("");
   const [editChannel, setEditChannel] = useState("");
   const [editDays, setEditDays] = useState<string[]>([]);
+  const [boardFilter, setBoardFilter] = useState<BoardFilter>("all");
 
   const autoboardsCacheKey = `autoboards-${guildId}`;
   const channelsCacheKey = dashboardCacheKeys.channels(guildId);
@@ -412,8 +427,213 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
     }
   };
 
+  const confirmDeleteAutoBoard = async () => {
+    if (!deleteConfirmId) return;
+    await handleDeleteAutoBoard(deleteConfirmId);
+    setDeleteConfirmId(null);
+  };
+
   const getBoardTypeName = (boardType: string): string => {
     return BOARD_TYPES[boardType as keyof typeof BOARD_TYPES] || boardType; // NOSONAR — non-null assertion guards against null safely in context
+  };
+
+  const channelById = useMemo(
+    () => new Map(channels.map((channel) => [channel.id, channel])),
+    [channels],
+  );
+
+  const getChannelState = useCallback((channelId: string | null): { label: string | null; isDeleted: boolean } => {
+    if (!channelId) return { label: null, isDeleted: false };
+
+    const channel = channelById.get(channelId);
+    if (!channel) {
+      return { label: null, isDeleted: true };
+    }
+
+    return {
+      label: channel.parent_name ? `${channel.parent_name} / #${channel.name}` : `#${channel.name}`,
+      isDeleted: false,
+    };
+  }, [channelById]);
+
+  const totalBoards = autoboardsData?.total ?? 0;
+  const postBoards = autoboardsData?.post_count ?? 0;
+  const refreshBoards = autoboardsData?.refresh_count ?? 0;
+  const allAutoboards = useMemo(() => autoboardsData?.autoboards ?? [], [autoboardsData]);
+
+  const filteredAutoboards = useMemo(() => {
+    if (boardFilter === "post") {
+      return allAutoboards.filter((autoboard) => autoboard.type === "post");
+    }
+
+    if (boardFilter === "refresh") {
+      return allAutoboards.filter((autoboard) => autoboard.type === "refresh");
+    }
+
+    return allAutoboards;
+  }, [allAutoboards, boardFilter]);
+
+  const renderAutoboardsListContent = () => {
+    if (loading) {
+      return (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center gap-4 p-4 border border-border rounded-lg">
+              <Skeleton className="h-14 w-14 rounded-lg" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-5 w-48" />
+                <Skeleton className="h-4 w-64" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-8 w-16" />
+                <Skeleton className="h-8 w-20" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (allAutoboards.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">
+            {t('noAutoboards')}
+          </h3>
+          <p className="text-sm text-muted-foreground mb-4">
+            {t('noAutoboardsDesc')}
+          </p>
+          <Button
+            onClick={() => setCreateDialogOpen(true)}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {t('createAutoboard')}
+          </Button>
+        </div>
+      );
+    }
+
+    if (filteredAutoboards.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <LayoutDashboard className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <h3 className="mb-2 text-lg font-semibold text-foreground">
+            {t('noAutoboardsForFilter')}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {t('noAutoboardsForFilterDesc')}
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-3">
+        {filteredAutoboards.map((autoboard) => {
+          const channelState = getChannelState(autoboard.channel_id);
+          const channelLabel = channelState.label;
+
+          return (
+            <div
+              key={autoboard.id}
+              className="flex flex-col gap-4 rounded-lg border border-border p-4 transition-colors hover:bg-secondary/50 md:flex-row md:items-center md:justify-between"
+            >
+              <div className="flex items-center gap-4 flex-1 w-full">
+                <div className={`p-3 rounded-lg ${autoboard.type === 'post' ? 'bg-green-500/10 border border-green-500/30' : 'bg-purple-500/10 border border-purple-500/30'}`}>
+                  {autoboard.type === 'post' ? (
+                    <Calendar className="h-5 w-5 text-green-500" />
+                  ) : (
+                    <RefreshCw className="h-5 w-5 text-purple-500" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-foreground">
+                      {getBoardTypeName(autoboard.board_type)}
+                    </h3>
+                    <Badge
+                      variant={autoboard.type === 'post' ? 'default' : 'secondary'}
+                      className={autoboard.type === 'post' ? 'cursor-default bg-green-600 text-white hover:bg-green-600 hover:text-white' : 'cursor-default bg-purple-600 text-white hover:bg-purple-600 hover:text-white'}
+                    >
+                      {autoboard.type === 'post' ? t('autoPost') : t('autoRefresh')}
+                    </Badge>
+                  </div>
+                  {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('postsOn')} {autoboard.days.map(d => getDayLabel(d)).join(', ')}
+                    </p>
+                  )}
+                  {autoboard.type === 'refresh' && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('updatesEvery')}
+                    </p>
+                  )}
+                  {channelLabel && autoboard.channel_id && (
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <span>{t('channel')}:</span>
+                      <DiscordOpenPopover
+                        title={channelLabel}
+                        description={t('channel')}
+                        url={`https://discord.com/channels/${guildId}/${autoboard.channel_id}`}
+                        buttonLabel={tCommon('openChannelInDiscord')}
+                        trigger={(
+                          <button
+                            type="button"
+                            className="max-w-[260px] truncate text-left text-sm text-muted-foreground transition-colors hover:text-foreground"
+                          >
+                            {channelLabel}
+                          </button>
+                        )}
+                      />
+                    </div>
+                  )}
+                  {!channelLabel && channelState.isDeleted && autoboard.channel_id && (
+                    <div className="flex items-center gap-1 text-sm">
+                      <span className="text-muted-foreground">{t('channel')}:</span>
+                      <span className="font-medium text-orange-500">{t('channelDeleted')}</span>
+                    </div>
+                  )}
+                  {autoboard.created_at && (
+                    <p className="text-xs text-muted-foreground">
+                      {t('created')} {new Date(autoboard.created_at).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="order-first flex items-center gap-2 self-start md:order-none md:self-auto">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => openEditDialog(autoboard)}
+                  className="text-primary hover:text-primary hover:bg-primary/10"
+                >
+                  <Pencil className="w-4 h-4 mr-1" />
+                  {t('edit')}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setDeleteConfirmId(autoboard.id)}
+                  disabled={deleting === autoboard.id}
+                  className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                >
+                  {deleting === autoboard.id ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      {t('remove')}
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
@@ -435,15 +655,6 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
             </div>
           </div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              className="bg-primary hover:bg-primary/90 w-full md:w-auto"
-              disabled={autoboardsData ? autoboardsData.total >= autoboardsData.limit : false}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              {t('createAutoboard')}
-            </Button>
-          </DialogTrigger>
           <DialogContent className="bg-card border-border max-w-2xl">
             <DialogHeader>
               <DialogTitle className="text-foreground">{t('createDialogTitle')}</DialogTitle>
@@ -453,7 +664,10 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
             </DialogHeader>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="autoboard-type" className="text-foreground">{t('automationType')}</Label>
+                <Label htmlFor="autoboard-type" className="text-foreground">
+                  {t('automationType')}
+                  <span className="ml-1 text-destructive">*</span>
+                </Label>
                 <Select value={newType} onValueChange={(val) => setNewType(val as "post" | "refresh")}>
                   <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                     <SelectValue />
@@ -476,7 +690,10 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="channel" className="text-foreground">{t('channel')}</Label>
+                <Label htmlFor="channel" className="text-foreground">
+                  {t('channel')}
+                  <span className="ml-1 text-destructive">*</span>
+                </Label>
                 <ChannelCombobox
                   channels={channels}
                   value={selectedChannel}
@@ -491,7 +708,10 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="board-type" className="text-foreground">{t('boardType')}</Label>
+                <Label htmlFor="board-type" className="text-foreground">
+                  {t('boardType')}
+                  <span className="ml-1 text-destructive">*</span>
+                </Label>
                 <Select value={newBoardType} onValueChange={setNewBoardType}>
                   <SelectTrigger className="bg-background border-border text-foreground hover:bg-accent hover:text-accent-foreground">
                     <SelectValue placeholder={t('selectBoardType')} />
@@ -527,7 +747,10 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
 
               {newType === 'post' && (
                 <div className="space-y-2">
-                  <Label className="text-foreground">{t('postDays')}</Label>
+                  <Label className="text-foreground">
+                    {t('postDays')}
+                    <span className="ml-1 text-destructive">*</span>
+                  </Label>
                   <div className="grid grid-cols-2 gap-3 p-4 border border-border rounded-lg bg-background">
                     {DAYS.map((day) => (
                       <div key={day.value} className="flex items-center space-x-2">
@@ -767,20 +990,24 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
               {t('totalAutoboards')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              {loading ? (
-                <Skeleton className="h-8 w-20 animate-pulse" />
-              ) : (
-                <div className="text-3xl font-bold text-blue-500">{autoboardsData?.total || 0}</div>
-              )}
-              <LayoutDashboard className="h-8 w-8 text-blue-500/50" />
+          <CardContent className="h-[84px] flex flex-col justify-between">
+            <div className="relative h-10">
+              <div className="flex h-8 w-[84px] items-center">
+                {loading ? (
+                  <Skeleton className="h-8 w-[76px] animate-pulse" />
+                ) : (
+                  <div className="text-3xl font-bold leading-none tabular-nums text-blue-500">{totalBoards}</div>
+                )}
+              </div>
+              <div className="absolute right-0 top-1 flex h-8 w-8 items-center justify-center">
+                <LayoutDashboard className="h-8 w-8 text-blue-500/50" />
+              </div>
             </div>
             {loading ? (
               <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
             ) : (
               <p className="text-xs text-muted-foreground mt-2">
-                {autoboardsData?.limit ? `${autoboardsData.total} / ${autoboardsData.limit} ${t('used')}` : tCommon("loading")}
+                {autoboardsData?.limit ? `${totalBoards} / ${autoboardsData.limit} ${t('used')}` : tCommon("loading")}
               </p>
             )}
           </CardContent>
@@ -792,20 +1019,20 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
               {t('autoPost')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              {loading ? (
-                <Skeleton className="h-8 w-16 animate-pulse" />
-              ) : (
-                <div className="text-3xl font-bold text-green-500">{autoboardsData?.post_count || 0}</div>
-              )}
-              <Calendar className="h-8 w-8 text-green-500/50" />
+          <CardContent className="h-[84px] flex flex-col justify-between">
+            <div className="relative h-10">
+              <div className="flex h-8 w-[72px] items-center">
+                {loading ? (
+                  <Skeleton className="h-8 w-[64px] animate-pulse" />
+                ) : (
+                  <div className="text-3xl font-bold leading-none tabular-nums text-green-500">{postBoards}</div>
+                )}
+              </div>
+              <div className="absolute right-0 top-1 flex h-8 w-8 items-center justify-center">
+                <Calendar className="h-8 w-8 text-green-500/50" />
+              </div>
             </div>
-            {loading ? (
-              <Skeleton className="h-3 w-28 mt-2 animate-pulse" />
-            ) : (
-              <p className="text-xs text-muted-foreground mt-2">{t('scheduledBoards')}</p>
-            )}
+            <p className="text-xs text-muted-foreground mt-2">{t('scheduledBoards')}</p>
           </CardContent>
         </Card>
 
@@ -815,20 +1042,20 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
               {t('autoRefresh')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              {loading ? (
-                <Skeleton className="h-8 w-16 animate-pulse" />
-              ) : (
-                <div className="text-3xl font-bold text-purple-500">{autoboardsData?.refresh_count || 0}</div>
-              )}
-              <RefreshCw className="h-8 w-8 text-purple-500/50" />
+          <CardContent className="h-[84px] flex flex-col justify-between">
+            <div className="relative h-10">
+              <div className="flex h-8 w-[72px] items-center">
+                {loading ? (
+                  <Skeleton className="h-8 w-[64px] animate-pulse" />
+                ) : (
+                  <div className="text-3xl font-bold leading-none tabular-nums text-purple-500">{refreshBoards}</div>
+                )}
+              </div>
+              <div className="absolute right-0 top-1 flex h-8 w-8 items-center justify-center">
+                <RefreshCw className="h-8 w-8 text-purple-500/50" />
+              </div>
             </div>
-            {loading ? (
-              <Skeleton className="h-3 w-32 mt-2 animate-pulse" />
-            ) : (
-              <p className="text-xs text-muted-foreground mt-2">{t('continuousUpdates')}</p>
-            )}
+            <p className="text-xs text-muted-foreground mt-2">{t('continuousUpdates')}</p>
           </CardContent>
         </Card>
 
@@ -838,154 +1065,106 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
               {t('availableSlots')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between">
-              {loading ? (
-                <Skeleton className="h-8 w-16 animate-pulse" />
-              ) : (
-                <div className="text-3xl font-bold text-yellow-500">
-                  {autoboardsData ? autoboardsData.limit - autoboardsData.total : 0}
-                </div>
-              )}
-              <Clock className="h-8 w-8 text-yellow-500/50" />
+          <CardContent className="h-[84px] flex flex-col justify-between">
+            <div className="relative h-10">
+              <div className="flex h-8 w-[72px] items-center">
+                {loading ? (
+                  <Skeleton className="h-8 w-[64px] animate-pulse" />
+                ) : (
+                  <div className="text-3xl font-bold leading-none tabular-nums text-yellow-500">
+                    {autoboardsData ? autoboardsData.limit - totalBoards : 0}
+                  </div>
+                )}
+              </div>
+              <div className="absolute right-0 top-1 flex h-8 w-8 items-center justify-center">
+                <Clock className="h-8 w-8 text-yellow-500/50" />
+              </div>
             </div>
-            {loading ? (
-              <Skeleton className="h-3 w-36 mt-2 animate-pulse" />
-            ) : (
-              <p className="text-xs text-muted-foreground mt-2">{t('remainingCapacity')}</p>
-            )}
+            <p className="text-xs text-muted-foreground mt-2">{t('remainingCapacity')}</p>
           </CardContent>
         </Card>
       </div>
 
       {/* AutoBoards List */}
       <Card className="bg-card border-border">
-        <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <CardTitle className="text-foreground">{t('activeAutoboards')}</CardTitle>
-              <CardDescription className="text-muted-foreground">
-                {!autoboardsData || autoboardsData.autoboards.length === 0
-                  ? t('noAutoboards')
-                  : t('activeAutoboardsCount', { count: autoboardsData.autoboards.length })
-                }
-              </CardDescription>
-            </div>
+        <CardHeader className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle className="text-foreground">{t('activeAutoboards')}</CardTitle>
+            <Button
+              size="sm"
+              className="w-full bg-primary hover:bg-primary/90 sm:w-auto"
+              disabled={autoboardsData ? autoboardsData.total >= autoboardsData.limit : false}
+              onClick={() => setCreateDialogOpen(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              {t('createAutoboard')}
+            </Button>
           </div>
+          <Tabs value={boardFilter} onValueChange={(value) => setBoardFilter(value as BoardFilter)}>
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
+              <TabsTrigger
+                value="all"
+                className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+              >
+                <LayoutDashboard className="h-3.5 w-3.5 shrink-0 text-blue-500" />
+                <span className="truncate">{t('totalAutoboards')}</span>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-[4px] bg-blue-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : totalBoards}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="post"
+                className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+              >
+                <Calendar className="h-3.5 w-3.5 shrink-0 text-green-500" />
+                <span className="truncate">{t('autoPost')}</span>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : postBoards}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="refresh"
+                className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm"
+              >
+                <RefreshCw className="h-3.5 w-3.5 shrink-0 text-purple-500" />
+                <span className="truncate">{t('autoRefresh')}</span>
+                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-[4px] bg-purple-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : refreshBoards}
+                </span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4 p-4 border border-border rounded-lg">
-                  <Skeleton className="h-14 w-14 rounded-lg" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-5 w-48" />
-                    <Skeleton className="h-4 w-64" />
-                  </div>
-                  <div className="flex gap-2">
-                    <Skeleton className="h-8 w-16" />
-                    <Skeleton className="h-8 w-20" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : !autoboardsData || autoboardsData.autoboards.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-            <div className="text-center py-12">
-              <LayoutDashboard className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">
-                {t('noAutoboards')}
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t('noAutoboardsDesc')}
-              </p>
-              <Button
-                onClick={() => setCreateDialogOpen(true)}
-                className="bg-primary hover:bg-primary/90"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                {t('createAutoboard')}
-              </Button>
-            </div>
-          ) : (
-            <div className="rounded-md border border-border">
-              <div className="divide-y divide-border">
-                {autoboardsData.autoboards.map((autoboard) => (
-                  <div
-                    key={autoboard.id}
-                    className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 hover:bg-secondary/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-4 flex-1 w-full">
-                      <div className={`p-3 rounded-lg ${autoboard.type === 'post' ? 'bg-green-500/10 border border-green-500/30' : 'bg-blue-500/10 border border-blue-500/30'}`}>
-                        {autoboard.type === 'post' ? (
-                          <Calendar className="h-5 w-5 text-green-500" />
-                        ) : (
-                          <RefreshCw className="h-5 w-5 text-blue-500" />
-                        )}
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-foreground">
-                            {getBoardTypeName(autoboard.board_type)}
-                          </h3>
-                          <Badge
-                            variant={autoboard.type === 'post' ? 'default' : 'secondary'}
-                            className={autoboard.type === 'post' ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}
-                          >
-                            {autoboard.type === 'post' ? t('autoPost') : t('autoRefresh')}
-                          </Badge>
-                        </div>
-                        {autoboard.type === 'post' && autoboard.days && autoboard.days.length > 0 && (
-                          <p className="text-sm text-muted-foreground">
-                            {t('postsOn')} {autoboard.days.map(d => getDayLabel(d)).join(', ')}
-                          </p>
-                        )}
-                        {autoboard.type === 'refresh' && (
-                          <p className="text-sm text-muted-foreground">
-                            {t('updatesEvery')}
-                          </p>
-                        )}
-                        {autoboard.created_at && (
-                          <p className="text-xs text-muted-foreground">
-                            {t('created')} {new Date(autoboard.created_at).toLocaleDateString()}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => openEditDialog(autoboard)}
-                        className="text-primary hover:text-primary hover:bg-primary/10"
-                      >
-                        <Pencil className="w-4 h-4 mr-1" />
-                        {t('edit')}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleDeleteAutoBoard(autoboard.id)}
-                        disabled={deleting === autoboard.id}
-                        className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                      >
-                        {deleting === autoboard.id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <>
-                            <Trash2 className="w-4 h-4 mr-1" />
-                            {t('remove')}
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {renderAutoboardsListContent()}
         </CardContent>
       </Card>
+
+      <AlertDialog
+        open={deleteConfirmId !== null}
+        onOpenChange={(open) => {
+          if (!open && !deleting) {
+            setDeleteConfirmId(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('alerts.deleteConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('alerts.deleteConfirmDescription')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={Boolean(deleting)}>{tCommon('cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteAutoBoard}
+              disabled={Boolean(deleting)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : t('remove')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Best Practices */}
       <Card className="border-yellow-500/30 bg-yellow-500/5">

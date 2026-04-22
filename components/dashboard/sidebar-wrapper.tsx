@@ -12,10 +12,34 @@ interface SidebarWrapperProps {
   readonly variant?: "sidebar" | "mobile-header";
 }
 
+interface CachedGuildInfo {
+  id: string;
+  name: string;
+  icon?: string;
+}
+
 const GUILD_INFO_CACHE_TTL = 120000;
 
 function getGuildInfoCacheKey(guildId: string): string {
   return `guild-info-${guildId}`;
+}
+
+function getStoredGuildInfo(guildId: string): CachedGuildInfo | null {
+  try {
+    const stored = sessionStorage.getItem("selected_guild");
+    if (!stored) return null;
+    const parsed = JSON.parse(stored) as Partial<CachedGuildInfo> | null;
+    if (parsed?.id !== guildId || typeof parsed?.name !== "string") {
+      return null;
+    }
+    return {
+      id: parsed.id,
+      name: parsed.name,
+      icon: typeof parsed.icon === "string" ? parsed.icon : undefined,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: SidebarWrapperProps) {
@@ -28,6 +52,15 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
   useEffect(() => {
     async function fetchServerInfo() {
       try {
+        const storedGuild = getStoredGuildInfo(guildId);
+        if (storedGuild) {
+          setServerInfo({
+            name: storedGuild.name,
+            icon: storedGuild.icon,
+          });
+          setIsLoading(false);
+        }
+
         const token = localStorage.getItem("access_token");
         if (!token) {
           setIsLoading(false);
@@ -57,6 +90,15 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
           name: guild.name || "My Server",
           icon: iconUrl,
         });
+
+        sessionStorage.setItem(
+          "selected_guild",
+          JSON.stringify({
+            id: guildId,
+            name: guild.name || "My Server",
+            icon: iconUrl,
+          })
+        );
       } catch (error) {
         console.error("Failed to fetch server info:", { guildId, error });
       } finally {

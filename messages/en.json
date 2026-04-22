@@ -43,7 +43,19 @@
     "tryAgain": "Try again",
     "create": "Create",
     "viewClashProfile": "View Clash profile",
-    "openInGame": "Open in game"
+    "openInGame": "Open in game",
+    "openChannelInDiscord": "Open this channel in Discord",
+    "playerProfile": {
+      "clan": "Clan",
+      "townHallLevel": "Town Hall level",
+      "trophies": "Trophies",
+      "warPreference": "War preference",
+      "warPreferenceIn": "In",
+      "warPreferenceOut": "Out",
+      "signupGroup": "Signup group",
+      "heroLevels": "Hero levels",
+      "hitrate30d": "30 day hit rate"
+    }
   },
   "Navigation": {
     "features": "Features",
@@ -1253,6 +1265,15 @@
     "configuredBadge": "Configured",
     "setupRequired": "Setup Required",
     "configure": "Configure",
+    "sorting": {
+      "label": "Sort clans",
+      "sortBy": "Sort by",
+      "toggleDirection": "Toggle sort direction",
+      "added": "Added on",
+      "name": "Clan name",
+      "level": "Clan level",
+      "members": "Members"
+    },
     "configureClan": "Configure {name} ({tag})",
     "customizeIntegration": "Customize Discord integration settings for this clan",
     "tabs": {
@@ -2086,7 +2107,7 @@
   },
   "ServersPage": {
     "title": "Select a Server",
-    "description": "Choose a server to configure ClashKing bot settings",
+    "description": "Choose a server to configure ClashKing bot settings. You must be the Discord server owner or an administrator.",
     "backToHome": "Back to Home",
     "backToLogin": "Back to Login",
     "error": "Error",
@@ -2119,6 +2140,7 @@
     "autoRefresh": "Auto Refresh",
     "autoRefreshDesc": "Auto Refresh - Continuous updates (30-60 min)",
     "channel": "Channel",
+    "channelDeleted": "Channel was deleted.",
     "selectChannel": "Select a channel",
     "channelDesc": "The channel where the autoboard will be posted",
     "boardType": "Board Type",
@@ -2135,6 +2157,9 @@
     "howItWorks": "How AutoBoards Work",
     "howItWorksDesc": "AutoBoards can automatically post new boards on a schedule or continuously refresh existing boards with up-to-date data. Choose **Auto Post** to create new boards daily at specific days, or **Auto Refresh** to keep a board updated every 30-60 minutes.",
     "totalAutoboards": "Total AutoBoards",
+    "totalShort": "Total",
+    "postShort": "Post",
+    "refreshShort": "Refresh",
     "used": "used",
     "scheduledBoards": "Scheduled boards",
     "continuousUpdates": "Continuous updates",
@@ -2151,6 +2176,8 @@
     "tips": "💡 AutoBoard Tips",
     "noChannels": "No channels available",
     "activeAutoboardsCount": "{count} active autoboard{count, plural, one {} other {s}}",
+    "noAutoboardsForFilter": "No AutoBoards in this filter",
+    "noAutoboardsForFilterDesc": "Try another filter or create a new AutoBoard.",
     "tipsContent": {
       "type": {
         "title": "Choose the right type:",
@@ -2212,7 +2239,9 @@
       "selectDays": "Please select at least one day for auto-post",
       "createFailed": "Failed to create autoboard. Please try again.",
       "updateFailed": "Failed to update autoboard. Please try again.",
-      "deleteFailed": "Failed to delete autoboard. Please try again."
+      "deleteFailed": "Failed to delete autoboard. Please try again.",
+      "deleteConfirmTitle": "Remove AutoBoard?",
+      "deleteConfirmDescription": "Are you sure you want to remove this AutoBoard? This action cannot be undone."
     }
   },
   "TicketsPage": {
@@ -2238,11 +2267,13 @@
     "cleanup": "Cleanup",
     "transcript": "Transcript",
     "missingChannel": "Channel deleted",
+    "missingChannelCleanup": "Channel deleted, cleanup required",
     "openInDiscord": "Open in Discord",
     "table": {
       "number": "#",
       "panel": "Panel",
       "user": "User ID",
+      "category": "Category",
       "clan": "Clan",
       "account": "Account",
       "actions": "Actions"

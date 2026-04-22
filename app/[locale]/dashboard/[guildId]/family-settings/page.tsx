@@ -572,7 +572,7 @@ export default function FamilySettingsPage() {
                   {t("nickname.familyFormat")}
                 </Label>
                 {isLoading ? (
-                  <Skeleton className="h-10 w-full animate-pulse" />
+                  <Skeleton className="h-9 w-full animate-pulse" />
                 ) : (
                   <Input
                     id="family-convention"
@@ -591,13 +591,17 @@ export default function FamilySettingsPage() {
                     <Eye className="h-4 w-4 text-primary" />
                     <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
-                  {isLoading ? (
-                    <Skeleton className="h-9 w-full animate-pulse" />
-                  ) : (
-                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                      {generatePreview(settings.nickname_rule)}
-                    </p>
-                  )}
+                  <div className="h-9 w-full rounded border border-border bg-background/50 px-3">
+                    {isLoading ? (
+                      <div className="flex h-full items-center">
+                        <Skeleton className="h-4 w-2/3 animate-pulse" />
+                      </div>
+                    ) : (
+                      <p className="flex h-full items-center truncate text-sm font-mono">
+                        {generatePreview(settings.nickname_rule)}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -656,7 +660,7 @@ export default function FamilySettingsPage() {
                   {t("nickname.nonFamilyFormat")}
                 </Label>
                 {isLoading ? (
-                  <Skeleton className="h-10 w-full animate-pulse" />
+                  <Skeleton className="h-9 w-full animate-pulse" />
                 ) : (
                   <Input
                     id="non-family-convention"
@@ -675,13 +679,17 @@ export default function FamilySettingsPage() {
                     <Eye className="h-4 w-4 text-primary" />
                     <p className="text-xs font-medium text-primary">{t("nickname.preview")}</p>
                   </div>
-                  {isLoading ? (
-                    <Skeleton className="h-9 w-full animate-pulse" />
-                  ) : (
-                    <p className="text-sm font-mono bg-background/50 border border-border rounded px-3 py-2">
-                      {generatePreview(settings.non_family_nickname_rule)}
-                    </p>
-                  )}
+                  <div className="h-9 w-full rounded border border-border bg-background/50 px-3">
+                    {isLoading ? (
+                      <div className="flex h-full items-center">
+                        <Skeleton className="h-4 w-2/3 animate-pulse" />
+                      </div>
+                    ) : (
+                      <p className="flex h-full items-center truncate text-sm font-mono">
+                        {generatePreview(settings.non_family_nickname_rule)}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
 

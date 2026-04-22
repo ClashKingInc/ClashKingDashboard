@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -21,9 +21,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { AlertCircle, CalendarRange, CheckCircle2, Clock3, Copy, ExternalLink, Eye, Gift, Loader2, Pencil, Plus, RefreshCw, ShieldCheck, Sword, Trash2, Trophy, User, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -221,41 +221,6 @@ interface GiveawaysMainContentProps {
   onShowMore: () => void;
 }
 
-interface DiscordOpenPopoverProps {
-  trigger: ReactNode;
-  title: string;
-  description?: string;
-  url: string;
-  buttonLabel: string;
-}
-
-function DiscordOpenPopover({
-  trigger,
-  title,
-  description,
-  url,
-  buttonLabel,
-}: Readonly<DiscordOpenPopoverProps>) {
-  const openDiscord = () => window.open(url, "_blank", "noreferrer");
-  return (
-    <Popover>
-      <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-      <PopoverContent className="w-72 p-3" align="start">
-        <div className="space-y-3">
-          <div>
-            <p className="truncate text-sm font-medium text-foreground">{title}</p>
-            {description ? <p className="mt-1 text-xs text-muted-foreground">{description}</p> : null}
-          </div>
-          <Button variant="outline" className="w-full gap-2" onClick={openDiscord}>
-            <ExternalLink className="h-4 w-4" />
-            {buttonLabel}
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 function GiveawaysMainContent({
   loading,
   statsLabels,
@@ -317,10 +282,25 @@ function GiveawaysMainContent({
           <CardHeader><CardTitle>{listTitle}</CardTitle><CardDescription>{listDescription}</CardDescription></CardHeader>
           <CardContent>
             <Tabs value="ongoing">
-              <TabsList className="grid w-full grid-cols-3 md:w-auto">
-                <TabsTrigger value="ongoing">{tabs.ongoing}</TabsTrigger>
-                <TabsTrigger value="upcoming">{tabs.upcoming}</TabsTrigger>
-                <TabsTrigger value="ended">{tabs.ended}</TabsTrigger>
+              <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
+                <TabsTrigger value="ongoing" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                  <span className="truncate">{tabs.ongoing}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="upcoming" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                  <span className="truncate">{tabs.upcoming}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="ended" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                  <span className="truncate">{tabs.ended}</span>
+                  <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-slate-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                    <Skeleton className="h-2.5 w-2.5 rounded-[2px]" />
+                  </span>
+                </TabsTrigger>
               </TabsList>
             </Tabs>
             <div className="mt-6 space-y-3">
@@ -372,10 +352,25 @@ function GiveawaysMainContent({
         <CardHeader><CardTitle>{t("listTitle")}</CardTitle><CardDescription>{t("listDescription")}</CardDescription></CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={onActiveTabChange}>
-            <TabsList className="grid w-full grid-cols-3 md:w-auto">
-              <TabsTrigger value="ongoing">{t("tabs.ongoing")}{giveaways.ongoing.length > 0 && <span className="ml-1.5 rounded-full bg-primary/20 px-1.5 py-0.5 text-[10px] font-semibold text-primary">{giveaways.ongoing.length}</span>}</TabsTrigger>
-              <TabsTrigger value="upcoming">{t("tabs.upcoming")}{giveaways.upcoming.length > 0 && <span className="ml-1.5 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold text-amber-500">{giveaways.upcoming.length}</span>}</TabsTrigger>
-              <TabsTrigger value="ended">{t("tabs.ended")}{giveaways.ended.length > 0 && <span className="ml-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">{giveaways.ended.length}</span>}</TabsTrigger>
+            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-3 sm:gap-0">
+              <TabsTrigger value="ongoing" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <span className="truncate">{t("tabs.ongoing")}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {giveaways.ongoing.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="upcoming" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <span className="truncate">{t("tabs.upcoming")}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-amber-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {giveaways.upcoming.length}
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="ended" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
+                <span className="truncate">{t("tabs.ended")}</span>
+                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-slate-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
+                  {giveaways.ended.length}
+                </span>
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="ongoing" className="mt-6">
               <GiveawaysTable
@@ -488,6 +483,7 @@ function GiveawaysTable({
             key={w.user_id}
             userId={w.user_id}
             username={w.username}
+            avatarUrl={w.avatar_url}
             size="sm"
             triggerContent={(
               <button
@@ -584,7 +580,7 @@ function GiveawaysTable({
                         title={ch}
                         description={t("table.channel")}
                         url={`https://discord.com/channels/${guildId}/${g.channel_id}`}
-                        buttonLabel={t("table.openInDiscord")}
+                        buttonLabel={tCommon("openChannelInDiscord")}
                         trigger={(
                           <button
                             type="button"

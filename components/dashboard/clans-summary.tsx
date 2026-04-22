@@ -70,13 +70,28 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
   if (isLoading) {
     return (
       <Card className="bg-card border-border">
-        <CardHeader>
-          <Skeleton className="h-5 w-32" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <div>
+            <CardTitle className="text-foreground">{t("clans.title")}</CardTitle>
+            <CardDescription className="flex h-5 items-center">
+              <Skeleton className="h-3.5 w-36" />
+            </CardDescription>
+          </div>
+          <Skeleton className="h-8 w-24" />
         </CardHeader>
         <CardContent>
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex flex-wrap gap-3">
             {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-16 w-32 rounded-lg" />
+              <div
+                key={i}
+                className="flex h-[52px] w-[220px] items-center gap-2 rounded-lg border border-border bg-background px-3 py-2"
+              >
+                <Skeleton className="h-7 w-7 rounded-sm" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </div>
             ))}
           </div>
         </CardContent>
@@ -139,7 +154,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <div>
           <CardTitle className="text-foreground">{t("clans.title")}</CardTitle>
-          <CardDescription>{t("clans.description", { count: clans.length })}</CardDescription>
+          <CardDescription className="flex h-5 items-center">{t("clans.description", { count: clans.length })}</CardDescription>
         </div>
         <Button
           variant="outline"
@@ -158,7 +173,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
             return (
               <div
                 key={tag}
-                className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2"
+                className="flex h-[52px] w-[220px] items-center gap-2 overflow-hidden rounded-lg border border-border bg-background px-3 py-2"
               >
                 <Image
                   src={badge}
@@ -168,9 +183,9 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
                   className="rounded-sm"
                   unoptimized
                 />
-                <div>
-                  <p className="text-sm font-medium text-foreground leading-tight">{name}</p>
-                  <p className="text-xs text-muted-foreground">{tag}</p>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium leading-tight text-foreground">{name}</p>
+                  <p className="truncate text-xs text-muted-foreground">{tag}</p>
                 </div>
               </div>
             );

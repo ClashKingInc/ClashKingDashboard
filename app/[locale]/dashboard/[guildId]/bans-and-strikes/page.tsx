@@ -51,12 +51,19 @@ import {
   Users,
   ChevronRight,
   ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 import type { BannedPlayer, Strike } from "@/lib/api/types/server";
 import { useToast } from "@/components/ui/use-toast";
+
+type SortDirection = "asc" | "desc";
+type BanSortKey = "player" | "reason" | "bannedBy" | "date";
+type StrikeSortKey = "player" | "reason" | "addedBy" | "date";
+type GroupedStrikeSortKey = "player" | "totalStrikes" | "totalWeight" | "lastStrike";
 
 export default function BansPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
@@ -92,12 +99,40 @@ export default function BansPage() { // NOSONAR — React page component: comple
   const [activeTab, setActiveTab] = useState("bans");
   const [strikeViewMode, setStrikeViewMode] = useState<"grouped" | "all">("grouped");
   const [expandedPlayerTags, setExpandedPlayerTags] = useState<string[]>([]);
+  const [clanNameByTag, setClanNameByTag] = useState<Record<string, string>>({});
+  const [banSort, setBanSort] = useState<{ key: BanSortKey; direction: SortDirection }>({
+    key: "date",
+    direction: "desc",
+  });
+  const [strikeSort, setStrikeSort] = useState<{ key: StrikeSortKey; direction: SortDirection }>({
+    key: "date",
+    direction: "desc",
+  });
+  const [groupedStrikeSort, setGroupedStrikeSort] = useState<{ key: GroupedStrikeSortKey; direction: SortDirection }>({
+    key: "totalWeight",
+    direction: "desc",
+  });
 
   // Fetch bans and strikes on mount
   useEffect(() => {
     fetchBans();
     fetchStrikes();
+    fetchServerClans();
   }, [guildId]);
+
+  const normalizeClanTag = (tag?: string | null) => {
+    if (!tag) return "";
+    const trimmed = tag.trim().toUpperCase();
+    if (!trimmed) return "";
+    return trimmed.startsWith("#") ? trimmed : `#${trimmed}`;
+  };
+
+  const resolveClanName = (clanName?: string | null, clanTag?: string | null) => {
+    if (clanName) return clanName;
+    const normalizedTag = normalizeClanTag(clanTag);
+    if (!normalizedTag) return null;
+    return clanNameByTag[normalizedTag] ?? null;
+  };
 
   const fetchBans = async () => {
     try {
@@ -130,6 +165,35 @@ export default function BansPage() { // NOSONAR — React page component: comple
       });
     } finally {
       setIsLoadingBans(false);
+    }
+  };
+
+  const fetchServerClans = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) return;
+
+      const response = await apiCache.get(`server-clans-${guildId}`, async () => {
+        return await apiClient.servers.getServerClans(guildId);
+      });
+
+      if (response.error) {
+        throw new Error(response.error || "Failed to fetch server clans");
+      }
+
+      const clans = response.data ?? [];
+      const nextClanNameByTag = clans.reduce<Record<string, string>>((acc, clan) => {
+        const normalizedTag = normalizeClanTag(clan.tag);
+        if (!normalizedTag || !clan.name) {
+          return acc;
+        }
+        acc[normalizedTag] = clan.name;
+        return acc;
+      }, {});
+
+      setClanNameByTag(nextClanNameByTag);
+    } catch (error) {
+      console.error("Error fetching server clans:", error);
     }
   };
 
@@ -395,6 +459,116 @@ export default function BansPage() { // NOSONAR — React page component: comple
       strike.reason.toLowerCase().includes(searchQueryStrikes.toLowerCase())
   );
 
+  const toggleBanSort = (key: BanSortKey) => {
+    setBanSort((current) => {
+      if (current.key === key) {
+        return { key, direction: current.direction === "asc" ? "desc" : "asc" };
+      }
+
+      return { key, direction: key === "date" ? "desc" : "asc" };
+    });
+  };
+
+  const toggleStrikeSort = (key: StrikeSortKey) => {
+    setStrikeSort((current) => {
+      if (current.key === key) {
+        return { key, direction: current.direction === "asc" ? "desc" : "asc" };
+      }
+
+      return { key, direction: key === "date" ? "desc" : "asc" };
+    });
+  };
+
+  const toggleGroupedStrikeSort = (key: GroupedStrikeSortKey) => {
+    setGroupedStrikeSort((current) => {
+      if (current.key === key) {
+        return { key, direction: current.direction === "asc" ? "desc" : "asc" };
+      }
+
+      return {
+        key,
+        direction: key === "lastStrike" || key === "totalWeight" ? "desc" : "asc",
+      };
+    });
+  };
+
+  const sortText = (left: string, right: string) =>
+    left.localeCompare(right, locale, { sensitivity: "base" });
+
+  const toTime = (value: string | null | undefined) => {
+    if (!value) return 0;
+    const parsed = new Date(value).getTime();
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
+
+  const sortedBans = [...filteredBans].sort((left, right) => {
+    let result = 0;
+
+    switch (banSort.key) {
+      case "player": {
+        const leftPlayer = left.VillageName || left.name || left.VillageTag || "";
+        const rightPlayer = right.VillageName || right.name || right.VillageTag || "";
+        result = sortText(leftPlayer, rightPlayer);
+        break;
+      }
+      case "reason": {
+        result = sortText(left.Notes || "", right.Notes || "");
+        break;
+      }
+      case "bannedBy": {
+        const leftAddedBy = left.added_by_username || String(left.added_by ?? "");
+        const rightAddedBy = right.added_by_username || String(right.added_by ?? "");
+        result = sortText(leftAddedBy, rightAddedBy);
+        break;
+      }
+      case "date":
+      default: {
+        result = toTime(left.DateCreated) - toTime(right.DateCreated);
+        break;
+      }
+    }
+
+    return banSort.direction === "asc" ? result : -result;
+  });
+
+  const sortedStrikes = [...filteredStrikes].sort((left, right) => {
+    let result = 0;
+
+    switch (strikeSort.key) {
+      case "player": {
+        result = sortText(left.player_name || left.tag || "", right.player_name || right.tag || "");
+        break;
+      }
+      case "reason": {
+        result = sortText(left.reason || "", right.reason || "");
+        break;
+      }
+      case "addedBy": {
+        const leftAddedBy = left.added_by_username || String(left.added_by ?? "");
+        const rightAddedBy = right.added_by_username || String(right.added_by ?? "");
+        result = sortText(leftAddedBy, rightAddedBy);
+        break;
+      }
+      case "date":
+      default: {
+        result = toTime(left.date_created) - toTime(right.date_created);
+        break;
+      }
+    }
+
+    return strikeSort.direction === "asc" ? result : -result;
+  });
+
+  const renderSortIcon = (isActive: boolean, direction: SortDirection) => {
+    if (!isActive) {
+      return <ChevronsUpDown className="h-3.5 w-3.5 opacity-40" />;
+    }
+
+    return direction === "asc"
+      ? <ChevronUp className="h-3.5 w-3.5" />
+      : <ChevronDown className="h-3.5 w-3.5" />;
+  };
+
   const groupedStrikes = Object.values(
     filteredStrikes.reduce((acc, strike) => {
       const tag = strike.tag;
@@ -402,6 +576,9 @@ export default function BansPage() { // NOSONAR — React page component: comple
         acc[tag] = {
           tag: tag,
           player_name: strike.player_name,
+          clan_name: strike.clan_name,
+          town_hall: strike.town_hall,
+          trophies: strike.trophies,
           total_weight: 0,
           count: 0,
           last_strike: strike.date_created,
@@ -418,12 +595,41 @@ export default function BansPage() { // NOSONAR — React page component: comple
     }, {} as Record<string, {
       tag: string,
       player_name?: string,
+      clan_name?: string | null,
+      town_hall?: number | null,
+      trophies?: number | null,
       total_weight: number,
       count: number,
       last_strike: string,
       strikes: Strike[]
     }>)
-  ).sort((a, b) => b.total_weight - a.total_weight);
+  );
+
+  const sortedGroupedStrikes = [...groupedStrikes].sort((left, right) => {
+    let result = 0;
+
+    switch (groupedStrikeSort.key) {
+      case "player": {
+        result = sortText(left.player_name || left.tag || "", right.player_name || right.tag || "");
+        break;
+      }
+      case "totalStrikes": {
+        result = left.count - right.count;
+        break;
+      }
+      case "totalWeight": {
+        result = left.total_weight - right.total_weight;
+        break;
+      }
+      case "lastStrike":
+      default: {
+        result = toTime(left.last_strike) - toTime(right.last_strike);
+        break;
+      }
+    }
+
+    return groupedStrikeSort.direction === "asc" ? result : -result;
+  });
 
   // Calculate strike statistics
   const totalStrikeWeight = strikes.reduce((sum, strike) => sum + strike.strike_weight, 0);
@@ -562,7 +768,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
             <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                  <div className="flex flex-col md:flex-row md:items-start gap-4">
                     <div>
                       <CardTitle>{t("bans.list.title")}</CardTitle>
                       <CardDescription>
@@ -681,20 +887,60 @@ export default function BansPage() { // NOSONAR — React page component: comple
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>{t("bans.table.player")}</TableHead>
-                            <TableHead>{t("bans.table.reason")}</TableHead>
-                            <TableHead>{t("bans.table.bannedBy")}</TableHead>
-                            <TableHead>{t("bans.table.date")}</TableHead>
+                            <TableHead>
+                              <button
+                                type="button"
+                                onClick={() => toggleBanSort("player")}
+                                className="flex items-center gap-1 transition-colors hover:text-foreground"
+                              >
+                                {t("bans.table.player")}
+                                {renderSortIcon(banSort.key === "player", banSort.direction)}
+                              </button>
+                            </TableHead>
+                            <TableHead>
+                              <button
+                                type="button"
+                                onClick={() => toggleBanSort("reason")}
+                                className="flex items-center gap-1 transition-colors hover:text-foreground"
+                              >
+                                {t("bans.table.reason")}
+                                {renderSortIcon(banSort.key === "reason", banSort.direction)}
+                              </button>
+                            </TableHead>
+                            <TableHead>
+                              <button
+                                type="button"
+                                onClick={() => toggleBanSort("bannedBy")}
+                                className="flex items-center gap-1 transition-colors hover:text-foreground"
+                              >
+                                {t("bans.table.bannedBy")}
+                                {renderSortIcon(banSort.key === "bannedBy", banSort.direction)}
+                              </button>
+                            </TableHead>
+                            <TableHead>
+                              <button
+                                type="button"
+                                onClick={() => toggleBanSort("date")}
+                                className="flex items-center gap-1 transition-colors hover:text-foreground"
+                              >
+                                {t("bans.table.date")}
+                                {renderSortIcon(banSort.key === "date", banSort.direction)}
+                              </button>
+                            </TableHead>
                             <TableHead className="text-right">{tCommon("actions")}</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {filteredBans.map((ban, index) => (
+                          {sortedBans.map((ban, index) => (
                             <TableRow key={`${ban.VillageTag}-${index}`}>
                               <TableCell>
                                 <PlayerProfilePopover
-                                  playerName={ban.VillageName || ban.name || tCommon("unknown")}
+                                  playerName={ban.name || ban.VillageName || tCommon("unknown")}
                                   playerTag={ban.VillageTag}
+                                  clanName={resolveClanName(ban.clan_name, ban.clan_tag)}
+                                  clanTag={ban.clan_tag ?? null}
+                                  townhallLevel={ban.town_hall ?? null}
+                                  trophies={ban.trophies ?? null}
                                 />
                               </TableCell>
                             <TableCell className="max-w-xs">
@@ -859,7 +1105,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
               <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
+                  <div className="flex flex-col md:flex-row md:items-start gap-4">
                     <div>
                       <CardTitle>{t("strikes.list.title")}</CardTitle>
                       <CardDescription>
@@ -1040,22 +1286,62 @@ export default function BansPage() { // NOSONAR — React page component: comple
                         <Table>
                           <TableHeader>
                             <TableRow>
-                              <TableHead>{t("strikes.table.player")}</TableHead>
-                              <TableHead>{t("strikes.table.reason")}</TableHead>
+                              <TableHead>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleStrikeSort("player")}
+                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.player")}
+                                  {renderSortIcon(strikeSort.key === "player", strikeSort.direction)}
+                                </button>
+                              </TableHead>
+                              <TableHead>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleStrikeSort("reason")}
+                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.reason")}
+                                  {renderSortIcon(strikeSort.key === "reason", strikeSort.direction)}
+                                </button>
+                              </TableHead>
                               <TableHead>{t("strikes.table.weight")}</TableHead>
-                              <TableHead>{t("strikes.table.addedBy")}</TableHead>
-                              <TableHead>{t("strikes.table.date")}</TableHead>
+                              <TableHead>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleStrikeSort("addedBy")}
+                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.addedBy")}
+                                  {renderSortIcon(strikeSort.key === "addedBy", strikeSort.direction)}
+                                </button>
+                              </TableHead>
+                              <TableHead>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleStrikeSort("date")}
+                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.date")}
+                                  {renderSortIcon(strikeSort.key === "date", strikeSort.direction)}
+                                </button>
+                              </TableHead>
                               <TableHead>{t("strikes.table.expires")}</TableHead>
                               <TableHead className="text-right">{tCommon("actions")}</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {filteredStrikes.map((strike, index) => (
+                            {sortedStrikes.map((strike, index) => (
                               <TableRow key={`${strike.strike_id}-${index}`}>
                                 <TableCell>
                                   <PlayerProfilePopover
                                     playerName={strike.player_name || tCommon("unknown")}
                                     playerTag={strike.tag}
+                                    clanName={resolveClanName(strike.clan_name, strike.clan_tag)}
+                                    clanTag={strike.clan_tag ?? null}
+                                    townhallLevel={strike.town_hall ?? null}
+                                    trophies={strike.trophies ?? null}
                                   />
                                 </TableCell>
                               <TableCell className="max-w-xs">
@@ -1117,15 +1403,51 @@ export default function BansPage() { // NOSONAR — React page component: comple
                         <Table>
                           <TableHeader>
                             <TableRow>
-                              <TableHead>{t("strikes.table.player")}</TableHead>
-                              <TableHead className="text-center">{t("strikes.table.totalStrikes")}</TableHead>
-                              <TableHead className="text-center">{t("strikes.table.totalWeight")}</TableHead>
-                              <TableHead>{t("strikes.table.lastStrike")}</TableHead>
+                              <TableHead>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleGroupedStrikeSort("player")}
+                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.player")}
+                                  {renderSortIcon(groupedStrikeSort.key === "player", groupedStrikeSort.direction)}
+                                </button>
+                              </TableHead>
+                              <TableHead className="text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => toggleGroupedStrikeSort("totalStrikes")}
+                                  className="mx-auto flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.totalStrikes")}
+                                  {renderSortIcon(groupedStrikeSort.key === "totalStrikes", groupedStrikeSort.direction)}
+                                </button>
+                              </TableHead>
+                              <TableHead className="text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => toggleGroupedStrikeSort("totalWeight")}
+                                  className="mx-auto flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.totalWeight")}
+                                  {renderSortIcon(groupedStrikeSort.key === "totalWeight", groupedStrikeSort.direction)}
+                                </button>
+                              </TableHead>
+                              <TableHead>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleGroupedStrikeSort("lastStrike")}
+                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
+                                >
+                                  {t("strikes.table.lastStrike")}
+                                  {renderSortIcon(groupedStrikeSort.key === "lastStrike", groupedStrikeSort.direction)}
+                                </button>
+                              </TableHead>
                               <TableHead className="text-right">{tCommon("actions")}</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {groupedStrikes.map((group, index) => {
+                            {sortedGroupedStrikes.map((group, index) => {
                               const isExpanded = expandedPlayerTags.includes(group.tag);
                               return (
                                 <Fragment key={`${group.tag}-${index}`}>
@@ -1134,6 +1456,10 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                       <PlayerProfilePopover
                                         playerName={group.player_name || tCommon("unknown")}
                                         playerTag={group.tag}
+                                        clanName={resolveClanName(group.clan_name, group.strikes[0]?.clan_tag)}
+                                        clanTag={group.strikes[0]?.clan_tag ?? null}
+                                        townhallLevel={group.town_hall ?? null}
+                                        trophies={group.trophies ?? null}
                                       />
                                     </TableCell>
                                     <TableCell className="text-center">
