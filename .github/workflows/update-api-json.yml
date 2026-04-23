@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write # Cruciaal voor het aanmaken van de PR
+      pull-requests: write
 
     steps:
       - name: Checkout repository
@@ -31,18 +31,22 @@ jobs:
             exit 1
           fi
 
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
       - name: Create or Update Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update api reference $(date +'%Y-%m-%d')"
+          commit-message: "chore: update api reference ${{ steps.date.outputs.date }}"
           branch: docs/api-reference
-          delete-branch: false # We houden de branch aan voor updates
-          title: "Update API JSON Reference"
+          delete-branch: false
+          title: "Update API JSON Reference (${{ steps.date.outputs.date }})"
           body: |
             This is an automated update of the API JSON documentation.
-            - Source: https://go.api.clashk.ing/openapi-private.json
-            - Updated at: $(date)
+            - **Source:** https://go.api.clashk.ing/openapi-private.json
+            - **Updated at:** ${{ steps.date.outputs.date }}
           labels: |
             documentation
             automated-pr
