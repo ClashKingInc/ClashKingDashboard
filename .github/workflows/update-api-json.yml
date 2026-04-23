@@ -2,9 +2,8 @@ name: Update API JSON Reference
 
 on:
   schedule:
-    # Runs every day at 00:00 UTC
     - cron: '0 0 * * *'
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   update-json:
@@ -19,7 +18,11 @@ jobs:
       - name: Fetch API JSON
         run: |
           mkdir -p .github/api-reference
-          curl -s https://go.api.clashk.ing/openapi-private.json -o .github/api-reference/openapi-private.json
+          # -f: Fail on HTTP errors
+          # -s: Silent mode
+          # -S: Show error message if it fails (useful with -s)
+          # -L: Follow redirects
+          curl -f sSL https://go.api.clashk.ing/openapi-private.json -o .github/api-reference/openapi-private.json
 
       - name: Commit and Push changes
         run: |
