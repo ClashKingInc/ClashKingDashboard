@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
       - name: Fetch API JSON
         run: |
@@ -25,7 +28,7 @@ jobs:
       - name: Validate JSON
         run: jq . .github/api-reference/openapi-private.json > /dev/null
 
-      - name: Create PR if changes exist
+      - name: Create or update pull request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -40,7 +43,7 @@ jobs:
           commit-message: "chore: update api reference"
           title: "Update API JSON Reference"
           body: |
-            Automated update of API reference JSON
+            Automated update of API reference JSON.
             Source: https://go.api.clashk.ing/openapi-private.json
 
           labels: |
