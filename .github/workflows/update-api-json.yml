@@ -5,9 +5,6 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   update-json:
     runs-on: ubuntu-latest
@@ -17,36 +14,35 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Fetch API JSON
         run: |
           mkdir -p .github/api-reference
-          curl -fsSL https://go.api.clashk.ing/openapi-private.json -o .github/api-reference/openapi-private.json
+          curl -fsSL https://go.api.clashk.ing/openapi-private.json \
+            -o .github/api-reference/openapi-private.json
 
       - name: Validate JSON
-        run: |
-          if ! jq . .github/api-reference/openapi-private.json > /dev/null; then
-            echo "Error: Downloaded file is not valid JSON"
-            exit 1
-          fi
+        run: jq . .github/api-reference/openapi-private.json > /dev/null
 
-      - name: Get current date
-        id: date
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
-
-      - name: Create or Update Pull Request
+      - name: Create PR if changes exist
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update api reference ${{ steps.date.outputs.date }}"
+
+          base: main
           branch: docs/api-reference
           delete-branch: false
-          title: "Update API JSON Reference (${{ steps.date.outputs.date }})"
+
+          add-paths: |
+            .github/api-reference/openapi-private.json
+
+          commit-message: "chore: update api reference"
+          title: "Update API JSON Reference"
           body: |
-            This is an automated update of the API JSON documentation.
-            - **Source:** https://go.api.clashk.ing/openapi-private.json
-            - **Updated at:** ${{ steps.date.outputs.date }}
+            Automated update of API reference JSON
+            Source: https://go.api.clashk.ing/openapi-private.json
+
           labels: |
             documentation
             automated-pr
