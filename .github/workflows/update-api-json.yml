@@ -29,7 +29,7 @@ jobs:
         run: jq . .github/api-reference/openapi-private.json > /dev/null
 
       - name: Create or update pull request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
