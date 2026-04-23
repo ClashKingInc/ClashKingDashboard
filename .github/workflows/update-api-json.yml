@@ -18,11 +18,19 @@ jobs:
       - name: Fetch API JSON
         run: |
           mkdir -p .github/api-reference
-          # -f: Fail on HTTP errors
+          # -f: Fail fast on HTTP errors (don't return 0 on 404/500)
           # -s: Silent mode
-          # -S: Show error message if it fails (useful with -s)
+          # -S: Show error if it fails
           # -L: Follow redirects
-          curl -f sSL https://go.api.clashk.ing/openapi-private.json -o .github/api-reference/openapi-private.json
+          curl -fsSL https://go.api.clashk.ing/openapi-private.json -o .github/api-reference/openapi-private.json
+
+      - name: Validate JSON
+        run: |
+          # Check if the file is valid JSON using jq
+          if ! jq . .github/api-reference/openapi-private.json > /dev/null; then
+            echo "Error: Downloaded file is not valid JSON"
+            exit 1
+          fi
 
       - name: Commit and Push changes
         run: |
