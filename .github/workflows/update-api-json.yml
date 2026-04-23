@@ -1,0 +1,36 @@
+name: Update API JSON Reference
+
+on:
+  schedule:
+    # Runs every day at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch API JSON
+        run: |
+          mkdir -p .github/api-reference
+          curl -s https://go.api.clashk.ing/openapi-private.json -o .github/api-reference/openapi-private.json
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add .github/api-reference/openapi-private.json
+          
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes detected in API JSON."
+          else
+            git commit -m "chore: update api reference $(date +'%Y-%m-%d')"
+            git push
+          fi
