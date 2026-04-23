@@ -1,0 +1,47 @@
+name: Update API JSON Reference
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch API JSON
+        run: |
+          mkdir -p .github/api-reference
+          # -f: Fail fast on HTTP errors (don't return 0 on 404/500)
+          # -s: Silent mode
+          # -S: Show error if it fails
+          # -L: Follow redirects
+          curl -fsSL https://go.api.clashk.ing/openapi-private.json -o .github/api-reference/openapi-private.json
+
+      - name: Validate JSON
+        run: |
+          # Check if the file is valid JSON using jq
+          if ! jq . .github/api-reference/openapi-private.json > /dev/null; then
+            echo "Error: Downloaded file is not valid JSON"
+            exit 1
+          fi
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add .github/api-reference/openapi-private.json
+          
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes detected in API JSON."
+          else
+            git commit -m "chore: update api reference $(date +'%Y-%m-%d')"
+            git push
+          fi
