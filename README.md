@@ -224,7 +224,7 @@ API Docs: http://localhost:8000/docs
 
 ## API Integration
 
-The dashboard connects to ClashKingAPI endpoints. See [.claude/context.md](./.claude/context.md) for complete API documentation.
+The dashboard connects to ClashKingAPI endpoints. See [.github/api-reference/openapi-private.json](./.github/api-reference/openapi-private.json) for complete API documentation.
 
 ## Tech Stack
 

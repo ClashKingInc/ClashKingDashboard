@@ -214,4 +214,4 @@ api.utils.*      // 17 utility methods
 
 ## Examples
 
-See [ENDPOINTS_DOCUMENTATION.md](../../.claude/ENDPOINTS_DOCUMENTATION.md) for complete API reference.
+See [.github/api-reference/openapi-private.json](../../.github/api-reference/openapi-private.json) for complete API reference.

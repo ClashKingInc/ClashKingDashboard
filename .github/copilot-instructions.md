@@ -29,6 +29,8 @@ ClashKing Dashboard is the web control panel for configuring ClashKing bot setti
 - `lib/*.ts`: shared utilities (cache, locale preference, theme, PKCE, utils).
 - `messages/`: translation JSON files for all supported locales.
 
+- `.github/api-reference/`: machine-readable API reference (for AI models and tooling).
+
 ## Coding rules
 
 1. Prefer Server Components by default. Add `"use client"` only when required.
