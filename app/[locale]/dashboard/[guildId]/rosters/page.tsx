@@ -777,7 +777,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-3">
               <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
                 <ClipboardList className="h-8 w-8 text-primary" />
@@ -787,7 +787,35 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 <p className="text-muted-foreground mt-1">{t("description")}</p>
               </div>
             </div>
-            <Skeleton className="h-10 w-32" />
+            <div className="grid w-full grid-cols-2 gap-2 md:ml-auto md:flex md:w-auto md:flex-nowrap md:items-center md:justify-end md:gap-2">
+              <Button
+                variant="outline"
+                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>Refresh</span>
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
+              >
+                <Layers className="h-4 w-4" />
+                {t("groups.create")}
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
+              >
+                <GitCompare className="h-4 w-4" />
+                {t("compare.enterMode")}
+              </Button>
+              <Button
+                className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
+              >
+                <Plus className="h-4 w-4" />
+                {t("createRoster")}
+              </Button>
+            </div>
           </div>
           <div className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
             <Card className="bg-card border-blue-500/30 bg-blue-500/5">
@@ -835,6 +863,12 @@ export default function RostersPage() { // NOSONAR — React page component: com
               </CardContent>
             </Card>
           </div>
+          {/* Search + Categories */}
+          <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+            <div className="relative w-full md:w-96">
+              <Skeleton className="h-10 w-full rounded-md" />
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-64" /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
@@ -867,7 +901,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3">
             <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
               <ClipboardList className="h-8 w-8 text-primary" />
             </div>
@@ -877,14 +911,15 @@ export default function RostersPage() { // NOSONAR — React page component: com
             </div>
           </div>
 
-          <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <Button onClick={refresh} variant="outline" size="icon" className="shrink-0">
+          <div className="grid w-full grid-cols-2 gap-2 md:ml-auto md:flex md:w-auto md:flex-nowrap md:items-center md:justify-end md:gap-2 md:overflow-x-auto md:pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden">
+            <Button onClick={refresh} variant="outline" className="w-full md:w-auto gap-2">
               <RefreshCw className="w-4 h-4" />
+              <span>Refresh</span>
             </Button>
             <Button
               variant="outline"
               onClick={() => setCreateGroupDialogOpen(true)}
-              className="gap-2 shrink-0"
+              className="gap-2 shrink-0 w-full md:w-auto"
             >
               <Layers className="h-4 w-4" />
               {t("groups.create")}
@@ -893,7 +928,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
               <Button
                 variant="outline"
                 onClick={() => setCompareMode(true)}
-                className="gap-2 shrink-0"
+                className="gap-2 shrink-0 w-full md:w-auto"
               >
                 <GitCompare className="h-4 w-4" />
                 {t("compare.enterMode")}
@@ -901,7 +936,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
             )}
             <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-primary hover:bg-primary/90 gap-2 shrink-0">
+                <Button className="bg-primary hover:bg-primary/90 gap-2 shrink-0 w-full md:w-auto">
                   <Plus className="h-4 w-4" />
                   {t("createRoster")}
                 </Button>

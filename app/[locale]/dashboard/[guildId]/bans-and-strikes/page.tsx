@@ -654,8 +654,8 @@ export default function BansPage() { // NOSONAR — React page component: comple
         {/* Header */}
         <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+            <div className="flex items-start gap-3">
+              <div className="shrink-0 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
                 <Ban className="h-8 w-8 text-red-500" />
               </div>
               <div>
