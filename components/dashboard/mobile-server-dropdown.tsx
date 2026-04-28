@@ -55,9 +55,10 @@ export function MobileServerDropdown({
 
   if (isLoading) {
     return (
-      <div className="flex min-w-0 items-center gap-2">
+      <div className="flex min-w-0 items-center gap-2 rounded-md px-1 py-1">
         <Skeleton className="h-8 w-8 rounded-md" />
         <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-4 w-4" />
       </div>
     );
   }

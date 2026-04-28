@@ -751,8 +751,8 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-start gap-4 md:items-center">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+        <div className="flex items-start gap-4">
+          <div className="shrink-0 rounded-lg border border-primary/30 bg-primary/10 p-3">
             <Shield className="h-8 w-8 text-primary" />
           </div>
           <div>
@@ -770,13 +770,13 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.totalRoles")}</CardTitle>
             </CardHeader>
             <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-center justify-between">
+              <div className="flex h-10 items-start justify-between gap-3">
                 {isLoading ? (
                   <Skeleton className="h-9 w-16 animate-pulse" />
                 ) : (
                   <div className="flex h-8 items-center text-3xl font-bold text-blue-500">{totalRoles}</div>
                 )}
-                <Shield className="h-8 w-8 shrink-0 text-blue-500/50" />
+                <Shield className="mt-0.5 h-8 w-8 shrink-0 text-blue-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 {t("stats.totalRolesDesc")}
@@ -789,7 +789,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.autoEvaluation")}</CardTitle>
             </CardHeader>
             <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-center justify-between">
+              <div className="flex h-10 items-start justify-between gap-3">
                 {isLoading ? (
                   <Skeleton className="h-9 w-20 animate-pulse" />
                 ) : (
@@ -797,7 +797,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                     {roleSettings.auto_eval_status ? t("stats.autoEvaluationOn") : t("stats.autoEvaluationOff")}
                   </div>
                 )}
-                <Settings className={`h-8 w-8 shrink-0 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-green-500/30'}`} />
+                <Settings className={`mt-0.5 h-8 w-8 shrink-0 ${roleSettings.auto_eval_status ? 'text-green-500/50' : 'text-green-500/30'}`} />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 {roleSettings.auto_eval_status ? t("stats.autoEvaluationActiveDesc") : t("stats.autoEvaluationInactiveDesc")}
@@ -810,13 +810,13 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.activeTypes")}</CardTitle>
             </CardHeader>
             <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-center justify-between">
+              <div className="flex h-10 items-start justify-between gap-3">
                 {isLoading ? (
                   <Skeleton className="h-9 w-12 animate-pulse" />
                 ) : (
                   <div className="flex h-8 items-center text-3xl font-bold text-purple-500">{activeRoleTypes}/{totalRoleTypes}</div>
                 )}
-                <Trophy className="h-8 w-8 shrink-0 text-purple-500/50" />
+                <Trophy className="mt-0.5 h-8 w-8 shrink-0 text-purple-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 {t("stats.activeTypesDesc")}
@@ -829,13 +829,13 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               <CardTitle className="text-sm font-medium text-muted-foreground">{t("stats.discordRoles")}</CardTitle>
             </CardHeader>
             <CardContent className="h-[84px] flex flex-col justify-between">
-              <div className="flex h-10 items-center justify-between">
+              <div className="flex h-10 items-start justify-between gap-3">
                 {isLoading ? (
                   <Skeleton className="h-9 w-12 animate-pulse" />
                 ) : (
                   <div className="flex h-8 items-center text-3xl font-bold text-yellow-500">{discordRoles.length}</div>
                 )}
-                <Users className="h-8 w-8 shrink-0 text-yellow-500/50" />
+                <Users className="mt-0.5 h-8 w-8 shrink-0 text-yellow-500/50" />
               </div>
               <p className="text-xs text-muted-foreground mt-2">
                 {t("stats.discordRolesDesc")}
