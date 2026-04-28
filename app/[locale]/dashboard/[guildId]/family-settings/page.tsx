@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Save, RotateCcw, AlertCircle, Loader2, User, Shield, Eye, ChevronDown, ChevronRight, Trash2, Users } from "lucide-react";
+import { Save, RotateCcw, AlertCircle, Loader2, User, Shield, Eye, ChevronDown, ChevronRight, Trash2, Users, Settings2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
@@ -470,15 +470,18 @@ export default function FamilySettingsPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div className="space-y-1">
+        <div className="flex items-start gap-3">
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+            <Settings2 className="h-8 w-8 text-primary" />
+          </div>
+          <div>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mt-1">
               {t("description")}
             </p>
           </div>
         </div>
-
+        
         {/* Error Alert */}
         {error && (
           <Alert variant="destructive">

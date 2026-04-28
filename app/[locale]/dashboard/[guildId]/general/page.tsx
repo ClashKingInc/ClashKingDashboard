@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { RotateCcw, AlertCircle, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2 } from "lucide-react";
+import { RotateCcw, AlertCircle, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2, Settings } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
@@ -263,13 +263,16 @@ export default function GeneralSettingsPage() {
     <div className="min-h-screen bg-background p-4 md:p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted-foreground">
-              {t("description")}
-            </p>
-          </div>
+        <div className="flex items-start gap-3">
+            <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+              <Settings className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
+              <p className="text-muted-foreground mt-1">
+                {t("description")}
+              </p>
+            </div>
         </div>
 
         {/* Error Alert */}

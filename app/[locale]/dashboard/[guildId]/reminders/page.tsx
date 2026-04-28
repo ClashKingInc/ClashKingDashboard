@@ -702,7 +702,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-start gap-3">
                 <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
                   <Bell className="h-8 w-8 text-primary" />
                 </div>
