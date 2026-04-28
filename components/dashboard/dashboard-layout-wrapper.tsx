@@ -49,6 +49,7 @@ export function DashboardLayoutWrapper({
       <div
         className={`fixed inset-0 z-50 md:hidden transition-opacity duration-200 ${isSidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
         aria-hidden={!isSidebarOpen}
+        inert={!isSidebarOpen}
       >
         <button
           className={`fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-200 ${isSidebarOpen ? "opacity-100" : "opacity-0"}`}
