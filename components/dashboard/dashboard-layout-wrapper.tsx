@@ -46,28 +46,34 @@ export function DashboardLayoutWrapper({
       </div>
 
       {/* Mobile Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <button
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm cursor-default"
-            onClick={() => setIsSidebarOpen(false)}
-            aria-label="Close sidebar"
-          />
-          <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-lg animate-in slide-in-from-left duration-200">
-            <div className="h-full relative">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsSidebarOpen(false)}
-                className="absolute right-2 top-2 z-50 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-              {sidebar}
-            </div>
+      <div
+        className={`fixed inset-0 z-50 md:hidden transition-opacity duration-200 ${isSidebarOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        aria-hidden={!isSidebarOpen}
+        inert={!isSidebarOpen}
+      >
+        <button
+          className={`fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-200 ${isSidebarOpen ? "opacity-100" : "opacity-0"}`}
+          onClick={() => setIsSidebarOpen(false)}
+          aria-label="Close sidebar"
+          tabIndex={isSidebarOpen ? 0 : -1}
+        />
+        <div
+          className={`fixed inset-y-0 left-0 w-64 bg-background shadow-lg transition-transform duration-200 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        >
+          <div className="h-full relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSidebarOpen(false)}
+              className="absolute right-2 top-2 z-50 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+              tabIndex={isSidebarOpen ? 0 : -1}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            {sidebar}
           </div>
         </div>
-      )}
+      </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-full overflow-hidden">

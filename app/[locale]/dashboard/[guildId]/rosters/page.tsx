@@ -793,7 +793,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
                 className="w-full md:w-auto pointer-events-none bg-muted text-transparent border-muted hover:bg-muted animate-pulse"
               >
                 <RefreshCw className="w-4 h-4" />
-                <span>Refresh</span>
+                <span>{tCommon("refresh")}</span>
               </Button>
               <Button
                 variant="outline"
@@ -914,7 +914,7 @@ export default function RostersPage() { // NOSONAR — React page component: com
           <div className="grid w-full grid-cols-2 gap-2 md:ml-auto md:flex md:w-auto md:flex-nowrap md:items-center md:justify-end md:gap-2 md:overflow-x-auto md:pb-1 [-ms-overflow-style:none] [scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden">
             <Button onClick={refresh} variant="outline" className="w-full md:w-auto gap-2">
               <RefreshCw className="w-4 h-4" />
-              <span>Refresh</span>
+              <span>{tCommon("refresh")}</span>
             </Button>
             <Button
               variant="outline"
