@@ -221,13 +221,25 @@ export function stateToPayload(states: EmbedFormState[], content = "", profile: 
   } = {
     data: { content: normalizedContent || null, embeds },
   };
-  if (normalizedProfile.name) messageEntry.data.username = normalizedProfile.name;
-  if (normalizedProfile.avatar_url) messageEntry.data.avatar_url = normalizedProfile.avatar_url;
-
-  return {
+  const payload: Record<string, unknown> = {
+    // Keep top-level fields for bot compatibility while preserving Discohook format.
     version: "d2",
+    content: normalizedContent || null,
+    embeds,
     messages: [messageEntry],
   };
+
+  if (normalizedProfile.name) {
+    messageEntry.data.username = normalizedProfile.name;
+    payload.username = normalizedProfile.name;
+  }
+
+  if (normalizedProfile.avatar_url) {
+    messageEntry.data.avatar_url = normalizedProfile.avatar_url;
+    payload.avatar_url = normalizedProfile.avatar_url;
+  }
+
+  return payload;
 }
 
 function parseDiscohookUrl(url: string): Record<string, unknown> | null {

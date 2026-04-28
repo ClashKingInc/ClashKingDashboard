@@ -1,0 +1,51 @@
+name: Update API JSON Reference
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-json:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Fetch API JSON
+        run: |
+          mkdir -p .github/api-reference
+          curl -fsSL https://go.api.clashk.ing/openapi-private.json \
+            -o .github/api-reference/openapi-private.json
+
+      - name: Validate JSON
+        run: jq . .github/api-reference/openapi-private.json > /dev/null
+
+      - name: Create or update pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+          base: main
+          branch: docs/api-reference
+          delete-branch: false
+
+          add-paths: |
+            .github/api-reference/openapi-private.json
+
+          commit-message: "chore: update api reference"
+          title: "Update API JSON Reference"
+          body: |
+            Automated update of API reference JSON.
+            Source: https://go.api.clashk.ing/openapi-private.json
+
+          labels: |
+            documentation
+            automated-pr
