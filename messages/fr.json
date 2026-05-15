@@ -2484,6 +2484,7 @@
     "profileUnsupportedWarning": "Attention : le bot ne prend actuellement pas en charge la modification de ce profil.",
     "import": "Importer",
     "importError": "URL Discohook invalide.",
+    "importMultipleMessagesWarning": "Ce lien contient plusieurs messages. Seul le premier a été importé — le bot supporte un seul message par embed.",
     "colorSection": "Couleur",
     "authorSection": "Auteur",
     "authorName": "Nom",

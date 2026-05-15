@@ -246,7 +246,8 @@ function parseDiscohookUrl(url: string): Record<string, unknown> | null {
   try {
     const match = /[?&]data=([^&\s]+)/.exec(url);
     if (!match) return null;
-    return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(match[1]), c => c.codePointAt(0) ?? 0)));
+    const decoded = decodeURIComponent(match[1]);
+    return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(decoded), c => c.codePointAt(0) ?? 0)));
   } catch { return null; }
 }
 
@@ -346,6 +347,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   ));
   const [importUrl, setImportUrl] = useState("");
   const [importError, setImportError] = useState(false);
+  const [importWarning, setImportWarning] = useState<string | null>(null);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [importExportOpen, setImportExportOpen] = useState(false);
   const [copiedDiscohook, setCopiedDiscohook] = useState(false);
@@ -450,7 +452,9 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
 
   const handleImport = () => {
     const parsed = parseDiscohookUrl(importUrl.trim());
-    if (!parsed) { setImportError(true); return; }
+    if (!parsed) { setImportError(true); setImportWarning(null); return; }
+    const messages = (parsed as { messages?: unknown }).messages;
+    const hasMultipleMessages = Array.isArray(messages) && messages.length > 1;
     const editorState = payloadToEditorState(parsed);
     setImportError(false);
     setImportUrl("");
@@ -458,7 +462,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setContent(editorState.content);
     setProfile(editorState.profile);
     setExpandedEmbedId(editorState.embeds[0]?.editorId ?? null);
-    setImportExportOpen(false);
+    if (hasMultipleMessages) {
+      setImportWarning(t("importMultipleMessagesWarning"));
+    } else {
+      setImportWarning(null);
+      setImportExportOpen(false);
+    }
   };
 
   // ── Save ────────────────────────────────────────────────────────────────────
@@ -810,7 +819,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
         </Button>
       </div>
 
-      <Dialog open={importExportOpen} onOpenChange={setImportExportOpen}>
+      <Dialog open={importExportOpen} onOpenChange={(open) => { if (!open) { setImportWarning(null); setImportError(false); } setImportExportOpen(open); }}>
         <DialogContent className="bg-card border-border sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("importExport")}</DialogTitle>
@@ -822,7 +831,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
               <div className="flex gap-2">
                 <Input
                   value={importUrl}
-                  onChange={e => { setImportUrl(e.target.value); setImportError(false); }}
+                  onChange={e => { setImportUrl(e.target.value); setImportError(false); setImportWarning(null); }}
                   placeholder="https://discohook.app/?data=..."
                   className={cn(inputClassName, "text-xs h-8", importError && "border-destructive")}
                 />
@@ -831,6 +840,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                 </Button>
               </div>
               {importError && <p className="text-xs text-destructive">{t("importError")}</p>}
+              {importWarning && <p className="text-xs text-amber-500">{importWarning}</p>}
             </div>
             <Button type="button" variant="outline" className="w-full justify-start" onClick={handleCopyDiscohookUrl}>
               {copiedDiscohook ? <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> : <Copy className="h-4 w-4 mr-2" />}

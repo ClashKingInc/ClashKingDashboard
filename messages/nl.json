@@ -2464,6 +2464,7 @@
     "profileUnsupportedWarning": "Let op: de bot ondersteunt het aanpassen van dit profiel momenteel nog niet.",
     "import": "Importeren",
     "importError": "Ongeldige Discohook-URL.",
+    "importMultipleMessagesWarning": "Deze link bevat meerdere berichten. Alleen het eerste bericht is geïmporteerd — de bot ondersteunt één bericht per embed.",
     "colorSection": "Kleur",
     "authorSection": "Auteur",
     "authorName": "Naam",
