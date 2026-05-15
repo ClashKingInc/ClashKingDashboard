@@ -1540,6 +1540,20 @@
       "manualOverride": "Handmatige Overschrijving:",
       "manualOverrideDesc": "Serverbeheerders kunnen handmatig rollen toewijzen, die niet worden verwijderd door auto-evaluatie."
     },
+    "categoryRoles": {
+      "title": "Categorierollen",
+      "description": "Wijs een Discord-rol toe aan elke clancategorie. Leden van clans in die categorie ontvangen automatisch de bijbehorende rol.",
+      "addButton": "Categorie toevoegen",
+      "categoryName": "Categorie",
+      "categoryNamePlaceholder": "Naam van de categorie",
+      "noCategoryRoles": "Geen categorierollen geconfigureerd",
+      "noCategoryRolesDesc": "Klik op \"Categorie toevoegen\" om er een aan te maken",
+      "addTitle": "Categorirol toevoegen",
+      "addConfirm": "Toevoegen",
+      "errorCategoryRequired": "Categorienaam is verplicht",
+      "errorRoleRequired": "Discord-rol is verplicht",
+      "errorCategoryExists": "Deze categorie heeft al een rol geconfigureerd"
+    },
     "toast": {
       "changesSaved": "Wijzigingen succesvol opgeslagen!",
       "errorLoading": "Laden van rollen mislukt",

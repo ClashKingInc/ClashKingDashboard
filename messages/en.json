@@ -1537,6 +1537,20 @@
       "manualOverride": "Manual Override:",
       "manualOverrideDesc": "Server admins can manually assign roles, which will not be removed by auto-evaluation."
     },
+    "categoryRoles": {
+      "title": "Category Roles",
+      "description": "Assign a Discord role to each clan category. Members of clans in that category automatically receive the corresponding role.",
+      "addButton": "Add Category",
+      "categoryName": "Category",
+      "categoryNamePlaceholder": "Category name",
+      "noCategoryRoles": "No category roles configured",
+      "noCategoryRolesDesc": "Click \"Add Category\" to create one",
+      "addTitle": "Add Category Role",
+      "addConfirm": "Add",
+      "errorCategoryRequired": "Category name is required",
+      "errorRoleRequired": "Discord role is required",
+      "errorCategoryExists": "This category already has a role configured"
+    },
     "toast": {
       "changesSaved": "Changes saved successfully!",
       "errorLoading": "Failed to load roles",

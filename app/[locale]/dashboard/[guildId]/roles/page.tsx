@@ -43,6 +43,7 @@ import {
   ChevronsUpDown,
   ChevronUp,
   ChevronDown,
+  Tag,
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
@@ -179,6 +180,14 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const [sortCol, setSortCol] = useState<"role" | "criteria" | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
+  const [categoryRoles, setCategoryRoles] = useState<Record<string, string>>({});
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+  const [categoryRoleSaving, setCategoryRoleSaving] = useState<string | null>(null);
+  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryRoleId, setNewCategoryRoleId] = useState("");
+  const [addCategoryError, setAddCategoryError] = useState<string | null>(null);
+
   // Dynamic league data loaded from API
   const [availableLeagues, setAvailableLeagues] = useState<Array<{ value: string; label: string }>>([]);
 
@@ -273,16 +282,17 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setIsLoading(true);
       setError(null);
 
-      const { rolesRes, settingsRes, discordRolesRes } = await apiCache.get(
+      const { rolesRes, settingsRes, discordRolesRes, clansRes } = await apiCache.get(
         rolesCacheKey,
         async () => {
-          const [rolesRes, settingsRes, discordRolesRes] = await Promise.all([
+          const [rolesRes, settingsRes, discordRolesRes, clansRes] = await Promise.all([
             apiClient.roles.getAllRoles(guildId),
             apiClient.roles.getRoleSettings(guildId),
             apiClient.roles.getDiscordRoles(guildId),
+            apiClient.servers.getServerClans(guildId),
           ]);
 
-          return { rolesRes, settingsRes, discordRolesRes };
+          return { rolesRes, settingsRes, discordRolesRes, clansRes };
         }
       );
 
@@ -319,10 +329,24 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       if (settingsRes.data) {
         setRoleSettings(settingsRes.data);
         setOriginalRoleSettings(settingsRes.data);
+        const cats = (settingsRes.data.category_roles as Record<string, any>) || {};
+        setCategoryRoles(Object.fromEntries(
+          Object.entries(cats).map(([k, v]) => [k, String(v)])
+        ));
       }
 
       if (discordRolesRes.data) {
         setDiscordRoles(discordRolesRes.data.roles);
+      }
+
+      if (clansRes.data) {
+        const clans = Array.isArray(clansRes.data) ? clansRes.data : (clansRes.data as any).items || [];
+        const cats = Array.from(new Set(
+          clans
+            .map((c: any) => c.settings?.category)
+            .filter((cat: any): cat is string => typeof cat === "string" && cat.trim() !== "")
+        )) as string[];
+        setAvailableCategories(cats.sort());
       }
     } catch (err: any) {
       setError(err.message || "Failed to load roles");
@@ -429,6 +453,41 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     } catch (err: any) {
       setError(err.message || "Failed to delete role");
     }
+  };
+
+  const handleUpdateCategoryRole = async (category: string, roleId: string) => {
+    try {
+      setCategoryRoleSaving(category);
+      await apiClient.roles.updateRoleSettings(guildId, {
+        category_roles: { [category]: roleId || null },
+      });
+      apiCache.invalidate(rolesCacheKey);
+      if (roleId) {
+        setCategoryRoles((prev) => ({ ...prev, [category]: roleId }));
+      } else {
+        setCategoryRoles((prev) => {
+          const next = { ...prev };
+          delete next[category];
+          return next;
+        });
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to update category role");
+    } finally {
+      setCategoryRoleSaving(null);
+    }
+  };
+
+  const handleAddCategoryRole = async () => {
+    const name = newCategoryName.trim();
+    if (!name) { setAddCategoryError(t("categoryRoles.errorCategoryRequired")); return; }
+    if (!newCategoryRoleId) { setAddCategoryError(t("categoryRoles.errorRoleRequired")); return; }
+    if (categoryRoles[name] !== undefined) { setAddCategoryError(t("categoryRoles.errorCategoryExists")); return; }
+    await handleUpdateCategoryRole(name, newCategoryRoleId);
+    setIsAddCategoryOpen(false);
+    setNewCategoryName("");
+    setNewCategoryRoleId("");
+    setAddCategoryError(null);
   };
 
   const renderRoleForm = () => {
@@ -938,6 +997,117 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                 />
               )}
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Category Roles */}
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Tag className="h-5 w-5" />
+                  {t("categoryRoles.title")}
+                </CardTitle>
+                <CardDescription>{t("categoryRoles.description")}</CardDescription>
+              </div>
+              <Button variant="outline" className="w-full md:w-auto" onClick={() => { setIsAddCategoryOpen(true); setAddCategoryError(null); }}>
+                <Plus className="mr-2 h-4 w-4" />
+                {t("categoryRoles.addButton")}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="space-y-2">
+                {[1, 2].map((i) => <Skeleton key={i} className="h-10 w-full animate-pulse" />)}
+              </div>
+            ) : Object.keys(categoryRoles).length === 0 && !isAddCategoryOpen ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>{t("categoryRoles.noCategoryRoles")}</p>
+                <p className="text-sm mt-2">{t("categoryRoles.noCategoryRolesDesc")}</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {Object.entries(categoryRoles).map(([category, roleId]) => {
+                  const discordRole = discordRoles.find((r) => r.id === roleId);
+                  const isSaving = categoryRoleSaving === category;
+                  return (
+                    <div key={category} className="flex items-center gap-3 rounded-lg border border-border bg-secondary/30 px-4 py-2">
+                      <span className="min-w-[140px] font-medium text-sm">{category}</span>
+                      <div className="flex-1">
+                        <RoleCombobox
+                          roles={discordRoles}
+                          value={roleId}
+                          onValueChange={(val) => handleUpdateCategoryRole(category, val)}
+                          placeholder={t("addRoleDialog.selectRole")}
+                          showDisabled={false}
+                        />
+                      </div>
+                      {isSaving ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground shrink-0" />
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleUpdateCategoryRole(category, "")}
+                          className="text-red-500 hover:text-red-600 hover:bg-red-500/10 shrink-0"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  );
+                })}
+                {isAddCategoryOpen && (
+                  <div className="rounded-lg border border-primary/40 bg-primary/5 px-4 py-3 space-y-3">
+                    <p className="text-sm font-medium">{t("categoryRoles.addTitle")}</p>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Select
+                        value={newCategoryName}
+                        onValueChange={(val) => { setNewCategoryName(val); setAddCategoryError(null); }}
+                      >
+                        <SelectTrigger className="sm:max-w-[200px]">
+                          <SelectValue placeholder={t("categoryRoles.categoryNamePlaceholder")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {availableCategories
+                            .filter((cat) => categoryRoles[cat] === undefined)
+                            .map((cat) => (
+                              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <div className="flex-1">
+                        <RoleCombobox
+                          roles={discordRoles}
+                          value={newCategoryRoleId}
+                          onValueChange={(val) => { setNewCategoryRoleId(val); setAddCategoryError(null); }}
+                          placeholder={t("addRoleDialog.selectRole")}
+                          showDisabled={false}
+                        />
+                      </div>
+                      <div className="flex gap-2 shrink-0">
+                        <Button
+                          size="sm"
+                          onClick={handleAddCategoryRole}
+                          disabled={categoryRoleSaving !== null}
+                          className="bg-primary hover:bg-primary/90"
+                        >
+                          {categoryRoleSaving !== null ? <Loader2 className="h-4 w-4 animate-spin" /> : t("categoryRoles.addConfirm")}
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={() => { setIsAddCategoryOpen(false); setNewCategoryName(""); setNewCategoryRoleId(""); setAddCategoryError(null); }}>
+                          {t("addRoleDialog.cancel")}
+                        </Button>
+                      </div>
+                    </div>
+                    {addCategoryError && (
+                      <p className="text-xs text-destructive">{addCategoryError}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 

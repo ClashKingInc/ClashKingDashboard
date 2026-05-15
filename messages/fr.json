@@ -1560,6 +1560,20 @@
       "manualOverride": "Remplacement Manuel :",
       "manualOverrideDesc": "Les administrateurs du serveur peuvent attribuer manuellement des rôles, qui ne seront pas retirés par l'auto-évaluation."
     },
+    "categoryRoles": {
+      "title": "Rôles de Catégorie",
+      "description": "Attribuez un rôle Discord à chaque catégorie de clan. Les membres des clans appartenant à cette catégorie reçoivent automatiquement le rôle correspondant.",
+      "addButton": "Ajouter une Catégorie",
+      "categoryName": "Catégorie",
+      "categoryNamePlaceholder": "Nom de la catégorie",
+      "noCategoryRoles": "Aucun rôle de catégorie configuré",
+      "noCategoryRolesDesc": "Cliquez sur « Ajouter une Catégorie » pour en créer un",
+      "addTitle": "Ajouter un Rôle de Catégorie",
+      "addConfirm": "Ajouter",
+      "errorCategoryRequired": "Le nom de la catégorie est requis",
+      "errorRoleRequired": "Le rôle Discord est requis",
+      "errorCategoryExists": "Cette catégorie a déjà un rôle configuré"
+    },
     "toast": {
       "changesSaved": "Modifications enregistrées avec succès !",
       "errorLoading": "Échec du chargement des rôles",

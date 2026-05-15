@@ -95,6 +95,7 @@ export interface RoleSettingsUpdate {
   autoeval_log?: string | number;
   blacklisted_roles?: (string | number)[];
   role_treatment?: string[];
+  category_roles?: Record<string, string | null>;
 }
 
 export interface RolesListResponse {
@@ -116,6 +117,7 @@ export interface AllRolesResponse {
     family_position: FamilyPositionRole[];
   };
   total_count: number;
+  category_roles?: Record<string, string>;
 }
 
 export interface RoleResponse {
