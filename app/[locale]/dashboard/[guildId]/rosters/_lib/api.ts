@@ -264,8 +264,8 @@ export async function fetchClanMembers(clanTag: string): Promise<ClanMember[]> {
   const response = await fetch(`https://proxy.clashk.ing/v1/clans/${encodeURIComponent(clanTag)}/members`, {
     headers: getAuthHeaders(),
   });
-  const data = await handleResponse<{ members?: ClanMember[]; clan_tag?: string } | ClanMember[]>(response);
-  return Array.isArray(data) ? data : data.members || [];
+  const data = await handleResponse<{ items?: ClanMember[]; members?: ClanMember[]; clan_tag?: string } | ClanMember[]>(response);
+  return Array.isArray(data) ? data : data.items || data.members || [];
 }
 
 // ============================================
