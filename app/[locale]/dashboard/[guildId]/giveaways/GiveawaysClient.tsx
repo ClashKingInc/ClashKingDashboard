@@ -935,7 +935,12 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               <p className="text-muted-foreground mt-1">{t("description")}</p>
             </div>
           </div>
-          <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" onClick={() => load(true)} disabled={tableLoading} title={tCommon("refresh")}>
+              <RefreshCw className={cn("h-4 w-4", tableLoading && "animate-spin")} />
+            </Button>
+            <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
+          </div>
         </div>
         
         <GiveawaysMainContent
