@@ -35,6 +35,7 @@ import {
   normalizeDiscordRolesPayload,
 } from "@/lib/dashboard-cache";
 import type { Giveaway } from "@/lib/api/types/server";
+import { useGiveawayEntries } from "./useGiveawayEntries";
 
 type Channel = { id: string; name: string; parent_name?: string };
 type Role = { id: string; name: string; color?: number };
@@ -193,6 +194,7 @@ interface GiveawaysTableProps {
   onDuplicate: (giveaway: Giveaway) => void;
   onDelete: (id: string) => void;
   onOpenReroll: (giveaway: Giveaway) => void;
+  onOpenEntries: (giveaway: Giveaway) => void;
   onShowMore: () => void;
 }
 
@@ -218,6 +220,7 @@ interface GiveawaysMainContentProps {
   onDuplicate: (giveaway: Giveaway) => void;
   onDelete: (id: string) => void;
   onOpenReroll: (giveaway: Giveaway) => void;
+  onOpenEntries: (giveaway: Giveaway) => void;
   onShowMore: () => void;
 }
 
@@ -243,6 +246,7 @@ function GiveawaysMainContent({
   onDuplicate,
   onDelete,
   onOpenReroll,
+  onOpenEntries,
   onShowMore,
 }: Readonly<GiveawaysMainContentProps>) {
   if (loading) {
@@ -387,6 +391,7 @@ function GiveawaysMainContent({
                 onDuplicate={onDuplicate}
                 onDelete={onDelete}
                 onOpenReroll={onOpenReroll}
+                onOpenEntries={onOpenEntries}
                 onShowMore={onShowMore}
               />
             </TabsContent>
@@ -405,6 +410,7 @@ function GiveawaysMainContent({
                 onDuplicate={onDuplicate}
                 onDelete={onDelete}
                 onOpenReroll={onOpenReroll}
+                onOpenEntries={onOpenEntries}
                 onShowMore={onShowMore}
               />
             </TabsContent>
@@ -423,6 +429,7 @@ function GiveawaysMainContent({
                 onDuplicate={onDuplicate}
                 onDelete={onDelete}
                 onOpenReroll={onOpenReroll}
+                onOpenEntries={onOpenEntries}
                 onShowMore={onShowMore}
               />
             </TabsContent>
@@ -447,6 +454,7 @@ function GiveawaysTable({
   onDuplicate,
   onDelete,
   onOpenReroll,
+  onOpenEntries,
   onShowMore,
 }: Readonly<GiveawaysTableProps>) {
   const isEnded = tab === "ended";
@@ -603,7 +611,20 @@ function GiveawaysTable({
                   </td>
                   <td className="px-4 py-3">
                     {isEnded ? (activeWinnersLabel(g) ?? <span className="text-xs text-muted-foreground">—</span>) : (
-                      <span className="flex items-center gap-1.5 text-sm text-muted-foreground tabular-nums"><Users className="h-3.5 w-3.5 shrink-0" />{g.entry_count}</span>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type="button"
+                              onClick={() => onOpenEntries(g)}
+                              className="flex items-center gap-1.5 text-sm text-muted-foreground tabular-nums hover:text-foreground transition-colors"
+                            >
+                              <Users className="h-3.5 w-3.5 shrink-0" />{g.entry_count}
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent>{t("table.viewEntries")}</TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     )}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
@@ -725,6 +746,15 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const [rerollSelected, setRerollSelected] = useState<string[]>([]);
   const [rerolling, setRerolling] = useState(false);
   const [giveaways, setGiveaways] = useState<{ ongoing: Giveaway[]; upcoming: Giveaway[]; ended: Giveaway[]; total: number }>({ ongoing: [], upcoming: [], ended: [], total: 0 });
+  const {
+    dialogOpen: entriesDialogOpen,
+    target: entriesTarget, data: entriesData, loading: entriesLoading,
+    openDialog: openEntriesDialog, closeDialog: closeEntries,
+  } = useGiveawayEntries(
+    guildId,
+    (gid, giveawayId) => apiClient.servers.getGiveawayEntries(gid, giveawayId),
+    (message) => toast({ title: t("toast.errorTitle"), description: message, variant: "destructive" }),
+  );
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
@@ -875,6 +905,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     setRerollSelected([]);
     setRerollDialogOpen(true);
   };
+
   const toggleRerollSelection = (userId: string, checked: boolean) => {
     setRerollSelected((prev) => (checked ? [...prev, userId] : prev.filter((id) => id !== userId)));
   };
@@ -935,7 +966,12 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               <p className="text-muted-foreground mt-1">{t("description")}</p>
             </div>
           </div>
-          <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" onClick={() => load(true)} disabled={tableLoading} title={tCommon("refresh")}>
+              <RefreshCw className={cn("h-4 w-4", tableLoading && "animate-spin")} />
+            </Button>
+            <Button onClick={openCreate}><Plus className="mr-2 h-4 w-4" />{t("create")}</Button>
+          </div>
         </div>
         
         <GiveawaysMainContent
@@ -960,6 +996,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
           onDuplicate={duplicate}
           onDelete={setDeleteConfirmId}
           onOpenReroll={openRerollDialog}
+          onOpenEntries={openEntriesDialog}
           onShowMore={() => setShownEnded((n) => n + ENDED_LIMIT)}
         />
 
@@ -1227,6 +1264,62 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                 {rerolling && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {t("reroll.confirm", { count: rerollSelected.length })}
               </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Entries Dialog */}
+        <Dialog open={entriesDialogOpen} onOpenChange={(open) => { if (!open) closeEntries(); }}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2"><Users className="h-5 w-5" />{entriesTarget?.prize}</DialogTitle>
+              <DialogDescription>{t("entries.description")}</DialogDescription>
+            </DialogHeader>
+            {entriesLoading && (
+              <div className="space-y-2 py-4">
+                {[1, 2, 3].map((i) => <Skeleton key={i} className="h-10 w-full animate-pulse" />)}
+              </div>
+            )}
+            {!entriesLoading && entriesData && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-center">
+                    <div className="text-2xl font-bold text-foreground">{entriesData.total_entries}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{t("entries.totalEntries")}</div>
+                  </div>
+                  <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-center">
+                    <div className="text-2xl font-bold text-foreground">{entriesData.unique_users}</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{t("entries.uniqueUsers")}</div>
+                  </div>
+                </div>
+                {entriesData.entrants.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">{t("entries.noEntrants")}</p>
+                ) : (
+                  <div className="max-h-72 overflow-y-auto rounded-lg border border-border">
+                    <table className="w-full text-sm">
+                      <thead className="sticky top-0 bg-muted/80 backdrop-blur-sm">
+                        <tr className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          <th className="px-3 py-2">{t("entries.userId")}</th>
+                          <th className="px-3 py-2 text-center">{t("entries.entryCount")}</th>
+                          <th className="px-3 py-2 text-right">{t("entries.winChance")}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {entriesData.entrants.map((e, i) => (
+                          <tr key={e.user_id} className={cn("border-t border-border/60", i % 2 === 0 ? "bg-background" : "bg-muted/10")}>
+                            <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{e.user_id}</td>
+                            <td className="px-3 py-2 text-center tabular-nums">{e.entries}</td>
+                            <td className="px-3 py-2 text-right tabular-nums text-primary">{e.win_chance.toFixed(2)}%</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={closeEntries}>{tCommon("close")}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

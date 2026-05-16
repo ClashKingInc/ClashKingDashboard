@@ -29,7 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { EmbedEditor } from "@/components/dashboard/embed-editor";
-import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile } from "@/components/dashboard/discord-embed-preview";
+import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile, isV2Payload, extractComponents } from "@/components/dashboard/discord-embed-preview";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
 
 function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
@@ -191,10 +191,12 @@ export default function EmbedsPage() {
         ) : (
           <div className="space-y-2">
             {embeds.map((embed) => {
+              const isV2 = embed.data ? isV2Payload(embed.data) : false;
+              const v2Components = isV2 && embed.data ? extractComponents(embed.data) : [];
               const previews = embed.data ? extractEmbeds(embed.data) : [];
               const messageContent = embed.data ? extractMessageContent(embed.data) : null;
               const profile = embed.data ? extractMessageProfile(embed.data) : null;
-              const hasPreview = previews.length > 0 || Boolean(messageContent) || Boolean(profile?.name || profile?.avatar_url);
+              const hasPreview = v2Components.length > 0 || previews.length > 0 || Boolean(messageContent) || Boolean(profile?.name || profile?.avatar_url);
               const isExpanded = expandedName === embed.name;
               return (
                 <div key={embed.name} className="rounded-xl border border-border/60 bg-card overflow-hidden">
@@ -228,6 +230,8 @@ export default function EmbedsPage() {
                         profile={profile}
                         content={messageContent}
                         embeds={previews}
+                        isV2={isV2}
+                        components={v2Components}
                         className="max-w-none"
                       />
                     </div>

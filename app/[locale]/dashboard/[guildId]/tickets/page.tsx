@@ -33,6 +33,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -72,7 +81,6 @@ import type {
   TicketButton,
   TicketButtonSettings,
   TicketPanel,
-  UpdateApproveMessagesRequest,
   UpdateButtonSettingsRequest,
   UpdateOpenTicketClanRequest,
   UpdateOpenTicketStatusRequest,
@@ -101,6 +109,7 @@ const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildI
 const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
 const MAX_APPROVE_MESSAGE_NAME_LENGTH = 100;
 const MAX_APPROVE_MESSAGE_CONTENT_LENGTH = 2000;
+const DEFAULT_TOWNHALL_REQUIREMENT_FIELDS = ["BK", "AQ", "GW", "RC", "WARST"];
 
 const stripTrailingSlashes = (value: string): string => {
   let normalized = value;
@@ -267,6 +276,19 @@ const normalizePlayerTag = (value: string): string => {
   return `#${withoutPrefix.toUpperCase()}`;
 };
 
+const normalizeTownhallRequirementFields = (fields: readonly string[] | null | undefined): string[] => {
+  const normalized = (fields ?? []).filter((field): field is string => typeof field === "string" && field.trim().length > 0);
+  return normalized.length > 0 ? normalized : [...DEFAULT_TOWNHALL_REQUIREMENT_FIELDS];
+};
+
+const createTownhallRequirementRow = (th: string, fields: readonly string[]): THRequirement => {
+  const row: THRequirement = { TH: Number(th) };
+  for (const field of fields) {
+    row[field] = 0;
+  }
+  return row;
+};
+
 function TicketManageDialog({
   open,
   onOpenChange,
@@ -290,14 +312,17 @@ function TicketManageDialog({
   const [isSavingStatus, setIsSavingStatus] = useState(false);
   const [isSavingClan, setIsSavingClan] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   useEffect(() => {
     if (!ticket) return;
-    setStatus(ticket.status);
+    setStatus(ticket.status === "delete" ? "closed" : ticket.status);
     setSetClan(ticket.set_clan ?? "disabled");
   }, [ticket]);
 
   if (!ticket) return null;
+  const isDeletedTicket = ticket.status === "delete";
+  const canPermanentlyDelete = ticket.status === "closed" || isDeletedTicket;
 
   const handleStatusSave = async () => {
     setIsSavingStatus(true);
@@ -306,7 +331,6 @@ function TicketManageDialog({
       if (res.error) throw new Error(res.error);
       await onSaved();
       toast({ title: tCommon("success"), description: t("manage.statusSaved") });
-      if (status === "delete") onOpenChange(false);
     } catch (err) {
       toast({
         title: tCommon("error"),
@@ -342,6 +366,7 @@ function TicketManageDialog({
     try {
       const res = await apiClient.tickets.deleteOpenTicket(guildId, ticket.channel);
       if (res.error) throw new Error(res.error);
+      setConfirmDeleteOpen(false);
       await onSaved();
       onOpenChange(false);
       toast({ title: tCommon("success"), description: t("manage.deleted") });
@@ -356,12 +381,15 @@ function TicketManageDialog({
     }
   };
 
+  const closedOrDefaultKey = canPermanentlyDelete ? "manage.descriptionClosed" : "manage.description";
+  const descriptionKey = isDeletedTicket ? "manage.descriptionDeleted" : closedOrDefaultKey;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-border sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t("manage.title", { number: ticket.number })}</DialogTitle>
-          <DialogDescription>{t("manage.description")}</DialogDescription>
+          <DialogDescription>{t(descriptionKey)}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -396,73 +424,98 @@ function TicketManageDialog({
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-background p-4">
-            <div className="mb-3">
-              <Label className="text-sm font-medium">{t("manage.statusLabel")}</Label>
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Select value={status} onValueChange={(value) => setStatus(value as UpdateOpenTicketStatusRequest["status"])}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="open">{t("status.open")}</SelectItem>
-                  <SelectItem value="sleep">{t("status.sleep")}</SelectItem>
-                  <SelectItem value="closed">{t("status.closed")}</SelectItem>
-                  <div className="my-1 border-t border-border" />
-                  <SelectItem value="delete" className="text-destructive focus:text-destructive">
-                    {t("manage.statusDelete")}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <Button onClick={handleStatusSave} disabled={isSavingStatus}>
-                {isSavingStatus && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t("manage.saveStatus")}
-              </Button>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-border bg-background p-4">
-            <div className="mb-3">
-              <Label className="text-sm font-medium">{t("manage.clanLabel")}</Label>
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Select value={setClan} onValueChange={setSetClan}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder={t("manage.selectClan")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="disabled">{t("manage.noClan")}</SelectItem>
-                  {clans.map((clan) => (
-                    <SelectItem key={clan.tag} value={clan.tag}>{clan.name} ({clan.tag})</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button variant="outline" onClick={handleClanSave} disabled={isSavingClan}>
-                {isSavingClan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t("manage.saveClan")}
-              </Button>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-medium text-foreground">{t("manage.deleteTicket")}</p>
-                <p className="text-xs text-muted-foreground">{t("manage.deleteHint")}</p>
+          {!isDeletedTicket && (
+            <>
+              <div className="rounded-xl border border-border bg-background p-4">
+                <div className="mb-3">
+                  <Label className="text-sm font-medium">{t("manage.statusLabel")}</Label>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Select value={status} onValueChange={(value) => setStatus(value as UpdateOpenTicketStatusRequest["status"])}>
+                    <SelectTrigger className="flex-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="open">{t("status.open")}</SelectItem>
+                      <SelectItem value="sleep">{t("status.sleep")}</SelectItem>
+                      <SelectItem value="closed">{t("status.closed")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button onClick={handleStatusSave} disabled={isSavingStatus}>
+                    {isSavingStatus && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {t("manage.saveStatus")}
+                  </Button>
+                </div>
               </div>
-              <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-                {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t("manage.deleteTicket")}
-              </Button>
+
+              <div className="rounded-xl border border-border bg-background p-4">
+                <div className="mb-3">
+                  <Label className="text-sm font-medium">{t("manage.clanLabel")}</Label>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Select value={setClan} onValueChange={setSetClan}>
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder={t("manage.selectClan")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="disabled">{t("manage.noClan")}</SelectItem>
+                      {clans.map((clan) => (
+                        <SelectItem key={clan.tag} value={clan.tag}>{clan.name} ({clan.tag})</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline" onClick={handleClanSave} disabled={isSavingClan}>
+                    {isSavingClan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {t("manage.saveClan")}
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {canPermanentlyDelete && (
+            <div className="rounded-xl border border-border bg-muted/20 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-medium text-foreground">{t("manage.permanentDeleteTicket")}</p>
+                  <p className="text-xs text-muted-foreground">{t("manage.deleteHint")}</p>
+                </div>
+                <Button
+                  variant="outline"
+                  className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  onClick={() => setConfirmDeleteOpen(true)}
+                  disabled={isDeleting}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {t("manage.deleteTicket")}
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <DialogFooter>
           <Button className={CANCEL_BUTTON_CLASS} onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
         </DialogFooter>
       </DialogContent>
+
+      <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("manage.warningTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t(isDeletedTicket ? "manage.warningDescriptionDeleted" : "manage.warningDescription")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>{tCommon("cancel")}</AlertDialogCancel>
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t("manage.permanentDeleteTicket")}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }
@@ -1069,7 +1122,21 @@ function TicketsTab({
                             </a>
                           </Button>
                         )}
-                        {ticket.status !== "delete" && (
+                        {ticket.status === "delete" ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                            onClick={() => {
+                              setSelectedTicket(ticket);
+                              setManageOpen(true);
+                            }}
+                            aria-label={t("manage.permanentDeleteTicket")}
+                            title={t("manage.permanentDeleteTicket")}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        ) : (
                           <Button
                             variant="outline"
                             size="sm"
@@ -1596,7 +1663,7 @@ const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): Ticket
 });
 
 function ButtonCard({
-  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, onDeleted, onAppearanceUpdated,
+  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, townhallRequirementFields, onDeleted, onAppearanceUpdated,
 }: {
   readonly customId: string;
   readonly label: string;
@@ -1607,6 +1674,7 @@ function ButtonCard({
   readonly roles: DiscordRole[];
   readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
+  readonly townhallRequirementFields: string[];
   readonly onDeleted: () => void;
   readonly onAppearanceUpdated: (label: string, style: number) => void;
 }) {
@@ -1666,6 +1734,10 @@ function ButtonCard({
   const buttonEmbedPreviews = selectedButtonEmbedData ? extractEmbeds(selectedButtonEmbedData) : [];
   const buttonMessageContentPreview = selectedButtonEmbedData ? extractMessageContent(selectedButtonEmbedData) : null;
   const isUsingDefaultTicketMessage = effectiveButtonEmbedName === null;
+  const effectiveTownhallRequirementFields = useMemo(
+    () => normalizeTownhallRequirementFields(townhallRequirementFields),
+    [townhallRequirementFields],
+  );
 
   const setField = <K extends keyof UpdateButtonSettingsRequest>(key: K, val: UpdateButtonSettingsRequest[K]) =>
     setForm((p) => ({ ...p, [key]: val }));
@@ -1694,7 +1766,7 @@ function ButtonCard({
       ...p,
       townhall_requirements: {
         ...p.townhall_requirements,
-        [th]: { TH: Number(th), BK: 0, AQ: 0, GW: 0, RC: 0, WARST: 0 },
+        [th]: createTownhallRequirementRow(th, effectiveTownhallRequirementFields),
       },
     }));
   };
@@ -1704,7 +1776,7 @@ function ButtonCard({
       delete next[th];
       return { ...p, townhall_requirements: next };
     });
-  const setTHField = (th: string, field: keyof THRequirement, val: number) =>
+  const setTHField = (th: string, field: string, val: number) =>
     setForm((p) => ({
       ...p,
       townhall_requirements: {
@@ -1992,7 +2064,6 @@ function ButtonCard({
                   <div>
                     <Label className="text-sm font-medium">{t("thRequirements")}</Label>
                     <p className="text-xs text-muted-foreground">{t("thRequirementsHint")}</p>
-                    <p className="mt-1 text-xs text-muted-foreground/70">{t("thHeroLegend")}</p>
                   </div>
                   <Button variant="outline" size="sm" onClick={addTHRow} type="button"
                     disabled={Object.keys(form.townhall_requirements).length >= 15}>
@@ -2005,7 +2076,7 @@ function ButtonCard({
                       <thead>
                         <tr className="border-b border-border bg-muted/50">
                           <th className="px-3 py-2 text-left font-medium text-xs text-muted-foreground">{t("thLevel")}</th>
-                          {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((h) => (
+                          {effectiveTownhallRequirementFields.map((h) => (
                             <th key={h} className="px-3 py-2 text-center font-medium text-xs text-muted-foreground">{h}</th>
                           ))}
                           <th className="px-3 py-2" />
@@ -2017,7 +2088,7 @@ function ButtonCard({
                           .map(([th, reqs]) => (
                             <tr key={th} className="border-b border-border last:border-0">
                               <td className="px-3 py-2 font-semibold">TH{th}</td>
-                              {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((hero) => (
+                              {effectiveTownhallRequirementFields.map((hero) => (
                                 <td key={hero} className="px-2 py-1.5">
                                   <Input
                                     type="number" min={0} max={100}
@@ -2268,7 +2339,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
     setIsSaving(true);
     try {
       const payloadMessages = valid.map(({ name, message }) => ({ name, message }));
-      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages } as UpdateApproveMessagesRequest);
+      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages });
       if (res.error) throw new Error(res.error);
       setMessages(valid);
       setDraftMessages(cloneMessages(valid));
@@ -2454,7 +2525,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
 }
 
 function PanelCard({
-  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, onDeleted,
+  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, townhallRequirementFields, onDeleted,
 }: {
   readonly panel: TicketPanel;
   readonly categories: DiscordChannel[];
@@ -2463,6 +2534,7 @@ function PanelCard({
   readonly guildId: string;
   readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
+  readonly townhallRequirementFields: string[];
   readonly onDeleted: () => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
@@ -2672,6 +2744,7 @@ function PanelCard({
                         <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
                           settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
                           panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} embeds={embeds}
+                          townhallRequirementFields={townhallRequirementFields}
                           onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
                           onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
@@ -2702,6 +2775,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
   const [panels, setPanels] = useState<TicketPanel[]>([]);
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
   const [availableEmbeds, setAvailableEmbeds] = useState<string[]>([]);
+  const [townhallRequirementFields, setTownhallRequirementFields] = useState<string[]>(DEFAULT_TOWNHALL_REQUIREMENT_FIELDS);
   const [categories, setCategories] = useState<DiscordChannel[]>([]);
   const [textChannels, setTextChannels] = useState<DiscordChannel[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
@@ -2731,6 +2805,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
 
         setPanels(panelsRes.data?.items ?? []);
         setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+        setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
         setEmbeds(normalizeTicketEmbeds(embedsRes.data));
         let all = normalizeTicketChannels(channelsRes.data);
 
@@ -2776,6 +2851,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
       const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
       setPanels(panelsRes.data?.items ?? []);
       setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+      setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
       setCreatePanelOpen(false);
       setNewPanelName("");
     } catch (err) {
@@ -2843,6 +2919,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
         ) : (
           panels.map((panel) => (
             <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
+              townhallRequirementFields={townhallRequirementFields}
               onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
             />
           ))

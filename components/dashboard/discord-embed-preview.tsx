@@ -1,5 +1,6 @@
 "use client";
 
+import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 
@@ -409,13 +410,17 @@ interface DiscordMessagePreviewProps {
   readonly profile?: DiscordMessageProfile | null;
   readonly content?: string | null;
   readonly embeds: DiscordEmbed[];
+  readonly components?: TopLevelComponent[];
+  readonly isV2?: boolean;
   readonly className?: string;
 }
 
-export function DiscordMessagePreview({ profile, content, embeds, className }: DiscordMessagePreviewProps) {
+export function DiscordMessagePreview({ profile, content, embeds, components, isV2, className }: DiscordMessagePreviewProps) {
   const displayName = profile?.name?.trim() || "ClashKing";
   const avatarUrl = profile?.avatar_url?.trim() || clashKingAssets.logos.botApp;
-  const messageContent = content?.trim() ? content : null;
+  const v1Content = content?.trim() ? content : null;
+  const messageContent = isV2 ? null : v1Content;
+  const v2Components = isV2 && components && components.length > 0 ? components : null;
 
   return (
     <div className={cn("max-w-[520px]", messageContent ? "space-y-2" : "space-y-0", className)}>
@@ -435,13 +440,229 @@ export function DiscordMessagePreview({ profile, content, embeds, className }: D
         </div>
       </div>
       <div className="space-y-2 pl-12">
-        {embeds.map((embed, index) => (
-          <DiscordEmbedPreview
-            key={`${embed.title ?? "embed"}-${index}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
-            embed={embed}
+        {v2Components
+          ? v2Components.map((comp, index) => (
+              <V2TopLevelPreview key={`v2-${comp.type}-${index}`} component={comp} /> // NOSONAR
+            ))
+          : embeds.map((embed, index) => (
+              <DiscordEmbedPreview
+                key={`${embed.title ?? "embed"}-${index}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
+                embed={embed}
+              />
+            ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Discord Components V2 ────────────────────────────────────────────────────
+
+export const COMPONENT_TYPE = {
+  ACTION_ROW: 1,
+  BUTTON: 2,
+  SECTION: 9,
+  TEXT_DISPLAY: 10,
+  THUMBNAIL: 11,
+  MEDIA_GALLERY: 12,
+  SEPARATOR: 14,
+  CONTAINER: 17,
+} as const;
+
+export const IS_COMPONENTS_V2_FLAG = 32768;
+
+export interface TextDisplayComponent { type: 10; content: string; id?: number }
+export interface ThumbnailComponent { type: 11; media: { url: string }; description?: string; spoiler?: boolean; id?: number }
+export interface MediaGalleryItem { media: { url: string }; description?: string; spoiler?: boolean }
+export interface MediaGalleryComponent { type: 12; items: MediaGalleryItem[]; id?: number }
+export interface SeparatorComponent { type: 14; divider?: boolean; spacing?: 1 | 2; id?: number }
+export interface SectionComponent {
+  type: 9;
+  components: TextDisplayComponent[];
+  accessory?: ThumbnailComponent | { type: number; [key: string]: unknown };
+  id?: number;
+}
+export interface ButtonComponent {
+  type: 2;
+  style?: 1 | 2 | 3 | 4 | 5;
+  label?: string;
+  emoji?: { id?: string | null; name?: string | null; animated?: boolean };
+  url?: string;
+  disabled?: boolean;
+  id?: number;
+}
+export interface ActionRowComponent { type: 1; components: ButtonComponent[]; id?: number }
+export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
+export interface ContainerComponent { type: 17; accent_color?: number | null; spoiler?: boolean; components: ContainerChild[]; id?: number }
+export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
+
+export function isV2Payload(data: Record<string, unknown>): boolean {
+  if (typeof (data as any).flags === 'number' && ((data as any).flags & IS_COMPONENTS_V2_FLAG) !== 0) return true;
+  const messages = (data as any).messages;
+  if (Array.isArray(messages)) {
+    return messages.some((m: any) => {
+      const flags = m?.data?.flags ?? m?.flags;
+      return typeof flags === 'number' && (flags & IS_COMPONENTS_V2_FLAG) !== 0;
+    });
+  }
+  return false;
+}
+
+export function extractComponents(data: Record<string, unknown>): TopLevelComponent[] {
+  const messages = (data as any)?.messages;
+  if (Array.isArray(messages) && messages.length > 0) {
+    const components = messages[0]?.data?.components;
+    if (Array.isArray(components)) return components as TopLevelComponent[];
+  }
+  const components = (data as any)?.components;
+  if (Array.isArray(components)) return components as TopLevelComponent[];
+  return [];
+}
+
+const BUTTON_STYLE_CLASSES: Record<number, string> = {
+  1: "bg-[#5865f2] text-white",
+  2: "bg-[#4e5058] text-white",
+  3: "bg-[#248046] text-white",
+  4: "bg-[#da373c] text-white",
+  5: "bg-[#4e5058] text-[#00aff4]",
+};
+
+function ButtonPreview({ button }: { readonly button: ButtonComponent }) {
+  const style = button.style ?? 2;
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 px-3 py-1.5 rounded text-sm font-medium cursor-default select-none",
+        BUTTON_STYLE_CLASSES[style] ?? BUTTON_STYLE_CLASSES[2],
+        button.disabled && "opacity-50",
+      )}
+    >
+      {button.emoji?.name && <span>{button.emoji.name}</span>}
+      {button.label}
+      {style === 5 && <ExternalLink className="w-3 h-3 opacity-70" />}
+    </span>
+  );
+}
+
+function ActionRowPreview({ component }: { readonly component: ActionRowComponent }) {
+  const buttons = component.components ?? [];
+  if (buttons.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1 py-0.5">
+      {buttons.map((btn, i) => (
+        <ButtonPreview key={i} button={btn} /> // NOSONAR
+      ))}
+    </div>
+  );
+}
+
+function V2TextDisplayPreview({ component }: { readonly component: TextDisplayComponent }) {
+  return (
+    <div className="text-xs text-[#dbdee1] whitespace-pre-wrap break-words leading-snug">
+      {renderLines(component.content)}
+    </div>
+  );
+}
+
+function V2SeparatorPreview({ component }: { readonly component: SeparatorComponent }) {
+  const large = component.spacing === 2;
+  const hasDivider = component.divider !== false;
+  return (
+    <hr className={cn(
+      "border-0",
+      hasDivider ? "border-t border-[#3f3f3f]" : "",
+      large ? "my-3" : "my-1",
+    )} />
+  );
+}
+
+function V2MediaGalleryPreview({ component }: { readonly component: MediaGalleryComponent }) {
+  const items = component.items ?? [];
+  if (items.length === 0) return null;
+  const single = items.length === 1;
+  return (
+    <div className={cn("grid gap-1", single ? "grid-cols-1" : "grid-cols-2")}>
+      {items.map((item, i) => (
+        <div
+          key={i} // NOSONAR
+          className={cn(
+            "overflow-hidden rounded",
+            single ? "max-h-64" : "aspect-square",
+            items.length === 3 && i === 0 ? "col-span-2" : "",
+          )}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={item.media.url} alt={item.description ?? ""} className="w-full h-full object-cover" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function V2SectionPreview({ component }: { readonly component: SectionComponent }) {
+  const accessory = component.accessory ?? null;
+  const isThumbnail = accessory?.type === COMPONENT_TYPE.THUMBNAIL;
+  return (
+    <div className="flex justify-between gap-3">
+      <div className="flex flex-col gap-1 flex-1 min-w-0">
+        {component.components
+          .filter(c => c.type === COMPONENT_TYPE.TEXT_DISPLAY)
+          .map((c, i) => (
+            <V2TextDisplayPreview key={i} component={c as TextDisplayComponent} /> // NOSONAR
+          ))}
+      </div>
+      {isThumbnail && (accessory as ThumbnailComponent).media.url && (
+        <div className="w-[85px] h-[85px] shrink-0 overflow-hidden rounded-lg">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={(accessory as ThumbnailComponent).media.url}
+            alt={(accessory as ThumbnailComponent).description ?? ""}
+            className="w-full h-full object-cover"
           />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function V2ContainerChildPreview({ component }: { readonly component: ContainerChild }) {
+  switch (component.type) {
+    case COMPONENT_TYPE.TEXT_DISPLAY: return <V2TextDisplayPreview component={component} />;
+    case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
+    case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
+    case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
+    default: return null;
+  }
+}
+
+function V2ContainerPreview({ component }: { readonly component: ContainerComponent }) {
+  const accentColor = component.accent_color == null ? null : intToHex(component.accent_color);
+  return (
+    <div
+      className={cn(
+        "relative rounded-lg overflow-hidden border border-[#3b3d44] bg-[#232428] text-[#dbdee1] flex flex-col gap-1.5 p-4",
+      )}
+    >
+      {accentColor && (
+        <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l" style={{ backgroundColor: accentColor }} />
+      )}
+      <div className={cn("flex flex-col gap-1.5", accentColor ? "pl-2" : "")}>
+        {component.components.map((child, i) => (
+          <V2ContainerChildPreview key={i} component={child} /> // NOSONAR
         ))}
       </div>
     </div>
   );
+}
+
+export function V2TopLevelPreview({ component }: { readonly component: TopLevelComponent }) {
+  switch (component.type) {
+    case COMPONENT_TYPE.CONTAINER: return <V2ContainerPreview component={component} />;
+    case COMPONENT_TYPE.TEXT_DISPLAY: return <V2TextDisplayPreview component={component} />;
+    case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
+    case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
+    case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
+    default: return null;
+  }
 }

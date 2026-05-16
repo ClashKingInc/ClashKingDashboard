@@ -1,8 +1,9 @@
 "use client";
 
+import { decompressFromEncodedURIComponent, decompressFromBase64, compressToEncodedURIComponent } from 'lz-string';
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Plus, Trash2, Link2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,7 +18,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { DiscordMessagePreview, extractEmbeds, extractMessageProfile, type DiscordEmbed } from "./discord-embed-preview";
+import {
+  DiscordMessagePreview,
+  extractEmbeds,
+  extractMessageProfile,
+  IS_COMPONENTS_V2_FLAG,
+  COMPONENT_TYPE,
+  type DiscordEmbed,
+  type TopLevelComponent,
+  type ContainerChild,
+} from "./discord-embed-preview";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -46,6 +56,41 @@ interface EmbedFormState {
   includeTimestamp: boolean;
 }
 
+// ─── Components V2 state types ────────────────────────────────────────────────
+
+interface TextDisplayState { id: string; type: "text_display"; content: string }
+interface SeparatorState { id: string; type: "separator"; divider: boolean; spacing: "small" | "large" }
+interface MediaGalleryItemState { id: string; url: string; description: string; spoiler: boolean }
+interface MediaGalleryState { id: string; type: "media_gallery"; items: MediaGalleryItemState[] }
+interface SectionState {
+  id: string;
+  type: "section";
+  texts: TextDisplayState[];
+  accessoryType: "none" | "thumbnail";
+  thumbnailUrl: string;
+  thumbnailDescription: string;
+}
+type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState;
+interface ContainerState {
+  id: string;
+  type: "container";
+  accentColor: string;
+  children: ContainerChildState[];
+}
+/** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
+interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
+interface ButtonState { id: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
+interface ActionRowState { id: string; type: "action_row"; buttons: ButtonState[] }
+type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | RawComponentState;
+
+interface MessageState {
+  id: string;
+  mode: "v1" | "v2";
+  embeds: EmbedFormState[];
+  content: string;
+  components: TopLevelComponentState[];
+}
+
 type SectionKey = "author" | "body" | "fields" | "images" | "footer";
 const MAX_DISCORD_EMBEDS_PER_MESSAGE = 10;
 const MAX_DISCORD_MESSAGE_CONTENT_LENGTH = 2000;
@@ -56,7 +101,7 @@ interface MessageProfileState {
   avatarUrl: string;
 }
 
-const EMPTY_MESSAGE_PROFILE: MessageProfileState = { name: "", avatarUrl: "" };
+export const EMPTY_MESSAGE_PROFILE: MessageProfileState = { name: "", avatarUrl: "" };
 
 function createCollapsedSectionState(): Record<SectionKey, boolean> {
   return {
@@ -125,37 +170,192 @@ function embedToState(embed: DiscordEmbed): EmbedFormState {
   };
 }
 
-function extractMessageContent(data: Record<string, unknown>): string {
-  const messages = (data as { messages?: unknown }).messages;
-  if (Array.isArray(messages)) {
-    for (const message of messages) {
-      const content = (message as { data?: { content?: unknown } })?.data?.content;
-      if (typeof content === "string") {
-        if (content.trim().length === 0) continue;
-        return content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
-      }
-    }
-  }
+// ─── Components V2 serialization ──────────────────────────────────────────────
 
-  const topLevelContent = (data as { content?: unknown }).content;
-  if (typeof topLevelContent === "string") {
-    if (topLevelContent.trim().length === 0) return "";
-    return topLevelContent.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
-  }
-
-  return "";
+function hexToIntSafe(hex: string): number | null {
+  const val = Number.parseInt(hex.replace("#", ""), 16);
+  return Number.isNaN(val) ? null : val;
 }
 
-function payloadToEditorState(data: Record<string, unknown>): { embeds: EmbedFormState[]; content: string; profile: MessageProfileState } {
-  const embeds = extractEmbeds(data);
-  const content = extractMessageContent(data);
+export function serializeComponentState(s: TopLevelComponentState): TopLevelComponent {
+  switch (s.type) {
+    case "action_row":
+      return {
+        type: 1,
+        components: s.buttons.map(btn => ({
+          type: 2,
+          style: btn.style,
+          ...(btn.label ? { label: btn.label } : {}),
+          ...(btn.style === 5 && btn.url ? { url: btn.url } : {}),
+          ...(btn.disabled ? { disabled: true } : {}),
+        })),
+      } as unknown as TopLevelComponent;
+    case "raw":
+      return s.rawData as unknown as TopLevelComponent;
+    case "container": {
+      const accent = hexToIntSafe(s.accentColor);
+      return {
+        type: 17,
+        accent_color: accent ?? undefined,
+        components: s.children.map(child => serializeComponentState(child) as ContainerChild),
+      };
+    }
+    case "text_display":
+      return { type: 10, content: s.content };
+    case "separator":
+      return { type: 14, divider: s.divider, spacing: s.spacing === "large" ? 2 : 1 };
+    case "media_gallery":
+      return {
+        type: 12,
+        items: s.items.map(item => ({
+          media: { url: item.url },
+          ...(item.description.trim() ? { description: item.description.trim() } : {}),
+          ...(item.spoiler ? { spoiler: true } : {}),
+        })),
+      };
+    case "section": {
+      const texts = s.texts.filter(t => t.content.trim()).map(t => ({ type: 10 as const, content: t.content }));
+      const accessory = s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()
+        ? { type: 11 as const, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) }
+        : null;
+      return { type: 9, components: texts, ...(accessory ? { accessory } : {}) };
+    }
+  }
+}
+
+export function parseComponentState(c: TopLevelComponent): TopLevelComponentState {
+  switch (c.type) {
+    case 17: return {
+      id: uid(),
+      type: "container",
+      accentColor: c.accent_color == null ? "#5865f2" : `#${c.accent_color.toString(16).padStart(6, "0")}`,
+      children: (c.components ?? []).map(child => parseComponentState(child as TopLevelComponent) as ContainerChildState),
+    };
+    case 10: return { id: uid(), type: "text_display", content: c.content ?? "" };
+    case 14: return { id: uid(), type: "separator", divider: (c as any).divider !== false, spacing: (c as any).spacing === 2 ? "large" : "small" };
+    case 12: return {
+      id: uid(),
+      type: "media_gallery",
+      items: ((c as any).items ?? []).map((item: any) => ({ id: uid(), url: item.media?.url ?? "", description: item.description ?? "", spoiler: item.spoiler ?? false })),
+    };
+    case 9: {
+      const sec = c as any;
+      return {
+        id: uid(),
+        type: "section",
+        texts: (sec.components ?? []).filter((ch: any) => ch.type === COMPONENT_TYPE.TEXT_DISPLAY).map((ch: any) => ({ id: uid(), type: "text_display" as const, content: ch.content ?? "" })),
+        accessoryType: sec.accessory?.type === 11 && sec.accessory?.media?.url ? "thumbnail" : "none",
+        thumbnailUrl: sec.accessory?.type === 11 ? sec.accessory?.media?.url ?? "" : "",
+        thumbnailDescription: sec.accessory?.type === 11 ? sec.accessory?.description ?? "" : "",
+      };
+    }
+    case 1: return {
+      id: uid(),
+      type: "action_row",
+      buttons: ((c as any).components ?? [])
+        .filter((b: any) => b.type === 2)
+        .map((b: any) => ({
+          id: uid(),
+          label: b.label ?? "",
+          style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
+          url: b.url ?? "",
+          disabled: b.disabled ?? false,
+        })),
+    };
+    default: return { id: uid(), type: "raw", rawType: (c as { type: number }).type, rawData: c as unknown as Record<string, unknown> };
+  }
+}
+
+function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLevelComponentState {
+  switch (type) {
+    case "container": return { id: uid(), type: "container", accentColor: "#5865f2", children: [] };
+    case "text_display": return { id: uid(), type: "text_display", content: "" };
+    case "separator": return { id: uid(), type: "separator", divider: true, spacing: "small" };
+    case "media_gallery": return { id: uid(), type: "media_gallery", items: [] };
+    case "section": return {
+      id: uid(), type: "section",
+      texts: [{ id: uid(), type: "text_display", content: "" }],
+      accessoryType: "none", thumbnailUrl: "", thumbnailDescription: "",
+    };
+    case "action_row": return { id: uid(), type: "action_row", buttons: [] };
+    case "raw": return { id: uid(), type: "raw", rawType: 0, rawData: {} };
+  }
+}
+
+export function payloadToMessages(data: Record<string, unknown>): { messages: MessageState[]; profile: MessageProfileState } {
   const profile = extractMessageProfile(data);
   const mappedProfile: MessageProfileState = {
     name: (profile?.name ?? "").slice(0, MAX_PROFILE_NAME_LENGTH),
     avatarUrl: profile?.avatar_url ?? "",
   };
-  if (embeds.length === 0) return { embeds: [defaultState()], content, profile: mappedProfile };
-  return { embeds: embeds.map(embedToState), content, profile: mappedProfile };
+
+  const rawMessages = (data as { messages?: unknown[] }).messages;
+  if (Array.isArray(rawMessages) && rawMessages.length > 0) {
+    return {
+      messages: rawMessages.map(rawMsg => {
+        const msgData: Record<string, unknown> = (rawMsg as { data?: Record<string, unknown> })?.data ?? {};
+        const rawMsgFlags = (rawMsg as { flags?: unknown }).flags;
+        let flags = 0;
+        if (typeof msgData.flags === "number") flags = msgData.flags;
+        else if (typeof rawMsgFlags === "number") flags = rawMsgFlags;
+        const isV2 = (flags & IS_COMPONENTS_V2_FLAG) !== 0;
+        if (isV2) {
+          const rawMsgComponents = (rawMsg as { components?: unknown }).components;
+          let rawComponents: TopLevelComponent[];
+          if (Array.isArray(msgData.components)) rawComponents = msgData.components as TopLevelComponent[];
+          else if (Array.isArray(rawMsgComponents)) rawComponents = rawMsgComponents as TopLevelComponent[];
+          else rawComponents = [];
+          return {
+            id: uid(),
+            mode: "v2" as const,
+            embeds: [defaultState()],
+            content: "",
+            components: rawComponents.map(parseComponentState),
+          };
+        }
+        const rawEmbeds = Array.isArray((msgData as any).embeds) ? (msgData as any).embeds as DiscordEmbed[] : [];
+        const rawContent = (msgData as any).content;
+        return {
+          id: uid(),
+          mode: "v1" as const,
+          embeds: rawEmbeds.length > 0 ? rawEmbeds.map(embedToState) : [defaultState()],
+          content: typeof rawContent === "string" ? rawContent.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH) : "",
+          components: [],
+        };
+      }),
+      profile: mappedProfile,
+    };
+  }
+
+  // Fallback: top-level V2 (e.g. Discohook payloads without messages array)
+  const topFlags = typeof (data as any).flags === "number" ? (data as any).flags : 0;
+  if ((topFlags & IS_COMPONENTS_V2_FLAG) !== 0) {
+    const rawComponents = Array.isArray((data as any).components) ? (data as any).components as TopLevelComponent[] : [];
+    return {
+      messages: [{
+        id: uid(),
+        mode: "v2" as const,
+        embeds: [defaultState()],
+        content: "",
+        components: rawComponents.map(parseComponentState),
+      }],
+      profile: mappedProfile,
+    };
+  }
+
+  // Fallback: top-level embeds/content (legacy V1 format)
+  const rawEmbeds = extractEmbeds(data);
+  const rawContent = (data as any).content;
+  return {
+    messages: [{
+      id: uid(),
+      mode: "v1" as const,
+      embeds: rawEmbeds.length > 0 ? rawEmbeds.map(embedToState) : [defaultState()],
+      content: typeof rawContent === "string" ? rawContent.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH) : "",
+      components: [],
+    }],
+    profile: mappedProfile,
+  };
 }
 
 function stateToEmbed(s: EmbedFormState): DiscordEmbed { // NOSONAR — sequential field assignments, no real logic branches
@@ -201,57 +401,89 @@ function hasMeaningfulEmbedContent(embed: DiscordEmbed): boolean {
 }
 
 /** Outputs the Discohook-compatible payload stored in MongoDB */
-export function stateToPayload(states: EmbedFormState[], content = "", profile: MessageProfileState = EMPTY_MESSAGE_PROFILE): Record<string, unknown> {
-  const embeds = states
-    .map(stateToEmbed)
-    .filter(hasMeaningfulEmbedContent)
-    .slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
-  const normalizedContent = content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
+export function stateToPayload( // NOSONAR — sequential field assignments, no real logic branches
+  messages: MessageState[],
+  profile: MessageProfileState = EMPTY_MESSAGE_PROFILE,
+): Record<string, unknown> {
   const normalizedProfile = {
     name: profile.name.slice(0, MAX_PROFILE_NAME_LENGTH).trim() || null,
     avatar_url: profile.avatarUrl.trim() || null,
   };
-  const messageEntry: {
-    data: {
-      content: string | null;
-      embeds: DiscordEmbed[];
-      username?: string;
-      avatar_url?: string;
-    };
-  } = {
-    data: { content: normalizedContent || null, embeds },
-  };
+
+  const messageEntries = messages.map(msg => {
+    if (msg.mode === "v2") {
+      const components = msg.components.map(serializeComponentState);
+      return { data: { flags: IS_COMPONENTS_V2_FLAG, components } };
+    }
+    const embeds = msg.embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent).slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
+    const content = msg.content.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH);
+    const msgData: Record<string, unknown> = { content: content || null, embeds };
+    if (normalizedProfile.name) msgData.username = normalizedProfile.name;
+    if (normalizedProfile.avatar_url) msgData.avatar_url = normalizedProfile.avatar_url;
+    return { data: msgData };
+  });
+
+  const firstMsg = messages[0];
+  const firstData: Record<string, unknown> = messageEntries[0]?.data ?? { content: null, embeds: [] };
   const payload: Record<string, unknown> = {
-    // Keep top-level fields for bot compatibility while preserving Discohook format.
     version: "d2",
-    content: normalizedContent || null,
-    embeds,
-    messages: [messageEntry],
+    messages: messageEntries,
   };
-
-  if (normalizedProfile.name) {
-    messageEntry.data.username = normalizedProfile.name;
-    payload.username = normalizedProfile.name;
+  if (firstMsg?.mode === "v2") {
+    payload.flags = IS_COMPONENTS_V2_FLAG;
+    payload.components = firstData.components ?? [];
+  } else {
+    payload.content = firstData.content;
+    payload.embeds = firstData.embeds;
+    if (normalizedProfile.name) payload.username = normalizedProfile.name;
+    if (normalizedProfile.avatar_url) payload.avatar_url = normalizedProfile.avatar_url;
   }
-
-  if (normalizedProfile.avatar_url) {
-    messageEntry.data.avatar_url = normalizedProfile.avatar_url;
-    payload.avatar_url = normalizedProfile.avatar_url;
-  }
-
   return payload;
 }
 
-function parseDiscohookUrl(url: string): Record<string, unknown> | null {
+function decodeBase64DiscohookPayload(raw: string): string {
+  const normalized = raw.replaceAll("-", "+").replaceAll("_", "/");
+  const paddingLength = (4 - (normalized.length % 4)) % 4;
+  const padded = `${normalized}${"=".repeat(paddingLength)}`;
+  return new TextDecoder().decode(Uint8Array.from(atob(padded), c => c.codePointAt(0) ?? 0));
+}
+
+export function parseDiscohookUrl(url: string): Record<string, unknown> | null {
   try {
     const match = /[?&]data=([^&\s]+)/.exec(url);
     if (!match) return null;
-    return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(match[1]), c => c.codePointAt(0) ?? 0)));
+    const raw = match[1];
+    const decoded = decodeURIComponent(raw);
+
+    // 1. Discohook native format: LZString.compressToEncodedURIComponent
+    try {
+      const json = decompressFromEncodedURIComponent(raw);
+      if (json) return JSON.parse(json);
+    } catch { /* fall through */ }
+
+    // 2. LZString.compressToBase64 variant
+    try {
+      const json = decompressFromBase64(decoded);
+      if (json) return JSON.parse(json);
+    } catch { /* fall through */ }
+
+    // 3. Plain base64 or base64url payload
+    return JSON.parse(decodeBase64DiscohookPayload(decoded));
   } catch { return null; }
 }
 
+export function requiresDiscohookResolve(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname === "share.discohook.app" ||
+      (parsed.hostname === "discohook.app" && parsed.searchParams.has("share"));
+  } catch {
+    return false;
+  }
+}
+
 function buildDiscohookUrl(data: Record<string, unknown>): string {
-  const encoded = btoa(Array.from(new TextEncoder().encode(JSON.stringify(data)), (byte) => String.fromCodePoint(byte)).join(""));
+  const encoded = compressToEncodedURIComponent(JSON.stringify(data));
   return `https://discohook.app/?data=${encoded}`;
 }
 
@@ -333,25 +565,57 @@ function CollapsibleSection({ title, open, onToggle, children }: CollapsibleSect
 export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEditorProps) {
   const t = useTranslations("EmbedEditor");
   const tCommon = useTranslations("Common");
-  const parsedInitialData = initialData ? payloadToEditorState(initialData) : null;
+  const parsedInitialData = initialData ? payloadToMessages(initialData) : null;
   const inputClassName = "bg-background border-border/80";
   const compactInputClassName = `${inputClassName} h-8 text-sm`;
   const compactTextareaClassName = `${inputClassName} text-sm resize-none`;
 
-  const [embeds, setEmbeds] = useState<EmbedFormState[]>(() =>
-    parsedInitialData ? parsedInitialData.embeds : [defaultState()]
+  const [messages, setMessages] = useState<MessageState[]>(() =>
+    parsedInitialData ? parsedInitialData.messages : [{ id: uid(), mode: "v1", embeds: [defaultState()], content: "", components: [] }]
   );
-  const [expandedEmbedId, setExpandedEmbedId] = useState<string | null>(() => (
-    (parsedInitialData?.embeds[0]?.editorId) ?? null
-  ));
+  const [activeMessageIdx, setActiveMessageIdx] = useState(0);
+  const [expandedEmbedId, setExpandedEmbedId] = useState<string | null>(() =>
+    parsedInitialData?.messages[0]?.embeds[0]?.editorId ?? null
+  );
   const [importUrl, setImportUrl] = useState("");
   const [importError, setImportError] = useState(false);
+  const [importWarning, setImportWarning] = useState<string | null>(null);
+  const [importResolving, setImportResolving] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [importExportOpen, setImportExportOpen] = useState(false);
   const [copiedDiscohook, setCopiedDiscohook] = useState(false);
-  const [content, setContent] = useState(() => parsedInitialData?.content ?? "");
   const [profile, setProfile] = useState<MessageProfileState>(() => parsedInitialData?.profile ?? { name: "", avatarUrl: "" });
   const [profileOpen, setProfileOpen] = useState(false);
+
+  const safeIdx = Math.min(activeMessageIdx, messages.length - 1);
+  const activeMessage = messages[safeIdx];
+  const embeds = activeMessage.embeds;
+  const content = activeMessage.content;
+
+  const setEmbeds = (updater: EmbedFormState[] | ((prev: EmbedFormState[]) => EmbedFormState[])) =>
+    setMessages(prev => prev.map((msg, i) => i === safeIdx ? {
+      ...msg,
+      embeds: typeof updater === "function" ? updater(msg.embeds) : updater,
+    } : msg));
+
+  const setContent = (value: string) =>
+    setMessages(prev => prev.map((msg, i) => i === safeIdx ? { ...msg, content: value } : msg));
+
+  const addMessage = () => {
+    const newEmbed = defaultState();
+    const newMsg: MessageState = { id: uid(), mode: "v1", embeds: [newEmbed], content: "", components: [] };
+    setMessages(prev => [...prev, newMsg]);
+    setActiveMessageIdx(messages.length);
+    setExpandedEmbedId(newEmbed.editorId);
+  };
+
+  const removeMessage = (index: number) => {
+    if (messages.length <= 1) return;
+    setMessages(prev => prev.filter((_, i) => i !== index));
+    const newIdx = Math.max(0, Math.min(index, messages.length - 2));
+    setActiveMessageIdx(newIdx);
+    setExpandedEmbedId(messages[newIdx]?.embeds[0]?.editorId ?? null);
+  };
 
   const updateEmbed = (embedId: string, updater: (embed: EmbedFormState) => EmbedFormState) =>
     setEmbeds((prev) => prev.map((embed) => (embed.editorId === embedId ? updater(embed) : embed)));
@@ -446,31 +710,115 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const moveField = (embedId: string, fieldId: string, dir: -1 | 1) =>
     updateEmbed(embedId, (embed) => ({ ...embed, fields: reorderFieldById(embed.fields, fieldId, dir) }));
 
+  // ── V2 Component management ──────────────────────────────────────────────────
+
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [expandedV2Ids, setExpandedV2Ids] = useState<Set<string>>(new Set());
+  const toggleV2Expanded = (id: string) =>
+    setExpandedV2Ids(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+
+  const setMessageMode = (idx: number, mode: "v1" | "v2") =>
+    setMessages(prev => prev.map((msg, i) => i === idx ? { ...msg, mode } : msg));
+
+  const setV2Components = (updater: TopLevelComponentState[] | ((prev: TopLevelComponentState[]) => TopLevelComponentState[])) =>
+    setMessages(prev => prev.map((msg, i) => i === safeIdx ? {
+      ...msg,
+      components: typeof updater === "function" ? updater(msg.components) : updater,
+    } : msg));
+
+  const addV2Component = (type: TopLevelComponentState["type"]) => {
+    const newComp = createDefaultV2Component(type);
+    setV2Components(prev => [...prev, newComp]);
+  };
+
+  const removeV2Component = (id: string) =>
+    setV2Components(prev => prev.filter(c => c.id !== id));
+
+  const moveV2Component = (id: string, dir: -1 | 1) =>
+    setV2Components(prev => {
+      const arr = [...prev];
+      const idx = arr.findIndex(c => c.id === id);
+      const next = idx + dir;
+      if (idx < 0 || next < 0 || next >= arr.length) return prev;
+      [arr[idx], arr[next]] = [arr[next], arr[idx]];
+      return arr;
+    });
+
+  const updateV2Component = (id: string, updater: (c: TopLevelComponentState) => TopLevelComponentState) =>
+    setV2Components(prev => prev.map(c => c.id === id ? updater(c) : c));
+
+  const updateContainerChildren = (containerId: string, updater: (children: ContainerChildState[]) => ContainerChildState[]) =>
+    updateV2Component(containerId, comp => {
+      if (comp.type !== "container") return comp;
+      return { ...comp, children: updater(comp.children) };
+    });
+
   // ── Import ──────────────────────────────────────────────────────────────────
 
-  const handleImport = () => {
-    const parsed = parseDiscohookUrl(importUrl.trim());
-    if (!parsed) { setImportError(true); return; }
-    const editorState = payloadToEditorState(parsed);
+  const applyParsed = (parsed: Record<string, unknown>) => {
+    const { messages: parsedMessages, profile: parsedProfile } = payloadToMessages(parsed);
     setImportError(false);
     setImportUrl("");
-    setEmbeds(editorState.embeds);
-    setContent(editorState.content);
-    setProfile(editorState.profile);
-    setExpandedEmbedId(editorState.embeds[0]?.editorId ?? null);
+    setMessages(parsedMessages);
+    setActiveMessageIdx(0);
+    setProfile(parsedProfile);
+    setExpandedEmbedId(parsedMessages[0]?.embeds[0]?.editorId ?? null);
+    setImportWarning(null);
     setImportExportOpen(false);
+  };
+
+  const handleImport = async () => {
+    let urlToparse = importUrl.trim();
+
+    // Share links don't carry ?data= and can't be fetched client-side (CORS).
+    // Resolve both share.discohook.app URLs and discohook.app/?share= links via the Next.js proxy.
+    if (requiresDiscohookResolve(urlToparse)) {
+      setImportResolving(true);
+      setImportError(false);
+      try {
+        const res = await fetch(`/api/v2/app/discohook-resolve?url=${encodeURIComponent(urlToparse)}`);
+        const json = await res.json();
+        if (!res.ok) { setImportError(true); setImportWarning(null); return; }
+
+        if (json.payload) {
+          // Backend returned the raw JSON payload directly
+          applyParsed(json.payload as Record<string, unknown>);
+          return;
+        }
+        if (json.resolvedUrl) {
+          urlToparse = json.resolvedUrl;
+        } else {
+          setImportError(true); setImportWarning(null); return;
+        }
+      } catch {
+        setImportError(true); setImportWarning(null); return;
+      } finally {
+        setImportResolving(false);
+      }
+    }
+
+    const parsed = parseDiscohookUrl(urlToparse);
+    if (!parsed) { setImportError(true); setImportWarning(null); return; }
+    applyParsed(parsed);
   };
 
   // ── Save ────────────────────────────────────────────────────────────────────
 
-  const handleSave = () => onSave(stateToPayload(embeds, content, profile));
+  const handleSave = () => onSave(stateToPayload(messages, profile));
 
-  const discohookPayload = stateToPayload(embeds, content, profile);
+  const discohookPayload = stateToPayload(messages, profile);
   const discohookUrl = buildDiscohookUrl(discohookPayload);
-  const previewEmbeds = embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent);
+  const previewEmbeds = activeMessage.mode === "v1" ? embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent) : [];
+  const previewV2Components = activeMessage.mode === "v2" ? activeMessage.components.map(serializeComponentState) : [];
   const hasContent =
-    previewEmbeds.length > 0 ||
-    content.trim().length > 0 ||
+    messages.some(msg => {
+      if (msg.mode === "v2") return msg.components.length > 0;
+      return msg.embeds.map(stateToEmbed).some(hasMeaningfulEmbedContent) || msg.content.trim().length > 0;
+    }) ||
     profile.name.trim().length > 0 ||
     profile.avatarUrl.trim().length > 0;
 
@@ -494,19 +842,58 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
 
           <Separator />
 
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <Label className="text-xs">{t("content")}</Label>
-              <CharCount value={content} max={MAX_DISCORD_MESSAGE_CONTENT_LENGTH} />
+          {/* ── Message switcher ── */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1 flex-wrap">
+              {messages.map((msg, i) => (
+                <button
+                  key={msg.id}
+                  type="button"
+                  onClick={() => { setActiveMessageIdx(i); setExpandedEmbedId(msg.embeds[0]?.editorId ?? null); }}
+                  className={cn(
+                    "text-xs px-2.5 py-1 rounded-md border transition-colors",
+                    i === safeIdx
+                      ? "border-primary/60 bg-primary/10 text-foreground font-medium"
+                      : "border-border/80 text-muted-foreground hover:border-border hover:text-foreground"
+                  )}
+                >
+                  Message {i + 1}
+                </button>
+              ))}
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 text-xs text-muted-foreground hover:text-foreground"
+                onClick={addMessage}
+              >
+                <Plus className="h-3 w-3 mr-1" />Add
+              </Button>
+              {messages.length > 1 && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs text-muted-foreground hover:text-destructive"
+                  onClick={() => removeMessage(safeIdx)}
+                >
+                  <Trash2 className="h-3 w-3 mr-1" />Remove
+                </Button>
+              )}
             </div>
-            <Textarea
-              value={content}
-              onChange={(event) => setContent(event.target.value.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH))}
-              maxLength={MAX_DISCORD_MESSAGE_CONTENT_LENGTH}
-              rows={4}
-              className={compactTextareaClassName}
-              placeholder={t("contentPlaceholder")}
-            />
+          </div>
+
+          {/* Mode toggle */}
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={() => setMessageMode(safeIdx, "v1")}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                activeMessage.mode === "v1" ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {t("modeToggleV1")}
+            </button>
+            <button type="button" onClick={() => setMessageMode(safeIdx, "v2")}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors flex items-center gap-1",
+                activeMessage.mode === "v2" ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {t("modeToggleV2")}
+              <span className="rounded bg-[#5865F2] px-1 py-0.5 text-[9px] font-semibold text-white uppercase tracking-wide">NEW</span>
+            </button>
           </div>
 
           <CollapsibleSection title={t("profileSection")} open={profileOpen} onToggle={() => setProfileOpen((prev) => !prev)}>
@@ -537,213 +924,631 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
             </div>
           </CollapsibleSection>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <SectionLabel>{`Embeds (${embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</SectionLabel>
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-7 text-xs"
-                onClick={addEmbed}
-                disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}
-              >
-                <Plus className="h-3.5 w-3.5 mr-1" />Add Embed
-              </Button>
-            </div>
-            {embeds.map((embed, index) => {
-              const label = embed.title.trim() || embed.description.trim().slice(0, 40) || `Embed ${index + 1}`;
-              const isExpanded = expandedEmbedId === embed.editorId;
-              return (
-                <div
-                  key={embed.editorId}
-                  className={cn(
-                    "rounded-lg border bg-card",
-                    isExpanded ? "border-primary/60" : "border-border/80",
-                  )}
-                >
-                  <div className="flex items-center gap-2 px-3 py-2">
-                    <button
-                      type="button"
-                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
-                      onClick={() => setExpandedEmbedId((prev) => (prev === embed.editorId ? null : embed.editorId))}
+          {activeMessage.mode === "v1" ? (
+            <>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs">{t("content")}</Label>
+                  <CharCount value={content} max={MAX_DISCORD_MESSAGE_CONTENT_LENGTH} />
+                </div>
+                <Textarea
+                  value={content}
+                  onChange={(event) => setContent(event.target.value.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH))}
+                  maxLength={MAX_DISCORD_MESSAGE_CONTENT_LENGTH}
+                  rows={4}
+                  className={compactTextareaClassName}
+                  placeholder={t("contentPlaceholder")}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <SectionLabel>{`Embeds (${embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</SectionLabel>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs"
+                    onClick={addEmbed}
+                    disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}
+                  >
+                    <Plus className="h-3.5 w-3.5 mr-1" />Add Embed
+                  </Button>
+                </div>
+                {embeds.map((embed, index) => {
+                  const label = embed.title.trim() || embed.description.trim().slice(0, 40) || `Embed ${index + 1}`;
+                  const isExpanded = expandedEmbedId === embed.editorId;
+                  return (
+                    <div
+                      key={embed.editorId}
+                      className={cn(
+                        "rounded-lg border bg-card",
+                        isExpanded ? "border-primary/60" : "border-border/80",
+                      )}
                     >
-                      {isExpanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
-                      <span className="truncate text-base font-semibold">{`Embed ${index + 1} - ${label}`}</span>
-                    </button>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, -1)} disabled={index === 0}>
-                        <ChevronUp className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, 1)} disabled={index === embeds.length - 1}>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => duplicateEmbed(embed.editorId)} disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}>
-                        <Copy className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeEmbed(embed.editorId)} disabled={embeds.length <= 1}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  {isExpanded && (
-                    <div className="border-t border-border/80">
-                      <CollapsibleSection title={t("authorSection")} open={embed.openSections.author} onToggle={() => toggleSection(embed.editorId, "author")}>
-                        <div className="space-y-3">
-                          <Field label="">
-                            <div className="mb-1 flex items-center justify-between">
-                              <Label className="text-xs">{t("authorName")}</Label>
-                              <CharCount value={embed.authorName} max={256} />
-                            </div>
-                            <Input value={embed.authorName} onChange={e => setEmbedField(embed.editorId, "authorName", e.target.value)} maxLength={256} className={compactInputClassName} />
-                          </Field>
-                          <Field label={t("authorUrl")}>
-                            <Input value={embed.authorUrl} onChange={e => setEmbedField(embed.editorId, "authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-                          </Field>
-                          <Field label={t("authorIconUrl")}>
-                            <Input value={embed.authorIconUrl} onChange={e => setEmbedField(embed.editorId, "authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-                          </Field>
+                      <div className="flex items-center gap-2 px-3 py-2">
+                        <button
+                          type="button"
+                          className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                          onClick={() => setExpandedEmbedId((prev) => (prev === embed.editorId ? null : embed.editorId))}
+                        >
+                          {isExpanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                          <span className="truncate text-base font-semibold">{`Embed ${index + 1} - ${label}`}</span>
+                        </button>
+                        <div className="flex items-center gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, -1)} disabled={index === 0}>
+                            <ChevronUp className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, 1)} disabled={index === embeds.length - 1}>
+                            <ChevronDown className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => duplicateEmbed(embed.editorId)} disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}>
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeEmbed(embed.editorId)} disabled={embeds.length <= 1}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
-                      </CollapsibleSection>
+                      </div>
+                      {isExpanded && (
+                        <div className="border-t border-border/80">
+                          <CollapsibleSection title={t("authorSection")} open={embed.openSections.author} onToggle={() => toggleSection(embed.editorId, "author")}>
+                            <div className="space-y-3">
+                              <Field label="">
+                                <div className="mb-1 flex items-center justify-between">
+                                  <Label className="text-xs">{t("authorName")}</Label>
+                                  <CharCount value={embed.authorName} max={256} />
+                                </div>
+                                <Input value={embed.authorName} onChange={e => setEmbedField(embed.editorId, "authorName", e.target.value)} maxLength={256} className={compactInputClassName} />
+                              </Field>
+                              <Field label={t("authorUrl")}>
+                                <Input value={embed.authorUrl} onChange={e => setEmbedField(embed.editorId, "authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              </Field>
+                              <Field label={t("authorIconUrl")}>
+                                <Input value={embed.authorIconUrl} onChange={e => setEmbedField(embed.editorId, "authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              </Field>
+                            </div>
+                          </CollapsibleSection>
 
-                      <CollapsibleSection title={t("bodySection")} open={embed.openSections.body} onToggle={() => toggleSection(embed.editorId, "body")}>
-                        <div className="space-y-3">
-                          <Field label="">
-                            <div className="mb-1 flex items-center justify-between">
-                              <Label className="text-xs">{t("title")}</Label>
-                              <CharCount value={embed.title} max={256} />
+                          <CollapsibleSection title={t("bodySection")} open={embed.openSections.body} onToggle={() => toggleSection(embed.editorId, "body")}>
+                            <div className="space-y-3">
+                              <Field label="">
+                                <div className="mb-1 flex items-center justify-between">
+                                  <Label className="text-xs">{t("title")}</Label>
+                                  <CharCount value={embed.title} max={256} />
+                                </div>
+                                <Input value={embed.title} onChange={e => setEmbedField(embed.editorId, "title", e.target.value)} maxLength={256} className={compactInputClassName} />
+                              </Field>
+                              <Field label={t("titleUrl")}>
+                                <Input value={embed.titleUrl} onChange={e => setEmbedField(embed.editorId, "titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              </Field>
+                              <Field label={t("sidebarColor")}>
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    type="color"
+                                    value={embed.color || "#5865f2"}
+                                    onChange={e => setEmbedField(embed.editorId, "color", e.target.value)}
+                                    className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5"
+                                  />
+                                  <Input
+                                    value={embed.color}
+                                    onChange={e => {
+                                      const value = e.target.value;
+                                      if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setEmbedField(embed.editorId, "color", value);
+                                    }}
+                                    className={cn(inputClassName, "font-mono text-sm w-28")}
+                                    maxLength={7}
+                                  />
+                                </div>
+                              </Field>
+                              <Field label="">
+                                <div className="mb-1 flex items-center justify-between">
+                                  <Label className="text-xs">{t("description")}</Label>
+                                  <CharCount value={embed.description} max={4096} />
+                                </div>
+                                <Textarea
+                                  value={embed.description}
+                                  onChange={e => setEmbedField(embed.editorId, "description", e.target.value)}
+                                  maxLength={4096}
+                                  rows={5}
+                                  className={compactTextareaClassName}
+                                  placeholder={t("descriptionPlaceholder")}
+                                />
+                              </Field>
                             </div>
-                            <Input value={embed.title} onChange={e => setEmbedField(embed.editorId, "title", e.target.value)} maxLength={256} className={compactInputClassName} />
-                          </Field>
-                          <Field label={t("titleUrl")}>
-                            <Input value={embed.titleUrl} onChange={e => setEmbedField(embed.editorId, "titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-                          </Field>
-                          <Field label={t("sidebarColor")}>
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="color"
-                                value={embed.color || "#5865f2"}
-                                onChange={e => setEmbedField(embed.editorId, "color", e.target.value)}
-                                className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5"
-                              />
-                              <Input
-                                value={embed.color}
-                                onChange={e => {
-                                  const value = e.target.value;
-                                  if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setEmbedField(embed.editorId, "color", value);
-                                }}
-                                className={cn(inputClassName, "font-mono text-sm w-28")}
-                                maxLength={7}
-                              />
-                            </div>
-                          </Field>
-                          <Field label="">
-                            <div className="mb-1 flex items-center justify-between">
-                              <Label className="text-xs">{t("description")}</Label>
-                              <CharCount value={embed.description} max={4096} />
-                            </div>
-                            <Textarea
-                              value={embed.description}
-                              onChange={e => setEmbedField(embed.editorId, "description", e.target.value)}
-                              maxLength={4096}
-                              rows={5}
-                              className={compactTextareaClassName}
-                              placeholder={t("descriptionPlaceholder")}
-                            />
-                          </Field>
-                        </div>
-                      </CollapsibleSection>
+                          </CollapsibleSection>
 
-                      <CollapsibleSection title={`${t("fieldsSection")} (${embed.fields.length}/25)`} open={embed.openSections.fields} onToggle={() => toggleSection(embed.editorId, "fields")}>
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-end">
-                            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => addField(embed.editorId)} disabled={embed.fields.length >= 25}>
-                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addField")}
-                            </Button>
-                          </div>
-                          {embed.fields.map((field, fieldIndex) => (
-                            <div key={field.id} className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-xs font-medium text-muted-foreground">{t("field")} {fieldIndex + 1}</span>
-                                <div className="flex items-center gap-1">
-                                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, -1)} disabled={fieldIndex === 0}>
-                                    <ChevronUp className="h-3.5 w-3.5" />
-                                  </Button>
-                                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, 1)} disabled={fieldIndex === embed.fields.length - 1}>
-                                    <ChevronDown className="h-3.5 w-3.5" />
-                                  </Button>
-                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeField(embed.editorId, field.id)}>
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </div>
+                          <CollapsibleSection title={`${t("fieldsSection")} (${embed.fields.length}/25)`} open={embed.openSections.fields} onToggle={() => toggleSection(embed.editorId, "fields")}>
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-end">
+                                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => addField(embed.editorId)} disabled={embed.fields.length >= 25}>
+                                  <Plus className="h-3.5 w-3.5 mr-1" />{t("addField")}
+                                </Button>
                               </div>
-                              <div className="space-y-1">
-                                <div className="flex items-center justify-between">
-                                  <Label className="text-xs">{t("fieldName")}</Label>
-                                  <CharCount value={field.name} max={256} />
+                              {embed.fields.map((field, fieldIndex) => (
+                                <div key={field.id} className="rounded-lg border border-border/80 bg-card p-3 space-y-2">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className="text-xs font-medium text-muted-foreground">{t("field")} {fieldIndex + 1}</span>
+                                    <div className="flex items-center gap-1">
+                                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, -1)} disabled={fieldIndex === 0}>
+                                        <ChevronUp className="h-3.5 w-3.5" />
+                                      </Button>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, 1)} disabled={fieldIndex === embed.fields.length - 1}>
+                                        <ChevronDown className="h-3.5 w-3.5" />
+                                      </Button>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeField(embed.editorId, field.id)}>
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  <div className="space-y-1">
+                                    <div className="flex items-center justify-between">
+                                      <Label className="text-xs">{t("fieldName")}</Label>
+                                      <CharCount value={field.name} max={256} />
+                                    </div>
+                                    <Input value={field.name} onChange={e => updateField(embed.editorId, field.id, { name: e.target.value })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} />
+                                  </div>
+                                  <div className="space-y-1">
+                                    <div className="flex items-center justify-between">
+                                      <Label className="text-xs">{t("fieldValue")}</Label>
+                                      <CharCount value={field.value} max={1024} />
+                                    </div>
+                                    <Textarea value={field.value} onChange={e => updateField(embed.editorId, field.id, { value: e.target.value })} maxLength={1024} rows={2} className={cn(inputClassName, "text-xs resize-none")} />
+                                  </div>
+                                  <label className="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={field.inline}
+                                      onChange={e => updateField(embed.editorId, field.id, { inline: e.target.checked })}
+                                      className="h-3.5 w-3.5 rounded border-input accent-primary"
+                                    />
+                                    <span className="text-xs text-muted-foreground">{t("fieldInline")}</span>
+                                  </label>
                                 </div>
-                                <Input value={field.name} onChange={e => updateField(embed.editorId, field.id, { name: e.target.value })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} />
-                              </div>
-                              <div className="space-y-1">
-                                <div className="flex items-center justify-between">
-                                  <Label className="text-xs">{t("fieldValue")}</Label>
-                                  <CharCount value={field.value} max={1024} />
+                              ))}
+                            </div>
+                          </CollapsibleSection>
+
+                          <CollapsibleSection title={t("imagesSection")} open={embed.openSections.images} onToggle={() => toggleSection(embed.editorId, "images")}>
+                            <div className="space-y-3">
+                              <Field label={t("thumbnailUrl")}>
+                                <Input value={embed.thumbnailUrl} onChange={e => setEmbedField(embed.editorId, "thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              </Field>
+                              <Field label={t("imageUrl")}>
+                                <Input value={embed.imageUrl} onChange={e => setEmbedField(embed.editorId, "imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              </Field>
+                            </div>
+                          </CollapsibleSection>
+
+                          <CollapsibleSection title={t("footerSection")} open={embed.openSections.footer} onToggle={() => toggleSection(embed.editorId, "footer")}>
+                            <div className="space-y-3">
+                              <Field label="">
+                                <div className="mb-1 flex items-center justify-between">
+                                  <Label className="text-xs">{t("footerText")}</Label>
+                                  <CharCount value={embed.footerText} max={2048} />
                                 </div>
-                                <Textarea value={field.value} onChange={e => updateField(embed.editorId, field.id, { value: e.target.value })} maxLength={1024} rows={2} className={cn(inputClassName, "text-xs resize-none")} />
-                              </div>
+                                <Input value={embed.footerText} onChange={e => setEmbedField(embed.editorId, "footerText", e.target.value)} maxLength={2048} className={compactInputClassName} />
+                              </Field>
+                              <Field label={t("footerIconUrl")}>
+                                <Input value={embed.footerIconUrl} onChange={e => setEmbedField(embed.editorId, "footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                              </Field>
                               <label className="flex items-center gap-2 cursor-pointer">
                                 <input
                                   type="checkbox"
-                                  checked={field.inline}
-                                  onChange={e => updateField(embed.editorId, field.id, { inline: e.target.checked })}
+                                  checked={embed.includeTimestamp}
+                                  onChange={e => setEmbedField(embed.editorId, "includeTimestamp", e.target.checked)}
                                   className="h-3.5 w-3.5 rounded border-input accent-primary"
                                 />
-                                <span className="text-xs text-muted-foreground">{t("fieldInline")}</span>
+                                <span className="text-sm">{t("timestamp")}</span>
                               </label>
                             </div>
-                          ))}
+                          </CollapsibleSection>
                         </div>
-                      </CollapsibleSection>
-
-                      <CollapsibleSection title={t("imagesSection")} open={embed.openSections.images} onToggle={() => toggleSection(embed.editorId, "images")}>
-                        <div className="space-y-3">
-                          <Field label={t("thumbnailUrl")}>
-                            <Input value={embed.thumbnailUrl} onChange={e => setEmbedField(embed.editorId, "thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-                          </Field>
-                          <Field label={t("imageUrl")}>
-                            <Input value={embed.imageUrl} onChange={e => setEmbedField(embed.editorId, "imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-                          </Field>
-                        </div>
-                      </CollapsibleSection>
-
-                      <CollapsibleSection title={t("footerSection")} open={embed.openSections.footer} onToggle={() => toggleSection(embed.editorId, "footer")}>
-                        <div className="space-y-3">
-                          <Field label="">
-                            <div className="mb-1 flex items-center justify-between">
-                              <Label className="text-xs">{t("footerText")}</Label>
-                              <CharCount value={embed.footerText} max={2048} />
-                            </div>
-                            <Input value={embed.footerText} onChange={e => setEmbedField(embed.editorId, "footerText", e.target.value)} maxLength={2048} className={compactInputClassName} />
-                          </Field>
-                          <Field label={t("footerIconUrl")}>
-                            <Input value={embed.footerIconUrl} onChange={e => setEmbedField(embed.editorId, "footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
-                          </Field>
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={embed.includeTimestamp}
-                              onChange={e => setEmbedField(embed.editorId, "includeTimestamp", e.target.checked)}
-                              className="h-3.5 w-3.5 rounded border-input accent-primary"
-                            />
-                            <span className="text-sm">{t("timestamp")}</span>
-                          </label>
-                        </div>
-                      </CollapsibleSection>
+                      )}
                     </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            /* ── V2 Components editor ── */
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <SectionLabel>{t("componentsSection")}</SectionLabel>
+                <div className="relative">
+                  <Button size="sm" variant="outline" className="h-7 text-xs"
+                    onClick={() => setOpenDropdownId(prev => prev === "__top__" ? null : "__top__")}>
+                    <Plus className="h-3.5 w-3.5 mr-1" />{t("addComponent")}
+                  </Button>
+                  {openDropdownId === "__top__" && (
+                    <>
+                      <button type="button" tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-10 cursor-default" onClick={() => setOpenDropdownId(null)} />
+                      <div className="absolute right-0 top-8 z-20 rounded-md border border-border bg-card shadow-lg min-w-[160px]">
+                        {([
+                          { type: "container" as const, label: t("containerLabel") },
+                          { type: "text_display" as const, label: t("textDisplayLabel") },
+                          { type: "separator" as const, label: t("separatorLabel") },
+                          { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
+                          { type: "section" as const, label: t("sectionLabel") },
+                          { type: "action_row" as const, label: t("actionRowLabel") },
+                        ] as const).map(item => (
+                          <button key={item.type} type="button"
+                            className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
+                            onClick={() => { addV2Component(item.type); setOpenDropdownId(null); }}>
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+              {activeMessage.components.map((comp, compIdx) => {
+                const compV2Labels: Record<string, string> = {
+                  container: t("containerLabel"),
+                  text_display: t("textDisplayLabel"),
+                  separator: t("separatorLabel"),
+                  media_gallery: t("mediaGalleryLabel"),
+                  action_row: t("actionRowLabel"),
+                  section: t("sectionLabel"),
+                };
+                const isExpanded = expandedV2Ids.has(comp.id);
+                const compLabel = comp.type === "raw"
+                  ? `${t("unknownComponent")} (type ${comp.rawType})`
+                  : (compV2Labels[comp.type] ?? t("sectionLabel"));
+                return (
+                  <div key={comp.id} className={cn("rounded-lg border bg-card", isExpanded ? "border-primary/60" : "border-border/80")}>
+                    <div className="flex items-center gap-2 px-3 py-2">
+                      <button type="button" className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                        onClick={() => toggleV2Expanded(comp.id)}>
+                        {isExpanded ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                        <span className="truncate text-base font-semibold">{`${compLabel} ${compIdx + 1}`}</span>
+                      </button>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveV2Component(comp.id, -1)} disabled={compIdx === 0}>
+                          <ChevronUp className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveV2Component(comp.id, 1)} disabled={compIdx === activeMessage.components.length - 1}>
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeV2Component(comp.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    {isExpanded && (
+                      <div className="border-t border-border/80 px-3 py-3 space-y-3">
+                        {comp.type === "action_row" && (
+                          <div className="space-y-2">
+                            {comp.buttons.map((btn, btnIdx) => (
+                              <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                    onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c)}>
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                                <Field label={t("buttonLabel")}>
+                                  <Input value={btn.label}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c)}
+                                    className={compactInputClassName} />
+                                </Field>
+                                <Field label={t("buttonStyle")}>
+                                  <div className="flex flex-wrap gap-1">
+                                    {([
+                                      { style: 1 as const, label: t("buttonStylePrimary") },
+                                      { style: 2 as const, label: t("buttonStyleSecondary") },
+                                      { style: 3 as const, label: t("buttonStyleSuccess") },
+                                      { style: 4 as const, label: t("buttonStyleDanger") },
+                                      { style: 5 as const, label: t("buttonStyleLink") },
+                                    ]).map(({ style, label }) => (
+                                      <button key={style} type="button"
+                                        onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, style } : b) } : c)}
+                                        className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                                          btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                                        {label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </Field>
+                                {btn.style === 5 && (
+                                  <Field label={t("buttonUrl")}>
+                                    <Input value={btn.url}
+                                      onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) } : c)}
+                                      placeholder="https://..." className={compactInputClassName} />
+                                  </Field>
+                                )}
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input type="checkbox" checked={btn.disabled}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) } : c)}
+                                    className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                                  <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
+                                </label>
+                              </div>
+                            ))}
+                            <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+                              onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c)}>
+                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
+                            </Button>
+                          </div>
+                        )}
+                        {comp.type === "raw" && (
+                          <p className="text-xs text-muted-foreground">{t("unknownComponentHint")}</p>
+                        )}
+                        {comp.type === "text_display" && (
+                          <Textarea value={comp.content}
+                            onChange={e => updateV2Component(comp.id, c => c.type === "text_display" ? { ...c, content: e.target.value } : c)}
+                            rows={4} className={compactTextareaClassName} />
+                        )}
+                        {comp.type === "separator" && (
+                          <div className="space-y-3">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" checked={comp.divider}
+                                onChange={e => updateV2Component(comp.id, c => c.type === "separator" ? { ...c, divider: e.target.checked } : c)}
+                                className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                              <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
+                            </label>
+                            <Field label={t("spacing")}>
+                              <div className="flex gap-2">
+                                {(["small", "large"] as const).map(s => (
+                                  <button key={s} type="button"
+                                    onClick={() => updateV2Component(comp.id, c => c.type === "separator" ? { ...c, spacing: s } : c)}
+                                    className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                                      comp.spacing === s ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                                    {s === "small" ? t("spacingSmall") : t("spacingLarge")}
+                                  </button>
+                                ))}
+                              </div>
+                            </Field>
+                          </div>
+                        )}
+                        {comp.type === "media_gallery" && (
+                          <div className="space-y-2">
+                            {comp.items.map((item, itemIdx) => (
+                              <div key={item.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-medium text-muted-foreground">Image {itemIdx + 1}</span>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                    onClick={() => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.filter(it => it.id !== item.id) } : c)}>
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                                <Field label={t("imageUrl")}>
+                                  <Input value={item.url}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) } : c)}
+                                    placeholder="https://..." className={compactInputClassName} />
+                                </Field>
+                                <Field label={t("imageDescription")}>
+                                  <Input value={item.description}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, description: e.target.value } : it) } : c)}
+                                    className={compactInputClassName} />
+                                </Field>
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input type="checkbox" checked={item.spoiler}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, spoiler: e.target.checked } : it) } : c)}
+                                    className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                                  <span className="text-xs text-muted-foreground">{t("imageSpoiler")}</span>
+                                </label>
+                              </div>
+                            ))}
+                            <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+                              onClick={() => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: [...c.items, { id: uid(), url: "", description: "", spoiler: false }] } : c)}>
+                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addImage")}
+                            </Button>
+                          </div>
+                        )}
+                        {comp.type === "section" && (
+                          <div className="space-y-3">
+                            {comp.texts.map((text, textIdx) => (
+                              <div key={text.id} className="space-y-1">
+                                <div className="flex items-center justify-between">
+                                  <Label className="text-xs">{`${t("textDisplayLabel")} ${textIdx + 1}`}</Label>
+                                  {comp.texts.length > 1 && (
+                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                      onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: c.texts.filter(tx => tx.id !== text.id) } : c)}>
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  )}
+                                </div>
+                                <Textarea value={text.content}
+                                  onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: c.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) } : c)}
+                                  rows={3} className={compactTextareaClassName} />
+                              </div>
+                            ))}
+                            <Button size="sm" variant="outline" className="h-7 text-xs"
+                              onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: [...c.texts, { id: uid(), type: "text_display" as const, content: "" }] } : c)}>
+                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addTextBlock")}
+                            </Button>
+                            <Field label={t("accessory")}>
+                              <div className="flex gap-2">
+                                {(["none", "thumbnail"] as const).map(a => (
+                                  <button key={a} type="button"
+                                    onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, accessoryType: a } : c)}
+                                    className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                                      comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                                    {a === "none" ? t("accessoryNone") : t("accessoryThumbnail")}
+                                  </button>
+                                ))}
+                              </div>
+                            </Field>
+                            {comp.accessoryType === "thumbnail" && (
+                              <>
+                                <Field label={t("thumbnailUrl")}>
+                                  <Input value={comp.thumbnailUrl}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, thumbnailUrl: e.target.value } : c)}
+                                    placeholder="https://..." className={compactInputClassName} />
+                                </Field>
+                                <Field label={t("thumbnailAlt")}>
+                                  <Input value={comp.thumbnailDescription}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, thumbnailDescription: e.target.value } : c)}
+                                    className={compactInputClassName} />
+                                </Field>
+                              </>
+                            )}
+                          </div>
+                        )}
+                        {comp.type === "container" && (
+                          <div className="space-y-2">
+                            <Field label={t("accentColor")}>
+                              <div className="flex items-center gap-2">
+                                <input type="color" value={comp.accentColor || "#5865f2"}
+                                  onChange={e => updateV2Component(comp.id, c => c.type === "container" ? { ...c, accentColor: e.target.value } : c)}
+                                  className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5" />
+                                <Input value={comp.accentColor}
+                                  onChange={e => {
+                                    const val = e.target.value;
+                                    if (/^#[0-9a-fA-F]{0,6}$/.test(val)) updateV2Component(comp.id, c => c.type === "container" ? { ...c, accentColor: val } : c);
+                                  }}
+                                  className={cn(inputClassName, "font-mono text-sm w-28")} maxLength={7} />
+                              </div>
+                            </Field>
+                            {comp.children.map((child, childIdx) => {
+                              const childIsExpanded = expandedV2Ids.has(child.id);
+                              const childV2Labels: Record<string, string> = {
+                                text_display: t("textDisplayLabel"),
+                                separator: t("separatorLabel"),
+                                media_gallery: t("mediaGalleryLabel"),
+                                action_row: t("actionRowLabel"),
+                              };
+                              const childLabel = childV2Labels[child.type] ?? t("sectionLabel");
+                              return (
+                                <div key={child.id} className={cn("ml-3 rounded-md border", childIsExpanded ? "border-primary/40" : "border-border/60")}>
+                                  <div className="flex items-center gap-2 px-2 py-1.5">
+                                    <button type="button" className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
+                                      onClick={() => toggleV2Expanded(child.id)}>
+                                      {childIsExpanded ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
+                                      <span className="truncate text-sm font-medium">{`${childLabel} ${childIdx + 1}`}</span>
+                                    </button>
+                                    <div className="flex items-center gap-1">
+                                      <Button variant="ghost" size="icon" className="h-6 w-6"
+                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i > 0) { [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; } return arr; })}
+                                        disabled={childIdx === 0}>
+                                        <ChevronUp className="h-3.5 w-3.5" />
+                                      </Button>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6"
+                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i < arr.length - 1) { [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]; } return arr; })}
+                                        disabled={childIdx === comp.children.length - 1}>
+                                        <ChevronDown className="h-3.5 w-3.5" />
+                                      </Button>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                        onClick={() => updateContainerChildren(comp.id, children => children.filter(c => c.id !== child.id))}>
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  {childIsExpanded && (
+                                    <div className="border-t border-border/60 px-3 py-2 space-y-2">
+                                      {child.type === "text_display" && (
+                                        <Textarea value={child.content}
+                                          onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "text_display" ? { ...c, content: e.target.value } : c))}
+                                          rows={3} className={compactTextareaClassName} />
+                                      )}
+                                      {child.type === "separator" && (
+                                        <label className="flex items-center gap-2 cursor-pointer">
+                                          <input type="checkbox" checked={child.divider}
+                                            onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "separator" ? { ...c, divider: e.target.checked } : c))}
+                                            className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                                          <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
+                                        </label>
+                                      )}
+                                      {child.type === "media_gallery" && (
+                                        <div className="space-y-2">
+                                          {child.items.map((item, iIdx) => (
+                                            <div key={item.id} className="rounded border border-border/60 p-2 space-y-1.5">
+                                              <div className="flex items-center justify-between">
+                                                <span className="text-xs text-muted-foreground">Image {iIdx + 1}</span>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-muted-foreground hover:text-destructive"
+                                                  onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: c.items.filter(it => it.id !== item.id) } : c))}>
+                                                  <Trash2 className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                              <Input value={item.url}
+                                                onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) } : c))}
+                                                placeholder="https://..." className={cn(compactInputClassName, "text-xs")} />
+                                            </div>
+                                          ))}
+                                          <Button size="sm" variant="outline" className="h-6 text-xs w-full"
+                                            onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: [...c.items, { id: uid(), url: "", description: "", spoiler: false }] } : c))}>
+                                            <Plus className="h-3 w-3 mr-1" />{t("addImage")}
+                                          </Button>
+                                        </div>
+                                      )}
+                                      {child.type === "section" && (
+                                        <div className="space-y-2">
+                                          {child.texts.map(text => (
+                                            <Textarea key={text.id} value={text.content}
+                                              onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "section" ? { ...c, texts: c.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) } : c))}
+                                              rows={2} className={compactTextareaClassName} />
+                                          ))}
+                                          {child.accessoryType === "thumbnail" && (
+                                            <Input value={child.thumbnailUrl}
+                                              onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "section" ? { ...c, thumbnailUrl: e.target.value } : c))}
+                                              placeholder={t("thumbnailUrl")} className={compactInputClassName} />
+                                          )}
+                                        </div>
+                                      )}
+                                      {child.type === "action_row" && (
+                                        <div className="space-y-2">
+                                          {child.buttons.map((btn, btnIdx) => (
+                                            <div key={btn.id} className="rounded border border-border/60 p-2 space-y-1.5">
+                                              <div className="flex items-center justify-between">
+                                                <span className="text-xs text-muted-foreground">Button {btnIdx + 1}</span>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-muted-foreground hover:text-destructive"
+                                                  onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c))}>
+                                                  <Trash2 className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                              <Input value={btn.label}
+                                                onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c))}
+                                                placeholder={t("buttonLabel")} className={cn(compactInputClassName, "text-xs")} />
+                                            </div>
+                                          ))}
+                                          <Button size="sm" variant="outline" className="h-6 text-xs w-full"
+                                            onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c))}>
+                                            <Plus className="h-3 w-3 mr-1" />{t("addButton")}
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                            <div className="relative">
+                              <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+                                onClick={() => setOpenDropdownId(prev => prev === comp.id ? null : comp.id)}>
+                                <Plus className="h-3.5 w-3.5 mr-1" />{t("addContainer")}
+                              </Button>
+                              {openDropdownId === comp.id && (
+                                <>
+                                <button type="button" tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-10 cursor-default" onClick={() => setOpenDropdownId(null)} />
+                                  <div className="absolute left-0 top-8 z-20 rounded-md border border-border bg-card shadow-lg min-w-[160px]">
+                                    {([
+                                      { type: "text_display" as const, label: t("textDisplayLabel") },
+                                      { type: "separator" as const, label: t("separatorLabel") },
+                                      { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
+                                      { type: "section" as const, label: t("sectionLabel") },
+                                      { type: "action_row" as const, label: t("actionRowLabel") },
+                                    ] as const).map(item => (
+                                      <button key={item.type} type="button"
+                                        className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
+                                        onClick={() => { updateContainerChildren(comp.id, prev => [...prev, createDefaultV2Component(item.type) as ContainerChildState]); setOpenDropdownId(null); }}>
+                                        {item.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Bottom padding */}
           <div className="h-4" />
@@ -773,6 +1578,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
                   content={content}
                   embeds={previewEmbeds}
+                  isV2={activeMessage.mode === "v2"}
+                  components={previewV2Components}
                 />
               ) : (
                 <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
@@ -783,14 +1590,23 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
           )}
 
           <div className="hidden p-5 md:sticky md:top-0 md:block">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-              {t("preview")}
-            </p>
+            <div className="flex items-center gap-2 mb-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {t("preview")}
+              </p>
+              {messages.length > 1 && (
+                <span className="text-[11px] text-muted-foreground">
+                  — Message {safeIdx + 1}/{messages.length}
+                </span>
+              )}
+            </div>
             {hasContent ? (
               <DiscordMessagePreview
                 profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
                 content={content}
                 embeds={previewEmbeds}
+                isV2={activeMessage.mode === "v2"}
+                components={previewV2Components}
               />
             ) : (
               <div className="flex items-center justify-center h-40 rounded-xl border border-dashed border-border text-muted-foreground text-sm">
@@ -810,7 +1626,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
         </Button>
       </div>
 
-      <Dialog open={importExportOpen} onOpenChange={setImportExportOpen}>
+      <Dialog open={importExportOpen} onOpenChange={(open) => { if (!open) { setImportWarning(null); setImportError(false); } setImportExportOpen(open); }}>
         <DialogContent className="bg-card border-border sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("importExport")}</DialogTitle>
@@ -822,15 +1638,17 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
               <div className="flex gap-2">
                 <Input
                   value={importUrl}
-                  onChange={e => { setImportUrl(e.target.value); setImportError(false); }}
+                  onChange={e => { setImportUrl(e.target.value); setImportError(false); setImportWarning(null); }}
                   placeholder="https://discohook.app/?data=..."
                   className={cn(inputClassName, "text-xs h-8", importError && "border-destructive")}
                 />
-                <Button size="sm" variant="secondary" className="h-8 shrink-0" onClick={handleImport}>
-                  <Link2 className="h-3.5 w-3.5 mr-1" />{t("import")}
+                <Button size="sm" variant="secondary" className="h-8 shrink-0" onClick={handleImport} disabled={importResolving}>
+                  {importResolving ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : <Link2 className="h-3.5 w-3.5 mr-1" />}
+                  {t("import")}
                 </Button>
               </div>
               {importError && <p className="text-xs text-destructive">{t("importError")}</p>}
+              {importWarning && <p className="text-xs text-amber-500">{importWarning}</p>}
             </div>
             <Button type="button" variant="outline" className="w-full justify-start" onClick={handleCopyDiscohookUrl}>
               {copiedDiscohook ? <CheckCircle2 className="h-4 w-4 mr-2 text-green-500" /> : <Copy className="h-4 w-4 mr-2" />}

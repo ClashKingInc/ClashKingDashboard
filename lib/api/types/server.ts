@@ -69,6 +69,10 @@ export interface ServerClanListItem {
   badge_url?: string | null;
   clan_badge_url?: string | null;
   badge?: string | null;
+  settings?: {
+    category?: string | null;
+    [key: string]: any;
+  };
 }
 
 export interface BanRequest {

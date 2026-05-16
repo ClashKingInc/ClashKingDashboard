@@ -1,5 +1,5 @@
 /**
- * Utility API client (dates, legends, search, app)
+ * Utility API client (dates, legends, search)
  */
 
 import { BaseApiClient } from '../core/base-client';
@@ -82,21 +82,6 @@ export class UtilityClient extends BaseApiClient {
 
   async deleteSearchGroup(groupId: number): Promise<ApiResponse<{ success: boolean }>> {
     return this.request(`/v2/search/groups/${groupId}`, { method: 'DELETE' });
-  }
-
-  // ============================================================================
-  // App
-  // ============================================================================
-
-  async getPublicConfig(): Promise<ApiResponse<{ sentry_dsn: string }>> {
-    return this.request('/v2/app/public-config', { method: 'GET' });
-  }
-
-  async initializeApp(playerTags: string[]): Promise<ApiResponse<any>> {
-    return this.request('/v2/app/initialization', {
-      method: 'POST',
-      body: JSON.stringify({ player_tags: playerTags }),
-    });
   }
 
   // ============================================================================

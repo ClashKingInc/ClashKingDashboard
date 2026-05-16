@@ -224,6 +224,19 @@ export class ServerClient extends BaseApiClient {
   }
 
   /**
+   * GET /v2/server/{server_id}/giveaways/{giveaway_id}/entries
+   */
+  async getGiveawayEntries(serverId: string | number, giveawayId: string): Promise<ApiResponse<{
+    giveaway_id: string;
+    server_id: number;
+    total_entries: number;
+    unique_users: number;
+    entrants: { user_id: string; entries: number; win_chance: number }[];
+  }>> {
+    return this.request(`/v2/server/${serverId}/giveaways/${giveawayId}/entries`, { method: 'GET' });
+  }
+
+  /**
    * POST /v2/server/{server_id}/giveaways/{giveaway_id}/reroll
    */
   async rerollGiveaway(serverId: string | number, giveawayId: string, userIdsToReplace: string[]): Promise<ApiResponse<GiveawayRerollResponse>> {

@@ -1,11 +1,4 @@
-export interface THRequirement {
-  TH: number;
-  BK: number;
-  AQ: number;
-  GW: number;
-  RC: number;
-  WARST: number;
-}
+export type THRequirement = Record<string, number>;
 
 export interface TicketButton {
   custom_id: string;
@@ -56,6 +49,7 @@ export interface TicketPanelsResponse {
   items: TicketPanel[];
   total: number;
   available_embeds: string[];
+  townhall_requirement_fields: string[];
 }
 
 export interface LinkedAccount {
