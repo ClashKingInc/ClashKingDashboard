@@ -101,6 +101,7 @@ const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildI
 const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
 const MAX_APPROVE_MESSAGE_NAME_LENGTH = 100;
 const MAX_APPROVE_MESSAGE_CONTENT_LENGTH = 2000;
+const DEFAULT_TOWNHALL_REQUIREMENT_FIELDS = ["BK", "AQ", "GW", "RC", "WARST"];
 
 const stripTrailingSlashes = (value: string): string => {
   let normalized = value;
@@ -265,6 +266,19 @@ const normalizePlayerTag = (value: string): string => {
   const trimmed = value.trim();
   const withoutPrefix = trimmed.replace(/^#/, "");
   return `#${withoutPrefix.toUpperCase()}`;
+};
+
+const normalizeTownhallRequirementFields = (fields: readonly string[] | null | undefined): string[] => {
+  const normalized = (fields ?? []).filter((field): field is string => typeof field === "string" && field.trim().length > 0);
+  return normalized.length > 0 ? normalized : [...DEFAULT_TOWNHALL_REQUIREMENT_FIELDS];
+};
+
+const createTownhallRequirementRow = (th: string, fields: readonly string[]): THRequirement => {
+  const row: THRequirement = { TH: Number(th) };
+  for (const field of fields) {
+    row[field] = 0;
+  }
+  return row;
 };
 
 function TicketManageDialog({
@@ -1596,7 +1610,7 @@ const createButtonSettingsFromForm = (form: UpdateButtonSettingsRequest): Ticket
 });
 
 function ButtonCard({
-  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, onDeleted, onAppearanceUpdated,
+  customId, label, style, settings, panelName, guildId, roles, availableEmbeds, embeds, townhallRequirementFields, onDeleted, onAppearanceUpdated,
 }: {
   readonly customId: string;
   readonly label: string;
@@ -1607,6 +1621,7 @@ function ButtonCard({
   readonly roles: DiscordRole[];
   readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
+  readonly townhallRequirementFields: string[];
   readonly onDeleted: () => void;
   readonly onAppearanceUpdated: (label: string, style: number) => void;
 }) {
@@ -1666,6 +1681,10 @@ function ButtonCard({
   const buttonEmbedPreviews = selectedButtonEmbedData ? extractEmbeds(selectedButtonEmbedData) : [];
   const buttonMessageContentPreview = selectedButtonEmbedData ? extractMessageContent(selectedButtonEmbedData) : null;
   const isUsingDefaultTicketMessage = effectiveButtonEmbedName === null;
+  const effectiveTownhallRequirementFields = useMemo(
+    () => normalizeTownhallRequirementFields(townhallRequirementFields),
+    [townhallRequirementFields],
+  );
 
   const setField = <K extends keyof UpdateButtonSettingsRequest>(key: K, val: UpdateButtonSettingsRequest[K]) =>
     setForm((p) => ({ ...p, [key]: val }));
@@ -1694,7 +1713,7 @@ function ButtonCard({
       ...p,
       townhall_requirements: {
         ...p.townhall_requirements,
-        [th]: { TH: Number(th), BK: 0, AQ: 0, GW: 0, RC: 0, WARST: 0 },
+        [th]: createTownhallRequirementRow(th, effectiveTownhallRequirementFields),
       },
     }));
   };
@@ -1704,7 +1723,7 @@ function ButtonCard({
       delete next[th];
       return { ...p, townhall_requirements: next };
     });
-  const setTHField = (th: string, field: keyof THRequirement, val: number) =>
+  const setTHField = (th: string, field: string, val: number) =>
     setForm((p) => ({
       ...p,
       townhall_requirements: {
@@ -1992,7 +2011,6 @@ function ButtonCard({
                   <div>
                     <Label className="text-sm font-medium">{t("thRequirements")}</Label>
                     <p className="text-xs text-muted-foreground">{t("thRequirementsHint")}</p>
-                    <p className="mt-1 text-xs text-muted-foreground/70">{t("thHeroLegend")}</p>
                   </div>
                   <Button variant="outline" size="sm" onClick={addTHRow} type="button"
                     disabled={Object.keys(form.townhall_requirements).length >= 15}>
@@ -2005,7 +2023,7 @@ function ButtonCard({
                       <thead>
                         <tr className="border-b border-border bg-muted/50">
                           <th className="px-3 py-2 text-left font-medium text-xs text-muted-foreground">{t("thLevel")}</th>
-                          {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((h) => (
+                          {effectiveTownhallRequirementFields.map((h) => (
                             <th key={h} className="px-3 py-2 text-center font-medium text-xs text-muted-foreground">{h}</th>
                           ))}
                           <th className="px-3 py-2" />
@@ -2017,7 +2035,7 @@ function ButtonCard({
                           .map(([th, reqs]) => (
                             <tr key={th} className="border-b border-border last:border-0">
                               <td className="px-3 py-2 font-semibold">TH{th}</td>
-                              {(["BK", "AQ", "GW", "RC", "WARST"] as const).map((hero) => (
+                              {effectiveTownhallRequirementFields.map((hero) => (
                                 <td key={hero} className="px-2 py-1.5">
                                   <Input
                                     type="number" min={0} max={100}
@@ -2454,7 +2472,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
 }
 
 function PanelCard({
-  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, onDeleted,
+  panel, categories, textChannels, roles, guildId, availableEmbeds, embeds, townhallRequirementFields, onDeleted,
 }: {
   readonly panel: TicketPanel;
   readonly categories: DiscordChannel[];
@@ -2463,6 +2481,7 @@ function PanelCard({
   readonly guildId: string;
   readonly availableEmbeds: string[];
   readonly embeds: ServerEmbed[];
+  readonly townhallRequirementFields: string[];
   readonly onDeleted: () => void;
 }) {
   const t = useTranslations("TicketsSettingsPage");
@@ -2672,6 +2691,7 @@ function PanelCard({
                         <ButtonCard key={btn.custom_id} customId={btn.custom_id} label={btn.label} style={btn.style}
                           settings={panel.button_settings[btn.custom_id] ?? createDefaultButtonSettings()}
                           panelName={panel.name} guildId={guildId} roles={roles} availableEmbeds={availableEmbeds} embeds={embeds}
+                          townhallRequirementFields={townhallRequirementFields}
                           onDeleted={() => setComponents((prev) => prev.filter(c => c.custom_id !== btn.custom_id))} // NOSONAR — structural JSX complexity from framework nesting
                           onAppearanceUpdated={(newLabel, newStyle) => setComponents((prev) => prev.map(c => c.custom_id === btn.custom_id ? { ...c, label: newLabel, style: newStyle } : c))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
                         />
@@ -2702,6 +2722,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
   const [panels, setPanels] = useState<TicketPanel[]>([]);
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
   const [availableEmbeds, setAvailableEmbeds] = useState<string[]>([]);
+  const [townhallRequirementFields, setTownhallRequirementFields] = useState<string[]>(DEFAULT_TOWNHALL_REQUIREMENT_FIELDS);
   const [categories, setCategories] = useState<DiscordChannel[]>([]);
   const [textChannels, setTextChannels] = useState<DiscordChannel[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
@@ -2731,6 +2752,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
 
         setPanels(panelsRes.data?.items ?? []);
         setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+        setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
         setEmbeds(normalizeTicketEmbeds(embedsRes.data));
         let all = normalizeTicketChannels(channelsRes.data);
 
@@ -2776,6 +2798,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
       const panelsRes = await apiCache.get(getTicketsPanelsCacheKey(guildId), () => apiClient.tickets.getPanels(guildId));
       setPanels(panelsRes.data?.items ?? []);
       setAvailableEmbeds(panelsRes.data?.available_embeds ?? []);
+      setTownhallRequirementFields(normalizeTownhallRequirementFields(panelsRes.data?.townhall_requirement_fields));
       setCreatePanelOpen(false);
       setNewPanelName("");
     } catch (err) {
@@ -2843,6 +2866,7 @@ function ConfigTab({ guildId }: { readonly guildId: string }) {
         ) : (
           panels.map((panel) => (
             <PanelCard key={panel.name} panel={panel} categories={categories} textChannels={textChannels} roles={roles} guildId={guildId} availableEmbeds={availableEmbeds} embeds={embeds}
+              townhallRequirementFields={townhallRequirementFields}
               onDeleted={() => setPanels((prev) => prev.filter(p => p.name !== panel.name))} // NOSONAR — JSX inline handler nesting is structural, not logic complexity
             />
           ))
