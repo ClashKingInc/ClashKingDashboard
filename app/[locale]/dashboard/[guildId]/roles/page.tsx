@@ -346,7 +346,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
             .map((c: any) => c.settings?.category)
             .filter((cat: any): cat is string => typeof cat === "string" && cat.trim() !== "")
         )) as string[];
-        setAvailableCategories(cats.sort((a, b) => a.localeCompare(b)));
+        setAvailableCategories(cats.toSorted((a, b) => a.localeCompare(b)));
       }
     } catch (err: any) {
       setError(err.message || "Failed to load roles");
@@ -1022,7 +1022,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
               <div className="space-y-2">
                 {[1, 2].map((i) => <Skeleton key={i} className="h-10 w-full animate-pulse" />)}
               </div>
-            ) : Object.keys(categoryRoles).length === 0 && !isAddCategoryOpen ? (
+            ) : Object.keys(categoryRoles).length === 0 && !isAddCategoryOpen ? ( // NOSONAR — JSX nested ternary for multi-branch display state
               <div className="text-center py-8 text-muted-foreground">
                 <p>{t("categoryRoles.noCategoryRoles")}</p>
                 <p className="text-sm mt-2">{t("categoryRoles.noCategoryRolesDesc")}</p>
@@ -1030,7 +1030,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
             ) : (
               <div className="space-y-3">
                 {Object.entries(categoryRoles).map(([category, roleId]) => {
-                  const discordRole = discordRoles.find((r) => r.id === roleId);
                   const isSaving = categoryRoleSaving === category;
                   return (
                     <div key={category} className="flex items-center gap-3 rounded-lg border border-border bg-secondary/30 px-4 py-2">
@@ -1094,7 +1093,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                           disabled={categoryRoleSaving !== null}
                           className="bg-primary hover:bg-primary/90"
                         >
-                          {categoryRoleSaving !== null ? <Loader2 className="h-4 w-4 animate-spin" /> : t("categoryRoles.addConfirm")}
+                          {categoryRoleSaving == null ? t("categoryRoles.addConfirm") : <Loader2 className="h-4 w-4 animate-spin" />}
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => { setIsAddCategoryOpen(false); setNewCategoryName(""); setNewCategoryRoleId(""); setAddCategoryError(null); }}>
                           {t("addRoleDialog.cancel")}

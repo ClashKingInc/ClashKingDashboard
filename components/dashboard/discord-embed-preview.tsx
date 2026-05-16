@@ -478,7 +478,7 @@ export interface SeparatorComponent { type: 14; divider?: boolean; spacing?: 1 |
 export interface SectionComponent {
   type: 9;
   components: TextDisplayComponent[];
-  accessory: ThumbnailComponent | { type: number; [key: string]: unknown };
+  accessory?: ThumbnailComponent | { type: number; [key: string]: unknown };
   id?: number;
 }
 export interface ButtonComponent {
@@ -599,8 +599,8 @@ function V2MediaGalleryPreview({ component }: { readonly component: MediaGallery
 }
 
 function V2SectionPreview({ component }: { readonly component: SectionComponent }) {
-  const accessory = component.accessory;
-  const isThumbnail = accessory.type === COMPONENT_TYPE.THUMBNAIL;
+  const accessory = component.accessory ?? null;
+  const isThumbnail = accessory != null && accessory.type === COMPONENT_TYPE.THUMBNAIL;
   return (
     <div className="flex justify-between gap-3">
       <div className="flex flex-col gap-1 flex-1 min-w-0">

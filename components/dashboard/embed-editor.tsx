@@ -1180,14 +1180,18 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                 </div>
               </div>
               {activeMessage.components.map((comp, compIdx) => {
+                const compV2Labels: Record<string, string> = {
+                  container: t("containerLabel"),
+                  text_display: t("textDisplayLabel"),
+                  separator: t("separatorLabel"),
+                  media_gallery: t("mediaGalleryLabel"),
+                  action_row: t("actionRowLabel"),
+                  section: t("sectionLabel"),
+                };
                 const isExpanded = expandedV2Ids.has(comp.id);
-                const compLabel = comp.type === "container" ? t("containerLabel")
-                  : comp.type === "text_display" ? t("textDisplayLabel")
-                  : comp.type === "separator" ? t("separatorLabel")
-                  : comp.type === "media_gallery" ? t("mediaGalleryLabel")
-                  : comp.type === "action_row" ? t("actionRowLabel")
-                  : comp.type === "raw" ? `${t("unknownComponent")} (type ${comp.rawType})`
-                  : t("sectionLabel");
+                const compLabel = comp.type === "raw"
+                  ? `${t("unknownComponent")} (type ${comp.rawType})`
+                  : (compV2Labels[comp.type] ?? t("sectionLabel"));
                 return (
                   <div key={comp.id} className={cn("rounded-lg border bg-card", isExpanded ? "border-primary/60" : "border-border/80")}>
                     <div className="flex items-center gap-2 px-3 py-2">
@@ -1397,11 +1401,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                             </Field>
                             {comp.children.map((child, childIdx) => {
                               const childIsExpanded = expandedV2Ids.has(child.id);
-                              const childLabel = child.type === "text_display" ? t("textDisplayLabel")
-                                : child.type === "separator" ? t("separatorLabel")
-                                : child.type === "media_gallery" ? t("mediaGalleryLabel")
-                                : child.type === "action_row" ? t("actionRowLabel")
-                                : t("sectionLabel");
+                              const childV2Labels: Record<string, string> = {
+                                text_display: t("textDisplayLabel"),
+                                separator: t("separatorLabel"),
+                                media_gallery: t("mediaGalleryLabel"),
+                                action_row: t("actionRowLabel"),
+                              };
+                              const childLabel = childV2Labels[child.type] ?? t("sectionLabel");
                               return (
                                 <div key={child.id} className={cn("ml-3 rounded-md border", childIsExpanded ? "border-primary/40" : "border-border/60")}>
                                   <div className="flex items-center gap-2 px-2 py-1.5">
@@ -1412,12 +1418,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                     </button>
                                     <div className="flex items-center gap-1">
                                       <Button variant="ghost" size="icon" className="h-6 w-6"
-                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i > 0) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; return arr; })}
+                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i > 0) { [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; } return arr; })}
                                         disabled={childIdx === 0}>
                                         <ChevronUp className="h-3.5 w-3.5" />
                                       </Button>
                                       <Button variant="ghost" size="icon" className="h-6 w-6"
-                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i < arr.length - 1) [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]; return arr; })}
+                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i < arr.length - 1) { [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]; } return arr; })}
                                         disabled={childIdx === comp.children.length - 1}>
                                         <ChevronDown className="h-3.5 w-3.5" />
                                       </Button>

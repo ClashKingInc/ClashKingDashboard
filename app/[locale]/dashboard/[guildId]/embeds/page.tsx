@@ -193,8 +193,8 @@ export default function EmbedsPage() {
             {embeds.map((embed) => {
               const isV2 = embed.data ? isV2Payload(embed.data) : false;
               const v2Components = isV2 && embed.data ? extractComponents(embed.data) : [];
-              const previews = !isV2 && embed.data ? extractEmbeds(embed.data) : [];
-              const messageContent = !isV2 && embed.data ? extractMessageContent(embed.data) : null;
+              const previews = embed.data ? extractEmbeds(embed.data) : [];
+              const messageContent = embed.data ? extractMessageContent(embed.data) : null;
               const profile = embed.data ? extractMessageProfile(embed.data) : null;
               const hasPreview = v2Components.length > 0 || previews.length > 0 || Boolean(messageContent) || Boolean(profile?.name || profile?.avatar_url);
               const isExpanded = expandedName === embed.name;
