@@ -312,7 +312,8 @@ function TicketManageDialog({
   }, [ticket]);
 
   if (!ticket) return null;
-  const canPermanentlyDelete = ticket.status === "closed";
+  const isDeletedTicket = ticket.status === "delete";
+  const canPermanentlyDelete = ticket.status === "closed" || isDeletedTicket;
 
   const handleStatusSave = async () => {
     setIsSavingStatus(true);
@@ -375,7 +376,7 @@ function TicketManageDialog({
       <DialogContent className="bg-card border-border sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t("manage.title", { number: ticket.number })}</DialogTitle>
-          <DialogDescription>{t(canPermanentlyDelete ? "manage.descriptionClosed" : "manage.description")}</DialogDescription>
+          <DialogDescription>{t(isDeletedTicket ? "manage.descriptionDeleted" : canPermanentlyDelete ? "manage.descriptionClosed" : "manage.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -410,50 +411,54 @@ function TicketManageDialog({
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-background p-4">
-            <div className="mb-3">
-              <Label className="text-sm font-medium">{t("manage.statusLabel")}</Label>
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Select value={status} onValueChange={(value) => setStatus(value as UpdateOpenTicketStatusRequest["status"])}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="open">{t("status.open")}</SelectItem>
-                  <SelectItem value="sleep">{t("status.sleep")}</SelectItem>
-                  <SelectItem value="closed">{t("status.closed")}</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button onClick={handleStatusSave} disabled={isSavingStatus}>
-                {isSavingStatus && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t("manage.saveStatus")}
-              </Button>
-            </div>
-          </div>
+          {!isDeletedTicket && (
+            <>
+              <div className="rounded-xl border border-border bg-background p-4">
+                <div className="mb-3">
+                  <Label className="text-sm font-medium">{t("manage.statusLabel")}</Label>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Select value={status} onValueChange={(value) => setStatus(value as UpdateOpenTicketStatusRequest["status"])}>
+                    <SelectTrigger className="flex-1">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="open">{t("status.open")}</SelectItem>
+                      <SelectItem value="sleep">{t("status.sleep")}</SelectItem>
+                      <SelectItem value="closed">{t("status.closed")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button onClick={handleStatusSave} disabled={isSavingStatus}>
+                    {isSavingStatus && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {t("manage.saveStatus")}
+                  </Button>
+                </div>
+              </div>
 
-          <div className="rounded-xl border border-border bg-background p-4">
-            <div className="mb-3">
-              <Label className="text-sm font-medium">{t("manage.clanLabel")}</Label>
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Select value={setClan} onValueChange={setSetClan}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder={t("manage.selectClan")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="disabled">{t("manage.noClan")}</SelectItem>
-                  {clans.map((clan) => (
-                    <SelectItem key={clan.tag} value={clan.tag}>{clan.name} ({clan.tag})</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button variant="outline" onClick={handleClanSave} disabled={isSavingClan}>
-                {isSavingClan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t("manage.saveClan")}
-              </Button>
-            </div>
-          </div>
+              <div className="rounded-xl border border-border bg-background p-4">
+                <div className="mb-3">
+                  <Label className="text-sm font-medium">{t("manage.clanLabel")}</Label>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Select value={setClan} onValueChange={setSetClan}>
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder={t("manage.selectClan")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="disabled">{t("manage.noClan")}</SelectItem>
+                      {clans.map((clan) => (
+                        <SelectItem key={clan.tag} value={clan.tag}>{clan.name} ({clan.tag})</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline" onClick={handleClanSave} disabled={isSavingClan}>
+                    {isSavingClan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {t("manage.saveClan")}
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
 
           {canPermanentlyDelete && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">
@@ -1081,18 +1086,16 @@ function TicketsTab({
                             </a>
                           </Button>
                         )}
-                        {ticket.status !== "delete" && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedTicket(ticket);
-                              setManageOpen(true);
-                            }}
-                          >
-                            {t("manage.open")}
-                          </Button>
-                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedTicket(ticket);
+                            setManageOpen(true);
+                          }}
+                        >
+                          {ticket.status === "delete" ? t("manage.permanentDeleteTicket") : t("manage.open")}
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>

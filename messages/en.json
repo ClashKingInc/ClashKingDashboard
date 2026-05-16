@@ -2297,6 +2297,7 @@
       "title": "Manage Ticket #{number}",
       "description": "Update the ticket status or assign a clan.",
       "descriptionClosed": "Update the ticket status, assign a clan, or permanently delete it.",
+      "descriptionDeleted": "This ticket is already deleted in Discord. You can permanently remove the dashboard entry and transcript link.",
       "statusLabel": "Ticket status",
       "statusDelete": "Delete ticket",
       "saveStatus": "Save status",

@@ -2320,6 +2320,7 @@
       "title": "Gérer le ticket #{number}",
       "description": "Mettez à jour le statut du ticket ou assignez un clan.",
       "descriptionClosed": "Mettez à jour le statut du ticket, assignez un clan ou supprimez-le définitivement.",
+      "descriptionDeleted": "Ce ticket est deja supprime sur Discord. Vous pouvez supprimer definitivement l'entree du dashboard et le lien de transcription.",
       "statusLabel": "Statut du ticket",
       "statusDelete": "Supprimer le ticket",
       "saveStatus": "Enregistrer le statut",

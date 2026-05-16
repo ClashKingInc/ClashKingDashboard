@@ -2300,6 +2300,7 @@
       "title": "Beheer ticket #{number}",
       "description": "Werk de ticketstatus bij of wijs een clan toe.",
       "descriptionClosed": "Werk de ticketstatus bij, wijs een clan toe of verwijder het definitief.",
+      "descriptionDeleted": "Dit ticket is al verwijderd in Discord. Je kunt nu de dashboardvermelding en transcriptlink definitief verwijderen.",
       "statusLabel": "Ticketstatus",
       "statusDelete": "Ticket verwijderen",
       "saveStatus": "Status opslaan",
