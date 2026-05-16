@@ -81,7 +81,6 @@ import type {
   TicketButton,
   TicketButtonSettings,
   TicketPanel,
-  UpdateApproveMessagesRequest,
   UpdateButtonSettingsRequest,
   UpdateOpenTicketClanRequest,
   UpdateOpenTicketStatusRequest,

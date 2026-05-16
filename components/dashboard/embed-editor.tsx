@@ -26,10 +26,8 @@ import {
   COMPONENT_TYPE,
   type DiscordEmbed,
   type TopLevelComponent,
-  type ContainerComponent,
   type ContainerChild,
   type ThumbnailComponent,
-  type TextDisplayComponent,
 } from "./discord-embed-preview";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
