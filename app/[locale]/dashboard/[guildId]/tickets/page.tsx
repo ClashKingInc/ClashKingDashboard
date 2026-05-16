@@ -33,6 +33,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -304,6 +313,7 @@ function TicketManageDialog({
   const [isSavingStatus, setIsSavingStatus] = useState(false);
   const [isSavingClan, setIsSavingClan] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   useEffect(() => {
     if (!ticket) return;
@@ -357,6 +367,7 @@ function TicketManageDialog({
     try {
       const res = await apiClient.tickets.deleteOpenTicket(guildId, ticket.channel);
       if (res.error) throw new Error(res.error);
+      setConfirmDeleteOpen(false);
       await onSaved();
       onOpenChange(false);
       toast({ title: tCommon("success"), description: t("manage.deleted") });
@@ -461,15 +472,20 @@ function TicketManageDialog({
           )}
 
           {canPermanentlyDelete && (
-            <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">
+            <div className="rounded-xl border border-border bg-muted/20 p-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-sm font-medium text-foreground">{t("manage.permanentDeleteTicket")}</p>
                   <p className="text-xs text-muted-foreground">{t("manage.deleteHint")}</p>
                 </div>
-                <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-                  {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {t("manage.permanentDeleteTicket")}
+                <Button
+                  variant="outline"
+                  className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  onClick={() => setConfirmDeleteOpen(true)}
+                  disabled={isDeleting}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {t("manage.deleteTicket")}
                 </Button>
               </div>
             </div>
@@ -480,6 +496,24 @@ function TicketManageDialog({
           <Button className={CANCEL_BUTTON_CLASS} onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button>
         </DialogFooter>
       </DialogContent>
+
+      <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("manage.warningTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t(isDeletedTicket ? "manage.warningDescriptionDeleted" : "manage.warningDescription")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>{tCommon("cancel")}</AlertDialogCancel>
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t("manage.permanentDeleteTicket")}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   );
 }
@@ -1086,16 +1120,31 @@ function TicketsTab({
                             </a>
                           </Button>
                         )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedTicket(ticket);
-                            setManageOpen(true);
-                          }}
-                        >
-                          {ticket.status === "delete" ? t("manage.permanentDeleteTicket") : t("manage.open")}
-                        </Button>
+                        {ticket.status === "delete" ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              setSelectedTicket(ticket);
+                              setManageOpen(true);
+                            }}
+                            aria-label={t("manage.permanentDeleteTicket")}
+                            title={t("manage.permanentDeleteTicket")}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedTicket(ticket);
+                              setManageOpen(true);
+                            }}
+                          >
+                            {t("manage.open")}
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

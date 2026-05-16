@@ -2307,7 +2307,10 @@
       "saveClan": "Save clan",
       "deleteTicket": "Delete ticket",
       "permanentDeleteTicket": "Permanently delete ticket",
-      "deleteHint": "Permanently closes and deletes the Discord channel. This action cannot be undone.",
+      "deleteHint": "Permanently remove the dashboard entry and transcript link.",
+      "warningTitle": "Permanently delete this ticket?",
+      "warningDescription": "This removes the ticket from the dashboard and hides its transcript link. This action cannot be undone.",
+      "warningDescriptionDeleted": "This deleted ticket will be removed from the dashboard and its transcript link will no longer be available. This action cannot be undone.",
       "statusSaved": "Ticket status updated.",
       "clanSaved": "Ticket clan updated.",
       "deleted": "Ticket deleted."

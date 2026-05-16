@@ -2310,7 +2310,10 @@
       "saveClan": "Clan opslaan",
       "deleteTicket": "Ticket verwijderen",
       "permanentDeleteTicket": "Ticket definitief verwijderen",
-      "deleteHint": "Sluit het Discord-kanaal permanent en verwijdert het. Deze actie kan niet ongedaan worden gemaakt.",
+      "deleteHint": "Verwijder de dashboardvermelding en transcriptlink definitief.",
+      "warningTitle": "Dit ticket definitief verwijderen?",
+      "warningDescription": "Dit verwijdert het ticket uit het dashboard en verbergt de transcriptlink. Deze actie kan niet ongedaan worden gemaakt.",
+      "warningDescriptionDeleted": "Dit al verwijderde ticket wordt uit het dashboard gehaald en de transcriptlink is daarna niet meer beschikbaar. Deze actie kan niet ongedaan worden gemaakt.",
       "statusSaved": "Ticketstatus bijgewerkt.",
       "clanSaved": "Ticketclan bijgewerkt.",
       "deleted": "Ticket verwijderd."

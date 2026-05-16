@@ -2330,7 +2330,10 @@
       "saveClan": "Enregistrer le clan",
       "deleteTicket": "Supprimer le ticket",
       "permanentDeleteTicket": "Supprimer définitivement le ticket",
-      "deleteHint": "Ferme et supprime définitivement le salon Discord. Cette action est irréversible.",
+      "deleteHint": "Supprime definitivement l'entree du dashboard et le lien de transcription.",
+      "warningTitle": "Supprimer definitivement ce ticket ?",
+      "warningDescription": "Le ticket sera retire du dashboard et son lien de transcription sera masque. Cette action est irreversible.",
+      "warningDescriptionDeleted": "Ce ticket deja supprime sera retire du dashboard et son lien de transcription ne sera plus disponible. Cette action est irreversible.",
       "statusSaved": "Statut du ticket mis à jour.",
       "clanSaved": "Clan du ticket mis à jour.",
       "deleted": "Ticket supprimé."
