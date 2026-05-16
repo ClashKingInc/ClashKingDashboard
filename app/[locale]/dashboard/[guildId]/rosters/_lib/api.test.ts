@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { fetchRosters } from "./api";
+import { fetchClanMembers, fetchRosters } from "./api";
 
 describe("fetchRosters", () => {
   const fetchMock = vi.fn();
@@ -69,5 +69,40 @@ describe("fetchRosters", () => {
     });
 
     await expect(fetchRosters("123")).rejects.toThrow("Backend failed");
+  });
+});
+
+describe("fetchClanMembers", () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(() => {
+    vi.stubGlobal("fetch", fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    fetchMock.mockReset();
+  });
+
+  const member = { tag: "#ABC", name: "Test" };
+
+  it("returns an array response directly", async () => {
+    fetchMock.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue([member]) });
+    await expect(fetchClanMembers("#ABC")).resolves.toEqual([member]);
+  });
+
+  it("returns data.items when present", async () => {
+    fetchMock.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({ items: [member] }) });
+    await expect(fetchClanMembers("#ABC")).resolves.toEqual([member]);
+  });
+
+  it("returns data.members when items is absent", async () => {
+    fetchMock.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({ members: [member] }) });
+    await expect(fetchClanMembers("#ABC")).resolves.toEqual([member]);
+  });
+
+  it("returns empty array when neither items nor members exist", async () => {
+    fetchMock.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({}) });
+    await expect(fetchClanMembers("#ABC")).resolves.toEqual([]);
   });
 });

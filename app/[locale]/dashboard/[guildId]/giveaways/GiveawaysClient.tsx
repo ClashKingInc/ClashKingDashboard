@@ -35,6 +35,7 @@ import {
   normalizeDiscordRolesPayload,
 } from "@/lib/dashboard-cache";
 import type { Giveaway } from "@/lib/api/types/server";
+import { useGiveawayEntries } from "./useGiveawayEntries";
 
 type Channel = { id: string; name: string; parent_name?: string };
 type Role = { id: string; name: string; color?: number };
@@ -745,10 +746,15 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   const [rerollSelected, setRerollSelected] = useState<string[]>([]);
   const [rerolling, setRerolling] = useState(false);
   const [giveaways, setGiveaways] = useState<{ ongoing: Giveaway[]; upcoming: Giveaway[]; ended: Giveaway[]; total: number }>({ ongoing: [], upcoming: [], ended: [], total: 0 });
-  const [entriesDialogOpen, setEntriesDialogOpen] = useState(false);
-  const [entriesTarget, setEntriesTarget] = useState<Giveaway | null>(null);
-  const [entriesData, setEntriesData] = useState<{ total_entries: number; unique_users: number; entrants: { user_id: string; entries: number; win_chance: number }[] } | null>(null);
-  const [entriesLoading, setEntriesLoading] = useState(false);
+  const {
+    dialogOpen: entriesDialogOpen,
+    target: entriesTarget, data: entriesData, loading: entriesLoading,
+    openDialog: openEntriesDialog, closeDialog: closeEntries,
+  } = useGiveawayEntries(
+    guildId,
+    (gid, giveawayId) => apiClient.servers.getGiveawayEntries(gid, giveawayId),
+    (message) => toast({ title: t("toast.errorTitle"), description: message, variant: "destructive" }),
+  );
   const [channels, setChannels] = useState<Channel[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [form, setForm] = useState<FormState>(buildEmptyState(t));
@@ -898,22 +904,6 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
     setRerollTarget(giveaway);
     setRerollSelected([]);
     setRerollDialogOpen(true);
-  };
-  const openEntriesDialog = async (giveaway: Giveaway) => {
-    setEntriesTarget(giveaway);
-    setEntriesData(null);
-    setEntriesDialogOpen(true);
-    setEntriesLoading(true);
-    try {
-      const res = await apiClient.servers.getGiveawayEntries(guildId, giveaway.id);
-      if (res.error) throw new Error(res.error);
-      setEntriesData(res.data!);
-    } catch (error) {
-      toast({ title: t("toast.errorTitle"), description: error instanceof Error ? error.message : t("toast.loadError"), variant: "destructive" });
-      setEntriesDialogOpen(false);
-    } finally {
-      setEntriesLoading(false);
-    }
   };
 
   const toggleRerollSelection = (userId: string, checked: boolean) => {
@@ -1279,7 +1269,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
         </Dialog>
 
         {/* Entries Dialog */}
-        <Dialog open={entriesDialogOpen} onOpenChange={(open) => { if (!open) { setEntriesDialogOpen(false); setEntriesTarget(null); setEntriesData(null); } }}>
+        <Dialog open={entriesDialogOpen} onOpenChange={(open) => { if (!open) closeEntries(); }}>
           <DialogContent className="sm:max-w-lg">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2"><Users className="h-5 w-5" />{entriesTarget?.prize}</DialogTitle>
@@ -1329,7 +1319,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               </div>
             )}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setEntriesDialogOpen(false)}>{tCommon("close")}</Button>
+              <Button variant="outline" onClick={closeEntries}>{tCommon("close")}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
