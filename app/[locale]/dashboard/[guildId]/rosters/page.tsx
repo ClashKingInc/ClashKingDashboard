@@ -450,9 +450,8 @@ export default function RostersPage() { // NOSONAR — React page component: com
     if (!newGroupAlias.trim()) return;
     setSavingGroup(true);
     try {
-      const created = await api.createGroup(guildId, newGroupAlias.trim());
-      apiCache.invalidate(getGroupsCacheKey(guildId));
-      setGroups(prev => [...prev, created]);
+      await api.createGroup(guildId, newGroupAlias.trim());
+      refreshGroups(true);
       setCreateGroupDialogOpen(false);
       setNewGroupAlias("");
       toast({ title: t("groupCreated") });

@@ -104,6 +104,7 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     setLoading(true);
     setError(null);
 
+    let clanTag: string | null | undefined;
     try {
       const [rosterData, clansData] = await Promise.all([
         api.fetchRoster(rosterId, serverId),
@@ -113,16 +114,17 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
       setRoster(rosterData);
       groupIdRef.current = rosterData.group_id ?? null;
       setClans(clansData);
-
-      // Load clan members if roster has a clan
-      if (rosterData.clan_tag) {
-        const members = await api.fetchClanMembers(rosterData.clan_tag);
-        setClanMembers(members);
-      }
+      clanTag = rosterData.clan_tag;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load roster');
     } finally {
       setLoading(false);
+    }
+
+    // Fetch clan members separately — calls an external proxy (proxy.clashk.ing)
+    // not routed through Next.js, so a failure must not block the page.
+    if (clanTag) {
+      api.fetchClanMembers(clanTag).then(setClanMembers).catch(() => {});
     }
   }, [rosterId, serverId]);
 
