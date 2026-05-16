@@ -27,7 +27,6 @@ import {
   type DiscordEmbed,
   type TopLevelComponent,
   type ContainerChild,
-  type ThumbnailComponent,
 } from "./discord-embed-preview";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -296,15 +295,16 @@ export function payloadToMessages(data: Record<string, unknown>): { messages: Me
       messages: rawMessages.map(rawMsg => {
         const msgData: Record<string, unknown> = (rawMsg as { data?: Record<string, unknown> })?.data ?? {};
         const rawMsgFlags = (rawMsg as { flags?: unknown }).flags;
-        const flags = typeof msgData.flags === "number" ? msgData.flags
-          : typeof rawMsgFlags === "number" ? rawMsgFlags
-          : 0;
+        let flags = 0;
+        if (typeof msgData.flags === "number") flags = msgData.flags;
+        else if (typeof rawMsgFlags === "number") flags = rawMsgFlags;
         const isV2 = (flags & IS_COMPONENTS_V2_FLAG) !== 0;
         if (isV2) {
           const rawMsgComponents = (rawMsg as { components?: unknown }).components;
-          const rawComponents = Array.isArray(msgData.components) ? msgData.components as TopLevelComponent[]
-            : Array.isArray(rawMsgComponents) ? rawMsgComponents as TopLevelComponent[]
-            : [];
+          let rawComponents: TopLevelComponent[];
+          if (Array.isArray(msgData.components)) rawComponents = msgData.components as TopLevelComponent[];
+          else if (Array.isArray(rawMsgComponents)) rawComponents = rawMsgComponents as TopLevelComponent[];
+          else rawComponents = [];
           return {
             id: uid(),
             mode: "v2" as const,

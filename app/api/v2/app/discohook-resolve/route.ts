@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     const contentType = response.headers.get('content-type') ?? '';
     if (contentType.includes('application/json')) {
       const data = await response.json();
-      return NextResponse.json({ payload: data });
+      return NextResponse.json({ payload: data?.data ?? data });
     }
 
     return NextResponse.json({ error: 'Could not extract data from Discohook share link' }, { status: 422 });
