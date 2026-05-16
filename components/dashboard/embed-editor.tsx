@@ -216,11 +216,10 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
       };
     case "section": {
       const texts = s.texts.filter(t => t.content.trim()).map(t => ({ type: 10 as const, content: t.content }));
-      const accessory: ThumbnailComponent | { type: number } =
-        s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()
-          ? { type: 11, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) }
-          : { type: 11, media: { url: "" } };
-      return { type: 9, components: texts, accessory };
+      const accessory = s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()
+        ? { type: 11 as const, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) }
+        : null;
+      return { type: 9, components: texts, ...(accessory ? { accessory } : {}) };
     }
   }
 }
@@ -296,10 +295,16 @@ export function payloadToMessages(data: Record<string, unknown>): { messages: Me
     return {
       messages: rawMessages.map(rawMsg => {
         const msgData: Record<string, unknown> = (rawMsg as { data?: Record<string, unknown> })?.data ?? {};
-        const flags = typeof msgData.flags === "number" ? msgData.flags : 0;
+        const rawMsgFlags = (rawMsg as { flags?: unknown }).flags;
+        const flags = typeof msgData.flags === "number" ? msgData.flags
+          : typeof rawMsgFlags === "number" ? rawMsgFlags
+          : 0;
         const isV2 = (flags & IS_COMPONENTS_V2_FLAG) !== 0;
         if (isV2) {
-          const rawComponents = Array.isArray(msgData.components) ? msgData.components as TopLevelComponent[] : [];
+          const rawMsgComponents = (rawMsg as { components?: unknown }).components;
+          const rawComponents = Array.isArray(msgData.components) ? msgData.components as TopLevelComponent[]
+            : Array.isArray(rawMsgComponents) ? rawMsgComponents as TopLevelComponent[]
+            : [];
           return {
             id: uid(),
             mode: "v2" as const,
