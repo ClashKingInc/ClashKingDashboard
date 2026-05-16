@@ -382,12 +382,15 @@ function TicketManageDialog({
     }
   };
 
+  const closedOrDefaultKey = canPermanentlyDelete ? "manage.descriptionClosed" : "manage.description";
+  const descriptionKey = isDeletedTicket ? "manage.descriptionDeleted" : closedOrDefaultKey;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-border sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t("manage.title", { number: ticket.number })}</DialogTitle>
-          <DialogDescription>{t(isDeletedTicket ? "manage.descriptionDeleted" : canPermanentlyDelete ? "manage.descriptionClosed" : "manage.description")}</DialogDescription>
+          <DialogDescription>{t(descriptionKey)}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -2337,7 +2340,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
     setIsSaving(true);
     try {
       const payloadMessages = valid.map(({ name, message }) => ({ name, message }));
-      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages } as UpdateApproveMessagesRequest);
+      const res = await apiClient.tickets.updateApproveMessages(guildId, panel.name, { messages: payloadMessages });
       if (res.error) throw new Error(res.error);
       setMessages(valid);
       setDraftMessages(cloneMessages(valid));

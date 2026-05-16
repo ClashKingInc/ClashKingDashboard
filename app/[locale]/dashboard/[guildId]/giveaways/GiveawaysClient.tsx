@@ -1285,11 +1285,12 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               <DialogTitle className="flex items-center gap-2"><Users className="h-5 w-5" />{entriesTarget?.prize}</DialogTitle>
               <DialogDescription>{t("entries.description")}</DialogDescription>
             </DialogHeader>
-            {entriesLoading ? (
+            {entriesLoading && (
               <div className="space-y-2 py-4">
                 {[1, 2, 3].map((i) => <Skeleton key={i} className="h-10 w-full animate-pulse" />)}
               </div>
-            ) : entriesData ? (
+            )}
+            {!entriesLoading && entriesData && (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-center">
@@ -1326,7 +1327,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                   </div>
                 )}
               </div>
-            ) : null}
+            )}
             <DialogFooter>
               <Button variant="outline" onClick={() => setEntriesDialogOpen(false)}>{tCommon("close")}</Button>
             </DialogFooter>

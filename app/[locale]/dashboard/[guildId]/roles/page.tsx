@@ -346,7 +346,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
             .map((c: any) => c.settings?.category)
             .filter((cat: any): cat is string => typeof cat === "string" && cat.trim() !== "")
         )) as string[];
-        setAvailableCategories(cats.sort());
+        setAvailableCategories(cats.sort((a, b) => a.localeCompare(b)));
       }
     } catch (err: any) {
       setError(err.message || "Failed to load roles");

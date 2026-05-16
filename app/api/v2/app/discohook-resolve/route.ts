@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const ALLOWED_HOSTS = ['discohook.app', 'share.discohook.app'];
+const ALLOWED_HOSTS = new Set(['discohook.app', 'share.discohook.app']);
 
 function isAllowedUrl(url: string): boolean {
   try {
     const { hostname } = new URL(url);
-    return ALLOWED_HOSTS.includes(hostname);
+    return ALLOWED_HOSTS.has(hostname);
   } catch {
     return false;
   }

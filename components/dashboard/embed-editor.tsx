@@ -232,10 +232,10 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
     case 17: return {
       id: uid(),
       type: "container",
-      accentColor: (c as ContainerComponent).accent_color != null ? `#${(c as ContainerComponent).accent_color!.toString(16).padStart(6, "0")}` : "#5865f2",
-      children: ((c as ContainerComponent).components ?? []).map(child => parseComponentState(child as TopLevelComponent) as ContainerChildState),
+      accentColor: c.accent_color == null ? "#5865f2" : `#${c.accent_color.toString(16).padStart(6, "0")}`,
+      children: (c.components ?? []).map(child => parseComponentState(child as TopLevelComponent) as ContainerChildState),
     };
-    case 10: return { id: uid(), type: "text_display", content: (c as TextDisplayComponent).content ?? "" };
+    case 10: return { id: uid(), type: "text_display", content: c.content ?? "" };
     case 14: return { id: uid(), type: "separator", divider: (c as any).divider !== false, spacing: (c as any).spacing === 2 ? "large" : "small" };
     case 12: return {
       id: uid(),
@@ -297,7 +297,7 @@ export function payloadToMessages(data: Record<string, unknown>): { messages: Me
   if (Array.isArray(rawMessages) && rawMessages.length > 0) {
     return {
       messages: rawMessages.map(rawMsg => {
-        const msgData = ((rawMsg as { data?: Record<string, unknown> })?.data ?? {}) as Record<string, unknown>;
+        const msgData: Record<string, unknown> = (rawMsg as { data?: Record<string, unknown> })?.data ?? {};
         const flags = typeof msgData.flags === "number" ? msgData.flags : 0;
         const isV2 = (flags & IS_COMPONENTS_V2_FLAG) !== 0;
         if (isV2) {
@@ -421,17 +421,17 @@ export function stateToPayload( // NOSONAR — sequential field assignments, no 
   });
 
   const firstMsg = messages[0];
-  const firstData = messageEntries[0]?.data ?? { content: null, embeds: [] };
+  const firstData: Record<string, unknown> = messageEntries[0]?.data ?? { content: null, embeds: [] };
   const payload: Record<string, unknown> = {
     version: "d2",
     messages: messageEntries,
   };
   if (firstMsg?.mode === "v2") {
     payload.flags = IS_COMPONENTS_V2_FLAG;
-    payload.components = (firstData as Record<string, unknown>).components ?? [];
+    payload.components = firstData.components ?? [];
   } else {
-    payload.content = (firstData as Record<string, unknown>).content;
-    payload.embeds = (firstData as Record<string, unknown>).embeds;
+    payload.content = firstData.content;
+    payload.embeds = firstData.embeds;
     if (normalizedProfile.name) payload.username = normalizedProfile.name;
     if (normalizedProfile.avatar_url) payload.avatar_url = normalizedProfile.avatar_url;
   }
@@ -439,7 +439,7 @@ export function stateToPayload( // NOSONAR — sequential field assignments, no 
 }
 
 function decodeBase64DiscohookPayload(raw: string): string {
-  const normalized = raw.replace(/-/g, "+").replace(/_/g, "/");
+  const normalized = raw.replaceAll("-", "+").replaceAll("_", "/");
   const paddingLength = (4 - (normalized.length % 4)) % 4;
   const padded = `${normalized}${"=".repeat(paddingLength)}`;
   return new TextDecoder().decode(Uint8Array.from(atob(padded), c => c.codePointAt(0) ?? 0));
@@ -1158,7 +1158,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   </Button>
                   {openDropdownId === "__top__" && (
                     <>
-                      <div className="fixed inset-0 z-10" onClick={() => setOpenDropdownId(null)} />
+                      <button type="button" tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-10 cursor-default" onClick={() => setOpenDropdownId(null)} />
                       <div className="absolute right-0 top-8 z-20 rounded-md border border-border bg-card shadow-lg min-w-[160px]">
                         {([
                           { type: "container" as const, label: t("containerLabel") },
@@ -1512,7 +1512,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                               </Button>
                               {openDropdownId === comp.id && (
                                 <>
-                                  <div className="fixed inset-0 z-10" onClick={() => setOpenDropdownId(null)} />
+                                <button type="button" tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-10 cursor-default" onClick={() => setOpenDropdownId(null)} />
                                   <div className="absolute left-0 top-8 z-20 rounded-md border border-border bg-card shadow-lg min-w-[160px]">
                                     {([
                                       { type: "text_display" as const, label: t("textDisplayLabel") },

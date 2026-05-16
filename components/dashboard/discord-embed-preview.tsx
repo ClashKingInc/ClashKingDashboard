@@ -418,7 +418,8 @@ interface DiscordMessagePreviewProps {
 export function DiscordMessagePreview({ profile, content, embeds, components, isV2, className }: DiscordMessagePreviewProps) {
   const displayName = profile?.name?.trim() || "ClashKing";
   const avatarUrl = profile?.avatar_url?.trim() || clashKingAssets.logos.botApp;
-  const messageContent = isV2 ? null : (content?.trim() ? content : null);
+  const v1Content = content?.trim() ? content : null;
+  const messageContent = isV2 ? null : v1Content;
   const v2Components = isV2 && components && components.length > 0 ? components : null;
 
   return (
@@ -629,13 +630,13 @@ function V2ContainerChildPreview({ component }: { readonly component: ContainerC
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
-    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component as ActionRowComponent} />;
+    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
     default: return null;
   }
 }
 
 function V2ContainerPreview({ component }: { readonly component: ContainerComponent }) {
-  const accentColor = component.accent_color != null ? intToHex(component.accent_color) : null;
+  const accentColor = component.accent_color == null ? null : intToHex(component.accent_color);
   return (
     <div
       className={cn(
@@ -661,7 +662,7 @@ export function V2TopLevelPreview({ component }: { readonly component: TopLevelC
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
-    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component as ActionRowComponent} />;
+    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
     default: return null;
   }
 }
