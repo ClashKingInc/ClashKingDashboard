@@ -2318,7 +2318,8 @@
     "manage": {
       "open": "Gérer",
       "title": "Gérer le ticket #{number}",
-      "description": "Mettez à jour le statut du ticket, assignez un clan ou supprimez-le définitivement.",
+      "description": "Mettez à jour le statut du ticket ou assignez un clan.",
+      "descriptionClosed": "Mettez à jour le statut du ticket, assignez un clan ou supprimez-le définitivement.",
       "statusLabel": "Statut du ticket",
       "statusDelete": "Supprimer le ticket",
       "saveStatus": "Enregistrer le statut",

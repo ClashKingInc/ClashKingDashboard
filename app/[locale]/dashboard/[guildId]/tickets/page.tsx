@@ -307,11 +307,12 @@ function TicketManageDialog({
 
   useEffect(() => {
     if (!ticket) return;
-    setStatus(ticket.status);
+    setStatus(ticket.status === "delete" ? "closed" : ticket.status);
     setSetClan(ticket.set_clan ?? "disabled");
   }, [ticket]);
 
   if (!ticket) return null;
+  const canPermanentlyDelete = ticket.status === "closed";
 
   const handleStatusSave = async () => {
     setIsSavingStatus(true);
@@ -320,7 +321,6 @@ function TicketManageDialog({
       if (res.error) throw new Error(res.error);
       await onSaved();
       toast({ title: tCommon("success"), description: t("manage.statusSaved") });
-      if (status === "delete") onOpenChange(false);
     } catch (err) {
       toast({
         title: tCommon("error"),
@@ -375,7 +375,7 @@ function TicketManageDialog({
       <DialogContent className="bg-card border-border sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{t("manage.title", { number: ticket.number })}</DialogTitle>
-          <DialogDescription>{t("manage.description")}</DialogDescription>
+          <DialogDescription>{t(canPermanentlyDelete ? "manage.descriptionClosed" : "manage.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -423,10 +423,6 @@ function TicketManageDialog({
                   <SelectItem value="open">{t("status.open")}</SelectItem>
                   <SelectItem value="sleep">{t("status.sleep")}</SelectItem>
                   <SelectItem value="closed">{t("status.closed")}</SelectItem>
-                  <div className="my-1 border-t border-border" />
-                  <SelectItem value="delete" className="text-destructive focus:text-destructive">
-                    {t("manage.statusDelete")}
-                  </SelectItem>
                 </SelectContent>
               </Select>
               <Button onClick={handleStatusSave} disabled={isSavingStatus}>
@@ -459,18 +455,20 @@ function TicketManageDialog({
             </div>
           </div>
 
-          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-medium text-foreground">{t("manage.deleteTicket")}</p>
-                <p className="text-xs text-muted-foreground">{t("manage.deleteHint")}</p>
+          {canPermanentlyDelete && (
+            <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-medium text-foreground">{t("manage.permanentDeleteTicket")}</p>
+                  <p className="text-xs text-muted-foreground">{t("manage.deleteHint")}</p>
+                </div>
+                <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+                  {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {t("manage.permanentDeleteTicket")}
+                </Button>
               </div>
-              <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-                {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {t("manage.deleteTicket")}
-              </Button>
             </div>
-          </div>
+          )}
         </div>
 
         <DialogFooter>

@@ -2295,7 +2295,8 @@
     "manage": {
       "open": "Manage",
       "title": "Manage Ticket #{number}",
-      "description": "Update the ticket status, assign a clan, or permanently delete it.",
+      "description": "Update the ticket status or assign a clan.",
+      "descriptionClosed": "Update the ticket status, assign a clan, or permanently delete it.",
       "statusLabel": "Ticket status",
       "statusDelete": "Delete ticket",
       "saveStatus": "Save status",
