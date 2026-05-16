@@ -1,5 +1,6 @@
 "use client";
 
+import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 
@@ -456,6 +457,8 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
 // ─── Discord Components V2 ────────────────────────────────────────────────────
 
 export const COMPONENT_TYPE = {
+  ACTION_ROW: 1,
+  BUTTON: 2,
   SECTION: 9,
   TEXT_DISPLAY: 10,
   THUMBNAIL: 11,
@@ -477,9 +480,19 @@ export interface SectionComponent {
   accessory: ThumbnailComponent | { type: number; [key: string]: unknown };
   id?: number;
 }
-export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent;
+export interface ButtonComponent {
+  type: 2;
+  style?: 1 | 2 | 3 | 4 | 5;
+  label?: string;
+  emoji?: { id?: string | null; name?: string | null; animated?: boolean };
+  url?: string;
+  disabled?: boolean;
+  id?: number;
+}
+export interface ActionRowComponent { type: 1; components: ButtonComponent[]; id?: number }
+export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
 export interface ContainerComponent { type: 17; accent_color?: number | null; spoiler?: boolean; components: ContainerChild[]; id?: number }
-export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent;
+export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
 
 export function isV2Payload(data: Record<string, unknown>): boolean {
   if (typeof (data as any).flags === 'number' && ((data as any).flags & IS_COMPONENTS_V2_FLAG) !== 0) return true;
@@ -502,6 +515,43 @@ export function extractComponents(data: Record<string, unknown>): TopLevelCompon
   const components = (data as any)?.components;
   if (Array.isArray(components)) return components as TopLevelComponent[];
   return [];
+}
+
+const BUTTON_STYLE_CLASSES: Record<number, string> = {
+  1: "bg-[#5865f2] text-white",
+  2: "bg-[#4e5058] text-white",
+  3: "bg-[#248046] text-white",
+  4: "bg-[#da373c] text-white",
+  5: "bg-[#4e5058] text-[#00aff4]",
+};
+
+function ButtonPreview({ button }: { readonly button: ButtonComponent }) {
+  const style = button.style ?? 2;
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 px-3 py-1.5 rounded text-sm font-medium cursor-default select-none",
+        BUTTON_STYLE_CLASSES[style] ?? BUTTON_STYLE_CLASSES[2],
+        button.disabled && "opacity-50",
+      )}
+    >
+      {button.emoji?.name && <span>{button.emoji.name}</span>}
+      {button.label}
+      {style === 5 && <ExternalLink className="w-3 h-3 opacity-70" />}
+    </span>
+  );
+}
+
+function ActionRowPreview({ component }: { readonly component: ActionRowComponent }) {
+  const buttons = component.components ?? [];
+  if (buttons.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1 py-0.5">
+      {buttons.map((btn, i) => (
+        <ButtonPreview key={i} button={btn} /> // NOSONAR
+      ))}
+    </div>
+  );
 }
 
 function V2TextDisplayPreview({ component }: { readonly component: TextDisplayComponent }) {
@@ -579,6 +629,7 @@ function V2ContainerChildPreview({ component }: { readonly component: ContainerC
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component as ActionRowComponent} />;
     default: return null;
   }
 }
@@ -610,6 +661,7 @@ export function V2TopLevelPreview({ component }: { readonly component: TopLevelC
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component as ActionRowComponent} />;
     default: return null;
   }
 }

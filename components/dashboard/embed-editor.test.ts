@@ -6,6 +6,8 @@ import {
   stateToPayload,
   serializeComponentState,
   parseComponentState,
+  payloadToMessages,
+  EMPTY_MESSAGE_PROFILE,
 } from "@/components/dashboard/embed-editor";
 import { IS_COMPONENTS_V2_FLAG, type ContainerComponent } from "@/components/dashboard/discord-embed-preview";
 
@@ -135,6 +137,35 @@ describe("v2 components", () => {
     expect(state.type).toBe("media_gallery");
     if (state.type !== "media_gallery") throw new Error("wrong type");
     expect(state.items[0].url).toBe("https://example.com/img.png");
+  });
+
+  it("round-trips action_row with buttons", () => {
+    const msg = createV1Message();
+    msg.mode = "v2";
+    msg.components = [
+      {
+        id: "ar1",
+        type: "action_row",
+        buttons: [
+          { id: "b1", label: "Click me", style: 1, url: "", disabled: false },
+          { id: "b2", label: "Visit", style: 5, url: "https://example.com", disabled: false },
+        ],
+      },
+    ];
+    const payload = stateToPayload([msg], EMPTY_MESSAGE_PROFILE);
+    const comp = (payload as any).components?.[0];
+    expect(comp?.type).toBe(1);
+    expect(comp?.components).toHaveLength(2);
+    expect(comp?.components[0]).toMatchObject({ type: 2, style: 1, label: "Click me" });
+    expect(comp?.components[1]).toMatchObject({ type: 2, style: 5, label: "Visit", url: "https://example.com" });
+    const [reparsed] = payloadToMessages(payload).messages;
+    const ar = reparsed.components[0];
+    expect(ar.type).toBe("action_row");
+    if (ar.type === "action_row") {
+      expect(ar.buttons).toHaveLength(2);
+      expect(ar.buttons[0].label).toBe("Click me");
+      expect(ar.buttons[1].url).toBe("https://example.com");
+    }
   });
 });
 

@@ -73,7 +73,7 @@ interface SectionState {
   thumbnailUrl: string;
   thumbnailDescription: string;
 }
-type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState;
+type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState;
 interface ContainerState {
   id: string;
   type: "container";
@@ -82,7 +82,9 @@ interface ContainerState {
 }
 /** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
 interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
-type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | RawComponentState;
+interface ButtonState { id: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
+interface ActionRowState { id: string; type: "action_row"; buttons: ButtonState[] }
+type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | RawComponentState;
 
 interface MessageState {
   id: string;
@@ -102,7 +104,7 @@ interface MessageProfileState {
   avatarUrl: string;
 }
 
-const EMPTY_MESSAGE_PROFILE: MessageProfileState = { name: "", avatarUrl: "" };
+export const EMPTY_MESSAGE_PROFILE: MessageProfileState = { name: "", avatarUrl: "" };
 
 function createCollapsedSectionState(): Record<SectionKey, boolean> {
   return {
@@ -180,6 +182,17 @@ function hexToIntSafe(hex: string): number | null {
 
 export function serializeComponentState(s: TopLevelComponentState): TopLevelComponent {
   switch (s.type) {
+    case "action_row":
+      return {
+        type: 1,
+        components: s.buttons.map(btn => ({
+          type: 2,
+          style: btn.style,
+          ...(btn.label ? { label: btn.label } : {}),
+          ...(btn.style === 5 && btn.url ? { url: btn.url } : {}),
+          ...(btn.disabled ? { disabled: true } : {}),
+        })),
+      } as unknown as TopLevelComponent;
     case "raw":
       return s.rawData as unknown as TopLevelComponent;
     case "container": {
@@ -240,6 +253,19 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
         thumbnailDescription: sec.accessory?.type === 11 ? sec.accessory?.description ?? "" : "",
       };
     }
+    case 1: return {
+      id: uid(),
+      type: "action_row",
+      buttons: ((c as any).components ?? [])
+        .filter((b: any) => b.type === 2)
+        .map((b: any) => ({
+          id: uid(),
+          label: b.label ?? "",
+          style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
+          url: b.url ?? "",
+          disabled: b.disabled ?? false,
+        })),
+    };
     default: return { id: uid(), type: "raw", rawType: (c as { type: number }).type, rawData: c as unknown as Record<string, unknown> };
   }
 }
@@ -255,11 +281,12 @@ function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLeve
       texts: [{ id: uid(), type: "text_display", content: "" }],
       accessoryType: "none", thumbnailUrl: "", thumbnailDescription: "",
     };
+    case "action_row": return { id: uid(), type: "action_row", buttons: [] };
     case "raw": return { id: uid(), type: "raw", rawType: 0, rawData: {} };
   }
 }
 
-function payloadToMessages(data: Record<string, unknown>): { messages: MessageState[]; profile: MessageProfileState } {
+export function payloadToMessages(data: Record<string, unknown>): { messages: MessageState[]; profile: MessageProfileState } {
   const profile = extractMessageProfile(data);
   const mappedProfile: MessageProfileState = {
     name: (profile?.name ?? "").slice(0, MAX_PROFILE_NAME_LENGTH),
@@ -1139,6 +1166,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                           { type: "separator" as const, label: t("separatorLabel") },
                           { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
                           { type: "section" as const, label: t("sectionLabel") },
+                          { type: "action_row" as const, label: t("actionRowLabel") },
                         ] as const).map(item => (
                           <button key={item.type} type="button"
                             className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
@@ -1157,6 +1185,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   : comp.type === "text_display" ? t("textDisplayLabel")
                   : comp.type === "separator" ? t("separatorLabel")
                   : comp.type === "media_gallery" ? t("mediaGalleryLabel")
+                  : comp.type === "action_row" ? t("actionRowLabel")
                   : comp.type === "raw" ? `${t("unknownComponent")} (type ${comp.rawType})`
                   : t("sectionLabel");
                 return (
@@ -1181,6 +1210,61 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                     </div>
                     {isExpanded && (
                       <div className="border-t border-border/80 px-3 py-3 space-y-3">
+                        {comp.type === "action_row" && (
+                          <div className="space-y-2">
+                            {comp.buttons.map((btn, btnIdx) => (
+                              <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                    onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c)}>
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                                <Field label={t("buttonLabel")}>
+                                  <Input value={btn.label}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c)}
+                                    className={compactInputClassName} />
+                                </Field>
+                                <Field label={t("buttonStyle")}>
+                                  <div className="flex flex-wrap gap-1">
+                                    {([
+                                      { style: 1 as const, label: t("buttonStylePrimary") },
+                                      { style: 2 as const, label: t("buttonStyleSecondary") },
+                                      { style: 3 as const, label: t("buttonStyleSuccess") },
+                                      { style: 4 as const, label: t("buttonStyleDanger") },
+                                      { style: 5 as const, label: t("buttonStyleLink") },
+                                    ]).map(({ style, label }) => (
+                                      <button key={style} type="button"
+                                        onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, style } : b) } : c)}
+                                        className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                                          btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                                        {label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </Field>
+                                {btn.style === 5 && (
+                                  <Field label={t("buttonUrl")}>
+                                    <Input value={btn.url}
+                                      onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) } : c)}
+                                      placeholder="https://..." className={compactInputClassName} />
+                                  </Field>
+                                )}
+                                <label className="flex items-center gap-2 cursor-pointer">
+                                  <input type="checkbox" checked={btn.disabled}
+                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) } : c)}
+                                    className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                                  <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
+                                </label>
+                              </div>
+                            ))}
+                            <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+                              onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c)}>
+                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
+                            </Button>
+                          </div>
+                        )}
                         {comp.type === "raw" && (
                           <p className="text-xs text-muted-foreground">{t("unknownComponentHint")}</p>
                         )}
@@ -1316,6 +1400,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                               const childLabel = child.type === "text_display" ? t("textDisplayLabel")
                                 : child.type === "separator" ? t("separatorLabel")
                                 : child.type === "media_gallery" ? t("mediaGalleryLabel")
+                                : child.type === "action_row" ? t("actionRowLabel")
                                 : t("sectionLabel");
                               return (
                                 <div key={child.id} className={cn("ml-3 rounded-md border", childIsExpanded ? "border-primary/40" : "border-border/60")}>
@@ -1393,6 +1478,28 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                           )}
                                         </div>
                                       )}
+                                      {child.type === "action_row" && (
+                                        <div className="space-y-2">
+                                          {child.buttons.map((btn, btnIdx) => (
+                                            <div key={btn.id} className="rounded border border-border/60 p-2 space-y-1.5">
+                                              <div className="flex items-center justify-between">
+                                                <span className="text-xs text-muted-foreground">Button {btnIdx + 1}</span>
+                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-muted-foreground hover:text-destructive"
+                                                  onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c))}>
+                                                  <Trash2 className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                              <Input value={btn.label}
+                                                onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c))}
+                                                placeholder={t("buttonLabel")} className={cn(compactInputClassName, "text-xs")} />
+                                            </div>
+                                          ))}
+                                          <Button size="sm" variant="outline" className="h-6 text-xs w-full"
+                                            onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c))}>
+                                            <Plus className="h-3 w-3 mr-1" />{t("addButton")}
+                                          </Button>
+                                        </div>
+                                      )}
                                     </div>
                                   )}
                                 </div>
@@ -1412,6 +1519,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                       { type: "separator" as const, label: t("separatorLabel") },
                                       { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
                                       { type: "section" as const, label: t("sectionLabel") },
+                                      { type: "action_row" as const, label: t("actionRowLabel") },
                                     ] as const).map(item => (
                                       <button key={item.type} type="button"
                                         className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
