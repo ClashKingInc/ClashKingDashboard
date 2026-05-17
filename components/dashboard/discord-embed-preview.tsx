@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
@@ -556,27 +557,29 @@ function ButtonPreview({ button }: { readonly button: ButtonComponent }) {
 }
 
 function SelectMenuPreview({ component }: { readonly component: SelectMenuComponent }) {
+  const [open, setOpen] = useState(false);
   const placeholder = component.placeholder ?? "Make a selection";
   const isString = component.type === COMPONENT_TYPE.STRING_SELECT;
   const options = isString ? (component as StringSelectComponent).options ?? [] : [];
   return (
     <div className={cn("flex flex-col gap-1 w-full", component.disabled && "opacity-50")}>
-      <div className="flex items-center justify-between px-3 py-2 rounded bg-[#1e1f22] border border-[#3b3d44] text-[#87898c] text-sm cursor-default select-none">
+      <button
+        type="button"
+        onClick={() => setOpen(prev => !prev)}
+        className="flex items-center justify-between px-3 py-2 rounded bg-[#1e1f22] border border-[#3b3d44] text-[#87898c] text-sm w-full"
+      >
         <span>{placeholder}</span>
-        <ChevronDown className="w-4 h-4 shrink-0" />
-      </div>
-      {isString && options.length > 0 && (
+        <ChevronDown className={cn("w-4 h-4 shrink-0 transition-transform", open && "rotate-180")} />
+      </button>
+      {open && isString && options.length > 0 && (
         <div className="rounded border border-[#3b3d44] bg-[#2b2d31] overflow-hidden">
-          {options.slice(0, 3).map((opt, i) => (
+          {options.slice(0, 25).map((opt, i) => (
             // eslint-disable-next-line react/no-array-index-key
             <div key={i} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
               <span className="font-medium">{opt.label}</span>
               {opt.description && <span className="ml-2 text-[#87898c]">{opt.description}</span>}
             </div>
           ))}
-          {options.length > 3 && (
-            <div className="px-3 py-1 text-xs text-[#87898c]">+{options.length - 3} more</div>
-          )}
         </div>
       )}
     </div>
