@@ -213,12 +213,13 @@ function serializeSelectMenu(s: SelectMenuEditorState): Record<string, unknown> 
   return base;
 }
 
-export function serializeComponentState(s: TopLevelComponentState): TopLevelComponent {
+export function serializeComponentState(s: TopLevelComponentState): TopLevelComponent | null {
   switch (s.type) {
     case "action_row": {
       if (s.selectMenu) {
         return { type: 1, components: [serializeSelectMenu(s.selectMenu)] } as unknown as TopLevelComponent;
       }
+      if (s.buttons.length === 0) return null;
       return {
         type: 1,
         components: s.buttons.map(btn => ({
@@ -231,12 +232,11 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
       } as unknown as TopLevelComponent;
     }
     case "string_select":
-      return serializeSelectMenu(s) as unknown as TopLevelComponent;
     case "user_select":
     case "role_select":
     case "mentionable_select":
     case "channel_select":
-      return serializeSelectMenu(s) as unknown as TopLevelComponent;
+      return { type: 1, components: [serializeSelectMenu(s)] } as unknown as TopLevelComponent;
     case "raw":
       return s.rawData as unknown as TopLevelComponent;
     case "container": {
@@ -245,7 +245,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
         type: 17,
         accent_color: accent ?? undefined,
         ...(s.spoiler ? { spoiler: true } : {}),
-        components: s.children.map(child => serializeComponentState(child) as ContainerChild),
+        components: s.children.map(child => serializeComponentState(child)).filter((c): c is ContainerChild => c !== null),
       };
     }
     case "text_display":
@@ -532,7 +532,7 @@ export function stateToPayload( // NOSONAR — sequential field assignments, no 
 
   const messageEntries = messages.map(msg => {
     if (msg.mode === "v2") {
-      const components = msg.components.map(serializeComponentState);
+      const components = msg.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null);
       return { data: { flags: IS_COMPONENTS_V2_FLAG, components } };
     }
     const embeds = msg.embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent).slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
@@ -1312,7 +1312,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const discohookPayload = stateToPayload(messages, profile);
   const discohookUrl = buildDiscohookUrl(discohookPayload);
   const previewEmbeds = activeMessage.mode === "v1" ? embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent) : [];
-  const previewV2Components = activeMessage.mode === "v2" ? activeMessage.components.map(serializeComponentState) : [];
+  const previewV2Components = activeMessage.mode === "v2" ? activeMessage.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null) : [];
   const hasContent =
     messages.some(msg => {
       if (msg.mode === "v2") return msg.components.length > 0;

@@ -201,9 +201,10 @@ describe("v2 components", () => {
     expect(state.options).toHaveLength(2);
     expect(state.options[1].isDefault).toBe(true);
     const back = serializeComponentState(state as any);
-    expect((back as any).type).toBe(3);
-    expect((back as any).custom_id).toBe("my_select");
-    expect((back as any).options).toHaveLength(2);
+    expect((back as any).type).toBe(1);
+    expect((back as any).components[0].type).toBe(3);
+    expect((back as any).components[0].custom_id).toBe("my_select");
+    expect((back as any).components[0].options).toHaveLength(2);
   });
 
   it("round-trips a user select component", () => {
@@ -212,8 +213,43 @@ describe("v2 components", () => {
     if (state.type !== "user_select") throw new Error("wrong type");
     expect(state.customId).toBe("user_picker");
     const back = serializeComponentState(state as any);
-    expect((back as any).type).toBe(5);
-    expect((back as any).custom_id).toBe("user_picker");
+    expect((back as any).type).toBe(1);
+    expect((back as any).components[0].type).toBe(5);
+    expect((back as any).components[0].custom_id).toBe("user_picker");
+  });
+
+  it("returns null for empty action row (no buttons, no select)", () => {
+    const state = parseComponentState({ type: 1, components: [] } as any);
+    expect(state.type).toBe("action_row");
+    const result = serializeComponentState(state as any);
+    expect(result).toBeNull();
+  });
+
+  it("wraps standalone select menus in an action row during serialization", () => {
+    const state = parseComponentState({ type: 5, custom_id: "u_sel", placeholder: "Pick" } as any);
+    expect(state.type).toBe("user_select");
+    const back = serializeComponentState(state as any);
+    expect((back as any)?.type).toBe(1);
+    expect((back as any)?.components[0].type).toBe(5);
+    expect((back as any)?.components[0].custom_id).toBe("u_sel");
+  });
+
+  it("filters empty action rows and wraps standalone selects in stateToPayload", () => {
+    const msg: MessageState = {
+      id: "m1",
+      mode: "v2",
+      embeds: [],
+      content: "",
+      components: [
+        { id: "ar1", type: "action_row", buttons: [] }, // empty → filtered
+        { id: "us1", type: "user_select", customId: "sel1", placeholder: "", minValues: 1, maxValues: 1, disabled: false }, // wrapped
+      ],
+    };
+    const payload = stateToPayload([msg], EMPTY_MESSAGE_PROFILE);
+    const comps = (payload as any).components as any[];
+    expect(comps).toHaveLength(1);
+    expect(comps[0].type).toBe(1); // action row wrapper
+    expect(comps[0].components[0].type).toBe(5); // user select inside
   });
 
   it("round-trips an action row with a string select", () => {
