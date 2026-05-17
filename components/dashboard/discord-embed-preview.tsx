@@ -525,7 +525,7 @@ export function isV2Payload(data: Record<string, unknown>): boolean {
 export function extractComponents(data: Record<string, unknown>): TopLevelComponent[] {
   const messages = (data as any)?.messages;
   if (Array.isArray(messages) && messages.length > 0) {
-    const components = (messages[0] as any)?.data?.components ?? (messages[0] as any)?.components;
+    const components = messages[0]?.data?.components ?? messages[0]?.components;
     if (Array.isArray(components)) return components as TopLevelComponent[];
   }
   const components = (data as any)?.components;
@@ -562,7 +562,7 @@ function SelectMenuPreview({ component }: { readonly component: SelectMenuCompon
   const [open, setOpen] = useState(false);
   const placeholder = component.placeholder ?? "Make a selection";
   const isString = component.type === COMPONENT_TYPE.STRING_SELECT;
-  const options = isString ? (component as StringSelectComponent).options ?? [] : [];
+  const options = isString ? (component as StringSelectComponent).options ?? [] : []; // NOSONAR
   return (
     <div className={cn("flex flex-col gap-1 w-full", component.disabled && "opacity-50")}>
       <button
@@ -591,8 +591,8 @@ function SelectMenuPreview({ component }: { readonly component: SelectMenuCompon
 function ActionRowPreview({ component }: { readonly component: ActionRowComponent }) {
   const items = component.components ?? [];
   if (items.length === 0) return null;
-  const firstSelectType: number[] = [COMPONENT_TYPE.STRING_SELECT, COMPONENT_TYPE.USER_SELECT, COMPONENT_TYPE.ROLE_SELECT, COMPONENT_TYPE.MENTIONABLE_SELECT, COMPONENT_TYPE.CHANNEL_SELECT];
-  const selectMenu = items.find(c => firstSelectType.includes(c.type)) as SelectMenuComponent | undefined;
+  const firstSelectType = new Set<number>([COMPONENT_TYPE.STRING_SELECT, COMPONENT_TYPE.USER_SELECT, COMPONENT_TYPE.ROLE_SELECT, COMPONENT_TYPE.MENTIONABLE_SELECT, COMPONENT_TYPE.CHANNEL_SELECT]);
+  const selectMenu = items.find(c => firstSelectType.has(c.type)) as SelectMenuComponent | undefined;
   if (selectMenu) return <SelectMenuPreview component={selectMenu} />;
   return (
     <div className="flex flex-wrap gap-1 py-0.5">
@@ -709,7 +709,7 @@ function V2ContainerChildPreview({ component }: { readonly component: ContainerC
     case COMPONENT_TYPE.ROLE_SELECT:
     case COMPONENT_TYPE.MENTIONABLE_SELECT:
     case COMPONENT_TYPE.CHANNEL_SELECT:
-      return <SelectMenuPreview component={component as SelectMenuComponent} />;
+      return <SelectMenuPreview component={component as SelectMenuComponent} />; // NOSONAR
     default: return null;
   }
 }
@@ -754,7 +754,7 @@ export function V2TopLevelPreview({ component }: { readonly component: TopLevelC
     case COMPONENT_TYPE.ROLE_SELECT:
     case COMPONENT_TYPE.MENTIONABLE_SELECT:
     case COMPONENT_TYPE.CHANNEL_SELECT:
-      return <SelectMenuPreview component={component as SelectMenuComponent} />;
+      return <SelectMenuPreview component={component as SelectMenuComponent} />; // NOSONAR
     default: return null;
   }
 }

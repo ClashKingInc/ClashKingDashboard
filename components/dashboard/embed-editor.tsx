@@ -27,7 +27,6 @@ import {
   type DiscordEmbed,
   type TopLevelComponent,
   type ContainerChild,
-  type SelectMenuComponent,
   type SectionComponent,
   type FileComponent,
 } from "./discord-embed-preview";
@@ -36,7 +35,13 @@ import {
 const COMPACT_INPUT_CN = "bg-background border-border/80 h-8 text-sm";
 const COMPACT_TEXTAREA_CN = "bg-background border-border/80 text-sm resize-none";
 
+// Translation key lookups to avoid nested ternaries in JSX
+const ACCESSORY_TYPE_KEYS = { none: "accessoryNone", thumbnail: "accessoryThumbnail", button: "accessoryButton" } as const;
+const BUTTON_STYLE_KEYS = { 1: "buttonStylePrimary", 2: "buttonStyleSecondary", 3: "buttonStyleSuccess", 4: "buttonStyleDanger", 5: "buttonStyleLink" } as const;
+
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+type ButtonStyle = 1 | 2 | 3 | 4 | 5;
 
 interface FieldState {
   id: string;
@@ -77,7 +82,7 @@ interface SectionState {
   thumbnailUrl: string;
   thumbnailDescription: string;
   buttonLabel: string;
-  buttonStyle: 1 | 2 | 3 | 4 | 5;
+  buttonStyle: ButtonStyle;
   buttonUrl: string;
   buttonCustomId: string;
   buttonDisabled: boolean;
@@ -85,7 +90,7 @@ interface SectionState {
 /** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
 interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
 interface FileComponentState { id: string; type: "file"; url: string; spoiler: boolean }
-interface ButtonState { id: string; customId: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
+interface ButtonState { id: string; customId: string; label: string; style: ButtonStyle; url: string; disabled: boolean }
 interface SelectOptionState { id: string; label: string; value: string; description: string; isDefault: boolean }
 interface StringSelectState { id: string; type: "string_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean; options: SelectOptionState[] }
 interface GenericSelectState { id: string; type: "user_select" | "role_select" | "mentionable_select" | "channel_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean }
@@ -201,8 +206,8 @@ function serializeSelectMenu(s: SelectMenuEditorState): Record<string, unknown> 
     type: typeMap[s.type],
     custom_id: s.customId,
     ...(s.placeholder ? { placeholder: s.placeholder } : {}),
-    ...(s.minValues !== 1 ? { min_values: s.minValues } : {}),
-    ...(s.maxValues !== 1 ? { max_values: s.maxValues } : {}),
+    ...(s.minValues === 1 ? {} : { min_values: s.minValues }),
+    ...(s.maxValues === 1 ? {} : { max_values: s.maxValues }),
     ...(s.disabled ? { disabled: true } : {}),
   };
   if (s.type === "string_select") {
@@ -229,7 +234,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
           type: 2,
           style: btn.style,
           ...(btn.label ? { label: btn.label } : {}),
-          ...(btn.style === 5 ? (btn.url ? { url: btn.url } : {}) : { custom_id: btn.customId }),
+          ...(btn.style === 5 ? (btn.url ? { url: btn.url } : {}) : { custom_id: btn.customId }), // NOSONAR
           ...(btn.disabled ? { disabled: true } : {}),
         })),
       } as unknown as TopLevelComponent; // NOSONAR
@@ -277,7 +282,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
           type: 2,
           style: s.buttonStyle,
           ...(s.buttonLabel.trim() ? { label: s.buttonLabel.trim() } : {}),
-          ...(s.buttonStyle === 5 ? (s.buttonUrl.trim() ? { url: s.buttonUrl.trim() } : {}) : { custom_id: s.buttonCustomId }),
+          ...(s.buttonStyle === 5 ? (s.buttonUrl.trim() ? { url: s.buttonUrl.trim() } : {}) : { custom_id: s.buttonCustomId }), // NOSONAR
           ...(s.buttonDisabled ? { disabled: true } : {}),
         };
       }
@@ -310,7 +315,7 @@ function parseSelectMenu(c: any): SelectMenuEditorState {
       })),
     };
   }
-  return { ...base, type: type as "user_select" | "role_select" | "mentionable_select" | "channel_select" };
+  return { ...base, type };
 }
 
 export function parseComponentState(c: TopLevelComponent): TopLevelComponentState {
@@ -333,7 +338,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
       const sec = c as any;
       const accType = sec.accessory?.type === 11 && sec.accessory?.media?.url
         ? "thumbnail"
-        : sec.accessory?.type === 2
+        : sec.accessory?.type === 2 // NOSONAR
         ? "button"
         : "none";
       return {
@@ -352,8 +357,8 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
     }
     case 1: {
       const arComponents = (c as any).components ?? [];
-      const selectTypes = [3, 5, 6, 7, 8];
-      const selectComp = arComponents.find((x: any) => selectTypes.includes(x.type));
+      const selectTypes = new Set([3, 5, 6, 7, 8]);
+      const selectComp = arComponents.find((x: any) => selectTypes.has(x.type));
       if (selectComp) {
         return {
           id: uid(),
@@ -621,7 +626,7 @@ export function requiresDiscohookResolve(url: string): boolean {
 function base64UrlEncode(utf8: string): string {
   const percentEncoded = encodeURIComponent(utf8);
   const escaped = percentEncoded.replace(/%[\dA-Fa-f]{2}/g, (hex) =>
-    String.fromCharCode(Number.parseInt(hex.slice(1), 16)),
+    String.fromCodePoint(Number.parseInt(hex.slice(1), 16)),
   );
   return btoa(escaped).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
 }
@@ -811,7 +816,7 @@ function SectionEditorFields({ comp, onChange }: {
               onClick={() => onChange({ ...comp, accessoryType: a })}
               className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
                 comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-              {a === "none" ? t("accessoryNone") : a === "thumbnail" ? t("accessoryThumbnail") : t("accessoryButton")}
+              {t(ACCESSORY_TYPE_KEYS[a])}
             </button>
           ))}
         </div>
@@ -844,7 +849,7 @@ function SectionEditorFields({ comp, onChange }: {
                   onClick={() => onChange({ ...comp, buttonStyle: style })}
                   className={cn("text-xs px-2 py-1 rounded border transition-colors",
                     comp.buttonStyle === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                  {style === 1 ? t("buttonStylePrimary") : style === 2 ? t("buttonStyleSecondary") : style === 3 ? t("buttonStyleSuccess") : style === 4 ? t("buttonStyleDanger") : t("buttonStyleLink")}
+                  {t(BUTTON_STYLE_KEYS[style])}
                 </button>
               ))}
             </div>
@@ -877,24 +882,24 @@ function SelectMenuCommonFields({ comp, onChange }: {
     <div className="space-y-2">
       <Field label={t("selectPlaceholder")}>
         <Input value={comp.placeholder}
-          onChange={e => onChange({ ...comp, placeholder: e.target.value } as SelectMenuEditorState)}
+          onChange={e => onChange({ ...comp, placeholder: e.target.value })}
           className={COMPACT_INPUT_CN} />
       </Field>
       <div className="flex gap-3">
         <Field label={t("selectMinValues")}>
           <Input type="number" value={comp.minValues} min={0} max={25}
-            onChange={e => onChange({ ...comp, minValues: Math.max(0, Math.min(25, Number(e.target.value) || 1)) } as SelectMenuEditorState)}
+            onChange={e => onChange({ ...comp, minValues: Math.max(0, Math.min(25, Number(e.target.value) || 1)) })}
             className={cn(COMPACT_INPUT_CN, "w-16")} />
         </Field>
         <Field label={t("selectMaxValues")}>
           <Input type="number" value={comp.maxValues} min={1} max={25}
-            onChange={e => onChange({ ...comp, maxValues: Math.max(1, Math.min(25, Number(e.target.value) || 1)) } as SelectMenuEditorState)}
+            onChange={e => onChange({ ...comp, maxValues: Math.max(1, Math.min(25, Number(e.target.value) || 1)) })}
             className={cn(COMPACT_INPUT_CN, "w-16")} />
         </Field>
       </div>
       <label className="flex items-center gap-2 cursor-pointer">
         <input type="checkbox" checked={comp.disabled}
-          onChange={e => onChange({ ...comp, disabled: e.target.checked } as SelectMenuEditorState)}
+          onChange={e => onChange({ ...comp, disabled: e.target.checked })}
           className="h-3.5 w-3.5 rounded border-input accent-primary" />
         <span className="text-xs text-muted-foreground">{t("selectDisabled")}</span>
       </label>
@@ -980,7 +985,7 @@ function ActionRowEditorFields({ comp, onChange }: {
           <button type="button"
             onClick={switchToButtons}
             className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-              !hasSelectMenu ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              hasSelectMenu ? "border-border/80 text-muted-foreground hover:text-foreground" : "border-primary/60 bg-primary/10 font-medium")}>
             {t("actionRowModeButtons")}
           </button>
           {([
@@ -1054,7 +1059,7 @@ function ActionRowEditorFields({ comp, onChange }: {
           </Button>
         </>
       )}
-      {comp.selectMenu && comp.selectMenu.type === "string_select" && (
+      {comp.selectMenu?.type === "string_select" && (
         <StringSelectEditorFields
           comp={comp.selectMenu}
           onChange={updated => onChange({ ...comp, selectMenu: updated })}
@@ -1062,7 +1067,7 @@ function ActionRowEditorFields({ comp, onChange }: {
       )}
       {comp.selectMenu && comp.selectMenu.type !== "string_select" && (
         <GenericSelectEditorFields
-          comp={comp.selectMenu as GenericSelectState}
+          comp={comp.selectMenu as GenericSelectState} // NOSONAR
           onChange={updated => onChange({ ...comp, selectMenu: updated })}
         />
       )}
@@ -1090,7 +1095,7 @@ function FileComponentEditorFields({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const token = document.cookie.match(/access_token=([^;]+)/)?.[1];
+      const token = /access_token=([^;]+)/.exec(document.cookie)?.[1];
       const res = await fetch("/api/v2/app/cdn-upload", {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
