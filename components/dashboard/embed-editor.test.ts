@@ -139,8 +139,7 @@ describe("v2 components", () => {
     expect(state.items[0].url).toBe("https://example.com/img.png");
   });
 
-  it("round-trips action_row with buttons", () => {
-    const msg = createV1Message();
+  it("round-trips action_row with buttons", () => {    const msg = createV1Message();
     msg.mode = "v2";
     msg.components = [
       {
@@ -166,6 +165,134 @@ describe("v2 components", () => {
       expect(ar.buttons[0].label).toBe("Click me");
       expect(ar.buttons[1].url).toBe("https://example.com");
     }
+  });
+
+  it("round-trips a container with spoiler=true", () => {
+    const original: ContainerComponent = {
+      type: 17,
+      accent_color: null,
+      spoiler: true,
+      components: [{ type: 10, content: "Surprise!" }],
+    };
+    const state = parseComponentState(original);
+    if (state.type !== "container") throw new Error("wrong type");
+    expect(state.spoiler).toBe(true);
+    const back = serializeComponentState(state);
+    expect((back as any).spoiler).toBe(true);
+  });
+
+  it("round-trips a string select component", () => {
+    const state = parseComponentState({
+      type: 3,
+      custom_id: "my_select",
+      placeholder: "Choose...",
+      min_values: 1,
+      max_values: 2,
+      options: [
+        { label: "Option A", value: "a", description: "First option" },
+        { label: "Option B", value: "b", default: true },
+      ],
+    } as any);
+    expect(state.type).toBe("string_select");
+    if (state.type !== "string_select") throw new Error("wrong type");
+    expect(state.customId).toBe("my_select");
+    expect(state.placeholder).toBe("Choose...");
+    expect(state.maxValues).toBe(2);
+    expect(state.options).toHaveLength(2);
+    expect(state.options[1].isDefault).toBe(true);
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(1);
+    expect((back as any).components[0].type).toBe(3);
+    expect((back as any).components[0].custom_id).toBe("my_select");
+    expect((back as any).components[0].options).toHaveLength(2);
+  });
+
+  it("round-trips a user select component", () => {
+    const state = parseComponentState({ type: 5, custom_id: "user_picker", placeholder: "Pick user" } as any);
+    expect(state.type).toBe("user_select");
+    if (state.type !== "user_select") throw new Error("wrong type");
+    expect(state.customId).toBe("user_picker");
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(1);
+    expect((back as any).components[0].type).toBe(5);
+    expect((back as any).components[0].custom_id).toBe("user_picker");
+  });
+
+  it("returns null for empty action row (no buttons, no select)", () => {
+    const state = parseComponentState({ type: 1, components: [] } as any);
+    expect(state.type).toBe("action_row");
+    const result = serializeComponentState(state as any);
+    expect(result).toBeNull();
+  });
+
+  it("wraps standalone select menus in an action row during serialization", () => {
+    const state = parseComponentState({ type: 5, custom_id: "u_sel", placeholder: "Pick" } as any);
+    expect(state.type).toBe("user_select");
+    const back = serializeComponentState(state as any);
+    expect((back as any)?.type).toBe(1);
+    expect((back as any)?.components[0].type).toBe(5);
+    expect((back as any)?.components[0].custom_id).toBe("u_sel");
+  });
+
+  it("filters empty action rows and wraps standalone selects in stateToPayload", () => {
+    const msg: MessageState = {
+      id: "m1",
+      mode: "v2",
+      embeds: [],
+      content: "",
+      components: [
+        { id: "ar1", type: "action_row", buttons: [] }, // empty → filtered
+        { id: "us1", type: "user_select", customId: "sel1", placeholder: "", minValues: 1, maxValues: 1, disabled: false }, // wrapped
+      ],
+    };
+    const payload = stateToPayload([msg], EMPTY_MESSAGE_PROFILE);
+    const comps = (payload as any).components as any[];
+    expect(comps).toHaveLength(1);
+    expect(comps[0].type).toBe(1); // action row wrapper
+    expect(comps[0].components[0].type).toBe(5); // user select inside
+  });
+
+  it("round-trips an action row with a string select", () => {
+    const state = parseComponentState({
+      type: 1,
+      components: [{ type: 3, custom_id: "sel", options: [{ label: "A", value: "a" }] }],
+    } as any);
+    expect(state.type).toBe("action_row");
+    if (state.type !== "action_row") throw new Error("wrong type");
+    expect(state.selectMenu?.type).toBe("string_select");
+    expect(state.buttons).toHaveLength(0);
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(1);
+    expect((back as any).components[0].type).toBe(3);
+  });
+
+  it("round-trips a section with button accessory", () => {
+    const state = parseComponentState({
+      type: 9,
+      components: [{ type: 10, content: "Click the button" }],
+      accessory: { type: 2, style: 1, label: "Go!" },
+    } as any);
+    expect(state.type).toBe("section");
+    if (state.type !== "section") throw new Error("wrong type");
+    expect(state.accessoryType).toBe("button");
+    expect(state.buttonLabel).toBe("Go!");
+    expect(state.buttonStyle).toBe(1);
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(9);
+    expect((back as any).accessory?.type).toBe(2);
+    expect((back as any).accessory?.label).toBe("Go!");
+  });
+
+  it("omits accessory when section accessoryType is none", () => {
+    const state = parseComponentState({
+      type: 9,
+      components: [{ type: 10, content: "No accessory" }],
+    } as any);
+    expect(state.type).toBe("section");
+    if (state.type !== "section") throw new Error("wrong type");
+    expect(state.accessoryType).toBe("none");
+    const back = serializeComponentState(state as any);
+    expect((back as any).accessory).toBeUndefined();
   });
 });
 

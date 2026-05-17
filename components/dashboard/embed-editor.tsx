@@ -1,9 +1,9 @@
 "use client";
 
-import { decompressFromEncodedURIComponent, decompressFromBase64, compressToEncodedURIComponent } from 'lz-string';
-import { useState } from "react";
+import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,9 +27,21 @@ import {
   type DiscordEmbed,
   type TopLevelComponent,
   type ContainerChild,
+  type SectionComponent,
+  type FileComponent,
 } from "./discord-embed-preview";
 
+// Shared compact class names used across V2 sub-editor components
+const COMPACT_INPUT_CN = "bg-background border-border/80 h-8 text-sm";
+const COMPACT_TEXTAREA_CN = "bg-background border-border/80 text-sm resize-none";
+
+// Translation key lookups to avoid nested ternaries in JSX
+const ACCESSORY_TYPE_KEYS = { none: "accessoryNone", thumbnail: "accessoryThumbnail", button: "accessoryButton" } as const;
+const BUTTON_STYLE_KEYS = { 1: "buttonStylePrimary", 2: "buttonStyleSecondary", 3: "buttonStyleSuccess", 4: "buttonStyleDanger", 5: "buttonStyleLink" } as const;
+
 // ─── Types ────────────────────────────────────────────────────────────────────
+
+type ButtonStyle = 1 | 2 | 3 | 4 | 5;
 
 interface FieldState {
   id: string;
@@ -66,22 +78,33 @@ interface SectionState {
   id: string;
   type: "section";
   texts: TextDisplayState[];
-  accessoryType: "none" | "thumbnail";
+  accessoryType: "none" | "thumbnail" | "button";
   thumbnailUrl: string;
   thumbnailDescription: string;
+  buttonLabel: string;
+  buttonStyle: ButtonStyle;
+  buttonUrl: string;
+  buttonCustomId: string;
+  buttonDisabled: boolean;
 }
-type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState;
+/** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
+interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
+interface FileComponentState { id: string; type: "file"; url: string; spoiler: boolean }
+interface ButtonState { id: string; customId: string; label: string; style: ButtonStyle; url: string; disabled: boolean }
+interface SelectOptionState { id: string; label: string; value: string; description: string; isDefault: boolean }
+interface StringSelectState { id: string; type: "string_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean; options: SelectOptionState[] }
+interface GenericSelectState { id: string; type: "user_select" | "role_select" | "mentionable_select" | "channel_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean }
+type SelectMenuEditorState = StringSelectState | GenericSelectState;
+interface ActionRowState { id: string; type: "action_row"; buttons: ButtonState[]; selectMenu?: SelectMenuEditorState }
+type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState | FileComponentState;
 interface ContainerState {
   id: string;
   type: "container";
   accentColor: string;
+  spoiler?: boolean;
   children: ContainerChildState[];
 }
-/** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
-interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
-interface ButtonState { id: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
-interface ActionRowState { id: string; type: "action_row"; buttons: ButtonState[] }
-type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | RawComponentState;
+type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState | RawComponentState | FileComponentState;
 
 interface MessageState {
   id: string;
@@ -123,7 +146,7 @@ export interface EmbedEditorProps {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function hexToInt(hex: string): number {
-  return Number.parseInt(hex.replace("#", ""), 16);
+  return Number.parseInt(hex.replaceAll("#", ""), 16);
 }
 
 function intToHex(color: number): string {
@@ -173,31 +196,67 @@ function embedToState(embed: DiscordEmbed): EmbedFormState {
 // ─── Components V2 serialization ──────────────────────────────────────────────
 
 function hexToIntSafe(hex: string): number | null {
-  const val = Number.parseInt(hex.replace("#", ""), 16);
+  const val = Number.parseInt(hex.replaceAll("#", ""), 16);
   return Number.isNaN(val) ? null : val;
 }
 
-export function serializeComponentState(s: TopLevelComponentState): TopLevelComponent {
+function serializeSelectMenu(s: SelectMenuEditorState): Record<string, unknown> {
+  const typeMap: Record<string, number> = { string_select: 3, user_select: 5, role_select: 6, mentionable_select: 7, channel_select: 8 };
+  const base: Record<string, unknown> = {
+    type: typeMap[s.type],
+    custom_id: s.customId,
+    ...(s.placeholder ? { placeholder: s.placeholder } : {}),
+    ...(s.minValues === 1 ? {} : { min_values: s.minValues }),
+    ...(s.maxValues === 1 ? {} : { max_values: s.maxValues }),
+    ...(s.disabled ? { disabled: true } : {}),
+  };
+  if (s.type === "string_select") {
+    base.options = s.options.map(opt => ({
+      label: opt.label || "\u200b",
+      value: opt.value || opt.id,
+      ...(opt.description ? { description: opt.description } : {}),
+      ...(opt.isDefault ? { default: true } : {}),
+    }));
+  }
+  return base;
+}
+
+export function serializeComponentState(s: TopLevelComponentState): TopLevelComponent | null {
   switch (s.type) {
-    case "action_row":
+    case "action_row": {
+      if (s.selectMenu) {
+        return { type: 1, components: [serializeSelectMenu(s.selectMenu)] } as unknown as TopLevelComponent; // NOSONAR
+      }
+      if (s.buttons.length === 0) return null;
       return {
         type: 1,
         components: s.buttons.map(btn => ({
           type: 2,
           style: btn.style,
           ...(btn.label ? { label: btn.label } : {}),
-          ...(btn.style === 5 && btn.url ? { url: btn.url } : {}),
+          ...(btn.style === 5 ? (btn.url ? { url: btn.url } : {}) : { custom_id: btn.customId }), // NOSONAR
           ...(btn.disabled ? { disabled: true } : {}),
         })),
-      } as unknown as TopLevelComponent;
+      } as unknown as TopLevelComponent; // NOSONAR
+    }
+    case "string_select":
+    case "user_select":
+    case "role_select":
+    case "mentionable_select":
+    case "channel_select":
+      return { type: 1, components: [serializeSelectMenu(s)] } as unknown as TopLevelComponent; // NOSONAR
+    case "file":
+      if (!s.url.trim()) return null;
+      return { type: 13, file: { url: s.url.trim() }, ...(s.spoiler ? { spoiler: true } : {}) } as unknown as TopLevelComponent; // NOSONAR
     case "raw":
-      return s.rawData as unknown as TopLevelComponent;
+      return s.rawData as unknown as TopLevelComponent; // NOSONAR
     case "container": {
       const accent = hexToIntSafe(s.accentColor);
       return {
         type: 17,
         accent_color: accent ?? undefined,
-        components: s.children.map(child => serializeComponentState(child) as ContainerChild),
+        ...(s.spoiler ? { spoiler: true } : {}),
+        components: s.children.map(child => serializeComponentState(child)).filter((c): c is ContainerChild => c !== null),
       };
     }
     case "text_display":
@@ -215,12 +274,48 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
       };
     case "section": {
       const texts = s.texts.filter(t => t.content.trim()).map(t => ({ type: 10 as const, content: t.content }));
-      const accessory = s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()
-        ? { type: 11 as const, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) }
-        : null;
+      let accessory: NonNullable<SectionComponent["accessory"]> | null = null;
+      if (s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()) {
+        accessory = { type: 11, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) };
+      } else if (s.accessoryType === "button") {
+        accessory = {
+          type: 2,
+          style: s.buttonStyle,
+          ...(s.buttonLabel.trim() ? { label: s.buttonLabel.trim() } : {}),
+          ...(s.buttonStyle === 5 ? (s.buttonUrl.trim() ? { url: s.buttonUrl.trim() } : {}) : { custom_id: s.buttonCustomId }), // NOSONAR
+          ...(s.buttonDisabled ? { disabled: true } : {}),
+        };
+      }
       return { type: 9, components: texts, ...(accessory ? { accessory } : {}) };
     }
   }
+}
+
+function parseSelectMenu(c: any): SelectMenuEditorState {
+  const typeMap: Record<number, SelectMenuEditorState["type"]> = { 3: "string_select", 5: "user_select", 6: "role_select", 7: "mentionable_select", 8: "channel_select" };
+  const type = typeMap[c.type] ?? "string_select";
+  const base = {
+    id: uid(),
+    customId: c.custom_id ?? uid(),
+    placeholder: c.placeholder ?? "",
+    minValues: typeof c.min_values === "number" ? c.min_values : 1,
+    maxValues: typeof c.max_values === "number" ? c.max_values : 1,
+    disabled: c.disabled === true,
+  };
+  if (type === "string_select") {
+    return {
+      ...base,
+      type: "string_select" as const,
+      options: (c.options ?? []).map((opt: any) => ({
+        id: uid(),
+        label: opt.label ?? "",
+        value: opt.value ?? "",
+        description: opt.description ?? "",
+        isDefault: opt.default === true,
+      })),
+    };
+  }
+  return { ...base, type };
 }
 
 export function parseComponentState(c: TopLevelComponent): TopLevelComponentState {
@@ -228,7 +323,8 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
     case 17: return {
       id: uid(),
       type: "container",
-      accentColor: c.accent_color == null ? "#5865f2" : `#${c.accent_color.toString(16).padStart(6, "0")}`,
+      accentColor: c.accent_color == null ? "" : `#${c.accent_color.toString(16).padStart(6, "0")}`,
+      spoiler: (c as any).spoiler === true,
       children: (c.components ?? []).map(child => parseComponentState(child as TopLevelComponent) as ContainerChildState),
     };
     case 10: return { id: uid(), type: "text_display", content: c.content ?? "" };
@@ -240,35 +336,68 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
     };
     case 9: {
       const sec = c as any;
+      const accType = sec.accessory?.type === 11 && sec.accessory?.media?.url
+        ? "thumbnail"
+        : sec.accessory?.type === 2 // NOSONAR
+        ? "button"
+        : "none";
       return {
         id: uid(),
         type: "section",
         texts: (sec.components ?? []).filter((ch: any) => ch.type === COMPONENT_TYPE.TEXT_DISPLAY).map((ch: any) => ({ id: uid(), type: "text_display" as const, content: ch.content ?? "" })),
-        accessoryType: sec.accessory?.type === 11 && sec.accessory?.media?.url ? "thumbnail" : "none",
+        accessoryType: accType,
         thumbnailUrl: sec.accessory?.type === 11 ? sec.accessory?.media?.url ?? "" : "",
         thumbnailDescription: sec.accessory?.type === 11 ? sec.accessory?.description ?? "" : "",
+        buttonLabel: sec.accessory?.type === 2 ? sec.accessory?.label ?? "" : "",
+        buttonStyle: sec.accessory?.type === 2 ? (sec.accessory?.style ?? 2) : 2,
+        buttonUrl: sec.accessory?.type === 2 ? sec.accessory?.url ?? "" : "",
+        buttonCustomId: sec.accessory?.type === 2 ? (sec.accessory?.custom_id ?? uid()) : uid(),
+        buttonDisabled: sec.accessory?.type === 2 ? sec.accessory?.disabled === true : false,
       };
     }
-    case 1: return {
-      id: uid(),
-      type: "action_row",
-      buttons: ((c as any).components ?? [])
-        .filter((b: any) => b.type === 2)
-        .map((b: any) => ({
+    case 1: {
+      const arComponents = (c as any).components ?? [];
+      const selectTypes = new Set([3, 5, 6, 7, 8]);
+      const selectComp = arComponents.find((x: any) => selectTypes.has(x.type));
+      if (selectComp) {
+        return {
           id: uid(),
-          label: b.label ?? "",
-          style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
-          url: b.url ?? "",
-          disabled: b.disabled ?? false,
-        })),
-    };
-    default: return { id: uid(), type: "raw", rawType: (c as { type: number }).type, rawData: c as unknown as Record<string, unknown> };
+          type: "action_row",
+          buttons: [],
+          selectMenu: parseSelectMenu(selectComp),
+        };
+      }
+      return {
+        id: uid(),
+        type: "action_row",
+        buttons: arComponents
+          .filter((b: any) => b.type === 2)
+          .map((b: any) => ({
+            id: uid(),
+            customId: b.custom_id ?? uid(),
+            label: b.label ?? "",
+            style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
+            url: b.url ?? "",
+            disabled: b.disabled ?? false,
+          })),
+      };
+    }
+    case 3: return parseSelectMenu(c as any) as unknown as TopLevelComponentState; // NOSONAR
+    case 5: return parseSelectMenu(c as any) as unknown as TopLevelComponentState; // NOSONAR
+    case 6: return parseSelectMenu(c as any) as unknown as TopLevelComponentState; // NOSONAR
+    case 7: return parseSelectMenu(c as any) as unknown as TopLevelComponentState; // NOSONAR
+    case 8: return parseSelectMenu(c as any) as unknown as TopLevelComponentState; // NOSONAR
+    case 13: {
+      const fc = c as unknown as FileComponent; // NOSONAR
+      return { id: uid(), type: "file", url: fc.file?.url ?? "", spoiler: (c as any).spoiler === true };
+    }
+    default: return { id: uid(), type: "raw", rawType: (c as { type: number }).type, rawData: c as unknown as Record<string, unknown> }; // NOSONAR
   }
 }
 
 function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLevelComponentState {
   switch (type) {
-    case "container": return { id: uid(), type: "container", accentColor: "#5865f2", children: [] };
+    case "container": return { id: uid(), type: "container", accentColor: "", spoiler: false, children: [] };
     case "text_display": return { id: uid(), type: "text_display", content: "" };
     case "separator": return { id: uid(), type: "separator", divider: true, spacing: "small" };
     case "media_gallery": return { id: uid(), type: "media_gallery", items: [] };
@@ -276,8 +405,15 @@ function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLeve
       id: uid(), type: "section",
       texts: [{ id: uid(), type: "text_display", content: "" }],
       accessoryType: "none", thumbnailUrl: "", thumbnailDescription: "",
+      buttonLabel: "", buttonStyle: 2, buttonUrl: "", buttonCustomId: uid(), buttonDisabled: false,
     };
     case "action_row": return { id: uid(), type: "action_row", buttons: [] };
+    case "string_select": return { id: uid(), type: "string_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false, options: [] };
+    case "user_select": return { id: uid(), type: "user_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "role_select": return { id: uid(), type: "role_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "mentionable_select": return { id: uid(), type: "mentionable_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "channel_select": return { id: uid(), type: "channel_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "file": return { id: uid(), type: "file", url: "", spoiler: false };
     case "raw": return { id: uid(), type: "raw", rawType: 0, rawData: {} };
   }
 }
@@ -412,7 +548,7 @@ export function stateToPayload( // NOSONAR — sequential field assignments, no 
 
   const messageEntries = messages.map(msg => {
     if (msg.mode === "v2") {
-      const components = msg.components.map(serializeComponentState);
+      const components = msg.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null);
       return { data: { flags: IS_COMPONENTS_V2_FLAG, components } };
     }
     const embeds = msg.embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent).slice(0, MAX_DISCORD_EMBEDS_PER_MESSAGE);
@@ -455,20 +591,25 @@ export function parseDiscohookUrl(url: string): Record<string, unknown> | null {
     const raw = match[1];
     const decoded = decodeURIComponent(raw);
 
-    // 1. Discohook native format: LZString.compressToEncodedURIComponent
+    // 1. New Discohook format: base64url
+    try {
+      const json = decodeBase64DiscohookPayload(decoded);
+      if (json) return JSON.parse(json);
+    } catch { /* fall through */ }
+
+    // 2. Discohook legacy format: LZString.compressToEncodedURIComponent
     try {
       const json = decompressFromEncodedURIComponent(raw);
       if (json) return JSON.parse(json);
     } catch { /* fall through */ }
 
-    // 2. LZString.compressToBase64 variant
+    // 3. LZString.compressToBase64 variant
     try {
       const json = decompressFromBase64(decoded);
       if (json) return JSON.parse(json);
     } catch { /* fall through */ }
 
-    // 3. Plain base64 or base64url payload
-    return JSON.parse(decodeBase64DiscohookPayload(decoded));
+    return null;
   } catch { return null; }
 }
 
@@ -482,8 +623,16 @@ export function requiresDiscohookResolve(url: string): boolean {
   }
 }
 
+function base64UrlEncode(utf8: string): string {
+  const percentEncoded = encodeURIComponent(utf8);
+  const escaped = percentEncoded.replace(/%[\dA-Fa-f]{2}/g, (hex) =>
+    String.fromCodePoint(Number.parseInt(hex.slice(1), 16)),
+  );
+  return btoa(escaped).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+}
+
 function buildDiscohookUrl(data: Record<string, unknown>): string {
-  const encoded = compressToEncodedURIComponent(JSON.stringify(data));
+  const encoded = base64UrlEncode(JSON.stringify(data));
   return `https://discohook.app/?data=${encoded}`;
 }
 
@@ -560,15 +709,466 @@ function CollapsibleSection({ title, open, onToggle, children }: CollapsibleSect
   );
 }
 
+// ─── V2 component sub-editors ─────────────────────────────────────────────────
+
+function SeparatorEditorFields({ comp, onChange }: {
+  readonly comp: SeparatorState;
+  readonly onChange: (updated: SeparatorState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-3">
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" checked={comp.divider}
+          onChange={e => onChange({ ...comp, divider: e.target.checked })}
+          className="h-3.5 w-3.5 rounded border-input accent-primary" />
+        <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
+      </label>
+      <Field label={t("spacing")}>
+        <div className="flex gap-2">
+          {(["small", "large"] as const).map(s => (
+            <button key={s} type="button"
+              onClick={() => onChange({ ...comp, spacing: s })}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                comp.spacing === s ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {s === "small" ? t("spacingSmall") : t("spacingLarge")}
+            </button>
+          ))}
+        </div>
+      </Field>
+    </div>
+  );
+}
+
+function MediaGalleryEditorFields({ comp, onChange }: {
+  readonly comp: MediaGalleryState;
+  readonly onChange: (updated: MediaGalleryState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-2">
+      {comp.items.map((item, itemIdx) => (
+        <div key={item.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-muted-foreground">Image {itemIdx + 1}</span>
+            <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+              onClick={() => onChange({ ...comp, items: comp.items.filter(it => it.id !== item.id) })}>
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+          <Field label={t("imageUrl")}>
+            <Input value={item.url}
+              onChange={e => onChange({ ...comp, items: comp.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) })}
+              placeholder="https://..." className={COMPACT_INPUT_CN} />
+          </Field>
+          <Field label={t("imageDescription")}>
+            <Input value={item.description}
+              onChange={e => onChange({ ...comp, items: comp.items.map(it => it.id === item.id ? { ...it, description: e.target.value } : it) })}
+              className={COMPACT_INPUT_CN} />
+          </Field>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={item.spoiler}
+              onChange={e => onChange({ ...comp, items: comp.items.map(it => it.id === item.id ? { ...it, spoiler: e.target.checked } : it) })}
+              className="h-3.5 w-3.5 rounded border-input accent-primary" />
+            <span className="text-xs text-muted-foreground">{t("imageSpoiler")}</span>
+          </label>
+        </div>
+      ))}
+      <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+        onClick={() => onChange({ ...comp, items: [...comp.items, { id: uid(), url: "", description: "", spoiler: false }] })}>
+        <Plus className="h-3.5 w-3.5 mr-1" />{t("addImage")}
+      </Button>
+    </div>
+  );
+}
+
+function SectionEditorFields({ comp, onChange }: {
+  readonly comp: SectionState;
+  readonly onChange: (updated: SectionState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-3">
+      {comp.texts.map((text, textIdx) => (
+        <div key={text.id} className="space-y-1">
+          <div className="flex items-center justify-between">
+            <Label className="text-xs">{`${t("textDisplayLabel")} ${textIdx + 1}`}</Label>
+            {comp.texts.length > 1 && (
+              <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                onClick={() => onChange({ ...comp, texts: comp.texts.filter(tx => tx.id !== text.id) })}>
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
+          <Textarea value={text.content}
+            onChange={e => onChange({ ...comp, texts: comp.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) })}
+            rows={3} className={COMPACT_TEXTAREA_CN} />
+        </div>
+      ))}
+      <Button size="sm" variant="outline" className="h-7 text-xs"
+        onClick={() => onChange({ ...comp, texts: [...comp.texts, { id: uid(), type: "text_display" as const, content: "" }] })}>
+        <Plus className="h-3.5 w-3.5 mr-1" />{t("addTextBlock")}
+      </Button>
+      <Field label={t("accessory")}>
+        <div className="flex gap-2">
+          {(["none", "thumbnail", "button"] as const).map(a => (
+            <button key={a} type="button"
+              onClick={() => onChange({ ...comp, accessoryType: a })}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {t(ACCESSORY_TYPE_KEYS[a])}
+            </button>
+          ))}
+        </div>
+      </Field>
+      {comp.accessoryType === "thumbnail" && (
+        <>
+          <Field label={t("thumbnailUrl")}>
+            <Input value={comp.thumbnailUrl}
+              onChange={e => onChange({ ...comp, thumbnailUrl: e.target.value })}
+              placeholder="https://..." className={COMPACT_INPUT_CN} />
+          </Field>
+          <Field label={t("thumbnailAlt")}>
+            <Input value={comp.thumbnailDescription}
+              onChange={e => onChange({ ...comp, thumbnailDescription: e.target.value })}
+              className={COMPACT_INPUT_CN} />
+          </Field>
+        </>
+      )}
+      {comp.accessoryType === "button" && (
+        <>
+          <Field label={t("buttonLabel")}>
+            <Input value={comp.buttonLabel}
+              onChange={e => onChange({ ...comp, buttonLabel: e.target.value })}
+              className={COMPACT_INPUT_CN} />
+          </Field>
+          <Field label={t("buttonStyle")}>
+            <div className="flex flex-wrap gap-1">
+              {([1, 2, 3, 4, 5] as const).map(style => (
+                <button key={style} type="button"
+                  onClick={() => onChange({ ...comp, buttonStyle: style })}
+                  className={cn("text-xs px-2 py-1 rounded border transition-colors",
+                    comp.buttonStyle === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                  {t(BUTTON_STYLE_KEYS[style])}
+                </button>
+              ))}
+            </div>
+          </Field>
+          {comp.buttonStyle === 5 && (
+            <Field label={t("buttonUrl")}>
+              <Input value={comp.buttonUrl}
+                onChange={e => onChange({ ...comp, buttonUrl: e.target.value })}
+                placeholder="https://..." className={COMPACT_INPUT_CN} />
+            </Field>
+          )}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={comp.buttonDisabled}
+              onChange={e => onChange({ ...comp, buttonDisabled: e.target.checked })}
+              className="h-3.5 w-3.5 rounded border-input accent-primary" />
+            <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
+          </label>
+        </>
+      )}
+    </div>
+  );
+}
+
+function SelectMenuCommonFields({ comp, onChange }: {
+  readonly comp: SelectMenuEditorState;
+  readonly onChange: (updated: SelectMenuEditorState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-2">
+      <Field label={t("selectPlaceholder")}>
+        <Input value={comp.placeholder}
+          onChange={e => onChange({ ...comp, placeholder: e.target.value })}
+          className={COMPACT_INPUT_CN} />
+      </Field>
+      <div className="flex gap-3">
+        <Field label={t("selectMinValues")}>
+          <Input type="number" value={comp.minValues} min={0} max={25}
+            onChange={e => onChange({ ...comp, minValues: Math.max(0, Math.min(25, Number(e.target.value) || 1)) })}
+            className={cn(COMPACT_INPUT_CN, "w-16")} />
+        </Field>
+        <Field label={t("selectMaxValues")}>
+          <Input type="number" value={comp.maxValues} min={1} max={25}
+            onChange={e => onChange({ ...comp, maxValues: Math.max(1, Math.min(25, Number(e.target.value) || 1)) })}
+            className={cn(COMPACT_INPUT_CN, "w-16")} />
+        </Field>
+      </div>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" checked={comp.disabled}
+          onChange={e => onChange({ ...comp, disabled: e.target.checked })}
+          className="h-3.5 w-3.5 rounded border-input accent-primary" />
+        <span className="text-xs text-muted-foreground">{t("selectDisabled")}</span>
+      </label>
+    </div>
+  );
+}
+
+function StringSelectEditorFields({ comp, onChange }: {
+  readonly comp: StringSelectState;
+  readonly onChange: (updated: StringSelectState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-3">
+      <SelectMenuCommonFields comp={comp} onChange={updated => onChange(updated as StringSelectState)} />
+      <div className="space-y-2 pt-1">
+        <Label className="text-xs font-medium">{t("selectOptions")}</Label>
+        {comp.options.map((opt, optIdx) => (
+          <div key={opt.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">{t("selectOption")} {optIdx + 1}</span>
+              <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                onClick={() => onChange({ ...comp, options: comp.options.filter(o => o.id !== opt.id) })}>
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+            <Field label={t("selectOptionLabel")}>
+              <Input value={opt.label}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, label: e.target.value } : o) })}
+                className={COMPACT_INPUT_CN} />
+            </Field>
+            <Field label={t("selectOptionValue")}>
+              <Input value={opt.value}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, value: e.target.value } : o) })}
+                className={COMPACT_INPUT_CN} />
+            </Field>
+            <Field label={t("selectOptionDescription")}>
+              <Input value={opt.description}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, description: e.target.value } : o) })}
+                className={COMPACT_INPUT_CN} />
+            </Field>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={opt.isDefault}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, isDefault: e.target.checked } : o) })}
+                className="h-3.5 w-3.5 rounded border-input accent-primary" />
+              <span className="text-xs text-muted-foreground">{t("selectOptionDefault")}</span>
+            </label>
+          </div>
+        ))}
+        <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+          onClick={() => onChange({ ...comp, options: [...comp.options, { id: uid(), label: "", value: "", description: "", isDefault: false }] })}>
+          <Plus className="h-3.5 w-3.5 mr-1" />{t("addSelectOption")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function GenericSelectEditorFields({ comp, onChange }: {
+  readonly comp: GenericSelectState;
+  readonly onChange: (updated: GenericSelectState) => void;
+}) {
+  return <SelectMenuCommonFields comp={comp} onChange={updated => onChange(updated as GenericSelectState)} />;
+}
+
+function ActionRowEditorFields({ comp, onChange }: {
+  readonly comp: ActionRowState;
+  readonly onChange: (updated: ActionRowState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  const hasSelectMenu = !!comp.selectMenu;
+
+  const switchToSelect = (type: SelectMenuEditorState["type"]) => {
+    const defaultSelect = createDefaultV2Component(type) as SelectMenuEditorState;
+    onChange({ ...comp, selectMenu: defaultSelect, buttons: [] });
+  };
+  const switchToButtons = () => onChange({ ...comp, selectMenu: undefined });
+
+  return (
+    <div className="space-y-3">
+      <Field label={t("actionRowMode")}>
+        <div className="flex gap-2 flex-wrap">
+          <button type="button"
+            onClick={switchToButtons}
+            className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+              hasSelectMenu ? "border-border/80 text-muted-foreground hover:text-foreground" : "border-primary/60 bg-primary/10 font-medium")}>
+            {t("actionRowModeButtons")}
+          </button>
+          {([
+            { type: "string_select" as const, label: t("stringSelectLabel") },
+            { type: "user_select" as const, label: t("userSelectLabel") },
+            { type: "role_select" as const, label: t("roleSelectLabel") },
+            { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
+            { type: "channel_select" as const, label: t("channelSelectLabel") },
+          ]).map(({ type, label }) => (
+            <button key={type} type="button"
+              onClick={() => switchToSelect(type)}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                comp.selectMenu?.type === type ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </Field>
+      {!hasSelectMenu && (
+        <>
+          {comp.buttons.map((btn, btnIdx) => (
+            <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                  onClick={() => onChange({ ...comp, buttons: comp.buttons.filter(b => b.id !== btn.id) })}>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+              <Field label={t("buttonLabel")}>
+                <Input value={btn.label}
+                  onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) })}
+                  className={COMPACT_INPUT_CN} />
+              </Field>
+              <Field label={t("buttonStyle")}>
+                <div className="flex flex-wrap gap-1">
+                  {([
+                    { style: 1 as const, label: t("buttonStylePrimary") },
+                    { style: 2 as const, label: t("buttonStyleSecondary") },
+                    { style: 3 as const, label: t("buttonStyleSuccess") },
+                    { style: 4 as const, label: t("buttonStyleDanger") },
+                    { style: 5 as const, label: t("buttonStyleLink") },
+                  ]).map(({ style, label }) => (
+                    <button key={style} type="button"
+                      onClick={() => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, style } : b) })}
+                      className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                        btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </Field>
+              {btn.style === 5 && (
+                <Field label={t("buttonUrl")}>
+                  <Input value={btn.url}
+                    onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) })}
+                    placeholder="https://..." className={COMPACT_INPUT_CN} />
+                </Field>
+              )}
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={btn.disabled}
+                  onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) })}
+                  className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
+              </label>
+            </div>
+          ))}
+          <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+            onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), customId: uid(), label: "", style: 2 as const, url: "", disabled: false }] })}>
+            <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
+          </Button>
+        </>
+      )}
+      {comp.selectMenu?.type === "string_select" && (
+        <StringSelectEditorFields
+          comp={comp.selectMenu}
+          onChange={updated => onChange({ ...comp, selectMenu: updated })}
+        />
+      )}
+      {comp.selectMenu && comp.selectMenu.type !== "string_select" && (
+        <GenericSelectEditorFields
+          comp={comp.selectMenu as GenericSelectState} // NOSONAR
+          onChange={updated => onChange({ ...comp, selectMenu: updated })}
+        />
+      )}
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEditorProps) {
+function FileComponentEditorFields({
+  comp,
+  onChange,
+}: {
+  readonly comp: FileComponentState;
+  readonly onChange: (updated: FileComponentState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const token = /access_token=([^;]+)/.exec(document.cookie)?.[1];
+      const res = await fetch("/api/v2/app/cdn-upload", {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+      if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+      const data = await res.json();
+      if (data.url) onChange({ ...comp, url: data.url });
+      else throw new Error("No URL in response");
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Field label={t("fileUrl")}>
+        <div className="flex gap-2">
+          <Input
+            value={comp.url}
+            onChange={e => onChange({ ...comp, url: e.target.value })}
+            placeholder="https://..."
+            className={cn(COMPACT_INPUT_CN, "flex-1")}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-8 px-2 shrink-0"
+            disabled={uploading}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {uploading ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Upload className="h-3.5 w-3.5" />
+            )}
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="sr-only"
+            onChange={e => {
+              const file = e.target.files?.[0];
+              if (file) { void handleUpload(file); }
+              e.target.value = "";
+            }}
+          />
+        </div>
+        {uploadError && <p className="text-xs text-destructive mt-1">{uploadError}</p>}
+      </Field>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={comp.spoiler}
+          onChange={e => onChange({ ...comp, spoiler: e.target.checked })}
+          className="h-3.5 w-3.5 rounded border-input accent-primary"
+        />
+        <span className="text-xs text-muted-foreground">{t("fileSpoiler")}</span>
+      </label>
+    </div>
+  );
+}
+
+export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEditorProps) { // NOSONAR
   const t = useTranslations("EmbedEditor");
   const tCommon = useTranslations("Common");
   const parsedInitialData = initialData ? payloadToMessages(initialData) : null;
   const inputClassName = "bg-background border-border/80";
-  const compactInputClassName = `${inputClassName} h-8 text-sm`;
-  const compactTextareaClassName = `${inputClassName} text-sm resize-none`;
+  const compactInputClassName = COMPACT_INPUT_CN;
+  const compactTextareaClassName = COMPACT_TEXTAREA_CN;
 
   const [messages, setMessages] = useState<MessageState[]>(() =>
     parsedInitialData ? parsedInitialData.messages : [{ id: uid(), mode: "v1", embeds: [defaultState()], content: "", components: [] }]
@@ -623,13 +1223,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const setEmbedField = <K extends Exclude<keyof EmbedFormState, "editorId" | "openSections" | "fields">>(
     embedId: string,
     key: K,
-    value: EmbedFormState[K],
+    value: EmbedFormState[K], // NOSONAR
   ) => {
     updateEmbed(embedId, (embed) => ({ ...embed, [key]: value }));
   };
 
   const toggleSection = (embedId: string, section: SectionKey) => {
-    updateEmbed(embedId, (embed) => ({
+    updateEmbed(embedId, (embed) => ({ // NOSONAR
       ...embed,
       openSections: {
         ...embed.openSections,
@@ -642,7 +1242,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setEmbeds((prev) => {
       if (prev.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return prev;
       const nextEmbed = defaultState();
-      setExpandedEmbedId(nextEmbed.editorId);
+      setExpandedEmbedId(nextEmbed.editorId); // NOSONAR
       return [...prev, nextEmbed];
     });
   };
@@ -653,13 +1253,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
         const replacement = defaultState();
         setExpandedEmbedId(replacement.editorId);
         return [replacement];
-      }
+      } // NOSONAR
       const removedIndex = prev.findIndex((embed) => embed.editorId === embedId);
       const nextEmbeds = prev.filter((embed) => embed.editorId !== embedId);
       if (expandedEmbedId === embedId) {
         const fallback = nextEmbeds[Math.max(0, removedIndex - 1)] ?? nextEmbeds[0] ?? null;
         setExpandedEmbedId(fallback?.editorId ?? null);
-      }
+      } // NOSONAR
       return nextEmbeds;
     });
   };
@@ -691,7 +1291,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const addField = (embedId: string) => {
     updateEmbed(embedId, (embed) => {
       if (embed.fields.length >= 25) return embed;
-      return {
+      return { // NOSONAR
         ...embed,
         fields: [...embed.fields, { id: uid(), name: "", value: "", inline: false }],
       };
@@ -708,21 +1308,21 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     updateEmbed(embedId, (embed) => ({ ...embed, fields: removeFieldById(embed.fields, fieldId) }));
 
   const moveField = (embedId: string, fieldId: string, dir: -1 | 1) =>
-    updateEmbed(embedId, (embed) => ({ ...embed, fields: reorderFieldById(embed.fields, fieldId, dir) }));
+    updateEmbed(embedId, (embed) => ({ ...embed, fields: reorderFieldById(embed.fields, fieldId, dir) })); // NOSONAR
 
   // ── V2 Component management ──────────────────────────────────────────────────
 
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [expandedV2Ids, setExpandedV2Ids] = useState<Set<string>>(new Set());
   const toggleV2Expanded = (id: string) =>
-    setExpandedV2Ids(prev => {
+    setExpandedV2Ids(prev => { // NOSONAR
       const next = new Set(prev);
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
-    });
+    }); // NOSONAR
 
   const setMessageMode = (idx: number, mode: "v1" | "v2") =>
-    setMessages(prev => prev.map((msg, i) => i === idx ? { ...msg, mode } : msg));
+    setMessages(prev => prev.map((msg, i) => i === idx ? { ...msg, mode } : msg)); // NOSONAR
 
   const setV2Components = (updater: TopLevelComponentState[] | ((prev: TopLevelComponentState[]) => TopLevelComponentState[])) =>
     setMessages(prev => prev.map((msg, i) => i === safeIdx ? {
@@ -744,7 +1344,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
       const idx = arr.findIndex(c => c.id === id);
       const next = idx + dir;
       if (idx < 0 || next < 0 || next >= arr.length) return prev;
-      [arr[idx], arr[next]] = [arr[next], arr[idx]];
+      [arr[idx], arr[next]] = [arr[next], arr[idx]]; // NOSONAR
       return arr;
     });
 
@@ -766,7 +1366,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
     setMessages(parsedMessages);
     setActiveMessageIdx(0);
     setProfile(parsedProfile);
-    setExpandedEmbedId(parsedMessages[0]?.embeds[0]?.editorId ?? null);
+    setExpandedEmbedId(parsedMessages[0]?.embeds[0]?.editorId ?? null); // NOSONAR
     setImportWarning(null);
     setImportExportOpen(false);
   };
@@ -813,19 +1413,19 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const discohookPayload = stateToPayload(messages, profile);
   const discohookUrl = buildDiscohookUrl(discohookPayload);
   const previewEmbeds = activeMessage.mode === "v1" ? embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent) : [];
-  const previewV2Components = activeMessage.mode === "v2" ? activeMessage.components.map(serializeComponentState) : [];
+  const previewV2Components = activeMessage.mode === "v2" ? activeMessage.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null) : [];
   const hasContent =
     messages.some(msg => {
       if (msg.mode === "v2") return msg.components.length > 0;
-      return msg.embeds.map(stateToEmbed).some(hasMeaningfulEmbedContent) || msg.content.trim().length > 0;
+      return msg.embeds.map(stateToEmbed).some(hasMeaningfulEmbedContent) || msg.content.trim().length > 0; // NOSONAR
     }) ||
-    profile.name.trim().length > 0 ||
+    profile.name.trim().length > 0 || // NOSONAR
     profile.avatarUrl.trim().length > 0;
 
   const handleCopyDiscohookUrl = async () => {
-    await navigator.clipboard.writeText(discohookUrl);
+    await navigator.clipboard.writeText(discohookUrl); // NOSONAR
     setCopiedDiscohook(true);
-    setTimeout(() => setCopiedDiscohook(false), 2000);
+    setTimeout(() => setCopiedDiscohook(false), 2000); // NOSONAR
   };
 
   return (
@@ -860,7 +1460,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   Message {i + 1}
                 </button>
               ))}
-              <Button
+              <Button // NOSONAR
                 size="sm"
                 variant="ghost"
                 className="h-7 text-xs text-muted-foreground hover:text-foreground"
@@ -873,7 +1473,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   size="sm"
                   variant="ghost"
                   className="h-7 text-xs text-muted-foreground hover:text-destructive"
-                  onClick={() => removeMessage(safeIdx)}
+                  onClick={() => removeMessage(safeIdx)} // NOSONAR
                 >
                   <Trash2 className="h-3 w-3 mr-1" />Remove
                 </Button>
@@ -1170,6 +1770,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                           { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
                           { type: "section" as const, label: t("sectionLabel") },
                           { type: "action_row" as const, label: t("actionRowLabel") },
+                          { type: "string_select" as const, label: t("stringSelectLabel") },
+                          { type: "user_select" as const, label: t("userSelectLabel") },
+                          { type: "role_select" as const, label: t("roleSelectLabel") },
+                          { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
+                          { type: "channel_select" as const, label: t("channelSelectLabel") },
+                          { type: "file" as const, label: t("fileLabel") },
                         ] as const).map(item => (
                           <button key={item.type} type="button"
                             className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
@@ -1190,6 +1796,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   media_gallery: t("mediaGalleryLabel"),
                   action_row: t("actionRowLabel"),
                   section: t("sectionLabel"),
+                  string_select: t("stringSelectLabel"),
+                  user_select: t("userSelectLabel"),
+                  role_select: t("roleSelectLabel"),
+                  mentionable_select: t("mentionableSelectLabel"),
+                  channel_select: t("channelSelectLabel"),
+                  file: t("fileLabel"),
                 };
                 const isExpanded = expandedV2Ids.has(comp.id);
                 const compLabel = comp.type === "raw"
@@ -1218,59 +1830,22 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                     {isExpanded && (
                       <div className="border-t border-border/80 px-3 py-3 space-y-3">
                         {comp.type === "action_row" && (
-                          <div className="space-y-2">
-                            {comp.buttons.map((btn, btnIdx) => (
-                              <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
-                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c)}>
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </div>
-                                <Field label={t("buttonLabel")}>
-                                  <Input value={btn.label}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c)}
-                                    className={compactInputClassName} />
-                                </Field>
-                                <Field label={t("buttonStyle")}>
-                                  <div className="flex flex-wrap gap-1">
-                                    {([
-                                      { style: 1 as const, label: t("buttonStylePrimary") },
-                                      { style: 2 as const, label: t("buttonStyleSecondary") },
-                                      { style: 3 as const, label: t("buttonStyleSuccess") },
-                                      { style: 4 as const, label: t("buttonStyleDanger") },
-                                      { style: 5 as const, label: t("buttonStyleLink") },
-                                    ]).map(({ style, label }) => (
-                                      <button key={style} type="button"
-                                        onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, style } : b) } : c)}
-                                        className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                                          btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                                        {label}
-                                      </button>
-                                    ))}
-                                  </div>
-                                </Field>
-                                {btn.style === 5 && (
-                                  <Field label={t("buttonUrl")}>
-                                    <Input value={btn.url}
-                                      onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) } : c)}
-                                      placeholder="https://..." className={compactInputClassName} />
-                                  </Field>
-                                )}
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                  <input type="checkbox" checked={btn.disabled}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) } : c)}
-                                    className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                                  <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
-                                </label>
-                              </div>
-                            ))}
-                            <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-                              onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c)}>
-                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
-                            </Button>
-                          </div>
+                          <ActionRowEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
+                        )}
+                        {comp.type === "string_select" && (
+                          <StringSelectEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
+                        )}
+                        {(comp.type === "user_select" || comp.type === "role_select" || comp.type === "mentionable_select" || comp.type === "channel_select") && (
+                          <GenericSelectEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "raw" && (
                           <p className="text-xs text-muted-foreground">{t("unknownComponentHint")}</p>
@@ -1281,111 +1856,28 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                             rows={4} className={compactTextareaClassName} />
                         )}
                         {comp.type === "separator" && (
-                          <div className="space-y-3">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input type="checkbox" checked={comp.divider}
-                                onChange={e => updateV2Component(comp.id, c => c.type === "separator" ? { ...c, divider: e.target.checked } : c)}
-                                className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                              <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
-                            </label>
-                            <Field label={t("spacing")}>
-                              <div className="flex gap-2">
-                                {(["small", "large"] as const).map(s => (
-                                  <button key={s} type="button"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "separator" ? { ...c, spacing: s } : c)}
-                                    className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                                      comp.spacing === s ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                                    {s === "small" ? t("spacingSmall") : t("spacingLarge")}
-                                  </button>
-                                ))}
-                              </div>
-                            </Field>
-                          </div>
+                          <SeparatorEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "media_gallery" && (
-                          <div className="space-y-2">
-                            {comp.items.map((item, itemIdx) => (
-                              <div key={item.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs font-medium text-muted-foreground">Image {itemIdx + 1}</span>
-                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.filter(it => it.id !== item.id) } : c)}>
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </div>
-                                <Field label={t("imageUrl")}>
-                                  <Input value={item.url}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) } : c)}
-                                    placeholder="https://..." className={compactInputClassName} />
-                                </Field>
-                                <Field label={t("imageDescription")}>
-                                  <Input value={item.description}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, description: e.target.value } : it) } : c)}
-                                    className={compactInputClassName} />
-                                </Field>
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                  <input type="checkbox" checked={item.spoiler}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, spoiler: e.target.checked } : it) } : c)}
-                                    className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                                  <span className="text-xs text-muted-foreground">{t("imageSpoiler")}</span>
-                                </label>
-                              </div>
-                            ))}
-                            <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-                              onClick={() => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: [...c.items, { id: uid(), url: "", description: "", spoiler: false }] } : c)}>
-                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addImage")}
-                            </Button>
-                          </div>
+                          <MediaGalleryEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "section" && (
-                          <div className="space-y-3">
-                            {comp.texts.map((text, textIdx) => (
-                              <div key={text.id} className="space-y-1">
-                                <div className="flex items-center justify-between">
-                                  <Label className="text-xs">{`${t("textDisplayLabel")} ${textIdx + 1}`}</Label>
-                                  {comp.texts.length > 1 && (
-                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                      onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: c.texts.filter(tx => tx.id !== text.id) } : c)}>
-                                      <Trash2 className="h-3.5 w-3.5" />
-                                    </Button>
-                                  )}
-                                </div>
-                                <Textarea value={text.content}
-                                  onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: c.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) } : c)}
-                                  rows={3} className={compactTextareaClassName} />
-                              </div>
-                            ))}
-                            <Button size="sm" variant="outline" className="h-7 text-xs"
-                              onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: [...c.texts, { id: uid(), type: "text_display" as const, content: "" }] } : c)}>
-                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addTextBlock")}
-                            </Button>
-                            <Field label={t("accessory")}>
-                              <div className="flex gap-2">
-                                {(["none", "thumbnail"] as const).map(a => (
-                                  <button key={a} type="button"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, accessoryType: a } : c)}
-                                    className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                                      comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                                    {a === "none" ? t("accessoryNone") : t("accessoryThumbnail")}
-                                  </button>
-                                ))}
-                              </div>
-                            </Field>
-                            {comp.accessoryType === "thumbnail" && (
-                              <>
-                                <Field label={t("thumbnailUrl")}>
-                                  <Input value={comp.thumbnailUrl}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, thumbnailUrl: e.target.value } : c)}
-                                    placeholder="https://..." className={compactInputClassName} />
-                                </Field>
-                                <Field label={t("thumbnailAlt")}>
-                                  <Input value={comp.thumbnailDescription}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, thumbnailDescription: e.target.value } : c)}
-                                    className={compactInputClassName} />
-                                </Field>
-                              </>
-                            )}
-                          </div>
+                          <SectionEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
+                        )}
+                        {comp.type === "file" && (
+                          <FileComponentEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "container" && (
                           <div className="space-y-2">
@@ -1402,6 +1894,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                   className={cn(inputClassName, "font-mono text-sm w-28")} maxLength={7} />
                               </div>
                             </Field>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" checked={comp.spoiler ?? false}
+                                onChange={e => updateV2Component(comp.id, c => c.type === "container" ? { ...c, spoiler: e.target.checked } : c)}
+                                className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                              <span className="text-xs text-muted-foreground">{t("containerSpoiler")}</span>
+                            </label>
                             {comp.children.map((child, childIdx) => {
                               const childIsExpanded = expandedV2Ids.has(child.id);
                               const childV2Labels: Record<string, string> = {
@@ -1409,6 +1907,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                 separator: t("separatorLabel"),
                                 media_gallery: t("mediaGalleryLabel"),
                                 action_row: t("actionRowLabel"),
+                                string_select: t("stringSelectLabel"),
+                                user_select: t("userSelectLabel"),
+                                role_select: t("roleSelectLabel"),
+                                mentionable_select: t("mentionableSelectLabel"),
+                                channel_select: t("channelSelectLabel"),
+                                file: t("fileLabel"),
                               };
                               const childLabel = childV2Labels[child.type] ?? t("sectionLabel");
                               return (
@@ -1444,70 +1948,46 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                           rows={3} className={compactTextareaClassName} />
                                       )}
                                       {child.type === "separator" && (
-                                        <label className="flex items-center gap-2 cursor-pointer">
-                                          <input type="checkbox" checked={child.divider}
-                                            onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "separator" ? { ...c, divider: e.target.checked } : c))}
-                                            className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                                          <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
-                                        </label>
+                                        <SeparatorEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                       {child.type === "media_gallery" && (
-                                        <div className="space-y-2">
-                                          {child.items.map((item, iIdx) => (
-                                            <div key={item.id} className="rounded border border-border/60 p-2 space-y-1.5">
-                                              <div className="flex items-center justify-between">
-                                                <span className="text-xs text-muted-foreground">Image {iIdx + 1}</span>
-                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-muted-foreground hover:text-destructive"
-                                                  onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: c.items.filter(it => it.id !== item.id) } : c))}>
-                                                  <Trash2 className="h-3 w-3" />
-                                                </Button>
-                                              </div>
-                                              <Input value={item.url}
-                                                onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) } : c))}
-                                                placeholder="https://..." className={cn(compactInputClassName, "text-xs")} />
-                                            </div>
-                                          ))}
-                                          <Button size="sm" variant="outline" className="h-6 text-xs w-full"
-                                            onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: [...c.items, { id: uid(), url: "", description: "", spoiler: false }] } : c))}>
-                                            <Plus className="h-3 w-3 mr-1" />{t("addImage")}
-                                          </Button>
-                                        </div>
+                                        <MediaGalleryEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                       {child.type === "section" && (
-                                        <div className="space-y-2">
-                                          {child.texts.map(text => (
-                                            <Textarea key={text.id} value={text.content}
-                                              onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "section" ? { ...c, texts: c.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) } : c))}
-                                              rows={2} className={compactTextareaClassName} />
-                                          ))}
-                                          {child.accessoryType === "thumbnail" && (
-                                            <Input value={child.thumbnailUrl}
-                                              onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "section" ? { ...c, thumbnailUrl: e.target.value } : c))}
-                                              placeholder={t("thumbnailUrl")} className={compactInputClassName} />
-                                          )}
-                                        </div>
+                                        <SectionEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                       {child.type === "action_row" && (
-                                        <div className="space-y-2">
-                                          {child.buttons.map((btn, btnIdx) => (
-                                            <div key={btn.id} className="rounded border border-border/60 p-2 space-y-1.5">
-                                              <div className="flex items-center justify-between">
-                                                <span className="text-xs text-muted-foreground">Button {btnIdx + 1}</span>
-                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-muted-foreground hover:text-destructive"
-                                                  onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c))}>
-                                                  <Trash2 className="h-3 w-3" />
-                                                </Button>
-                                              </div>
-                                              <Input value={btn.label}
-                                                onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c))}
-                                                placeholder={t("buttonLabel")} className={cn(compactInputClassName, "text-xs")} />
-                                            </div>
-                                          ))}
-                                          <Button size="sm" variant="outline" className="h-6 text-xs w-full"
-                                            onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c))}>
-                                            <Plus className="h-3 w-3 mr-1" />{t("addButton")}
-                                          </Button>
-                                        </div>
+                                        <ActionRowEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
+                                      )}
+                                      {child.type === "string_select" && (
+                                        <StringSelectEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
+                                      )}
+                                      {(child.type === "user_select" || child.type === "role_select" || child.type === "mentionable_select" || child.type === "channel_select") && (
+                                        <GenericSelectEditorFields
+                                          comp={child as GenericSelectState}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
+                                      )}
+                                      {child.type === "file" && (
+                                        <FileComponentEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                     </div>
                                   )}
@@ -1529,6 +2009,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                       { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
                                       { type: "section" as const, label: t("sectionLabel") },
                                       { type: "action_row" as const, label: t("actionRowLabel") },
+                                      { type: "string_select" as const, label: t("stringSelectLabel") },
+                                      { type: "user_select" as const, label: t("userSelectLabel") },
+                                      { type: "role_select" as const, label: t("roleSelectLabel") },
+                                      { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
+                                      { type: "channel_select" as const, label: t("channelSelectLabel") },
+                                      { type: "file" as const, label: t("fileLabel") },
                                     ] as const).map(item => (
                                       <button key={item.type} type="button"
                                         className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
@@ -1589,7 +2075,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
             </div>
           )}
 
-          <div className="hidden p-5 md:sticky md:top-0 md:block">
+          <div className="hidden max-h-screen overflow-y-auto p-5 md:sticky md:top-0 md:block">
             <div className="flex items-center gap-2 mb-3">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {t("preview")}

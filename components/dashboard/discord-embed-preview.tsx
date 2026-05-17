@@ -1,6 +1,7 @@
 "use client";
 
-import { ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, ExternalLink, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 
@@ -460,10 +461,16 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
 export const COMPONENT_TYPE = {
   ACTION_ROW: 1,
   BUTTON: 2,
+  STRING_SELECT: 3,
+  USER_SELECT: 5,
+  ROLE_SELECT: 6,
+  MENTIONABLE_SELECT: 7,
+  CHANNEL_SELECT: 8,
   SECTION: 9,
   TEXT_DISPLAY: 10,
   THUMBNAIL: 11,
   MEDIA_GALLERY: 12,
+  FILE: 13,
   SEPARATOR: 14,
   CONTAINER: 17,
 } as const;
@@ -490,10 +497,18 @@ export interface ButtonComponent {
   disabled?: boolean;
   id?: number;
 }
-export interface ActionRowComponent { type: 1; components: ButtonComponent[]; id?: number }
-export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
+export interface StringSelectOption { label: string; value?: string; description?: string; default?: boolean }
+export interface StringSelectComponent { type: 3; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; options?: StringSelectOption[]; id?: number }
+export interface UserSelectComponent { type: 5; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
+export interface RoleSelectComponent { type: 6; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
+export interface MentionableSelectComponent { type: 7; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
+export interface ChannelSelectComponent { type: 8; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; channel_types?: number[]; id?: number }
+export interface FileComponent { type: 13; file: { url: string; proxy_url?: string; content_type?: string }; name?: string; spoiler?: boolean; id?: number }
+export type SelectMenuComponent = StringSelectComponent | UserSelectComponent | RoleSelectComponent | MentionableSelectComponent | ChannelSelectComponent;
+export interface ActionRowComponent { type: 1; components: (ButtonComponent | SelectMenuComponent)[]; id?: number }
+export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent | FileComponent;
 export interface ContainerComponent { type: 17; accent_color?: number | null; spoiler?: boolean; components: ContainerChild[]; id?: number }
-export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
+export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent | FileComponent;
 
 export function isV2Payload(data: Record<string, unknown>): boolean {
   if (typeof (data as any).flags === 'number' && ((data as any).flags & IS_COMPONENTS_V2_FLAG) !== 0) return true;
@@ -510,7 +525,7 @@ export function isV2Payload(data: Record<string, unknown>): boolean {
 export function extractComponents(data: Record<string, unknown>): TopLevelComponent[] {
   const messages = (data as any)?.messages;
   if (Array.isArray(messages) && messages.length > 0) {
-    const components = messages[0]?.data?.components;
+    const components = messages[0]?.data?.components ?? messages[0]?.components;
     if (Array.isArray(components)) return components as TopLevelComponent[];
   }
   const components = (data as any)?.components;
@@ -543,13 +558,46 @@ function ButtonPreview({ button }: { readonly button: ButtonComponent }) {
   );
 }
 
+function SelectMenuPreview({ component }: { readonly component: SelectMenuComponent }) {
+  const [open, setOpen] = useState(false);
+  const placeholder = component.placeholder ?? "Make a selection";
+  const isString = component.type === COMPONENT_TYPE.STRING_SELECT;
+  const options = isString ? (component as StringSelectComponent).options ?? [] : []; // NOSONAR
+  return (
+    <div className={cn("flex flex-col gap-1 w-full", component.disabled && "opacity-50")}>
+      <button
+        type="button"
+        onClick={() => setOpen(prev => !prev)}
+        className="flex items-center justify-between px-3 py-2 rounded bg-[#1e1f22] border border-[#3b3d44] text-[#87898c] text-sm w-full"
+      >
+        <span>{placeholder}</span>
+        <ChevronDown className={cn("w-4 h-4 shrink-0 transition-transform", open && "rotate-180")} />
+      </button>
+      {open && isString && options.length > 0 && (
+        <div className="rounded border border-[#3b3d44] bg-[#2b2d31] overflow-hidden">
+          {options.slice(0, 25).map((opt, i) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={i} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
+              <span className="font-medium">{opt.label}</span>
+              {opt.description && <span className="ml-2 text-[#87898c]">{opt.description}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ActionRowPreview({ component }: { readonly component: ActionRowComponent }) {
-  const buttons = component.components ?? [];
-  if (buttons.length === 0) return null;
+  const items = component.components ?? [];
+  if (items.length === 0) return null;
+  const firstSelectType = new Set<number>([COMPONENT_TYPE.STRING_SELECT, COMPONENT_TYPE.USER_SELECT, COMPONENT_TYPE.ROLE_SELECT, COMPONENT_TYPE.MENTIONABLE_SELECT, COMPONENT_TYPE.CHANNEL_SELECT]);
+  const selectMenu = items.find(c => firstSelectType.has(c.type)) as SelectMenuComponent | undefined;
+  if (selectMenu) return <SelectMenuPreview component={selectMenu} />;
   return (
     <div className="flex flex-wrap gap-1 py-0.5">
-      {buttons.map((btn, i) => (
-        <ButtonPreview key={i} button={btn} /> // NOSONAR
+      {items.map((btn, i) => (
+        <ButtonPreview key={i} button={btn as ButtonComponent} /> // NOSONAR
       ))}
     </div>
   );
@@ -601,6 +649,7 @@ function V2MediaGalleryPreview({ component }: { readonly component: MediaGallery
 function V2SectionPreview({ component }: { readonly component: SectionComponent }) {
   const accessory = component.accessory ?? null;
   const isThumbnail = accessory?.type === COMPONENT_TYPE.THUMBNAIL;
+  const isButton = accessory?.type === COMPONENT_TYPE.BUTTON;
   return (
     <div className="flex justify-between gap-3">
       <div className="flex flex-col gap-1 flex-1 min-w-0">
@@ -610,16 +659,39 @@ function V2SectionPreview({ component }: { readonly component: SectionComponent 
             <V2TextDisplayPreview key={i} component={c as TextDisplayComponent} /> // NOSONAR
           ))}
       </div>
-      {isThumbnail && (accessory as ThumbnailComponent).media.url && (
+      {isThumbnail && (accessory as ThumbnailComponent).media.url && ( // NOSONAR
         <div className="w-[85px] h-[85px] shrink-0 overflow-hidden rounded-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={(accessory as ThumbnailComponent).media.url}
-            alt={(accessory as ThumbnailComponent).description ?? ""}
+            src={(accessory as ThumbnailComponent).media.url} // NOSONAR
+            alt={(accessory as ThumbnailComponent).description ?? ""} // NOSONAR
             className="w-full h-full object-cover"
           />
         </div>
       )}
+      {isButton && (
+        <div className="shrink-0 self-center">
+          <ButtonPreview button={accessory as ButtonComponent} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function V2FilePreview({ component }: { readonly component: FileComponent }) {
+  const url = component.file?.url ?? "";
+  const name = component.name ?? url.split("/").pop() ?? "File";
+  return (
+    <div className="relative">
+      {component.spoiler && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded bg-black/80 backdrop-blur-sm text-xs text-white cursor-pointer select-none">
+          SPOILER
+        </div>
+      )}
+      <div className={cn("flex items-center gap-2 rounded-md border border-border bg-card/50 px-3 py-2 text-sm", component.spoiler && "opacity-60")}>
+        <Paperclip className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <span className="truncate text-foreground/90">{name}</span>
+      </div>
     </div>
   );
 }
@@ -630,7 +702,14 @@ function V2ContainerChildPreview({ component }: { readonly component: ContainerC
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.FILE: return <V2FilePreview component={component as FileComponent} />; // NOSONAR
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
+    case COMPONENT_TYPE.STRING_SELECT:
+    case COMPONENT_TYPE.USER_SELECT:
+    case COMPONENT_TYPE.ROLE_SELECT:
+    case COMPONENT_TYPE.MENTIONABLE_SELECT:
+    case COMPONENT_TYPE.CHANNEL_SELECT:
+      return <SelectMenuPreview component={component as SelectMenuComponent} />; // NOSONAR
     default: return null;
   }
 }
@@ -641,16 +720,22 @@ function V2ContainerPreview({ component }: { readonly component: ContainerCompon
     <div
       className={cn(
         "relative rounded-lg overflow-hidden border border-[#3b3d44] bg-[#232428] text-[#dbdee1] flex flex-col gap-1.5 p-4",
+        component.spoiler && "cursor-pointer",
       )}
     >
       {accentColor && (
         <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l" style={{ backgroundColor: accentColor }} />
       )}
-      <div className={cn("flex flex-col gap-1.5", accentColor ? "pl-2" : "")}>
+      <div className={cn("flex flex-col gap-1.5", accentColor ? "pl-2" : "", component.spoiler && "blur-md select-none")}>
         {component.components.map((child, i) => (
           <V2ContainerChildPreview key={i} component={child} /> // NOSONAR
         ))}
       </div>
+      {component.spoiler && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="rounded bg-[#1e1f22] px-2 py-1 text-xs font-medium text-[#b5bac1]">SPOILER</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -662,7 +747,14 @@ export function V2TopLevelPreview({ component }: { readonly component: TopLevelC
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.FILE: return <V2FilePreview component={component as FileComponent} />; // NOSONAR
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
+    case COMPONENT_TYPE.STRING_SELECT:
+    case COMPONENT_TYPE.USER_SELECT:
+    case COMPONENT_TYPE.ROLE_SELECT:
+    case COMPONENT_TYPE.MENTIONABLE_SELECT:
+    case COMPONENT_TYPE.CHANNEL_SELECT:
+      return <SelectMenuPreview component={component as SelectMenuComponent} />; // NOSONAR
     default: return null;
   }
 }
