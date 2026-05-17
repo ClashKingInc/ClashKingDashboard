@@ -1,9 +1,9 @@
 "use client";
 
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,6 +28,7 @@ import {
   type TopLevelComponent,
   type ContainerChild,
   type SelectMenuComponent,
+  type FileComponent,
 } from "./discord-embed-preview";
 
 // Shared compact class names used across V2 sub-editor components
@@ -82,13 +83,14 @@ interface SectionState {
 }
 /** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
 interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
+interface FileComponentState { id: string; type: "file"; url: string; spoiler: boolean }
 interface ButtonState { id: string; customId: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
 interface SelectOptionState { id: string; label: string; value: string; description: string; isDefault: boolean }
 interface StringSelectState { id: string; type: "string_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean; options: SelectOptionState[] }
 interface GenericSelectState { id: string; type: "user_select" | "role_select" | "mentionable_select" | "channel_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean }
 type SelectMenuEditorState = StringSelectState | GenericSelectState;
 interface ActionRowState { id: string; type: "action_row"; buttons: ButtonState[]; selectMenu?: SelectMenuEditorState }
-type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState;
+type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState | FileComponentState;
 interface ContainerState {
   id: string;
   type: "container";
@@ -96,7 +98,7 @@ interface ContainerState {
   spoiler?: boolean;
   children: ContainerChildState[];
 }
-type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState | RawComponentState;
+type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState | RawComponentState | FileComponentState;
 
 interface MessageState {
   id: string;
@@ -237,6 +239,9 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
     case "mentionable_select":
     case "channel_select":
       return { type: 1, components: [serializeSelectMenu(s)] } as unknown as TopLevelComponent;
+    case "file":
+      if (!s.url.trim()) return null;
+      return { type: 13, file: { url: s.url.trim() }, ...(s.spoiler ? { spoiler: true } : {}) } as unknown as TopLevelComponent;
     case "raw":
       return s.rawData as unknown as TopLevelComponent;
     case "container": {
@@ -376,6 +381,10 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
     case 6: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
     case 7: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
     case 8: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
+    case 13: {
+      const fc = c as unknown as FileComponent;
+      return { id: uid(), type: "file", url: fc.file?.url ?? "", spoiler: (c as any).spoiler === true };
+    }
     default: return { id: uid(), type: "raw", rawType: (c as { type: number }).type, rawData: c as unknown as Record<string, unknown> };
   }
 }
@@ -398,6 +407,7 @@ function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLeve
     case "role_select": return { id: uid(), type: "role_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
     case "mentionable_select": return { id: uid(), type: "mentionable_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
     case "channel_select": return { id: uid(), type: "channel_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "file": return { id: uid(), type: "file", url: "", spoiler: false };
     case "raw": return { id: uid(), type: "raw", rawType: 0, rawData: {} };
   }
 }
@@ -1061,6 +1071,91 @@ function ActionRowEditorFields({ comp, onChange }: {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
+function FileComponentEditorFields({
+  comp,
+  onChange,
+}: {
+  readonly comp: FileComponentState;
+  readonly onChange: (updated: FileComponentState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const token = document.cookie.match(/access_token=([^;]+)/)?.[1];
+      const res = await fetch("/api/v2/app/cdn-upload", {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+      if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+      const data = await res.json();
+      if (data.url) onChange({ ...comp, url: data.url });
+      else throw new Error("No URL in response");
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Field label={t("fileUrl")}>
+        <div className="flex gap-2">
+          <Input
+            value={comp.url}
+            onChange={e => onChange({ ...comp, url: e.target.value })}
+            placeholder="https://..."
+            className={cn(COMPACT_INPUT_CN, "flex-1")}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-8 px-2 shrink-0"
+            disabled={uploading}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {uploading ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Upload className="h-3.5 w-3.5" />
+            )}
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="sr-only"
+            onChange={e => {
+              const file = e.target.files?.[0];
+              if (file) { void handleUpload(file); }
+              e.target.value = "";
+            }}
+          />
+        </div>
+        {uploadError && <p className="text-xs text-destructive mt-1">{uploadError}</p>}
+      </Field>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={comp.spoiler}
+          onChange={e => onChange({ ...comp, spoiler: e.target.checked })}
+          className="h-3.5 w-3.5 rounded border-input accent-primary"
+        />
+        <span className="text-xs text-muted-foreground">{t("fileSpoiler")}</span>
+      </label>
+    </div>
+  );
+}
+
 export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEditorProps) {
   const t = useTranslations("EmbedEditor");
   const tCommon = useTranslations("Common");
@@ -1674,6 +1769,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                           { type: "role_select" as const, label: t("roleSelectLabel") },
                           { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
                           { type: "channel_select" as const, label: t("channelSelectLabel") },
+                          { type: "file" as const, label: t("fileLabel") },
                         ] as const).map(item => (
                           <button key={item.type} type="button"
                             className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
@@ -1699,6 +1795,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   role_select: t("roleSelectLabel"),
                   mentionable_select: t("mentionableSelectLabel"),
                   channel_select: t("channelSelectLabel"),
+                  file: t("fileLabel"),
                 };
                 const isExpanded = expandedV2Ids.has(comp.id);
                 const compLabel = comp.type === "raw"
@@ -1770,6 +1867,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                             onChange={updated => updateV2Component(comp.id, () => updated)}
                           />
                         )}
+                        {comp.type === "file" && (
+                          <FileComponentEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
+                        )}
                         {comp.type === "container" && (
                           <div className="space-y-2">
                             <Field label={t("accentColor")}>
@@ -1803,6 +1906,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                 role_select: t("roleSelectLabel"),
                                 mentionable_select: t("mentionableSelectLabel"),
                                 channel_select: t("channelSelectLabel"),
+                                file: t("fileLabel"),
                               };
                               const childLabel = childV2Labels[child.type] ?? t("sectionLabel");
                               return (
@@ -1873,6 +1977,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                           onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
+                                      {child.type === "file" && (
+                                        <FileComponentEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
+                                      )}
                                     </div>
                                   )}
                                 </div>
@@ -1898,6 +2008,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                       { type: "role_select" as const, label: t("roleSelectLabel") },
                                       { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
                                       { type: "channel_select" as const, label: t("channelSelectLabel") },
+                                      { type: "file" as const, label: t("fileLabel") },
                                     ] as const).map(item => (
                                       <button key={item.type} type="button"
                                         className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"

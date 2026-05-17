@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ChevronDown, ExternalLink, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 
@@ -470,6 +470,7 @@ export const COMPONENT_TYPE = {
   TEXT_DISPLAY: 10,
   THUMBNAIL: 11,
   MEDIA_GALLERY: 12,
+  FILE: 13,
   SEPARATOR: 14,
   CONTAINER: 17,
 } as const;
@@ -502,11 +503,12 @@ export interface UserSelectComponent { type: 5; custom_id?: string; placeholder?
 export interface RoleSelectComponent { type: 6; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
 export interface MentionableSelectComponent { type: 7; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
 export interface ChannelSelectComponent { type: 8; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; channel_types?: number[]; id?: number }
+export interface FileComponent { type: 13; file: { url: string; proxy_url?: string; content_type?: string }; name?: string; spoiler?: boolean; id?: number }
 export type SelectMenuComponent = StringSelectComponent | UserSelectComponent | RoleSelectComponent | MentionableSelectComponent | ChannelSelectComponent;
 export interface ActionRowComponent { type: 1; components: (ButtonComponent | SelectMenuComponent)[]; id?: number }
-export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent;
+export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent | FileComponent;
 export interface ContainerComponent { type: 17; accent_color?: number | null; spoiler?: boolean; components: ContainerChild[]; id?: number }
-export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent;
+export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent | FileComponent;
 
 export function isV2Payload(data: Record<string, unknown>): boolean {
   if (typeof (data as any).flags === 'number' && ((data as any).flags & IS_COMPONENTS_V2_FLAG) !== 0) return true;
@@ -676,12 +678,31 @@ function V2SectionPreview({ component }: { readonly component: SectionComponent 
   );
 }
 
+function V2FilePreview({ component }: { readonly component: FileComponent }) {
+  const url = component.file?.url ?? "";
+  const name = component.name ?? url.split("/").pop() ?? "File";
+  return (
+    <div className="relative">
+      {component.spoiler && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center rounded bg-black/80 backdrop-blur-sm text-xs text-white cursor-pointer select-none">
+          SPOILER
+        </div>
+      )}
+      <div className={cn("flex items-center gap-2 rounded-md border border-border bg-card/50 px-3 py-2 text-sm", component.spoiler && "opacity-60")}>
+        <Paperclip className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <span className="truncate text-foreground/90">{name}</span>
+      </div>
+    </div>
+  );
+}
+
 function V2ContainerChildPreview({ component }: { readonly component: ContainerChild }) {
   switch (component.type) {
     case COMPONENT_TYPE.TEXT_DISPLAY: return <V2TextDisplayPreview component={component} />;
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.FILE: return <V2FilePreview component={component as FileComponent} />;
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
     case COMPONENT_TYPE.STRING_SELECT:
     case COMPONENT_TYPE.USER_SELECT:
@@ -726,6 +747,7 @@ export function V2TopLevelPreview({ component }: { readonly component: TopLevelC
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.FILE: return <V2FilePreview component={component as FileComponent} />;
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
     case COMPONENT_TYPE.STRING_SELECT:
     case COMPONENT_TYPE.USER_SELECT:
