@@ -228,7 +228,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
     case 17: return {
       id: uid(),
       type: "container",
-      accentColor: c.accent_color == null ? "#5865f2" : `#${c.accent_color.toString(16).padStart(6, "0")}`,
+      accentColor: c.accent_color == null ? "" : `#${c.accent_color.toString(16).padStart(6, "0")}`,
       children: (c.components ?? []).map(child => parseComponentState(child as TopLevelComponent) as ContainerChildState),
     };
     case 10: return { id: uid(), type: "text_display", content: c.content ?? "" };
@@ -268,7 +268,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
 
 function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLevelComponentState {
   switch (type) {
-    case "container": return { id: uid(), type: "container", accentColor: "#5865f2", children: [] };
+    case "container": return { id: uid(), type: "container", accentColor: "", children: [] };
     case "text_display": return { id: uid(), type: "text_display", content: "" };
     case "separator": return { id: uid(), type: "separator", divider: true, spacing: "small" };
     case "media_gallery": return { id: uid(), type: "media_gallery", items: [] };

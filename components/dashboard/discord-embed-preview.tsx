@@ -510,7 +510,7 @@ export function isV2Payload(data: Record<string, unknown>): boolean {
 export function extractComponents(data: Record<string, unknown>): TopLevelComponent[] {
   const messages = (data as any)?.messages;
   if (Array.isArray(messages) && messages.length > 0) {
-    const components = messages[0]?.data?.components;
+    const components = (messages[0] as any)?.data?.components ?? (messages[0] as any)?.components;
     if (Array.isArray(components)) return components as TopLevelComponent[];
   }
   const components = (data as any)?.components;
