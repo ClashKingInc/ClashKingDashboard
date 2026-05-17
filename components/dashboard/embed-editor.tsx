@@ -77,11 +77,12 @@ interface SectionState {
   buttonLabel: string;
   buttonStyle: 1 | 2 | 3 | 4 | 5;
   buttonUrl: string;
+  buttonCustomId: string;
   buttonDisabled: boolean;
 }
 /** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
 interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
-interface ButtonState { id: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
+interface ButtonState { id: string; customId: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
 interface SelectOptionState { id: string; label: string; value: string; description: string; isDefault: boolean }
 interface StringSelectState { id: string; type: "string_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean; options: SelectOptionState[] }
 interface GenericSelectState { id: string; type: "user_select" | "role_select" | "mentionable_select" | "channel_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean }
@@ -195,7 +196,7 @@ function serializeSelectMenu(s: SelectMenuEditorState): Record<string, unknown> 
   const typeMap: Record<string, number> = { string_select: 3, user_select: 5, role_select: 6, mentionable_select: 7, channel_select: 8 };
   const base: Record<string, unknown> = {
     type: typeMap[s.type],
-    ...(s.customId ? { custom_id: s.customId } : {}),
+    custom_id: s.customId,
     ...(s.placeholder ? { placeholder: s.placeholder } : {}),
     ...(s.minValues !== 1 ? { min_values: s.minValues } : {}),
     ...(s.maxValues !== 1 ? { max_values: s.maxValues } : {}),
@@ -224,7 +225,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
           type: 2,
           style: btn.style,
           ...(btn.label ? { label: btn.label } : {}),
-          ...(btn.style === 5 && btn.url ? { url: btn.url } : {}),
+          ...(btn.style === 5 ? (btn.url ? { url: btn.url } : {}) : { custom_id: btn.customId }),
           ...(btn.disabled ? { disabled: true } : {}),
         })),
       } as unknown as TopLevelComponent;
@@ -270,7 +271,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
           type: 2,
           style: s.buttonStyle,
           ...(s.buttonLabel.trim() ? { label: s.buttonLabel.trim() } : {}),
-          ...(s.buttonStyle === 5 && s.buttonUrl.trim() ? { url: s.buttonUrl.trim() } : {}),
+          ...(s.buttonStyle === 5 ? (s.buttonUrl.trim() ? { url: s.buttonUrl.trim() } : {}) : { custom_id: s.buttonCustomId }),
           ...(s.buttonDisabled ? { disabled: true } : {}),
         };
       }
@@ -284,7 +285,7 @@ function parseSelectMenu(c: any): SelectMenuEditorState {
   const type = typeMap[c.type] ?? "string_select";
   const base = {
     id: uid(),
-    customId: c.custom_id ?? "",
+    customId: c.custom_id ?? uid(),
     placeholder: c.placeholder ?? "",
     minValues: typeof c.min_values === "number" ? c.min_values : 1,
     maxValues: typeof c.max_values === "number" ? c.max_values : 1,
@@ -339,6 +340,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
         buttonLabel: sec.accessory?.type === 2 ? sec.accessory?.label ?? "" : "",
         buttonStyle: sec.accessory?.type === 2 ? (sec.accessory?.style ?? 2) : 2,
         buttonUrl: sec.accessory?.type === 2 ? sec.accessory?.url ?? "" : "",
+        buttonCustomId: sec.accessory?.type === 2 ? (sec.accessory?.custom_id ?? uid()) : uid(),
         buttonDisabled: sec.accessory?.type === 2 ? sec.accessory?.disabled === true : false,
       };
     }
@@ -361,6 +363,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
           .filter((b: any) => b.type === 2)
           .map((b: any) => ({
             id: uid(),
+            customId: b.custom_id ?? uid(),
             label: b.label ?? "",
             style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
             url: b.url ?? "",
@@ -387,14 +390,14 @@ function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLeve
       id: uid(), type: "section",
       texts: [{ id: uid(), type: "text_display", content: "" }],
       accessoryType: "none", thumbnailUrl: "", thumbnailDescription: "",
-      buttonLabel: "", buttonStyle: 2, buttonUrl: "", buttonDisabled: false,
+      buttonLabel: "", buttonStyle: 2, buttonUrl: "", buttonCustomId: uid(), buttonDisabled: false,
     };
     case "action_row": return { id: uid(), type: "action_row", buttons: [] };
-    case "string_select": return { id: uid(), type: "string_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false, options: [] };
-    case "user_select": return { id: uid(), type: "user_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
-    case "role_select": return { id: uid(), type: "role_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
-    case "mentionable_select": return { id: uid(), type: "mentionable_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
-    case "channel_select": return { id: uid(), type: "channel_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "string_select": return { id: uid(), type: "string_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false, options: [] };
+    case "user_select": return { id: uid(), type: "user_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "role_select": return { id: uid(), type: "role_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "mentionable_select": return { id: uid(), type: "mentionable_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "channel_select": return { id: uid(), type: "channel_select", customId: uid(), placeholder: "", minValues: 1, maxValues: 1, disabled: false };
     case "raw": return { id: uid(), type: "raw", rawType: 0, rawData: {} };
   }
 }
@@ -848,11 +851,6 @@ function SelectMenuCommonFields({ comp, onChange }: {
   const t = useTranslations("EmbedEditor");
   return (
     <div className="space-y-2">
-      <Field label={t("selectCustomId")}>
-        <Input value={comp.customId}
-          onChange={e => onChange({ ...comp, customId: e.target.value } as SelectMenuEditorState)}
-          className={COMPACT_INPUT_CN} />
-      </Field>
       <Field label={t("selectPlaceholder")}>
         <Input value={comp.placeholder}
           onChange={e => onChange({ ...comp, placeholder: e.target.value } as SelectMenuEditorState)}
@@ -1027,7 +1025,7 @@ function ActionRowEditorFields({ comp, onChange }: {
             </div>
           ))}
           <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-            onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] })}>
+            onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), customId: uid(), label: "", style: 2 as const, url: "", disabled: false }] })}>
             <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
           </Button>
         </>
