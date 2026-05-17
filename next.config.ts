@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'cdn.clashk.ing',
+      },
+      {
+        protocol: 'https',
         hostname: 'flagcdn.com',
       },
     ],
