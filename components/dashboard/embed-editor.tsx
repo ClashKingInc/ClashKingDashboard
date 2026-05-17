@@ -1,6 +1,6 @@
 "use client";
 
-import { decompressFromEncodedURIComponent, decompressFromBase64, compressToEncodedURIComponent } from 'lz-string';
+import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2 } from "lucide-react";
@@ -575,20 +575,25 @@ export function parseDiscohookUrl(url: string): Record<string, unknown> | null {
     const raw = match[1];
     const decoded = decodeURIComponent(raw);
 
-    // 1. Discohook native format: LZString.compressToEncodedURIComponent
+    // 1. New Discohook format: base64url
+    try {
+      const json = decodeBase64DiscohookPayload(decoded);
+      if (json) return JSON.parse(json);
+    } catch { /* fall through */ }
+
+    // 2. Discohook legacy format: LZString.compressToEncodedURIComponent
     try {
       const json = decompressFromEncodedURIComponent(raw);
       if (json) return JSON.parse(json);
     } catch { /* fall through */ }
 
-    // 2. LZString.compressToBase64 variant
+    // 3. LZString.compressToBase64 variant
     try {
       const json = decompressFromBase64(decoded);
       if (json) return JSON.parse(json);
     } catch { /* fall through */ }
 
-    // 3. Plain base64 or base64url payload
-    return JSON.parse(decodeBase64DiscohookPayload(decoded));
+    return null;
   } catch { return null; }
 }
 
@@ -602,8 +607,16 @@ export function requiresDiscohookResolve(url: string): boolean {
   }
 }
 
+function base64UrlEncode(utf8: string): string {
+  const percentEncoded = encodeURIComponent(utf8);
+  const escaped = percentEncoded.replace(/%[\dA-Fa-f]{2}/g, (hex) =>
+    String.fromCharCode(Number.parseInt(hex.slice(1), 16)),
+  );
+  return btoa(escaped).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+}
+
 function buildDiscohookUrl(data: Record<string, unknown>): string {
-  const encoded = compressToEncodedURIComponent(JSON.stringify(data));
+  const encoded = base64UrlEncode(JSON.stringify(data));
   return `https://discohook.app/?data=${encoded}`;
 }
 
