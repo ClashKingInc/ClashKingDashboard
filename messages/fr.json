@@ -2551,6 +2551,7 @@
     "accessory": "Accessoire",
     "accessoryNone": "Aucun",
     "accessoryThumbnail": "Miniature",
+    "accessoryButton": "Bouton",
     "thumbnailAlt": "Texte alternatif de la miniature",
     "accentColor": "Couleur d'accentuation",
     "addContainer": "Ajouter un composant enfant",

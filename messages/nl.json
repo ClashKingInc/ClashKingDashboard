@@ -2531,6 +2531,7 @@
     "accessory": "Accessoire",
     "accessoryNone": "Geen",
     "accessoryThumbnail": "Miniatuur",
+    "accessoryButton": "Knop",
     "thumbnailAlt": "Alt-tekst miniatuur",
     "accentColor": "Accentkleur",
     "addContainer": "Subcomponent toevoegen",

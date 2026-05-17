@@ -71,9 +71,13 @@ interface SectionState {
   id: string;
   type: "section";
   texts: TextDisplayState[];
-  accessoryType: "none" | "thumbnail";
+  accessoryType: "none" | "thumbnail" | "button";
   thumbnailUrl: string;
   thumbnailDescription: string;
+  buttonLabel: string;
+  buttonStyle: 1 | 2 | 3 | 4 | 5;
+  buttonUrl: string;
+  buttonDisabled: boolean;
 }
 /** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
 interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
@@ -258,9 +262,18 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
       };
     case "section": {
       const texts = s.texts.filter(t => t.content.trim()).map(t => ({ type: 10 as const, content: t.content }));
-      const accessory = s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()
-        ? { type: 11 as const, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) }
-        : null;
+      let accessory: Record<string, unknown> | null = null;
+      if (s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()) {
+        accessory = { type: 11, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) };
+      } else if (s.accessoryType === "button") {
+        accessory = {
+          type: 2,
+          style: s.buttonStyle,
+          ...(s.buttonLabel.trim() ? { label: s.buttonLabel.trim() } : {}),
+          ...(s.buttonStyle === 5 && s.buttonUrl.trim() ? { url: s.buttonUrl.trim() } : {}),
+          ...(s.buttonDisabled ? { disabled: true } : {}),
+        };
+      }
       return { type: 9, components: texts, ...(accessory ? { accessory } : {}) };
     }
   }
@@ -311,13 +324,22 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
     };
     case 9: {
       const sec = c as any;
+      const accType = sec.accessory?.type === 11 && sec.accessory?.media?.url
+        ? "thumbnail"
+        : sec.accessory?.type === 2
+        ? "button"
+        : "none";
       return {
         id: uid(),
         type: "section",
         texts: (sec.components ?? []).filter((ch: any) => ch.type === COMPONENT_TYPE.TEXT_DISPLAY).map((ch: any) => ({ id: uid(), type: "text_display" as const, content: ch.content ?? "" })),
-        accessoryType: sec.accessory?.type === 11 && sec.accessory?.media?.url ? "thumbnail" : "none",
+        accessoryType: accType,
         thumbnailUrl: sec.accessory?.type === 11 ? sec.accessory?.media?.url ?? "" : "",
         thumbnailDescription: sec.accessory?.type === 11 ? sec.accessory?.description ?? "" : "",
+        buttonLabel: sec.accessory?.type === 2 ? sec.accessory?.label ?? "" : "",
+        buttonStyle: sec.accessory?.type === 2 ? (sec.accessory?.style ?? 2) : 2,
+        buttonUrl: sec.accessory?.type === 2 ? sec.accessory?.url ?? "" : "",
+        buttonDisabled: sec.accessory?.type === 2 ? sec.accessory?.disabled === true : false,
       };
     }
     case 1: {
@@ -365,6 +387,7 @@ function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLeve
       id: uid(), type: "section",
       texts: [{ id: uid(), type: "text_display", content: "" }],
       accessoryType: "none", thumbnailUrl: "", thumbnailDescription: "",
+      buttonLabel: "", buttonStyle: 2, buttonUrl: "", buttonDisabled: false,
     };
     case "action_row": return { id: uid(), type: "action_row", buttons: [] };
     case "string_select": return { id: uid(), type: "string_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false, options: [] };
@@ -756,12 +779,12 @@ function SectionEditorFields({ comp, onChange }: {
       </Button>
       <Field label={t("accessory")}>
         <div className="flex gap-2">
-          {(["none", "thumbnail"] as const).map(a => (
+          {(["none", "thumbnail", "button"] as const).map(a => (
             <button key={a} type="button"
               onClick={() => onChange({ ...comp, accessoryType: a })}
               className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
                 comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-              {a === "none" ? t("accessoryNone") : t("accessoryThumbnail")}
+              {a === "none" ? t("accessoryNone") : a === "thumbnail" ? t("accessoryThumbnail") : t("accessoryButton")}
             </button>
           ))}
         </div>
@@ -778,6 +801,40 @@ function SectionEditorFields({ comp, onChange }: {
               onChange={e => onChange({ ...comp, thumbnailDescription: e.target.value })}
               className={COMPACT_INPUT_CN} />
           </Field>
+        </>
+      )}
+      {comp.accessoryType === "button" && (
+        <>
+          <Field label={t("buttonLabel")}>
+            <Input value={comp.buttonLabel}
+              onChange={e => onChange({ ...comp, buttonLabel: e.target.value })}
+              className={COMPACT_INPUT_CN} />
+          </Field>
+          <Field label={t("buttonStyle")}>
+            <div className="flex flex-wrap gap-1">
+              {([1, 2, 3, 4, 5] as const).map(style => (
+                <button key={style} type="button"
+                  onClick={() => onChange({ ...comp, buttonStyle: style })}
+                  className={cn("text-xs px-2 py-1 rounded border transition-colors",
+                    comp.buttonStyle === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                  {style === 1 ? t("buttonStylePrimary") : style === 2 ? t("buttonStyleSecondary") : style === 3 ? t("buttonStyleSuccess") : style === 4 ? t("buttonStyleDanger") : t("buttonStyleLink")}
+                </button>
+              ))}
+            </div>
+          </Field>
+          {comp.buttonStyle === 5 && (
+            <Field label={t("buttonUrl")}>
+              <Input value={comp.buttonUrl}
+                onChange={e => onChange({ ...comp, buttonUrl: e.target.value })}
+                placeholder="https://..." className={COMPACT_INPUT_CN} />
+            </Field>
+          )}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={comp.buttonDisabled}
+              onChange={e => onChange({ ...comp, buttonDisabled: e.target.checked })}
+              className="h-3.5 w-3.5 rounded border-input accent-primary" />
+            <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
+          </label>
         </>
       )}
     </div>
@@ -1890,7 +1947,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
             </div>
           )}
 
-          <div className="hidden p-5 md:sticky md:top-0 md:block">
+          <div className="hidden max-h-screen overflow-y-auto p-5 md:sticky md:top-0 md:block">
             <div className="flex items-center gap-2 mb-3">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {t("preview")}

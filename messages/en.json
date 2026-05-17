@@ -2528,6 +2528,7 @@
     "accessory": "Accessory",
     "accessoryNone": "None",
     "accessoryThumbnail": "Thumbnail",
+    "accessoryButton": "Button",
     "thumbnailAlt": "Thumbnail alt text",
     "accentColor": "Accent colour",
     "addContainer": "Add child component",

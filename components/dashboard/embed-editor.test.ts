@@ -229,6 +229,35 @@ describe("v2 components", () => {
     expect((back as any).type).toBe(1);
     expect((back as any).components[0].type).toBe(3);
   });
+
+  it("round-trips a section with button accessory", () => {
+    const state = parseComponentState({
+      type: 9,
+      components: [{ type: 10, content: "Click the button" }],
+      accessory: { type: 2, style: 1, label: "Go!" },
+    } as any);
+    expect(state.type).toBe("section");
+    if (state.type !== "section") throw new Error("wrong type");
+    expect(state.accessoryType).toBe("button");
+    expect(state.buttonLabel).toBe("Go!");
+    expect(state.buttonStyle).toBe(1);
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(9);
+    expect((back as any).accessory?.type).toBe(2);
+    expect((back as any).accessory?.label).toBe("Go!");
+  });
+
+  it("omits accessory when section accessoryType is none", () => {
+    const state = parseComponentState({
+      type: 9,
+      components: [{ type: 10, content: "No accessory" }],
+    } as any);
+    expect(state.type).toBe("section");
+    if (state.type !== "section") throw new Error("wrong type");
+    expect(state.accessoryType).toBe("none");
+    const back = serializeComponentState(state as any);
+    expect((back as any).accessory).toBeUndefined();
+  });
 });
 
 describe("parseDiscohookUrl", () => {
