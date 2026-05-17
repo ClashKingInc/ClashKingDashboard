@@ -180,6 +180,55 @@ describe("v2 components", () => {
     const back = serializeComponentState(state);
     expect((back as any).spoiler).toBe(true);
   });
+
+  it("round-trips a string select component", () => {
+    const state = parseComponentState({
+      type: 3,
+      custom_id: "my_select",
+      placeholder: "Choose...",
+      min_values: 1,
+      max_values: 2,
+      options: [
+        { label: "Option A", value: "a", description: "First option" },
+        { label: "Option B", value: "b", default: true },
+      ],
+    } as any);
+    expect(state.type).toBe("string_select");
+    if (state.type !== "string_select") throw new Error("wrong type");
+    expect(state.customId).toBe("my_select");
+    expect(state.placeholder).toBe("Choose...");
+    expect(state.maxValues).toBe(2);
+    expect(state.options).toHaveLength(2);
+    expect(state.options[1].isDefault).toBe(true);
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(3);
+    expect((back as any).custom_id).toBe("my_select");
+    expect((back as any).options).toHaveLength(2);
+  });
+
+  it("round-trips a user select component", () => {
+    const state = parseComponentState({ type: 5, custom_id: "user_picker", placeholder: "Pick user" } as any);
+    expect(state.type).toBe("user_select");
+    if (state.type !== "user_select") throw new Error("wrong type");
+    expect(state.customId).toBe("user_picker");
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(5);
+    expect((back as any).custom_id).toBe("user_picker");
+  });
+
+  it("round-trips an action row with a string select", () => {
+    const state = parseComponentState({
+      type: 1,
+      components: [{ type: 3, custom_id: "sel", options: [{ label: "A", value: "a" }] }],
+    } as any);
+    expect(state.type).toBe("action_row");
+    if (state.type !== "action_row") throw new Error("wrong type");
+    expect(state.selectMenu?.type).toBe("string_select");
+    expect(state.buttons).toHaveLength(0);
+    const back = serializeComponentState(state as any);
+    expect((back as any).type).toBe(1);
+    expect((back as any).components[0].type).toBe(3);
+  });
 });
 
 describe("parseDiscohookUrl", () => {

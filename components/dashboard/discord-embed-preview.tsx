@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink } from "lucide-react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 
@@ -460,6 +460,11 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
 export const COMPONENT_TYPE = {
   ACTION_ROW: 1,
   BUTTON: 2,
+  STRING_SELECT: 3,
+  USER_SELECT: 5,
+  ROLE_SELECT: 6,
+  MENTIONABLE_SELECT: 7,
+  CHANNEL_SELECT: 8,
   SECTION: 9,
   TEXT_DISPLAY: 10,
   THUMBNAIL: 11,
@@ -490,10 +495,17 @@ export interface ButtonComponent {
   disabled?: boolean;
   id?: number;
 }
-export interface ActionRowComponent { type: 1; components: ButtonComponent[]; id?: number }
-export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
+export interface StringSelectOption { label: string; value?: string; description?: string; default?: boolean }
+export interface StringSelectComponent { type: 3; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; options?: StringSelectOption[]; id?: number }
+export interface UserSelectComponent { type: 5; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
+export interface RoleSelectComponent { type: 6; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
+export interface MentionableSelectComponent { type: 7; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; id?: number }
+export interface ChannelSelectComponent { type: 8; custom_id?: string; placeholder?: string; min_values?: number; max_values?: number; disabled?: boolean; channel_types?: number[]; id?: number }
+export type SelectMenuComponent = StringSelectComponent | UserSelectComponent | RoleSelectComponent | MentionableSelectComponent | ChannelSelectComponent;
+export interface ActionRowComponent { type: 1; components: (ButtonComponent | SelectMenuComponent)[]; id?: number }
+export type ContainerChild = TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent;
 export interface ContainerComponent { type: 17; accent_color?: number | null; spoiler?: boolean; components: ContainerChild[]; id?: number }
-export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent;
+export type TopLevelComponent = ContainerComponent | TextDisplayComponent | SeparatorComponent | MediaGalleryComponent | SectionComponent | ActionRowComponent | SelectMenuComponent;
 
 export function isV2Payload(data: Record<string, unknown>): boolean {
   if (typeof (data as any).flags === 'number' && ((data as any).flags & IS_COMPONENTS_V2_FLAG) !== 0) return true;
@@ -543,13 +555,44 @@ function ButtonPreview({ button }: { readonly button: ButtonComponent }) {
   );
 }
 
+function SelectMenuPreview({ component }: { readonly component: SelectMenuComponent }) {
+  const placeholder = component.placeholder ?? "Make a selection";
+  const isString = component.type === COMPONENT_TYPE.STRING_SELECT;
+  const options = isString ? (component as StringSelectComponent).options ?? [] : [];
+  return (
+    <div className={cn("flex flex-col gap-1 w-full", component.disabled && "opacity-50")}>
+      <div className="flex items-center justify-between px-3 py-2 rounded bg-[#1e1f22] border border-[#3b3d44] text-[#87898c] text-sm cursor-default select-none">
+        <span>{placeholder}</span>
+        <ChevronDown className="w-4 h-4 shrink-0" />
+      </div>
+      {isString && options.length > 0 && (
+        <div className="rounded border border-[#3b3d44] bg-[#2b2d31] overflow-hidden">
+          {options.slice(0, 3).map((opt, i) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={i} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
+              <span className="font-medium">{opt.label}</span>
+              {opt.description && <span className="ml-2 text-[#87898c]">{opt.description}</span>}
+            </div>
+          ))}
+          {options.length > 3 && (
+            <div className="px-3 py-1 text-xs text-[#87898c]">+{options.length - 3} more</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ActionRowPreview({ component }: { readonly component: ActionRowComponent }) {
-  const buttons = component.components ?? [];
-  if (buttons.length === 0) return null;
+  const items = component.components ?? [];
+  if (items.length === 0) return null;
+  const firstSelectType: number[] = [COMPONENT_TYPE.STRING_SELECT, COMPONENT_TYPE.USER_SELECT, COMPONENT_TYPE.ROLE_SELECT, COMPONENT_TYPE.MENTIONABLE_SELECT, COMPONENT_TYPE.CHANNEL_SELECT];
+  const selectMenu = items.find(c => firstSelectType.includes(c.type)) as SelectMenuComponent | undefined;
+  if (selectMenu) return <SelectMenuPreview component={selectMenu} />;
   return (
     <div className="flex flex-wrap gap-1 py-0.5">
-      {buttons.map((btn, i) => (
-        <ButtonPreview key={i} button={btn} /> // NOSONAR
+      {items.map((btn, i) => (
+        <ButtonPreview key={i} button={btn as ButtonComponent} /> // NOSONAR
       ))}
     </div>
   );
@@ -631,6 +674,12 @@ function V2ContainerChildPreview({ component }: { readonly component: ContainerC
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
+    case COMPONENT_TYPE.STRING_SELECT:
+    case COMPONENT_TYPE.USER_SELECT:
+    case COMPONENT_TYPE.ROLE_SELECT:
+    case COMPONENT_TYPE.MENTIONABLE_SELECT:
+    case COMPONENT_TYPE.CHANNEL_SELECT:
+      return <SelectMenuPreview component={component as SelectMenuComponent} />;
     default: return null;
   }
 }
@@ -669,6 +718,12 @@ export function V2TopLevelPreview({ component }: { readonly component: TopLevelC
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
     case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
+    case COMPONENT_TYPE.STRING_SELECT:
+    case COMPONENT_TYPE.USER_SELECT:
+    case COMPONENT_TYPE.ROLE_SELECT:
+    case COMPONENT_TYPE.MENTIONABLE_SELECT:
+    case COMPONENT_TYPE.CHANNEL_SELECT:
+      return <SelectMenuPreview component={component as SelectMenuComponent} />;
     default: return null;
   }
 }

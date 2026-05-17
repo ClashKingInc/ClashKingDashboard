@@ -27,6 +27,7 @@ import {
   type DiscordEmbed,
   type TopLevelComponent,
   type ContainerChild,
+  type SelectMenuComponent,
 } from "./discord-embed-preview";
 
 // Shared compact class names used across V2 sub-editor components
@@ -74,7 +75,15 @@ interface SectionState {
   thumbnailUrl: string;
   thumbnailDescription: string;
 }
-type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState;
+/** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
+interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
+interface ButtonState { id: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
+interface SelectOptionState { id: string; label: string; value: string; description: string; isDefault: boolean }
+interface StringSelectState { id: string; type: "string_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean; options: SelectOptionState[] }
+interface GenericSelectState { id: string; type: "user_select" | "role_select" | "mentionable_select" | "channel_select"; customId: string; placeholder: string; minValues: number; maxValues: number; disabled: boolean }
+type SelectMenuEditorState = StringSelectState | GenericSelectState;
+interface ActionRowState { id: string; type: "action_row"; buttons: ButtonState[]; selectMenu?: SelectMenuEditorState }
+type ContainerChildState = TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState;
 interface ContainerState {
   id: string;
   type: "container";
@@ -82,11 +91,7 @@ interface ContainerState {
   spoiler?: boolean;
   children: ContainerChildState[];
 }
-/** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
-interface RawComponentState { id: string; type: "raw"; rawType: number; rawData: Record<string, unknown> }
-interface ButtonState { id: string; label: string; style: 1 | 2 | 3 | 4 | 5; url: string; disabled: boolean }
-interface ActionRowState { id: string; type: "action_row"; buttons: ButtonState[] }
-type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | RawComponentState;
+type TopLevelComponentState = ContainerState | TextDisplayState | SeparatorState | MediaGalleryState | SectionState | ActionRowState | StringSelectState | GenericSelectState | RawComponentState;
 
 interface MessageState {
   id: string;
@@ -182,9 +187,33 @@ function hexToIntSafe(hex: string): number | null {
   return Number.isNaN(val) ? null : val;
 }
 
+function serializeSelectMenu(s: SelectMenuEditorState): Record<string, unknown> {
+  const typeMap: Record<string, number> = { string_select: 3, user_select: 5, role_select: 6, mentionable_select: 7, channel_select: 8 };
+  const base: Record<string, unknown> = {
+    type: typeMap[s.type],
+    ...(s.customId ? { custom_id: s.customId } : {}),
+    ...(s.placeholder ? { placeholder: s.placeholder } : {}),
+    ...(s.minValues !== 1 ? { min_values: s.minValues } : {}),
+    ...(s.maxValues !== 1 ? { max_values: s.maxValues } : {}),
+    ...(s.disabled ? { disabled: true } : {}),
+  };
+  if (s.type === "string_select") {
+    base.options = s.options.map(opt => ({
+      label: opt.label || "\u200b",
+      value: opt.value || opt.id,
+      ...(opt.description ? { description: opt.description } : {}),
+      ...(opt.isDefault ? { default: true } : {}),
+    }));
+  }
+  return base;
+}
+
 export function serializeComponentState(s: TopLevelComponentState): TopLevelComponent {
   switch (s.type) {
-    case "action_row":
+    case "action_row": {
+      if (s.selectMenu) {
+        return { type: 1, components: [serializeSelectMenu(s.selectMenu)] } as unknown as TopLevelComponent;
+      }
       return {
         type: 1,
         components: s.buttons.map(btn => ({
@@ -195,6 +224,14 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
           ...(btn.disabled ? { disabled: true } : {}),
         })),
       } as unknown as TopLevelComponent;
+    }
+    case "string_select":
+      return serializeSelectMenu(s) as unknown as TopLevelComponent;
+    case "user_select":
+    case "role_select":
+    case "mentionable_select":
+    case "channel_select":
+      return serializeSelectMenu(s) as unknown as TopLevelComponent;
     case "raw":
       return s.rawData as unknown as TopLevelComponent;
     case "container": {
@@ -229,6 +266,33 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
   }
 }
 
+function parseSelectMenu(c: any): SelectMenuEditorState {
+  const typeMap: Record<number, SelectMenuEditorState["type"]> = { 3: "string_select", 5: "user_select", 6: "role_select", 7: "mentionable_select", 8: "channel_select" };
+  const type = typeMap[c.type] ?? "string_select";
+  const base = {
+    id: uid(),
+    customId: c.custom_id ?? "",
+    placeholder: c.placeholder ?? "",
+    minValues: typeof c.min_values === "number" ? c.min_values : 1,
+    maxValues: typeof c.max_values === "number" ? c.max_values : 1,
+    disabled: c.disabled === true,
+  };
+  if (type === "string_select") {
+    return {
+      ...base,
+      type: "string_select" as const,
+      options: (c.options ?? []).map((opt: any) => ({
+        id: uid(),
+        label: opt.label ?? "",
+        value: opt.value ?? "",
+        description: opt.description ?? "",
+        isDefault: opt.default === true,
+      })),
+    };
+  }
+  return { ...base, type: type as "user_select" | "role_select" | "mentionable_select" | "channel_select" };
+}
+
 export function parseComponentState(c: TopLevelComponent): TopLevelComponentState {
   switch (c.type) {
     case 17: return {
@@ -256,19 +320,37 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
         thumbnailDescription: sec.accessory?.type === 11 ? sec.accessory?.description ?? "" : "",
       };
     }
-    case 1: return {
-      id: uid(),
-      type: "action_row",
-      buttons: ((c as any).components ?? [])
-        .filter((b: any) => b.type === 2)
-        .map((b: any) => ({
+    case 1: {
+      const arComponents = (c as any).components ?? [];
+      const selectTypes = [3, 5, 6, 7, 8];
+      const selectComp = arComponents.find((x: any) => selectTypes.includes(x.type));
+      if (selectComp) {
+        return {
           id: uid(),
-          label: b.label ?? "",
-          style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
-          url: b.url ?? "",
-          disabled: b.disabled ?? false,
-        })),
-    };
+          type: "action_row",
+          buttons: [],
+          selectMenu: parseSelectMenu(selectComp),
+        };
+      }
+      return {
+        id: uid(),
+        type: "action_row",
+        buttons: arComponents
+          .filter((b: any) => b.type === 2)
+          .map((b: any) => ({
+            id: uid(),
+            label: b.label ?? "",
+            style: ([1, 2, 3, 4, 5].includes(b.style) ? b.style : 2) as 1 | 2 | 3 | 4 | 5,
+            url: b.url ?? "",
+            disabled: b.disabled ?? false,
+          })),
+      };
+    }
+    case 3: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
+    case 5: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
+    case 6: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
+    case 7: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
+    case 8: return parseSelectMenu(c as any) as unknown as TopLevelComponentState;
     default: return { id: uid(), type: "raw", rawType: (c as { type: number }).type, rawData: c as unknown as Record<string, unknown> };
   }
 }
@@ -285,6 +367,11 @@ function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLeve
       accessoryType: "none", thumbnailUrl: "", thumbnailDescription: "",
     };
     case "action_row": return { id: uid(), type: "action_row", buttons: [] };
+    case "string_select": return { id: uid(), type: "string_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false, options: [] };
+    case "user_select": return { id: uid(), type: "user_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "role_select": return { id: uid(), type: "role_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "mentionable_select": return { id: uid(), type: "mentionable_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
+    case "channel_select": return { id: uid(), type: "channel_select", customId: "", placeholder: "", minValues: 1, maxValues: 1, disabled: false };
     case "raw": return { id: uid(), type: "raw", rawType: 0, rawData: {} };
   }
 }
@@ -697,64 +784,209 @@ function SectionEditorFields({ comp, onChange }: {
   );
 }
 
+function SelectMenuCommonFields({ comp, onChange }: {
+  readonly comp: SelectMenuEditorState;
+  readonly onChange: (updated: SelectMenuEditorState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-2">
+      <Field label={t("selectCustomId")}>
+        <Input value={comp.customId}
+          onChange={e => onChange({ ...comp, customId: e.target.value } as SelectMenuEditorState)}
+          className={COMPACT_INPUT_CN} />
+      </Field>
+      <Field label={t("selectPlaceholder")}>
+        <Input value={comp.placeholder}
+          onChange={e => onChange({ ...comp, placeholder: e.target.value } as SelectMenuEditorState)}
+          className={COMPACT_INPUT_CN} />
+      </Field>
+      <div className="flex gap-3">
+        <Field label={t("selectMinValues")}>
+          <Input type="number" value={comp.minValues} min={0} max={25}
+            onChange={e => onChange({ ...comp, minValues: Math.max(0, Math.min(25, Number(e.target.value) || 1)) } as SelectMenuEditorState)}
+            className={cn(COMPACT_INPUT_CN, "w-16")} />
+        </Field>
+        <Field label={t("selectMaxValues")}>
+          <Input type="number" value={comp.maxValues} min={1} max={25}
+            onChange={e => onChange({ ...comp, maxValues: Math.max(1, Math.min(25, Number(e.target.value) || 1)) } as SelectMenuEditorState)}
+            className={cn(COMPACT_INPUT_CN, "w-16")} />
+        </Field>
+      </div>
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" checked={comp.disabled}
+          onChange={e => onChange({ ...comp, disabled: e.target.checked } as SelectMenuEditorState)}
+          className="h-3.5 w-3.5 rounded border-input accent-primary" />
+        <span className="text-xs text-muted-foreground">{t("selectDisabled")}</span>
+      </label>
+    </div>
+  );
+}
+
+function StringSelectEditorFields({ comp, onChange }: {
+  readonly comp: StringSelectState;
+  readonly onChange: (updated: StringSelectState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-3">
+      <SelectMenuCommonFields comp={comp} onChange={updated => onChange(updated as StringSelectState)} />
+      <div className="space-y-2 pt-1">
+        <Label className="text-xs font-medium">{t("selectOptions")}</Label>
+        {comp.options.map((opt, optIdx) => (
+          <div key={opt.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">{t("selectOption")} {optIdx + 1}</span>
+              <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                onClick={() => onChange({ ...comp, options: comp.options.filter(o => o.id !== opt.id) })}>
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+            <Field label={t("selectOptionLabel")}>
+              <Input value={opt.label}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, label: e.target.value } : o) })}
+                className={COMPACT_INPUT_CN} />
+            </Field>
+            <Field label={t("selectOptionValue")}>
+              <Input value={opt.value}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, value: e.target.value } : o) })}
+                className={COMPACT_INPUT_CN} />
+            </Field>
+            <Field label={t("selectOptionDescription")}>
+              <Input value={opt.description}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, description: e.target.value } : o) })}
+                className={COMPACT_INPUT_CN} />
+            </Field>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={opt.isDefault}
+                onChange={e => onChange({ ...comp, options: comp.options.map(o => o.id === opt.id ? { ...o, isDefault: e.target.checked } : o) })}
+                className="h-3.5 w-3.5 rounded border-input accent-primary" />
+              <span className="text-xs text-muted-foreground">{t("selectOptionDefault")}</span>
+            </label>
+          </div>
+        ))}
+        <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+          onClick={() => onChange({ ...comp, options: [...comp.options, { id: uid(), label: "", value: "", description: "", isDefault: false }] })}>
+          <Plus className="h-3.5 w-3.5 mr-1" />{t("addSelectOption")}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function GenericSelectEditorFields({ comp, onChange }: {
+  readonly comp: GenericSelectState;
+  readonly onChange: (updated: GenericSelectState) => void;
+}) {
+  return <SelectMenuCommonFields comp={comp} onChange={updated => onChange(updated as GenericSelectState)} />;
+}
+
 function ActionRowEditorFields({ comp, onChange }: {
   readonly comp: ActionRowState;
   readonly onChange: (updated: ActionRowState) => void;
 }) {
   const t = useTranslations("EmbedEditor");
+  const hasSelectMenu = !!comp.selectMenu;
+
+  const switchToSelect = (type: SelectMenuEditorState["type"]) => {
+    const defaultSelect = createDefaultV2Component(type) as SelectMenuEditorState;
+    onChange({ ...comp, selectMenu: defaultSelect, buttons: [] });
+  };
+  const switchToButtons = () => onChange({ ...comp, selectMenu: undefined });
+
   return (
-    <div className="space-y-2">
-      {comp.buttons.map((btn, btnIdx) => (
-        <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
-            <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-              onClick={() => onChange({ ...comp, buttons: comp.buttons.filter(b => b.id !== btn.id) })}>
-              <Trash2 className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-          <Field label={t("buttonLabel")}>
-            <Input value={btn.label}
-              onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) })}
-              className={COMPACT_INPUT_CN} />
-          </Field>
-          <Field label={t("buttonStyle")}>
-            <div className="flex flex-wrap gap-1">
-              {([
-                { style: 1 as const, label: t("buttonStylePrimary") },
-                { style: 2 as const, label: t("buttonStyleSecondary") },
-                { style: 3 as const, label: t("buttonStyleSuccess") },
-                { style: 4 as const, label: t("buttonStyleDanger") },
-                { style: 5 as const, label: t("buttonStyleLink") },
-              ]).map(({ style, label }) => (
-                <button key={style} type="button"
-                  onClick={() => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, style } : b) })}
-                  className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                    btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                  {label}
-                </button>
-              ))}
-            </div>
-          </Field>
-          {btn.style === 5 && (
-            <Field label={t("buttonUrl")}>
-              <Input value={btn.url}
-                onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) })}
-                placeholder="https://..." className={COMPACT_INPUT_CN} />
-            </Field>
-          )}
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={btn.disabled}
-              onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) })}
-              className="h-3.5 w-3.5 rounded border-input accent-primary" />
-            <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
-          </label>
+    <div className="space-y-3">
+      <Field label={t("actionRowMode")}>
+        <div className="flex gap-2 flex-wrap">
+          <button type="button"
+            onClick={switchToButtons}
+            className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+              !hasSelectMenu ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+            {t("actionRowModeButtons")}
+          </button>
+          {([
+            { type: "string_select" as const, label: t("stringSelectLabel") },
+            { type: "user_select" as const, label: t("userSelectLabel") },
+            { type: "role_select" as const, label: t("roleSelectLabel") },
+            { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
+            { type: "channel_select" as const, label: t("channelSelectLabel") },
+          ]).map(({ type, label }) => (
+            <button key={type} type="button"
+              onClick={() => switchToSelect(type)}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                comp.selectMenu?.type === type ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {label}
+            </button>
+          ))}
         </div>
-      ))}
-      <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-        onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] })}>
-        <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
-      </Button>
+      </Field>
+      {!hasSelectMenu && (
+        <>
+          {comp.buttons.map((btn, btnIdx) => (
+            <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                  onClick={() => onChange({ ...comp, buttons: comp.buttons.filter(b => b.id !== btn.id) })}>
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+              <Field label={t("buttonLabel")}>
+                <Input value={btn.label}
+                  onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) })}
+                  className={COMPACT_INPUT_CN} />
+              </Field>
+              <Field label={t("buttonStyle")}>
+                <div className="flex flex-wrap gap-1">
+                  {([
+                    { style: 1 as const, label: t("buttonStylePrimary") },
+                    { style: 2 as const, label: t("buttonStyleSecondary") },
+                    { style: 3 as const, label: t("buttonStyleSuccess") },
+                    { style: 4 as const, label: t("buttonStyleDanger") },
+                    { style: 5 as const, label: t("buttonStyleLink") },
+                  ]).map(({ style, label }) => (
+                    <button key={style} type="button"
+                      onClick={() => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, style } : b) })}
+                      className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                        btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </Field>
+              {btn.style === 5 && (
+                <Field label={t("buttonUrl")}>
+                  <Input value={btn.url}
+                    onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) })}
+                    placeholder="https://..." className={COMPACT_INPUT_CN} />
+                </Field>
+              )}
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={btn.disabled}
+                  onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) })}
+                  className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
+              </label>
+            </div>
+          ))}
+          <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+            onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] })}>
+            <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
+          </Button>
+        </>
+      )}
+      {comp.selectMenu && comp.selectMenu.type === "string_select" && (
+        <StringSelectEditorFields
+          comp={comp.selectMenu}
+          onChange={updated => onChange({ ...comp, selectMenu: updated })}
+        />
+      )}
+      {comp.selectMenu && comp.selectMenu.type !== "string_select" && (
+        <GenericSelectEditorFields
+          comp={comp.selectMenu as GenericSelectState}
+          onChange={updated => onChange({ ...comp, selectMenu: updated })}
+        />
+      )}
     </div>
   );
 }
@@ -1369,6 +1601,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                           { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
                           { type: "section" as const, label: t("sectionLabel") },
                           { type: "action_row" as const, label: t("actionRowLabel") },
+                          { type: "string_select" as const, label: t("stringSelectLabel") },
+                          { type: "user_select" as const, label: t("userSelectLabel") },
+                          { type: "role_select" as const, label: t("roleSelectLabel") },
+                          { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
+                          { type: "channel_select" as const, label: t("channelSelectLabel") },
                         ] as const).map(item => (
                           <button key={item.type} type="button"
                             className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
@@ -1389,6 +1626,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   media_gallery: t("mediaGalleryLabel"),
                   action_row: t("actionRowLabel"),
                   section: t("sectionLabel"),
+                  string_select: t("stringSelectLabel"),
+                  user_select: t("userSelectLabel"),
+                  role_select: t("roleSelectLabel"),
+                  mentionable_select: t("mentionableSelectLabel"),
+                  channel_select: t("channelSelectLabel"),
                 };
                 const isExpanded = expandedV2Ids.has(comp.id);
                 const compLabel = comp.type === "raw"
@@ -1418,6 +1660,18 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                       <div className="border-t border-border/80 px-3 py-3 space-y-3">
                         {comp.type === "action_row" && (
                           <ActionRowEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
+                        )}
+                        {comp.type === "string_select" && (
+                          <StringSelectEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
+                        )}
+                        {(comp.type === "user_select" || comp.type === "role_select" || comp.type === "mentionable_select" || comp.type === "channel_select") && (
+                          <GenericSelectEditorFields
                             comp={comp}
                             onChange={updated => updateV2Component(comp.id, () => updated)}
                           />
@@ -1476,6 +1730,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                 separator: t("separatorLabel"),
                                 media_gallery: t("mediaGalleryLabel"),
                                 action_row: t("actionRowLabel"),
+                                string_select: t("stringSelectLabel"),
+                                user_select: t("userSelectLabel"),
+                                role_select: t("roleSelectLabel"),
+                                mentionable_select: t("mentionableSelectLabel"),
+                                channel_select: t("channelSelectLabel"),
                               };
                               const childLabel = childV2Labels[child.type] ?? t("sectionLabel");
                               return (
@@ -1534,6 +1793,18 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                           onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
+                                      {child.type === "string_select" && (
+                                        <StringSelectEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
+                                      )}
+                                      {(child.type === "user_select" || child.type === "role_select" || child.type === "mentionable_select" || child.type === "channel_select") && (
+                                        <GenericSelectEditorFields
+                                          comp={child as GenericSelectState}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
+                                      )}
                                     </div>
                                   )}
                                 </div>
@@ -1554,6 +1825,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                       { type: "media_gallery" as const, label: t("mediaGalleryLabel") },
                                       { type: "section" as const, label: t("sectionLabel") },
                                       { type: "action_row" as const, label: t("actionRowLabel") },
+                                      { type: "string_select" as const, label: t("stringSelectLabel") },
+                                      { type: "user_select" as const, label: t("userSelectLabel") },
+                                      { type: "role_select" as const, label: t("roleSelectLabel") },
+                                      { type: "mentionable_select" as const, label: t("mentionableSelectLabel") },
+                                      { type: "channel_select" as const, label: t("channelSelectLabel") },
                                     ] as const).map(item => (
                                       <button key={item.type} type="button"
                                         className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
