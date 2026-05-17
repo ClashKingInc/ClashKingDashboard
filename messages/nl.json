@@ -2534,6 +2534,7 @@
     "thumbnailAlt": "Alt-tekst miniatuur",
     "accentColor": "Accentkleur",
     "addContainer": "Subcomponent toevoegen",
+    "containerSpoiler": "Spoiler container",
     "actionRowLabel": "Actierij",
     "addButton": "Knop toevoegen",
     "buttonLabel": "Tekst",

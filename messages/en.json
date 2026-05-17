@@ -2531,6 +2531,7 @@
     "thumbnailAlt": "Thumbnail alt text",
     "accentColor": "Accent colour",
     "addContainer": "Add child component",
+    "containerSpoiler": "Spoiler container",
     "actionRowLabel": "Action Row",
     "addButton": "Add button",
     "buttonLabel": "Label",

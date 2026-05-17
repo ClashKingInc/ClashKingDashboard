@@ -641,16 +641,22 @@ function V2ContainerPreview({ component }: { readonly component: ContainerCompon
     <div
       className={cn(
         "relative rounded-lg overflow-hidden border border-[#3b3d44] bg-[#232428] text-[#dbdee1] flex flex-col gap-1.5 p-4",
+        component.spoiler && "cursor-pointer",
       )}
     >
       {accentColor && (
         <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l" style={{ backgroundColor: accentColor }} />
       )}
-      <div className={cn("flex flex-col gap-1.5", accentColor ? "pl-2" : "")}>
+      <div className={cn("flex flex-col gap-1.5", accentColor ? "pl-2" : "", component.spoiler && "blur-md select-none")}>
         {component.components.map((child, i) => (
           <V2ContainerChildPreview key={i} component={child} /> // NOSONAR
         ))}
       </div>
+      {component.spoiler && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="rounded bg-[#1e1f22] px-2 py-1 text-xs font-medium text-[#b5bac1]">SPOILER</span>
+        </div>
+      )}
     </div>
   );
 }

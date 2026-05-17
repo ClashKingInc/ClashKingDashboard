@@ -139,8 +139,7 @@ describe("v2 components", () => {
     expect(state.items[0].url).toBe("https://example.com/img.png");
   });
 
-  it("round-trips action_row with buttons", () => {
-    const msg = createV1Message();
+  it("round-trips action_row with buttons", () => {    const msg = createV1Message();
     msg.mode = "v2";
     msg.components = [
       {
@@ -166,6 +165,20 @@ describe("v2 components", () => {
       expect(ar.buttons[0].label).toBe("Click me");
       expect(ar.buttons[1].url).toBe("https://example.com");
     }
+  });
+
+  it("round-trips a container with spoiler=true", () => {
+    const original: ContainerComponent = {
+      type: 17,
+      accent_color: null,
+      spoiler: true,
+      components: [{ type: 10, content: "Surprise!" }],
+    };
+    const state = parseComponentState(original);
+    if (state.type !== "container") throw new Error("wrong type");
+    expect(state.spoiler).toBe(true);
+    const back = serializeComponentState(state);
+    expect((back as any).spoiler).toBe(true);
   });
 });
 

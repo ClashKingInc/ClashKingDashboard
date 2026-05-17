@@ -2554,6 +2554,7 @@
     "thumbnailAlt": "Texte alternatif de la miniature",
     "accentColor": "Couleur d'accentuation",
     "addContainer": "Ajouter un composant enfant",
+    "containerSpoiler": "Conteneur spoiler",
     "actionRowLabel": "Ligne d'action",
     "addButton": "Ajouter un bouton",
     "buttonLabel": "Texte",

@@ -29,6 +29,10 @@ import {
   type ContainerChild,
 } from "./discord-embed-preview";
 
+// Shared compact class names used across V2 sub-editor components
+const COMPACT_INPUT_CN = "bg-background border-border/80 h-8 text-sm";
+const COMPACT_TEXTAREA_CN = "bg-background border-border/80 text-sm resize-none";
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface FieldState {
@@ -75,6 +79,7 @@ interface ContainerState {
   id: string;
   type: "container";
   accentColor: string;
+  spoiler?: boolean;
   children: ContainerChildState[];
 }
 /** Preserves unknown V2 component types (e.g. Action Rows with buttons) for round-trip import/export. */
@@ -197,6 +202,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
       return {
         type: 17,
         accent_color: accent ?? undefined,
+        ...(s.spoiler ? { spoiler: true } : {}),
         components: s.children.map(child => serializeComponentState(child) as ContainerChild),
       };
     }
@@ -229,6 +235,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
       id: uid(),
       type: "container",
       accentColor: c.accent_color == null ? "" : `#${c.accent_color.toString(16).padStart(6, "0")}`,
+      spoiler: (c as any).spoiler === true,
       children: (c.components ?? []).map(child => parseComponentState(child as TopLevelComponent) as ContainerChildState),
     };
     case 10: return { id: uid(), type: "text_display", content: c.content ?? "" };
@@ -268,7 +275,7 @@ export function parseComponentState(c: TopLevelComponent): TopLevelComponentStat
 
 function createDefaultV2Component(type: TopLevelComponentState["type"]): TopLevelComponentState {
   switch (type) {
-    case "container": return { id: uid(), type: "container", accentColor: "", children: [] };
+    case "container": return { id: uid(), type: "container", accentColor: "", spoiler: false, children: [] };
     case "text_display": return { id: uid(), type: "text_display", content: "" };
     case "separator": return { id: uid(), type: "separator", divider: true, spacing: "small" };
     case "media_gallery": return { id: uid(), type: "media_gallery", items: [] };
@@ -560,6 +567,198 @@ function CollapsibleSection({ title, open, onToggle, children }: CollapsibleSect
   );
 }
 
+// ─── V2 component sub-editors ─────────────────────────────────────────────────
+
+function SeparatorEditorFields({ comp, onChange }: {
+  readonly comp: SeparatorState;
+  readonly onChange: (updated: SeparatorState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-3">
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" checked={comp.divider}
+          onChange={e => onChange({ ...comp, divider: e.target.checked })}
+          className="h-3.5 w-3.5 rounded border-input accent-primary" />
+        <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
+      </label>
+      <Field label={t("spacing")}>
+        <div className="flex gap-2">
+          {(["small", "large"] as const).map(s => (
+            <button key={s} type="button"
+              onClick={() => onChange({ ...comp, spacing: s })}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                comp.spacing === s ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {s === "small" ? t("spacingSmall") : t("spacingLarge")}
+            </button>
+          ))}
+        </div>
+      </Field>
+    </div>
+  );
+}
+
+function MediaGalleryEditorFields({ comp, onChange }: {
+  readonly comp: MediaGalleryState;
+  readonly onChange: (updated: MediaGalleryState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-2">
+      {comp.items.map((item, itemIdx) => (
+        <div key={item.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-muted-foreground">Image {itemIdx + 1}</span>
+            <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+              onClick={() => onChange({ ...comp, items: comp.items.filter(it => it.id !== item.id) })}>
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+          <Field label={t("imageUrl")}>
+            <Input value={item.url}
+              onChange={e => onChange({ ...comp, items: comp.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) })}
+              placeholder="https://..." className={COMPACT_INPUT_CN} />
+          </Field>
+          <Field label={t("imageDescription")}>
+            <Input value={item.description}
+              onChange={e => onChange({ ...comp, items: comp.items.map(it => it.id === item.id ? { ...it, description: e.target.value } : it) })}
+              className={COMPACT_INPUT_CN} />
+          </Field>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={item.spoiler}
+              onChange={e => onChange({ ...comp, items: comp.items.map(it => it.id === item.id ? { ...it, spoiler: e.target.checked } : it) })}
+              className="h-3.5 w-3.5 rounded border-input accent-primary" />
+            <span className="text-xs text-muted-foreground">{t("imageSpoiler")}</span>
+          </label>
+        </div>
+      ))}
+      <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+        onClick={() => onChange({ ...comp, items: [...comp.items, { id: uid(), url: "", description: "", spoiler: false }] })}>
+        <Plus className="h-3.5 w-3.5 mr-1" />{t("addImage")}
+      </Button>
+    </div>
+  );
+}
+
+function SectionEditorFields({ comp, onChange }: {
+  readonly comp: SectionState;
+  readonly onChange: (updated: SectionState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-3">
+      {comp.texts.map((text, textIdx) => (
+        <div key={text.id} className="space-y-1">
+          <div className="flex items-center justify-between">
+            <Label className="text-xs">{`${t("textDisplayLabel")} ${textIdx + 1}`}</Label>
+            {comp.texts.length > 1 && (
+              <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                onClick={() => onChange({ ...comp, texts: comp.texts.filter(tx => tx.id !== text.id) })}>
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
+          <Textarea value={text.content}
+            onChange={e => onChange({ ...comp, texts: comp.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) })}
+            rows={3} className={COMPACT_TEXTAREA_CN} />
+        </div>
+      ))}
+      <Button size="sm" variant="outline" className="h-7 text-xs"
+        onClick={() => onChange({ ...comp, texts: [...comp.texts, { id: uid(), type: "text_display" as const, content: "" }] })}>
+        <Plus className="h-3.5 w-3.5 mr-1" />{t("addTextBlock")}
+      </Button>
+      <Field label={t("accessory")}>
+        <div className="flex gap-2">
+          {(["none", "thumbnail"] as const).map(a => (
+            <button key={a} type="button"
+              onClick={() => onChange({ ...comp, accessoryType: a })}
+              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+              {a === "none" ? t("accessoryNone") : t("accessoryThumbnail")}
+            </button>
+          ))}
+        </div>
+      </Field>
+      {comp.accessoryType === "thumbnail" && (
+        <>
+          <Field label={t("thumbnailUrl")}>
+            <Input value={comp.thumbnailUrl}
+              onChange={e => onChange({ ...comp, thumbnailUrl: e.target.value })}
+              placeholder="https://..." className={COMPACT_INPUT_CN} />
+          </Field>
+          <Field label={t("thumbnailAlt")}>
+            <Input value={comp.thumbnailDescription}
+              onChange={e => onChange({ ...comp, thumbnailDescription: e.target.value })}
+              className={COMPACT_INPUT_CN} />
+          </Field>
+        </>
+      )}
+    </div>
+  );
+}
+
+function ActionRowEditorFields({ comp, onChange }: {
+  readonly comp: ActionRowState;
+  readonly onChange: (updated: ActionRowState) => void;
+}) {
+  const t = useTranslations("EmbedEditor");
+  return (
+    <div className="space-y-2">
+      {comp.buttons.map((btn, btnIdx) => (
+        <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
+            <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
+              onClick={() => onChange({ ...comp, buttons: comp.buttons.filter(b => b.id !== btn.id) })}>
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+          <Field label={t("buttonLabel")}>
+            <Input value={btn.label}
+              onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) })}
+              className={COMPACT_INPUT_CN} />
+          </Field>
+          <Field label={t("buttonStyle")}>
+            <div className="flex flex-wrap gap-1">
+              {([
+                { style: 1 as const, label: t("buttonStylePrimary") },
+                { style: 2 as const, label: t("buttonStyleSecondary") },
+                { style: 3 as const, label: t("buttonStyleSuccess") },
+                { style: 4 as const, label: t("buttonStyleDanger") },
+                { style: 5 as const, label: t("buttonStyleLink") },
+              ]).map(({ style, label }) => (
+                <button key={style} type="button"
+                  onClick={() => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, style } : b) })}
+                  className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
+                    btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </Field>
+          {btn.style === 5 && (
+            <Field label={t("buttonUrl")}>
+              <Input value={btn.url}
+                onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) })}
+                placeholder="https://..." className={COMPACT_INPUT_CN} />
+            </Field>
+          )}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={btn.disabled}
+              onChange={e => onChange({ ...comp, buttons: comp.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) })}
+              className="h-3.5 w-3.5 rounded border-input accent-primary" />
+            <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
+          </label>
+        </div>
+      ))}
+      <Button size="sm" variant="outline" className="h-7 text-xs w-full"
+        onClick={() => onChange({ ...comp, buttons: [...comp.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] })}>
+        <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
+      </Button>
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEditorProps) {
@@ -567,8 +766,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
   const tCommon = useTranslations("Common");
   const parsedInitialData = initialData ? payloadToMessages(initialData) : null;
   const inputClassName = "bg-background border-border/80";
-  const compactInputClassName = `${inputClassName} h-8 text-sm`;
-  const compactTextareaClassName = `${inputClassName} text-sm resize-none`;
+  const compactInputClassName = COMPACT_INPUT_CN;
+  const compactTextareaClassName = COMPACT_TEXTAREA_CN;
 
   const [messages, setMessages] = useState<MessageState[]>(() =>
     parsedInitialData ? parsedInitialData.messages : [{ id: uid(), mode: "v1", embeds: [defaultState()], content: "", components: [] }]
@@ -1218,59 +1417,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                     {isExpanded && (
                       <div className="border-t border-border/80 px-3 py-3 space-y-3">
                         {comp.type === "action_row" && (
-                          <div className="space-y-2">
-                            {comp.buttons.map((btn, btnIdx) => (
-                              <div key={btn.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs font-medium text-muted-foreground">Button {btnIdx + 1}</span>
-                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c)}>
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </div>
-                                <Field label={t("buttonLabel")}>
-                                  <Input value={btn.label}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c)}
-                                    className={compactInputClassName} />
-                                </Field>
-                                <Field label={t("buttonStyle")}>
-                                  <div className="flex flex-wrap gap-1">
-                                    {([
-                                      { style: 1 as const, label: t("buttonStylePrimary") },
-                                      { style: 2 as const, label: t("buttonStyleSecondary") },
-                                      { style: 3 as const, label: t("buttonStyleSuccess") },
-                                      { style: 4 as const, label: t("buttonStyleDanger") },
-                                      { style: 5 as const, label: t("buttonStyleLink") },
-                                    ]).map(({ style, label }) => (
-                                      <button key={style} type="button"
-                                        onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, style } : b) } : c)}
-                                        className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                                          btn.style === style ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                                        {label}
-                                      </button>
-                                    ))}
-                                  </div>
-                                </Field>
-                                {btn.style === 5 && (
-                                  <Field label={t("buttonUrl")}>
-                                    <Input value={btn.url}
-                                      onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, url: e.target.value } : b) } : c)}
-                                      placeholder="https://..." className={compactInputClassName} />
-                                  </Field>
-                                )}
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                  <input type="checkbox" checked={btn.disabled}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, disabled: e.target.checked } : b) } : c)}
-                                    className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                                  <span className="text-xs text-muted-foreground">{t("buttonDisabled")}</span>
-                                </label>
-                              </div>
-                            ))}
-                            <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-                              onClick={() => updateV2Component(comp.id, c => c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c)}>
-                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addButton")}
-                            </Button>
-                          </div>
+                          <ActionRowEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "raw" && (
                           <p className="text-xs text-muted-foreground">{t("unknownComponentHint")}</p>
@@ -1281,111 +1431,22 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                             rows={4} className={compactTextareaClassName} />
                         )}
                         {comp.type === "separator" && (
-                          <div className="space-y-3">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input type="checkbox" checked={comp.divider}
-                                onChange={e => updateV2Component(comp.id, c => c.type === "separator" ? { ...c, divider: e.target.checked } : c)}
-                                className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                              <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
-                            </label>
-                            <Field label={t("spacing")}>
-                              <div className="flex gap-2">
-                                {(["small", "large"] as const).map(s => (
-                                  <button key={s} type="button"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "separator" ? { ...c, spacing: s } : c)}
-                                    className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                                      comp.spacing === s ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                                    {s === "small" ? t("spacingSmall") : t("spacingLarge")}
-                                  </button>
-                                ))}
-                              </div>
-                            </Field>
-                          </div>
+                          <SeparatorEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "media_gallery" && (
-                          <div className="space-y-2">
-                            {comp.items.map((item, itemIdx) => (
-                              <div key={item.id} className="rounded-md border border-border/80 bg-card p-3 space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs font-medium text-muted-foreground">Image {itemIdx + 1}</span>
-                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.filter(it => it.id !== item.id) } : c)}>
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </div>
-                                <Field label={t("imageUrl")}>
-                                  <Input value={item.url}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) } : c)}
-                                    placeholder="https://..." className={compactInputClassName} />
-                                </Field>
-                                <Field label={t("imageDescription")}>
-                                  <Input value={item.description}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, description: e.target.value } : it) } : c)}
-                                    className={compactInputClassName} />
-                                </Field>
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                  <input type="checkbox" checked={item.spoiler}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, spoiler: e.target.checked } : it) } : c)}
-                                    className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                                  <span className="text-xs text-muted-foreground">{t("imageSpoiler")}</span>
-                                </label>
-                              </div>
-                            ))}
-                            <Button size="sm" variant="outline" className="h-7 text-xs w-full"
-                              onClick={() => updateV2Component(comp.id, c => c.type === "media_gallery" ? { ...c, items: [...c.items, { id: uid(), url: "", description: "", spoiler: false }] } : c)}>
-                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addImage")}
-                            </Button>
-                          </div>
+                          <MediaGalleryEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "section" && (
-                          <div className="space-y-3">
-                            {comp.texts.map((text, textIdx) => (
-                              <div key={text.id} className="space-y-1">
-                                <div className="flex items-center justify-between">
-                                  <Label className="text-xs">{`${t("textDisplayLabel")} ${textIdx + 1}`}</Label>
-                                  {comp.texts.length > 1 && (
-                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                      onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: c.texts.filter(tx => tx.id !== text.id) } : c)}>
-                                      <Trash2 className="h-3.5 w-3.5" />
-                                    </Button>
-                                  )}
-                                </div>
-                                <Textarea value={text.content}
-                                  onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: c.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) } : c)}
-                                  rows={3} className={compactTextareaClassName} />
-                              </div>
-                            ))}
-                            <Button size="sm" variant="outline" className="h-7 text-xs"
-                              onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, texts: [...c.texts, { id: uid(), type: "text_display" as const, content: "" }] } : c)}>
-                              <Plus className="h-3.5 w-3.5 mr-1" />{t("addTextBlock")}
-                            </Button>
-                            <Field label={t("accessory")}>
-                              <div className="flex gap-2">
-                                {(["none", "thumbnail"] as const).map(a => (
-                                  <button key={a} type="button"
-                                    onClick={() => updateV2Component(comp.id, c => c.type === "section" ? { ...c, accessoryType: a } : c)}
-                                    className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                                      comp.accessoryType === a ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-                                    {a === "none" ? t("accessoryNone") : t("accessoryThumbnail")}
-                                  </button>
-                                ))}
-                              </div>
-                            </Field>
-                            {comp.accessoryType === "thumbnail" && (
-                              <>
-                                <Field label={t("thumbnailUrl")}>
-                                  <Input value={comp.thumbnailUrl}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, thumbnailUrl: e.target.value } : c)}
-                                    placeholder="https://..." className={compactInputClassName} />
-                                </Field>
-                                <Field label={t("thumbnailAlt")}>
-                                  <Input value={comp.thumbnailDescription}
-                                    onChange={e => updateV2Component(comp.id, c => c.type === "section" ? { ...c, thumbnailDescription: e.target.value } : c)}
-                                    className={compactInputClassName} />
-                                </Field>
-                              </>
-                            )}
-                          </div>
+                          <SectionEditorFields
+                            comp={comp}
+                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                          />
                         )}
                         {comp.type === "container" && (
                           <div className="space-y-2">
@@ -1402,6 +1463,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                   className={cn(inputClassName, "font-mono text-sm w-28")} maxLength={7} />
                               </div>
                             </Field>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" checked={comp.spoiler ?? false}
+                                onChange={e => updateV2Component(comp.id, c => c.type === "container" ? { ...c, spoiler: e.target.checked } : c)}
+                                className="h-3.5 w-3.5 rounded border-input accent-primary" />
+                              <span className="text-xs text-muted-foreground">{t("containerSpoiler")}</span>
+                            </label>
                             {comp.children.map((child, childIdx) => {
                               const childIsExpanded = expandedV2Ids.has(child.id);
                               const childV2Labels: Record<string, string> = {
@@ -1444,70 +1511,28 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                           rows={3} className={compactTextareaClassName} />
                                       )}
                                       {child.type === "separator" && (
-                                        <label className="flex items-center gap-2 cursor-pointer">
-                                          <input type="checkbox" checked={child.divider}
-                                            onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "separator" ? { ...c, divider: e.target.checked } : c))}
-                                            className="h-3.5 w-3.5 rounded border-input accent-primary" />
-                                          <span className="text-xs text-muted-foreground">{t("dividerLine")}</span>
-                                        </label>
+                                        <SeparatorEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                       {child.type === "media_gallery" && (
-                                        <div className="space-y-2">
-                                          {child.items.map((item, iIdx) => (
-                                            <div key={item.id} className="rounded border border-border/60 p-2 space-y-1.5">
-                                              <div className="flex items-center justify-between">
-                                                <span className="text-xs text-muted-foreground">Image {iIdx + 1}</span>
-                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-muted-foreground hover:text-destructive"
-                                                  onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: c.items.filter(it => it.id !== item.id) } : c))}>
-                                                  <Trash2 className="h-3 w-3" />
-                                                </Button>
-                                              </div>
-                                              <Input value={item.url}
-                                                onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: c.items.map(it => it.id === item.id ? { ...it, url: e.target.value } : it) } : c))}
-                                                placeholder="https://..." className={cn(compactInputClassName, "text-xs")} />
-                                            </div>
-                                          ))}
-                                          <Button size="sm" variant="outline" className="h-6 text-xs w-full"
-                                            onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "media_gallery" ? { ...c, items: [...c.items, { id: uid(), url: "", description: "", spoiler: false }] } : c))}>
-                                            <Plus className="h-3 w-3 mr-1" />{t("addImage")}
-                                          </Button>
-                                        </div>
+                                        <MediaGalleryEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                       {child.type === "section" && (
-                                        <div className="space-y-2">
-                                          {child.texts.map(text => (
-                                            <Textarea key={text.id} value={text.content}
-                                              onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "section" ? { ...c, texts: c.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) } : c))}
-                                              rows={2} className={compactTextareaClassName} />
-                                          ))}
-                                          {child.accessoryType === "thumbnail" && (
-                                            <Input value={child.thumbnailUrl}
-                                              onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "section" ? { ...c, thumbnailUrl: e.target.value } : c))}
-                                              placeholder={t("thumbnailUrl")} className={compactInputClassName} />
-                                          )}
-                                        </div>
+                                        <SectionEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                       {child.type === "action_row" && (
-                                        <div className="space-y-2">
-                                          {child.buttons.map((btn, btnIdx) => (
-                                            <div key={btn.id} className="rounded border border-border/60 p-2 space-y-1.5">
-                                              <div className="flex items-center justify-between">
-                                                <span className="text-xs text-muted-foreground">Button {btnIdx + 1}</span>
-                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-muted-foreground hover:text-destructive"
-                                                  onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.filter(b => b.id !== btn.id) } : c))}>
-                                                  <Trash2 className="h-3 w-3" />
-                                                </Button>
-                                              </div>
-                                              <Input value={btn.label}
-                                                onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: c.buttons.map(b => b.id === btn.id ? { ...b, label: e.target.value } : b) } : c))}
-                                                placeholder={t("buttonLabel")} className={cn(compactInputClassName, "text-xs")} />
-                                            </div>
-                                          ))}
-                                          <Button size="sm" variant="outline" className="h-6 text-xs w-full"
-                                            onClick={() => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "action_row" ? { ...c, buttons: [...c.buttons, { id: uid(), label: "", style: 2 as const, url: "", disabled: false }] } : c))}>
-                                            <Plus className="h-3 w-3 mr-1" />{t("addButton")}
-                                          </Button>
-                                        </div>
+                                        <ActionRowEditorFields
+                                          comp={child}
+                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                        />
                                       )}
                                     </div>
                                   )}
