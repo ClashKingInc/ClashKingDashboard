@@ -28,6 +28,7 @@ import {
   type TopLevelComponent,
   type ContainerChild,
   type SelectMenuComponent,
+  type SectionComponent,
   type FileComponent,
 } from "./discord-embed-preview";
 
@@ -268,7 +269,7 @@ export function serializeComponentState(s: TopLevelComponentState): TopLevelComp
       };
     case "section": {
       const texts = s.texts.filter(t => t.content.trim()).map(t => ({ type: 10 as const, content: t.content }));
-      let accessory: Record<string, unknown> | null = null;
+      let accessory: NonNullable<SectionComponent["accessory"]> | null = null;
       if (s.accessoryType === "thumbnail" && s.thumbnailUrl.trim()) {
         accessory = { type: 11, media: { url: s.thumbnailUrl.trim() }, ...(s.thumbnailDescription.trim() ? { description: s.thumbnailDescription.trim() } : {}) };
       } else if (s.accessoryType === "button") {
