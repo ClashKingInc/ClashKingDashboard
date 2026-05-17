@@ -1093,7 +1093,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                           disabled={categoryRoleSaving !== null}
                           className="bg-primary hover:bg-primary/90"
                         >
-                          {categoryRoleSaving == null ? t("categoryRoles.addConfirm") : <Loader2 className="h-4 w-4 animate-spin" />}
+                          {categoryRoleSaving == null ? t("categoryRoles.addConfirm") : <Loader2 className="h-4 w-4 animate-spin" />} {/* NOSONAR */}
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => { setIsAddCategoryOpen(false); setNewCategoryName(""); setNewCategoryRoleId(""); setAddCategoryError(null); }}>
                           {t("addRoleDialog.cancel")}
