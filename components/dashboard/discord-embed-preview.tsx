@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "next-intl";
 import { ChevronDown, ExternalLink, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -30,6 +32,21 @@ interface EmbedImage {
 
 interface EmbedThumbnail {
   url?: string;
+}
+
+export interface PreviewDiscordChannel {
+  id: string;
+  name: string;
+}
+
+export interface PreviewDiscordRole {
+  id: string;
+  name: string;
+}
+
+export interface DiscordPreviewMentionContext {
+  channels?: PreviewDiscordChannel[];
+  roles?: PreviewDiscordRole[];
 }
 
 export interface DiscordEmbed {
@@ -191,6 +208,116 @@ type MarkdownParseResult = {
 
 type MarkdownParser = (text: string, start: number, key: number) => MarkdownParseResult | null;
 
+function roleMentionClassName() {
+  return "inline-flex h-[1.375rem] items-center align-middle rounded bg-[#5865f233] px-1.5 text-[0.92em] font-medium leading-none text-[#c9cdfb]";
+}
+
+function channelMentionClassName() {
+  return "inline-flex h-[1.375rem] items-center align-middle rounded bg-[#5865f233] px-1.5 text-[0.92em] font-medium leading-none text-[#c9cdfb]";
+}
+
+function specialMentionClassName() {
+  return "inline-flex h-[1.375rem] cursor-pointer items-center gap-1 rounded bg-[#5865f233] px-1.5 text-[0.92em] font-medium leading-none text-[#c9cdfb] align-middle transition-colors hover:bg-[#5865f255]";
+}
+
+function pad2(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+function formatDiscordDateTime(date: Date, locale: string, options: { month: "short" | "long"; includeWeekday: boolean; includeSeconds?: boolean }): string {
+  const weekday = options.includeWeekday ? new Intl.DateTimeFormat(locale, { weekday: "long" }).format(date) : "";
+  const day = new Intl.DateTimeFormat(locale, { day: "numeric" }).format(date);
+  const month = new Intl.DateTimeFormat(locale, { month: options.month }).format(date);
+  const year = new Intl.DateTimeFormat(locale, { year: "numeric" }).format(date);
+  const time = options.includeSeconds
+    ? `${pad2(date.getHours())}:${pad2(date.getMinutes())}:${pad2(date.getSeconds())}`
+    : `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+
+  const dateText = [weekday, day, month, year].filter(Boolean).join(" ");
+  return `${dateText} ${time}`.trim();
+}
+
+function DiscordServerGuideIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
+      <path d="M11 3a1 1 0 1 1 2 0v2h5.75c.16 0 .3.07.4.2l2.63 3.5a.5.5 0 0 1 0 .6l-2.63 3.5a.5.5 0 0 1-.4.2H13v5h2a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-1c0-1.1.9-2 2-2h2v-5H2.8a.5.5 0 0 1-.44-.72L3.9 9.22a.5.5 0 0 0 0-.44L2.36 5.72A.5.5 0 0 1 2.81 5H11V3z" />
+    </svg>
+  );
+}
+
+function DiscordBrowseChannelsIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
+      <path fillRule="evenodd" clipRule="evenodd" d="M18.5 23c.88 0 1.7-.25 2.4-.69l1.4 1.4a1 1 0 0 0 1.4-1.42l-1.39-1.4A4.5 4.5 0 1 0 18.5 23zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+      <path d="M3 3a1 1 0 0 0 0 2h18a1 1 0 1 0 0-2H3zM2 8a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 3a1 1 0 1 0 0 2h11a1 1 0 1 0 0-2H3zm-1 5a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 3a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H3z" />
+    </svg>
+  );
+}
+
+function formatRelativeTimestamp(date: Date, locale: string): string {
+  const diffMs = date.getTime() - Date.now();
+  const diffSeconds = Math.round(diffMs / 1000);
+  const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  const ranges: Array<[Intl.RelativeTimeFormatUnit, number]> = [
+    ["year", 60 * 60 * 24 * 365],
+    ["month", 60 * 60 * 24 * 30],
+    ["week", 60 * 60 * 24 * 7],
+    ["day", 60 * 60 * 24],
+    ["hour", 60 * 60],
+    ["minute", 60],
+    ["second", 1],
+  ];
+
+  for (const [unit, secondsPerUnit] of ranges) {
+    if (Math.abs(diffSeconds) >= secondsPerUnit || unit === "second") {
+      return formatter.format(Math.round(diffSeconds / secondsPerUnit), unit);
+    }
+  }
+
+  return formatter.format(0, "second");
+}
+
+function formatDiscordTimestamp(unixSeconds: number, style: string | undefined, locale: string): string {
+  const date = new Date(unixSeconds * 1000);
+  if (Number.isNaN(date.getTime())) {
+    return `<t:${unixSeconds}${style ? `:${style}` : ""}>`;
+  }
+
+  switch (style) {
+    case "t":
+      return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+    case "T":
+      return `${pad2(date.getHours())}:${pad2(date.getMinutes())}:${pad2(date.getSeconds())}`;
+    case "d":
+      return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+    case "D":
+      return [new Intl.DateTimeFormat(locale, { day: "numeric" }).format(date), new Intl.DateTimeFormat(locale, { month: "long" }).format(date), new Intl.DateTimeFormat(locale, { year: "numeric" }).format(date)].join(" ");
+    case "F":
+      return formatDiscordDateTime(date, locale, { month: "long", includeWeekday: true });
+    case "R":
+      return formatRelativeTimestamp(date, locale);
+    case "f":
+    default:
+      return formatDiscordDateTime(date, locale, { month: "long", includeWeekday: false });
+  }
+}
+
+function formatDiscordTimestampTooltip(unixSeconds: number, locale: string): string {
+  const date = new Date(unixSeconds * 1000);
+  if (Number.isNaN(date.getTime())) {
+    return String(unixSeconds);
+  }
+  return formatDiscordDateTime(date, locale, { month: "long", includeWeekday: true });
+}
+
+function resolveChannelName(id: string, mentionContext?: DiscordPreviewMentionContext): string {
+  return mentionContext?.channels?.find((channel) => channel.id === id)?.name ?? "channel";
+}
+
+function resolveRoleName(id: string, mentionContext?: DiscordPreviewMentionContext): string {
+  return mentionContext?.roles?.find((role) => role.id === id)?.name ?? "role";
+}
+
 function parseDelimited(
   text: string,
   start: number,
@@ -253,9 +380,131 @@ const parseLink: MarkdownParser = (text, start, key) => {
   };
 };
 
-const MARKDOWN_PARSERS: MarkdownParser[] = [parseBold, parseUnderline, parseItalic, parseCode, parseLink];
+function createTimestampParser(locale: string): MarkdownParser {
+  return (text, start, key) => {
+    const match = /^<t:(\d+)(?::([tTdDfFR]))?>/.exec(text.slice(start));
+    if (!match) return null;
+    const unix = Number.parseInt(match[1], 10);
+    return {
+      node: (
+        <TooltipProvider key={key} delayDuration={150}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                title={new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "medium" }).format(new Date(unix * 1000))}
+                className="relative top-px inline-flex h-[1.375rem] cursor-default items-center rounded-[3px] bg-primary-400/[0.24] px-[2px] text-[0.92em] leading-none text-[#dbdee1] align-middle transition-colors hover:bg-primary-400/[0.35] dark:bg-primary-500/[0.48]"
+              >
+                {formatDiscordTimestamp(unix, match[2], locale)}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="rounded-xl bg-[#111214] px-4 py-3 text-center text-sm text-white shadow-2xl">
+              <span className="block whitespace-nowrap">{formatDiscordTimestampTooltip(unix, locale)}</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ),
+      nextIndex: start + match[0].length,
+    };
+  };
+}
 
-function renderMarkdown(text: string): React.ReactNode {
+const SPECIAL_ID_MENTIONS = {
+  guide: { label: "Servergids", icon: DiscordServerGuideIcon },
+  browse: { label: "Kanalen browsen", icon: DiscordBrowseChannelsIcon },
+  customize: { label: "Kanalen en rollen", icon: DiscordBrowseChannelsIcon },
+} as const;
+
+const parseSpecialIdMention: MarkdownParser = (text, start, key) => {
+  const match = /^<id:(guide|browse|customize)>/.exec(text.slice(start));
+  if (!match) return null;
+
+  const mention = SPECIAL_ID_MENTIONS[match[1] as keyof typeof SPECIAL_ID_MENTIONS];
+  const Icon = mention.icon;
+  return {
+    node: (
+      <button
+        key={key}
+        type="button"
+        className={specialMentionClassName()}
+        onClick={() => undefined}
+      >
+        <Icon className="h-4 w-4 shrink-0" />
+        {mention.label}
+      </button>
+    ),
+    nextIndex: start + match[0].length,
+  };
+};
+
+function createChannelMentionParser(mentionContext?: DiscordPreviewMentionContext): MarkdownParser {
+  return (text, start, key) => {
+    const match = /^<#(\d+)>/.exec(text.slice(start));
+    if (!match) return null;
+    return {
+      node: <span key={key} className={channelMentionClassName()}>{`#${resolveChannelName(match[1], mentionContext)}`}</span>,
+      nextIndex: start + match[0].length,
+    };
+  };
+}
+
+function createRoleMentionParser(mentionContext?: DiscordPreviewMentionContext): MarkdownParser {
+  return (text, start, key) => {
+    const roleMatch = /^<@&(\d+)>/.exec(text.slice(start));
+    if (roleMatch) {
+      return {
+        node: <span key={key} className={roleMentionClassName()}>{`@${resolveRoleName(roleMatch[1], mentionContext)}`}</span>,
+        nextIndex: start + roleMatch[0].length,
+      };
+    }
+
+    const userMatch = /^<@!?(\d+)>/.exec(text.slice(start));
+    if (!userMatch) return null;
+    return {
+      node: <span key={key} className={roleMentionClassName()}>{`@user-${userMatch[1].slice(-4)}`}</span>,
+      nextIndex: start + userMatch[0].length,
+    };
+  };
+}
+
+const parseBroadcastMention: MarkdownParser = (text, start, key) => {
+  if (text.startsWith("@everyone", start)) {
+    return {
+      node: <span key={key} className={roleMentionClassName()}>@everyone</span>,
+      nextIndex: start + "@everyone".length,
+    };
+  }
+  if (text.startsWith("@here", start)) {
+    return {
+      node: <span key={key} className={roleMentionClassName()}>@here</span>,
+      nextIndex: start + "@here".length,
+    };
+  }
+  return null;
+};
+
+const parseCustomEmoji: MarkdownParser = (text, start, key) => {
+  const match = /^<(a?):([a-zA-Z0-9_]+):(\d+)>/.exec(text.slice(start));
+  if (!match) return null;
+  return {
+    node: <span key={key} className="font-medium text-[#f0b232]">{`:${match[2]}:`}</span>,
+    nextIndex: start + match[0].length,
+  };
+};
+
+function renderMarkdown(text: string, mentionContext: DiscordPreviewMentionContext | undefined, locale: string): React.ReactNode {
+  const MARKDOWN_PARSERS: MarkdownParser[] = [
+    parseLink,
+    createTimestampParser(locale),
+    parseSpecialIdMention,
+    createChannelMentionParser(mentionContext),
+    createRoleMentionParser(mentionContext),
+    parseBroadcastMention,
+    parseCustomEmoji,
+    parseBold,
+    parseUnderline,
+    parseItalic,
+    parseCode,
+  ];
   const parts: React.ReactNode[] = [];
   let i = 0;
   let key = 0;
@@ -281,10 +530,10 @@ function renderMarkdown(text: string): React.ReactNode {
   return <>{parts}</>;
 }
 
-function renderLines(text: string): React.ReactNode {
+function renderLines(text: string, mentionContext: DiscordPreviewMentionContext | undefined, locale: string): React.ReactNode {
   return text.split("\n").map((line, i, arr) => (
     <span key={`line-${i}`}>{/* NOSONAR — index is the only stable key for text line fragments */}
-      {renderMarkdown(line)}
+      {renderMarkdown(line, mentionContext, locale)}
       {i < arr.length - 1 && <br />}
     </span>
   ));
@@ -295,9 +544,11 @@ function renderLines(text: string): React.ReactNode {
 interface Props {
   readonly embed: DiscordEmbed;
   readonly className?: string;
+  readonly mentionContext?: DiscordPreviewMentionContext;
 }
 
-export function DiscordEmbedPreview({ embed, className }: Props) {
+export function DiscordEmbedPreview({ embed, className, mentionContext }: Props) {
+  const locale = useLocale();
   const accentColor = embed.color == null ? "#1d9bd1" : intToHex(embed.color);
   const hasContent =
     embed.author?.name || embed.title || embed.description ||
@@ -328,8 +579,8 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
             )}
             <span className="text-xs font-semibold text-[#dbdee1]">
               {embed.author.url
-                ? <a href={embed.author.url} target="_blank" rel="noreferrer" className="hover:underline">{embed.author.name}</a>
-                : embed.author.name}
+                ? <a href={embed.author.url} target="_blank" rel="noreferrer" className="hover:underline">{renderLines(embed.author.name, mentionContext, locale)}</a>
+                : renderLines(embed.author.name, mentionContext, locale)}
             </span>
           </div>
         )}
@@ -338,8 +589,8 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
         {embed.title && (
           <div className="font-semibold text-white text-sm">
             {embed.url
-              ? <a href={embed.url} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{embed.title}</a>
-              : embed.title}
+              ? <a href={embed.url} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{renderLines(embed.title, mentionContext, locale)}</a>
+              : renderLines(embed.title, mentionContext, locale)}
           </div>
         )}
 
@@ -348,7 +599,7 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
           <div className="flex flex-col gap-1.5 flex-1 min-w-0">
             {embed.description && (
               <div className="text-xs text-[#dbdee1] whitespace-pre-wrap break-words">
-                {renderLines(embed.description)}
+                {renderLines(embed.description, mentionContext, locale)}
               </div>
             )}
 
@@ -361,9 +612,9 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
                     className="flex flex-col gap-0.5"
                     style={{ gridColumn: field.inline ? "span 1" : "span 3" }}
                   >
-                    <span className="text-xs font-semibold text-white">{field.name}</span>
+                    <span className="text-xs font-semibold text-white">{renderLines(field.name, mentionContext, locale)}</span>
                     <span className="text-xs text-[#dbdee1] whitespace-pre-wrap break-words">
-                      {renderLines(field.value)}
+                      {renderLines(field.value, mentionContext, locale)}
                     </span>
                   </div>
                 ))}
@@ -396,9 +647,9 @@ export function DiscordEmbedPreview({ embed, className }: Props) {
               <img src={embed.footer.icon_url} alt="" className="w-4 h-4 rounded-full object-cover" />
             )}
             <span className="text-[0.7rem] text-[#949ba4]">
-              {embed.footer?.text}
+              {embed.footer?.text ? renderLines(embed.footer.text, mentionContext, locale) : null}
               {embed.footer?.text && embed.timestamp && " • "}
-              {embed.timestamp && new Date(embed.timestamp).toLocaleDateString()}
+              {embed.timestamp && new Date(embed.timestamp).toLocaleDateString(locale)}
             </span>
           </div>
         )}
@@ -414,9 +665,11 @@ interface DiscordMessagePreviewProps {
   readonly components?: TopLevelComponent[];
   readonly isV2?: boolean;
   readonly className?: string;
+  readonly mentionContext?: DiscordPreviewMentionContext;
 }
 
-export function DiscordMessagePreview({ profile, content, embeds, components, isV2, className }: DiscordMessagePreviewProps) {
+export function DiscordMessagePreview({ profile, content, embeds, components, isV2, className, mentionContext }: DiscordMessagePreviewProps) {
+  const locale = useLocale();
   const displayName = profile?.name?.trim() || "ClashKing";
   const avatarUrl = profile?.avatar_url?.trim() || clashKingAssets.logos.botApp;
   const v1Content = content?.trim() ? content : null;
@@ -435,7 +688,7 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
           </div>
           {messageContent && (
             <p className="mt-1 whitespace-pre-wrap break-words text-sm text-foreground">
-              {messageContent}
+              {renderLines(messageContent, mentionContext, locale)}
             </p>
           )}
         </div>
@@ -443,12 +696,13 @@ export function DiscordMessagePreview({ profile, content, embeds, components, is
       <div className="space-y-2 pl-12">
         {v2Components
           ? v2Components.map((comp, index) => (
-              <V2TopLevelPreview key={`v2-${comp.type}-${index}`} component={comp} /> // NOSONAR
+              <V2TopLevelPreview key={`v2-${comp.type}-${index}`} component={comp} mentionContext={mentionContext} /> // NOSONAR
             ))
           : embeds.map((embed, index) => (
               <DiscordEmbedPreview
                 key={`${embed.title ?? "embed"}-${index}`} // NOSONAR — index keeps order-stable previews for duplicate embeds
                 embed={embed}
+                mentionContext={mentionContext}
               />
             ))}
       </div>
@@ -576,7 +830,6 @@ function SelectMenuPreview({ component }: { readonly component: SelectMenuCompon
       {open && isString && options.length > 0 && (
         <div className="rounded border border-[#3b3d44] bg-[#2b2d31] overflow-hidden">
           {options.slice(0, 25).map((opt, i) => (
-            // eslint-disable-next-line react/no-array-index-key
             <div key={i} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
               <span className="font-medium">{opt.label}</span>
               {opt.description && <span className="ml-2 text-[#87898c]">{opt.description}</span>}
@@ -603,10 +856,10 @@ function ActionRowPreview({ component }: { readonly component: ActionRowComponen
   );
 }
 
-function V2TextDisplayPreview({ component }: { readonly component: TextDisplayComponent }) {
+function V2TextDisplayPreview({ component, mentionContext, locale }: { readonly component: TextDisplayComponent; readonly mentionContext?: DiscordPreviewMentionContext; readonly locale: string }) {
   return (
     <div className="text-xs text-[#dbdee1] whitespace-pre-wrap break-words leading-snug">
-      {renderLines(component.content)}
+      {renderLines(component.content, mentionContext, locale)}
     </div>
   );
 }
@@ -646,7 +899,7 @@ function V2MediaGalleryPreview({ component }: { readonly component: MediaGallery
   );
 }
 
-function V2SectionPreview({ component }: { readonly component: SectionComponent }) {
+function V2SectionPreview({ component, mentionContext, locale }: { readonly component: SectionComponent; readonly mentionContext?: DiscordPreviewMentionContext; readonly locale: string }) {
   const accessory = component.accessory ?? null;
   const isThumbnail = accessory?.type === COMPONENT_TYPE.THUMBNAIL;
   const isButton = accessory?.type === COMPONENT_TYPE.BUTTON;
@@ -656,7 +909,7 @@ function V2SectionPreview({ component }: { readonly component: SectionComponent 
         {component.components
           .filter(c => c.type === COMPONENT_TYPE.TEXT_DISPLAY)
           .map((c, i) => (
-            <V2TextDisplayPreview key={i} component={c as TextDisplayComponent} /> // NOSONAR
+            <V2TextDisplayPreview key={i} component={c as TextDisplayComponent} mentionContext={mentionContext} locale={locale} /> // NOSONAR
           ))}
       </div>
       {isThumbnail && (accessory as ThumbnailComponent).media.url && ( // NOSONAR
@@ -696,12 +949,12 @@ function V2FilePreview({ component }: { readonly component: FileComponent }) {
   );
 }
 
-function V2ContainerChildPreview({ component }: { readonly component: ContainerChild }) {
+function V2ContainerChildPreview({ component, mentionContext, locale }: { readonly component: ContainerChild; readonly mentionContext?: DiscordPreviewMentionContext; readonly locale: string }) {
   switch (component.type) {
-    case COMPONENT_TYPE.TEXT_DISPLAY: return <V2TextDisplayPreview component={component} />;
+    case COMPONENT_TYPE.TEXT_DISPLAY: return <V2TextDisplayPreview component={component} mentionContext={mentionContext} locale={locale} />;
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
-    case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} mentionContext={mentionContext} locale={locale} />;
     case COMPONENT_TYPE.FILE: return <V2FilePreview component={component as FileComponent} />; // NOSONAR
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
     case COMPONENT_TYPE.STRING_SELECT:
@@ -714,7 +967,7 @@ function V2ContainerChildPreview({ component }: { readonly component: ContainerC
   }
 }
 
-function V2ContainerPreview({ component }: { readonly component: ContainerComponent }) {
+function V2ContainerPreview({ component, mentionContext, locale }: { readonly component: ContainerComponent; readonly mentionContext?: DiscordPreviewMentionContext; readonly locale: string }) {
   const accentColor = component.accent_color == null ? null : intToHex(component.accent_color);
   return (
     <div
@@ -728,7 +981,7 @@ function V2ContainerPreview({ component }: { readonly component: ContainerCompon
       )}
       <div className={cn("flex flex-col gap-1.5", accentColor ? "pl-2" : "", component.spoiler && "blur-md select-none")}>
         {component.components.map((child, i) => (
-          <V2ContainerChildPreview key={i} component={child} /> // NOSONAR
+          <V2ContainerChildPreview key={i} component={child} mentionContext={mentionContext} locale={locale} /> // NOSONAR
         ))}
       </div>
       {component.spoiler && (
@@ -740,13 +993,14 @@ function V2ContainerPreview({ component }: { readonly component: ContainerCompon
   );
 }
 
-export function V2TopLevelPreview({ component }: { readonly component: TopLevelComponent }) {
+export function V2TopLevelPreview({ component, mentionContext }: { readonly component: TopLevelComponent; readonly mentionContext?: DiscordPreviewMentionContext }) {
+  const locale = useLocale();
   switch (component.type) {
-    case COMPONENT_TYPE.CONTAINER: return <V2ContainerPreview component={component} />;
-    case COMPONENT_TYPE.TEXT_DISPLAY: return <V2TextDisplayPreview component={component} />;
+    case COMPONENT_TYPE.CONTAINER: return <V2ContainerPreview component={component} mentionContext={mentionContext} locale={locale} />;
+    case COMPONENT_TYPE.TEXT_DISPLAY: return <V2TextDisplayPreview component={component} mentionContext={mentionContext} locale={locale} />;
     case COMPONENT_TYPE.SEPARATOR: return <V2SeparatorPreview component={component} />;
     case COMPONENT_TYPE.MEDIA_GALLERY: return <V2MediaGalleryPreview component={component} />;
-    case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} />;
+    case COMPONENT_TYPE.SECTION: return <V2SectionPreview component={component} mentionContext={mentionContext} locale={locale} />;
     case COMPONENT_TYPE.FILE: return <V2FilePreview component={component as FileComponent} />; // NOSONAR
     case COMPONENT_TYPE.ACTION_ROW: return <ActionRowPreview component={component} />;
     case COMPONENT_TYPE.STRING_SELECT:
