@@ -530,13 +530,18 @@ function createRoleMentionParser(mentionContext?: DiscordPreviewMentionContext):
 }
 
 const parseBroadcastMention: MarkdownParser = (text, start, key) => {
-  if (text.startsWith("@everyone", start)) {
+  const hasMentionBoundary = (token: string) => {
+    const nextChar = text[start + token.length];
+    return nextChar === undefined || !/\w/.test(nextChar);
+  };
+
+  if (text.startsWith("@everyone", start) && hasMentionBoundary("@everyone")) {
     return {
       node: <span key={key} className={roleMentionClassName()}>@everyone</span>,
       nextIndex: start + "@everyone".length,
     };
   }
-  if (text.startsWith("@here", start)) {
+  if (text.startsWith("@here", start) && hasMentionBoundary("@here")) {
     return {
       node: <span key={key} className={roleMentionClassName()}>@here</span>,
       nextIndex: start + "@here".length,
@@ -893,8 +898,8 @@ function SelectMenuPreview({ component }: { readonly component: SelectMenuCompon
       </button>
       {open && isString && options.length > 0 && (
         <div className="rounded border border-[#3b3d44] bg-[#2b2d31] overflow-hidden">
-          {options.slice(0, 25).map((opt) => (
-            <div key={`${opt.value ?? opt.label}-${opt.description ?? ""}`} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
+          {options.slice(0, 25).map((opt, index) => (
+            <div key={`opt-${opt.value ?? ""}-${opt.label}-${opt.description ?? ""}-${index}`} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
               <span className="font-medium">{opt.label}</span>
               {opt.description && <span className="ml-2 text-[#87898c]">{opt.description}</span>}
             </div>
