@@ -579,11 +579,11 @@ function renderMarkdown(
   text: string,
   mentionContext: DiscordPreviewMentionContext | undefined,
   locale: string,
-  options?: { allowLinks?: boolean },
+  options?: { allowLinks?: boolean; allowSpecialMentions?: boolean },
 ): React.ReactNode {
+  const allowSpecialMentions = options?.allowSpecialMentions ?? true;
   const MARKDOWN_PARSERS: MarkdownParser[] = [
     createTimestampParser(locale),
-    createSpecialIdMentionParser(locale),
     createChannelMentionParser(mentionContext),
     createRoleMentionParser(mentionContext),
     parseBroadcastMention,
@@ -596,6 +596,9 @@ function renderMarkdown(
   ];
   if (options?.allowLinks !== false) {
     MARKDOWN_PARSERS.unshift(parseLink);
+  }
+  if (allowSpecialMentions) {
+    MARKDOWN_PARSERS.splice(1, 0, createSpecialIdMentionParser(locale));
   }
   const parts: React.ReactNode[] = [];
   let i = 0;
@@ -626,7 +629,7 @@ function renderLines(
   text: string,
   mentionContext: DiscordPreviewMentionContext | undefined,
   locale: string,
-  options?: { allowLinks?: boolean },
+  options?: { allowLinks?: boolean; allowSpecialMentions?: boolean },
 ): React.ReactNode {
   return text.split("\n").map((line, i, arr) => (
     <span key={`line-${i}`}>{/* NOSONAR — index is the only stable key for text line fragments */}
@@ -676,7 +679,7 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
             )}
             <span className="text-xs font-semibold text-[#dbdee1]">
               {embed.author.url
-                ? <a href={embed.author.url} target="_blank" rel="noreferrer" className="hover:underline">{renderLines(embed.author.name, mentionContext, locale, { allowLinks: false })}</a>
+                ? <a href={embed.author.url} target="_blank" rel="noreferrer" className="hover:underline">{renderLines(embed.author.name, mentionContext, locale, { allowLinks: false, allowSpecialMentions: false })}</a>
                 : renderLines(embed.author.name, mentionContext, locale)}
             </span>
           </div>
@@ -686,7 +689,7 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
         {embed.title && (
           <div className="font-semibold text-white text-sm">
             {embed.url
-              ? <a href={embed.url} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{renderLines(embed.title, mentionContext, locale, { allowLinks: false })}</a>
+              ? <a href={embed.url} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{renderLines(embed.title, mentionContext, locale, { allowLinks: false, allowSpecialMentions: false })}</a>
               : renderLines(embed.title, mentionContext, locale)}
           </div>
         )}
