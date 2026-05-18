@@ -393,12 +393,20 @@ function TicketManageDialog({
         </DialogHeader>
 
         <div className="space-y-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">#{ticket.number}</Badge>
-            <Badge variant="outline" className={STATUS_BADGE_CLASS[ticket.status] ?? ""}>
-              {t(`status.${ticket.status}`)}
-            </Badge>
-            <Badge variant="secondary">{ticket.panel}</Badge>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="outline">#{ticket.number}</Badge>
+              <Badge variant="outline" className={STATUS_BADGE_CLASS[ticket.status] ?? ""}>
+                {t(`status.${ticket.status}`)}
+              </Badge>
+              <Badge variant="secondary">{ticket.panel}</Badge>
+            </div>
+            <Button asChild variant="outline" size="sm">
+              <Link href={getTranscriptUrl(ticket)} target="_blank" rel="noopener noreferrer">
+                <FileText className="mr-2 h-4 w-4" />
+                {t("manage.showTranscript")}
+              </Link>
+            </Button>
           </div>
 
           <div className="grid gap-3 text-sm sm:grid-cols-3">
@@ -480,15 +488,17 @@ function TicketManageDialog({
                   <p className="text-sm font-medium text-foreground">{t("manage.permanentDeleteTicket")}</p>
                   <p className="text-xs text-muted-foreground">{t("manage.deleteHint")}</p>
                 </div>
-                <Button
-                  variant="outline"
-                  className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                  onClick={() => setConfirmDeleteOpen(true)}
-                  disabled={isDeleting}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {t("manage.deleteTicket")}
-                </Button>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    variant="outline"
+                    className="border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    onClick={() => setConfirmDeleteOpen(true)}
+                    disabled={isDeleting}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {t("manage.deleteTicket")}
+                  </Button>
+                </div>
               </div>
             </div>
           )}
@@ -500,7 +510,7 @@ function TicketManageDialog({
       </DialogContent>
 
       <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-card border-border">
           <AlertDialogHeader>
             <AlertDialogTitle>{t("manage.warningTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
