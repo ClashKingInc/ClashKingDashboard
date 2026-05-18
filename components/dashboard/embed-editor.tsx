@@ -746,7 +746,7 @@ function MentionTextField({
                     type="date"
                     value={dateValue}
                     onChange={(event) => setDateValue(event.target.value)}
-                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white [::-webkit-calendar-picker-indicator]:opacity-0 [::-webkit-calendar-picker-indicator]:pointer-events-none"
+                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
                   />
                   <button
                     type="button"
@@ -759,7 +759,7 @@ function MentionTextField({
                       }
                       el.focus();
                     }}
-                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-[#949ba4] hover:text-white"
+                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
                   >
                     <CalendarDays className="h-3.5 w-3.5" />
                   </button>
@@ -775,7 +775,7 @@ function MentionTextField({
                     step={1}
                     value={timeValue}
                     onChange={(event) => setTimeValue(event.target.value)}
-                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white [::-webkit-calendar-picker-indicator]:opacity-0 [::-webkit-calendar-picker-indicator]:pointer-events-none"
+                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
                   />
                   <button
                     type="button"
@@ -788,7 +788,7 @@ function MentionTextField({
                       }
                       el.focus();
                     }}
-                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-[#949ba4] hover:text-white"
+                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
                   >
                     <Clock3 className="h-3.5 w-3.5" />
                   </button>
