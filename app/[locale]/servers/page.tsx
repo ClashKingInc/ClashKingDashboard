@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Users } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
@@ -136,9 +137,38 @@ export default function ServersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background overflow-x-hidden">
         <ServersHeader />
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="relative container mx-auto px-4 pt-24 pb-8 sm:pt-32 sm:pb-12">
+          <div className="max-w-5xl mx-auto">
+            <div className="mb-8">
+              <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
+                {t("title")}
+              </h1>
+              <p className="text-muted-foreground text-sm sm:text-base">
+                {t("description")}
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <Card key={`server-skeleton-${idx}`} className="border-2 border-border bg-card/95 backdrop-blur rounded-xl overflow-hidden">
+                  <CardHeader className="flex flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6">
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                      <Skeleton className="h-12 w-12 sm:h-16 sm:w-16 rounded-full" />
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <Skeleton className="h-5 w-40 sm:w-52" />
+                        <Skeleton className="h-4 w-28 sm:w-36" />
+                        <Skeleton className="h-5 w-16 rounded-full" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-9 sm:h-10 w-24 sm:w-28 rounded-md" />
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
