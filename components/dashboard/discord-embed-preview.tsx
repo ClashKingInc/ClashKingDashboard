@@ -430,13 +430,17 @@ function createTimestampParser(locale: string): MarkdownParser {
     const match = /^<t:(\d+)(?::([tTdDfFR]))?>/.exec(text.slice(start));
     if (!match) return null;
     const unix = Number.parseInt(match[1], 10);
+    const tooltipDate = new Date(unix * 1000);
+    const tooltipTitle = Number.isNaN(tooltipDate.getTime())
+      ? String(unix)
+      : new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "medium" }).format(tooltipDate);
     return {
       node: (
         <TooltipProvider key={key} delayDuration={150}>
           <Tooltip>
             <TooltipTrigger asChild>
               <span
-                title={new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "medium" }).format(new Date(unix * 1000))}
+                title={tooltipTitle}
                 className="relative top-px inline-flex h-[1.375rem] cursor-default items-center rounded-[3px] bg-primary-400/[0.24] px-[2px] text-[0.92em] leading-none text-[#dbdee1] align-middle transition-colors hover:bg-primary-400/[0.35] dark:bg-primary-500/[0.48]"
               >
                 {formatDiscordTimestamp(unix, match[2], locale)}

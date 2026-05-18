@@ -2,7 +2,7 @@
 
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
 import { useId, useRef, useState, type ComponentType, type MutableRefObject, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import emojiDataset from "emoji-datasource-twitter/emoji.json";
 import { AtSign, Bike, CalendarDays, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -536,6 +536,7 @@ function MentionTextField({
   multiline = false,
 }: MentionTextFieldProps) {
   const t = useTranslations("EmbedEditor");
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [pickerTab, setPickerTab] = useState<"mentions" | "time" | "emojis">("mentions");
   const [emojiQuery, setEmojiQuery] = useState("");
@@ -815,7 +816,7 @@ function MentionTextField({
                   {DISCORD_TIMESTAMP_STYLES.map((item) => (
                     <TimeStyleInsertButton
                       key={item.style}
-                      label={item.style === "R" ? t("timeRelativeNow") : formatTimestampStylePreview(dateValue, timeValue, item.style, "nl-NL")}
+                      label={item.style === "R" ? t("timeRelativeNow") : formatTimestampStylePreview(dateValue, timeValue, item.style, locale)}
                       onSelect={() => insertToken(createTimestampToken(dateValue, timeValue, item.style))}
                     />
                   ))}
