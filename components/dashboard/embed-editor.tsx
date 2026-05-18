@@ -399,12 +399,11 @@ function sortCategoryEmojis(categoryKey: string, emojis: readonly string[]): str
     sorted.sort((a, b) => {
       const aSpecial = specialOrder.get(a);
       const bSpecial = specialOrder.get(b);
-      if (aSpecial === undefined && bSpecial === undefined) {
-        // Keep non-special flags in existing source order.
-        return 0;
-      }
       if (aSpecial !== undefined && bSpecial !== undefined) return aSpecial - bSpecial;
-      return aSpecial !== undefined ? -1 : 1;
+      if (aSpecial !== undefined) return -1;
+      if (bSpecial !== undefined) return 1;
+      // Keep non-special flags in existing source order.
+      return 0;
     });
     return sorted;
   }
