@@ -23,6 +23,14 @@ const ROLE_LABEL_KEYS: Record<string, string> = {
   Administrator: "roles.administrator",
   Manager: "roles.manager",
 };
+const SERVER_SKELETON_KEYS = [
+  "server-skeleton-a",
+  "server-skeleton-b",
+  "server-skeleton-c",
+  "server-skeleton-d",
+  "server-skeleton-e",
+  "server-skeleton-f",
+];
 
 export default function ServersPage() {
   const t = useTranslations("ServersPage");
@@ -151,8 +159,8 @@ export default function ServersPage() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              {Array.from({ length: 6 }).map((_, idx) => (
-                <Card key={`server-skeleton-${idx}`} className="border-2 border-border bg-card/95 backdrop-blur rounded-xl overflow-hidden">
+              {SERVER_SKELETON_KEYS.map((skeletonKey) => (
+                <Card key={skeletonKey} className="border-2 border-border bg-card/95 backdrop-blur rounded-xl overflow-hidden">
                   <CardHeader className="flex min-h-[106px] sm:min-h-[138px] flex-row items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6">
                     <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                       <Skeleton className="h-12 w-12 sm:h-16 sm:w-16 rounded-full" />
