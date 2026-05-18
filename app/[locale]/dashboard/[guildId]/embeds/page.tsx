@@ -29,7 +29,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { EmbedEditor } from "@/components/dashboard/embed-editor";
-import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile, isV2Payload, extractComponents } from "@/components/dashboard/discord-embed-preview";
+import { DiscordMessagePreview, extractEmbeds, extractMessageContent, extractMessageProfile, isV2Payload, extractComponents, type PreviewDiscordChannel, type PreviewDiscordRole } from "@/components/dashboard/discord-embed-preview";
+import { dashboardCacheKeys, normalizeChannelsPayload, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
 import type { ServerEmbed } from "@/lib/api/types/tickets";
 
 function normalizeEmbedsPayload(payload: unknown): ServerEmbed[] {
@@ -54,6 +55,8 @@ export default function EmbedsPage() {
   const { toast } = useToast();
 
   const [embeds, setEmbeds] = useState<ServerEmbed[]>([]);
+  const [channels, setChannels] = useState<PreviewDiscordChannel[]>([]);
+  const [roles, setRoles] = useState<PreviewDiscordRole[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedName, setExpandedName] = useState<string | null>(null);
 
@@ -72,6 +75,8 @@ export default function EmbedsPage() {
 
   const loaded = useRef(false);
   const embedsCacheKey = `tickets-embeds-list-${guildId}`;
+  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
+  const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
 
   const load = useCallback(async (forceRefresh = false) => {
     if (forceRefresh) {
@@ -79,18 +84,32 @@ export default function EmbedsPage() {
     }
 
     try {
-      const embedsData = await apiCache.get(embedsCacheKey, async () => {
-        const res = await apiClient.tickets.getEmbeds(guildId);
-        if (res.error) throw new Error(res.error);
-        return res.data?.items ?? [];
-      });
+      const [embedsData, channelsData, rolesData] = await Promise.all([
+        apiCache.get(embedsCacheKey, async () => {
+          const res = await apiClient.tickets.getEmbeds(guildId);
+          if (res.error) throw new Error(res.error);
+          return res.data?.items ?? [];
+        }),
+        apiCache.get(channelsCacheKey, async () => {
+          const res = await apiClient.servers.getChannels(guildId);
+          if (res.error) throw new Error(res.error);
+          return res.data;
+        }),
+        apiCache.get(rolesCacheKey, async () => {
+          const res = await apiClient.servers.getDiscordRoles(guildId);
+          if (res.error) throw new Error(res.error);
+          return res.data;
+        }),
+      ]);
       setEmbeds(normalizeEmbedsPayload(embedsData));
+      setChannels(normalizeChannelsPayload(channelsData).map((channel) => ({ id: channel.id, name: channel.name })));
+      setRoles(normalizeDiscordRolesPayload(rolesData).map((role) => ({ id: role.id, name: role.name })));
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
-  }, [embedsCacheKey, guildId, toast, tCommon]);
+  }, [channelsCacheKey, embedsCacheKey, guildId, rolesCacheKey, toast, tCommon]);
 
   useEffect(() => {
     if (loaded.current) return;
@@ -232,6 +251,7 @@ export default function EmbedsPage() {
                         embeds={previews}
                         isV2={isV2}
                         components={v2Components}
+                        mentionContext={{ channels, roles }}
                         className="max-w-none"
                       />
                     </div>
@@ -286,6 +306,8 @@ export default function EmbedsPage() {
               onSave={handleSave}
               isSaving={isSaving}
               onCancel={() => setEditorOpen(false)}
+              channels={channels}
+              roles={roles}
             />
           </div>
         </DialogContent>
