@@ -549,7 +549,7 @@ function MentionTextField({
   const emojiHeaderRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   const insertToken = (token: string) => {
-    insertTextAtCursor(fieldRef.current, value, token, onValueChange, maxLength);
+    insertTextAtCursor(fieldRef.current, value, token, onValueChange);
     setOpen(false);
   };
 
