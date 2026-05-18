@@ -6,6 +6,7 @@ import { ChevronDown, ExternalLink, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import emojiDataset from "emoji-datasource-twitter/emoji.json";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -207,6 +208,49 @@ type MarkdownParseResult = {
 };
 
 type MarkdownParser = (text: string, start: number, key: number) => MarkdownParseResult | null;
+
+function unifiedToEmoji(unified: string): string {
+  return unified
+    .split("-")
+    .map((hex) => String.fromCodePoint(Number.parseInt(hex, 16)))
+    .join("");
+}
+
+function emojiToTwemojiUrl(emoji: string): string {
+  const codePoints = Array.from(emoji)
+    .map((char) => char.codePointAt(0))
+    .filter((point): point is number => typeof point === "number")
+    .map((point) => point.toString(16).padStart(4, "0"));
+  return `/api/v2/app/twemoji/${codePoints.join("-")}.png`;
+}
+
+const EMOJI_TOKENS = Array.from(
+  new Set(
+    (emojiDataset as Array<{ unified: string; emoji?: string }>)
+      .map((entry) => entry.emoji ?? unifiedToEmoji(entry.unified))
+      .filter(Boolean),
+  ),
+).sort((a, b) => b.length - a.length);
+
+const parseUnicodeEmoji: MarkdownParser = (text, start, key) => {
+  const remaining = text.slice(start);
+  for (const token of EMOJI_TOKENS) {
+    if (!remaining.startsWith(token)) continue;
+    return {
+      node: (
+        <img
+          key={key}
+          src={emojiToTwemojiUrl(token)}
+          alt={token}
+          className="mx-[1px] inline-block h-[1.1em] w-[1.1em] align-[-0.12em]"
+          draggable={false}
+        />
+      ),
+      nextIndex: start + token.length,
+    };
+  }
+  return null;
+};
 
 function roleMentionClassName() {
   return "inline-flex h-[1.375rem] items-center align-middle rounded bg-[#5865f233] px-1.5 text-[0.92em] font-medium leading-none text-[#c9cdfb]";
@@ -500,6 +544,7 @@ function renderMarkdown(text: string, mentionContext: DiscordPreviewMentionConte
     createRoleMentionParser(mentionContext),
     parseBroadcastMention,
     parseCustomEmoji,
+    parseUnicodeEmoji,
     parseBold,
     parseUnderline,
     parseItalic,
