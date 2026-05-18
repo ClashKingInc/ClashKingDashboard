@@ -2306,6 +2306,7 @@
       "noClan": "No clan assigned",
       "saveClan": "Save clan",
       "deleteTicket": "Delete ticket",
+      "showTranscript": "Show transcript",
       "permanentDeleteTicket": "Permanently delete ticket",
       "deleteHint": "Permanently remove the dashboard entry and transcript link.",
       "warningTitle": "Permanently delete this ticket?",

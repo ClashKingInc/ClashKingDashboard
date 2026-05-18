@@ -2309,6 +2309,7 @@
       "noClan": "Geen clan toegewezen",
       "saveClan": "Clan opslaan",
       "deleteTicket": "Ticket verwijderen",
+      "showTranscript": "Transcript tonen",
       "permanentDeleteTicket": "Ticket definitief verwijderen",
       "deleteHint": "Verwijder de dashboardvermelding en transcriptlink definitief.",
       "warningTitle": "Dit ticket definitief verwijderen?",
