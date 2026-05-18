@@ -542,6 +542,7 @@ function MentionTextField({
   const rolesSectionRef = useRef<HTMLDivElement | null>(null);
   const emojisScrollerRef = useRef<HTMLDivElement | null>(null);
   const emojiSectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const emojiHeaderRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   const insertToken = (token: string) => {
     insertTextAtCursor(fieldRef.current, value, token, onValueChange);
@@ -574,11 +575,20 @@ function MentionTextField({
     const scroller = emojisScrollerRef.current;
     if (!scroller || filteredEmojiCategories.length === 0) return;
     const currentScroll = scroller.scrollTop;
+    const maxScroll = scroller.scrollHeight - scroller.clientHeight;
+    if (currentScroll >= maxScroll - 2) {
+      const lastKey = filteredEmojiCategories[filteredEmojiCategories.length - 1]?.key;
+      if (lastKey) setEmojiCategory(lastKey);
+      return;
+    }
+
+    const scrollerTop = scroller.getBoundingClientRect().top;
     let activeKey = filteredEmojiCategories[0]?.key ?? "";
     for (const category of filteredEmojiCategories) {
-      const node = emojiSectionRefs.current[category.key];
+      const node = emojiHeaderRefs.current[category.key] ?? emojiSectionRefs.current[category.key];
       if (!node) continue;
-      if (node.offsetTop <= currentScroll + 1) {
+      const relativeTop = node.getBoundingClientRect().top - scrollerTop;
+      if (relativeTop <= 0) {
         activeKey = category.key;
       }
     }
@@ -589,7 +599,7 @@ function MentionTextField({
     if (open && pickerTab === "emojis") {
       syncEmojiCategoryOnScroll();
     }
-  }, [open, pickerTab]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, pickerTab, emojiOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="relative">
@@ -837,7 +847,10 @@ function MentionTextField({
                     <button
                       key={category.key}
                       type="button"
-                      onClick={() => emojiSectionRefs.current[category.key]?.scrollIntoView({ block: "start", behavior: "smooth" })}
+                      onClick={() => {
+                        setEmojiCategory(category.key);
+                        emojiSectionRefs.current[category.key]?.scrollIntoView({ block: "start", behavior: "smooth" });
+                      }}
                       className={cn("flex h-7 w-7 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#3a3c43] hover:text-white", emojiCategory === category.key && "bg-[#3a3c43] text-white")}
                       title={t(`emojiCategory.${category.key}`)}
                     >
@@ -862,7 +875,12 @@ function MentionTextField({
                       ref={(node) => { emojiSectionRefs.current[category.key] = node; }}
                       className="mb-3 space-y-2"
                     >
-                      <button type="button" onClick={() => setEmojiOpen((prev) => ({ ...prev, [category.key]: !prev[category.key] }))} className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[11px] font-semibold tracking-wide text-white hover:bg-[#3a3c43]">
+                      <button
+                        ref={(node) => { emojiHeaderRefs.current[category.key] = node; }}
+                        type="button"
+                        onClick={() => setEmojiOpen((prev) => ({ ...prev, [category.key]: !prev[category.key] }))}
+                        className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[11px] font-semibold tracking-wide text-white hover:bg-[#3a3c43]"
+                      >
                         <span>{t(`emojiCategory.${category.key}`)}</span>
                         <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !emojiOpen[category.key] && "-rotate-90")} />
                       </button>
