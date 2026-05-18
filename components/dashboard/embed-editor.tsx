@@ -3,7 +3,6 @@
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
 import { useId, useRef, useState, type ComponentType, type MutableRefObject, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { emojiToName, gemoji } from "gemoji";
 import emojiDataset from "emoji-datasource-twitter/emoji.json";
 import { AtSign, Bike, CalendarDays, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -180,6 +179,22 @@ const SKIN_TONE_TO_UNIFIED_SUFFIX: Record<string, string> = {
   "🏾": "1F3FE",
   "🏿": "1F3FF",
 };
+type EmojiDatasetEntry = {
+  emoji?: string;
+  unified: string;
+  short_name: string;
+  short_names?: string[];
+  name?: string;
+  category: string;
+  sort_order?: number;
+  skin_variations?: Record<string, { unified: string }>;
+};
+
+const EMOJI_DATA = (emojiDataset as EmojiDatasetEntry[]).map((entry) => ({
+  ...entry,
+  emoji: entry.emoji ?? unifiedToEmoji(entry.unified),
+}));
+const EMOJI_BY_CHAR = new Map(EMOJI_DATA.map((entry) => [entry.emoji, entry] as const));
 
 function unifiedToEmoji(unified: string): string {
   return unified
@@ -189,7 +204,7 @@ function unifiedToEmoji(unified: string): string {
 }
 
 const SKIN_TONE_VARIANTS = new Map<string, Record<string, string>>(
-  (emojiDataset as Array<{ unified: string; skin_variations?: Record<string, { unified: string }> }>)
+  (emojiDataset as EmojiDatasetEntry[])
     .filter((entry) => entry.skin_variations && Object.keys(entry.skin_variations).length > 0)
     .map((entry) => {
       const baseEmoji = unifiedToEmoji(entry.unified);
@@ -307,8 +322,9 @@ function isSkinToneVariant(emoji: string): boolean {
 
 function buildCategoryEmojis(categories: readonly string[]): string[] {
   const allowed = new Set(categories);
-  const picked = gemoji
+  const picked = [...EMOJI_DATA
     .filter((entry) => allowed.has(entry.category))
+  ].sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
     .map((entry) => entry.emoji)
     .filter((emoji) => !isSkinToneVariant(emoji));
   return [...new Set(picked)];
@@ -347,8 +363,9 @@ function flagEmojiToCountryCode(emoji: string): string | null {
 
 function buildSupportedFlagEmojis(): string[] {
   const base = [...SPECIAL_FLAG_ORDER];
-  const flagsFromSource = gemoji
+  const flagsFromSource = [...EMOJI_DATA
     .filter((entry) => entry.category === "Flags")
+  ].sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
     .map((entry) => entry.emoji)
     .filter((emoji) => !base.includes(emoji as (typeof SPECIAL_FLAG_ORDER)[number]));
   return [...new Set([...base, ...flagsFromSource])];
@@ -359,7 +376,7 @@ function getEmojiShortcodeName(emoji: string): string {
   if (specialFlagShortcode) return specialFlagShortcode;
   const countryCode = flagEmojiToCountryCode(emoji);
   if (countryCode) return `flag_${countryCode}`;
-  const mapped = (emojiToName as Record<string, string>)[emoji];
+  const mapped = EMOJI_BY_CHAR.get(emoji)?.short_name;
   if (mapped) return mapped;
   return "";
 }
@@ -368,13 +385,12 @@ function getEmojiSearchBlob(emoji: string): string {
   const specialFlagShortcode = SPECIAL_FLAG_SHORTCODES[emoji];
   if (specialFlagShortcode) return specialFlagShortcode;
 
-  const datasetEntry = gemoji.find((entry) => entry.emoji === emoji);
-  const names = datasetEntry?.names?.join(" ") ?? "";
-  const tags = datasetEntry?.tags?.join(" ") ?? "";
-  const description = datasetEntry?.description ?? "";
+  const datasetEntry = EMOJI_BY_CHAR.get(emoji);
+  const names = datasetEntry?.short_names?.join(" ") ?? datasetEntry?.short_name ?? "";
+  const formalName = datasetEntry?.name ?? "";
   const countryCode = flagEmojiToCountryCode(emoji);
   const flagName = countryCode ? `flag_${countryCode}` : "";
-  return `${names} ${tags} ${description} ${flagName}`.trim();
+  return `${names} ${formalName} ${flagName}`.trim();
 }
 
 function sortCategoryEmojis(categoryKey: string, emojis: readonly string[]): string[] {
