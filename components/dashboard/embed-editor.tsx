@@ -348,7 +348,7 @@ function flagEmojiToCountryCode(emoji: string): string | null {
   const chars = Array.from(emoji);
   if (chars.length !== 2) return null;
   const points = chars.map((char) => char.codePointAt(0));
-  if (points.some((point) => point === undefined)) return null;
+  if (points.includes(undefined)) return null;
   const isRegional = points.every((point) => point >= 0x1f1e6 && point <= 0x1f1ff);
   if (!isRegional) return null;
   return String.fromCodePoint(
@@ -494,9 +494,10 @@ function insertTextAtCursor(
 }
 
 function openNativePicker(input: HTMLInputElement | null) {
-  if (!input) return;
-  const maybePickerInput = input as HTMLInputElement & { showPicker?: () => void };
-  maybePickerInput.showPicker?.();
+  if (input === null) return;
+  if ("showPicker" in input && typeof input.showPicker === "function") {
+    input.showPicker();
+  }
   input.focus();
 }
 
@@ -548,7 +549,7 @@ function MentionTextField({
   const emojiHeaderRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   const insertToken = (token: string) => {
-    insertTextAtCursor(fieldRef.current, value, token, onValueChange);
+    insertTextAtCursor(fieldRef.current, value, token, onValueChange, maxLength);
     setOpen(false);
   };
 
@@ -564,13 +565,16 @@ function MentionTextField({
       ),
     }))
     .filter((category) => category.emojis.length > 0);
-  const channelsList = channelsOpen
-    ? (filteredChannels.length > 0
-        ? filteredChannels.map((channel) => (
-          <MentionInsertButton key={`channel-${channel.id}`} icon={Hash} label={channel.name} compact onSelect={() => insertToken(`<#${channel.id}>`)} />
-        ))
-        : <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">{t("mentionsNoChannels")}</div>)
-    : null;
+  let channelsList: React.ReactNode = null;
+  if (channelsOpen) {
+    if (filteredChannels.length > 0) {
+      channelsList = filteredChannels.map((channel) => (
+        <MentionInsertButton key={`channel-${channel.id}`} icon={Hash} label={channel.name} compact onSelect={() => insertToken(`<#${channel.id}>`)} />
+      ));
+    } else {
+      channelsList = <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">{t("mentionsNoChannels")}</div>;
+    }
+  }
 
   useScrollSpy(
     mentionsScrollerRef,
@@ -578,7 +582,7 @@ function MentionTextField({
       { key: "channels", ref: channelsSectionRef },
       { key: "roles", ref: rolesSectionRef },
     ],
-    (nextKey) => setMentionSection(nextKey as "channels" | "roles"),
+    (nextKey) => setMentionSection(nextKey === "roles" ? "roles" : "channels"),
   );
 
   const syncEmojiCategoryOnScroll = () => {

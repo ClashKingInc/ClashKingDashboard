@@ -281,7 +281,7 @@ function formatDiscordDateTime(date: Date, locale: string, options: { month: "sh
   return `${dateText} ${time}`.trim();
 }
 
-function DiscordServerGuideIcon({ className = "h-4 w-4" }: { className?: string }) {
+function DiscordServerGuideIcon({ className = "h-4 w-4" }: { readonly className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
       <path d="M11 3a1 1 0 1 1 2 0v2h5.75c.16 0 .3.07.4.2l2.63 3.5a.5.5 0 0 1 0 .6l-2.63 3.5a.5.5 0 0 1-.4.2H13v5h2a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-1c0-1.1.9-2 2-2h2v-5H2.8a.5.5 0 0 1-.44-.72L3.9 9.22a.5.5 0 0 0 0-.44L2.36 5.72A.5.5 0 0 1 2.81 5H11V3z" />
@@ -289,7 +289,7 @@ function DiscordServerGuideIcon({ className = "h-4 w-4" }: { className?: string 
   );
 }
 
-function DiscordBrowseChannelsIcon({ className = "h-4 w-4" }: { className?: string }) {
+function DiscordBrowseChannelsIcon({ className = "h-4 w-4" }: { readonly className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
       <path fillRule="evenodd" clipRule="evenodd" d="M18.5 23c.88 0 1.7-.25 2.4-.69l1.4 1.4a1 1 0 0 0 1.4-1.42l-1.39-1.4A4.5 4.5 0 1 0 18.5 23zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
@@ -324,7 +324,8 @@ function formatRelativeTimestamp(date: Date, locale: string): string {
 function formatDiscordTimestamp(unixSeconds: number, style: string | undefined, locale: string): string {
   const date = new Date(unixSeconds * 1000);
   if (Number.isNaN(date.getTime())) {
-    return `<t:${unixSeconds}${style ? `:${style}` : ""}>`;
+    const styleSuffix = style ? `:${style}` : "";
+    return `<t:${unixSeconds}${styleSuffix}>`;
   }
 
   switch (style) {
@@ -453,32 +454,46 @@ function createTimestampParser(locale: string): MarkdownParser {
 }
 
 const SPECIAL_ID_MENTIONS = {
-  guide: { label: "Servergids", icon: DiscordServerGuideIcon },
-  browse: { label: "Kanalen browsen", icon: DiscordBrowseChannelsIcon },
-  customize: { label: "Kanalen en rollen", icon: DiscordBrowseChannelsIcon },
+  guide: { labels: { nl: "Servergids", en: "Server Guide", fr: "Guide du serveur" }, icon: DiscordServerGuideIcon },
+  browse: { labels: { nl: "Kanalen browsen", en: "Browse Channels", fr: "Parcourir les salons" }, icon: DiscordBrowseChannelsIcon },
+  customize: { labels: { nl: "Kanalen en rollen", en: "Channels & Roles", fr: "Salons et roles" }, icon: DiscordBrowseChannelsIcon },
 } as const;
 
-const parseSpecialIdMention: MarkdownParser = (text, start, key) => {
-  const match = /^<id:(guide|browse|customize)>/.exec(text.slice(start));
-  if (!match) return null;
+function getSpecialMentionLabel(
+  key: keyof typeof SPECIAL_ID_MENTIONS,
+  locale: string,
+): string {
+  const normalized = locale.toLowerCase();
+  const labels = SPECIAL_ID_MENTIONS[key].labels;
+  if (normalized.startsWith("nl")) return labels.nl;
+  if (normalized.startsWith("fr")) return labels.fr;
+  return labels.en;
+}
 
-  const mention = SPECIAL_ID_MENTIONS[match[1] as keyof typeof SPECIAL_ID_MENTIONS];
-  const Icon = mention.icon;
-  return {
-    node: (
-      <button
-        key={key}
-        type="button"
-        className={specialMentionClassName()}
-        onClick={() => undefined}
-      >
-        <Icon className="h-4 w-4 shrink-0" />
-        {mention.label}
-      </button>
-    ),
-    nextIndex: start + match[0].length,
+function createSpecialIdMentionParser(locale: string): MarkdownParser {
+  return (text, start, key) => {
+    const match = /^<id:(guide|browse|customize)>/.exec(text.slice(start));
+    if (!match) return null;
+
+    const mentionKey = match[1] as keyof typeof SPECIAL_ID_MENTIONS;
+    const mention = SPECIAL_ID_MENTIONS[mentionKey];
+    const Icon = mention.icon;
+    return {
+      node: (
+        <button
+          key={key}
+          type="button"
+          className={specialMentionClassName()}
+          onClick={() => undefined}
+        >
+          <Icon className="h-4 w-4 shrink-0" />
+          {getSpecialMentionLabel(mentionKey, locale)}
+        </button>
+      ),
+      nextIndex: start + match[0].length,
+    };
   };
-};
+}
 
 function createChannelMentionParser(mentionContext?: DiscordPreviewMentionContext): MarkdownParser {
   return (text, start, key) => {
@@ -539,7 +554,7 @@ function renderMarkdown(text: string, mentionContext: DiscordPreviewMentionConte
   const MARKDOWN_PARSERS: MarkdownParser[] = [
     parseLink,
     createTimestampParser(locale),
-    parseSpecialIdMention,
+    createSpecialIdMentionParser(locale),
     createChannelMentionParser(mentionContext),
     createRoleMentionParser(mentionContext),
     parseBroadcastMention,
@@ -874,8 +889,8 @@ function SelectMenuPreview({ component }: { readonly component: SelectMenuCompon
       </button>
       {open && isString && options.length > 0 && (
         <div className="rounded border border-[#3b3d44] bg-[#2b2d31] overflow-hidden">
-          {options.slice(0, 25).map((opt, i) => (
-            <div key={i} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
+          {options.slice(0, 25).map((opt) => (
+            <div key={`${opt.value ?? opt.label}-${opt.description ?? ""}`} className="px-3 py-1.5 text-xs text-[#dbdee1] border-b border-[#3b3d44] last:border-0">
               <span className="font-medium">{opt.label}</span>
               {opt.description && <span className="ml-2 text-[#87898c]">{opt.description}</span>}
             </div>

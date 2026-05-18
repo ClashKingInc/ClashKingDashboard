@@ -84,12 +84,14 @@ export default function EmbedsPage() {
     }
 
     try {
-      const [embedsData, channelsData, rolesData] = await Promise.all([
-        apiCache.get(embedsCacheKey, async () => {
-          const res = await apiClient.tickets.getEmbeds(guildId);
-          if (res.error) throw new Error(res.error);
-          return res.data?.items ?? [];
-        }),
+      const embedsData = await apiCache.get(embedsCacheKey, async () => {
+        const res = await apiClient.tickets.getEmbeds(guildId);
+        if (res.error) throw new Error(res.error);
+        return res.data?.items ?? [];
+      });
+      setEmbeds(normalizeEmbedsPayload(embedsData));
+
+      const [channelsResult, rolesResult] = await Promise.allSettled([
         apiCache.get(channelsCacheKey, async () => {
           const res = await apiClient.servers.getChannels(guildId);
           if (res.error) throw new Error(res.error);
@@ -101,9 +103,18 @@ export default function EmbedsPage() {
           return res.data;
         }),
       ]);
-      setEmbeds(normalizeEmbedsPayload(embedsData));
-      setChannels(normalizeChannelsPayload(channelsData).map((channel) => ({ id: channel.id, name: channel.name })));
-      setRoles(normalizeDiscordRolesPayload(rolesData).map((role) => ({ id: role.id, name: role.name })));
+
+      if (channelsResult.status === "fulfilled") {
+        setChannels(normalizeChannelsPayload(channelsResult.value).map((channel) => ({ id: channel.id, name: channel.name })));
+      } else {
+        setChannels([]);
+      }
+
+      if (rolesResult.status === "fulfilled") {
+        setRoles(normalizeDiscordRolesPayload(rolesResult.value).map((role) => ({ id: role.id, name: role.name })));
+      } else {
+        setRoles([]);
+      }
     } catch (err) {
       toast({ title: tCommon("error"), description: err instanceof Error ? err.message : tCommon("loadError"), variant: "destructive" });
     } finally {
