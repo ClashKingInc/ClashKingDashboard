@@ -232,9 +232,25 @@ const EMOJI_TOKENS = Array.from(
   ),
 ).sort((a, b) => b.length - a.length);
 
+const EMOJI_TOKENS_BY_PREFIX = new Map<string, string[]>();
+for (const token of EMOJI_TOKENS) {
+  const prefix = Array.from(token)[0];
+  if (prefix === undefined) continue;
+  const existing = EMOJI_TOKENS_BY_PREFIX.get(prefix);
+  if (existing) {
+    existing.push(token);
+  } else {
+    EMOJI_TOKENS_BY_PREFIX.set(prefix, [token]);
+  }
+}
+
 const parseUnicodeEmoji: MarkdownParser = (text, start, key) => {
   const remaining = text.slice(start);
-  for (const token of EMOJI_TOKENS) {
+  const prefix = Array.from(remaining)[0];
+  if (prefix === undefined) return null;
+  const candidates = EMOJI_TOKENS_BY_PREFIX.get(prefix);
+  if (!candidates) return null;
+  for (const token of candidates) {
     if (!remaining.startsWith(token)) continue;
     return {
       node: (

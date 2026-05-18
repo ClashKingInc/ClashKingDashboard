@@ -701,12 +701,6 @@ function MentionTextField({
                 </div>
                 <div
                   ref={mentionsScrollerRef}
-                  onWheel={(event) => {
-                    event.stopPropagation();
-                    const scroller = mentionsScrollerRef.current;
-                    if (!scroller) return;
-                    scroller.scrollTop += event.deltaY;
-                  }}
                   className="min-w-0 flex-1 space-y-3 overflow-y-auto overscroll-contain pr-1"
                 >
                   <div ref={channelsSectionRef} className="space-y-1">
@@ -754,11 +748,6 @@ function MentionTextField({
             <TabsContent
               value="time"
               className="mt-0 max-h-[min(52vh,360px)] space-y-2 overflow-y-auto overscroll-contain pr-1"
-              onWheel={(event) => {
-                event.stopPropagation();
-                const scroller = event.currentTarget;
-                scroller.scrollTop += event.deltaY;
-              }}
             >
               <div className="space-y-1">
                 <Label htmlFor={`${inputId}-date`} className="text-xs text-white">{t("dateLabel")}</Label>
@@ -876,12 +865,6 @@ function MentionTextField({
                 <div
                   ref={emojisScrollerRef}
                   onScroll={syncEmojiCategoryOnScroll}
-                  onWheel={(event) => {
-                    event.stopPropagation();
-                    const scroller = emojisScrollerRef.current;
-                    if (!scroller) return;
-                    scroller.scrollTop += event.deltaY;
-                  }}
                   className="min-w-0 flex-1 overflow-y-auto overscroll-contain pr-1"
                 >
                   {filteredEmojiCategories.map((category) => (
