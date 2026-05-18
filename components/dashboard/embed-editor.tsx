@@ -274,7 +274,8 @@ function createTimestampToken(dateValue: string, timeValue: string, style: strin
     0,
   );
   const unix = Math.floor(safeDate.getTime() / 1000);
-  return `<t:${unix}${style ? `:${style}` : ""}>`;
+  const styleSuffix = style ? `:${style}` : "";
+  return `<t:${unix}${styleSuffix}>`;
 }
 
 function formatTimestampStylePreview(dateValue: string, timeValue: string, style: string, locale: string): string {
@@ -343,19 +344,14 @@ function emojiToTwemojiFallbackUrl(emoji: string): string {
   return `/api/v2/app/twemoji/${codePoints.join("-")}.png`;
 }
 
-function countryCodeToFlagEmoji(code: string): string {
-  return Array.from(code.toUpperCase())
-    .map((char) => String.fromCodePoint(0x1f1e6 + (char.charCodeAt(0) - 65)))
-    .join("");
-}
-
 function flagEmojiToCountryCode(emoji: string): string | null {
   const chars = Array.from(emoji);
   if (chars.length !== 2) return null;
-  const points = chars.map((char) => char.codePointAt(0) ?? 0);
+  const points = chars.map((char) => char.codePointAt(0));
+  if (points.some((point) => point === undefined)) return null;
   const isRegional = points.every((point) => point >= 0x1f1e6 && point <= 0x1f1ff);
   if (!isRegional) return null;
-  return String.fromCharCode(
+  return String.fromCodePoint(
     65 + (points[0] - 0x1f1e6),
     65 + (points[1] - 0x1f1e6),
   ).toLowerCase();
@@ -491,10 +487,17 @@ function insertTextAtCursor(
   const nextValue = `${value.slice(0, start)}${nextText}${value.slice(end)}`;
   const cursorPosition = start + nextText.length;
   onValueChange(nextValue);
-  window.setTimeout(() => {
+  globalThis.setTimeout(() => {
     element.focus();
     element.setSelectionRange(cursorPosition, cursorPosition);
   }, 0);
+}
+
+function openNativePicker(input: HTMLInputElement | null) {
+  if (!input) return;
+  const maybePickerInput = input as HTMLInputElement & { showPicker?: () => void };
+  maybePickerInput.showPicker?.();
+  input.focus();
 }
 
 type MentionTextFieldProps = {
@@ -561,6 +564,13 @@ function MentionTextField({
       ),
     }))
     .filter((category) => category.emojis.length > 0);
+  const channelsList = channelsOpen
+    ? (filteredChannels.length > 0
+        ? filteredChannels.map((channel) => (
+          <MentionInsertButton key={`channel-${channel.id}`} icon={Hash} label={channel.name} compact onSelect={() => insertToken(`<#${channel.id}>`)} />
+        ))
+        : <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">{t("mentionsNoChannels")}</div>)
+    : null;
 
   useScrollSpy(
     mentionsScrollerRef,
@@ -577,7 +587,7 @@ function MentionTextField({
     const currentScroll = scroller.scrollTop;
     const maxScroll = scroller.scrollHeight - scroller.clientHeight;
     if (currentScroll >= maxScroll - 2) {
-      const lastKey = filteredEmojiCategories[filteredEmojiCategories.length - 1]?.key;
+      const lastKey = filteredEmojiCategories.at(-1)?.key;
       if (lastKey) setEmojiCategory(lastKey);
       return;
     }
@@ -699,11 +709,7 @@ function MentionTextField({
                     <span>{t("mentionsChannelList")}</span>
                     <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !channelsOpen && "-rotate-90")} />
                   </button>
-                  {channelsOpen ? filteredChannels.length > 0 ? filteredChannels.map((channel) => (
-                    <MentionInsertButton key={`channel-${channel.id}`} icon={Hash} label={channel.name} compact onSelect={() => insertToken(`<#${channel.id}>`)} />
-                  )) : (
-                    <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">{t("mentionsNoChannels")}</div>
-                  ) : null}
+                  {channelsList}
                 </div>
 
                 <div ref={rolesSectionRef} className="space-y-1">
@@ -753,11 +759,7 @@ function MentionTextField({
                     aria-label={t("dateLabel")}
                     onClick={() => {
                       const el = dateInputRef.current;
-                      if (!el) return;
-                      if ("showPicker" in el) {
-                        (el as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
-                      }
-                      el.focus();
+                      openNativePicker(el);
                     }}
                     className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
                   >
@@ -782,11 +784,7 @@ function MentionTextField({
                     aria-label={t("timeLabel")}
                     onClick={() => {
                       const el = timeInputRef.current;
-                      if (!el) return;
-                      if ("showPicker" in el) {
-                        (el as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
-                      }
-                      el.focus();
+                      openNativePicker(el);
                     }}
                     className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
                   >
@@ -886,9 +884,9 @@ function MentionTextField({
                       </button>
                       {emojiOpen[category.key] && (
                         <div className="grid grid-cols-7 gap-1">
-                          {category.emojis.map((emoji, idx) => (
+                          {category.emojis.map((emoji) => (
                             <button
-                              key={`${category.key}-${emoji}-${idx}`}
+                              key={`${category.key}-${emoji}`}
                               type="button"
                               title={`:${getEmojiShortcodeName(emoji) || emoji}:`}
                               className="flex h-10 w-10 items-center justify-center rounded-md bg-[#1e1f22] transition-colors hover:bg-[#3a3c43]"
@@ -917,10 +915,10 @@ function MentionInsertButton({
   compact = false,
   onSelect,
 }: {
-  icon: ComponentType<{ className?: string }>;
-  label: string;
-  compact?: boolean;
-  onSelect: () => void;
+  readonly icon: ComponentType<{ className?: string }>;
+  readonly label: string;
+  readonly compact?: boolean;
+  readonly onSelect: () => void;
 }) {
   return (
     <button

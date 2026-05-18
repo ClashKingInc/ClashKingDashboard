@@ -527,7 +527,7 @@ const parseBroadcastMention: MarkdownParser = (text, start, key) => {
 };
 
 const parseCustomEmoji: MarkdownParser = (text, start, key) => {
-  const match = /^<(a?):([a-zA-Z0-9_]+):(\d+)>/.exec(text.slice(start));
+  const match = /^<(a?):(\w+):(\d+)>/.exec(text.slice(start));
   if (!match) return null;
   return {
     node: <span key={key} className="font-medium text-[#f0b232]">{`:${match[2]}:`}</span>,
