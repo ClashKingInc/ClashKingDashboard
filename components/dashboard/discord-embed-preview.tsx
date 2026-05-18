@@ -575,9 +575,13 @@ const parseCustomEmoji: MarkdownParser = (text, start, key) => {
   };
 };
 
-function renderMarkdown(text: string, mentionContext: DiscordPreviewMentionContext | undefined, locale: string): React.ReactNode {
+function renderMarkdown(
+  text: string,
+  mentionContext: DiscordPreviewMentionContext | undefined,
+  locale: string,
+  options?: { allowLinks?: boolean },
+): React.ReactNode {
   const MARKDOWN_PARSERS: MarkdownParser[] = [
-    parseLink,
     createTimestampParser(locale),
     createSpecialIdMentionParser(locale),
     createChannelMentionParser(mentionContext),
@@ -590,6 +594,9 @@ function renderMarkdown(text: string, mentionContext: DiscordPreviewMentionConte
     parseItalic,
     parseCode,
   ];
+  if (options?.allowLinks !== false) {
+    MARKDOWN_PARSERS.unshift(parseLink);
+  }
   const parts: React.ReactNode[] = [];
   let i = 0;
   let key = 0;
@@ -615,10 +622,15 @@ function renderMarkdown(text: string, mentionContext: DiscordPreviewMentionConte
   return <>{parts}</>;
 }
 
-function renderLines(text: string, mentionContext: DiscordPreviewMentionContext | undefined, locale: string): React.ReactNode {
+function renderLines(
+  text: string,
+  mentionContext: DiscordPreviewMentionContext | undefined,
+  locale: string,
+  options?: { allowLinks?: boolean },
+): React.ReactNode {
   return text.split("\n").map((line, i, arr) => (
     <span key={`line-${i}`}>{/* NOSONAR — index is the only stable key for text line fragments */}
-      {renderMarkdown(line, mentionContext, locale)}
+      {renderMarkdown(line, mentionContext, locale, options)}
       {i < arr.length - 1 && <br />}
     </span>
   ));
@@ -664,7 +676,7 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
             )}
             <span className="text-xs font-semibold text-[#dbdee1]">
               {embed.author.url
-                ? <a href={embed.author.url} target="_blank" rel="noreferrer" className="hover:underline">{renderLines(embed.author.name, mentionContext, locale)}</a>
+                ? <a href={embed.author.url} target="_blank" rel="noreferrer" className="hover:underline">{renderLines(embed.author.name, mentionContext, locale, { allowLinks: false })}</a>
                 : renderLines(embed.author.name, mentionContext, locale)}
             </span>
           </div>
@@ -674,7 +686,7 @@ export function DiscordEmbedPreview({ embed, className, mentionContext }: Props)
         {embed.title && (
           <div className="font-semibold text-white text-sm">
             {embed.url
-              ? <a href={embed.url} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{renderLines(embed.title, mentionContext, locale)}</a>
+              ? <a href={embed.url} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: "#00a8fc" }}>{renderLines(embed.title, mentionContext, locale, { allowLinks: false })}</a>
               : renderLines(embed.title, mentionContext, locale)}
           </div>
         )}
