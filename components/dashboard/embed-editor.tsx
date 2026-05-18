@@ -746,7 +746,7 @@ function MentionTextField({
                     type="date"
                     value={dateValue}
                     onChange={(event) => setDateValue(event.target.value)}
-                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
+                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-red-500/80 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
                   />
                   <button
                     type="button"
@@ -775,7 +775,7 @@ function MentionTextField({
                     step={1}
                     value={timeValue}
                     onChange={(event) => setTimeValue(event.target.value)}
-                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
+                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-red-500/80 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
                   />
                   <button
                     type="button"
