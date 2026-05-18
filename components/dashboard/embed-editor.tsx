@@ -349,12 +349,15 @@ function flagEmojiToCountryCode(emoji: string): string | null {
   if (chars.length !== 2) return null;
   const points = chars.map((char) => char.codePointAt(0));
   if (points.includes(undefined)) return null;
-  const isRegional = points.every((point) => point >= 0x1f1e6 && point <= 0x1f1ff);
-  if (!isRegional) return null;
-  return String.fromCodePoint(
-    65 + (points[0] - 0x1f1e6),
-    65 + (points[1] - 0x1f1e6),
-  ).toLowerCase();
+  const normalizedPoints = points as [number, number];
+  const isRegional = normalizedPoints.every((point) => point >= 0x1f1e6 && point <= 0x1f1ff);
+  if (isRegional) {
+    return String.fromCodePoint(
+      65 + (normalizedPoints[0] - 0x1f1e6),
+      65 + (normalizedPoints[1] - 0x1f1e6),
+    ).toLowerCase();
+  }
+  return null;
 }
 
 function buildSupportedFlagEmojis(): string[] {
@@ -392,16 +395,16 @@ function getEmojiSearchBlob(emoji: string): string {
 function sortCategoryEmojis(categoryKey: string, emojis: readonly string[]): string[] {
   const sorted = [...emojis];
   if (categoryKey === "flags") {
-    const specialOrder = new Map(SPECIAL_FLAG_ORDER.map((emoji, index) => [emoji, index]));
+    const specialOrder = new Map<string, number>(SPECIAL_FLAG_ORDER.map((emoji, index) => [emoji, index]));
     sorted.sort((a, b) => {
       const aSpecial = specialOrder.get(a);
       const bSpecial = specialOrder.get(b);
-      if (aSpecial !== undefined || bSpecial !== undefined) {
-        if (aSpecial !== undefined && bSpecial !== undefined) return aSpecial - bSpecial;
-        return aSpecial !== undefined ? -1 : 1;
+      if (aSpecial === undefined && bSpecial === undefined) {
+        // Keep non-special flags in existing source order.
+        return 0;
       }
-      // Keep non-special flags in existing source order.
-      return 0;
+      if (aSpecial !== undefined && bSpecial !== undefined) return aSpecial - bSpecial;
+      return aSpecial !== undefined ? -1 : 1;
     });
     return sorted;
   }
@@ -429,7 +432,7 @@ function matchesEmojiQuery(emoji: string, query: string): boolean {
 function applySkinToneVariant(emoji: string, tone: string): string {
   if (tone === "default") return emoji;
   const suffix = SKIN_TONE_TO_UNIFIED_SUFFIX[tone];
-  if (!suffix) return emoji;
+  if (suffix === undefined) return emoji;
   const variants = SKIN_TONE_VARIANTS.get(emoji);
   return variants?.[suffix] ?? emoji;
 }
@@ -476,16 +479,26 @@ function insertTextAtCursor(
   value: string,
   nextText: string,
   onValueChange: (value: string) => void,
+  maxLength?: number,
 ) {
+  const clamp = (text: string) => {
+    if (typeof maxLength === "number" && maxLength >= 0) {
+      return text.slice(0, maxLength);
+    }
+    return text;
+  };
+
   if (!element) {
-    onValueChange(`${value}${nextText}`);
+    onValueChange(clamp(`${value}${nextText}`));
     return;
   }
 
   const start = element.selectionStart ?? value.length;
   const end = element.selectionEnd ?? start;
-  const nextValue = `${value.slice(0, start)}${nextText}${value.slice(end)}`;
-  const cursorPosition = start + nextText.length;
+  const rawNextValue = `${value.slice(0, start)}${nextText}${value.slice(end)}`;
+  const nextValue = clamp(rawNextValue);
+  const insertedLength = nextValue.length - (value.length - (end - start));
+  const cursorPosition = Math.max(start, start + insertedLength);
   onValueChange(nextValue);
   globalThis.setTimeout(() => {
     element.focus();
@@ -502,14 +515,14 @@ function openNativePicker(input: HTMLInputElement | null) {
 }
 
 type MentionTextFieldProps = {
-  value: string;
-  onValueChange: (value: string) => void;
-  mentionContext: MentionContext;
-  className?: string;
-  placeholder?: string;
-  maxLength?: number;
-  rows?: number;
-  multiline?: boolean;
+  readonly value: string;
+  readonly onValueChange: (value: string) => void;
+  readonly mentionContext: MentionContext;
+  readonly className?: string;
+  readonly placeholder?: string;
+  readonly maxLength?: number;
+  readonly rows?: number;
+  readonly multiline?: boolean;
 };
 
 function MentionTextField({
