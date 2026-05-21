@@ -2329,6 +2329,7 @@
       "noClan": "Aucun clan assigné",
       "saveClan": "Enregistrer le clan",
       "deleteTicket": "Supprimer le ticket",
+      "showTranscript": "Afficher la transcription",
       "permanentDeleteTicket": "Supprimer définitivement le ticket",
       "deleteHint": "Supprime definitivement l'entree du dashboard et le lien de transcription.",
       "warningTitle": "Supprimer definitivement ce ticket ?",
