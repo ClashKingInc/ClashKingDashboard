@@ -1,9 +1,10 @@
 "use client";
 
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
-import { useState, useRef } from "react";
-import { useTranslations } from "next-intl";
-import { CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Copy, ExternalLink, Loader2, Plus, Trash2, Link2, Upload } from "lucide-react";
+import { useId, useRef, useState, type ComponentType, type MutableRefObject, useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import emojiDataset from "emoji-datasource-twitter/emoji.json";
+import { AtSign, Bike, CalendarDays, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,11 +18,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import {
   DiscordMessagePreview,
   extractEmbeds,
   extractMessageProfile,
+  type PreviewDiscordChannel,
+  type PreviewDiscordRole,
   IS_COMPONENTS_V2_FLAG,
   COMPONENT_TYPE,
   type DiscordEmbed,
@@ -141,7 +146,96 @@ export interface EmbedEditorProps {
   readonly onSave: (data: Record<string, unknown>) => Promise<void>;
   readonly isSaving: boolean;
   readonly onCancel: () => void;
+  readonly channels?: PreviewDiscordChannel[];
+  readonly roles?: PreviewDiscordRole[];
 }
+
+type MentionContext = {
+  channels: PreviewDiscordChannel[];
+  roles: PreviewDiscordRole[];
+};
+
+type EmojiCategory = {
+  key: string;
+  icon: typeof Smile;
+  emojis: readonly string[];
+};
+
+const SPECIAL_FLAG_ORDER = ["🏳️", "🏴", "🏴‍☠️", "🏁", "🚩", "🏳️‍🌈", "🏳️‍⚧️", "🇺🇳"] as const;
+const SPECIAL_FLAG_SHORTCODES: Record<string, string> = {
+  "🏳️": "flag_white",
+  "🏴": "flag_black",
+  "🏴‍☠️": "pirate_flag",
+  "🏁": "checkered_flag",
+  "🚩": "triangular_flag_on_post",
+  "🏳️‍🌈": "rainbow_flag",
+  "🏳️‍⚧️": "transgender_flag",
+  "🇺🇳": "united_nations",
+};
+const SKIN_TONE_TO_UNIFIED_SUFFIX: Record<string, string> = {
+  "🏻": "1F3FB",
+  "🏼": "1F3FC",
+  "🏽": "1F3FD",
+  "🏾": "1F3FE",
+  "🏿": "1F3FF",
+};
+type EmojiDatasetEntry = {
+  emoji?: string;
+  unified: string;
+  short_name: string;
+  short_names?: string[];
+  name?: string;
+  category: string;
+  sort_order?: number;
+  skin_variations?: Record<string, { unified: string }>;
+};
+
+const EMOJI_DATA = (emojiDataset as EmojiDatasetEntry[]).map((entry) => ({
+  ...entry,
+  emoji: entry.emoji ?? unifiedToEmoji(entry.unified),
+}));
+const EMOJI_BY_CHAR = new Map(EMOJI_DATA.map((entry) => [entry.emoji, entry] as const));
+
+function unifiedToEmoji(unified: string): string {
+  return unified
+    .split("-")
+    .map((hex) => String.fromCodePoint(Number.parseInt(hex, 16)))
+    .join("");
+}
+
+const SKIN_TONE_VARIANTS = new Map<string, Record<string, string>>(
+  (emojiDataset as EmojiDatasetEntry[])
+    .filter((entry) => entry.skin_variations && Object.keys(entry.skin_variations).length > 0)
+    .map((entry) => {
+      const baseEmoji = unifiedToEmoji(entry.unified);
+      const variants: Record<string, string> = {};
+      for (const [suffix, variant] of Object.entries(entry.skin_variations ?? {})) {
+        variants[suffix] = unifiedToEmoji(variant.unified);
+      }
+      return [baseEmoji, variants] as const;
+    }),
+);
+
+const EMOJI_CATEGORIES: readonly EmojiCategory[] = [
+  { key: "people", icon: Smile, emojis: buildDiscordPeopleEmojis() },
+  { key: "nature", icon: Leaf, emojis: buildCategoryEmojis(["Animals & Nature"]) },
+  { key: "food", icon: Utensils, emojis: buildCategoryEmojis(["Food & Drink"]) },
+  { key: "activities", icon: Gamepad2, emojis: buildCategoryEmojis(["Activities"]) },
+  { key: "travel", icon: Bike, emojis: buildCategoryEmojis(["Travel & Places"]) },
+  { key: "objects", icon: GlassWater, emojis: buildCategoryEmojis(["Objects"]) },
+  { key: "symbols", icon: Heart, emojis: buildCategoryEmojis(["Symbols"]) },
+  { key: "flags", icon: Flag, emojis: buildSupportedFlagEmojis() },
+];
+
+const DISCORD_TIMESTAMP_STYLES = [
+  { style: "t", label: "09:47" },
+  { style: "T", label: "09:47:24" },
+  { style: "f", label: "18 May 2026 09:47" },
+  { style: "F", label: "Monday 18 May 2026 09:47" },
+  { style: "d", label: "2026-05-18" },
+  { style: "D", label: "18 May 2026" },
+  { style: "R", label: "0 seconds ago" },
+] as const;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -151,6 +245,753 @@ function hexToInt(hex: string): number {
 
 function intToHex(color: number): string {
   return `#${color.toString(16).padStart(6, "0")}`;
+}
+
+function formatDateInputValue(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function formatTimeInputValue(date: Date): string {
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+function createTimestampToken(dateValue: string, timeValue: string, style: string): string {
+  const [year, month, day] = dateValue.split("-").map((part) => Number.parseInt(part, 10));
+  const [hours, minutes, seconds] = timeValue.split(":").map((part) => Number.parseInt(part, 10));
+  const safeDate = new Date(
+    Number.isFinite(year) ? year : 1970,
+    Number.isFinite(month) ? month - 1 : 0,
+    Number.isFinite(day) ? day : 1,
+    Number.isFinite(hours) ? hours : 0,
+    Number.isFinite(minutes) ? minutes : 0,
+    Number.isFinite(seconds) ? seconds : 0,
+    0,
+  );
+  const unix = Math.floor(safeDate.getTime() / 1000);
+  const styleSuffix = style ? `:${style}` : "";
+  return `<t:${unix}${styleSuffix}>`;
+}
+
+function formatTimestampStylePreview(dateValue: string, timeValue: string, style: string, locale: string): string {
+  const token = createTimestampToken(dateValue, timeValue, style);
+  const match = /^<t:(\d+)(?::([tTdDfFR]))?>$/.exec(token);
+  if (!match) return token;
+  const unix = Number.parseInt(match[1], 10);
+  const date = new Date(unix * 1000);
+  if (Number.isNaN(date.getTime())) return token;
+
+  const pad = (value: number) => String(value).padStart(2, "0");
+  const shortDate = `${pad(date.getDate())} ${new Intl.DateTimeFormat(locale, { month: "short" }).format(date)} ${date.getFullYear()}`;
+  const longDate = `${new Intl.DateTimeFormat(locale, { weekday: "long" }).format(date)} ${shortDate}`;
+
+  switch (style) {
+    case "t":
+      return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    case "T":
+      return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    case "d":
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    case "D":
+      return shortDate;
+    case "F":
+      return `${longDate} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    case "R":
+      return "relative time";
+    case "f":
+    default:
+      return `${shortDate} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+}
+
+function emojiToTwemojiUrl(emoji: string): string {
+  const codePoints = Array.from(emoji)
+    .map((char) => char.codePointAt(0))
+    .filter((point): point is number => typeof point === "number")
+    .map((point) => point.toString(16).padStart(4, "0"));
+  return `/api/v2/app/twemoji/${codePoints.join("-")}.png`;
+}
+
+function isSkinToneVariant(emoji: string): boolean {
+  return /[\u{1F3FB}-\u{1F3FF}]/u.test(emoji);
+}
+
+function buildCategoryEmojis(categories: readonly string[]): string[] {
+  const allowed = new Set(categories);
+  const picked = [...EMOJI_DATA
+    .filter((entry) => allowed.has(entry.category))
+  ].sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
+    .map((entry) => entry.emoji)
+    .filter((emoji) => !isSkinToneVariant(emoji));
+  return [...new Set(picked)];
+}
+
+function buildDiscordPeopleEmojis(): string[] {
+  return buildCategoryEmojis(["Smileys & Emotion", "People & Body"]);
+}
+
+function emojiToTwemojiFallbackUrl(emoji: string): string {
+  const codePoints = Array.from(emoji)
+    .map((char) => char.codePointAt(0))
+    .filter((point): point is number => typeof point === "number")
+    .filter((point) => point !== 0xfe0f && point !== 0xfe0e)
+    .map((point) => point.toString(16).padStart(4, "0"));
+  return `/api/v2/app/twemoji/${codePoints.join("-")}.png`;
+}
+
+function flagEmojiToCountryCode(emoji: string): string | null {
+  const chars = Array.from(emoji);
+  if (chars.length !== 2) return null;
+  const points = chars.map((char) => char.codePointAt(0));
+  if (points.includes(undefined)) return null;
+  const normalizedPoints = points as [number, number];
+  const isRegional = normalizedPoints.every((point) => point >= 0x1f1e6 && point <= 0x1f1ff);
+  if (isRegional) {
+    return String.fromCodePoint(
+      65 + (normalizedPoints[0] - 0x1f1e6),
+      65 + (normalizedPoints[1] - 0x1f1e6),
+    ).toLowerCase();
+  }
+  return null;
+}
+
+function buildSupportedFlagEmojis(): string[] {
+  const base = [...SPECIAL_FLAG_ORDER];
+  const flagsFromSource = [...EMOJI_DATA
+    .filter((entry) => entry.category === "Flags")
+  ].sort((a, b) => (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER))
+    .map((entry) => entry.emoji)
+    .filter((emoji) => !base.includes(emoji as (typeof SPECIAL_FLAG_ORDER)[number]));
+  return [...new Set([...base, ...flagsFromSource])];
+}
+
+function getEmojiShortcodeName(emoji: string): string {
+  const specialFlagShortcode = SPECIAL_FLAG_SHORTCODES[emoji];
+  if (specialFlagShortcode) return specialFlagShortcode;
+  const countryCode = flagEmojiToCountryCode(emoji);
+  if (countryCode) return `flag_${countryCode}`;
+  const mapped = EMOJI_BY_CHAR.get(emoji)?.short_name;
+  if (mapped) return mapped;
+  return "";
+}
+
+function getEmojiSearchBlob(emoji: string): string {
+  const specialFlagShortcode = SPECIAL_FLAG_SHORTCODES[emoji];
+  if (specialFlagShortcode) return specialFlagShortcode;
+
+  const datasetEntry = EMOJI_BY_CHAR.get(emoji);
+  const names = datasetEntry?.short_names?.join(" ") ?? datasetEntry?.short_name ?? "";
+  const formalName = datasetEntry?.name ?? "";
+  const countryCode = flagEmojiToCountryCode(emoji);
+  const flagName = countryCode ? `flag_${countryCode}` : "";
+  return `${names} ${formalName} ${flagName}`.trim();
+}
+
+function sortCategoryEmojis(categoryKey: string, emojis: readonly string[]): string[] {
+  const sorted = [...emojis];
+  if (categoryKey === "flags") {
+    const specialOrder = new Map<string, number>(SPECIAL_FLAG_ORDER.map((emoji, index) => [emoji, index]));
+    sorted.sort((a, b) => {
+      const aSpecial = specialOrder.get(a);
+      const bSpecial = specialOrder.get(b);
+      if (aSpecial !== undefined && bSpecial !== undefined) return aSpecial - bSpecial;
+      if (aSpecial !== undefined) return -1;
+      if (bSpecial !== undefined) return 1;
+      // Keep non-special flags in existing source order.
+      return 0;
+    });
+    return sorted;
+  }
+  // Preserve source order for all non-flag categories (Discord-like ordering).
+  return sorted;
+}
+
+function matchesEmojiQuery(emoji: string, query: string): boolean {
+  if (query.length === 0) return true;
+  const normalized = query.toLowerCase();
+  const shortcode = getEmojiShortcodeName(emoji).toLowerCase();
+  const searchBlob = getEmojiSearchBlob(emoji).toLowerCase();
+  const normalizedShortcode = shortcode.replaceAll("_", "").replaceAll("-", "");
+  const normalizedSearchBlob = searchBlob.replaceAll("_", "").replaceAll("-", "");
+  const normalizedQuery = normalized.replaceAll(":", "").replaceAll("_", "").replaceAll("-", "");
+  const wrappedShortcode = shortcode.length > 0 ? `:${shortcode}:` : "";
+  return emoji.includes(query)
+    || shortcode.includes(normalized)
+    || searchBlob.includes(normalized)
+    || wrappedShortcode.includes(normalized)
+    || normalizedShortcode.includes(normalizedQuery)
+    || normalizedSearchBlob.includes(normalizedQuery);
+}
+
+function applySkinToneVariant(emoji: string, tone: string): string {
+  if (tone === "default") return emoji;
+  const suffix = SKIN_TONE_TO_UNIFIED_SUFFIX[tone];
+  if (suffix === undefined) return emoji;
+  const variants = SKIN_TONE_VARIANTS.get(emoji);
+  return variants?.[suffix] ?? emoji;
+}
+
+function EmojiGlyph({ emoji, className = "h-7 w-7" }: { readonly emoji: string; readonly className?: string }) {
+  const primarySrc = emojiToTwemojiUrl(emoji);
+  const fallbackSrc = emojiToTwemojiFallbackUrl(emoji);
+  return (
+    <img
+      src={primarySrc}
+      alt={emoji}
+      draggable={false}
+      className={cn("pointer-events-none object-contain", className)}
+      onError={(event) => {
+        if (fallbackSrc !== primarySrc && event.currentTarget.src !== fallbackSrc) {
+          event.currentTarget.src = fallbackSrc;
+          return;
+        }
+        event.currentTarget.style.visibility = "hidden";
+      }}
+    />
+  );
+}
+
+function ServerGuideIcon({ className = "h-4 w-4" }: { readonly className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
+      <path d="M11 3a1 1 0 1 1 2 0v2h5.75c.16 0 .3.07.4.2l2.63 3.5a.5.5 0 0 1 0 .6l-2.63 3.5a.5.5 0 0 1-.4.2H13v5h2a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-1c0-1.1.9-2 2-2h2v-5H2.8a.5.5 0 0 1-.44-.72L3.9 9.22a.5.5 0 0 0 0-.44L2.36 5.72A.5.5 0 0 1 2.81 5H11V3z" />
+    </svg>
+  );
+}
+
+function BrowseChannelsIcon({ className = "h-4 w-4" }: { readonly className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor" shapeRendering="geometricPrecision">
+      <path fillRule="evenodd" clipRule="evenodd" d="M18.5 23c.88 0 1.7-.25 2.4-.69l1.4 1.4a1 1 0 0 0 1.4-1.42l-1.39-1.4A4.5 4.5 0 1 0 18.5 23zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+      <path d="M3 3a1 1 0 0 0 0 2h18a1 1 0 1 0 0-2H3zM2 8a1 1 0 0 1 1-1h18a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 3a1 1 0 1 0 0 2h11a1 1 0 1 0 0-2H3zm-1 5a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm1 3a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H3z" />
+    </svg>
+  );
+}
+
+function insertTextAtCursor(
+  element: HTMLInputElement | HTMLTextAreaElement | null,
+  value: string,
+  nextText: string,
+  onValueChange: (value: string) => void,
+  maxLength?: number,
+) {
+  const clamp = (text: string) => {
+    if (typeof maxLength === "number" && maxLength >= 0) {
+      return text.slice(0, maxLength);
+    }
+    return text;
+  };
+
+  if (!element) {
+    onValueChange(clamp(`${value}${nextText}`));
+    return;
+  }
+
+  const start = element.selectionStart ?? value.length;
+  const end = element.selectionEnd ?? start;
+  const rawNextValue = `${value.slice(0, start)}${nextText}${value.slice(end)}`;
+  const nextValue = clamp(rawNextValue);
+  const insertedLength = nextValue.length - (value.length - (end - start));
+  const cursorPosition = Math.max(start, start + insertedLength);
+  onValueChange(nextValue);
+  globalThis.setTimeout(() => {
+    element.focus();
+    element.setSelectionRange(cursorPosition, cursorPosition);
+  }, 0);
+}
+
+function openNativePicker(input: HTMLInputElement | null) {
+  if (input === null) return;
+  if ("showPicker" in input && typeof input.showPicker === "function") {
+    input.showPicker();
+  }
+  input.focus();
+}
+
+type MentionTextFieldProps = {
+  readonly value: string;
+  readonly onValueChange: (value: string) => void;
+  readonly mentionContext: MentionContext;
+  readonly className?: string;
+  readonly placeholder?: string;
+  readonly maxLength?: number;
+  readonly rows?: number;
+  readonly multiline?: boolean;
+};
+
+function MentionTextField({
+  value,
+  onValueChange,
+  mentionContext,
+  className,
+  placeholder,
+  maxLength,
+  rows,
+  multiline = false,
+}: MentionTextFieldProps) {
+  const t = useTranslations("EmbedEditor");
+  const locale = useLocale();
+  const [open, setOpen] = useState(false);
+  const [pickerTab, setPickerTab] = useState<"mentions" | "time" | "emojis">("mentions");
+  const [emojiQuery, setEmojiQuery] = useState("");
+  const [skinTone, setSkinTone] = useState("default");
+  const [skinToneOpen, setSkinToneOpen] = useState(false);
+  const [emojiCategory, setEmojiCategory] = useState<string>(EMOJI_CATEGORIES[0]?.key ?? "people");
+  const [mentionSection, setMentionSection] = useState<"channels" | "roles">("channels");
+  const [specialOpen, setSpecialOpen] = useState(true);
+  const [channelsOpen, setChannelsOpen] = useState(true);
+  const [emojiOpen, setEmojiOpen] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(EMOJI_CATEGORIES.map((category) => [category.key, true])),
+  );
+  const [dateValue, setDateValue] = useState(() => formatDateInputValue(new Date()));
+  const [timeValue, setTimeValue] = useState(() => formatTimeInputValue(new Date()));
+  const inputId = useId();
+  const fieldRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  const dateInputRef = useRef<HTMLInputElement | null>(null);
+  const timeInputRef = useRef<HTMLInputElement | null>(null);
+  const mentionsScrollerRef = useRef<HTMLDivElement | null>(null);
+  const channelsSectionRef = useRef<HTMLDivElement | null>(null);
+  const rolesSectionRef = useRef<HTMLDivElement | null>(null);
+  const emojisScrollerRef = useRef<HTMLDivElement | null>(null);
+  const emojiSectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const emojiHeaderRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  const insertToken = (token: string) => {
+    insertTextAtCursor(fieldRef.current, value, token, onValueChange);
+    setOpen(false);
+  };
+
+  const filteredChannels = mentionContext.channels;
+  const filteredRoles = mentionContext.roles;
+  const normalizedEmojiQuery = emojiQuery.trim();
+  const filteredEmojiCategories = EMOJI_CATEGORIES
+    .map((category) => ({
+      ...category,
+      emojis: sortCategoryEmojis(
+        category.key,
+        category.emojis.filter((emoji) => matchesEmojiQuery(emoji, normalizedEmojiQuery)),
+      ),
+    }))
+    .filter((category) => category.emojis.length > 0);
+  let channelsList: React.ReactNode = null;
+  if (channelsOpen) {
+    if (filteredChannels.length > 0) {
+      channelsList = filteredChannels.map((channel) => (
+        <MentionInsertButton key={`channel-${channel.id}`} icon={Hash} label={channel.name} compact onSelect={() => insertToken(`<#${channel.id}>`)} />
+      ));
+    } else {
+      channelsList = <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">{t("mentionsNoChannels")}</div>;
+    }
+  }
+
+  useScrollSpy(
+    mentionsScrollerRef,
+    [
+      { key: "channels", ref: channelsSectionRef },
+      { key: "roles", ref: rolesSectionRef },
+    ],
+    (nextKey) => setMentionSection(nextKey === "roles" ? "roles" : "channels"),
+  );
+
+  const syncEmojiCategoryOnScroll = () => {
+    const scroller = emojisScrollerRef.current;
+    if (!scroller || filteredEmojiCategories.length === 0) return;
+    const currentScroll = scroller.scrollTop;
+    const maxScroll = scroller.scrollHeight - scroller.clientHeight;
+    if (currentScroll >= maxScroll - 2) {
+      const lastKey = filteredEmojiCategories.at(-1)?.key;
+      if (lastKey) setEmojiCategory(lastKey);
+      return;
+    }
+
+    const scrollerTop = scroller.getBoundingClientRect().top;
+    let activeKey = filteredEmojiCategories[0]?.key ?? "";
+    for (const category of filteredEmojiCategories) {
+      const node = emojiHeaderRefs.current[category.key] ?? emojiSectionRefs.current[category.key];
+      if (!node) continue;
+      const relativeTop = node.getBoundingClientRect().top - scrollerTop;
+      if (relativeTop <= 0) {
+        activeKey = category.key;
+      }
+    }
+    if (activeKey) setEmojiCategory(activeKey);
+  };
+
+  useEffect(() => {
+    if (open && pickerTab === "emojis") {
+      syncEmojiCategoryOnScroll();
+    }
+  }, [open, pickerTab, emojiOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div className="relative">
+      {multiline ? (
+        <Textarea
+          ref={(node) => { fieldRef.current = node; }}
+          value={value}
+          onChange={(event) => onValueChange(event.target.value)}
+          maxLength={maxLength}
+          rows={rows}
+          placeholder={placeholder}
+          className={cn(className, "pr-12 pb-10")}
+        />
+      ) : (
+        <Input
+          ref={(node) => { fieldRef.current = node; }}
+          value={value}
+          onChange={(event) => onValueChange(event.target.value)}
+          maxLength={maxLength}
+          placeholder={placeholder}
+          className={cn(className, "pr-12")}
+        />
+      )}
+
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            aria-label="Open mentions, time, and emojis"
+            className={cn(
+              "absolute rounded-md border border-border/70 bg-background/95 p-1.5 text-muted-foreground transition-colors hover:text-foreground",
+              multiline ? "bottom-2 right-2" : "right-2 top-1/2 -translate-y-1/2",
+            )}
+          >
+            <Keyboard className="h-3.5 w-3.5" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          side="bottom"
+          sideOffset={8}
+          sticky="always"
+          collisionPadding={{ top: 56, right: 12, bottom: 12, left: 12 }}
+          className="w-[min(92vw,400px)] max-h-[calc(100dvh-72px)] overflow-y-auto border-border bg-[#2b2d31] p-3 text-[#dbdee1]"
+        >
+          <Tabs value={pickerTab} onValueChange={(value) => setPickerTab(value as "mentions" | "time" | "emojis")}>
+            <TabsList className="mb-3 h-9 w-full justify-start gap-1 bg-[#1e1f22] p-1">
+              <TabsTrigger value="mentions" className="h-7 px-2.5 text-xs data-[state=active]:bg-[#4e5058] data-[state=active]:text-white">{t("tabMentions")}</TabsTrigger>
+              <TabsTrigger value="time" className="h-7 px-2.5 text-xs data-[state=active]:bg-[#4e5058] data-[state=active]:text-white">{t("tabTime")}</TabsTrigger>
+              <TabsTrigger value="emojis" className="h-7 px-2.5 text-xs data-[state=active]:bg-[#4e5058] data-[state=active]:text-white">{t("tabEmojis")}</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="mentions" className="mt-0">
+              <div className="flex max-h-[min(52vh,360px)] gap-2 overflow-hidden">
+                <div className="flex w-9 shrink-0 flex-col items-center gap-1 rounded-md bg-[#1e1f22] p-1">
+                  <button
+                    type="button"
+                    onClick={() => channelsSectionRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })}
+                    className={cn("flex h-7 w-7 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#3a3c43] hover:text-white", mentionSection === "channels" && "bg-[#3a3c43] text-white")}
+                    title={t("mentionsChannels")}
+                  >
+                    <Hash className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => rolesSectionRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })}
+                    className={cn("flex h-7 w-7 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#3a3c43] hover:text-white", mentionSection === "roles" && "bg-[#3a3c43] text-white")}
+                    title={t("mentionsRoles")}
+                  >
+                    <AtSign className="h-4 w-4" />
+                  </button>
+                </div>
+                <div
+                  ref={mentionsScrollerRef}
+                  onWheelCapture={(event) => {
+                    event.stopPropagation();
+                  }}
+                  className="min-w-0 flex-1 space-y-3 overflow-y-auto overscroll-contain pr-1"
+                >
+                  <div ref={channelsSectionRef} className="space-y-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-white">{t("mentionsChannels")}</p>
+                  <button type="button" onClick={() => setSpecialOpen((prev) => !prev)} className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold tracking-wide text-white/90 hover:bg-[#3a3c43]">
+                    <span>{t("mentionsSpecial")}</span>
+                    <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !specialOpen && "-rotate-90")} />
+                  </button>
+                  {specialOpen && (
+                    <>
+                      <MentionInsertButton icon={ServerGuideIcon} label={t("mentionsServerGuide")} compact onSelect={() => insertToken("<id:guide>")} />
+                      <MentionInsertButton icon={BrowseChannelsIcon} label={t("mentionsBrowseChannels")} compact onSelect={() => insertToken("<id:browse>")} />
+                      <MentionInsertButton icon={BrowseChannelsIcon} label={t("mentionsChannelsAndRoles")} compact onSelect={() => insertToken("<id:customize>")} />
+                    </>
+                  )}
+                  <button type="button" onClick={() => setChannelsOpen((prev) => !prev)} className="mt-1 flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold tracking-wide text-white/90 hover:bg-[#3a3c43]">
+                    <span>{t("mentionsChannelList")}</span>
+                    <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !channelsOpen && "-rotate-90")} />
+                  </button>
+                  {channelsList}
+                </div>
+
+                <div ref={rolesSectionRef} className="space-y-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-white">{t("mentionsRoles")}</p>
+                  <MentionInsertButton icon={AtSign} label="@everyone" compact onSelect={() => insertToken("@everyone")} />
+                  <MentionInsertButton icon={AtSign} label="@here" compact onSelect={() => insertToken("@here")} />
+                  {filteredRoles.length > 0 ? filteredRoles.map((role) => (
+                    <MentionInsertButton
+                      key={`role-${role.id}`}
+                      icon={AtSign}
+                      label={role.name}
+                      compact
+                      onSelect={() => insertToken(`<@&${role.id}>`)}
+                    />
+                  )) : (
+                    <div className="rounded-md border border-dashed border-[#3f4147] px-3 py-2 text-xs text-[#949ba4]">
+                      {t("mentionsNoRoles")}
+                    </div>
+                  )}
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent
+              value="time"
+              className="mt-0 max-h-[min(52vh,360px)] space-y-2 overflow-y-auto overscroll-contain pr-1"
+              onWheelCapture={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              <div className="space-y-1">
+                <Label htmlFor={`${inputId}-date`} className="text-xs text-white">{t("dateLabel")}</Label>
+                <div className="relative">
+                  <Input
+                    ref={dateInputRef}
+                    id={`${inputId}-date`}
+                    type="date"
+                    value={dateValue}
+                    onChange={(event) => setDateValue(event.target.value)}
+                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-red-500/80 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
+                  />
+                  <button
+                    type="button"
+                    aria-label={t("dateLabel")}
+                    onClick={() => {
+                      const el = dateInputRef.current;
+                      openNativePicker(el);
+                    }}
+                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
+                  >
+                    <CalendarDays className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor={`${inputId}-time`} className="text-xs text-white">{t("timeLabel")}</Label>
+                <div className="relative">
+                  <Input
+                    ref={timeInputRef}
+                    id={`${inputId}-time`}
+                    type="time"
+                    step={1}
+                    value={timeValue}
+                    onChange={(event) => setTimeValue(event.target.value)}
+                    className="h-8 appearance-none border-[#3f4147] bg-[#1e1f22] px-2.5 pr-8 text-sm text-white focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-red-500/80 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:pointer-events-none"
+                  />
+                  <button
+                    type="button"
+                    aria-label={t("timeLabel")}
+                    onClick={() => {
+                      const el = timeInputRef.current;
+                      openNativePicker(el);
+                    }}
+                    className="absolute right-1.5 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-white hover:text-white"
+                  >
+                    <Clock3 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <p className="text-[11px] font-semibold tracking-wide text-white">{t("styleLabel")}</p>
+                <div className="grid grid-cols-1 gap-1">
+                  {DISCORD_TIMESTAMP_STYLES.map((item) => (
+                    <TimeStyleInsertButton
+                      key={item.style}
+                      label={item.style === "R" ? t("timeRelativeNow") : formatTimestampStylePreview(dateValue, timeValue, item.style, locale)}
+                      onSelect={() => insertToken(createTimestampToken(dateValue, timeValue, item.style))}
+                    />
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="emojis" className="mt-0 space-y-3">
+              <div className="flex items-center gap-2">
+                <Input
+                  value={emojiQuery}
+                  onChange={(event) => setEmojiQuery(event.target.value)}
+                  placeholder={t("emojiSearchPlaceholder")}
+                  className="h-9 flex-1 border-[#3f4147] bg-[#1e1f22] text-sm text-white placeholder:text-[#949ba4]"
+                />
+                <Popover open={skinToneOpen} onOpenChange={setSkinToneOpen}>
+                  <PopoverTrigger asChild>
+                    <button type="button" aria-label={t("emojiToneLabel")} className="flex h-9 w-9 items-center justify-center rounded-md border border-[#3f4147] bg-[#1e1f22] text-lg text-white">
+                      {skinTone === "default" ? "👋" : `👋${skinTone}`}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-auto border-[#3f4147] bg-[#2b2d31] p-1">
+                    <div className="flex gap-1">
+                      {["default", "🏻", "🏼", "🏽", "🏾", "🏿"].map((tone) => (
+                        <button
+                          key={tone}
+                          type="button"
+                          onClick={() => {
+                            setSkinTone(tone);
+                            setSkinToneOpen(false);
+                          }}
+                          className="flex h-8 w-8 items-center justify-center rounded bg-[#1e1f22] text-base text-white hover:bg-[#3a3c43]"
+                        >
+                          {tone === "default" ? "👋" : `👋${tone}`}
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="flex max-h-[calc(min(52vh,360px)-48px)] min-h-[212px] gap-2 overflow-hidden">
+                <div className="flex w-9 shrink-0 flex-col items-center gap-1 overflow-y-auto rounded-md bg-[#1e1f22] p-1">
+                  {filteredEmojiCategories.map((category) => (
+                    <button
+                      key={category.key}
+                      type="button"
+                      onClick={() => {
+                        setEmojiCategory(category.key);
+                        emojiSectionRefs.current[category.key]?.scrollIntoView({ block: "start", behavior: "smooth" });
+                      }}
+                      className={cn("flex h-7 w-7 items-center justify-center rounded text-[#b5bac1] transition-colors hover:bg-[#3a3c43] hover:text-white", emojiCategory === category.key && "bg-[#3a3c43] text-white")}
+                      title={t(`emojiCategory.${category.key}`)}
+                    >
+                      <category.icon className="h-4 w-4" />
+                    </button>
+                  ))}
+                </div>
+                <div
+                  ref={emojisScrollerRef}
+                  onScroll={syncEmojiCategoryOnScroll}
+                  onWheelCapture={(event) => {
+                    event.stopPropagation();
+                  }}
+                  className="min-w-0 flex-1 overflow-y-auto overscroll-contain pr-1"
+                >
+                  {filteredEmojiCategories.map((category) => (
+                    <div
+                      key={category.key}
+                      ref={(node) => { emojiSectionRefs.current[category.key] = node; }}
+                      className="mb-3 space-y-2"
+                    >
+                      <button
+                        ref={(node) => { emojiHeaderRefs.current[category.key] = node; }}
+                        type="button"
+                        onClick={() => setEmojiOpen((prev) => ({ ...prev, [category.key]: !prev[category.key] }))}
+                        className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[11px] font-semibold tracking-wide text-white hover:bg-[#3a3c43]"
+                      >
+                        <span>{t(`emojiCategory.${category.key}`)}</span>
+                        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !emojiOpen[category.key] && "-rotate-90")} />
+                      </button>
+                      {emojiOpen[category.key] && (
+                        <div className="grid grid-cols-7 gap-1">
+                          {category.emojis.map((emoji) => (
+                            <button
+                              key={`${category.key}-${emoji}`}
+                              type="button"
+                              title={`:${getEmojiShortcodeName(emoji) || emoji}:`}
+                              className="flex h-10 w-10 items-center justify-center rounded-md bg-[#1e1f22] transition-colors hover:bg-[#3a3c43]"
+                              onClick={() => insertToken(applySkinToneVariant(emoji, skinTone))}
+                            >
+                              <EmojiGlyph emoji={applySkinToneVariant(emoji, skinTone)} />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+function MentionInsertButton({
+  icon: Icon,
+  label,
+  compact = false,
+  onSelect,
+}: {
+  readonly icon: ComponentType<{ className?: string }>;
+  readonly label: string;
+  readonly compact?: boolean;
+  readonly onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={cn(
+        "flex w-full items-center gap-3 rounded-md text-left transition-colors hover:bg-[#3a3c43]",
+        compact ? "px-2.5 py-1.5" : "px-3 py-2",
+      )}
+    >
+      <span className={cn("flex items-center justify-center rounded-md bg-[#1e1f22] text-[#b5bac1]", compact ? "h-7 w-7" : "h-8 w-8")}>
+        <Icon className={cn(compact ? "h-3.5 w-3.5" : "h-4 w-4")} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className={cn("block truncate font-medium text-white", compact ? "text-[13px]" : "text-sm")}>{label}</span>
+      </span>
+    </button>
+  );
+}
+
+function TimeStyleInsertButton({ label, onSelect }: { readonly label: string; readonly onSelect: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="flex h-8 w-full items-center gap-1.5 rounded-[5px] border border-[#454850] bg-[#262930] px-2 text-left transition-colors hover:bg-[#343842]"
+    >
+      <span className="flex h-4 w-4 items-center justify-center text-[#b5bac1]">
+        <Clock3 className="h-3 w-3" />
+      </span>
+      <span className="truncate text-[13px] font-medium leading-none text-white">{label}</span>
+    </button>
+  );
+}
+
+function useScrollSpy(
+  scrollerRef: MutableRefObject<HTMLDivElement | null>,
+  sections: Array<{ key: string; ref: MutableRefObject<HTMLDivElement | null> }>,
+  onChange: (key: string) => void,
+) {
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller || sections.length === 0) return;
+
+    const handleScroll = () => {
+      const scrollerTop = scroller.getBoundingClientRect().top;
+      let activeKey = sections[0]?.key;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      for (const section of sections) {
+        const node = section.ref.current;
+        if (!node) continue;
+        const distance = Math.abs(node.getBoundingClientRect().top - scrollerTop - 8);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          activeKey = section.key;
+        }
+      }
+      if (activeKey) onChange(activeKey);
+    };
+
+    handleScroll();
+    scroller.addEventListener("scroll", handleScroll, { passive: true });
+    return () => scroller.removeEventListener("scroll", handleScroll);
+  }, [onChange, scrollerRef, sections]);
 }
 
 function defaultState(): EmbedFormState {
@@ -782,9 +1623,10 @@ function MediaGalleryEditorFields({ comp, onChange }: {
   );
 }
 
-function SectionEditorFields({ comp, onChange }: {
+function SectionEditorFields({ comp, onChange, mentionContext }: {
   readonly comp: SectionState;
   readonly onChange: (updated: SectionState) => void;
+  readonly mentionContext: MentionContext;
 }) {
   const t = useTranslations("EmbedEditor");
   return (
@@ -800,9 +1642,14 @@ function SectionEditorFields({ comp, onChange }: {
               </Button>
             )}
           </div>
-          <Textarea value={text.content}
-            onChange={e => onChange({ ...comp, texts: comp.texts.map(tx => tx.id === text.id ? { ...tx, content: e.target.value } : tx) })}
-            rows={3} className={COMPACT_TEXTAREA_CN} />
+          <MentionTextField
+            value={text.content}
+            onValueChange={(nextValue) => onChange({ ...comp, texts: comp.texts.map(tx => tx.id === text.id ? { ...tx, content: nextValue } : tx) })}
+            rows={3}
+            multiline
+            className={COMPACT_TEXTAREA_CN}
+            mentionContext={mentionContext}
+          />
         </div>
       ))}
       <Button size="sm" variant="outline" className="h-7 text-xs"
@@ -1162,9 +2009,10 @@ function FileComponentEditorFields({
   );
 }
 
-export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEditorProps) { // NOSONAR
+export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels = [], roles = [] }: EmbedEditorProps) { // NOSONAR
   const t = useTranslations("EmbedEditor");
   const tCommon = useTranslations("Common");
+  const mentionContext: MentionContext = { channels, roles };
   const parsedInitialData = initialData ? payloadToMessages(initialData) : null;
   const inputClassName = "bg-background border-border/80";
   const compactInputClassName = COMPACT_INPUT_CN;
@@ -1531,13 +2379,15 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   <Label className="text-xs">{t("content")}</Label>
                   <CharCount value={content} max={MAX_DISCORD_MESSAGE_CONTENT_LENGTH} />
                 </div>
-                <Textarea
+                <MentionTextField
                   value={content}
-                  onChange={(event) => setContent(event.target.value.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH))}
+                  onValueChange={(nextValue) => setContent(nextValue.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH))}
                   maxLength={MAX_DISCORD_MESSAGE_CONTENT_LENGTH}
                   rows={4}
+                  multiline
                   className={compactTextareaClassName}
                   placeholder={t("contentPlaceholder")}
+                  mentionContext={mentionContext}
                 />
               </div>
 
@@ -1598,7 +2448,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                   <Label className="text-xs">{t("authorName")}</Label>
                                   <CharCount value={embed.authorName} max={256} />
                                 </div>
-                                <Input value={embed.authorName} onChange={e => setEmbedField(embed.editorId, "authorName", e.target.value)} maxLength={256} className={compactInputClassName} />
+                                <MentionTextField value={embed.authorName} onValueChange={(nextValue) => setEmbedField(embed.editorId, "authorName", nextValue)} maxLength={256} className={compactInputClassName} mentionContext={mentionContext} />
                               </Field>
                               <Field label={t("authorUrl")}>
                                 <Input value={embed.authorUrl} onChange={e => setEmbedField(embed.editorId, "authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
@@ -1616,7 +2466,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                   <Label className="text-xs">{t("title")}</Label>
                                   <CharCount value={embed.title} max={256} />
                                 </div>
-                                <Input value={embed.title} onChange={e => setEmbedField(embed.editorId, "title", e.target.value)} maxLength={256} className={compactInputClassName} />
+                                <MentionTextField value={embed.title} onValueChange={(nextValue) => setEmbedField(embed.editorId, "title", nextValue)} maxLength={256} className={compactInputClassName} mentionContext={mentionContext} />
                               </Field>
                               <Field label={t("titleUrl")}>
                                 <Input value={embed.titleUrl} onChange={e => setEmbedField(embed.editorId, "titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
@@ -1645,13 +2495,15 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                   <Label className="text-xs">{t("description")}</Label>
                                   <CharCount value={embed.description} max={4096} />
                                 </div>
-                                <Textarea
+                                <MentionTextField
                                   value={embed.description}
-                                  onChange={e => setEmbedField(embed.editorId, "description", e.target.value)}
+                                  onValueChange={(nextValue) => setEmbedField(embed.editorId, "description", nextValue)}
                                   maxLength={4096}
                                   rows={5}
+                                  multiline
                                   className={compactTextareaClassName}
                                   placeholder={t("descriptionPlaceholder")}
+                                  mentionContext={mentionContext}
                                 />
                               </Field>
                             </div>
@@ -1685,14 +2537,14 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                       <Label className="text-xs">{t("fieldName")}</Label>
                                       <CharCount value={field.name} max={256} />
                                     </div>
-                                    <Input value={field.name} onChange={e => updateField(embed.editorId, field.id, { name: e.target.value })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} />
+                                    <MentionTextField value={field.name} onValueChange={(nextValue) => updateField(embed.editorId, field.id, { name: nextValue })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} mentionContext={mentionContext} />
                                   </div>
                                   <div className="space-y-1">
                                     <div className="flex items-center justify-between">
                                       <Label className="text-xs">{t("fieldValue")}</Label>
                                       <CharCount value={field.value} max={1024} />
                                     </div>
-                                    <Textarea value={field.value} onChange={e => updateField(embed.editorId, field.id, { value: e.target.value })} maxLength={1024} rows={2} className={cn(inputClassName, "text-xs resize-none")} />
+                                    <MentionTextField value={field.value} onValueChange={(nextValue) => updateField(embed.editorId, field.id, { value: nextValue })} maxLength={1024} rows={2} multiline className={cn(inputClassName, "text-xs resize-none")} mentionContext={mentionContext} />
                                   </div>
                                   <label className="flex items-center gap-2 cursor-pointer">
                                     <input
@@ -1726,7 +2578,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                   <Label className="text-xs">{t("footerText")}</Label>
                                   <CharCount value={embed.footerText} max={2048} />
                                 </div>
-                                <Input value={embed.footerText} onChange={e => setEmbedField(embed.editorId, "footerText", e.target.value)} maxLength={2048} className={compactInputClassName} />
+                                <MentionTextField value={embed.footerText} onValueChange={(nextValue) => setEmbedField(embed.editorId, "footerText", nextValue)} maxLength={2048} className={compactInputClassName} mentionContext={mentionContext} />
                               </Field>
                               <Field label={t("footerIconUrl")}>
                                 <Input value={embed.footerIconUrl} onChange={e => setEmbedField(embed.editorId, "footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
@@ -1851,9 +2703,14 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                           <p className="text-xs text-muted-foreground">{t("unknownComponentHint")}</p>
                         )}
                         {comp.type === "text_display" && (
-                          <Textarea value={comp.content}
-                            onChange={e => updateV2Component(comp.id, c => c.type === "text_display" ? { ...c, content: e.target.value } : c)}
-                            rows={4} className={compactTextareaClassName} />
+                          <MentionTextField
+                            value={comp.content}
+                            onValueChange={(nextValue) => updateV2Component(comp.id, c => c.type === "text_display" ? { ...c, content: nextValue } : c)}
+                            rows={4}
+                            multiline
+                            className={compactTextareaClassName}
+                            mentionContext={mentionContext}
+                          />
                         )}
                         {comp.type === "separator" && (
                           <SeparatorEditorFields
@@ -1871,6 +2728,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                           <SectionEditorFields
                             comp={comp}
                             onChange={updated => updateV2Component(comp.id, () => updated)}
+                            mentionContext={mentionContext}
                           />
                         )}
                         {comp.type === "file" && (
@@ -1943,9 +2801,14 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                   {childIsExpanded && (
                                     <div className="border-t border-border/60 px-3 py-2 space-y-2">
                                       {child.type === "text_display" && (
-                                        <Textarea value={child.content}
-                                          onChange={e => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "text_display" ? { ...c, content: e.target.value } : c))}
-                                          rows={3} className={compactTextareaClassName} />
+                                        <MentionTextField
+                                          value={child.content}
+                                          onValueChange={(nextValue) => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "text_display" ? { ...c, content: nextValue } : c))}
+                                          rows={3}
+                                          multiline
+                                          className={compactTextareaClassName}
+                                          mentionContext={mentionContext}
+                                        />
                                       )}
                                       {child.type === "separator" && (
                                         <SeparatorEditorFields
@@ -1963,6 +2826,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                                         <SectionEditorFields
                                           comp={child}
                                           onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          mentionContext={mentionContext}
                                         />
                                       )}
                                       {child.type === "action_row" && (
@@ -2066,6 +2930,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                   embeds={previewEmbeds}
                   isV2={activeMessage.mode === "v2"}
                   components={previewV2Components}
+                  mentionContext={mentionContext}
                 />
               ) : (
                 <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
@@ -2093,6 +2958,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel }: EmbedEd
                 embeds={previewEmbeds}
                 isV2={activeMessage.mode === "v2"}
                 components={previewV2Components}
+                mentionContext={mentionContext}
               />
             ) : (
               <div className="flex items-center justify-center h-40 rounded-xl border border-dashed border-border text-muted-foreground text-sm">
