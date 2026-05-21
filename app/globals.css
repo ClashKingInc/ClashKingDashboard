@@ -127,6 +127,11 @@ body {
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    scrollbar-gutter: stable;
   }
 
   /* Better focus visible states */
