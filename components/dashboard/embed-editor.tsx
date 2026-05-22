@@ -2092,7 +2092,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
         mode: source.mode,
         embeds: source.embeds.map((embed) => duplicateEmbedState(embed)),
         content: source.content,
-        components: source.components.map((component) => parseV2Component(serializeComponentState(component) ?? { type: 10, content: "" })),
+        components: source.components
+          .map((component) => serializeComponentState(component))
+          .filter((component): component is TopLevelComponent => component !== null)
+          .map((component) => parseComponentState(component)),
       };
       const next = [...prev.slice(0, index + 1), duplicated, ...prev.slice(index + 1)];
       setExpandedMessageIds((expandedPrev) => new Set(expandedPrev).add(duplicated.id));
@@ -2151,9 +2154,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
   const removeEmbed = (messageIndex: number, embedId: string) => {
     setEmbedsForMessage(messageIndex, (prev) => {
       if (prev.length <= 1) {
-        const replacement = defaultState();
-        setExpandedEmbedId(replacement.editorId);
-        return [replacement];
+        setExpandedEmbedId(null);
+        return [];
       } // NOSONAR
       const removedIndex = prev.findIndex((embed) => embed.editorId === embedId);
       const nextEmbeds = prev.filter((embed) => embed.editorId !== embedId);
@@ -2513,7 +2515,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => duplicateEmbed(i, embed.editorId)} disabled={msg.embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}>
                             <Copy className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeEmbed(i, embed.editorId)} disabled={msg.embeds.length <= 1}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeEmbed(i, embed.editorId)}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
