@@ -3180,8 +3180,6 @@ function duplicateComponentState(component: TopLevelComponentState): TopLevelCom
     case "raw":
     case "file":
       return { ...component, id: uid() };
-    default:
-      return { ...component, id: uid() };
   }
 }
 
