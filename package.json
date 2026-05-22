@@ -39,7 +39,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "emoji-datasource-twitter": "^16.0.0",
-    "framer-motion": "^12.38.0",
+    "framer-motion": "^12.40.0",
     "lucide-react": "^0.577.0",
     "lz-string": "^1.5.0",
     "next": "^16.2.6",
@@ -60,15 +60,18 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.0.2",
-    "@vitest/coverage-v8": "^4.1.6",
+    "@vitest/coverage-v8": "^4.1.7",
     "autoprefixer": "^10.5.0",
-    "baseline-browser-mapping": "^2.10.30",
+    "baseline-browser-mapping": "^2.10.31",
     "eslint": "^9",
     "eslint-config-next": "^16",
     "jsdom": "^29.1.1",
-    "postcss": "^8",
+    "postcss": "8.5.15",
     "tailwindcss": "^4.0.0",
     "typescript": "^5",
     "vitest": "^4.1.2"
+  },
+  "overrides": {
+    "postcss": "8.5.15"
   }
 }
