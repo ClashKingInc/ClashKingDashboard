@@ -2021,7 +2021,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
   const [messages, setMessages] = useState<MessageState[]>(() =>
     parsedInitialData ? parsedInitialData.messages : [{ id: uid(), mode: "v1", embeds: [defaultState()], content: "", components: [] }]
   );
-  const [activeMessageIdx, setActiveMessageIdx] = useState(0);
   const [expandedEmbedId, setExpandedEmbedId] = useState<string | null>(() =>
     parsedInitialData?.messages[0]?.embeds[0]?.editorId ?? null
   );
@@ -2038,8 +2037,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
   const [expandedMessageIds, setExpandedMessageIds] = useState<Set<string>>(
     () => new Set((parsedInitialData?.messages ?? []).map((message) => message.id)),
   );
-
-  const safeIdx = Math.min(activeMessageIdx, messages.length - 1);
 
   useEffect(() => {
     setExpandedMessageIds((prev) => {
@@ -2062,7 +2059,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     const newMsg: MessageState = { id: uid(), mode, embeds: [newEmbed], content: "", components: [] };
     setMessages(prev => [...prev, newMsg]);
     setExpandedMessageIds((prev) => new Set(prev).add(newMsg.id));
-    setActiveMessageIdx(messages.length);
     setExpandedEmbedId(newEmbed.editorId);
     setAddMessageDialogOpen(false);
   };
@@ -2079,7 +2075,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
       });
     }
     const newIdx = Math.max(0, Math.min(index, messages.length - 2));
-    setActiveMessageIdx(newIdx);
     setExpandedEmbedId(messages[newIdx]?.embeds[0]?.editorId ?? null);
   };
 
@@ -2099,7 +2094,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
       };
       const next = [...prev.slice(0, index + 1), duplicated, ...prev.slice(index + 1)];
       setExpandedMessageIds((expandedPrev) => new Set(expandedPrev).add(duplicated.id));
-      setActiveMessageIdx(index + 1);
       setExpandedEmbedId(duplicated.embeds[0]?.editorId ?? null);
       return next;
     });
@@ -2111,11 +2105,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
       if (targetIndex < 0 || targetIndex >= prev.length) return prev;
       const next = [...prev];
       [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
-      setActiveMessageIdx((current) => {
-        if (current === index) return targetIndex;
-        if (current === targetIndex) return index;
-        return current;
-      });
       return next;
     });
   };
@@ -2264,7 +2253,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     setImportError(false);
     setImportUrl("");
     setMessages(parsedMessages);
-    setActiveMessageIdx(0);
     setProfile(parsedProfile);
     setExpandedEmbedId(parsedMessages[0]?.embeds[0]?.editorId ?? null); // NOSONAR
     setImportWarning(null);
@@ -2375,7 +2363,6 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                           }
                           return next;
                         });
-                        setActiveMessageIdx(i);
                         setExpandedEmbedId(msg.embeds[0]?.editorId ?? null);
                       }}
                     >
@@ -2689,10 +2676,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                 <SectionLabel>{t("componentsSection")}</SectionLabel>
                 <div className="relative">
                   <Button size="sm" variant="outline" className="h-7 text-xs"
-                    onClick={() => setOpenDropdownId(prev => prev === "__top__" ? null : "__top__")}>
+                    onClick={() => setOpenDropdownId(prev => prev === `__top__:${msg.id}` ? null : `__top__:${msg.id}`)}>
                     <Plus className="h-3.5 w-3.5 mr-1" />{t("addComponent")}
                   </Button>
-                  {openDropdownId === "__top__" && (
+                  {openDropdownId === `__top__:${msg.id}` && (
                     <>
                       <button type="button" tabIndex={-1} aria-hidden="true" className="fixed inset-0 z-10 cursor-default" onClick={() => setOpenDropdownId(null)} />
                       <div className="absolute right-0 top-8 z-20 rounded-md border border-border bg-card shadow-lg min-w-[160px]">
