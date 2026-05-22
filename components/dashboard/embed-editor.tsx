@@ -2031,53 +2031,106 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
   const [importResolving, setImportResolving] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [importExportOpen, setImportExportOpen] = useState(false);
+  const [addMessageDialogOpen, setAddMessageDialogOpen] = useState(false);
   const [copiedDiscohook, setCopiedDiscohook] = useState(false);
   const [profile, setProfile] = useState<MessageProfileState>(() => parsedInitialData?.profile ?? { name: "", avatarUrl: "" });
   const [profileOpen, setProfileOpen] = useState(false);
+  const [expandedMessageIds, setExpandedMessageIds] = useState<Set<string>>(
+    () => new Set((parsedInitialData?.messages ?? []).map((message) => message.id)),
+  );
 
   const safeIdx = Math.min(activeMessageIdx, messages.length - 1);
-  const activeMessage = messages[safeIdx];
-  const embeds = activeMessage.embeds;
-  const content = activeMessage.content;
 
-  const setEmbeds = (updater: EmbedFormState[] | ((prev: EmbedFormState[]) => EmbedFormState[])) =>
-    setMessages(prev => prev.map((msg, i) => i === safeIdx ? {
+  useEffect(() => {
+    setExpandedMessageIds((prev) => {
+      if (prev.size > 0) return prev;
+      return new Set(messages.map((message) => message.id));
+    });
+  }, [messages]);
+
+  const setEmbedsForMessage = (messageIndex: number, updater: EmbedFormState[] | ((prev: EmbedFormState[]) => EmbedFormState[])) =>
+    setMessages(prev => prev.map((msg, i) => i === messageIndex ? {
       ...msg,
       embeds: typeof updater === "function" ? updater(msg.embeds) : updater,
     } : msg));
 
-  const setContent = (value: string) =>
-    setMessages(prev => prev.map((msg, i) => i === safeIdx ? { ...msg, content: value } : msg));
+  const setContentForMessage = (messageIndex: number, value: string) =>
+    setMessages(prev => prev.map((msg, i) => i === messageIndex ? { ...msg, content: value } : msg));
 
-  const addMessage = () => {
+  const addMessage = (mode: "v1" | "v2") => {
     const newEmbed = defaultState();
-    const newMsg: MessageState = { id: uid(), mode: "v1", embeds: [newEmbed], content: "", components: [] };
+    const newMsg: MessageState = { id: uid(), mode, embeds: [newEmbed], content: "", components: [] };
     setMessages(prev => [...prev, newMsg]);
+    setExpandedMessageIds((prev) => new Set(prev).add(newMsg.id));
     setActiveMessageIdx(messages.length);
     setExpandedEmbedId(newEmbed.editorId);
+    setAddMessageDialogOpen(false);
   };
 
   const removeMessage = (index: number) => {
     if (messages.length <= 1) return;
+    const removingId = messages[index]?.id;
     setMessages(prev => prev.filter((_, i) => i !== index));
+    if (removingId) {
+      setExpandedMessageIds((prev) => {
+        const next = new Set(prev);
+        next.delete(removingId);
+        return next;
+      });
+    }
     const newIdx = Math.max(0, Math.min(index, messages.length - 2));
     setActiveMessageIdx(newIdx);
     setExpandedEmbedId(messages[newIdx]?.embeds[0]?.editorId ?? null);
   };
 
-  const updateEmbed = (embedId: string, updater: (embed: EmbedFormState) => EmbedFormState) =>
-    setEmbeds((prev) => prev.map((embed) => (embed.editorId === embedId ? updater(embed) : embed)));
+  const duplicateMessage = (index: number) => {
+    setMessages((prev) => {
+      const source = prev[index];
+      if (!source) return prev;
+      const duplicated: MessageState = {
+        id: uid(),
+        mode: source.mode,
+        embeds: source.embeds.map((embed) => duplicateEmbedState(embed)),
+        content: source.content,
+        components: source.components.map((component) => parseV2Component(serializeComponentState(component) ?? { type: 10, content: "" })),
+      };
+      const next = [...prev.slice(0, index + 1), duplicated, ...prev.slice(index + 1)];
+      setExpandedMessageIds((expandedPrev) => new Set(expandedPrev).add(duplicated.id));
+      setActiveMessageIdx(index + 1);
+      setExpandedEmbedId(duplicated.embeds[0]?.editorId ?? null);
+      return next;
+    });
+  };
+
+  const moveMessage = (index: number, direction: -1 | 1) => {
+    setMessages((prev) => {
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= prev.length) return prev;
+      const next = [...prev];
+      [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+      setActiveMessageIdx((current) => {
+        if (current === index) return targetIndex;
+        if (current === targetIndex) return index;
+        return current;
+      });
+      return next;
+    });
+  };
+
+  const updateEmbed = (messageIndex: number, embedId: string, updater: (embed: EmbedFormState) => EmbedFormState) =>
+    setEmbedsForMessage(messageIndex, (prev) => prev.map((embed) => (embed.editorId === embedId ? updater(embed) : embed)));
 
   const setEmbedField = <K extends Exclude<keyof EmbedFormState, "editorId" | "openSections" | "fields">>(
+    messageIndex: number,
     embedId: string,
     key: K,
     value: EmbedFormState[K], // NOSONAR
   ) => {
-    updateEmbed(embedId, (embed) => ({ ...embed, [key]: value }));
+    updateEmbed(messageIndex, embedId, (embed) => ({ ...embed, [key]: value }));
   };
 
-  const toggleSection = (embedId: string, section: SectionKey) => {
-    updateEmbed(embedId, (embed) => ({ // NOSONAR
+  const toggleSection = (messageIndex: number, embedId: string, section: SectionKey) => {
+    updateEmbed(messageIndex, embedId, (embed) => ({ // NOSONAR
       ...embed,
       openSections: {
         ...embed.openSections,
@@ -2086,8 +2139,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     }));
   };
 
-  const addEmbed = () => {
-    setEmbeds((prev) => {
+  const addEmbed = (messageIndex: number) => {
+    setEmbedsForMessage(messageIndex, (prev) => {
       if (prev.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return prev;
       const nextEmbed = defaultState();
       setExpandedEmbedId(nextEmbed.editorId); // NOSONAR
@@ -2095,8 +2148,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     });
   };
 
-  const removeEmbed = (embedId: string) => {
-    setEmbeds((prev) => {
+  const removeEmbed = (messageIndex: number, embedId: string) => {
+    setEmbedsForMessage(messageIndex, (prev) => {
       if (prev.length <= 1) {
         const replacement = defaultState();
         setExpandedEmbedId(replacement.editorId);
@@ -2112,8 +2165,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     });
   };
 
-  const duplicateEmbed = (embedId: string) => {
-    setEmbeds((prev) => {
+  const duplicateEmbed = (messageIndex: number, embedId: string) => {
+    setEmbedsForMessage(messageIndex, (prev) => {
       if (prev.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE) return prev;
       const index = prev.findIndex((embed) => embed.editorId === embedId);
       if (index === -1) return prev;
@@ -2123,8 +2176,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     });
   };
 
-  const moveEmbed = (embedId: string, direction: -1 | 1) => {
-    setEmbeds((prev) => {
+  const moveEmbed = (messageIndex: number, embedId: string, direction: -1 | 1) => {
+    setEmbedsForMessage(messageIndex, (prev) => {
       const index = prev.findIndex((embed) => embed.editorId === embedId);
       const targetIndex = index + direction;
       if (index < 0 || targetIndex < 0 || targetIndex >= prev.length) return prev;
@@ -2136,8 +2189,8 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
   // ── Field management ────────────────────────────────────────────────────────
 
-  const addField = (embedId: string) => {
-    updateEmbed(embedId, (embed) => {
+  const addField = (messageIndex: number, embedId: string) => {
+    updateEmbed(messageIndex, embedId, (embed) => {
       if (embed.fields.length >= 25) return embed;
       return { // NOSONAR
         ...embed,
@@ -2146,17 +2199,17 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     });
   };
 
-  const updateField = (embedId: string, fieldId: string, patch: Partial<FieldState>) =>
-    updateEmbed(embedId, (embed) => ({
+  const updateField = (messageIndex: number, embedId: string, fieldId: string, patch: Partial<FieldState>) =>
+    updateEmbed(messageIndex, embedId, (embed) => ({
       ...embed,
       fields: patchField(embed.fields, fieldId, patch),
     }));
 
-  const removeField = (embedId: string, fieldId: string) =>
-    updateEmbed(embedId, (embed) => ({ ...embed, fields: removeFieldById(embed.fields, fieldId) }));
+  const removeField = (messageIndex: number, embedId: string, fieldId: string) =>
+    updateEmbed(messageIndex, embedId, (embed) => ({ ...embed, fields: removeFieldById(embed.fields, fieldId) }));
 
-  const moveField = (embedId: string, fieldId: string, dir: -1 | 1) =>
-    updateEmbed(embedId, (embed) => ({ ...embed, fields: reorderFieldById(embed.fields, fieldId, dir) })); // NOSONAR
+  const moveField = (messageIndex: number, embedId: string, fieldId: string, dir: -1 | 1) =>
+    updateEmbed(messageIndex, embedId, (embed) => ({ ...embed, fields: reorderFieldById(embed.fields, fieldId, dir) })); // NOSONAR
 
   // ── V2 Component management ──────────────────────────────────────────────────
 
@@ -2169,25 +2222,22 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
       return next;
     }); // NOSONAR
 
-  const setMessageMode = (idx: number, mode: "v1" | "v2") =>
-    setMessages(prev => prev.map((msg, i) => i === idx ? { ...msg, mode } : msg)); // NOSONAR
-
-  const setV2Components = (updater: TopLevelComponentState[] | ((prev: TopLevelComponentState[]) => TopLevelComponentState[])) =>
-    setMessages(prev => prev.map((msg, i) => i === safeIdx ? {
+  const setV2Components = (messageIndex: number, updater: TopLevelComponentState[] | ((prev: TopLevelComponentState[]) => TopLevelComponentState[])) =>
+    setMessages(prev => prev.map((msg, i) => i === messageIndex ? {
       ...msg,
       components: typeof updater === "function" ? updater(msg.components) : updater,
     } : msg));
 
-  const addV2Component = (type: TopLevelComponentState["type"]) => {
+  const addV2Component = (messageIndex: number, type: TopLevelComponentState["type"]) => {
     const newComp = createDefaultV2Component(type);
-    setV2Components(prev => [...prev, newComp]);
+    setV2Components(messageIndex, prev => [...prev, newComp]);
   };
 
-  const removeV2Component = (id: string) =>
-    setV2Components(prev => prev.filter(c => c.id !== id));
+  const removeV2Component = (messageIndex: number, id: string) =>
+    setV2Components(messageIndex, prev => prev.filter(c => c.id !== id));
 
-  const moveV2Component = (id: string, dir: -1 | 1) =>
-    setV2Components(prev => {
+  const moveV2Component = (messageIndex: number, id: string, dir: -1 | 1) =>
+    setV2Components(messageIndex, prev => {
       const arr = [...prev];
       const idx = arr.findIndex(c => c.id === id);
       const next = idx + dir;
@@ -2196,11 +2246,11 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
       return arr;
     });
 
-  const updateV2Component = (id: string, updater: (c: TopLevelComponentState) => TopLevelComponentState) =>
-    setV2Components(prev => prev.map(c => c.id === id ? updater(c) : c));
+  const updateV2Component = (messageIndex: number, id: string, updater: (c: TopLevelComponentState) => TopLevelComponentState) =>
+    setV2Components(messageIndex, prev => prev.map(c => c.id === id ? updater(c) : c));
 
-  const updateContainerChildren = (containerId: string, updater: (children: ContainerChildState[]) => ContainerChildState[]) =>
-    updateV2Component(containerId, comp => {
+  const updateContainerChildren = (messageIndex: number, containerId: string, updater: (children: ContainerChildState[]) => ContainerChildState[]) =>
+    updateV2Component(messageIndex, containerId, comp => {
       if (comp.type !== "container") return comp;
       return { ...comp, children: updater(comp.children) };
     });
@@ -2260,8 +2310,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
   const discohookPayload = stateToPayload(messages, profile);
   const discohookUrl = buildDiscohookUrl(discohookPayload);
-  const previewEmbeds = activeMessage.mode === "v1" ? embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent) : [];
-  const previewV2Components = activeMessage.mode === "v2" ? activeMessage.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null) : [];
+  const previewMessages = messages.map((message) => ({
+    id: message.id,
+    content: message.content,
+    embeds: message.mode === "v1" ? message.embeds.map(stateToEmbed).filter(hasMeaningfulEmbedContent) : [],
+    isV2: message.mode === "v2",
+    components: message.mode === "v2" ? message.components.map(serializeComponentState).filter((c): c is TopLevelComponent => c !== null) : [],
+  }));
   const hasContent =
     messages.some(msg => {
       if (msg.mode === "v2") return msg.components.length > 0;
@@ -2284,104 +2339,100 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
         {/* ── Left: form ── */}
         <div className="w-full overflow-y-auto border-b border-border bg-card px-4 py-5 space-y-5 md:w-[52%] md:border-b-0 md:border-r md:px-6">
 
-          <Button size="sm" variant="secondary" className="h-8" onClick={() => setImportExportOpen(true)}>
-            <Link2 className="h-3.5 w-3.5 mr-1" />{t("importExport")}
-          </Button>
+          <div className="flex items-center justify-between">
+            <Button size="sm" variant="secondary" className="h-8" onClick={() => setImportExportOpen(true)}>
+              <Link2 className="h-3.5 w-3.5 mr-1" />{t("importExport")}
+            </Button>
+            <Button
+              size="sm"
+              className="h-8 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => setAddMessageDialogOpen(true)}
+            >
+              <Plus className="h-3 w-3 mr-1" />{t("addMessage")}
+            </Button>
+          </div>
 
           <Separator />
 
-          {/* ── Message switcher ── */}
+          {/* ── Message headers ── */}
           <div className="space-y-2">
-            <div className="flex items-center gap-1 flex-wrap">
+            <div className="space-y-2">
               {messages.map((msg, i) => (
-                <button
-                  key={msg.id}
-                  type="button"
-                  onClick={() => { setActiveMessageIdx(i); setExpandedEmbedId(msg.embeds[0]?.editorId ?? null); }}
-                  className={cn(
-                    "text-xs px-2.5 py-1 rounded-md border transition-colors",
-                    i === safeIdx
-                      ? "border-primary/60 bg-primary/10 text-foreground font-medium"
-                      : "border-border/80 text-muted-foreground hover:border-border hover:text-foreground"
-                  )}
-                >
-                  Message {i + 1}
-                </button>
-              ))}
-              <Button // NOSONAR
-                size="sm"
-                variant="ghost"
-                className="h-7 text-xs text-muted-foreground hover:text-foreground"
-                onClick={addMessage}
-              >
-                <Plus className="h-3 w-3 mr-1" />Add
-              </Button>
-              {messages.length > 1 && (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 text-xs text-muted-foreground hover:text-destructive"
-                  onClick={() => removeMessage(safeIdx)} // NOSONAR
-                >
-                  <Trash2 className="h-3 w-3 mr-1" />Remove
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Mode toggle */}
-          <div className="flex items-center gap-2">
-            <button type="button" onClick={() => setMessageMode(safeIdx, "v1")}
-              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors",
-                activeMessage.mode === "v1" ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-              {t("modeToggleV1")}
-            </button>
-            <button type="button" onClick={() => setMessageMode(safeIdx, "v2")}
-              className={cn("text-xs px-2.5 py-1 rounded-md border transition-colors flex items-center gap-1",
-                activeMessage.mode === "v2" ? "border-primary/60 bg-primary/10 font-medium" : "border-border/80 text-muted-foreground hover:text-foreground")}>
-              {t("modeToggleV2")}
-              <span className="rounded bg-[#5865F2] px-1 py-0.5 text-[9px] font-semibold text-white uppercase tracking-wide">NEW</span>
-            </button>
-          </div>
-
-          <CollapsibleSection title={t("profileSection")} open={profileOpen} onToggle={() => setProfileOpen((prev) => !prev)}>
-            <div className="space-y-3">
-              <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-100">
-                {t("profileUnsupportedWarning")}
-              </div>
-              <Field label="">
-                <div className="mb-1 flex items-center justify-between">
-                  <Label className="text-xs">{t("profileName")}</Label>
-                  <CharCount value={profile.name} max={MAX_PROFILE_NAME_LENGTH} />
-                </div>
-                <Input
-                  value={profile.name}
-                  onChange={(event) => setProfile((prev) => ({ ...prev, name: event.target.value.slice(0, MAX_PROFILE_NAME_LENGTH) }))}
-                  maxLength={MAX_PROFILE_NAME_LENGTH}
-                  className={compactInputClassName}
-                />
-              </Field>
-              <Field label={t("profileAvatarUrl")}>
-                <Input
-                  value={profile.avatarUrl}
-                  onChange={(event) => setProfile((prev) => ({ ...prev, avatarUrl: event.target.value }))}
-                  placeholder="https://..."
-                  className={compactInputClassName}
-                />
-              </Field>
-            </div>
-          </CollapsibleSection>
-
-          {activeMessage.mode === "v1" ? (
+                <div key={msg.id} className={cn("rounded-lg border bg-card", expandedMessageIds.has(msg.id) ? "border-primary/60" : "border-border/80")}>
+                  <div className="flex items-center gap-2 px-3 py-2">
+                    <button
+                      type="button"
+                      className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                      onClick={() => {
+                        setExpandedMessageIds((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(msg.id)) {
+                            next.delete(msg.id);
+                          } else {
+                            next.add(msg.id);
+                          }
+                          return next;
+                        });
+                        setActiveMessageIdx(i);
+                        setExpandedEmbedId(msg.embeds[0]?.editorId ?? null);
+                      }}
+                    >
+                      {expandedMessageIds.has(msg.id) ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                      <span className="truncate text-base font-semibold">{`Message ${i + 1}`}</span>
+                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        {msg.mode === "v2" ? "Components v2" : "Classic"}
+                      </span>
+                    </button>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() => moveMessage(i, -1)}
+                        disabled={i === 0}
+                      >
+                        <ChevronUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() => moveMessage(i, 1)}
+                        disabled={i === messages.length - 1}
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={() => duplicateMessage(i)}
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                        onClick={() => removeMessage(i)}
+                        disabled={messages.length <= 1}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  {expandedMessageIds.has(msg.id) && (
+                    <div className="border-t border-border/80 p-3 space-y-4">
+                      {msg.mode === "v1" ? (
             <>
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs">{t("content")}</Label>
-                  <CharCount value={content} max={MAX_DISCORD_MESSAGE_CONTENT_LENGTH} />
+                  <CharCount value={msg.content} max={MAX_DISCORD_MESSAGE_CONTENT_LENGTH} />
                 </div>
                 <MentionTextField
-                  value={content}
-                  onValueChange={(nextValue) => setContent(nextValue.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH))}
+                  value={msg.content}
+                  onValueChange={(nextValue) => setContentForMessage(i, nextValue.slice(0, MAX_DISCORD_MESSAGE_CONTENT_LENGTH))}
                   maxLength={MAX_DISCORD_MESSAGE_CONTENT_LENGTH}
                   rows={4}
                   multiline
@@ -2391,20 +2442,48 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                 />
               </div>
 
+              <CollapsibleSection title={t("profileSection")} open={profileOpen} onToggle={() => setProfileOpen((prev) => !prev)}>
+                <div className="space-y-3">
+                  <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-900 dark:text-amber-100">
+                    {t("profileUnsupportedWarning")}
+                  </div>
+                  <Field label="">
+                    <div className="mb-1 flex items-center justify-between">
+                      <Label className="text-xs">{t("profileName")}</Label>
+                      <CharCount value={profile.name} max={MAX_PROFILE_NAME_LENGTH} />
+                    </div>
+                    <Input
+                      value={profile.name}
+                      onChange={(event) => setProfile((prev) => ({ ...prev, name: event.target.value.slice(0, MAX_PROFILE_NAME_LENGTH) }))}
+                      maxLength={MAX_PROFILE_NAME_LENGTH}
+                      className={compactInputClassName}
+                    />
+                  </Field>
+                  <Field label={t("profileAvatarUrl")}>
+                    <Input
+                      value={profile.avatarUrl}
+                      onChange={(event) => setProfile((prev) => ({ ...prev, avatarUrl: event.target.value }))}
+                      placeholder="https://..."
+                      className={compactInputClassName}
+                    />
+                  </Field>
+                </div>
+              </CollapsibleSection>
+
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <SectionLabel>{`Embeds (${embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</SectionLabel>
+                  <h3 className="text-sm font-semibold text-foreground dark:text-white">{`Embeds (${msg.embeds.length}/${MAX_DISCORD_EMBEDS_PER_MESSAGE})`}</h3>
                   <Button
                     size="sm"
                     variant="outline"
                     className="h-7 text-xs"
-                    onClick={addEmbed}
-                    disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}
+                    onClick={() => addEmbed(i)}
+                    disabled={msg.embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}
                   >
                     <Plus className="h-3.5 w-3.5 mr-1" />Add Embed
                   </Button>
                 </div>
-                {embeds.map((embed, index) => {
+                {msg.embeds.map((embed, index) => {
                   const label = embed.title.trim() || embed.description.trim().slice(0, 40) || `Embed ${index + 1}`;
                   const isExpanded = expandedEmbedId === embed.editorId;
                   return (
@@ -2425,65 +2504,65 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                           <span className="truncate text-base font-semibold">{`Embed ${index + 1} - ${label}`}</span>
                         </button>
                         <div className="flex items-center gap-1">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, -1)} disabled={index === 0}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(i, embed.editorId, -1)} disabled={index === 0}>
                             <ChevronUp className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(embed.editorId, 1)} disabled={index === embeds.length - 1}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveEmbed(i, embed.editorId, 1)} disabled={index === msg.embeds.length - 1}>
                             <ChevronDown className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => duplicateEmbed(embed.editorId)} disabled={embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => duplicateEmbed(i, embed.editorId)} disabled={msg.embeds.length >= MAX_DISCORD_EMBEDS_PER_MESSAGE}>
                             <Copy className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeEmbed(embed.editorId)} disabled={embeds.length <= 1}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeEmbed(i, embed.editorId)} disabled={msg.embeds.length <= 1}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
                       {isExpanded && (
                         <div className="border-t border-border/80">
-                          <CollapsibleSection title={t("authorSection")} open={embed.openSections.author} onToggle={() => toggleSection(embed.editorId, "author")}>
+                          <CollapsibleSection title={t("authorSection")} open={embed.openSections.author} onToggle={() => toggleSection(i, embed.editorId, "author")}>
                             <div className="space-y-3">
                               <Field label="">
                                 <div className="mb-1 flex items-center justify-between">
                                   <Label className="text-xs">{t("authorName")}</Label>
                                   <CharCount value={embed.authorName} max={256} />
                                 </div>
-                                <MentionTextField value={embed.authorName} onValueChange={(nextValue) => setEmbedField(embed.editorId, "authorName", nextValue)} maxLength={256} className={compactInputClassName} mentionContext={mentionContext} />
+                                <MentionTextField value={embed.authorName} onValueChange={(nextValue) => setEmbedField(i, embed.editorId, "authorName", nextValue)} maxLength={256} className={compactInputClassName} mentionContext={mentionContext} />
                               </Field>
                               <Field label={t("authorUrl")}>
-                                <Input value={embed.authorUrl} onChange={e => setEmbedField(embed.editorId, "authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                                <Input value={embed.authorUrl} onChange={e => setEmbedField(i, embed.editorId, "authorUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
                               <Field label={t("authorIconUrl")}>
-                                <Input value={embed.authorIconUrl} onChange={e => setEmbedField(embed.editorId, "authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                                <Input value={embed.authorIconUrl} onChange={e => setEmbedField(i, embed.editorId, "authorIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
                             </div>
                           </CollapsibleSection>
 
-                          <CollapsibleSection title={t("bodySection")} open={embed.openSections.body} onToggle={() => toggleSection(embed.editorId, "body")}>
+                          <CollapsibleSection title={t("bodySection")} open={embed.openSections.body} onToggle={() => toggleSection(i, embed.editorId, "body")}>
                             <div className="space-y-3">
                               <Field label="">
                                 <div className="mb-1 flex items-center justify-between">
                                   <Label className="text-xs">{t("title")}</Label>
                                   <CharCount value={embed.title} max={256} />
                                 </div>
-                                <MentionTextField value={embed.title} onValueChange={(nextValue) => setEmbedField(embed.editorId, "title", nextValue)} maxLength={256} className={compactInputClassName} mentionContext={mentionContext} />
+                                <MentionTextField value={embed.title} onValueChange={(nextValue) => setEmbedField(i, embed.editorId, "title", nextValue)} maxLength={256} className={compactInputClassName} mentionContext={mentionContext} />
                               </Field>
                               <Field label={t("titleUrl")}>
-                                <Input value={embed.titleUrl} onChange={e => setEmbedField(embed.editorId, "titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                                <Input value={embed.titleUrl} onChange={e => setEmbedField(i, embed.editorId, "titleUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
                               <Field label={t("sidebarColor")}>
                                 <div className="flex items-center gap-2">
                                   <input
                                     type="color"
                                     value={embed.color || "#5865f2"}
-                                    onChange={e => setEmbedField(embed.editorId, "color", e.target.value)}
+                                    onChange={e => setEmbedField(i, embed.editorId, "color", e.target.value)}
                                     className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5"
                                   />
                                   <Input
                                     value={embed.color}
                                     onChange={e => {
                                       const value = e.target.value;
-                                      if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setEmbedField(embed.editorId, "color", value);
+                                      if (/^#[0-9a-fA-F]{0,6}$/.test(value)) setEmbedField(i, embed.editorId, "color", value);
                                     }}
                                     className={cn(inputClassName, "font-mono text-sm w-28")}
                                     maxLength={7}
@@ -2497,7 +2576,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                 </div>
                                 <MentionTextField
                                   value={embed.description}
-                                  onValueChange={(nextValue) => setEmbedField(embed.editorId, "description", nextValue)}
+                                  onValueChange={(nextValue) => setEmbedField(i, embed.editorId, "description", nextValue)}
                                   maxLength={4096}
                                   rows={5}
                                   multiline
@@ -2509,10 +2588,10 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                             </div>
                           </CollapsibleSection>
 
-                          <CollapsibleSection title={`${t("fieldsSection")} (${embed.fields.length}/25)`} open={embed.openSections.fields} onToggle={() => toggleSection(embed.editorId, "fields")}>
+                          <CollapsibleSection title={`${t("fieldsSection")} (${embed.fields.length}/25)`} open={embed.openSections.fields} onToggle={() => toggleSection(i, embed.editorId, "fields")}>
                             <div className="space-y-3">
                               <div className="flex items-center justify-end">
-                                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => addField(embed.editorId)} disabled={embed.fields.length >= 25}>
+                                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => addField(i, embed.editorId)} disabled={embed.fields.length >= 25}>
                                   <Plus className="h-3.5 w-3.5 mr-1" />{t("addField")}
                                 </Button>
                               </div>
@@ -2521,13 +2600,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                   <div className="flex items-center justify-between gap-2">
                                     <span className="text-xs font-medium text-muted-foreground">{t("field")} {fieldIndex + 1}</span>
                                     <div className="flex items-center gap-1">
-                                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, -1)} disabled={fieldIndex === 0}>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(i, embed.editorId, field.id, -1)} disabled={fieldIndex === 0}>
                                         <ChevronUp className="h-3.5 w-3.5" />
                                       </Button>
-                                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(embed.editorId, field.id, 1)} disabled={fieldIndex === embed.fields.length - 1}>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => moveField(i, embed.editorId, field.id, 1)} disabled={fieldIndex === embed.fields.length - 1}>
                                         <ChevronDown className="h-3.5 w-3.5" />
                                       </Button>
-                                      <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeField(embed.editorId, field.id)}>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive" onClick={() => removeField(i, embed.editorId, field.id)}>
                                         <Trash2 className="h-3.5 w-3.5" />
                                       </Button>
                                     </div>
@@ -2537,20 +2616,20 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                       <Label className="text-xs">{t("fieldName")}</Label>
                                       <CharCount value={field.name} max={256} />
                                     </div>
-                                    <MentionTextField value={field.name} onValueChange={(nextValue) => updateField(embed.editorId, field.id, { name: nextValue })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} mentionContext={mentionContext} />
+                                    <MentionTextField value={field.name} onValueChange={(nextValue) => updateField(i, embed.editorId, field.id, { name: nextValue })} maxLength={256} className={cn(inputClassName, "h-7 text-xs")} mentionContext={mentionContext} />
                                   </div>
                                   <div className="space-y-1">
                                     <div className="flex items-center justify-between">
                                       <Label className="text-xs">{t("fieldValue")}</Label>
                                       <CharCount value={field.value} max={1024} />
                                     </div>
-                                    <MentionTextField value={field.value} onValueChange={(nextValue) => updateField(embed.editorId, field.id, { value: nextValue })} maxLength={1024} rows={2} multiline className={cn(inputClassName, "text-xs resize-none")} mentionContext={mentionContext} />
+                                    <MentionTextField value={field.value} onValueChange={(nextValue) => updateField(i, embed.editorId, field.id, { value: nextValue })} maxLength={1024} rows={2} multiline className={cn(inputClassName, "text-xs resize-none")} mentionContext={mentionContext} />
                                   </div>
                                   <label className="flex items-center gap-2 cursor-pointer">
                                     <input
                                       type="checkbox"
                                       checked={field.inline}
-                                      onChange={e => updateField(embed.editorId, field.id, { inline: e.target.checked })}
+                                      onChange={e => updateField(i, embed.editorId, field.id, { inline: e.target.checked })}
                                       className="h-3.5 w-3.5 rounded border-input accent-primary"
                                     />
                                     <span className="text-xs text-muted-foreground">{t("fieldInline")}</span>
@@ -2560,34 +2639,34 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                             </div>
                           </CollapsibleSection>
 
-                          <CollapsibleSection title={t("imagesSection")} open={embed.openSections.images} onToggle={() => toggleSection(embed.editorId, "images")}>
+                          <CollapsibleSection title={t("imagesSection")} open={embed.openSections.images} onToggle={() => toggleSection(i, embed.editorId, "images")}>
                             <div className="space-y-3">
                               <Field label={t("thumbnailUrl")}>
-                                <Input value={embed.thumbnailUrl} onChange={e => setEmbedField(embed.editorId, "thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                                <Input value={embed.thumbnailUrl} onChange={e => setEmbedField(i, embed.editorId, "thumbnailUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
                               <Field label={t("imageUrl")}>
-                                <Input value={embed.imageUrl} onChange={e => setEmbedField(embed.editorId, "imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                                <Input value={embed.imageUrl} onChange={e => setEmbedField(i, embed.editorId, "imageUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
                             </div>
                           </CollapsibleSection>
 
-                          <CollapsibleSection title={t("footerSection")} open={embed.openSections.footer} onToggle={() => toggleSection(embed.editorId, "footer")}>
+                          <CollapsibleSection title={t("footerSection")} open={embed.openSections.footer} onToggle={() => toggleSection(i, embed.editorId, "footer")}>
                             <div className="space-y-3">
                               <Field label="">
                                 <div className="mb-1 flex items-center justify-between">
                                   <Label className="text-xs">{t("footerText")}</Label>
                                   <CharCount value={embed.footerText} max={2048} />
                                 </div>
-                                <MentionTextField value={embed.footerText} onValueChange={(nextValue) => setEmbedField(embed.editorId, "footerText", nextValue)} maxLength={2048} className={compactInputClassName} mentionContext={mentionContext} />
+                                <MentionTextField value={embed.footerText} onValueChange={(nextValue) => setEmbedField(i, embed.editorId, "footerText", nextValue)} maxLength={2048} className={compactInputClassName} mentionContext={mentionContext} />
                               </Field>
                               <Field label={t("footerIconUrl")}>
-                                <Input value={embed.footerIconUrl} onChange={e => setEmbedField(embed.editorId, "footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
+                                <Input value={embed.footerIconUrl} onChange={e => setEmbedField(i, embed.editorId, "footerIconUrl", e.target.value)} placeholder="https://..." className={compactInputClassName} />
                               </Field>
                               <label className="flex items-center gap-2 cursor-pointer">
                                 <input
                                   type="checkbox"
                                   checked={embed.includeTimestamp}
-                                  onChange={e => setEmbedField(embed.editorId, "includeTimestamp", e.target.checked)}
+                                  onChange={e => setEmbedField(i, embed.editorId, "includeTimestamp", e.target.checked)}
                                   className="h-3.5 w-3.5 rounded border-input accent-primary"
                                 />
                                 <span className="text-sm">{t("timestamp")}</span>
@@ -2601,7 +2680,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                 })}
               </div>
             </>
-          ) : (
+                      ) : (
             /* ── V2 Components editor ── */
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -2631,7 +2710,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         ] as const).map(item => (
                           <button key={item.type} type="button"
                             className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
-                            onClick={() => { addV2Component(item.type); setOpenDropdownId(null); }}>
+                            onClick={() => { addV2Component(i, item.type); setOpenDropdownId(null); }}>
                             {item.label}
                           </button>
                         ))}
@@ -2640,7 +2719,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                   )}
                 </div>
               </div>
-              {activeMessage.components.map((comp, compIdx) => {
+              {msg.components.map((comp, compIdx) => {
                 const compV2Labels: Record<string, string> = {
                   container: t("containerLabel"),
                   text_display: t("textDisplayLabel"),
@@ -2668,13 +2747,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         <span className="truncate text-base font-semibold">{`${compLabel} ${compIdx + 1}`}</span>
                       </button>
                       <div className="flex items-center gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveV2Component(comp.id, -1)} disabled={compIdx === 0}>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveV2Component(i, comp.id, -1)} disabled={compIdx === 0}>
                           <ChevronUp className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveV2Component(comp.id, 1)} disabled={compIdx === activeMessage.components.length - 1}>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => moveV2Component(i, comp.id, 1)} disabled={compIdx === msg.components.length - 1}>
                           <ChevronDown className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeV2Component(comp.id)}>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeV2Component(i, comp.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -2684,19 +2763,19 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         {comp.type === "action_row" && (
                           <ActionRowEditorFields
                             comp={comp}
-                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                            onChange={updated => updateV2Component(i, comp.id, () => updated)}
                           />
                         )}
                         {comp.type === "string_select" && (
                           <StringSelectEditorFields
                             comp={comp}
-                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                            onChange={updated => updateV2Component(i, comp.id, () => updated)}
                           />
                         )}
                         {(comp.type === "user_select" || comp.type === "role_select" || comp.type === "mentionable_select" || comp.type === "channel_select") && (
                           <GenericSelectEditorFields
                             comp={comp}
-                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                            onChange={updated => updateV2Component(i, comp.id, () => updated)}
                           />
                         )}
                         {comp.type === "raw" && (
@@ -2705,7 +2784,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         {comp.type === "text_display" && (
                           <MentionTextField
                             value={comp.content}
-                            onValueChange={(nextValue) => updateV2Component(comp.id, c => c.type === "text_display" ? { ...c, content: nextValue } : c)}
+                            onValueChange={(nextValue) => updateV2Component(i, comp.id, c => c.type === "text_display" ? { ...c, content: nextValue } : c)}
                             rows={4}
                             multiline
                             className={compactTextareaClassName}
@@ -2715,26 +2794,26 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                         {comp.type === "separator" && (
                           <SeparatorEditorFields
                             comp={comp}
-                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                            onChange={updated => updateV2Component(i, comp.id, () => updated)}
                           />
                         )}
                         {comp.type === "media_gallery" && (
                           <MediaGalleryEditorFields
                             comp={comp}
-                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                            onChange={updated => updateV2Component(i, comp.id, () => updated)}
                           />
                         )}
                         {comp.type === "section" && (
                           <SectionEditorFields
                             comp={comp}
-                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                            onChange={updated => updateV2Component(i, comp.id, () => updated)}
                             mentionContext={mentionContext}
                           />
                         )}
                         {comp.type === "file" && (
                           <FileComponentEditorFields
                             comp={comp}
-                            onChange={updated => updateV2Component(comp.id, () => updated)}
+                            onChange={updated => updateV2Component(i, comp.id, () => updated)}
                           />
                         )}
                         {comp.type === "container" && (
@@ -2742,19 +2821,19 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                             <Field label={t("accentColor")}>
                               <div className="flex items-center gap-2">
                                 <input type="color" value={comp.accentColor || "#5865f2"}
-                                  onChange={e => updateV2Component(comp.id, c => c.type === "container" ? { ...c, accentColor: e.target.value } : c)}
+                                  onChange={e => updateV2Component(i, comp.id, c => c.type === "container" ? { ...c, accentColor: e.target.value } : c)}
                                   className="h-9 w-14 cursor-pointer rounded border border-input bg-background p-0.5" />
                                 <Input value={comp.accentColor}
                                   onChange={e => {
                                     const val = e.target.value;
-                                    if (/^#[0-9a-fA-F]{0,6}$/.test(val)) updateV2Component(comp.id, c => c.type === "container" ? { ...c, accentColor: val } : c);
+                                    if (/^#[0-9a-fA-F]{0,6}$/.test(val)) updateV2Component(i, comp.id, c => c.type === "container" ? { ...c, accentColor: val } : c);
                                   }}
                                   className={cn(inputClassName, "font-mono text-sm w-28")} maxLength={7} />
                               </div>
                             </Field>
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input type="checkbox" checked={comp.spoiler ?? false}
-                                onChange={e => updateV2Component(comp.id, c => c.type === "container" ? { ...c, spoiler: e.target.checked } : c)}
+                                onChange={e => updateV2Component(i, comp.id, c => c.type === "container" ? { ...c, spoiler: e.target.checked } : c)}
                                 className="h-3.5 w-3.5 rounded border-input accent-primary" />
                               <span className="text-xs text-muted-foreground">{t("containerSpoiler")}</span>
                             </label>
@@ -2783,17 +2862,17 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                     </button>
                                     <div className="flex items-center gap-1">
                                       <Button variant="ghost" size="icon" className="h-6 w-6"
-                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i > 0) { [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; } return arr; })}
+                                        onClick={() => updateContainerChildren(i, comp.id, children => { const arr = [...children]; const childIndex = arr.findIndex(c => c.id === child.id); if (childIndex > 0) { [arr[childIndex - 1], arr[childIndex]] = [arr[childIndex], arr[childIndex - 1]]; } return arr; })}
                                         disabled={childIdx === 0}>
                                         <ChevronUp className="h-3.5 w-3.5" />
                                       </Button>
                                       <Button variant="ghost" size="icon" className="h-6 w-6"
-                                        onClick={() => updateContainerChildren(comp.id, children => { const arr = [...children]; const i = arr.findIndex(c => c.id === child.id); if (i < arr.length - 1) { [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]; } return arr; })}
+                                        onClick={() => updateContainerChildren(i, comp.id, children => { const arr = [...children]; const childIndex = arr.findIndex(c => c.id === child.id); if (childIndex < arr.length - 1) { [arr[childIndex], arr[childIndex + 1]] = [arr[childIndex + 1], arr[childIndex]]; } return arr; })}
                                         disabled={childIdx === comp.children.length - 1}>
                                         <ChevronDown className="h-3.5 w-3.5" />
                                       </Button>
                                       <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                        onClick={() => updateContainerChildren(comp.id, children => children.filter(c => c.id !== child.id))}>
+                                        onClick={() => updateContainerChildren(i, comp.id, children => children.filter(c => c.id !== child.id))}>
                                         <Trash2 className="h-3.5 w-3.5" />
                                       </Button>
                                     </div>
@@ -2803,7 +2882,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                       {child.type === "text_display" && (
                                         <MentionTextField
                                           value={child.content}
-                                          onValueChange={(nextValue) => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id && c.type === "text_display" ? { ...c, content: nextValue } : c))}
+                                          onValueChange={(nextValue) => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id && c.type === "text_display" ? { ...c, content: nextValue } : c))}
                                           rows={3}
                                           multiline
                                           className={compactTextareaClassName}
@@ -2813,44 +2892,44 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                       {child.type === "separator" && (
                                         <SeparatorEditorFields
                                           comp={child}
-                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
                                       {child.type === "media_gallery" && (
                                         <MediaGalleryEditorFields
                                           comp={child}
-                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
                                       {child.type === "section" && (
                                         <SectionEditorFields
                                           comp={child}
-                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                           mentionContext={mentionContext}
                                         />
                                       )}
                                       {child.type === "action_row" && (
                                         <ActionRowEditorFields
                                           comp={child}
-                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
                                       {child.type === "string_select" && (
                                         <StringSelectEditorFields
                                           comp={child}
-                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
                                       {(child.type === "user_select" || child.type === "role_select" || child.type === "mentionable_select" || child.type === "channel_select") && (
                                         <GenericSelectEditorFields
                                           comp={child as GenericSelectState}
-                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
                                       {child.type === "file" && (
                                         <FileComponentEditorFields
                                           comp={child}
-                                          onChange={updated => updateContainerChildren(comp.id, children => children.map(c => c.id === child.id ? updated : c))}
+                                          onChange={updated => updateContainerChildren(i, comp.id, children => children.map(c => c.id === child.id ? updated : c))}
                                         />
                                       )}
                                     </div>
@@ -2882,7 +2961,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                                     ] as const).map(item => (
                                       <button key={item.type} type="button"
                                         className="w-full text-left px-3 py-1.5 text-sm hover:bg-accent transition-colors"
-                                        onClick={() => { updateContainerChildren(comp.id, prev => [...prev, createDefaultV2Component(item.type) as ContainerChildState]); setOpenDropdownId(null); }}>
+                                        onClick={() => { updateContainerChildren(i, comp.id, prev => [...prev, createDefaultV2Component(item.type) as ContainerChildState]); setOpenDropdownId(null); }}>
                                         {item.label}
                                       </button>
                                     ))}
@@ -2898,7 +2977,13 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                 );
               })}
             </div>
-          )}
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Bottom padding */}
           <div className="h-4" />
@@ -2924,14 +3009,19 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
           {isMobilePreviewOpen && (
             <div className="border-b border-border p-4 md:hidden">
               {hasContent ? (
-                <DiscordMessagePreview
-                  profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
-                  content={content}
-                  embeds={previewEmbeds}
-                  isV2={activeMessage.mode === "v2"}
-                  components={previewV2Components}
-                  mentionContext={mentionContext}
-                />
+                <div className="space-y-4">
+                  {previewMessages.map((message) => (
+                    <DiscordMessagePreview
+                      key={message.id}
+                      profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
+                      content={message.content}
+                      embeds={message.embeds}
+                      isV2={message.isV2}
+                      components={message.components}
+                      mentionContext={mentionContext}
+                    />
+                  ))}
+                </div>
               ) : (
                 <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">
                   {t("previewEmpty")}
@@ -2945,21 +3035,21 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {t("preview")}
               </p>
-              {messages.length > 1 && (
-                <span className="text-[11px] text-muted-foreground">
-                  — Message {safeIdx + 1}/{messages.length}
-                </span>
-              )}
             </div>
             {hasContent ? (
-              <DiscordMessagePreview
-                profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
-                content={content}
-                embeds={previewEmbeds}
-                isV2={activeMessage.mode === "v2"}
-                components={previewV2Components}
-                mentionContext={mentionContext}
-              />
+              <div className="space-y-4">
+                {previewMessages.map((message) => (
+                  <DiscordMessagePreview
+                    key={message.id}
+                    profile={{ name: profile.name || undefined, avatar_url: profile.avatarUrl || undefined }}
+                    content={message.content}
+                    embeds={message.embeds}
+                    isV2={message.isV2}
+                    components={message.components}
+                    mentionContext={mentionContext}
+                  />
+                ))}
+              </div>
             ) : (
               <div className="flex items-center justify-center h-40 rounded-xl border border-dashed border-border text-muted-foreground text-sm">
                 {t("previewEmpty")}
@@ -2977,6 +3067,37 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
           {tCommon("save")}
         </Button>
       </div>
+
+      <Dialog open={addMessageDialogOpen} onOpenChange={setAddMessageDialogOpen}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto bg-card border-border sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("addMessageDialogTitle")}</DialogTitle>
+            <DialogDescription>{t("addMessageDialogDescription")}</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-2">
+            <Button type="button" variant="outline" className="h-auto justify-start whitespace-normal py-2" onClick={() => addMessage("v1")}>
+              <div className="min-w-0 text-left">
+                <p className="text-sm font-semibold">{t("addMessageClassicTitle")}</p>
+                <p className="break-words text-xs text-muted-foreground">{t("addMessageClassicDescription")}</p>
+              </div>
+            </Button>
+            <Button type="button" variant="outline" className="h-auto justify-start whitespace-normal py-2" onClick={() => addMessage("v2")}>
+              <div className="min-w-0 text-left">
+                <p className="flex items-center gap-2 text-sm font-semibold">
+                  <span>{t("addMessageV2Title")}</span>
+                  <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                    {t("betaTag")}
+                  </span>
+                </p>
+                <p className="break-words text-xs text-muted-foreground">{t("addMessageV2Description")}</p>
+              </div>
+            </Button>
+          </div>
+          <DialogFooter className="mt-2 border-t border-border pt-3">
+            <Button variant="outline" onClick={() => setAddMessageDialogOpen(false)}>{tCommon("cancel")}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={importExportOpen} onOpenChange={(open) => { if (!open) { setImportWarning(null); setImportError(false); } setImportExportOpen(open); }}>
         <DialogContent className="bg-card border-border sm:max-w-md">
