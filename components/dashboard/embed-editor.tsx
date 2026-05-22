@@ -2087,10 +2087,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
         mode: source.mode,
         embeds: source.embeds.map((embed) => duplicateEmbedState(embed)),
         content: source.content,
-        components: source.components
-          .map((component) => serializeComponentState(component))
-          .filter((component): component is TopLevelComponent => component !== null)
-          .map((component) => parseComponentState(component)),
+        components: source.components.map((component) => duplicateComponentState(component)),
       };
       const next = [...prev.slice(0, index + 1), duplicated, ...prev.slice(index + 1)];
       setExpandedMessageIds((expandedPrev) => new Set(expandedPrev).add(duplicated.id));
@@ -3139,4 +3136,66 @@ function duplicateEmbedState(embed: EmbedFormState): EmbedFormState {
     openSections: createCollapsedSectionState(),
     fields: embed.fields.map((field) => ({ ...field, id: uid() })),
   };
+}
+
+function duplicateComponentState(component: TopLevelComponentState): TopLevelComponentState {
+  switch (component.type) {
+    case "container":
+      return {
+        ...component,
+        id: uid(),
+        children: component.children.map((child) => duplicateContainerChildState(child)),
+      };
+    case "section":
+      return {
+        ...component,
+        id: uid(),
+        texts: component.texts.map((text) => ({ ...text, id: uid() })),
+      };
+    case "media_gallery":
+      return {
+        ...component,
+        id: uid(),
+        items: component.items.map((item) => ({ ...item, id: uid() })),
+      };
+    case "action_row":
+      return {
+        ...component,
+        id: uid(),
+        buttons: component.buttons.map((button) => ({ ...button, id: uid() })),
+        selectMenu: component.selectMenu ? duplicateSelectMenuState(component.selectMenu) : undefined,
+      };
+    case "string_select":
+      return {
+        ...component,
+        id: uid(),
+        options: component.options.map((option) => ({ ...option, id: uid() })),
+      };
+    case "text_display":
+    case "separator":
+    case "user_select":
+    case "role_select":
+    case "mentionable_select":
+    case "channel_select":
+    case "raw":
+    case "file":
+      return { ...component, id: uid() };
+    default:
+      return { ...component, id: uid() };
+  }
+}
+
+function duplicateContainerChildState(child: ContainerChildState): ContainerChildState {
+  return duplicateComponentState(child) as ContainerChildState;
+}
+
+function duplicateSelectMenuState(selectMenu: SelectMenuEditorState): SelectMenuEditorState {
+  if (selectMenu.type === "string_select") {
+    return {
+      ...selectMenu,
+      id: uid(),
+      options: selectMenu.options.map((option) => ({ ...option, id: uid() })),
+    };
+  }
+  return { ...selectMenu, id: uid() };
 }
