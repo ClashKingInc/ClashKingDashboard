@@ -62,7 +62,7 @@
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/coverage-v8": "^4.1.9",
     "autoprefixer": "^10.5.2",
-    "baseline-browser-mapping": "^2.10.31",
+    "baseline-browser-mapping": "^2.10.41",
     "eslint": "^9",
     "eslint-config-next": "^16",
     "jsdom": "^29.1.1",
