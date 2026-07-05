@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
@@ -72,13 +73,13 @@ export default function LoadingScreenWithMessages({ // NOSONAR — theme ternari
           {/* Logo (80x80, volledig, transparante achtergrond) */}
           <div className="w-20 h-20 rounded-none flex items-center justify-center">
             {mounted ? (
-              <img
+              <Image
                 src={mainLogoUrl}
                 alt="ClashKing Logo"
                 width={80}
                 height={80}
                 className="object-contain"
-                loading="eager"
+                priority
                 style={{ width: 80, height: 80 }}
               />
             ) : (
@@ -91,12 +92,13 @@ export default function LoadingScreenWithMessages({ // NOSONAR — theme ternari
           {/* Text Logo (ClashKing tekst) */}
           <div className="mt-4 h-8 flex items-center justify-center">
             {mounted ? (
-              <img
+              <Image
                 src={textLogoUrl}
                 alt="ClashKing Text"
                 width={120}
                 height={32}
                 className="object-contain"
+                priority
                 style={{ width: 120, height: 32 }}
               />
             ) : (

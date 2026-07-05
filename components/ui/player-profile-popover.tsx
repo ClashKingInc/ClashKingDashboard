@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -101,9 +102,11 @@ export function PlayerProfilePopover({
                     <span className="text-foreground">-</span>
                   ) : (
                     <div className="flex items-center gap-1.5">
-                      <img
+                      <Image
                         src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${townhallLevel}.png`}
                         alt={`TH${townhallLevel}`}
+                        width={24}
+                        height={24}
                         className="w-6 h-6 object-contain"
                       />
                       <span className="text-foreground">TH{townhallLevel}</span>
