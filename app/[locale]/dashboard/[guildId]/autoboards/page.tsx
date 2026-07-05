@@ -42,6 +42,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { apiCache } from "@/lib/api-cache";
 import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
+import { useToast } from "@/components/ui/use-toast";
 
 // Type definitions
 interface Channel {
@@ -118,6 +119,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("AutoboardsPage");
+  const { toast } = useToast();
   const tCommon = useTranslations("Common");
 
   // Helper functions for translations
@@ -280,17 +282,17 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
 
   const handleCreateAutoBoard = async () => {
     if (!newBoardType) {
-      alert(t('alerts.selectBoardType'));
+      toast({ description: t('alerts.selectBoardType'), variant: "destructive" });
       return;
     }
 
     if (!selectedChannel) {
-      alert(t('alerts.selectChannel'));
+      toast({ description: t('alerts.selectChannel'), variant: "destructive" });
       return;
     }
 
     if (newType === 'post' && selectedDays.length === 0) {
-      alert(t('alerts.selectDays'));
+      toast({ description: t('alerts.selectDays'), variant: "destructive" });
       return;
     }
 
@@ -335,7 +337,10 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
       setNewType("post");
     } catch (error) {
       console.error('Error creating autoboard:', error);
-      alert(error instanceof Error ? error.message : t('alerts.createFailed'));
+      toast({
+        description: error instanceof Error ? error.message : t('alerts.createFailed'),
+        variant: "destructive",
+      });
     } finally {
       setCreating(false);
     }
@@ -345,17 +350,17 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
     if (!editingAutoboard) return;
 
     if (!editBoardType) {
-      alert(t('alerts.selectBoardType'));
+      toast({ description: t('alerts.selectBoardType'), variant: "destructive" });
       return;
     }
 
     if (!editChannel) {
-      alert(t('alerts.selectChannel'));
+      toast({ description: t('alerts.selectChannel'), variant: "destructive" });
       return;
     }
 
     if (editType === 'post' && editDays.length === 0) {
-      alert(t('alerts.selectDays'));
+      toast({ description: t('alerts.selectDays'), variant: "destructive" });
       return;
     }
 
@@ -395,7 +400,10 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
       setEditType("post");
     } catch (error) {
       console.error('Error updating autoboard:', error);
-      alert(error instanceof Error ? error.message : t('alerts.updateFailed'));
+      toast({
+        description: error instanceof Error ? error.message : t('alerts.updateFailed'),
+        variant: "destructive",
+      });
     } finally {
       setUpdating(false);
     }
@@ -421,7 +429,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
       }
     } catch (error) {
       console.error('Error deleting autoboard:', error);
-      alert(t('alerts.deleteFailed'));
+      toast({ description: t('alerts.deleteFailed'), variant: "destructive" });
     } finally {
       setDeleting(null);
     }
