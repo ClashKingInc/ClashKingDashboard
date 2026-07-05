@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
@@ -40,8 +40,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
-import { apiCache } from "@/lib/api-cache";
-import { dashboardCacheKeys, normalizeChannelsPayload } from "@/lib/dashboard-cache";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { useToast } from "@/components/ui/use-toast";
 
 // Type definitions
@@ -123,9 +123,9 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   const { toast } = useToast();
   const tCommon = useTranslations("Common");
 
-  // Helper functions for translations
-  const getBoardTypeLabel = (key: string) => t(`boardTypes.${key}` as any);
-  const getDayLabel = (key: string) => t(`days.${key}` as any);
+  // Helper functions for translations (keys are dynamic, so bypass the literal key type)
+  const getBoardTypeLabel = (key: string) => t(`boardTypes.${key}` as Parameters<typeof t>[0]);
+  const getDayLabel = (key: string) => t(`days.${key}` as Parameters<typeof t>[0]);
 
   const BOARD_TYPES: Record<string, string> = Object.keys(BOARD_TYPE_KEYS).reduce((acc, key) => {
     acc[key] = getBoardTypeLabel(key);
@@ -141,15 +141,10 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   })();
 
-  const [loading, setLoading] = useState(true);
-  const [autoboardsData, setAutoboardsData] = useState<ServerAutoBoardsResponse | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-
-  // Channels state
-  const [channels, setChannels] = useState<Channel[]>([]);
 
   // New autoboard form state
   const [newType, setNewType] = useState<"post" | "refresh">("post");
@@ -167,94 +162,44 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   const [editDays, setEditDays] = useState<string[]>([]);
   const [boardFilter, setBoardFilter] = useState<BoardFilter>("all");
 
-  const autoboardsCacheKey = `autoboards-${guildId}`;
-  const channelsCacheKey = dashboardCacheKeys.channels(guildId);
+  const queryClient = useQueryClient();
 
-  const fetchAutoboards = useCallback(async (
-    accessToken: string,
-    forceRefresh = false
-  ): Promise<ServerAutoBoardsResponse> => {
-    if (forceRefresh) {
-      apiCache.invalidate(autoboardsCacheKey);
-    }
-
-    return apiCache.get(autoboardsCacheKey, async () => {
+  const autoboardsQuery = useQuery<ServerAutoBoardsResponse>({
+    queryKey: ["autoboards", guildId],
+    enabled: !!guildId,
+    queryFn: async ({ signal }) => {
       const response = await fetch(`/api/v2/server/${guildId}/autoboards`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+        signal,
       });
-
-      if (!response.ok) {
-        throw new Error(tErrors('loadFailed'));
-      }
-
+      if (!response.ok) throw new Error(tErrors("loadFailed"));
       return response.json();
-    });
-  }, [autoboardsCacheKey, guildId, tErrors]);
+    },
+  });
 
-  const fetchChannels = useCallback(async (
-    accessToken: string,
-    forceRefresh = false
-  ): Promise<Channel[]> => {
-    if (forceRefresh) {
-      apiCache.invalidate(channelsCacheKey);
-    }
-
-    return apiCache.get(channelsCacheKey, async () => {
+  const channelsQuery = useQuery<Channel[]>({
+    queryKey: ["server-channels", guildId],
+    enabled: !!guildId,
+    queryFn: async ({ signal }) => {
       const response = await fetch(`/api/v2/server/${guildId}/channels`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+        signal,
       });
+      if (!response.ok) throw new Error(tErrors("loadFailed"));
+      // Filter to only text channels
+      return normalizeChannelsPayload(await response.json())
+        .filter(ch => ch.type === "text" || ch.type === "0");
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error(tErrors('loadFailed'));
-      }
+  const loading = autoboardsQuery.isLoading || channelsQuery.isLoading;
+  const autoboardsData = autoboardsQuery.data ?? null;
+  const channelsData = channelsQuery.data;
+  const channels = useMemo(() => channelsData ?? [], [channelsData]);
 
-      return response.json();
-    });
-  }, [channelsCacheKey, guildId, tErrors]);
-
-  const refreshAutoboards = useCallback(async (accessToken: string) => {
-    const freshAutoboards = await fetchAutoboards(accessToken, true);
-    setAutoboardsData(freshAutoboards);
-  }, [fetchAutoboards]);
-
-  // Fetch autoboards and channels
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          setAutoboardsData(null);
-          setChannels([]);
-          return;
-        }
-
-        const [autoboardsResult, channelsResult] = await Promise.allSettled([
-          fetchAutoboards(accessToken),
-          fetchChannels(accessToken),
-        ]);
-
-        if (autoboardsResult.status === "fulfilled") {
-          setAutoboardsData(autoboardsResult.value);
-        }
-
-        if (channelsResult.status === "fulfilled") {
-          const channelsData = normalizeChannelsPayload(channelsResult.value);
-          // Filter to only text channels
-          const textChannels = channelsData.filter(ch => ch.type === "text" || ch.type === "0");
-          setChannels(textChannels);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (guildId) {
-      fetchData();
-    }
-  }, [guildId, fetchAutoboards, fetchChannels]);
+  const refreshAutoboards = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["autoboards", guildId] });
+  };
 
   const handleDayToggle = (day: string) => {
     setSelectedDays(prev =>
@@ -326,10 +271,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
         throw new Error(error.detail || t('alerts.createFailed'));
       }
 
-      const accessToken = localStorage.getItem("access_token");
-      if (accessToken) {
-        await refreshAutoboards(accessToken);
-      }
+      await refreshAutoboards();
 
       setCreateDialogOpen(false);
       setNewBoardType("");
@@ -388,10 +330,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
         throw new Error(error.detail || t('alerts.updateFailed'));
       }
 
-      const accessToken = localStorage.getItem("access_token");
-      if (accessToken) {
-        await refreshAutoboards(accessToken);
-      }
+      await refreshAutoboards();
 
       setEditDialogOpen(false);
       setEditingAutoboard(null);
@@ -424,10 +363,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
         throw new Error(t('alerts.deleteFailed'));
       }
 
-      const accessToken = localStorage.getItem("access_token");
-      if (accessToken) {
-        await refreshAutoboards(accessToken);
-      }
+      await refreshAutoboards();
     } catch (error) {
       console.error('Error deleting autoboard:', error);
       toast({ description: t('alerts.deleteFailed'), variant: "destructive" });
