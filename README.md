@@ -8,7 +8,7 @@ A modern web dashboard for configuring ClashKing bot settings, built with Next.j
 - 📱 **Responsive Design** - Fully responsive, works on mobile and desktop
 - 🔐 **Discord OAuth2** - Secure authentication with Discord
 - ⚙️ **Modern Interface** - Familiar and intuitive settings management
-- 🚀 **Fast & Performant** - Built on Next.js 15 with App Router
+- 🚀 **Fast & Performant** - Built on Next.js 16 with App Router
 
 ## Project Structure
 
@@ -109,7 +109,6 @@ clashking-dashboard/
 │   │   ├── discord-login.ts
 │   │   ├── logout.ts
 │   │   └── redirect.ts
-│   ├── api-client.ts                 # Legacy auth client
 │   ├── api-cache.ts                  # Request caching
 │   ├── dashboard-cache.ts            # Dashboard-level caching
 │   ├── locale-preference.ts          # Locale preference helpers
@@ -144,8 +143,8 @@ React Component → lib/api client → /app/api proxy → ClashKing Backend
 
 ### Prerequisites
 
-- Node.js 25+ (or Node.js 18+ minimum)
-- npm 11+ or yarn
+- Node.js 22+ (version used in CI)
+- npm 10+
 
 ### Installation
 
@@ -235,10 +234,9 @@ The dashboard connects to ClashKingAPI endpoints. See [.github/api-reference/ope
 - **UI Components:** shadcn/ui
 - **Icons:** Lucide React
 - **Animations:** Framer Motion
-- **i18n:** next-intl
-- **State Management:** Zustand
-- **API Client:** Tanstack Query + Axios
-- **Authentication:** NextAuth.js v5
+- **i18n:** next-intl (en, fr, nl)
+- **API Client:** Custom type-safe SDK (`lib/api`) built on `fetch`
+- **Authentication:** Discord OAuth2 with PKCE (handled by the ClashKing API)
 
 ## Development
 

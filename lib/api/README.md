@@ -3,7 +3,6 @@
 Modular TypeScript client for the ClashKing Dashboard API.
 
 > **Note**: This is a comprehensive API client covering all 100+ endpoints of the ClashKing API.
-> The existing `lib/api-client.ts` (3 methods for auth only) is still available for basic authentication needs.
 > This client provides full coverage for players, clans, rosters, wars, servers, and more.
 
 ## Features
@@ -175,17 +174,7 @@ lib/api/
     └── utility-client.ts      # Utility endpoints (17 methods)
 ```
 
-## Comparison with Existing Client
-
-### `lib/api-client.ts` (Simple Auth Client)
-```typescript
-import { apiClient } from '@/lib/api-client';
-
-// Only 3 auth methods available
-await apiClient.loginWithDiscord(code, verifier);
-await apiClient.getCurrentUser(token);
-await apiClient.refreshToken(refreshToken);
-```
+## Usage Overview
 
 ### `lib/api/*` (Full Featured Client - 85+ methods)
 ```typescript
