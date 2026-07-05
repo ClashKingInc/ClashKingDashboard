@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { SERVER_COUNT } from "@/lib/constants";
 
-export function CtaSection() {
+export function CtaSection({ serverCount = SERVER_COUNT }: { readonly serverCount?: string }) {
   const t = useTranslations("HomePage.cta");
 
   return (
@@ -34,7 +34,7 @@ export function CtaSection() {
 
           {/* Description */}
           <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            {t("description", { serverCount: SERVER_COUNT })}
+            {t("description", { serverCount })}
           </p>
 
           {/* CTA Button */}
@@ -47,7 +47,7 @@ export function CtaSection() {
 
           {/* Trust badge */}
           <p className="mt-8 text-sm text-white/80">
-            {t("trustBadge", { serverCount: SERVER_COUNT })}
+            {t("trustBadge", { serverCount })}
           </p>
         </motion.div>
       </div>
