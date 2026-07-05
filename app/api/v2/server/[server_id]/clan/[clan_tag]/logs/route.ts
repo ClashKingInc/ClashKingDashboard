@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { upstreamJsonResponse } from '@/lib/server/api-proxy';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -21,14 +22,7 @@ export async function PUT(
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
-
-    // Log errors from backend
-    if (!response.ok) {
-      console.error(`Backend error (${response.status}):`, JSON.stringify(data, null, 2));
-    }
-
-    return NextResponse.json(data, { status: response.status });
+    return upstreamJsonResponse(response);
   } catch (error) {
     console.error('API proxy error (PUT /clan/logs):', error);
     return NextResponse.json({ error: 'Failed to update clan logs' }, { status: 500 });
@@ -60,14 +54,7 @@ export async function DELETE(
       }
     );
 
-    const data = await response.json();
-
-    // Log errors from backend
-    if (!response.ok) {
-      console.error(`Backend error (${response.status}):`, JSON.stringify(data, null, 2));
-    }
-
-    return NextResponse.json(data, { status: response.status });
+    return upstreamJsonResponse(response);
   } catch (error) {
     console.error('API proxy error (DELETE /clan/logs):', error);
     return NextResponse.json({ error: 'Failed to delete clan logs' }, { status: 500 });

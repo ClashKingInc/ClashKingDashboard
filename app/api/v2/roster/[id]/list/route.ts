@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { upstreamJsonResponse } from '@/lib/server/api-proxy';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -18,8 +19,7 @@ export async function GET(
       },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return upstreamJsonResponse(response);
   } catch (error) {
     console.error('API proxy error (GET /roster/:server_id/list):', error);
     return NextResponse.json(
