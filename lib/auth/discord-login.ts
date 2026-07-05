@@ -1,4 +1,4 @@
-import { generateCodeVerifier, generateCodeChallenge } from "@/lib/pkce";
+import { generateCodeVerifier, generateCodeChallenge, generateState } from "@/lib/pkce";
 
 /**
  * Initiates Discord OAuth2 login flow with PKCE
@@ -11,8 +11,12 @@ export async function initiateDiscordLogin(locale: string = 'en') {
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-    // Store code_verifier and locale in sessionStorage for callback
+    // Random state ties the callback to this browser session (CSRF protection)
+    const state = generateState();
+
+    // Store code_verifier, state and locale in sessionStorage for callback
     sessionStorage.setItem('discord_code_verifier', codeVerifier);
+    sessionStorage.setItem('discord_oauth_state', state);
     sessionStorage.setItem('auth_locale', locale);
 
     // Build Discord OAuth2 URL with PKCE
@@ -31,6 +35,7 @@ export async function initiateDiscordLogin(locale: string = 'en') {
     discordAuthUrl.searchParams.append("scope", "identify guilds");
     discordAuthUrl.searchParams.append("code_challenge", codeChallenge);
     discordAuthUrl.searchParams.append("code_challenge_method", "S256");
+    discordAuthUrl.searchParams.append("state", state);
 
     // Redirect to Discord
     globalThis.window.location.href = discordAuthUrl.toString();

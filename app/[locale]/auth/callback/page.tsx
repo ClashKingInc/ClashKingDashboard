@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import LoadingScreenWithMessages from "@/components/ui/loading-screen-with-messages";
 import { apiClient } from "@/lib/api/client";
+import { getOrCreateDeviceId } from "@/lib/auth/device-id";
 import { clashKingAssets } from "@/lib/theme";
 
 export default function AuthCallbackPage() {
@@ -33,6 +34,7 @@ export default function AuthCallbackPage() {
     hasHandledCallbackRef.current = true;
 
     const code = searchParams.get("code");
+    const state = searchParams.get("state");
     const errorParam = searchParams.get("error");
     const errorDescription = searchParams.get("error_description");
 
@@ -40,6 +42,7 @@ export default function AuthCallbackPage() {
       // User canceled the Discord authorization flow.
       if (errorParam === "access_denied") {
         sessionStorage.removeItem("discord_code_verifier");
+        sessionStorage.removeItem("discord_oauth_state");
         setError(t("errorCancelled"));
         setStatus("error");
         return;
@@ -56,6 +59,17 @@ export default function AuthCallbackPage() {
       return;
     }
 
+    // CSRF protection: the state returned by Discord must match the one
+    // generated when this browser session initiated the login flow.
+    const expectedState = sessionStorage.getItem("discord_oauth_state");
+    sessionStorage.removeItem("discord_oauth_state");
+    if (!expectedState || state !== expectedState) {
+      sessionStorage.removeItem("discord_code_verifier");
+      setError(t("errorStateMismatch"));
+      setStatus("error");
+      return;
+    }
+
     // Exchange code for token via API
     const authenticateWithDiscord = async () => {
       try {
@@ -65,24 +79,7 @@ export default function AuthCallbackPage() {
           throw new Error(t("errorCodeVerifierMissing"));
         }
 
-        // Get device ID (or generate one)
-        let deviceId = localStorage.getItem('device_id');
-        if (!deviceId) {
-          // Use crypto.randomUUID() if available (HTTPS or localhost)
-          // Otherwise, fallback to a simple UUID v4 generator
-          if (crypto.randomUUID) {
-            deviceId = crypto.randomUUID();
-          } else {
-            // Fallback: crypto.getRandomValues is available in all contexts (unlike randomUUID)
-            const bytes = new Uint8Array(16);
-            crypto.getRandomValues(bytes);
-            bytes[6] = (bytes[6] & 0x0f) | 0x40;
-            bytes[8] = (bytes[8] & 0x3f) | 0x80;
-            const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-            deviceId = `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
-          }
-          localStorage.setItem('device_id', deviceId);
-        }
+        const deviceId = getOrCreateDeviceId() ?? undefined;
 
         const requestBody = {
           code,

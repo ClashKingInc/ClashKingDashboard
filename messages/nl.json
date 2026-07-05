@@ -1997,6 +1997,7 @@
     "errorDiscordFailedWithReason": "Discord-authenticatie mislukt: {reason}",
     "errorNoAuthorizationCode": "Geen autorisatiecode ontvangen van Discord.",
     "errorCodeVerifierMissing": "Code verifier niet gevonden. Probeer opnieuw in te loggen.",
+    "errorStateMismatch": "De inlogsessie kon niet worden geverifieerd. Probeer opnieuw in te loggen.",
     "errorAuthenticateFailed": "Authenticatie met Discord is mislukt.",
     "loadingVillages": "Inloggen met Discord...",
     "loadingClanData": "Laden van server lijst...",
@@ -2895,8 +2896,12 @@
     "title": "404 - Pagina Niet Gevonden",
     "description": "De pagina die u zoekt bestaat niet.",
     "goHome": "Ga naar Home"
+  },
+  "ErrorBoundary": {
+    "title": "Er is iets misgegaan",
+    "description": "Er is een onverwachte fout opgetreden bij het laden van deze pagina. Probeer het opnieuw.",
+    "tryAgain": "Opnieuw proberen",
+    "goHome": "Naar startpagina",
+    "backToDashboard": "Terug naar dashboard"
   }
 }
-
-
-
