@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter, useParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useRequireAuth } from "@/lib/auth/use-require-auth";
 
 export function DashboardLayoutWrapper({
   sidebar,
@@ -18,18 +19,9 @@ export function DashboardLayoutWrapper({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const mainContentRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
-  const router = useRouter();
-  const params = useParams();
-  const locale = params.locale as string;
   const tCommon = useTranslations("Common");
 
-  // Auth check
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      router.push(`/${locale}/login`);
-    }
-  }, [router, locale]);
+  useRequireAuth();
 
   // Close sidebar on route change
   useEffect(() => {

@@ -118,6 +118,7 @@ export default function LogsPage() {
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("LogsPage");
+  const tErrors = useTranslations("Errors");
   const CLAN_LOGS: LogTypeDefinition[] = [
     { keys: ['join_log'], label: t('clanLogs.joinLog.label'), description: t('clanLogs.joinLog.description'), icon: Users, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128182552121839648' },
     { keys: ['leave_log'], label: t('clanLogs.leaveLog.label'), description: t('clanLogs.leaveLog.description'), icon: Users, color: 'red', exampleLink: 'https://discord.com/channels/923764211845312533/1128182846218055722' },
@@ -180,14 +181,14 @@ export default function LogsPage() {
             const res = await fetch(`/api/v2/server/${guildId}/channels`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!res.ok) throw new Error('Failed to fetch channels');
+            if (!res.ok) throw new Error(tErrors('loadFailed'));
             return res.json();
           }),
           apiCache.get(`clan-logs-${guildId}`, async () => {
             const res = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!res.ok) throw new Error('Failed to fetch clan logs');
+            if (!res.ok) throw new Error(tErrors('loadFailed'));
             return res.json();
           })
         ]);
@@ -206,7 +207,7 @@ export default function LogsPage() {
     };
 
     fetchData();
-  }, [guildId, mounted]); // Removed selectedClan dependency - no need to refetch all data when clan changes
+  }, [guildId, mounted, tErrors]); // Removed selectedClan dependency - no need to refetch all data when clan changes
 
   const loadThreadsIfNeeded = async () => {
     if (threadsLoaded) return;
@@ -219,7 +220,7 @@ export default function LogsPage() {
         const res = await fetch(`/api/v2/server/${guildId}/threads`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (!res.ok) throw new Error('Failed to fetch threads');
+        if (!res.ok) throw new Error(tErrors('loadFailed'));
         return res.json();
       });
 
@@ -250,7 +251,7 @@ export default function LogsPage() {
         );
 
         if (!response.ok) {
-          throw new Error('Failed to delete clan log configuration');
+          throw new Error(tErrors('deleteFailed'));
         }
 
         // Refresh clan logs
@@ -284,7 +285,7 @@ export default function LogsPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update clan logs');
+        throw new Error(tErrors('updateFailed'));
       }
 
       // Invalidate cache and refresh clan logs
@@ -332,7 +333,7 @@ export default function LogsPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update clan logs');
+        throw new Error(tErrors('updateFailed'));
       }
 
       // Invalidate cache and refresh clan logs

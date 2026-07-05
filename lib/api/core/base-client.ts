@@ -301,9 +301,16 @@ export class BaseApiClient {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
-        // Both tokens are invalid — redirect to login preserving locale
-        const pathParts = globalThis.window.location.pathname.split('/');
-        const locale = pathParts[1] || 'en';
+        // Both tokens are invalid — remember where the user was so the
+        // login flow can return there, notify listeners, then redirect.
+        const { pathname, search } = globalThis.window.location;
+        try {
+          sessionStorage.setItem('post_login_redirect', `${pathname}${search}`);
+        } catch {
+          // Storage may be unavailable (private mode quota); redirect anyway
+        }
+        globalThis.window.dispatchEvent(new CustomEvent('clashking:auth-expired'));
+        const locale = pathname.split('/')[1] || 'en';
         globalThis.window.location.href = `/${locale}/login`;
         return false;
       }

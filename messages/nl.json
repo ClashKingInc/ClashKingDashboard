@@ -2903,5 +2903,12 @@
     "tryAgain": "Opnieuw proberen",
     "goHome": "Naar startpagina",
     "backToDashboard": "Terug naar dashboard"
+  },
+  "Errors": {
+    "loadFailed": "Er is iets misgegaan bij het laden. Probeer het opnieuw.",
+    "saveFailed": "Er is iets misgegaan bij het opslaan. Probeer het opnieuw.",
+    "addFailed": "Er is iets misgegaan bij het toevoegen. Probeer het opnieuw.",
+    "updateFailed": "Er is iets misgegaan bij het bijwerken. Probeer het opnieuw.",
+    "deleteFailed": "Er is iets misgegaan bij het verwijderen. Probeer het opnieuw."
   }
 }

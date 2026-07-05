@@ -124,8 +124,16 @@ export default function AuthCallbackPage() {
         // Clean up
         sessionStorage.removeItem('discord_code_verifier');
 
-        // Redirect to servers page
-        router.push(`/${locale}/servers`);
+        // Return to where the session expired, or default to server selection.
+        // Only internal absolute paths are accepted (no protocol-relative or
+        // external URLs) to avoid open redirects.
+        const storedRedirect = sessionStorage.getItem('post_login_redirect');
+        sessionStorage.removeItem('post_login_redirect');
+        if (storedRedirect?.startsWith('/') && !storedRedirect.startsWith('//')) {
+          router.push(storedRedirect);
+        } else {
+          router.push(`/${locale}/servers`);
+        }
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : t("errorAuthenticateFailed"));

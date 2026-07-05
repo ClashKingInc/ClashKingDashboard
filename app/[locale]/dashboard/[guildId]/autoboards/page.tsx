@@ -119,6 +119,7 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
   const params = useParams();
   const guildId = params?.guildId as string;
   const t = useTranslations("AutoboardsPage");
+  const tErrors = useTranslations("Errors");
   const { toast } = useToast();
   const tCommon = useTranslations("Common");
 
@@ -183,12 +184,12 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch autoboards: ${response.status}`);
+        throw new Error(tErrors('loadFailed'));
       }
 
       return response.json();
     });
-  }, [autoboardsCacheKey, guildId]);
+  }, [autoboardsCacheKey, guildId, tErrors]);
 
   const fetchChannels = useCallback(async (
     accessToken: string,
@@ -204,12 +205,12 @@ export default function AutoBoardsPage() { // NOSONAR — complexity comes from 
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch channels: ${response.status}`);
+        throw new Error(tErrors('loadFailed'));
       }
 
       return response.json();
     });
-  }, [channelsCacheKey, guildId]);
+  }, [channelsCacheKey, guildId, tErrors]);
 
   const refreshAutoboards = useCallback(async (accessToken: string) => {
     const freshAutoboards = await fetchAutoboards(accessToken, true);

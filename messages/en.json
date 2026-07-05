@@ -2900,5 +2900,12 @@
     "tryAgain": "Try again",
     "goHome": "Go to Home",
     "backToDashboard": "Back to dashboard"
+  },
+  "Errors": {
+    "loadFailed": "Something went wrong while loading. Please try again.",
+    "saveFailed": "Something went wrong while saving. Please try again.",
+    "addFailed": "Something went wrong while adding. Please try again.",
+    "updateFailed": "Something went wrong while updating. Please try again.",
+    "deleteFailed": "Something went wrong while deleting. Please try again."
   }
 }

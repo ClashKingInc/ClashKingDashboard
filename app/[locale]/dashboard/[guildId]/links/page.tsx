@@ -111,6 +111,7 @@ function filterMembers(
 
 export default function LinksManagementPage() { // NOSONAR — complexity comes from aggregate link/search state management, not a single logic unit
   const t = useTranslations("LinksPage");
+  const tErrors = useTranslations("Errors");
   const { toast } = useToast();
   const params = useParams();
   const guildId = params?.guildId as string;
@@ -154,7 +155,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
           apiCache.get<ServerLinksResponse>(linksCacheKey, async () => {
             const linksResponse = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, { headers });
             if (!linksResponse.ok) {
-              throw new Error('Failed to fetch links data');
+              throw new Error(tErrors('loadFailed'));
             }
             return linksResponse.json();
           }),
@@ -183,7 +184,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
     if (guildId) {
       fetchLinksData();
     }
-  }, [guildId, currentPage, itemsPerPage]);
+  }, [guildId, currentPage, itemsPerPage, tErrors]);
 
   // Filter members based on search query and filters
   useEffect(() => {
@@ -207,7 +208,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
       );
 
       if (!response.ok) {
-        throw new Error('Failed to unlink account');
+        throw new Error(tErrors('deleteFailed'));
       }
 
       const cachePrefix = `links-${guildId}-`;
@@ -224,7 +225,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
         });
 
         if (!refreshResponse.ok) {
-          throw new Error('Failed to refresh links data');
+          throw new Error(tErrors('loadFailed'));
         }
 
         return refreshResponse.json();

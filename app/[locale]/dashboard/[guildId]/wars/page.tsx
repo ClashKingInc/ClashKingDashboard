@@ -148,6 +148,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   const { toast } = useToast();
   const guildId = params?.guildId as string;
   const t = useTranslations("WarsPage");
+  const tErrors = useTranslations("Errors");
   const [loading, setLoading] = useState(true);
   const [clans, setClans] = useState<Clan[]>([]);
   const [clanStats, setClanStats] = useState<ComputedClanStats[]>([]);
@@ -196,7 +197,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
         });
 
         if (!clansRes.ok) {
-          const error = new Error("Failed to fetch clans") as Error & { status?: number };
+          const error = new Error(tErrors('loadFailed')) as Error & { status?: number };
           error.status = clansRes.status;
           throw error;
         }
@@ -242,7 +243,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     if (guildId) {
       fetchData();
     }
-  }, [guildId, router, toast]);
+  }, [guildId, router, toast, tErrors]);
 
   const fetchWarDataForClans = async (clansList: Clan[], token: string) => { // NOSONAR — data-fetching orchestration: parallel API calls + multi-dimension aggregation, inherently complex
     try {

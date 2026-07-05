@@ -2923,5 +2923,12 @@
     "tryAgain": "Réessayer",
     "goHome": "Retour à l'accueil",
     "backToDashboard": "Retour au tableau de bord"
+  },
+  "Errors": {
+    "loadFailed": "Une erreur est survenue lors du chargement. Veuillez réessayer.",
+    "saveFailed": "Une erreur est survenue lors de l'enregistrement. Veuillez réessayer.",
+    "addFailed": "Une erreur est survenue lors de l'ajout. Veuillez réessayer.",
+    "updateFailed": "Une erreur est survenue lors de la mise à jour. Veuillez réessayer.",
+    "deleteFailed": "Une erreur est survenue lors de la suppression. Veuillez réessayer."
   }
 }

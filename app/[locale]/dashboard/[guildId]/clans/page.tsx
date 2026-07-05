@@ -139,6 +139,7 @@ export default function ClansPage() {
   const { toast } = useToast();
   const guildId = params.guildId as string;
   const t = useTranslations("ClansPage");
+  const tErrors = useTranslations("Errors");
   const tCommon = useTranslations("Common");
 
   const GREETING_PLACEHOLDERS = [
@@ -210,7 +211,7 @@ export default function ClansPage() {
       });
 
       if (!response.ok) {
-        const error = new Error(`Failed to fetch clans: ${response.status}`) as Error & { status?: number };
+        const error = new Error(tErrors('loadFailed')) as Error & { status?: number };
         error.status = response.status;
         throw error;
       }
@@ -247,14 +248,14 @@ export default function ClansPage() {
             const response = await fetch(`/api/v2/server/${guildId}/channels`, {
               headers: { Authorization: `Bearer ${accessToken}` }
             });
-            if (!response.ok) throw new Error("Failed to fetch channels");
+            if (!response.ok) throw new Error(tErrors('loadFailed'));
             return response.json();
           }),
           apiCache.get(rolesCacheKey, async () => {
             const response = await fetch(`/api/v2/server/${guildId}/discord-roles`, {
               headers: { Authorization: `Bearer ${accessToken}` }
             });
-            if (!response.ok) throw new Error("Failed to fetch roles");
+            if (!response.ok) throw new Error(tErrors('loadFailed'));
             return response.json();
           })
         ]);
@@ -273,7 +274,7 @@ export default function ClansPage() {
           router.push(`/${params.locale}/login`);
           return;
         }
-        setError(err instanceof Error ? err.message : "Failed to load clans");
+        setError(err instanceof Error ? err.message : tErrors('loadFailed'));
         toast({
           title: tCommon("error"),
           description: t("toast.errorLoadingClans"),
@@ -361,7 +362,7 @@ export default function ClansPage() {
           });
           return;
         }
-        throw new Error(detail || 'Failed to add clan');
+        throw new Error(detail || tErrors('addFailed'));
       }
 
       toast({
@@ -401,7 +402,7 @@ export default function ClansPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete clan');
+        throw new Error(tErrors('deleteFailed'));
       }
 
       toast({
@@ -460,7 +461,7 @@ export default function ClansPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || `Failed to ${enabled ? 'enable' : 'disable'} countdown`);
+        throw new Error(error.detail || tErrors('updateFailed'));
       }
 
       const data = await response.json();
@@ -509,7 +510,7 @@ export default function ClansPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to update settings');
+        throw new Error(tErrors('updateFailed'));
       }
 
       toast({
