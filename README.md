@@ -236,6 +236,7 @@ The dashboard connects to ClashKingAPI endpoints. See [.github/api-reference/ope
 - **Animations:** Framer Motion
 - **i18n:** next-intl (en, fr, nl)
 - **API Client:** Custom type-safe SDK (`lib/api`) built on `fetch`
+- **Data Fetching:** TanStack Query (incremental adoption, dashboard pages)
 - **Authentication:** Discord OAuth2 with PKCE (handled by the ClashKing API)
 
 ## Development
