@@ -203,6 +203,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
                 size="icon"
                 className="h-8 w-8"
                 onClick={handleCopyId}
+                aria-label={t("copyId")}
               >
                 {copied ? (
                   <Check className="h-4 w-4 text-green-500" />

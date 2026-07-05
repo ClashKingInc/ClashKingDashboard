@@ -182,6 +182,7 @@ export function Navbar() {
                         variant="ghost"
                         size="icon"
                         onClick={handleLogout}
+                        aria-label={t("logout")}
                         className="text-destructive hover:text-destructive/80"
                       >
                         <LogOut className="h-5 w-5" />

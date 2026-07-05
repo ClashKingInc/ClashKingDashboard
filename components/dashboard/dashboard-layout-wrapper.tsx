@@ -57,6 +57,7 @@ export function DashboardLayoutWrapper({
               variant="ghost"
               size="icon"
               onClick={() => setIsSidebarOpen(false)}
+              aria-label={tCommon("close")}
               className="absolute right-2 top-2 z-50 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
               tabIndex={isSidebarOpen ? 0 : -1}
             >
@@ -71,7 +72,7 @@ export function DashboardLayoutWrapper({
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Mobile Header */}
         <div className="md:hidden flex items-center p-4 border-b bg-card text-card-foreground">
-          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="-ml-2">
+          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} aria-label={tCommon("openMenu")} className="-ml-2">
             <Menu className="h-6 w-6" />
           </Button>
           <div className="ml-2 min-w-0 flex-1">

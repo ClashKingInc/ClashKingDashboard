@@ -55,7 +55,9 @@
       "signupGroup": "Aanmeldingsgroep",
       "heroLevels": "Heldenniveaus",
       "hitrate30d": "30 dagen trefferscore"
-    }
+    },
+    "openMenu": "Menu openen",
+    "clearSelection": "Selectie wissen"
   },
   "Navigation": {
     "features": "Functies",
@@ -184,7 +186,8 @@
     },
     "discordId": "Discord-ID",
     "viewProfile": "Bekijk Discord-profiel",
-    "idPrefix": "ID: {id}"
+    "idPrefix": "ID: {id}",
+    "copyId": "Discord-ID kopiëren"
   },
   "Sidebar": {
     "overview": {
@@ -263,7 +266,8 @@
       "statistics": "Statistieken"
     },
     "switchServer": "Server Wisselen",
-    "goHome": "Homepagina"
+    "goHome": "Homepagina",
+    "logout": "Uitloggen"
   },
   "BansPage": {
     "title": "Moderatie",

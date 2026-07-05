@@ -55,7 +55,9 @@
       "signupGroup": "Signup group",
       "heroLevels": "Hero levels",
       "hitrate30d": "30 day hit rate"
-    }
+    },
+    "openMenu": "Open menu",
+    "clearSelection": "Clear selection"
   },
   "Navigation": {
     "features": "Features",
@@ -184,7 +186,8 @@
     },
     "discordId": "Discord ID",
     "viewProfile": "View Discord profile",
-    "idPrefix": "ID: {id}"
+    "idPrefix": "ID: {id}",
+    "copyId": "Copy Discord ID"
   },
   "Sidebar": {
     "overview": {
@@ -263,7 +266,8 @@
       "statistics": "Statistics"
     },
     "switchServer": "Switch Server",
-    "goHome": "Homepage"
+    "goHome": "Homepage",
+    "logout": "Logout"
   },
   "BansPage": {
     "title": "Moderation",

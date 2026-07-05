@@ -55,7 +55,9 @@
       "signupGroup": "Groupe d'inscription",
       "heroLevels": "Niveaux des heros",
       "hitrate30d": "Taux de reussite sur 30 jours"
-    }
+    },
+    "openMenu": "Ouvrir le menu",
+    "clearSelection": "Effacer la sélection"
   },
   "Navigation": {
     "features": "Fonctionnalités",
@@ -184,7 +186,8 @@
     },
     "discordId": "ID Discord",
     "viewProfile": "Voir le profil Discord",
-    "idPrefix": "ID: {id}"
+    "idPrefix": "ID: {id}",
+    "copyId": "Copier l'identifiant Discord"
   },
   "Sidebar": {
     "overview": {
@@ -263,7 +266,8 @@
       "statistics": "Statistiques"
     },
     "switchServer": "Changer de Serveur",
-    "goHome": "Accueil"
+    "goHome": "Accueil",
+    "logout": "Déconnexion"
   },
   "BansPage": {
     "title": "Modération",

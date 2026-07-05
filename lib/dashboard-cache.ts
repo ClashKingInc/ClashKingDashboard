@@ -31,21 +31,27 @@ export const dashboardCacheKeys = {
   allRoles: (guildId: string) => `dashboard-all-roles-${guildId}`,
 };
 
-export function normalizeChannelsPayload(payload: unknown): DiscordChannel[] {
-  const unwrapped = unwrapApiData<unknown>(payload);
-  const normalizeChannel = (channel: any): DiscordChannel => ({
+function normalizeChannel(channel: Record<string, unknown>): DiscordChannel {
+  return {
     ...channel,
     id: String(channel.id),
     name: String(channel.name),
     type: String(channel.type),
-  });
+  };
+}
+
+export function normalizeChannelsPayload(payload: unknown): DiscordChannel[] {
+  const unwrapped = unwrapApiData<unknown>(payload);
 
   if (Array.isArray(unwrapped)) {
     return unwrapped.map(normalizeChannel);
   }
 
-  if (unwrapped && typeof unwrapped === "object" && Array.isArray((unwrapped as any).channels)) {
-    return (unwrapped as any).channels.map(normalizeChannel);
+  if (unwrapped && typeof unwrapped === "object" && "channels" in unwrapped) {
+    const { channels } = unwrapped as { channels: unknown };
+    if (Array.isArray(channels)) {
+      return channels.map(normalizeChannel);
+    }
   }
 
   return [];
@@ -54,8 +60,11 @@ export function normalizeChannelsPayload(payload: unknown): DiscordChannel[] {
 export function normalizeDiscordRolesPayload(payload: unknown): DiscordRolesResponse["roles"] {
   const unwrapped = unwrapApiData<unknown>(payload);
 
-  if (unwrapped && typeof unwrapped === "object" && Array.isArray((unwrapped as any).roles)) {
-    return (unwrapped as any).roles as DiscordRolesResponse["roles"];
+  if (unwrapped && typeof unwrapped === "object" && "roles" in unwrapped) {
+    const { roles } = unwrapped as { roles: unknown };
+    if (Array.isArray(roles)) {
+      return roles as DiscordRolesResponse["roles"];
+    }
   }
 
   return [];
