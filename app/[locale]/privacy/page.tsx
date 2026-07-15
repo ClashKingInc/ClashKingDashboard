@@ -1,17 +1,28 @@
-"use client";
+import type { Metadata } from "next";
+import { ClanSignalLegalShell } from "@/components/landing/explorations/clan-signal/legal-shell";
 
-import { Navbar } from "@/components/landing/navbar";
-import { Footer } from "@/components/landing/footer";
+export const metadata: Metadata = {
+  title: "Privacy Policy | ClashKing",
+  description: "How ClashKing collects, uses, stores, and protects account, game, and app data.",
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: "ClashKing Privacy Policy",
+    description: "How ClashKing collects, uses, stores, and protects account, game, and app data.",
+    type: "website",
+    url: "/privacy",
+    images: ["/og/clashking-landing.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ClashKing Privacy Policy",
+    description: "How ClashKing collects, uses, stores, and protects account, game, and app data.",
+    images: ["/og/clashking-landing.png"],
+  },
+};
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container mx-auto px-4 py-24 max-w-4xl">
-        <h1 className="text-4xl font-bold mb-2 text-primary">ClashKing Privacy Policy</h1>
-        <p className="text-muted-foreground mb-8 italic">Effective Date: 05 July 2025</p>
-
-        <div className="space-y-8 text-muted-foreground">
+    <ClanSignalLegalShell title="Privacy Policy" eyebrow="Effective 05 July 2025">
           <section>
             <h2 className="text-2xl font-bold mb-4 text-foreground">1. Introduction</h2>
             <p>
@@ -111,9 +122,6 @@ export default function PrivacyPolicyPage() {
 
             </div>
           </section>
-        </div>
-      </div>
-      <Footer />
-    </div>
+    </ClanSignalLegalShell>
   );
 }

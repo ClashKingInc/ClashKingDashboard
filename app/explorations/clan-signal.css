@@ -305,6 +305,40 @@
 }
 .cs-bottom-landscape-image { object-fit: cover; object-position: center bottom; }
 
+.cs-legal-page { min-height: 100dvh; }
+.cs-legal-page .cs-nav-shell { background: #48a2d5; }
+.cs-legal-hero {
+  position: relative;
+  min-height: 300px;
+  margin-top: -72px;
+  padding: 142px 32px 58px;
+  display: grid;
+  place-items: end center;
+  overflow: hidden;
+  background: linear-gradient(180deg, #48a2d5 0%, #8bd5ef 72%, var(--cs-bg) 100%);
+}
+.cs-legal-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: url("/concepts/clan-signal/clash-clouds-transparent.png") center 12% / max(100vw, 1320px) auto repeat-x;
+  opacity: 0.74;
+}
+.cs-legal-hero > div { position: relative; z-index: 1; width: min(920px, 100%); }
+.cs-legal-eyebrow { margin-bottom: 8px !important; color: #17352a !important; font-size: 0.78rem !important; font-weight: 820; letter-spacing: 0.08em; text-transform: uppercase; }
+.cs-legal-hero h1 { font-size: clamp(3.6rem, 7vw, 6.6rem); line-height: 0.98; letter-spacing: -0.035em; }
+.cs-legal-document { width: min(920px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0 32px; }
+.cs-legal-document section { padding: 34px 0; border-bottom: 1px solid var(--cs-line); }
+.cs-legal-document section:first-child { padding-top: 0; }
+.cs-legal-document h2 { margin-bottom: 14px; font-size: clamp(1.8rem, 3vw, 2.45rem); line-height: 1.14; letter-spacing: -0.015em; }
+.cs-legal-document h3 { margin: 24px 0 8px; font-size: 1.18rem; line-height: 1.25; }
+.cs-legal-document p, .cs-legal-document li { color: var(--cs-muted); font-size: 0.98rem; line-height: 1.72; }
+.cs-legal-document ul { margin: 10px 0 0; padding-left: 1.35rem; }
+.cs-legal-document li + li { margin-top: 5px; }
+.cs-legal-notice { margin-top: 20px; padding: 18px 20px; border: 1px solid var(--cs-line); border-radius: 14px; background: rgb(255 255 255 / 0.4); }
+.cs-legal-notice a { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
 .clan-signal[data-cs-theme="sunset"] {
   --cs-bg: #2e2844;
   --cs-surface: #463954;
@@ -344,6 +378,11 @@
 .clan-signal[data-cs-theme="sunset"] .cs-bot-art { background: #29292d; }
 .clan-signal[data-cs-theme="sunset"] .cs-footer-scene::after { background: linear-gradient(180deg, transparent, rgb(64 63 66 / 0.5) 34%, rgb(52 66 48 / 0.86) 100%); }
 .clan-signal[data-cs-theme="sunset"] .cs-bottom-landscape-image { filter: brightness(0.52) saturate(1.12) hue-rotate(-7deg); }
+.clan-signal[data-cs-theme="sunset"].cs-legal-page .cs-nav-shell { background: #181a3b; }
+.clan-signal[data-cs-theme="sunset"] .cs-legal-hero { background: linear-gradient(180deg, #181a3b 0%, #744867 42%, #b96576 72%, var(--cs-bg) 100%); }
+.clan-signal[data-cs-theme="sunset"] .cs-legal-hero::after { filter: grayscale(1) sepia(0.55) saturate(1.25) hue-rotate(330deg) brightness(0.76) contrast(1.05); opacity: 0.68; }
+.clan-signal[data-cs-theme="sunset"] .cs-legal-eyebrow { color: #fff2d5 !important; }
+.clan-signal[data-cs-theme="sunset"] .cs-legal-notice { background: rgb(24 26 59 / 0.2); }
 .clan-signal[data-cs-theme="sunset"] .cs-footer-brand p,
 .clan-signal[data-cs-theme="sunset"] .cs-footer-links a,
 .clan-signal[data-cs-theme="sunset"] .cs-footer-links a:hover,
@@ -423,6 +462,12 @@
   .cs-legal { text-align: left; }
   .cs-footer-scene { min-height: 390px; margin-top: 0; }
   .cs-footer-scene::after { inset-block-start: 28%; }
+  .cs-legal-hero { min-height: 250px; padding: 126px 24px 42px; place-items: end start; }
+  .cs-legal-hero h1 { font-size: clamp(3rem, 15vw, 4.4rem); }
+  .cs-legal-document { width: calc(100% - 40px); padding-top: 52px; }
+  .cs-legal-document section { padding: 28px 0; }
+  .clan-signal .cs-legal-document h2 { font-size: clamp(1.7rem, 8vw, 2.15rem); line-height: 1.12; overflow-wrap: anywhere; }
+  .clan-signal .cs-legal-document h3 { font-size: 1.08rem; }
 }
 
 @media (max-width: 360px) {

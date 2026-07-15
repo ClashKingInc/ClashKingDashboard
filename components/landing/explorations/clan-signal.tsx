@@ -3,6 +3,8 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { ClanSignalHeroModel } from "./clan-signal/hero-model";
+import { ClanSignalWordmark } from "./clan-signal/brand";
+import { ClanSignalFooter } from "./clan-signal/footer";
 import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
 import { RotatingHeadline } from "./clan-signal/rotating-headline";
 import "../../../app/explorations/clan-signal.css";
@@ -38,31 +40,6 @@ function ArrowAsset() {
       className="cs-arrow"
       unoptimized
     />
-  );
-}
-
-function Wordmark({ priority = false }: { priority?: boolean }) {
-  return (
-    <span className="cs-wordmark-wrap">
-      <Image
-        src="/concepts/clashking-wordmark-light.svg"
-        alt="ClashKing"
-        width={190}
-        height={52}
-        priority={priority}
-        loading={priority ? "eager" : undefined}
-        className="cs-wordmark cs-wordmark-day"
-        unoptimized
-      />
-      <Image
-        src="/concepts/clashking-wordmark-dark.svg"
-        alt=""
-        width={190}
-        height={52}
-        className="cs-wordmark cs-wordmark-sunset"
-        unoptimized
-      />
-    </span>
   );
 }
 
@@ -112,7 +89,7 @@ export async function ClanSignal() {
       <header className="cs-nav-shell">
         <nav className="cs-nav" aria-label={t("navigation.ariaLabel")}>
           <Link href="/" aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
-            <Wordmark priority />
+            <ClanSignalWordmark priority />
           </Link>
           <div className="cs-nav-links">
             <a href="#app">{t("navigation.mobileApp")}</a>
@@ -245,30 +222,7 @@ export async function ClanSignal() {
         </nav>
       </section>
 
-      <div className="cs-footer-scene">
-        <div className="cs-bottom-landscape" aria-hidden="true">
-          <Image
-            src="/concepts/clan-signal/clash-landscape-cutout.webp"
-            alt=""
-            fill
-            sizes="100vw"
-            className="cs-bottom-landscape-image"
-            unoptimized
-          />
-        </div>
-        <footer className="cs-footer">
-          <div className="cs-footer-brand"><Wordmark /><p>{t("footer.tagline")}</p></div>
-          <div className="cs-footer-links">
-            <a href="https://invite.clashk.ing/">{t("navigation.discordBot")}</a>
-            <a href="https://testflight.apple.com/join/6Q8dfnMX">{t("navigation.mobileApp")}</a>
-            <span className="cs-footer-link-disabled" aria-disabled="true">{t("navigation.dashboard")}</span>
-            <a href="https://docs.clashk.ing/">{t("footer.docs")}</a>
-            <a href="https://github.com/ClashKingInc">GitHub</a>
-            <a href="https://go.api.clashk.ing/">API</a>
-          </div>
-          <p className="cs-legal">{t("footer.legal")}</p>
-        </footer>
-      </div>
+      <ClanSignalFooter />
     </main>
   );
 }

@@ -1,17 +1,29 @@
-"use client";
-
-import { Navbar } from "@/components/landing/navbar";
-import { Footer } from "@/components/landing/footer";
+import type { Metadata } from "next";
+import { ClanSignalLegalShell } from "@/components/landing/explorations/clan-signal/legal-shell";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | ClashKing",
+  description: "The terms that apply when you use ClashKing websites, apps, services, and community tools.",
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: "ClashKing Terms of Service",
+    description: "The terms that apply when you use ClashKing websites, apps, services, and community tools.",
+    type: "website",
+    url: "/terms",
+    images: ["/og/clashking-landing.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ClashKing Terms of Service",
+    description: "The terms that apply when you use ClashKing websites, apps, services, and community tools.",
+    images: ["/og/clashking-landing.png"],
+  },
+};
 
 export default function TermsOfServicePage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container mx-auto px-4 py-24 max-w-4xl">
-        <h1 className="text-4xl font-bold mb-8 text-primary">Terms and Conditions</h1>
-
-        <div className="space-y-8 text-muted-foreground">
+    <ClanSignalLegalShell title="Terms of Service" eyebrow="ClashKing legal">
           <section>
             <h2 className="text-2xl font-bold mb-4 text-foreground">Acceptance of Use</h2>
             <p className="mb-4">
@@ -36,10 +48,10 @@ export default function TermsOfServicePage() {
             <p className="mb-4">
               All content on the website is property of ClashKing, our affiliates or other relevant third parties. Content may not be reproduced without written permission from ClashKing.
             </p>
-            <div className="bg-card p-4 rounded-lg border border-primary/20 text-sm">
+            <div className="cs-legal-notice">
               <p>
                 This material is unofficial and is not endorsed by Supercell. For more information see Supercell&apos;s Fan Content Policy:{" "}
-                <Link href="https://www.supercell.com/fan-content-policy" target="_blank" className="text-primary hover:underline">
+                <Link href="https://www.supercell.com/fan-content-policy" target="_blank">
                   www.supercell.com/fan-content-policy
                 </Link>
               </p>
@@ -59,9 +71,6 @@ export default function TermsOfServicePage() {
               This website may include links to third party websites or materials. These links are for your convenience and do not signify an endorsement of the third party website(s). ClashKing has no responsibility for the content of third party websites.
             </p>
           </section>
-        </div>
-      </div>
-      <Footer />
-    </div>
+    </ClanSignalLegalShell>
   );
 }
