@@ -1,30 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+import type { NextRequest } from 'next/server';
+import { proxyApiRequest } from '@/lib/server/api-proxy';
 
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ server_id: string; player_tag: string }> }
 ) {
-  try {
-    const { server_id, player_tag } = await params;
-    const token = request.headers.get('authorization');
-
-    const response = await fetch(`${API_BASE_URL}/v2/ban/remove/${server_id}/${player_tag}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': token || '',
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
-  } catch (error) {
-    console.error('API proxy error (DELETE /ban/remove):', error);
-    return NextResponse.json(
-      { error: 'Failed to remove ban' },
-      { status: 500 }
-    );
-  }
+  const { server_id, player_tag } = await params;
+  return proxyApiRequest(request, `/v2/ban/remove/${server_id}/${player_tag}`, { errorMessage: 'Failed to remove ban' });
 }

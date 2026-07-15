@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Users } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
+import { useRequireAuth } from "@/lib/auth/use-require-auth";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { ServersHeader } from "@/components/servers-header";
 
@@ -34,9 +35,11 @@ const SERVER_SKELETON_KEYS = [
 
 export default function ServersPage() {
   const t = useTranslations("ServersPage");
+  const tErrors = useTranslations("Errors");
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
+  useRequireAuth();
   const [guilds, setGuilds] = useState<GuildInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -94,7 +97,7 @@ export default function ServersPage() {
             setGuilds([]);
             return;
           }
-          throw new Error(response.error || "Failed to fetch guilds");
+          throw new Error(response.error || tErrors('loadFailed'));
         }
 
         // Sort guilds: servers with bot first, then by name
@@ -110,14 +113,14 @@ export default function ServersPage() {
         setGuilds(sortedGuilds);
       } catch (err) {
         console.error("Error fetching guilds:", err);
-        setError(err instanceof Error ? err.message : "Failed to load servers");
+        setError(err instanceof Error ? err.message : tErrors('loadFailed'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchGuilds();
-  }, [router, locale, t]);
+  }, [router, locale, t, tErrors]);
 
   const getGuildIconUrl = (guild: GuildInfo) => {
     if (!guild.icon) return null;

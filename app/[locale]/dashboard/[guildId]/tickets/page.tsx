@@ -71,7 +71,25 @@ import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { DiscordEmbedPreview, extractEmbeds, extractMessageContent, type DiscordEmbed } from "@/components/dashboard/discord-embed-preview";
-import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
+import {
+  MAX_APPROVE_MESSAGE_NAME_LENGTH,
+  MAX_APPROVE_MESSAGE_CONTENT_LENGTH,
+  DEFAULT_TOWNHALL_REQUIREMENT_FIELDS,
+  createTownhallRequirementRow,
+  getTicketDiscordUrl,
+  getTranscriptUrl,
+  isCategoryChannel,
+  isTextLikeChannel,
+  normalizeOptionalText,
+  normalizePlayerTag,
+  normalizeTicketChannels,
+  normalizeTicketEmbeds,
+  normalizeTownhallRequirementFields,
+  pickFirstNonEmptyText,
+  toEmbedDataRecord,
+  type DiscordChannel,
+  type DiscordRole,
+} from "./_lib";
 import { cn } from "@/lib/utils";
 import type {
   ApproveMessage,
@@ -90,125 +108,15 @@ import type { ServerClanListItem } from "@/lib/api/types/server";
 
 // ─── Shared types ────────────────────────────────────────────────────────────
 
-interface DiscordChannel {
-  id: string;
-  name: string;
-  type: number | string;
-  parent_name?: string;
-}
-
-interface DiscordRole {
-  id: string;
-  name: string;
-  color?: number;
-}
-
 const getTicketsPanelsCacheKey = (guildId: string) => `ticket-panels-${guildId}`;
 const getTicketsEmbedsCacheKey = (guildId: string) => `ticket-embeds-${guildId}`;
 const getServerChannelsCacheKey = (guildId: string) => `server-channels-${guildId}`;
 const getServerRolesCacheKey = (guildId: string) => `server-roles-${guildId}`;
-const MAX_APPROVE_MESSAGE_NAME_LENGTH = 100;
-const MAX_APPROVE_MESSAGE_CONTENT_LENGTH = 2000;
-const DEFAULT_TOWNHALL_REQUIREMENT_FIELDS = ["BK", "AQ", "GW", "RC", "WARST"];
-
-const stripTrailingSlashes = (value: string): string => {
-  let normalized = value;
-  while (normalized.endsWith("/")) {
-    normalized = normalized.slice(0, -1);
-  }
-  return normalized;
-};
-
-const getChannelTypeToken = (channel: DiscordChannel): string => {
-  const rawType = (channel as { channel_type?: string | number; channelType?: string | number }).channel_type
-    ?? (channel as { channelType?: string | number }).channelType
-    ?? channel.type;
-  return String(rawType).toLowerCase();
-};
-
-const isCategoryChannel = (channel: DiscordChannel): boolean => {
-  const token = getChannelTypeToken(channel);
-  return token === "4" || token.includes("category");
-};
-
-const isTextLikeChannel = (channel: DiscordChannel): boolean => {
-  const token = getChannelTypeToken(channel);
-  return token === "0" || token === "11" || token === "5" || token.includes("text") || token.includes("news");
-};
-
-const normalizeTicketChannels = (payload: unknown): DiscordChannel[] => {
-  const normalized = normalizeChannelsPayload(payload) as DiscordChannel[];
-  if (normalized.length > 0) {
-    return normalized;
-  }
-
-  if (payload && typeof payload === "object") {
-    const obj = payload as { items?: unknown; results?: unknown };
-    if (Array.isArray(obj.items)) return obj.items as DiscordChannel[];
-    if (Array.isArray(obj.results)) return obj.results as DiscordChannel[];
-  }
-
-  return [];
-};
-
-const normalizeTicketEmbeds = (payload: unknown): ServerEmbed[] => {
-  if (Array.isArray(payload)) {
-    return payload as ServerEmbed[];
-  }
-
-  if (!payload || typeof payload !== "object") {
-    return [];
-  }
-
-  const obj = payload as { items?: unknown; data?: { items?: unknown } };
-  if (Array.isArray(obj.items)) return obj.items as ServerEmbed[];
-  if (obj.data && Array.isArray(obj.data.items)) return obj.data.items as ServerEmbed[];
-
-  return [];
-};
-
-const toEmbedDataRecord = (data: unknown): Record<string, unknown> | null => {
-  if (!data) return null;
-
-  if (typeof data === "string") {
-    try {
-      const parsed = JSON.parse(data) as unknown;
-      return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : null;
-    } catch {
-      return null;
-    }
-  }
-
-  return typeof data === "object" ? (data as Record<string, unknown>) : null;
-};
-
-const getTicketDiscordUrl = (ticket: OpenTicket) =>
-  `https://discord.com/channels/${ticket.server}/${ticket.channel}`;
-
-const TRANSCRIPT_BASE_URL = stripTrailingSlashes(process.env.NEXT_PUBLIC_TRANSCRIPT_BASE_URL ?? "https://cdn.clashk.ing");
-
-const getTranscriptUrl = (ticket: OpenTicket) =>
-  `${TRANSCRIPT_BASE_URL}/transcript-${ticket.channel}.html`;
-
 const DEFAULT_PREVIEW_ACCENT = "#3ba55d";
 const CANCEL_BUTTON_CLASS = "!bg-black !text-white hover:!bg-zinc-900";
 const CLASHKING_RED_BUTTON_CLASS = "bg-red-600 hover:bg-red-700 text-white";
 const DEFAULT_TICKET_MESSAGE_SELECT_VALUE = "__ck_default_ticket_message__";
 const LEGACY_DISABLED_EMBED_TOKEN = "disabled";
-
-const normalizeOptionalText = (value: string | null | undefined): string | null => {
-  if (typeof value !== "string") return null;
-  const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : null;
-};
-
-const pickFirstNonEmptyText = (...values: Array<string | null | undefined>): string | null => {
-  for (const value of values) {
-    const normalized = normalizeOptionalText(value);
-    if (normalized) return normalized;
-  }
-  return null;
-};
 
 function TicketAccountsCell({
   ticket,
@@ -269,25 +177,6 @@ function TicketAccountsCell({
     </div>
   );
 }
-
-const normalizePlayerTag = (value: string): string => {
-  const trimmed = value.trim();
-  const withoutPrefix = trimmed.replace(/^#/, "");
-  return `#${withoutPrefix.toUpperCase()}`;
-};
-
-const normalizeTownhallRequirementFields = (fields: readonly string[] | null | undefined): string[] => {
-  const normalized = (fields ?? []).filter((field): field is string => typeof field === "string" && field.trim().length > 0);
-  return normalized.length > 0 ? normalized : [...DEFAULT_TOWNHALL_REQUIREMENT_FIELDS];
-};
-
-const createTownhallRequirementRow = (th: string, fields: readonly string[]): THRequirement => {
-  const row: THRequirement = { TH: Number(th) };
-  for (const field of fields) {
-    row[field] = 0;
-  }
-  return row;
-};
 
 function TicketManageDialog({
   open,

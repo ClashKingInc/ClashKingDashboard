@@ -145,6 +145,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const { toast } = useToast();
   const guildId = params.guildId as string;
   const t = useTranslations("RemindersPage");
+  const tErrors = useTranslations("Errors");
   const tCommon = useTranslations("Common");
   const reminderTypes = [
     { value: "War", label: t('types.war'), icon: Target, color: "text-red-500", tabIcon: Target },
@@ -196,7 +197,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           .get(clansCacheKey, async () => {
             const response = await apiClient.servers.getServerClans(guildId);
             if (response.error) {
-              throw new Error(response.error || 'Failed to fetch clans');
+              throw new Error(response.error || tErrors('loadFailed'));
             }
             return response.data ?? [];
           })
@@ -216,7 +217,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 'Content-Type': 'application/json',
               },
             });
-            if (!res.ok) throw new Error('Failed to fetch channels');
+            if (!res.ok) throw new Error(tErrors('loadFailed'));
             return res.json();
           }),
           fetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
@@ -233,7 +234,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
             router.push(`/${params.locale}/login`);
             return;
           }
-          throw new Error(`Failed to fetch reminders: ${remindersRes.statusText}`);
+          throw new Error(tErrors('loadFailed'));
         }
 
         // Parse clans
@@ -266,7 +267,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (guildId) {
       fetchReminders();
     }
-  }, [channelsCacheKey, clansCacheKey, guildId, router, toast]);
+  }, [channelsCacheKey, clansCacheKey, guildId, router, toast, tErrors]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
@@ -463,7 +464,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         });
 
         if (!response.ok) {
-          throw new Error('Failed to delete reminder');
+          throw new Error(tErrors('deleteFailed'));
         }
 
         toast({
@@ -588,7 +589,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to create reminder: ${response.statusText}`);
+          throw new Error(tErrors('addFailed'));
         }
 
         toast({
@@ -620,7 +621,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to update reminder: ${response.statusText}`);
+          throw new Error(tErrors('updateFailed'));
         }
 
         toast({

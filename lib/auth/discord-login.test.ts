@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 vi.mock('@/lib/pkce', () => ({
   generateCodeVerifier: vi.fn().mockReturnValue('mock_verifier_abc123'),
   generateCodeChallenge: vi.fn().mockResolvedValue('mock_challenge_xyz'),
+  generateState: vi.fn().mockReturnValue('mock_state_456'),
 }));
 
 import { initiateDiscordLogin } from './discord-login';
@@ -44,6 +45,12 @@ describe('initiateDiscordLogin', () => {
     expect(window.location.href).toContain('discord.com');
     expect(window.location.href).toContain('code_challenge=mock_challenge_xyz');
     expect(window.location.href).toContain('code_challenge_method=S256');
+  });
+
+  it('stores the OAuth state and includes it in the redirect URL', async () => {
+    await initiateDiscordLogin('en');
+    expect(sessionStorage.getItem('discord_oauth_state')).toBe('mock_state_456');
+    expect(window.location.href).toContain('state=mock_state_456');
   });
 
   it('calls alert and logs error when client ID is missing', async () => {

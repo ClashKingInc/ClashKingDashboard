@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,6 +43,7 @@ export function PlayerSearchCombobox({
   placeholder,
   selectedName,
 }: PlayerSearchComboboxProps) {
+  const tCommon = useTranslations("Common");
   const [open, setOpen] = useState(false);
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(false);
@@ -138,6 +140,7 @@ export function PlayerSearchCombobox({
         <Button
           variant="ghost"
           size="icon"
+          aria-label={tCommon("clearSelection")}
           className="shrink-0 h-10 w-10 text-muted-foreground hover:text-foreground"
           onClick={onClear}
         >

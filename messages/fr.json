@@ -55,7 +55,9 @@
       "signupGroup": "Groupe d'inscription",
       "heroLevels": "Niveaux des heros",
       "hitrate30d": "Taux de reussite sur 30 jours"
-    }
+    },
+    "openMenu": "Ouvrir le menu",
+    "clearSelection": "Effacer la sélection"
   },
   "Navigation": {
     "features": "Fonctionnalités",
@@ -184,7 +186,8 @@
     },
     "discordId": "ID Discord",
     "viewProfile": "Voir le profil Discord",
-    "idPrefix": "ID: {id}"
+    "idPrefix": "ID: {id}",
+    "copyId": "Copier l'identifiant Discord"
   },
   "Sidebar": {
     "overview": {
@@ -263,7 +266,8 @@
       "statistics": "Statistiques"
     },
     "switchServer": "Changer de Serveur",
-    "goHome": "Accueil"
+    "goHome": "Accueil",
+    "logout": "Déconnexion"
   },
   "BansPage": {
     "title": "Modération",
@@ -2017,6 +2021,7 @@
     "errorDiscordFailedWithReason": "Échec de l'authentification Discord : {reason}",
     "errorNoAuthorizationCode": "Aucun code d'autorisation reçu de Discord.",
     "errorCodeVerifierMissing": "Code verifier introuvable. Veuillez réessayer de vous connecter.",
+    "errorStateMismatch": "La session de connexion n'a pas pu être vérifiée. Veuillez réessayer de vous connecter.",
     "errorAuthenticateFailed": "Échec de l'authentification avec Discord.",
     "loadingVillages": "Connexion avec Discord...",
     "loadingClanData": "Chargement de la liste des serveurs...",
@@ -2915,8 +2920,19 @@
     "title": "404 - Page Non Trouvée",
     "description": "La page que vous recherchez n'existe pas.",
     "goHome": "Retour à l'Accueil"
+  },
+  "ErrorBoundary": {
+    "title": "Une erreur est survenue",
+    "description": "Une erreur inattendue s'est produite lors du chargement de cette page. Veuillez réessayer.",
+    "tryAgain": "Réessayer",
+    "goHome": "Retour à l'accueil",
+    "backToDashboard": "Retour au tableau de bord"
+  },
+  "Errors": {
+    "loadFailed": "Une erreur est survenue lors du chargement. Veuillez réessayer.",
+    "saveFailed": "Une erreur est survenue lors de l'enregistrement. Veuillez réessayer.",
+    "addFailed": "Une erreur est survenue lors de l'ajout. Veuillez réessayer.",
+    "updateFailed": "Une erreur est survenue lors de la mise à jour. Veuillez réessayer.",
+    "deleteFailed": "Une erreur est survenue lors de la suppression. Veuillez réessayer."
   }
 }
-
-
-

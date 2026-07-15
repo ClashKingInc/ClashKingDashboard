@@ -47,6 +47,7 @@ export default function GeneralSettingsPage() {
   const params = useParams();
   const guildId = params.guildId as string;
   const t = useTranslations("GeneralPage");
+  const tErrors = useTranslations("Errors");
   const tCommon = useTranslations("Common");
 
   const [settings, setSettings] = useState({
@@ -112,7 +113,7 @@ export default function GeneralSettingsPage() {
         setTempHex(intToHex(newSettings.embed_color));
       }
     } catch (err: any) {
-      setError(err.message || "Failed to load settings");
+      setError(err.message || tErrors('loadFailed'));
       console.error("Failed to load settings:", err);
     } finally {
       setIsLoading(false);
@@ -194,7 +195,7 @@ export default function GeneralSettingsPage() {
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to add tenure role");
+      setError(err.message || tErrors('addFailed'));
     }
   };
 
@@ -214,7 +215,7 @@ export default function GeneralSettingsPage() {
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to delete tenure role");
+      setError(err.message || tErrors('deleteFailed'));
     }
   };
 
@@ -240,7 +241,7 @@ export default function GeneralSettingsPage() {
       if (previousSettings) {
         setSettings(previousSettings);
       }
-      setError(err.message || "Failed to save settings");
+      setError(err.message || tErrors('saveFailed'));
       console.error("Failed to save settings:", err);
     } finally {
       setIsSaving(false);

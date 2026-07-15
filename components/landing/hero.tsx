@@ -9,7 +9,7 @@ import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { useTranslations } from "next-intl";
 import { SERVER_COUNT } from "@/lib/constants";
 
-export function Hero() {
+export function Hero({ serverCount = SERVER_COUNT }: { readonly serverCount?: string }) {
   const params = useParams();
   const router = useRouter();
   const locale = (params?.locale as string) || "en";
@@ -49,7 +49,7 @@ export function Hero() {
             className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium mb-8 border-2 border-primary/20"
           >
             <Sparkles className="w-4 h-4" />
-            <span>{t("badge", { serverCount: SERVER_COUNT })}</span>
+            <span>{t("badge", { serverCount })}</span>
           </motion.div>
 
           {/* Main heading */}

@@ -71,6 +71,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
   const locale = params.locale as string;
   const { toast } = useToast();
   const t = useTranslations("BansPage");
+  const tErrors = useTranslations("Errors");
   const tCommon = useTranslations("Common");
 
   // Bans state
@@ -146,7 +147,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
       });
 
       if (response.error) {
-        throw new Error(response.error || "Failed to fetch bans");
+        throw new Error(response.error || tErrors('loadFailed'));
       }
 
       // Convert added_by to string to preserve precision for large Discord IDs
@@ -178,7 +179,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
       });
 
       if (response.error) {
-        throw new Error(response.error || "Failed to fetch server clans");
+        throw new Error(response.error || tErrors('loadFailed'));
       }
 
       const clans = response.data ?? [];
@@ -209,7 +210,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
       });
 
       if (response.error) {
-        throw new Error(response.error || "Failed to fetch strikes");
+        throw new Error(response.error || tErrors('loadFailed'));
       }
 
       // Convert added_by to string to preserve precision for large Discord IDs

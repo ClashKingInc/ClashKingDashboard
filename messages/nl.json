@@ -55,7 +55,9 @@
       "signupGroup": "Aanmeldingsgroep",
       "heroLevels": "Heldenniveaus",
       "hitrate30d": "30 dagen trefferscore"
-    }
+    },
+    "openMenu": "Menu openen",
+    "clearSelection": "Selectie wissen"
   },
   "Navigation": {
     "features": "Functies",
@@ -184,7 +186,8 @@
     },
     "discordId": "Discord-ID",
     "viewProfile": "Bekijk Discord-profiel",
-    "idPrefix": "ID: {id}"
+    "idPrefix": "ID: {id}",
+    "copyId": "Discord-ID kopiëren"
   },
   "Sidebar": {
     "overview": {
@@ -263,7 +266,8 @@
       "statistics": "Statistieken"
     },
     "switchServer": "Server Wisselen",
-    "goHome": "Homepagina"
+    "goHome": "Homepagina",
+    "logout": "Uitloggen"
   },
   "BansPage": {
     "title": "Moderatie",
@@ -1997,6 +2001,7 @@
     "errorDiscordFailedWithReason": "Discord-authenticatie mislukt: {reason}",
     "errorNoAuthorizationCode": "Geen autorisatiecode ontvangen van Discord.",
     "errorCodeVerifierMissing": "Code verifier niet gevonden. Probeer opnieuw in te loggen.",
+    "errorStateMismatch": "De inlogsessie kon niet worden geverifieerd. Probeer opnieuw in te loggen.",
     "errorAuthenticateFailed": "Authenticatie met Discord is mislukt.",
     "loadingVillages": "Inloggen met Discord...",
     "loadingClanData": "Laden van server lijst...",
@@ -2895,8 +2900,19 @@
     "title": "404 - Pagina Niet Gevonden",
     "description": "De pagina die u zoekt bestaat niet.",
     "goHome": "Ga naar Home"
+  },
+  "ErrorBoundary": {
+    "title": "Er is iets misgegaan",
+    "description": "Er is een onverwachte fout opgetreden bij het laden van deze pagina. Probeer het opnieuw.",
+    "tryAgain": "Opnieuw proberen",
+    "goHome": "Naar startpagina",
+    "backToDashboard": "Terug naar dashboard"
+  },
+  "Errors": {
+    "loadFailed": "Er is iets misgegaan bij het laden. Probeer het opnieuw.",
+    "saveFailed": "Er is iets misgegaan bij het opslaan. Probeer het opnieuw.",
+    "addFailed": "Er is iets misgegaan bij het toevoegen. Probeer het opnieuw.",
+    "updateFailed": "Er is iets misgegaan bij het bijwerken. Probeer het opnieuw.",
+    "deleteFailed": "Er is iets misgegaan bij het verwijderen. Probeer het opnieuw."
   }
 }
-
-
-

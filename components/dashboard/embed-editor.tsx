@@ -440,6 +440,7 @@ function EmojiGlyph({ emoji, className = "h-7 w-7" }: { readonly emoji: string; 
   const primarySrc = emojiToTwemojiUrl(emoji);
   const fallbackSrc = emojiToTwemojiFallbackUrl(emoji);
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- tiny emoji glyph with a runtime onError src fallback, which next/image does not support
     <img
       src={primarySrc}
       alt={emoji}

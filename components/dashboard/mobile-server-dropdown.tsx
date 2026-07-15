@@ -112,6 +112,7 @@ export function MobileServerDropdown({
               variant="ghost"
               size="icon"
               onClick={handleLogout}
+              aria-label={t("logout")}
               className="h-8 w-8 text-muted-foreground hover:bg-muted/60 hover:text-primary"
             >
               <LogOut className="h-4 w-4" />

@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
@@ -45,6 +48,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { apiCache } from "@/lib/api-cache";
+import { useToast } from "@/components/ui/use-toast";
 
 // Type definitions
 interface LinkedAccount {
@@ -106,6 +110,9 @@ function filterMembers(
 }
 
 export default function LinksManagementPage() { // NOSONAR — complexity comes from aggregate link/search state management, not a single logic unit
+  const t = useTranslations("LinksPage");
+  const tErrors = useTranslations("Errors");
+  const { toast } = useToast();
   const params = useParams();
   const guildId = params?.guildId as string;
   const [loading, setLoading] = useState(true);
@@ -148,7 +155,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
           apiCache.get<ServerLinksResponse>(linksCacheKey, async () => {
             const linksResponse = await fetch(`/api/v2/server/${guildId}/links?limit=${itemsPerPage}&offset=${offset}`, { headers });
             if (!linksResponse.ok) {
-              throw new Error('Failed to fetch links data');
+              throw new Error(tErrors('loadFailed'));
             }
             return linksResponse.json();
           }),
@@ -177,7 +184,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
     if (guildId) {
       fetchLinksData();
     }
-  }, [guildId, currentPage, itemsPerPage]);
+  }, [guildId, currentPage, itemsPerPage, tErrors]);
 
   // Filter members based on search query and filters
   useEffect(() => {
@@ -201,7 +208,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
       );
 
       if (!response.ok) {
-        throw new Error('Failed to unlink account');
+        throw new Error(tErrors('deleteFailed'));
       }
 
       const cachePrefix = `links-${guildId}-`;
@@ -218,7 +225,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
         });
 
         if (!refreshResponse.ok) {
-          throw new Error('Failed to refresh links data');
+          throw new Error(tErrors('loadFailed'));
         }
 
         return refreshResponse.json();
@@ -231,7 +238,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
       setAccountToDelete(null);
     } catch (error) {
       console.error('Error unlinking account:', error);
-      alert('Failed to unlink account. Please try again.');
+      toast({ description: t("toast.unlinkFailed"), variant: "destructive" });
     } finally {
       setDeleting(false);
     }
@@ -303,7 +310,7 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
 
   const handleBulkUnlink = async () => {
     // This would need a backend endpoint for bulk operations
-    alert('Bulk unlink feature coming soon!');
+    toast({ description: t("bulk.comingSoon") });
     setBulkActionDialogOpen(false);
   };
 
@@ -608,17 +615,12 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                           className="flex items-center gap-4 p-4 cursor-pointer w-full text-left"
                           onClick={() => toggleMemberExpanded(member.user_id)}
                         >
-                          {member.avatar_url ? (
-                            <img
-                              src={member.avatar_url}
-                              alt={member.display_name}
-                              className="w-12 h-12 rounded-full ring-2 ring-primary/20"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Avatar className="w-12 h-12 ring-2 ring-primary/20">
+                            <AvatarImage src={member.avatar_url ?? undefined} alt={member.display_name} />
+                            <AvatarFallback className="bg-primary/10">
                               <User className="w-6 h-6 text-primary" />
-                            </div>
-                          )}
+                            </AvatarFallback>
+                          </Avatar>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-foreground truncate">{member.display_name}</h3>
                             <p className="text-sm text-muted-foreground">@{member.username} • {member.account_count} {member.account_count === 1 ? 'account' : 'accounts'}</p>
@@ -642,9 +644,11 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary/50 border border-border text-sm"
                               >
                                 {account.town_hall && (
-                                  <img
+                                  <Image
                                     src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${account.town_hall}.png`}
                                     alt={`TH${account.town_hall}`}
+                                    width={20}
+                                    height={20}
                                     className="w-5 h-5 object-contain flex-shrink-0"
                                   />
                                 )}
@@ -678,9 +682,11 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                                   <div className="flex items-start gap-2">
                                     {account.town_hall && (
                                       <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0">
-                                        <img
+                                        <Image
                                           src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${account.town_hall}.png`}
                                           alt={`TH${account.town_hall}`}
+                                          width={40}
+                                          height={40}
                                           className="w-10 h-10 object-contain"
                                         />
                                       </div>
@@ -809,11 +815,12 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
                               {item.user.avatar_url && (
-                                <img
-                                  src={item.user.avatar_url}
-                                  alt={item.user.display_name}
-                                  className="w-6 h-6 rounded-full"
-                                />
+                                <Avatar className="w-6 h-6">
+                                  <AvatarImage src={item.user.avatar_url} alt={item.user.display_name} />
+                                  <AvatarFallback className="bg-primary/10">
+                                    <User className="w-3 h-3 text-primary" />
+                                  </AvatarFallback>
+                                </Avatar>
                               )}
                               <span className="font-medium text-foreground">{item.user.display_name}</span>
                               <span className="text-sm text-muted-foreground">@{item.user.username}</span>
@@ -821,9 +828,11 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                             <div className="flex items-center gap-2 ml-8">
                               {item.town_hall && (
                                 <div className="w-6 h-6 flex items-center justify-center">
-                                  <img
+                                  <Image
                                     src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${item.town_hall}.png`}
                                     alt={`TH${item.town_hall}`}
+                                    width={24}
+                                    height={24}
                                     className="w-6 h-6 object-contain"
                                   />
                                 </div>
@@ -893,11 +902,12 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                           onCheckedChange={() => toggleMemberSelection(member.user_id)}
                         />
                         {member.avatar_url && (
-                          <img
-                            src={member.avatar_url}
-                            alt={member.display_name}
-                            className="w-8 h-8 rounded-full"
-                          />
+                          <Avatar className="w-8 h-8">
+                            <AvatarImage src={member.avatar_url} alt={member.display_name} />
+                            <AvatarFallback className="bg-primary/10">
+                              <User className="w-4 h-4 text-primary" />
+                            </AvatarFallback>
+                          </Avatar>
                         )}
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
@@ -998,9 +1008,11 @@ export default function LinksManagementPage() { // NOSONAR — complexity comes 
                           return (
                             <div key={th} className="flex justify-between text-sm">
                               <div className="flex items-center gap-1.5 text-muted-foreground">
-                                <img
+                                <Image
                                   src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${th}.png`}
                                   alt={`TH${th}`}
+                                  width={20}
+                                  height={20}
                                   className="w-5 h-5 object-contain"
                                 />
                                 <span>TH {th}</span>

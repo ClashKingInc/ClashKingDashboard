@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { upstreamJsonResponse } from '@/lib/server/api-proxy';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -29,8 +30,7 @@ export async function GET(
       },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return upstreamJsonResponse(response);
   } catch (error) {
     console.error('API proxy error (GET /roster/:id):', error);
     return NextResponse.json(
@@ -69,8 +69,7 @@ export async function PATCH(
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return upstreamJsonResponse(response);
   } catch (error) {
     console.error('API proxy error (PATCH /roster/:id):', error);
     return NextResponse.json(
@@ -106,8 +105,7 @@ export async function DELETE(
       },
     });
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    return upstreamJsonResponse(response);
   } catch (error) {
     console.error('API proxy error (DELETE /roster/:id):', error);
     return NextResponse.json(

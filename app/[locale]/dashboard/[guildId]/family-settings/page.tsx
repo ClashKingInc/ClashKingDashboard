@@ -194,6 +194,7 @@ export default function FamilySettingsPage() {
   const params = useParams();
   const guildId = params.guildId as string;
   const t = useTranslations("FamilySettingsPage");
+  const tErrors = useTranslations("Errors");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
 
@@ -278,7 +279,7 @@ export default function FamilySettingsPage() {
         setInitialSettings(loadedSettings);
       }
     } catch (err: any) {
-      setError(err.message || "Failed to load settings");
+      setError(err.message || tErrors('loadFailed'));
       console.error("Failed to load settings:", err);
     } finally {
       setIsLoading(false);
@@ -366,7 +367,7 @@ export default function FamilySettingsPage() {
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to add family role");
+      setError(err.message || tErrors('addFailed'));
     } finally {
       setFamilyRolesLoading(false);
     }
@@ -395,7 +396,7 @@ export default function FamilySettingsPage() {
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to remove family role");
+      setError(err.message || tErrors('deleteFailed'));
     } finally {
       setFamilyRolesLoading(false);
     }
@@ -424,7 +425,7 @@ export default function FamilySettingsPage() {
         description: t("settingsSaved"),
       });
     } catch (err: any) {
-      setError(err.message || "Failed to save settings");
+      setError(err.message || tErrors('saveFailed'));
       console.error("Failed to save settings:", err);
     } finally {
       setIsSaving(false);

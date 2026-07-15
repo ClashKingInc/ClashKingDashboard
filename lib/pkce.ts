@@ -23,6 +23,15 @@ export async function generateCodeChallenge(verifier: string): Promise<string> {
 }
 
 /**
+ * Generate a random OAuth2 state value (CSRF protection)
+ */
+export function generateState(): string {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  return base64URLEncode(array);
+}
+
+/**
  * Base64 URL encode (without padding)
  */
 function base64URLEncode(buffer: Uint8Array): string {

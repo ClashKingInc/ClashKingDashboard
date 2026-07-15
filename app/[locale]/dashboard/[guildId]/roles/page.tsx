@@ -117,6 +117,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const guildId = params.guildId as string;
   const locale = useLocale();
   const t = useTranslations("RolesPage");
+  const tErrors = useTranslations("Errors");
   const tCommon = useTranslations("Common");
   const rolesCacheKey = `roles-page-data-${guildId}`;
 
@@ -349,7 +350,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         setAvailableCategories(cats.toSorted((a, b) => a.localeCompare(b)));
       }
     } catch (err: any) {
-      setError(err.message || "Failed to load roles");
+      setError(err.message || tErrors('loadFailed'));
       console.error("Failed to load roles:", err);
     } finally {
       setIsLoading(false);
@@ -375,7 +376,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (err: any) {
-      setError(err.message || "Failed to save settings");
+      setError(err.message || tErrors('saveFailed'));
       setSaveStatus('idle');
     }
   };
@@ -436,7 +437,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      setError(err.message || "Failed to add role");
+      setError(err.message || tErrors('addFailed'));
     }
   };
 
@@ -451,7 +452,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      setError(err.message || "Failed to delete role");
+      setError(err.message || tErrors('deleteFailed'));
     }
   };
 
@@ -472,7 +473,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         });
       }
     } catch (err: any) {
-      setError(err.message || "Failed to update category role");
+      setError(err.message || tErrors('updateFailed'));
     } finally {
       setCategoryRoleSaving(null);
     }

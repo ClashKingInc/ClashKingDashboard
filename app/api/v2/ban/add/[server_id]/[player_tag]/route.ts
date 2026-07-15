@@ -1,32 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+import type { NextRequest } from 'next/server';
+import { proxyApiRequest } from '@/lib/server/api-proxy';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ server_id: string; player_tag: string }> }
 ) {
-  try {
-    const { server_id, player_tag } = await params;
-    const token = request.headers.get('authorization');
-    const body = await request.json();
-
-    const response = await fetch(`${API_BASE_URL}/v2/ban/add/${server_id}/${player_tag}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': token || '',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-
-    const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
-  } catch (error) {
-    console.error('API proxy error (POST /ban/add):', error);
-    return NextResponse.json(
-      { error: 'Failed to add ban' },
-      { status: 500 }
-    );
-  }
+  const { server_id, player_tag } = await params;
+  return proxyApiRequest(request, `/v2/ban/add/${server_id}/${player_tag}`, { errorMessage: 'Failed to add ban' });
 }

@@ -254,6 +254,7 @@ const parseUnicodeEmoji: MarkdownParser = (text, start, key) => {
     if (!remaining.startsWith(token)) continue;
     return {
       node: (
+        // eslint-disable-next-line @next/next/no-img-element -- tiny inline emoji served by the local twemoji proxy; the optimizer adds nothing
         <img
           key={key}
           src={emojiToTwemojiUrl(token)}

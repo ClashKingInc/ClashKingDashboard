@@ -55,7 +55,9 @@
       "signupGroup": "Signup group",
       "heroLevels": "Hero levels",
       "hitrate30d": "30 day hit rate"
-    }
+    },
+    "openMenu": "Open menu",
+    "clearSelection": "Clear selection"
   },
   "Navigation": {
     "features": "Features",
@@ -184,7 +186,8 @@
     },
     "discordId": "Discord ID",
     "viewProfile": "View Discord profile",
-    "idPrefix": "ID: {id}"
+    "idPrefix": "ID: {id}",
+    "copyId": "Copy Discord ID"
   },
   "Sidebar": {
     "overview": {
@@ -263,7 +266,8 @@
       "statistics": "Statistics"
     },
     "switchServer": "Switch Server",
-    "goHome": "Homepage"
+    "goHome": "Homepage",
+    "logout": "Logout"
   },
   "BansPage": {
     "title": "Moderation",
@@ -1994,6 +1998,7 @@
     "errorDiscordFailedWithReason": "Discord authentication failed: {reason}",
     "errorNoAuthorizationCode": "No authorization code received from Discord.",
     "errorCodeVerifierMissing": "Code verifier not found. Please try logging in again.",
+    "errorStateMismatch": "Login session could not be verified. Please try logging in again.",
     "errorAuthenticateFailed": "Failed to authenticate with Discord.",
     "loadingVillages": "Logging in with Discord...",
     "loadingClanData": "Loading server list...",
@@ -2892,8 +2897,19 @@
     "title": "404 - Page Not Found",
     "description": "The page you are looking for does not exist.",
     "goHome": "Go to Home"
+  },
+  "ErrorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred while loading this page. Please try again.",
+    "tryAgain": "Try again",
+    "goHome": "Go to Home",
+    "backToDashboard": "Back to dashboard"
+  },
+  "Errors": {
+    "loadFailed": "Something went wrong while loading. Please try again.",
+    "saveFailed": "Something went wrong while saving. Please try again.",
+    "addFailed": "Something went wrong while adding. Please try again.",
+    "updateFailed": "Something went wrong while updating. Please try again.",
+    "deleteFailed": "Something went wrong while deleting. Please try again."
   }
 }
-
-
-
