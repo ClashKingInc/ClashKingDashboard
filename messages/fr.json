@@ -2915,8 +2915,87 @@
     "title": "404 - Page Non Trouvée",
     "description": "La page que vous recherchez n'existe pas.",
     "goHome": "Retour à l'Accueil"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Bot Discord, application mobile et tableau de bord",
+      "description": "Gérez les guerres, les rosters, les comptes, les rappels et les réglages de votre clan avec ClashKing sur Discord, mobile et le web.",
+      "openGraphTitle": "ClashKing | Gérez votre clan"
+    },
+    "navigation": {
+      "ariaLabel": "Navigation ClashKing",
+      "homeLabel": "Accueil ClashKing",
+      "mobileApp": "Application mobile",
+      "discordBot": "Bot Discord",
+      "dashboard": "Tableau de bord"
+    },
+    "language": { "label": "Langue" },
+    "appearance": { "label": "Apparence", "day": "Jour", "sunset": "Coucher de soleil" },
+    "actions": {
+      "addToDiscord": "Ajouter à Discord",
+      "addClashKing": "Ajouter ClashKing",
+      "openDashboard": "Ouvrir le tableau de bord",
+      "joinTestFlight": "Rejoindre TestFlight",
+      "getAndroidApp": "Télécharger sur Android"
+    },
+    "hero": {
+      "phrases": {
+        "run": { "first": "Gérez", "second": "votre", "third": "clan." },
+        "accounts": { "first": "Gérez", "second": "vos", "third": "comptes." },
+        "stats": { "first": "Explorez", "second": "les", "third": "statistiques." }
+      },
+      "rotatingLabel": "Gérez votre clan. Gérez vos comptes. Explorez les statistiques.",
+      "copy": "Guerres, rosters, comptes et réglages du clan sur Discord, mobile et le web."
+    },
+    "app": {
+      "title": "Application mobile",
+      "intro": "L'application qui accompagne vos comptes Clash.",
+      "stageLabel": "Écrans de clan, d'amélioration et de widget de guerre de l'application mobile ClashKing",
+      "images": {
+        "clanOverview": "Aperçu d'un clan dans l'application mobile ClashKing",
+        "upgradeStats": "Statistiques d'amélioration du Grand Gardien dans l'application mobile ClashKing",
+        "warWidget": "Widget de résultat de guerre ClashKing"
+      },
+      "features": {
+        "widgets": { "title": "Widgets", "copy": "Consultez vos guerres en un coup d'œil." },
+        "notifications": { "title": "Notifications", "copy": "Soyez prévenu lorsqu'il vous reste une attaque ou qu'une amélioration se termine." },
+        "accounts": { "title": "Comptes liés", "copy": "Regroupez tous vos comptes Clash au même endroit." }
+      }
+    },
+    "bot": {
+      "title": "Bot Discord",
+      "intro": "Les statistiques et les outils du clan, directement dans Discord.",
+      "imageLabel": "Commande de clan ClashKing dans Discord",
+      "imageAlt": "Commande ClashKing affichant les statistiques du clan ArcLine dans Discord",
+      "features": {
+        "rosters": { "title": "Rosters", "copy": "Gérez les comptes pour la LDC ou vos événements." },
+        "warTools": { "title": "Outils de guerre", "copy": "Consultez les attaques, les compositions et les rappels dans Discord." },
+        "accounts": { "title": "Comptes liés", "copy": "Regroupez tous vos comptes Clash au même endroit." }
+      }
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "intro": "Gérez les rosters, les rappels et les réglages du serveur au même endroit.",
+      "imageLabel": "Cabane d'ouvrier représentant les outils de gestion du clan",
+      "imageAlt": "Cabane d'ouvrier niveau 8",
+      "features": {
+        "settings": { "title": "Réglages du clan", "copy": "Configurez les clans, les rôles et les salons." },
+        "rosters": { "title": "Rosters", "copy": "Gérez les comptes pour la LDC ou vos événements." },
+        "automation": { "title": "Automatisation", "copy": "Programmez les rappels et les tâches du serveur." }
+      }
+    },
+    "resources": {
+      "title": "Créez avec ClashKing.",
+      "copy": "Guides, code source et données structurées pour les outils de la communauté.",
+      "ariaLabel": "Ressources pour les développeurs",
+      "documentation": "Documentation",
+      "publicApi": "API publique"
+    },
+    "footer": {
+      "tagline": "Des outils Clash of Clans pour tous",
+      "docs": "Documentation",
+      "legal": "Ce contenu n'est ni affilié à Supercell, ni approuvé, sponsorisé ou spécifiquement autorisé par Supercell."
+    }
   }
 }
-
-
 

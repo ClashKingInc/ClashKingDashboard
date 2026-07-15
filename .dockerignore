@@ -1,0 +1,15 @@
+.git
+.github
+.next
+node_modules
+npm-debug.log*
+.env
+.env.*
+!.env.example
+.DS_Store
+coverage
+docs
+*.md
+Dockerfile*
+compose*.yml
+compose*.yaml

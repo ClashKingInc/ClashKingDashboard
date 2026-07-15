@@ -2892,8 +2892,87 @@
     "title": "404 - Page Not Found",
     "description": "The page you are looking for does not exist.",
     "goHome": "Go to Home"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord bot, mobile app, and clan dashboard",
+      "description": "Manage wars, rosters, accounts, reminders, and clan settings with ClashKing across Discord, mobile, and the web.",
+      "openGraphTitle": "ClashKing | Run your clan"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing navigation",
+      "homeLabel": "ClashKing home",
+      "mobileApp": "Mobile App",
+      "discordBot": "Discord Bot",
+      "dashboard": "Dashboard"
+    },
+    "language": { "label": "Language" },
+    "appearance": { "label": "Appearance", "day": "Day", "sunset": "Sunset" },
+    "actions": {
+      "addToDiscord": "Add to Discord",
+      "addClashKing": "Add ClashKing",
+      "openDashboard": "Open dashboard",
+      "joinTestFlight": "Join TestFlight",
+      "getAndroidApp": "Get Android app"
+    },
+    "hero": {
+      "phrases": {
+        "run": { "first": "Run", "second": "your", "third": "clan." },
+        "accounts": { "first": "Manage", "second": "your", "third": "accounts." },
+        "stats": { "first": "Explore", "second": "the", "third": "stats." }
+      },
+      "rotatingLabel": "Run your clan. Manage your accounts. Explore the stats.",
+      "copy": "Wars, rosters, accounts, and clan settings across Discord, mobile, and the web."
+    },
+    "app": {
+      "title": "Mobile App",
+      "intro": "Your Clash account companion.",
+      "stageLabel": "ClashKing Mobile App clan, upgrade, and war widget screens",
+      "images": {
+        "clanOverview": "ClashKing Mobile App clan overview",
+        "upgradeStats": "ClashKing Mobile App Grand Warden upgrade statistics",
+        "warWidget": "ClashKing war result widget"
+      },
+      "features": {
+        "widgets": { "title": "Widgets", "copy": "View your wars at a glance." },
+        "notifications": { "title": "Notifications", "copy": "Get notified when you have an attack or an upgrade finishes." },
+        "accounts": { "title": "Linked accounts", "copy": "Keep all of your Clash accounts together." }
+      }
+    },
+    "bot": {
+      "title": "Discord Bot",
+      "intro": "Clan stats and tools, right inside Discord.",
+      "imageLabel": "ClashKing clan command in Discord",
+      "imageAlt": "ClashKing clan command showing ArcLine clan statistics in Discord",
+      "features": {
+        "rosters": { "title": "Rosters", "copy": "Manage accounts for CWL or events." },
+        "warTools": { "title": "War tools", "copy": "Check attacks, lineups, and reminders in Discord." },
+        "accounts": { "title": "Linked accounts", "copy": "Keep all of your Clash accounts together." }
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "intro": "Manage rosters, reminders, and server settings from one place.",
+      "imageLabel": "Builder Hut representing clan management tools",
+      "imageAlt": "Builder Hut level 8",
+      "features": {
+        "settings": { "title": "Clan settings", "copy": "Configure clans, roles, and channels." },
+        "rosters": { "title": "Rosters", "copy": "Manage accounts for CWL or events." },
+        "automation": { "title": "Automation", "copy": "Schedule reminders and server tasks." }
+      }
+    },
+    "resources": {
+      "title": "Build with ClashKing.",
+      "copy": "Guides, source, and structured data for community tools.",
+      "ariaLabel": "Developer resources",
+      "documentation": "Documentation",
+      "publicApi": "Public API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans tools for everyone",
+      "docs": "Docs",
+      "legal": "This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell."
+    }
   }
 }
-
-
 

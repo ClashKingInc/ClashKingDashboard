@@ -3,7 +3,7 @@
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import Link from "next/link";
-import { Github, Code2, BookOpen, Users, ExternalLink, Languages } from "lucide-react";
+import { GitFork, Code2, BookOpen, Users, ExternalLink, Languages } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function OpenSourcePage() {
@@ -26,7 +26,7 @@ export default function OpenSourcePage() {
           {/* GitHub Section */}
           <div className="bg-card p-8 rounded-2xl border border-primary/20 flex flex-col">
             <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
-              <Github className="text-primary" size={24} />
+              <GitFork className="text-primary" size={24} />
             </div>
             <h2 className="text-2xl font-bold mb-4 text-foreground">{t("github.title")}</h2>
             <p className="text-muted-foreground mb-8 flex-grow">

@@ -2895,8 +2895,87 @@
     "title": "404 - Pagina Niet Gevonden",
     "description": "De pagina die u zoekt bestaat niet.",
     "goHome": "Ga naar Home"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord-bot, mobiele app en clandashboard",
+      "description": "Beheer oorlogen, rosters, accounts, herinneringen en claninstellingen met ClashKing in Discord, op mobiel en op het web.",
+      "openGraphTitle": "ClashKing | Beheer je clan"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing-navigatie",
+      "homeLabel": "ClashKing-homepagina",
+      "mobileApp": "Mobiele app",
+      "discordBot": "Discord-bot",
+      "dashboard": "Dashboard"
+    },
+    "language": { "label": "Taal" },
+    "appearance": { "label": "Weergave", "day": "Dag", "sunset": "Zonsondergang" },
+    "actions": {
+      "addToDiscord": "Voeg toe aan Discord",
+      "addClashKing": "Voeg ClashKing toe",
+      "openDashboard": "Open dashboard",
+      "joinTestFlight": "Probeer via TestFlight",
+      "getAndroidApp": "Download voor Android"
+    },
+    "hero": {
+      "phrases": {
+        "run": { "first": "Beheer", "second": "je", "third": "clan." },
+        "accounts": { "first": "Beheer", "second": "je", "third": "accounts." },
+        "stats": { "first": "Bekijk", "second": "de", "third": "statistieken." }
+      },
+      "rotatingLabel": "Beheer je clan. Beheer je accounts. Bekijk de statistieken.",
+      "copy": "Oorlogen, rosters, accounts en claninstellingen in Discord, op mobiel en op het web."
+    },
+    "app": {
+      "title": "Mobiele app",
+      "intro": "De app voor al je Clash-accounts.",
+      "stageLabel": "Clan-, upgrade- en oorlogswidgetschermen van de mobiele ClashKing-app",
+      "images": {
+        "clanOverview": "Clanoverzicht in de mobiele ClashKing-app",
+        "upgradeStats": "Upgradestatistieken van de Grand Warden in de mobiele ClashKing-app",
+        "warWidget": "ClashKing-widget met een oorlogsresultaat"
+      },
+      "features": {
+        "widgets": { "title": "Widgets", "copy": "Bekijk je oorlogen in één oogopslag." },
+        "notifications": { "title": "Meldingen", "copy": "Krijg een melding als je nog moet aanvallen of een upgrade klaar is." },
+        "accounts": { "title": "Gekoppelde accounts", "copy": "Bewaar al je Clash-accounts bij elkaar." }
+      }
+    },
+    "bot": {
+      "title": "Discord-bot",
+      "intro": "Clanstatistieken en hulpmiddelen, rechtstreeks in Discord.",
+      "imageLabel": "ClashKing-clancommando in Discord",
+      "imageAlt": "ClashKing-commando met statistieken van clan ArcLine in Discord",
+      "features": {
+        "rosters": { "title": "Rosters", "copy": "Beheer accounts voor CWL of evenementen." },
+        "warTools": { "title": "Oorlogstools", "copy": "Bekijk aanvallen, opstellingen en herinneringen in Discord." },
+        "accounts": { "title": "Gekoppelde accounts", "copy": "Bewaar al je Clash-accounts bij elkaar." }
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "intro": "Beheer rosters, herinneringen en serverinstellingen op één plek.",
+      "imageLabel": "Bouwershut als symbool voor clanbeheertools",
+      "imageAlt": "Bouwershut level 8",
+      "features": {
+        "settings": { "title": "Claninstellingen", "copy": "Stel clans, rollen en kanalen in." },
+        "rosters": { "title": "Rosters", "copy": "Beheer accounts voor CWL of evenementen." },
+        "automation": { "title": "Automatisering", "copy": "Plan herinneringen en servertaken." }
+      }
+    },
+    "resources": {
+      "title": "Bouw met ClashKing.",
+      "copy": "Handleidingen, broncode en gestructureerde data voor communitytools.",
+      "ariaLabel": "Bronnen voor ontwikkelaars",
+      "documentation": "Documentatie",
+      "publicApi": "Publieke API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans-tools voor iedereen",
+      "docs": "Documentatie",
+      "legal": "Deze inhoud is niet gelieerd aan, goedgekeurd, gesponsord of specifiek toegestaan door Supercell."
+    }
   }
 }
-
-
 
