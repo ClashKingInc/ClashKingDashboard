@@ -112,6 +112,11 @@ export async function ClanSignal() {
       </header>
 
       <section className="cs-hero" aria-labelledby="cs-hero-title">
+        <div className="cs-mobile-cloud-track" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
         <div className="cs-hero-copy cs-enter">
           <RotatingHeadline phrases={headlinePhrases} label={t("hero.rotatingLabel")} />
           <p>{t("hero.copy")}</p>

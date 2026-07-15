@@ -165,6 +165,7 @@
   will-change: transform;
   animation: cs-cloud-drift 160s linear infinite;
 }
+.cs-mobile-cloud-track { display: none; }
 .cs-hero-copy { position: relative; z-index: 2; }
 .cs-hero h1 {
   --cs-headline-base-size: clamp(3.8rem, 5vw, 5.5rem);
@@ -370,6 +371,7 @@
   background: linear-gradient(180deg, #181a3b 0, #744867 28%, #b96576 48%, #6a415d 68%, #2e2844 100%);
 }
 .clan-signal[data-cs-theme="sunset"] .cs-hero::after { filter: grayscale(1) sepia(0.55) saturate(1.25) hue-rotate(330deg) brightness(0.76) contrast(1.05); opacity: 0.82; }
+.clan-signal[data-cs-theme="sunset"] .cs-mobile-cloud-track { filter: grayscale(1) sepia(0.55) saturate(1.25) hue-rotate(330deg) brightness(0.76) contrast(1.05); opacity: 0.82; }
 .clan-signal[data-cs-theme="sunset"] .cs-mobile::before { background: linear-gradient(180deg, #2e2844 0, rgb(46 40 68 / 0.74) 42%, transparent 100%); }
 .clan-signal[data-cs-theme="sunset"] .cs-button { color: #281d2f !important; border-color: rgb(255 225 159 / 0.3); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.36), 0 10px 28px rgb(16 11 31 / 0.2); }
 .clan-signal[data-cs-theme="sunset"] .cs-text-link { border-color: rgb(255 242 213 / 0.34); }
@@ -399,6 +401,10 @@
   from { transform: translate3d(-50%, 0, 0); }
   to { transform: translate3d(calc(-50% - var(--cs-cloud-strip-width)), 0, 0); }
 }
+@keyframes cs-cloud-drift-mobile {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(calc(-50% - var(--cs-cloud-strip-width) + 320px), 0, 0); }
+}
 
 @media (max-width: 920px) {
   .cs-nav-links { display: none; }
@@ -421,12 +427,34 @@
   .cs-nav .cs-button .cs-arrow { display: none; }
   .cs-language-trigger { min-height: 38px; border-radius: 11px; }
   .cs-hero {
-    --cs-cloud-strip-width: calc(300dvh + 660px);
+    --cs-cloud-strip-width: calc(300svh + 660px);
     --cs-sky-fade-height: 300px;
-    min-height: calc(100dvh - 66px);
+    min-height: calc(100svh - 66px);
     padding: 44px 20px 62px;
     gap: 38px;
   }
+  .cs-hero::after { display: none; }
+  .cs-mobile-cloud-track {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: max-content;
+    display: flex;
+    pointer-events: none;
+    will-change: transform;
+    animation: cs-cloud-drift-mobile 160s linear infinite;
+  }
+  .cs-mobile-cloud-track span {
+    width: var(--cs-cloud-strip-width);
+    height: 100%;
+    flex: 0 0 var(--cs-cloud-strip-width);
+    background: url("/concepts/clan-signal/clash-clouds-transparent.png") center top / var(--cs-cloud-strip-width) auto no-repeat;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
+  }
+  .cs-mobile-cloud-track span + span { margin-left: -320px; }
   .cs-hero h1 { --cs-headline-base-size: clamp(3.15rem, 13vw, 3.8rem); line-height: 1.08; letter-spacing: -0.03em; }
   .cs-hero-copy > p { margin-top: 18px; font-size: 0.96rem; }
   .cs-actions { margin-top: 24px; gap: 16px; }
@@ -477,6 +505,7 @@
 @media (prefers-reduced-motion: reduce) {
   .cs-enter { animation: cs-crossfade 160ms ease-out both; }
   .cs-hero::after { animation: none; transform: translate3d(-50%, 0, 0); }
+  .cs-mobile-cloud-track { animation: none; transform: translate3d(-50%, 0, 0); }
   .cs-hero-model-canvas { transition-duration: 120ms; }
   .cs-headline-phrase { transition: none; }
   .cs-button, .cs-text-link, .cs-resources nav a { transition: background-color 120ms ease-out, color 120ms ease-out, border-color 120ms ease-out; }
