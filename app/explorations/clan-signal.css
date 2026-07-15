@@ -307,7 +307,6 @@
 .cs-bottom-landscape-image { object-fit: cover; object-position: center bottom; }
 
 .cs-legal-page { min-height: 100dvh; }
-.cs-legal-page .cs-nav-shell { background: #48a2d5; }
 .cs-legal-hero {
   position: relative;
   min-height: 300px;
@@ -380,7 +379,6 @@
 .clan-signal[data-cs-theme="sunset"] .cs-bot-art { background: #29292d; }
 .clan-signal[data-cs-theme="sunset"] .cs-footer-scene::after { background: linear-gradient(180deg, transparent, rgb(64 63 66 / 0.5) 34%, rgb(52 66 48 / 0.86) 100%); }
 .clan-signal[data-cs-theme="sunset"] .cs-bottom-landscape-image { filter: brightness(0.52) saturate(1.12) hue-rotate(-7deg); }
-.clan-signal[data-cs-theme="sunset"].cs-legal-page .cs-nav-shell { background: #181a3b; }
 .clan-signal[data-cs-theme="sunset"] .cs-legal-hero { background: linear-gradient(180deg, #181a3b 0%, #744867 42%, #b96576 72%, var(--cs-bg) 100%); }
 .clan-signal[data-cs-theme="sunset"] .cs-legal-hero::after { filter: grayscale(1) sepia(0.55) saturate(1.25) hue-rotate(330deg) brightness(0.76) contrast(1.05); opacity: 0.68; }
 .clan-signal[data-cs-theme="sunset"] .cs-legal-eyebrow { color: #fff2d5 !important; }
