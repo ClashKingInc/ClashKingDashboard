@@ -261,9 +261,10 @@ export async function fetchServerMembers(serverId: string): Promise<ClanMember[]
 }
 
 export async function fetchClanMembers(clanTag: string): Promise<ClanMember[]> {
-  const response = await fetch(`https://proxy.clashk.ing/v1/clans/${encodeURIComponent(clanTag)}/members`, {
-    headers: getAuthHeaders(),
-  });
+  // Goes through the local proxy route (app/api/v2/clan/[clanTag]/members) so
+  // the request stays within the CSP connect-src and the dashboard bearer
+  // token is never sent to the external proxy host.
+  const response = await fetch(`/api/v2/clan/${encodeURIComponent(clanTag)}/members`);
   const data = await handleResponse<{ items?: ClanMember[]; members?: ClanMember[]; clan_tag?: string } | ClanMember[]>(response);
   return Array.isArray(data) ? data : data.items || data.members || [];
 }

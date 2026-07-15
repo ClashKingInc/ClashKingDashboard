@@ -121,8 +121,8 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
       setLoading(false);
     }
 
-    // Fetch clan members separately — calls an external proxy (proxy.clashk.ing)
-    // not routed through Next.js, so a failure must not block the page.
+    // Fetch clan members separately — proxied to an external upstream
+    // (proxy.clashk.ing), so a failure must not block the page.
     if (clanTag) {
       api.fetchClanMembers(clanTag).then(setClanMembers).catch(() => {});
     }
