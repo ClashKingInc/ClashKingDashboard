@@ -421,7 +421,7 @@
   .cs-nav .cs-button .cs-arrow { display: none; }
   .cs-language-trigger { min-height: 38px; border-radius: 11px; }
   .cs-hero {
-    --cs-cloud-strip-width: 900px;
+    --cs-cloud-strip-width: calc(300dvh + 660px);
     --cs-sky-fade-height: 300px;
     min-height: calc(100dvh - 66px);
     padding: 44px 20px 62px;
