@@ -19,12 +19,18 @@ export async function generateMetadata({
       url: "https://clashk.ing",
       images: [
         {
-          url: "https://assets.clashk.ing/logos/bot-app-logo/bot-app-logo.png",
-          width: 512,
-          height: 512,
-          alt: "ClashKing",
+          url: "/og/clashking-landing.png",
+          width: 1200,
+          height: 630,
+          alt: "ClashKing landing page with the Run your clan headline and animated Battle Copter",
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("metadata.openGraphTitle"),
+      description: t("hero.copy"),
+      images: ["/og/clashking-landing.png"],
     },
     alternates: { canonical: "/" },
   };

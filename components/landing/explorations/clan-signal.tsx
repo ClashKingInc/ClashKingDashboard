@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { ClanSignalHeroModel } from "./clan-signal/hero-model";
 import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
@@ -8,6 +9,7 @@ import "../../../app/explorations/clan-signal.css";
 
 const SHARED = "/concepts/local/assets";
 const ICONS = `${SHARED}/bot/icons`;
+const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
 
 type Feature = {
   icon: string;
@@ -82,6 +84,8 @@ function FeatureList({ features }: { features: readonly Feature[] }) {
 
 export async function ClanSignal() {
   const t = await getTranslations("ClanSignal");
+  const cookieStore = await cookies();
+  const landingTheme = cookieStore.get(LANDING_THEME_COOKIE)?.value === "sunset" ? "sunset" : "day";
   const headlinePhrases = [
     [t("hero.phrases.run.first"), t("hero.phrases.run.second"), t("hero.phrases.run.third")],
     [t("hero.phrases.accounts.first"), t("hero.phrases.accounts.second"), t("hero.phrases.accounts.third")],
@@ -104,7 +108,7 @@ export async function ClanSignal() {
   ] as const;
 
   return (
-    <main className="clan-signal">
+    <main className="clan-signal" data-cs-theme={landingTheme}>
       <header className="cs-nav-shell">
         <nav className="cs-nav" aria-label={t("navigation.ariaLabel")}>
           <Link href="/" aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
@@ -121,6 +125,7 @@ export async function ClanSignal() {
               appearanceLabel={t("appearance.label")}
               dayLabel={t("appearance.day")}
               sunsetLabel={t("appearance.sunset")}
+              initialTheme={landingTheme}
             />
             <a className="cs-button cs-button-small" href="https://invite.clashk.ing/" target="_blank" rel="noreferrer">
               {t("actions.addToDiscord")} <ArrowAsset />

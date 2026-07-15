@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { useEffect, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,22 +23,26 @@ type LandingLanguageSwitcherProps = {
   appearanceLabel: string;
   dayLabel: string;
   sunsetLabel: string;
+  initialTheme: LandingTheme;
 };
+
+type LandingTheme = "day" | "sunset";
+
+const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
 
 export function LandingLanguageSwitcher({
   label,
   appearanceLabel,
   dayLabel,
   sunsetLabel,
+  initialTheme,
 }: Readonly<LandingLanguageSwitcherProps>) {
   const locale = useLocale() as SupportedLocale;
   const router = useRouter();
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
   const [isPending, startTransition] = useTransition();
   const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
-
-  useEffect(() => setMounted(true), []);
 
   const switchLocale = (nextLocale: SupportedLocale) => {
     // eslint-disable-next-line react-hooks/immutability -- locale preference is persisted by next-intl's cookie contract
@@ -49,10 +52,16 @@ export function LandingLanguageSwitcher({
     startTransition(() => router.refresh());
   };
 
+  const switchLandingTheme = (nextTheme: LandingTheme) => {
+    setLandingTheme(nextTheme);
+    document.cookie = `${LANDING_THEME_COOKIE}=${nextTheme}; path=/; max-age=31536000; SameSite=Lax`;
+    triggerRef.current?.closest<HTMLElement>(".clan-signal")?.setAttribute("data-cs-theme", nextTheme);
+  };
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button className="cs-language-trigger" type="button" aria-label={label} disabled={isPending}>
+        <button ref={triggerRef} className="cs-language-trigger" type="button" aria-label={label} disabled={isPending}>
           <span className="cs-language-flag">
             <Image
               src={`https://flagcdn.com/w40/${currentLanguage.flagCode}.png`}
@@ -65,7 +74,12 @@ export function LandingLanguageSwitcher({
           <span className="cs-language-chevron" aria-hidden="true" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={6} className="cs-language-menu">
+      <DropdownMenuContent
+        align="end"
+        sideOffset={6}
+        className="cs-language-menu"
+        data-landing-theme={landingTheme}
+      >
         {LANGUAGE_OPTIONS.map((language) => (
           <DropdownMenuItem
             key={language.code}
@@ -89,16 +103,16 @@ export function LandingLanguageSwitcher({
         <DropdownMenuLabel className="cs-language-label">{appearanceLabel}</DropdownMenuLabel>
         <DropdownMenuItem
           className="cs-language-option"
-          data-active={mounted && resolvedTheme === "light" ? "true" : undefined}
-          onClick={() => setTheme("light")}
+          data-active={landingTheme === "day" ? "true" : undefined}
+          onClick={() => switchLandingTheme("day")}
         >
           <span className="cs-theme-swatch cs-theme-swatch-day" aria-hidden="true" />
           <span>{dayLabel}</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cs-language-option"
-          data-active={mounted && resolvedTheme === "dark" ? "true" : undefined}
-          onClick={() => setTheme("dark")}
+          data-active={landingTheme === "sunset" ? "true" : undefined}
+          onClick={() => switchLandingTheme("sunset")}
         >
           <span className="cs-theme-swatch cs-theme-swatch-sunset" aria-hidden="true" />
           <span>{sunsetLabel}</span>
