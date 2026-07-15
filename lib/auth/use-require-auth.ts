@@ -18,9 +18,11 @@ export function useRequireAuth(): void {
   const locale = (params.locale as string) || "en";
 
   useEffect(() => {
-    const hasCredentials =
-      !!localStorage.getItem("access_token") || !!localStorage.getItem("refresh_token");
-    if (hasCredentials) return;
+    // Require an access token: several pages still call fetch() with the raw
+    // localStorage token and cannot recover from a refresh-token-only state,
+    // so send those users through login (which returns them here afterwards).
+    // Expired-but-present access tokens are refreshed by the SDK on 401.
+    if (localStorage.getItem("access_token")) return;
 
     try {
       sessionStorage.setItem("post_login_redirect", pathname);
