@@ -205,7 +205,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     loadMaxLevels();
   }, [guildId, locale]);
 
-  const loadMaxLevels = async () => {
+  async function loadMaxLevels() {
     try {
       // Load Town Hall max level
       const thEncoded = encodeURIComponent('Town Hall');
@@ -234,9 +234,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       console.error("Failed to load max levels:", err);
       // Keep fallback values
     }
-  };
+  }
 
-  const loadLeagues = async () => {
+  async function loadLeagues() {
     try {
       // Map next-intl locale codes to CoC API locale codes
       const localeMap: Record<string, string> = {
@@ -275,9 +275,9 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       console.error("Failed to load leagues from static data:", err);
       // Keep empty array if loading fails, will show empty dropdown
     }
-  };
+  }
 
-  const loadData = async () => {
+  async function loadData() {
     try {
       setIsLoading(true);
       setError(null);
@@ -354,7 +354,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   const handleSaveSettings = async () => {
     try {

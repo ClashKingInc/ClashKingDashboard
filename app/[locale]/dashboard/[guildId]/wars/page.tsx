@@ -244,7 +244,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     }
   }, [guildId, router, toast]);
 
-  const fetchWarDataForClans = async (clansList: Clan[], token: string) => { // NOSONAR — data-fetching orchestration: parallel API calls + multi-dimension aggregation, inherently complex
+  async function fetchWarDataForClans(clansList: Clan[], token: string) { // NOSONAR — data-fetching orchestration: parallel API calls + multi-dimension aggregation, inherently complex
     try {
       const clansToFetch = filters.clan === "all"
         ? clansList.map(c => c.tag).filter(tag => tag && tag.trim() !== '')
@@ -483,7 +483,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const fetchPlayerStats = async (clanTags: string[], token: string, startTs: number, endTs: number): Promise<PlayerStats[]> => {
     try {

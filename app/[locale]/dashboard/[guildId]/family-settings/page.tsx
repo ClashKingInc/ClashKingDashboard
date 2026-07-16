@@ -242,7 +242,7 @@ export default function FamilySettingsPage() {
     loadFamilyRoles();
   }, [guildId]);
 
-  const loadSettings = async (forceRefresh = false) => {
+  async function loadSettings(forceRefresh = false) {
     try {
       setIsLoading(true);
       setError(null);
@@ -283,9 +283,9 @@ export default function FamilySettingsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
-  const loadDiscordRoles = async (forceRefresh = false) => {
+  async function loadDiscordRoles(forceRefresh = false) {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) return;
@@ -306,9 +306,9 @@ export default function FamilySettingsPage() {
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
     }
-  };
+  }
 
-  const loadFamilyRoles = async (forceRefresh = false) => {
+  async function loadFamilyRoles(forceRefresh = false) {
     try {
       setIsLoadingFamilyRoles(true);
       const token = localStorage.getItem("access_token");
@@ -336,7 +336,7 @@ export default function FamilySettingsPage() {
     } finally {
       setIsLoadingFamilyRoles(false);
     }
-  };
+  }
 
   const handleAddFamilyRole = async (roleType: FamilyRoleType, roleId: string) => {
     if (!roleId || !roleType) return;

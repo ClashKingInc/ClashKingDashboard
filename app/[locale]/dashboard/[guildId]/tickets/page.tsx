@@ -2264,10 +2264,10 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
     ?? `${Date.now().toString(36)}-${(localIdCounterRef.current++).toString(36)}`
   );
   const [messages, setMessages] = useState<EditableApproveMessage[]>(
-    (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })),
+    (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
   );
   const [draftMessages, setDraftMessages] = useState<EditableApproveMessage[]>(
-    (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() })),
+    (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
   );
   const [isSaving, setIsSaving] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
