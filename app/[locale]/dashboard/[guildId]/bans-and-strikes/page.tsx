@@ -112,9 +112,11 @@ export default function BansPage() { // NOSONAR — React page component: comple
     key: "totalWeight",
     direction: "desc",
   });
+  const [currentTime, setCurrentTime] = useState(0);
 
   // Fetch bans and strikes on mount
   useEffect(() => {
+    setCurrentTime(Date.now());
     fetchBans();
     fetchStrikes();
     fetchServerClans();
@@ -134,7 +136,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
     return clanNameByTag[normalizedTag] ?? null;
   };
 
-  const fetchBans = async () => {
+  async function fetchBans() {
     try {
       setIsLoadingBans(true);
       const token = localStorage.getItem("access_token");
@@ -166,9 +168,9 @@ export default function BansPage() { // NOSONAR — React page component: comple
     } finally {
       setIsLoadingBans(false);
     }
-  };
+  }
 
-  const fetchServerClans = async () => {
+  async function fetchServerClans() {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) return;
@@ -195,9 +197,9 @@ export default function BansPage() { // NOSONAR — React page component: comple
     } catch (error) {
       console.error("Error fetching server clans:", error);
     }
-  };
+  }
 
-  const fetchStrikes = async () => {
+  async function fetchStrikes() {
     try {
       setIsLoadingStrikes(true);
       const token = localStorage.getItem("access_token");
@@ -229,7 +231,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
     } finally {
       setIsLoadingStrikes(false);
     }
-  };
+  }
 
   const handleAddBan = async () => {
     if (!newBan.player_tag || !newBan.reason) return;
@@ -635,14 +637,14 @@ export default function BansPage() { // NOSONAR — React page component: comple
   const totalStrikeWeight = strikes.reduce((sum, strike) => sum + strike.strike_weight, 0);
   const recentBans = bans.filter((b) => {
     const days = Math.floor(
-      (Date.now() - new Date(b.DateCreated).getTime()) /
+      (currentTime - new Date(b.DateCreated).getTime()) /
       (1000 * 60 * 60 * 24)
     );
     return days <= 7;
   }).length;
   const recentStrikes = strikes.filter((s) => {
     const days = Math.floor(
-      (Date.now() - new Date(s.date_created).getTime()) /
+      (currentTime - new Date(s.date_created).getTime()) /
       (1000 * 60 * 60 * 24)
     );
     return days <= 7;
@@ -963,7 +965,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                 <div className="text-xs text-muted-foreground">
                                   {t("bans.table.daysAgo", {
                                     days: Math.floor(
-                                      (Date.now() - new Date(ban.DateCreated).getTime()) /
+                                      (currentTime - new Date(ban.DateCreated).getTime()) /
                                       (1000 * 60 * 60 * 24)
                                     )
                                   })}
@@ -1369,7 +1371,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                   <div className="text-xs text-muted-foreground">
                                     {t("strikes.table.daysAgo", {
                                       days: Math.floor(
-                                        (Date.now() - new Date(strike.date_created).getTime()) /
+                                        (currentTime - new Date(strike.date_created).getTime()) /
                                         (1000 * 60 * 60 * 24)
                                       )
                                     })}
@@ -1477,7 +1479,7 @@ export default function BansPage() { // NOSONAR — React page component: comple
                                       <div className="text-xs text-muted-foreground">
                                         {t("strikes.table.daysAgo", {
                                           days: Math.floor(
-                                            (Date.now() - new Date(group.last_strike).getTime()) /
+                                            (currentTime - new Date(group.last_strike).getTime()) /
                                             (1000 * 60 * 60 * 24)
                                           )
                                         })}

@@ -73,14 +73,7 @@ export default function GeneralSettingsPage() {
   const discordRolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
   const allRolesCacheKey = dashboardCacheKeys.allRoles(guildId);
 
-  // Load settings on mount
-  useEffect(() => {
-    loadSettings();
-    loadDiscordRoles();
-    loadTenureRoles();
-  }, [guildId]);
-
-  const loadSettings = async () => {
+  async function loadSettings() {
     try {
       setIsLoading(true);
       setError(null);
@@ -117,9 +110,9 @@ export default function GeneralSettingsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
-  const loadDiscordRoles = async () => {
+  async function loadDiscordRoles() {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) return;
@@ -136,9 +129,9 @@ export default function GeneralSettingsPage() {
     } catch (err) {
       console.error("Failed to load Discord roles:", err);
     }
-  };
+  }
 
-  const loadTenureRoles = async () => {
+  async function loadTenureRoles() {
     try {
       setIsLoadingTenureRoles(true);
       const token = localStorage.getItem("access_token");
@@ -166,7 +159,14 @@ export default function GeneralSettingsPage() {
     } finally {
       setIsLoadingTenureRoles(false);
     }
-  };
+  }
+
+  // Load settings on mount
+  useEffect(() => {
+    loadSettings();
+    loadDiscordRoles();
+    loadTenureRoles();
+  }, [guildId]);
 
   const handleAddTenureRole = async () => {
     try {

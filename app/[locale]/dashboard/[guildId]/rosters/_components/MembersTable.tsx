@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
@@ -56,6 +56,11 @@ export function MembersTable({
   const [updatingCategory, setUpdatingCategory] = useState<string | null>(null);
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0);
+
+  useEffect(() => {
+    setCurrentTimeSeconds(Math.floor(Date.now() / 1000));
+  }, []);
 
   const handleSort = (col: string) => {
     if (sortColumn === col) {
@@ -181,8 +186,7 @@ export function MembersTable({
         );
 
       case 'name': {
-        const now = Math.floor(Date.now() / 1000);
-        const isStale = member.last_updated != null && (now - member.last_updated) > STALE_THRESHOLD_SECONDS;
+        const isStale = member.last_updated != null && (currentTimeSeconds - member.last_updated) > STALE_THRESHOLD_SECONDS;
         const staleDate = member.last_updated ? new Date(member.last_updated * 1000).toLocaleDateString() : null;
         const duplicateRosters = groupDuplicateMap[member.tag];
         return (
