@@ -4,56 +4,44 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse } from '../types/common';
-import type { CocAccountRequest } from '../types/link';
+import type { CocAccountRequest, LinkedAccountsResponse } from '../types/link';
+
+const encodePathSegment = (value: string): string => encodeURIComponent(value);
+const toLinkAccountPayload = (data: CocAccountRequest): CocAccountRequest => ({
+  player_tag: data.player_tag,
+  ...(data.api_token ? { api_token: data.api_token } : {}),
+});
 
 export class LinkClient extends BaseApiClient {
   /**
-   * POST /v2/link
+   * POST /v2/links/{id}
    */
-  async linkAccount(data: CocAccountRequest): Promise<ApiResponse<any>> {
-    return this.request('/v2/link', {
+  async linkAccount(id: string, data: CocAccountRequest): Promise<ApiResponse<any>> {
+    return this.request(`/v2/links/${encodePathSegment(id)}`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(toLinkAccountPayload(data)),
     });
   }
 
   /**
-   * POST /v2/link/no-auth
+   * GET /v2/links/{id}
    */
-  async linkAccountNoAuth(userId: string, data: CocAccountRequest): Promise<ApiResponse<any>> {
-    return this.request(`/v2/link/no-auth`, {
-      method: 'POST',
-      body: JSON.stringify({ ...data, user_id: userId }),
-    });
+  async getLinkedAccounts(id: string): Promise<ApiResponse<LinkedAccountsResponse>> {
+    return this.request(`/v2/links/${encodePathSegment(id)}`, { method: 'GET' });
   }
 
   /**
-   * GET /v2/links/{tag_or_id}
+   * DELETE /v2/links/{id}/{player_tag}
    */
-  async getLinkedAccounts(tagOrId: string): Promise<ApiResponse<any[]>> {
-    return this.request(`/v2/links/${tagOrId}`, { method: 'GET' });
+  async unlinkAccount(id: string, playerTag: string): Promise<ApiResponse<{ message: string }>> {
+    return this.request(`/v2/links/${encodePathSegment(id)}/${encodePathSegment(playerTag)}`, { method: 'DELETE' });
   }
 
   /**
-   * DELETE /v2/link/{tag}
+   * PUT /v2/links/{id}/order
    */
-  async unlinkAccount(tag: string): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/link/${tag}`, { method: 'DELETE' });
-  }
-
-  /**
-   * DELETE /v2/link/no-auth/{tag}
-   */
-  async unlinkAccountNoAuth(tag: string, apiToken: string): Promise<ApiResponse<{ message: string }>> {
-    const query = this.buildQueryString({ api_token: apiToken });
-    return this.request(`/v2/link/no-auth/${tag}${query}`, { method: 'DELETE' });
-  }
-
-  /**
-   * PUT /v2/links/reorder
-   */
-  async reorderAccounts(orderedTags: string[]): Promise<ApiResponse<{ message: string }>> {
-    return this.request('/v2/links/reorder', {
+  async reorderAccounts(id: string, orderedTags: string[]): Promise<ApiResponse<{ message: string }>> {
+    return this.request(`/v2/links/${encodePathSegment(id)}/order`, {
       method: 'PUT',
       body: JSON.stringify({ ordered_tags: orderedTags }),
     });

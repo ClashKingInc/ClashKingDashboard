@@ -4,14 +4,14 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ server_id: string; user_id: string; player_tag: string }> }
+  { params }: { params: Promise<{ id: string; player_tag: string }> }
 ) {
   try {
-    const { user_id, player_tag } = await params;
+    const { id, player_tag } = await params;
     const token = request.headers.get('authorization');
 
     const response = await fetch(
-      `${API_BASE_URL}/v2/links/${encodeURIComponent(user_id)}/${encodeURIComponent(player_tag)}`,
+      `${API_BASE_URL}/v2/links/${encodeURIComponent(id)}/${encodeURIComponent(player_tag)}`,
       {
         method: 'DELETE',
         headers: {
@@ -24,7 +24,7 @@ export async function DELETE(
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error('API proxy error (DELETE /links/:user_id/:player_tag):', error);
+    console.error('API proxy error (DELETE /links/:id/:player_tag):', error);
     return NextResponse.json(
       { error: 'Failed to unlink account' },
       { status: 500 }

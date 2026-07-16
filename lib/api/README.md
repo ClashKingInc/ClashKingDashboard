@@ -53,8 +53,8 @@ const { data: settings } = await api.servers.getSettings(serverId);
 await api.servers.updateEmbedColor(serverId, 'FF5733');
 
 // Links
-const { data: accounts } = await api.links.getLinkedAccounts('#TAG');
-await api.links.linkAccount({ player_tag: '#TAG', api_token: 'token' });
+const { data: accounts } = await api.links.getLinkedAccounts(user.user_id);
+await api.links.linkAccount(user.user_id, { player_tag: '#TAG', api_token: 'token' });
 
 // Utilities
 const { data: dates } = await api.utils.getCurrentDates();
@@ -171,7 +171,7 @@ lib/api/
     ├── roster-client.ts       # Roster endpoints (27 methods)
     ├── war-client.ts          # War endpoints (6 methods)
     ├── server-client.ts       # Server endpoints (7 methods)
-    ├── link-client.ts         # Link endpoints (6 methods)
+    ├── link-client.ts         # Link endpoints (4 methods)
     └── utility-client.ts      # Utility endpoints (17 methods)
 ```
 
@@ -200,7 +200,7 @@ api.clans.*      // 6 clan methods
 api.rosters.*    // 27 roster methods
 api.wars.*       // 6 war methods
 api.servers.*    // 7 server methods
-api.links.*      // 6 link methods
+api.links.*      // 4 link methods
 api.utils.*      // 17 utility methods
 ```
 
