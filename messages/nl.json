@@ -195,6 +195,10 @@
       "name": "Algemene Instellingen",
       "description": "Serverconfiguratie"
     },
+    "dashboardAccess": {
+      "name": "Dashboardtoegang",
+      "description": "Dashboardonderdelen delegeren"
+    },
     "familySettings": {
       "name": "Familie Instellingen",
       "description": "Familie rollen en bijnamen"

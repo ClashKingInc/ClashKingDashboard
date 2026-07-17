@@ -14,13 +14,6 @@ import type {
   DiscordChannel,
 } from './types';
 
-export interface RosterTokenResult {
-  access_url: string;
-  token: string;
-  expires_at: string;
-  server_info: { server_id: string; roster_count: number };
-}
-
 // ============================================
 // Helper
 // ============================================
@@ -232,20 +225,6 @@ export async function fetchMissingMembers(
     headers: getAuthHeaders(),
   });
   return handleResponse<MissingMembersResult>(response);
-}
-
-export async function generateRosterToken(
-  serverId: string,
-  rosterId?: string
-): Promise<RosterTokenResult> {
-  const params = new URLSearchParams({ server_id: serverId });
-  if (rosterId) params.append('roster_id', rosterId);
-
-  const response = await fetch(`/api/v2/roster-token?${params.toString()}`, {
-    method: 'POST',
-    headers: getAuthHeaders(),
-  });
-  return handleResponse<RosterTokenResult>(response);
 }
 
 // ============================================

@@ -25,8 +25,9 @@ import {
   UserCog,
   TicketIcon,
   FileText,
-  Crown,
+  KeyRound,
 } from "lucide-react";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -40,6 +41,9 @@ import { useTranslations } from "next-intl";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { logout } from "@/lib/auth/logout";
 import { SettingsDropdown } from "@/components/settings-dropdown";
+import { useDashboardAccess } from "./dashboard-access-provider";
+import type { DashboardSection } from "@/lib/api/types/dashboard-access";
+import { clashKingAssets } from "@/lib/theme";
 
 interface SidebarProps {
   readonly guildId: string;
@@ -54,6 +58,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
   const router = useRouter();
   const t = useTranslations("Sidebar");
   const tCommon = useTranslations("Common");
+  const { capabilities, canView } = useDashboardAccess();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -75,7 +80,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
     router.push(`/${locale}`);
   };
 
-  const navigationSections = [
+  const navigationSections: Array<{ titleKey: string | null; items: Array<{ nameKey: string; href: string; icon: React.ComponentType<{ className?: string }>; capability?: DashboardSection; fullAccess?: boolean }> }> = [
     {
       titleKey: null, // Overview - no section title
       items: [
@@ -93,16 +98,25 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
           nameKey: "general.name",
           href: `/dashboard/${guildId}/general`,
           icon: Settings,
+          capability: "settings",
         },
         {
           nameKey: "familySettings.name",
           href: `/dashboard/${guildId}/family-settings`,
           icon: UserCog,
+          capability: "family_settings",
         },
         {
           nameKey: "logs.name",
           href: `/dashboard/${guildId}/logs`,
           icon: ScrollText,
+          capability: "logs",
+        },
+        {
+          nameKey: "dashboardAccess.name",
+          href: `/dashboard/${guildId}/dashboard-access`,
+          icon: KeyRound,
+          fullAccess: true,
         },
       ],
     },
@@ -113,11 +127,13 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
           nameKey: "clans.name",
           href: `/dashboard/${guildId}/clans`,
           icon: Users,
+          capability: "clans",
         },
         {
           nameKey: "rosters.name",
           href: `/dashboard/${guildId}/rosters`,
           icon: ClipboardList,
+          capability: "rosters",
         },
       ],
     },
@@ -128,11 +144,13 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
           nameKey: "links.name",
           href: `/dashboard/${guildId}/links`,
           icon: Link2,
+          capability: "links",
         },
         {
           nameKey: "bans.name",
           href: `/dashboard/${guildId}/bans-and-strikes`,
           icon: Ban,
+          capability: "moderation",
         },
       ],
     },
@@ -143,36 +161,43 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
           nameKey: "roles.name",
           href: `/dashboard/${guildId}/roles`,
           icon: ShieldCheck,
+          capability: "roles",
         },
         {
           nameKey: "reminders.name",
           href: `/dashboard/${guildId}/reminders`,
           icon: Bell,
+          capability: "reminders",
         },
         {
           nameKey: "autoboards.name",
           href: `/dashboard/${guildId}/autoboards`,
           icon: LayoutDashboard,
+          capability: "autoboards",
         },
         {
           nameKey: "giveaways.name",
           href: `/dashboard/${guildId}/giveaways`,
           icon: Gift,
+          capability: "giveaways",
         },
         {
           nameKey: "panels.name",
           href: `/dashboard/${guildId}/panels`,
           icon: LayoutTemplate,
+          capability: "panels",
         },
         {
           nameKey: "tickets.name",
           href: `/dashboard/${guildId}/tickets`,
           icon: TicketIcon,
+          capability: "tickets",
         },
         {
           nameKey: "embeds.name",
           href: `/dashboard/${guildId}/embeds`,
           icon: FileText,
+          capability: "embeds",
         },
       ],
     },
@@ -183,15 +208,21 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
           nameKey: "wars.name",
           href: `/dashboard/${guildId}/wars`,
           icon: Swords,
+          capability: "wars",
         },
         {
           nameKey: "leaderboards.name",
           href: `/dashboard/${guildId}/leaderboards`,
           icon: Trophy,
+          capability: "leaderboards",
         },
       ],
     },
   ];
+
+  const visibleNavigationSections = navigationSections
+    .map((section) => ({ ...section, items: section.items.filter((item) => item.fullAccess ? capabilities?.full_access : !item.capability || canView(item.capability)) }))
+    .filter((section) => section.items.length > 0);
 
   const normalizedPathname = pathname.replace(/^\/[a-z]{2}(?=\/)/, "").replace(/\/$/, "") || "/";
 
@@ -288,7 +319,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-3 space-y-4">
-        {navigationSections.map((section, sectionIndex) => (
+        {visibleNavigationSections.map((section, sectionIndex) => (
           <div key={section.titleKey || `section-${sectionIndex}`}>
             {/* Section Title - only show if titleKey exists */}
             {section.titleKey && (
@@ -358,7 +389,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
             {tCommon("poweredBy")}
           </span>
           <span className="flex h-4 items-center gap-1 font-bold text-primary">
-            <Crown className="h-3 w-3 shrink-0 fill-primary text-primary" aria-hidden />
+            <Image src={clashKingAssets.logos.crownRed} alt="" width={14} height={14} unoptimized className="h-3.5 w-3.5" />
             <span className="leading-none">ClashKing</span>
           </span>
         </Link>

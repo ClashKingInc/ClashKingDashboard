@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse } from '../types/common';
-import type { CocAccountRequest, LinkedAccountsResponse } from '../types/link';
+import type { CocAccountRequest, LinkedAccount, LinkedAccountsResponse } from '../types/link';
 
 const encodePathSegment = (value: string): string => encodeURIComponent(value);
 const toLinkAccountPayload = (data: CocAccountRequest): CocAccountRequest => ({
@@ -35,6 +35,16 @@ export class LinkClient extends BaseApiClient {
    */
   async unlinkAccount(id: string, playerTag: string): Promise<ApiResponse<{ message: string }>> {
     return this.request(`/v2/links/${encodePathSegment(id)}/${encodePathSegment(playerTag)}`, { method: 'DELETE' });
+  }
+
+  /**
+   * PATCH /v2/links/{id}/{player_tag}
+   */
+  async setAccountHidden(id: string, playerTag: string, hidden: boolean): Promise<ApiResponse<LinkedAccount>> {
+    return this.request(`/v2/links/${encodePathSegment(id)}/${encodePathSegment(playerTag)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ hidden }),
+    });
   }
 
   /**

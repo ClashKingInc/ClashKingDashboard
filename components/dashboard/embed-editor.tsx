@@ -3,6 +3,7 @@
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
 import { useId, useRef, useState, type ComponentType, type MutableRefObject, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 import emojiDataset from "emoji-datasource-twitter/emoji.json";
 import { AtSign, Bike, CalendarDays, CheckCircle2, ChevronDown, ChevronRight, ChevronUp, Clock3, Copy, ExternalLink, Flag, Gamepad2, GlassWater, Hash, Heart, Keyboard, Leaf, Loader2, Plus, Smile, Trash2, Utensils, Link2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -440,9 +441,12 @@ function EmojiGlyph({ emoji, className = "h-7 w-7" }: { readonly emoji: string; 
   const primarySrc = emojiToTwemojiUrl(emoji);
   const fallbackSrc = emojiToTwemojiFallbackUrl(emoji);
   return (
-    <img
+    <Image
       src={primarySrc}
       alt={emoji}
+      width={28}
+      height={28}
+      unoptimized
       draggable={false}
       className={cn("pointer-events-none object-contain", className)}
       onError={(event) => {

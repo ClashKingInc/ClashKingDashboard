@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLocale } from "next-intl";
+import Image from "next/image";
 import { ChevronDown, ExternalLink, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { clashKingAssets } from "@/lib/theme";
@@ -254,10 +255,13 @@ const parseUnicodeEmoji: MarkdownParser = (text, start, key) => {
     if (!remaining.startsWith(token)) continue;
     return {
       node: (
-        <img
+        <Image
           key={key}
           src={emojiToTwemojiUrl(token)}
           alt={token}
+          width={18}
+          height={18}
+          unoptimized
           className="mx-[1px] inline-block h-[1.1em] w-[1.1em] align-[-0.12em]"
           draggable={false}
         />

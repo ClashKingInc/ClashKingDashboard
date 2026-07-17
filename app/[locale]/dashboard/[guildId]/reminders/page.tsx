@@ -266,7 +266,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (guildId) {
       fetchReminders();
     }
-  }, [channelsCacheKey, clansCacheKey, guildId, router, toast]);
+  }, [channelsCacheKey, clansCacheKey, guildId, params.locale, router, t, toast]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {

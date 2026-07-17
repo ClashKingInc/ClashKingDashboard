@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useEffectEvent } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -235,14 +235,7 @@ export default function FamilySettingsPage() {
   const rolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
   const familyRolesCacheKey = `family-roles-${guildId}`;
 
-  // Load settings on mount
-  useEffect(() => {
-    loadSettings();
-    loadDiscordRoles();
-    loadFamilyRoles();
-  }, [guildId]);
-
-  async function loadSettings(forceRefresh = false) {
+  const loadSettings = async (forceRefresh = false) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -337,6 +330,14 @@ export default function FamilySettingsPage() {
       setIsLoadingFamilyRoles(false);
     }
   }
+
+  const loadInitialData = useEffectEvent(() => {
+    void loadSettings();
+    void loadDiscordRoles();
+    void loadFamilyRoles();
+  });
+
+  useEffect(() => { loadInitialData(); }, [guildId]);
 
   const handleAddFamilyRole = async (roleType: FamilyRoleType, roleId: string) => {
     if (!roleId || !roleType) return;

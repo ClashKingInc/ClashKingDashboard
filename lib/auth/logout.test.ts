@@ -7,12 +7,14 @@ vi.mock("@/lib/api/client", () => ({
 
 import { logout } from "./logout";
 import { apiClient } from "@/lib/api/client";
+import { apiCache } from "@/lib/api-cache";
 
 describe("logout", () => {
   beforeEach(() => {
     localStorage.setItem("access_token", "tok");
     localStorage.setItem("refresh_token", "ref");
     localStorage.setItem("user", JSON.stringify({ id: 1 }));
+    sessionStorage.setItem("selected_guild", "cached");
     vi.mocked(apiClient.clearTokens).mockClear();
   });
 
@@ -38,5 +40,14 @@ describe("logout", () => {
   it("calls apiClient.clearTokens()", () => {
     logout();
     expect(apiClient.clearTokens).toHaveBeenCalledTimes(1);
+  });
+
+  it("clears session storage and cached API responses", async () => {
+    const fetcher = vi.fn().mockResolvedValue({ private: true });
+    await apiCache.get("private-user-data", fetcher);
+    logout();
+    expect(sessionStorage.length).toBe(0);
+    await apiCache.get("private-user-data", fetcher);
+    expect(fetcher).toHaveBeenCalledTimes(2);
   });
 });

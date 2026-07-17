@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useEffectEvent } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -199,13 +199,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
   const thPrefix = t("addRoleDialog.thPrefix");
   const bhPrefix = t("addRoleDialog.bhPrefix");
 
-  useEffect(() => {
-    loadData();
-    loadLeagues();
-    loadMaxLevels();
-  }, [guildId, locale]);
-
-  async function loadMaxLevels() {
+  const loadMaxLevels = async () => {
     try {
       // Load Town Hall max level
       const thEncoded = encodeURIComponent('Town Hall');
@@ -355,6 +349,14 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       setIsLoading(false);
     }
   }
+
+  const loadInitialData = useEffectEvent(() => {
+    void loadData();
+    void loadLeagues();
+    void loadMaxLevels();
+  });
+
+  useEffect(() => { loadInitialData(); }, [guildId, locale]);
 
   const handleSaveSettings = async () => {
     try {

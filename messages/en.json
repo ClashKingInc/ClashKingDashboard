@@ -195,6 +195,10 @@
       "name": "General Settings",
       "description": "Server configuration"
     },
+    "dashboardAccess": {
+      "name": "Dashboard Access",
+      "description": "Delegate dashboard sections"
+    },
     "familySettings": {
       "name": "Family Settings",
       "description": "Family roles and nicknames"

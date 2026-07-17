@@ -46,7 +46,7 @@ export function MissingMembersDialog({
     if (open) {
       onLoad(viewMode === 'group' && groupId ? groupId : undefined);
     }
-  }, [open, viewMode]);
+  }, [groupId, onLoad, open, viewMode]);
 
   // Reset when dialog closes
   React.useEffect(() => {

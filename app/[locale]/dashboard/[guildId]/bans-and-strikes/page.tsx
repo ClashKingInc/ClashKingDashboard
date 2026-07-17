@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useEffectEvent, Fragment } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -114,14 +114,6 @@ export default function BansPage() { // NOSONAR — React page component: comple
   });
   const [currentTime, setCurrentTime] = useState(0);
 
-  // Fetch bans and strikes on mount
-  useEffect(() => {
-    setCurrentTime(Date.now());
-    fetchBans();
-    fetchStrikes();
-    fetchServerClans();
-  }, [guildId]);
-
   const normalizeClanTag = (tag?: string | null) => {
     if (!tag) return "";
     const trimmed = tag.trim().toUpperCase();
@@ -232,6 +224,15 @@ export default function BansPage() { // NOSONAR — React page component: comple
       setIsLoadingStrikes(false);
     }
   }
+
+  const loadInitialData = useEffectEvent(() => {
+    setCurrentTime(Date.now());
+    void fetchBans();
+    void fetchStrikes();
+    void fetchServerClans();
+  });
+
+  useEffect(() => { loadInitialData(); }, [guildId]);
 
   const handleAddBan = async () => {
     if (!newBan.player_tag || !newBan.reason) return;

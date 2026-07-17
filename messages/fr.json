@@ -195,6 +195,10 @@
       "name": "Paramètres Généraux",
       "description": "Configuration du serveur"
     },
+    "dashboardAccess": {
+      "name": "Accès au tableau de bord",
+      "description": "Déléguer les sections"
+    },
     "familySettings": {
       "name": "Paramètres Famille",
       "description": "Rôles de famille et pseudos"

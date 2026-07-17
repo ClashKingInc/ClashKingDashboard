@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useEffectEvent } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +34,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { BotProfileCard } from "@/components/dashboard/bot-profile-card";
 
 const hexToInt = (hex: string): number => {
   return Number.parseInt(hex.replace("#", ""), 16);
@@ -73,7 +74,7 @@ export default function GeneralSettingsPage() {
   const discordRolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
   const allRolesCacheKey = dashboardCacheKeys.allRoles(guildId);
 
-  async function loadSettings() {
+  const loadSettings = async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -161,12 +162,13 @@ export default function GeneralSettingsPage() {
     }
   }
 
-  // Load settings on mount
-  useEffect(() => {
-    loadSettings();
-    loadDiscordRoles();
-    loadTenureRoles();
-  }, [guildId]);
+  const loadInitialData = useEffectEvent(() => {
+    void loadSettings();
+    void loadDiscordRoles();
+    void loadTenureRoles();
+  });
+
+  useEffect(() => { loadInitialData(); }, [guildId]);
 
   const handleAddTenureRole = async () => {
     try {
@@ -307,8 +309,10 @@ export default function GeneralSettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Grid Layout for smaller cards */}
+        {/* Two-column settings grid */}
         <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
+          <BotProfileCard guildId={guildId} />
+
           {/* Appearance */}
           <Card className="bg-card border-border">
             <CardHeader>
@@ -532,10 +536,9 @@ export default function GeneralSettingsPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Discord Tenure Roles */}
-        <Card className="bg-card border-border">
+          {/* Discord Tenure Roles */}
+          <Card className="bg-card border-border">
           <CardHeader>
             <div className="flex items-center gap-2">
               <div className="p-2 bg-blue-500/10 rounded-lg">
@@ -685,9 +688,9 @@ export default function GeneralSettingsPage() {
               </Table>
             )}
           </CardContent>
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );
 }
-

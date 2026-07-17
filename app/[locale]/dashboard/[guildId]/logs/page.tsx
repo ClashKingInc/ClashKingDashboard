@@ -195,8 +195,8 @@ export default function LogsPage() {
         setChannels(normalizeChannelsPayload(channelsData));
         setClanLogs(clanLogsData);
 
-        if (clanLogsData.length > 0 && !selectedClan) {
-          setSelectedClan(clanLogsData[0].tag);
+        if (clanLogsData.length > 0) {
+          setSelectedClan((current) => current || clanLogsData[0].tag);
         }
       } catch (error) {
         console.error("Failed to fetch logs data:", error);
@@ -206,7 +206,7 @@ export default function LogsPage() {
     };
 
     fetchData();
-  }, [guildId, mounted]); // Removed selectedClan dependency - no need to refetch all data when clan changes
+  }, [guildId, mounted]);
 
   const loadThreadsIfNeeded = async () => {
     if (threadsLoaded) return;

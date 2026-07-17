@@ -63,11 +63,11 @@ export class PlayerClient extends BaseApiClient {
   }
 
   /**
-   * GET /v2/player/{player_tag}
+   * GET /proxy/v1/players/{player_tag}
    * Get player information from COC wrapper
    */
-  async getPlayerInfo(playerTag: string): Promise<ApiResponse<{ name: string; tag: string; town_hall_level?: number }>> {
-    return this.request(`/v2/player/${encodeURIComponent(playerTag)}`, {
+  async getPlayerInfo(playerTag: string): Promise<ApiResponse<{ name: string; tag: string; townHallLevel?: number }>> {
+    return this.request(`/proxy/v1/players/${encodeURIComponent(playerTag)}`, {
       method: 'GET',
     });
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { Trash2, AlertCircle, Clock, RefreshCw, Plus, X, ChevronUp, ChevronDown, ChevronsUpDown, Copy } from "lucide-react";
 import type { RosterMember, Clan, SignupCategory } from "../_lib/types";
+import { townHallImageUrl } from "@/lib/theme";
 
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
 
@@ -176,9 +178,12 @@ export function MembersTable({
         return withPlayerPopover(
           member,
           <div className="flex items-center gap-1.5">
-              <img
-                src={`https://assets.clashk.ing/home-base/town-hall-pics/town-hall-${member.townhall}.png`}
+              <Image
+                src={townHallImageUrl(member.townhall)}
                 alt={`TH${member.townhall}`}
+                width={28}
+                height={28}
+                unoptimized
                 className="w-7 h-7 object-contain"
               />
               <span className="text-orange-400 font-medium">TH{member.townhall}</span>

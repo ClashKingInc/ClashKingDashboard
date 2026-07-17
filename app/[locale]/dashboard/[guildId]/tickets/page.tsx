@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentType, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type ComponentType, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -1503,12 +1503,17 @@ function PanelSettingsTab({
     return channel.parent_name ? `${channel.parent_name} / #${channel.name}` : `#${channel.name}`;
   };
 
-  useEffect(() => {
+  const resetForm = useEffectEvent(() => {
     const initialForm = createFormState();
     setForm(initialForm);
     lastSavedFormRef.current = initialForm;
     skipNextAutosave.current = true;
     hasPendingUserChange.current = false;
+  });
+  const describeSavedValue = useEffectEvent(getSavedValueLabel);
+
+  useEffect(() => {
+    resetForm();
   }, [
     panel.name,
     panel.open_category,
@@ -1561,7 +1566,7 @@ function PanelSettingsTab({
         lastSavedFormRef.current = nextForm;
 
         const changedDetails = changedFields
-          .map((field) => `${t(field)}: ${getSavedValueLabel(field, nextForm[field])}`)
+          .map((field) => `${t(field)}: ${describeSavedValue(field, nextForm[field])}`)
           .join(" • ");
 
         toast({
@@ -2253,21 +2258,20 @@ function ButtonCard({
   );
 }
 
+function createLocalMessageId(): string {
+  return globalThis.crypto.randomUUID();
+}
+
 function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly guildId: string }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   type EditableApproveMessage = ApproveMessage & { localId: string };
-  const localIdCounterRef = useRef(0);
-  const makeLocalId = () => (
-    globalThis.crypto?.randomUUID?.()
-    ?? `${Date.now().toString(36)}-${(localIdCounterRef.current++).toString(36)}`
-  );
   const [messages, setMessages] = useState<EditableApproveMessage[]>(
-    (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
+    () => (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
   );
   const [draftMessages, setDraftMessages] = useState<EditableApproveMessage[]>(
-    (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
+    () => (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
   );
   const [isSaving, setIsSaving] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -2279,7 +2283,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   );
 
   useEffect(() => {
-    const nextMessages = (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() }));
+    const nextMessages = (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` }));
     setMessages(nextMessages);
     setDraftMessages(cloneMessages(nextMessages));
     setExpandedPreviewIds(new Set());
@@ -2304,7 +2308,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
 
   const addMessage = () => {
     if (draftMessages.length >= 25) return;
-    const localId = makeLocalId();
+    const localId = createLocalMessageId();
     setDraftMessages((prev) => [...prev, { name: "", message: "", localId }]);
     setExpandedEditorIds((prev) => {
       const next = new Set(prev);
