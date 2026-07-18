@@ -775,7 +775,7 @@ export default function LogsPage() {
                 <SelectTrigger className="w-full md:w-[300px] h-10">
                   <SelectValue placeholder={t('clanSelector.placeholder')} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-80">
                   {clanLogs.map((clan) => (
                     <SelectItem key={clan.tag} value={clan.tag}>
                       {clan.name} ({clan.tag})

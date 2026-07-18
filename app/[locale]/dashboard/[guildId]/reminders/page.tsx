@@ -818,7 +818,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                       <SelectTrigger className="w-full md:w-[250px]">
                         <SelectValue placeholder={t('clanSelector.placeholder')} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-80">
                         <SelectItem value="all">{t('clanSelector.allClans')}</SelectItem>
                         {clans.map((clan) => (
                           <SelectItem key={clan.tag} value={clan.tag}>
@@ -1173,7 +1173,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                       <SelectTrigger id="dialog-clan">
                         <SelectValue placeholder={t('card.clanPlaceholder')} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-80">
                         {clans.map((clan) => (
                             <SelectItem key={clan.tag} value={clan.tag}>
                               {clan.name} ({clan.tag})

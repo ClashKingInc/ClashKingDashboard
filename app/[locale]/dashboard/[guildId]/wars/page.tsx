@@ -731,7 +731,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                       <SelectTrigger id="clan-filter">
                         <SelectValue placeholder={t('filters.clan')} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-80">
                         <SelectItem value="all">{t('filters.allClans')}</SelectItem>
                         {clans.map((clan) => (
                           <SelectItem key={clan.tag} value={clan.tag}>
