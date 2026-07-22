@@ -22,8 +22,10 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RoleCombobox } from "@/components/ui/role-combobox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import type { FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
+import type { FamilyRole, FamilyRolesResponse, FamilyRoleType } from "@/lib/api/types/family-roles";
+import type { RoleMode } from "@/lib/api/types/roles";
 
 interface NicknameSettings {
   change_nickname: boolean;
@@ -44,17 +46,17 @@ const colorClasses: Record<string, { bg: string; text: string; border: string }>
 
 // FamilyRoleCard component - supports multiple roles per type
 interface FamilyRoleCardProps {
-  readonly roleTypeKey: FamilyRoleType;
   readonly label: string;
   readonly description: string;
-  readonly roleIds: string[];
+  readonly roles: FamilyRole[];
   readonly icon: React.ComponentType<{ className?: string }>;
   readonly color: string;
   readonly discordRoles: Array<{ id: string; name: string; color?: number }>;
   readonly isRoleDataLoading: boolean;
   readonly isLoading: boolean;
   readonly onAdd: (roleId: string) => Promise<void>;
-  readonly onRemove: (roleId: string) => Promise<void>;
+  readonly onRemove: (id: string, roleId: string) => Promise<void>;
+  readonly onModeChange: (id: string, mode: RoleMode) => Promise<void>;
   readonly t: (key: string) => string;
 }
 
@@ -64,10 +66,9 @@ function intToHexColor(color: number): string {
 }
 
 function FamilyRoleCard({
-  roleTypeKey,
   label,
   description,
-  roleIds,
+  roles,
   icon: Icon,
   color,
   discordRoles,
@@ -75,16 +76,17 @@ function FamilyRoleCard({
   isLoading,
   onAdd,
   onRemove,
+  onModeChange,
   t,
 }: FamilyRoleCardProps) {
   const colors = colorClasses[color] || colorClasses.gray;
-  const hasRoles = !isRoleDataLoading && roleIds.length > 0;
+  const hasRoles = !isRoleDataLoading && roles.length > 0;
 
   // Get role details with existence check
-  const assignedRoles = roleIds.map((roleId) => {
-    const discordRole = discordRoles.find((r) => r.id === roleId);
+  const assignedRoles = roles.map((role) => {
+    const discordRole = discordRoles.find((r) => r.id === role.role_id);
     return {
-      id: roleId,
+      ...role,
       name: discordRole?.name || null,
       color: discordRole?.color || 0,
       exists: discordRole !== undefined,
@@ -106,7 +108,7 @@ function FamilyRoleCard({
               <p className="text-sm font-medium text-foreground">{label}</p>
               {hasRoles && (
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${colors.bg} ${colors.text} font-medium`}>
-                  {roleIds.length}
+                  {roles.length}
                 </span>
               )}
               {hasDeletedRoles && (
@@ -135,7 +137,7 @@ function FamilyRoleCard({
             <RoleCombobox
               roles={discordRoles}
               mode="add"
-              excludeRoleIds={roleIds}
+              excludeRoleIds={roles.map((role) => role.role_id)}
               onAdd={onAdd}
               addPlaceholder={t("familyRoles.addRole")}
               disabled={isLoading}
@@ -161,17 +163,29 @@ function FamilyRoleCard({
                         {role.exists ? `@${role.name}` : t("familyRoles.deletedRole")}
                       </span>
                       {role.exists ? null : (
-                        <span className="text-xs text-orange-500">({role.id})</span>
+                        <span className="text-xs text-orange-500">({role.role_id})</span>
                       )}
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => onRemove(role.id)}
-                      disabled={isLoading}
-                      className="p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors shrink-0"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <Select value={role.mode} onValueChange={(mode) => void onModeChange(role.id, mode as RoleMode)} disabled={isLoading}>
+                        <SelectTrigger className="h-8 w-[8.5rem] text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="both">{t("familyRoles.modes.both")}</SelectItem>
+                          <SelectItem value="add">{t("familyRoles.modes.add")}</SelectItem>
+                          <SelectItem value="remove">{t("familyRoles.modes.remove")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <button
+                        type="button"
+                        onClick={() => onRemove(role.id, role.role_id)}
+                        disabled={isLoading}
+                        className="p-1 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors shrink-0"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -373,7 +387,7 @@ export default function FamilySettingsPage() {
     }
   };
 
-  const handleRemoveFamilyRole = async (roleType: FamilyRoleType, roleId: string) => {
+  const handleRemoveFamilyRole = async (roleType: FamilyRoleType, id: string, roleId: string) => {
     try {
       setFamilyRolesLoading(true);
       setError(null);
@@ -381,7 +395,7 @@ export default function FamilySettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      const response = await apiClient.familyRoles.removeFamilyRole(guildId, roleType, roleId);
+      const response = await apiClient.familyRoles.removeFamilyRole(guildId, roleType, id, roleId);
 
       if (response.error) {
         setError(response.error);
@@ -397,6 +411,23 @@ export default function FamilySettingsPage() {
       });
     } catch (err: any) {
       setError(err.message || "Failed to remove family role");
+    } finally {
+      setFamilyRolesLoading(false);
+    }
+  };
+
+  const handleFamilyRoleModeChange = async (id: string, mode: RoleMode) => {
+    try {
+      setFamilyRolesLoading(true);
+      setError(null);
+      const response = await apiClient.familyRoles.updateFamilyRoleMode(guildId, id, mode);
+      if (response.error) {
+        setError(response.error);
+        return;
+      }
+      await loadFamilyRoles(true);
+    } catch (err: any) {
+      setError(err.message || "Failed to update family role behavior");
     } finally {
       setFamilyRolesLoading(false);
     }
@@ -765,26 +796,23 @@ export default function FamilySettingsPage() {
                 {[
                   { key: "family", label: t("familyRoles.types.family"), description: t("familyRoles.descriptions.family"), roles: familyRoles?.family_roles || [], icon: Users, color: "green" },
                   { key: "not_family", label: t("familyRoles.types.notFamily"), description: t("familyRoles.descriptions.notFamily"), roles: familyRoles?.not_family_roles || [], icon: Users, color: "red" },
-                  { key: "only_family", label: t("familyRoles.types.onlyFamily"), description: t("familyRoles.descriptions.onlyFamily"), roles: familyRoles?.only_family_roles || [], icon: Users, color: "blue" },
-                  { key: "family_member", label: t("familyRoles.types.member"), description: t("familyRoles.descriptions.member"), roles: familyRoles?.family_member_roles || [], icon: Shield, color: "gray" },
                   { key: "family_elder", label: t("familyRoles.types.elder"), description: t("familyRoles.descriptions.elder"), roles: familyRoles?.family_elder_roles || [], icon: Shield, color: "yellow" },
                   { key: "family_coleader", label: t("familyRoles.types.coLeader"), description: t("familyRoles.descriptions.coLeader"), roles: familyRoles?.family_coleader_roles || [], icon: Shield, color: "orange" },
                   { key: "family_leader", label: t("familyRoles.types.leader"), description: t("familyRoles.descriptions.leader"), roles: familyRoles?.family_leader_roles || [], icon: Shield, color: "purple" },
-                  { key: "ignored", label: t("familyRoles.types.ignored"), description: t("familyRoles.descriptions.ignored"), roles: familyRoles?.ignored_roles || [], icon: Eye, color: "gray" },
                 ].map((roleType) => (
                   <FamilyRoleCard
                     key={roleType.key}
-                    roleTypeKey={roleType.key as FamilyRoleType}
                     label={roleType.label}
                     description={roleType.description}
-                    roleIds={roleType.roles}
+                    roles={roleType.roles}
                     icon={roleType.icon}
                     color={roleType.color}
                     discordRoles={discordRoles}
                     isRoleDataLoading={isLoadingFamilyRoles}
                     isLoading={familyRolesLoading}
                     onAdd={(roleId) => handleAddFamilyRole(roleType.key as FamilyRoleType, roleId)}
-                    onRemove={(roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, roleId)}
+                    onRemove={(id, roleId) => handleRemoveFamilyRole(roleType.key as FamilyRoleType, id, roleId)}
+                    onModeChange={handleFamilyRoleModeChange}
                     t={t}
                   />
                 ))}

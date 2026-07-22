@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { LogOut, ChevronDown, Home } from "lucide-react";
+import { LogOut, ChevronDown, Home, UserRoundCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTranslations } from "next-intl";
@@ -13,6 +13,7 @@ import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { logout } from "@/lib/auth/logout";
 import { SettingsDropdown } from "@/components/settings-dropdown";
+import { apiClient } from "@/lib/api/client";
 
 export function ServersHeader() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -33,6 +34,11 @@ export function ServersHeader() {
         console.error("Failed to parse user from localStorage", e);
       }
     }
+    void apiClient.auth.getCurrentUser().then((response) => {
+      if (!response.data) return;
+      setUser(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data));
+    });
   }, []);
 
   const handleLogout = () => {
@@ -103,6 +109,14 @@ export function ServersHeader() {
                     <span className="hover:!text-primary">{t("Sidebar.goHome")}</span>
                   </Link>
                 </DropdownMenuItem>
+                {user.is_admin && (
+                  <DropdownMenuItem asChild className="hover:!bg-transparent">
+                    <Link href={`/${locale}/admin/creators`} className="flex items-center space-x-2">
+                      <UserRoundCheck className="h-4 w-4" />
+                      <span className="hover:!text-primary">Creator review</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 hover:!bg-transparent">
                   <LogOut className="h-4 w-4 text-destructive" />
                   <span className="hover:!text-primary">{t("Navigation.logout")}</span>

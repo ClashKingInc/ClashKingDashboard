@@ -60,30 +60,6 @@ export class UtilityClient extends BaseApiClient {
     return this.request(`/v2/search/recent/${userId}/${type}/${tag}`, { method: 'POST' });
   }
 
-  async createSearchGroup(userId: number, name: string, type: number): Promise<ApiResponse<{ success: boolean }>> {
-    return this.request(`/v2/search/groups/create/${userId}/${name}/${type}`, { method: 'POST' });
-  }
-
-  async addToSearchGroup(groupId: string, tag: string): Promise<ApiResponse<{ success: boolean }>> {
-    return this.request(`/v2/search/groups/${groupId}/add/${tag}`, { method: 'POST' });
-  }
-
-  async removeFromSearchGroup(groupId: string, tag: string): Promise<ApiResponse<{ success: boolean }>> {
-    return this.request(`/v2/search/groups/${groupId}/remove/${tag}`, { method: 'POST' });
-  }
-
-  async getSearchGroup(groupId: string): Promise<ApiResponse<any>> {
-    return this.request(`/v2/search/groups/${groupId}`, { method: 'GET' });
-  }
-
-  async listSearchGroups(userId: number): Promise<ApiResponse<PaginatedResponse<any>>> {
-    return this.request(`/v2/search/groups/${userId}/list`, { method: 'GET' });
-  }
-
-  async deleteSearchGroup(groupId: number): Promise<ApiResponse<{ success: boolean }>> {
-    return this.request(`/v2/search/groups/${groupId}`, { method: 'DELETE' });
-  }
-
   // ============================================================================
   // UI
   // ============================================================================

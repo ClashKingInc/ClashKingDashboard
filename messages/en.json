@@ -19,6 +19,8 @@
     "noData": "No data available",
     "noChannelFound": "No channel found.",
     "searchChannels": "Search channels...",
+    "searchClans": "Search clans...",
+    "noClanFound": "No clan found.",
     "searchCategories": "Search categories...",
     "noRoleFound": "No role found.",
     "searchRoles": "Search roles...",
@@ -1293,14 +1295,18 @@
     "none": "None",
     "clanAbbreviation": "Clan Abbreviation",
     "greetingMessage": "Greeting Message",
-    "leadershipEval": "Leadership Eval",
-    "leadershipEvalDescription": "Auto-assign leadership roles",
     "warScoreCountdown": "War Score Countdown",
     "warScoreCountdownDescription": "Creates a voice channel displaying the current war score",
     "warTimerCountdown": "War Timer Countdown",
     "warTimerCountdownDescription": "Creates a voice channel displaying time remaining in war",
     "banAlertChannel": "Ban Alert Channel",
     "category": "Category",
+    "categoryOptions": {
+      "none": "No category",
+      "premade": "Common categories",
+      "usedByServer": "Used by other clans",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}"
+    },
     "autoGreetOption": "Auto Greet Option",
     "autoGreetOptions": {
       "never": "Never",
@@ -1347,8 +1353,8 @@
     "deleteConfirm": "Are you sure you want to remove {tag}? This will also delete all associated reminders and logs.",
     "toast": {
       "errorLoadingClans": "Failed to load clans",
+      "errorLoadingSettings": "Failed to load clan settings",
       "errorEmptyClanTag": "Please enter a clan tag",
-      "errorClanNotFound": "Clan not found. Please check the tag.",
       "clanAdded": "Clan added successfully",
       "errorAddingClan": "Failed to add clan",
       "clanRemoved": "Clan removed successfully",
@@ -1497,6 +1503,10 @@
       "addRoleToStart": "Click \"Add Role\" to create one",
       "discordRole": "Discord Role",
       "criteria": "Criteria",
+      "mode": "Mode",
+      "modeBoth": "Add and remove",
+      "modeAdd": "Add only",
+      "modeRemove": "Remove only",
       "actions": "Actions",
       "unknownRole": "Unknown Role",
       "remove": "Remove",
@@ -1507,6 +1517,7 @@
       "title": "Add New Role",
       "description": "Configure a new automatic role assignment rule",
       "roleType": "Role Type",
+      "mode": "Mode",
       "discordRole": "Discord Role",
       "selectRole": "Select a role",
       "townHallLevel": "Town Hall Level",
@@ -1876,25 +1887,24 @@
       "addRole": "Add a role...",
       "deletedRole": "Deleted role",
       "noRolesConfigured": "No roles configured",
+      "modes": {
+        "both": "Add and remove",
+        "add": "Add only",
+        "remove": "Remove only"
+      },
       "types": {
         "family": "Family",
         "notFamily": "Non-Family",
-        "onlyFamily": "Exclusive Family",
-        "member": "Member",
         "elder": "Elder",
         "coLeader": "Co-Leader",
-        "leader": "Leader",
-        "ignored": "Ignored"
+        "leader": "Leader"
       },
       "descriptions": {
         "family": "Has at least one account in family clans",
         "notFamily": "Has no accounts in family clans",
-        "onlyFamily": "All linked accounts are in family clans",
-        "member": "Has Member position in any family clan",
         "elder": "Has Elder position in any family clan",
         "coLeader": "Has Co-Leader position in any family clan",
-        "leader": "Has Leader position in any family clan",
-        "ignored": "Excluded from automatic role evaluation"
+        "leader": "Has Leader position in any family clan"
       }
     },
     "tenureRoles": {
@@ -1957,25 +1967,24 @@
       "addRole": "Add a role...",
       "deletedRole": "Deleted role",
       "noRolesConfigured": "No roles configured",
+      "modes": {
+        "both": "Add and remove",
+        "add": "Add only",
+        "remove": "Remove only"
+      },
       "types": {
         "family": "Family",
         "notFamily": "Non-Family",
-        "onlyFamily": "Exclusive Family",
-        "member": "Member",
         "elder": "Elder",
         "coLeader": "Co-Leader",
-        "leader": "Leader",
-        "ignored": "Ignored"
+        "leader": "Leader"
       },
       "descriptions": {
         "family": "Has at least one account in family clans",
         "notFamily": "Has no accounts in family clans",
-        "onlyFamily": "All linked accounts are in family clans",
-        "member": "Has Member position in any family clan",
         "elder": "Has Elder position in any family clan",
         "coLeader": "Has Co-Leader position in any family clan",
-        "leader": "Has Leader position in any family clan",
-        "ignored": "Excluded from automatic role evaluation"
+        "leader": "Has Leader position in any family clan"
       }
     }
   },

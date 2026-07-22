@@ -1,4 +1,4 @@
-import type { AllRolesResponse, DiscordRolesResponse } from "@/lib/api/types/roles";
+import type { DiscordRolesResponse } from "@/lib/api/types/roles";
 import type { ServerSettings } from "@/lib/api/types/server";
 
 type ApiEnvelope<T> = {
@@ -28,10 +28,10 @@ export const dashboardCacheKeys = {
   channels: (guildId: string) => `dashboard-server-channels-${guildId}`,
   discordRoles: (guildId: string) => `dashboard-discord-roles-${guildId}`,
   settings: (guildId: string) => `dashboard-server-settings-${guildId}`,
-  allRoles: (guildId: string) => `dashboard-all-roles-${guildId}`,
+  serverRoles: (guildId: string) => `dashboard-server-roles-${guildId}`,
 };
 
-export function normalizeChannelsPayload(payload: unknown): DiscordChannel[] {
+function normalizeAllChannels(payload: unknown): DiscordChannel[] {
   const unwrapped = unwrapApiData<unknown>(payload);
   const normalizeChannel = (channel: any): DiscordChannel => ({
     ...channel,
@@ -51,11 +51,24 @@ export function normalizeChannelsPayload(payload: unknown): DiscordChannel[] {
   return [];
 }
 
+export function normalizeAllChannelsPayload(payload: unknown): DiscordChannel[] {
+  return normalizeAllChannels(payload);
+}
+
+export function normalizeChannelsPayload(payload: unknown): DiscordChannel[] {
+  return normalizeAllChannels(payload).filter((channel) => {
+    const type = channel.type.toLowerCase();
+    return type === "0" || type === "5" || type === "text" || type === "news";
+  });
+}
+
 export function normalizeDiscordRolesPayload(payload: unknown): DiscordRolesResponse["roles"] {
   const unwrapped = unwrapApiData<unknown>(payload);
 
   if (unwrapped && typeof unwrapped === "object" && Array.isArray((unwrapped as any).roles)) {
-    return (unwrapped as any).roles as DiscordRolesResponse["roles"];
+    return ((unwrapped as any).roles as DiscordRolesResponse["roles"]).filter(
+      (role) => !role.managed && role.name !== "@everyone",
+    );
   }
 
   return [];
@@ -64,14 +77,4 @@ export function normalizeDiscordRolesPayload(payload: unknown): DiscordRolesResp
 export function normalizeServerSettingsPayload(payload: unknown): ServerSettings | null {
   const unwrapped = unwrapApiData<unknown>(payload);
   return unwrapped && typeof unwrapped === "object" ? (unwrapped as ServerSettings) : null;
-}
-
-export function normalizeAllRolesPayload(payload: unknown): AllRolesResponse | null {
-  const unwrapped = unwrapApiData<unknown>(payload);
-
-  if (!unwrapped || typeof unwrapped !== "object" || !("roles" in unwrapped)) {
-    return null;
-  }
-
-  return unwrapped as AllRolesResponse;
 }

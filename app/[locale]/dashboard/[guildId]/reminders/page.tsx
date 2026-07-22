@@ -6,6 +6,7 @@ import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { apiCache } from "@/lib/api-cache";
 import { apiClient } from "@/lib/api/client";
+import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import {
   Dialog,
   DialogContent,
@@ -95,17 +97,6 @@ interface Channel {
   name: string;
   type: string;
   parent_name?: string;
-}
-
-function normalizeChannelsPayload(payload: unknown): Channel[] {
-  if (Array.isArray(payload)) return payload as Channel[];
-  if (!payload || typeof payload !== "object") return [];
-
-  const obj = payload as { data?: unknown; items?: unknown };
-  if (Array.isArray(obj.data)) return obj.data as Channel[];
-  if (Array.isArray(obj.items)) return obj.items as Channel[];
-
-  return [];
 }
 
 const POINT_THRESHOLD_MIN = 0;
@@ -814,19 +805,14 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                 ) : (
                   <>
                     <Label className="whitespace-nowrap text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
-                    <Select value={selectedClan} onValueChange={setSelectedClan}>
-                      <SelectTrigger className="w-full md:w-[250px]">
-                        <SelectValue placeholder={t('clanSelector.placeholder')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">{t('clanSelector.allClans')}</SelectItem>
-                        {clans.map((clan) => (
-                          <SelectItem key={clan.tag} value={clan.tag}>
-                            {clan.name} ({clan.tag})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <ClanCombobox
+                      clans={clans}
+                      value={selectedClan}
+                      onValueChange={setSelectedClan}
+                      placeholder={t('clanSelector.placeholder')}
+                      specialOptions={[{ value: "all", label: t('clanSelector.allClans') }]}
+                      className="md:w-[250px]"
+                    />
                   </>
                 )}
               </div>
@@ -1166,21 +1152,13 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
                   <div className="space-y-2">
                     <Label htmlFor="dialog-clan">{t('card.clan')}  <span className="text-destructive">*</span></Label>
-                    <Select
-                        value={dialogReminder.clan_tag || ""}
-                        onValueChange={(value) => updateDialogField("clan_tag", value)}
-                    >
-                      <SelectTrigger id="dialog-clan">
-                        <SelectValue placeholder={t('card.clanPlaceholder')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {clans.map((clan) => (
-                            <SelectItem key={clan.tag} value={clan.tag}>
-                              {clan.name} ({clan.tag})
-                            </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <ClanCombobox
+                      id="dialog-clan"
+                      clans={clans}
+                      value={dialogReminder.clan_tag || ""}
+                      onValueChange={(value) => updateDialogField("clan_tag", value)}
+                      placeholder={t('card.clanPlaceholder')}
+                    />
                   </div>
                 </div>
 

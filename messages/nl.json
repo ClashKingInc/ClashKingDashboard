@@ -19,6 +19,8 @@
     "noData": "Geen gegevens beschikbaar",
     "noChannelFound": "Geen kanaal gevonden.",
     "searchChannels": "Zoek kanalen...",
+    "searchClans": "Zoek clans...",
+    "noClanFound": "Geen clan gevonden.",
     "searchCategories": "Zoek categorieën...",
     "noRoleFound": "Geen rol gevonden.",
     "searchRoles": "Zoek rollen...",
@@ -1296,14 +1298,18 @@
     "none": "Geen",
     "clanAbbreviation": "Clan Afkorting",
     "greetingMessage": "Welkomstbericht",
-    "leadershipEval": "Leiderschap Evaluatie",
-    "leadershipEvalDescription": "Automatisch leiderschapsrollen toewijzen",
     "warScoreCountdown": "Oorlogsscore Aftelling",
     "warScoreCountdownDescription": "Maakt een spraakkanaal met de huidige oorlogsscore",
     "warTimerCountdown": "Oorlog Timer Aftelling",
     "warTimerCountdownDescription": "Maakt een spraakkanaal met de resterende oorlogstijd",
     "banAlertChannel": "Ban Alert Kanaal",
     "category": "Categorie",
+    "categoryOptions": {
+      "none": "Geen categorie",
+      "premade": "Veelgebruikte categorieën",
+      "usedByServer": "Gebruikt door andere clans",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}"
+    },
     "autoGreetOption": "Auto Welkomst Optie",
     "autoGreetOptions": {
       "never": "Never",
@@ -1350,8 +1356,8 @@
     "deleteConfirm": "Weet je zeker dat je {tag} wilt verwijderen? Dit verwijdert ook alle bijbehorende herinneringen en logs.",
     "toast": {
       "errorLoadingClans": "Kon clans niet laden",
+      "errorLoadingSettings": "Kon claninstellingen niet laden",
       "errorEmptyClanTag": "Voer een clantag in",
-      "errorClanNotFound": "De clantag bestaat niet. Controleer de tag.",
       "clanAdded": "Clan succesvol toegevoegd",
       "errorAddingClan": "Kon clan niet toevoegen",
       "clanRemoved": "Clan succesvol verwijderd",
@@ -1500,6 +1506,10 @@
       "addRoleToStart": "Klik op \"Rol Toevoegen\" om er een te maken",
       "discordRole": "Discord Rol",
       "criteria": "Criteria",
+      "mode": "Modus",
+      "modeBoth": "Toevoegen en verwijderen",
+      "modeAdd": "Alleen toevoegen",
+      "modeRemove": "Alleen verwijderen",
       "actions": "Acties",
       "unknownRole": "Onbekende Rol",
       "remove": "Verwijderen",
@@ -1510,6 +1520,7 @@
       "title": "Nieuwe Rol Toevoegen",
       "description": "Configureer een nieuwe automatische roltoewijzingsregel",
       "roleType": "Roltype",
+      "mode": "Modus",
       "discordRole": "Discord Rol",
       "selectRole": "Selecteer een rol",
       "townHallLevel": "Stadhuis Niveau",
@@ -1879,25 +1890,24 @@
       "addRole": "Rol toevoegen...",
       "deletedRole": "Verwijderde rol",
       "noRolesConfigured": "Geen rollen geconfigureerd",
+      "modes": {
+        "both": "Toevoegen en verwijderen",
+        "add": "Alleen toevoegen",
+        "remove": "Alleen verwijderen"
+      },
       "types": {
         "family": "Familie",
         "notFamily": "Niet-Familie",
-        "onlyFamily": "Exclusief Familie",
-        "member": "Lid",
         "elder": "Oudste",
         "coLeader": "Medeleider",
-        "leader": "Leider",
-        "ignored": "Genegeerd"
+        "leader": "Leider"
       },
       "descriptions": {
         "family": "Heeft minstens één account in familie clans",
         "notFamily": "Heeft geen accounts in familie clans",
-        "onlyFamily": "Alle gekoppelde accounts zijn in familie clans",
-        "member": "Heeft Lid positie in een familie clan",
         "elder": "Heeft Oudste positie in een familie clan",
         "coLeader": "Heeft Medeleider positie in een familie clan",
-        "leader": "Heeft Leider positie in een familie clan",
-        "ignored": "Uitgesloten van automatische rol-evaluatie"
+        "leader": "Heeft Leider positie in een familie clan"
       }
     },
     "tenureRoles": {
@@ -1960,25 +1970,24 @@
       "addRole": "Rol toevoegen...",
       "deletedRole": "Verwijderde rol",
       "noRolesConfigured": "Geen rollen geconfigureerd",
+      "modes": {
+        "both": "Toevoegen en verwijderen",
+        "add": "Alleen toevoegen",
+        "remove": "Alleen verwijderen"
+      },
       "types": {
         "family": "Familie",
         "notFamily": "Niet-Familie",
-        "onlyFamily": "Exclusief Familie",
-        "member": "Lid",
         "elder": "Oudste",
         "coLeader": "Medeleider",
-        "leader": "Leider",
-        "ignored": "Genegeerd"
+        "leader": "Leider"
       },
       "descriptions": {
         "family": "Heeft minstens één account in familie clans",
         "notFamily": "Heeft geen accounts in familie clans",
-        "onlyFamily": "Alle gekoppelde accounts zijn in familie clans",
-        "member": "Heeft Lid positie in een familie clan",
         "elder": "Heeft Oudste positie in een familie clan",
         "coLeader": "Heeft Medeleider positie in een familie clan",
-        "leader": "Heeft Leider positie in een familie clan",
-        "ignored": "Uitgesloten van automatische rol-evaluatie"
+        "leader": "Heeft Leider positie in een familie clan"
       }
     }
   },

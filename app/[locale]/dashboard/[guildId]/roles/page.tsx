@@ -52,6 +52,8 @@ import { apiCache } from "@/lib/api-cache";
 import type {
   RoleType,
   DiscordRole,
+  ServerRole,
+  RoleMode,
   RoleSettings,
 } from "@/lib/api/types/roles";
 
@@ -147,22 +149,20 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
   const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>([]);
   const [roleSettings, setRoleSettings] = useState<RoleSettings>({
-    server_id: guildId,
+    server_id: Number(guildId),
     auto_eval_status: false,
     auto_eval_nickname: false,
     autoeval_triggers: [],
     autoeval_log: undefined,
     blacklisted_roles: [],
-    role_treatment: [],
   });
   const [originalRoleSettings, setOriginalRoleSettings] = useState<RoleSettings>({
-    server_id: guildId,
+    server_id: Number(guildId),
     auto_eval_status: false,
     auto_eval_nickname: false,
     autoeval_triggers: [],
     autoeval_log: undefined,
     blacklisted_roles: [],
-    role_treatment: [],
   });
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
@@ -172,10 +172,11 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     builderhall: [],
     builder_league: [],
   });
+  const [serverRoles, setServerRoles] = useState<ServerRole[]>([]);
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [currentRoleType, setCurrentRoleType] = useState<RoleType>("townhall");
-  const [newRole, setNewRole] = useState<any>({});
+  const [newRole, setNewRole] = useState<any>({ mode: 'both' });
   const [dialogError, setDialogError] = useState<string | null>(null);
   const [sortCol, setSortCol] = useState<"role" | "criteria" | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
@@ -203,7 +204,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     try {
       // Load Town Hall max level
       const thEncoded = encodeURIComponent('Town Hall');
-      const thUrl = `/api/v2/static/buildings/${thEncoded}/maxlevel`;
+      const thUrl = `/api/v2/static/buildings/${thEncoded}/max-level`;
       const thResponse = await fetch(thUrl);
       if (thResponse.ok) {
         const thData = await thResponse.json();
@@ -215,7 +216,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
 
       // Load Builder Hall max level
       const bhEncoded = encodeURIComponent('Builder Hall');
-      const bhUrl = `/api/v2/static/buildings/${bhEncoded}/maxlevel`;
+      const bhUrl = `/api/v2/static/buildings/${bhEncoded}/max-level`;
       const bhResponse = await fetch(bhUrl);
       if (bhResponse.ok) {
         const bhData = await bhResponse.json();
@@ -280,7 +281,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         rolesCacheKey,
         async () => {
           const [rolesRes, settingsRes, discordRolesRes, clansRes] = await Promise.all([
-            apiClient.roles.getAllRoles(guildId),
+            apiClient.roles.getServerRoles(guildId),
             apiClient.roles.getRoleSettings(guildId),
             apiClient.roles.getDiscordRoles(guildId),
             apiClient.servers.getServerClans(guildId),
@@ -291,42 +292,23 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       );
 
       if (rolesRes.data) {
-        // Normalize role data from API
-        // CRITICAL: Convert all Discord IDs to strings immediately to prevent precision loss
-        // Discord Snowflake IDs are 64-bit integers that get rounded when stored as JS numbers
+        const rules = rolesRes.data.roles;
+        setServerRoles(rules);
         const normalizedRoles = {
-          townhall: rolesRes.data.roles.townhall?.map((r: any) => ({
-            ...r,
-            role_id: String(r.role || r.role_id),
-            th: typeof r.th === 'string' ? Number.parseInt(r.th.replace(/^th/i, '')) : r.th,
-          })) || [],
-          league: rolesRes.data.roles.league?.map((r: any) => ({
-            ...r,
-            role_id: String(r.role || r.role_id),
-          })) || [],
-          builderhall: rolesRes.data.roles.builderhall?.map((r: any) => ({
-            ...r,
-            role_id: String(r.role || r.role_id),
-          })) || [],
-          builder_league: rolesRes.data.roles.builder_league?.map((r: any) => ({
-            ...r,
-            role_id: String(r.role || r.role_id),
-          })) || [],
-          achievement: rolesRes.data.roles.achievement?.map((r: any) => ({
-            ...r,
-            role_id: String(r.role || r.role_id),
-          })) || [],
+          townhall: rules.filter((r) => !r.clan_tag && r.type === 'townhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, th: Number(r.option), mode: r.mode })),
+          league: rules.filter((r) => !r.clan_tag && r.type === 'league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option, mode: r.mode })),
+          builderhall: rules.filter((r) => !r.clan_tag && r.type === 'builderhall').map((r) => ({ rule_id: r.id, role_id: r.role_id, bh: Number(r.option), mode: r.mode })),
+          builder_league: rules.filter((r) => !r.clan_tag && r.type === 'builder_league').map((r) => ({ rule_id: r.id, role_id: r.role_id, type: r.option, mode: r.mode })),
         };
         setAllRoles(normalizedRoles);
+        setCategoryRoles(Object.fromEntries(
+          rules.filter((r) => !r.clan_tag && r.type === 'clan_category').map((r) => [r.option, r.role_id])
+        ));
       }
 
       if (settingsRes.data) {
         setRoleSettings(settingsRes.data);
         setOriginalRoleSettings(settingsRes.data);
-        const cats = (settingsRes.data.category_roles as Record<string, any>) || {};
-        setCategoryRoles(Object.fromEntries(
-          Object.entries(cats).map(([k, v]) => [k, String(v)])
-        ));
       }
 
       if (discordRolesRes.data) {
@@ -369,7 +351,6 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         autoeval_triggers: roleSettings.autoeval_triggers,
         autoeval_log: roleSettings.autoeval_log,
         blacklisted_roles: roleSettings.blacklisted_roles,
-        role_treatment: roleSettings.role_treatment,
       });
       apiCache.invalidate(rolesCacheKey);
 
@@ -399,32 +380,19 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
         return;
       }
 
-      // Transform data to match backend format
-      let roleData: any = { ...newRole };
-
-      // For league roles: rename "league" → "type" to match API schema
-      // Backend expects: { role: int, type: "Legend League" }
-      if (currentRoleType === "league" && roleData.league) {
-        roleData.type = roleData.league;
-        delete roleData.league;
-      }
-
-      // For builder_league roles: rename "builder_league" → "type" to match API schema
-      // Backend expects: { role: int, type: "Diamond I" }
-      if (currentRoleType === "builder_league" && roleData.builder_league) {
-        roleData.type = roleData.builder_league;
-        delete roleData.builder_league;
-      }
-
-      // Backend expects "role" field for most types, but frontend uses "role_id"
-      // Keep as string to avoid JavaScript number precision loss with 64-bit Discord IDs
-      // Pydantic will handle string -> int conversion on the backend
-      if (roleData.role_id !== undefined) {
-        roleData.role = roleData.role_id; // Keep as string
-        delete roleData.role_id;
-      }
-
-      const result = await apiClient.roles.createRole(guildId, currentRoleType, roleData);
+      const option = currentRoleType === 'townhall'
+        ? String(newRole.th)
+        : currentRoleType === 'builderhall'
+          ? String(newRole.bh)
+          : currentRoleType === 'league'
+            ? newRole.league
+            : newRole.builder_league;
+      const result = await apiClient.roles.createServerRole(guildId, {
+        type: currentRoleType,
+        option,
+        role_id: String(newRole.role_id),
+        mode: newRole.mode as RoleMode,
+      });
 
       if (result.error) {
         setDialogError(result.error);
@@ -434,7 +402,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
       apiCache.invalidate(rolesCacheKey);
       await loadData();
       setIsAddDialogOpen(false);
-      setNewRole({});
+      setNewRole({ mode: 'both' });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
@@ -442,11 +410,12 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     }
   };
 
-  const handleDeleteRole = async (roleType: RoleType, roleId: string | number) => {
+  const handleDeleteRole = async (_roleType: RoleType, ruleId: string) => {
     try {
       setError(null);
 
-      await apiClient.roles.deleteRole(guildId, roleType, roleId);
+      const result = await apiClient.roles.deleteServerRole(guildId, ruleId);
+      if (result.error) throw new Error(result.error);
 
       apiCache.invalidate(rolesCacheKey);
       await loadData();
@@ -457,22 +426,36 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
     }
   };
 
+  const handleUpdateRoleMode = async (ruleId: string, mode: RoleMode) => {
+    try {
+      setError(null);
+      const result = await apiClient.roles.updateServerRole(guildId, ruleId, { mode });
+      if (result.error) throw new Error(result.error);
+      apiCache.invalidate(rolesCacheKey);
+      await loadData();
+    } catch (err: any) {
+      setError(err.message || "Failed to update role mode");
+    }
+  };
+
   const handleUpdateCategoryRole = async (category: string, roleId: string) => {
     try {
       setCategoryRoleSaving(category);
-      await apiClient.roles.updateRoleSettings(guildId, {
-        category_roles: { [category]: roleId || null },
-      });
-      apiCache.invalidate(rolesCacheKey);
-      if (roleId) {
-        setCategoryRoles((prev) => ({ ...prev, [category]: roleId }));
-      } else {
-        setCategoryRoles((prev) => {
-          const next = { ...prev };
-          delete next[category];
-          return next;
+      const current = serverRoles.find((role) => !role.clan_tag && role.type === 'clan_category' && role.option === category);
+      if (current && roleId) {
+        const response = await apiClient.roles.updateServerRole(guildId, current.id, { role_id: roleId });
+        if (response.error) throw new Error(response.error);
+      } else if (current) {
+        const response = await apiClient.roles.deleteServerRole(guildId, current.id);
+        if (response.error) throw new Error(response.error);
+      } else if (roleId) {
+        const response = await apiClient.roles.createServerRole(guildId, {
+          type: 'clan_category', option: category, role_id: roleId, mode: 'both',
         });
+        if (response.error) throw new Error(response.error);
       }
+      apiCache.invalidate(rolesCacheKey);
+      await loadData();
     } catch (err: any) {
       setError(err.message || "Failed to update category role");
     } finally {
@@ -716,6 +699,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
             >
               {t("configuredRoles.criteria")}<SortIcon col="criteria" sortCol={sortCol} sortDir={sortDir} />
             </TableHead>
+            <TableHead>{t("configuredRoles.mode")}</TableHead>
             <TableHead className="text-right">{t("configuredRoles.actions")}</TableHead>
           </TableRow>
         </TableHeader>
@@ -741,11 +725,23 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                   </div>
                 </TableCell>
                 <TableCell>{criteria}</TableCell>
+                <TableCell>
+                  <Select value={role.mode || 'both'} onValueChange={(value) => void handleUpdateRoleMode(role.rule_id, value as RoleMode)}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="both">{t("configuredRoles.modeBoth")}</SelectItem>
+                      <SelectItem value="add">{t("configuredRoles.modeAdd")}</SelectItem>
+                      <SelectItem value="remove">{t("configuredRoles.modeRemove")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDeleteRole(roleType, role.role_id || role.id)}
+                    onClick={() => handleDeleteRole(roleType, role.rule_id)}
                     className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
@@ -1138,7 +1134,7 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                         value={currentRoleType}
                         onValueChange={(value) => {
                           setCurrentRoleType(value as RoleType);
-                          setNewRole({});
+                          setNewRole({ mode: 'both' });
                           setDialogError(null);
                         }}
                       >
@@ -1151,6 +1147,20 @@ export default function RolesPage() { // NOSONAR — complexity comes from aggre
                               {type.label}
                             </SelectItem>
                           ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="role-mode">{t("addRoleDialog.mode")}</Label>
+                      <Select value={newRole.mode || 'both'} onValueChange={(value) => setNewRole({ ...newRole, mode: value as RoleMode })}>
+                        <SelectTrigger id="role-mode">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="both">{t("configuredRoles.modeBoth")}</SelectItem>
+                          <SelectItem value="add">{t("configuredRoles.modeAdd")}</SelectItem>
+                          <SelectItem value="remove">{t("configuredRoles.modeRemove")}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

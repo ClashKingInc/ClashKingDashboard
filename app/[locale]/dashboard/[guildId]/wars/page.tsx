@@ -42,6 +42,7 @@ import {
 import { darkTheme, clashKingColors } from "@/lib/theme";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { apiCache } from "@/lib/api-cache";
 import type { War, WarSummary } from "@/lib/api/types/war";
 
@@ -727,19 +728,14 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
                     <Label htmlFor="clan-filter">{t('filters.clan')}</Label>
-                    <Select value={filters.clan} onValueChange={(value) => handleFilterChange("clan", value)}>
-                      <SelectTrigger id="clan-filter">
-                        <SelectValue placeholder={t('filters.clan')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">{t('filters.allClans')}</SelectItem>
-                        {clans.map((clan) => (
-                          <SelectItem key={clan.tag} value={clan.tag}>
-                            {clan.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <ClanCombobox
+                      id="clan-filter"
+                      clans={clans}
+                      value={filters.clan}
+                      onValueChange={(value) => handleFilterChange("clan", value)}
+                      placeholder={t('filters.clan')}
+                      specialOptions={[{ value: "all", label: t('filters.allClans') }]}
+                    />
                   </div>
 
                   <div className="space-y-2">

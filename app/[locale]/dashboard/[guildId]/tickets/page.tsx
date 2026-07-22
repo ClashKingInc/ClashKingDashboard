@@ -69,9 +69,10 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { DiscordEmbedPreview, extractEmbeds, extractMessageContent, type DiscordEmbed } from "@/components/dashboard/discord-embed-preview";
-import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
+import { normalizeAllChannelsPayload } from "@/lib/dashboard-cache";
 import { cn } from "@/lib/utils";
 import type {
   ApproveMessage,
@@ -137,7 +138,7 @@ const isTextLikeChannel = (channel: DiscordChannel): boolean => {
 };
 
 const normalizeTicketChannels = (payload: unknown): DiscordChannel[] => {
-  const normalized = normalizeChannelsPayload(payload) as DiscordChannel[];
+  const normalized = normalizeAllChannelsPayload(payload) as DiscordChannel[];
   if (normalized.length > 0) {
     return normalized;
   }
@@ -461,17 +462,14 @@ function TicketManageDialog({
                   <Label className="text-sm font-medium">{t("manage.clanLabel")}</Label>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <Select value={setClan} onValueChange={setSetClan}>
-                    <SelectTrigger className="flex-1">
-                      <SelectValue placeholder={t("manage.selectClan")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="disabled">{t("manage.noClan")}</SelectItem>
-                      {clans.map((clan) => (
-                        <SelectItem key={clan.tag} value={clan.tag}>{clan.name} ({clan.tag})</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ClanCombobox
+                    clans={clans}
+                    value={setClan}
+                    onValueChange={setSetClan}
+                    placeholder={t("manage.selectClan")}
+                    specialOptions={[{ value: "disabled", label: t("manage.noClan") }]}
+                    className="flex-1"
+                  />
                   <Button variant="outline" onClick={handleClanSave} disabled={isSavingClan}>
                     {isSavingClan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {t("manage.saveClan")}

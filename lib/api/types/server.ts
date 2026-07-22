@@ -10,7 +10,6 @@ export interface ServerSettings {
   change_nickname?: boolean;
   flair_non_family?: boolean;
   auto_eval_nickname?: boolean;
-  leadership_eval?: boolean;
   api_token?: boolean;
   banlist?: string | number;
   strike_log?: string | number;
@@ -19,7 +18,7 @@ export interface ServerSettings {
   family_label?: string;
   greeting?: string;
   clans?: any[];
-  eval?: any;
+  server_roles?: import('./roles').ServerRole[];
 }
 
 export interface ServerSettingsUpdate {
@@ -29,7 +28,6 @@ export interface ServerSettingsUpdate {
   change_nickname?: boolean;
   flair_non_family?: boolean;
   auto_eval_nickname?: boolean;
-  leadership_eval?: boolean;
   api_token?: boolean;
   banlist?: string | number;
   strike_log?: string | number;
@@ -273,39 +271,4 @@ export interface GiveawayRerollResponse {
   giveaway_id: string;
   server_id: number;
   new_winners: string[];
-}
-
-/**
- * Bot information and status from /v2/internal/bot/info
- */
-export interface BotInfo {
-  bot: {
-    total_servers: number;
-    total_members: number;
-    total_clans: number;
-    total_shards: number;
-    clusters: Array<{
-      cluster_id: number;
-      server_count: number;
-      member_count: number;
-      clan_count: number;
-      shards: number[];
-    }>;
-  };
-  system: {
-    python_version: string;
-    platform: string;
-    cpu_percent: number;
-    memory_used_mb: number;
-    memory_total_gb: number;
-    memory_percent: number;
-    disk_usage_percent: number;
-  };
-  database: {
-    clans_tracked: number;
-    players_tracked: number;
-    wars_stored: number;
-    tickets_open: number;
-    capital_raids: number;
-  };
 }

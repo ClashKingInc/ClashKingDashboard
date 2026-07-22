@@ -1,5 +1,6 @@
 // Roster API - Centralized API functions for the rosters module
 
+import { normalizeChannelsPayload } from '@/lib/dashboard-cache';
 import type {
   Roster,
   RosterMember,
@@ -428,5 +429,5 @@ export async function fetchChannels(serverId: string): Promise<DiscordChannel[]>
   const response = await fetch(`/api/v2/server/${serverId}/channels`, {
     headers: getAuthHeaders(),
   });
-  return handleResponse<DiscordChannel[]>(response);
+  return normalizeChannelsPayload(await handleResponse<unknown>(response)) as DiscordChannel[];
 }

@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import {
   Loader2, ArrowLeft, Settings as SettingsIcon, Users, Zap,
   RefreshCw, UserPlus, Clock, Calendar, Plus, Trash2, Bell, Lock, Unlock,
@@ -1246,21 +1247,13 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                   {editData.roster_type === "clan" && (
                     <div className="space-y-1.5">
                       <Label className="text-sm font-medium">{t("settings.clan")}</Label>
-                      <Select
+                      <ClanCombobox
+                        clans={clans}
                         value={editData.clan_tag}
                         onValueChange={(value) => setEditData({ ...editData, clan_tag: value })}
-                      >
-                        <SelectTrigger className="bg-muted/30">
-                          <SelectValue placeholder={t("settings.selectClan")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {clans.map((clan) => (
-                            <SelectItem key={clan.tag} value={clan.tag}>
-                              {clan.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        placeholder={t("settings.selectClan")}
+                        className="bg-muted/30"
+                      />
                     </div>
                   )}
                 </div>

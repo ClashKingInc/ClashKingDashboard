@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import {
   FileText,
   Users,
@@ -52,43 +53,23 @@ interface Thread {
   parent_channel_name?: string;
 }
 
-interface ClanLogTypeConfig {
-  webhook: number | null;
-  channel: string | null;  // Channel ID as string to match channel list
-  thread: number | null;
-}
-
-interface ClanLogsConfig {
+interface ClanSummary {
   tag: string;
   name: string;
-  // Clan logs
-  join_log: ClanLogTypeConfig | null;
-  leave_log: ClanLogTypeConfig | null;
-  donation_log: ClanLogTypeConfig | null;
-  clan_achievement_log: ClanLogTypeConfig | null;
-  clan_requirements_log: ClanLogTypeConfig | null;
-  clan_description_log: ClanLogTypeConfig | null;
-  // War logs
-  war_log: ClanLogTypeConfig | null;
-  war_panel: ClanLogTypeConfig | null;
-  cwl_lineup_change_log: ClanLogTypeConfig | null;
-  // Capital logs
-  capital_donations: ClanLogTypeConfig | null;
-  capital_attacks: ClanLogTypeConfig | null;
-  raid_panel: ClanLogTypeConfig | null;
-  capital_weekly_summary: ClanLogTypeConfig | null;
-  // Player logs
-  role_change: ClanLogTypeConfig | null;
-  troop_upgrade: ClanLogTypeConfig | null;
-  super_troop_boost_log: ClanLogTypeConfig | null;
-  th_upgrade: ClanLogTypeConfig | null;
-  league_change: ClanLogTypeConfig | null;
-  spell_upgrade: ClanLogTypeConfig | null;
-  hero_upgrade: ClanLogTypeConfig | null;
-  hero_equipment_upgrade: ClanLogTypeConfig | null;
-  name_change: ClanLogTypeConfig | null;
-  legend_log_attacks: ClanLogTypeConfig | null;
-  legend_log_defenses: ClanLogTypeConfig | null;
+}
+
+interface ServerLog {
+  clan_tag?: string;
+  type: string;
+  webhook_id: string;
+  channel_id?: string;
+  thread_id?: string;
+  disabled: boolean;
+}
+
+interface ServerLogsResponse {
+  logs: ServerLog[];
+  count: number;
 }
 
 interface LogTypeDefinition {
@@ -143,7 +124,7 @@ export default function LogsPage() {
   const PLAYER_LOGS: LogTypeDefinition[] = [
     { keys: ['role_change'], label: t('playerLogs.roleChange.label'), description: t('playerLogs.roleChange.description'), icon: UserCog, color: 'blue', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
     { keys: ['troop_upgrade'], label: t('playerLogs.troopUpgrade.label'), description: t('playerLogs.troopUpgrade.description'), icon: TrendingUp, color: 'green', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
-    { keys: ['super_troop_boost_log'], label: t('playerLogs.superTroopBoostLog.label'), description: t('playerLogs.superTroopBoostLog.description'), icon: Zap, color: 'yellow', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
+    { keys: ['super_troop_boost'], label: t('playerLogs.superTroopBoostLog.label'), description: t('playerLogs.superTroopBoostLog.description'), icon: Zap, color: 'yellow', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
     { keys: ['th_upgrade'], label: t('playerLogs.thUpgrade.label'), description: t('playerLogs.thUpgrade.description'), icon: Castle, color: 'orange', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
     { keys: ['league_change'], label: t('playerLogs.leagueChange.label'), description: t('playerLogs.leagueChange.description'), icon: Target, color: 'purple', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
     { keys: ['spell_upgrade'], label: t('playerLogs.spellUpgrade.label'), description: t('playerLogs.spellUpgrade.description'), icon: Star, color: 'blue', exampleLink: 'https://discord.com/channels/923764211845312533/1128185014773874770' },
@@ -158,7 +139,8 @@ export default function LogsPage() {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [threadsLoaded, setThreadsLoaded] = useState(false);
-  const [clanLogs, setClanLogs] = useState<ClanLogsConfig[]>([]);
+  const [clans, setClans] = useState<ClanSummary[]>([]);
+  const [serverLogs, setServerLogs] = useState<ServerLog[]>([]);
   const [selectedClan, setSelectedClan] = useState<string>("");
   const [mounted, setMounted] = useState(false);
 
@@ -175,7 +157,7 @@ export default function LogsPage() {
         const token = localStorage.getItem('access_token');
 
         // Use cache to prevent duplicate requests
-        const [channelsData, clanLogsData] = await Promise.all([
+        const [channelsData, clansData, logsData] = await Promise.all([
           apiCache.get(dashboardCacheKeys.channels(guildId), async () => {
             const res = await fetch(`/api/v2/server/${guildId}/channels`, {
               headers: { 'Authorization': `Bearer ${token}` }
@@ -183,20 +165,28 @@ export default function LogsPage() {
             if (!res.ok) throw new Error('Failed to fetch channels');
             return res.json();
           }),
-          apiCache.get(`clan-logs-${guildId}`, async () => {
-            const res = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
+          apiCache.get(`server-clans-${guildId}`, async () => {
+            const res = await fetch(`/api/v2/server/${guildId}/clans`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (!res.ok) throw new Error('Failed to fetch clan logs');
+            if (!res.ok) throw new Error('Failed to fetch clans');
+            return res.json();
+          }),
+          apiCache.get(`server-logs-${guildId}`, async () => {
+            const res = await fetch(`/api/v2/server/${guildId}/logs`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to fetch logs');
             return res.json();
           })
         ]);
 
         setChannels(normalizeChannelsPayload(channelsData));
-        setClanLogs(clanLogsData);
+        setClans(clansData);
+        setServerLogs((logsData as ServerLogsResponse).logs ?? []);
 
-        if (clanLogsData.length > 0) {
-          setSelectedClan((current) => current || clanLogsData[0].tag);
+        if (clansData.length > 0) {
+          setSelectedClan((current) => current || clansData[0].tag);
         }
       } catch (error) {
         console.error("Failed to fetch logs data:", error);
@@ -232,49 +222,20 @@ export default function LogsPage() {
 
   const handleChannelChange = async (logKeys: string[], channelId: string) => {
     if (!selectedClan) return;
+    if (getSelectedLog(logKeys)?.disabled) return;
 
     try {
       setSaving(logKeys[0]);
       const token = localStorage.getItem('access_token');
 
-      // Use DELETE endpoint if "disabled" was selected
-      if (channelId === "disabled") {
-        const response = await fetch(
-          `/api/v2/server/${guildId}/clan/${encodeURIComponent(selectedClan)}/logs?log_types=${logKeys.join(',')}`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to delete clan log configuration');
-        }
-
-        // Refresh clan logs
-        const clanLogsRes = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (clanLogsRes.ok) {
-          const data = await clanLogsRes.json();
-          setClanLogs(data);
-        }
-
-        setSaving(null);
-        return;
-      }
-
-      // Use PUT endpoint to update channel
       const requestBody = {
+        clan_tag: selectedClan,
         channel_id: channelId,
         thread_id: null,
         log_types: logKeys
       };
 
-      const response = await fetch(`/api/v2/server/${guildId}/clan/${encodeURIComponent(selectedClan)}/logs`, {
+      const response = await fetch(`/api/v2/server/${guildId}/logs`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -287,16 +248,15 @@ export default function LogsPage() {
         throw new Error('Failed to update clan logs');
       }
 
-      // Invalidate cache and refresh clan logs
-      apiCache.invalidate(`clan-logs-${guildId}`);
+      apiCache.invalidate(`server-logs-${guildId}`);
 
-      const clanLogsRes = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
+      const logsRes = await fetch(`/api/v2/server/${guildId}/logs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      if (clanLogsRes.ok) {
-        const data = await clanLogsRes.json();
-        setClanLogs(data);
+      if (logsRes.ok) {
+        const data = await logsRes.json() as ServerLogsResponse;
+        setServerLogs(data.logs ?? []);
       }
     } catch (error) {
       console.error("Failed to update clan logs:", error);
@@ -305,8 +265,47 @@ export default function LogsPage() {
     }
   };
 
+  const handleDisabledChange = async (logKeys: string[], disabled: boolean) => {
+    if (!selectedClan) return;
+
+    try {
+      setSaving(logKeys[0]);
+      const token = localStorage.getItem('access_token');
+      const response = await fetch(`/api/v2/server/${guildId}/logs`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          clan_tag: selectedClan,
+          log_types: logKeys,
+          disabled
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to change clan log state');
+      }
+
+      apiCache.invalidate(`server-logs-${guildId}`);
+      const logsRes = await fetch(`/api/v2/server/${guildId}/logs`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (logsRes.ok) {
+        const data = await logsRes.json() as ServerLogsResponse;
+        setServerLogs(data.logs ?? []);
+      }
+    } catch (error) {
+      console.error("Failed to change clan log state:", error);
+    } finally {
+      setSaving(null);
+    }
+  };
+
   const handleThreadChange = async (logKeys: string[], threadId: string) => {
     if (!selectedClan) return;
+    if (getSelectedLog(logKeys)?.disabled) return;
 
     try {
       setSaving(logKeys[0]);
@@ -317,12 +316,13 @@ export default function LogsPage() {
       if (!currentChannel) return;
 
       const requestBody = {
+        clan_tag: selectedClan,
         channel_id: currentChannel,
         thread_id: threadId === "none" ? null : threadId,
         log_types: logKeys
       };
 
-      const response = await fetch(`/api/v2/server/${guildId}/clan/${encodeURIComponent(selectedClan)}/logs`, {
+      const response = await fetch(`/api/v2/server/${guildId}/logs`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -335,16 +335,15 @@ export default function LogsPage() {
         throw new Error('Failed to update clan logs');
       }
 
-      // Invalidate cache and refresh clan logs
-      apiCache.invalidate(`clan-logs-${guildId}`);
+      apiCache.invalidate(`server-logs-${guildId}`);
 
-      const clanLogsRes = await fetch(`/api/v2/server/${guildId}/clan-logs`, {
+      const logsRes = await fetch(`/api/v2/server/${guildId}/logs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      if (clanLogsRes.ok) {
-        const data = await clanLogsRes.json();
-        setClanLogs(data);
+      if (logsRes.ok) {
+        const data = await logsRes.json() as ServerLogsResponse;
+        setServerLogs(data.logs ?? []);
       }
     } catch (error) {
       console.error("Failed to update clan logs:", error);
@@ -354,85 +353,43 @@ export default function LogsPage() {
   };
 
   const getCurrentClan = () => {
-    return clanLogs.find(c => c.tag === selectedClan);
+    return clans.find(c => c.tag === selectedClan);
+  };
+
+  const getSelectedLog = (logKeys: string[]) => {
+    return serverLogs.find(log => log.clan_tag === selectedClan && logKeys.includes(log.type));
   };
 
   const getSelectedChannelForLogs = (logKeys: string[]) => {
-    const currentClan = getCurrentClan();
-    if (!currentClan) return "";
-
-    const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-    if (!firstLogConfig?.channel) return "";
-
-    return firstLogConfig.channel;
+    return getSelectedLog(logKeys)?.channel_id ?? "";
   };
 
   const getSelectedThreadForLogs = (logKeys: string[]) => {
-    const currentClan = getCurrentClan();
-    if (!currentClan) return "";
+    return getSelectedLog(logKeys)?.thread_id ?? "";
+  };
 
-    const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-    if (!firstLogConfig?.thread) return "";
-
-    return firstLogConfig.thread.toString();
+  const isLogConfigured = (logKeys: string[]) => {
+    return Boolean(getSelectedLog(logKeys)?.webhook_id);
   };
 
   const isLogEnabled = (logKeys: string[]) => {
-    const currentClan = getCurrentClan();
-    if (!currentClan) return false;
-
-    const firstLogConfig = currentClan[logKeys[0] as keyof ClanLogsConfig] as ClanLogTypeConfig | null;
-    return firstLogConfig?.webhook;
+    const log = getSelectedLog(logKeys);
+    return Boolean(log?.webhook_id) && !log?.disabled;
   };
 
   const countActiveLogs = () => {
-    const currentClan = getCurrentClan();
-    if (!currentClan) return 0;
-
-    const allLogKeys = [
-      ...CLAN_LOGS.flatMap(l => l.keys),
-      ...WAR_LOGS.flatMap(l => l.keys),
-      ...CAPITAL_LOGS.flatMap(l => l.keys),
-      ...PLAYER_LOGS.flatMap(l => l.keys),
-    ];
-
-    return allLogKeys.filter(key => {
-      const config = currentClan[key as keyof ClanLogsConfig];
-      return config && typeof config === 'object' && config.webhook;
-    }).length;
+    return serverLogs.filter(log => log.clan_tag === selectedClan && log.webhook_id && !log.disabled).length;
   };
 
   const countLogsWithIssues = () => {
-    const currentClan = getCurrentClan();
-    if (!currentClan) return 0;
-
-    const allLogKeys = [
-      ...CLAN_LOGS.flatMap(l => l.keys),
-      ...WAR_LOGS.flatMap(l => l.keys),
-      ...CAPITAL_LOGS.flatMap(l => l.keys),
-      ...PLAYER_LOGS.flatMap(l => l.keys),
-    ];
-
-    return allLogKeys.filter(key => {
-      const config = currentClan[key as keyof ClanLogsConfig];
-      // Log is enabled (has webhook) but channel doesn't exist
-      if (!config || typeof config !== 'object' || !config.webhook) return false;
-      const channelId = config.channel;
-      const channelExists = channelId && channels.some(ch => ch.id === channelId);
-      return !channelExists;
+    return serverLogs.filter(log => {
+      if (log.clan_tag !== selectedClan || !log.webhook_id || log.disabled) return false;
+      return !log.channel_id || !channels.some(channel => channel.id === log.channel_id);
     }).length;
   };
 
   const countActiveLogsByDefinitions = (logDefinitions: LogTypeDefinition[]) => {
-    const currentClan = getCurrentClan();
-    if (!currentClan) return 0;
-
-    return logDefinitions.filter((definition) => {
-      return definition.keys.some((key) => {
-        const config = currentClan[key as keyof ClanLogsConfig];
-        return Boolean(config && typeof config === 'object' && config.webhook);
-      });
-    }).length;
+    return logDefinitions.filter(definition => isLogEnabled(definition.keys)).length;
   };
 
 
@@ -441,6 +398,7 @@ export default function LogsPage() {
     const Icon = logDef.icon;
     const currentClan = getCurrentClan();
     const isStatusLoading = statusLoading || !currentClan;
+    const isConfigured = isLogConfigured(logDef.keys);
     const isEnabled = isLogEnabled(logDef.keys);
     const selectedChannel = getSelectedChannelForLogs(logDef.keys);
     const selectedThread = getSelectedThreadForLogs(logDef.keys);
@@ -503,17 +461,19 @@ export default function LogsPage() {
                   <Switch
                     checked={Boolean(isEnabled) || showEnableForm}
                     onCheckedChange={(checked) => {
-                      if (checked) {
+                      if (checked && isConfigured) {
+                        handleDisabledChange(logDef.keys, false);
+                      } else if (checked) {
                         setShowEnableForm(true);
-                      } else if (showEnableForm && !isEnabled) {
+                      } else if (showEnableForm && !isConfigured) {
                         setShowEnableForm(false);
-                      } else {
-                        handleChannelChange(logDef.keys, 'disabled');
+                      } else if (isConfigured) {
+                        handleDisabledChange(logDef.keys, true);
                       }
                     }}
                     disabled={isSaving}
                     className={
-                      showEnableForm && !isEnabled
+                      showEnableForm && !isConfigured
                         ? 'data-[state=checked]:bg-blue-500'
                         : isEnabled && !channelExists // NOSONAR — JSX nested ternary for multi-branch display state
                         ? 'data-[state=checked]:bg-orange-500'
@@ -525,11 +485,11 @@ export default function LogsPage() {
                   ) : (
                     <span className={`text-xs font-medium ${
                       !isEnabled && !showEnableForm ? 'text-muted-foreground' : // NOSONAR — multi-branch state indicator, negations are intentional
-                      showEnableForm && !isEnabled ? 'text-blue-600' : // NOSONAR — JSX nested ternary for multi-branch display state
+                      showEnableForm && !isConfigured ? 'text-blue-600' : // NOSONAR — JSX nested ternary for multi-branch display state
                       channelExists ? 'text-green-600' : 'text-orange-600' // NOSONAR — JSX nested ternary for multi-branch display state
                     }`}>
                       {!isEnabled && !showEnableForm ? t('logCard.off') :
-                       showEnableForm && !isEnabled ? t('logCard.configuring') : // NOSONAR — JSX nested ternary for multi-branch display state
+                       showEnableForm && !isConfigured ? t('logCard.configuring') : // NOSONAR — JSX nested ternary for multi-branch display state
                        t('logCard.on')}
                     </span>
                   )}
@@ -545,12 +505,12 @@ export default function LogsPage() {
               <Skeleton className="h-10 w-full animate-pulse" />
               <Skeleton className="h-4 w-28 animate-pulse" />
             </div>
-          ) : !isEnabled && !showEnableForm && !isSaving ? ( // NOSONAR — JSX nested ternary for multi-branch display state
+          ) : !isConfigured && !showEnableForm && !isSaving ? ( // NOSONAR — JSX nested ternary for multi-branch display state
             /* DISABLED STATE: Empty state */
             <div className="text-center py-6 text-muted-foreground text-sm">
               {t('logCard.enableToConfig')}
             </div>
-          ) : (!isEnabled && showEnableForm) || (isSaving && !isEnabled) ? ( // NOSONAR — JSX nested ternary for multi-branch display state
+          ) : (!isConfigured && showEnableForm) || (isSaving && !isConfigured) ? ( // NOSONAR — JSX nested ternary for multi-branch display state
             /* CONFIGURING STATE: Show channel selector */
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">{t('logCard.channel')}</Label>
@@ -583,7 +543,7 @@ export default function LogsPage() {
                     if (value !== "disabled") loadThreadsIfNeeded();
                   }}
                   placeholder={t('logCard.channelPlaceholder')}
-                  disabled={isSaving}
+                  disabled={isSaving || !isEnabled}
                   className={!channelExists && isEnabled ? 'border-orange-500/50' : ''}
                   showDisabled={false}
                 />
@@ -601,7 +561,7 @@ export default function LogsPage() {
                   <Select
                     value={selectedThread || "none"}
                     onValueChange={(value) => handleThreadChange(logDef.keys, value)}
-                    disabled={isSaving}
+                    disabled={isSaving || !isEnabled}
                   >
                     <SelectTrigger className="bg-secondary border-border">
                       <SelectValue placeholder={t('logCard.threadPlaceholder')} />
@@ -732,7 +692,7 @@ export default function LogsPage() {
                 {loading ? (
                   <Skeleton className="h-9 w-12 animate-pulse" />
                 ) : (
-                  <div className="h-9 flex items-center text-3xl font-bold text-yellow-500">{clanLogs.length}</div>
+                  <div className="h-9 flex items-center text-3xl font-bold text-yellow-500">{clans.length}</div>
                 )}
                 <Users className="h-8 w-8 text-yellow-500/50" />
               </div>
@@ -763,7 +723,7 @@ export default function LogsPage() {
         </div>
 
         {/* Clan Selector */}
-        {(loading || clanLogs.length > 0) && (
+        {(loading || clans.length > 0) && (
           <div className="flex flex-col md:flex-row md:items-center gap-2 min-h-[58px]">
             <Label className="text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
             {loading ? (
@@ -771,18 +731,13 @@ export default function LogsPage() {
                 <Skeleton className="h-10 w-full rounded-md border border-border animate-pulse" />
               </div>
             ) : (
-              <Select value={selectedClan} onValueChange={setSelectedClan}>
-                <SelectTrigger className="w-full md:w-[300px] h-10">
-                  <SelectValue placeholder={t('clanSelector.placeholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  {clanLogs.map((clan) => (
-                    <SelectItem key={clan.tag} value={clan.tag}>
-                      {clan.name} ({clan.tag})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <ClanCombobox
+                clans={clans}
+                value={selectedClan}
+                onValueChange={setSelectedClan}
+                placeholder={t('clanSelector.placeholder')}
+                className="md:w-[300px]"
+              />
             )}
           </div>
         )}

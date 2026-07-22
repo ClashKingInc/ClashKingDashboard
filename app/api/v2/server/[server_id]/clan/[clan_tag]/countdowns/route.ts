@@ -9,8 +9,9 @@ export async function GET(
   try {
     const { server_id, clan_tag } = await params;
     const token = request.headers.get('authorization');
+    const encodedClanTag = encodeURIComponent(clan_tag);
 
-    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clan/${clan_tag}/countdowns`, {
+    const response = await fetch(`${API_BASE_URL}/v2/server/${server_id}/clan/${encodedClanTag}/countdowns`, {
       method: 'GET',
       headers: {
         'Authorization': token || '',

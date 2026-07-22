@@ -19,6 +19,8 @@
     "noData": "Aucune donnée disponible",
     "noChannelFound": "Aucun canal trouvé.",
     "searchChannels": "Rechercher des canaux...",
+    "searchClans": "Rechercher des clans...",
+    "noClanFound": "Aucun clan trouvé.",
     "searchCategories": "Rechercher des catégories...",
     "noRoleFound": "Aucun rôle trouvé.",
     "searchRoles": "Rechercher des rôles...",
@@ -1316,14 +1318,18 @@
     "none": "Aucun",
     "clanAbbreviation": "Abréviation du Clan",
     "greetingMessage": "Message d'Accueil",
-    "leadershipEval": "Éval de Leadership",
-    "leadershipEvalDescription": "Attribution auto des rôles de leadership",
     "warScoreCountdown": "Score de Guerre",
     "warScoreCountdownDescription": "Crée un salon vocal affichant le score de guerre actuel",
     "warTimerCountdown": "Timer de Guerre",
     "warTimerCountdownDescription": "Crée un salon vocal affichant le temps restant de guerre",
     "banAlertChannel": "Canal d'Alerte de Bannissement",
     "category": "Catégorie",
+    "categoryOptions": {
+      "none": "Aucune catégorie",
+      "premade": "Catégories courantes",
+      "usedByServer": "Utilisées par d'autres clans",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}"
+    },
     "autoGreetOption": "Option d'Accueil Auto",
     "autoGreetOptions": {
       "never": "Never",
@@ -1370,8 +1376,8 @@
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {tag} ? Cela supprimera également tous les rappels et journaux associés.",
     "toast": {
       "errorLoadingClans": "Échec du chargement des clans",
+      "errorLoadingSettings": "Échec du chargement des paramètres du clan",
       "errorEmptyClanTag": "Veuillez entrer un tag de clan",
-      "errorClanNotFound": "Clan non trouvé. Veuillez vérifier le tag.",
       "clanAdded": "Clan ajouté avec succès",
       "errorAddingClan": "Échec de l'ajout du clan",
       "clanRemoved": "Clan retiré avec succès",
@@ -1520,6 +1526,10 @@
       "addRoleToStart": "Cliquez sur \"Ajouter un Rôle\" pour en créer un",
       "discordRole": "Rôle Discord",
       "criteria": "Critères",
+      "mode": "Mode",
+      "modeBoth": "Ajouter et retirer",
+      "modeAdd": "Ajouter seulement",
+      "modeRemove": "Retirer seulement",
       "actions": "Actions",
       "unknownRole": "Rôle Inconnu",
       "remove": "Retirer",
@@ -1530,6 +1540,7 @@
       "title": "Ajouter un Nouveau Rôle",
       "description": "Configurer une nouvelle règle d'attribution automatique de rôle",
       "roleType": "Type de Rôle",
+      "mode": "Mode",
       "discordRole": "Rôle Discord",
       "selectRole": "Sélectionner un rôle",
       "townHallLevel": "Niveau d'Hôtel de Ville",
@@ -1899,25 +1910,24 @@
       "addRole": "Ajouter un rôle...",
       "deletedRole": "Rôle supprimé",
       "noRolesConfigured": "Aucun rôle configuré",
+      "modes": {
+        "both": "Ajouter et retirer",
+        "add": "Ajouter uniquement",
+        "remove": "Retirer uniquement"
+      },
       "types": {
         "family": "Famille",
         "notFamily": "Non-Famille",
-        "onlyFamily": "Exclusif Famille",
-        "member": "Membre",
         "elder": "Ainé",
         "coLeader": "Chef Adjoint",
-        "leader": "Chef",
-        "ignored": "Ignoré"
+        "leader": "Chef"
       },
       "descriptions": {
         "family": "A au moins un compte dans les clans famille",
         "notFamily": "N'a aucun compte dans les clans famille",
-        "onlyFamily": "Tous les comptes liés sont dans les clans famille",
-        "member": "A le rang Membre dans un clan famille",
         "elder": "A le rang Ainé dans un clan famille",
         "coLeader": "A le rang Chef Adjoint dans un clan famille",
-        "leader": "A le rang Chef dans un clan famille",
-        "ignored": "Exclu de l'évaluation automatique des rôles"
+        "leader": "A le rang Chef dans un clan famille"
       }
     },
     "tenureRoles": {
@@ -1980,25 +1990,24 @@
       "addRole": "Ajouter un rôle...",
       "deletedRole": "Rôle supprimé",
       "noRolesConfigured": "Aucun rôle configuré",
+      "modes": {
+        "both": "Ajouter et retirer",
+        "add": "Ajouter uniquement",
+        "remove": "Retirer uniquement"
+      },
       "types": {
         "family": "Famille",
         "notFamily": "Non-Famille",
-        "onlyFamily": "Exclusif Famille",
-        "member": "Membre",
         "elder": "Ainé",
         "coLeader": "Chef Adjoint",
-        "leader": "Chef",
-        "ignored": "Ignoré"
+        "leader": "Chef"
       },
       "descriptions": {
         "family": "A au moins un compte dans les clans famille",
         "notFamily": "N'a aucun compte dans les clans famille",
-        "onlyFamily": "Tous les comptes liés sont dans les clans famille",
-        "member": "A le rang Membre dans un clan famille",
         "elder": "A le rang Ainé dans un clan famille",
         "coLeader": "A le rang Chef Adjoint dans un clan famille",
-        "leader": "A le rang Chef dans un clan famille",
-        "ignored": "Exclu de l'évaluation automatique des rôles"
+        "leader": "A le rang Chef dans un clan famille"
       }
     }
   },

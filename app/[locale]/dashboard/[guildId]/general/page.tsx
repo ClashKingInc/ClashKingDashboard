@@ -19,7 +19,6 @@ import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 import {
   dashboardCacheKeys,
-  normalizeAllRolesPayload,
   normalizeDiscordRolesPayload,
   normalizeServerSettingsPayload,
 } from "@/lib/dashboard-cache";
@@ -66,13 +65,13 @@ export default function GeneralSettingsPage() {
   const { toast } = useToast();
 
   // Discord Tenure Roles state
-  const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; months: number; role_id?: string }>>([]);
+  const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; rule_id: string; months: number }>>([]);
   const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
   const [isTenureDialogOpen, setIsTenureDialogOpen] = useState(false);
   const [newTenureRole, setNewTenureRole] = useState<{ months?: number; id?: string }>({});
   const settingsCacheKey = dashboardCacheKeys.settings(guildId);
   const discordRolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
-  const allRolesCacheKey = dashboardCacheKeys.allRoles(guildId);
+  const allRolesCacheKey = dashboardCacheKeys.serverRoles(guildId);
 
   const loadSettings = async () => {
     try {
@@ -139,19 +138,17 @@ export default function GeneralSettingsPage() {
       if (!token) return;
 
       const allRolesPayload = await apiCache.get(allRolesCacheKey, async () => {
-        const response = await apiClient.roles.getAllRoles(guildId);
+        const response = await apiClient.roles.getServerRoles(guildId, { type: 'status' });
         if (response.error) {
           throw new Error(response.error);
         }
         return response.data;
       });
-      const allRolesData = normalizeAllRolesPayload(allRolesPayload);
-
-      if (allRolesData?.roles?.status) {
-        const normalizedRoles = allRolesData.roles.status.map((r: any) => ({
-          id: String(r.role || r.id),
-          months: r.months,
-          role_id: String(r.role || r.id),
+      if (allRolesPayload?.roles) {
+        const normalizedRoles = allRolesPayload.roles.map((role) => ({
+          id: role.role_id,
+          rule_id: role.id,
+          months: Number(role.option),
         }));
         setTenureRoles(normalizedRoles);
       }
@@ -182,10 +179,13 @@ export default function GeneralSettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      await apiClient.roles.createRole(guildId, "status", {
-        months: newTenureRole.months,
-        id: newTenureRole.id,
+      const response = await apiClient.roles.createServerRole(guildId, {
+        type: 'status',
+        option: String(newTenureRole.months),
+        role_id: newTenureRole.id,
+        mode: 'both',
       });
+      if (response.error) throw new Error(response.error);
 
       apiCache.invalidate(allRolesCacheKey);
       await loadTenureRoles();
@@ -200,14 +200,15 @@ export default function GeneralSettingsPage() {
     }
   };
 
-  const handleDeleteTenureRole = async (roleId: string) => {
+  const handleDeleteTenureRole = async (ruleId: string) => {
     try {
       setError(null);
 
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      await apiClient.roles.deleteRole(guildId, "status", roleId);
+      const response = await apiClient.roles.deleteServerRole(guildId, ruleId);
+      if (response.error) throw new Error(response.error);
 
       apiCache.invalidate(allRolesCacheKey);
       await loadTenureRoles();
@@ -674,7 +675,7 @@ export default function GeneralSettingsPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteTenureRole(role.id)}
+                            onClick={() => handleDeleteTenureRole(role.rule_id)}
                             className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                           >
                             <Trash2 className="h-4 w-4 mr-1" />

@@ -30,6 +30,7 @@ import { Loader2, Plus, Users, Trash2, Search, RefreshCw, Eye, Copy, ClipboardLi
 import { Switch } from "@/components/ui/switch";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { useToast } from "@/components/ui/use-toast";
 import { apiCache } from "@/lib/api-cache";
 import {
@@ -985,23 +986,14 @@ export default function RostersPage() { // NOSONAR — React page component: com
                       <Label>
                         {t("createDialog.clanLabel")} <span className="text-destructive">*</span>
                       </Label>
-                      <Select
+                      <ClanCombobox
+                        clans={clans}
                         value={newRosterData.clan_tag}
                         onValueChange={(value) =>
                           setNewRosterData({ ...newRosterData, clan_tag: value })
                         }
-                      >
-                        <SelectTrigger className="bg-background border-border">
-                          <SelectValue placeholder={t("createDialog.clanPlaceholder")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {clans.map((clan) => (
-                            <SelectItem key={clan.tag} value={clan.tag}>
-                              {clan.name} ({clan.tag})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        placeholder={t("createDialog.clanPlaceholder")}
+                      />
                     </div>
                   )}
 

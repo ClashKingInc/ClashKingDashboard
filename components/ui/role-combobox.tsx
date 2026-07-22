@@ -23,6 +23,7 @@ interface Role {
   id: string
   name: string
   color?: number
+  managed?: boolean
 }
 
 interface RoleComboboxProps {
@@ -63,9 +64,10 @@ export function RoleCombobox({
   const selectedRole = roles.find((role) => role.id === value)
 
   // Filter out excluded roles in add mode
+  const selectableRoles = roles.filter((role) => !role.managed && role.name !== "@everyone")
   const availableRoles = mode === "add"
-    ? roles.filter((role) => !excludeRoleIds.includes(role.id))
-    : roles
+    ? selectableRoles.filter((role) => !excludeRoleIds.includes(role.id))
+    : selectableRoles
 
   const isAddMode = mode === "add"
   const hasNoAvailableRoles = isAddMode && availableRoles.length === 0

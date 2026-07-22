@@ -31,7 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { InfoPopover } from "@/components/ui/info-popover";
@@ -56,41 +56,22 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { apiCache } from "@/lib/api-cache";
-import { dashboardCacheKeys, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
-
-// Types based on ClashKingAPI models
-interface MemberCountWarning {
-  channel?: string | number | null; // NOSONAR — inline union is fine for a single field
-  above?: number | null;
-  below?: number | null;
-  role?: string | number | null;
-}
-
-interface LogButtonSettings {
-  profile_button?: boolean | null;
-  strike_button?: boolean | null;
-  ban_button?: boolean | null;
-}
-
-interface ClanLogSettings {
-  join_log?: LogButtonSettings | null;
-  leave_log?: LogButtonSettings | null;
-}
+import { apiClient } from "@/lib/api/client";
+import type { RoleMode, ServerRole } from "@/lib/api/types/roles";
+import { dashboardCacheKeys, normalizeChannelsPayload, normalizeDiscordRolesPayload } from "@/lib/dashboard-cache";
 
 interface ClanSettings {
-  generalRole?: string | number | null;
-  leaderRole?: string | number | null;
-  clanChannel?: string | number | null;
+  clan_channel?: string | null;
   category?: string | null;
   abbreviation?: string | null;
   greeting?: string | null;
   auto_greet_option?: string | null;
-  leadership_eval?: boolean | null;
-  warCountdown?: string | number | null;
-  warTimerCountdown?: string | number | null;
-  ban_alert_channel?: string | number | null;
-  member_count_warning?: MemberCountWarning | null;
-  logs?: ClanLogSettings | null;
+  ban_alert_channel?: string | null;
+}
+
+interface ClanRoleSelection {
+  role_id: string | null;
+  mode: RoleMode;
 }
 
 interface Clan {
@@ -132,6 +113,39 @@ function normalizeClansPayload(payload: unknown): Clan[] {
 
 type ClanSortField = "added" | "name" | "level" | "members";
 type SortDirection = "asc" | "desc";
+
+const PREMADE_CLAN_CATEGORIES = [
+  "Main",
+  "Competitive",
+  "Casual",
+  "Development",
+  "CWL",
+  "Events",
+] as const;
+
+function RoleModeSelect({
+  value,
+  onChange,
+  disabled = false,
+}: {
+  readonly value: RoleMode;
+  readonly onChange: (mode: RoleMode) => void;
+  readonly disabled?: boolean;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label>Role behavior</Label>
+      <Select value={value} onValueChange={(mode) => onChange(mode as RoleMode)} disabled={disabled}>
+        <SelectTrigger><SelectValue /></SelectTrigger>
+        <SelectContent>
+          <SelectItem value="both">Add and remove</SelectItem>
+          <SelectItem value="add">Add only</SelectItem>
+          <SelectItem value="remove">Remove only</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
 
 export default function ClansPage() {
   const params = useParams();
@@ -185,6 +199,9 @@ export default function ClansPage() {
   const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [clanSettings, setClanSettings] = useState<ClanSettings>({});
+  const [clanServerRoles, setClanServerRoles] = useState<ServerRole[]>([]);
+  const [memberRole, setMemberRole] = useState<ClanRoleSelection>({ role_id: null, mode: 'both' });
+  const [leaderRole, setLeaderRole] = useState<ClanRoleSelection>({ role_id: null, mode: 'both' });
   const [isGreetingPlaceholdersOpen, setIsGreetingPlaceholdersOpen] = useState(false);
 
   // Countdown states
@@ -260,7 +277,7 @@ export default function ClansPage() {
         ]);
 
         if (channelsResult.status === "fulfilled") {
-          setChannels(channelsResult.value || []);
+          setChannels(normalizeChannelsPayload(channelsResult.value));
         }
 
         if (rolesResult.status === "fulfilled") {
@@ -352,16 +369,7 @@ export default function ClansPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        const detail = error.detail || '';
-        if (detail.toLowerCase().includes("not found in clash of clans")) {
-          toast({
-            title: tCommon("error"),
-            description: t("toast.errorClanNotFound"),
-            variant: "destructive",
-          });
-          return;
-        }
-        throw new Error(detail || 'Failed to add clan');
+        throw new Error(error.message || t("toast.errorAddingClan"));
       }
 
       toast({
@@ -426,14 +434,40 @@ export default function ClansPage() {
   const handleOpenSettings = async (clan: Clan) => {
     setSelectedClan(clan);
     setClanSettings(clan.settings || {});
-
-    // Load countdown status from clan settings
-    setCountdownStatus({
-      war_score: clan.settings?.warCountdown ? String(clan.settings.warCountdown) : null,
-      war_timer: clan.settings?.warTimerCountdown ? String(clan.settings.warTimerCountdown) : null,
-    });
-
     setIsSettingsDialogOpen(true);
+
+    try {
+      const clanTag = clan.tag || clan.clan_tag || '';
+      const accessToken = localStorage.getItem("access_token");
+      const [rulesResponse, countdownResponse] = await Promise.all([
+        apiClient.roles.getServerRoles(guildId, { type: 'clan_role', clan_tag: clanTag }),
+        fetch(`/api/v2/server/${guildId}/clan/${encodeURIComponent(clanTag)}/countdowns`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }),
+      ]);
+      if (rulesResponse.error) throw new Error(rulesResponse.error);
+      const roles = rulesResponse.data?.roles || [];
+      setClanServerRoles(roles);
+      const member = roles.find((role) => role.option === 'member');
+      const leader = roles.find((role) => role.option === 'leader');
+      setMemberRole({ role_id: member?.role_id || null, mode: member?.mode || 'both' });
+      setLeaderRole({ role_id: leader?.role_id || null, mode: leader?.mode || 'both' });
+      if (!countdownResponse.ok) throw new Error('Failed to load clan countdowns');
+      const payload = await countdownResponse.json();
+      const status = Object.fromEntries((payload.countdowns || []).map((item: { type: string; channel_id?: string }) => [item.type, item.channel_id || null]));
+      setCountdownStatus({ war_score: status.war_score || null, war_timer: status.war_timer || null });
+    } catch (err) {
+      console.error("Error loading clan settings:", err);
+      setClanServerRoles([]);
+      setMemberRole({ role_id: null, mode: 'both' });
+      setLeaderRole({ role_id: null, mode: 'both' });
+      setCountdownStatus({ war_score: null, war_timer: null });
+      toast({
+        title: tCommon("error"),
+        description: t("toast.errorLoadingSettings"),
+        variant: "destructive",
+      });
+    }
   };
 
   // Toggle countdown (enable/disable)
@@ -496,21 +530,55 @@ export default function ClansPage() {
       const accessToken = localStorage.getItem("access_token");
       const encodedTag = encodeURIComponent(selectedClan.tag || selectedClan.clan_tag || '');
 
-      const response = await fetch(
-        `/api/v2/server/${guildId}/clan/${encodedTag}/settings`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(clanSettings),
-        }
-      );
+      if (Object.keys(clanSettings).length > 0) {
+        const settingsPayload = {
+          ...clanSettings,
+          ...(Object.hasOwn(clanSettings, 'category')
+            ? { category: clanSettings.category ?? '' }
+            : {}),
+        };
+        const response = await fetch(
+          `/api/v2/server/${guildId}/clan/${encodedTag}/settings`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(settingsPayload),
+          }
+        );
 
-      if (!response.ok) {
-        throw new Error('Failed to update settings');
+        if (!response.ok) {
+          const error = await response.json().catch(() => null) as { message?: string; detail?: string; error?: string } | null;
+          throw new Error(error?.message || error?.detail || error?.error || 'Failed to update settings');
+        }
       }
+
+      const clanTag = selectedClan.tag || selectedClan.clan_tag || '';
+      const syncClanRole = async (option: 'member' | 'leader', selection: ClanRoleSelection) => {
+        const current = clanServerRoles.find((role) => role.option === option);
+        if (current && selection.role_id) {
+          const result = await apiClient.roles.updateServerRole(guildId, current.id, {
+            role_id: selection.role_id,
+            mode: selection.mode,
+          });
+          if (result.error) throw new Error(result.error);
+        } else if (current) {
+          const result = await apiClient.roles.deleteServerRole(guildId, current.id);
+          if (result.error) throw new Error(result.error);
+        } else if (selection.role_id) {
+          const result = await apiClient.roles.createServerRole(guildId, {
+            clan_tag: clanTag,
+            type: 'clan_role',
+            option,
+            role_id: selection.role_id,
+            mode: selection.mode,
+          });
+          if (result.error) throw new Error(result.error);
+        }
+      };
+      await Promise.all([syncClanRole('member', memberRole), syncClanRole('leader', leaderRole)]);
 
       toast({
         title: tCommon("success"),
@@ -522,10 +590,9 @@ export default function ClansPage() {
       setIsSettingsDialogOpen(false);
       setSelectedClan(null);
     } catch (err) {
-      console.error("Error saving settings:", err);
       toast({
         title: tCommon("error"),
-        description: t("toast.errorSavingSettings"),
+        description: err instanceof Error ? err.message : t("toast.errorSavingSettings"),
         variant: "destructive",
       });
     } finally {
@@ -564,8 +631,28 @@ export default function ClansPage() {
 
   const totalMembers = clans.reduce((sum, clan) => sum + (clan.member_count || clan.members || 0), 0);
   const configuredClans = clans.filter(c =>
-    c.settings?.clanChannel || c.settings?.generalRole
+    c.settings?.clan_channel || c.settings?.category
   ).length;
+
+  const categoryOptions = useMemo(() => {
+    const selectedTag = selectedClan?.tag || selectedClan?.clan_tag;
+    const counts = new Map<string, number>();
+    for (const clan of clans) {
+      if ((clan.tag || clan.clan_tag) === selectedTag) continue;
+      const category = clan.settings?.category?.trim();
+      if (category) counts.set(category, (counts.get(category) || 0) + 1);
+    }
+    const premade = PREMADE_CLAN_CATEGORIES.map((name) => ({ name, count: counts.get(name) || 0 }));
+    const custom = [...counts.entries()]
+      .filter(([name]) => !PREMADE_CLAN_CATEGORIES.includes(name as typeof PREMADE_CLAN_CATEGORIES[number]))
+      .map(([name, count]) => ({ name, count }))
+      .toSorted((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+    const current = clanSettings.category?.trim();
+    if (current && !premade.some((item) => item.name === current) && !custom.some((item) => item.name === current)) {
+      custom.unshift({ name: current, count: 0 });
+    }
+    return { premade, custom };
+  }, [clanSettings.category, clans, selectedClan]);
 
   if (error) {
     return (
@@ -827,7 +914,7 @@ export default function ClansPage() {
         ) : (
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {sortedClans.map((clan) => {
-              const isConfigured = !!(clan.settings?.clanChannel || clan.settings?.generalRole);
+              const isConfigured = !!(clan.settings?.clan_channel || clan.settings?.category);
 
               return (
                 <Card key={clan.tag} className="bg-card border-border hover:border-primary/50 transition-all duration-200">
@@ -932,29 +1019,43 @@ export default function ClansPage() {
 
               <TabsContent value="basic" className="space-y-4">
                 <div className="grid gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-1.5">
-                      <Label>{t("memberRole")}</Label>
-                      <InfoPopover content={t("fieldHelp.memberRole")} label={t("fieldHelp.infoButtonLabel")} />
+                  <div className="grid grid-cols-3 items-end gap-2">
+                    <div className="col-span-2 min-w-0 space-y-1.5">
+                      <div className="flex items-center gap-1.5">
+                        <Label>{t("memberRole")}</Label>
+                        <InfoPopover content={t("fieldHelp.memberRole")} label={t("fieldHelp.infoButtonLabel")} />
+                      </div>
+                      <RoleCombobox
+                        roles={discordRoles}
+                        value={memberRole.role_id || 'disabled'}
+                        onValueChange={(value) => setMemberRole({ ...memberRole, role_id: value === 'disabled' ? null : value })}
+                        placeholder={t("selectRole")}
+                      />
                     </div>
-                    <RoleCombobox
-                      roles={discordRoles}
-                      value={clanSettings?.generalRole?.toString() || 'disabled'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, generalRole: value === 'disabled' ? null : value})}
-                      placeholder={t("selectRole")}
+                    <RoleModeSelect
+                      value={memberRole.mode}
+                      onChange={(mode) => setMemberRole({ ...memberRole, mode })}
+                      disabled={!memberRole.role_id}
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-1.5">
-                      <Label>{t("leaderRole")}</Label>
-                      <InfoPopover content={t("fieldHelp.leaderRole")} label={t("fieldHelp.infoButtonLabel")} />
+                  <div className="grid grid-cols-3 items-end gap-2">
+                    <div className="col-span-2 min-w-0 space-y-1.5">
+                      <div className="flex items-center gap-1.5">
+                        <Label>{t("leaderRole")}</Label>
+                        <InfoPopover content={t("fieldHelp.leaderRole")} label={t("fieldHelp.infoButtonLabel")} />
+                      </div>
+                      <RoleCombobox
+                        roles={discordRoles}
+                        value={leaderRole.role_id || 'disabled'}
+                        onValueChange={(value) => setLeaderRole({ ...leaderRole, role_id: value === 'disabled' ? null : value })}
+                        placeholder={t("selectRole")}
+                      />
                     </div>
-                    <RoleCombobox
-                      roles={discordRoles}
-                      value={clanSettings?.leaderRole?.toString() || 'disabled'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, leaderRole: value === 'disabled' ? null : value})}
-                      placeholder={t("selectRole")}
+                    <RoleModeSelect
+                      value={leaderRole.mode}
+                      onChange={(mode) => setLeaderRole({ ...leaderRole, mode })}
+                      disabled={!leaderRole.role_id}
                     />
                   </div>
 
@@ -965,8 +1066,8 @@ export default function ClansPage() {
                     </div>
                     <ChannelCombobox
                       channels={channels}
-                      value={clanSettings.clanChannel?.toString() || 'none'}
-                      onValueChange={(value) => setClanSettings({...clanSettings, clanChannel: value === 'none' || value === 'disabled' ? null : value})}
+                      value={clanSettings.clan_channel || 'none'}
+                      onValueChange={(value) => setClanSettings({...clanSettings, clan_channel: value === 'none' || value === 'disabled' ? null : value})}
                       placeholder={t("selectChannel")}
                       showDisabled={false}
                       className="bg-background"
@@ -1002,12 +1103,39 @@ export default function ClansPage() {
                       <Label>{t("category")}</Label>
                       <InfoPopover content={t("fieldHelp.category")} label={t("fieldHelp.infoButtonLabel")} />
                     </div>
-                    <Input
-                      placeholder={t("categoryPlaceholder")}
-                      value={clanSettings?.category || ''}
-                      onChange={(e) => setClanSettings({...clanSettings, category: e.target.value})}
-                      className="bg-background border-border"
-                    />
+                    <Select
+                      value={clanSettings.category || "__none__"}
+                      onValueChange={(value) => setClanSettings({ ...clanSettings, category: value === "__none__" ? null : value })}
+                    >
+                      <SelectTrigger className="bg-background border-border">
+                        <SelectValue placeholder={t("categoryPlaceholder")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">{t("categoryOptions.none")}</SelectItem>
+                        <SelectSeparator />
+                        <SelectGroup>
+                          <SelectLabel>{t("categoryOptions.premade")}</SelectLabel>
+                          {categoryOptions.premade.map((category) => (
+                            <SelectItem key={category.name} value={category.name}>
+                              {category.name}{category.count > 0 ? ` · ${t("categoryOptions.clanCount", { count: category.count })}` : ""}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                        {categoryOptions.custom.length > 0 && (
+                          <>
+                            <SelectSeparator />
+                            <SelectGroup>
+                              <SelectLabel>{t("categoryOptions.usedByServer")}</SelectLabel>
+                              {categoryOptions.custom.map((category) => (
+                                <SelectItem key={category.name} value={category.name}>
+                                  {category.name} · {t("categoryOptions.clanCount", { count: category.count })}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
@@ -1029,19 +1157,6 @@ export default function ClansPage() {
                       value={clanSettings?.abbreviation || ''}
                       onChange={(e) => setClanSettings({...clanSettings, abbreviation: e.target.value})}
                       className="bg-background border-border"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4">
-                    <div className="space-y-0.5">
-                      <Label>{t("leadershipEval")}</Label>
-                      <p className="text-sm text-muted-foreground">
-                        {t("leadershipEvalDescription")}
-                      </p>
-                    </div>
-                    <Switch
-                      checked={clanSettings?.leadership_eval || false}
-                      onCheckedChange={(checked) => setClanSettings({...clanSettings, leadership_eval: checked})}
                     />
                   </div>
                 </div>
