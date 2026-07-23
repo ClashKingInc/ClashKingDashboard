@@ -1151,7 +1151,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
               {/* Section: Identity */}
               <div className="p-6 space-y-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                <p className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5" />
                   {t("settings.general")}
                 </p>
@@ -1199,7 +1199,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
               {/* Section: Type & Scope */}
               <div className="p-6 space-y-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                <p className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-1.5">
                   <Building2 className="w-3.5 h-3.5" />
                   {t("settings.typeAndScope")}
                 </p>
@@ -1261,7 +1261,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
               {/* Section: Event & Recurrence */}
               <div className="p-6 space-y-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                <p className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-1.5">
                   <Calendar className="w-3.5 h-3.5 text-amber-500" />
                   {t("settings.eventTime")}
                 </p>
@@ -1339,7 +1339,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 
               {/* Section: Restrictions */}
               <div className="p-6 space-y-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                <p className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-1.5">
                   <Shield className="w-3.5 h-3.5 text-emerald-500" />
                   {t("settings.restrictions")}
                 </p>
@@ -1407,7 +1407,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               {/* Section: Signup Categories */}
               <div className="p-6 space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+                  <p className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-1.5">
                     <Tag className="w-3.5 h-3.5 text-purple-500" />
                     {t("settings.allowedCategories")}
                   </p>

@@ -412,11 +412,11 @@ function TicketManageDialog({
 
           <div className="grid gap-3 text-sm sm:grid-cols-3">
             <div className="rounded-lg border border-border bg-background p-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.panel")}</p>
+              <p className="text-xs font-medium uppercase text-muted-foreground">{t("table.panel")}</p>
               <p className="mt-1 font-medium">{ticket.panel}</p>
             </div>
             <div className="rounded-lg border border-border bg-background p-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.user")}</p>
+              <p className="text-xs font-medium uppercase text-muted-foreground">{t("table.user")}</p>
               <div className="mt-1">
                 <DiscordUserDisplay
                   userId={ticket.user}
@@ -426,7 +426,7 @@ function TicketManageDialog({
               </div>
             </div>
             <div className="rounded-lg border border-border bg-background p-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.account")}</p>
+              <p className="text-xs font-medium uppercase text-muted-foreground">{t("table.account")}</p>
               <div className="mt-1">
                 <TicketAccountsCell ticket={ticket} />
               </div>
@@ -1585,7 +1585,7 @@ function PanelSettingsTab({
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-border/60 bg-card p-4">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("categories")}</p>
+        <p className="mb-3 text-xs font-semibold uppercase text-muted-foreground">{t("categories")}</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(["open_category", "sleep_category", "closed_category"] as const).map((key) => (
             <div key={key} className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-3">
@@ -1602,7 +1602,7 @@ function PanelSettingsTab({
         </div>
       </div>
       <div className="rounded-xl border border-border/60 bg-card p-4">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("logChannels")}</p>
+        <p className="mb-3 text-xs font-semibold uppercase text-muted-foreground">{t("logChannels")}</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(["status_change_log", "ticket_button_click_log", "ticket_close_log"] as const).map((key) => (
             <div key={key} className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-3">

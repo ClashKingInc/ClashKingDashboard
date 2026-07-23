@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RotateCcw, AlertCircle, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2, Settings } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
@@ -287,28 +287,22 @@ export default function GeneralSettingsPage() {
         )}
 
         {/* Info Banner */}
-        <Card className="bg-blue-500/5 border-blue-500/30">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  {t("infoBanner.title")}
-                </p>
-                <div className="text-xs text-muted-foreground prose prose-sm max-w-none dark:prose-invert">
-                  <ReactMarkdown
-                    components={{
-                      p: ({ children }) => <span>{children}</span>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
-                      strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
-                    }}
-                  >
-                    {t("infoBanner.description")}
-                  </ReactMarkdown>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Alert className="rounded-xl border-blue-500/30 bg-blue-500/5 py-3.5">
+          <AlertCircle className="h-5 w-5 text-blue-500" />
+          <AlertTitle className="text-sm text-blue-600 dark:text-blue-400">
+            {t("infoBanner.title")}
+          </AlertTitle>
+          <AlertDescription className="text-xs text-muted-foreground">
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => <span>{children}</span>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
+                strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
+              }}
+            >
+              {t("infoBanner.description")}
+            </ReactMarkdown>
+          </AlertDescription>
+        </Alert>
 
         {/* Two-column settings grid */}
         <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
@@ -526,7 +520,9 @@ export default function GeneralSettingsPage() {
                     <SelectItem value="none">{t("security.noRole")}</SelectItem>
                     {discordRoles.map((role) => (
                       <SelectItem key={role.id} value={role.id}>
-                        {role.name}
+                        <span style={{ color: role.color ? intToHex(role.color) : "#99AAB5" }}>
+                          @{role.name}
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>

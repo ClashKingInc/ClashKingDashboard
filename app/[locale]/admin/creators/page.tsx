@@ -82,7 +82,7 @@ export default function CreatorApplicationsPage() {
             <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/12 text-primary">
               <UserRoundCheck className="h-6 w-6" />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight">Creator applications</h1>
+            <h1 className="text-3xl font-bold">Creator applications</h1>
             <p className="mt-2 text-muted-foreground">Approve channels that can attach localized YouTube guides to curated army presets.</p>
           </div>
           <Button variant="outline" onClick={load} disabled={loading}>

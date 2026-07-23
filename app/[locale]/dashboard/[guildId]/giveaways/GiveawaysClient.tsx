@@ -540,7 +540,7 @@ function GiveawaysTable({
       <div className="overflow-x-auto rounded-xl border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted/40">
-            <tr className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <tr className="text-left text-xs font-medium text-muted-foreground uppercase">
               <th className="px-4 py-3">{t("table.giveaway")}</th>
               <th className="px-4 py-3">{t("table.channel")}</th>
               <th className="px-4 py-3">{isEnded ? t("table.winnersHeader") : t("table.entries")}</th>
@@ -1298,7 +1298,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                   <div className="max-h-72 overflow-y-auto rounded-lg border border-border">
                     <table className="w-full text-sm">
                       <thead className="sticky top-0 bg-muted/80 backdrop-blur-sm">
-                        <tr className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                        <tr className="text-left text-xs font-medium text-muted-foreground uppercase">
                           <th className="px-3 py-2">{t("entries.userId")}</th>
                           <th className="px-3 py-2 text-center">{t("entries.entryCount")}</th>
                           <th className="px-3 py-2 text-right">{t("entries.winChance")}</th>
@@ -1339,7 +1339,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
                     <span className="text-sm text-muted-foreground">{selectedChannel ? `#${selectedChannel.name}` : t("preview.noChannel")}</span>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-[#313338] p-5">
-                    <div className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">{t("preview.discordPreview")}</div>
+                    <div className="text-xs font-medium uppercase text-slate-400">{t("preview.discordPreview")}</div>
                     {mentionLabels.length > 0 && <div className="mt-4 flex flex-wrap gap-2 text-sm text-sky-300">{mentionLabels.map((m) => <span key={m}>{m}</span>)}</div>}
                     {form.textAbove && <div className="mt-4 prose prose-invert max-w-none text-sm text-slate-200">{renderMarkdown(form.textAbove)}</div>}
                     <div className="mt-4 rounded-xl border-l-4 border-l-[#5865f2] border border-white/10 bg-[#2b2d31] p-4 text-slate-100">
@@ -1356,7 +1356,7 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
               ) : (
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-[#313338] p-5">
-                    <div className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">{t("preview.discordPreview")}</div>
+                    <div className="text-xs font-medium uppercase text-slate-400">{t("preview.discordPreview")}</div>
                     <div className="mt-4 text-sm text-sky-300">@Winner</div>
                     <div className="mt-4 prose prose-invert max-w-none text-sm text-slate-200">{renderMarkdown(form.textEnd, t("preview.noEndText"))}</div>
                     <div className="mt-4 rounded-xl border-l-4 border-l-[#ed4245] border border-white/10 bg-[#2b2d31] p-4 text-slate-100">

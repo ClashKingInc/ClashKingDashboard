@@ -711,8 +711,8 @@ function MentionTextField({
                   className="min-w-0 flex-1 space-y-3 overflow-y-auto overscroll-contain pr-1"
                 >
                   <div ref={channelsSectionRef} className="space-y-1">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-white">{t("mentionsChannels")}</p>
-                  <button type="button" onClick={() => setSpecialOpen((prev) => !prev)} className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold tracking-wide text-white/90 hover:bg-[#3a3c43]">
+                  <p className="text-[11px] font-semibold uppercase text-white">{t("mentionsChannels")}</p>
+                  <button type="button" onClick={() => setSpecialOpen((prev) => !prev)} className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold text-white/90 hover:bg-[#3a3c43]">
                     <span>{t("mentionsSpecial")}</span>
                     <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !specialOpen && "-rotate-90")} />
                   </button>
@@ -723,7 +723,7 @@ function MentionTextField({
                       <MentionInsertButton icon={BrowseChannelsIcon} label={t("mentionsChannelsAndRoles")} compact onSelect={() => insertToken("<id:customize>")} />
                     </>
                   )}
-                  <button type="button" onClick={() => setChannelsOpen((prev) => !prev)} className="mt-1 flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold tracking-wide text-white/90 hover:bg-[#3a3c43]">
+                  <button type="button" onClick={() => setChannelsOpen((prev) => !prev)} className="mt-1 flex w-full items-center justify-between rounded px-1 py-1 text-left text-[10px] font-semibold text-white/90 hover:bg-[#3a3c43]">
                     <span>{t("mentionsChannelList")}</span>
                     <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !channelsOpen && "-rotate-90")} />
                   </button>
@@ -731,7 +731,7 @@ function MentionTextField({
                 </div>
 
                 <div ref={rolesSectionRef} className="space-y-1">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-white">{t("mentionsRoles")}</p>
+                  <p className="text-[11px] font-semibold uppercase text-white">{t("mentionsRoles")}</p>
                   <MentionInsertButton icon={AtSign} label="@everyone" compact onSelect={() => insertToken("@everyone")} />
                   <MentionInsertButton icon={AtSign} label="@here" compact onSelect={() => insertToken("@here")} />
                   {filteredRoles.length > 0 ? filteredRoles.map((role) => (
@@ -809,7 +809,7 @@ function MentionTextField({
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-[11px] font-semibold tracking-wide text-white">{t("styleLabel")}</p>
+                <p className="text-[11px] font-semibold text-white">{t("styleLabel")}</p>
                 <div className="grid grid-cols-1 gap-1">
                   {DISCORD_TIMESTAMP_STYLES.map((item) => (
                     <TimeStyleInsertButton
@@ -890,7 +890,7 @@ function MentionTextField({
                         ref={(node) => { emojiHeaderRefs.current[category.key] = node; }}
                         type="button"
                         onClick={() => setEmojiOpen((prev) => ({ ...prev, [category.key]: !prev[category.key] }))}
-                        className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[11px] font-semibold tracking-wide text-white hover:bg-[#3a3c43]"
+                        className="flex w-full items-center justify-between rounded px-1 py-1 text-left text-[11px] font-semibold text-white hover:bg-[#3a3c43]"
                       >
                         <span>{t(`emojiCategory.${category.key}`)}</span>
                         <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", !emojiOpen[category.key] && "-rotate-90")} />
@@ -1506,7 +1506,7 @@ function reorderFieldById(fields: FieldState[], id: string, dir: -1 | 1): FieldS
 
 function SectionLabel({ children }: { readonly children: React.ReactNode }) {
   return (
-    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+    <p className="text-[11px] font-semibold uppercase text-muted-foreground mb-2">
       {children}
     </p>
   );
@@ -2369,7 +2369,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
                     >
                       {expandedMessageIds.has(msg.id) ? <ChevronDown className="h-4 w-4 text-muted-foreground" /> : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
                       <span className="truncate text-base font-semibold">{`Message ${i + 1}`}</span>
-                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted-foreground">
                         {msg.mode === "v2" ? "Components v2" : "Classic"}
                       </span>
                     </button>
@@ -2986,7 +2986,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
             className="flex items-center justify-between border-b border-border px-4 py-3 text-left md:hidden"
             onClick={() => setIsMobilePreviewOpen(prev => !prev)}
           >
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className="text-[11px] font-semibold uppercase text-muted-foreground">
               {t("preview")}
             </span>
             {isMobilePreviewOpen ? (
@@ -3022,7 +3022,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
 
           <div className="hidden max-h-screen overflow-y-auto p-5 md:sticky md:top-0 md:block">
             <div className="flex items-center gap-2 mb-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <p className="text-[11px] font-semibold uppercase text-muted-foreground">
                 {t("preview")}
               </p>
             </div>
@@ -3075,7 +3075,7 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
               <div className="min-w-0 text-left">
                 <p className="flex items-center gap-2 text-sm font-semibold">
                   <span>{t("addMessageV2Title")}</span>
-                  <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                  <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-700 dark:text-amber-300">
                     {t("betaTag")}
                   </span>
                 </p>

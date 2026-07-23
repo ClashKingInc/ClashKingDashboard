@@ -865,7 +865,7 @@ export default function ClansPage() {
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <Skeleton className="h-14 w-14 rounded-full animate-pulse" />
+                      <Skeleton className="h-14 w-14 rounded-lg animate-pulse" />
                       <div>
                         <Skeleton className="h-5 w-32 animate-pulse mb-2" />
                         <Skeleton className="h-4 w-24 animate-pulse" />
@@ -921,9 +921,13 @@ export default function ClansPage() {
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-14 w-14 border-2 border-border">
-                          <AvatarImage src={clan.badge_url || clan.clan_badge_url || ''} alt={clan.name || clan.clan_name || 'Clan'} />
-                          <AvatarFallback className="bg-secondary text-foreground">
+                        <Avatar className="h-14 w-14 overflow-visible rounded-none border-0 bg-transparent">
+                          <AvatarImage
+                            src={clan.badge_url || clan.clan_badge_url || ''}
+                            alt={clan.name || clan.clan_name || 'Clan'}
+                            className="object-contain"
+                          />
+                          <AvatarFallback className="rounded-xl bg-secondary text-foreground">
                             {(clan.name || clan.clan_name || 'C').charAt(0)}
                           </AvatarFallback>
                         </Avatar>
@@ -959,8 +963,8 @@ export default function ClansPage() {
                     <div className="flex items-center justify-between py-2">
                       <span className="text-sm text-muted-foreground">{t("status")}</span>
                       <Badge
-                        variant={isConfigured ? "default" : "secondary"}
-                        className={isConfigured ? "bg-green-600 hover:bg-green-700" : "bg-secondary"}
+                        variant={isConfigured ? "outline" : "secondary"}
+                        className={isConfigured ? "border-green-600 bg-green-600 text-white hover:bg-green-700 dark:text-white" : "bg-secondary"}
                       >
                         {isConfigured ? t("configuredBadge") : t("setupRequired")}
                       </Badge>
