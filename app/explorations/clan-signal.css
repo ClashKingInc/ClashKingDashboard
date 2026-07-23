@@ -19,7 +19,7 @@
   overflow-x: clip;
   color: var(--cs-ink);
   background-color: var(--cs-bg);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "ClashKing", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .clan-signal *, .clan-signal *::before, .clan-signal *::after { box-sizing: border-box; }
@@ -27,7 +27,7 @@
 .clan-signal img { display: block; max-width: 100%; }
 .clan-signal h1, .clan-signal h2, .clan-signal h3, .clan-signal p { margin: 0; }
 .clan-signal h1, .clan-signal h2, .clan-signal h3 { font-family: "Clash Display", ui-sans-serif, sans-serif; font-weight: 400; }
-.clan-signal h2 { font-size: clamp(3rem, 5vw, 5.25rem); line-height: 1.08; letter-spacing: -0.025em; }
+.clan-signal h2 { font-size: clamp(3rem, 5vw, 5.25rem); line-height: 1.08; }
 .clan-signal p { color: var(--cs-muted); font-size: 1rem; line-height: 1.62; }
 .clan-signal a:focus-visible { outline: 3px solid #b78c20; outline-offset: 4px; border-radius: 10px; }
 
@@ -87,7 +87,7 @@
 .cs-language-option[data-active="true"] { background: #c1f1ff !important; }
 .cs-language-code { margin-left: auto; color: rgb(0 0 0 / 0.5); font-size: 0.66rem; font-weight: 820; }
 .cs-language-separator { background: rgb(23 53 42 / 0.13) !important; }
-.cs-language-label { padding: 8px 8px 4px !important; color: rgb(0 0 0 / 0.5) !important; font-size: 0.62rem !important; font-weight: 820 !important; letter-spacing: 0.08em; text-transform: uppercase; }
+.cs-language-label { padding: 8px 8px 4px !important; color: rgb(0 0 0 / 0.5) !important; font-size: 0.62rem !important; font-weight: 820 !important; text-transform: uppercase; }
 .cs-theme-swatch { width: 20px; height: 14px; flex: 0 0 auto; border-radius: 4px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.14); }
 .cs-theme-swatch-day { background: linear-gradient(135deg, #48a2d5 0 48%, #c1f1ff 48%); }
 .cs-theme-swatch-sunset { background: linear-gradient(135deg, #191b3a 0 44%, #a75d78 44% 70%, #e59a68 70%); }
@@ -174,7 +174,7 @@
   max-width: none;
   font-size: var(--cs-headline-fitted-size, var(--cs-headline-base-size));
   line-height: 1.04;
-  letter-spacing: -0.04em;
+
 }
 .cs-headline-phrase { display: grid; transition: opacity 240ms ease-out, transform 240ms cubic-bezier(.22, .61, .36, 1); }
 .cs-headline-phrase > span { display: block; white-space: nowrap; }
@@ -326,12 +326,12 @@
   opacity: 0.74;
 }
 .cs-legal-hero > div { position: relative; z-index: 1; width: min(920px, 100%); }
-.cs-legal-eyebrow { margin-bottom: 8px !important; color: #17352a !important; font-size: 0.78rem !important; font-weight: 820; letter-spacing: 0.08em; text-transform: uppercase; }
-.cs-legal-hero h1 { font-size: clamp(3.6rem, 7vw, 6.6rem); line-height: 0.98; letter-spacing: -0.035em; }
+.cs-legal-eyebrow { margin-bottom: 8px !important; color: #17352a !important; font-size: 0.78rem !important; font-weight: 820; text-transform: uppercase; }
+.cs-legal-hero h1 { font-size: clamp(3.6rem, 7vw, 6.6rem); line-height: 0.98; }
 .cs-legal-document { width: min(920px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0 32px; }
 .cs-legal-document section { padding: 34px 0; border-bottom: 1px solid var(--cs-line); }
 .cs-legal-document section:first-child { padding-top: 0; }
-.cs-legal-document h2 { margin-bottom: 14px; font-size: clamp(1.8rem, 3vw, 2.45rem); line-height: 1.14; letter-spacing: -0.015em; }
+.cs-legal-document h2 { margin-bottom: 14px; font-size: clamp(1.8rem, 3vw, 2.45rem); line-height: 1.14; }
 .cs-legal-document h3 { margin: 24px 0 8px; font-size: 1.18rem; line-height: 1.25; }
 .cs-legal-document p, .cs-legal-document li { color: var(--cs-muted); font-size: 0.98rem; line-height: 1.72; }
 .cs-legal-document ul { margin: 10px 0 0; padding-left: 1.35rem; }
@@ -453,7 +453,7 @@
     mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
   }
   .cs-mobile-cloud-track span + span { margin-left: -320px; }
-  .cs-hero h1 { --cs-headline-base-size: clamp(3.15rem, 13vw, 3.8rem); line-height: 1.08; letter-spacing: -0.03em; }
+  .cs-hero h1 { --cs-headline-base-size: clamp(3.15rem, 13vw, 3.8rem); line-height: 1.08; }
   .cs-hero-copy > p { margin-top: 18px; font-size: 0.96rem; }
   .cs-actions { margin-top: 24px; gap: 16px; }
   .cs-hero .cs-actions { align-items: center; flex-direction: row; flex-wrap: wrap; gap: 8px; }

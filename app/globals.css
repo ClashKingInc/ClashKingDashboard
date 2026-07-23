@@ -1,81 +1,74 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "ClashKing";
+  src: url("/fonts/clashking.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
 :root {
-  /* Light mode - minimal changes as we focus on dark mode */
-  --background: 0 0% 100%;
+  --background: 0 0% 95.7%;
   --foreground: 0 0% 3.9%;
   --card: 0 0% 100%;
   --card-foreground: 0 0% 3.9%;
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 3.9%;
-  --primary: 356 100% 43%; /* ClashKing Red: #D90709 */
+  --primary: 0 100% 37.5%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 96.1%;
+  --secondary: 0 0% 92.9%;
   --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 0 0% 96.1%;
+  --muted: 0 0% 92.9%;
+  --muted-foreground: 0 0% 39%;
+  --accent: 0 0% 90.2%;
   --accent-foreground: 0 0% 9%;
-  --destructive: 0 84.2% 60.2%;
+  --destructive: 0 66.2% 41.8%;
   --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --ring: 356 100% 43%;
-  --radius: 0.5rem;
-  --chart-1: 356 100% 43%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
+  --border: 0 0% 82%;
+  --input: 0 0% 78%;
+  --ring: 0 100% 37.5%;
+  --radius: 0.75rem;
+  --info: 207 98% 29%;
+  --war: 39 80% 53%;
+  --success: 163 79% 36%;
+  --capital: 263 61% 62%;
+  --chart-1: 0 100% 37.5%;
+  --chart-2: 207 98% 29%;
+  --chart-3: 163 79% 36%;
+  --chart-4: 39 80% 53%;
+  --chart-5: 263 61% 62%;
 }
 
 .dark {
-  /* ClashKing Dark Theme */
-  /* Ultra dark backgrounds for depth */
-  --background: 0 0% 5.9%; /* #0F0F0F */
-  --foreground: 0 0% 100%; /* #FFFFFF */
-
-  /* Cards and elevated surfaces */
-  --card: 0 0% 10.2%; /* #1A1A1A */
+  --background: 300 14% 1.4%;
+  --foreground: 0 0% 100%;
+  --card: 240 4% 4.5%;
   --card-foreground: 0 0% 100%;
-
-  /* Popovers, dropdowns, modals */
-  --popover: 0 0% 17.6%; /* #2D2D2D */
+  --popover: 240 5% 6.7%;
   --popover-foreground: 0 0% 100%;
-
-  /* ClashKing Primary Red */
-  --primary: 356 100% 43%; /* #D90709 */
+  --primary: 359 94% 44%;
   --primary-foreground: 0 0% 100%;
-
-  /* Secondary interactive elements */
-  --secondary: 0 0% 14.1%; /* #242424 */
+  --secondary: 240 2% 8.4%;
   --secondary-foreground: 0 0% 100%;
-
-  /* Muted text and backgrounds */
-  --muted: 0 0% 14.1%; /* #242424 */
-  --muted-foreground: 0 0% 70%; /* #B3B3B3 */
-
-  /* Accent - hover states */
-  --accent: 0 0% 18.4%; /* #2F2F2F */
+  --muted: 240 2% 10%;
+  --muted-foreground: 240 3% 66%;
+  --accent: 240 3% 13%;
   --accent-foreground: 0 0% 100%;
-
-  /* Destructive/Error states */
-  --destructive: 0 66% 57%; /* #ED4245 */
+  --destructive: 5 72% 60%;
   --destructive-foreground: 0 0% 100%;
-
-  /* Borders - subtle */
-  --border: 0 0% 17.6%; /* #2D2D2D */
-  --input: 0 0% 23.9%; /* #3D3D3D */
-
-  /* Focus rings */
-  --ring: 356 100% 43%; /* ClashKing Red */
-
-  /* Charts using ClashKing colors */
-  --chart-1: 356 100% 43%; /* Primary Red */
-  --chart-2: 220 62% 69%; /* Info Blue */
-  --chart-3: 142 71% 45%; /* Success Green */
-  --chart-4: 38 92% 50%; /* Warning Orange */
-  --chart-5: 356 100% 56%; /* Light Red */
+  --border: 240 4% 19%;
+  --input: 240 3% 24%;
+  --ring: 359 94% 44%;
+  --info: 207 98% 38%;
+  --war: 39 80% 53%;
+  --success: 163 79% 36%;
+  --capital: 263 61% 62%;
+  --chart-1: 359 94% 44%;
+  --chart-2: 207 98% 38%;
+  --chart-3: 163 79% 36%;
+  --chart-4: 39 80% 53%;
+  --chart-5: 263 61% 62%;
 }
 
 @theme inline {
@@ -103,9 +96,16 @@
   --color-chart-3: hsl(var(--chart-3));
   --color-chart-4: hsl(var(--chart-4));
   --color-chart-5: hsl(var(--chart-5));
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --color-info: hsl(var(--info));
+  --color-war: hsl(var(--war));
+  --color-success: hsl(var(--success));
+  --color-capital: hsl(var(--capital));
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
   --radius-lg: var(--radius);
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
 }
 
 * {
@@ -115,11 +115,11 @@
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "ClashKing", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
 }
 
-/* Dark theme enhancements */
 @layer base {
   * {
     @apply border-border;
@@ -135,57 +135,108 @@ body {
     scrollbar-gutter: stable;
   }
 
-  /* Better focus visible states */
   *:focus-visible {
-    outline: 2px solid hsl(var(--ring));
-    outline-offset: 2px;
+    outline: none;
+  }
+
+  ::selection {
+    color: hsl(var(--primary-foreground));
+    background: hsl(var(--primary) / 0.75);
   }
 }
 
 @layer components {
-  /* Enhanced card styling for dark theme */
   .card-dark {
-    @apply bg-card border border-border rounded-lg shadow-sm;
-    transition: all 0.2s ease-in-out;
+    @apply rounded-[28px] border border-border bg-card;
+    transition: border-color 150ms ease, background-color 150ms ease;
   }
 
   .card-dark:hover {
-    @apply border-border/60;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    @apply border-foreground/20;
   }
 
-  /* Subtle gradient backgrounds for headers */
   .gradient-header {
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--secondary)) 100%);
+    background: hsl(var(--card));
     border-bottom: 1px solid hsl(var(--border));
   }
 
-  /* ClashKing accent gradient */
   .gradient-clashking {
-    background: linear-gradient(135deg, #BF0000 0%, #D90709 100%);
+    background: hsl(var(--primary));
   }
 
-  /* Glow effect for primary elements */
   .glow-primary {
-    box-shadow: 0 0 20px rgba(217, 7, 9, 0.3);
+    box-shadow: none;
   }
 
-  /* Custom scrollbar for dark theme */
+  .scrollbar-custom {
+    scrollbar-color: transparent transparent;
+    scrollbar-width: thin;
+  }
+
   .scrollbar-custom::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 4px;
+    height: 4px;
   }
 
   .scrollbar-custom::-webkit-scrollbar-track {
-    background: hsl(var(--background));
+    background: transparent;
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted));
-    border-radius: 4px;
+    background: transparent;
+    border-radius: 999px;
+  }
+
+  .scrollbar-custom:hover,
+  .scrollbar-custom:focus-within {
+    scrollbar-color: hsl(var(--muted-foreground) / 0.32) transparent;
+  }
+
+  .scrollbar-custom:hover::-webkit-scrollbar-thumb,
+  .scrollbar-custom:focus-within::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.32);
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: hsl(var(--muted-foreground) / 0.52);
+  }
+
+  .dashboard-app {
+    background:
+      radial-gradient(circle at 85% -20%, hsl(var(--primary) / 0.07), transparent 34rem),
+      hsl(var(--background));
+  }
+
+  .dashboard-content {
+    background: transparent;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.38) transparent;
+    scrollbar-width: thin;
+  }
+
+  .dashboard-content > [class*="min-h-screen"] {
+    min-height: 100%;
+    background: transparent;
+    padding: 1.25rem;
+  }
+
+  .dashboard-content [class*="max-w-7xl"] {
+    max-width: 90rem;
+  }
+
+  @media (min-width: 768px) {
+    .dashboard-content > [class*="min-h-screen"] {
+      padding: 2rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
