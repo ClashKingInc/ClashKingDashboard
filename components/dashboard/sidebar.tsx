@@ -15,13 +15,12 @@ import {
   ClipboardList,
   Ban,
   Gift,
+  Check,
   ChevronDown,
   LayoutDashboard,
   LayoutTemplate,
   Link2,
   Trophy,
-  LogOut,
-  Server,
   UserCog,
   TicketIcon,
   FileText,
@@ -38,46 +37,37 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
-import type { UserInfo } from "@/lib/api/types/auth";
-import { logout } from "@/lib/auth/logout";
-import { SettingsDropdown } from "@/components/settings-dropdown";
+import type { GuildInfo } from "@/lib/api/types/server";
 import { useDashboardAccess } from "./dashboard-access-provider";
 import type { DashboardSection } from "@/lib/api/types/dashboard-access";
-import { clashKingAssets } from "@/lib/theme";
 
 interface SidebarProps {
   readonly guildId: string;
   readonly locale: string;
   readonly guildName: string;
   readonly guildIcon?: string;
+  readonly availableGuilds?: GuildInfo[];
   readonly isLoading?: boolean;
 }
 
-export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = false }: SidebarProps) {
+export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds = [], isLoading = false }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("Sidebar");
+  const tNavigation = useTranslations("Navigation");
   const tCommon = useTranslations("Common");
   const { capabilities, canView } = useDashboardAccess();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [user, setUser] = useState<UserInfo | null>(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error("Failed to parse user from localStorage", e);
-      }
-    }
-  }, []);
-
-  const handleLogout = () => {
-    logout();
-    setUser(null);
-    router.push(`/${locale}`);
+  const selectGuild = (guild: GuildInfo) => {
+    const icon = guild.icon?.startsWith("https") ? guild.icon : undefined;
+    sessionStorage.setItem("selected_guild", JSON.stringify({
+      id: guild.id,
+      name: guild.name,
+      icon,
+    }));
+    setIsDropdownOpen(false);
+    router.push(`/${locale}/dashboard/${guild.id}`);
   };
 
   const navigationSections: Array<{ titleKey: string | null; items: Array<{ nameKey: string; href: string; icon: React.ComponentType<{ className?: string }>; capability?: DashboardSection; fullAccess?: boolean }> }> = [
@@ -237,100 +227,73 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
   };
 
   return (
-    <div className="flex h-full w-64 flex-col bg-card border-r border-border">
-      {/* Server Header */}
-      <div className="hidden border-b border-border md:block">
+    <aside className="flex h-full w-72 flex-col border-r border-border bg-card">
+      <div className="hidden h-[72px] shrink-0 items-center border-b border-border px-3 md:flex">
         {isLoading ? (
-          <div className="p-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-12 w-12 rounded-xl" />
-              <div className="flex-1 min-w-0 space-y-2">
-                <Skeleton className="h-5 w-32" />
-                <Skeleton className="h-3 w-24" />
-              </div>
-            </div>
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-xl" />
+            <Skeleton className="h-4 min-w-0 flex-1" />
           </div>
         ) : (
           <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
             <DropdownMenuTrigger asChild>
-              <div className="flex items-center gap-3 p-4 cursor-pointer group transition-all duration-200 hover:bg-accent/50 outline-none">
-                <Avatar className="h-12 w-12 rounded-xl ring-2 ring-border transition-all group-hover:ring-4">
+              <button className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl p-2 text-left outline-none transition-colors hover:bg-accent/60 focus-visible:ring-2 focus-visible:ring-ring">
+                <Avatar className="h-10 w-10 shrink-0 rounded-xl border border-border">
                   <AvatarImage src={guildIcon} className="rounded-xl" />
-                  <AvatarFallback className="rounded-xl text-lg font-bold bg-secondary text-primary">
+                  <AvatarFallback className="rounded-xl bg-secondary text-base font-semibold text-primary">
                     {guildName.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1">
-                    <p className="font-semibold text-base truncate text-foreground">
-                      {guildName}
-                    </p>
-                    <ChevronDown className={cn(
-                      "h-4 w-4 opacity-60 group-hover:opacity-100 transition-all duration-200 text-muted-foreground",
-                      isDropdownOpen && "rotate-180"
-                    )} />
-                  </div>
-                </div>
-              </div>
+                <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">{guildName}</span>
+                <ChevronDown className={cn(
+                  "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
+                  isDropdownOpen && "rotate-180"
+                )} />
+              </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" sideOffset={-10} alignOffset={10} className="w-56 bg-popover/95 backdrop-blur-md border-primary/30 shadow-2xl">
-              {/* Switch Server */}
-              <DropdownMenuItem asChild className="focus:bg-muted/60 focus:text-primary hover:bg-muted/60 hover:text-primary transition-colors cursor-pointer">
-                <Link href="/servers" className="flex items-center gap-2 py-2">
-                  <Server className="h-4 w-4" />
-                  <span className="font-medium">{t("switchServer")}</span>
-                </Link>
-              </DropdownMenuItem>
-
-              {/* Go Home */}
-              <DropdownMenuItem asChild className="focus:bg-muted/60 focus:text-primary hover:bg-muted/60 hover:text-primary transition-colors cursor-pointer">
-                <Link href={`/${locale}`} className="flex items-center gap-2 py-2">
-                  <Home className="h-4 w-4" />
-                  <span className="font-medium">{t("goHome")}</span>
-                </Link>
-              </DropdownMenuItem>
-
-              {/* User Info & Logout */}
-              {user && (
-                <div className="flex items-center justify-between p-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <Avatar className="h-8 w-8 border border-border">
-                      <AvatarImage src={user.avatar_url} alt={user.username} />
-                      <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium text-foreground truncate">
-                      {user.username}
-                    </span>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleLogout}
-                    className="h-8 w-8 text-muted-foreground hover:bg-muted/60 hover:text-primary"
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
+            <DropdownMenuContent align="end" sideOffset={8} className="w-64">
+              {(availableGuilds.length > 0 ? availableGuilds : [{
+                id: guildId,
+                name: guildName,
+                icon: guildIcon ?? null,
+                has_bot: true,
+              } as GuildInfo]).map((guild) => (
+                <DropdownMenuItem
+                  key={guild.id}
+                  onSelect={() => selectGuild(guild)}
+                  className="flex cursor-pointer items-center gap-2.5 rounded-lg py-2"
+                >
+                  <Avatar className="h-8 w-8 rounded-lg border border-border">
+                    <AvatarImage src={guild.icon?.startsWith("https") ? guild.icon : undefined} className="rounded-lg" />
+                    <AvatarFallback className="rounded-lg bg-secondary text-sm font-semibold text-primary">
+                      {guild.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="min-w-0 flex-1 truncate font-medium">{guild.name}</span>
+                  {guild.id === guildId && <Check className="h-4 w-4 shrink-0 text-primary" />}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+      <nav className="scrollbar-custom flex-1 space-y-5 overflow-y-auto p-3">
         {visibleNavigationSections.map((section, sectionIndex) => (
           <div key={section.titleKey || `section-${sectionIndex}`}>
             {/* Section Title - only show if titleKey exists */}
             {section.titleKey && (
-              <div className="px-3 mb-2">
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <div className="mb-2 flex items-center gap-2 px-3">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" aria-hidden="true" />
+                <h3 className="text-xs text-muted-foreground">
                   {t(section.titleKey)}
                 </h3>
+                <span className="h-px flex-1 bg-border/70" aria-hidden="true" />
               </div>
             )}
             {/* Section Items */}
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {section.items.map((item) => {
                 const isActive = isNavItemActive(item.href);
                 return (
@@ -338,21 +301,17 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
                     key={item.nameKey}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                      "group relative flex min-h-10 items-center gap-3 overflow-hidden rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-150",
                       isActive
-                        ? "bg-primary/10 text-primary shadow-sm"
+                        ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-accent hover:text-foreground"
                     )}
+                    aria-current={isActive ? "page" : undefined}
                   >
-                    {/* Active indicator */}
-                    {isActive && (
-                      <div className="absolute left-0 top-0 bottom-0 w-1 rounded-r bg-primary" />
-                    )}
-
                     <item.icon
                       className={cn(
-                        "h-5 w-5 transition-transform group-hover:scale-110",
-                        isActive ? "ml-1" : ""
+                        "h-[18px] w-[18px] shrink-0",
+                        isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"
                       )}
                     />
                     <div className="flex-1 min-w-0">
@@ -366,34 +325,24 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, isLoading = fal
         ))}
       </nav>
 
-      {/* Footer - ClashKing Branding & Settings */}
-      <div className="p-4 border-t border-border bg-background space-y-3">
-        {/* Settings Button */}
-        <div className="flex justify-center">
-          <SettingsDropdown
-            locale={locale}
-            triggerButtonClassName="border-border h-10 w-10"
-            menuClassName="w-48 bg-popover border border-border shadow-2xl"
-            subTriggerClassName="flex items-center space-x-2 hover:bg-accent/50 cursor-pointer"
-            itemClassName="flex items-center space-x-2 hover:bg-accent/50 cursor-pointer"
-            textClassName="hover:text-primary"
-          />
-        </div>
-
-        {/* Branding */}
+      <div className="border-t border-border bg-card p-3">
         <Link
           href={`/dashboard/${guildId}/support-us`}
-          className="flex items-center justify-center gap-1.5 rounded-md px-2 py-1 text-xs leading-none transition-colors hover:bg-accent/40"
+          className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] leading-none text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
         >
-          <span className="flex h-4 items-center text-muted-foreground">
-            {tCommon("poweredBy")}
-          </span>
-          <span className="flex h-4 items-center gap-1 font-bold text-primary">
-            <Image src={clashKingAssets.logos.crownRed} alt="" width={14} height={14} unoptimized className="h-3.5 w-3.5" />
-            <span className="leading-none">ClashKing</span>
+          <span>{tCommon("poweredBy")}</span>
+          <span className="flex items-center gap-1 font-semibold text-primary">
+            <Image
+              src="/logos/bot-app-logo.png"
+              alt=""
+              width={16}
+              height={16}
+              className="h-4 w-4 object-contain"
+            />
+            ClashKing
           </span>
         </Link>
       </div>
-    </div>
+    </aside>
   );
 }

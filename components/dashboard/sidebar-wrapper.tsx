@@ -5,6 +5,7 @@ import { Sidebar } from "./sidebar";
 import { MobileServerDropdown } from "./mobile-server-dropdown";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
+import type { GuildInfo } from "@/lib/api/types/server";
 
 interface SidebarWrapperProps {
   readonly guildId: string;
@@ -19,6 +20,7 @@ interface CachedGuildInfo {
 }
 
 const GUILD_INFO_CACHE_TTL = 120000;
+const GUILD_LIST_CACHE_KEY = "dashboard-guild-list";
 
 function getGuildInfoCacheKey(guildId: string): string {
   return `guild-info-${guildId}`;
@@ -48,6 +50,7 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
     name: "My Server",
     icon: undefined as string | undefined,
   });
+  const [availableGuilds, setAvailableGuilds] = useState<GuildInfo[]>([]);
 
   useEffect(() => {
     async function fetchServerInfo() {
@@ -99,6 +102,27 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
             icon: iconUrl,
           })
         );
+
+        try {
+          const guilds = await apiCache.get(
+            GUILD_LIST_CACHE_KEY,
+            async () => {
+              const response = await apiClient.servers.getGuilds();
+              if (response.error || !response.data) {
+                throw new Error(response.error || `Failed to fetch guilds (${response.status})`);
+              }
+              return response.data;
+            },
+            GUILD_INFO_CACHE_TTL
+          );
+          setAvailableGuilds(
+            guilds
+              .filter((candidate) => candidate.has_bot)
+              .toSorted((a, b) => a.name.localeCompare(b.name))
+          );
+        } catch (error) {
+          console.error("Failed to fetch available guilds:", { guildId, error });
+        }
       } catch (error) {
         console.error("Failed to fetch server info:", { guildId, error });
       } finally {
@@ -115,6 +139,8 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
         locale={locale}
         guildName={serverInfo.name}
         guildIcon={serverInfo.icon}
+        guildId={guildId}
+        availableGuilds={availableGuilds}
         isLoading={isLoading}
       />
     );
@@ -126,6 +152,7 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
       locale={locale}
       guildName={serverInfo.name}
       guildIcon={serverInfo.icon}
+      availableGuilds={availableGuilds}
       isLoading={isLoading}
     />
   );
