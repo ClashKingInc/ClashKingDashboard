@@ -92,12 +92,11 @@ export function RoleCombobox({
               {addPlaceholder || t("addRole")}
             </span>
           ) : selectedRole ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-            <span className="flex items-center gap-2 truncate">
-              <span
-                className="w-3 h-3 rounded-full shrink-0"
-                style={{ backgroundColor: intToHexColor(selectedRole.color || 0) }}
-              />
-              <span className="truncate">@{selectedRole.name}</span>
+            <span
+              className="truncate"
+              style={{ color: intToHexColor(selectedRole.color || 0) }}
+            >
+              @{selectedRole.name}
             </span>
           ) : (
             placeholder
@@ -152,10 +151,11 @@ export function RoleCombobox({
                     />
                   )}
                   <span
-                    className="w-3 h-3 rounded-full mr-2 shrink-0"
-                    style={{ backgroundColor: intToHexColor(role.color || 0) }}
-                  />
-                  <span className="truncate">@{role.name}</span>
+                    className="truncate"
+                    style={{ color: intToHexColor(role.color || 0) }}
+                  >
+                    @{role.name}
+                  </span>
                 </CommandItem>
               ))}
             </CommandGroup>
