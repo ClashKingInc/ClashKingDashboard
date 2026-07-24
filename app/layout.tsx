@@ -19,6 +19,16 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
+      <head>
+        <link rel="preconnect" href="https://assets.clashk.ing" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          href="https://assets.clashk.ing/fonts/clashking.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <ThemeProvider
           attribute="class"

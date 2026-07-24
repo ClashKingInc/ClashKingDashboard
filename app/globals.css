@@ -2,9 +2,9 @@
 
 @font-face {
   font-family: "ClashKing";
-  src: url("/fonts/clashking.woff2") format("woff2");
+  src: url("https://assets.clashk.ing/fonts/clashking.woff2") format("woff2");
   font-style: normal;
-  font-weight: 600;
+  font-weight: 100 900;
   font-display: swap;
 }
 
