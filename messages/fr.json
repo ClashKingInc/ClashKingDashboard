@@ -2943,8 +2943,8 @@
       "discordBot": "Bot Discord",
       "dashboard": "Tableau de bord"
     },
-    "language": { "label": "Langue" },
-    "appearance": { "label": "Apparence", "day": "Jour", "sunset": "Coucher de soleil" },
+    "language": { "label": "Langue", "system": "Suivre la langue du système" },
+    "appearance": { "label": "Apparence", "system": "Suivre l’apparence du système", "day": "Jour", "sunset": "Coucher de soleil" },
     "actions": {
       "addToDiscord": "Ajouter à Discord",
       "addClashKing": "Ajouter ClashKing",

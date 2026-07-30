@@ -36,7 +36,10 @@ export async function ClanSignalLegalShell({
           <div className="cs-nav-actions">
             <LandingLanguageSwitcher
               label={t("language.label")}
+              languageLabel={t("language.label")}
               appearanceLabel={t("appearance.label")}
+              systemLanguageLabel={t("language.system")}
+              systemAppearanceLabel={t("appearance.system")}
               dayLabel={t("appearance.day")}
               sunsetLabel={t("appearance.sunset")}
               initialTheme={landingTheme}

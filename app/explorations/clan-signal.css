@@ -60,12 +60,13 @@
 .cs-nav-links a { color: #000; font-size: 0.82rem; font-weight: 730; transition: color 140ms ease-out; }
 .cs-nav-links a:hover { color: #000; }
 .cs-nav-actions { justify-self: end; display: flex; align-items: center; gap: 10px; }
-.cs-language-trigger {
+.cs-settings-trigger {
   min-height: 42px;
-  padding: 0 11px;
+  padding: 0 12px;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
+  gap: 8px;
   border: 1px solid rgb(0 0 0 / 0.24);
   border-radius: 12px;
   background: rgb(255 255 255 / 0.16);
@@ -75,19 +76,15 @@
   font-weight: 820;
   cursor: pointer;
 }
-.cs-language-trigger:focus-visible { outline: 3px solid #b78c20; outline-offset: 3px; }
-.cs-language-trigger:disabled { cursor: wait; opacity: 0.6; }
+.cs-settings-trigger svg, .cs-settings-option > svg { width: 16px; height: 16px; flex: 0 0 auto; }
+.cs-settings-trigger:focus-visible { outline: 3px solid #b78c20; outline-offset: 3px; }
+.cs-settings-trigger:disabled { cursor: wait; opacity: 0.6; }
 .cs-language-flag { position: relative; width: 20px; height: 14px; display: inline-block; flex: 0 0 20px; overflow: hidden; border-radius: 3px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.16); }
 .cs-language-flag img { position: static !important; width: 100% !important; height: 100% !important; object-fit: cover; }
-.cs-language-chevron { width: 6px; height: 6px; margin: -3px 1px 0 2px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); }
-.cs-language-menu { min-width: 178px !important; padding: 6px !important; border: 1px solid rgb(23 53 42 / 0.18) !important; border-radius: 14px !important; background: #eff9fd !important; color: #000 !important; box-shadow: 0 16px 42px rgb(23 53 42 / 0.18) !important; }
-.cs-language-option { min-height: 40px; gap: 10px !important; border-radius: 9px !important; color: #000 !important; font-size: 0.78rem !important; font-weight: 720 !important; cursor: pointer; }
-.cs-language-option:focus, .cs-language-option[data-highlighted] { background: #d5edf7 !important; }
-.cs-language-option[aria-current="true"] { background: #c1f1ff !important; }
-.cs-language-option[data-active="true"] { background: #c1f1ff !important; }
-.cs-language-code { margin-left: auto; color: rgb(0 0 0 / 0.5); font-size: 0.66rem; font-weight: 820; }
-.cs-language-separator { background: rgb(23 53 42 / 0.13) !important; }
-.cs-language-label { padding: 8px 8px 4px !important; color: rgb(0 0 0 / 0.5) !important; font-size: 0.62rem !important; font-weight: 820 !important; text-transform: uppercase; }
+.cs-settings-menu { min-width: 178px !important; padding: 6px !important; border: 1px solid rgb(23 53 42 / 0.18) !important; border-radius: 14px !important; background: #eff9fd !important; color: #000 !important; box-shadow: 0 16px 42px rgb(23 53 42 / 0.18) !important; }
+.cs-settings-option { min-height: 40px; gap: 10px !important; border-radius: 9px !important; color: #000 !important; font-size: 0.78rem !important; font-weight: 720 !important; cursor: pointer; }
+.cs-settings-option:focus, .cs-settings-option[data-highlighted], .cs-settings-option[data-state="open"] { background: #d5edf7 !important; }
+.cs-settings-check { margin-left: auto; }
 .cs-theme-swatch { width: 20px; height: 14px; flex: 0 0 auto; border-radius: 4px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.14); }
 .cs-theme-swatch-day { background: linear-gradient(135deg, #48a2d5 0 48%, #c1f1ff 48%); }
 .cs-theme-swatch-sunset { background: linear-gradient(135deg, #191b3a 0 44%, #a75d78 44% 70%, #e59a68 70%); }
@@ -355,17 +352,13 @@
 .clan-signal[data-cs-theme="sunset"] .cs-wordmark-sunset { opacity: 1; }
 .clan-signal[data-cs-theme="sunset"] .cs-nav-links a,
 .clan-signal[data-cs-theme="sunset"] .cs-nav-links a:hover,
-.clan-signal[data-cs-theme="sunset"] .cs-language-trigger { color: #fff2d5; }
-.clan-signal[data-cs-theme="sunset"] .cs-language-trigger { border-color: rgb(255 242 213 / 0.3); background: rgb(29 24 49 / 0.22); }
-.cs-language-menu[data-landing-theme="sunset"] { border-color: rgb(255 242 213 / 0.16) !important; background: #332b48 !important; color: #fff2d5 !important; }
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-option { color: #fff2d5 !important; }
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-option:focus,
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-option[data-highlighted] { background: #4c3c5a !important; }
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-option[aria-current="true"],
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-option[data-active="true"] { background: #65475d !important; }
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-code,
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-label { color: rgb(255 242 213 / 0.56) !important; }
-.cs-language-menu[data-landing-theme="sunset"] .cs-language-separator { background: rgb(255 242 213 / 0.14) !important; }
+.clan-signal[data-cs-theme="sunset"] .cs-settings-trigger { color: #fff2d5; }
+.clan-signal[data-cs-theme="sunset"] .cs-settings-trigger { border-color: rgb(255 242 213 / 0.3); background: rgb(29 24 49 / 0.22); }
+.cs-settings-menu[data-landing-theme="sunset"] { border-color: rgb(255 242 213 / 0.16) !important; background: #332b48 !important; color: #fff2d5 !important; }
+.cs-settings-menu[data-landing-theme="sunset"] .cs-settings-option { color: #fff2d5 !important; }
+.cs-settings-menu[data-landing-theme="sunset"] .cs-settings-option:focus,
+.cs-settings-menu[data-landing-theme="sunset"] .cs-settings-option[data-highlighted],
+.cs-settings-menu[data-landing-theme="sunset"] .cs-settings-option[data-state="open"] { background: #4c3c5a !important; }
 .clan-signal[data-cs-theme="sunset"] .cs-hero::before {
   background: linear-gradient(180deg, #181a3b 0, #744867 28%, #b96576 48%, #6a415d 68%, #2e2844 100%);
 }
@@ -423,7 +416,7 @@
   .cs-nav-brand { width: 126px; }
   .cs-nav .cs-button { min-height: 38px; padding-inline: 12px; font-size: 0.68rem; }
   .cs-nav .cs-button .cs-arrow { display: none; }
-  .cs-language-trigger { min-height: 38px; border-radius: 11px; }
+  .cs-settings-trigger { min-height: 38px; border-radius: 11px; }
   .cs-hero {
     --cs-cloud-strip-width: calc(300svh + 660px);
     --cs-sky-fade-height: 300px;
