@@ -21,7 +21,10 @@ export async function ClanSignalLegalShell({
 }>) {
   const t = await getTranslations("ClanSignal");
   const cookieStore = await cookies();
-  const landingTheme = cookieStore.get(LANDING_THEME_COOKIE)?.value === "sunset" ? "sunset" : "day";
+  const storedLandingTheme = cookieStore.get(LANDING_THEME_COOKIE)?.value;
+  const landingTheme = storedLandingTheme === "sunset" || storedLandingTheme === "system"
+    ? storedLandingTheme
+    : "day";
 
   return (
     <main className="clan-signal cs-legal-page" data-cs-theme={landingTheme}>

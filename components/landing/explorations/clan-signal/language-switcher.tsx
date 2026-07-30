@@ -8,7 +8,8 @@ import { Check, Computer, Globe, Moon, Settings, Sun } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -31,7 +32,7 @@ type LandingLanguageSwitcherProps = {
   systemAppearanceLabel: string;
   dayLabel: string;
   sunsetLabel: string;
-  initialTheme: LandingTheme;
+  initialTheme: LandingThemeMode;
 };
 
 type LandingTheme = "day" | "sunset";
@@ -55,7 +56,7 @@ export function LandingLanguageSwitcher({
 }: Readonly<LandingLanguageSwitcherProps>) {
   const locale = useLocale() as SupportedLocale;
   const router = useRouter();
-  const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
+  const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme === "sunset" ? "sunset" : "day");
   const [themeMode, setThemeMode] = useState<LandingThemeMode>(initialTheme);
   const [localeMode, setLocaleMode] = useState<LocaleMode>("manual");
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -80,10 +81,6 @@ export function LandingLanguageSwitcher({
       }
     }
 
-    const storedTheme = document.cookie.match(new RegExp(`(?:^|; )${LANDING_THEME_COOKIE}=([^;]*)`))?.[1];
-    if (storedTheme === "system") {
-      setThemeMode("system");
-    }
   }, [locale, router]);
 
   useEffect(() => {
@@ -106,6 +103,28 @@ export function LandingLanguageSwitcher({
     startTransition(() => router.refresh());
   };
 
+  const applyThemePreference = (value: string) => {
+    if (value === "system") {
+      applyTheme(resolveSystemTheme(), "system");
+      return;
+    }
+
+    if (value === "day" || value === "sunset") {
+      applyTheme(value, value);
+    }
+  };
+
+  const applyLocalePreference = (value: string) => {
+    if (value === "system") {
+      switchLocale(resolveBrowserLocale(navigator.languages), "browser");
+      return;
+    }
+
+    if (LANGUAGE_OPTIONS.some((language) => language.code === value)) {
+      switchLocale(value as SupportedLocale, "manual");
+    }
+  };
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -120,21 +139,23 @@ export function LandingLanguageSwitcher({
             <span>{appearanceLabel}</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="cs-settings-menu" data-landing-theme={landingTheme} sideOffset={8} alignOffset={-6}>
-            <DropdownMenuItem className="cs-settings-option" onClick={() => applyTheme(resolveSystemTheme(), "system")}>
+            <DropdownMenuRadioGroup value={themeMode} onValueChange={applyThemePreference}>
+            <DropdownMenuRadioItem value="system" className="cs-settings-option">
               <Computer aria-hidden="true" />
               <span>{systemAppearanceLabel}</span>
               {themeMode === "system" && <Check className="cs-settings-check" aria-hidden="true" />}
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cs-settings-option" onClick={() => applyTheme("day", "day")}>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="day" className="cs-settings-option">
               <span className="cs-theme-swatch cs-theme-swatch-day" aria-hidden="true" />
               <span>{dayLabel}</span>
               {themeMode === "day" && <Check className="cs-settings-check" aria-hidden="true" />}
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cs-settings-option" onClick={() => applyTheme("sunset", "sunset")}>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="sunset" className="cs-settings-option">
               <span className="cs-theme-swatch cs-theme-swatch-sunset" aria-hidden="true" />
               <span>{sunsetLabel}</span>
               {themeMode === "sunset" && <Check className="cs-settings-check" aria-hidden="true" />}
-            </DropdownMenuItem>
+            </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
 
@@ -144,18 +165,20 @@ export function LandingLanguageSwitcher({
             <span>{languageLabel}</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="cs-settings-menu" data-landing-theme={landingTheme} sideOffset={8} alignOffset={-6}>
-            <DropdownMenuItem className="cs-settings-option" onClick={() => switchLocale(resolveBrowserLocale(navigator.languages), "browser")}>
+            <DropdownMenuRadioGroup value={localeMode === "browser" ? "system" : locale} onValueChange={applyLocalePreference}>
+            <DropdownMenuRadioItem value="system" className="cs-settings-option">
               <Globe aria-hidden="true" />
               <span>{systemLanguageLabel}</span>
               {localeMode === "browser" && <Check className="cs-settings-check" aria-hidden="true" />}
-            </DropdownMenuItem>
+            </DropdownMenuRadioItem>
             {LANGUAGE_OPTIONS.map((language) => (
-              <DropdownMenuItem key={language.code} className="cs-settings-option" onClick={() => switchLocale(language.code, "manual")}>
+              <DropdownMenuRadioItem key={language.code} value={language.code} className="cs-settings-option">
                 <span className="cs-language-flag"><Image src={`https://flagcdn.com/w40/${language.flagCode}.png`} alt="" width={20} height={14} /></span>
                 <span>{language.name}</span>
                 {localeMode === "manual" && locale === language.code && <Check className="cs-settings-check" aria-hidden="true" />}
-              </DropdownMenuItem>
+              </DropdownMenuRadioItem>
             ))}
+            </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
       </DropdownMenuContent>

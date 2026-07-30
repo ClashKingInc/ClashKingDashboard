@@ -62,7 +62,10 @@ function FeatureList({ features }: { features: readonly Feature[] }) {
 export async function ClanSignal() {
   const t = await getTranslations("ClanSignal");
   const cookieStore = await cookies();
-  const landingTheme = cookieStore.get(LANDING_THEME_COOKIE)?.value === "sunset" ? "sunset" : "day";
+  const storedLandingTheme = cookieStore.get(LANDING_THEME_COOKIE)?.value;
+  const landingTheme = storedLandingTheme === "sunset" || storedLandingTheme === "system"
+    ? storedLandingTheme
+    : "day";
   const headlinePhrases = [
     [t("hero.phrases.run.first"), t("hero.phrases.run.second"), t("hero.phrases.run.third")],
     [t("hero.phrases.accounts.first"), t("hero.phrases.accounts.second"), t("hero.phrases.accounts.third")],
