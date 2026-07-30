@@ -82,7 +82,7 @@
 .cs-language-flag { position: relative; width: 20px; height: 14px; display: inline-block; flex: 0 0 20px; overflow: hidden; border-radius: 3px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.16); }
 .cs-language-flag img { position: static !important; width: 100% !important; height: 100% !important; object-fit: cover; }
 .cs-settings-menu { min-width: 178px !important; padding: 6px !important; border: 1px solid rgb(23 53 42 / 0.18) !important; border-radius: 14px !important; background: #eff9fd !important; color: #000 !important; box-shadow: 0 16px 42px rgb(23 53 42 / 0.18) !important; }
-.cs-settings-option { min-height: 40px; gap: 10px !important; border-radius: 9px !important; color: #000 !important; font-size: 0.78rem !important; font-weight: 720 !important; cursor: pointer; }
+.cs-settings-option { min-height: 40px; gap: 10px !important; padding-left: 8px !important; padding-right: 8px !important; border-radius: 9px !important; color: #000 !important; font-size: 0.78rem !important; font-weight: 720 !important; cursor: pointer; }
 .cs-settings-option:focus, .cs-settings-option[data-highlighted], .cs-settings-option[data-state="open"] { background: #d5edf7 !important; }
 .cs-settings-option > .absolute { display: none; }
 .cs-settings-check { margin-left: auto; }
