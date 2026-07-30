@@ -2943,6 +2943,7 @@
       "discordBot": "Bot Discord",
       "dashboard": "Tableau de bord"
     },
+    "settings": { "label": "Paramètres" },
     "language": { "label": "Langue", "system": "Suivre la langue du système" },
     "appearance": { "label": "Apparence", "system": "Suivre l’apparence du système", "day": "Jour", "sunset": "Coucher de soleil" },
     "actions": {

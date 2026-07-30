@@ -2920,6 +2920,7 @@
       "discordBot": "Discord Bot",
       "dashboard": "Dashboard"
     },
+    "settings": { "label": "Settings" },
     "language": { "label": "Language", "system": "Follow system language" },
     "appearance": { "label": "Appearance", "system": "Follow system appearance", "day": "Day", "sunset": "Sunset" },
     "actions": {

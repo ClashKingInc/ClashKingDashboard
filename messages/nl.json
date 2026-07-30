@@ -2923,6 +2923,7 @@
       "discordBot": "Discord-bot",
       "dashboard": "Dashboard"
     },
+    "settings": { "label": "Instellingen" },
     "language": { "label": "Taal", "system": "Systeemtaal volgen" },
     "appearance": { "label": "Weergave", "system": "Systeemuiterlijk volgen", "day": "Dag", "sunset": "Zonsondergang" },
     "actions": {

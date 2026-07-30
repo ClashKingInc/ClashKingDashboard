@@ -98,7 +98,7 @@ export async function ClanSignal() {
           </div>
           <div className="cs-nav-actions">
             <LandingLanguageSwitcher
-              label={t("language.label")}
+              label={t("settings.label")}
               languageLabel={t("language.label")}
               appearanceLabel={t("appearance.label")}
               systemLanguageLabel={t("language.system")}

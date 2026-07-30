@@ -81,14 +81,23 @@ export function LandingLanguageSwitcher({
     }
 
     const storedTheme = document.cookie.match(new RegExp(`(?:^|; )${LANDING_THEME_COOKIE}=([^;]*)`))?.[1];
-    if (storedTheme !== "system") return;
+    if (storedTheme === "system") {
+      setThemeMode("system");
+    }
+  }, [locale, router]);
 
+  useEffect(() => {
+    if (themeMode !== "system") return;
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const syncSystemTheme = () => applyTheme(resolveSystemTheme(), "system");
+    const syncSystemTheme = () => {
+      const nextTheme = resolveSystemTheme();
+      setLandingTheme(nextTheme);
+      document.querySelector<HTMLElement>(".clan-signal")?.setAttribute("data-cs-theme", nextTheme);
+    };
     syncSystemTheme();
     mediaQuery.addEventListener("change", syncSystemTheme);
     return () => mediaQuery.removeEventListener("change", syncSystemTheme);
-  }, [locale, router]);
+  }, [themeMode]);
 
   const switchLocale = (nextLocale: SupportedLocale, mode: LocaleMode) => {
     document.cookie = `${LOCALE_MODE_COOKIE}=${mode}; path=/; max-age=31536000; SameSite=Lax`;
