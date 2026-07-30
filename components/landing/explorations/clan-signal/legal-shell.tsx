@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
@@ -7,6 +8,7 @@ import { LandingLanguageSwitcher } from "./language-switcher";
 import "../../../../app/explorations/clan-signal.css";
 
 const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
+const ARROW_ICON = "/concepts/local/assets/icons/Icon_DC_ArrowRight.png";
 
 export async function ClanSignalLegalShell({
   title,
@@ -44,6 +46,10 @@ export async function ClanSignalLegalShell({
               sunsetLabel={t("appearance.sunset")}
               initialTheme={landingTheme}
             />
+            <a className="cs-button cs-button-small" href="https://invite.clashk.ing/" target="_blank" rel="noreferrer">
+              {t("actions.addToDiscord")}
+              <Image src={ARROW_ICON} alt="" width={12} height={17} className="cs-arrow" unoptimized />
+            </a>
           </div>
         </nav>
       </header>
