@@ -37,9 +37,9 @@ describe("resolveBrowserLocale", () => {
 });
 
 describe("getLocaleModeFromCookie", () => {
-  it("returns 'manual' when cookie is absent", () => {
-    expect(getLocaleModeFromCookie("")).toBe("manual");
-    expect(getLocaleModeFromCookie("other=value")).toBe("manual");
+  it("returns 'browser' when cookie is absent", () => {
+    expect(getLocaleModeFromCookie("")).toBe("browser");
+    expect(getLocaleModeFromCookie("other=value")).toBe("browser");
   });
 
   it("returns 'browser' when cookie ends with 'browser'", () => {
