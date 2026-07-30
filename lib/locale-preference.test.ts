@@ -42,6 +42,11 @@ describe("getLocaleModeFromCookie", () => {
     expect(getLocaleModeFromCookie("other=value")).toBe("browser");
   });
 
+  it("preserves a legacy NEXT_LOCALE preference as manual", () => {
+    expect(getLocaleModeFromCookie("NEXT_LOCALE=fr")).toBe("manual");
+    expect(getLocaleModeFromCookie("foo=bar; NEXT_LOCALE=nl")).toBe("manual");
+  });
+
   it("returns 'browser' when cookie ends with 'browser'", () => {
     expect(getLocaleModeFromCookie(`${LOCALE_MODE_COOKIE}=browser`)).toBe("browser");
   });

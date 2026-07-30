@@ -1,6 +1,7 @@
 import { routing } from "@/i18n/routing";
 
 export const LOCALE_MODE_COOKIE = "CK_LOCALE_MODE";
+const NEXT_LOCALE_COOKIE = "NEXT_LOCALE";
 
 export type LocaleMode = "manual" | "browser";
 export type SupportedLocale = "en" | "fr" | "nl";
@@ -39,6 +40,12 @@ export function getLocaleModeFromCookie(cookieString: string): LocaleMode {
     .find((part) => part.startsWith(`${LOCALE_MODE_COOKIE}=`));
 
   if (!cookie) {
+    const hasLegacyLocalePreference = cookieString
+      .split(";")
+      .map((part) => part.trim())
+      .some((part) => part.startsWith(`${NEXT_LOCALE_COOKIE}=`));
+
+    if (hasLegacyLocalePreference) return "manual";
     return "browser";
   }
 
