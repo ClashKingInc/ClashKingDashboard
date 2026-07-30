@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { useTheme } from "next-themes";
 import { Check, Computer, Globe, Moon, Settings, Sun } from "lucide-react";
 import {
   DropdownMenu,
@@ -32,17 +33,9 @@ type LandingLanguageSwitcherProps = {
   systemAppearanceLabel: string;
   dayLabel: string;
   sunsetLabel: string;
-  initialTheme: LandingThemeMode;
 };
 
 type LandingTheme = "day" | "sunset";
-type LandingThemeMode = LandingTheme | "system";
-
-const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
-
-function resolveSystemTheme(): LandingTheme {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "sunset" : "day";
-}
 
 export function LandingLanguageSwitcher({
   label,
@@ -52,23 +45,15 @@ export function LandingLanguageSwitcher({
   systemAppearanceLabel,
   dayLabel,
   sunsetLabel,
-  initialTheme,
 }: Readonly<LandingLanguageSwitcherProps>) {
   const locale = useLocale() as SupportedLocale;
   const router = useRouter();
-  const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme === "sunset" ? "sunset" : "day");
-  const [themeMode, setThemeMode] = useState<LandingThemeMode>(initialTheme);
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [landingTheme, setLandingTheme] = useState<LandingTheme>("day");
   const [localeMode, setLocaleMode] = useState<LocaleMode>("manual");
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
-
-  const applyTheme = (nextTheme: LandingTheme, mode: LandingThemeMode) => {
-    setLandingTheme(nextTheme);
-    setThemeMode(mode);
-    document.cookie = `${LANDING_THEME_COOKIE}=${mode}; path=/; max-age=31536000; SameSite=Lax`;
-    document.querySelector<HTMLElement>(".clan-signal")?.setAttribute("data-cs-theme", nextTheme);
-  };
 
   useEffect(() => {
     const nextLocaleMode = getLocaleModeFromCookie(document.cookie);
@@ -84,17 +69,10 @@ export function LandingLanguageSwitcher({
   }, [locale, router]);
 
   useEffect(() => {
-    if (themeMode !== "system") return;
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const syncSystemTheme = () => {
-      const nextTheme = resolveSystemTheme();
-      setLandingTheme(nextTheme);
-      document.querySelector<HTMLElement>(".clan-signal")?.setAttribute("data-cs-theme", nextTheme);
-    };
-    syncSystemTheme();
-    mediaQuery.addEventListener("change", syncSystemTheme);
-    return () => mediaQuery.removeEventListener("change", syncSystemTheme);
-  }, [themeMode]);
+    const nextTheme = resolvedTheme === "dark" ? "sunset" : "day";
+    setLandingTheme(nextTheme);
+    document.querySelector<HTMLElement>(".clan-signal")?.setAttribute("data-cs-theme", nextTheme);
+  }, [resolvedTheme]);
 
   const switchLocale = (nextLocale: SupportedLocale, mode: LocaleMode) => {
     document.cookie = `${LOCALE_MODE_COOKIE}=${mode}; path=/; max-age=31536000; SameSite=Lax`;
@@ -105,14 +83,15 @@ export function LandingLanguageSwitcher({
 
   const applyThemePreference = (value: string) => {
     if (value === "system") {
-      applyTheme(resolveSystemTheme(), "system");
+      setTheme("system");
       return;
     }
 
-    if (value === "day" || value === "sunset") {
-      applyTheme(value, value);
-    }
+    if (value === "day") setTheme("light");
+    if (value === "sunset") setTheme("dark");
   };
+
+  const themeMode = theme === "light" ? "day" : theme === "dark" ? "sunset" : "system";
 
   const applyLocalePreference = (value: string) => {
     if (value === "system") {
