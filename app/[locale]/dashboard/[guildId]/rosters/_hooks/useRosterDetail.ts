@@ -204,12 +204,14 @@ export function useRosterDetail(rosterId: string, serverId: string): UseRosterDe
     loadChannels();
   }, [loadData, loadGroups, loadCategories, loadChannels]);
 
+  const rosterGroupId = roster?.group_id;
+
   // Load automations when roster is loaded (to include group automations)
   useEffect(() => {
-    if (roster) {
-      loadAutomations(roster.group_id);
+    if (rosterGroupId) {
+      loadAutomations(rosterGroupId);
     }
-  }, [roster?.group_id, loadAutomations]);
+  }, [rosterGroupId, loadAutomations]);
 
   // Refresh roster data from API
   const refreshRoster = useCallback(async () => {

@@ -60,7 +60,6 @@ clashking-dashboard/
 │           ├── roster-automation/    # Roster automation endpoints
 │           ├── roster-group/         # Roster group endpoints
 │           ├── roster-signup-category/ # Signup category endpoints
-│           ├── roster-token/         # Roster token endpoints
 │           ├── search/               # Search endpoints
 │           ├── server/               # Server settings
 │           ├── static/               # Static metadata endpoints

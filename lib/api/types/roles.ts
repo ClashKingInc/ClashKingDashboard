@@ -1,15 +1,15 @@
-/**
- * Role-related types
- */
-
 export type RoleType =
   | "townhall"
-  | "league"
   | "builderhall"
+  | "league"
   | "builder_league"
+  | "clan_role"
+  | "clan_category"
+  | "family"
   | "achievement"
-  | "status"
-  | "family_position";
+  | "status";
+
+export type RoleMode = "both" | "add" | "remove";
 
 export interface DiscordRole {
   id: string;
@@ -20,115 +20,58 @@ export interface DiscordRole {
   mentionable: boolean;
 }
 
-export interface TownhallRole {
-  role_id: string | number;
-  th: number;
-  toggle?: boolean;
-  server?: number;
+export interface ServerRole {
+  id: string;
+  server_id: number;
+  clan_tag?: string | null;
+  type: RoleType;
+  option: string;
+  role_id: string;
+  mode: RoleMode;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface LeagueRole {
-  role_id: string | number;
-  league: string;
-  toggle?: boolean;
-  server?: number;
+export interface ServerRoleInput {
+  clan_tag?: string | null;
+  type: RoleType;
+  option: string;
+  role_id: string;
+  mode?: RoleMode;
 }
 
-export interface BuilderHallRole {
-  role_id: string | number;
-  bh: number;
-  toggle?: boolean;
-  server?: number;
+export type ServerRoleUpdate = Partial<ServerRoleInput>;
+
+export interface ServerRolesResponse {
+  server_id: number;
+  roles: ServerRole[];
+  count: number;
 }
 
-export interface BuilderLeagueRole {
-  role_id: string | number;
-  league: string;
-  toggle?: boolean;
-  server?: number;
+export interface ServerRoleResponse {
+  message: string;
+  role: ServerRole;
 }
-
-export interface AchievementRole {
-  role_id: string | number;
-  achievement: string;
-  toggle?: boolean;
-  server?: number;
-}
-
-export interface StatusRole {
-  id: string | number;
-  months: number;
-  server?: number;
-}
-
-export interface FamilyPositionRole {
-  role_id: string | number;
-  type: "family_elder_roles" | "family_co-leader_roles" | "family_leader_roles";
-  toggle?: boolean;
-  server?: number;
-}
-
-export type ConfiguredRole =
-  | TownhallRole
-  | LeagueRole
-  | BuilderHallRole
-  | BuilderLeagueRole
-  | AchievementRole
-  | StatusRole
-  | FamilyPositionRole;
 
 export interface RoleSettings {
-  server_id: string | number;
-  auto_eval_status: boolean;
-  auto_eval_nickname: boolean;
-  autoeval_triggers: string[];
-  autoeval_log?: string | number;
-  blacklisted_roles: (string | number)[];
-  role_treatment: string[];
-  category_roles?: any;
+  server_id: number;
+  auto_eval_status?: boolean;
+  auto_eval_nickname?: boolean;
+  autoeval_triggers?: string[];
+  autoeval_log?: string;
+  blacklisted_roles?: string[];
 }
 
 export interface RoleSettingsUpdate {
   auto_eval_status?: boolean;
   auto_eval_nickname?: boolean;
   autoeval_triggers?: string[];
-  autoeval_log?: string | number;
-  blacklisted_roles?: (string | number)[];
-  role_treatment?: string[];
-  category_roles?: Record<string, string | null>;
-}
-
-export interface RolesListResponse {
-  server_id: string | number;
-  role_type: string;
-  roles: ConfiguredRole[];
-  count: number;
-}
-
-export interface AllRolesResponse {
-  server_id: string | number;
-  roles: {
-    townhall: TownhallRole[];
-    league: LeagueRole[];
-    builderhall: BuilderHallRole[];
-    builder_league: BuilderLeagueRole[];
-    achievement: AchievementRole[];
-    status: StatusRole[];
-    family_position: FamilyPositionRole[];
-  };
-  total_count: number;
-  category_roles?: Record<string, string>;
-}
-
-export interface RoleResponse {
-  message: string;
-  server_id: string | number;
-  role_type: string;
-  role_id?: string | number;
+  autoeval_log?: string;
+  blacklisted_roles?: string[];
 }
 
 export interface DiscordRolesResponse {
-  server_id: string | number;
+  server_id: number;
   roles: DiscordRole[];
   count: number;
 }

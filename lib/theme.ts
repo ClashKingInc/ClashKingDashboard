@@ -130,12 +130,12 @@ export const clashKingAssets = {
     homeBase: `${baseUrl}/home-base`,
     builderBase: `${baseUrl}/builder-base`,
     capitalBase: `${baseUrl}/capital-base`,
-    townHallPics: `${baseUrl}/home-base/town-hall-pics`,
+    townHallPics: `${baseUrl}/buildings/home-village/town_hall`,
   },
 } as const;
 
 export function townHallImageUrl(level: number): string {
-  return `${baseUrl}/home-base/town-hall-pics/town-hall-${level}.png`;
+  return `${baseUrl}/buildings/home-village/town_hall/level_${level}.webp`;
 }
 
 // ============================================================================

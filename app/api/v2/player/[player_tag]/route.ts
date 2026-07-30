@@ -10,7 +10,7 @@ export async function GET(
     const { player_tag } = await params;
     const token = request.headers.get('authorization');
 
-    const response = await fetch(`${API_BASE_URL}/v2/player/${player_tag}`, {
+    const response = await fetch(`${API_BASE_URL}/proxy/v1/players/${encodeURIComponent(player_tag)}`, {
       method: 'GET',
       headers: {
         'Authorization': token || '',

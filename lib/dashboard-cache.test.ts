@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   dashboardCacheKeys,
-  normalizeAllRolesPayload,
+  normalizeAllChannelsPayload,
   normalizeChannelsPayload,
   normalizeDiscordRolesPayload,
   normalizeServerSettingsPayload,
@@ -13,7 +13,7 @@ describe("dashboardCacheKeys", () => {
     expect(dashboardCacheKeys.channels("123")).toBe("dashboard-server-channels-123");
     expect(dashboardCacheKeys.discordRoles("123")).toBe("dashboard-discord-roles-123");
     expect(dashboardCacheKeys.settings("123")).toBe("dashboard-server-settings-123");
-    expect(dashboardCacheKeys.allRoles("123")).toBe("dashboard-all-roles-123");
+    expect(dashboardCacheKeys.serverRoles("123")).toBe("dashboard-server-roles-123");
   });
 });
 
@@ -28,11 +28,28 @@ describe("dashboard cache payload normalization", () => {
     expect(normalizeChannelsPayload(undefined)).toEqual([]);
   });
 
-  it("normalizes raw or wrapped discord roles payloads", () => {
-    const roles = [{ id: "1", name: "Leader", color: 123 }];
+  it("keeps only text and announcement channels in channel selectors", () => {
+    const channels = [
+      { id: "1", name: "general", type: 0 },
+      { id: "2", name: "announcements", type: "news" },
+      { id: "3", name: "Staff", type: "category" },
+      { id: "4", name: "Lobby", type: 2 },
+    ];
 
-    expect(normalizeDiscordRolesPayload({ roles, count: 1, server_id: "1" })).toEqual(roles);
-    expect(normalizeDiscordRolesPayload({ data: { roles, count: 1, server_id: "1" } })).toEqual(roles);
+    expect(normalizeChannelsPayload(channels).map((channel) => channel.id)).toEqual(["1", "2"]);
+    expect(normalizeAllChannelsPayload(channels).map((channel) => channel.id)).toEqual(["1", "2", "3", "4"]);
+  });
+
+  it("normalizes raw or wrapped discord roles payloads", () => {
+    const roles = [
+      { id: "1", name: "Leader", color: 123, position: 3, managed: false, mentionable: true },
+      { id: "2", name: "ClashKing", color: 0, position: 2, managed: true, mentionable: false },
+      { id: "3", name: "@everyone", color: 0, position: 0, managed: false, mentionable: false },
+    ];
+    const selectableRoles = [roles[0]];
+
+    expect(normalizeDiscordRolesPayload({ roles, count: 3, server_id: "1" })).toEqual(selectableRoles);
+    expect(normalizeDiscordRolesPayload({ data: { roles, count: 3, server_id: "1" } })).toEqual(selectableRoles);
     expect(normalizeDiscordRolesPayload(null)).toEqual([]);
   });
 
@@ -42,25 +59,5 @@ describe("dashboard cache payload normalization", () => {
     expect(normalizeServerSettingsPayload(settings)).toEqual(settings);
     expect(normalizeServerSettingsPayload({ data: settings })).toEqual(settings);
     expect(normalizeServerSettingsPayload("nope")).toBeNull();
-  });
-
-  it("normalizes raw or wrapped all roles payloads", () => {
-    const payload = {
-      server_id: "1",
-      roles: {
-        townhall: [],
-        league: [],
-        builderhall: [],
-        builder_league: [],
-        achievement: [],
-        status: [{ id: "1", months: 6 }],
-        family_position: [],
-      },
-      total_count: 1,
-    };
-
-    expect(normalizeAllRolesPayload(payload)).toEqual(payload);
-    expect(normalizeAllRolesPayload({ data: payload })).toEqual(payload);
-    expect(normalizeAllRolesPayload({ data: [] })).toBeNull();
   });
 });

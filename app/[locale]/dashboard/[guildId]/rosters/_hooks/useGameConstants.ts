@@ -23,7 +23,7 @@ let fetchPromise: Promise<GameConstants> | null = null;
 
 async function fetchMaxLevel(category: string, itemName: string): Promise<number | null> {
   try {
-    const response = await fetch(`/api/v2/static/${category}/${encodeURIComponent(itemName)}/maxlevel`);
+    const response = await fetch(`/api/v2/static/${category}/${encodeURIComponent(itemName)}/max-level`);
     if (response.ok) {
       const data = await response.json();
       return data.max_level;

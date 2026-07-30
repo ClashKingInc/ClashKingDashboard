@@ -4,9 +4,29 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordRole, GuildInfo, BotInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordRole, GuildInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
+import type { BotGuildProfile, BotGuildProfileUpdate, DashboardAccessConfig, DashboardAccessGrant, DashboardCapabilities } from '../types/dashboard-access';
 
 export class ServerClient extends BaseApiClient {
+  async getDashboardCapabilities(serverId: string | number): Promise<ApiResponse<DashboardCapabilities>> {
+    return this.request(`/v2/server/${serverId}/dashboard-capabilities`, { method: 'GET' });
+  }
+
+  async getDashboardAccess(serverId: string | number): Promise<ApiResponse<DashboardAccessConfig>> {
+    return this.request(`/v2/server/${serverId}/dashboard-access`, { method: 'GET' });
+  }
+
+  async updateDashboardAccess(serverId: string | number, grants: DashboardAccessGrant[]): Promise<ApiResponse<DashboardAccessConfig>> {
+    return this.request(`/v2/server/${serverId}/dashboard-access`, { method: 'PUT', body: JSON.stringify({ grants }) });
+  }
+
+  async getBotGuildProfile(serverId: string | number): Promise<ApiResponse<BotGuildProfile>> {
+    return this.request(`/v2/server/${serverId}/bot-profile`, { method: 'GET' });
+  }
+
+  async updateBotGuildProfile(serverId: string | number, profile: BotGuildProfileUpdate): Promise<ApiResponse<BotGuildProfile>> {
+    return this.request(`/v2/server/${serverId}/bot-profile`, { method: 'PATCH', body: JSON.stringify(profile) });
+  }
   /**
    * GET /v2/guilds
    * Get all guilds the authenticated user has access to
@@ -21,14 +41,6 @@ export class ServerClient extends BaseApiClient {
    */
   async getGuild(guildId: string): Promise<ApiResponse<GuildInfo>> {
     return this.request(`/v2/guild/${guildId}`, { method: 'GET' });
-  }
-
-  /**
-   * GET /v2/internal/bot/info
-   * Get bot information and status
-   */
-  async getBotInfo(): Promise<ApiResponse<BotInfo>> {
-    return this.request('/v2/internal/bot/info', { method: 'GET' });
   }
 
   /**
@@ -133,12 +145,12 @@ export class ServerClient extends BaseApiClient {
   }
 
   /**
-   * GET /v2/server/{server_id}/links
+   * GET /v2/links/server/{server_id}
    * Get all links for a server with pagination
    */
-  async getServerLinks(serverId: string | number, params?: { limit?: number; offset?: number; search?: string }): Promise<ApiResponse<PaginatedResponse<any>>> {
+  async getServerLinks(serverId: string | number, params?: { limit?: number; offset?: number; query?: string; account_filter?: 'none' }): Promise<ApiResponse<PaginatedResponse<any>>> {
     const query = params ? this.buildQueryString(params) : '';
-    return this.request(`/v2/server/${serverId}/links${query}`, { method: 'GET' });
+    return this.request(`/v2/links/server/${serverId}${query}`, { method: 'GET' });
   }
 
   /**

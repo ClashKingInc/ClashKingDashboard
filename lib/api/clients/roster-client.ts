@@ -99,11 +99,6 @@ export class RosterClient extends BaseApiClient {
     return this.request(`/v2/roster/server/${serverId}/members`, { method: 'GET' });
   }
 
-  async generateToken(serverId: number, rosterId?: string): Promise<ApiResponse<{ message: string; access_url: string; token: string; expires_at: string }>> {
-    const query = this.buildQueryString({ server_id: serverId, roster_id: rosterId });
-    return this.request(`/v2/roster-token${query}`, { method: 'POST' });
-  }
-
   // ============================================================================
   // Roster Groups
   // ============================================================================

@@ -12,7 +12,6 @@ import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { SettingsDropdown } from "@/components/settings-dropdown";
 
@@ -45,11 +44,11 @@ export function Navbar() {
   };
 
   const logoSrc = mounted && (theme === "light" || resolvedTheme === "light")
-    ? clashKingAssets.logos.withTextWhitePng
-    : clashKingAssets.logos.withTextDarkPng;
+    ? "/concepts/clashking-wordmark-light.svg"
+    : "/concepts/clashking-wordmark-dark.svg";
 
   return (
-    <nav className={`fixed top-0 inset-x-0 backdrop-blur-lg z-50 border-b border-primary/30 ${
+    <nav className={`fixed inset-x-0 top-0 z-50 border-b border-border backdrop-blur-xl ${
       mounted && (theme === "dark" || resolvedTheme === "dark")
         ? "bg-card/95"
         : "bg-background/95"
@@ -61,9 +60,9 @@ export function Navbar() {
             <Image
               src={logoSrc}
               alt="ClashKing Logo"
-              width={100}
-              height={100}
-              className="h-7 w-auto"
+              width={164}
+              height={40}
+              className="h-9 w-auto"
               priority
             />
           </Link>

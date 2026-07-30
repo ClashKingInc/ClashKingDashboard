@@ -1,6 +1,6 @@
 "use client";
 
-import { type ComponentType, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type ComponentType, type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -69,9 +69,10 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { DiscordEmbedPreview, extractEmbeds, extractMessageContent, type DiscordEmbed } from "@/components/dashboard/discord-embed-preview";
-import { normalizeChannelsPayload } from "@/lib/dashboard-cache";
+import { normalizeAllChannelsPayload } from "@/lib/dashboard-cache";
 import { cn } from "@/lib/utils";
 import type {
   ApproveMessage,
@@ -137,7 +138,7 @@ const isTextLikeChannel = (channel: DiscordChannel): boolean => {
 };
 
 const normalizeTicketChannels = (payload: unknown): DiscordChannel[] => {
-  const normalized = normalizeChannelsPayload(payload) as DiscordChannel[];
+  const normalized = normalizeAllChannelsPayload(payload) as DiscordChannel[];
   if (normalized.length > 0) {
     return normalized;
   }
@@ -411,11 +412,11 @@ function TicketManageDialog({
 
           <div className="grid gap-3 text-sm sm:grid-cols-3">
             <div className="rounded-lg border border-border bg-background p-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.panel")}</p>
+              <p className="text-xs font-medium uppercase text-muted-foreground">{t("table.panel")}</p>
               <p className="mt-1 font-medium">{ticket.panel}</p>
             </div>
             <div className="rounded-lg border border-border bg-background p-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.user")}</p>
+              <p className="text-xs font-medium uppercase text-muted-foreground">{t("table.user")}</p>
               <div className="mt-1">
                 <DiscordUserDisplay
                   userId={ticket.user}
@@ -425,7 +426,7 @@ function TicketManageDialog({
               </div>
             </div>
             <div className="rounded-lg border border-border bg-background p-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("table.account")}</p>
+              <p className="text-xs font-medium uppercase text-muted-foreground">{t("table.account")}</p>
               <div className="mt-1">
                 <TicketAccountsCell ticket={ticket} />
               </div>
@@ -461,17 +462,14 @@ function TicketManageDialog({
                   <Label className="text-sm font-medium">{t("manage.clanLabel")}</Label>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <Select value={setClan} onValueChange={setSetClan}>
-                    <SelectTrigger className="flex-1">
-                      <SelectValue placeholder={t("manage.selectClan")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="disabled">{t("manage.noClan")}</SelectItem>
-                      {clans.map((clan) => (
-                        <SelectItem key={clan.tag} value={clan.tag}>{clan.name} ({clan.tag})</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <ClanCombobox
+                    clans={clans}
+                    value={setClan}
+                    onValueChange={setSetClan}
+                    placeholder={t("manage.selectClan")}
+                    specialOptions={[{ value: "disabled", label: t("manage.noClan") }]}
+                    className="flex-1"
+                  />
                   <Button variant="outline" onClick={handleClanSave} disabled={isSavingClan}>
                     {isSavingClan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {t("manage.saveClan")}
@@ -1503,12 +1501,17 @@ function PanelSettingsTab({
     return channel.parent_name ? `${channel.parent_name} / #${channel.name}` : `#${channel.name}`;
   };
 
-  useEffect(() => {
+  const resetForm = useEffectEvent(() => {
     const initialForm = createFormState();
     setForm(initialForm);
     lastSavedFormRef.current = initialForm;
     skipNextAutosave.current = true;
     hasPendingUserChange.current = false;
+  });
+  const describeSavedValue = useEffectEvent(getSavedValueLabel);
+
+  useEffect(() => {
+    resetForm();
   }, [
     panel.name,
     panel.open_category,
@@ -1561,7 +1564,7 @@ function PanelSettingsTab({
         lastSavedFormRef.current = nextForm;
 
         const changedDetails = changedFields
-          .map((field) => `${t(field)}: ${getSavedValueLabel(field, nextForm[field])}`)
+          .map((field) => `${t(field)}: ${describeSavedValue(field, nextForm[field])}`)
           .join(" • ");
 
         toast({
@@ -1582,7 +1585,7 @@ function PanelSettingsTab({
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-border/60 bg-card p-4">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("categories")}</p>
+        <p className="mb-3 text-xs font-semibold uppercase text-muted-foreground">{t("categories")}</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(["open_category", "sleep_category", "closed_category"] as const).map((key) => (
             <div key={key} className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-3">
@@ -1599,7 +1602,7 @@ function PanelSettingsTab({
         </div>
       </div>
       <div className="rounded-xl border border-border/60 bg-card p-4">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{t("logChannels")}</p>
+        <p className="mb-3 text-xs font-semibold uppercase text-muted-foreground">{t("logChannels")}</p>
         <div className="grid gap-3 sm:grid-cols-3">
           {(["status_change_log", "ticket_button_click_log", "ticket_close_log"] as const).map((key) => (
             <div key={key} className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-3">
@@ -2253,21 +2256,20 @@ function ButtonCard({
   );
 }
 
+function createLocalMessageId(): string {
+  return globalThis.crypto.randomUUID();
+}
+
 function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly guildId: string }) {
   const t = useTranslations("TicketsSettingsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
   type EditableApproveMessage = ApproveMessage & { localId: string };
-  const localIdCounterRef = useRef(0);
-  const makeLocalId = () => (
-    globalThis.crypto?.randomUUID?.()
-    ?? `${Date.now().toString(36)}-${(localIdCounterRef.current++).toString(36)}`
-  );
   const [messages, setMessages] = useState<EditableApproveMessage[]>(
-    (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
+    () => (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
   );
   const [draftMessages, setDraftMessages] = useState<EditableApproveMessage[]>(
-    (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
+    () => (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` })),
   );
   const [isSaving, setIsSaving] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -2279,7 +2281,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
   );
 
   useEffect(() => {
-    const nextMessages = (panel.approve_messages ?? []).map((message) => ({ ...message, localId: makeLocalId() }));
+    const nextMessages = (panel.approve_messages ?? []).map((message, index) => ({ ...message, localId: `saved-${index}` }));
     setMessages(nextMessages);
     setDraftMessages(cloneMessages(nextMessages));
     setExpandedPreviewIds(new Set());
@@ -2304,7 +2306,7 @@ function MessagesTab({ panel, guildId }: { readonly panel: TicketPanel; readonly
 
   const addMessage = () => {
     if (draftMessages.length >= 25) return;
-    const localId = makeLocalId();
+    const localId = createLocalMessageId();
     setDraftMessages((prev) => [...prev, { name: "", message: "", localId }]);
     setExpandedEditorIds((prev) => {
       const next = new Set(prev);

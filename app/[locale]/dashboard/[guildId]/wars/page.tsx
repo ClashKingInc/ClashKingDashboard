@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useEffectEvent, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
 import { useTranslations } from "next-intl";
@@ -42,6 +42,7 @@ import {
 import { darkTheme, clashKingColors } from "@/lib/theme";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
+import { ClanCombobox } from "@/components/ui/clan-combobox";
 import { apiCache } from "@/lib/api-cache";
 import type { War, WarSummary } from "@/lib/api/types/war";
 
@@ -142,6 +143,10 @@ type ClanStatsSortKey =
   | "avgDefenseStars"
   | "avgDestruction";
 
+function currentTimestamp(): number {
+  return Date.now();
+}
+
 export default function WarsPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const params = useParams();
   const router = useRouter();
@@ -187,62 +192,62 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     };
   }, []);
 
-  // Fetch clans and war data on mount
-  useEffect(() => {
-    const fetchClans = async (accessToken: string): Promise<Clan[]> =>
-      apiCache.get(clansCacheKey, async () => {
-        const clansRes = await fetch(`/api/v2/server/${guildId}/clans`, {
-          headers: { Authorization: `Bearer ${accessToken}` }
-        });
-
-        if (!clansRes.ok) {
-          const error = new Error("Failed to fetch clans") as Error & { status?: number };
-          error.status = clansRes.status;
-          throw error;
-        }
-
-        const clansPayload = await clansRes.json();
-        return normalizeClansPayload(clansPayload);
-      });
-
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          router.push(`/${params.locale}/login`);
-          return;
-        }
-
-        const clansData = await fetchClans(accessToken);
-        setClans(clansData || []);
-
-        // If we have clans, fetch war data immediately
-        if (clansData && clansData.length > 0) {
-          await fetchWarDataForClans(clansData, accessToken);
-        } else {
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        if (error instanceof Error && (error as Error & { status?: number }).status === 401) {
-          logout();
-          router.push(`/${params.locale}/login`);
-          return;
-        }
-        toast({
-          title: t('toast.errorTitle'),
-          description: t('toast.errorLoadingClans'),
-          variant: "destructive",
-        });
-        setLoading(false);
-      }
-    };
-
-    if (guildId) {
-      fetchData();
+  async function fetchPlayerStats(clanTags: string[], token: string, startTs: number, endTs: number): Promise<PlayerStats[]> {
+    try {
+      const query = new URLSearchParams();
+      clanTags.forEach(tag => query.append('clan_tags', tag));
+      query.append('timestamp_start', startTs.toString());
+      query.append('timestamp_end', endTs.toString());
+      if (filters.townHall !== "all") query.append('townhall_filter', `${filters.townHall}v*`);
+      const warTypes = (filters.warTypes.random ? 1 : 0) + (filters.warTypes.friendly ? 2 : 0) + (filters.warTypes.cwl ? 4 : 0);
+      if (warTypes !== 7) query.append('war_types', warTypes.toString());
+      const response = await fetch(`/api/v2/war/stats?${query.toString()}`, { headers: { Authorization: `Bearer ${token}` } });
+      if (response.ok) return (await response.json()).items || [] as PlayerStats[];
+    } catch (error) {
+      console.error("Error fetching player stats:", error);
     }
-  }, [guildId, router, toast]);
+    return [];
+  }
+
+  function calculateDailyStats(allWars: War[]) {
+    const weekMap = new Map<string, DailyWarStats>();
+    const getWeekKey = (date: Date): string => {
+      const value = new Date(date);
+      value.setHours(0, 0, 0, 0);
+      value.setDate(value.getDate() - ((value.getDay() + 6) % 7));
+      return value.toISOString().split('T')[0];
+    };
+    allWars.forEach(war => {
+      if (war.state !== 'warEnded' || (!war.endTime && !war.end_time)) return;
+      const rawDate = war.endTime || war.end_time!;
+      const normalized = /^\d{8}T/.test(rawDate) ? rawDate.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:$5:$6') : rawDate;
+      const parsed = new Date(normalized);
+      if (Number.isNaN(parsed.getTime())) return;
+      const weekKey = getWeekKey(parsed);
+      const stats = weekMap.get(weekKey) ?? { date: weekKey, wins: 0, losses: 0, draws: 0 };
+      if (war.clan.stars > war.opponent.stars) stats.wins++;
+      else if (war.clan.stars < war.opponent.stars) stats.losses++;
+      else stats.draws++;
+      weekMap.set(weekKey, stats);
+    });
+    setDailyStats(Array.from(weekMap.values()).sort((a, b) => a.date.localeCompare(b.date)).slice(-13));
+  }
+
+  function calculateTHStats(stats: PlayerStats[]) {
+    const thMap = new Map<number, { attacks: number; threeStars: number }>();
+    stats.forEach(player => {
+      if (!player.townhall) return;
+      const current = thMap.get(player.townhall) ?? { attacks: 0, threeStars: 0 };
+      current.attacks += player.stats?.attacks ?? 0;
+      current.threeStars += player.stats?.three_stars ?? 0;
+      thMap.set(player.townhall, current);
+    });
+    setTHStats(Array.from(thMap.entries()).map(([th, data]) => ({
+      th: `${t('filters.townHallShort')}${th}`,
+      success: data.attacks ? Math.round((data.threeStars / data.attacks) * 100) : 0,
+      failed: data.attacks ? Math.round(((data.attacks - data.threeStars) / data.attacks) * 100) : 0,
+    })).filter(stat => stat.success + stat.failed > 0).sort((a, b) => Number.parseInt(b.th.slice(2)) - Number.parseInt(a.th.slice(2))).slice(0, 5));
+  }
 
   async function fetchWarDataForClans(clansList: Clan[], token: string) { // NOSONAR — data-fetching orchestration: parallel API calls + multi-dimension aggregation, inherently complex
     try {
@@ -258,7 +263,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       }
 
       // Calculate timestamps from preset or custom dates
-      const now = Date.now();
+      const now = currentTimestamp();
       const presetMs: Record<string, number> = {
         "7d":  7   * 24 * 60 * 60 * 1000,
         "30d": 30  * 24 * 60 * 60 * 1000,
@@ -485,97 +490,38 @@ export default function WarsPage() { // NOSONAR — React page component: comple
     }
   }
 
-  const fetchPlayerStats = async (clanTags: string[], token: string, startTs: number, endTs: number): Promise<PlayerStats[]> => {
-    try {
-      const params = new URLSearchParams();
-      clanTags.forEach(tag => params.append('clan_tags', tag));
-      params.append('timestamp_start', startTs.toString());
-      params.append('timestamp_end', endTs.toString());
-
-      if (filters.townHall !== "all") {
-        params.append('townhall_filter', `${filters.townHall}v*`);
-      }
-      const warTypesInt = (filters.warTypes.random ? 1 : 0) + (filters.warTypes.friendly ? 2 : 0) + (filters.warTypes.cwl ? 4 : 0);
-      if (warTypesInt !== 7) params.append('war_types', warTypesInt.toString());
-
-      const res = await fetch(`/api/v2/war/stats?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        return data.items || [] as PlayerStats[];
-      }
-    } catch (error) {
-      console.error("Error fetching player stats:", error);
+  const loadInitialData = useEffectEvent(async () => {
+    const accessToken = localStorage.getItem("access_token");
+    if (!accessToken) {
+      router.push(`/${params.locale}/login`);
+      return;
     }
-    return [];
-  };
-
-  const calculateDailyStats = (allWars: War[]) => {
-    // Aggregate ended wars by ISO week (Monday-based)
-    const weekMap = new Map<string, DailyWarStats>();
-
-    const getWeekKey = (date: Date): string => {
-      const d = new Date(date);
-      d.setHours(0, 0, 0, 0);
-      // Shift to Monday
-      const day = d.getDay();
-      d.setDate(d.getDate() - ((day + 6) % 7));
-      return d.toISOString().split('T')[0];
-    };
-
-    allWars.forEach(war => {
-      if (war.state !== 'warEnded' || (!war.endTime && !war.end_time)) return;
-
-      const rawDate = war.endTime || war.end_time!;
-      const normalized = /^\d{8}T/.test(rawDate)
-        ? rawDate.replace(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:$5:$6')
-        : rawDate;
-      const parsed = new Date(normalized);
-      if (Number.isNaN(parsed.getTime())) return;
-
-      const weekKey = getWeekKey(parsed);
-      if (!weekMap.has(weekKey)) {
-        weekMap.set(weekKey, { date: weekKey, wins: 0, losses: 0, draws: 0 });
+    setLoading(true);
+    try {
+      const clansData = await apiCache.get(clansCacheKey, async () => {
+        const response = await fetch(`/api/v2/server/${guildId}/clans`, { headers: { Authorization: `Bearer ${accessToken}` } });
+        if (!response.ok) {
+          const error = new Error("Failed to fetch clans") as Error & { status?: number };
+          error.status = response.status;
+          throw error;
+        }
+        return normalizeClansPayload(await response.json());
+      });
+      setClans(clansData);
+      if (clansData.length > 0) await fetchWarDataForClans(clansData, accessToken);
+      else setLoading(false);
+    } catch (error) {
+      if (error instanceof Error && (error as Error & { status?: number }).status === 401) {
+        logout();
+        router.push(`/${params.locale}/login`);
+        return;
       }
-      const stats = weekMap.get(weekKey)!;
-      if (war.clan.stars > war.opponent.stars) stats.wins++;
-      else if (war.clan.stars < war.opponent.stars) stats.losses++;
-      else stats.draws++;
-    });
+      toast({ title: t('toast.errorTitle'), description: t('toast.errorLoadingClans'), variant: "destructive" });
+      setLoading(false);
+    }
+  });
 
-    const sorted = Array.from(weekMap.values())
-      .sort((a, b) => a.date.localeCompare(b.date))
-      .slice(-13);
-
-    setDailyStats(sorted);
-  };
-
-  const calculateTHStats = (playerStats: PlayerStats[]) => {
-    const thMap = new Map<number, { attacks: number, threeStars: number }>();
-
-    playerStats.forEach(player => {
-      if (!player.townhall) return;
-
-      const existing = thMap.get(player.townhall) || { attacks: 0, threeStars: 0 };
-      existing.attacks += player.stats?.attacks ?? 0;
-      existing.threeStars += player.stats?.three_stars ?? 0;
-      thMap.set(player.townhall, existing);
-    });
-
-    const thStatsArray = Array.from(thMap.entries())
-      .map(([th, data]) => ({
-        th: `${t('filters.townHallShort')}${th}`,
-        success: data.attacks > 0 ? Math.round((data.threeStars / data.attacks) * 100) : 0,
-        failed: data.attacks > 0 ? Math.round(((data.attacks - data.threeStars) / data.attacks) * 100) : 0,
-      }))
-      .filter(stat => stat.success + stat.failed > 0)
-      .sort((a, b) => Number.parseInt(b.th.slice(2)) - Number.parseInt(a.th.slice(2)))
-      .slice(0, 5);
-
-    setTHStats(thStatsArray);
-  };
+  useEffect(() => { if (guildId) void loadInitialData(); }, [guildId]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters({ ...filters, [key]: value });
@@ -782,19 +728,14 @@ export default function WarsPage() { // NOSONAR — React page component: comple
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <div className="space-y-2">
                     <Label htmlFor="clan-filter">{t('filters.clan')}</Label>
-                    <Select value={filters.clan} onValueChange={(value) => handleFilterChange("clan", value)}>
-                      <SelectTrigger id="clan-filter">
-                        <SelectValue placeholder={t('filters.clan')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">{t('filters.allClans')}</SelectItem>
-                        {clans.map((clan) => (
-                          <SelectItem key={clan.tag} value={clan.tag}>
-                            {clan.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <ClanCombobox
+                      id="clan-filter"
+                      clans={clans}
+                      value={filters.clan}
+                      onValueChange={(value) => handleFilterChange("clan", value)}
+                      placeholder={t('filters.clan')}
+                      specialOptions={[{ value: "all", label: t('filters.allClans') }]}
+                    />
                   </div>
 
                   <div className="space-y-2">

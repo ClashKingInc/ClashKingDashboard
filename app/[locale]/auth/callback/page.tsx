@@ -35,11 +35,15 @@ export default function AuthCallbackPage() {
     const code = searchParams.get("code");
     const errorParam = searchParams.get("error");
     const errorDescription = searchParams.get("error_description");
+    const clearPkceVerifier = () => {
+      sessionStorage.removeItem("discord_code_verifier");
+    };
 
     if (errorParam) {
+      clearPkceVerifier();
+
       // User canceled the Discord authorization flow.
       if (errorParam === "access_denied") {
-        sessionStorage.removeItem("discord_code_verifier");
         setError(t("errorCancelled"));
         setStatus("error");
         return;
@@ -51,6 +55,7 @@ export default function AuthCallbackPage() {
     }
 
     if (!code) {
+      clearPkceVerifier();
       setError(t("errorNoAuthorizationCode"));
       setStatus("error");
       return;
@@ -124,15 +129,14 @@ export default function AuthCallbackPage() {
           // Still redirect, it will fetch on servers page
         }
 
-        // Clean up
-        sessionStorage.removeItem('discord_code_verifier');
-
         // Redirect to servers page
         router.push(`/${locale}/servers`);
       } catch (err) {
         console.error("Authentication error:", err);
         setError(err instanceof Error ? err.message : t("errorAuthenticateFailed"));
         setStatus("error");
+      } finally {
+        clearPkceVerifier();
       }
     };
 

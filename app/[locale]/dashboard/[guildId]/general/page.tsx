@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useEffectEvent } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,13 +13,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RoleCombobox } from "@/components/ui/role-combobox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RotateCcw, AlertCircle, Palette, Lock, Pencil, Shield, Clock, Plus, Trash2, Settings } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api/client";
 import { apiCache } from "@/lib/api-cache";
 import {
   dashboardCacheKeys,
-  normalizeAllRolesPayload,
   normalizeDiscordRolesPayload,
   normalizeServerSettingsPayload,
 } from "@/lib/dashboard-cache";
@@ -34,6 +33,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { BotProfileCard } from "@/components/dashboard/bot-profile-card";
 
 const hexToInt = (hex: string): number => {
   return Number.parseInt(hex.replace("#", ""), 16);
@@ -65,15 +65,15 @@ export default function GeneralSettingsPage() {
   const { toast } = useToast();
 
   // Discord Tenure Roles state
-  const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; months: number; role_id?: string }>>([]);
+  const [tenureRoles, setTenureRoles] = useState<Array<{ id: string; rule_id: string; months: number }>>([]);
   const [isLoadingTenureRoles, setIsLoadingTenureRoles] = useState(true);
   const [isTenureDialogOpen, setIsTenureDialogOpen] = useState(false);
   const [newTenureRole, setNewTenureRole] = useState<{ months?: number; id?: string }>({});
   const settingsCacheKey = dashboardCacheKeys.settings(guildId);
   const discordRolesCacheKey = dashboardCacheKeys.discordRoles(guildId);
-  const allRolesCacheKey = dashboardCacheKeys.allRoles(guildId);
+  const allRolesCacheKey = dashboardCacheKeys.serverRoles(guildId);
 
-  async function loadSettings() {
+  const loadSettings = async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -138,19 +138,17 @@ export default function GeneralSettingsPage() {
       if (!token) return;
 
       const allRolesPayload = await apiCache.get(allRolesCacheKey, async () => {
-        const response = await apiClient.roles.getAllRoles(guildId);
+        const response = await apiClient.roles.getServerRoles(guildId, { type: 'status' });
         if (response.error) {
           throw new Error(response.error);
         }
         return response.data;
       });
-      const allRolesData = normalizeAllRolesPayload(allRolesPayload);
-
-      if (allRolesData?.roles?.status) {
-        const normalizedRoles = allRolesData.roles.status.map((r: any) => ({
-          id: String(r.role || r.id),
-          months: r.months,
-          role_id: String(r.role || r.id),
+      if (allRolesPayload?.roles) {
+        const normalizedRoles = allRolesPayload.roles.map((role) => ({
+          id: role.role_id,
+          rule_id: role.id,
+          months: Number(role.option),
         }));
         setTenureRoles(normalizedRoles);
       }
@@ -161,12 +159,13 @@ export default function GeneralSettingsPage() {
     }
   }
 
-  // Load settings on mount
-  useEffect(() => {
-    loadSettings();
-    loadDiscordRoles();
-    loadTenureRoles();
-  }, [guildId]);
+  const loadInitialData = useEffectEvent(() => {
+    void loadSettings();
+    void loadDiscordRoles();
+    void loadTenureRoles();
+  });
+
+  useEffect(() => { loadInitialData(); }, [guildId]);
 
   const handleAddTenureRole = async () => {
     try {
@@ -180,10 +179,13 @@ export default function GeneralSettingsPage() {
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      await apiClient.roles.createRole(guildId, "status", {
-        months: newTenureRole.months,
-        id: newTenureRole.id,
+      const response = await apiClient.roles.createServerRole(guildId, {
+        type: 'status',
+        option: String(newTenureRole.months),
+        role_id: newTenureRole.id,
+        mode: 'both',
       });
+      if (response.error) throw new Error(response.error);
 
       apiCache.invalidate(allRolesCacheKey);
       await loadTenureRoles();
@@ -198,14 +200,15 @@ export default function GeneralSettingsPage() {
     }
   };
 
-  const handleDeleteTenureRole = async (roleId: string) => {
+  const handleDeleteTenureRole = async (ruleId: string) => {
     try {
       setError(null);
 
       const token = localStorage.getItem("access_token");
       if (!token) return;
 
-      await apiClient.roles.deleteRole(guildId, "status", roleId);
+      const response = await apiClient.roles.deleteServerRole(guildId, ruleId);
+      if (response.error) throw new Error(response.error);
 
       apiCache.invalidate(allRolesCacheKey);
       await loadTenureRoles();
@@ -284,31 +287,27 @@ export default function GeneralSettingsPage() {
         )}
 
         {/* Info Banner */}
-        <Card className="bg-blue-500/5 border-blue-500/30">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                  {t("infoBanner.title")}
-                </p>
-                <div className="text-xs text-muted-foreground prose prose-sm max-w-none dark:prose-invert">
-                  <ReactMarkdown
-                    components={{
-                      p: ({ children }) => <span>{children}</span>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
-                      strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
-                    }}
-                  >
-                    {t("infoBanner.description")}
-                  </ReactMarkdown>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Alert className="rounded-xl border-blue-500/30 bg-blue-500/5 py-3.5">
+          <AlertCircle className="h-5 w-5 text-blue-500" />
+          <AlertTitle className="text-sm text-blue-600 dark:text-blue-400">
+            {t("infoBanner.title")}
+          </AlertTitle>
+          <AlertDescription className="text-xs text-muted-foreground">
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => <span>{children}</span>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
+                strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>, // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
+              }}
+            >
+              {t("infoBanner.description")}
+            </ReactMarkdown>
+          </AlertDescription>
+        </Alert>
 
-        {/* Grid Layout for smaller cards */}
+        {/* Two-column settings grid */}
         <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
+          <BotProfileCard guildId={guildId} />
+
           {/* Appearance */}
           <Card className="bg-card border-border">
             <CardHeader>
@@ -521,7 +520,9 @@ export default function GeneralSettingsPage() {
                     <SelectItem value="none">{t("security.noRole")}</SelectItem>
                     {discordRoles.map((role) => (
                       <SelectItem key={role.id} value={role.id}>
-                        {role.name}
+                        <span style={{ color: role.color ? intToHex(role.color) : "#99AAB5" }}>
+                          @{role.name}
+                        </span>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -532,10 +533,9 @@ export default function GeneralSettingsPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Discord Tenure Roles */}
-        <Card className="bg-card border-border">
+          {/* Discord Tenure Roles */}
+          <Card className="bg-card border-border">
           <CardHeader>
             <div className="flex items-center gap-2">
               <div className="p-2 bg-blue-500/10 rounded-lg">
@@ -671,7 +671,7 @@ export default function GeneralSettingsPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDeleteTenureRole(role.id)}
+                            onClick={() => handleDeleteTenureRole(role.rule_id)}
                             className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
@@ -685,9 +685,9 @@ export default function GeneralSettingsPage() {
               </Table>
             )}
           </CardContent>
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );
 }
-
