@@ -36,6 +36,7 @@ type LandingLanguageSwitcherProps = {
 };
 
 type LandingTheme = "day" | "sunset";
+type LandingThemeMode = LandingTheme | "system";
 
 export function LandingLanguageSwitcher({
   label,
@@ -91,7 +92,12 @@ export function LandingLanguageSwitcher({
     if (value === "sunset") setTheme("dark");
   };
 
-  const themeMode = theme === "light" ? "day" : theme === "dark" ? "sunset" : "system";
+  let themeMode: LandingThemeMode = "system";
+  if (theme === "light") {
+    themeMode = "day";
+  } else if (theme === "dark") {
+    themeMode = "sunset";
+  }
 
   const applyLocalePreference = (value: string) => {
     if (value === "system") {
