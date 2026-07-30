@@ -37,9 +37,14 @@ describe("resolveBrowserLocale", () => {
 });
 
 describe("getLocaleModeFromCookie", () => {
-  it("returns 'manual' when cookie is absent", () => {
-    expect(getLocaleModeFromCookie("")).toBe("manual");
-    expect(getLocaleModeFromCookie("other=value")).toBe("manual");
+  it("returns 'browser' when cookie is absent", () => {
+    expect(getLocaleModeFromCookie("")).toBe("browser");
+    expect(getLocaleModeFromCookie("other=value")).toBe("browser");
+  });
+
+  it("preserves a legacy NEXT_LOCALE preference as manual", () => {
+    expect(getLocaleModeFromCookie("NEXT_LOCALE=fr")).toBe("manual");
+    expect(getLocaleModeFromCookie("foo=bar; NEXT_LOCALE=nl")).toBe("manual");
   });
 
   it("returns 'browser' when cookie ends with 'browser'", () => {

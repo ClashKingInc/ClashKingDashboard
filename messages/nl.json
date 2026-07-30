@@ -2923,8 +2923,9 @@
       "discordBot": "Discord-bot",
       "dashboard": "Dashboard"
     },
-    "language": { "label": "Taal" },
-    "appearance": { "label": "Weergave", "day": "Dag", "sunset": "Zonsondergang" },
+    "settings": { "label": "Instellingen" },
+    "language": { "label": "Taal", "system": "Systeemtaal volgen" },
+    "appearance": { "label": "Weergave", "system": "Systeemuiterlijk volgen", "day": "Dag", "sunset": "Zonsondergang" },
     "actions": {
       "addToDiscord": "Voeg toe aan Discord",
       "addClashKing": "Voeg ClashKing toe",

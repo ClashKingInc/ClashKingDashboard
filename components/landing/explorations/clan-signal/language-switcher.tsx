@@ -3,120 +3,169 @@
 import Image from "next/image";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { useTheme } from "next-themes";
+import { Check, Computer, Globe, Moon, Settings, Sun } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  getLocaleModeFromCookie,
   LANGUAGE_OPTIONS,
   LOCALE_MODE_COOKIE,
+  resolveBrowserLocale,
+  type LocaleMode,
   type SupportedLocale,
 } from "@/lib/locale-preference";
 
 type LandingLanguageSwitcherProps = {
   label: string;
+  languageLabel: string;
   appearanceLabel: string;
+  systemLanguageLabel: string;
+  systemAppearanceLabel: string;
   dayLabel: string;
   sunsetLabel: string;
-  initialTheme: LandingTheme;
 };
 
 type LandingTheme = "day" | "sunset";
-
-const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
+type LandingThemeMode = LandingTheme | "system";
 
 export function LandingLanguageSwitcher({
   label,
+  languageLabel,
   appearanceLabel,
+  systemLanguageLabel,
+  systemAppearanceLabel,
   dayLabel,
   sunsetLabel,
-  initialTheme,
 }: Readonly<LandingLanguageSwitcherProps>) {
   const locale = useLocale() as SupportedLocale;
   const router = useRouter();
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [landingTheme, setLandingTheme] = useState<LandingTheme>("day");
+  const [localeMode, setLocaleMode] = useState<LocaleMode>("manual");
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
 
-  const switchLocale = (nextLocale: SupportedLocale) => {
-    // eslint-disable-next-line react-hooks/immutability -- locale preference is persisted by next-intl's cookie contract
-    document.cookie = `${LOCALE_MODE_COOKIE}=manual; path=/; max-age=31536000; SameSite=Lax`;
-    // eslint-disable-next-line react-hooks/immutability -- locale preference is persisted by next-intl's cookie contract
+  useEffect(() => {
+    const nextLocaleMode = getLocaleModeFromCookie(document.cookie);
+    setLocaleMode(nextLocaleMode);
+    if (nextLocaleMode === "browser") {
+      const browserLocale = resolveBrowserLocale(navigator.languages);
+      if (browserLocale !== locale) {
+        document.cookie = `NEXT_LOCALE=${browserLocale}; path=/; max-age=31536000; SameSite=Lax`;
+        router.refresh();
+      }
+    }
+
+  }, [locale, router]);
+
+  useEffect(() => {
+    const nextTheme = resolvedTheme === "dark" ? "sunset" : "day";
+    setLandingTheme(nextTheme);
+    document.querySelector<HTMLElement>(".clan-signal")?.setAttribute("data-cs-theme", nextTheme);
+  }, [resolvedTheme]);
+
+  const switchLocale = (nextLocale: SupportedLocale, mode: LocaleMode) => {
+    document.cookie = `${LOCALE_MODE_COOKIE}=${mode}; path=/; max-age=31536000; SameSite=Lax`;
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    setLocaleMode(mode);
     startTransition(() => router.refresh());
   };
 
-  const switchLandingTheme = (nextTheme: LandingTheme) => {
-    setLandingTheme(nextTheme);
-    document.cookie = `${LANDING_THEME_COOKIE}=${nextTheme}; path=/; max-age=31536000; SameSite=Lax`;
-    triggerRef.current?.closest<HTMLElement>(".clan-signal")?.setAttribute("data-cs-theme", nextTheme);
+  const applyThemePreference = (value: string) => {
+    if (value === "system") {
+      setTheme("system");
+      return;
+    }
+
+    if (value === "day") setTheme("light");
+    if (value === "sunset") setTheme("dark");
+  };
+
+  let themeMode: LandingThemeMode = "system";
+  if (theme === "light") {
+    themeMode = "day";
+  } else if (theme === "dark") {
+    themeMode = "sunset";
+  }
+
+  const applyLocalePreference = (value: string) => {
+    if (value === "system") {
+      switchLocale(resolveBrowserLocale(navigator.languages), "browser");
+      return;
+    }
+
+    if (LANGUAGE_OPTIONS.some((language) => language.code === value)) {
+      switchLocale(value as SupportedLocale, "manual");
+    }
   };
 
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <button ref={triggerRef} className="cs-language-trigger" type="button" aria-label={label} disabled={isPending}>
-          <span className="cs-language-flag">
-            <Image
-              src={`https://flagcdn.com/w40/${currentLanguage.flagCode}.png`}
-              alt=""
-              width={20}
-              height={14}
-            />
-          </span>
-          <span>{currentLanguage.code.toUpperCase()}</span>
-          <span className="cs-language-chevron" aria-hidden="true" />
+        <button className="cs-settings-trigger" type="button" aria-label={label} disabled={isPending}>
+          <Settings aria-hidden="true" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        sideOffset={6}
-        className="cs-language-menu"
-        data-landing-theme={landingTheme}
-      >
-        {LANGUAGE_OPTIONS.map((language) => (
-          <DropdownMenuItem
-            key={language.code}
-            className="cs-language-option"
-            aria-current={locale === language.code ? "true" : undefined}
-            onClick={() => switchLocale(language.code)}
-          >
-            <span className="cs-language-flag">
-              <Image
-                src={`https://flagcdn.com/w40/${language.flagCode}.png`}
-                alt=""
-                width={20}
-                height={14}
-              />
-            </span>
-            <span>{language.name}</span>
-            <span className="cs-language-code">{language.code.toUpperCase()}</span>
-          </DropdownMenuItem>
-        ))}
-        <DropdownMenuSeparator className="cs-language-separator" />
-        <DropdownMenuLabel className="cs-language-label">{appearanceLabel}</DropdownMenuLabel>
-        <DropdownMenuItem
-          className="cs-language-option"
-          data-active={landingTheme === "day" ? "true" : undefined}
-          onClick={() => switchLandingTheme("day")}
-        >
-          <span className="cs-theme-swatch cs-theme-swatch-day" aria-hidden="true" />
-          <span>{dayLabel}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="cs-language-option"
-          data-active={landingTheme === "sunset" ? "true" : undefined}
-          onClick={() => switchLandingTheme("sunset")}
-        >
-          <span className="cs-theme-swatch cs-theme-swatch-sunset" aria-hidden="true" />
-          <span>{sunsetLabel}</span>
-        </DropdownMenuItem>
+      <DropdownMenuContent align="end" sideOffset={8} className="cs-settings-menu" data-landing-theme={landingTheme}>
+        <DropdownMenuSub open={openSubmenu === "appearance"} onOpenChange={(open) => setOpenSubmenu(open ? "appearance" : null)}>
+          <DropdownMenuSubTrigger className="cs-settings-option">
+            {landingTheme === "sunset" ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
+            <span>{appearanceLabel}</span>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent className="cs-settings-menu" data-landing-theme={landingTheme} sideOffset={8} alignOffset={-6}>
+            <DropdownMenuRadioGroup value={themeMode} onValueChange={applyThemePreference}>
+            <DropdownMenuRadioItem value="system" className="cs-settings-option">
+              <Computer aria-hidden="true" />
+              <span>{systemAppearanceLabel}</span>
+              {themeMode === "system" && <Check className="cs-settings-check" aria-hidden="true" />}
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="day" className="cs-settings-option">
+              <span className="cs-theme-swatch cs-theme-swatch-day" aria-hidden="true" />
+              <span>{dayLabel}</span>
+              {themeMode === "day" && <Check className="cs-settings-check" aria-hidden="true" />}
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="sunset" className="cs-settings-option">
+              <span className="cs-theme-swatch cs-theme-swatch-sunset" aria-hidden="true" />
+              <span>{sunsetLabel}</span>
+              {themeMode === "sunset" && <Check className="cs-settings-check" aria-hidden="true" />}
+            </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+
+        <DropdownMenuSub open={openSubmenu === "language"} onOpenChange={(open) => setOpenSubmenu(open ? "language" : null)}>
+          <DropdownMenuSubTrigger className="cs-settings-option">
+            <span className="cs-language-flag"><Image src={`https://flagcdn.com/w40/${currentLanguage.flagCode}.png`} alt="" width={20} height={14} /></span>
+            <span>{languageLabel}</span>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuSubContent className="cs-settings-menu" data-landing-theme={landingTheme} sideOffset={8} alignOffset={-6}>
+            <DropdownMenuRadioGroup value={localeMode === "browser" ? "system" : locale} onValueChange={applyLocalePreference}>
+            <DropdownMenuRadioItem value="system" className="cs-settings-option">
+              <Globe aria-hidden="true" />
+              <span>{systemLanguageLabel}</span>
+              {localeMode === "browser" && <Check className="cs-settings-check" aria-hidden="true" />}
+            </DropdownMenuRadioItem>
+            {LANGUAGE_OPTIONS.map((language) => (
+              <DropdownMenuRadioItem key={language.code} value={language.code} className="cs-settings-option">
+                <span className="cs-language-flag"><Image src={`https://flagcdn.com/w40/${language.flagCode}.png`} alt="" width={20} height={14} /></span>
+                <span>{language.name}</span>
+                {localeMode === "manual" && locale === language.code && <Check className="cs-settings-check" aria-hidden="true" />}
+              </DropdownMenuRadioItem>
+            ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
       </DropdownMenuContent>
     </DropdownMenu>
   );

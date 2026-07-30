@@ -2920,8 +2920,9 @@
       "discordBot": "Discord Bot",
       "dashboard": "Dashboard"
     },
-    "language": { "label": "Language" },
-    "appearance": { "label": "Appearance", "day": "Day", "sunset": "Sunset" },
+    "settings": { "label": "Settings" },
+    "language": { "label": "Language", "system": "Follow system language" },
+    "appearance": { "label": "Appearance", "system": "Follow system appearance", "day": "Day", "sunset": "Sunset" },
     "actions": {
       "addToDiscord": "Add to Discord",
       "addClashKing": "Add ClashKing",
