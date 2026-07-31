@@ -13,7 +13,7 @@ describe('initiateDiscordLogin', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(window, 'alert').mockImplementation(() => {});
     Object.defineProperty(window, 'location', {
-      value: { origin: 'https://dashboard.clashk.ing', href: '' },
+      value: { origin: 'https://dash.clashk.ing', href: '' },
       writable: true,
       configurable: true,
     });

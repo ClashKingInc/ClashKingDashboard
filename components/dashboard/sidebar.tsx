@@ -225,7 +225,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
   const normalizedPathname = pathname.replace(/^\/[a-z]{2}(?=\/)/, "").replace(/\/$/, "") || "/";
 
   const isNavItemActive = (href: string) => {
-    const normalizedHref = new URL(href, "https://dashboard.clashk.ing").pathname.replace(/\/$/, "") || "/";
+    const normalizedHref = new URL(href, "https://dash.clashk.ing").pathname.replace(/\/$/, "") || "/";
 
     if (normalizedHref === "/dashboard") {
       return normalizedPathname === normalizedHref;

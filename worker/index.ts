@@ -1,5 +1,6 @@
 const MARKETING_HOST = "clashk.ing";
-const DASHBOARD_HOST = "dashboard.clashk.ing";
+const DASHBOARD_HOST = "dash.clashk.ing";
+const LEGACY_DASHBOARD_HOST = "dashboard.clashk.ing";
 const WWW_HOST = "www.clashk.ing";
 
 const dashboardRoutePrefixes = [
@@ -20,6 +21,14 @@ export function resolveDomainRedirect(requestUrl: URL): URL | null {
 
   if (requestUrl.hostname === WWW_HOST) {
     redirectUrl.hostname = MARKETING_HOST;
+    return redirectUrl;
+  }
+
+  if (requestUrl.hostname === LEGACY_DASHBOARD_HOST) {
+    redirectUrl.hostname = DASHBOARD_HOST;
+    if (requestUrl.pathname === "/") {
+      redirectUrl.pathname = "/servers";
+    }
     return redirectUrl;
   }
 

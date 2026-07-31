@@ -3,9 +3,17 @@ import { resolveDomainRedirect } from "./index";
 
 describe("resolveDomainRedirect", () => {
   it("sends the dashboard root to the server picker", () => {
-    expect(resolveDomainRedirect(new URL("https://dashboard.clashk.ing/"))?.toString()).toBe(
-      "https://dashboard.clashk.ing/servers",
+    expect(resolveDomainRedirect(new URL("https://dash.clashk.ing/"))?.toString()).toBe(
+      "https://dash.clashk.ing/servers",
     );
+  });
+
+  it("moves the legacy dashboard hostname to the short hostname", () => {
+    expect(
+      resolveDomainRedirect(
+        new URL("https://dashboard.clashk.ing/dashboard/roles?guildId=123"),
+      )?.toString(),
+    ).toBe("https://dash.clashk.ing/dashboard/roles?guildId=123");
   });
 
   it.each(["/servers", "/login", "/auth/callback", "/dashboard", "/dashboard/roles", "/admin/creators"])(
@@ -16,7 +24,7 @@ describe("resolveDomainRedirect", () => {
       );
 
       expect(redirect?.toString()).toBe(
-        `https://dashboard.clashk.ing${pathname}?guildId=123`,
+        `https://dash.clashk.ing${pathname}?guildId=123`,
       );
     },
   );
@@ -31,7 +39,7 @@ describe("resolveDomainRedirect", () => {
     "https://clashk.ing/",
     "https://clashk.ing/privacy",
     "https://clashk.ing/dashboarding",
-    "https://dashboard.clashk.ing/dashboard",
+    "https://dash.clashk.ing/dashboard",
     "https://app.clashk.ing/",
   ])("serves %s without a domain redirect", (url) => {
     expect(resolveDomainRedirect(new URL(url))).toBeNull();

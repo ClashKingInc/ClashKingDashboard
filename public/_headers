@@ -3,6 +3,9 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
 
+https://dash.clashk.ing/*
+  X-Robots-Tag: noindex, nofollow
+
 https://dashboard.clashk.ing/*
   X-Robots-Tag: noindex, nofollow
 
