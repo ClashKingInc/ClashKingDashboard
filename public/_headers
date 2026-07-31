@@ -1,4 +1,12 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+
 https://dashboard.clashk.ing/*
+  X-Robots-Tag: noindex, nofollow
+
+https://:worker.:subdomain.workers.dev/*
   X-Robots-Tag: noindex, nofollow
 
 /_next/static/*

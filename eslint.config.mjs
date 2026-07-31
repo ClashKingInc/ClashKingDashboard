@@ -2,7 +2,7 @@ import nextConfig from "eslint-config-next";
 
 const eslintConfig = [
   {
-    ignores: ["dist/**", ".vinext/**", ".wrangler/**"],
+    ignores: ["dist/**", ".vinext/**", ".wrangler/**", "worker-configuration.d.ts"],
   },
   ...nextConfig,
   {

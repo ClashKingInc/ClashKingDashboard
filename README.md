@@ -37,6 +37,21 @@ npm run build
 
 `npm run validate:messages` requires French and Dutch to have the same keys, value types, and ICU placeholders as English. It runs automatically before every Vinext static build. `npm run preview` serves the generated assets with Wrangler. Deployment is intentionally separate and is not performed by validation.
 
+## Deployment
+
+One Cloudflare Worker serves the static build on `clashk.ing`, `dashboard.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/servers`, moves application routes from the marketing hostname to the dashboard hostname, and redirects `www` to the apex. `app.clashk.ing` remains a separate Cloudflare Pages application.
+
+Production builds pin the browser API and Discord application configuration before uploading assets, so a developer's `.env.local` cannot leak into a deployment:
+
+```bash
+npm run build:production
+npm run deploy
+```
+
+Cloudflare serves the generated HTML, JavaScript, CSS, and media from Workers Static Assets. Fingerprinted `/_next/static/*` files use immutable browser caching; HTML keeps Cloudflare's revalidation behavior so new deployments and rollbacks take effect without leaving stale documents in browsers.
+
+Vinext reads `wrangler.jsonc` while prerendering. Production deployment uses `wrangler.deploy.jsonc` so the hostname-routing Worker can wrap those assets without replacing Vinext's build-time server.
+
 ## SEO
 
 The homepage, privacy policy, and terms are static in English, French, and Dutch, with localized titles, descriptions, canonical URLs, `hreflang`, Open Graph/Twitter metadata, `robots.txt`, and sitemap alternates. Cloudflare applies `X-Robots-Tag: noindex, nofollow` to every `dashboard.clashk.ing` response; private application routes also carry page-level `noindex` metadata.

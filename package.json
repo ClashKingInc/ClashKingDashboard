@@ -10,14 +10,17 @@
   "scripts": {
     "dev": "vinext dev --port 3002",
     "build": "npm run validate:messages && vinext build && node scripts/postprocess-static-html.mjs",
+    "build:production": "NEXT_PUBLIC_API_URL=https://v2-api.clashk.ing NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227 npm run build",
     "start": "vinext start --port 3002",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p worker/tsconfig.json",
     "validate:messages": "node scripts/validate-messages.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "preview": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "worker:types": "wrangler types --config wrangler.deploy.jsonc",
+    "deploy": "npm run build:production && wrangler deploy --config wrangler.deploy.jsonc"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
