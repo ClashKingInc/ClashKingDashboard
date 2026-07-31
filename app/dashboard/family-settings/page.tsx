@@ -1,7 +1,6 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { getAccessToken } from "@/lib/auth/session";
 
 
 import React, { useState, useEffect, useEffectEvent } from "react";
@@ -256,11 +255,6 @@ export default function FamilySettingsPage() {
       setIsLoading(true);
       setError(null);
 
-      const token = getAccessToken();
-      if (!token) {
-        throw new Error("No access token found. Please log in again.");
-      }
-
       if (forceRefresh) {
         apiCache.invalidate(settingsCacheKey);
       }
@@ -296,9 +290,6 @@ export default function FamilySettingsPage() {
 
   async function loadDiscordRoles(forceRefresh = false) {
     try {
-      const token = getAccessToken();
-      if (!token) return;
-
       if (forceRefresh) {
         apiCache.invalidate(rolesCacheKey);
       }
@@ -320,9 +311,6 @@ export default function FamilySettingsPage() {
   async function loadFamilyRoles(forceRefresh = false) {
     try {
       setIsLoadingFamilyRoles(true);
-      const token = getAccessToken();
-      if (!token) return;
-
       if (forceRefresh) {
         apiCache.invalidate(familyRolesCacheKey);
       }
@@ -362,9 +350,6 @@ export default function FamilySettingsPage() {
       setFamilyRolesLoading(true);
       setError(null);
 
-      const token = getAccessToken();
-      if (!token) return;
-
       const response = await apiClient.familyRoles.addFamilyRole(guildId, {
         role: roleId,
         type: roleType,
@@ -393,9 +378,6 @@ export default function FamilySettingsPage() {
     try {
       setFamilyRolesLoading(true);
       setError(null);
-
-      const token = getAccessToken();
-      if (!token) return;
 
       const response = await apiClient.familyRoles.removeFamilyRole(guildId, roleType, id, roleId);
 

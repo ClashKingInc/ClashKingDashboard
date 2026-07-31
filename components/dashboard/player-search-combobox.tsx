@@ -1,6 +1,5 @@
 "use client";
 
-import { getAccessToken } from "@/lib/auth/session";
 import { apiFetch } from "@/lib/api/fetch";
 
 
@@ -55,10 +54,7 @@ export function PlayerSearchCombobox({
     if (loaded) return;
     setLoading(true);
     try {
-      const token = getAccessToken();
-      const res = await apiFetch(`/v2/roster/server/${guildId}/members`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await apiFetch(`/v2/roster/server/${guildId}/members`);
       if (res.ok) {
         const data = await res.json();
         const list = Array.isArray(data) ? data : (data.members ?? []);

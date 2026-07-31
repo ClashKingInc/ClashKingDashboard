@@ -16,8 +16,23 @@ export async function apiFetch(
   const raw = input instanceof URL ? input.toString() : input;
   const url = apiUrl(raw);
   const headers = new Headers(init.headers);
-  const token = getAccessToken();
-  if (token && !headers.has("Authorization") && url.startsWith(getDefaultBaseUrl())) {
+  const baseUrl = getDefaultBaseUrl();
+  const isApiRequest = url.startsWith(baseUrl);
+  const isAuthRequest = url.includes("/v2/auth/");
+  let token = getAccessToken();
+
+  // Static dashboard documents can render before AuthSessionProvider finishes
+  // restoring the cookie-backed session. Wait for that shared refresh instead
+  // of sending an unauthenticated first request from page-level fetches.
+  if (!token && isApiRequest && !isAuthRequest && !authRetried && globalThis.window !== undefined) {
+    if (await refreshAccessToken(baseUrl)) token = getAccessToken();
+  }
+
+  const suppliedAuthorization = headers.get("Authorization");
+  const hasUsableAuthorization = Boolean(
+    suppliedAuthorization && !/^Bearer\s*(?:undefined|null)?$/i.test(suppliedAuthorization),
+  );
+  if (token && isApiRequest && !hasUsableAuthorization) {
     headers.set("Authorization", `Bearer ${token}`);
   }
   if (init.body != null && !(init.body instanceof FormData) && !headers.has("Content-Type")) {
@@ -28,7 +43,7 @@ export async function apiFetch(
     headers,
     credentials: url.includes("/v2/auth/web/") ? "include" : init.credentials,
   });
-  if (response.status !== 401 || authRetried || url.includes("/v2/auth/")) return response;
-  if (!(await refreshAccessToken(getDefaultBaseUrl()))) return response;
+  if (response.status !== 401 || authRetried || isAuthRequest) return response;
+  if (!(await refreshAccessToken(baseUrl))) return response;
   return apiFetch(input, init, true);
 }

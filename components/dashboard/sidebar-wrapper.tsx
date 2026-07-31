@@ -1,9 +1,7 @@
 "use client";
 
-import { getAccessToken } from "@/lib/auth/session";
-
-
 import { useEffect, useState } from "react";
+import { useAuthSession } from "@/components/auth-session-provider";
 import { Sidebar } from "./sidebar";
 import { MobileServerDropdown } from "./mobile-server-dropdown";
 import { apiClient } from "@/lib/api/client";
@@ -48,6 +46,7 @@ function getStoredGuildInfo(guildId: string): CachedGuildInfo | null {
 }
 
 export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: SidebarWrapperProps) {
+  const { status: authStatus } = useAuthSession();
   const [isLoading, setIsLoading] = useState(true);
   const [serverInfo, setServerInfo] = useState({
     name: "My Server",
@@ -56,6 +55,8 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
   const [availableGuilds, setAvailableGuilds] = useState<GuildInfo[]>([]);
 
   useEffect(() => {
+    if (authStatus === "restoring") return;
+
     async function fetchServerInfo() {
       try {
         const storedGuild = getStoredGuildInfo(guildId);
@@ -67,8 +68,7 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
           setIsLoading(false);
         }
 
-        const token = getAccessToken();
-        if (!token) {
+        if (authStatus !== "authenticated") {
           setIsLoading(false);
           return;
         }
@@ -134,7 +134,7 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
     }
 
     fetchServerInfo();
-  }, [guildId]);
+  }, [authStatus, guildId]);
 
   if (variant === "mobile-header") {
     return (

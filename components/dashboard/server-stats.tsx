@@ -1,8 +1,5 @@
 "use client";
 
-import { getAccessToken } from "@/lib/auth/session";
-
-
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -49,12 +46,6 @@ export function ServerStats({ guildId }: ServerStatsProps) {
     }
 
     try {
-      const hasSession = getAccessToken() || getAccessToken();
-      if (!hasSession) {
-        setIsLoading(false);
-        return;
-      }
-
       const [clansRes, rostersRes, linksRes] = await Promise.all([
         apiCache.get(clansCacheKey, () => apiClient.servers.getServerClans(guildId)),
         apiCache.get(rostersCacheKey, () => apiClient.rosters.list(guildId)),

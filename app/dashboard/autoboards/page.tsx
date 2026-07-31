@@ -2,7 +2,6 @@
 
 import { useLocale } from "next-intl";
 import { useGuildId } from "@/lib/dashboard-route";
-import { getAccessToken } from "@/lib/auth/session";
 import { apiFetch } from "@/lib/api/fetch";
 
 
@@ -159,12 +158,9 @@ export default function AutoboardsPage() {
   const requiresThread = destinationNeedsThread(form?.channelId, channels);
 
   const request = useCallback(async (path: string, init?: RequestInit) => {
-    const token = getAccessToken();
-    if (!token) throw new Error(t("errors.session"));
     const response = await apiFetch(path, {
       ...init,
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         ...init?.headers,
       },

@@ -1,6 +1,5 @@
 "use client";
 
-import { getAccessToken } from "@/lib/auth/session";
 import { dashboardHref } from "@/lib/dashboard-route";
 
 
@@ -48,12 +47,6 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
     }
 
     try {
-      const hasSession = getAccessToken() || getAccessToken();
-      if (!hasSession) {
-        setIsLoading(false);
-        return;
-      }
-
       const res = await apiCache.get(clansCacheKey, () => apiClient.servers.getServerClans(guildId));
 
       if (res.error) throw new Error(res.error);

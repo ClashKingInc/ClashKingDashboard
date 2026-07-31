@@ -1,7 +1,6 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { getAccessToken } from "@/lib/auth/session";
 
 
 import React, { useState, useEffect, useEffectEvent } from "react";
@@ -79,11 +78,6 @@ export default function GeneralSettingsPage() {
       setIsLoading(true);
       setError(null);
 
-      const token = getAccessToken();
-      if (!token) {
-        throw new Error("No access token found. Please log in again.");
-      }
-
       const settingsPayload = await apiCache.get(settingsCacheKey, async () => {
         const response = await apiClient.servers.getSettings(guildId);
 
@@ -114,9 +108,6 @@ export default function GeneralSettingsPage() {
 
   async function loadDiscordRoles() {
     try {
-      const token = getAccessToken();
-      if (!token) return;
-
       // Use cache to prevent duplicate requests
       const rolesPayload = await apiCache.get(discordRolesCacheKey, async () => {
         const response = await apiClient.roles.getDiscordRoles(guildId);
@@ -134,9 +125,6 @@ export default function GeneralSettingsPage() {
   async function loadTenureRoles() {
     try {
       setIsLoadingTenureRoles(true);
-      const token = getAccessToken();
-      if (!token) return;
-
       const allRolesPayload = await apiCache.get(allRolesCacheKey, async () => {
         const response = await apiClient.roles.getServerRoles(guildId, { type: 'status' });
         if (response.error) {
@@ -176,9 +164,6 @@ export default function GeneralSettingsPage() {
         return;
       }
 
-      const token = getAccessToken();
-      if (!token) return;
-
       const response = await apiClient.roles.createServerRole(guildId, {
         type: 'status',
         option: String(newTenureRole.months),
@@ -203,9 +188,6 @@ export default function GeneralSettingsPage() {
   const handleDeleteTenureRole = async (ruleId: string) => {
     try {
       setError(null);
-
-      const token = getAccessToken();
-      if (!token) return;
 
       const response = await apiClient.roles.deleteServerRole(guildId, ruleId);
       if (response.error) throw new Error(response.error);

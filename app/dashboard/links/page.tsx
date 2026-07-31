@@ -1,7 +1,6 @@
 "use client";
 
 import { useGuildId } from "@/lib/dashboard-route";
-import { getAccessToken } from "@/lib/auth/session";
 import { apiFetch } from "@/lib/api/fetch";
 
 
@@ -125,10 +124,7 @@ export default function LinksManagementPage() {
       });
       if (serverQuery) search.set("query", serverQuery);
       if (accountFilter !== "all") search.set("account_filter", accountFilter);
-      const response = await apiFetch(`/v2/links/server/${guildId}?${search}`, {
-        headers: { Authorization: `Bearer ${getAccessToken() || ""}` },
-        cache: "no-store",
-      });
+      const response = await apiFetch(`/v2/links/server/${guildId}?${search}`, { cache: "no-store" });
       const body = await response.json();
       if (!response.ok) throw new Error(body.message || body.error || "Failed to fetch links");
       setData(body);
@@ -144,10 +140,7 @@ export default function LinksManagementPage() {
     setStatsLoading(true);
     setError(null);
     try {
-      const response = await apiFetch(`/v2/links/server/${guildId}?limit=5000&offset=0`, {
-        headers: { Authorization: `Bearer ${getAccessToken() || ""}` },
-        cache: "no-store",
-      });
+      const response = await apiFetch(`/v2/links/server/${guildId}?limit=5000&offset=0`, { cache: "no-store" });
       const body = await response.json();
       if (!response.ok) throw new Error(body.message || body.error || "Failed to fetch link statistics");
       setStatsData(body);
@@ -189,10 +182,7 @@ export default function LinksManagementPage() {
     const suffix = options.query ? `?${options.query}` : "";
     const response = await apiFetch(`/v2/links/server/${guildId}${suffix}`, {
       method,
-      headers: {
-        Authorization: `Bearer ${getAccessToken() || ""}`,
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
     });
     const body = await response.json();
@@ -223,10 +213,7 @@ export default function LinksManagementPage() {
       const search = new URLSearchParams({ limit: "5000", offset: "0" });
       if (serverQuery) search.set("query", serverQuery);
       if (accountFilter !== "all") search.set("account_filter", accountFilter);
-      const response = await apiFetch(`/v2/links/server/${guildId}?${search}`, {
-        headers: { Authorization: `Bearer ${getAccessToken() || ""}` },
-        cache: "no-store",
-      });
+      const response = await apiFetch(`/v2/links/server/${guildId}?${search}`, { cache: "no-store" });
       const exportData = await response.json() as ServerLinksResponse & { message?: string; error?: string };
       if (!response.ok) throw new Error(exportData.message || exportData.error || "Failed to export links");
 
@@ -271,9 +258,7 @@ export default function LinksManagementPage() {
     setError(null);
     setNotice(null);
     try {
-      const response = await apiFetch(`/v2/player/${encodeURIComponent(account.player_tag)}`, {
-        headers: { Authorization: `Bearer ${getAccessToken() || ""}` },
-      });
+      const response = await apiFetch(`/v2/player/${encodeURIComponent(account.player_tag)}`);
       const player = await response.json();
       if (response.status === 404 && player.reason === "notFound") {
         await request("DELETE", { query: new URLSearchParams({ playerTag: account.player_tag }) });
