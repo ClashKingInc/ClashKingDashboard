@@ -6,7 +6,7 @@ Vinext/React dashboard and static ClashKing marketing site.
 
 - `clashk.ing` serves the statically prerendered marketing homepage and legal pages.
 - `dashboard.clashk.ing` serves the static dashboard application.
-- Browser API calls go directly to `https://v2-api.clashk.ing`.
+- Browser API calls currently go directly to `https://local-api.clashk.ing`.
 - Dashboard routes are finite static shells. Guild context is carried as `?guildId=...`; roster detail uses `?guildId=...&rosterId=...`.
 - The Go API owns Discord and email authentication, refresh-cookie rotation, Discohook resolution, uploads, and all application data.
 
@@ -23,7 +23,7 @@ npm install
 npm run dev
 ```
 
-The development server listens on `http://localhost:3002`. Configure `.env.local` from `.env.example`; production defaults to `https://v2-api.clashk.ing`.
+The development server listens on `http://localhost:3002`. Configure `.env.local` from `.env.example`; builds currently default to `https://local-api.clashk.ing`.
 
 ## Validation
 

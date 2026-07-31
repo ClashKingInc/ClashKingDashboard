@@ -60,12 +60,12 @@ describe('getDefaultBaseUrl', () => {
   it('returns backend URL when running server-side (window undefined)', () => {
     Reflect.deleteProperty(globalThis, 'window');
     const url = getDefaultBaseUrl();
-    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://v2-api.clashk.ing');
+    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://local-api.clashk.ing');
   });
 
   it('uses the API origin directly when running client-side', () => {
     (globalThis as Record<string, unknown>).window = {};
     const url = getDefaultBaseUrl();
-    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://v2-api.clashk.ing');
+    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://local-api.clashk.ing');
   });
 });

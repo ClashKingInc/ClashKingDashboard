@@ -33,7 +33,7 @@ vi.mock("@/lib/auth/session", () => ({
 
 vi.mock("@/lib/api/client", () => ({
   apiClient: { auth: { getCurrentUser: vi.fn() } },
-  getDefaultBaseUrl: () => "https://v2-api.clashk.ing",
+  getDefaultBaseUrl: () => "https://local-api.clashk.ing",
 }));
 
 function SessionStatus() {

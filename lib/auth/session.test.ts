@@ -36,10 +36,10 @@ describe("browser auth session", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    await expect(refreshAccessToken("https://v2-api.clashk.ing")).resolves.toBe(true);
+    await expect(refreshAccessToken("https://local-api.clashk.ing")).resolves.toBe(true);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://v2-api.clashk.ing/v2/auth/web/refresh",
+      "https://local-api.clashk.ing/v2/auth/web/refresh",
       { method: "POST", credentials: "include" },
     );
     expect(getAccessToken()).toBe("restored-access");
@@ -54,8 +54,8 @@ describe("browser auth session", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const first = refreshAccessToken("https://v2-api.clashk.ing");
-    const second = refreshAccessToken("https://v2-api.clashk.ing");
+    const first = refreshAccessToken("https://local-api.clashk.ing");
+    const second = refreshAccessToken("https://local-api.clashk.ing");
     resolveResponse(
       new Response(JSON.stringify({ access_token: "rotated-access" }), { status: 200 }),
     );

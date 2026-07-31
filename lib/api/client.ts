@@ -127,7 +127,7 @@ export function createApiClient(
  * Exported for testability.
  */
 export function getDefaultBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_API_URL || 'https://v2-api.clashk.ing';
+  return process.env.NEXT_PUBLIC_API_URL || 'https://local-api.clashk.ing';
 }
 
 /**

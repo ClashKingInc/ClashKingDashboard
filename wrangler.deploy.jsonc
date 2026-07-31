@@ -6,8 +6,8 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  "workers_dev": false,
-  "preview_urls": false,
+  "workers_dev": true,
+  "preview_urls": true,
   "routes": [
     {
       "pattern": "clashk.ing",
