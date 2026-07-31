@@ -2,6 +2,16 @@
  * Server/Guild-related types
  */
 
+import type { ClanCategory } from './clan-categories';
+
+export interface LinkParseSettings {
+  clan?: boolean;
+  army?: boolean;
+  player?: boolean;
+  base?: boolean;
+  show?: boolean;
+}
+
 export interface ServerSettings {
   server: string | number;
   embed_color?: number;
@@ -10,13 +20,9 @@ export interface ServerSettings {
   change_nickname?: boolean;
   flair_non_family?: boolean;
   auto_eval_nickname?: boolean;
-  api_token?: boolean;
-  banlist?: string | number;
-  strike_log?: string | number;
   full_whitelist_role?: string | number;
-  reddit_feed?: string | number;
   family_label?: string;
-  greeting?: string;
+  link_parse?: LinkParseSettings;
   clans?: any[];
   server_roles?: import('./roles').ServerRole[];
 }
@@ -28,13 +34,9 @@ export interface ServerSettingsUpdate {
   change_nickname?: boolean;
   flair_non_family?: boolean;
   auto_eval_nickname?: boolean;
-  api_token?: boolean;
-  banlist?: string | number;
-  strike_log?: string | number;
   full_whitelist_role?: string | number;
-  reddit_feed?: string | number;
   family_label?: string;
-  greeting?: string;
+  link_parse?: LinkParseSettings;
 }
 
 export interface ServerSettingsResponse {
@@ -59,6 +61,19 @@ export interface ClanSettings {
   server_id: string | number;
   clan_tag: string;
   settings: any;
+}
+
+export interface ClanSettingsUpdate {
+  category?: string | null;
+  abbreviation?: string | null;
+}
+
+export interface ClanSettingsResponse {
+  message: string;
+  server_id: string | number;
+  clan_tag: string;
+  updated_fields: number;
+  category: ClanCategory | null;
 }
 
 export interface ServerClanListItem {
@@ -215,15 +230,15 @@ export interface GiveawayBooster {
 }
 
 /**
- * A single winner entry in a giveaway's winners_list
+ * A single winner entry in a giveaway's winnersList
  */
 export interface GiveawayWinner {
-  user_id: string;
-  username: string | null;
-  avatar_url?: string | null;
+  userId: string;
+  username?: string | null;
+  avatarUrl?: string | null;
   status: 'winner' | 'rerolled';
-  timestamp: string | null;
-  reason: string | null;
+  timestamp?: string | null;
+  reason?: string | null;
 }
 
 /**
@@ -231,26 +246,31 @@ export interface GiveawayWinner {
  */
 export interface Giveaway {
   id: string;
+  serverId: string;
   prize: string;
-  channel_id: string | null;
+  channelId: string | null;
   status: 'scheduled' | 'ongoing' | 'ended';
-  start_time: string;
-  end_time: string;
+  startTime: string;
+  endTime: string;
   winners: number;
   mentions: string[];
-  text_above_embed: string;
-  text_in_embed: string;
-  text_on_end: string;
-  image_url: string | null;
-  profile_picture_required: boolean;
-  coc_account_required: boolean;
-  roles_mode: 'allow' | 'deny' | 'none';
+  textAboveEmbed: string;
+  textInEmbed: string;
+  textOnEnd: string;
+  imageUrl: string | null;
+  profilePictureRequired: boolean;
+  cocAccountRequired: boolean;
+  rolesMode: 'allow' | 'deny' | 'none';
   roles: string[];
   boosters: GiveawayBooster[];
-  entry_count: number;
+  entryCount: number;
   updated: boolean;
-  message_id: string | null;
-  winners_list: GiveawayWinner[];
+  messageId: string | null;
+  winnersList: GiveawayWinner[];
+  eventPending: string | null;
+  eventPendingAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -263,12 +283,102 @@ export interface GiveawaysResponse {
   total: number;
 }
 
+function isNullableString(value: unknown): value is string | null {
+  return typeof value === 'string' || value === null;
+}
+
+function isGiveawayWinner(value: unknown): value is GiveawayWinner {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<GiveawayWinner>;
+  return typeof candidate.userId === 'string'
+    && (candidate.username === undefined || isNullableString(candidate.username))
+    && (candidate.avatarUrl === undefined || isNullableString(candidate.avatarUrl))
+    && ['winner', 'rerolled'].includes(candidate.status ?? '')
+    && (candidate.timestamp === undefined || isNullableString(candidate.timestamp))
+    && (candidate.reason === undefined || isNullableString(candidate.reason));
+}
+
+function isGiveawayBooster(value: unknown): value is GiveawayBooster {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<GiveawayBooster>;
+  return typeof candidate.value === 'number'
+    && Array.isArray(candidate.roles)
+    && candidate.roles.every((role) => typeof role === 'string');
+}
+
+export function isGiveaway(value: unknown): value is Giveaway {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<Giveaway>;
+  return typeof candidate.id === 'string'
+    && typeof candidate.serverId === 'string'
+    && typeof candidate.prize === 'string'
+    && isNullableString(candidate.channelId)
+    && ['scheduled', 'ongoing', 'ended'].includes(candidate.status ?? '')
+    && typeof candidate.startTime === 'string'
+    && typeof candidate.endTime === 'string'
+    && typeof candidate.winners === 'number'
+    && Array.isArray(candidate.mentions)
+    && candidate.mentions.every((mention) => typeof mention === 'string')
+    && typeof candidate.textAboveEmbed === 'string'
+    && typeof candidate.textInEmbed === 'string'
+    && typeof candidate.textOnEnd === 'string'
+    && isNullableString(candidate.imageUrl)
+    && typeof candidate.profilePictureRequired === 'boolean'
+    && typeof candidate.cocAccountRequired === 'boolean'
+    && ['allow', 'deny', 'none'].includes(candidate.rolesMode ?? '')
+    && Array.isArray(candidate.roles)
+    && candidate.roles.every((role) => typeof role === 'string')
+    && Array.isArray(candidate.boosters)
+    && candidate.boosters.every(isGiveawayBooster)
+    && typeof candidate.entryCount === 'number'
+    && typeof candidate.updated === 'boolean'
+    && isNullableString(candidate.messageId)
+    && Array.isArray(candidate.winnersList)
+    && candidate.winnersList.every(isGiveawayWinner)
+    && isNullableString(candidate.eventPending)
+    && isNullableString(candidate.eventPendingAt)
+    && typeof candidate.createdAt === 'string'
+    && typeof candidate.updatedAt === 'string';
+}
+
+export function isGiveawaysResponse(value: unknown): value is GiveawaysResponse {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Partial<GiveawaysResponse>;
+  return Array.isArray(candidate.ongoing)
+    && candidate.ongoing.every(isGiveaway)
+    && Array.isArray(candidate.upcoming)
+    && candidate.upcoming.every(isGiveaway)
+    && Array.isArray(candidate.ended)
+    && candidate.ended.every(isGiveaway)
+    && typeof candidate.total === 'number';
+}
+
+export interface GiveawayMutationResponse {
+  message: string;
+  giveawayId: string;
+  serverId: string;
+}
+
+export interface GiveawayEntrant {
+  userId: string;
+  entries: number;
+  winChance: number;
+}
+
+export interface GiveawayEntriesResponse {
+  giveawayId: string;
+  serverId: string;
+  totalEntries: number;
+  uniqueUsers: number;
+  entrants: GiveawayEntrant[];
+}
+
 /**
  * Response from the reroll endpoint
  */
 export interface GiveawayRerollResponse {
   message: string;
-  giveaway_id: string;
-  server_id: number;
-  new_winners: string[];
+  giveawayId: string;
+  serverId: string;
+  newWinners: string[];
 }

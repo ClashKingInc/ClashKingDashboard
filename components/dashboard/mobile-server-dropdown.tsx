@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { GuildInfo } from "@/lib/api/types/server";
+import { dashboardHref } from "@/lib/dashboard-route";
 
 interface MobileServerDropdownProps {
   readonly locale: string;
@@ -42,7 +43,7 @@ export function MobileServerDropdown({
       icon,
     }));
     setIsDropdownOpen(false);
-    router.push(`/${locale}/dashboard/${guild.id}`);
+    router.push(dashboardHref("", guild.id));
   };
 
   if (isLoading) {

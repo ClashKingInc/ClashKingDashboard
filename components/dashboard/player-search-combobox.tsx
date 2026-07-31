@@ -1,5 +1,9 @@
 "use client";
 
+import { getAccessToken } from "@/lib/auth/session";
+import { apiFetch } from "@/lib/api/fetch";
+
+
 import { useState, useCallback } from "react";
 import { Check, ChevronsUpDown, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,8 +55,8 @@ export function PlayerSearchCombobox({
     if (loaded) return;
     setLoading(true);
     try {
-      const token = localStorage.getItem("access_token");
-      const res = await fetch(`/api/v2/roster/server/${guildId}/members`, {
+      const token = getAccessToken();
+      const res = await apiFetch(`/v2/roster/server/${guildId}/members`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {

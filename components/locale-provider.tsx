@@ -1,0 +1,117 @@
+"use client";
+
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { NextIntlClientProvider } from "next-intl";
+import englishMessages from "@/messages/en.json";
+import {
+  DASHBOARD_LOCALE_MODE_STORAGE_KEY,
+  DASHBOARD_LOCALE_STORAGE_KEY,
+  getLocaleModeFromStorage,
+  getPublicRoute,
+  isSupportedLocale,
+  resolveBrowserLocale,
+  type LocaleMode,
+  type SupportedLocale,
+} from "@/lib/locale-preference";
+
+type Messages = typeof englishMessages;
+
+const messageLoaders: Record<SupportedLocale, () => Promise<Messages>> = {
+  en: async () => englishMessages,
+  fr: async () => (await import("@/messages/fr.json")).default,
+  nl: async () => (await import("@/messages/nl.json")).default,
+};
+
+type LocaleContextValue = {
+  locale: SupportedLocale;
+  mode: LocaleMode;
+  setDashboardLocale: (locale: SupportedLocale, mode: LocaleMode) => void;
+};
+
+const LocaleContext = createContext<LocaleContextValue | undefined>(undefined);
+
+export function LocaleProvider({ children }: { readonly children: React.ReactNode }) {
+  const [locale, setLocale] = useState<SupportedLocale>("en");
+  const [messages, setMessages] = useState<Messages>(englishMessages);
+  const [mode, setMode] = useState<LocaleMode>("manual");
+
+  const applyLocale = useCallback(async (nextLocale: SupportedLocale) => {
+    const nextMessages = await messageLoaders[nextLocale]();
+    setMessages(nextMessages);
+    setLocale(nextLocale);
+    document.documentElement.lang = nextLocale;
+  }, []);
+
+  const setDashboardLocale = useCallback(
+    (nextLocale: SupportedLocale, nextMode: LocaleMode) => {
+      localStorage.setItem(DASHBOARD_LOCALE_STORAGE_KEY, nextLocale);
+      localStorage.setItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY, nextMode);
+      setMode(nextMode);
+      void applyLocale(nextLocale);
+    },
+    [applyLocale],
+  );
+
+  useEffect(() => {
+    const publicRoute = getPublicRoute(globalThis.location.pathname);
+    if (publicRoute) {
+      void applyLocale(publicRoute.locale);
+      return;
+    }
+
+    const storedMode = getLocaleModeFromStorage(
+      localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY),
+    );
+    const storedLocale = localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY);
+    const nextLocale = storedMode === "browser"
+      ? resolveBrowserLocale(navigator.languages)
+      : isSupportedLocale(storedLocale) ? storedLocale : "en";
+
+    setMode(storedMode);
+    void applyLocale(nextLocale);
+  }, [applyLocale, children]);
+
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (
+        getPublicRoute(globalThis.location.pathname) ||
+        (event.key !== DASHBOARD_LOCALE_STORAGE_KEY &&
+          event.key !== DASHBOARD_LOCALE_MODE_STORAGE_KEY)
+      ) {
+        return;
+      }
+
+      const storedMode = getLocaleModeFromStorage(
+        localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY),
+      );
+      const storedLocale = localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY);
+      const nextLocale = storedMode === "browser"
+        ? resolveBrowserLocale(navigator.languages)
+        : isSupportedLocale(storedLocale) ? storedLocale : "en";
+      setMode(storedMode);
+      void applyLocale(nextLocale);
+    };
+
+    globalThis.addEventListener("storage", handleStorage);
+    return () => globalThis.removeEventListener("storage", handleStorage);
+  }, [applyLocale]);
+
+  const value = useMemo(
+    () => ({ locale, mode, setDashboardLocale }),
+    [locale, mode, setDashboardLocale],
+  );
+
+  return (
+    <LocaleContext.Provider value={value}>
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        {children}
+      </NextIntlClientProvider>
+    </LocaleContext.Provider>
+  );
+}
+
+export function useAppLocale(): LocaleContextValue {
+  const value = useContext(LocaleContext);
+  if (!value) throw new Error("useAppLocale must be used inside LocaleProvider");
+  return value;
+}

@@ -1,0 +1,5 @@
+https://dashboard.clashk.ing/*
+  X-Robots-Tag: noindex, nofollow
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable

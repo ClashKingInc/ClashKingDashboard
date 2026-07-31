@@ -222,7 +222,7 @@ function emojiToTwemojiUrl(emoji: string): string {
     .map((char) => char.codePointAt(0))
     .filter((point): point is number => typeof point === "number")
     .map((point) => point.toString(16).padStart(4, "0"));
-  return `/api/v2/app/twemoji/${codePoints.join("-")}.png`;
+  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${codePoints.join("-")}.png`;
 }
 
 const EMOJI_TOKENS = Array.from(

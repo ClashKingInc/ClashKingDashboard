@@ -1,5 +1,9 @@
 "use client";
 
+import { getAccessToken } from "@/lib/auth/session";
+import { dashboardHref } from "@/lib/dashboard-route";
+
+
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -44,7 +48,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
     }
 
     try {
-      const hasSession = localStorage.getItem("access_token") || localStorage.getItem("refresh_token");
+      const hasSession = getAccessToken() || getAccessToken();
       if (!hasSession) {
         setIsLoading(false);
         return;
@@ -139,7 +143,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
           ))}
           <Button
             className="mt-2"
-            onClick={() => router.push(`/${locale}/dashboard/${guildId}/clans`)}
+            onClick={() => router.push(dashboardHref("clans", guildId))}
           >
             <Plus className="h-4 w-4 mr-2" />
             {t("clans.addFirst")}
@@ -159,7 +163,7 @@ export function ClansSummary({ guildId }: ClansSummaryProps) {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => router.push(`/${locale}/dashboard/${guildId}/clans`)}
+          onClick={() => router.push(dashboardHref("clans", guildId))}
         >
           {t("clans.manage")}
         </Button>

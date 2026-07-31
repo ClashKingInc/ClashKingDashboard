@@ -25,6 +25,7 @@ import {
   TicketIcon,
   FileText,
   KeyRound,
+  Map,
 } from "lucide-react";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -40,6 +41,7 @@ import { useTranslations } from "next-intl";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { useDashboardAccess } from "./dashboard-access-provider";
 import type { DashboardSection } from "@/lib/api/types/dashboard-access";
+import { dashboardHref } from "@/lib/dashboard-route";
 
 interface SidebarProps {
   readonly guildId: string;
@@ -67,7 +69,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       icon,
     }));
     setIsDropdownOpen(false);
-    router.push(`/${locale}/dashboard/${guild.id}`);
+    router.push(dashboardHref("", guild.id));
   };
 
   const navigationSections: Array<{ titleKey: string | null; items: Array<{ nameKey: string; href: string; icon: React.ComponentType<{ className?: string }>; capability?: DashboardSection; fullAccess?: boolean }> }> = [
@@ -76,7 +78,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       items: [
         {
           nameKey: "overview.name",
-          href: `/dashboard/${guildId}`,
+          href: dashboardHref("", guildId),
           icon: Home,
         },
       ],
@@ -86,25 +88,25 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       items: [
         {
           nameKey: "general.name",
-          href: `/dashboard/${guildId}/general`,
+          href: dashboardHref("general", guildId),
           icon: Settings,
           capability: "settings",
         },
         {
           nameKey: "familySettings.name",
-          href: `/dashboard/${guildId}/family-settings`,
+          href: dashboardHref("family-settings", guildId),
           icon: UserCog,
           capability: "family_settings",
         },
         {
           nameKey: "logs.name",
-          href: `/dashboard/${guildId}/logs`,
+          href: dashboardHref("logs", guildId),
           icon: ScrollText,
           capability: "logs",
         },
         {
           nameKey: "dashboardAccess.name",
-          href: `/dashboard/${guildId}/dashboard-access`,
+          href: dashboardHref("dashboard-access", guildId),
           icon: KeyRound,
           fullAccess: true,
         },
@@ -115,15 +117,21 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       items: [
         {
           nameKey: "clans.name",
-          href: `/dashboard/${guildId}/clans`,
+          href: dashboardHref("clans", guildId),
           icon: Users,
           capability: "clans",
         },
         {
           nameKey: "rosters.name",
-          href: `/dashboard/${guildId}/rosters`,
+          href: dashboardHref("rosters", guildId),
           icon: ClipboardList,
           capability: "rosters",
+        },
+        {
+          nameKey: "bases.name",
+          href: dashboardHref("bases", guildId),
+          icon: Map,
+          fullAccess: true,
         },
       ],
     },
@@ -132,13 +140,13 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       items: [
         {
           nameKey: "links.name",
-          href: `/dashboard/${guildId}/links`,
+          href: dashboardHref("links", guildId),
           icon: Link2,
           capability: "links",
         },
         {
           nameKey: "bans.name",
-          href: `/dashboard/${guildId}/bans-and-strikes`,
+          href: dashboardHref("bans-and-strikes", guildId),
           icon: Ban,
           capability: "moderation",
         },
@@ -149,43 +157,43 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       items: [
         {
           nameKey: "roles.name",
-          href: `/dashboard/${guildId}/roles`,
+          href: dashboardHref("roles", guildId),
           icon: ShieldCheck,
           capability: "roles",
         },
         {
           nameKey: "reminders.name",
-          href: `/dashboard/${guildId}/reminders`,
+          href: dashboardHref("reminders", guildId),
           icon: Bell,
           capability: "reminders",
         },
         {
           nameKey: "autoboards.name",
-          href: `/dashboard/${guildId}/autoboards`,
+          href: dashboardHref("autoboards", guildId),
           icon: LayoutDashboard,
           capability: "autoboards",
         },
         {
           nameKey: "giveaways.name",
-          href: `/dashboard/${guildId}/giveaways`,
+          href: dashboardHref("giveaways", guildId),
           icon: Gift,
           capability: "giveaways",
         },
         {
           nameKey: "panels.name",
-          href: `/dashboard/${guildId}/panels`,
+          href: dashboardHref("panels", guildId),
           icon: LayoutTemplate,
           capability: "panels",
         },
         {
           nameKey: "tickets.name",
-          href: `/dashboard/${guildId}/tickets`,
+          href: dashboardHref("tickets", guildId),
           icon: TicketIcon,
           capability: "tickets",
         },
         {
           nameKey: "embeds.name",
-          href: `/dashboard/${guildId}/embeds`,
+          href: dashboardHref("embeds", guildId),
           icon: FileText,
           capability: "embeds",
         },
@@ -196,13 +204,13 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
       items: [
         {
           nameKey: "wars.name",
-          href: `/dashboard/${guildId}/wars`,
+          href: dashboardHref("wars", guildId),
           icon: Swords,
           capability: "wars",
         },
         {
           nameKey: "leaderboards.name",
-          href: `/dashboard/${guildId}/leaderboards`,
+          href: dashboardHref("leaderboards", guildId),
           icon: Trophy,
           capability: "leaderboards",
         },
@@ -217,9 +225,9 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
   const normalizedPathname = pathname.replace(/^\/[a-z]{2}(?=\/)/, "").replace(/\/$/, "") || "/";
 
   const isNavItemActive = (href: string) => {
-    const normalizedHref = href.replace(/\/$/, "") || "/";
+    const normalizedHref = new URL(href, "https://dashboard.clashk.ing").pathname.replace(/\/$/, "") || "/";
 
-    if (normalizedHref === `/dashboard/${guildId}`) {
+    if (normalizedHref === "/dashboard") {
       return normalizedPathname === normalizedHref;
     }
 
@@ -327,7 +335,7 @@ export function Sidebar({ guildId, locale, guildName, guildIcon, availableGuilds
 
       <div className="border-t border-border bg-card p-3">
         <Link
-          href={`/dashboard/${guildId}/support-us`}
+          href={dashboardHref("support-us", guildId)}
           className="flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[11px] leading-none text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
         >
           <span>{tCommon("poweredBy")}</span>

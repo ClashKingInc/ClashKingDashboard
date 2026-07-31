@@ -11,7 +11,6 @@ export interface UserInfo {
 
 export interface AuthResponse {
   access_token: string;
-  refresh_token: string;
   user: UserInfo;
 }
 
@@ -25,11 +24,6 @@ export interface EmailRegisterRequest {
 export interface EmailAuthRequest {
   email: string;
   password: string;
-  device_id?: string;
-}
-
-export interface RefreshTokenRequest {
-  refresh_token: string;
   device_id?: string;
 }
 
@@ -48,7 +42,6 @@ export interface DiscordAuthRequest {
   code: string;
   code_verifier: string;
   device_id?: string;
-  device_name?: string;
   redirect_uri?: string;
 }
 

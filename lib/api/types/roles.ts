@@ -59,7 +59,6 @@ export interface RoleSettings {
   auto_eval_nickname?: boolean;
   autoeval_triggers?: string[];
   autoeval_log?: string;
-  blacklisted_roles?: string[];
 }
 
 export interface RoleSettingsUpdate {
@@ -67,7 +66,6 @@ export interface RoleSettingsUpdate {
   auto_eval_nickname?: boolean;
   autoeval_triggers?: string[];
   autoeval_log?: string;
-  blacklisted_roles?: string[];
 }
 
 export interface DiscordRolesResponse {

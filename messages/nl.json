@@ -226,6 +226,10 @@
       "name": "Roosters",
       "description": "Roosterbeheer"
     },
+    "bases": {
+      "name": "Bases",
+      "description": "Layoutbibliotheek en betrokkenheid"
+    },
     "autoboards": {
       "name": "Autoboards",
       "description": "Geautomatiseerde ranglijsten"
@@ -271,6 +275,106 @@
     },
     "switchServer": "Server Wisselen",
     "goHome": "Homepagina"
+  },
+  "BasesPage": {
+    "eyebrow": "Clanbeheer",
+    "title": "Bases",
+    "description": "Bekijk gedeelde layouts, betrokkenheidsgeschiedenis en Discord-bronberichten.",
+    "refresh": "Vernieuwen",
+    "create": "Base toevoegen",
+    "retry": "Opnieuw proberen",
+    "dismiss": "Sluiten",
+    "cancel": "Annuleren",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "pagination": "Pagina {page} van {total}",
+    "imageAlt": "Base-layoutafbeelding {index}",
+    "noDescription": "Geen beschrijving opgegeven.",
+    "openLayout": "Layout openen",
+    "openMessage": "Discord-bericht",
+    "summary": {
+      "total": "Totaal bases",
+      "page": "Huidige pagina",
+      "visible": "Zichtbaar"
+    },
+    "counts": {
+      "downloads": "Unieke downloads",
+      "upvotes": "Upvotes",
+      "downvotes": "Downvotes"
+    },
+    "history": {
+      "title": "Downloadgeschiedenis ({count})",
+      "empty": "Er zijn geen downloader-ID's vastgelegd.",
+      "resolve": "Profiel ophalen"
+    },
+    "delete": {
+      "action": "Verwijderen",
+      "confirmTitle": "Deze base verwijderen?",
+      "confirmDescription": "Dit verwijdert de databaserecord permanent nadat eerst het Discord-bronbericht is verwijderd. De base kan niet worden hersteld.",
+      "confirmAction": "Base verwijderen",
+      "deleting": "Verwijderen…",
+      "baseId": "Base-ID",
+      "discordSource": "Discord-bron",
+      "successTitle": "Base verwijderd",
+      "successDeleted": "De databaserecord en het Discord-bericht zijn verwijderd.",
+      "successAlreadyMissing": "De databaserecord is verwijderd; het Discord-bericht ontbrak al.",
+      "cleanupFailedTitle": "Base behouden; Discord-opruiming mislukt",
+      "cleanupCompleteTitle": "Discord-opruiming voltooid; base behouden",
+      "failureTitle": "De base is niet verwijderd",
+      "failureFallback": "Het verwijderverzoek is mislukt.",
+      "retryable": "Opnieuw proberen is veilig",
+      "notRetryable": "Niet opnieuw proberen",
+      "cleanup": {
+        "deleted": "Discord-bericht verwijderd",
+        "alreadyMissing": "Discord-bericht ontbrak al",
+        "failed": "Discord-opruiming mislukt"
+      }
+    },
+    "empty": {
+      "title": "Nog geen bases gedeeld",
+      "description": "Voeg de eerste layout toe door het Discord-kanaal en de Clash of Clans-layoutlink te kiezen."
+    },
+    "form": {
+      "title": "Base toevoegen",
+      "description": "Bases kunnen na creatie niet worden bewerkt. Kies waar ClashKing het Discord-bericht plaatst en controleer de layoutlink.",
+      "channel": "Discord-kanaal",
+      "channelPlaceholder": "Selecteer een kanaal",
+      "channelSearch": "Kanalen zoeken…",
+      "channelsLoading": "Kanalen laden…",
+      "baseLink": "Layoutlink",
+      "descriptionLabel": "Beschrijving",
+      "images": "Afbeeldingen",
+      "chooseImages": "Layoutafbeeldingen kiezen",
+      "imageLimit": "Maximaal vier afbeeldingen; uploads worden voor creatie afgerond.",
+      "submit": "Base maken",
+      "creating": "Uploaden en maken…",
+      "createRejectedTitle": "De base is niet gemaakt",
+      "createCleanupCompleteTitle": "Discord-opruiming voltooid; base niet gemaakt",
+      "createCleanupFailedTitle": "Discord-bericht kan achterblijven; base niet gemaakt",
+      "databaseNotInserted": "Databaserecord niet ingevoegd",
+      "discordMessageCreated": "Discord-bericht is gemaakt",
+      "discordMessageId": "Discord-bericht-ID",
+      "retryable": "Opnieuw proberen is veilig",
+      "notRetryable": "Niet automatisch opnieuw proberen",
+      "cleanup": {
+        "notNeeded": "Discord-opruiming niet nodig",
+        "deleted": "Discord-bericht verwijderd",
+        "alreadyMissing": "Discord-bericht ontbrak al",
+        "failed": "Discord-opruiming mislukt"
+      }
+    },
+    "errors": {
+      "title": "Bases niet beschikbaar",
+      "load": "Bases laden is mislukt.",
+      "create": "De base maken is mislukt.",
+      "upload": "Een afbeelding uploaden is mislukt.",
+      "downloader": "Deze downloader ophalen is mislukt.",
+      "channels": "Discord-kanalen laden is mislukt.",
+      "channelRequired": "Selecteer een Discord-kanaal.",
+      "linkRequired": "Layoutlink is verplicht.",
+      "descriptionTooLong": "De beschrijving mag maximaal 1.000 tekens bevatten.",
+      "tooManyImages": "Kies maximaal vier afbeeldingen."
+    }
   },
   "BansPage": {
     "title": "Moderatie",
@@ -581,10 +685,7 @@
       "tag": "Tag",
       "hitrate": "30 Dagen Trefferscore",
       "current_clan": "Huidige clan",
-      "currentClanTag": "Clan Tag",
       "discord": "Discord",
-      "heroLvs": "Helden",
-      "warPref": "Oorlogsvoorkeur",
       "trophies": "Trofeeën",
       "current_clan_tag": "Clan Tag",
       "hero_lvs": "Heldenniveaus",
@@ -625,7 +726,7 @@
       "errorUpdatingRoster": "Kan rooster niet bijwerken. Probeer het opnieuw.",
       "rosterDeleted": "Rooster succesvol verwijderd!",
       "errorDeletingRoster": "Kan rooster niet verwijderen. Probeer het opnieuw.",
-      "membersAdded": "Leden succesvol toegevoegd!",
+      "membersAdded": "{count} leden aan het roster toegevoegd!",
       "errorAddingMembers": "Kan leden niet toevoegen. Probeer het opnieuw.",
       "memberRemoved": "Lid succesvol verwijderd!",
       "errorRemovingMember": "Kan lid niet verwijderen. Probeer het opnieuw.",
@@ -1288,22 +1389,17 @@
     "customizeIntegration": "Pas Discord-integratie-instellingen aan voor deze clan",
     "tabs": {
       "basic": "Discord setup",
-      "war": "Oorlog",
-      "advanced": "Welkom & automatisering"
+      "war": "Oorlog"
     },
     "memberRole": "Lid Rol",
     "leaderRole": "Leider Rol",
-    "clanChannel": "Clankanaal",
-    "selectChannel": "Selecteer kanaal",
     "selectRole": "Selecteer rol",
     "none": "Geen",
     "clanAbbreviation": "Clan Afkorting",
-    "greetingMessage": "Welkomstbericht",
     "warScoreCountdown": "Oorlogsscore Aftelling",
     "warScoreCountdownDescription": "Maakt een spraakkanaal met de huidige oorlogsscore",
     "warTimerCountdown": "Oorlog Timer Aftelling",
     "warTimerCountdownDescription": "Maakt een spraakkanaal met de resterende oorlogstijd",
-    "banAlertChannel": "Ban Alert Kanaal",
     "category": "Categorie",
     "categoryOptions": {
       "none": "Geen categorie",
@@ -1311,45 +1407,50 @@
       "usedByServer": "Gebruikt door andere clans",
       "clanCount": "{count, plural, one {# clan} other {# clans}}"
     },
-    "autoGreetOption": "Auto Welkomst Optie",
-    "autoGreetOptions": {
-      "never": "Never",
-      "always": "Every Join",
-      "onJoin": "First Join"
+    "categories": {
+      "title": "Clancategorieën",
+      "description": "Maak en beheer de categorieën die beschikbaar zijn voor de clans van deze server.",
+      "refresh": "Vernieuwen",
+      "createLabel": "Nieuwe categorie",
+      "name": "Categorienaam",
+      "namePlaceholder": "bijv. Competitief",
+      "nameHelp": "{count}/{max} tekens na normalisatie van witruimte",
+      "create": "Categorie maken",
+      "empty": "Er zijn nog geen clancategorieën gemaakt.",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}",
+      "renameAction": "{name} hernoemen",
+      "deleteAction": "{name} verwijderen",
+      "renameTitle": "Clancategorie hernoemen",
+      "renameDescription": "De genormaliseerde naam wordt bijgewerkt voor alle toegewezen clans.",
+      "saveRename": "Naam opslaan",
+      "deleteTitle": "Clancategorie verwijderen?",
+      "deleteWarning": "Als “{name}” wordt verwijderd, worden {count, plural, one {# clan} other {# clans}} ongecategoriseerd.",
+      "deleteCountMayChange": "Dit voorbeeld is nu actueel. De voltooide verwijdering meldt het werkelijk vergrendelde aantal clans.",
+      "confirmDelete": "Categorie verwijderen",
+      "deleteSuccessTitle": "{name} verwijderd",
+      "deleteSuccessDescription": "{count, plural, =0 {Geen clans gewijzigd.} one {# clan is nu ongecategoriseerd.} other {# clans zijn nu ongecategoriseerd.}}",
+      "created": "{name} gemaakt.",
+      "renamed": "Categorie hernoemd naar {name}.",
+      "errors": {
+        "title": "Categorieën niet beschikbaar",
+        "load": "Clancategorieën laden is mislukt.",
+        "create": "De clancategorie maken is mislukt.",
+        "rename": "De clancategorie hernoemen is mislukt.",
+        "preview": "Het verwijdervoorbeeld laden is mislukt.",
+        "delete": "De clancategorie verwijderen is mislukt.",
+        "refresh": "De categorie is gewijzigd, maar de vernieuwde categorie- of clanstatus kon niet worden geladen.",
+        "invalidName": "Gebruik een niet-lege naam van maximaal 64 tekens zonder besturingstekens."
+      }
     },
     "fieldHelp": {
       "infoButtonLabel": "Toon meer informatie",
       "memberRole": "De rol die leden van deze clan moeten krijgen. Als de bot de rollen beheert, krijgt iedereen in deze clan deze rol. Handig als je clan-specifieke kanalen gebruikt.",
       "leaderRole": "De rol die co-leaders en de leider van deze clan krijgen. In een typische Discord kun je hiermee bijvoorbeeld een leiderschat per clan of een gezamenlijke leiderschat voor alle clans maken.",
-      "clanChannel": "Het kanaal dat je kiest is het standaardkanaal waar de bot berichten plaatst. Bijvoorbeeld: hier begroet de bot nieuwe gebruikers als je die optie inschakelt.",
-      "banAlertChannel": "Kies in welk kanaal de bot je waarschuwt wanneer iemand die is geband (zie <bansLink>Bans</bansLink>) je clan binnenkomt.",
       "clanAbbreviation": "Geef je clan een afkorting zodat leden die in hun naam kunnen krijgen als je hernoemen activeert. Je kunt dit instellen in <familySettingsLink>Familie-instellingen</familySettingsLink>.",
       "category": "Een manier om je clans te organiseren. Veel clanfamilies hebben 5 of meer clans. Sommige zijn bijvoorbeeld alleen voor CWL of events."
     },
-    "greeting": {
-      "title": "Welkomstbericht Variabelen",
-      "description": "Beschikbare variabelen voor het welkomstbericht:",
-      "preview": "Voorbeeld",
-      "availablePlaceholders": "Beschikbare Plaatshouders",
-      "placeholders": {
-        "user_mention": "Vermeldt de gebruiker",
-        "user_display_name": "Discord weergavenaam",
-        "clan_name": "Naam van de clan",
-        "clan_link": "Link naar de clan",
-        "clan_leader_name": "Naam van de clanleider",
-        "clan_leader_mention": "Vermeldt de clanleider",
-        "player_name": "In-game naam van de speler",
-        "player_link": "Link naar het spelersprofiel",
-        "player_townhall": "Stadhuis niveau",
-        "player_townhall_emoji": "Stadhuis emoji",
-        "player_league": "Divisie naam",
-        "player_league_emoji": "Divisie emoji",
-        "player_trophies": "Huidige trofeeën"
-      }
-    },
     "roleIdPlaceholder": "Rol ID",
     "abbreviationPlaceholder": "bijv. CK",
-    "greetingPlaceholder": "Welkom '{'player_name'}' bij '{'clan_name'}'!",
     "categoryPlaceholder": "Categorienaam",
     "notAvailable": "N/A",
     "saving": "Opslaan...",
@@ -1636,6 +1737,12 @@
       "hoursRemaining": "u resterend",
       "channel": "Kanaal",
       "channelPlaceholder": "Selecteer kanaal",
+      "threadOptional": "Thread (optioneel)",
+      "threadPlaceholder": "Selecteer een thread",
+      "noThread": "Plaats rechtstreeks in het kanaal",
+      "forumPost": "Forumbericht",
+      "forumPostPlaceholder": "Selecteer een forumbericht",
+      "forumPostRequired": "Een forumbericht is verplicht voor forumkanalen.",
       "clan": "Clan",
       "clanPlaceholder": "Selecteer clan",
       "customMessage": "Aangepast Bericht",
@@ -1677,6 +1784,8 @@
       "failedToDelete": "Kan herinnering niet verwijderen",
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
       "failedToSave": "Kan herinneringen niet opslaan",
+      "forumPostRequired": "Selecteer een forumbericht voordat je deze herinnering opslaat.",
+      "invalidDestination": "De geselecteerde thread hoort niet bij dit kanaal.",
       "timeExceedsLimit": "Resterende tijd moet tussen {min} en {max} uur liggen",
       "pointThresholdInvalid": "Puntendrempel moet tussen {min} en {max} liggen",
       "attackThresholdInvalid": "Aanvalsdrempel moet tussen {min} en {max} liggen"
@@ -1687,13 +1796,13 @@
     "description": "Configureer automatische logging voor clan- en speleractiviteiten",
     "stats": {
       "activeLogs": "Actieve Logs",
-      "activeLogsDesc": "Van 26 logtypen",
+      "activeLogsDesc": "Alle familieclans en serverlogboeken",
       "logChannels": "Log Kanalen",
       "logChannelsDesc": "Beschikbare kanalen",
       "trackedClans": "Gevolgde Clans",
       "trackedClansDesc": "Geconfigureerde clans",
       "issues": "Problemen",
-      "issuesDesc": "Logs vereisen aandacht"
+      "issuesDesc": "In de volledige familie"
     },
     "clanSelector": {
       "label": "Clan:",
@@ -1703,7 +1812,8 @@
       "clan": "Clan",
       "war": "Oorlog",
       "capital": "Hoofdstad",
-      "player": "Speler"
+      "player": "Speler",
+      "server": "Server"
     },
     "clanLogs": {
       "joinLog": {
@@ -1729,6 +1839,16 @@
       "clanDescriptionLog": {
         "label": "Clan Beschrijving",
         "description": "Volg wijzigingen in clan beschrijving"
+      },
+      "banAlert": {
+        "label": "Banmeldingen",
+        "description": "Publiceer een melding wanneer een verbannen speler deze clan binnenkomt"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit-feed",
+        "description": "Publiceer de Reddit-feed van de server"
       }
     },
     "warLogs": {
@@ -1820,6 +1940,11 @@
       "thread": "Thread (Optioneel)",
       "threadPlaceholder": "Selecteer thread",
       "noThread": "Geen Thread",
+      "forumPost": "Forumbericht",
+      "forumPostPlaceholder": "Selecteer een forumbericht",
+      "forumPostRequired": "Selecteer een forumbericht voordat je dit logboek opslaat.",
+      "invalidThread": "De geselecteerde thread hoort niet bij dit kanaal.",
+      "saveDestination": "Bestemming opslaan",
       "channelDeleted": "Dit kanaal bestaat niet meer. Selecteer een nieuw kanaal of schakel het logboek uit.",
       "enableToConfig": "Schakel dit logboek in om het te configureren",
       "configuring": "Configureren",
@@ -1878,8 +2003,6 @@
     "security": {
       "title": "Beveiliging & Rechten",
       "description": "Beheer toegang en verificatie",
-      "requireApiToken": "Vereis Speler API Token",
-      "requireApiTokenDesc": "Spelers moeten accounteigendom verifiëren met Clash of Clans API token bij koppelen (aanbevolen)",
       "fullWhitelistRole": "Volledige Whitelist Rol",
       "fullWhitelistRoleDesc": "Discord rol met volledige toegang tot alle bot commando's (omzeilt alle rechtencontroles)",
       "noRole": "Geen Rol"
@@ -2158,180 +2281,137 @@
   },
   "AutoboardsPage": {
     "title": "AutoBoards",
-    "description": "Automatisch posten en vernieuwen van clan, familie en legende borden",
-    "createAutoboard": "AutoBoard Maken",
-    "editAutoboard": "AutoBoard Bewerken",
-    "createDialogTitle": "AutoBoard Maken",
-    "createDialogDesc": "Stel automatisch posten of vernieuwen in voor een bord",
-    "editDialogTitle": "AutoBoard Bewerken",
-    "editDialogDesc": "Wijzig de configuratie van dit autoboard",
-    "automationType": "Automatiseringstype",
-    "autoPost": "Auto Post",
-    "autoPostDesc": "Auto Post - Geplande dagelijkse posts",
-    "autoRefresh": "Auto Refresh",
-    "autoRefreshDesc": "Auto Refresh - Continue updates (30-60 min)",
-    "channel": "Kanaal",
-    "channelDeleted": "Kanaal is verwijderd.",
-    "selectChannel": "Selecteer een kanaal",
-    "channelDesc": "Het kanaal waar het autoboard wordt gepost",
-    "boardType": "Bordtype",
-    "selectBoardType": "Selecteer een bordtype",
-    "postDays": "Postdagen (selecteer er minstens één)",
-    "postDaysDesc": "Op de geselecteerde dagen wordt een post geplaatst om {time} (5:00 AM UTC).",
-    "autoRefreshInfo": "Auto Refresh Info",
-    "autoRefreshInfoDesc": "Het bord wordt automatisch elke 30-60 minuten vernieuwd met de laatste gegevens. Perfect om statistieken actueel te houden zonder handmatige updates.",
-    "cancel": "Annuleren",
-    "creating": "Aanmaken...",
-    "create": "Maken",
-    "updating": "Bijwerken...",
-    "update": "Bijwerken",
-    "howItWorks": "Hoe AutoBoards Werken",
-    "howItWorksDesc": "AutoBoards kunnen automatisch nieuwe borden posten volgens een schema of bestaande borden continu vernieuwen met actuele gegevens. Kies **Auto Post** om dagelijks nieuwe borden te maken op specifieke dagen, of **Auto Refresh** om een bord elke 30-60 minuten bij te werken.",
-    "totalAutoboards": "Totaal AutoBoards",
-    "totalShort": "Totaal",
-    "postShort": "Post",
-    "refreshShort": "Refresh",
-    "used": "gebruikt",
-    "scheduledBoards": "Geplande borden",
-    "continuousUpdates": "Continue updates",
-    "availableSlots": "Beschikbare Sloten",
-    "remainingCapacity": "Resterende capaciteit",
-    "activeAutoboards": "Actieve AutoBoards",
-    "noAutoboards": "Geen AutoBoards geconfigureerd",
-    "noAutoboardsDesc": "Maak je eerste AutoBoard om bordupdates te automatiseren",
-    "postsOn": "Post op:",
-    "updatesEvery": "Vernieuwt elke 30-60 minuten",
-    "created": "Aangemaakt:",
-    "edit": "Bewerken",
-    "remove": "Verwijderen",
-    "tips": "💡 AutoBoard Tips",
-    "noChannels": "Geen kanalen beschikbaar",
-    "activeAutoboardsCount": "{count} actieve autoboard{count, plural, one {} other {s}}",
-    "noAutoboardsForFilter": "Geen AutoBoards in dit filter",
-    "noAutoboardsForFilterDesc": "Probeer een ander filter of maak een nieuw AutoBoard.",
-    "tipsContent": {
-      "type": {
-        "title": "Kies het juiste type:",
-        "desc": "Gebruik Auto Post voor dagelijkse samenvattingen en Auto Refresh voor live ranglijsten en realtime tracking."
-      },
-      "limits": {
-        "title": "Beheer je limieten:",
-        "desc": "Elke server heeft een beperkt aantal autoboard-slots. Verwijder ongebruikte autoboards om ruimte vrij te maken."
-      },
-      "schedule": {
-        "title": "Plan verstandig:",
-        "desc": "Auto Post-borden verschijnen om {time} (5:00 AM UTC). Kies dagen die aansluiten bij de activiteitscyclus van je clan."
-      },
-      "duplicates": {
-        "title": "Vermijd duplicaten:",
-        "desc": "Het gebruik van zowel Auto Post als Auto Refresh voor hetzelfde bordtype in hetzelfde kanaal kan voor rommel zorgen."
-      }
+    "description": "Vernieuw een live bord of verstuur nieuwe borden volgens een schema",
+    "actions": {
+      "create": "AutoBoard maken",
+      "edit": "AutoBoard bewerken",
+      "delete": "AutoBoard verwijderen",
+      "save": "Wijzigingen opslaan",
+      "cancel": "Annuleren",
+      "retry": "Opnieuw proberen"
     },
-    "boardTypes": {
-      "clanBoards": "Clan Borden",
-      "familyBoards": "Familie Borden",
-      "legendBoards": "Legende Borden",
-      "other": "Overig",
-      "clandetailed": "Clan Gedetailleerd",
-      "clanbasic": "Clan Basis",
-      "clanmini": "Clan Minimalistisch",
-      "clancompo": "Clan Samenstelling",
-      "clandonos": "Clan Donaties",
-      "clanactivity": "Clan Activiteit",
-      "clancapoverview": "Clan Hoofdstad Overzicht",
-      "clancapdonos": "Clan Hoofdstad Donaties",
-      "clancapraids": "Clan Hoofdstad Raids",
-      "clanwarlog": "Clan Oorlogslog",
-      "clancwlperf": "Clan CWL Prestatie",
-      "clangames": "Clan Spelen",
-      "familyoverview": "Familie Overzicht",
-      "familycompo": "Familie Samenstelling",
-      "familydonos": "Familie Donaties",
-      "familygames": "Familie Games",
-      "familyactivity": "Familie Activiteit",
-      "legendclan": "Legende Clan",
-      "legendday": "Legende Dag",
-      "legendseason": "Legende Seizoen",
-      "discordlinks": "Discord Koppelingen"
+    "metrics": {
+      "total": "Geconfigureerd",
+      "refresh": "Vernieuwborden",
+      "send": "Geplande verzendingen"
     },
-    "days": {
-      "monday": "Maandag",
-      "tuesday": "Dinsdag",
-      "wednesday": "Woensdag",
-      "thursday": "Donderdag",
-      "friday": "Vrijdag",
-      "saturday": "Zaterdag",
-      "sunday": "Zondag",
-      "endofseason": "Einde van Seizoen"
+    "filters": {
+      "all": "Alle"
     },
-    "alerts": {
-      "selectBoardType": "Selecteer een bordtype",
+    "list": {
+      "title": "Geconfigureerde AutoBoards",
+      "description": "Door beheerders ingestelde levering, doelen, bestemming en uitvoeringsstatus",
+      "empty": "Geen AutoBoards in deze weergave",
+      "emptyDescription": "Maak er een wanneer het API-register een bordtype beschikbaar stelt."
+    },
+    "registry": {
+      "emptyTitle": "Geen bordtypen beschikbaar",
+      "emptyDescription": "Het API-register is leeg. Aanmaken wordt mogelijk zodra daar een bordtype actief is.",
+      "typeUnavailable": "Dit bordtype staat niet meer in het register en kan niet worden bewerkt."
+    },
+    "dialog": {
+      "createTitle": "AutoBoard maken",
+      "editTitle": "AutoBoard bewerken",
+      "description": "Mogelijkheden en limieten komen uit het actieve register."
+    },
+    "boardType": {
+      "label": "Bordtype",
+      "description": "Beschikbare typen komen rechtstreeks uit het API-register.",
+      "placeholder": "Selecteer een bordtype"
+    },
+    "targets": {
+      "kind": "Doeltype: {kind}",
+      "kindDescription": "Het register bepaalt hoe iedere doelwaarde wordt geïnterpreteerd.",
+      "scope": "Doelbereik",
+      "scopeDescription": "Familiebereik gebruikt alle ingestelde familieclans zonder expliciete doelen.",
+      "family": "Familie",
+      "custom": "Aangepaste doelen",
+      "values": "Doelen",
+      "count": "Geef tussen {min} en {max} doelen op voor dit bordtype.",
+      "placeholder": "Voer een {kind}-doel in",
+      "add": "Doel toevoegen",
+      "remove": "Doel verwijderen"
+    },
+    "modes": {
+      "label": "Leveringsmodus",
+      "description": "Het register bepaalt welke modi dit bord ondersteunt.",
+      "refresh": "Vernieuwen",
+      "send": "Gepland versturen"
+    },
+    "destination": {
+      "label": "Bestemming",
+      "channel": "Bovenliggend kanaal",
+      "channelDescription": "Tekst- en aankondigingskanalen kunnen direct leveren; forums gebruiken een onderliggende post.",
       "selectChannel": "Selecteer een kanaal",
-      "selectDays": "Selecteer minstens één dag voor auto-post",
-      "createFailed": "Kon autoboard niet maken. Probeer het opnieuw.",
-      "updateFailed": "Kon autoboard niet bijwerken. Probeer het opnieuw.",
-      "deleteFailed": "Kon autoboard niet verwijderen. Probeer het opnieuw.",
-      "deleteConfirmTitle": "AutoBoard verwijderen?",
-      "deleteConfirmDescription": "Weet je zeker dat je dit AutoBoard wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt."
-    }
-  },
-  "TicketsPage": {
-    "title": "Tickets",
-    "description": "Bekijk alle werving- en supporttickets van je server.",
-    "configurepanels": "Panelen configureren",
-    "openTickets": "Ticketlijst",
-    "noTickets": "Geen tickets gevonden",
-    "noTicketsHint": "Geen tickets komen overeen met het geselecteerde filter.",
-    "ticketsFound": "tickets",
-    "showing": "{count} van {total} tickets",
-    "tabTickets": "Tickets",
-    "tabConfiguration": "Configuratie",
+      "thread": "Thread of forumpost",
+      "selectThread": "Selecteer een thread",
+      "threadOptional": "Optioneel voor tekst- en aankondigingskanalen.",
+      "forumRequired": "Voor deze bestemming is een forumpost verplicht.",
+      "direct": "Rechtstreeks naar het kanaal sturen",
+      "deleted": "Kanaal bestaat niet meer"
+    },
+    "refresh": {
+      "interval": "Vernieuwingsinterval (minuten)",
+      "intervalDescription": "Toegestaan bereik: {minimum}–{maximum} minuten."
+    },
+    "schedule": {
+      "label": "Schema",
+      "kind": "Schemapatroon",
+      "kindDescription": "Stuur dagelijks, op gekozen weekdagen of maandelijks.",
+      "daily": "Dagelijks",
+      "weekdays": "Geselecteerde weekdagen",
+      "dayOfMonth": "Dag van de maand",
+      "selectWeekdays": "Weekdagen",
+      "monthDay": "Dag van de maand",
+      "monthDayDescription": "Gebruik een waarde van 1 tot en met 31.",
+      "timezone": "Tijdzone",
+      "timeOfDay": "Tijdstip",
+      "nextRun": "Volgende uitvoering"
+    },
+    "weekdays": {
+      "1": "Maandag",
+      "2": "Dinsdag",
+      "3": "Woensdag",
+      "4": "Donderdag",
+      "5": "Vrijdag",
+      "6": "Zaterdag",
+      "7": "Zondag"
+    },
     "status": {
-      "open": "Open",
-      "sleep": "Slapend",
-      "closed": "Gesloten",
-      "delete": "Verwijderd"
+      "enabled": "Ingeschakeld",
+      "disabled": "Uitgeschakeld",
+      "enabledDescription": "Uitgeschakelde borden behouden hun configuratie, maar worden niet uitgevoerd.",
+      "messageId": "Huidig vernieuwingsbericht: {id}"
     },
-    "filter": {
-      "all": "Alle statussen"
+    "delete": {
+      "title": "Deze AutoBoard verwijderen?",
+      "description": "Hiermee wordt de configuratie definitief verwijderd."
     },
-    "cleanup": "Opschonen",
-    "transcript": "Transcript",
-    "missingChannel": "Kanaal verwijderd",
-    "missingChannelCleanup": "Kanaal verwijderd, opschonen vereist",
-    "openInDiscord": "Openen in Discord",
-    "table": {
-      "number": "#",
-      "panel": "Paneel",
-      "user": "Gebruikers-ID",
-      "category": "Categorie",
-      "clan": "Clan",
-      "account": "Account",
-      "actions": "Acties"
+    "feedback": {
+      "created": "AutoBoard aangemaakt",
+      "updated": "AutoBoard bijgewerkt",
+      "deleted": "AutoBoard verwijderd"
     },
-    "manage": {
-      "open": "Beheren",
-      "title": "Beheer ticket #{number}",
-      "description": "Werk de ticketstatus bij of wijs een clan toe.",
-      "descriptionClosed": "Werk de ticketstatus bij, wijs een clan toe of verwijder het definitief.",
-      "descriptionDeleted": "Dit ticket is al verwijderd in Discord. Je kunt nu de dashboardvermelding en transcriptlink definitief verwijderen.",
-      "statusLabel": "Ticketstatus",
-      "statusDelete": "Ticket verwijderen",
-      "saveStatus": "Status opslaan",
-      "clanLabel": "Toegewezen clan",
-      "selectClan": "Selecteer een clan",
-      "noClan": "Geen clan toegewezen",
-      "saveClan": "Clan opslaan",
-      "deleteTicket": "Ticket verwijderen",
-      "showTranscript": "Transcript tonen",
-      "permanentDeleteTicket": "Ticket definitief verwijderen",
-      "deleteHint": "Verwijder de dashboardvermelding en transcriptlink definitief.",
-      "warningTitle": "Dit ticket definitief verwijderen?",
-      "warningDescription": "Dit verwijdert het ticket uit het dashboard en verbergt de transcriptlink. Deze actie kan niet ongedaan worden gemaakt.",
-      "warningDescriptionDeleted": "Dit al verwijderde ticket wordt uit het dashboard gehaald en de transcriptlink is daarna niet meer beschikbaar. Deze actie kan niet ongedaan worden gemaakt.",
-      "statusSaved": "Ticketstatus bijgewerkt.",
-      "clanSaved": "Ticketclan bijgewerkt.",
-      "deleted": "Ticket verwijderd."
+    "validation": {
+      "boardType": "Selecteer een bordtype uit het actieve register.",
+      "targetScope": "Selecteer een ondersteund doelbereik.",
+      "familyTargets": "Familiebereik kan geen expliciete doelen bevatten.",
+      "targetCount": "Voer tussen {min} en {max} niet-lege doelen in.",
+      "deliveryMode": "Selecteer een ondersteunde leveringsmodus.",
+      "destination": "Selecteer een geldige bestemming. Forums vereisen een onderliggende post.",
+      "refreshInterval": "Voer een interval tussen {minimum} en {maximum} minuten in.",
+      "timezone": "Voer een IANA-tijdzone in.",
+      "timeOfDay": "Voer een geldig tijdstip in.",
+      "weekdays": "Selecteer minstens één weekdag.",
+      "dayOfMonth": "Voer een dag van 1 tot en met 31 in."
+    },
+    "errors": {
+      "title": "AutoBoards niet beschikbaar",
+      "session": "Je sessie is verlopen.",
+      "request": "De AutoBoards-aanvraag is mislukt.",
+      "load": "AutoBoards konden niet worden geladen.",
+      "save": "De AutoBoard kon niet worden opgeslagen.",
+      "delete": "De AutoBoard kon niet worden verwijderd."
     }
   },
   "TicketsSettingsPage": {
@@ -2357,7 +2437,7 @@
     "panelNamePlaceholder": "bijv. Aanmeldingen",
     "panelCreated": "Paneel \"{name}\" aangemaakt.",
     "confirmDeletePanel": "Paneel \"{name}\" verwijderen?",
-    "confirmDeletePanelHint": "Dit verwijdert het paneel en alle knopinstellingen permanent. Openstaande tickets worden niet beïnvloed.",
+    "confirmDeletePanelHint": "Dit verwijdert het paneel en alle knopinstellingen permanent.",
     "panelDeleted": "Paneel verwijderd.",
     "panelHint": "Klik om dit paneel uit te klappen en te configureren.",
     "buttons": "knoppen",
@@ -2991,6 +3071,23 @@
       "privacy": "Privacybeleid",
       "terms": "Servicevoorwaarden",
       "legal": "Deze inhoud is niet gelieerd aan, goedgekeurd, gesponsord of specifiek toegestaan door Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing voor Discord, mobiel en het web",
+    "privacy": {
+      "title": "Privacybeleid | ClashKing",
+      "openGraphTitle": "Privacybeleid van ClashKing",
+      "description": "Lees hoe ClashKing account-, game- en appgegevens verzamelt, gebruikt, bewaart en beschermt.",
+      "heading": "Privacybeleid",
+      "eyebrow": "Van kracht sinds 17 juli 2026"
+    },
+    "terms": {
+      "title": "Servicevoorwaarden | ClashKing",
+      "openGraphTitle": "Servicevoorwaarden van ClashKing",
+      "description": "De voorwaarden die gelden wanneer je websites, apps, diensten en communitytools van ClashKing gebruikt.",
+      "heading": "Servicevoorwaarden",
+      "eyebrow": "Juridische informatie van ClashKing"
     }
   }
 }

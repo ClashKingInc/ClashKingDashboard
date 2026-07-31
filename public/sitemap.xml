@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+  <url>
+    <loc>https://clashk.ing/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/fr</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/nl</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/privacy" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr/privacy" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/privacy" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/fr/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/privacy" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr/privacy" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/privacy" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/nl/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/privacy" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr/privacy" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/privacy" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/terms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/terms" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr/terms" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/terms" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/fr/terms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/terms" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr/terms" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/terms" />
+  </url>
+  <url>
+    <loc>https://clashk.ing/nl/terms</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://clashk.ing/terms" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://clashk.ing/fr/terms" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://clashk.ing/nl/terms" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clashk.ing/terms" />
+  </url>
+</urlset>

@@ -3,48 +3,41 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { LogOut, ChevronDown, Home, UserRoundCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { clashKingAssets } from "@/lib/theme";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { logout } from "@/lib/auth/logout";
 import { SettingsDropdown } from "@/components/settings-dropdown";
 import { apiClient } from "@/lib/api/client";
+import { cacheUser, getCachedUser } from "@/lib/auth/session";
 
 export function ServersHeader() {
   const [user, setUser] = useState<UserInfo | null>(null);
-  const params = useParams();
   const router = useRouter();
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const locale = (params?.locale as string) || "en";
+  const locale = useLocale();
   const t = useTranslations();
 
   useEffect(() => {
     setMounted(true);
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error("Failed to parse user from localStorage", e);
-      }
-    }
+    setUser(getCachedUser() ?? null);
     void apiClient.auth.getCurrentUser().then((response) => {
       if (!response.data) return;
       setUser(response.data);
-      localStorage.setItem("user", JSON.stringify(response.data));
+      cacheUser(response.data);
     });
   }, []);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     setUser(null);
-    router.push(`/${locale}`);
+    router.push("/");
   };
 
   const logoSrc = mounted && (theme === "light" || resolvedTheme === "light")
@@ -111,7 +104,7 @@ export function ServersHeader() {
                 </DropdownMenuItem>
                 {user.is_admin && (
                   <DropdownMenuItem asChild className="hover:!bg-transparent">
-                    <Link href={`/${locale}/admin/creators`} className="flex items-center space-x-2">
+                    <Link href={"/admin/creators"} className="flex items-center space-x-2">
                       <UserRoundCheck className="h-4 w-4" />
                       <span className="hover:!text-primary">Creator review</span>
                     </Link>

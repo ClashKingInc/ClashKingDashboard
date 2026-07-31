@@ -102,8 +102,8 @@ export function DashboardRouteAccess({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const { capabilities, loading, canView } = useDashboardAccess();
   const section = pathSections.find(([path]) => pathname.includes(path))?.[1];
-  const isAccessConfig = pathname.includes("/dashboard-access");
-  const allowed = isAccessConfig ? capabilities?.full_access === true : !section || canView(section);
+  const isFullAccessOnly = pathname.includes("/dashboard-access") || pathname.includes("/bases");
+  const allowed = isFullAccessOnly ? capabilities?.full_access === true : !section || canView(section);
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading dashboard access…</div>;
   if (allowed) return children;

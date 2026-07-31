@@ -7,10 +7,9 @@ describe('createApiClient', () => {
     expect(client.auth.getConfig().baseUrl).toBe('http://api.example.com');
   });
 
-  it('creates a client with optional access and refresh tokens', () => {
-    const client = createApiClient('http://api.example.com', 'acc', 'ref');
+  it('creates a client with an optional in-memory access token', () => {
+    const client = createApiClient('http://api.example.com', 'acc');
     expect(client.auth.getConfig().accessToken).toBe('acc');
-    expect(client.auth.getConfig().refreshToken).toBe('ref');
   });
 });
 
@@ -31,25 +30,15 @@ describe('ClashKingApiClient — setAccessToken', () => {
     expect(client.leaderboards.getConfig().accessToken).toBe('tok_new');
     expect(client.tickets.getConfig().accessToken).toBe('tok_new');
     expect(client.panels.getConfig().accessToken).toBe('tok_new');
-  });
-});
-
-describe('ClashKingApiClient — setRefreshToken', () => {
-  it('propagates the refresh token to all sub-clients', () => {
-    const client = createApiClient('http://api.example.com');
-    client.setRefreshToken('ref_new');
-    expect(client.auth.getConfig().refreshToken).toBe('ref_new');
-    expect(client.players.getConfig().refreshToken).toBe('ref_new');
-    expect(client.rosters.getConfig().refreshToken).toBe('ref_new');
+    expect(client.clanCategories.getConfig().accessToken).toBe('tok_new');
   });
 });
 
 describe('ClashKingApiClient — clearTokens', () => {
   it('clears tokens on all sub-clients', () => {
-    const client = createApiClient('http://api.example.com', 'acc', 'ref');
+    const client = createApiClient('http://api.example.com', 'acc');
     client.clearTokens();
     expect(client.auth.getConfig().accessToken).toBeUndefined();
-    expect(client.auth.getConfig().refreshToken).toBeUndefined();
     expect(client.players.getConfig().accessToken).toBeUndefined();
     expect(client.rosters.getConfig().accessToken).toBeUndefined();
   });
@@ -71,12 +60,12 @@ describe('getDefaultBaseUrl', () => {
   it('returns backend URL when running server-side (window undefined)', () => {
     Reflect.deleteProperty(globalThis, 'window');
     const url = getDefaultBaseUrl();
-    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000');
+    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://v2-api.clashk.ing');
   });
 
-  it('returns /api when running client-side (window defined)', () => {
+  it('uses the API origin directly when running client-side', () => {
     (globalThis as Record<string, unknown>).window = {};
     const url = getDefaultBaseUrl();
-    expect(url).toBe('/api');
+    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://v2-api.clashk.ing');
   });
 });

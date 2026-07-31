@@ -18,6 +18,8 @@ export { ServerClient } from './clients/server-client';
 export { LinkClient } from './clients/link-client';
 export { UtilityClient } from './clients/utility-client';
 export { LeaderboardClient } from './clients/leaderboard-client';
+export { BasesClient } from './clients/bases-client';
+export { ClanCategoriesClient } from './clients/clan-categories-client';
 
 // Base client (for extending)
 export { BaseApiClient } from './core/base-client';
@@ -31,7 +33,6 @@ export type {
   AuthResponse,
   EmailRegisterRequest,
   EmailAuthRequest,
-  RefreshTokenRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest,
   DiscordAuthRequest,
@@ -77,7 +78,42 @@ export type {
 } from './types/war';
 
 // Server types
-export type { ServerSettings, ClanSettings, BanRequest } from './types/server';
+export type {
+  ServerSettings,
+  ClanSettings,
+  ClanSettingsUpdate,
+  ClanSettingsResponse,
+  Giveaway,
+  GiveawayWinner,
+  GiveawayBooster,
+  GiveawaysResponse,
+  GiveawayMutationResponse,
+  GiveawayEntrant,
+  GiveawayEntriesResponse,
+  GiveawayRerollResponse,
+  BanRequest,
+} from './types/server';
+
+export type {
+  Base,
+  BasesResponse,
+  CreateBaseRequest,
+  BaseImageUploadResponse,
+  BaseCreateFailure,
+  BaseDownloader,
+  BaseDeleteResponse,
+  BaseDeleteFailure,
+  DiscordMessageCreateCleanup,
+  DiscordMessageCleanup,
+} from './types/bases';
+
+export type {
+  ClanCategory,
+  ClanCategoriesResponse,
+  ClanCategoryMutationResponse,
+  ClanCategoryDeletePreview,
+  ClanCategoryDeleteResponse,
+} from './types/clan-categories';
 
 // Link types
 export type { CocAccountRequest } from './types/link';

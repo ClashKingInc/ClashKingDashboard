@@ -1,5 +1,8 @@
 "use client";
 
+import { getAccessToken } from "@/lib/auth/session";
+
+
 import { useEffect, useState } from "react";
 import { Sidebar } from "./sidebar";
 import { MobileServerDropdown } from "./mobile-server-dropdown";
@@ -64,7 +67,7 @@ export function SidebarWrapper({ guildId, locale, variant = "sidebar" }: Sidebar
           setIsLoading(false);
         }
 
-        const token = localStorage.getItem("access_token");
+        const token = getAccessToken();
         if (!token) {
           setIsLoading(false);
           return;

@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-import { getLocale } from "next-intl/server";
+import { AuthSessionProvider } from "@/components/auth-session-provider";
+import { LocaleProvider } from "@/components/locale-provider";
+import { NextIntlClientProvider } from "next-intl";
+import englishMessages from "@/messages/en.json";
+
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://clashk.ing"),
@@ -10,15 +15,13 @@ export const metadata: Metadata = {
   description: "Configure your ClashKing bot settings",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   readonly children: React.ReactNode;
 }) {
-  const locale = await getLocale();
-
   return (
-    <html lang={locale} suppressHydrationWarning data-scroll-behavior="smooth">
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <link rel="preconnect" href="https://assets.clashk.ing" crossOrigin="anonymous" />
         <link
@@ -36,8 +39,14 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <NextIntlClientProvider locale="en" messages={englishMessages}>
+            <LocaleProvider>
+              <AuthSessionProvider>
+                {children}
+                <Toaster />
+              </AuthSessionProvider>
+            </LocaleProvider>
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>

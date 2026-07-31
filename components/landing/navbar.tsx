@@ -3,44 +3,37 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Menu, X, LogOut, ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
 import { logout } from "@/lib/auth/logout";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { SettingsDropdown } from "@/components/settings-dropdown";
+import { getCachedUser } from "@/lib/auth/session";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<UserInfo | null>(null);
-  const params = useParams();
   const router = useRouter();
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const locale = (params?.locale as string) || "en";
+  const locale = useLocale();
   const t = useTranslations("Navigation");
 
   useEffect(() => {
     setMounted(true);
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error("Failed to parse user from localStorage", e);
-      }
-    }
+    setUser(getCachedUser() ?? null);
   }, []);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     setUser(null);
-    router.push(`/${locale}`);
+    router.push("/");
   };
 
   const logoSrc = mounted && (theme === "light" || resolvedTheme === "light")

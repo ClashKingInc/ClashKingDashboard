@@ -1,17 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { ClanSignalHeroModel } from "./clan-signal/hero-model";
 import { ClanSignalWordmark } from "./clan-signal/brand";
 import { ClanSignalFooter } from "./clan-signal/footer";
 import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
 import { RotatingHeadline } from "./clan-signal/rotating-headline";
+import { publicPath, type SupportedLocale } from "@/lib/locale-preference";
 import "../../../app/explorations/clan-signal.css";
 
 const SHARED = "/concepts/local/assets";
 const ICONS = `${SHARED}/bot/icons`;
-const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
 
 type Feature = {
   icon: string;
@@ -59,10 +58,9 @@ function FeatureList({ features }: { features: readonly Feature[] }) {
   );
 }
 
-export async function ClanSignal() {
-  const t = await getTranslations("ClanSignal");
-  const cookieStore = await cookies();
-  const landingTheme = cookieStore.get(LANDING_THEME_COOKIE)?.value === "sunset" ? "sunset" : "day";
+export async function ClanSignal({ locale = "en" }: { readonly locale?: SupportedLocale }) {
+  const t = await getTranslations({ locale, namespace: "ClanSignal" });
+  const landingTheme = "day";
   const headlinePhrases = [
     [t("hero.phrases.run.first"), t("hero.phrases.run.second"), t("hero.phrases.run.third")],
     [t("hero.phrases.accounts.first"), t("hero.phrases.accounts.second"), t("hero.phrases.accounts.third")],
@@ -88,7 +86,7 @@ export async function ClanSignal() {
     <main className="clan-signal" data-cs-theme={landingTheme}>
       <header className="cs-nav-shell">
         <nav className="cs-nav" aria-label={t("navigation.ariaLabel")}>
-          <Link href="/" aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
+          <Link href={publicPath(locale, "/")} aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
             <ClanSignalWordmark priority />
           </Link>
           <div className="cs-nav-links">
@@ -227,7 +225,7 @@ export async function ClanSignal() {
         </nav>
       </section>
 
-      <ClanSignalFooter />
+      <ClanSignalFooter locale={locale} />
     </main>
   );
 }

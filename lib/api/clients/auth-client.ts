@@ -9,7 +9,6 @@ import type {
   UserInfo,
   EmailRegisterRequest,
   EmailAuthRequest,
-  RefreshTokenRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest,
   DiscordAuthRequest,
@@ -21,8 +20,9 @@ export class AuthClient extends BaseApiClient {
    * POST /v2/auth/verify-email-code
    */
   async verifyEmailCode(email: string, code: string): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/verify-email-code', {
+    return this.request('/v2/auth/web/verify-email-code', {
       method: 'POST',
+      credentials: 'include',
       body: JSON.stringify({ email, code }),
     });
   }
@@ -38,8 +38,9 @@ export class AuthClient extends BaseApiClient {
    * POST /v2/auth/discord
    */
   async authenticateWithDiscord(data: DiscordAuthRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/discord', {
+    return this.request('/v2/auth/web/discord', {
       method: 'POST',
+      credentials: 'include',
       body: JSON.stringify(data),
     });
   }
@@ -47,10 +48,10 @@ export class AuthClient extends BaseApiClient {
   /**
    * POST /v2/auth/refresh
    */
-  async refreshToken(data: RefreshTokenRequest): Promise<ApiResponse<{ access_token: string }>> {
-    return this.request('/v2/auth/refresh', {
+  async refreshToken(): Promise<ApiResponse<{ access_token: string }>> {
+    return this.request('/v2/auth/web/refresh', {
       method: 'POST',
-      body: JSON.stringify(data),
+      credentials: 'include',
     });
   }
 
@@ -78,8 +79,9 @@ export class AuthClient extends BaseApiClient {
    * POST /v2/auth/email
    */
   async loginWithEmail(data: EmailAuthRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/email', {
+    return this.request('/v2/auth/web/email', {
       method: 'POST',
+      credentials: 'include',
       body: JSON.stringify(data),
     });
   }
@@ -118,9 +120,17 @@ export class AuthClient extends BaseApiClient {
    * POST /v2/auth/reset-password
    */
   async resetPassword(data: ResetPasswordRequest): Promise<ApiResponse<AuthResponse>> {
-    return this.request('/v2/auth/reset-password', {
+    return this.request('/v2/auth/web/reset-password', {
       method: 'POST',
+      credentials: 'include',
       body: JSON.stringify(data),
+    });
+  }
+
+  async logout(): Promise<ApiResponse<null>> {
+    return this.request('/v2/auth/web/logout', {
+      method: 'POST',
+      credentials: 'include',
     });
   }
 }

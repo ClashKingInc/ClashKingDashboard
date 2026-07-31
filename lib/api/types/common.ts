@@ -5,12 +5,12 @@
 export interface ApiConfig {
   baseUrl: string;
   accessToken?: string;
-  refreshToken?: string;
 }
 
 export interface ApiResponse<T> {
   data?: T;
   error?: string;
+  errorData?: unknown;
   status: number;
 }
 

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,15 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
-
-const languages = [
-  { code: "en", name: "English", flagCode: "us" },
-  { code: "fr", name: "Français", flagCode: "fr" },
-  { code: "nl", name: "Nederlands", flagCode: "nl" },
-];
+import { useAppLocale } from "@/components/locale-provider";
+import { LANGUAGE_OPTIONS } from "@/lib/locale-preference";
 
 export function LanguageSwitcher() {
-  const router = useRouter();
+  const { setDashboardLocale } = useAppLocale();
   const t = useTranslations("LanguageSwitcher");
   const locale = useLocale();
   const [mounted, setMounted] = React.useState(false);
@@ -30,12 +25,6 @@ export function LanguageSwitcher() {
   React.useEffect(() => {
     setMounted(true);
   }, []);
-
-  const switchLocale = (newLocale: string) => {
-    // eslint-disable-next-line react-hooks/immutability
-    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    router.refresh();
-  };
 
   if (!mounted) {
     return (
@@ -55,10 +44,10 @@ export function LanguageSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {languages.map((lang) => (
+        {LANGUAGE_OPTIONS.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => switchLocale(lang.code)}
+            onClick={() => setDashboardLocale(lang.code, "manual")}
             className={currentLocale === lang.code ? "bg-accent" : ""}
           >
             <div className="mr-2 relative w-5 h-3.5 overflow-hidden rounded-sm border border-border/50">

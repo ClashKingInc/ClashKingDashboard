@@ -29,7 +29,7 @@ export class LeaderboardClient extends BaseApiClient {
     });
 
     return this.request<LeaderboardResponse>(
-      `/api/v1/leaderboard/${entityType}/${category}${queryString}`,
+      `/v1/leaderboard/${entityType}/${category}${queryString}`,
       {
         method: 'GET',
       }

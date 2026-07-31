@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import {
   DropdownMenu,
@@ -13,8 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  getPublicRoute,
   LANGUAGE_OPTIONS,
-  LOCALE_MODE_COOKIE,
+  publicPath,
   type SupportedLocale,
 } from "@/lib/locale-preference";
 
@@ -38,6 +39,7 @@ export function LandingLanguageSwitcher({
   initialTheme,
 }: Readonly<LandingLanguageSwitcherProps>) {
   const locale = useLocale() as SupportedLocale;
+  const pathname = usePathname();
   const router = useRouter();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
@@ -45,11 +47,9 @@ export function LandingLanguageSwitcher({
   const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
 
   const switchLocale = (nextLocale: SupportedLocale) => {
-    // eslint-disable-next-line react-hooks/immutability -- locale preference is persisted by next-intl's cookie contract
-    document.cookie = `${LOCALE_MODE_COOKIE}=manual; path=/; max-age=31536000; SameSite=Lax`;
-    // eslint-disable-next-line react-hooks/immutability -- locale preference is persisted by next-intl's cookie contract
-    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    startTransition(() => router.refresh());
+    const page = getPublicRoute(pathname)?.page ?? "/";
+    const hash = globalThis.location.hash;
+    startTransition(() => router.push(`${publicPath(nextLocale, page)}${hash}`));
   };
 
   const switchLandingTheme = (nextTheme: LandingTheme) => {

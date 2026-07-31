@@ -1,6 +1,9 @@
 import nextConfig from "eslint-config-next";
 
 const eslintConfig = [
+  {
+    ignores: ["dist/**", ".vinext/**", ".wrangler/**"],
+  },
   ...nextConfig,
   {
     rules: {

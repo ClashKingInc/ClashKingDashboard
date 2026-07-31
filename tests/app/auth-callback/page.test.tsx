@@ -1,5 +1,5 @@
 import { render, waitFor } from "@testing-library/react";
-import AuthCallbackPage from "@/app/[locale]/auth/callback/page";
+import AuthCallbackPage from "@/app/auth/callback/page";
 
 const navigationMock = vi.hoisted(() => ({
   locale: "en",
@@ -10,8 +10,6 @@ const navigationMock = vi.hoisted(() => ({
 const apiMock = vi.hoisted(() => ({
   authenticateWithDiscord: vi.fn(),
   getGuilds: vi.fn(),
-  setAccessToken: vi.fn(),
-  setRefreshToken: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -58,8 +56,6 @@ vi.mock("@/lib/api/client", () => ({
     servers: {
       getGuilds: apiMock.getGuilds,
     },
-    setAccessToken: apiMock.setAccessToken,
-    setRefreshToken: apiMock.setRefreshToken,
   },
 }));
 
@@ -108,8 +104,9 @@ describe("AuthCallbackPage PKCE cleanup", () => {
   });
 
   it("clears the PKCE verifier after backend authentication failures", async () => {
-    navigationMock.searchParams = new URLSearchParams("code=auth-code");
+    navigationMock.searchParams = new URLSearchParams("code=auth-code&state=expected-state");
     sessionStorage.setItem("discord_code_verifier", "verifier");
+    sessionStorage.setItem("discord_oauth_state", "expected-state");
     apiMock.authenticateWithDiscord.mockResolvedValue({
       data: null,
       error: "backend failed",
@@ -118,7 +115,12 @@ describe("AuthCallbackPage PKCE cleanup", () => {
     render(<AuthCallbackPage />);
 
     await waitFor(() => {
-      expect(apiMock.authenticateWithDiscord).toHaveBeenCalled();
+      expect(apiMock.authenticateWithDiscord).toHaveBeenCalledWith({
+        code: "auth-code",
+        code_verifier: "verifier",
+        device_id: "device-id",
+        redirect_uri: "http://localhost:3000/auth/callback",
+      });
       expect(sessionStorage.getItem("discord_code_verifier")).toBeNull();
     });
   });

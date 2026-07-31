@@ -3,6 +3,7 @@
  */
 
 import type { ApiConfig, ApiResponse } from '../types/common';
+import { getAccessToken, refreshAccessToken } from '@/lib/auth/session';
 
 // Module-level singleton so all client instances share one refresh attempt
 let _sharedRefreshPromise: Promise<boolean> | null = null;
@@ -73,17 +74,11 @@ export class BaseApiClient {
    * @param isAuthEndpoint - skip proactive refresh for auth endpoints (no-op refresh loop)
    */
   private async _getToken(isRetry: boolean, isAuthEndpoint = false): Promise<string | undefined> {
-    let token = this.config.accessToken;
-    if (!token && globalThis.window !== undefined) {
-      token = localStorage.getItem('access_token') || undefined;
-    }
+    let token = getAccessToken() || this.config.accessToken;
     if (!token && !isRetry && !isAuthEndpoint && globalThis.window !== undefined) {
-      const hasRefresh = !!localStorage.getItem('refresh_token');
-      if (hasRefresh) {
-        const refreshed = await this._tryRefreshToken();
-        if (refreshed) {
-          token = this.config.accessToken || localStorage.getItem('access_token') || undefined;
-        }
+      const refreshed = await this._tryRefreshToken();
+      if (refreshed) {
+        token = getAccessToken() || this.config.accessToken;
       }
     }
     return token;
@@ -102,7 +97,7 @@ export class BaseApiClient {
     const headers = new Headers(options.headers);
     const method = getRequestMethod(options);
 
-    if (!headers.has('Content-Type')) {
+    if (options.body != null && !headers.has('Content-Type') && !(options.body instanceof FormData)) {
       headers.set('Content-Type', 'application/json');
     }
 
@@ -127,7 +122,11 @@ export class BaseApiClient {
         const transientRetry = await this._retryOnTransientFailure<T>(endpoint, options, method, response.status, state);
         if (transientRetry) return transientRetry;
 
-        return { error: extractErrorMessage(data, response.status), status: response.status };
+        return {
+          error: extractErrorMessage(data, response.status),
+          errorData: data,
+          status: response.status,
+        };
       }
 
       return {
@@ -255,7 +254,11 @@ export class BaseApiClient {
           }
         }
 
-        return { error: extractErrorMessage(data, response.status), status: response.status };
+        return {
+          error: extractErrorMessage(data, response.status),
+          errorData: data,
+          status: response.status,
+        };
       }
 
       return { data, status: response.status };
@@ -277,51 +280,11 @@ export class BaseApiClient {
       return _sharedRefreshPromise;
     }
 
-    _sharedRefreshPromise = this._doRefresh().finally(() => {
+    _sharedRefreshPromise = refreshAccessToken(this.config.baseUrl).finally(() => {
       _sharedRefreshPromise = null;
     });
 
     return _sharedRefreshPromise;
-  }
-
-  private async _doRefresh(): Promise<boolean> {
-    try {
-      const refreshToken = localStorage.getItem('refresh_token');
-      if (!refreshToken) return false;
-
-      const deviceId = localStorage.getItem('device_id') || undefined;
-
-      const response = await fetch(`${this.config.baseUrl}/v2/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh_token: refreshToken, device_id: deviceId }),
-      });
-
-      if (!response.ok) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        // Both tokens are invalid — redirect to login preserving locale
-        const pathParts = globalThis.window.location.pathname.split('/');
-        const locale = pathParts[1] || 'en';
-        globalThis.window.location.href = `/${locale}/login`;
-        return false;
-      }
-
-      const data = await response.json();
-      if (data?.access_token) {
-        localStorage.setItem('access_token', data.access_token);
-        this.config.accessToken = data.access_token;
-        if (data.refresh_token) {
-          localStorage.setItem('refresh_token', data.refresh_token);
-        }
-        return true;
-      }
-
-      return false;
-    } catch {
-      return false;
-    }
   }
 
   /**
@@ -350,18 +313,10 @@ export class BaseApiClient {
   }
 
   /**
-   * Update the refresh token
-   */
-  setRefreshToken(token: string): void {
-    this.config.refreshToken = token;
-  }
-
-  /**
    * Clear all tokens
    */
   clearTokens(): void {
     this.config.accessToken = undefined;
-    this.config.refreshToken = undefined;
   }
 
   /**

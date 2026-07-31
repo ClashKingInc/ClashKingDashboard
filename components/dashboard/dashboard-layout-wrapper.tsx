@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { LogOut, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter, useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { SettingsDropdown } from "@/components/settings-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { UserInfo } from "@/lib/api/types/auth";
 import { logout } from "@/lib/auth/logout";
+import { getAccessToken, getCachedUser } from "@/lib/auth/session";
 
 export function DashboardLayoutWrapper({
   sidebar,
@@ -24,32 +25,24 @@ export function DashboardLayoutWrapper({
   const mainContentRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
-  const params = useParams();
-  const locale = params.locale as string;
+  const locale = useLocale();
   const tCommon = useTranslations("Common");
   const tNavigation = useTranslations("Navigation");
 
   // Auth check
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = getAccessToken();
     if (!token) {
-      router.push(`/${locale}/login`);
+      router.push("/login");
     }
 
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Failed to parse user from localStorage", error);
-      }
-    }
+    setUser(getCachedUser() ?? null);
   }, [router, locale]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     setUser(null);
-    router.push(`/${locale}`);
+    router.push("/");
   };
 
   const accountControls = user ? (

@@ -1,28 +1,30 @@
 "use client";
 
+import { getAccessToken } from "@/lib/auth/session";
+
+
 import { motion } from "framer-motion";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { initiateDiscordLogin } from "@/lib/auth/discord-login";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { SERVER_COUNT } from "@/lib/constants";
 
 export function Hero() {
-  const params = useParams();
   const router = useRouter();
-  const locale = (params?.locale as string) || "en";
+  const locale = useLocale();
   const t = useTranslations("HomePage");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("access_token"));
+    setIsLoggedIn(!!getAccessToken());
   }, []);
 
   const handleDashboardClick = () => {
     if (isLoggedIn) {
-      router.push(`/${locale}/servers`);
+      router.push("/servers");
     } else {
       initiateDiscordLogin(locale);
     }

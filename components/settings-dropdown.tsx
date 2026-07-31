@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -19,12 +18,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   LANGUAGE_OPTIONS,
-  LOCALE_MODE_COOKIE,
-  getLocaleModeFromCookie,
   resolveBrowserLocale,
   type SupportedLocale,
   type LocaleMode,
 } from "@/lib/locale-preference";
+import { useAppLocale } from "@/components/locale-provider";
 
 const BROWSER_LANGUAGE_LABEL_BY_LOCALE: Record<SupportedLocale, string> = {
   en: "Browser Language",
@@ -53,32 +51,18 @@ export function SettingsDropdown({
   textClassName,
   selectedItemClassName = "bg-primary/10 text-primary",
 }: Readonly<SettingsDropdownProps>) {
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const { mode: localeMode, setDashboardLocale } = useAppLocale();
   const t = useTranslations("Navigation");
   const [mounted, setMounted] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const [localeMode, setLocaleMode] = useState<LocaleMode>("manual");
 
   useEffect(() => {
     setMounted(true);
-    const currentMode = getLocaleModeFromCookie(document.cookie);
-    setLocaleMode(currentMode);
+  }, []);
 
-    if (currentMode === "browser") {
-      const browserLocale = resolveBrowserLocale(navigator.languages);
-      if (browserLocale !== locale) {
-        document.cookie = `NEXT_LOCALE=${browserLocale}; path=/; max-age=31536000; SameSite=Lax`;
-        router.refresh();
-      }
-    }
-  }, [locale, router]);
-
-  const applyLocale = (newLocale: string, mode: LocaleMode) => {
-    document.cookie = `${LOCALE_MODE_COOKIE}=${mode}; path=/; max-age=31536000; SameSite=Lax`;
-    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    setLocaleMode(mode);
-    router.refresh();
+  const applyLocale = (newLocale: SupportedLocale, mode: LocaleMode) => {
+    setDashboardLocale(newLocale, mode);
   };
 
   const browserLocale = mounted ? resolveBrowserLocale(navigator.languages) : "en";

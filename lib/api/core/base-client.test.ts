@@ -1,3 +1,4 @@
+import { clearSession, getAccessToken, setAccessToken } from "@/lib/auth/session";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { BaseApiClient } from "./base-client";
 
@@ -14,6 +15,10 @@ class TestClient extends BaseApiClient {
   }
 }
 
+beforeEach(() => {
+  clearSession(false);
+});
+
 // ─── token management ────────────────────────────────────────────────────────
 
 describe("BaseApiClient — token management", () => {
@@ -27,7 +32,6 @@ describe("BaseApiClient — token management", () => {
     const cfg = client.getConfig();
     expect(cfg.baseUrl).toBe("http://api.example.com");
     expect(cfg.accessToken).toBeUndefined();
-    expect(cfg.refreshToken).toBeUndefined();
   });
 
   it("setAccessToken updates the token in config", () => {
@@ -35,17 +39,10 @@ describe("BaseApiClient — token management", () => {
     expect(client.getConfig().accessToken).toBe("tok_123");
   });
 
-  it("setRefreshToken updates the refresh token in config", () => {
-    client.setRefreshToken("ref_abc");
-    expect(client.getConfig().refreshToken).toBe("ref_abc");
-  });
-
-  it("clearTokens removes both tokens", () => {
+  it("clearTokens removes the access token", () => {
     client.setAccessToken("tok_123");
-    client.setRefreshToken("ref_abc");
     client.clearTokens();
     expect(client.getConfig().accessToken).toBeUndefined();
-    expect(client.getConfig().refreshToken).toBeUndefined();
   });
 
   it("getConfig returns a snapshot (immutable to subsequent setters)", () => {
@@ -144,7 +141,7 @@ describe("BaseApiClient — request", () => {
     expect(headers.get("Authorization")).toBe("Bearer tok");
   });
 
-  it("sets Content-Type header by default", async () => {
+  it("does not trigger a JSON preflight header for a bodyless GET", async () => {
     fetchMock.mockResolvedValue({
       ok: true,
       status: 200,
@@ -153,7 +150,7 @@ describe("BaseApiClient — request", () => {
     await client.req("/players");
     const [, options] = fetchMock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
     const headers = options.headers as Headers;
-    expect(headers.get("Content-Type")).toBe("application/json");
+    expect(headers.get("Content-Type")).toBeNull();
   });
 
   it("returns error with string detail on non-OK response", async () => {
@@ -214,9 +211,9 @@ describe("BaseApiClient — request", () => {
     expect(result.status).toBe(0);
   });
 
-  it("uses token from localStorage when config token is absent", async () => {
+  it("uses the in-memory session token when config token is absent", async () => {
     const clientNoToken = new TestClient({ baseUrl: "http://api.example.com" });
-    localStorage.setItem("access_token", "local_tok");
+    setAccessToken("memory_tok", false);
     fetchMock.mockResolvedValue({
       ok: true,
       status: 200,
@@ -224,7 +221,7 @@ describe("BaseApiClient — request", () => {
     });
     await clientNoToken.req("/players");
     const [, options] = fetchMock.mock.calls[0] as [string, RequestInit & { headers: Headers }];
-    expect((options.headers as Headers).get("Authorization")).toBe("Bearer local_tok");
+    expect((options.headers as Headers).get("Authorization")).toBe("Bearer memory_tok");
   });
 
   it("does not retry 401 on auth endpoints", async () => {
@@ -480,12 +477,11 @@ describe('BaseApiClient — _doRefresh edge cases', () => {
       .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) })
       .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) });
     await client.req('/protected').catch(() => null);
-    expect(localStorage.getItem('access_token')).toBeNull();
-    expect(localStorage.getItem('refresh_token')).toBeNull();
+    expect(getAccessToken()).toBeUndefined();
     expect(localStorage.getItem('user')).toBeNull();
   });
 
-  it('stores new refresh_token when rotation is included in refresh response', async () => {
+  it('ignores any refresh token in JSON and stores only the new access token in memory', async () => {
     localStorage.setItem('refresh_token', 'old_ref');
     fetchMock
       .mockResolvedValueOnce({ ok: false, status: 401, json: vi.fn().mockResolvedValue({}) })
@@ -495,7 +491,8 @@ describe('BaseApiClient — _doRefresh edge cases', () => {
       })
       .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({}) });
     await client.req('/protected');
-    expect(localStorage.getItem('refresh_token')).toBe('new_ref');
+    expect(getAccessToken()).toBe('new_tok');
+    expect(localStorage.getItem('refresh_token')).toBeNull();
   });
 
   it('does not retry when refresh response has no access_token', async () => {

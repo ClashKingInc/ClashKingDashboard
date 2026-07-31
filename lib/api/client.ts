@@ -17,6 +17,8 @@ import { FamilyRolesClient } from './clients/family-roles-client';
 import { LeaderboardClient } from './clients/leaderboard-client';
 import { TicketsClient } from './clients/tickets-client';
 import { PanelsClient } from './clients/panels-client';
+import { BasesClient } from './clients/bases-client';
+import { ClanCategoriesClient } from './clients/clan-categories-client';
 
 /**
  * Main API client with all endpoints organized by domain
@@ -35,6 +37,8 @@ export class ClashKingApiClient {
   public readonly leaderboards: LeaderboardClient;
   public readonly tickets: TicketsClient;
   public readonly panels: PanelsClient;
+  public readonly bases: BasesClient;
+  public readonly clanCategories: ClanCategoriesClient;
 
   constructor(config: ApiConfig) {
     // Initialize all specialized clients with the same config
@@ -51,6 +55,8 @@ export class ClashKingApiClient {
     this.leaderboards = new LeaderboardClient(config);
     this.tickets = new TicketsClient(config);
     this.panels = new PanelsClient(config);
+    this.bases = new BasesClient(config);
+    this.clanCategories = new ClanCategoriesClient(config);
   }
 
   /**
@@ -70,25 +76,8 @@ export class ClashKingApiClient {
     this.leaderboards.setAccessToken(token);
     this.tickets.setAccessToken(token);
     this.panels.setAccessToken(token);
-  }
-
-  /**
-   * Update refresh token for all clients
-   */
-  setRefreshToken(token: string): void {
-    this.auth.setRefreshToken(token);
-    this.players.setRefreshToken(token);
-    this.clans.setRefreshToken(token);
-    this.rosters.setRefreshToken(token);
-    this.wars.setRefreshToken(token);
-    this.servers.setRefreshToken(token);
-    this.links.setRefreshToken(token);
-    this.utils.setRefreshToken(token);
-    this.roles.setRefreshToken(token);
-    this.familyRoles.setRefreshToken(token);
-    this.leaderboards.setRefreshToken(token);
-    this.tickets.setRefreshToken(token);
-    this.panels.setRefreshToken(token);
+    this.bases.setAccessToken(token);
+    this.clanCategories.setAccessToken(token);
   }
 
   /**
@@ -108,6 +97,8 @@ export class ClashKingApiClient {
     this.leaderboards.clearTokens();
     this.tickets.clearTokens();
     this.panels.clearTokens();
+    this.bases.clearTokens();
+    this.clanCategories.clearTokens();
   }
 
   /**
@@ -123,13 +114,11 @@ export class ClashKingApiClient {
  */
 export function createApiClient(
   baseUrl: string,
-  accessToken?: string,
-  refreshToken?: string
+  accessToken?: string
 ): ClashKingApiClient {
   return new ClashKingApiClient({
     baseUrl,
     accessToken,
-    refreshToken,
   });
 }
 
@@ -138,16 +127,13 @@ export function createApiClient(
  * Exported for testability.
  */
 export function getDefaultBaseUrl(): string {
-  return globalThis.window === undefined
-    ? process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'  // Server-side: use backend directly
-    : '/api';  // Client-side: use Next.js API routes
+  return process.env.NEXT_PUBLIC_API_URL || 'https://v2-api.clashk.ing';
 }
 
 /**
  * Default API client instance
  * Uses environment variables for configuration
  *
- * For client-side requests, use the Next.js API routes (/api) as proxy
- * For server-side requests, use the backend URL directly
+ * Browser requests go directly to the Go API.
  */
 export const apiClient = createApiClient(getDefaultBaseUrl());

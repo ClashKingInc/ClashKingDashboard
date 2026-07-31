@@ -1,5 +1,8 @@
 "use client";
 
+import { getAccessToken } from "@/lib/auth/session";
+
+
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,7 +49,7 @@ export function ServerStats({ guildId }: ServerStatsProps) {
     }
 
     try {
-      const hasSession = localStorage.getItem("access_token") || localStorage.getItem("refresh_token");
+      const hasSession = getAccessToken() || getAccessToken();
       if (!hasSession) {
         setIsLoading(false);
         return;

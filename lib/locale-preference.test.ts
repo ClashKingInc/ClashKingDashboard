@@ -1,8 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
   resolveBrowserLocale,
-  getLocaleModeFromCookie,
-  LOCALE_MODE_COOKIE,
+  getLocaleModeFromStorage,
+  getPublicRoute,
+  publicPath,
 } from "./locale-preference";
 
 describe("resolveBrowserLocale", () => {
@@ -36,22 +37,32 @@ describe("resolveBrowserLocale", () => {
   });
 });
 
-describe("getLocaleModeFromCookie", () => {
-  it("returns 'manual' when cookie is absent", () => {
-    expect(getLocaleModeFromCookie("")).toBe("manual");
-    expect(getLocaleModeFromCookie("other=value")).toBe("manual");
+describe("getLocaleModeFromStorage", () => {
+  it("returns 'manual' when the preference is absent or invalid", () => {
+    expect(getLocaleModeFromStorage(null)).toBe("manual");
+    expect(getLocaleModeFromStorage("other")).toBe("manual");
   });
 
-  it("returns 'browser' when cookie ends with 'browser'", () => {
-    expect(getLocaleModeFromCookie(`${LOCALE_MODE_COOKIE}=browser`)).toBe("browser");
+  it("returns the stored browser preference", () => {
+    expect(getLocaleModeFromStorage("browser")).toBe("browser");
   });
 
-  it("returns 'manual' when cookie is set to 'manual'", () => {
-    expect(getLocaleModeFromCookie(`${LOCALE_MODE_COOKIE}=manual`)).toBe("manual");
+  it("returns the stored manual preference", () => {
+    expect(getLocaleModeFromStorage("manual")).toBe("manual");
+  });
+});
+
+describe("public locale routes", () => {
+  it("recognizes only the localized public routes", () => {
+    expect(getPublicRoute("/")).toEqual({ locale: "en", page: "/" });
+    expect(getPublicRoute("/fr/privacy")).toEqual({ locale: "fr", page: "/privacy" });
+    expect(getPublicRoute("/nl/terms/")).toEqual({ locale: "nl", page: "/terms" });
+    expect(getPublicRoute("/dashboard")).toBeUndefined();
   });
 
-  it("works with multiple cookies", () => {
-    expect(getLocaleModeFromCookie(`foo=bar; ${LOCALE_MODE_COOKIE}=browser; baz=qux`)).toBe("browser");
-    expect(getLocaleModeFromCookie(`foo=bar; ${LOCALE_MODE_COOKIE}=manual; baz=qux`)).toBe("manual");
+  it("builds English and locale-prefixed public paths", () => {
+    expect(publicPath("en", "/privacy")).toBe("/privacy");
+    expect(publicPath("fr", "/")).toBe("/fr");
+    expect(publicPath("nl", "/terms")).toBe("/nl/terms");
   });
 });

@@ -4,7 +4,7 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, BanRequest, BannedPlayer, DiscordRole, GuildInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, Giveaway, GiveawaysResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
+import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, ClanSettings, ClanSettingsUpdate, ClanSettingsResponse, BanRequest, BannedPlayer, DiscordRole, GuildInfo, StrikeRequest, Strike, StrikeAddResponse, StrikeDeleteResponse, StrikeSummary, GiveawaysResponse, GiveawayMutationResponse, GiveawayEntriesResponse, GiveawayRerollResponse, ServerClanListItem } from '../types/server';
 import type { BotGuildProfile, BotGuildProfileUpdate, DashboardAccessConfig, DashboardAccessGrant, DashboardCapabilities } from '../types/dashboard-access';
 
 export class ServerClient extends BaseApiClient {
@@ -66,6 +66,17 @@ export class ServerClient extends BaseApiClient {
    */
   async getClanSettings(serverId: string | number, clanTag: string): Promise<ApiResponse<ClanSettings>> {
     return this.request(`/v2/server/${serverId}/clan/${clanTag}/settings`, { method: 'GET' });
+  }
+
+  async updateClanSettings(
+    serverId: string | number,
+    clanTag: string,
+    settings: ClanSettingsUpdate,
+  ): Promise<ApiResponse<ClanSettingsResponse>> {
+    return this.request(
+      `/v2/server/${serverId}/clan/${encodeURIComponent(clanTag)}/settings`,
+      { method: 'PATCH', body: JSON.stringify(settings) },
+    );
   }
 
   /**
@@ -208,34 +219,31 @@ export class ServerClient extends BaseApiClient {
   /**
    * POST /v2/server/{server_id}/giveaways
    */
-  async createGiveaway(serverId: string | number, body: FormData): Promise<ApiResponse<Giveaway>> {
+  async createGiveaway(serverId: string | number, body: FormData): Promise<ApiResponse<GiveawayMutationResponse>> {
     return this.requestFormData(`/v2/server/${serverId}/giveaways`, 'POST', body);
   }
 
   /**
    * PUT /v2/server/{server_id}/giveaways/{giveaway_id}
    */
-  async updateGiveaway(serverId: string | number, giveawayId: string, body: FormData): Promise<ApiResponse<Giveaway>> {
+  async updateGiveaway(serverId: string | number, giveawayId: string, body: FormData): Promise<ApiResponse<GiveawayMutationResponse>> {
     return this.requestFormData(`/v2/server/${serverId}/giveaways/${giveawayId}`, 'PUT', body);
   }
 
   /**
    * DELETE /v2/server/{server_id}/giveaways/{giveaway_id}
    */
-  async deleteGiveaway(serverId: string | number, giveawayId: string): Promise<ApiResponse<void>> {
+  async deleteGiveaway(serverId: string | number, giveawayId: string): Promise<ApiResponse<GiveawayMutationResponse>> {
     return this.request(`/v2/server/${serverId}/giveaways/${giveawayId}`, { method: 'DELETE' });
   }
 
   /**
    * GET /v2/server/{server_id}/giveaways/{giveaway_id}/entries
    */
-  async getGiveawayEntries(serverId: string | number, giveawayId: string): Promise<ApiResponse<{
-    giveaway_id: string;
-    server_id: number;
-    total_entries: number;
-    unique_users: number;
-    entrants: { user_id: string; entries: number; win_chance: number }[];
-  }>> {
+  async getGiveawayEntries(
+    serverId: string | number,
+    giveawayId: string,
+  ): Promise<ApiResponse<GiveawayEntriesResponse>> {
     return this.request(`/v2/server/${serverId}/giveaways/${giveawayId}/entries`, { method: 'GET' });
   }
 

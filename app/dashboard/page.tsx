@@ -1,0 +1,35 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { ServerStats } from "@/components/dashboard/server-stats";
+import { ClansSummary } from "@/components/dashboard/clans-summary";
+import { DashboardIcon } from "@radix-ui/react-icons";
+
+import { useGuildId } from "@/lib/dashboard-route";
+
+export default function OverviewPage() {
+  const guildId = useGuildId();
+  const t = useTranslations("OverviewPage");
+
+  return (
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="flex items-start gap-3">
+          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
+            <DashboardIcon className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
+            <p className="text-muted-foreground mt-1">{t("description")}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <ServerStats guildId={guildId} />
+        </div>
+
+        <ClansSummary guildId={guildId} />
+      </div>
+    </div>
+  );
+}

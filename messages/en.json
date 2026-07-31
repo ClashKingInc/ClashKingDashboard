@@ -226,6 +226,10 @@
       "name": "Rosters",
       "description": "Roster management"
     },
+    "bases": {
+      "name": "Bases",
+      "description": "Layout library and engagement"
+    },
     "autoboards": {
       "name": "Autoboards",
       "description": "Automated leaderboards"
@@ -271,6 +275,106 @@
     },
     "switchServer": "Switch Server",
     "goHome": "Homepage"
+  },
+  "BasesPage": {
+    "eyebrow": "Clan Management",
+    "title": "Bases",
+    "description": "Review shared layouts, engagement history, and Discord source messages.",
+    "refresh": "Refresh",
+    "create": "Add base",
+    "retry": "Try again",
+    "dismiss": "Dismiss",
+    "cancel": "Cancel",
+    "previous": "Previous",
+    "next": "Next",
+    "pagination": "Page {page} of {total}",
+    "imageAlt": "Base layout image {index}",
+    "noDescription": "No description provided.",
+    "openLayout": "Open layout",
+    "openMessage": "Discord message",
+    "summary": {
+      "total": "Total bases",
+      "page": "Current page",
+      "visible": "Visible"
+    },
+    "counts": {
+      "downloads": "Unique downloads",
+      "upvotes": "Upvotes",
+      "downvotes": "Downvotes"
+    },
+    "history": {
+      "title": "Downloader history ({count})",
+      "empty": "No downloader IDs have been recorded.",
+      "resolve": "Resolve profile"
+    },
+    "delete": {
+      "action": "Delete",
+      "confirmTitle": "Delete this base?",
+      "confirmDescription": "This permanently removes the database record and first attempts to delete its Discord source message. The base cannot be restored.",
+      "confirmAction": "Delete base",
+      "deleting": "Deleting…",
+      "baseId": "Base ID",
+      "discordSource": "Discord source",
+      "successTitle": "Base deleted",
+      "successDeleted": "The database record and Discord message were deleted.",
+      "successAlreadyMissing": "The database record was deleted; the Discord message was already missing.",
+      "cleanupFailedTitle": "Base retained; Discord cleanup failed",
+      "cleanupCompleteTitle": "Discord cleanup completed; base retained",
+      "failureTitle": "Base was not deleted",
+      "failureFallback": "The delete request failed.",
+      "retryable": "Retry is safe",
+      "notRetryable": "Not retryable",
+      "cleanup": {
+        "deleted": "Discord message deleted",
+        "alreadyMissing": "Discord message already missing",
+        "failed": "Discord cleanup failed"
+      }
+    },
+    "empty": {
+      "title": "No bases shared yet",
+      "description": "Add the first layout by choosing its Discord channel and Clash of Clans layout link."
+    },
+    "form": {
+      "title": "Add a base",
+      "description": "Bases cannot be edited after creation. Choose where ClashKing should post the Discord message and confirm the layout link.",
+      "channel": "Discord channel",
+      "channelPlaceholder": "Select a channel",
+      "channelSearch": "Search channels…",
+      "channelsLoading": "Loading channels…",
+      "baseLink": "Layout link",
+      "descriptionLabel": "Description",
+      "images": "Images",
+      "chooseImages": "Choose layout images",
+      "imageLimit": "Up to four images; uploads finish before the base is created.",
+      "submit": "Create base",
+      "creating": "Uploading and creating…",
+      "createRejectedTitle": "Base was not created",
+      "createCleanupCompleteTitle": "Discord cleanup completed; base was not created",
+      "createCleanupFailedTitle": "Discord message may remain; base was not created",
+      "databaseNotInserted": "Database record not inserted",
+      "discordMessageCreated": "Discord message was created",
+      "discordMessageId": "Discord message ID",
+      "retryable": "Retry is safe",
+      "notRetryable": "Do not retry automatically",
+      "cleanup": {
+        "notNeeded": "Discord cleanup not needed",
+        "deleted": "Discord message deleted",
+        "alreadyMissing": "Discord message already missing",
+        "failed": "Discord cleanup failed"
+      }
+    },
+    "errors": {
+      "title": "Bases unavailable",
+      "load": "Failed to load bases.",
+      "create": "Failed to create the base.",
+      "upload": "Failed to upload an image.",
+      "downloader": "Failed to resolve this downloader.",
+      "channels": "Failed to load Discord channels.",
+      "channelRequired": "Select a Discord channel.",
+      "linkRequired": "Layout link is required.",
+      "descriptionTooLong": "Description must be 1,000 characters or fewer.",
+      "tooManyImages": "Choose no more than four images."
+    }
   },
   "BansPage": {
     "title": "Moderation",
@@ -1285,22 +1389,17 @@
     "customizeIntegration": "Customize Discord integration settings for this clan",
     "tabs": {
       "basic": "Discord Setup",
-      "war": "War",
-      "advanced": "Welcome & Automation"
+      "war": "War"
     },
     "memberRole": "Member Role",
     "leaderRole": "Leader Role",
-    "clanChannel": "Clan Channel",
-    "selectChannel": "Select channel",
     "selectRole": "Select role",
     "none": "None",
     "clanAbbreviation": "Clan Abbreviation",
-    "greetingMessage": "Greeting Message",
     "warScoreCountdown": "War Score Countdown",
     "warScoreCountdownDescription": "Creates a voice channel displaying the current war score",
     "warTimerCountdown": "War Timer Countdown",
     "warTimerCountdownDescription": "Creates a voice channel displaying time remaining in war",
-    "banAlertChannel": "Ban Alert Channel",
     "category": "Category",
     "categoryOptions": {
       "none": "No category",
@@ -1308,45 +1407,50 @@
       "usedByServer": "Used by other clans",
       "clanCount": "{count, plural, one {# clan} other {# clans}}"
     },
-    "autoGreetOption": "Auto Greet Option",
-    "autoGreetOptions": {
-      "never": "Never",
-      "always": "Every Join",
-      "onJoin": "First Join"
+    "categories": {
+      "title": "Clan categories",
+      "description": "Create and maintain the categories available to this server's clans.",
+      "refresh": "Refresh",
+      "createLabel": "New category",
+      "name": "Category name",
+      "namePlaceholder": "e.g., Competitive",
+      "nameHelp": "{count}/{max} characters after whitespace normalization",
+      "create": "Create category",
+      "empty": "No clan categories have been created.",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}",
+      "renameAction": "Rename {name}",
+      "deleteAction": "Delete {name}",
+      "renameTitle": "Rename clan category",
+      "renameDescription": "The normalized name will update every assigned clan.",
+      "saveRename": "Save name",
+      "deleteTitle": "Delete clan category?",
+      "deleteWarning": "Deleting “{name}” will make {count, plural, one {# clan} other {# clans}} uncategorized.",
+      "deleteCountMayChange": "This preview is current now. The completed deletion will report the actual locked clan count.",
+      "confirmDelete": "Delete category",
+      "deleteSuccessTitle": "Deleted {name}",
+      "deleteSuccessDescription": "{count, plural, =0 {No clans were changed.} one {# clan is now uncategorized.} other {# clans are now uncategorized.}}",
+      "created": "Created {name}.",
+      "renamed": "Renamed category to {name}.",
+      "errors": {
+        "title": "Categories unavailable",
+        "load": "Failed to load clan categories.",
+        "create": "Failed to create the clan category.",
+        "rename": "Failed to rename the clan category.",
+        "preview": "Failed to load the deletion preview.",
+        "delete": "Failed to delete the clan category.",
+        "refresh": "The category changed, but refreshed category or clan state could not be loaded.",
+        "invalidName": "Use a non-empty name of at most 64 characters without control characters."
+      }
     },
     "fieldHelp": {
       "infoButtonLabel": "Show more information",
       "memberRole": "The role that the members of this clan should receive. So on your discord, if the bot managed the roles, every person in this clan would get this role. Helpful if you are making clan specific channels.",
       "leaderRole": "The role that co-leaders and the leader of this clan will receive. In a typical Discord server, this is useful for a clan leader chat or one shared leader chat across all clans.",
-      "clanChannel": "The channel you define will be the default channel where the bot writes. For example, this is where it will greet new users if you enable that option.",
-      "banAlertChannel": "Choose which channel the bot should use to warn you when someone who is banned (see <bansLink>Bans</bansLink>) joins your clan.",
       "clanAbbreviation": "Give your clan an abbreviation so members can have it in their name when rename is enabled. You can configure this format in <familySettingsLink>Family Settings</familySettingsLink>.",
       "category": "This is a way to organize your clans. Many clan families have 5 or more clans. Sometimes some are only for CWL or Event clans."
     },
-    "greeting": {
-      "title": "Greeting Placeholders",
-      "description": "Available placeholders for the greeting message:",
-      "preview": "Preview",
-      "availablePlaceholders": "Available Placeholders",
-      "placeholders": {
-        "user_mention": "Mentions the user",
-        "user_display_name": "Discord display name",
-        "clan_name": "Name of the clan",
-        "clan_link": "Link to the clan",
-        "clan_leader_name": "Name of the clan leader",
-        "clan_leader_mention": "Mentions the clan leader",
-        "player_name": "In-game name of the player",
-        "player_link": "Link to the player profile",
-        "player_townhall": "Town Hall level",
-        "player_townhall_emoji": "Town Hall emoji",
-        "player_league": "League name",
-        "player_league_emoji": "League emoji",
-        "player_trophies": "Current trophies"
-      }
-    },
     "roleIdPlaceholder": "Role ID",
     "abbreviationPlaceholder": "e.g., CK",
-    "greetingPlaceholder": "Welcome '{'player_name'}' to '{'clan_name'}'!",
     "categoryPlaceholder": "Category name",
     "notAvailable": "N/A",
     "saving": "Saving...",
@@ -1633,6 +1737,12 @@
       "hoursRemaining": "hrs remaining",
       "channel": "Channel",
       "channelPlaceholder": "Select channel",
+      "threadOptional": "Thread (optional)",
+      "threadPlaceholder": "Select a thread",
+      "noThread": "Post directly in the channel",
+      "forumPost": "Forum post",
+      "forumPostPlaceholder": "Select a forum post",
+      "forumPostRequired": "A forum post is required for forum channels.",
       "clan": "Clan",
       "clanPlaceholder": "Select clan",
       "customMessage": "Custom Message",
@@ -1674,6 +1784,8 @@
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
       "failedToSave": "Failed to save reminders",
+      "forumPostRequired": "Select a forum post before saving this reminder.",
+      "invalidDestination": "The selected thread does not belong to this channel.",
       "timeExceedsLimit": "Remaining time must be between {min} and {max} hours",
       "pointThresholdInvalid": "Point threshold must be between {min} and {max}",
       "attackThresholdInvalid": "Attack threshold must be between {min} and {max}"
@@ -1684,13 +1796,13 @@
     "description": "Configure automatic logging for clan and player activities",
     "stats": {
       "activeLogs": "Active Logs",
-      "activeLogsDesc": "Out of 26 log types",
+      "activeLogsDesc": "Across all family clans and server logs",
       "logChannels": "Log Channels",
       "logChannelsDesc": "Available channels",
       "trackedClans": "Tracked Clans",
       "trackedClansDesc": "Configured clans",
       "issues": "Issues",
-      "issuesDesc": "Logs need attention"
+      "issuesDesc": "Across the complete family"
     },
     "clanSelector": {
       "label": "Clan:",
@@ -1700,7 +1812,8 @@
       "clan": "Clan",
       "war": "War",
       "capital": "Capital",
-      "player": "Player"
+      "player": "Player",
+      "server": "Server"
     },
     "clanLogs": {
       "joinLog": {
@@ -1726,6 +1839,16 @@
       "clanDescriptionLog": {
         "label": "Clan Description",
         "description": "Track changes to clan description"
+      },
+      "banAlert": {
+        "label": "Ban Alerts",
+        "description": "Publish alerts when a banned player joins this clan"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit Feed",
+        "description": "Publish the server Reddit feed"
       }
     },
     "warLogs": {
@@ -1817,6 +1940,11 @@
       "thread": "Thread (Optional)",
       "threadPlaceholder": "Select thread",
       "noThread": "No Thread",
+      "forumPost": "Forum post",
+      "forumPostPlaceholder": "Select a forum post",
+      "forumPostRequired": "Select a forum post before saving this log.",
+      "invalidThread": "The selected thread does not belong to this channel.",
+      "saveDestination": "Save destination",
       "channelDeleted": "This channel no longer exists. Select a new one or disable the log.",
       "enableToConfig": "Enable this log to configure it",
       "configuring": "Configuring",
@@ -1875,8 +2003,6 @@
     "security": {
       "title": "Security & Permissions",
       "description": "Control access and verification",
-      "requireApiToken": "Require Player API Token",
-      "requireApiTokenDesc": "Players must verify account ownership with Clash of Clans API token when linking (recommended)",
       "fullWhitelistRole": "Full Whitelist Role",
       "fullWhitelistRoleDesc": "Discord role with full access to all bot commands (bypasses all permission checks)",
       "noRole": "No Role"
@@ -2155,180 +2281,137 @@
   },
   "AutoboardsPage": {
     "title": "AutoBoards",
-    "description": "Automatically post and refresh clan, family, and legend boards",
-    "createAutoboard": "Create AutoBoard",
-    "editAutoboard": "Edit AutoBoard",
-    "createDialogTitle": "Create AutoBoard",
-    "createDialogDesc": "Set up automatic posting or refreshing for a board",
-    "editDialogTitle": "Edit AutoBoard",
-    "editDialogDesc": "Modify the configuration of this autoboard",
-    "automationType": "Automation Type",
-    "autoPost": "Auto Post",
-    "autoPostDesc": "Auto Post - Scheduled daily posts",
-    "autoRefresh": "Auto Refresh",
-    "autoRefreshDesc": "Auto Refresh - Continuous updates (30-60 min)",
-    "channel": "Channel",
-    "channelDeleted": "Channel was deleted.",
-    "selectChannel": "Select a channel",
-    "channelDesc": "The channel where the autoboard will be posted",
-    "boardType": "Board Type",
-    "selectBoardType": "Select a board type",
-    "postDays": "Post Days (select at least one)",
-    "postDaysDesc": "On the selected days, a post will be created at {time} (5:00 AM UTC).",
-    "autoRefreshInfo": "Auto Refresh Info",
-    "autoRefreshInfoDesc": "The board will automatically refresh every 30-60 minutes with the latest data. Perfect for keeping stats current without manual updates.",
-    "cancel": "Cancel",
-    "creating": "Creating...",
-    "create": "Create",
-    "updating": "Updating...",
-    "update": "Update",
-    "howItWorks": "How AutoBoards Work",
-    "howItWorksDesc": "AutoBoards can automatically post new boards on a schedule or continuously refresh existing boards with up-to-date data. Choose **Auto Post** to create new boards daily at specific days, or **Auto Refresh** to keep a board updated every 30-60 minutes.",
-    "totalAutoboards": "Total AutoBoards",
-    "totalShort": "Total",
-    "postShort": "Post",
-    "refreshShort": "Refresh",
-    "used": "used",
-    "scheduledBoards": "Scheduled boards",
-    "continuousUpdates": "Continuous updates",
-    "availableSlots": "Available Slots",
-    "remainingCapacity": "Remaining capacity",
-    "activeAutoboards": "Active AutoBoards",
-    "noAutoboards": "No AutoBoards configured",
-    "noAutoboardsDesc": "Create your first AutoBoard to automate board updates",
-    "postsOn": "Posts on:",
-    "updatesEvery": "Updates every 30-60 minutes",
-    "created": "Created:",
-    "edit": "Edit",
-    "remove": "Remove",
-    "tips": "💡 AutoBoard Tips",
-    "noChannels": "No channels available",
-    "activeAutoboardsCount": "{count} active autoboard{count, plural, one {} other {s}}",
-    "noAutoboardsForFilter": "No AutoBoards in this filter",
-    "noAutoboardsForFilterDesc": "Try another filter or create a new AutoBoard.",
-    "tipsContent": {
-      "type": {
-        "title": "Choose the right type:",
-        "desc": "Use Auto Post for daily summaries and Auto Refresh for live leaderboards and real-time tracking."
-      },
-      "limits": {
-        "title": "Manage your limits:",
-        "desc": "Each server has a limited number of autoboard slots. Remove unused autoboards to free up space."
-      },
-      "schedule": {
-        "title": "Schedule wisely:",
-        "desc": "Auto Post boards appear at {time} (5:00 AM UTC). Choose days that align with your clan's activity cycle."
-      },
-      "duplicates": {
-        "title": "Avoid duplicates:",
-        "desc": "Using both Auto Post and Auto Refresh for the same board type in the same channel can cause clutter."
-      }
+    "description": "Refresh a live board or send new boards on an operational schedule",
+    "actions": {
+      "create": "Create AutoBoard",
+      "edit": "Edit AutoBoard",
+      "delete": "Delete AutoBoard",
+      "save": "Save changes",
+      "cancel": "Cancel",
+      "retry": "Retry"
     },
-    "boardTypes": {
-      "clanBoards": "Clan Boards",
-      "familyBoards": "Family Boards",
-      "legendBoards": "Legend Boards",
-      "other": "Other",
-      "clandetailed": "Clan Detailed",
-      "clanbasic": "Clan Basic",
-      "clanmini": "Clan Minimalistic",
-      "clancompo": "Clan Composition",
-      "clandonos": "Clan Donations",
-      "clanactivity": "Clan Activity",
-      "clancapoverview": "Clan Capital Overview",
-      "clancapdonos": "Clan Capital Donations",
-      "clancapraids": "Clan Capital Raids",
-      "clanwarlog": "Clan War Log",
-      "clancwlperf": "Clan CWL Performance",
-      "clangames": "Clan Games",
-      "familyoverview": "Family Overview",
-      "familycompo": "Family Composition",
-      "familydonos": "Family Donations",
-      "familygames": "Family Games",
-      "familyactivity": "Family Activity",
-      "legendclan": "Legend Clan",
-      "legendday": "Legend Day",
-      "legendseason": "Legend Season",
-      "discordlinks": "Discord Links"
+    "metrics": {
+      "total": "Configured",
+      "refresh": "Refresh boards",
+      "send": "Scheduled sends"
     },
-    "days": {
-      "monday": "Monday",
-      "tuesday": "Tuesday",
-      "wednesday": "Wednesday",
-      "thursday": "Thursday",
-      "friday": "Friday",
-      "saturday": "Saturday",
-      "sunday": "Sunday",
-      "endofseason": "End of Season"
+    "filters": {
+      "all": "All"
     },
-    "alerts": {
-      "selectBoardType": "Please select a board type",
-      "selectChannel": "Please select a channel",
-      "selectDays": "Please select at least one day for auto-post",
-      "createFailed": "Failed to create autoboard. Please try again.",
-      "updateFailed": "Failed to update autoboard. Please try again.",
-      "deleteFailed": "Failed to delete autoboard. Please try again.",
-      "deleteConfirmTitle": "Remove AutoBoard?",
-      "deleteConfirmDescription": "Are you sure you want to remove this AutoBoard? This action cannot be undone."
-    }
-  },
-  "TicketsPage": {
-    "title": "Tickets",
-    "description": "View all recruitment and support tickets on your server.",
-    "configurepanels": "Configure Panels",
-    "openTickets": "Ticket List",
-    "noTickets": "No tickets found",
-    "noTicketsHint": "No tickets match the selected filter.",
-    "ticketsFound": "tickets",
-    "showing": "{count} of {total} tickets",
-    "tabTickets": "Tickets",
-    "tabConfiguration": "Configuration",
+    "list": {
+      "title": "Configured AutoBoards",
+      "description": "Manager-controlled delivery, targets, destination, and runtime state",
+      "empty": "No AutoBoards in this view",
+      "emptyDescription": "Create one when the API registry exposes an available board type."
+    },
+    "registry": {
+      "emptyTitle": "No board types are available",
+      "emptyDescription": "The API registry is currently empty. AutoBoards can be created when a board type is enabled there.",
+      "typeUnavailable": "This board type is no longer available in the registry, so it cannot be edited."
+    },
+    "dialog": {
+      "createTitle": "Create AutoBoard",
+      "editTitle": "Edit AutoBoard",
+      "description": "Capabilities and limits come from the live board registry."
+    },
+    "boardType": {
+      "label": "Board type",
+      "description": "Available types come directly from the API registry.",
+      "placeholder": "Select a board type"
+    },
+    "targets": {
+      "kind": "Target type: {kind}",
+      "kindDescription": "The registry defines how each target value is interpreted.",
+      "scope": "Target scope",
+      "scopeDescription": "Family scope uses every configured family clan and has no explicit targets.",
+      "family": "Family",
+      "custom": "Custom targets",
+      "values": "Targets",
+      "count": "Provide between {min} and {max} targets for this board type.",
+      "placeholder": "Enter a {kind} target",
+      "add": "Add target",
+      "remove": "Remove target"
+    },
+    "modes": {
+      "label": "Delivery mode",
+      "description": "The registry controls which delivery modes this board supports.",
+      "refresh": "Refresh",
+      "send": "Scheduled send"
+    },
+    "destination": {
+      "label": "Destination",
+      "channel": "Parent channel",
+      "channelDescription": "Text and announcement channels can deliver directly; forums use a child post.",
+      "selectChannel": "Select a channel",
+      "thread": "Thread or forum post",
+      "selectThread": "Select a thread",
+      "threadOptional": "Optional for text and announcement channels.",
+      "forumRequired": "A forum post is required for this destination.",
+      "direct": "Send directly to the channel",
+      "deleted": "Channel no longer exists"
+    },
+    "refresh": {
+      "interval": "Refresh interval (minutes)",
+      "intervalDescription": "Allowed range: {minimum}–{maximum} minutes."
+    },
+    "schedule": {
+      "label": "Schedule",
+      "kind": "Schedule pattern",
+      "kindDescription": "Send daily, on selected weekdays, or once per month.",
+      "daily": "Daily",
+      "weekdays": "Selected weekdays",
+      "dayOfMonth": "Day of month",
+      "selectWeekdays": "Weekdays",
+      "monthDay": "Day of month",
+      "monthDayDescription": "Use a value from 1 through 31.",
+      "timezone": "Timezone",
+      "timeOfDay": "Time of day",
+      "nextRun": "Next run"
+    },
+    "weekdays": {
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+      "7": "Sunday"
+    },
     "status": {
-      "open": "Open",
-      "sleep": "Sleeping",
-      "closed": "Closed",
-      "delete": "Deleted"
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "enabledDescription": "Disabled boards keep their configuration but do not run.",
+      "messageId": "Current refresh message: {id}"
     },
-    "filter": {
-      "all": "All statuses"
+    "delete": {
+      "title": "Delete this AutoBoard?",
+      "description": "This removes the configuration and cannot be undone."
     },
-    "cleanup": "Cleanup",
-    "transcript": "Transcript",
-    "missingChannel": "Channel deleted",
-    "missingChannelCleanup": "Channel deleted, cleanup required",
-    "openInDiscord": "Open in Discord",
-    "table": {
-      "number": "#",
-      "panel": "Panel",
-      "user": "User ID",
-      "category": "Category",
-      "clan": "Clan",
-      "account": "Account",
-      "actions": "Actions"
+    "feedback": {
+      "created": "AutoBoard created",
+      "updated": "AutoBoard updated",
+      "deleted": "AutoBoard deleted"
     },
-    "manage": {
-      "open": "Manage",
-      "title": "Manage Ticket #{number}",
-      "description": "Update the ticket status or assign a clan.",
-      "descriptionClosed": "Update the ticket status, assign a clan, or permanently delete it.",
-      "descriptionDeleted": "This ticket is already deleted in Discord. You can permanently remove the dashboard entry and transcript link.",
-      "statusLabel": "Ticket status",
-      "statusDelete": "Delete ticket",
-      "saveStatus": "Save status",
-      "clanLabel": "Assigned clan",
-      "selectClan": "Select a clan",
-      "noClan": "No clan assigned",
-      "saveClan": "Save clan",
-      "deleteTicket": "Delete ticket",
-      "showTranscript": "Show transcript",
-      "permanentDeleteTicket": "Permanently delete ticket",
-      "deleteHint": "Permanently remove the dashboard entry and transcript link.",
-      "warningTitle": "Permanently delete this ticket?",
-      "warningDescription": "This removes the ticket from the dashboard and hides its transcript link. This action cannot be undone.",
-      "warningDescriptionDeleted": "This deleted ticket will be removed from the dashboard and its transcript link will no longer be available. This action cannot be undone.",
-      "statusSaved": "Ticket status updated.",
-      "clanSaved": "Ticket clan updated.",
-      "deleted": "Ticket deleted."
+    "validation": {
+      "boardType": "Select a board type from the live registry.",
+      "targetScope": "Select a target scope supported by this board type.",
+      "familyTargets": "Family scope cannot include explicit targets.",
+      "targetCount": "Enter between {min} and {max} non-empty targets.",
+      "deliveryMode": "Select a delivery mode supported by this board type.",
+      "destination": "Select a valid destination. Forum channels require a child post.",
+      "refreshInterval": "Enter a refresh interval between {minimum} and {maximum} minutes.",
+      "timezone": "Enter an IANA timezone.",
+      "timeOfDay": "Enter a valid time of day.",
+      "weekdays": "Select at least one weekday.",
+      "dayOfMonth": "Enter a day from 1 through 31."
+    },
+    "errors": {
+      "title": "AutoBoards unavailable",
+      "session": "Your session has expired.",
+      "request": "The AutoBoards request failed.",
+      "load": "Failed to load AutoBoards.",
+      "save": "Failed to save the AutoBoard.",
+      "delete": "Failed to delete the AutoBoard."
     }
   },
   "TicketsSettingsPage": {
@@ -2343,7 +2426,7 @@
     "panelNamePlaceholder": "e.g. Applications",
     "panelCreated": "Panel \"{name}\" created.",
     "confirmDeletePanel": "Delete panel \"{name}\"?",
-    "confirmDeletePanelHint": "This will permanently delete the panel and all its button configurations. Open tickets are not affected.",
+    "confirmDeletePanelHint": "This will permanently delete the panel and all its button configurations.",
     "panelDeleted": "Panel deleted.",
     "panelHint": "Click to expand and configure this panel.",
     "panelEmbed": "Panel embed",
@@ -2988,6 +3071,23 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "legal": "This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing for Discord, mobile, and the web",
+    "privacy": {
+      "title": "Privacy Policy | ClashKing",
+      "openGraphTitle": "ClashKing Privacy Policy",
+      "description": "How ClashKing collects, uses, stores, and protects account, game, and app data.",
+      "heading": "Privacy Policy",
+      "eyebrow": "Effective 17 July 2026"
+    },
+    "terms": {
+      "title": "Terms of Service | ClashKing",
+      "openGraphTitle": "ClashKing Terms of Service",
+      "description": "The terms that apply when you use ClashKing websites, apps, services, and community tools.",
+      "heading": "Terms of Service",
+      "eyebrow": "ClashKing legal"
     }
   }
 }

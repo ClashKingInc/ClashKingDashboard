@@ -226,6 +226,10 @@
       "name": "Rosters",
       "description": "Gestion des rosters"
     },
+    "bases": {
+      "name": "Bases",
+      "description": "Bibliothèque de plans et engagement"
+    },
     "autoboards": {
       "name": "Tableaux Auto",
       "description": "Classements automatisés"
@@ -271,6 +275,106 @@
     },
     "switchServer": "Changer de Serveur",
     "goHome": "Accueil"
+  },
+  "BasesPage": {
+    "eyebrow": "Gestion des Clans",
+    "title": "Bases",
+    "description": "Consultez les plans partagés, l'historique d'engagement et les messages Discord sources.",
+    "refresh": "Actualiser",
+    "create": "Ajouter une base",
+    "retry": "Réessayer",
+    "dismiss": "Fermer",
+    "cancel": "Annuler",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "pagination": "Page {page} sur {total}",
+    "imageAlt": "Image du plan de base {index}",
+    "noDescription": "Aucune description.",
+    "openLayout": "Ouvrir le plan",
+    "openMessage": "Message Discord",
+    "summary": {
+      "total": "Total des bases",
+      "page": "Page actuelle",
+      "visible": "Visibles"
+    },
+    "counts": {
+      "downloads": "Téléchargements uniques",
+      "upvotes": "Votes positifs",
+      "downvotes": "Votes négatifs"
+    },
+    "history": {
+      "title": "Historique des téléchargements ({count})",
+      "empty": "Aucun identifiant de téléchargeur enregistré.",
+      "resolve": "Résoudre le profil"
+    },
+    "delete": {
+      "action": "Supprimer",
+      "confirmTitle": "Supprimer cette base ?",
+      "confirmDescription": "Cette action supprime définitivement l'enregistrement après avoir tenté de supprimer son message Discord source. La base ne peut pas être restaurée.",
+      "confirmAction": "Supprimer la base",
+      "deleting": "Suppression…",
+      "baseId": "ID de la base",
+      "discordSource": "Source Discord",
+      "successTitle": "Base supprimée",
+      "successDeleted": "L'enregistrement et le message Discord ont été supprimés.",
+      "successAlreadyMissing": "L'enregistrement a été supprimé ; le message Discord était déjà absent.",
+      "cleanupFailedTitle": "Base conservée ; nettoyage Discord échoué",
+      "cleanupCompleteTitle": "Nettoyage Discord terminé ; base conservée",
+      "failureTitle": "La base n'a pas été supprimée",
+      "failureFallback": "La demande de suppression a échoué.",
+      "retryable": "Nouvelle tentative sûre",
+      "notRetryable": "Nouvelle tentative déconseillée",
+      "cleanup": {
+        "deleted": "Message Discord supprimé",
+        "alreadyMissing": "Message Discord déjà absent",
+        "failed": "Nettoyage Discord échoué"
+      }
+    },
+    "empty": {
+      "title": "Aucune base partagée",
+      "description": "Ajoutez le premier plan en choisissant son salon Discord et son lien Clash of Clans."
+    },
+    "form": {
+      "title": "Ajouter une base",
+      "description": "Les bases ne peuvent pas être modifiées après création. Choisissez le salon où ClashKing publiera le message et vérifiez le lien.",
+      "channel": "Salon Discord",
+      "channelPlaceholder": "Sélectionner un salon",
+      "channelSearch": "Rechercher un salon…",
+      "channelsLoading": "Chargement des salons…",
+      "baseLink": "Lien du plan",
+      "descriptionLabel": "Description",
+      "images": "Images",
+      "chooseImages": "Choisir les images du plan",
+      "imageLimit": "Jusqu'à quatre images, téléversées avant la création.",
+      "submit": "Créer la base",
+      "creating": "Téléversement et création…",
+      "createRejectedTitle": "La base n'a pas été créée",
+      "createCleanupCompleteTitle": "Nettoyage Discord terminé ; base non créée",
+      "createCleanupFailedTitle": "Le message Discord peut subsister ; base non créée",
+      "databaseNotInserted": "Enregistrement non inséré",
+      "discordMessageCreated": "Message Discord créé",
+      "discordMessageId": "ID du message Discord",
+      "retryable": "Nouvelle tentative sûre",
+      "notRetryable": "Ne pas réessayer automatiquement",
+      "cleanup": {
+        "notNeeded": "Nettoyage Discord inutile",
+        "deleted": "Message Discord supprimé",
+        "alreadyMissing": "Message Discord déjà absent",
+        "failed": "Nettoyage Discord échoué"
+      }
+    },
+    "errors": {
+      "title": "Bases indisponibles",
+      "load": "Impossible de charger les bases.",
+      "create": "Impossible de créer la base.",
+      "upload": "Impossible de téléverser une image.",
+      "downloader": "Impossible de résoudre ce téléchargeur.",
+      "channels": "Impossible de charger les salons Discord.",
+      "channelRequired": "Sélectionnez un salon Discord.",
+      "linkRequired": "Le lien du plan est requis.",
+      "descriptionTooLong": "La description doit contenir au maximum 1 000 caractères.",
+      "tooManyImages": "Choisissez au maximum quatre images."
+    }
   },
   "BansPage": {
     "title": "Modération",
@@ -463,16 +567,6 @@
     },
     "noRosters": "Aucun roster trouvé",
     "createRoster": "Créer un Roster",
-    "viewDetails": "Voir les Détails",
-    "deleteRoster": "Supprimer le Roster",
-    "type": {
-      "clan": "Clan",
-      "family": "Famille"
-    },
-    "signupScope": {
-      "clanOnly": "Clan Uniquement",
-      "familyWide": "Toute la Famille"
-    },
     "filters": {
       "search": "Rechercher des rosters...",
       "type": "Type",
@@ -500,17 +594,6 @@
       "creating": "Création...",
       "create": "Créer la Composition"
     },
-    "details": {
-      "title": "Détails de la Composition",
-      "members": "Membres",
-      "addMember": "Ajouter un Membre",
-      "removeMember": "Retirer le Membre",
-      "noMembers": "Aucun membre dans cette composition",
-      "playerName": "Nom du Joueur",
-      "townHall": "Hôtel de Ville",
-      "clan": "Clan",
-      "status": "Statut"
-    },
     "rosterCard": {
       "members": "Membres",
       "thLevel": "HdV",
@@ -532,9 +615,7 @@
     "toast": {
       "rosterCreated": "Roster créé avec succès",
       "rosterDeleted": "Roster supprimé avec succès",
-      "memberAdded": "Membre ajouté avec succès",
       "memberRemoved": "Membre retiré avec succès",
-      "error": "Une erreur s'est produite",
       "rosterCloned": "Roster cloné avec succès !",
       "errorCloningRoster": "Échec du clonage du roster. Veuillez réessayer.",
       "missingMembersAdded": "{count} membre(s) manquant(s) ajouté(s) au roster !",
@@ -1308,22 +1389,17 @@
     "customizeIntegration": "Personnalisez les paramètres d'intégration Discord pour ce clan",
     "tabs": {
       "basic": "Configuration Discord",
-      "war": "Guerre",
-      "advanced": "Accueil & automatisation"
+      "war": "Guerre"
     },
     "memberRole": "Rôle de Membre",
     "leaderRole": "Rôle de Chef",
-    "clanChannel": "Canal du Clan",
-    "selectChannel": "Sélectionner un canal",
     "selectRole": "Sélectionner un rôle",
     "none": "Aucun",
     "clanAbbreviation": "Abréviation du Clan",
-    "greetingMessage": "Message d'Accueil",
     "warScoreCountdown": "Score de Guerre",
     "warScoreCountdownDescription": "Crée un salon vocal affichant le score de guerre actuel",
     "warTimerCountdown": "Timer de Guerre",
     "warTimerCountdownDescription": "Crée un salon vocal affichant le temps restant de guerre",
-    "banAlertChannel": "Canal d'Alerte de Bannissement",
     "category": "Catégorie",
     "categoryOptions": {
       "none": "Aucune catégorie",
@@ -1331,45 +1407,50 @@
       "usedByServer": "Utilisées par d'autres clans",
       "clanCount": "{count, plural, one {# clan} other {# clans}}"
     },
-    "autoGreetOption": "Option d'Accueil Auto",
-    "autoGreetOptions": {
-      "never": "Never",
-      "always": "Every Join",
-      "onJoin": "First Join"
+    "categories": {
+      "title": "Catégories de clans",
+      "description": "Créez et gérez les catégories disponibles pour les clans de ce serveur.",
+      "refresh": "Actualiser",
+      "createLabel": "Nouvelle catégorie",
+      "name": "Nom de la catégorie",
+      "namePlaceholder": "ex. Compétitif",
+      "nameHelp": "{count}/{max} caractères après normalisation des espaces",
+      "create": "Créer la catégorie",
+      "empty": "Aucune catégorie de clan n'a été créée.",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}",
+      "renameAction": "Renommer {name}",
+      "deleteAction": "Supprimer {name}",
+      "renameTitle": "Renommer la catégorie",
+      "renameDescription": "Le nom normalisé sera appliqué à tous les clans associés.",
+      "saveRename": "Enregistrer le nom",
+      "deleteTitle": "Supprimer la catégorie ?",
+      "deleteWarning": "La suppression de « {name} » laissera {count, plural, one {# clan sans catégorie} other {# clans sans catégorie}}.",
+      "deleteCountMayChange": "Cet aperçu est actuel. La suppression terminée indiquera le nombre verrouillé réel de clans.",
+      "confirmDelete": "Supprimer la catégorie",
+      "deleteSuccessTitle": "{name} supprimée",
+      "deleteSuccessDescription": "{count, plural, =0 {Aucun clan n'a été modifié.} one {# clan est maintenant sans catégorie.} other {# clans sont maintenant sans catégorie.}}",
+      "created": "{name} créée.",
+      "renamed": "Catégorie renommée en {name}.",
+      "errors": {
+        "title": "Catégories indisponibles",
+        "load": "Impossible de charger les catégories de clans.",
+        "create": "Impossible de créer la catégorie.",
+        "rename": "Impossible de renommer la catégorie.",
+        "preview": "Impossible de charger l'aperçu de suppression.",
+        "delete": "Impossible de supprimer la catégorie.",
+        "refresh": "La catégorie a changé, mais l'état actualisé des catégories ou des clans n'a pas pu être chargé.",
+        "invalidName": "Utilisez un nom non vide de 64 caractères maximum, sans caractère de contrôle."
+      }
     },
     "fieldHelp": {
       "infoButtonLabel": "Afficher plus d'informations",
       "memberRole": "Le role que les membres de ce clan doivent recevoir. Si le bot gère les roles, chaque personne de ce clan recevra ce role. Utile pour créer des salons spécifiques à un clan.",
       "leaderRole": "Le role que les co-leaders et le leader de ce clan recevront. Sur un serveur Discord classique, c'est utile pour un salon de chefs de clan ou un salon de chefs commun à tous les clans.",
-      "clanChannel": "Le salon que vous définissez devient le salon par défaut où le bot écrit. Par exemple, c'est ici qu'il accueillera les nouveaux utilisateurs si vous activez cette option.",
-      "banAlertChannel": "Choisissez le salon dans lequel le bot vous avertira quand une personne bannie (voir <bansLink>Bans</bansLink>) rejoint votre clan.",
       "clanAbbreviation": "Donnez une abréviation à votre clan pour que les membres puissent l'avoir dans leur nom quand le renommage est activé. Vous pouvez configurer cela dans <familySettingsLink>Paramètres de famille</familySettingsLink>.",
       "category": "Un moyen d'organiser vos clans. Beaucoup de familles de clans ont 5 clans ou plus. Certains servent uniquement pour la CWL ou des événements."
     },
-    "greeting": {
-      "title": "Variables du Message d'Accueil",
-      "description": "Variables disponibles pour le message d'accueil :",
-      "preview": "Aperçu",
-      "availablePlaceholders": "Variables Disponibles",
-      "placeholders": {
-        "user_mention": "Mentionne l'utilisateur",
-        "user_display_name": "Nom d'affichage Discord",
-        "clan_name": "Nom du clan",
-        "clan_link": "Lien vers le clan",
-        "clan_leader_name": "Nom du chef de clan",
-        "clan_leader_mention": "Mentionne le chef de clan",
-        "player_name": "Nom en jeu du joueur",
-        "player_link": "Lien vers le profil du joueur",
-        "player_townhall": "Niveau de l'Hôtel de Ville",
-        "player_townhall_emoji": "Emoji de l'Hôtel de Ville",
-        "player_league": "Nom de la ligue",
-        "player_league_emoji": "Emoji de la ligue",
-        "player_trophies": "Trophées actuels"
-      }
-    },
     "roleIdPlaceholder": "ID du Rôle",
     "abbreviationPlaceholder": "ex: CK",
-    "greetingPlaceholder": "Bienvenue '{'player_name'}' chez '{'clan_name'}' !",
     "categoryPlaceholder": "Nom de la catégorie",
     "notAvailable": "N/A",
     "saving": "Enregistrement...",
@@ -1656,6 +1737,12 @@
       "hoursRemaining": "h restantes",
       "channel": "Canal",
       "channelPlaceholder": "Sélectionner un canal",
+      "threadOptional": "Fil (facultatif)",
+      "threadPlaceholder": "Sélectionner un fil",
+      "noThread": "Publier directement dans le canal",
+      "forumPost": "Publication du forum",
+      "forumPostPlaceholder": "Sélectionner une publication du forum",
+      "forumPostRequired": "Une publication est requise pour les canaux de forum.",
       "clan": "Clan",
       "clanPlaceholder": "Sélectionner un clan",
       "customMessage": "Message Personnalisé",
@@ -1697,6 +1784,8 @@
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
       "failedToSave": "Échec de l'enregistrement des rappels",
+      "forumPostRequired": "Sélectionnez une publication du forum avant d'enregistrer ce rappel.",
+      "invalidDestination": "Le fil sélectionné n'appartient pas à ce canal.",
       "timeExceedsLimit": "Le temps restant doit être compris entre {min} et {max} heures",
       "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
       "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
@@ -1707,13 +1796,13 @@
     "description": "Configurez la journalisation automatique des activités de clan et de joueurs",
     "stats": {
       "activeLogs": "Journaux Actifs",
-      "activeLogsDesc": "Sur 26 types de journaux",
+      "activeLogsDesc": "Tous les clans de la famille et journaux du serveur",
       "logChannels": "Canaux de Journaux",
       "logChannelsDesc": "Canaux disponibles",
       "trackedClans": "Clans Suivis",
       "trackedClansDesc": "Clans configurés",
       "issues": "Problèmes",
-      "issuesDesc": "Journaux nécessitant attention"
+      "issuesDesc": "Dans toute la famille"
     },
     "clanSelector": {
       "label": "Clan :",
@@ -1723,7 +1812,8 @@
       "clan": "Clan",
       "war": "Guerre",
       "capital": "Capitale",
-      "player": "Joueur"
+      "player": "Joueur",
+      "server": "Serveur"
     },
     "clanLogs": {
       "joinLog": {
@@ -1749,6 +1839,16 @@
       "clanDescriptionLog": {
         "label": "Description du Clan",
         "description": "Suivre les modifications de la description du clan"
+      },
+      "banAlert": {
+        "label": "Alertes de bannissement",
+        "description": "Publier une alerte lorsqu'un joueur banni rejoint ce clan"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Flux Reddit",
+        "description": "Publier le flux Reddit du serveur"
       }
     },
     "warLogs": {
@@ -1840,6 +1940,11 @@
       "thread": "Fil (Optionnel)",
       "threadPlaceholder": "Sélectionner un fil",
       "noThread": "Aucun Fil",
+      "forumPost": "Publication du forum",
+      "forumPostPlaceholder": "Sélectionner une publication du forum",
+      "forumPostRequired": "Sélectionnez une publication du forum avant d'enregistrer ce journal.",
+      "invalidThread": "Le fil sélectionné n'appartient pas à ce canal.",
+      "saveDestination": "Enregistrer la destination",
       "channelDeleted": "Ce canal n'existe plus. Sélectionnez-en un nouveau ou désactivez le journal.",
       "enableToConfig": "Activez ce journal pour le configurer",
       "configuring": "Configuration",
@@ -1898,8 +2003,6 @@
     "security": {
       "title": "Sécurité et Permissions",
       "description": "Contrôler l'accès et la vérification",
-      "requireApiToken": "Exiger un Token API du Joueur",
-      "requireApiTokenDesc": "Les joueurs doivent vérifier la propriété du compte avec le token API de Clash of Clans lors de la liaison (recommandé)",
       "fullWhitelistRole": "Rôle super-administrateur",
       "fullWhitelistRoleDesc": "Rôle Discord avec un accès complet à toutes les commandes du bot (contourne toutes les vérifications de permissions)",
       "noRole": "Aucun Rôle"
@@ -2178,180 +2281,137 @@
   },
   "AutoboardsPage": {
     "title": "Tableaux Automatiques",
-    "description": "Publier et actualiser automatiquement les tableaux de clan, famille et légende",
-    "createAutoboard": "Créer un Tableau Automatique",
-    "editAutoboard": "Modifier le Tableau Automatique",
-    "createDialogTitle": "Créer un Tableau Automatique",
-    "createDialogDesc": "Configurer la publication ou l'actualisation automatique d'un tableau",
-    "editDialogTitle": "Modifier le Tableau Automatique",
-    "editDialogDesc": "Modifier la configuration de ce tableau automatique",
-    "automationType": "Type d'Automatisation",
-    "autoPost": "Publication Auto",
-    "autoPostDesc": "Publication Auto - Publications quotidiennes programmées",
-    "autoRefresh": "Actualisation Auto",
-    "autoRefreshDesc": "Actualisation Auto - Mises à jour continues (30-60 min)",
-    "channel": "Canal",
-    "channelDeleted": "Le canal a été supprimé.",
-    "selectChannel": "Sélectionner un canal",
-    "channelDesc": "Le canal où le tableau automatique sera publié",
-    "boardType": "Type de Tableau",
-    "selectBoardType": "Sélectionner un type de tableau",
-    "postDays": "Jours de Publication (sélectionner au moins un)",
-    "postDaysDesc": "Les jours sélectionnés, une publication sera effectuée à {time} (5h00 UTC).",
-    "autoRefreshInfo": "Info Actualisation Auto",
-    "autoRefreshInfoDesc": "Le tableau s'actualisera automatiquement toutes les 30-60 minutes avec les dernières données. Parfait pour garder les statistiques à jour sans mises à jour manuelles.",
-    "cancel": "Annuler",
-    "creating": "Création...",
-    "create": "Créer",
-    "updating": "Mise à jour...",
-    "update": "Mettre à jour",
-    "howItWorks": "Comment Fonctionnent les Tableaux Automatiques",
-    "howItWorksDesc": "Les tableaux automatiques peuvent publier de nouveaux tableaux selon un calendrier ou actualiser en continu les tableaux existants avec des données à jour. Choisissez **Publication Auto** pour créer de nouveaux tableaux quotidiennement à des jours spécifiques, ou **Actualisation Auto** pour maintenir un tableau à jour toutes les 30-60 minutes.",
-    "totalAutoboards": "Total de Tableaux Automatiques",
-    "totalShort": "Total",
-    "postShort": "Post",
-    "refreshShort": "Refresh",
-    "used": "utilisés",
-    "scheduledBoards": "Tableaux programmés",
-    "continuousUpdates": "Mises à jour continues",
-    "availableSlots": "Emplacements Disponibles",
-    "remainingCapacity": "Capacité restante",
-    "activeAutoboards": "Tableaux Automatiques Actifs",
-    "noAutoboards": "Aucun Tableau Automatique configuré",
-    "noAutoboardsDesc": "Créez votre premier Tableau Automatique pour automatiser les mises à jour de tableaux",
-    "postsOn": "Publie le :",
-    "updatesEvery": "Actualise toutes les 30-60 minutes",
-    "created": "Créé :",
-    "edit": "Modifier",
-    "remove": "Supprimer",
-    "tips": "💡 Astuces Tableaux Automatiques",
-    "noChannels": "Aucun canal disponible",
-    "activeAutoboardsCount": "{count} tableau{count, plural, one {} other {x}} automatique{count, plural, one {} other {s}} actif{count, plural, one {} other {s}}",
-    "noAutoboardsForFilter": "Aucun tableau automatique dans ce filtre",
-    "noAutoboardsForFilterDesc": "Essayez un autre filtre ou créez un nouveau tableau automatique.",
-    "tipsContent": {
-      "type": {
-        "title": "Choisissez le bon type :",
-        "desc": "Utilisez la Publication Auto pour les résumés quotidiens et l'Actualisation Auto pour les classements en direct et le suivi en temps réel."
-      },
-      "limits": {
-        "title": "Gérez vos limites :",
-        "desc": "Chaque serveur a un nombre limité d'emplacements de tableaux automatiques. Supprimez les tableaux inutilisés pour libérer de l'espace."
-      },
-      "schedule": {
-        "title": "Planifiez judicieusement :",
-        "desc": "Les tableaux de Publication Auto apparaissent à {time} (5h00 UTC). Choisissez des jours qui correspondent au cycle d'activité de votre clan."
-      },
-      "duplicates": {
-        "title": "Évitez les doublons :",
-        "desc": "Utiliser à la fois la Publication Auto et l'Actualisation Auto pour le même type de tableau dans le même canal peut encombrer le canal."
-      }
+    "description": "Actualiser un tableau actif ou envoyer de nouveaux tableaux selon un calendrier",
+    "actions": {
+      "create": "Créer un tableau automatique",
+      "edit": "Modifier le tableau",
+      "delete": "Supprimer le tableau",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "retry": "Réessayer"
     },
-    "boardTypes": {
-      "clanBoards": "Tableaux de Clan",
-      "familyBoards": "Tableaux de Famille",
-      "legendBoards": "Tableaux Légende",
-      "other": "Autre",
-      "clandetailed": "Clan Détaillé",
-      "clanbasic": "Clan Basique",
-      "clanmini": "Clan Minimaliste",
-      "clancompo": "Composition Clan",
-      "clandonos": "Dons Clan",
-      "clanactivity": "Activité Clan",
-      "clancapoverview": "Aperçu Capitale Clan",
-      "clancapdonos": "Dons Capitale Clan",
-      "clancapraids": "Raids Capitale Clan",
-      "clanwarlog": "Historique Guerre Clan",
-      "clancwlperf": "Performance LGC Clan",
-      "clangames": "Jeux de Clan",
-      "familyoverview": "Aperçu Famille",
-      "familycompo": "Composition Famille",
-      "familydonos": "Dons Famille",
-      "familygames": "Jeux Famille",
-      "familyactivity": "Activité Famille",
-      "legendclan": "Clan Légende",
-      "legendday": "Jour Légende",
-      "legendseason": "Saison Légende",
-      "discordlinks": "Liens Discord"
+    "metrics": {
+      "total": "Configurés",
+      "refresh": "Tableaux actualisés",
+      "send": "Envois programmés"
     },
-    "days": {
-      "monday": "Lundi",
-      "tuesday": "Mardi",
-      "wednesday": "Mercredi",
-      "thursday": "Jeudi",
-      "friday": "Vendredi",
-      "saturday": "Samedi",
-      "sunday": "Dimanche",
-      "endofseason": "Fin de Saison"
+    "filters": {
+      "all": "Tous"
     },
-    "alerts": {
-      "selectBoardType": "Veuillez sélectionner un type de tableau",
-      "selectChannel": "Veuillez sélectionner un canal",
-      "selectDays": "Veuillez sélectionner au moins un jour pour la publication automatique",
-      "createFailed": "Échec de la création du tableau automatique. Veuillez réessayer.",
-      "updateFailed": "Échec de la mise à jour du tableau automatique. Veuillez réessayer.",
-      "deleteFailed": "Échec de la suppression du tableau automatique. Veuillez réessayer.",
-      "deleteConfirmTitle": "Supprimer ce tableau automatique ?",
-      "deleteConfirmDescription": "Voulez-vous vraiment supprimer ce tableau automatique ? Cette action est irréversible."
-    }
-  },
-  "TicketsPage": {
-    "title": "Tickets",
-    "description": "Voir tous les tickets de recrutement et de support de votre serveur.",
-    "configurepanels": "Configurer les panneaux",
-    "openTickets": "Liste des tickets",
-    "noTickets": "Aucun ticket trouvé",
-    "noTicketsHint": "Aucun ticket ne correspond au filtre sélectionné.",
-    "ticketsFound": "tickets",
-    "showing": "{count} sur {total} tickets",
-    "tabTickets": "Tickets",
-    "tabConfiguration": "Configuration",
+    "list": {
+      "title": "Tableaux configurés",
+      "description": "Livraison, cibles, destination et état d'exécution gérés par les responsables",
+      "empty": "Aucun tableau dans cette vue",
+      "emptyDescription": "Créez-en un lorsque le registre API propose un type disponible."
+    },
+    "registry": {
+      "emptyTitle": "Aucun type de tableau disponible",
+      "emptyDescription": "Le registre API est vide. La création sera disponible lorsqu'un type y sera activé.",
+      "typeUnavailable": "Ce type n'est plus disponible dans le registre et ne peut pas être modifié."
+    },
+    "dialog": {
+      "createTitle": "Créer un tableau automatique",
+      "editTitle": "Modifier le tableau automatique",
+      "description": "Les capacités et limites proviennent du registre actif."
+    },
+    "boardType": {
+      "label": "Type de tableau",
+      "description": "Les types disponibles proviennent directement du registre API.",
+      "placeholder": "Sélectionner un type"
+    },
+    "targets": {
+      "kind": "Type de cible : {kind}",
+      "kindDescription": "Le registre définit l'interprétation de chaque cible.",
+      "scope": "Portée des cibles",
+      "scopeDescription": "La portée famille utilise tous les clans configurés sans cible explicite.",
+      "family": "Famille",
+      "custom": "Cibles personnalisées",
+      "values": "Cibles",
+      "count": "Fournissez entre {min} et {max} cibles pour ce type.",
+      "placeholder": "Saisir une cible {kind}",
+      "add": "Ajouter une cible",
+      "remove": "Supprimer la cible"
+    },
+    "modes": {
+      "label": "Mode de livraison",
+      "description": "Le registre contrôle les modes disponibles pour ce tableau.",
+      "refresh": "Actualisation",
+      "send": "Envoi programmé"
+    },
+    "destination": {
+      "label": "Destination",
+      "channel": "Canal parent",
+      "channelDescription": "Les canaux texte et annonces acceptent l'envoi direct ; les forums utilisent une publication enfant.",
+      "selectChannel": "Sélectionner un canal",
+      "thread": "Fil ou publication de forum",
+      "selectThread": "Sélectionner un fil",
+      "threadOptional": "Facultatif pour les canaux texte et annonces.",
+      "forumRequired": "Une publication de forum est obligatoire.",
+      "direct": "Envoyer directement dans le canal",
+      "deleted": "Le canal n'existe plus"
+    },
+    "refresh": {
+      "interval": "Intervalle d'actualisation (minutes)",
+      "intervalDescription": "Plage autorisée : {minimum}–{maximum} minutes."
+    },
+    "schedule": {
+      "label": "Calendrier",
+      "kind": "Type de calendrier",
+      "kindDescription": "Envoyer chaque jour, certains jours ou une fois par mois.",
+      "daily": "Tous les jours",
+      "weekdays": "Jours sélectionnés",
+      "dayOfMonth": "Jour du mois",
+      "selectWeekdays": "Jours de la semaine",
+      "monthDay": "Jour du mois",
+      "monthDayDescription": "Utilisez une valeur de 1 à 31.",
+      "timezone": "Fuseau horaire",
+      "timeOfDay": "Heure",
+      "nextRun": "Prochaine exécution"
+    },
+    "weekdays": {
+      "1": "Lundi",
+      "2": "Mardi",
+      "3": "Mercredi",
+      "4": "Jeudi",
+      "5": "Vendredi",
+      "6": "Samedi",
+      "7": "Dimanche"
+    },
     "status": {
-      "open": "Ouvert",
-      "sleep": "En veille",
-      "closed": "Fermé",
-      "delete": "Supprimé"
+      "enabled": "Activé",
+      "disabled": "Désactivé",
+      "enabledDescription": "Un tableau désactivé conserve sa configuration sans s'exécuter.",
+      "messageId": "Message d'actualisation actuel : {id}"
     },
-    "filter": {
-      "all": "Tous les statuts"
+    "delete": {
+      "title": "Supprimer ce tableau automatique ?",
+      "description": "Cette opération supprime définitivement la configuration."
     },
-    "cleanup": "Nettoyer",
-    "transcript": "Transcription",
-    "missingChannel": "Salon supprimé",
-    "missingChannelCleanup": "Salon supprimé, nettoyage requis",
-    "openInDiscord": "Ouvrir dans Discord",
-    "table": {
-      "number": "#",
-      "panel": "Panneau",
-      "user": "ID utilisateur",
-      "category": "Catégorie",
-      "clan": "Clan",
-      "account": "Compte",
-      "actions": "Actions"
+    "feedback": {
+      "created": "Tableau automatique créé",
+      "updated": "Tableau automatique mis à jour",
+      "deleted": "Tableau automatique supprimé"
     },
-    "manage": {
-      "open": "Gérer",
-      "title": "Gérer le ticket #{number}",
-      "description": "Mettez à jour le statut du ticket ou assignez un clan.",
-      "descriptionClosed": "Mettez à jour le statut du ticket, assignez un clan ou supprimez-le définitivement.",
-      "descriptionDeleted": "Ce ticket est deja supprime sur Discord. Vous pouvez supprimer definitivement l'entree du dashboard et le lien de transcription.",
-      "statusLabel": "Statut du ticket",
-      "statusDelete": "Supprimer le ticket",
-      "saveStatus": "Enregistrer le statut",
-      "clanLabel": "Clan assigné",
-      "selectClan": "Sélectionner un clan",
-      "noClan": "Aucun clan assigné",
-      "saveClan": "Enregistrer le clan",
-      "deleteTicket": "Supprimer le ticket",
-      "showTranscript": "Afficher la transcription",
-      "permanentDeleteTicket": "Supprimer définitivement le ticket",
-      "deleteHint": "Supprime definitivement l'entree du dashboard et le lien de transcription.",
-      "warningTitle": "Supprimer definitivement ce ticket ?",
-      "warningDescription": "Le ticket sera retire du dashboard et son lien de transcription sera masque. Cette action est irreversible.",
-      "warningDescriptionDeleted": "Ce ticket deja supprime sera retire du dashboard et son lien de transcription ne sera plus disponible. Cette action est irreversible.",
-      "statusSaved": "Statut du ticket mis à jour.",
-      "clanSaved": "Clan du ticket mis à jour.",
-      "deleted": "Ticket supprimé."
+    "validation": {
+      "boardType": "Sélectionnez un type dans le registre actif.",
+      "targetScope": "Sélectionnez une portée prise en charge.",
+      "familyTargets": "La portée famille ne peut pas contenir de cibles explicites.",
+      "targetCount": "Saisissez entre {min} et {max} cibles non vides.",
+      "deliveryMode": "Sélectionnez un mode pris en charge.",
+      "destination": "Sélectionnez une destination valide. Les forums exigent une publication enfant.",
+      "refreshInterval": "Saisissez un intervalle entre {minimum} et {maximum} minutes.",
+      "timezone": "Saisissez un fuseau horaire IANA.",
+      "timeOfDay": "Saisissez une heure valide.",
+      "weekdays": "Sélectionnez au moins un jour.",
+      "dayOfMonth": "Saisissez un jour de 1 à 31."
+    },
+    "errors": {
+      "title": "Tableaux automatiques indisponibles",
+      "session": "Votre session a expiré.",
+      "request": "La requête a échoué.",
+      "load": "Impossible de charger les tableaux.",
+      "save": "Impossible d'enregistrer le tableau.",
+      "delete": "Impossible de supprimer le tableau."
     }
   },
   "TicketsSettingsPage": {
@@ -2377,7 +2437,7 @@
     "panelNamePlaceholder": "ex. Candidatures",
     "panelCreated": "Panneau \"{name}\" créé.",
     "confirmDeletePanel": "Supprimer le panneau \"{name}\" ?",
-    "confirmDeletePanelHint": "Cela supprimera définitivement le panneau et toutes ses configurations de boutons. Les tickets ouverts ne sont pas affectés.",
+    "confirmDeletePanelHint": "Cela supprimera définitivement le panneau et toutes ses configurations de boutons.",
     "panelDeleted": "Panneau supprimé.",
     "panelHint": "Cliquez pour déplier et configurer ce panneau.",
     "buttons": "boutons",
@@ -3011,6 +3071,23 @@
       "privacy": "Politique de confidentialité",
       "terms": "Conditions d’utilisation",
       "legal": "Ce contenu n'est ni affilié à Supercell, ni approuvé, sponsorisé ou spécifiquement autorisé par Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing pour Discord, mobile et le web",
+    "privacy": {
+      "title": "Politique de confidentialité | ClashKing",
+      "openGraphTitle": "Politique de confidentialité de ClashKing",
+      "description": "Découvrez comment ClashKing collecte, utilise, conserve et protège les données de compte, de jeu et d’application.",
+      "heading": "Politique de confidentialité",
+      "eyebrow": "En vigueur depuis le 17 juillet 2026"
+    },
+    "terms": {
+      "title": "Conditions d’utilisation | ClashKing",
+      "openGraphTitle": "Conditions d’utilisation de ClashKing",
+      "description": "Les conditions applicables à l’utilisation des sites, applications, services et outils communautaires ClashKing.",
+      "heading": "Conditions d’utilisation",
+      "eyebrow": "Mentions légales ClashKing"
     }
   }
 }

@@ -3,14 +3,11 @@ import type { ApiResponse } from '../types/common';
 import type {
   CreateButtonRequest,
   CreatePanelRequest,
-  OpenTicketsResponse,
   ServerEmbedsResponse,
   TicketPanelsResponse,
   UpdateApproveMessagesRequest,
   UpdateButtonAppearanceRequest,
   UpdateButtonSettingsRequest,
-  UpdateOpenTicketClanRequest,
-  UpdateOpenTicketStatusRequest,
   UpdateTicketPanelRequest,
   UpsertEmbedRequest,
 } from '../types/tickets';
@@ -105,43 +102,6 @@ export class TicketsClient extends BaseApiClient {
       `/v2/server/${serverId}/tickets/${encodeURIComponent(panelName)}/approve-messages`,
       { method: 'PUT', body: JSON.stringify(data) },
     );
-  }
-
-  async getOpenTickets(
-    serverId: string | number,
-    status?: string,
-  ): Promise<ApiResponse<OpenTicketsResponse>> {
-    const query = status ? this.buildQueryString({ status }) : '';
-    return this.request(`/v2/server/${serverId}/tickets/open${query}`, { method: 'GET' });
-  }
-
-  async updateOpenTicketStatus(
-    serverId: string | number,
-    channelId: string,
-    data: UpdateOpenTicketStatusRequest,
-  ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/tickets/open/${channelId}/status`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
-  }
-
-  async updateOpenTicketClan(
-    serverId: string | number,
-    channelId: string,
-    data: UpdateOpenTicketClanRequest,
-  ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/tickets/open/${channelId}/clan`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
-  }
-
-  async deleteOpenTicket(
-    serverId: string | number,
-    channelId: string,
-  ): Promise<ApiResponse<{ message: string }>> {
-    return this.request(`/v2/server/${serverId}/tickets/open/${channelId}`, { method: 'DELETE' });
   }
 
   async getEmbeds(serverId: string | number): Promise<ApiResponse<ServerEmbedsResponse>> {

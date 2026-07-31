@@ -1,5 +1,8 @@
 "use client";
 
+import { apiFetch } from "@/lib/api/fetch";
+
+
 import { decompressFromEncodedURIComponent, decompressFromBase64 } from 'lz-string';
 import { useId, useRef, useState, type ComponentType, type MutableRefObject, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -315,7 +318,7 @@ function emojiToTwemojiUrl(emoji: string): string {
     .map((char) => char.codePointAt(0))
     .filter((point): point is number => typeof point === "number")
     .map((point) => point.toString(16).padStart(4, "0"));
-  return `/api/v2/app/twemoji/${codePoints.join("-")}.png`;
+  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${codePoints.join("-")}.png`;
 }
 
 function isSkinToneVariant(emoji: string): boolean {
@@ -342,7 +345,7 @@ function emojiToTwemojiFallbackUrl(emoji: string): string {
     .filter((point): point is number => typeof point === "number")
     .filter((point) => point !== 0xfe0f && point !== 0xfe0e)
     .map((point) => point.toString(16).padStart(4, "0"));
-  return `/api/v2/app/twemoji/${codePoints.join("-")}.png`;
+  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/${codePoints.join("-")}.png`;
 }
 
 function flagEmojiToCountryCode(emoji: string): string | null {
@@ -1946,10 +1949,8 @@ function FileComponentEditorFields({
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const token = /access_token=([^;]+)/.exec(document.cookie)?.[1];
-      const res = await fetch("/api/v2/app/cdn-upload", {
+      const res = await apiFetch("/v2/app/cdn-upload", {
         method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,
       });
       if (!res.ok) throw new Error(`Upload failed (${res.status})`);
@@ -2264,12 +2265,12 @@ export function EmbedEditor({ initialData, onSave, isSaving, onCancel, channels 
     let urlToparse = importUrl.trim();
 
     // Share links don't carry ?data= and can't be fetched client-side (CORS).
-    // Resolve both share.discohook.app URLs and discohook.app/?share= links via the Next.js proxy.
+    // Resolve both share.discohook.app URLs and discohook.app/?share= links through the Go API.
     if (requiresDiscohookResolve(urlToparse)) {
       setImportResolving(true);
       setImportError(false);
       try {
-        const res = await fetch(`/api/v2/app/discohook-resolve?url=${encodeURIComponent(urlToparse)}`);
+        const res = await apiFetch(`/v2/app/discohook-resolve?url=${encodeURIComponent(urlToparse)}`);
         const json = await res.json();
         if (!res.ok) { setImportError(true); setImportWarning(null); return; }
 
