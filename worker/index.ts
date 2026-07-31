@@ -1,6 +1,5 @@
 const MARKETING_HOST = "clashk.ing";
 const DASHBOARD_HOST = "dash.clashk.ing";
-const LEGACY_DASHBOARD_HOST = "dashboard.clashk.ing";
 const WWW_HOST = "www.clashk.ing";
 const RSC_CONTENT_TYPE = "text/x-component";
 
@@ -29,16 +28,8 @@ export function resolveDomainRedirect(requestUrl: URL): URL | null {
     return redirectUrl;
   }
 
-  if (requestUrl.hostname === LEGACY_DASHBOARD_HOST) {
-    redirectUrl.hostname = DASHBOARD_HOST;
-    if (requestUrl.pathname === "/") {
-      redirectUrl.pathname = "/servers";
-    }
-    return redirectUrl;
-  }
-
   if (requestUrl.hostname === DASHBOARD_HOST && requestUrl.pathname === "/") {
-    redirectUrl.pathname = "/servers";
+    redirectUrl.pathname = "/login";
     return redirectUrl;
   }
 

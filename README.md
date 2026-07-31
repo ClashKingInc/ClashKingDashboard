@@ -5,7 +5,7 @@ Vinext/React dashboard and static ClashKing marketing site.
 ## Architecture
 
 - `clashk.ing` serves the statically prerendered marketing homepage and legal pages.
-- `dash.clashk.ing` serves the static dashboard application; `dashboard.clashk.ing` redirects to it.
+- `dash.clashk.ing` serves the static dashboard application.
 - Browser API calls currently go directly to `https://local-api.clashk.ing`.
 - Dashboard routes are finite static shells. Guild context is carried as `?guildId=...`; roster detail uses `?guildId=...&rosterId=...`.
 - The Go API owns Discord and email authentication, refresh-cookie rotation, Discohook resolution, uploads, and all application data.
@@ -39,7 +39,7 @@ npm run build
 
 ## Deployment
 
-One Cloudflare Worker serves the static build on `clashk.ing`, `dash.clashk.ing`, `dashboard.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/servers`, moves application routes from the marketing hostname to the short dashboard hostname, redirects the legacy dashboard hostname, and redirects `www` to the apex. `app.clashk.ing` remains a separate Cloudflare Pages application.
+One Cloudflare Worker serves the static build on `clashk.ing`, `dash.clashk.ing`, and `www.clashk.ing`. The Worker redirects the dashboard hostname root to `/login`, where an existing session continues to `/servers`; it also moves application routes from the marketing hostname to the dashboard hostname and redirects `www` to the apex. `app.clashk.ing` remains a separate Cloudflare Pages application.
 
 Production builds pin the browser API and Discord application configuration before uploading assets, so a developer's `.env.local` cannot leak into a deployment:
 

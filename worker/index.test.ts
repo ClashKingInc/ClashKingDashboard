@@ -2,18 +2,10 @@ import { describe, expect, it } from "vitest";
 import { fetchAsset, resolveDomainRedirect, resolveRscAssetUrl } from "./index";
 
 describe("resolveDomainRedirect", () => {
-  it("sends the dashboard root to the server picker", () => {
+  it("sends the dashboard root through login restoration", () => {
     expect(resolveDomainRedirect(new URL("https://dash.clashk.ing/"))?.toString()).toBe(
-      "https://dash.clashk.ing/servers",
+      "https://dash.clashk.ing/login",
     );
-  });
-
-  it("moves the legacy dashboard hostname to the short hostname", () => {
-    expect(
-      resolveDomainRedirect(
-        new URL("https://dashboard.clashk.ing/dashboard/roles?guildId=123"),
-      )?.toString(),
-    ).toBe("https://dash.clashk.ing/dashboard/roles?guildId=123");
   });
 
   it.each(["/servers", "/login", "/auth/callback", "/dashboard", "/dashboard/roles", "/admin/creators"])(
