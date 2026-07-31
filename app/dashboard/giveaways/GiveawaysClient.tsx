@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
@@ -751,7 +750,6 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
   listDescription,
   tabs,
 }: Readonly<GiveawaysClientProps>) { // NOSONAR
-  const router = useRouter();
   const { toast } = useToast();
   const t = useTranslations("GiveawaysPage");
   const tCommon = useTranslations("Common");
@@ -820,7 +818,9 @@ export default function GiveawaysClient({ // NOSONAR — complexity comes from a
           return response.data;
         }),
       ]);
-      if (gRes.status === 401 || gRes.status === 403) { router.push("/login"); return; }
+      if (gRes.status === 401 || gRes.status === 403) {
+        throw new Error(gRes.error || t("toast.loadError"));
+      }
       if (gRes.error || !isGiveawaysResponse(gRes.data)) {
         throw new Error(gRes.error || t("toast.loadError"));
       }

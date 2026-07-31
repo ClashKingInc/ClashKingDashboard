@@ -7,9 +7,7 @@ import { apiFetch } from "@/lib/api/fetch";
 
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { logout } from "@/lib/auth/logout";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -151,7 +149,6 @@ function RoleModeSelect({
 export default function ClansPage() {
   const guildId = useGuildId();
   const locale = useLocale();
-  const router = useRouter();
   const { toast } = useToast();
   const t = useTranslations("ClansPage");
   const tCommon = useTranslations("Common");
@@ -225,11 +222,7 @@ export default function ClansPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const accessToken = getAccessToken();
-        if (!accessToken) {
-          router.push("/login");
-          return;
-        }
+        const accessToken = getAccessToken() ?? "";
 
         const clansData = await fetchClans(accessToken);
           setClans(normalizeClansPayload(clansData));
@@ -260,11 +253,6 @@ export default function ClansPage() {
         }
       } catch (err) {
         console.error("Error fetching data:", err);
-        if (err instanceof Error && (err as Error & { status?: number }).status === 401) {
-          logout();
-          router.push("/login");
-          return;
-        }
         setError(err instanceof Error ? err.message : "Failed to load clans");
         toast({
           title: tCommon("error"),

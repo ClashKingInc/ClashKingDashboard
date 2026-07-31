@@ -2,7 +2,6 @@
 
 import { useGuildId } from "@/lib/dashboard-route";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Check, Loader2, LayoutTemplate, Save } from "lucide-react";
 
@@ -179,7 +178,6 @@ function buildButtonsPreviewContent({
 
 export default function PanelsPage() {
   const guildId = useGuildId();
-  const router = useRouter();
   const t = useTranslations("PanelsPage");
   const tCommon = useTranslations("Common");
   const { toast } = useToast();
@@ -266,8 +264,7 @@ export default function PanelsPage() {
     try {
       const panelRes = await apiCache.get(panelCacheKey, () => apiClient.panels.getPanel(guildId));
       if (panelRes.status === 401 || panelRes.status === 403) {
-        router.push("/login");
-        return;
+        throw new Error(panelRes.error || "You do not have access to this panel.");
       }
 
       if (panelRes.data) {
@@ -281,7 +278,7 @@ export default function PanelsPage() {
     } finally {
       setIsPanelLoading(false);
     }
-  }, [applyPanelData, guildId, panelCacheKey, router, showLoadError]);
+  }, [applyPanelData, guildId, panelCacheKey, showLoadError]);
 
   const loadEmbeds = useCallback(async () => {
     try {

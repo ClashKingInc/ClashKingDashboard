@@ -3,9 +3,6 @@
 import { useLocale } from "next-intl";
 import { useGuildId } from "@/lib/dashboard-route";
 import { dashboardHref } from "@/lib/dashboard-route";
-import { getAccessToken } from "@/lib/auth/session";
-
-
 import { useState, useEffect, useEffectEvent, Fragment } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -135,10 +132,6 @@ export default function BansPage() { // NOSONAR — React page component: comple
   async function fetchBans() {
     try {
       setIsLoadingBans(true);
-      const token = getAccessToken();
-      if (!token) return;
-
-      
       const response = await apiCache.get(`bans-${guildId}`, async () => {
         return await apiClient.servers.getBans(guildId);
       });
@@ -168,9 +161,6 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
   async function fetchServerClans() {
     try {
-      const token = getAccessToken();
-      if (!token) return;
-
       const response = await apiCache.get(`server-clans-${guildId}`, async () => {
         return await apiClient.servers.getServerClans(guildId);
       });
@@ -198,10 +188,6 @@ export default function BansPage() { // NOSONAR — React page component: comple
   async function fetchStrikes() {
     try {
       setIsLoadingStrikes(true);
-      const token = getAccessToken();
-      if (!token) return;
-
-
       const response = await apiCache.get(`strikes-${guildId}`, async () => {
         return await apiClient.servers.getStrikes(guildId);
       });
@@ -243,13 +229,9 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
     try {
       setIsSubmittingBan(true);
-      const token = getAccessToken();
       const user = localStorage.getItem("user");
       // Preserve precision for large Discord IDs by using string instead of number
       const userId = user ? JSON.parse(user).user_id : "0";
-
-      if (!token) return;
-
 
       // Clean player tag (remove # if present)
       const cleanTag = newBan.player_tag.replace(/^#/, "");
@@ -305,13 +287,9 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
     try {
       setIsSubmittingStrike(true);
-      const token = getAccessToken();
       const user = localStorage.getItem("user");
       // Preserve precision for large Discord IDs by using string instead of number
       const userId = user ? JSON.parse(user).user_id : "0";
-
-      if (!token) return;
-
 
       // Clean player tag (remove # if present)
       const cleanTag = newStrike.player_tag.replace(/^#/, "");
@@ -365,10 +343,6 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
   const handleRemoveBan = async (playerTag: string) => {
     try {
-      const token = getAccessToken();
-      if (!token) return;
-
-
       // Clean player tag (remove # if present)
       const cleanTag = playerTag.replace(/^#/, "");
 
@@ -411,10 +385,6 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
   const handleRemoveStrike = async (strikeId: string) => {
     try {
-      const token = getAccessToken();
-      if (!token) return;
-
-
       const response = await apiClient.servers.removeStrike(guildId, strikeId);
 
       if (response.error) {

@@ -8,13 +8,14 @@ const LEASE_KEY = "clashking_refresh_lease";
 const LEASE_MS = 10_000;
 
 type SessionListener = () => void;
+export type SessionRestoreResult = "restored" | "anonymous" | "unavailable";
 type AuthMessage =
   | { type: "token"; token: string; generation: number }
   | { type: "logout"; generation: number };
 
 let accessToken: string | undefined;
 let generation = 0;
-let refreshPromise: Promise<boolean> | null = null;
+let refreshPromise: Promise<SessionRestoreResult> | null = null;
 const listeners = new Set<SessionListener>();
 const tabId = typeof crypto !== "undefined" && "randomUUID" in crypto
   ? crypto.randomUUID()
@@ -86,7 +87,11 @@ export function subscribeSession(listener: SessionListener): () => void {
   return () => listeners.delete(listener);
 }
 
-export function refreshAccessToken(baseUrl: string): Promise<boolean> {
+export async function refreshAccessToken(baseUrl: string): Promise<boolean> {
+  return (await restoreAccessToken(baseUrl)) === "restored";
+}
+
+export function restoreAccessToken(baseUrl: string): Promise<SessionRestoreResult> {
   if (refreshPromise) return refreshPromise;
   refreshPromise = coordinateRefresh(baseUrl).finally(() => {
     refreshPromise = null;
@@ -94,7 +99,7 @@ export function refreshAccessToken(baseUrl: string): Promise<boolean> {
   return refreshPromise;
 }
 
-async function coordinateRefresh(baseUrl: string): Promise<boolean> {
+async function coordinateRefresh(baseUrl: string): Promise<SessionRestoreResult> {
   const observedGeneration = generation;
   const locks = typeof navigator !== "undefined"
     ? (navigator as Navigator & {
@@ -103,36 +108,38 @@ async function coordinateRefresh(baseUrl: string): Promise<boolean> {
     : undefined;
   if (locks) {
     return locks.request(LOCK_NAME, async () => {
-      if (generation !== observedGeneration && accessToken) return true;
+      if (generation !== observedGeneration && accessToken) return "restored";
       return performRefresh(baseUrl);
     });
   }
   return withStorageLease(observedGeneration, () => performRefresh(baseUrl));
 }
 
-async function performRefresh(baseUrl: string): Promise<boolean> {
+async function performRefresh(baseUrl: string): Promise<SessionRestoreResult> {
   try {
     const response = await fetch(`${baseUrl}/v2/auth/web/refresh`, {
       method: "POST",
       credentials: "include",
     });
-    if (!response.ok) {
+    if (response.status === 401) {
       clearSession();
-      return false;
+      return "anonymous";
     }
+    if (response.status === 403) return "anonymous";
+    if (!response.ok) return "unavailable";
     const data = (await response.json()) as { access_token?: string };
-    if (!data.access_token) return false;
+    if (!data.access_token) return "unavailable";
     setAccessToken(data.access_token);
-    return true;
+    return "restored";
   } catch {
-    return false;
+    return "unavailable";
   }
 }
 
 async function withStorageLease(
   observedGeneration: number,
-  action: () => Promise<boolean>,
-): Promise<boolean> {
+  action: () => Promise<SessionRestoreResult>,
+): Promise<SessionRestoreResult> {
   if (typeof window === "undefined") return action();
   for (let attempt = 0; attempt < 40; attempt += 1) {
     const now = Date.now();
@@ -142,7 +149,7 @@ async function withStorageLease(
       const acquired = readLease();
       if (acquired?.owner === tabId) {
         try {
-          if (generation !== observedGeneration && accessToken) return true;
+          if (generation !== observedGeneration && accessToken) return "restored";
           return await action();
         } finally {
           if (readLease()?.owner === tabId) localStorage.removeItem(LEASE_KEY);
@@ -150,9 +157,9 @@ async function withStorageLease(
       }
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
-    if (generation !== observedGeneration && accessToken) return true;
+    if (generation !== observedGeneration && accessToken) return "restored";
   }
-  return false;
+  return "unavailable";
 }
 
 function readLease(): { owner: string; expiresAt: number } | undefined {

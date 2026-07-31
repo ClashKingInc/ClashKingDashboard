@@ -4,6 +4,7 @@ import {
   clearSession,
   getAccessToken,
   refreshAccessToken,
+  restoreAccessToken,
   setAccessToken,
 } from "./session";
 
@@ -62,5 +63,23 @@ describe("browser auth session", () => {
 
     await expect(Promise.all([first, second])).resolves.toEqual([true, true]);
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the session recoverable when refresh infrastructure is unavailable", async () => {
+    setAccessToken("existing-access", false);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 503 })));
+
+    await expect(restoreAccessToken("https://local-api.clashk.ing")).resolves.toBe("unavailable");
+
+    expect(getAccessToken()).toBe("existing-access");
+  });
+
+  it("clears the session only when the refresh credential is rejected", async () => {
+    setAccessToken("expired-access", false);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 401 })));
+
+    await expect(restoreAccessToken("https://local-api.clashk.ing")).resolves.toBe("anonymous");
+
+    expect(getAccessToken()).toBeUndefined();
   });
 });

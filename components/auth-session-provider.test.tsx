@@ -1,4 +1,5 @@
 import { act, render, screen } from "@testing-library/react";
+import { beforeEach } from "vitest";
 
 import { AuthSessionProvider, useAuthSession } from "./auth-session-provider";
 
@@ -8,7 +9,7 @@ const authMock = vi.hoisted(() => {
   return {
     getAccessToken: () => token,
     getCachedUser: () => undefined,
-    refreshAccessToken: vi.fn(() => new Promise<boolean>(() => undefined)),
+    restoreAccessToken: vi.fn(() => new Promise<"restored" | "anonymous" | "unavailable">(() => undefined)),
     subscribeSession: vi.fn((next: () => void) => {
       listener = next;
       return () => {
@@ -27,7 +28,7 @@ vi.mock("@/lib/auth/session", () => ({
   cacheUser: authMock.cacheUser,
   getAccessToken: authMock.getAccessToken,
   getCachedUser: authMock.getCachedUser,
-  refreshAccessToken: authMock.refreshAccessToken,
+  restoreAccessToken: authMock.restoreAccessToken,
   subscribeSession: authMock.subscribeSession,
 }));
 
@@ -41,6 +42,14 @@ function SessionStatus() {
 }
 
 describe("AuthSessionProvider", () => {
+  beforeEach(() => {
+    authMock.setToken(undefined);
+    authMock.restoreAccessToken.mockReset();
+    authMock.restoreAccessToken.mockImplementation(
+      () => new Promise<"restored" | "anonymous" | "unavailable">(() => undefined),
+    );
+  });
+
   it("tracks token changes broadcast by another browser tab", () => {
     render(
       <AuthSessionProvider>
@@ -61,5 +70,27 @@ describe("AuthSessionProvider", () => {
       authMock.notify();
     });
     expect(screen.getByText("anonymous")).toBeInTheDocument();
+  });
+
+  it("keeps restoring and retries after a temporary API failure", async () => {
+    vi.useFakeTimers();
+    authMock.restoreAccessToken
+      .mockResolvedValueOnce("unavailable")
+      .mockResolvedValueOnce("anonymous");
+
+    render(
+      <AuthSessionProvider>
+        <SessionStatus />
+      </AuthSessionProvider>,
+    );
+
+    await act(async () => Promise.resolve());
+    expect(screen.getByText("restoring")).toBeInTheDocument();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(5_000);
+    });
+    expect(screen.getByText("anonymous")).toBeInTheDocument();
+    vi.useRealTimers();
   });
 });

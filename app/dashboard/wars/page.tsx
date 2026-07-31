@@ -6,8 +6,6 @@ import { apiFetch } from "@/lib/api/fetch";
 
 
 import { useState, useEffect, useEffectEvent, useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { logout } from "@/lib/auth/logout";
 import { useLocale, useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -155,7 +153,6 @@ function currentTimestamp(): number {
 export default function WarsPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
   const locale = useLocale();
-  const router = useRouter();
   const { toast } = useToast();
   const t = useTranslations("WarsPage");
   const [loading, setLoading] = useState(true);
@@ -496,11 +493,7 @@ export default function WarsPage() { // NOSONAR — React page component: comple
   }
 
   const loadInitialData = useEffectEvent(async () => {
-    const accessToken = getAccessToken();
-    if (!accessToken) {
-      router.push("/login");
-      return;
-    }
+    const accessToken = getAccessToken() ?? "";
     setLoading(true);
     try {
       const clansData = await apiCache.get(clansCacheKey, async () => {
@@ -516,11 +509,6 @@ export default function WarsPage() { // NOSONAR — React page component: comple
       if (clansData.length > 0) await fetchWarDataForClans(clansData, accessToken);
       else setLoading(false);
     } catch (error) {
-      if (error instanceof Error && (error as Error & { status?: number }).status === 401) {
-        logout();
-        router.push("/login");
-        return;
-      }
       toast({ title: t('toast.errorTitle'), description: t('toast.errorLoadingClans'), variant: "destructive" });
       setLoading(false);
     }

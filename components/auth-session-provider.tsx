@@ -7,7 +7,7 @@ import {
   cacheUser,
   getAccessToken,
   getCachedUser,
-  refreshAccessToken,
+  restoreAccessToken,
   subscribeSession,
 } from "@/lib/auth/session";
 
@@ -37,9 +37,20 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     let active = true;
-    void refreshAccessToken(getDefaultBaseUrl()).then(async (restored) => {
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    let retryDelay = 5_000;
+
+    const restore = async () => {
+      const result = await restoreAccessToken(getDefaultBaseUrl());
       if (!active) return;
-      if (!restored) {
+      if (result === "unavailable") {
+        setStatus("restoring");
+        retryTimer = setTimeout(() => void restore(), retryDelay);
+        retryDelay = Math.min(retryDelay * 2, 60_000);
+        return;
+      }
+      retryDelay = 5_000;
+      if (result === "anonymous") {
         setStatus("anonymous");
         setUser(undefined);
         return;
@@ -51,9 +62,12 @@ export function AuthSessionProvider({ children }: { children: React.ReactNode })
         setUser(current.data);
       }
       setStatus(getAccessToken() ? "authenticated" : "anonymous");
-    });
+    };
+
+    void restore();
     return () => {
       active = false;
+      if (retryTimer) clearTimeout(retryTimer);
     };
   }, []);
 

@@ -6,8 +6,6 @@ import { apiFetch } from "@/lib/api/fetch";
 
 
 import { useState, useEffect, useRef, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
-import { logout } from "@/lib/auth/logout";
 import { useLocale, useTranslations } from "next-intl";
 import { apiCache } from "@/lib/api-cache";
 import { apiClient } from "@/lib/api/client";
@@ -143,7 +141,6 @@ function getTimeLimit(type: string | undefined): number {
 export default function RemindersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
   const locale = useLocale();
-  const router = useRouter();
   const { toast } = useToast();
   const t = useTranslations("RemindersPage");
   const tCommon = useTranslations("Common");
@@ -183,11 +180,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   useEffect(() => {
     const fetchReminders = async () => {
       try {
-        const accessToken = getAccessToken();
-        if (!accessToken) {
-          router.push("/login");
-          return;
-        }
+        const accessToken = getAccessToken() ?? "";
 
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
         if (!apiUrl) {
@@ -240,11 +233,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         ]);
 
         if (!remindersRes.ok) {
-          if (remindersRes.status === 401) {
-            logout();
-            router.push("/login");
-            return;
-          }
           throw new Error(`Failed to fetch reminders: ${remindersRes.statusText}`);
         }
 
@@ -279,7 +267,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (guildId) {
       fetchReminders();
     }
-  }, [channelsCacheKey, clansCacheKey, guildId, locale, router, t, toast]);
+  }, [channelsCacheKey, clansCacheKey, guildId, locale, t, toast]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
