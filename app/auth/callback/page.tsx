@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
@@ -13,7 +13,6 @@ import { cacheUser, setAccessToken } from "@/lib/auth/session";
 export default function AuthCallbackPage() {
   const t = useTranslations("AuthCallback");
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "error">("loading");
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -31,10 +30,14 @@ export default function AuthCallbackPage() {
 
     hasHandledCallbackRef.current = true;
 
-    const code = searchParams.get("code");
-    const errorParam = searchParams.get("error");
-    const errorDescription = searchParams.get("error_description");
-    const returnedState = searchParams.get("state");
+    // The callback URL is the authoritative OAuth response. During hydration,
+    // Vinext's statically generated useSearchParams snapshot can briefly be
+    // empty even though the browser URL already contains Discord's response.
+    const callbackParams = new URLSearchParams(globalThis.location.search);
+    const code = callbackParams.get("code");
+    const errorParam = callbackParams.get("error");
+    const errorDescription = callbackParams.get("error_description");
+    const returnedState = callbackParams.get("state");
     const clearPkceVerifier = () => {
       sessionStorage.removeItem("discord_code_verifier");
       sessionStorage.removeItem("discord_oauth_state");
@@ -141,7 +144,7 @@ export default function AuthCallbackPage() {
     };
 
     void authenticateWithDiscord();
-  }, [searchParams, router, t]);
+  }, [router, t]);
 
   if (status === "loading") {
     return (

@@ -4,7 +4,6 @@ import AuthCallbackPage from "@/app/auth/callback/page";
 const navigationMock = vi.hoisted(() => ({
   locale: "en",
   push: vi.fn(),
-  searchParams: new URLSearchParams(),
 }));
 
 const apiMock = vi.hoisted(() => ({
@@ -14,9 +13,9 @@ const apiMock = vi.hoisted(() => ({
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: navigationMock.push }),
-  useSearchParams: () => ({
-    get: (key: string) => navigationMock.searchParams.get(key),
-  }),
+  // Model Vinext's empty static search-param snapshot. The callback must use
+  // the actual browser URL, which already contains Discord's response.
+  useSearchParams: () => new URLSearchParams(),
   useParams: () => ({ locale: navigationMock.locale }),
 }));
 
@@ -63,14 +62,14 @@ describe("AuthCallbackPage PKCE cleanup", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     navigationMock.locale = "en";
-    navigationMock.searchParams = new URLSearchParams();
+    window.history.replaceState({}, "", "/auth/callback");
     localStorage.clear();
     sessionStorage.clear();
     localStorage.setItem("device_id", "device-id");
   });
 
   it("clears the PKCE verifier for Discord error callbacks", async () => {
-    navigationMock.searchParams = new URLSearchParams("error=server_error");
+    window.history.replaceState({}, "", "/auth/callback?error=server_error");
     sessionStorage.setItem("discord_code_verifier", "verifier");
 
     render(<AuthCallbackPage />);
@@ -93,7 +92,7 @@ describe("AuthCallbackPage PKCE cleanup", () => {
   });
 
   it("clears the PKCE verifier when the stored verifier is missing", async () => {
-    navigationMock.searchParams = new URLSearchParams("code=auth-code");
+    window.history.replaceState({}, "", "/auth/callback?code=auth-code");
 
     render(<AuthCallbackPage />);
 
@@ -103,8 +102,12 @@ describe("AuthCallbackPage PKCE cleanup", () => {
     });
   });
 
-  it("clears the PKCE verifier after backend authentication failures", async () => {
-    navigationMock.searchParams = new URLSearchParams("code=auth-code&state=expected-state");
+  it("uses the browser callback URL and clears PKCE after backend authentication failures", async () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/auth/callback?code=auth-code&state=expected-state",
+    );
     sessionStorage.setItem("discord_code_verifier", "verifier");
     sessionStorage.setItem("discord_oauth_state", "expected-state");
     apiMock.authenticateWithDiscord.mockResolvedValue({
