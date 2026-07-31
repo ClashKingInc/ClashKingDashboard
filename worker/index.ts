@@ -2,6 +2,11 @@ const MARKETING_HOST = "clashk.ing";
 const DASHBOARD_HOST = "dash.clashk.ing";
 const LEGACY_DASHBOARD_HOST = "dashboard.clashk.ing";
 const WWW_HOST = "www.clashk.ing";
+const RSC_CONTENT_TYPE = "text/x-component";
+
+interface AssetEnv {
+  ASSETS: Pick<Fetcher, "fetch">;
+}
 
 const dashboardRoutePrefixes = [
   "/admin",
@@ -48,6 +53,43 @@ export function resolveDomainRedirect(requestUrl: URL): URL | null {
   return null;
 }
 
+export function resolveRscAssetUrl(request: Request): URL | null {
+  if (
+    (request.method !== "GET" && request.method !== "HEAD") ||
+    request.headers.get("RSC") !== "1" ||
+    !request.headers.get("Accept")?.includes(RSC_CONTENT_TYPE)
+  ) {
+    return null;
+  }
+
+  const assetUrl = new URL(request.url);
+  const pathname = assetUrl.pathname === "/"
+    ? "/index"
+    : assetUrl.pathname.replace(/\/$/, "");
+
+  assetUrl.pathname = pathname.endsWith(".rsc") ? pathname : `${pathname}.rsc`;
+  assetUrl.searchParams.delete("_rsc");
+  return assetUrl;
+}
+
+export async function fetchAsset(request: Request, env: AssetEnv): Promise<Response> {
+  const rscAssetUrl = resolveRscAssetUrl(request);
+  if (!rscAssetUrl) return env.ASSETS.fetch(request);
+
+  const response = await env.ASSETS.fetch(new Request(rscAssetUrl.toString(), request));
+  if (!response.ok || response.headers.get("Content-Type")?.startsWith("text/html")) {
+    return response;
+  }
+
+  const headers = new Headers(response.headers);
+  headers.set("Content-Type", RSC_CONTENT_TYPE);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request, env): Promise<Response> {
     const redirectUrl = resolveDomainRedirect(new URL(request.url));
@@ -55,6 +97,6 @@ export default {
       return Response.redirect(redirectUrl.toString(), 308);
     }
 
-    return env.ASSETS.fetch(request);
+    return fetchAsset(request, env);
   },
 } satisfies ExportedHandler<Env>;

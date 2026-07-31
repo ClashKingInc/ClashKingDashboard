@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveDomainRedirect } from "./index";
+import { fetchAsset, resolveDomainRedirect, resolveRscAssetUrl } from "./index";
 
 describe("resolveDomainRedirect", () => {
   it("sends the dashboard root to the server picker", () => {
@@ -43,5 +43,79 @@ describe("resolveDomainRedirect", () => {
     "https://app.clashk.ing/",
   ])("serves %s without a domain redirect", (url) => {
     expect(resolveDomainRedirect(new URL(url))).toBeNull();
+  });
+});
+
+describe("RSC static asset routing", () => {
+  it("maps vinext navigation requests to the generated RSC asset", () => {
+    const request = new Request(
+      "https://dash.clashk.ing/dashboard/general?guildId=123&_rsc=cache-key",
+      { headers: { Accept: "text/x-component", RSC: "1" } },
+    );
+
+    expect(resolveRscAssetUrl(request)?.toString()).toBe(
+      "https://dash.clashk.ing/dashboard/general.rsc?guildId=123",
+    );
+  });
+
+  it("maps the root RSC request to index.rsc", () => {
+    const request = new Request("https://clashk.ing/?_rsc=cache-key", {
+      headers: { Accept: "text/x-component", RSC: "1" },
+    });
+
+    expect(resolveRscAssetUrl(request)?.pathname).toBe("/index.rsc");
+  });
+
+  it("leaves ordinary document and mutation requests alone", () => {
+    expect(resolveRscAssetUrl(new Request("https://dash.clashk.ing/dashboard/general"))).toBeNull();
+    expect(
+      resolveRscAssetUrl(
+        new Request("https://dash.clashk.ing/dashboard/general", {
+          method: "POST",
+          headers: { Accept: "text/x-component", RSC: "1" },
+        }),
+      ),
+    ).toBeNull();
+  });
+
+  it("serves RSC bytes with the component content type", async () => {
+    let fetchedUrl = "";
+    const env = {
+      ASSETS: {
+        fetch: async (request: Request) => {
+          fetchedUrl = request.url;
+          return new Response("rsc payload", {
+            headers: { "Content-Type": "application/octet-stream" },
+          });
+        },
+      },
+    };
+    const request = new Request(
+      "https://dash.clashk.ing/dashboard/roles?guildId=123&_rsc=cache-key",
+      { headers: { Accept: "text/x-component", RSC: "1" } },
+    );
+
+    const response = await fetchAsset(request, env);
+
+    expect(fetchedUrl).toBe("https://dash.clashk.ing/dashboard/roles.rsc?guildId=123");
+    expect(response.headers.get("Content-Type")).toBe("text/x-component");
+    expect(await response.text()).toBe("rsc payload");
+  });
+
+  it("does not disguise an SPA HTML fallback as an RSC response", async () => {
+    const env = {
+      ASSETS: {
+        fetch: async () => new Response("<!doctype html>", {
+          headers: { "Content-Type": "text/html; charset=utf-8" },
+        }),
+      },
+    };
+    const request = new Request("https://dash.clashk.ing/missing?_rsc=cache-key", {
+      headers: { Accept: "text/x-component", RSC: "1" },
+    });
+
+    const response = await fetchAsset(request, env);
+
+    expect(response.headers.get("Content-Type")).toBe("text/html; charset=utf-8");
   });
 });
