@@ -54,15 +54,13 @@ export function resolveDomainRedirect(requestUrl: URL): URL | null {
 }
 
 export function resolveRscAssetUrl(request: Request): URL | null {
-  if (
-    (request.method !== "GET" && request.method !== "HEAD") ||
-    request.headers.get("RSC") !== "1" ||
-    !request.headers.get("Accept")?.includes(RSC_CONTENT_TYPE)
-  ) {
-    return null;
-  }
-
   const assetUrl = new URL(request.url);
+  const isRscRequest =
+    request.headers.get("RSC") === "1" ||
+    request.headers.get("Accept")?.includes(RSC_CONTENT_TYPE) ||
+    assetUrl.searchParams.has("_rsc");
+  if ((request.method !== "GET" && request.method !== "HEAD") || !isRscRequest) return null;
+
   const pathname = assetUrl.pathname === "/"
     ? "/index"
     : assetUrl.pathname.replace(/\/$/, "");

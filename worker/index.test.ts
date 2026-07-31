@@ -58,6 +58,19 @@ describe("RSC static asset routing", () => {
     );
   });
 
+  it("recognizes vinext navigation when an edge omits either RSC header", () => {
+    const acceptRequest = new Request(
+      "https://dash.clashk.ing/dashboard/clans?guildId=123&_rsc=accept-key",
+      { headers: { Accept: "text/x-component" } },
+    );
+    const cacheKeyRequest = new Request(
+      "https://dash.clashk.ing/dashboard/wars?guildId=123&_rsc=query-key",
+    );
+
+    expect(resolveRscAssetUrl(acceptRequest)?.pathname).toBe("/dashboard/clans.rsc");
+    expect(resolveRscAssetUrl(cacheKeyRequest)?.pathname).toBe("/dashboard/wars.rsc");
+  });
+
   it("maps the root RSC request to index.rsc", () => {
     const request = new Request("https://clashk.ing/?_rsc=cache-key", {
       headers: { Accept: "text/x-component", RSC: "1" },
