@@ -7,9 +7,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { SettingsDropdown } from "@/components/settings-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { UserInfo } from "@/lib/api/types/auth";
 import { logout } from "@/lib/auth/logout";
-import { getAccessToken, getCachedUser } from "@/lib/auth/session";
+import { useAuthSession } from "@/components/auth-session-provider";
 
 export function DashboardLayoutWrapper({
   sidebar,
@@ -21,27 +20,24 @@ export function DashboardLayoutWrapper({
   readonly children: React.ReactNode;
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [user, setUser] = useState<UserInfo | null>(null);
   const mainContentRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const locale = useLocale();
   const tCommon = useTranslations("Common");
   const tNavigation = useTranslations("Navigation");
+  const { status: authStatus, user } = useAuthSession();
 
-  // Auth check
+  // A static dashboard route may load as a fresh document. Wait for the
+  // refresh-cookie restoration before deciding that the user is anonymous.
   useEffect(() => {
-    const token = getAccessToken();
-    if (!token) {
-      router.push("/login");
+    if (authStatus === "anonymous") {
+      router.replace("/login");
     }
-
-    setUser(getCachedUser() ?? null);
-  }, [router, locale]);
+  }, [authStatus, router]);
 
   const handleLogout = async () => {
     await logout();
-    setUser(null);
     router.push("/");
   };
 

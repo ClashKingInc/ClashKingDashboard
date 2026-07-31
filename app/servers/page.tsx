@@ -1,6 +1,5 @@
 "use client";
 
-import { getAccessToken } from "@/lib/auth/session";
 import { dashboardHref } from "@/lib/dashboard-route";
 
 
@@ -15,6 +14,7 @@ import { Users } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import type { GuildInfo } from "@/lib/api/types/server";
 import { ServersHeader } from "@/components/servers-header";
+import { useAuthSession } from "@/components/auth-session-provider";
 
 const ROLE_STYLES: Record<string, string> = {
   Owner: "bg-green-500/20 text-green-600 dark:text-green-400",
@@ -43,7 +43,16 @@ export default function ServersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [permissionMessage, setPermissionMessage] = useState<string | null>(null);
+  const { status: authStatus } = useAuthSession();
+
   useEffect(() => {
+    if (authStatus === "restoring") return;
+    if (authStatus === "anonymous") {
+      setLoading(false);
+      router.replace("/login");
+      return;
+    }
+
     const fetchGuilds = async () => {
       setPermissionMessage(null);
       setError(null);
@@ -60,17 +69,14 @@ export default function ServersPage() {
             sessionStorage.removeItem('prefetched_guilds'); // Clean up
 
             // Fetch fresh data in background
-            const accessToken = getAccessToken();
-            if (accessToken) {
-              const response = await apiClient.servers.getGuilds();
-              if (response.data) {
-                const sortedGuilds = response.data.toSorted((a, b) => {
-                  if (a.has_bot && !b.has_bot) return -1;
-                  if (!a.has_bot && b.has_bot) return 1;
-                  return a.name.localeCompare(b.name);
-                });
-                setGuilds(sortedGuilds);
-              }
+            const response = await apiClient.servers.getGuilds();
+            if (response.data) {
+              const sortedGuilds = response.data.toSorted((a, b) => {
+                if (a.has_bot && !b.has_bot) return -1;
+                if (!a.has_bot && b.has_bot) return 1;
+                return a.name.localeCompare(b.name);
+              });
+              setGuilds(sortedGuilds);
             }
             return;
           } catch (err) {
@@ -78,13 +84,6 @@ export default function ServersPage() {
             // Fall through to normal fetch
           }
         }
-
-        const accessToken = getAccessToken();
-        if (!accessToken) {
-          router.push("/login");
-          return;
-        }
-
 
         // Fetch user's guilds using API client
         const response = await apiClient.servers.getGuilds();
@@ -119,7 +118,7 @@ export default function ServersPage() {
     };
 
     fetchGuilds();
-  }, [router, t]);
+  }, [authStatus, router, t]);
 
   const getGuildIconUrl = (guild: GuildInfo) => {
     if (!guild.icon) return null;
