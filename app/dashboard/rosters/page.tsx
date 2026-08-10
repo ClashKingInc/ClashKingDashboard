@@ -179,7 +179,11 @@ function RosterCard({
           )}
           <div className="flex-1 min-w-0">
             {editingName ? (
-              <div className="flex min-w-0 items-center gap-1" onClick={(event) => event.stopPropagation()}>
+              <div
+                className="flex min-w-0 items-center gap-1"
+                onClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) => event.stopPropagation()}
+              >
                 <Input
                   autoFocus
                   value={nameDraft}
