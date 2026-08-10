@@ -96,28 +96,41 @@ export default function CwlBonusesPage() {
 
   useEffect(() => {
     if (!guildId) return;
+    let cancelled = false;
     fetchClans(guildId).then((items) => {
+      if (cancelled) return;
       setClans(items);
       setClanTag((current) => current || items[0]?.tag || "");
-    }).catch(() => setError(t("loadClansError")));
+    }).catch(() => {
+      if (!cancelled) setError(t("loadClansError"));
+    });
+    return () => { cancelled = true; };
   }, [guildId, t]);
 
   useEffect(() => {
     if (!clanTag) return;
+    let cancelled = false;
     setSeason("");
     setGroup(undefined);
     setSelected([]);
     setError(undefined);
-    apiClient.wars.getCwlSeasons(clanTag).then((response) => {
-      if (response.error) return setError(response.error);
-      const items = selectableCwlSeasons(response.data?.items ?? []);
-      setSeasons(items);
-      setSeason(items[0]?.season ?? "");
-    });
-  }, [clanTag]);
+    apiClient.wars.getCwlSeasons(clanTag)
+      .then((response) => {
+        if (cancelled) return;
+        if (response.error) return setError(response.error);
+        const items = selectableCwlSeasons(response.data?.items ?? []);
+        setSeasons(items);
+        setSeason(items[0]?.season ?? "");
+      })
+      .catch((loadError) => {
+        if (!cancelled) setError(loadError instanceof Error ? loadError.message : t("loadDataError"));
+      });
+    return () => { cancelled = true; };
+  }, [clanTag, t]);
 
   useEffect(() => {
     if (!guildId || !clanTag || !season) return;
+    let cancelled = false;
     setLoading(true);
     setError(undefined);
     setSelected([]);
@@ -129,13 +142,18 @@ export default function CwlBonusesPage() {
         return response.json() as Promise<{ items: CwlWarLeagueStaticItem[] }>;
       }),
     ]).then(([groupResponse, savedResponse, staticData]) => {
+      if (cancelled) return;
       if (groupResponse.error) throw new Error(groupResponse.error);
       if (savedResponse.error) throw new Error(savedResponse.error);
       setGroup(groupResponse.data);
       setSelected((savedResponse.data?.items ?? []).map((item) => item.playerTag));
       setRules(staticData.items);
-    }).catch((loadError) => setError(loadError instanceof Error ? loadError.message : t("loadDataError")))
-      .finally(() => setLoading(false));
+    }).catch((loadError) => {
+      if (!cancelled) setError(loadError instanceof Error ? loadError.message : t("loadDataError"));
+    }).finally(() => {
+      if (!cancelled) setLoading(false);
+    });
+    return () => { cancelled = true; };
   }, [clanTag, guildId, season, t]);
 
   const standings = useMemo(() => group ? calculateCwlStandings(group) : undefined, [group]);
