@@ -113,6 +113,7 @@ import { rasterizeGraphicText } from "./text-rasterizer";
 import { resizeTextElement, withAutoTextHeight } from "./text-layout";
 import { GraphicProjectHub } from "./graphic-project-hub";
 import { PositionPanel, type PositionPanelTab } from "./position-panel";
+import { embeddedImageValidationError, storeGraphicProjects } from "./graphic-project-storage";
 import { createGraphicProject, parseGraphicProjects, type GraphicProjectRecord } from "./graphic-projects";
 import { proxyClashApiAssetUrl } from "./asset-url";
 import { dispatchGraphicsEditorMode } from "@/lib/graphics-editor-shell";
@@ -266,6 +267,7 @@ export function GraphicEditor() {
   const guildId = useGuildId();
   const projectStorageKey = `graphic-projects:${guildId}`;
   const [projects, setProjects] = useState<GraphicProjectRecord[]>([]);
+  const projectsRef = useRef<GraphicProjectRecord[]>([]);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [history, setHistory] = useState<EditorHistory>(() => ({ past: [], present: cloneDefaultDocument(), future: [] }));
@@ -340,6 +342,7 @@ export function GraphicEditor() {
     try {
       const parsedProjects = storedProjects ? parseGraphicProjects(JSON.parse(storedProjects) as unknown) : [];
       if (parsedProjects.length) {
+        projectsRef.current = parsedProjects;
         setProjects(parsedProjects);
         setProjectsLoaded(true);
         return;
@@ -348,8 +351,10 @@ export function GraphicEditor() {
       const parsed: unknown = legacy ? JSON.parse(legacy) : null;
       if (validateGraphicDocument(parsed)) {
         const migrated: GraphicProjectRecord = { id: createElementId(), kind: parsed.kind ?? "player", updatedAt: new Date().toISOString(), document: parsed };
+        projectsRef.current = [migrated];
         setProjects([migrated]);
-        localStorage.setItem(projectStorageKey, JSON.stringify([migrated]));
+        const storageError = storeGraphicProjects(localStorage, projectStorageKey, [migrated]);
+        if (storageError) setStatus(storageError);
       }
     } catch {
       // A malformed local draft should never prevent the projects page opening.
@@ -358,21 +363,30 @@ export function GraphicEditor() {
     }
   }, [guildId, projectStorageKey]);
 
-  const persistProjects = useCallback((next: GraphicProjectRecord[]) => {
+  const persistProjects = useCallback((next: GraphicProjectRecord[]): boolean => {
+    const storageError = storeGraphicProjects(localStorage, projectStorageKey, next);
+    if (storageError) {
+      setStatus(storageError);
+      return false;
+    }
+    projectsRef.current = next;
     setProjects(next);
-    localStorage.setItem(projectStorageKey, JSON.stringify(next));
+    return true;
   }, [projectStorageKey]);
 
   useEffect(() => {
     if (!activeProjectId || !projectsLoaded) return;
     const timeout = window.setTimeout(() => {
-      setProjects((current) => {
-        const next = current.map((project) => project.id === activeProjectId
-          ? { ...project, kind: document.kind ?? project.kind, updatedAt: new Date().toISOString(), document }
-          : project);
-        localStorage.setItem(projectStorageKey, JSON.stringify(next));
-        return next;
-      });
+      const next = projectsRef.current.map((project) => project.id === activeProjectId
+        ? { ...project, kind: document.kind ?? project.kind, updatedAt: new Date().toISOString(), document }
+        : project);
+      const storageError = storeGraphicProjects(localStorage, projectStorageKey, next);
+      if (storageError) {
+        setStatus(storageError);
+        return;
+      }
+      projectsRef.current = next;
+      setProjects(next);
     }, 600);
     return () => window.clearTimeout(timeout);
   }, [activeProjectId, document, projectStorageKey, projectsLoaded]);
@@ -390,7 +404,7 @@ export function GraphicEditor() {
   const createProject = useCallback((kind: GraphicProjectRecord["kind"], warSize?: number) => {
     const project = createGraphicProject(kind, warSize);
     const next = [project, ...projects];
-    persistProjects(next);
+    if (!persistProjects(next)) return;
     setHistory({ past: [], present: structuredClone(project.document), future: [] });
     setSelectedIds([]);
     setZoom(1);
@@ -780,7 +794,12 @@ export function GraphicEditor() {
 
   const handleUploads = (files: FileList | null, asBackground = false) => {
     if (!files) return;
-    [...files].filter((file) => file.type.startsWith("image/")).forEach((file) => {
+    [...files].forEach((file) => {
+      const validationError = embeddedImageValidationError(file);
+      if (validationError) {
+        setStatus(`${file.name}: ${validationError}`);
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => {
         const source = String(reader.result);
@@ -792,18 +811,20 @@ export function GraphicEditor() {
         setUploads((current) => [...current, asset]);
         addAsset(asset);
       };
+      reader.onerror = () => setStatus(`${file.name}: This image could not be read.`);
       reader.readAsDataURL(file);
     });
   };
 
-  const saveDraft = () => {
-    if (!activeProjectId) return;
+  const saveDraft = (): boolean => {
+    if (!activeProjectId) return false;
     const next = projects.map((project) => project.id === activeProjectId
       ? { ...project, kind: document.kind ?? project.kind, updatedAt: new Date().toISOString(), document }
       : project);
-    persistProjects(next);
+    if (!persistProjects(next)) return false;
     setStatus("Saved in this browser");
     window.setTimeout(() => setStatus(null), 2200);
+    return true;
   };
 
   const openJson = () => {
@@ -882,7 +903,7 @@ export function GraphicEditor() {
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background">
       <header className="flex h-14 shrink-0 items-center gap-2 border-b border-border bg-card/90 px-3 backdrop-blur-xl">
-        <Button variant="ghost" size="icon" className="h-9 w-9" title="Back to graphics" onClick={() => { saveDraft(); setActiveProjectId(null); }}><ArrowLeft className="h-4 w-4" /></Button>
+        <Button variant="ghost" size="icon" className="h-9 w-9" title="Back to graphics" onClick={() => { if (saveDraft()) setActiveProjectId(null); }}><ArrowLeft className="h-4 w-4" /></Button>
         <div className="min-w-0 flex-1">
           <Input value={document.name} onChange={(event) => commitDocument((current) => ({ ...current, name: event.target.value }))} aria-label="Graphic name" className="h-7 max-w-64 border-0 bg-transparent px-1 text-sm font-semibold shadow-none focus-visible:ring-0" />
           <p className="px-1 text-[11px] text-muted-foreground">{document.canvas.width} × {document.canvas.height}px</p>
@@ -1048,8 +1069,8 @@ export function GraphicEditor() {
         </main>
       </div>
 
-      <input ref={uploadRef} type="file" accept="image/*" multiple className="hidden" onChange={(event) => handleUploads(event.target.files)} />
-      <input ref={backgroundUploadRef} type="file" accept="image/*" className="hidden" onChange={(event) => handleUploads(event.target.files, true)} />
+      <input ref={uploadRef} type="file" accept="image/*" multiple className="hidden" onChange={(event) => { handleUploads(event.target.files); event.currentTarget.value = ""; }} />
+      <input ref={backgroundUploadRef} type="file" accept="image/*" className="hidden" onChange={(event) => { handleUploads(event.target.files, true); event.currentTarget.value = ""; }} />
       <ResizeCanvasDialog open={resizeOpen} width={document.canvas.width} height={document.canvas.height} onOpenChange={setResizeOpen} onApply={applyCanvasResize} />
       <Dialog open={jsonOpen} onOpenChange={setJsonOpen}>
         <DialogContent className="max-h-[85vh] max-w-3xl overflow-hidden border-0 bg-card shadow-xl">

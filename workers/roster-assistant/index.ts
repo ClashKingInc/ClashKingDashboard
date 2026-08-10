@@ -18,6 +18,11 @@ import {
 } from "../../lib/roster-assistant-constants";
 import { normalizeAIUsage, settleAIUsage } from "./usage-reporting";
 import {
+  assertAuthorizedMembershipChanges,
+  authorizedRosterIds,
+  buildTrustedUserTranscript,
+} from "./request-guard";
+import {
   firstZodIssueMessage,
   rosterMemberFieldsSchema,
   rosterMembersOutputSchema,
@@ -131,13 +136,12 @@ async function apiRequest(env: RosterAssistantEnv, body: AssistantRequest, path:
 }
 
 async function prepareRequest(env: RosterAssistantEnv, request: AssistantBrowserRequest, userToken: string, signal: AbortSignal): Promise<AssistantRequest> {
-  // The Go API authorizes this request and validates the new user turn. The
-  // complete transcript stays in this trusted Worker so OpenAI's encrypted
-  // compaction items can be carried forward without hitting the API's bounded
-  // browser-message validation.
+  // Only user-authored text crosses the browser trust boundary. The same
+  // transcript is authorized by the API and then forwarded to the model.
+  const messages = buildTrustedUserTranscript(request.messages);
   const authorizationRequest = {
     ...request,
-    messages: request.messages.slice(-1),
+    messages,
   };
   const response = await fetch(`${env.CLASHKING_API_URL.replace(/\/$/, "")}/v2/roster/ai/context`, {
     method: "POST",
@@ -157,20 +161,19 @@ async function prepareRequest(env: RosterAssistantEnv, request: AssistantBrowser
   };
 	if (!response.ok || !payload.requestId || !payload.model || !payload.context) {
     throw new ContextRequestError(response.status, payload.message ?? payload.error ?? `Roster context request failed (${response.status})`);
-  }
+	}
 	if (payload.model !== MODEL) throw new ContextRequestError(502, "Roster assistant model configuration is out of sync");
-	return { requestId: payload.requestId, model: payload.model, userToken, request, context: payload.context };
-}
-
-function messagesAfterLatestCompaction(messages: UIMessage[]): UIMessage[] {
-  for (let index = messages.length - 1; index >= 0; index -= 1) {
-    if (messages[index].parts.some(
-      (part) => part.type === "custom" && part.kind === "openai.compaction",
-    )) {
-      return messages.slice(index);
-    }
-  }
-  return messages;
+	return {
+    requestId: payload.requestId,
+    model: payload.model,
+    userToken,
+    request: {
+      ...request,
+      messages,
+      rosterIds: payload.context.attachments.map((attachment) => attachment.rosterId),
+    },
+    context: payload.context,
+  };
 }
 
 function latestUserText(messages: UIMessage[]): string {
@@ -286,7 +289,7 @@ const rosterAssistantWorker = {
     const token = bearerToken(request);
     if (!token) return json(request, { error: "Unauthorized" }, 401);
     const browserRequest = await request.json() as AssistantBrowserRequest;
-    if (!browserRequest?.serverId || !Array.isArray(browserRequest.rosterIds) || browserRequest.rosterIds.length < 1 || browserRequest.rosterIds.length > MAX_ROSTERS) {
+    if (!browserRequest?.serverId || !Array.isArray(browserRequest.rosterIds) || !Array.isArray(browserRequest.messages) || browserRequest.rosterIds.length < 1 || browserRequest.rosterIds.length > MAX_ROSTERS) {
       return json(request, { error: `rosterIds must contain 1 to ${MAX_ROSTERS} rosters` }, 400);
     }
     if (!env.OPENAI_API_KEY && browserRequest.mode !== "replay") return json(request, { error: "OpenAI is not configured" }, 503);
@@ -322,6 +325,7 @@ const rosterAssistantWorker = {
     };
 
     const rosterIds = z.array(z.string()).min(1).max(MAX_ROSTERS);
+    const attachedRosterIds = new Set(body.context.attachments.map((attachment) => attachment.rosterId));
     const stableId = z.string().regex(/^[a-z][a-z0-9_]{0,47}$/);
     const viewColumn = z.object({
       id: stableId.describe("Stable lowercase ID, such as player_name or townhall"),
@@ -467,21 +471,49 @@ const rosterAssistantWorker = {
     };
 
 	const tools = {
-	  refreshRosterData: tool({ description: "Refresh explicitly requested roster snapshots.", inputSchema: z.object({ rosterIds }), execute: (input) => call("refresh_roster_data", () => apiRequest(env, body, `/v2/roster/refresh-batch${serverQuery}`, { serverId: body.request.serverId, ...input }, request.signal)) }),
+	  refreshRosterData: tool({
+        description: "Refresh explicitly requested roster snapshots.",
+        inputSchema: z.object({ rosterIds }),
+        execute: (input) => call("refresh_roster_data", () => apiRequest(env, body, `/v2/roster/refresh-batch${serverQuery}`, {
+          serverId: body.request.serverId,
+          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+        }, request.signal)),
+      }),
 	  refreshDiscordIdentity: tool({
 		description: "Refresh the stored Discord username and avatar for one roster member only when explicitly requested.",
 		inputSchema: z.object({ rosterId: z.string(), playerTag: z.string().min(1) }),
 		execute: (input) => call("refresh_discord_identity", () => {
-		  if (!body.request.rosterIds.includes(input.rosterId)) throw new Error("Roster is not attached to this request");
+		  authorizedRosterIds([input.rosterId], attachedRosterIds);
 		  return apiRequest(env, body, `/v2/server/${encodeURIComponent(body.request.serverId)}/rosters/${encodeURIComponent(input.rosterId)}/discord-identity/refresh`, { playerTag: input.playerTag }, request.signal);
 		}),
 	  }),
-      getRosterMembers: tool({ description: "Read selected snapshot fields for non-view analysis. Returns { rows }; each row always has rosterId and playerTag plus only the requested fields. Do not copy this result or outer rosterIds into saved view source; that source must read its current selection itself.", inputSchema: z.object({ rosterIds, fields: memberFields }), outputSchema: rosterMembersOutputSchema, execute: (input) => call("get_roster_members", () => apiRequest(env, body, `/v2/roster/members/query${serverQuery}`, { serverId: body.request.serverId, ...input }, request.signal)) }),
+      getRosterMembers: tool({
+        description: "Read selected snapshot fields for non-view analysis. Returns { rows }; each row always has rosterId and playerTag plus only the requested fields. Do not copy this result or outer rosterIds into saved view source; that source must read its current selection itself.",
+        inputSchema: z.object({ rosterIds, fields: memberFields }),
+        outputSchema: rosterMembersOutputSchema,
+        execute: (input) => call("get_roster_members", () => apiRequest(env, body, `/v2/roster/members/query${serverQuery}`, {
+          serverId: body.request.serverId,
+          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+          fields: input.fields,
+        }, request.signal)),
+      }),
       getRosterAccountGroups: tool({ description: "Group linked accounts by anonymous Discord owner. For list/show requests, use the returned multi-account player tags to publish a filtered roster view; do not print the groups as Markdown.", inputSchema: z.object({ rosterIds }), execute: (input) => call("get_roster_account_groups", async () => {
-        accountGroupsResult = await apiRequest(env, body, `/v2/roster/account-groups/query${serverQuery}`, { serverId: body.request.serverId, ...input }, request.signal);
+        accountGroupsResult = await apiRequest(env, body, `/v2/roster/account-groups/query${serverQuery}`, {
+          serverId: body.request.serverId,
+          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+        }, request.signal);
         return accountGroupsResult;
       }) }),
-      getRosterMetric: tool({ description: "Compute an allowlisted metric.", inputSchema: z.object({ rosterIds, metricId: z.string(), parameters: z.record(z.string(), z.unknown()).default({}) }), execute: (input) => call("get_roster_metric", () => apiRequest(env, body, `/v2/roster/metrics/query?server_id=${encodeURIComponent(body.request.serverId)}`, { ...input, force: false }, request.signal)) }),
+      getRosterMetric: tool({
+        description: "Compute an allowlisted metric.",
+        inputSchema: z.object({ rosterIds, metricId: z.string(), parameters: z.record(z.string(), z.unknown()).default({}) }),
+        execute: (input) => call("get_roster_metric", () => apiRequest(env, body, `/v2/roster/metrics/query?server_id=${encodeURIComponent(body.request.serverId)}`, {
+          rosterIds: authorizedRosterIds(input.rosterIds, attachedRosterIds),
+          metricId: input.metricId,
+          parameters: input.parameters,
+          force: false,
+        }, request.signal)),
+      }),
       publishRosterViewProgram: tool({
         description: `Execute and preview the final reusable TypeScript-compatible view program. ${savedViewProgramGuidance}`,
         inputSchema: z.object({ sourceCode: z.string().min(20).max(65_536).describe(savedViewProgramGuidance), sourceVersion: z.literal(1).default(1) }),
@@ -500,7 +532,20 @@ const rosterAssistantWorker = {
           return { published: true, type: input.type, dataPoints: input.data.length, series: input.series.length };
         }),
       }),
-      publishMembershipProposal: tool({ description: "Publish a complete transient membership proposal. This never applies changes.", inputSchema: z.object({ changes: z.array(z.object({ action: z.enum(["add", "remove", "move"]), playerTag: z.string(), fromRosterId: z.string().nullable(), toRosterId: z.string().nullable(), reason: z.string().max(80).nullable() })).min(1).max(MAX_CHANGES) }), execute: (input) => call("propose_roster_membership_changes", async () => { const proposal = await apiRequest(env, body, `/v2/roster/membership-changes/validate${serverQuery}`, { serverId: body.request.serverId, rosterIds: body.request.rosterIds, ...input }, request.signal); artifacts.push({ type: "membershipProposal", data: proposal }); return { proposed: proposal.changes?.length ?? 0, requiresApproval: true }; }) }),
+      publishMembershipProposal: tool({
+        description: "Publish a complete transient membership proposal. This never applies changes.",
+        inputSchema: z.object({ changes: z.array(z.object({ action: z.enum(["add", "remove", "move"]), playerTag: z.string(), fromRosterId: z.string().nullable(), toRosterId: z.string().nullable(), reason: z.string().max(80).nullable() })).min(1).max(MAX_CHANGES) }),
+        execute: (input) => call("propose_roster_membership_changes", async () => {
+          assertAuthorizedMembershipChanges(input.changes, attachedRosterIds);
+          const proposal = await apiRequest(env, body, `/v2/roster/membership-changes/validate${serverQuery}`, {
+            serverId: body.request.serverId,
+            rosterIds: body.request.rosterIds,
+            changes: input.changes,
+          }, request.signal);
+          artifacts.push({ type: "membershipProposal", data: proposal });
+          return { proposed: proposal.changes?.length ?? 0, requiresApproval: true };
+        }),
+      }),
     };
 
     if (body.request.mode === "replay") {
@@ -530,21 +575,20 @@ const rosterAssistantWorker = {
     const openai = createOpenAI({ apiKey: env.OPENAI_API_KEY });
     const startedAt = Date.now();
     const conversation = markLatestUserCacheBreakpoint(
-      await convertToModelMessages(messagesAfterLatestCompaction(body.request.messages), { ignoreIncompleteToolCalls: true }),
+      await convertToModelMessages(body.request.messages, { ignoreIncompleteToolCalls: true }),
     );
     const result = streamText({
       model: openai.responses(MODEL),
       abortSignal: request.signal,
-      instructions: {
-        role: "system",
-        content: instructions(),
-        providerOptions: { openai: { promptCacheBreakpoint: { mode: "explicit" } } },
-      },
-      allowSystemInMessages: true,
-      messages: [
-        ...conversation,
+      instructions: [
+        {
+          role: "system",
+          content: instructions(),
+          providerOptions: { openai: { promptCacheBreakpoint: { mode: "explicit" } } },
+        },
         { role: "system", content: runtimeContext(body) },
       ],
+      messages: conversation,
       tools: { codemode },
       maxOutputTokens: 64_000,
       stopWhen: stepCountIs(4),
