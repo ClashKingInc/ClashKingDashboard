@@ -1,0 +1,26 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "clashking-roster-assistant",
+  "main": "workers/roster-assistant/index.ts",
+  "compatibility_date": "2026-08-10",
+  "compatibility_flags": ["nodejs_compat", "enable_request_signal"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "ai.clashk.ing", "custom_domain": true }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 0.1,
+      "invocation_logs": true
+    }
+  },
+  "worker_loaders": [
+    { "binding": "LOADER" }
+  ],
+  "vars": {
+    "CLASHKING_API_URL": "https://v2-api.clashk.ing"
+  }
+}

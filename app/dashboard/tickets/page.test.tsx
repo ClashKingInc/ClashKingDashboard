@@ -1,5 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { dashboardQueryClientConfig } from "@/lib/dashboard-query";
 
 const { getPanels, getEmbeds, getChannels, getDiscordRoles } = vi.hoisted(() => ({
   getPanels: vi.fn(),
@@ -56,7 +58,10 @@ describe("TicketsPage after open-ticket retirement", () => {
   });
 
   it("loads panel and embed management directly without an open-ticket request", async () => {
-    const { getByText, queryByText } = render(<TicketsPage />);
+    const queryClient = new QueryClient(dashboardQueryClientConfig);
+    const { getByText, queryByText } = render(
+      <QueryClientProvider client={queryClient}><TicketsPage /></QueryClientProvider>,
+    );
 
     await waitFor(() => {
       expect(getPanels).toHaveBeenCalledWith("123");

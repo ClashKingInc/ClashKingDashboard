@@ -115,11 +115,33 @@
 .cs-button:hover { background: var(--cs-gold-hover); }
 .cs-button:active, .cs-text-link:active { transform: scale(0.98); transition-duration: 70ms; }
 .cs-button-small { min-height: 42px; padding-inline: 16px; font-size: 0.76rem; }
+.cs-session-action[aria-busy="true"] { opacity: 0.74; }
 .cs-text-link { padding: 0 2px; border: 0; border-bottom: 1px solid rgb(23 53 42 / 0.28); background: transparent; color: inherit; font-family: inherit; }
 .cs-text-link:hover { color: #8b6817; border-color: #8b6817; }
 .cs-disabled { opacity: 0.46; cursor: not-allowed; filter: saturate(0.6); }
 .cs-disabled:hover { color: inherit; border-color: rgb(23 53 42 / 0.28); }
 .cs-arrow { flex: 0 0 auto; width: 12px; height: 17px; object-fit: contain; }
+.cs-store-link {
+  min-height: 54px;
+  padding: 0 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid rgb(23 53 42 / 0.2);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.42);
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.48), 0 9px 24px rgb(53 91 72 / 0.09);
+  color: #17352a;
+  font-size: 0.82rem;
+  font-weight: 820;
+  transition: transform 120ms ease-out, background-color 160ms ease-out, border-color 160ms ease-out;
+}
+.cs-store-link.is-primary { border-color: rgb(16 24 20 / 0.88); background: #18241f; color: #fff; }
+.cs-store-link:hover { border-color: rgb(23 53 42 / 0.36); background: rgb(255 255 255 / 0.64); }
+.cs-store-link.is-primary:hover { background: #26372f; }
+.cs-store-link:active { transform: scale(0.98); }
+.cs-store-link > svg:first-child { width: 21px; height: 21px; flex: 0 0 auto; fill: currentColor; }
 
 .cs-hero {
   --cs-cloud-strip-width: max(100vw, 1320px);
@@ -130,9 +152,9 @@
   margin: 0 auto;
   padding: 54px 40px 62px;
   display: grid;
-  grid-template-columns: minmax(390px, 0.82fr) minmax(520px, 1.18fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(440px, 0.9fr);
   align-items: center;
-  gap: clamp(42px, 6vw, 90px);
+  gap: clamp(28px, 3.5vw, 58px);
 }
 .cs-hero::before {
   content: "";
@@ -168,7 +190,7 @@
 .cs-mobile-cloud-track { display: none; }
 .cs-hero-copy { position: relative; z-index: 2; }
 .cs-hero h1 {
-  --cs-headline-base-size: clamp(3.8rem, 5vw, 5.5rem);
+  --cs-headline-base-size: clamp(5.5rem, 7.3vw, 8rem);
   position: relative;
   width: 100%;
   max-width: none;
@@ -183,6 +205,14 @@
 .cs-headline-measure > span { display: block; width: max-content; white-space: nowrap; }
 .cs-hero-copy > p { max-width: 470px; margin-top: 22px; font-size: clamp(1rem, 1.3vw, 1.16rem); }
 .cs-actions { margin-top: 30px; display: flex; align-items: center; flex-wrap: wrap; gap: 24px; }
+.cs-hero-store-actions { gap: 10px; }
+.cs-hero-actions-mobile { display: none; }
+.cs-mobile-app-link { display: none; }
+.cs-mobile-app-link.is-fallback { display: inline-flex; }
+html[data-mobile-platform="ios"] .cs-mobile-app-link.is-fallback,
+html[data-mobile-platform="android"] .cs-mobile-app-link.is-fallback { display: none; }
+html[data-mobile-platform="ios"] .cs-mobile-app-link.is-ios,
+html[data-mobile-platform="android"] .cs-mobile-app-link.is-android { display: inline-flex; }
 .cs-hero-visual { position: relative; z-index: 2; isolation: isolate; min-height: clamp(480px, 64vh, 660px); overflow: hidden; }
 .cs-hero-model { position: absolute; z-index: 3; inset: 0; min-width: 0; }
 .cs-hero-model-canvas { display: block; width: 100%; height: 100%; opacity: 0; cursor: default; touch-action: pan-y; transition: opacity 260ms ease-out; }
@@ -291,9 +321,8 @@
 .cs-footer-brand .cs-wordmark { width: 168px; }
 .cs-footer-brand p { margin-top: 4px; color: #000; font-size: 0.76rem; line-height: 1.5; }
 .cs-footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 15px 24px; }
-.cs-footer-links a, .cs-footer-link-disabled { color: #000; font-size: 0.74rem; font-weight: 750; }
+.cs-footer-links a { color: #000; font-size: 0.74rem; font-weight: 750; }
 .cs-footer-links a:hover { color: #000; }
-.cs-footer-link-disabled { opacity: 0.48; cursor: not-allowed; }
 .cs-legal { grid-column: 1 / -1; padding-top: 26px; border-top: 1px solid rgb(23 53 42 / 0.22); color: #17352a !important; font-size: 0.63rem !important; font-weight: 650; text-align: right; text-shadow: 0 1px rgb(255 255 255 / 0.28); }
 
 .cs-bottom-landscape {
@@ -374,6 +403,10 @@
 .clan-signal[data-cs-theme="sunset"] .cs-mobile::before { background: linear-gradient(180deg, #2e2844 0, rgb(46 40 68 / 0.74) 42%, transparent 100%); }
 .clan-signal[data-cs-theme="sunset"] .cs-button { color: #281d2f !important; border-color: rgb(255 225 159 / 0.3); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.36), 0 10px 28px rgb(16 11 31 / 0.2); }
 .clan-signal[data-cs-theme="sunset"] .cs-text-link { border-color: rgb(255 242 213 / 0.34); }
+.clan-signal[data-cs-theme="sunset"] .cs-store-link { border-color: rgb(255 242 213 / 0.22); background: rgb(24 26 59 / 0.28); color: #fff2d5; }
+.clan-signal[data-cs-theme="sunset"] .cs-store-link.is-primary { border-color: rgb(255 242 213 / 0.7); background: #fff2d5; color: #281d2f; }
+.clan-signal[data-cs-theme="sunset"] .cs-store-link:hover { background: rgb(24 26 59 / 0.46); }
+.clan-signal[data-cs-theme="sunset"] .cs-store-link.is-primary:hover { background: #f2dfbc; }
 .clan-signal[data-cs-theme="sunset"] .cs-disabled:hover { border-color: rgb(255 242 213 / 0.34); }
 .clan-signal[data-cs-theme="sunset"] .cs-feature-icon { background: #4b4058; box-shadow: 0 8px 24px rgb(15 10 29 / 0.2); }
 .clan-signal[data-cs-theme="sunset"] .cs-bot-art { background: #29292d; }
@@ -385,8 +418,7 @@
 .clan-signal[data-cs-theme="sunset"] .cs-legal-notice { background: rgb(24 26 59 / 0.2); }
 .clan-signal[data-cs-theme="sunset"] .cs-footer-brand p,
 .clan-signal[data-cs-theme="sunset"] .cs-footer-links a,
-.clan-signal[data-cs-theme="sunset"] .cs-footer-links a:hover,
-.clan-signal[data-cs-theme="sunset"] .cs-footer-link-disabled { color: #fff2d5; }
+.clan-signal[data-cs-theme="sunset"] .cs-footer-links a:hover { color: #fff2d5; }
 .clan-signal[data-cs-theme="sunset"] .cs-legal { border-color: rgb(255 242 213 / 0.22); color: #fff2d5 !important; text-shadow: 0 1px rgb(0 0 0 / 0.28); }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -453,10 +485,14 @@
     mask-image: linear-gradient(90deg, transparent 0, #000 10%, #000 90%, transparent 100%);
   }
   .cs-mobile-cloud-track span + span { margin-left: -320px; }
-  .cs-hero h1 { --cs-headline-base-size: clamp(3.15rem, 13vw, 3.8rem); line-height: 1.08; }
+  .cs-hero h1 { --cs-headline-base-size: clamp(3.75rem, 15vw, 4.65rem); line-height: 1.04; }
   .cs-hero-copy > p { margin-top: 18px; font-size: 0.96rem; }
   .cs-actions { margin-top: 24px; gap: 16px; }
-  .cs-hero .cs-actions { align-items: center; flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .cs-hero .cs-actions { align-items: center; flex-direction: row; flex-wrap: nowrap; gap: 8px; }
+  .cs-hero-actions-desktop { display: none; }
+  .cs-hero-actions-mobile { display: flex; }
+  .cs-hero .cs-store-link { min-width: 0; flex: 1 1 0; padding-inline: 10px; font-size: 0.72rem; }
+  .cs-hero .cs-store-link .cs-arrow { display: none; }
   .cs-hero .cs-text-link { max-width: 100%; gap: 7px; font-size: clamp(0.68rem, 3vw, 0.75rem); }
   .cs-button, .cs-text-link { min-height: 46px; font-size: 0.75rem; }
   .cs-button { padding-inline: 10px; }
@@ -496,8 +532,10 @@
   .clan-signal .cs-legal-document h3 { font-size: 1.08rem; }
 }
 
-@media (max-width: 360px) {
-  .cs-nav-actions .cs-button { display: none; }
+@media (max-width: 420px) {
+  .cs-nav-actions .cs-language-trigger { display: none; }
+  .cs-nav-brand { width: 120px; }
+  .cs-nav .cs-session-action { padding-inline: 13px; font-size: 0.7rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -506,8 +544,8 @@
   .cs-mobile-cloud-track { animation: none; transform: translate3d(-50%, 0, 0); }
   .cs-hero-model-canvas { transition-duration: 120ms; }
   .cs-headline-phrase { transition: none; }
-  .cs-button, .cs-text-link, .cs-resources nav a { transition: background-color 120ms ease-out, color 120ms ease-out, border-color 120ms ease-out; }
-  .cs-button:active, .cs-text-link:active, .cs-resources nav a:active { transform: none; }
+  .cs-button, .cs-text-link, .cs-store-link, .cs-resources nav a { transition: background-color 120ms ease-out, color 120ms ease-out, border-color 120ms ease-out; }
+  .cs-button:active, .cs-text-link:active, .cs-store-link:active, .cs-resources nav a:active { transform: none; }
 }
 
 @media (prefers-reduced-transparency: reduce) {

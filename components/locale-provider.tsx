@@ -29,6 +29,20 @@ type LocaleContextValue = {
 };
 
 const LocaleContext = createContext<LocaleContextValue | undefined>(undefined);
+const DASHBOARD_LOCALE_CHANGE_EVENT = "clashking:locale-change";
+
+type DashboardLocaleChangeDetail = {
+  locale: SupportedLocale;
+  mode: LocaleMode;
+};
+
+export function updateDashboardLocale(locale: SupportedLocale, mode: LocaleMode): void {
+  localStorage.setItem(DASHBOARD_LOCALE_STORAGE_KEY, locale);
+  localStorage.setItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY, mode);
+  globalThis.dispatchEvent(new CustomEvent<DashboardLocaleChangeDetail>(DASHBOARD_LOCALE_CHANGE_EVENT, {
+    detail: { locale, mode },
+  }));
+}
 
 export function LocaleProvider({ children }: { readonly children: React.ReactNode }) {
   const [locale, setLocale] = useState<SupportedLocale>("en");
@@ -44,12 +58,9 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
 
   const setDashboardLocale = useCallback(
     (nextLocale: SupportedLocale, nextMode: LocaleMode) => {
-      localStorage.setItem(DASHBOARD_LOCALE_STORAGE_KEY, nextLocale);
-      localStorage.setItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY, nextMode);
-      setMode(nextMode);
-      void applyLocale(nextLocale);
+      updateDashboardLocale(nextLocale, nextMode);
     },
-    [applyLocale],
+    [],
   );
 
   useEffect(() => {
@@ -94,6 +105,17 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
 
     globalThis.addEventListener("storage", handleStorage);
     return () => globalThis.removeEventListener("storage", handleStorage);
+  }, [applyLocale]);
+
+  useEffect(() => {
+    const handleLocaleChange = (event: Event) => {
+      const { locale: nextLocale, mode: nextMode } = (event as CustomEvent<DashboardLocaleChangeDetail>).detail;
+      setMode(nextMode);
+      void applyLocale(nextLocale);
+    };
+
+    globalThis.addEventListener(DASHBOARD_LOCALE_CHANGE_EVENT, handleLocaleChange);
+    return () => globalThis.removeEventListener(DASHBOARD_LOCALE_CHANGE_EVENT, handleLocaleChange);
   }, [applyLocale]);
 
   const value = useMemo(

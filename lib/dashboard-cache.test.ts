@@ -60,4 +60,9 @@ describe("dashboard cache payload normalization", () => {
     expect(normalizeServerSettingsPayload({ data: settings })).toEqual(settings);
     expect(normalizeServerSettingsPayload("nope")).toBeNull();
   });
+
+  it("normalizes the API's decimal embed color string to a number", () => {
+    expect(normalizeServerSettingsPayload({ server: "1", embed_color: "2829617" }))
+      .toEqual({ server: "1", embed_color: 2829617 });
+  });
 });

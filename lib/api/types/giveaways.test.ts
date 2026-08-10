@@ -5,40 +5,36 @@ const giveaway = {
   id: "giveaway-1",
   serverId: "123",
   prize: "Gold pass",
-  channelId: "456",
   status: "ongoing" as const,
-  startTime: "2026-07-24T12:00:00Z",
-  endTime: "2026-07-25T12:00:00Z",
+  start: "2026-07-24T12:00:00Z",
+  end: "2026-07-25T12:00:00Z",
   winners: 1,
   mentions: ["789"],
   textAboveEmbed: "Enter now",
   textInEmbed: "Click the button",
   textOnEnd: "Thanks",
-  imageUrl: null,
   profilePictureRequired: true,
   cocAccountRequired: false,
   rolesMode: "allow" as const,
   roles: ["role-1"],
   boosters: [{ value: 2, roles: ["role-1"] }],
-  entryCount: 7,
+  entries: ["user-1", "user-1", "user-2"],
   updated: false,
-  messageId: "message-1",
   winnersList: [{
     userId: "user-1",
     username: "Winner",
     avatarUrl: null,
+    inServer: true,
     status: "winner",
     timestamp: "2026-07-25T12:00:00Z",
     reason: null,
   }],
-  eventPending: null,
-  eventPendingAt: null,
   createdAt: "2026-07-24T11:00:00Z",
   updatedAt: "2026-07-24T11:00:00Z",
 };
 
 describe("giveaway response contract", () => {
-  it("accepts the exact camelCase giveaway collection", () => {
+  it("accepts the exact Go API giveaway collection, including omitted optional fields", () => {
     expect(isGiveaway(giveaway)).toBe(true);
     expect(isGiveawaysResponse({
       ongoing: [giveaway],
@@ -48,13 +44,15 @@ describe("giveaway response contract", () => {
     })).toBe(true);
   });
 
-  it("rejects stale snake_case and removed data wrappers", () => {
+  it("rejects stale dashboard field names and removed data wrappers", () => {
     const stale = {
       ...giveaway,
-      channelId: undefined,
-      channel_id: "456",
-      entryCount: undefined,
-      entry_count: 7,
+      start: undefined,
+      end: undefined,
+      entries: undefined,
+      startTime: giveaway.start,
+      endTime: giveaway.end,
+      entryCount: giveaway.entries.length,
     };
     expect(isGiveaway(stale)).toBe(false);
     expect(isGiveawaysResponse({

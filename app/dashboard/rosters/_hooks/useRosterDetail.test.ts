@@ -21,7 +21,6 @@ describe("useRosterDetail – clan member loading", () => {
     vi.mocked(api.fetchClans).mockResolvedValue([]);
     vi.mocked(api.fetchClanMembers).mockResolvedValue(clanMembersData as never);
     vi.mocked(api.fetchGroups).mockResolvedValue([]);
-    vi.mocked(api.fetchCategories).mockResolvedValue([]);
     vi.mocked(api.fetchChannels).mockResolvedValue([]);
     vi.mocked(api.fetchAutomations).mockResolvedValue([]);
   });
@@ -50,5 +49,17 @@ describe("useRosterDetail – clan member loading", () => {
 
     expect(api.fetchClanMembers).not.toHaveBeenCalled();
     expect(result.current.clanMembers).toEqual([]);
+  });
+
+  it("keeps a loaded roster when the auxiliary clan request fails", async () => {
+    vi.mocked(api.fetchClans).mockRejectedValue(new Error("Discord unavailable"));
+
+    const { useRosterDetail } = await import("./useRosterDetail");
+    const { result } = renderHook(() => useRosterDetail("r1", "server-1"));
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.roster).toEqual(rosterData);
+    expect(result.current.error).toBeNull();
+    await waitFor(() => expect(result.current.clans).toEqual([]));
   });
 });

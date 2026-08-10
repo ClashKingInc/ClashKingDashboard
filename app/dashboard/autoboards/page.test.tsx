@@ -1,6 +1,8 @@
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { clearSession, setAccessToken } from "@/lib/auth/session";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { dashboardQueryClientConfig } from "@/lib/dashboard-query";
 
 const fetchMock = vi.hoisted(() => vi.fn());
 const toastMock = vi.hoisted(() => vi.fn());
@@ -39,6 +41,11 @@ vi.mock("@/components/ui/channel-combobox", () => ({
 }));
 
 import AutoboardsPage from "./page";
+
+function renderAutoboardsPage() {
+  const queryClient = new QueryClient(dashboardQueryClientConfig);
+  return render(<QueryClientProvider client={queryClient}><AutoboardsPage /></QueryClientProvider>);
+}
 
 const capability = {
   boardType: "registry-board",
@@ -109,7 +116,7 @@ describe("AutoboardsPage registry and Discord destinations", () => {
   });
 
   it("blocks a forum parent until an exact child post is selected", async () => {
-    const screen = render(<AutoboardsPage />);
+    const screen = renderAutoboardsPage();
     fireEvent.click(await screen.findByRole("button", { name: "actions.create" }));
     fireEvent.click(screen.getByRole("button", { name: "select-forum" }));
     fireEvent.click(screen.getAllByRole("button", { name: "actions.create" }).at(-1)!);
@@ -119,7 +126,7 @@ describe("AutoboardsPage registry and Discord destinations", () => {
   });
 
   it("allows a text parent directly and sends channelId plus nullable threadId", async () => {
-    const screen = render(<AutoboardsPage />);
+    const screen = renderAutoboardsPage();
     fireEvent.click(await screen.findByRole("button", { name: "actions.create" }));
     fireEvent.click(screen.getByRole("button", { name: "select-text" }));
     fireEvent.click(screen.getAllByRole("button", { name: "actions.create" }).at(-1)!);
@@ -142,7 +149,7 @@ describe("AutoboardsPage registry and Discord destinations", () => {
   });
 
   it("sends the selected forum post atomically with its parent", async () => {
-    const screen = render(<AutoboardsPage />);
+    const screen = renderAutoboardsPage();
     fireEvent.click(await screen.findByRole("button", { name: "actions.create" }));
     fireEvent.click(screen.getByRole("button", { name: "select-forum" }));
     const comboboxes = screen.getAllByRole("combobox");
@@ -160,7 +167,7 @@ describe("AutoboardsPage registry and Discord destinations", () => {
   });
 
   it("clears a selected child when the parent changes", async () => {
-    const screen = render(<AutoboardsPage />);
+    const screen = renderAutoboardsPage();
     fireEvent.click(await screen.findByRole("button", { name: "actions.create" }));
     fireEvent.click(screen.getByRole("button", { name: "select-forum" }));
     const comboboxes = screen.getAllByRole("combobox");

@@ -95,13 +95,14 @@ export const clashKingAssets = {
     // Clash of Clans - Home Village (Icon_HV_*)
     hv: {
       attack: `${baseUrl}/icons/Icon_HV_Attack.png`,
+      xp: `${baseUrl}/icons/Icon_HV_XP.png`,
       shield: `${baseUrl}/icons/Icon_HV_Shield.png`,
       trophy: `${baseUrl}/icons/Icon_HV_Trophy.png`,
       legendLeague: `${baseUrl}/icons/Icon_HV_League_Legend_3.png`,
       clanWar: `${baseUrl}/icons/Icon_HV_Clan_War.png`,
+      clanGames: `${baseUrl}/icons/Icon_HV_Clan_Games_Medal.png`,
       goldPass: `${baseUrl}/icons/Icon_HV_Gold_Pass.png`,
       raidAttack: `${baseUrl}/icons/Icon_HV_Raid_Attack.png`,
-      capitalGold: `${baseUrl}/icons/Icon_HV_Capital_Gold.png`,
       capitalTrophy: `${baseUrl}/icons/Icon_HV_Capital_Trophy.png`,
     },
     // Builder Base (Icon_BB_*)
@@ -117,6 +118,10 @@ export const clashKingAssets = {
       shieldArrow: `${baseUrl}/icons/Icon_HV_Shield_Arrow.png`,
       unknownPerson: `${baseUrl}/icons/Unknown_person.jpg`,
     },
+  },
+
+  resources: {
+    capitalGold: `${baseUrl}/resources/capital_gold.webp`,
   },
 
   // Paths to asset folders
@@ -136,6 +141,36 @@ export const clashKingAssets = {
 
 export function townHallImageUrl(level: number): string {
   return `${baseUrl}/buildings/home-village/town_hall/level_${level}.webp`;
+}
+
+export function cwlLeagueImageUrl(name?: string | null): string {
+  const normalized = name?.trim().toLowerCase() ?? "";
+  if (!normalized || normalized === "unknown" || normalized === "unranked") {
+    return `${baseUrl}/leagues/cwl/unranked.png`;
+  }
+
+  const tier = normalized.match(/\s+(i|ii|iii)$/);
+  const romanTier: Record<string, number> = { i: 1, ii: 2, iii: 3 };
+  const source = tier ? normalized.slice(0, tier.index) : normalized;
+  const league = source.replace(/\s+league$/, "").replaceAll(" ", "_");
+  const supported = new Set(["bronze", "silver", "gold", "crystal", "master", "champion", "titan"]);
+
+  if (league === "legend") return `${baseUrl}/leagues/cwl/legend_league.png`;
+  if (!tier || !supported.has(league)) return `${baseUrl}/leagues/cwl/unranked.png`;
+
+  return `${baseUrl}/leagues/cwl/${league}_league_${romanTier[tier[1]]}.png`;
+}
+
+export function playerLeagueImageUrl(name: string): string {
+  const normalized = name.trim().toLowerCase();
+  const tier = normalized.match(/\s+(i|ii|iii|iv|v|\d+)$/);
+  const romanTier: Record<string, number> = { i: 1, ii: 2, iii: 3, iv: 4, v: 5 };
+  const source = tier ? normalized.slice(0, tier.index) : normalized;
+  const baseSlug = source.replaceAll(" ", "_").replaceAll(".", "");
+  const slug = baseSlug === "legend" ? "legend_league" : baseSlug;
+  const tierNumber = tier ? (romanTier[tier[1]] ?? Number(tier[1])) : null;
+  const filename = tierNumber ? `${slug}_${tierNumber}` : slug;
+  return `${baseUrl}/leagues/league-tier/${filename || "unranked"}.png`;
 }
 
 // ============================================================================

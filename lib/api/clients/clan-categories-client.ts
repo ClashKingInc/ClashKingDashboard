@@ -30,6 +30,16 @@ export class ClanCategoriesClient extends BaseApiClient {
     );
   }
 
+  reorder(
+    serverId: string,
+    categoryIds: string[],
+  ): Promise<ApiResponse<ClanCategoriesResponse>> {
+    return this.request(`/v2/server/${serverId}/clan-categories/order`, {
+      method: "PUT",
+      body: JSON.stringify({ categoryIds }),
+    });
+  }
+
   previewDelete(
     serverId: string,
     categoryId: string,

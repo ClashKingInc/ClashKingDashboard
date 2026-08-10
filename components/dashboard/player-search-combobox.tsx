@@ -89,7 +89,7 @@ export function PlayerSearchCombobox({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-72 p-0" align="start">
+        <PopoverContent variant="combobox" className="p-0" align="start">
           <Command>
             <CommandInput placeholder={placeholder} />
             <CommandList>

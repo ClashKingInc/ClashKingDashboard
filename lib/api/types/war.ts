@@ -35,6 +35,99 @@ export interface PlayerWarhitsFilter {
   fresh_only?: boolean;
 }
 
+export interface LeagueReference {
+  id: number;
+  name: string;
+  iconUrl: string;
+}
+
+export interface CwlSeasonItem {
+  season: string;
+  state: string;
+  warSize: number | null;
+  warLeague: LeagueReference | null;
+}
+
+export interface CwlGroupMember {
+  tag: string;
+  name: string;
+  townHallLevel: number;
+}
+
+export interface CwlGroupClan {
+  tag: string;
+  name: string;
+  clanLevel: number;
+  badgeUrls: { small?: string; medium?: string; large?: string };
+  members: CwlGroupMember[];
+}
+
+export interface CwlStoredWarClan {
+  tag: string;
+  name: string;
+  attacks?: number;
+  stars: number;
+  destructionPercentage: number;
+  members?: CwlStoredWarMember[];
+}
+
+export interface CwlStoredWarAttack {
+  attackerTag: string;
+  defenderTag: string;
+  stars: number;
+  destructionPercentage: number;
+  order: number;
+  duration: number;
+}
+
+export interface CwlStoredWarMember {
+  tag: string;
+  name: string;
+  townhallLevel: number;
+  mapPosition: number;
+  attacks?: CwlStoredWarAttack[];
+}
+
+export interface CwlStoredWar {
+  tag: string;
+  season: string;
+  state: string;
+  teamSize: number;
+  clan: CwlStoredWarClan;
+  opponent: CwlStoredWarClan;
+}
+
+export interface CwlWarPlaceholder {
+  tag: string;
+}
+
+export interface CwlGroupResponse {
+  season: string;
+  state: string;
+  warLeague: LeagueReference | null;
+  clans: CwlGroupClan[];
+  rounds: Array<{ warTags: Array<CwlStoredWar | CwlWarPlaceholder> }>;
+}
+
+export interface CwlBonusRecipient {
+  playerTag: string;
+  medalCount: number;
+}
+
+export interface CwlWarLeagueStaticItem {
+  _id: number;
+  name: string;
+  cwl_medals: {
+    first_place: number;
+    position_medal_diff: number;
+    bonus_reward: number;
+    minimum_bonus_amount: number;
+  };
+  promotions?: number;
+  demotions?: number;
+  "15v15_only": boolean;
+}
+
 // Response types
 export interface WarAttack {
   order: number;

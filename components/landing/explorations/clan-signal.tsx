@@ -6,6 +6,8 @@ import { ClanSignalWordmark } from "./clan-signal/brand";
 import { ClanSignalFooter } from "./clan-signal/footer";
 import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
 import { RotatingHeadline } from "./clan-signal/rotating-headline";
+import { LandingSessionAction } from "./clan-signal/session-action";
+import { HeroActions } from "./clan-signal/hero-actions";
 import { publicPath, type SupportedLocale } from "@/lib/locale-preference";
 import "../../../app/explorations/clan-signal.css";
 
@@ -102,9 +104,7 @@ export async function ClanSignal({ locale = "en" }: { readonly locale?: Supporte
               sunsetLabel={t("appearance.sunset")}
               initialTheme={landingTheme}
             />
-            <a className="cs-button cs-button-small" href="https://invite.clashk.ing/" target="_blank" rel="noreferrer">
-              {t("actions.addToDiscord")} <ArrowAsset />
-            </a>
+            <LandingSessionAction loginLabel={t("actions.login")} dashboardLabel={t("actions.dashboard")} />
           </div>
         </nav>
       </header>
@@ -118,14 +118,12 @@ export async function ClanSignal({ locale = "en" }: { readonly locale?: Supporte
         <div className="cs-hero-copy cs-enter">
           <RotatingHeadline phrases={headlinePhrases} label={t("hero.rotatingLabel")} />
           <p>{t("hero.copy")}</p>
-          <div className="cs-actions">
-            <a className="cs-button" href="https://invite.clashk.ing/" target="_blank" rel="noreferrer">
-              {t("actions.addClashKing")} <ArrowAsset />
-            </a>
-            <button className="cs-text-link cs-disabled" type="button" disabled>
-              {t("actions.openDashboard")} <ArrowAsset />
-            </button>
-          </div>
+          <HeroActions
+            mobileAppLabel={t("navigation.mobileApp")}
+            iosLabel={t("actions.iosApp")}
+            androidLabel={t("actions.androidApp")}
+            discordLabel={t("actions.addDiscordBot")}
+          />
         </div>
         <div className="cs-hero-visual cs-enter cs-enter-late">
           <ClanSignalHeroModel />
@@ -197,9 +195,9 @@ export async function ClanSignal({ locale = "en" }: { readonly locale?: Supporte
           <h2 id="cs-dashboard-title">{t("dashboard.title")}</h2>
           <p className="cs-section-intro">{t("dashboard.intro")}</p>
           <FeatureList features={dashboardFeatures} />
-          <button className="cs-text-link cs-disabled" type="button" disabled>
+          <Link className="cs-text-link" href="/servers">
             {t("actions.openDashboard")} <ArrowAsset />
-          </button>
+          </Link>
         </div>
         <figure className="cs-dashboard-art" aria-label={t("dashboard.imageLabel")}>
           <Image
@@ -221,7 +219,7 @@ export async function ClanSignal({ locale = "en" }: { readonly locale?: Supporte
         <nav aria-label={t("resources.ariaLabel")}>
           <a href="https://docs.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.documentation")} <ArrowAsset /></a>
           <a href="https://github.com/ClashKingInc" target="_blank" rel="noreferrer">GitHub <ArrowAsset /></a>
-          <a href="https://go.api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
+          <a href="https://v2-api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
         </nav>
       </section>
 

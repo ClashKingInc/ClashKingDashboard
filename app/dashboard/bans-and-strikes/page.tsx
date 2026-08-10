@@ -1,18 +1,34 @@
 "use client";
 
-import { useLocale } from "next-intl";
-import { useGuildId } from "@/lib/dashboard-route";
-import { dashboardHref } from "@/lib/dashboard-route";
-import { useState, useEffect, useEffectEvent, Fragment } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState, type ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLocale, useTranslations } from "next-intl";
+import {
+  AlertTriangle,
+  ArrowDownAZ,
+  CalendarDays,
+  ChevronDown,
+  ChevronRight,
+  ExternalLink,
+  ImageIcon,
+  List,
+  Loader2,
+  Plus,
+  Search,
+  Trash2,
+  UserX,
+  Users,
+} from "lucide-react";
+
+import { apiClient } from "@/lib/api/client";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
+import type { BannedPlayer, Strike } from "@/lib/api/types/server";
+import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import {
   Dialog,
   DialogContent,
@@ -22,320 +38,270 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
+import { InfoPopover } from "@/components/ui/info-popover";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
-import {
-  Ban,
-  Search,
-  UserX,
-  AlertCircle,
-  Plus,
-  Trash2,
-  Calendar,
-  Loader2,
-  AlertTriangle,
-  Scale,
-  List,
-  Users,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
-  ChevronsUpDown,
-} from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { apiClient } from "@/lib/api/client";
-import { apiCache } from "@/lib/api-cache";
-import type { BannedPlayer, Strike } from "@/lib/api/types/server";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
-type SortDirection = "asc" | "desc";
-type BanSortKey = "player" | "reason" | "bannedBy" | "date";
-type StrikeSortKey = "player" | "reason" | "addedBy" | "date";
-type GroupedStrikeSortKey = "player" | "totalStrikes" | "totalWeight" | "lastStrike";
+type StrikeViewMode = "grouped" | "all";
+type BanSort = "newest" | "oldest" | "player" | "reason" | "moderator";
+type StrikeSort = "newest" | "oldest" | "player" | "reason" | "moderator";
+type GroupSort = "weight" | "count" | "player" | "recent";
+type NewStrike = {
+  player_tag: string;
+  reason: string;
+  strike_weight: number;
+  rollover_days: number | undefined;
+  image: string;
+};
 
-export default function BansPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
+function optionalImageUrlIsValid(value: string): boolean {
+  if (!value.trim()) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function normalizeClanTag(tag?: string | null): string {
+  if (!tag?.trim()) return "";
+  const normalized = tag.trim().toUpperCase();
+  return normalized.startsWith("#") ? normalized : `#${normalized}`;
+}
+
+function dateValue(value: string): number {
+  const parsed = new Date(value).getTime();
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+export default function BansAndStrikesPage() { // NOSONAR — page coordinates two closely related operational lists and dialogs
   const guildId = useGuildId();
   const locale = useLocale();
-  const { toast } = useToast();
   const t = useTranslations("BansPage");
   const tCommon = useTranslations("Common");
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const strikesRequested = useRef(false);
 
-  // Bans state
+  const [activeTab, setActiveTab] = useState("bans");
   const [bans, setBans] = useState<BannedPlayer[]>([]);
-  const [isLoadingBans, setIsLoadingBans] = useState(true);
-  const [searchQueryBans, setSearchQueryBans] = useState("");
-  const [isAddBanDialogOpen, setIsAddBanDialogOpen] = useState(false);
-  const [isSubmittingBan, setIsSubmittingBan] = useState(false);
-  const [newBan, setNewBan] = useState({
-    player_tag: "",
-    reason: "",
-  });
-
-  // Strikes state
   const [strikes, setStrikes] = useState<Strike[]>([]);
+  const [isLoadingBans, setIsLoadingBans] = useState(true);
   const [isLoadingStrikes, setIsLoadingStrikes] = useState(true);
+  const [searchQueryBans, setSearchQueryBans] = useState("");
   const [searchQueryStrikes, setSearchQueryStrikes] = useState("");
+  const [isAddBanDialogOpen, setIsAddBanDialogOpen] = useState(false);
   const [isAddStrikeDialogOpen, setIsAddStrikeDialogOpen] = useState(false);
+  const [isSubmittingBan, setIsSubmittingBan] = useState(false);
   const [isSubmittingStrike, setIsSubmittingStrike] = useState(false);
-  const [newStrike, setNewStrike] = useState({
+  const [strikeViewMode, setStrikeViewMode] = useState<StrikeViewMode>("grouped");
+  const [banSort, setBanSort] = useState<BanSort>("newest");
+  const [strikeSort, setStrikeSort] = useState<StrikeSort>("newest");
+  const [groupSort, setGroupSort] = useState<GroupSort>("weight");
+  const [expandedPlayerTags, setExpandedPlayerTags] = useState<string[]>([]);
+  const [clanNameByTag, setClanNameByTag] = useState<Record<string, string>>({});
+  const [newBan, setNewBan] = useState({ player_tag: "", reason: "", image: "" });
+  const [newStrike, setNewStrike] = useState<NewStrike>({
     player_tag: "",
     reason: "",
     strike_weight: 1,
     rollover_days: undefined as number | undefined,
+    image: "",
   });
-  const [activeTab, setActiveTab] = useState("bans");
-  const [strikeViewMode, setStrikeViewMode] = useState<"grouped" | "all">("grouped");
-  const [expandedPlayerTags, setExpandedPlayerTags] = useState<string[]>([]);
-  const [clanNameByTag, setClanNameByTag] = useState<Record<string, string>>({});
-  const [banSort, setBanSort] = useState<{ key: BanSortKey; direction: SortDirection }>({
-    key: "date",
-    direction: "desc",
-  });
-  const [strikeSort, setStrikeSort] = useState<{ key: StrikeSortKey; direction: SortDirection }>({
-    key: "date",
-    direction: "desc",
-  });
-  const [groupedStrikeSort, setGroupedStrikeSort] = useState<{ key: GroupedStrikeSortKey; direction: SortDirection }>({
-    key: "totalWeight",
-    direction: "desc",
-  });
-  const [currentTime, setCurrentTime] = useState(0);
 
-  const normalizeClanTag = (tag?: string | null) => {
-    if (!tag) return "";
-    const trimmed = tag.trim().toUpperCase();
-    if (!trimmed) return "";
-    return trimmed.startsWith("#") ? trimmed : `#${trimmed}`;
+  const fetchBans = async () => {
+    try {
+      setIsLoadingBans(true);
+      const response = await queryClient.fetchQuery({
+        queryKey: dashboardQueryKeys.route("bans", guildId),
+        queryFn: () => apiClient.servers.getBans(guildId),
+      });
+      if (response.error) throw new Error(String(response.error));
+      setBans((response.data?.items ?? []).map((ban) => ({ ...ban, added_by: String(ban.added_by) })));
+    } catch (error) {
+      console.error("Error fetching bans:", error);
+      toast({ title: tCommon("error"), description: t("toast.errorLoadingBans"), variant: "destructive" });
+    } finally {
+      setIsLoadingBans(false);
+    }
   };
+
+  const fetchStrikes = async () => {
+    try {
+      setIsLoadingStrikes(true);
+      const response = await queryClient.fetchQuery({
+        queryKey: dashboardQueryKeys.route("strikes", guildId),
+        queryFn: () => apiClient.servers.getStrikes(guildId),
+      });
+      if (response.error) throw new Error(String(response.error));
+      setStrikes((response.data?.items ?? []).map((strike) => ({ ...strike, added_by: String(strike.added_by) })));
+    } catch (error) {
+      strikesRequested.current = false;
+      console.error("Error fetching strikes:", error);
+      toast({ title: tCommon("error"), description: t("toast.errorLoadingStrikes"), variant: "destructive" });
+    } finally {
+      setIsLoadingStrikes(false);
+    }
+  };
+
+  const fetchServerClans = async () => {
+    try {
+      const clans = await queryClient.fetchQuery(dashboardQueryOptions.clans(guildId));
+      const names = clans.reduce<Record<string, string>>((result, clan) => {
+        const tag = normalizeClanTag(clan.tag);
+        if (tag && clan.name) result[tag] = clan.name;
+        return result;
+      }, {});
+      setClanNameByTag(names);
+    } catch (error) {
+      console.error("Error fetching server clans:", error);
+    }
+  };
+
+  const loadInitialData = useEffectEvent(() => {
+    void fetchBans();
+    void fetchServerClans();
+  });
+
+  useEffect(() => {
+    loadInitialData();
+  }, [guildId]);
 
   const resolveClanName = (clanName?: string | null, clanTag?: string | null) => {
     if (clanName) return clanName;
     const normalizedTag = normalizeClanTag(clanTag);
-    if (!normalizedTag) return null;
-    return clanNameByTag[normalizedTag] ?? null;
+    return normalizedTag ? clanNameByTag[normalizedTag] ?? null : null;
   };
 
-  async function fetchBans() {
-    try {
-      setIsLoadingBans(true);
-      const response = await apiCache.get(`bans-${guildId}`, async () => {
-        return await apiClient.servers.getBans(guildId);
-      });
+  const filteredBans = useMemo(() => {
+    const query = searchQueryBans.trim().toLowerCase();
+    const results = bans.filter((ban) => !query || [ban.VillageName, ban.name, ban.VillageTag, ban.Notes].some((value) => value?.toLowerCase().includes(query)));
+    return results.sort((a, b) => {
+      if (banSort === "oldest") return dateValue(a.DateCreated) - dateValue(b.DateCreated);
+      if (banSort === "player") return (a.name || a.VillageName || a.VillageTag).localeCompare(b.name || b.VillageName || b.VillageTag, locale);
+      if (banSort === "reason") return a.Notes.localeCompare(b.Notes, locale);
+      if (banSort === "moderator") return (a.added_by_username || String(a.added_by)).localeCompare(b.added_by_username || String(b.added_by), locale);
+      return dateValue(b.DateCreated) - dateValue(a.DateCreated);
+    });
+  }, [banSort, bans, locale, searchQueryBans]);
 
-      if (response.error) {
-        throw new Error(response.error || "Failed to fetch bans");
+  const filteredStrikes = useMemo(() => {
+    const query = searchQueryStrikes.trim().toLowerCase();
+    const results = strikes.filter((strike) => !query || [strike.player_name, strike.tag, strike.reason].some((value) => value?.toLowerCase().includes(query)));
+    return results.sort((a, b) => {
+      if (strikeSort === "oldest") return dateValue(a.date_created) - dateValue(b.date_created);
+      if (strikeSort === "player") return (a.player_name || a.tag).localeCompare(b.player_name || b.tag, locale);
+      if (strikeSort === "reason") return a.reason.localeCompare(b.reason, locale);
+      if (strikeSort === "moderator") return (a.added_by_username || String(a.added_by)).localeCompare(b.added_by_username || String(b.added_by), locale);
+      return dateValue(b.date_created) - dateValue(a.date_created);
+    });
+  }, [locale, searchQueryStrikes, strikeSort, strikes]);
+
+  const groupedStrikes = useMemo(() => {
+    const groups = new Map<string, {
+      tag: string;
+      player_name?: string;
+      town_hall?: number | null;
+      trophies?: number | null;
+      clan_tag?: string | null;
+      clan_name?: string | null;
+      strikes: Strike[];
+      totalWeight: number;
+    }>();
+    for (const strike of filteredStrikes) {
+      const current = groups.get(strike.tag);
+      if (current) {
+        current.strikes.push(strike);
+        current.totalWeight += strike.strike_weight;
+      } else {
+        groups.set(strike.tag, {
+          tag: strike.tag,
+          player_name: strike.player_name,
+          town_hall: strike.town_hall,
+          trophies: strike.trophies,
+          clan_tag: strike.clan_tag,
+          clan_name: strike.clan_name,
+          strikes: [strike],
+          totalWeight: strike.strike_weight,
+        });
       }
-
-      // Convert added_by to string to preserve precision for large Discord IDs
-      const bans = (response.data?.items || []).map((ban: any) => ({
-        ...ban,
-        added_by: String(ban.added_by), // Ensure added_by is always a string
-      }));
-
-      setBans(bans);
-    } catch (error) {
-      console.error("Error fetching bans:", error);
-      toast({
-        title: tCommon("error"),
-        description: t("toast.errorLoadingBans"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingBans(false);
     }
-  }
-
-  async function fetchServerClans() {
-    try {
-      const response = await apiCache.get(`server-clans-${guildId}`, async () => {
-        return await apiClient.servers.getServerClans(guildId);
-      });
-
-      if (response.error) {
-        throw new Error(response.error || "Failed to fetch server clans");
+    return [...groups.values()].sort((a, b) => {
+      if (groupSort === "count") return b.strikes.length - a.strikes.length || b.totalWeight - a.totalWeight;
+      if (groupSort === "player") return (a.player_name || a.tag).localeCompare(b.player_name || b.tag, locale);
+      if (groupSort === "recent") {
+        const latestA = Math.max(...a.strikes.map((strike) => dateValue(strike.date_created)));
+        const latestB = Math.max(...b.strikes.map((strike) => dateValue(strike.date_created)));
+        return latestB - latestA;
       }
+      return b.totalWeight - a.totalWeight || b.strikes.length - a.strikes.length;
+    });
+  }, [filteredStrikes, groupSort, locale]);
 
-      const clans = response.data ?? [];
-      const nextClanNameByTag = clans.reduce<Record<string, string>>((acc, clan) => {
-        const normalizedTag = normalizeClanTag(clan.tag);
-        if (!normalizedTag || !clan.name) {
-          return acc;
-        }
-        acc[normalizedTag] = clan.name;
-        return acc;
-      }, {});
-
-      setClanNameByTag(nextClanNameByTag);
-    } catch (error) {
-      console.error("Error fetching server clans:", error);
+  const mutationError = (error: unknown, fallback: string): string => {
+    if (typeof error === "string") return error;
+    if (Array.isArray(error)) return error.map((item) => typeof item === "string" ? item : item?.msg ?? item?.message ?? JSON.stringify(item)).join(", ");
+    if (error && typeof error === "object") {
+      const record = error as { detail?: string; message?: string };
+      return record.detail ?? record.message ?? JSON.stringify(error);
     }
-  }
+    return fallback;
+  };
 
-  async function fetchStrikes() {
-    try {
-      setIsLoadingStrikes(true);
-      const response = await apiCache.get(`strikes-${guildId}`, async () => {
-        return await apiClient.servers.getStrikes(guildId);
-      });
-
-      if (response.error) {
-        throw new Error(response.error || "Failed to fetch strikes");
-      }
-
-      // Convert added_by to string to preserve precision for large Discord IDs
-      const strikes = (response.data?.items || []).map((strike: any) => ({
-        ...strike,
-        added_by: String(strike.added_by), // Ensure added_by is always a string
-      }));
-
-      setStrikes(strikes);
-    } catch (error) {
-      console.error("Error fetching strikes:", error);
-      toast({
-        title: tCommon("error"),
-        description: t("toast.errorLoadingStrikes"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoadingStrikes(false);
-    }
-  }
-
-  const loadInitialData = useEffectEvent(() => {
-    setCurrentTime(Date.now());
-    void fetchBans();
-    void fetchStrikes();
-    void fetchServerClans();
-  });
-
-  useEffect(() => { loadInitialData(); }, [guildId]);
+  const currentUserId = (): string => {
+    const user = localStorage.getItem("user");
+    return user ? String(JSON.parse(user).user_id) : "0";
+  };
 
   const handleAddBan = async () => {
-    if (!newBan.player_tag || !newBan.reason) return;
-
+    if (!newBan.player_tag.trim() || !newBan.reason.trim() || !optionalImageUrlIsValid(newBan.image)) return;
     try {
       setIsSubmittingBan(true);
-      const user = localStorage.getItem("user");
-      // Preserve precision for large Discord IDs by using string instead of number
-      const userId = user ? JSON.parse(user).user_id : "0";
-
-      // Clean player tag (remove # if present)
-      const cleanTag = newBan.player_tag.replace(/^#/, "");
-
-      const response = await apiClient.servers.addBan(guildId, cleanTag, {
-        reason: newBan.reason,
-        added_by: userId, // Send as string to preserve precision for large Discord IDs
-        image: null,
+      const response = await apiClient.servers.addBan(guildId, newBan.player_tag.replace(/^#/, ""), {
+        reason: newBan.reason.trim(),
+        added_by: currentUserId(),
+        image: newBan.image.trim() || null,
       });
-
-      if (response.error) {
-        // Handle error - could be string, object, or array
-        let errorMessage = t("toast.errorAddingBan");
-
-        if (typeof response.error === 'string') {
-          errorMessage = response.error;
-        } else if (Array.isArray(response.error)) {
-          errorMessage = (response.error as any[]).map((e: any) =>
-            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
-          ).join(', ');
-        } else if (typeof response.error === 'object' && response.error !== null) {
-          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      toast({
-        title: tCommon("success"),
-        description: t("toast.banAdded"),
-      });
-
-      // Invalidate cache and refresh the ban list
-      apiCache.invalidate(`bans-${guildId}`);
+      if (response.error) throw new Error(mutationError(response.error, t("toast.errorAddingBan")));
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("bans", guildId), exact: true });
       await fetchBans();
-
-      setNewBan({ player_tag: "", reason: "" });
+      setNewBan({ player_tag: "", reason: "", image: "" });
       setIsAddBanDialogOpen(false);
+      toast({ title: tCommon("success"), description: t("toast.banAdded") });
     } catch (error) {
-      console.error("Error adding ban:", error);
-      toast({
-        title: tCommon("error"),
-        description: error instanceof Error ? error.message : t("toast.errorAddingBan"),
-        variant: "destructive",
-      });
+      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorAddingBan"), variant: "destructive" });
     } finally {
       setIsSubmittingBan(false);
     }
   };
 
   const handleAddStrike = async () => {
-    if (!newStrike.player_tag || !newStrike.reason) return;
-
+    if (!newStrike.player_tag.trim() || !newStrike.reason.trim() || !optionalImageUrlIsValid(newStrike.image)) return;
     try {
       setIsSubmittingStrike(true);
-      const user = localStorage.getItem("user");
-      // Preserve precision for large Discord IDs by using string instead of number
-      const userId = user ? JSON.parse(user).user_id : "0";
-
-      // Clean player tag (remove # if present)
-      const cleanTag = newStrike.player_tag.replace(/^#/, "");
-
-      const response = await apiClient.servers.addStrike(guildId, cleanTag, {
-        reason: newStrike.reason,
-        added_by: userId, // Send as string to preserve precision for large Discord IDs
+      const response = await apiClient.servers.addStrike(guildId, newStrike.player_tag.replace(/^#/, ""), {
+        reason: newStrike.reason.trim(),
+        added_by: currentUserId(),
         strike_weight: newStrike.strike_weight,
         rollover_days: newStrike.rollover_days,
+        image: newStrike.image.trim() || undefined,
       });
-
-      if (response.error) {
-        // Handle error - could be string, object, or array
-        let errorMessage = t("toast.errorAddingStrike");
-
-        if (typeof response.error === 'string') {
-          errorMessage = response.error;
-        } else if (Array.isArray(response.error)) {
-          errorMessage = (response.error as any[]).map((e: any) =>
-            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
-          ).join(', ');
-        } else if (typeof response.error === 'object' && response.error !== null) {
-          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      toast({
-        title: tCommon("success"),
-        description: t("toast.strikeAdded"),
-      });
-
-      // Invalidate cache and refresh the strikes list
-      apiCache.invalidate(`strikes-${guildId}`);
+      if (response.error) throw new Error(mutationError(response.error, t("toast.errorAddingStrike")));
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("strikes", guildId), exact: true });
       await fetchStrikes();
-
-      setNewStrike({ player_tag: "", reason: "", strike_weight: 1, rollover_days: undefined });
+      setNewStrike({ player_tag: "", reason: "", strike_weight: 1, rollover_days: undefined, image: "" });
       setIsAddStrikeDialogOpen(false);
+      toast({ title: tCommon("success"), description: t("toast.strikeAdded") });
     } catch (error) {
-      console.error("Error adding strike:", error);
-      toast({
-        title: tCommon("error"),
-        description: error instanceof Error ? error.message : t("toast.errorAddingStrike"),
-        variant: "destructive",
-      });
+      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorAddingStrike"), variant: "destructive" });
     } finally {
       setIsSubmittingStrike(false);
     }
@@ -343,1257 +309,267 @@ export default function BansPage() { // NOSONAR — React page component: comple
 
   const handleRemoveBan = async (playerTag: string) => {
     try {
-      // Clean player tag (remove # if present)
-      const cleanTag = playerTag.replace(/^#/, "");
-
-      const response = await apiClient.servers.removeBan(guildId, cleanTag);
-
-      if (response.error) {
-        // Handle error - could be string, object, or array
-        let errorMessage = t("toast.errorRemovingBan");
-
-        if (typeof response.error === 'string') {
-          errorMessage = response.error;
-        } else if (Array.isArray(response.error)) {
-          errorMessage = (response.error as any[]).map((e: any) =>
-            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
-          ).join(', ');
-        } else if (typeof response.error === 'object' && response.error !== null) {
-          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      toast({
-        title: tCommon("success"),
-        description: t("toast.banRemoved"),
-      });
-
-      // Invalidate cache and refresh the ban list
-      apiCache.invalidate(`bans-${guildId}`);
+      const response = await apiClient.servers.removeBan(guildId, playerTag.replace(/^#/, ""));
+      if (response.error) throw new Error(mutationError(response.error, t("toast.errorRemovingBan")));
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("bans", guildId), exact: true });
       await fetchBans();
+      toast({ title: tCommon("success"), description: t("toast.banRemoved") });
     } catch (error) {
-      console.error("Error removing ban:", error);
-      toast({
-        title: tCommon("error"),
-        description: error instanceof Error ? error.message : t("toast.errorRemovingBan"),
-        variant: "destructive",
-      });
+      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorRemovingBan"), variant: "destructive" });
     }
   };
 
   const handleRemoveStrike = async (strikeId: string) => {
     try {
       const response = await apiClient.servers.removeStrike(guildId, strikeId);
-
-      if (response.error) {
-        // Handle error - could be string, object, or array
-        let errorMessage = t("toast.errorRemovingStrike");
-
-        if (typeof response.error === 'string') {
-          errorMessage = response.error;
-        } else if (Array.isArray(response.error)) {
-          errorMessage = (response.error as any[]).map((e: any) =>
-            typeof e === 'string' ? e : e.msg || e.message || JSON.stringify(e)
-          ).join(', ');
-        } else if (typeof response.error === 'object' && response.error !== null) {
-          errorMessage = (response.error as any).detail || (response.error as any).message || JSON.stringify(response.error);
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      toast({
-        title: tCommon("success"),
-        description: t("toast.strikeRemoved"),
-      });
-
-      // Invalidate cache and refresh the strikes list
-      apiCache.invalidate(`strikes-${guildId}`);
+      if (response.error) throw new Error(mutationError(response.error, t("toast.errorRemovingStrike")));
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.route("strikes", guildId), exact: true });
       await fetchStrikes();
+      toast({ title: tCommon("success"), description: t("toast.strikeRemoved") });
     } catch (error) {
-      console.error("Error removing strike:", error);
-      toast({
-        title: tCommon("error"),
-        description: error instanceof Error ? error.message : t("toast.errorRemovingStrike"),
-        variant: "destructive",
-      });
+      toast({ title: tCommon("error"), description: error instanceof Error ? error.message : t("toast.errorRemovingStrike"), variant: "destructive" });
     }
   };
 
-  const filteredBans = bans.filter(
-    (ban) =>
-      (ban.VillageName?.toLowerCase() || ban.name?.toLowerCase() || "").includes(searchQueryBans.toLowerCase()) ||
-      ban.VillageTag.toLowerCase().includes(searchQueryBans.toLowerCase()) ||
-      ban.Notes.toLowerCase().includes(searchQueryBans.toLowerCase())
+  const banExplanation = (
+    <div className="space-y-2">
+      <p className="font-medium text-foreground">{t("bans.howItWorks.title")}</p>
+      <p>{t.rich("bans.howItWorks.description", {
+        clansTab: (chunks) => <Link href={dashboardHref("clans", guildId)} className="font-medium text-primary hover:underline">{chunks}</Link>,
+      })}</p>
+    </div>
   );
 
-  const filteredStrikes = strikes.filter(
-    (strike) =>
-      (strike.player_name?.toLowerCase() || "").includes(searchQueryStrikes.toLowerCase()) ||
-      strike.tag.toLowerCase().includes(searchQueryStrikes.toLowerCase()) ||
-      strike.reason.toLowerCase().includes(searchQueryStrikes.toLowerCase())
+  const strikeExplanation = (
+    <div className="space-y-3">
+      <div><p className="font-medium text-foreground">{t("strikes.howItWorks.title")}</p><p className="mt-1">{t("strikes.howItWorks.description")}</p></div>
+      <div><p className="font-medium text-foreground">{t("strikes.guidelines.weights.title")}</p><p className="mt-1">{t("strikes.guidelines.weights.desc")}</p></div>
+      <div><p className="font-medium text-foreground">{t("strikes.guidelines.expiration.title")}</p><p className="mt-1">{t("strikes.guidelines.expiration.desc")}</p></div>
+    </div>
   );
-
-  const toggleBanSort = (key: BanSortKey) => {
-    setBanSort((current) => {
-      if (current.key === key) {
-        return { key, direction: current.direction === "asc" ? "desc" : "asc" };
-      }
-
-      return { key, direction: key === "date" ? "desc" : "asc" };
-    });
-  };
-
-  const toggleStrikeSort = (key: StrikeSortKey) => {
-    setStrikeSort((current) => {
-      if (current.key === key) {
-        return { key, direction: current.direction === "asc" ? "desc" : "asc" };
-      }
-
-      return { key, direction: key === "date" ? "desc" : "asc" };
-    });
-  };
-
-  const toggleGroupedStrikeSort = (key: GroupedStrikeSortKey) => {
-    setGroupedStrikeSort((current) => {
-      if (current.key === key) {
-        return { key, direction: current.direction === "asc" ? "desc" : "asc" };
-      }
-
-      return {
-        key,
-        direction: key === "lastStrike" || key === "totalWeight" ? "desc" : "asc",
-      };
-    });
-  };
-
-  const sortText = (left: string, right: string) =>
-    left.localeCompare(right, locale, { sensitivity: "base" });
-
-  const toTime = (value: string | null | undefined) => {
-    if (!value) return 0;
-    const parsed = new Date(value).getTime();
-    return Number.isNaN(parsed) ? 0 : parsed;
-  };
-
-  const sortedBans = [...filteredBans].sort((left, right) => {
-    let result = 0;
-
-    switch (banSort.key) {
-      case "player": {
-        const leftPlayer = left.VillageName || left.name || left.VillageTag || "";
-        const rightPlayer = right.VillageName || right.name || right.VillageTag || "";
-        result = sortText(leftPlayer, rightPlayer);
-        break;
-      }
-      case "reason": {
-        result = sortText(left.Notes || "", right.Notes || "");
-        break;
-      }
-      case "bannedBy": {
-        const leftAddedBy = left.added_by_username || String(left.added_by ?? "");
-        const rightAddedBy = right.added_by_username || String(right.added_by ?? "");
-        result = sortText(leftAddedBy, rightAddedBy);
-        break;
-      }
-      case "date":
-      default: {
-        result = toTime(left.DateCreated) - toTime(right.DateCreated);
-        break;
-      }
-    }
-
-    return banSort.direction === "asc" ? result : -result;
-  });
-
-  const sortedStrikes = [...filteredStrikes].sort((left, right) => {
-    let result = 0;
-
-    switch (strikeSort.key) {
-      case "player": {
-        result = sortText(left.player_name || left.tag || "", right.player_name || right.tag || "");
-        break;
-      }
-      case "reason": {
-        result = sortText(left.reason || "", right.reason || "");
-        break;
-      }
-      case "addedBy": {
-        const leftAddedBy = left.added_by_username || String(left.added_by ?? "");
-        const rightAddedBy = right.added_by_username || String(right.added_by ?? "");
-        result = sortText(leftAddedBy, rightAddedBy);
-        break;
-      }
-      case "date":
-      default: {
-        result = toTime(left.date_created) - toTime(right.date_created);
-        break;
-      }
-    }
-
-    return strikeSort.direction === "asc" ? result : -result;
-  });
-
-  const renderSortIcon = (isActive: boolean, direction: SortDirection) => {
-    if (!isActive) {
-      return <ChevronsUpDown className="h-3.5 w-3.5 opacity-40" />;
-    }
-
-    return direction === "asc"
-      ? <ChevronUp className="h-3.5 w-3.5" />
-      : <ChevronDown className="h-3.5 w-3.5" />;
-  };
-
-  const groupedStrikes = Object.values(
-    filteredStrikes.reduce((acc, strike) => {
-      const tag = strike.tag;
-      if (!acc[tag]) {
-        acc[tag] = {
-          tag: tag,
-          player_name: strike.player_name,
-          clan_name: strike.clan_name,
-          town_hall: strike.town_hall,
-          trophies: strike.trophies,
-          total_weight: 0,
-          count: 0,
-          last_strike: strike.date_created,
-          strikes: [],
-        };
-      }
-      acc[tag].total_weight += strike.strike_weight;
-      acc[tag].count += 1;
-      if (new Date(strike.date_created) > new Date(acc[tag].last_strike)) {
-        acc[tag].last_strike = strike.date_created;
-      }
-      acc[tag].strikes.push(strike);
-      return acc;
-    }, {} as Record<string, {
-      tag: string,
-      player_name?: string,
-      clan_name?: string | null,
-      town_hall?: number | null,
-      trophies?: number | null,
-      total_weight: number,
-      count: number,
-      last_strike: string,
-      strikes: Strike[]
-    }>)
-  );
-
-  const sortedGroupedStrikes = [...groupedStrikes].sort((left, right) => {
-    let result = 0;
-
-    switch (groupedStrikeSort.key) {
-      case "player": {
-        result = sortText(left.player_name || left.tag || "", right.player_name || right.tag || "");
-        break;
-      }
-      case "totalStrikes": {
-        result = left.count - right.count;
-        break;
-      }
-      case "totalWeight": {
-        result = left.total_weight - right.total_weight;
-        break;
-      }
-      case "lastStrike":
-      default: {
-        result = toTime(left.last_strike) - toTime(right.last_strike);
-        break;
-      }
-    }
-
-    return groupedStrikeSort.direction === "asc" ? result : -result;
-  });
-
-  // Calculate strike statistics
-  const totalStrikeWeight = strikes.reduce((sum, strike) => sum + strike.strike_weight, 0);
-  const recentBans = bans.filter((b) => {
-    const days = Math.floor(
-      (currentTime - new Date(b.DateCreated).getTime()) /
-      (1000 * 60 * 60 * 24)
-    );
-    return days <= 7;
-  }).length;
-  const recentStrikes = strikes.filter((s) => {
-    const days = Math.floor(
-      (currentTime - new Date(s.date_created).getTime()) /
-      (1000 * 60 * 60 * 24)
-    );
-    return days <= 7;
-  }).length;
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-8">
-          <div>
-            <div className="flex items-start gap-3">
-              <div className="shrink-0 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
-                <Ban className="h-8 w-8 text-red-500" />
+    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
+      <div className="mx-auto max-w-6xl space-y-7">
+        <header>
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
+        </header>
+
+        <Tabs value={activeTab} onValueChange={(value) => {
+          setActiveTab(value);
+          if (value === "strikes" && !strikesRequested.current) {
+            strikesRequested.current = true;
+            void fetchStrikes();
+          }
+        }}>
+          <DashboardTabsList className="max-w-md grid-cols-2">
+            <DashboardTabTrigger value="bans" artwork={<UserX />} count={bans.length}>{t("tabs.bans")}</DashboardTabTrigger>
+            <DashboardTabTrigger value="strikes" artwork={<AlertTriangle />} count={strikes.length}>{t("tabs.strikes")}</DashboardTabTrigger>
+          </DashboardTabsList>
+
+          <TabsContent value="bans" className="mt-7 space-y-4">
+            <section className="space-y-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">{t("bans.list.title")}</h2><InfoPopover content={banExplanation} label={t("bans.howItWorks.title")} /></div>
+                  <p className="mt-1 text-sm text-muted-foreground">{t("bans.list.count", { count: filteredBans.length })}</p>
+                </div>
+                <BanDialog
+                  open={isAddBanDialogOpen}
+                  onOpenChange={setIsAddBanDialogOpen}
+                  value={newBan}
+                  onChange={setNewBan}
+                  onSubmit={() => void handleAddBan()}
+                  submitting={isSubmittingBan}
+                  imageValid={optionalImageUrlIsValid(newBan.image)}
+                  t={t}
+                  tCommon={tCommon}
+                />
               </div>
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-                <p className="text-muted-foreground mt-1">
-                  {t("description")}
-                </p>
+
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <SearchControl value={searchQueryBans} onChange={setSearchQueryBans} placeholder={t("bans.list.searchPlaceholder")} className="sm:flex-1" />
+                <SortControl value={banSort} onChange={(value) => setBanSort(value as BanSort)} options={["newest", "oldest", "player", "reason", "moderator"]} t={t} />
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger value="bans">
-              <Ban className="mr-2 h-4 w-4" />
-              {t("tabs.bans")}
-            </TabsTrigger>
-            <TabsTrigger value="strikes">
-              <AlertTriangle className="mr-2 h-4 w-4" />
-              {t("tabs.strikes")}
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Bans Tab */}
-          <TabsContent value="bans" className="space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-              <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    {t("bans.stats.total")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="h-[84px] flex flex-col justify-between">
-                  <div className="flex h-10 items-center justify-between">
-                    {isLoadingBans ? (
-                      <Skeleton className="h-8 w-20 animate-pulse" />
-                    ) : (
-                      <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-blue-500">
-                        {bans.length}
-                      </div>
-                    )}
-                    <UserX className="h-8 w-8 shrink-0 text-blue-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t("bans.stats.activeOnServer")}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-card border-green-500/30 bg-green-500/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    {t("bans.stats.recent")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="h-[84px] flex flex-col justify-between">
-                  <div className="flex h-10 items-center justify-between">
-                    {isLoadingBans ? (
-                      <Skeleton className="h-8 w-20 animate-pulse" />
-                    ) : (
-                      <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-green-500">
-                        {recentBans}
-                      </div>
-                    )}
-                    <Calendar className="h-8 w-8 shrink-0 text-green-500/50" />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    {t("bans.stats.last7Days")}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="col-span-2 bg-card border-purple-500/30 bg-purple-500/5 lg:col-span-1">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    {t("bans.stats.commonReason")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="h-[84px] flex flex-col justify-between">
-                  <div className="flex items-center justify-between gap-3">
-                    {isLoadingBans ? (
-                      <Skeleton className="h-8 w-32 animate-pulse" />
-                    ) : bans.length > 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-                      <div className="text-sm font-medium text-purple-500 truncate">
-                        {t("bans.stats.commonReasonValue")}
-                      </div>
-                    ) : (
-                      <div className="text-sm font-medium text-muted-foreground">
-                        {t("bans.stats.noBans")}
-                      </div>
-                    )}
-                    <AlertCircle className="h-8 w-8 text-purple-500/50 shrink-0" />
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                    {isLoadingBans ? (
-                      <Skeleton className="h-3 w-8 animate-pulse" />
-                    ) : (
-                      <span>{`${bans.length > 0 ? Math.round((1 / bans.length) * 100) : 0}%`}</span>
-                    )}
-                    <span>{t("bans.stats.percentOfAllLabel")}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Ban List */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                  <div className="flex flex-col md:flex-row md:items-start gap-4">
-                    <div>
-                      <CardTitle>{t("bans.list.title")}</CardTitle>
-                      <CardDescription>
-                        {isLoadingBans ? (
-                          <Skeleton className="h-4 w-24" />
-                        ) : (
-                          t("bans.list.count", { count: filteredBans.length })
-                        )}
-                      </CardDescription>
-                    </div>
-                    <Dialog open={isAddBanDialogOpen} onOpenChange={setIsAddBanDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button className="bg-red-500 hover:bg-red-600 w-full md:w-auto">
-                          <Plus className="mr-2 h-4 w-4" />
-                          {t("bans.addBan")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-card border-border sm:max-w-[500px]">
-                        <DialogHeader>
-                          <DialogTitle className="text-foreground">{t("bans.addDialog.title")}</DialogTitle>
-                          <DialogDescription className="text-muted-foreground">
-                            {t("bans.addDialog.description")}
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="player-tag" className="text-foreground">
-                              {t("bans.addDialog.playerTagLabel")}
-                              <span className="text-destructive ml-1">*</span>
-                            </Label>
-                            <Input
-                              id="player-tag"
-                              placeholder={t("bans.addDialog.playerTagPlaceholder")}
-                              value={newBan.player_tag}
-                              onChange={(e) =>
-                                setNewBan({ ...newBan, player_tag: e.target.value })
-                              }
-                              disabled={isSubmittingBan}
-                              className="bg-background border-border text-foreground"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="reason" className="text-foreground">
-                              {t("bans.addDialog.reasonLabel")}
-                              <span className="text-destructive ml-1">*</span>
-                            </Label>
-                            <Textarea
-                              id="reason"
-                              placeholder={t("bans.addDialog.reasonPlaceholder")}
-                              value={newBan.reason}
-                              onChange={(e) =>
-                                setNewBan({ ...newBan, reason: e.target.value })
-                              }
-                              rows={4}
-                              disabled={isSubmittingBan}
-                              className="bg-background border-border text-foreground"
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button
-                            variant="outline"
-                            onClick={() => setIsAddBanDialogOpen(false)}
-                            disabled={isSubmittingBan}
-                            className="border-border"
-                          >
-                            {tCommon("cancel")}
-                          </Button>
-                          <Button
-                            className="bg-red-500 hover:bg-red-600"
-                            onClick={handleAddBan}
-                            disabled={!newBan.player_tag || !newBan.reason || isSubmittingBan}
-                          >
-                            {isSubmittingBan && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {t("bans.addDialog.submit")}
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  <div className="relative w-full md:w-64 xl:w-72">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder={t("bans.list.searchPlaceholder")}
-                      value={searchQueryBans}
-                      onChange={(e) => setSearchQueryBans(e.target.value)}
-                      className="pl-8 bg-background border-border text-foreground"
-                      disabled={isLoadingBans}
+              {isLoadingBans ? <RowSkeletons /> : filteredBans.length === 0 ? (
+                <EmptyState
+                  title={searchQueryBans ? t("bans.list.noBansFound") : t("bans.list.noBans")}
+                  description={searchQueryBans ? t("bans.list.adjustSearch") : t("bans.list.getStarted")}
+                />
+              ) : (
+                <div className="space-y-2">
+                  {filteredBans.map((ban) => (
+                    <BanRow
+                      key={ban.VillageTag}
+                      ban={ban}
+                      locale={locale}
+                      clanName={resolveClanName(ban.clan_name, ban.clan_tag)}
+                      onRemove={() => void handleRemoveBan(ban.VillageTag)}
+                      t={t}
+                      tCommon={tCommon}
                     />
-                  </div>
+                  ))}
                 </div>
-              </CardHeader>
-              <CardContent>
-                  {isLoadingBans ? (
-                    <div className="space-y-3">
-                      {["a", "b", "c"].map(id => (
-                        <div key={id} className="flex items-center gap-4">
-                          <Skeleton className="h-12 w-full" />
-                        </div>
-                      ))}
-                    </div>
-                  ) : filteredBans.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-                    <div className="text-center py-12">
-                      <UserX className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">
-                        {searchQueryBans ? t("bans.list.noBansFound") : t("bans.list.noBans")}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {searchQueryBans
-                          ? t("bans.list.adjustSearch")
-                          : t("bans.list.getStarted")}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="rounded-md border border-border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>
-                              <button
-                                type="button"
-                                onClick={() => toggleBanSort("player")}
-                                className="flex items-center gap-1 transition-colors hover:text-foreground"
-                              >
-                                {t("bans.table.player")}
-                                {renderSortIcon(banSort.key === "player", banSort.direction)}
-                              </button>
-                            </TableHead>
-                            <TableHead>
-                              <button
-                                type="button"
-                                onClick={() => toggleBanSort("reason")}
-                                className="flex items-center gap-1 transition-colors hover:text-foreground"
-                              >
-                                {t("bans.table.reason")}
-                                {renderSortIcon(banSort.key === "reason", banSort.direction)}
-                              </button>
-                            </TableHead>
-                            <TableHead>
-                              <button
-                                type="button"
-                                onClick={() => toggleBanSort("bannedBy")}
-                                className="flex items-center gap-1 transition-colors hover:text-foreground"
-                              >
-                                {t("bans.table.bannedBy")}
-                                {renderSortIcon(banSort.key === "bannedBy", banSort.direction)}
-                              </button>
-                            </TableHead>
-                            <TableHead>
-                              <button
-                                type="button"
-                                onClick={() => toggleBanSort("date")}
-                                className="flex items-center gap-1 transition-colors hover:text-foreground"
-                              >
-                                {t("bans.table.date")}
-                                {renderSortIcon(banSort.key === "date", banSort.direction)}
-                              </button>
-                            </TableHead>
-                            <TableHead className="text-right">{tCommon("actions")}</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {sortedBans.map((ban, index) => (
-                            <TableRow key={`${ban.VillageTag}-${index}`}>
-                              <TableCell>
-                                <PlayerProfilePopover
-                                  playerName={ban.name || ban.VillageName || tCommon("unknown")}
-                                  playerTag={ban.VillageTag}
-                                  clanName={resolveClanName(ban.clan_name, ban.clan_tag)}
-                                  clanTag={ban.clan_tag ?? null}
-                                  townhallLevel={ban.town_hall ?? null}
-                                  trophies={ban.trophies ?? null}
-                                />
-                              </TableCell>
-                            <TableCell className="max-w-xs">
-                              <div className="truncate text-sm text-muted-foreground" title={ban.Notes}>
-                                {ban.Notes && ban.Notes !== "No Notes" ? ban.Notes : t("bans.table.noReason")}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <DiscordUserDisplay
-                                  userId={String(ban.added_by)}
-                                  username={ban.added_by_username}
-                                  avatarUrl={ban.added_by_avatar_url}
-                                  size="sm"
-                                />
-                              </TableCell>
-                              <TableCell className="whitespace-nowrap">
-                                <div className="text-sm">
-                                  {new Date(ban.DateCreated).toLocaleDateString(locale)}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {t("bans.table.daysAgo", {
-                                    days: Math.floor(
-                                      (currentTime - new Date(ban.DateCreated).getTime()) /
-                                      (1000 * 60 * 60 * 24)
-                                    )
-                                  })}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleRemoveBan(ban.VillageTag)}
-                                  className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                                >
-                                  <Trash2 className="h-4 w-4 mr-1" />
-                                  {tCommon("remove")}
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              )}
+            </section>
+          </TabsContent>
 
-              {/* Info Alert */}
-              <Alert className="border-blue-500/30 bg-blue-500/5">
-                <AlertCircle className="h-4 w-4 text-blue-500" />
-                <AlertTitle className="text-blue-400">{t("bans.howItWorks.title")}</AlertTitle>
-                <AlertDescription className="text-blue-300">
-                  {t.rich("bans.howItWorks.description", {
-                    clansTab: (chunks) => ( // NOSONAR — framework-required inline render prop (next-intl rich / ReactMarkdown)
-                      <Link
-                        href={dashboardHref("clans", guildId)}
-                        className="underline font-medium text-blue-200 hover:text-blue-100"
-                      >
-                        {chunks}
-                      </Link>
-                    ),
-                  })}
-                </AlertDescription>
-              </Alert>
-
-              {/* Best Practices */}
-              <Card className="border-yellow-500/30 bg-yellow-500/5">
-                <CardHeader>
-                  <CardTitle className="text-yellow-400">{t("bans.bestPractices.title")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm text-yellow-300">
-                  <p>
-                    <strong className="text-yellow-400 block mb-1">{t("bans.bestPractices.document.title")}</strong>
-                    {t("bans.bestPractices.document.desc")}
-                  </p>
-                  <p>
-                    <strong className="text-yellow-400 block mb-1">{t("bans.bestPractices.review.title")}</strong>
-                    {t("bans.bestPractices.review.desc")}
-                  </p>
-                  <p>
-                    <strong className="text-yellow-400 block mb-1">{t("bans.bestPractices.consistent.title")}</strong>
-                    {t("bans.bestPractices.consistent.desc")}
-                  </p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Strikes Tab */}
-            <TabsContent value="strikes" className="space-y-6">
-              {/* Stats Cards */}
-              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
-                <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      {t("strikes.stats.total")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="h-[84px] flex flex-col justify-between">
-                    <div className="flex h-10 items-center justify-between">
-                      {isLoadingStrikes ? (
-                        <Skeleton className="h-8 w-20 animate-pulse" />
-                      ) : (
-                        <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-blue-500">
-                          {strikes.length}
-                        </div>
-                      )}
-                      <AlertTriangle className="h-8 w-8 shrink-0 text-blue-500/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t("strikes.stats.activeOnServer")}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-card border-green-500/30 bg-green-500/5">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      {t("strikes.stats.recent")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="h-[84px] flex flex-col justify-between">
-                    <div className="flex h-10 items-center justify-between">
-                      {isLoadingStrikes ? (
-                        <Skeleton className="h-8 w-20 animate-pulse" />
-                      ) : (
-                        <div className="flex h-8 items-center text-3xl font-bold tabular-nums text-green-500">
-                          {recentStrikes}
-                        </div>
-                      )}
-                      <Calendar className="h-8 w-8 shrink-0 text-green-500/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t("strikes.stats.last7Days")}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="col-span-2 bg-card border-purple-500/30 bg-purple-500/5 lg:col-span-1">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium text-muted-foreground">
-                      {t("strikes.stats.totalWeight")}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="h-[84px] flex flex-col justify-between">
-                    <div className="flex items-center justify-between">
-                      {isLoadingStrikes ? (
-                        <Skeleton className="h-8 w-20 animate-pulse" />
-                      ) : (
-                        <div className="text-3xl font-bold text-purple-500">{totalStrikeWeight}</div>
-                      )}
-                      <Scale className="h-8 w-8 text-purple-500/50" />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {t("strikes.stats.cumulativeWeight")}
-                    </p>
-                  </CardContent>
-                </Card>
+          <TabsContent value="strikes" className="mt-7 space-y-4">
+            <section className="space-y-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <div className="flex items-center gap-2"><h2 className="text-lg font-semibold">{t("strikes.list.title")}</h2><InfoPopover content={strikeExplanation} label={t("strikes.howItWorks.title")} /></div>
+                  <p className="mt-1 text-sm text-muted-foreground">{t("strikes.list.count", { count: filteredStrikes.length })}</p>
+                </div>
+                <StrikeDialog
+                  open={isAddStrikeDialogOpen}
+                  onOpenChange={setIsAddStrikeDialogOpen}
+                  value={newStrike}
+                  onChange={setNewStrike}
+                  onSubmit={() => void handleAddStrike()}
+                  submitting={isSubmittingStrike}
+                  imageValid={optionalImageUrlIsValid(newStrike.image)}
+                  t={t}
+                  tCommon={tCommon}
+                />
               </div>
 
-              {/* Strikes List */}
-              <Card className="bg-card border-border">
-              <CardHeader>
-                <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                  <div className="flex flex-col md:flex-row md:items-start gap-4">
-                    <div>
-                      <CardTitle>{t("strikes.list.title")}</CardTitle>
-                      <CardDescription>
-                        {isLoadingStrikes ? (
-                          <Skeleton className="h-4 w-24" />
-                        ) : (
-                          t("strikes.list.count", { count: filteredStrikes.length })
-                        )}
-                      </CardDescription>
-                    </div>
-                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as "grouped" | "all")} className="hidden md:block">
-                      <TabsList className="grid grid-cols-2 w-fit">
-                        <TabsTrigger value="grouped">
-                          <Users className="h-4 w-4 mr-2" />
-                          {t("strikes.list.viewGrouped")}
-                        </TabsTrigger>
-                        <TabsTrigger value="all">
-                          <List className="h-4 w-4 mr-2" />
-                          {t("strikes.list.viewAll")}
-                        </TabsTrigger>
-                      </TabsList>
-                    </Tabs>
-                    <Dialog open={isAddStrikeDialogOpen} onOpenChange={setIsAddStrikeDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button className="bg-orange-500 hover:bg-orange-600">
-                          <Plus className="mr-2 h-4 w-4" />
-                          {t("strikes.addStrike")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-card border-border sm:max-w-[500px]">
-                        <DialogHeader>
-                          <DialogTitle className="text-foreground">{t("strikes.addDialog.title")}</DialogTitle>
-                          <DialogDescription className="text-muted-foreground">
-                            {t("strikes.addDialog.description")}
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4 py-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="strike-player-tag" className="text-foreground">
-                              {t("strikes.addDialog.playerTagLabel")}
-                              <span className="text-destructive ml-1">*</span>
-                            </Label>
-                            <Input
-                              id="strike-player-tag"
-                              placeholder={t("strikes.addDialog.playerTagPlaceholder")}
-                              value={newStrike.player_tag}
-                              onChange={(e) =>
-                                setNewStrike({ ...newStrike, player_tag: e.target.value })
-                              }
-                              disabled={isSubmittingStrike}
-                              className="bg-background border-border text-foreground"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="strike-reason" className="text-foreground">
-                              {t("strikes.addDialog.reasonLabel")}
-                              <span className="text-destructive ml-1">*</span>
-                            </Label>
-                            <Textarea
-                              id="strike-reason"
-                              placeholder={t("strikes.addDialog.reasonPlaceholder")}
-                              value={newStrike.reason}
-                              onChange={(e) =>
-                                setNewStrike({ ...newStrike, reason: e.target.value })
-                              }
-                              rows={4}
-                              disabled={isSubmittingStrike}
-                              className="bg-background border-border text-foreground"
-                            />
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="strike-weight" className="text-foreground">
-                                {t("strikes.addDialog.weightLabel")}
-                                <span className="text-destructive ml-1">*</span>
-                              </Label>
-                              <Input
-                                id="strike-weight"
-                                type="number"
-                                min="1"
-                                placeholder={t("strikes.addDialog.weightPlaceholder")}
-                                value={newStrike.strike_weight}
-                                onChange={(e) =>
-                                  setNewStrike({ ...newStrike, strike_weight: Number.parseInt(e.target.value) || 1 })
-                                }
-                                disabled={isSubmittingStrike}
-                                className="bg-background border-border text-foreground"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="rollover-days" className="text-foreground">{t("strikes.addDialog.rolloverLabel")}</Label>
-                              <Input
-                                id="rollover-days"
-                                type="number"
-                                min="1"
-                                placeholder={t("strikes.addDialog.rolloverPlaceholder")}
-                                value={newStrike.rollover_days || ""}
-                                onChange={(e) =>
-                                  setNewStrike({ ...newStrike, rollover_days: e.target.value ? Number.parseInt(e.target.value) : undefined })
-                                }
-                                disabled={isSubmittingStrike}
-                                className="bg-background border-border text-foreground"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button
-                            variant="outline"
-                            onClick={() => setIsAddStrikeDialogOpen(false)}
-                            disabled={isSubmittingStrike}
-                            className="border-border"
-                          >
-                            {tCommon("cancel")}
-                          </Button>
-                          <Button
-                            className="bg-orange-500 hover:bg-orange-600"
-                            onClick={handleAddStrike}
-                            disabled={!newStrike.player_tag || !newStrike.reason || isSubmittingStrike}
-                          >
-                            {isSubmittingStrike && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {t("strikes.addDialog.submit")}
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                  <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto">
-                    <Tabs value={strikeViewMode} onValueChange={(v) => setStrikeViewMode(v as "grouped" | "all")} className="md:hidden w-full">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="grouped">
-                          <Users className="h-4 w-4 mr-2" />
-                          {t("strikes.list.viewGrouped")}
-                        </TabsTrigger>
-                        <TabsTrigger value="all">
-                          <List className="h-4 w-4 mr-2" />
-                          {t("strikes.list.viewAll")}
-                        </TabsTrigger>
-                      </TabsList>
-                    </Tabs>
-                    <div className="relative w-full md:w-64 xl:w-72">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder={t("strikes.list.searchPlaceholder")}
-                        value={searchQueryStrikes}
-                        onChange={(e) => setSearchQueryStrikes(e.target.value)}
-                        className="pl-8 bg-background border-border text-foreground"
-                        disabled={isLoadingStrikes}
-                      />
-                    </div>
-                  </div>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <div className="flex rounded-xl bg-muted/55 p-1 shadow-sm shadow-black/5">
+                  <ViewButton active={strikeViewMode === "grouped"} onClick={() => setStrikeViewMode("grouped")} icon={<Users />} label={t("strikes.list.viewGrouped")} />
+                  <ViewButton active={strikeViewMode === "all"} onClick={() => setStrikeViewMode("all")} icon={<List />} label={t("strikes.list.viewAll")} />
                 </div>
-              </CardHeader>
-                <CardContent>
-                  {isLoadingStrikes ? (
-                    <div className="space-y-3">
-                      {["a", "b", "c"].map(id => (
-                        <div key={id} className="flex items-center gap-4">
-                          <Skeleton className="h-12 w-full" />
+                <SearchControl value={searchQueryStrikes} onChange={setSearchQueryStrikes} placeholder={t("strikes.list.searchPlaceholder")} className="sm:flex-1" />
+                <SortControl value={strikeViewMode === "grouped" ? groupSort : strikeSort} onChange={(value) => strikeViewMode === "grouped" ? setGroupSort(value as GroupSort) : setStrikeSort(value as StrikeSort)} options={strikeViewMode === "grouped" ? ["weight", "count", "player", "recent"] : ["newest", "oldest", "player", "reason", "moderator"]} t={t} />
+              </div>
+
+              {isLoadingStrikes ? <RowSkeletons /> : filteredStrikes.length === 0 ? (
+                <EmptyState
+                  title={searchQueryStrikes ? t("strikes.list.noStrikesFound") : t("strikes.list.noStrikes")}
+                  description={searchQueryStrikes ? t("strikes.list.adjustSearch") : t("strikes.list.getStarted")}
+                />
+              ) : strikeViewMode === "all" ? (
+                <div className="space-y-2">
+                  {filteredStrikes.map((strike) => (
+                    <StrikeRow key={strike.strike_id} strike={strike} locale={locale} clanName={resolveClanName(strike.clan_name, strike.clan_tag)} onRemove={() => void handleRemoveStrike(strike.strike_id)} t={t} tCommon={tCommon} />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {groupedStrikes.map((group) => {
+                    const expanded = expandedPlayerTags.includes(group.tag);
+                    return (
+                      <div key={group.tag} className="rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                          <div className="min-w-0 flex-1">
+                            <PlayerProfilePopover playerName={group.player_name || tCommon("unknown")} playerTag={group.tag} clanName={resolveClanName(group.clan_name, group.clan_tag)} clanTag={group.clan_tag ?? null} townhallLevel={group.town_hall ?? null} trophies={group.trophies ?? null} />
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <DataPill label={t("strikes.table.totalStrikes")} value={group.strikes.length} />
+                            <DataPill label={t("strikes.table.totalWeight")} value={group.totalWeight} accent />
+                            <Button type="button" variant="secondary" size="sm" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={() => setExpandedPlayerTags((current) => current.includes(group.tag) ? current.filter((tag) => tag !== group.tag) : [...current, group.tag])}>
+                              {expanded ? <ChevronDown className="mr-2 h-4 w-4" /> : <ChevronRight className="mr-2 h-4 w-4" />}{tCommon("details")}
+                            </Button>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  ) : filteredStrikes.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-                    <div className="text-center py-12">
-                      <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">
-                        {searchQueryStrikes ? t("strikes.list.noStrikesFound") : t("strikes.list.noStrikes")}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {searchQueryStrikes
-                          ? t("strikes.list.adjustSearch")
-                          : t("strikes.list.getStarted")}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="rounded-md border border-border">
-                      {strikeViewMode === "all" ? (
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleStrikeSort("player")}
-                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.player")}
-                                  {renderSortIcon(strikeSort.key === "player", strikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleStrikeSort("reason")}
-                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.reason")}
-                                  {renderSortIcon(strikeSort.key === "reason", strikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead>{t("strikes.table.weight")}</TableHead>
-                              <TableHead>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleStrikeSort("addedBy")}
-                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.addedBy")}
-                                  {renderSortIcon(strikeSort.key === "addedBy", strikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleStrikeSort("date")}
-                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.date")}
-                                  {renderSortIcon(strikeSort.key === "date", strikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead>{t("strikes.table.expires")}</TableHead>
-                              <TableHead className="text-right">{tCommon("actions")}</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {sortedStrikes.map((strike, index) => (
-                              <TableRow key={`${strike.strike_id}-${index}`}>
-                                <TableCell>
-                                  <PlayerProfilePopover
-                                    playerName={strike.player_name || tCommon("unknown")}
-                                    playerTag={strike.tag}
-                                    clanName={resolveClanName(strike.clan_name, strike.clan_tag)}
-                                    clanTag={strike.clan_tag ?? null}
-                                    townhallLevel={strike.town_hall ?? null}
-                                    trophies={strike.trophies ?? null}
-                                  />
-                                </TableCell>
-                              <TableCell className="max-w-xs">
-                                <div className="truncate text-sm text-muted-foreground" title={strike.reason}>
-                                  {strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/30">
-                                    {strike.strike_weight}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell>
-                                  <DiscordUserDisplay
-                                    userId={String(strike.added_by)}
-                                    username={strike.added_by_username}
-                                    avatarUrl={strike.added_by_avatar_url}
-                                    size="sm"
-                                  />
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap">
-                                  <div className="text-sm">
-                                    {new Date(strike.date_created).toLocaleDateString(locale)}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {t("strikes.table.daysAgo", {
-                                      days: Math.floor(
-                                        (currentTime - new Date(strike.date_created).getTime()) /
-                                        (1000 * 60 * 60 * 24)
-                                      )
-                                    })}
-                                  </div>
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap">
-                                  {strike.rollover_date ? (
-                                    <div className="text-sm text-muted-foreground">
-                                      {new Date(strike.rollover_date * 1000).toLocaleDateString(locale)}
-                                    </div>
-                                  ) : (
-                                    <div className="text-sm text-muted-foreground">{t("strikes.table.never")}</div>
-                                  )}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleRemoveStrike(strike.strike_id)}
-                                    className="text-orange-500 hover:text-orange-600 hover:bg-orange-500/10"
-                                  >
-                                    <Trash2 className="h-4 w-4 mr-1" />
-                                    {tCommon("remove")}
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      ) : (
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleGroupedStrikeSort("player")}
-                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.player")}
-                                  {renderSortIcon(groupedStrikeSort.key === "player", groupedStrikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead className="text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => toggleGroupedStrikeSort("totalStrikes")}
-                                  className="mx-auto flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.totalStrikes")}
-                                  {renderSortIcon(groupedStrikeSort.key === "totalStrikes", groupedStrikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead className="text-center">
-                                <button
-                                  type="button"
-                                  onClick={() => toggleGroupedStrikeSort("totalWeight")}
-                                  className="mx-auto flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.totalWeight")}
-                                  {renderSortIcon(groupedStrikeSort.key === "totalWeight", groupedStrikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead>
-                                <button
-                                  type="button"
-                                  onClick={() => toggleGroupedStrikeSort("lastStrike")}
-                                  className="flex items-center gap-1 transition-colors hover:text-foreground"
-                                >
-                                  {t("strikes.table.lastStrike")}
-                                  {renderSortIcon(groupedStrikeSort.key === "lastStrike", groupedStrikeSort.direction)}
-                                </button>
-                              </TableHead>
-                              <TableHead className="text-right">{tCommon("actions")}</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {sortedGroupedStrikes.map((group, index) => {
-                              const isExpanded = expandedPlayerTags.includes(group.tag);
-                              return (
-                                <Fragment key={`${group.tag}-${index}`}>
-                                  <TableRow className={isExpanded ? "border-b-0 bg-muted/30" : ""}>
-                                    <TableCell>
-                                      <PlayerProfilePopover
-                                        playerName={group.player_name || tCommon("unknown")}
-                                        playerTag={group.tag}
-                                        clanName={resolveClanName(group.clan_name, group.strikes[0]?.clan_tag)}
-                                        clanTag={group.strikes[0]?.clan_tag ?? null}
-                                        townhallLevel={group.town_hall ?? null}
-                                        trophies={group.trophies ?? null}
-                                      />
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                      <span className="font-bold">{group.count}</span>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                      <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-orange-500/30">
-                                        {group.total_weight}
-                                      </Badge>
-                                    </TableCell>
-                                    <TableCell className="whitespace-nowrap">
-                                      <div className="text-sm">
-                                        {new Date(group.last_strike).toLocaleDateString(locale)}
-                                      </div>
-                                      <div className="text-xs text-muted-foreground">
-                                        {t("strikes.table.daysAgo", {
-                                          days: Math.floor(
-                                            (currentTime - new Date(group.last_strike).getTime()) /
-                                            (1000 * 60 * 60 * 24)
-                                          )
-                                        })}
-                                      </div>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                      <Button 
-                                        variant="ghost" 
-                                        size="sm"
-                                        onClick={() => { // NOSONAR — inline toggle updater in JSX handler, standard React pattern
-                                          setExpandedPlayerTags(prev =>
-                                            prev.includes(group.tag)
-                                              ? prev.filter(t => t !== group.tag) // NOSONAR — structural JSX complexity from framework nesting
-                                              : [...prev, group.tag] // NOSONAR — JSX inline handler nesting is structural, not logic complexity
-                                          );
-                                        }}
-                                      >
-                                        {isExpanded ? (
-                                          <ChevronDown className="h-4 w-4 mr-1" />
-                                        ) : (
-                                          <ChevronRight className="h-4 w-4 mr-1" />
-                                        )}
-                                        {tCommon("details")}
-                                      </Button>
-                                    </TableCell>
-                                  </TableRow>
-                                  {isExpanded && (
-                                    <TableRow className="bg-muted/30 border-t-0">
-                                      <TableCell colSpan={5} className="p-0">
-                                        <div className="px-4 pb-4">
-                                          <div className="rounded-lg border border-border bg-background overflow-hidden">
-                                            <Table>
-                                              <TableHeader className="bg-muted/50">
-                                                <TableRow>
-                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.reason")}</TableHead>
-                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground text-center">{t("strikes.table.weight")}</TableHead>
-                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.addedBy")}</TableHead>
-                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.date")}</TableHead>
-                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground">{t("strikes.table.expires")}</TableHead>
-                                                  <TableHead className="h-8 text-[10px] uppercase font-bold text-muted-foreground text-right">{tCommon("actions")}</TableHead>
-                                                </TableRow>
-                                              </TableHeader>
-                                              <TableBody>
-                                                {group.strikes.map((s, idx) => (
-                                                  <TableRow key={`${s.strike_id}-${idx}`} className="hover:bg-muted/20">
-                                                    <TableCell className="py-2 max-w-[200px]">
-                                                      <div className="truncate text-xs text-muted-foreground" title={s.reason}>
-                                                        {s.reason && s.reason !== "No Notes" ? s.reason : t("bans.table.noReason")}
-                                                      </div>
-                                                    </TableCell>
-                                                    <TableCell className="py-2 text-center">
-                                                      <Badge variant="outline" className="text-[10px] px-1.5 h-5 bg-orange-500/10 text-orange-500 border-orange-500/30">
-                                                        {s.strike_weight}
-                                                      </Badge>
-                                                    </TableCell>
-                                                    <TableCell className="py-2">
-                                                      <DiscordUserDisplay
-                                                        userId={String(s.added_by)}
-                                                        username={s.added_by_username}
-                                                        avatarUrl={s.added_by_avatar_url}
-                                                        size="sm"
-                                                      />
-                                                    </TableCell>
-                                                    <TableCell className="py-2 whitespace-nowrap">
-                                                      <div className="text-[11px] text-muted-foreground">
-                                                        {new Date(s.date_created).toLocaleDateString(locale)}
-                                                      </div>
-                                                    </TableCell>
-                                                    <TableCell className="py-2 whitespace-nowrap">
-                                                      <div className="text-[11px] text-muted-foreground">
-                                                        {s.rollover_date ? (
-                                                          new Date(s.rollover_date * 1000).toLocaleDateString(locale)
-                                                        ) : (
-                                                          t("strikes.table.never")
-                                                        )}
-                                                      </div>
-                                                    </TableCell>
-                                                    <TableCell className="py-2 text-right">
-                                                      <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-6 w-6 text-red-500/70 hover:text-red-500 hover:bg-red-500/10"
-                                                        onClick={() => handleRemoveStrike(s.strike_id)}
-                                                      >
-                                                        <Trash2 className="h-3.5 w-3.5" />
-                                                      </Button>
-                                                    </TableCell>
-                                                  </TableRow>
-                                                ))}
-                                              </TableBody>
-                                            </Table>
-                                          </div>
-                                        </div>
-                                      </TableCell>
-                                    </TableRow>
-                                  )}
-                                </Fragment>
-                              );
-                            })}
-                          </TableBody>
-                        </Table>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Info Alert */}
-              <Alert className="border-orange-500/30 bg-orange-500/5">
-                <AlertTriangle className="h-4 w-4 text-orange-500" />
-                <AlertTitle className="text-orange-400">{t("strikes.howItWorks.title")}</AlertTitle>
-                <AlertDescription className="text-orange-300">
-                  {t("strikes.howItWorks.description")}
-                </AlertDescription>
-              </Alert>
-
-              {/* Guidelines */}
-              <Card className="border-yellow-500/30 bg-yellow-500/5">
-                <CardHeader>
-                  <CardTitle className="text-yellow-400">{t("strikes.guidelines.title")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm text-yellow-300">
-                  <p>
-                    <strong className="text-yellow-400 block mb-1">{t("strikes.guidelines.weights.title")}</strong>
-                    {t("strikes.guidelines.weights.desc")}
-                  </p>
-                  <p>
-                    <strong className="text-yellow-400 block mb-1">{t("strikes.guidelines.expiration.title")}</strong>
-                    {t("strikes.guidelines.expiration.desc")}
-                  </p>
-                  <p>
-                    <strong className="text-yellow-400 block mb-1">{t("strikes.guidelines.patterns.title")}</strong>
-                    {t("strikes.guidelines.patterns.desc")}
-                  </p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
+                        {expanded && (
+                          <div className="mt-4 space-y-2 rounded-2xl bg-muted/45 p-2 sm:p-3">
+                            {group.strikes.map((strike) => <StrikeRow key={strike.strike_id} strike={strike} locale={locale} compact onRemove={() => void handleRemoveStrike(strike.strike_id)} t={t} tCommon={tCommon} />)}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          </TabsContent>
+        </Tabs>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+type Translator = ReturnType<typeof useTranslations<"BansPage">>;
+type CommonTranslator = ReturnType<typeof useTranslations<"Common">>;
+
+function SearchControl({ value, onChange, placeholder, className }: Readonly<{ value: string; onChange: (value: string) => void; placeholder: string; className?: string }>) {
+  return (
+    <div className={cn("flex h-10 items-center gap-2 rounded-xl bg-muted/55 px-3 shadow-sm shadow-black/5 focus-within:ring-2 focus-within:ring-ring", className)}>
+      <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+      <input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} className="h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+    </div>
+  );
+}
+
+function SortControl({ value, onChange, options, t }: Readonly<{ value: string; onChange: (value: string) => void; options: string[]; t: Translator }>) {
+  return (
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger aria-label={t("sort.label")} className="h-10 border-0 bg-muted/55 shadow-sm shadow-black/5 sm:w-48">
+        <ArrowDownAZ className="mr-2 h-4 w-4 text-muted-foreground" />
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>{options.map((option) => <SelectItem key={option} value={option}>{t(`sort.${option}` as Parameters<Translator>[0])}</SelectItem>)}</SelectContent>
+    </Select>
+  );
+}
+
+function ViewButton({ active, onClick, icon, label }: Readonly<{ active: boolean; onClick: () => void; icon: ReactNode; label: string }>) {
+  return <button type="button" onClick={onClick} className={cn("flex h-8 items-center gap-2 rounded-lg px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", active ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}><span className="[&_svg]:h-3.5 [&_svg]:w-3.5">{icon}</span>{label}</button>;
+}
+
+function RowSkeletons() {
+  return <div className="space-y-2">{[1, 2, 3].map((item) => <div key={item} className="flex items-center gap-4 rounded-[22px] bg-card p-4 shadow-sm shadow-black/5"><Skeleton className="h-9 w-9 rounded-xl" /><div className="flex-1 space-y-2"><Skeleton className="h-4 w-36" /><Skeleton className="h-3 w-56 max-w-full" /></div><Skeleton className="h-8 w-24 rounded-xl" /></div>)}</div>;
+}
+
+function EmptyState({ title, description }: Readonly<{ title: string; description: string }>) {
+  return <div className="rounded-[24px] bg-card px-5 py-10 text-center shadow-sm shadow-black/5"><p className="font-medium text-foreground">{title}</p><p className="mt-1 text-sm text-muted-foreground">{description}</p></div>;
+}
+
+function DataPill({ label, value, accent = false }: Readonly<{ label: string; value: number; accent?: boolean }>) {
+  return <span className={cn("inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground", accent && "bg-primary/10 text-primary")}><span>{label}</span><strong className="font-semibold text-current">{value}</strong></span>;
+}
+
+function EvidenceLink({ image, label }: Readonly<{ image?: string | null; label: string }>) {
+  if (!image || !optionalImageUrlIsValid(image)) return null;
+  return <a href={image} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><ImageIcon className="h-3.5 w-3.5" />{label}<ExternalLink className="h-3 w-3" /></a>;
+}
+
+function BanRow({ ban, locale, clanName, onRemove, t, tCommon }: Readonly<{ ban: BannedPlayer; locale: string; clanName: string | null; onRemove: () => void; t: Translator; tCommon: CommonTranslator }>) {
+  return (
+    <article className="rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+        <div className="min-w-0 lg:w-52 lg:shrink-0"><PlayerProfilePopover playerName={ban.name || ban.VillageName || tCommon("unknown")} playerTag={ban.VillageTag} clanName={clanName} clanTag={ban.clan_tag ?? null} townhallLevel={ban.town_hall ?? null} trophies={ban.trophies ?? null} /></div>
+        <div className="min-w-0 flex-1"><p className="text-sm text-foreground">{ban.Notes && ban.Notes !== "No Notes" ? ban.Notes : t("bans.table.noReason")}</p><div className="mt-2 flex flex-wrap items-center gap-2"><EvidenceLink image={ban.image} label={t("image.view")} /><span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"><CalendarDays className="h-3.5 w-3.5" />{new Date(ban.DateCreated).toLocaleDateString(locale)}</span></div></div>
+        <div className="flex items-center justify-between gap-3 lg:justify-end"><DiscordUserDisplay userId={String(ban.added_by)} username={ban.added_by_username} avatarUrl={ban.added_by_avatar_url} size="sm" /><Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-9 w-9 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("bans.removeBan")}><Trash2 className="h-4 w-4" /></Button></div>
+      </div>
+    </article>
+  );
+}
+
+function StrikeRow({ strike, locale, clanName, compact = false, onRemove, t, tCommon }: Readonly<{ strike: Strike; locale: string; clanName?: string | null; compact?: boolean; onRemove: () => void; t: Translator; tCommon: CommonTranslator }>) {
+  return (
+    <article className={cn("rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5", compact && "rounded-2xl bg-card/80 p-3 sm:p-3") }>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+        {!compact && <div className="min-w-0 lg:w-52 lg:shrink-0"><PlayerProfilePopover playerName={strike.player_name || tCommon("unknown")} playerTag={strike.tag} clanName={clanName} clanTag={strike.clan_tag ?? null} townhallLevel={strike.town_hall ?? null} trophies={strike.trophies ?? null} /></div>}
+        <div className="min-w-0 flex-1"><p className="text-sm text-foreground">{strike.reason && strike.reason !== "No Notes" ? strike.reason : t("bans.table.noReason")}</p><div className="mt-2 flex flex-wrap items-center gap-2"><DataPill label={t("strikes.table.weight")} value={strike.strike_weight} accent /><EvidenceLink image={strike.image} label={t("image.view")} /><span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"><CalendarDays className="h-3.5 w-3.5" />{new Date(strike.date_created).toLocaleDateString(locale)}</span><span className="text-xs text-muted-foreground">{t("strikes.table.expires")}: {strike.rollover_date ? new Date(strike.rollover_date * 1000).toLocaleDateString(locale) : t("strikes.table.never")}</span></div></div>
+        <div className="flex items-center justify-between gap-3 lg:justify-end"><DiscordUserDisplay userId={String(strike.added_by)} username={strike.added_by_username} avatarUrl={strike.added_by_avatar_url} size="sm" /><Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-9 w-9 shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("strikes.removeStrike")}><Trash2 className="h-4 w-4" /></Button></div>
+      </div>
+    </article>
+  );
+}
+
+function ImageUrlField({ id, value, onChange, valid, t }: Readonly<{ id: string; value: string; onChange: (value: string) => void; valid: boolean; t: Translator }>) {
+  return <div className="space-y-2"><Label htmlFor={id}>{t("image.label")}</Label><div className="relative"><ImageIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input id={id} type="url" inputMode="url" value={value} onChange={(event) => onChange(event.target.value)} placeholder={t("image.placeholder")} aria-invalid={!valid} className="pl-9" /></div><p className={cn("text-xs text-muted-foreground", !valid && "text-destructive")}>{valid ? t("image.help") : t("image.invalid")}</p></div>;
+}
+
+function BanDialog({ open, onOpenChange, value, onChange, onSubmit, submitting, imageValid, t, tCommon }: Readonly<{ open: boolean; onOpenChange: (open: boolean) => void; value: { player_tag: string; reason: string; image: string }; onChange: (value: { player_tag: string; reason: string; image: string }) => void; onSubmit: () => void; submitting: boolean; imageValid: boolean; t: Translator; tCommon: CommonTranslator }>) {
+  return <Dialog open={open} onOpenChange={onOpenChange}><DialogTrigger asChild><Button size="sm"><Plus className="mr-2 h-4 w-4" />{t("bans.addBan")}</Button></DialogTrigger><DialogContent className="border-0 bg-card shadow-xl sm:max-w-lg"><DialogHeader><DialogTitle>{t("bans.addDialog.title")}</DialogTitle><DialogDescription>{t("bans.addDialog.description")}</DialogDescription></DialogHeader><div className="space-y-4 py-2"><div className="space-y-2"><Label htmlFor="ban-player-tag">{t("bans.addDialog.playerTagLabel")}</Label><Input id="ban-player-tag" value={value.player_tag} onChange={(event) => onChange({ ...value, player_tag: event.target.value })} placeholder={t("bans.addDialog.playerTagPlaceholder")} /></div><div className="space-y-2"><Label htmlFor="ban-reason">{t("bans.addDialog.reasonLabel")}</Label><Textarea id="ban-reason" value={value.reason} onChange={(event) => onChange({ ...value, reason: event.target.value })} placeholder={t("bans.addDialog.reasonPlaceholder")} /></div><ImageUrlField id="ban-image" value={value.image} onChange={(image) => onChange({ ...value, image })} valid={imageValid} t={t} /></div><DialogFooter><Button variant="secondary" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button><Button onClick={onSubmit} disabled={submitting || !value.player_tag.trim() || !value.reason.trim() || !imageValid}>{submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("bans.addDialog.submit")}</Button></DialogFooter></DialogContent></Dialog>;
+}
+
+function StrikeDialog({ open, onOpenChange, value, onChange, onSubmit, submitting, imageValid, t, tCommon }: Readonly<{ open: boolean; onOpenChange: (open: boolean) => void; value: NewStrike; onChange: (value: NewStrike) => void; onSubmit: () => void; submitting: boolean; imageValid: boolean; t: Translator; tCommon: CommonTranslator }>) {
+  const info = <div className="space-y-3"><div><p className="font-medium text-foreground">{t("strikes.guidelines.weights.title")}</p><p className="mt-1">{t("strikes.guidelines.weights.desc")}</p></div><div><p className="font-medium text-foreground">{t("strikes.guidelines.expiration.title")}</p><p className="mt-1">{t("strikes.guidelines.expiration.desc")}</p></div></div>;
+  return <Dialog open={open} onOpenChange={onOpenChange}><DialogTrigger asChild><Button size="sm"><Plus className="mr-2 h-4 w-4" />{t("strikes.addStrike")}</Button></DialogTrigger><DialogContent className="border-0 bg-card shadow-xl sm:max-w-lg"><DialogHeader><DialogTitle>{t("strikes.addDialog.title")}</DialogTitle><DialogDescription>{t("strikes.addDialog.description")}</DialogDescription></DialogHeader><div className="space-y-4 py-2"><div className="space-y-2"><Label htmlFor="strike-player-tag">{t("strikes.addDialog.playerTagLabel")}</Label><Input id="strike-player-tag" value={value.player_tag} onChange={(event) => onChange({ ...value, player_tag: event.target.value })} placeholder={t("strikes.addDialog.playerTagPlaceholder")} /></div><div className="space-y-2"><Label htmlFor="strike-reason">{t("strikes.addDialog.reasonLabel")}</Label><Textarea id="strike-reason" value={value.reason} onChange={(event) => onChange({ ...value, reason: event.target.value })} placeholder={t("strikes.addDialog.reasonPlaceholder")} /></div><div className="grid gap-4 sm:grid-cols-2"><div className="space-y-2"><div className="flex items-center gap-2"><Label htmlFor="strike-weight">{t("strikes.addDialog.weightLabel")}</Label><InfoPopover content={info} label={t("strikes.howItWorks.title")} /></div><Input id="strike-weight" type="number" min={1} value={value.strike_weight} onChange={(event) => onChange({ ...value, strike_weight: Math.max(1, Number.parseInt(event.target.value, 10) || 1) })} /></div><div className="space-y-2"><Label htmlFor="rollover-days">{t("strikes.addDialog.rolloverLabel")}</Label><Input id="rollover-days" type="number" min={1} value={value.rollover_days ?? ""} onChange={(event) => onChange({ ...value, rollover_days: event.target.value ? Math.max(1, Number.parseInt(event.target.value, 10) || 1) : undefined })} placeholder={t("strikes.addDialog.rolloverPlaceholder")} /></div></div><ImageUrlField id="strike-image" value={value.image} onChange={(image) => onChange({ ...value, image })} valid={imageValid} t={t} /></div><DialogFooter><Button variant="secondary" onClick={() => onOpenChange(false)}>{tCommon("cancel")}</Button><Button onClick={onSubmit} disabled={submitting || !value.player_tag.trim() || !value.reason.trim() || !imageValid}>{submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{t("strikes.addDialog.submit")}</Button></DialogFooter></DialogContent></Dialog>;
+}

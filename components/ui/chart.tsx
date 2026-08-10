@@ -63,6 +63,7 @@ export function ChartContainer({
   children,
   config,
   className,
+  style: containerStyle,
   ...props
 }: React.ComponentProps<"div"> & {
   config: ChartConfig;
@@ -71,7 +72,7 @@ export function ChartContainer({
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [size, setSize] = React.useState({ width: 0, height: 0 });
 
-  const style = React.useMemo(() => {
+  const chartStyle = React.useMemo(() => {
     return Object.entries(config).reduce<Record<string, string>>((acc, [key, value]) => {
       if (value.color) {
         acc[`--color-${key}`] = value.color;
@@ -141,7 +142,7 @@ export function ChartContainer({
           "[&_.recharts-sector[stroke='#fff']]:stroke-transparent",
           className
         )}
-        style={style}
+        style={{ ...chartStyle, ...containerStyle }}
         {...props}
       >
         {hasValidSize ? (

@@ -19,6 +19,7 @@ import { TicketsClient } from './clients/tickets-client';
 import { PanelsClient } from './clients/panels-client';
 import { BasesClient } from './clients/bases-client';
 import { ClanCategoriesClient } from './clients/clan-categories-client';
+import { BillingClient } from './clients/billing-client';
 
 /**
  * Main API client with all endpoints organized by domain
@@ -39,6 +40,7 @@ export class ClashKingApiClient {
   public readonly panels: PanelsClient;
   public readonly bases: BasesClient;
   public readonly clanCategories: ClanCategoriesClient;
+  public readonly billing: BillingClient;
 
   constructor(config: ApiConfig) {
     // Initialize all specialized clients with the same config
@@ -57,6 +59,7 @@ export class ClashKingApiClient {
     this.panels = new PanelsClient(config);
     this.bases = new BasesClient(config);
     this.clanCategories = new ClanCategoriesClient(config);
+    this.billing = new BillingClient(config);
   }
 
   /**
@@ -78,6 +81,7 @@ export class ClashKingApiClient {
     this.panels.setAccessToken(token);
     this.bases.setAccessToken(token);
     this.clanCategories.setAccessToken(token);
+    this.billing.setAccessToken(token);
   }
 
   /**
@@ -99,6 +103,7 @@ export class ClashKingApiClient {
     this.panels.clearTokens();
     this.bases.clearTokens();
     this.clanCategories.clearTokens();
+    this.billing.clearTokens();
   }
 
   /**
@@ -126,8 +131,17 @@ export function createApiClient(
  * Returns the base URL depending on whether code runs server-side or client-side.
  * Exported for testability.
  */
+export function getDevelopmentBaseUrl(browserHostname?: string): string {
+  const hostname = browserHostname ?? (typeof window === 'undefined' ? undefined : window.location.hostname);
+  if (hostname && !['localhost', '127.0.0.1', '::1'].includes(hostname)) {
+    return 'https://dev-api.clashk.ing';
+  }
+  return 'http://localhost:8000';
+}
+
 export function getDefaultBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_API_URL || 'https://local-api.clashk.ing';
+  if (process.env.NODE_ENV === 'development') return getDevelopmentBaseUrl();
+  return process.env.NEXT_PUBLIC_API_URL || 'https://v2-api.clashk.ing';
 }
 
 /**

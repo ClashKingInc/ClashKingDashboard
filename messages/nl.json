@@ -16,7 +16,6 @@
     "back": "Terug",
     "next": "Volgende",
     "previous": "Vorige",
-    "poweredBy": "Mogelijk gemaakt door",
     "noData": "Geen gegevens beschikbaar",
     "noChannelFound": "Geen kanaal gevonden.",
     "searchChannels": "Zoek kanalen...",
@@ -79,7 +78,71 @@
     "lightTheme": "Wit thema",
     "darkTheme": "Donker thema",
     "language": "Taal",
-    "browserLanguage": "Browsertaal"
+    "browserLanguage": "Browsertaal",
+    "accountSettings": "Accountinstellingen"
+  },
+  "AccountSettings": {
+    "title": "Accountinstellingen",
+    "description": "Beheer je ClashKing-profiel, voorkeuren, gebruik en abonnement.",
+    "retry": "Opnieuw proberen",
+    "profile": {
+      "title": "Profiel",
+      "description": "De identiteit die aan je ClashKing-account is gekoppeld.",
+      "discord": "Discord",
+      "account": "ClashKing",
+      "synced": "Je naam en profielfoto worden gesynchroniseerd vanuit Discord.",
+      "local": "Dit profiel wordt beheerd door je ClashKing-account."
+    },
+    "appearance": {
+      "title": "Weergave en taal",
+      "description": "Kies hoe het dashboard eruitziet en welke taal het gebruikt.",
+      "theme": "Thema",
+      "themes": { "system": "Systeem", "light": "Licht", "dark": "Donker" },
+      "language": "Taal",
+      "browserLanguage": "Browsertaal gebruiken"
+    },
+    "usage": {
+      "title": "Gebruik van AI-assistenten",
+      "serverDescription": "Gebruik van de geselecteerde Discord-server deze maand.",
+      "serverName": "Gebruik van {name} deze maand.",
+      "accountDescription": "Gebruik van je geabonneerde account deze maand.",
+      "used": "deze maand gebruikt",
+      "of": "van {limit}",
+      "available": "Gebruik beschikbaar",
+      "freePoolUsed": "Gedeeld gratis gebruik is momenteel niet beschikbaar",
+      "resets": "Reset op {date}",
+      "progressLabel": "{percent}% van het maandelijkse gebruik verbruikt",
+      "infoLabel": "Hoe gratis gebruik werkt",
+      "freePoolInfo": "Gratis servergebruik is beschikbaar zolang de gedeelde maandelijkse gratis ruimte van ClashKing capaciteit heeft. Het kan pauzeren voordat je server zijn eigen limiet bereikt en reset aan het begin van elke UTC-maand.",
+      "subscribers": "Tegoed van {count, plural, one {# abonnement} other {# abonnementen}}"
+    },
+    "billing": {
+      "active": "Actief",
+      "free": "Gratis abonnement",
+      "currentPlan": "ClashKing-abonnement",
+      "supportTitle": "Steun ClashKing ❤️",
+      "price": "$6,99 per maand",
+      "activeDescription": "Je Stripe-abonnement is actief.",
+      "description": "Wijs één abonnement toe aan één Discord-server. Accountfuncties werken op het dashboard en in de mobiele app.",
+      "notifications": "Meldingen voor maximaal {limit} favoriete spelers",
+      "credit": "Elke maand {credit} gebruik van AI-assistenten",
+      "crossPlatform": "Beschikbaar op het dashboard en in de mobiele app",
+      "manage": "Abonnement beheren in Stripe",
+      "subscribe": "$6,99/maand",
+      "learnMore": "Meer informatie",
+      "secure": "Veilig afrekenen en factuurbeheer worden door Stripe afgehandeld.",
+      "stripeUnavailable": "Stripe is momenteel niet beschikbaar.",
+      "checkoutUnavailable": "Abonnementen zijn nog niet beschikbaar. Elke server gebruikt momenteel de maandelijkse AI-limiet van $ 0,05.",
+      "checkoutSuccess": "Het afrekenen is voltooid. Je abonnement wordt bijgewerkt zodra Stripe dit bevestigt.",
+      "checkoutCancelled": "Het afrekenen is geannuleerd. Er is niets in rekening gebracht.",
+      "compactDescription": "$6,99 per maand, inclusief servervoordelen en $5,00 gebruik van AI-assistenten.",
+      "assignServer": "Abonnementsserver",
+      "selectServer": "Selecteer een server",
+      "assignmentHelp": "Servervoordelen volgen deze selectie. Verplaatsen kan AutoBoards boven de gratis limiet op de vorige server uitschakelen; eerder AI-gebruik blijft aan je account gekoppeld.",
+      "checkoutAssignmentHelp": "Kies welke server de voordelen en het inbegrepen maandelijkse AI-tegoed van $5,00 ontvangt.",
+      "subscriptionRequired": "Abonneer je om te kiezen welke server de voordelen ontvangt.",
+      "selectServerFirst": "Kies een server voordat je naar afrekenen gaat."
+    }
   },
   "HomePage": {
     "badge": "{serverCount}+ servers gebruiken ClashKing al",
@@ -190,17 +253,9 @@
     "idPrefix": "ID: {id}"
   },
   "Sidebar": {
-    "overview": {
-      "name": "Overzicht",
-      "description": "Dashboard startpagina"
-    },
     "general": {
       "name": "Algemene Instellingen",
       "description": "Serverconfiguratie"
-    },
-    "dashboardAccess": {
-      "name": "Dashboardtoegang",
-      "description": "Dashboardonderdelen delegeren"
     },
     "familySettings": {
       "name": "Familie Instellingen",
@@ -250,6 +305,10 @@
       "name": "Embeds",
       "description": "Discord embed-sjablonen"
     },
+    "graphics": {
+      "name": "Afbeeldingen",
+      "description": "Dynamische afbeeldingssjablonen"
+    },
     "links": {
       "name": "Koppelingen",
       "description": "Speler-Discord koppeling"
@@ -258,23 +317,19 @@
       "name": "Bans & Strikes",
       "description": "Moderatietools"
     },
-    "wars": {
-      "name": "Oorlogen",
-      "description": "Oorlogsstatistieken"
-    },
-    "leaderboards": {
-      "name": "Ranglijsten",
-      "description": "Wereldwijde ranglijsten"
-    },
     "sections": {
-      "configuration": "Configuratie",
+      "general": "Algemeen",
       "clanManagement": "Clanbeheer",
       "playerManagement": "Spelerbeheer",
-      "automation": "Automatisering",
-      "statistics": "Statistieken"
+      "serverManagement": "Serverbeheer"
     },
     "switchServer": "Server Wisselen",
+    "inactiveServer": "Tracking is uitgeschakeld voor deze server",
     "goHome": "Homepagina"
+  },
+  "GraphicsPage": {
+    "desktopOnlyTitle": "Graphics is beschikbaar op desktop",
+    "desktopOnlyDescription": "De grafische editor heeft een werkruimte op desktopformaat nodig. Open deze pagina op een scherm van minstens 1024 pixels breed."
   },
   "BasesPage": {
     "eyebrow": "Clanbeheer",
@@ -377,12 +432,30 @@
     }
   },
   "BansPage": {
-    "title": "Moderatie",
-    "description": "Beheer spelersbans en strikes",
+    "title": "Bans en strikes",
+    "description": "Bekijk spelerswaarschuwingen en bewaar gedeelde moderatiecontext op één plek",
     "viewClashProfile": "Bekijk Clash-profiel",
     "tabs": {
       "bans": "Bans",
       "strikes": "Strikes"
+    },
+    "image": {
+      "label": "URL van bewijsafbeelding (optioneel)",
+      "placeholder": "https://example.com/bewijs.png",
+      "help": "Voeg één openbaar toegankelijke afbeelding aan dit item toe.",
+      "invalid": "Voer een geldige http- of https-afbeeldings-URL in.",
+      "view": "Bekijk bewijs"
+    },
+    "sort": {
+      "label": "Sorteer items",
+      "newest": "Nieuwste eerst",
+      "oldest": "Oudste eerst",
+      "player": "Spelernaam",
+      "reason": "Reden",
+      "moderator": "Moderator",
+      "weight": "Hoogste gewicht",
+      "count": "Meeste strikes",
+      "recent": "Meest recente strike"
     },
     "bans": {
       "title": "Verbannen Spelers",
@@ -429,7 +502,7 @@
       },
       "addDialog": {
         "title": "Verban een speler",
-        "description": "Voeg een speler toe aan de banlijst. Ze kunnen geen enkele clan op deze server joinen.",
+        "description": "Voeg een speler toe aan de gedeelde banlijst. De bot waarschuwt je team als die speler zich bij een ingestelde clan aansluit.",
         "playerTagLabel": "Speler Tag",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Speler Naam (optioneel)",
@@ -550,6 +623,52 @@
   "RostersPage": {
     "title": "Roosters & Opstellingen",
     "description": "Beheer oorlogsroosters, opstellingen en ledenindelingen",
+    "aiBuilder": {
+      "button": "Rosterassistent",
+      "new": "Nieuw",
+      "title": "Rosterassistent",
+      "description": "Bouw en bewaar herbruikbare roosterweergaven met natuurlijke taal."
+    },
+    "cwlBonuses": {
+      "button": "CWL-bonussen",
+      "title": "CWL-bonussen",
+      "description": "Bereken en wijs de beschikbare seizoensbonussen toe.",
+      "back": "Terug naar roosters",
+      "clan": "Clan",
+      "selectClan": "Selecteer een clan",
+      "searchClans": "Clans zoeken",
+      "noClanFound": "Geen clan gevonden",
+      "season": "Seizoen",
+      "noStoredSeasons": "Geen opgeslagen seizoenen",
+      "unknownLeague": "Onbekende competitie",
+      "unrankedLeague": "Niet-geklasseerde CWL-competitie",
+      "loading": "Opgeslagen CWL-gegevens laden…",
+      "loadClansError": "Kan geconfigureerde clans niet laden.",
+      "loadMedalRulesError": "Kan CWL-medalleregels niet laden.",
+      "loadDataError": "Kan CWL-gegevens niet laden.",
+      "league": "Competitie",
+      "rank": "Rang",
+      "warsWon": "Gewonnen oorlogen",
+      "leagueMedals": "Competitiemedailles",
+      "bonusSlots": "Bonusplaatsen",
+      "movement": {
+        "promoted": "Promotiepositie",
+        "demoted": "Degradatiepositie",
+        "unchanged": "Competitie ongewijzigd"
+      },
+      "incomplete": "De opgeslagen groep is onvolledig. Alle oorlogen moeten opgeslagen en afgelopen zijn voordat bonussen kunnen worden toegewezen.",
+      "awardBonuses": "Bonussen toewijzen",
+      "selectionSummary": "{selected}/{total} geselecteerd · {medals} medailles per persoon",
+      "selectionLocked": "Selectie wordt beschikbaar wanneer de opgeslagen groep compleet is.",
+      "ready": "Klaar om op te slaan",
+      "chooseMore": "{count, plural, one {Kies nog # ontvanger.} other {Kies nog # ontvangers.}}",
+      "save": "Bonussen opslaan",
+      "saved": "CWL-bonusontvangers opgeslagen",
+      "townHallAlt": "Stadhuis {level}",
+      "stars": "{count, plural, one {# ster} other {# sterren}}",
+      "attacks": "{count, plural, one {# aanval} other {# aanvallen}}",
+      "noPlayers": "Er zijn geen spelers beschikbaar voor dit CWL-seizoen."
+    },
     "stats": {
       "totalRosters": "Totaal Roosters",
       "totalMembers": "Totaal Leden",
@@ -676,6 +795,12 @@
       "noGroup": "Geen groep",
       "moveToGroup": "Verplaats naar groep",
       "clone": "Klonen",
+      "rename": "{name} hernoemen",
+      "actions": "Acties voor {name}",
+      "renameInput": "Rosternaam",
+      "renameSave": "Rosternaam opslaan",
+      "renameCancel": "Hernoemen annuleren",
+      "renameSuccess": "Roster hernoemd naar {name}",
       "allRosters": "Alle Roosters",
       "manageRosters": "Beheer je oorlogsroosters en opstellingen"
     },
@@ -888,25 +1013,38 @@
       "submit": "Toevoegen"
     },
     "compare": {
-      "enterMode": "Vergelijken",
-      "modeTitle": "Vergelijkmodus",
-      "modeHint": "Klik op roosters om ze te selecteren (2 tot 4 roosters)",
+      "enterMode": "Bulk bewerken",
+      "modeTitle": "Roosters bulk bewerken",
+      "modeHint": "Selecteer 2 tot 4 roosters om samen te bewerken",
       "exitMode": "Annuleren",
       "selected": "rooster(s) geselecteerd",
-      "button": "Vergelijken",
-      "title": "Roosters Vergelijken",
+      "button": "Bulkeditor openen",
+      "title": "Roosters bulk bewerken",
+      "description": "Sleep spelers tussen roosters om ze te verplaatsen.",
       "dragToMove": "Sleep leden tussen roosters om ze te verplaatsen",
       "loadError": "Kon roosters niet laden",
       "memberMoved": "Lid verplaatst",
       "memberMovedDesc": "{name} verplaatst van {from} naar {to}",
       "moveError": "Kon lid niet verplaatsen",
-      "selectAtLeast2": "Selecteer minimaal 2 roosters om te vergelijken",
+      "selectAtLeast2": "Selecteer minimaal 2 roosters om te bewerken",
       "moving": "Lid verplaatsen...",
-      "compareGroup": "Groep vergelijken",
+      "compareGroup": "Groep bulk bewerken",
       "dragToMoveCategory": "Sleep leden tussen roosters en categorieën",
       "categoryChanged": "Categorie gewijzigd",
       "categoryChangedDesc": "{name} verplaatst naar {category}",
-      "uncategorized": "Zonder categorie"
+      "uncategorized": "Zonder categorie",
+      "back": "Terug naar roosters",
+      "unknownError": "Er is een onbekende fout opgetreden",
+      "memberCount": "{count, plural, one {# lid} other {# leden}}",
+      "dragPlayer": "Sleep {name}",
+      "townHallAlt": "Stadhuis {level}",
+      "duplicate": "Deze speler staat in meerdere roosters",
+      "dropHere": "Sleep een speler hierheen",
+      "status": {
+        "clan": "Clan",
+        "family": "Familie",
+        "external": "Extern"
+      }
     },
     "ungrouped": "Niet gegroepeerd",
     "automations": {
@@ -1182,179 +1320,19 @@
       "next": "Volgende"
     }
   },
-  "WarsPage": {
-    "title": "Oorlogsstatistieken",
-    "description": "Volg oorlogsprestaties en analyseer gevechtsstatistieken",
-    "actions": {
-      "exportData": "Gegevens Exporteren",
-      "resetFilters": "Filters Resetten",
-      "applyFilters": "Filters Toepassen"
-    },
-    "filters": {
-      "title": "Filters",
-      "description": "Filter oorlogsstatistieken op verschillende criteria",
-      "clan": "Clan",
-      "allClans": "Alle Clans",
-      "townHall": "Stadhuis",
-      "townHallShort": "SH",
-      "allTownHalls": "Alle SH Niveaus",
-      "townHallLevel": "SH {level}",
-      "period": "Periode",
-      "last7Days": "Laatste 7 dagen",
-      "last30Days": "Laatste 30 dagen",
-      "last90Days": "Laatste 90 dagen",
-      "last6Months": "Laatste 6 maanden",
-      "lastYear": "Laatste jaar",
-      "custom": "Aangepast",
-      "startDate": "Startdatum",
-      "endDate": "Einddatum",
-      "warTypes": "Oorlogstypen"
-    },
-    "summaryStats": {
-      "totalWins": "Totale Overwinningen",
-      "totalWinsDesc": "Van {totalWars} totale oorlogen",
-      "totalLosses": "Totale Nederlagen",
-      "totalLossesDesc": "{totalDraws} gelijkspel",
-      "winRate": "Winratio",
-      "winRateDesc": "Algehele prestaties",
-      "activeWars": "Actieve Oorlogen",
-      "activeWarsDesc": "{activeCwl} in CWL"
-    },
-    "charts": {
-      "dailyPerformance": {
-        "title": "Oorlogsprestaties per Week",
-        "description": "Wekelijkse overwinningen, nederlagen en gelijkspel over de geselecteerde periode",
-        "wins": "Overwinningen",
-        "losses": "Nederlagen",
-        "draws": "Gelijkspel"
-      },
-      "thSuccessRate": {
-        "title": "Aanval Succesratio per Stadhuis",
-        "description": "3-sterren ratio per SH niveau",
-        "threeStarPercent": "3-Sterren %",
-        "otherPercent": "Andere %"
-      },
-      "warTypeDistribution": {
-        "title": "Oorlogstype Verdeling",
-        "description": "Verdeling per oorlogstype",
-        "cwl": "CWL",
-        "random": "Willekeurig",
-        "friendly": "Vriendschappelijk"
-      },
-      "topPerformers": {
-        "title": "Topspelers",
-        "description": "Beste strijders op totaal aantal sterren",
-        "attacksAndStars": "{attacks} aanvallen • {stars} sterren",
-        "noData": "Geen spelersgegevens beschikbaar. Probeer je filters aan te passen."
-      },
-      "missedAttacks": {
-        "title": "Gemiste aanvallen",
-        "description": "Spelers die niet al hun aanvallen hebben gebruikt",
-        "attacks": "aanvallen gemist"
-      },
-      "topDefenders": {
-        "title": "Beste Verdedigers",
-        "description": "Beste verdedigers op gemiddeld aantal gegeven sterren",
-        "defensesAndStars": "{defenses} verdedigingen • {stars} sterren gegeven",
-        "noData": "Geen verdedigingsgegevens beschikbaar. Probeer je filters aan te passen."
-      },
-      "worstAttackers": {
-        "title": "Slechtste Aanvallers",
-        "description": "Spelers met het laagste gemiddelde sterren per aanval (min. 3 aanvallen)",
-        "attacksAndStars": "{attacks} aanvallen • {stars} sterren",
-        "noData": "Geen spelersgegevens beschikbaar. Probeer je filters aan te passen."
-      },
-      "worstDefenders": {
-        "title": "Slechtste Verdedigers",
-        "description": "Spelers die de meeste sterren weggaven bij verdediging (min. 3 verdedigingen)",
-        "defensesAndStars": "{defenses} verdedigingen • {stars} sterren weggegeven",
-        "noData": "Geen verdedigingsgegevens beschikbaar. Probeer je filters aan te passen."
-      }
-    },
-    "clanStatsTable": {
-      "title": "Clan Oorlogsstatistieken",
-      "description": "Gedetailleerde statistieken voor elke clan",
-      "headers": {
-        "clan": "Clan",
-        "status": "Status",
-        "wars": "Oorlogen",
-        "record": "W/V/G",
-        "winRate": "Winratio",
-        "avgDestruction": "Gem. Vernietiging",
-        "avgStarsPerAttack": "Sterren / Aanval",
-        "avgDefenseStars": "Sterren/Verd"
-      },
-      "status": {
-        "inWar": "In Oorlog",
-        "cwl": "CWL",
-        "peace": "Vrede"
-      },
-      "noData": "Geen clan statistieken beschikbaar. Pas filters toe of wacht tot de gegevens zijn geladen."
-    },
-    "toast": {
-      "errorTitle": "Fout",
-      "errorLoadingClans": "Kon clans niet laden. Probeer het opnieuw.",
-      "errorLoadingWarData": "Kon oorlogsgegevens niet laden. Probeer het opnieuw.",
-      "errorNoClans": "Geen clans beschikbaar",
-      "errorApplyingFilters": "Kon filters niet toepassen. Probeer het opnieuw."
-    }
-  },
-  "LeaderboardsPage": {
-    "title": "Ranglijsten",
-    "description": "Wereldwijde ranglijsten voor Clan Hoofdstad en meer",
-    "comingSoon": "Deze functie komt binnenkort. Kom later terug!",
-    "stats": {
-      "totalEntries": "Totaal Vermeldingen",
-      "type": "Type",
-      "league": "Divisie",
-      "weekend": "Weekend"
-    },
-    "filters": {
-      "title": "Filters",
-      "description": "Pas je ranglijstweergave aan",
-      "type": "Type",
-      "metric": "Metriek",
-      "league": "Divisie",
-      "weekend": "Weekend"
-    },
-    "types": {
-      "player": "Spelers",
-      "clan": "Clans"
-    },
-    "metrics": {
-      "capital": {
-        "player": {
-          "capitalLooted": "Hoofdstad Geplunderd"
-        },
-        "clan": {
-          "capitalTotalLoot": "Totale Buit",
-          "raidsCompleted": "Raids Voltooid",
-          "enemyDistrictsDestroyed": "Districten Vernietigd",
-          "medals": "Medailles"
-        }
-      }
-    },
-    "leagues": {
-      "all": "Alle",
-      "legendLeague": "Legende Divisie",
-      "titanLeagueI": "Titan Divisie I",
-      "titanLeagueII": "Titan Divisie II",
-      "titanLeagueIII": "Titan Divisie III"
-    },
-    "rankings": {
-      "title": "Ranglijsten",
-      "description": "Top {count} {type} voor {weekend}",
-      "players": "spelers",
-      "clans": "clans"
-    },
-    "empty": {
-      "title": "Geen gegevens beschikbaar",
-      "description": "Probeer een ander weekend of divisie te selecteren"
-    }
-  },
   "ClansPage": {
-    "title": "Clanbeheer",
-    "description": "Configureer je clans en hun Discord-integratie-instellingen",
+    "title": "Clans",
+    "description": "Beheer de clans die aan deze Discord-server zijn gekoppeld.",
+    "listTitle": "Gekoppelde clans",
+    "memberSummary": "{count, plural, one {# lid} other {# leden}}",
+    "memberCount": "{count}/50 leden",
+    "searchLabel": "Clans zoeken",
+    "searchPlaceholder": "Zoek op naam, tag of categorie",
+    "noSearchResults": "Geen clans gevonden voor deze zoekopdracht.",
+    "unknownClan": "Onbekende clan",
+    "badgeAlt": "Clanbadge van {name}",
+    "addedOn": "Toegevoegd aan deze server op {date}",
+    "addedOnLabel": "Tonen wanneer {name} is toegevoegd",
     "addClan": "Clan Toevoegen",
     "addNewClan": "Nieuwe Clan Toevoegen",
     "addClanDescription": "Voer je clantag in om deze aan de server toe te voegen",
@@ -1367,39 +1345,21 @@
     "acrossAllClans": "Over alle clans",
     "channels": "Kanalen",
     "availableChannels": "Beschikbare kanalen",
-    "noClansYet": "Nog Geen Clans",
-    "getStartedAdding": "Begin door je eerste clan toe te voegen",
-    "addFirstClan": "Voeg Je Eerste Clan Toe",
+    "noClansYet": "Stel je eerste clan in",
+    "getStartedAdding": "Je hebt nog geen clan aan deze server gekoppeld. Voeg er hier een toe om ClashKing in te stellen.",
+    "addFirstClan": "Voeg je eerste clan toe",
     "level": "Level",
     "members": "Leden",
     "status": "Status",
     "configuredBadge": "Geconfigureerd",
     "setupRequired": "Configuratie Vereist",
-    "configure": "Configureren",
-    "sorting": {
-      "label": "Sorteer clans",
-      "sortBy": "Sorteer op",
-      "toggleDirection": "Wissel sorteerrichting",
-      "added": "Toegevoegd op",
-      "name": "Clannaam",
-      "level": "Clanniveau",
-      "members": "Leden"
-    },
+    "configureClanLabel": "{name} configureren",
     "configureClan": "Configureer {name} ({tag})",
-    "customizeIntegration": "Pas Discord-integratie-instellingen aan voor deze clan",
-    "tabs": {
-      "basic": "Discord setup",
-      "war": "Oorlog"
-    },
     "memberRole": "Lid Rol",
     "leaderRole": "Leider Rol",
     "selectRole": "Selecteer rol",
     "none": "Geen",
     "clanAbbreviation": "Clan Afkorting",
-    "warScoreCountdown": "Oorlogsscore Aftelling",
-    "warScoreCountdownDescription": "Maakt een spraakkanaal met de huidige oorlogsscore",
-    "warTimerCountdown": "Oorlog Timer Aftelling",
-    "warTimerCountdownDescription": "Maakt een spraakkanaal met de resterende oorlogstijd",
     "category": "Categorie",
     "categoryOptions": {
       "none": "Geen categorie",
@@ -1410,6 +1370,9 @@
     "categories": {
       "title": "Clancategorieën",
       "description": "Maak en beheer de categorieën die beschikbaar zijn voor de clans van deze server.",
+      "manage": "Categorieën beheren",
+      "uncategorized": "Zonder categorie",
+      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
       "refresh": "Vernieuwen",
       "createLabel": "Nieuwe categorie",
       "name": "Categorienaam",
@@ -1418,6 +1381,7 @@
       "create": "Categorie maken",
       "empty": "Er zijn nog geen clancategorieën gemaakt.",
       "clanCount": "{count, plural, one {# clan} other {# clans}}",
+      "reorderAction": "{name} opnieuw ordenen",
       "renameAction": "{name} hernoemen",
       "deleteAction": "{name} verwijderen",
       "renameTitle": "Clancategorie hernoemen",
@@ -1431,11 +1395,13 @@
       "deleteSuccessDescription": "{count, plural, =0 {Geen clans gewijzigd.} one {# clan is nu ongecategoriseerd.} other {# clans zijn nu ongecategoriseerd.}}",
       "created": "{name} gemaakt.",
       "renamed": "Categorie hernoemd naar {name}.",
+      "reordered": "Categorievolgorde opgeslagen.",
       "errors": {
         "title": "Categorieën niet beschikbaar",
         "load": "Clancategorieën laden is mislukt.",
         "create": "De clancategorie maken is mislukt.",
         "rename": "De clancategorie hernoemen is mislukt.",
+        "reorder": "De categorievolgorde opslaan is mislukt.",
         "preview": "Het verwijdervoorbeeld laden is mislukt.",
         "delete": "De clancategorie verwijderen is mislukt.",
         "refresh": "De categorie is gewijzigd, maar de vernieuwde categorie- of clanstatus kon niet worden geladen.",
@@ -1455,7 +1421,8 @@
     "notAvailable": "N/A",
     "saving": "Opslaan...",
     "saveChanges": "Wijzigingen Opslaan",
-    "deleteConfirm": "Weet je zeker dat je {tag} wilt verwijderen? Dit verwijdert ook alle bijbehorende herinneringen en logs.",
+    "deleteClan": "Clan verwijderen",
+    "deleteConfirm": "Weet je zeker dat je {name} wilt verwijderen? Dit verwijdert ook alle bijbehorende herinneringen en logs.",
     "toast": {
       "errorLoadingClans": "Kon clans niet laden",
       "errorLoadingSettings": "Kon claninstellingen niet laden",
@@ -1502,6 +1469,7 @@
       "league": "Divisie",
       "builderhall": "Bouwershut",
       "builderLeague": "Bouwersdivisie",
+      "clanCategory": "Clancategorie",
       "achievement": "Prestatie",
       "status": "Status/Anciënniteit",
       "familyPosition": "Familiepositie"
@@ -1688,6 +1656,19 @@
       "clanGames": "Clan Spelen",
       "inactivity": "Inactiviteit"
     },
+    "section": {
+      "title": "Ingestelde herinneringen",
+      "description": "Filter op clan en kies daarna een herinneringstype om de bezorging te bekijken of te wijzigen."
+    },
+    "issues": {
+      "title": "{count, plural, one {1 herinnering vereist aandacht} other {# herinneringen vereisen aandacht}}",
+      "description": "Deze herinneringen verwijzen naar een kanaal, thread of forumbericht dat niet meer beschikbaar is.",
+      "channelMissing": "Kanaal {channelId} is verwijderd of niet beschikbaar",
+      "threadMissing": "Thread of forumbericht is verwijderd of niet beschikbaar",
+      "showDetails": "Details tonen",
+      "hideDetails": "Details verbergen",
+      "review": "Bekijken"
+    },
     "tabs": {
       "war": "Oorlog",
       "capital": "Hoofdstad",
@@ -1712,6 +1693,10 @@
       "addCapitalReminder": "Hoofdstad Herinnering Toevoegen",
       "addClanGamesReminder": "Clan Spelen Herinnering Toevoegen",
       "addInactivityReminder": "Inactiviteit Herinnering Toevoegen",
+      "clone": "Herinnering klonen",
+      "edit": "Herinnering bewerken",
+      "delete": "Herinnering verwijderen",
+      "more": "Herinneringsacties",
       "retry": "Opnieuw Proberen"
     },
     "clanSelector": {
@@ -1759,7 +1744,20 @@
       "attackThreshold": "Aanvalsdrempel",
       "attackThresholdPlaceholder": "1",
       "attackThresholdHelp": "Gaat mensen pingen als ze {threshold} of meer aanvallen nog kunnen doen.",
+      "pointsValue": "{count} punten",
+      "attacksValue": "{count, plural, one {1 aanval resterend} other {# aanvallen resterend}}",
+      "customImageAlt": "Aangepaste herinneringsafbeelding",
+      "customGifTitle": "Aangepaste herinnerings-GIF",
       "notSet": "Niet ingesteld"
+    },
+    "clone": {
+      "title": "Herinnering klonen",
+      "description": "Kies een andere clan. De tijd, het kanaal, het bericht en alle andere instellingen blijven hetzelfde.",
+      "targetClan": "Nieuwe clan",
+      "selectClan": "Selecteer een andere clan",
+      "noOtherClans": "Voeg nog een clan aan deze server toe voordat je deze herinnering kloont.",
+      "action": "Herinnering klonen",
+      "cloning": "Klonen..."
     },
     "dialog": {
       "addTitle": "Nieuwe Herinnering Toevoegen",
@@ -1779,11 +1777,13 @@
       "reminderAdded": "Herinnering succesvol toegevoegd",
       "reminderAddedDesc": "Nieuwe {type} herinnering toegevoegd. Vergeet niet op te slaan!",
       "reminderUpdated": "Herinnering succesvol bijgewerkt",
+      "reminderCloned": "Herinnering succesvol gekloond",
       "successTitle": "Succes",
       "reminderDeleted": "Herinnering succesvol verwijderd",
       "failedToDelete": "Kan herinnering niet verwijderen",
       "allRemindersSaved": "Alle herinneringen succesvol opgeslagen",
       "failedToSave": "Kan herinneringen niet opslaan",
+      "failedToClone": "Kan herinnering niet klonen",
       "forumPostRequired": "Selecteer een forumbericht voordat je deze herinnering opslaat.",
       "invalidDestination": "De geselecteerde thread hoort niet bij dit kanaal.",
       "timeExceedsLimit": "Resterende tijd moet tussen {min} en {max} uur liggen",
@@ -1793,17 +1793,33 @@
   },
   "LogsPage": {
     "title": "Activiteitslogboeken",
-    "description": "Configureer automatische logging voor clan- en speleractiviteiten",
-    "stats": {
-      "activeLogs": "Actieve Logs",
-      "activeLogsDesc": "Alle familieclans en serverlogboeken",
-      "logChannels": "Log Kanalen",
-      "logChannelsDesc": "Beschikbare kanalen",
-      "trackedClans": "Gevolgde Clans",
-      "trackedClansDesc": "Geconfigureerde clans",
-      "issues": "Problemen",
-      "issuesDesc": "In de volledige familie"
+    "description": "Configureer server- en clanactiviteit die naar Discord wordt verzonden.",
+    "source": {
+      "title": "Kies wat je configureert",
+      "description": "Selecteer een clan voor clanspecifieke logs en instellingen, of de server voor serverbrede logs en instellingen.",
+      "label": "Server of clan",
+      "placeholder": "Selecteer een server of clan",
+      "searchPlaceholder": "Zoek server of clans",
+      "serverDescription": "Logs, aftellingen en deelnamepaneel",
+      "serverFallback": "Deze server"
     },
+    "scope": {
+      "clan": "Clan",
+      "server": "Server",
+      "serverTitle": "Serverlogs",
+      "serverDescription": "Deze feeds gelden voor de hele Discord-server en veranderen niet met de geselecteerde clan."
+    },
+    "issues": {
+      "title": "{count, plural, one {1 bestemming vereist aandacht} other {# bestemmingen vereisen aandacht}}",
+      "description": "Deze actieve logs verwijzen naar een kanaal, thread of forumbericht dat niet meer beschikbaar is.",
+      "serverScope": "Hele server",
+      "channelMissing": "Kanaal {channelId} is verwijderd of niet beschikbaar",
+      "threadMissing": "Thread of forumbericht is verwijderd of niet beschikbaar",
+      "showDetails": "Details tonen",
+      "hideDetails": "Details verbergen",
+      "review": "Bekijken"
+    },
+    "emptyClans": "Voeg een clan aan deze server toe voordat je clanlogs configureert.",
     "clanSelector": {
       "label": "Clan:",
       "placeholder": "Selecteer een clan"
@@ -1813,7 +1829,27 @@
       "war": "Oorlog",
       "capital": "Hoofdstad",
       "player": "Speler",
-      "server": "Server"
+      "countdowns": "Aftellingen"
+    },
+    "serverTabs": {
+      "logs": "Logs",
+      "countdowns": "Aftellingen",
+      "joinPanel": "Deelnamepaneel"
+    },
+    "countdowns": {
+      "loadError": "Aftellingen laden is mislukt.",
+      "updateError": "De aftelling bijwerken is mislukt.",
+      "empty": "Er zijn geen aftellingstypen beschikbaar.",
+      "toggle": "{name} in- of uitschakelen",
+      "types": {
+        "clan_games_timer": { "label": "Clanspelen", "description": "Toon de resterende tijd van de Clanspelen in een spraakkanaal." },
+        "cwl_timer": { "label": "Clanoorlogscompetitie", "description": "Toon de resterende tijd van de Clanoorlogscompetitie in een spraakkanaal." },
+        "raid_weekend_timer": { "label": "Raidweekend", "description": "Toon de resterende tijd van het Raidweekend in een spraakkanaal." },
+        "season_end_timer": { "label": "Seizoenseinde", "description": "Toon de resterende tijd van het seizoen in een spraakkanaal." },
+        "season_day_timer": { "label": "Seizoensdag", "description": "Toon de huidige seizoensdag in een spraakkanaal." },
+        "war_score": { "label": "Oorlogsscore", "description": "Toon de huidige oorlogsscore van deze clan in een spraakkanaal." },
+        "war_timer": { "label": "Oorlogstimer", "description": "Toon de resterende tijd van de huidige clanoorlog in een spraakkanaal." }
+      }
     },
     "clanLogs": {
       "joinLog": {
@@ -1961,10 +1997,6 @@
     "saving": "Opslaan...",
     "saveChanges": "Wijzigingen Opslaan",
     "settingsSaved": "Instellingen succesvol opgeslagen!",
-    "infoBanner": {
-      "title": "Op zoek naar meer instellingen?",
-      "description": "Familie rol- en bijnaaminstellingen staan op de **Familie Instellingen** pagina. Rolbeheerinstellingen staan op de **Rollen** pagina. Clan-specifieke instellingen (ban/strike logs, oorlogskanalen) staan op de **Clans** pagina."
-    },
     "nickname": {
       "title": "Bijnaam Beheer",
       "description": "Beheer hoe bijnamen worden geformatteerd",
@@ -2005,7 +2037,19 @@
       "description": "Beheer toegang en verificatie",
       "fullWhitelistRole": "Volledige Whitelist Rol",
       "fullWhitelistRoleDesc": "Discord rol met volledige toegang tot alle bot commando's (omzeilt alle rechtencontroles)",
-      "noRole": "Geen Rol"
+      "noRole": "Geen Rol",
+      "dashboardAccess": {
+        "title": "Dashboardtoegang",
+        "description": "Geef Discord-rollen lees- of beheertoegang tot specifieke dashboardsecties. Meerdere rollen worden gecombineerd.",
+        "loadError": "Dashboardtoegang kon niet worden geladen",
+        "retry": "Opnieuw proberen",
+        "selectRole": "Selecteer een Discord-rol",
+        "addRole": "Rol toevoegen",
+        "empty": "Er zijn nog geen dashboardrollen toegevoegd.",
+        "removeRole": "{role} verwijderen",
+        "levels": { "none": "Geen toegang", "view": "Bekijken", "manage": "Beheren" },
+        "status": { "saving": "Opslaan", "saved": "Opgeslagen", "pending": "Wijzigingen in afwachting", "error": "Niet opgeslagen" }
+      }
     },
     "familyRoles": {
       "title": "Familie Rollen",
@@ -2069,6 +2113,9 @@
       "description": "Bepaal hoe bijnamen worden geformatteerd",
       "automaticChanges": "Automatische Wijzigingen",
       "automaticChangesDesc": "Sta bot toe om ledenbijnamen bij te werken",
+      "autocompleteHint": "Typ een openingsaccolade om een plaatshouder in te voegen",
+      "pending": "Wacht op opslaan",
+      "saved": "Opgeslagen",
       "familyFormat": "Familieleden Formaat",
       "availablePlaceholders": "Beschikbare Plaatshouders",
       "preview": "Voorbeeld:",
@@ -2140,7 +2187,21 @@
     "loadingWarStats": "Bijna klaar..."
   },
   "LoginPage": {
-    "redirecting": "Doorverwijzen naar Discord..."
+    "redirecting": "Doorverwijzen naar Discord...",
+    "dashboardLabel": "Dashboard",
+    "eyebrow": "ClashKing Dashboard",
+    "title": "Welkom, Chief.",
+    "subtitle": "Log in om je Discord-servers te beheren, ClashKing in te stellen en je clan soepel te laten draaien.",
+    "continueWithDiscord": "Doorgaan met Discord",
+    "checkingSession": "Je sessie controleren...",
+    "openingDiscord": "Discord openen...",
+    "helper": "Discord bevestigt wie je bent. ClashKing ziet of bewaart je Discord-wachtwoord nooit.",
+    "artCaption": "Je commandocentrum wacht op je",
+    "backToHome": "Terug naar ClashKing",
+    "footer": "Gebouwd voor clans die vooruit willen.",
+    "legalLabel": "Juridische links",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden"
   },
   "FeaturesPage": {
     "hero": {
@@ -2241,11 +2302,19 @@
   },
   "SupportPage": {
     "title": "Steun Ons",
-    "subtitle": "ClashKing is een gratis, open-source project. Jouw steun helpt ons de servers draaiende te houden en nieuwe functies voor de community te blijven ontwikkelen.",
-    "patreon": {
-      "title": "Word een Patreon",
-      "description": "Steun ons maandelijks op Patreon om exclusieve voordelen te krijgen, vroege toegang tot functies en te helpen onze hostingkosten te dekken.",
-      "cta": "Steun op Patreon"
+    "subtitle": "ClashKing is open source en de belangrijkste functies zijn gratis voor iedereen. Optionele abonnementen ontgrendelen enkele extra's en helpen de kosten voor hosting, API's en AI te dekken.",
+    "subscription": {
+      "title": "Steun het project en krijg meer mogelijkheden",
+      "price": "$ 6,99 / maand",
+      "perks": {
+        "notifications": "Meldingen voor maximaal 10 favoriete spelers",
+        "credit": "Elke maand $ 5 gebruik van AI-assistenten",
+        "botProfile": "Pas de naam en profielfoto van de bot aan",
+        "autoBoards": "Verhoog een server van {freeLimit} naar {paidLimit} AutoBoards",
+        "crossPlatform": "Eén abonnement voor dashboard en mobiele app"
+      },
+      "cta": "Log in om je te abonneren",
+      "ctaDashboard": "Abonnement bekijken"
     },
     "creatorCode": {
       "title": "Gebruik Creator Code",
@@ -2256,7 +2325,7 @@
     },
     "whySupport": {
       "title": "Waarom ons steunen?",
-      "description": "Elke bijdrage, hoe klein ook, gaat rechtstreeks naar serverkosten en API-kosten. Het gebruik van onze creator code kost jou niets extra maar helpt ons enorm!"
+      "description": "Abonnementen en inkomsten uit de creator code betalen serverkosten, API-kosten en verdere ontwikkeling. Het gebruik van onze creator code kost jou niets extra."
     }
   },
   "ServersPage": {
@@ -2269,6 +2338,16 @@
     "invite": "Uitnodigen",
     "members": "leden",
     "server": "Server",
+    "inactive": {
+      "tooltip": "Tracking uitgeschakeld na 90 dagen inactiviteit",
+      "title": "Servertracking opnieuw inschakelen?",
+      "description": "Automatiseringen en servertracking zijn uitgeschakeld omdat deze server meer dan 90 dagen inactief was.",
+      "lastUsed": "Laatste opdracht: {date}",
+      "unknown": "Geen opdrachtgeschiedenis",
+      "cancel": "Niet nu",
+      "confirm": "Opnieuw inschakelen",
+      "reactivating": "Opnieuw inschakelen..."
+    },
     "roles": {
       "owner": "Eigenaar",
       "administrator": "Beheerder",
@@ -2281,7 +2360,7 @@
   },
   "AutoboardsPage": {
     "title": "AutoBoards",
-    "description": "Vernieuw een live bord of verstuur nieuwe borden volgens een schema",
+    "description": "Houd Discord-embeds automatisch actueel, van claninfo en donaties tot serverklassementen.",
     "actions": {
       "create": "AutoBoard maken",
       "edit": "AutoBoard bewerken",
@@ -2291,18 +2370,24 @@
       "retry": "Opnieuw proberen"
     },
     "metrics": {
-      "total": "Geconfigureerd",
+      "total": "AutoBoards in gebruik",
       "refresh": "Vernieuwborden",
-      "send": "Geplande verzendingen"
+      "send": "Geplande verzendingen",
+      "remaining": "beschikbaar"
     },
     "filters": {
       "all": "Alle"
     },
     "list": {
-      "title": "Geconfigureerde AutoBoards",
-      "description": "Door beheerders ingestelde levering, doelen, bestemming en uitvoeringsstatus",
-      "empty": "Geen AutoBoards in deze weergave",
-      "emptyDescription": "Maak er een wanneer het API-register een bordtype beschikbaar stelt."
+      "title": "Je AutoBoards",
+      "description": "Elk bord heeft een eigen Discord-bestemming, doelgroep en bezorgschema.",
+      "empty": "Nog geen AutoBoards",
+      "emptyDescription": "Maak een bord om nuttige serverinformatie actueel te houden in Discord."
+    },
+    "entitlement": {
+      "title": "Elke server bevat {freeLimit} AutoBoards",
+      "description": "Wijs een abonnement toe aan deze server om er maximaal {paidLimit} te ontgrendelen. Meerdere abonnementen verhogen die limiet niet.",
+      "current": "Deze server staat momenteel {limit} AutoBoards toe."
     },
     "registry": {
       "emptyTitle": "Geen bordtypen beschikbaar",
@@ -2439,7 +2524,13 @@
     "confirmDeletePanel": "Paneel \"{name}\" verwijderen?",
     "confirmDeletePanelHint": "Dit verwijdert het paneel en alle knopinstellingen permanent.",
     "panelDeleted": "Paneel verwijderd.",
-    "panelHint": "Klik om dit paneel uit te klappen en te configureren.",
+    "panelHint": "Bekijk en configureer dit paneel.",
+    "configurePanel": "Configureren",
+    "configurePanelDescription": "Beheer het paneelbericht, de knoppen, vooraf geschreven berichten, categorieën en logboeken.",
+    "categoryCoverage": "{configured}/{total} categorieën",
+    "logCoverage": "{configured}/{total} logboeken",
+    "panelPreview": "Discord-voorbeeld",
+    "panelPreviewHint": "Dit combineert de geselecteerde paneel-embed en ticketknoppen, zodat je kunt controleren wat leden zien voordat je het configureert.",
     "buttons": "knoppen",
     "buttonList": "Knoppen",
     "categories": "Categorieën",
@@ -2717,6 +2808,8 @@
     "colorSection": "Knopkleur",
     "colorHint": "Geldt voor alle knoppen.",
     "welcomeSection": "Welkomstkanaal",
+    "joinPanelTitle": "Deelnamepaneel",
+    "enabled": "Deelnamepaneel inschakelen",
     "welcomeHint": "Indien ingesteld, wordt het paneel automatisch geplaatst wanneer een nieuw lid aansluit.",
     "welcomeChannel": "Kanaal",
     "welcomeChannelPlaceholder": "Selecteer een kanaal...",
@@ -2741,8 +2834,6 @@
     "title": "Giveaways",
     "description": "Maak, plan en beheer giveaways voor je server.",
     "create": "Giveaway maken",
-    "listTitle": "Giveaway dashboard",
-    "listDescription": "Volg geplande, actieve en afgelopen giveaways op één plek.",
     "empty": "Nog geen giveaways om weer te geven.",
     "confirmDeleteTitle": "Giveaway verwijderen",
     "confirmDelete": "Weet je zeker dat je deze giveaway wilt verwijderen?",
@@ -2753,7 +2844,8 @@
       "general": "Algemeen",
       "messages": "Berichten",
       "restrictions": "Beperkingen",
-      "advanced": "Geavanceerd"
+      "advanced": "Geavanceerd",
+      "winners": "Winnaars"
     },
     "tabs": {
       "ongoing": "Actief",
@@ -2800,6 +2892,9 @@
       "endsAt": "Eindigt om",
       "endedAt": "Geëindigd om",
       "duplicate": "Dupliceren",
+      "viewGiveaway": "Giveaway bekijken",
+      "editGiveaway": "Giveaway bewerken",
+      "moreActions": "Meer giveaway-acties",
       "showingEnded": "Toont {shown} van {total} beëindigde giveaways",
       "showMore": "{count} meer tonen",
       "pendingUpdate": "Update in behandeling",
@@ -2818,6 +2913,14 @@
       "userId": "Gebruikers-ID",
       "entryCount": "Inschrijvingen",
       "winChance": "Winkans"
+    },
+    "winners": {
+      "description": "Selecteer een winnaar om de Discord-ID te kopiëren of het Discord-profiel te openen.",
+      "current": "Huidige winnaars",
+      "rerolled": "Hergerolde winnaars",
+      "onServer": "Op server",
+      "notOnServer": "Niet op server",
+      "none": "Er zijn geen winnaars vastgelegd."
     },
     "dialog": {
       "createTitle": "Giveaway maken",
@@ -2927,52 +3030,6 @@
       "confirm": "{count, plural, one {# winnaar} other {# winnaars}} herrol"
     }
   },
-  "OverviewPage": {
-    "title": "Dashboard Overzicht",
-    "description": "Monitor je serverstatistieken en ga aan de slag",
-    "stats": {
-      "linkedPlayers": "Gekoppelde Spelers",
-      "linkedPlayersDesc": "Spelers gekoppeld in deze server",
-      "clansConfigured": "Clans Geconfigureerd",
-      "clansConfiguredDesc": "Clans gevolgd voor deze server",
-      "activeRosters": "Actieve Roosters",
-      "activeRostersDesc": "Oorlogsroosters aangemaakt",
-      "totalAccounts": "Gekoppelde Accounts",
-      "totalAccountsDesc": "Totaal gekoppelde CoC-accounts",
-      "playersTracked": "Gevolgde Spelers",
-      "globalPlayers": "Totaal aantal spelers in database",
-      "clansTracked": "Gevolgde Clans",
-      "globalClans": "Totaal aantal clans in database",
-      "botStatus": "Bot Status",
-      "online": "Online",
-      "offline": "Offline",
-      "memoryUsage": "Geheugen: {used}MB ({percent}%)",
-      "cpuUsage": "CPU: {percent}%"
-    },
-    "botSection": "Bot Statistieken",
-    "clans": {
-      "title": "Jouw Clans",
-      "description": "{count, plural, one {# clan geconfigureerd} other {# clans geconfigureerd}}",
-      "manage": "Clans Beheren",
-      "addFirst": "Voeg Je Eerste Clan Toe"
-    },
-    "quickStart": {
-      "title": "Snelstart",
-      "description": "Ga aan de slag met het configureren van je ClashKing bot",
-      "step1": {
-        "title": "Configureer Algemene Instellingen",
-        "description": "Stel bijnaamconventies, embed-kleuren en logkanalen in"
-      },
-      "step2": {
-        "title": "Voeg Je Clans Toe",
-        "description": "Verbind je Clash of Clans clans en configureer rollen"
-      },
-      "step3": {
-        "title": "Stel Auto Rollen In",
-        "description": "Configureer automatische roltoewijzing op basis van Stadhuis, trofeeën, enz."
-      }
-    }
-  },
   "BotStatsPage": {
     "title": "Bot Statistieken",
     "description": "Wereldwijde ClashKing bot statistieken en systeemgezondheid",
@@ -3007,9 +3064,14 @@
     "appearance": { "label": "Weergave", "day": "Dag", "sunset": "Zonsondergang" },
     "actions": {
       "addToDiscord": "Voeg toe aan Discord",
-      "addClashKing": "Voeg ClashKing toe",
-      "openDashboard": "Open dashboard",
-      "joinTestFlight": "Probeer via TestFlight",
+    "addClashKing": "Voeg ClashKing toe",
+    "openDashboard": "Open dashboard",
+    "login": "Inloggen",
+    "dashboard": "Dashboard",
+    "iosApp": "iOS-app",
+    "androidApp": "Android-app",
+    "addDiscordBot": "Discord-bot toevoegen",
+    "joinTestFlight": "Probeer via TestFlight",
       "getAndroidApp": "Download voor Android"
     },
     "hero": {

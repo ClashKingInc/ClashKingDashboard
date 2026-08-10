@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest';
-import { createApiClient, getDefaultBaseUrl } from './client';
+import { describe, it, expect } from 'vitest';
+import { createApiClient, getDefaultBaseUrl, getDevelopmentBaseUrl } from './client';
 
 describe('createApiClient', () => {
   it('creates a client with the provided baseUrl', () => {
@@ -52,20 +52,15 @@ describe('ClashKingApiClient — getConfig', () => {
 });
 
 describe('getDefaultBaseUrl', () => {
-  afterEach(() => {
-    // Restore window to undefined (Node.js / test environment default)
-    Reflect.deleteProperty(globalThis, 'window');
+  it('uses the configured local API during tests', () => {
+    expect(getDefaultBaseUrl()).toBe('http://localhost:8000');
   });
 
-  it('returns backend URL when running server-side (window undefined)', () => {
-    Reflect.deleteProperty(globalThis, 'window');
-    const url = getDefaultBaseUrl();
-    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://local-api.clashk.ing');
+  it('uses direct localhost services for local development', () => {
+    expect(getDevelopmentBaseUrl('localhost')).toBe('http://localhost:8000');
   });
 
-  it('uses the API origin directly when running client-side', () => {
-    (globalThis as Record<string, unknown>).window = {};
-    const url = getDefaultBaseUrl();
-    expect(url).toBe(process.env.NEXT_PUBLIC_API_URL || 'https://local-api.clashk.ing');
+  it('uses the local API tunnel for staging', () => {
+    expect(getDevelopmentBaseUrl('dev-dash.clashk.ing')).toBe('https://dev-api.clashk.ing');
   });
 });

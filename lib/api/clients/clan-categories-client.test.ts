@@ -16,13 +16,17 @@ describe("ClanCategoriesClient", () => {
     fetchMock
       .mockResolvedValueOnce(new Response(JSON.stringify({ items: [], total: 0 }), { status: 200 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({
-        category: { id: "category-1", serverId: "123", name: "CWL", clanCount: 0 },
+        category: { id: "category-1", serverId: "123", name: "CWL", position: 0, clanCount: 0 },
       }), { status: 201 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({
-        category: { id: "category-1", serverId: "123", name: "Events", clanCount: 0 },
+        category: { id: "category-1", serverId: "123", name: "Events", position: 0, clanCount: 0 },
       }), { status: 200 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({
-        category: { id: "category-1", serverId: "123", name: "Events", clanCount: 2 },
+        items: [{ id: "category-1", serverId: "123", name: "Events", position: 0, clanCount: 0 }],
+        total: 1,
+      }), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({
+        category: { id: "category-1", serverId: "123", name: "Events", position: 0, clanCount: 2 },
         affectedClanCount: 2,
       }), { status: 200 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({
@@ -35,6 +39,7 @@ describe("ClanCategoriesClient", () => {
     await client.list("123");
     await client.create("123", "CWL");
     await client.rename("123", "category/1", "Events");
+    await client.reorder("123", ["category-1"]);
     await client.previewDelete("123", "category/1");
     const deleted = await client.delete("123", "category/1");
 
@@ -42,6 +47,7 @@ describe("ClanCategoriesClient", () => {
       "/v2/server/123/clan-categories",
       "/v2/server/123/clan-categories",
       "/v2/server/123/clan-categories/category%2F1",
+      "/v2/server/123/clan-categories/order",
       "/v2/server/123/clan-categories/category%2F1/delete-preview",
       "/v2/server/123/clan-categories/category%2F1",
     ]);
@@ -53,7 +59,11 @@ describe("ClanCategoriesClient", () => {
       method: "PATCH",
       body: JSON.stringify({ name: "Events" }),
     }));
-    expect(fetchMock.mock.calls[4][1]).toEqual(expect.objectContaining({ method: "DELETE" }));
+    expect(fetchMock.mock.calls[3][1]).toEqual(expect.objectContaining({
+      method: "PUT",
+      body: JSON.stringify({ categoryIds: ["category-1"] }),
+    }));
+    expect(fetchMock.mock.calls[5][1]).toEqual(expect.objectContaining({ method: "DELETE" }));
     expect(deleted.data?.uncategorizedClanCount).toBe(3);
   });
 
