@@ -134,6 +134,15 @@ describe("browser auth session", () => {
     expect(getAccessToken()).toBeUndefined();
   });
 
+  it("clears an expired session when proactive refresh returns forbidden", async () => {
+    setAccessToken("expired-access", false);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 403 })));
+
+    await expect(restoreAccessToken("https://dev-api.clashk.ing")).resolves.toBe("anonymous");
+
+    expect(getAccessToken()).toBeUndefined();
+  });
+
   it("does not let a stale rejected refresh clear a newer session", async () => {
     let resolveResponse!: (response: Response) => void;
     vi.stubGlobal("fetch", vi.fn().mockImplementation(

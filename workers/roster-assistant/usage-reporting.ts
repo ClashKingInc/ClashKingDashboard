@@ -26,6 +26,22 @@ export function normalizeAIUsage(usage: LanguageModelUsage): NormalizedAIUsage {
   };
 }
 
+export function sumAIUsage(usages: readonly NormalizedAIUsage[]): NormalizedAIUsage {
+  return usages.reduce<NormalizedAIUsage>((total, usage) => ({
+    inputTokens: total.inputTokens + usage.inputTokens,
+    cachedInputTokens: total.cachedInputTokens + usage.cachedInputTokens,
+    cacheWriteTokens: total.cacheWriteTokens + usage.cacheWriteTokens,
+    outputTokens: total.outputTokens + usage.outputTokens,
+    reasoningTokens: total.reasoningTokens + usage.reasoningTokens,
+  }), {
+    inputTokens: 0,
+    cachedInputTokens: 0,
+    cacheWriteTokens: 0,
+    outputTokens: 0,
+    reasoningTokens: 0,
+  });
+}
+
 export function aiUsageSettlementHeaders(env: RosterAssistantEnv): Record<string, string> {
   const localAPI = /^https?:\/\/(?:127\.0\.0\.1|localhost)(?::\d+)?(?:\/|$)/i.test(env.CLASHKING_API_URL);
   const secret = env.AI_USAGE_SECRET?.trim() || (localAPI ? LOCAL_METERING_SECRET : "");

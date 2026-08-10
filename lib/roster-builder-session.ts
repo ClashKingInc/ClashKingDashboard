@@ -27,13 +27,13 @@ function compactMessagePart(part: UIMessage["parts"][number]): UIMessage["parts"
   return compact as UIMessage["parts"][number];
 }
 
-function storageKey(serverId: string): string {
-  return `${STORAGE_PREFIX}${serverId}`;
+function storageKey(userId: string, serverId: string): string {
+  return `${STORAGE_PREFIX}${encodeURIComponent(userId)}:${encodeURIComponent(serverId)}`;
 }
 
-export function loadRosterBuilderChat(serverId: string, now = Date.now()): UIMessage[] {
+export function loadRosterBuilderChat(userId: string, serverId: string, now = Date.now()): UIMessage[] {
   if (typeof window === "undefined") return [];
-  const key = storageKey(serverId);
+  const key = storageKey(userId, serverId);
   const raw = localStorage.getItem(key);
   if (!raw) return [];
 
@@ -50,9 +50,9 @@ export function loadRosterBuilderChat(serverId: string, now = Date.now()): UIMes
   }
 }
 
-export function saveRosterBuilderChat(serverId: string, messages: UIMessage[], now = Date.now()): void {
+export function saveRosterBuilderChat(userId: string, serverId: string, messages: UIMessage[], now = Date.now()): void {
   if (typeof window === "undefined") return;
-  const key = storageKey(serverId);
+  const key = storageKey(userId, serverId);
   if (messages.length === 0) {
     localStorage.removeItem(key);
     return;

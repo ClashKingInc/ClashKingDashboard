@@ -9,35 +9,35 @@ describe("roster builder chat storage", () => {
   afterEach(() => vi.restoreAllMocks());
 
   it("restores a server conversation for up to 24 hours", () => {
-    saveRosterBuilderChat("server-1", [message], 1_000);
-    expect(loadRosterBuilderChat("server-1", 1_000 + 24 * 60 * 60 * 1000 - 1)).toEqual([message]);
+    saveRosterBuilderChat("user-1", "server-1", [message], 1_000);
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_000 + 24 * 60 * 60 * 1000 - 1)).toEqual([message]);
   });
 
   it("removes a conversation once it is 24 hours old", () => {
-    saveRosterBuilderChat("server-1", [message], 1_000);
-    expect(loadRosterBuilderChat("server-1", 1_000 + 24 * 60 * 60 * 1000)).toEqual([]);
+    saveRosterBuilderChat("user-1", "server-1", [message], 1_000);
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_000 + 24 * 60 * 60 * 1000)).toEqual([]);
     expect(localStorage.length).toBe(0);
   });
 
   it("keeps servers isolated and clears every conversation on logout", () => {
-    saveRosterBuilderChat("server-1", [message], 1_000);
-    saveRosterBuilderChat("server-2", [{ ...message, id: "message-2" }], 1_000);
+    saveRosterBuilderChat("user-1", "server-1", [message], 1_000);
+    saveRosterBuilderChat("user-1", "server-2", [{ ...message, id: "message-2" }], 1_000);
     localStorage.setItem("unrelated", "keep");
 
     clearRosterBuilderChats();
 
-    expect(loadRosterBuilderChat("server-1", 1_000)).toEqual([]);
-    expect(loadRosterBuilderChat("server-2", 1_000)).toEqual([]);
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_000)).toEqual([]);
+    expect(loadRosterBuilderChat("user-1", "server-2", 1_000)).toEqual([]);
     expect(localStorage.getItem("unrelated")).toBe("keep");
   });
 
   it("discards malformed storage", () => {
-    localStorage.setItem("clashking:roster-builder-chat:server-1", "not json");
-    expect(loadRosterBuilderChat("server-1")).toEqual([]);
+    localStorage.setItem("clashking:roster-builder-chat:user-1:server-1", "not json");
+    expect(loadRosterBuilderChat("user-1", "server-1")).toEqual([]);
   });
 
   it("persists compact tool history while dropping large tool outputs", () => {
-    saveRosterBuilderChat("server-1", [{
+    saveRosterBuilderChat("user-1", "server-1", [{
       id: "assistant-1",
       role: "assistant",
       parts: [
@@ -46,7 +46,7 @@ describe("roster builder chat storage", () => {
       ],
     } as never], 1_000);
 
-    expect(loadRosterBuilderChat("server-1", 1_001)).toEqual([{
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_001)).toEqual([{
       id: "assistant-1",
       role: "assistant",
       parts: [
@@ -63,8 +63,8 @@ describe("roster builder chat storage", () => {
       parts: [{ type: "data-usage", data: { promptTokens: 100, completionTokens: 25, totalTokens: 125, durationMs: 900 } }],
     } as never;
 
-    saveRosterBuilderChat("server-1", [usage], 1_000);
-    expect(loadRosterBuilderChat("server-1", 1_001)).toEqual([usage]);
+    saveRosterBuilderChat("user-1", "server-1", [usage], 1_000);
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_001)).toEqual([usage]);
   });
 
   it("preserves OpenAI's encrypted compaction item", () => {
@@ -84,8 +84,8 @@ describe("roster builder chat storage", () => {
       }],
     } as never;
 
-    saveRosterBuilderChat("server-1", [compacted], 1_000);
-    expect(loadRosterBuilderChat("server-1", 1_001)).toEqual([compacted]);
+    saveRosterBuilderChat("user-1", "server-1", [compacted], 1_000);
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_001)).toEqual([compacted]);
   });
 
   it("preserves structured player mention context", () => {
@@ -98,8 +98,8 @@ describe("roster builder chat storage", () => {
       ],
     } as never;
 
-    saveRosterBuilderChat("server-1", [playerMention], 1_000);
-    expect(loadRosterBuilderChat("server-1", 1_001)).toEqual([playerMention]);
+    saveRosterBuilderChat("user-1", "server-1", [playerMention], 1_000);
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_001)).toEqual([playerMention]);
   });
 
   it("preserves the transient membership proposal", () => {
@@ -119,8 +119,8 @@ describe("roster builder chat storage", () => {
       }],
     } as never;
 
-    saveRosterBuilderChat("server-1", [proposal], 1_000);
-    expect(loadRosterBuilderChat("server-1", 1_001)).toEqual([proposal]);
+    saveRosterBuilderChat("user-1", "server-1", [proposal], 1_000);
+    expect(loadRosterBuilderChat("user-1", "server-1", 1_001)).toEqual([proposal]);
   });
 
   it("does not throw when browser storage is full", () => {
@@ -128,6 +128,13 @@ describe("roster builder chat storage", () => {
       throw new DOMException("The quota has been exceeded.", "QuotaExceededError");
     });
 
-    expect(() => saveRosterBuilderChat("server-1", [message], 1_000)).not.toThrow();
+    expect(() => saveRosterBuilderChat("user-1", "server-1", [message], 1_000)).not.toThrow();
+  });
+
+  it("never restores another user's conversation for the same server", () => {
+    saveRosterBuilderChat("user-1", "shared-server", [message], 1_000);
+
+    expect(loadRosterBuilderChat("user-2", "shared-server", 1_001)).toEqual([]);
+    expect(loadRosterBuilderChat("user-1", "shared-server", 1_001)).toEqual([message]);
   });
 });

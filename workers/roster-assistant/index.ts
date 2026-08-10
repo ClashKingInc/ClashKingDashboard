@@ -16,7 +16,7 @@ import {
   ROSTER_ASSISTANT_COMPACTION_THRESHOLD,
   ROSTER_ASSISTANT_MODEL,
 } from "../../lib/roster-assistant-constants";
-import { normalizeAIUsage, settleAIUsage } from "./usage-reporting";
+import { normalizeAIUsage, settleAIUsage, sumAIUsage, type NormalizedAIUsage } from "./usage-reporting";
 import {
   assertAuthorizedMembershipChanges,
   authorizedRosterIds,
@@ -574,6 +574,18 @@ const rosterAssistantWorker = {
     const codemode = createCodeTool({ tools, executor });
     const openai = createOpenAI({ apiKey: env.OPENAI_API_KEY });
     const startedAt = Date.now();
+    let usageSettlementScheduled = false;
+    let completedStepUsages: NormalizedAIUsage[] = [];
+    const scheduleUsageSettlement = (steps: NormalizedAIUsage[], usage = sumAIUsage(steps)): void => {
+      if (usageSettlementScheduled || steps.length === 0 || usage.inputTokens + usage.outputTokens <= 0) return;
+      usageSettlementScheduled = true;
+      ctx.waitUntil(settleAIUsage(env, "/v2/roster/ai/usage", {
+        requestId: body.requestId,
+        model: body.model,
+        usage,
+        steps,
+      }).catch((error) => console.error(JSON.stringify({ event: "roster_usage_failed", requestId: body.requestId, error: String(error) }))));
+    };
     const conversation = markLatestUserCacheBreakpoint(
       await convertToModelMessages(body.request.messages, { ignoreIncompleteToolCalls: true }),
     );
@@ -590,6 +602,21 @@ const rosterAssistantWorker = {
       ],
       messages: conversation,
       tools: { codemode },
+      onStepEnd: (step) => {
+        completedStepUsages = [...completedStepUsages, normalizeAIUsage(step.usage)];
+      },
+      onEnd: ({ usage, steps }) => {
+        scheduleUsageSettlement(
+          steps.map((step) => normalizeAIUsage(step.usage)),
+          normalizeAIUsage(usage),
+        );
+      },
+      onAbort: ({ steps }) => {
+        scheduleUsageSettlement(steps.map((step) => normalizeAIUsage(step.usage)));
+      },
+      onError: () => {
+        scheduleUsageSettlement(completedStepUsages);
+      },
       maxOutputTokens: 64_000,
       stopWhen: stepCountIs(4),
       providerOptions: {
@@ -644,8 +671,7 @@ const rosterAssistantWorker = {
           artifacts.push({ type: "viewResult", data: fallbackView.result });
         }
         for (const artifact of artifacts) writer.write({ type: `data-${artifact.type}` as `data-${string}`, data: artifact.data, transient: false });
-		const [usage, steps] = await Promise.all([result.totalUsage, result.steps]);
-		const normalizedUsage = normalizeAIUsage(usage);
+		const usage = await result.totalUsage;
         writer.write({
           type: "data-usage",
           data: {
@@ -658,12 +684,6 @@ const rosterAssistantWorker = {
           },
           transient: false,
         });
-		ctx.waitUntil(settleAIUsage(env, "/v2/roster/ai/usage", {
-			requestId: body.requestId,
-			model: body.model,
-			usage: normalizedUsage,
-			steps: steps.map((step) => normalizeAIUsage(step.usage)),
-		}).catch((error) => console.error(JSON.stringify({ event: "roster_usage_failed", requestId: body.requestId, error: String(error) }))));
       },
       onError: (error) => error instanceof Error ? error.message : "Roster assistant failed",
     });

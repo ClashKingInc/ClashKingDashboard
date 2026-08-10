@@ -188,12 +188,11 @@ async function performRefresh(baseUrl: string, observedGeneration: number): Prom
         credentials: "include",
       });
     }
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       if (runtime.generation !== observedGeneration && runtime.accessToken) return "restored";
       clearSession();
       return "anonymous";
     }
-    if (response.status === 403) return "anonymous";
     if (!response.ok) return "unavailable";
     const data = (await response.json()) as { access_token?: string };
     if (!data.access_token) return "unavailable";

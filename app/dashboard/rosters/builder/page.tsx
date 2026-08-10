@@ -914,6 +914,7 @@ export default function RosterBuilderPage() {
   const guildId = useGuildId();
   const router = useRouter();
   const { user } = useAuthSession();
+  const chatStorageScope = user?.user_id && guildId ? `${user.user_id}:${guildId}` : undefined;
   const showDeveloperContext = isDeveloperUserId(user?.user_id);
   const [prompt, setPrompt] = useState("");
   const [rosters, setRosters] = useState<Roster[]>([]);
@@ -1016,15 +1017,19 @@ export default function RosterBuilderPage() {
   }, [prompt, resizePrompt]);
 
   useEffect(() => {
-    if (!guildId) return;
-    setMessages(loadRosterBuilderChat(guildId) as RosterChatMessage[]);
-    setRestoredChatForGuild(guildId);
-  }, [guildId, setMessages]);
+    if (!guildId || !user?.user_id || !chatStorageScope) {
+      setMessages([]);
+      setRestoredChatForGuild(undefined);
+      return;
+    }
+    setMessages(loadRosterBuilderChat(user.user_id, guildId) as RosterChatMessage[]);
+    setRestoredChatForGuild(chatStorageScope);
+  }, [chatStorageScope, guildId, setMessages, user?.user_id]);
 
   useEffect(() => {
-    if (!guildId || restoredChatForGuild !== guildId) return;
-    saveRosterBuilderChat(guildId, messages);
-  }, [guildId, messages, restoredChatForGuild]);
+    if (!guildId || !user?.user_id || restoredChatForGuild !== chatStorageScope) return;
+    saveRosterBuilderChat(user.user_id, guildId, messages);
+  }, [chatStorageScope, guildId, messages, restoredChatForGuild, user?.user_id]);
 
   useEffect(() => subscribeSession((event) => {
     if (event === "anonymous") clearRosterBuilderChats();

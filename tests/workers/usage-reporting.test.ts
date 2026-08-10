@@ -1,8 +1,21 @@
 import { describe, expect, it } from "vitest";
 
-import { aiUsageSettlementHeaders, normalizeAIUsage, settleAIUsage } from "../../workers/roster-assistant/usage-reporting";
+import { aiUsageSettlementHeaders, normalizeAIUsage, settleAIUsage, sumAIUsage } from "../../workers/roster-assistant/usage-reporting";
 
 describe("AI usage reporting", () => {
+  it("combines completed step usage for aborted and failed streams", () => {
+    expect(sumAIUsage([
+      { inputTokens: 100, cachedInputTokens: 20, cacheWriteTokens: 5, outputTokens: 30, reasoningTokens: 10 },
+      { inputTokens: 50, cachedInputTokens: 10, cacheWriteTokens: 0, outputTokens: 15, reasoningTokens: 5 },
+    ])).toEqual({
+      inputTokens: 150,
+      cachedInputTokens: 30,
+      cacheWriteTokens: 5,
+      outputTokens: 45,
+      reasoningTokens: 15,
+    });
+  });
+
   it("normalizes provider token details for settlement", () => {
     expect(normalizeAIUsage({
       inputTokens: 100,
