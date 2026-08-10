@@ -97,9 +97,12 @@ export interface GraphicDocument {
 
 export type BindingValues = Record<string, string | number | null | undefined>;
 
+let fallbackElementId = 0;
+
 export function createElementId(): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
-  return `element-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  if (typeof globalThis.crypto?.randomUUID === "function") return globalThis.crypto.randomUUID();
+  fallbackElementId += 1;
+  return `element-${Date.now()}-${fallbackElementId}`;
 }
 
 export const DEFAULT_GRAPHIC_DOCUMENT: GraphicDocument = {

@@ -142,6 +142,16 @@ function RosterCard({
           : "hover:shadow-md"
       }`}
       onClick={compareMode ? onSelect : undefined}
+      onKeyDown={compareMode ? (event) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect();
+        }
+      } : undefined}
+      role={compareMode ? "button" : undefined}
+      tabIndex={compareMode ? 0 : undefined}
+      aria-pressed={compareMode ? isSelected : undefined}
     >
       {/* Selection indicator in compare mode */}
       {compareMode && (

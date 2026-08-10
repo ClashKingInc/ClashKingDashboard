@@ -32,14 +32,22 @@ type AuthRuntime = {
 const AUTH_RUNTIME_KEY = "__clashkingAuthRuntime";
 const serverRuntime = createRuntime(false);
 
+function createTabId(enableChannel: boolean): string {
+  if (!enableChannel) return "server";
+  if (typeof globalThis.crypto?.randomUUID === "function") return globalThis.crypto.randomUUID();
+  if (typeof globalThis.crypto?.getRandomValues === "function") {
+    const values = globalThis.crypto.getRandomValues(new Uint32Array(4));
+    return Array.from(values, (value) => value.toString(36)).join("-");
+  }
+  return `tab-${Date.now()}`;
+}
+
 function createRuntime(enableChannel: boolean): AuthRuntime {
   return {
     generation: 0,
     refreshPromise: null,
     listeners: new Set<SessionListener>(),
-    tabId: typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? crypto.randomUUID()
-      : Math.random().toString(36).slice(2),
+    tabId: createTabId(enableChannel),
     channel: enableChannel && typeof BroadcastChannel !== "undefined" ? new BroadcastChannel(CHANNEL_NAME) : null,
     listening: false,
   };
