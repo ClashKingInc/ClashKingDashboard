@@ -1,15 +1,15 @@
 {
   "Common": {
-    "loading": "Laden...",
-    "save": "Opslaan",
-    "cancel": "Annuleren",
-    "delete": "Verwijderen",
+    "loading": "Carregando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
     "edit": "Edit",
     "search": "Search",
-    "filter": "Filteren",
+    "filter": "Filtro",
     "add": "Add",
     "remove": "Remove",
-    "refresh": "Vernieuwen",
+    "refresh": "Atualizar",
     "close": "Close",
     "openMenu": "Open menu",
     "submit": "Submit",
@@ -27,31 +27,31 @@
     "searchRoles": "Search roles...",
     "addRole": "Add role...",
     "error": "An error occurred",
-    "success": "Succes",
+    "success": "Sucesso",
     "actions": "Actions",
-    "details": "Detailscherm",
+    "details": "Detalhes",
     "view": "View",
-    "unknown": "Onbekend",
-    "confirm": "Bevestigen",
-    "settings": "Instellingen",
+    "unknown": "Desconhecido",
+    "confirm": "Confirmar",
+    "settings": "Definições",
     "status": "Status",
-    "retry": "Opnieuw proberen",
+    "retry": "Tentar novamente",
     "disabled": "Disabled",
-    "name": "Naam",
+    "name": "Nome",
     "description": "Description",
     "createdAt": "Created At",
     "updatedAt": "Updated At",
-    "dashboard": "Hoofdpaneel",
+    "dashboard": "Painel",
     "loadError": "Failed to load data.",
-    "tryAgain": "Probeer het opnieuw",
+    "tryAgain": "Tente novamente",
     "create": "Create",
     "viewClashProfile": "View Clash profile",
-    "openInGame": "Openen in game",
+    "openInGame": "Abrir no jogo",
     "openChannelInDiscord": "Open this channel in Discord",
     "playerProfile": {
-      "clan": "De clan",
+      "clan": "Clã",
       "townHallLevel": "Town Hall level",
-      "trophies": "Trofeeën",
+      "trophies": "Troféus",
       "warPreference": "War preference",
       "warPreferenceIn": "In",
       "warPreferenceOut": "Out",
@@ -73,12 +73,12 @@
     "openDashboard": "Open Dashboard",
     "dashboardSettings": "Dashboard Settings",
     "logout": "Logout",
-    "settings": "Instellingen",
+    "settings": "Definições",
     "theme": "Theme",
     "systemTheme": "Follow System",
     "lightTheme": "Light Theme",
     "darkTheme": "Dark Theme",
-    "language": "Taal",
+    "language": "Linguagem",
     "browserLanguage": "Browser Language"
   },
   "HomePage": {
@@ -107,7 +107,7 @@
         "description": "Automatically assign roles based on player status, clan position, and achievements. Keep your server organized effortlessly."
       },
       "playerStats": {
-        "title": "Spelerstatistieken",
+        "title": "Estatísticas do jogador",
         "description": "Track detailed player stats, progress graphs, and attack history. See who's improving and who needs help."
       },
       "leaderboards": {
@@ -115,7 +115,7 @@
         "description": "Create competitive leaderboards for donations, trophies, war stars, and custom metrics. Boost engagement."
       },
       "warTracking": {
-        "title": "Oorlog volgen",
+        "title": "Acompanhamento de guerras",
         "description": "Monitor war lineups, track attacks in real-time, and get post-war analytics. Never miss a war detail."
       },
       "smartReminders": {
@@ -146,7 +146,7 @@
     "footer": {
       "tagline": "The most powerful Clash of Clans bot for Discord communities.",
       "about": {
-        "title": "Over",
+        "title": "Sobre",
         "features": "Features",
         "help": "Need Help?",
         "openSource": "Open Source",
@@ -154,11 +154,11 @@
       },
       "bot": {
         "title": "Bot",
-        "dashboard": "Hoofdpaneel",
+        "dashboard": "Painel",
         "inviteBot": "Invite Bot"
       },
       "resources": {
-        "title": "Grondstoffen",
+        "title": "Recursos",
         "documentation": "Documentation",
         "quickStart": "Quick Start Guide",
         "github": "GitHub"
@@ -172,7 +172,7 @@
       },
       "legal": {
         "copyright": "ClashKing. All rights reserved.",
-        "privacy": "Privacybeleid",
+        "privacy": "Política de privacidade",
         "terms": "Terms of Service"
       }
     }
@@ -191,7 +191,7 @@
   },
   "Sidebar": {
     "overview": {
-      "name": "Overzicht",
+      "name": "Visão geral",
       "description": "Dashboard home"
     },
     "general": {
@@ -207,7 +207,7 @@
       "description": "Family roles and nicknames"
     },
     "clans": {
-      "name": "Clans zoeken",
+      "name": "Clãs",
       "description": "Manage your clans"
     },
     "logs": {
@@ -219,7 +219,7 @@
       "description": "Role automation"
     },
     "reminders": {
-      "name": "Herinneringen",
+      "name": "Lembretes",
       "description": "All reminder types"
     },
     "rosters": {
@@ -259,7 +259,7 @@
       "description": "Moderation tools"
     },
     "wars": {
-      "name": "Oorlogen",
+      "name": "Guerras",
       "description": "War statistics"
     },
     "leaderboards": {
@@ -268,23 +268,23 @@
     },
     "sections": {
       "configuration": "Configuration",
-      "clanManagement": "Clan beheer",
+      "clanManagement": "Gestão do clã",
       "playerManagement": "Player Management",
       "automation": "Automation",
-      "statistics": "Statistieken"
+      "statistics": "Estatísticas"
     },
     "switchServer": "Switch Server",
     "goHome": "Homepage"
   },
   "BasesPage": {
-    "eyebrow": "Clan beheer",
+    "eyebrow": "Gestão do clã",
     "title": "Bases",
     "description": "Review shared layouts, engagement history, and Discord source messages.",
-    "refresh": "Vernieuwen",
+    "refresh": "Atualizar",
     "create": "Add base",
-    "retry": "Probeer het opnieuw",
+    "retry": "Tente novamente",
     "dismiss": "Dismiss",
-    "cancel": "Annuleren",
+    "cancel": "Cancelar",
     "previous": "Previous",
     "next": "Next",
     "pagination": "Page {page} of {total}",
@@ -308,7 +308,7 @@
       "resolve": "Resolve profile"
     },
     "delete": {
-      "action": "Verwijderen",
+      "action": "Eliminar",
       "confirmTitle": "Delete this base?",
       "confirmDescription": "This permanently removes the database record and first attempts to delete its Discord source message. The base cannot be restored.",
       "confirmAction": "Delete base",
@@ -420,11 +420,11 @@
         "getStarted": "Add a ban to get started with player moderation"
       },
       "table": {
-        "player": "Speler",
+        "player": "Jogador",
         "reason": "Reason",
         "bannedBy": "Banned By",
         "date": "Date",
-        "daysAgo": "{days} dagen geleden",
+        "daysAgo": "{days} dias atrás",
         "noReason": "No reason provided"
       },
       "addDialog": {
@@ -492,15 +492,15 @@
         "viewGrouped": "By Player"
       },
       "table": {
-        "player": "Speler",
+        "player": "Jogador",
         "reason": "Reason",
         "weight": "Weight",
         "addedBy": "Added By",
         "date": "Date",
         "expires": "Expires",
-        "never": "Nooit",
+        "never": "Nunca",
         "noReason": "No reason provided",
-        "daysAgo": "{days} dagen geleden",
+        "daysAgo": "{days} dias atrás",
         "totalStrikes": "Total Strikes",
         "totalWeight": "Total Weight",
         "lastStrike": "Last Strike"
@@ -555,11 +555,11 @@
       "totalMembers": "Total Members",
       "clanRosters": "Clan Rosters",
       "familyRosters": "Family Rosters",
-      "members": "Leden",
-      "avgTh": "Gem. TH",
+      "members": "Membros",
+      "avgTh": "Média de TH",
       "avgHitrate": "Avg Hitrate",
       "distribution": "Distribution",
-      "clan": "De clan",
+      "clan": "Clã",
       "family": "Family",
       "external": "External",
       "thDistribution": "TH Distribution",
@@ -567,14 +567,14 @@
     },
     "filters": {
       "search": "Search rosters...",
-      "type": "Clantype",
-      "all": "Alle",
-      "clan": "De clan",
+      "type": "Tipo",
+      "all": "Tudo",
+      "clan": "Clã",
       "family": "Family",
-      "clear": "Wissen"
+      "clear": "Claro"
     },
     "comparisonMode": {
-      "cancel": "Annuleren",
+      "cancel": "Cancelar",
       "compare": "Compare",
       "compareRosters": "Compare Rosters",
       "selectRosters": "Select rosters",
@@ -588,16 +588,16 @@
       "aliasLabel": "Roster Name",
       "aliasPlaceholder": "e.g., CWL Roster",
       "typeLabel": "Roster Type",
-      "typeClan": "De clan",
+      "typeClan": "Clã",
       "typeFamily": "Family",
       "signupScopeLabel": "Signup Scope",
       "scopeClanOnly": "Clan Only",
       "scopeFamilyWide": "Family Wide",
-      "clanLabel": "De clan",
+      "clanLabel": "Clã",
       "clanPlaceholder": "Select a clan",
       "descriptionLabel": "Description (Optional)",
       "descriptionPlaceholder": "Roster description...",
-      "cancel": "Annuleren",
+      "cancel": "Cancelar",
       "creating": "Creating...",
       "create": "Create Roster"
     },
@@ -617,8 +617,8 @@
       "columnsPlaceholder": "Select columns to display",
       "sortLabel": "Sort Order",
       "sortPlaceholder": "Select sort fields",
-      "cancel": "Annuleren",
-      "saving": "Opslaan...",
+      "cancel": "Cancelar",
+      "saving": "A guardar...",
       "save": "Save Changes"
     },
     "addMembersDialog": {
@@ -629,47 +629,47 @@
       "searchLabel": "Search Members",
       "searchPlaceholder": "Search by name or tag...",
       "selectFromClan": "Select from Clan Members",
-      "selectedCount": "Geselecteerd",
+      "selectedCount": "Selecionado",
       "noMembers": "No members available",
       "noMembersSelected": "No members selected",
       "noMembersSelectedDesc": "Please select members or enter player tags.",
-      "cancel": "Annuleren",
+      "cancel": "Cancelar",
       "adding": "Adding...",
       "add": "Add Members"
     },
     "detailsDialog": {
       "title": "Roster Details",
       "edit": "Edit",
-      "refresh": "Vernieuwen",
+      "refresh": "Atualizar",
       "refreshing": "Refreshing...",
-      "delete": "Verwijderen",
+      "delete": "Eliminar",
       "deleting": "Deleting...",
       "addMembers": "Add Members",
       "close": "Close",
       "noMembers": "No members in this roster",
       "noMembersDesc": "Add members to get started",
-      "memberCount": "Leden",
-      "thRestriction": "SH level",
-      "avgTh": "Gem. TH",
+      "memberCount": "Membros",
+      "thRestriction": "Nível do CV",
+      "avgTh": "Média de TH",
       "avgHitrate": "Avg Hitrate",
-      "clan": "De clan",
+      "clan": "Clã",
       "family": "Family",
       "external": "External",
       "substitute": "SUB",
       "removeMember": "Remove"
     },
     "rosterCard": {
-      "members": "Leden",
-      "thLevel": "SH level",
-      "avgTh": "Gem. TH",
+      "members": "Membros",
+      "thLevel": "Nível do CV",
+      "avgTh": "Média de TH",
       "avgHitrate": "Avg Hitrate",
-      "clan": "De clan",
+      "clan": "Clã",
       "family": "Family",
       "external": "External",
       "noRestriction": "No restriction",
       "view": "View",
       "edit": "Edit",
-      "delete": "Verwijderen",
+      "delete": "Eliminar",
       "noGroup": "No group",
       "moveToGroup": "Move to group",
       "clone": "Clone",
@@ -677,16 +677,16 @@
       "manageRosters": "Manage your war rosters and lineups"
     },
     "memberColumns": {
-      "name": "Naam",
-      "townhall": "Stadhuis",
+      "name": "Nome",
+      "townhall": "Centro da Vila",
       "tag": "Tag",
       "hitrate": "Hit Rate",
       "current_clan": "Current Clan",
       "current_clan_tag": "Clan Tag",
       "discord": "Discord",
-      "hero_lvs": "Helden",
+      "hero_lvs": "Heróis",
       "war_pref": "War Opt",
-      "trophies": "Trofeeën",
+      "trophies": "Troféus",
       "signup_group": "Signup Group"
     },
     "columns": {
@@ -700,10 +700,10 @@
     },
     "sortFields": {
       "townhall": "Townhall Level",
-      "name": "Naam",
+      "name": "Nome",
       "tag": "Tag",
-      "heroLvs": "Helden",
-      "trophies": "Trofeeën",
+      "heroLvs": "Heróis",
+      "trophies": "Troféus",
       "hitrate": "30 Day Hitrate",
       "currentClanTag": "Clan Tag",
       "addedAt": "Added At"
@@ -722,8 +722,8 @@
       "noMatchDesc": "Try adjusting your search or filter criteria"
     },
     "toast": {
-      "errorTitle": "Fout",
-      "successTitle": "Succes",
+      "errorTitle": "Erro",
+      "successTitle": "Sucesso",
       "errorLoadingRosters": "Failed to load rosters. Please try again.",
       "errorLoadingMembers": "Failed to load clan members.",
       "rosterCreated": "Roster created successfully!",
@@ -754,9 +754,9 @@
       "aliasLabel": "New Roster Name",
       "aliasPlaceholder": "Enter name for cloned roster",
       "copyMembers": "Copy members to new roster",
-      "memberCount": "{count} leden",
+      "memberCount": "{count} membros",
       "originalRoster": "Original roster:",
-      "cancel": "Annuleren",
+      "cancel": "Cancelar",
       "cloning": "Cloning...",
       "clone": "Clone Roster",
       "copyMembersHint": "Members will be copied from the original roster"
@@ -766,7 +766,7 @@
       "description": "Clan members not registered in this roster",
       "coverage": "Roster Coverage",
       "registered": "registered",
-      "missing": "ontbrekend",
+      "missing": "em falta",
       "total": "total",
       "selectAll": "Select All",
       "selected": "selected",
@@ -786,7 +786,7 @@
       "label": "Event Start Time",
       "timezone": "Your timezone",
       "utc": "UTC",
-      "clear": "Wissen"
+      "clear": "Claro"
     },
     "bulkValidation": {
       "valid": "valid",
@@ -802,12 +802,12 @@
       "groupHeading": "Server Members",
       "selectedLabel": "Selected Members",
       "membersSelected": "member(s) selected",
-      "selected": "Geselecteerd",
+      "selected": "Selecionado",
       "clanMembersLabel": "Or Select from Clan Members"
     },
-    "retry": "Opnieuw proberen",
+    "retry": "Tentar novamente",
     "back": "Back",
-    "refresh": "Vernieuwen",
+    "refresh": "Atualizar",
     "createRoster": "Create Roster",
     "searchPlaceholder": "Search rosters...",
     "noRosters": "No rosters yet",
@@ -815,7 +815,7 @@
     "noSearchResults": "No rosters found",
     "noSearchResultsHint": "Try a different search term",
     "createFirstRoster": "Create First Roster",
-    "deleteConfirm": "Weet je zeker dat je \"{name}\" wilt verwijderen?",
+    "deleteConfirm": "Tens a certeza de que queres eliminar \"{name}\"?",
     "deleteSuccess": "Roster Deleted",
     "deleteSuccessDesc": "Roster \"{name}\" has been deleted",
     "deleteError": "Failed to delete roster",
@@ -852,16 +852,16 @@
     "categoryDeleted": "Category deleted",
     "categoryError": "Failed to save category",
     "common": {
-      "cancel": "Annuleren",
-      "save": "Opslaan",
+      "cancel": "Cancelar",
+      "save": "Guardar",
       "close": "Close"
     },
     "tabs": {
-      "members": "Leden",
+      "members": "Membros",
       "automations": "Automations",
       "groups": "Groups",
       "categories": "Categories",
-      "settings": "Instellingen"
+      "settings": "Definições"
     },
     "members": {
       "count": "members",
@@ -891,7 +891,7 @@
       "enterMode": "Compare",
       "modeTitle": "Compare Mode",
       "modeHint": "Click on rosters to select them (2 to 4 rosters)",
-      "exitMode": "Annuleren",
+      "exitMode": "Cancelar",
       "selected": "roster(s) selected",
       "button": "Compare",
       "title": "Compare Rosters",
@@ -914,10 +914,10 @@
       "create": "Create Automation",
       "empty": "No automations",
       "emptyHint": "Create an automation to schedule actions",
-      "active": "Actief",
-      "inactive": "Inactief",
-      "executed": "Klaar",
-      "missed": "Gemist",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "executed": "Concluído",
+      "missed": "Perdido",
       "lastRun": "Last run",
       "enable": "Enable",
       "disable": "Disable",
@@ -941,7 +941,7 @@
       "channel": "Discord Channel",
       "selectChannel": "Select a channel",
       "channelHint": "Channel where the action will be posted/executed",
-      "activeLabel": "Actief",
+      "activeLabel": "Ativo",
       "target": "Target",
       "targetThisRoster": "This roster",
       "targetGroups": "Groups",
@@ -1025,12 +1025,12 @@
       "restrictions": "Restrictions & Limits",
       "name": "Roster Name",
       "rosterType": "Roster Type",
-      "typeClan": "De clan",
+      "typeClan": "Clã",
       "typeFamily": "Family",
       "signupScope": "Signup Scope",
       "scopeClanOnly": "Clan Only",
       "scopeFamilyWide": "Family Wide",
-      "clan": "De clan",
+      "clan": "Clã",
       "selectClan": "Select a clan",
       "description": "Description",
       "descriptionPlaceholder": "Enter a description for this roster...",
@@ -1063,7 +1063,7 @@
       "defaultSignupCategoryNone": "None (no default)",
       "defaultSignupCategoryHint": "Pre-selected category when a member signs up.",
       "categoriesManagedByGroup": "Signup categories are managed at the group level. Open the group settings from the Rosters page to configure which categories are available for all rosters in this group.",
-      "saving": "Opslaan...",
+      "saving": "A guardar...",
       "save": "Save Settings"
     }
   },
@@ -1071,7 +1071,7 @@
     "title": "Links Management",
     "description": "Manage Discord member account links and verify player ownership",
     "tabs": {
-      "overview": "Overzicht",
+      "overview": "Visão geral",
       "pending": "Pending",
       "bulk": "Bulk Actions",
       "analytics": "Analytics"
@@ -1113,7 +1113,7 @@
       "account": "account",
       "accounts": "accounts",
       "more": "more",
-      "unknown": "Onbekend"
+      "unknown": "Desconhecido"
     },
     "pending": {
       "title": "Pending Verifications",
@@ -1135,7 +1135,7 @@
       "title": "Link Analytics",
       "description": "Overview of linking statistics and trends",
       "verificationRate": "Verification Rate",
-      "verified": "Geverifiëerd",
+      "verified": "Verificada",
       "unverified": "Unverified",
       "accountDistribution": "Account Distribution",
       "oneAccount": "1 account",
@@ -1157,21 +1157,21 @@
     "deleteDialog": {
       "title": "Unlink Account",
       "description": "Are you sure you want to unlink {playerName}? This action cannot be undone.",
-      "cancel": "Annuleren",
+      "cancel": "Cancelar",
       "unlinking": "Unlinking...",
       "unlink": "Unlink"
     },
     "bulkDialog": {
       "title": "Bulk Unlink Accounts",
       "description": "Are you sure you want to unlink all accounts for {count} selected members? This action cannot be undone.",
-      "cancel": "Annuleren",
+      "cancel": "Cancelar",
       "unlinkAll": "Unlink All"
     },
     "toast": {
       "unlinkFailed": "Failed to unlink account. Please try again."
     },
     "badges": {
-      "verified": "Geverifiëerd",
+      "verified": "Verificada",
       "unverified": "Unverified",
       "pending": "Pending"
     },
@@ -1191,23 +1191,23 @@
       "applyFilters": "Apply Filters"
     },
     "filters": {
-      "title": "Filteropties",
+      "title": "Filtros",
       "description": "Filter war statistics by various criteria",
-      "clan": "De clan",
+      "clan": "Clã",
       "allClans": "All Clans",
-      "townHall": "Stadhuis",
-      "townHallShort": "SH",
+      "townHall": "Centro da Vila",
+      "townHallShort": "CV",
       "allTownHalls": "All TH Levels",
       "townHallLevel": "TH {level}",
-      "period": "Periode",
+      "period": "Período",
       "last7Days": "Last 7 days",
       "last30Days": "Last 30 days",
       "last90Days": "Last 90 days",
       "last6Months": "Last 6 months",
       "lastYear": "Last year",
-      "custom": "Aangepast",
-      "startDate": "Startdatum",
-      "endDate": "Einddatum",
+      "custom": "Personalizado",
+      "startDate": "Data de início",
+      "endDate": "Data de fim",
       "warTypes": "War Types"
     },
     "summaryStats": {
@@ -1224,9 +1224,9 @@
       "dailyPerformance": {
         "title": "War Performance by Week",
         "description": "Weekly wins, losses, and draws over the selected period",
-        "wins": "Overwinningen",
-        "losses": "Nederlagen",
-        "draws": "Gelijkspel"
+        "wins": "Vitórias",
+        "losses": "Perdas",
+        "draws": "Empates"
       },
       "thSuccessRate": {
         "title": "Attack Success Rate by Town Hall",
@@ -1238,8 +1238,8 @@
         "title": "War Type Distribution",
         "description": "Breakdown by war type",
         "cwl": "CWL",
-        "random": "Willekeurig",
-        "friendly": "Vriendschappelijk"
+        "random": "Aleatório",
+        "friendly": "Amigável"
       },
       "topPerformers": {
         "title": "Top Performers",
@@ -1248,7 +1248,7 @@
         "noData": "No player data available. Try adjusting your filters."
       },
       "missedAttacks": {
-        "title": "Gemiste aanvallen",
+        "title": "Ataques Perdidos",
         "description": "Players who did not use all their attacks",
         "attacks": "attacks missed"
       },
@@ -1275,9 +1275,9 @@
       "title": "Clan War Statistics",
       "description": "Detailed statistics for each clan",
       "headers": {
-        "clan": "De clan",
+        "clan": "Clã",
         "status": "Status",
-        "wars": "Oorlogen",
+        "wars": "Guerras",
         "record": "W/L/D",
         "winRate": "Win Rate",
         "avgDestruction": "Avg Destruction",
@@ -1285,14 +1285,14 @@
         "avgDefenseStars": "Stars/Defense"
       },
       "status": {
-        "inWar": "In oorlog",
+        "inWar": "Em guerra",
         "cwl": "CWL",
         "peace": "Peace"
       },
       "noData": "No clan statistics available. Try applying filters or wait for data to load."
     },
     "toast": {
-      "errorTitle": "Fout",
+      "errorTitle": "Erro",
       "errorLoadingClans": "Failed to load clans. Please try again.",
       "errorLoadingWarData": "Failed to load war data. Please try again.",
       "errorNoClans": "No clans available",
@@ -1305,21 +1305,21 @@
     "comingSoon": "This feature is coming soon. Check back later!",
     "stats": {
       "totalEntries": "Total Entries",
-      "type": "Clantype",
-      "league": "Competitie",
+      "type": "Tipo",
+      "league": "Liga",
       "weekend": "Weekend"
     },
     "filters": {
-      "title": "Filteropties",
+      "title": "Filtros",
       "description": "Customize your leaderboard view",
-      "type": "Clantype",
+      "type": "Tipo",
       "metric": "Metric",
-      "league": "Competitie",
+      "league": "Liga",
       "weekend": "Weekend"
     },
     "types": {
-      "player": "Spelers",
-      "clan": "Clans zoeken"
+      "player": "Jogadores",
+      "clan": "Clãs"
     },
     "metrics": {
       "capital": {
@@ -1335,14 +1335,14 @@
       }
     },
     "leagues": {
-      "all": "Alle",
-      "legendLeague": "Legendarische Divisie",
+      "all": "Tudo",
+      "legendLeague": "Liga Lendária",
       "titanLeagueI": "Titan League I",
       "titanLeagueII": "Titan League II",
       "titanLeagueIII": "Titan League III"
     },
     "rankings": {
-      "title": "Ranglijsten",
+      "title": "Classificações",
       "description": "Top {count} {type} for {weekend}",
       "players": "players",
       "clans": "clans"
@@ -1353,7 +1353,7 @@
     }
   },
   "ClansPage": {
-    "title": "Clan beheer",
+    "title": "Gestão do clã",
     "description": "Configure your clans and their Discord integration settings",
     "addClan": "Add Clan",
     "addNewClan": "Add New Clan",
@@ -1371,25 +1371,25 @@
     "getStartedAdding": "Get started by adding your first clan",
     "addFirstClan": "Add Your First Clan",
     "level": "Level",
-    "members": "Leden",
+    "members": "Membros",
     "status": "Status",
     "configuredBadge": "Configured",
     "setupRequired": "Setup Required",
     "configure": "Configure",
     "sorting": {
       "label": "Sort clans",
-      "sortBy": "Sorteren op",
+      "sortBy": "Classificar por",
       "toggleDirection": "Toggle sort direction",
       "added": "Added on",
       "name": "Clan name",
       "level": "Clan level",
-      "members": "Leden"
+      "members": "Membros"
     },
     "configureClan": "Configure {name} ({tag})",
     "customizeIntegration": "Customize Discord integration settings for this clan",
     "tabs": {
       "basic": "Discord Setup",
-      "war": "Oorlog"
+      "war": "Guerra"
     },
     "memberRole": "Member Role",
     "leaderRole": "Leader Role",
@@ -1410,7 +1410,7 @@
     "categories": {
       "title": "Clan categories",
       "description": "Create and maintain the categories available to this server's clans.",
-      "refresh": "Vernieuwen",
+      "refresh": "Atualizar",
       "createLabel": "New category",
       "name": "Category name",
       "namePlaceholder": "e.g., Competitive",
@@ -1452,8 +1452,8 @@
     "roleIdPlaceholder": "Role ID",
     "abbreviationPlaceholder": "e.g., CK",
     "categoryPlaceholder": "Category name",
-    "notAvailable": "N.v.t.",
-    "saving": "Opslaan...",
+    "notAvailable": "N/A",
+    "saving": "A guardar...",
     "saveChanges": "Save Changes",
     "deleteConfirm": "Are you sure you want to remove {tag}? This will also delete all associated reminders and logs.",
     "toast": {
@@ -1491,15 +1491,15 @@
       "title": "Auto-Evaluation Settings",
       "description": "Configure automatic role evaluation and assignment",
       "saveButton": "Save Settings",
-      "saving": "Opslaan...",
+      "saving": "A guardar...",
       "enableAutoEval": "Enable Auto-Evaluation",
       "enableAutoEvalDesc": "Automatically assign and remove roles based on player stats",
       "autoNickname": "Auto-Update Nicknames",
       "autoNicknameDesc": "Update nicknames when roles are evaluated"
     },
     "roleTypes": {
-      "townhall": "Stadhuis",
-      "league": "Competitie",
+      "townhall": "Centro da Vila",
+      "league": "Liga",
       "builderhall": "Builder Hall",
       "builderLeague": "Builder League",
       "achievement": "Achievement",
@@ -1507,13 +1507,13 @@
       "familyPosition": "Family Position"
     },
     "familyPositions": {
-      "member": "Lid",
-      "elder": "Oudste",
-      "coLeader": "Co-leider",
-      "leader": "Leider"
+      "member": "Membro",
+      "elder": "Ancião",
+      "coLeader": "Colíder",
+      "leader": "Líder"
     },
     "leagues": {
-      "legend": "Legendarische Divisie",
+      "legend": "Liga Lendária",
       "electroDragon": "Electro Dragon",
       "dragon": "Dragon",
       "electroTitan": "Electro Titan",
@@ -1567,7 +1567,7 @@
       "leagueSuperfan": "League Superfan",
       "leagueFanatic": "League Fanatic",
       "leagueMaster": "League Master",
-      "legendLeague": "Legendarische Divisie",
+      "legendLeague": "Liga Lendária",
       "humiliator": "Humiliator",
       "notSoEasyThisTime": "Not So Easy This Time",
       "unionBuster": "Union Buster",
@@ -1608,7 +1608,7 @@
       "addRoleToStart": "Click \"Add Role\" to create one",
       "discordRole": "Discord Role",
       "criteria": "Criteria",
-      "mode": "Modus",
+      "mode": "Modo",
       "modeBoth": "Add and remove",
       "modeAdd": "Add only",
       "modeRemove": "Remove only",
@@ -1622,13 +1622,13 @@
       "title": "Add New Role",
       "description": "Configure a new automatic role assignment rule",
       "roleType": "Role Type",
-      "mode": "Modus",
+      "mode": "Modo",
       "discordRole": "Discord Role",
       "selectRole": "Select a role",
       "townHallLevel": "Town Hall Level",
       "selectThLevel": "Select TH level",
-      "thPrefix": "SH",
-      "league": "Competitie",
+      "thPrefix": "CV",
+      "league": "Liga",
       "selectLeague": "Select league",
       "builderHallLevel": "Builder Hall Level",
       "selectBhLevel": "Select BH level",
@@ -1643,7 +1643,7 @@
       "monthsPlaceholder": "6",
       "familyPosition": "Family Position",
       "selectPosition": "Select position",
-      "cancel": "Annuleren",
+      "cancel": "Cancelar",
       "addRole": "Add Role",
       "errorDuplicateExact": "This criterion is already linked to this role.",
       "errorDuplicateCriterion": "This criterion already has a role assigned. Remove the existing one first."
@@ -1680,18 +1680,18 @@
     }
   },
   "RemindersPage": {
-    "title": "Herinneringen",
+    "title": "Lembretes",
     "description": "Configure automatic reminders for wars, raids, clan games, and inactivity",
     "types": {
       "war": "War Reminders",
-      "capital": "Clan Hoofdstad",
-      "clanGames": "Clanspelen",
+      "capital": "Capital do clã",
+      "clanGames": "Jogos de Clã",
       "inactivity": "Inactivity"
     },
     "tabs": {
-      "war": "Oorlog",
-      "capital": "Hoofdstad",
-      "clanGames": "Clanspelen",
+      "war": "Guerra",
+      "capital": "Capital do clã",
+      "clanGames": "Jogos de Clã",
       "inactivity": "Inactivity"
     },
     "stats": {
@@ -1705,14 +1705,14 @@
       "otherRemindersDesc": "Games & inactivity"
     },
     "actions": {
-      "saving": "Opslaan...",
+      "saving": "A guardar...",
       "saveChanges": "Save Changes",
       "addReminder": "Add Reminder",
       "addWarReminder": "Add War Reminder",
       "addCapitalReminder": "Add Capital Reminder",
       "addClanGamesReminder": "Add Clan Games Reminder",
       "addInactivityReminder": "Add Inactivity Reminder",
-      "retry": "Opnieuw proberen"
+      "retry": "Tentar novamente"
     },
     "clanSelector": {
       "label": "Clan:",
@@ -1727,7 +1727,7 @@
       "getStarted": "Get started by creating your first reminder"
     },
     "card": {
-      "new": "Nieuw",
+      "new": "Novo",
       "before": "before",
       "timeBefore": "Remaining time",
       "timeBeforePlaceholder": "e.g. 6",
@@ -1743,15 +1743,15 @@
       "forumPost": "Forum post",
       "forumPostPlaceholder": "Select a forum post",
       "forumPostRequired": "A forum post is required for forum channels.",
-      "clan": "De clan",
+      "clan": "Clã",
       "clanPlaceholder": "Select clan",
       "customMessage": "Custom Message",
       "customMessagePlaceholder": "Don't forget to use your attacks!",
       "customMessagePlaceholderClanGames": "Try to get more points in clan games!",
       "customMessagePlaceholderInactivity": "You've been inactive in the clan for a while :(",
       "warTypes": "War Types",
-      "random": "Willekeurig",
-      "friendly": "Vriendschappelijk",
+      "random": "Aleatório",
+      "friendly": "Amigável",
       "cwl": "CWL",
       "pointThreshold": "Point Threshold",
       "pointThresholdPlaceholder": "4000",
@@ -1759,7 +1759,7 @@
       "attackThreshold": "Attack Threshold",
       "attackThresholdPlaceholder": "1",
       "attackThresholdHelp": "Will ping people if they have {threshold} or more attacks remaining.",
-      "notSet": "Niet ingesteld"
+      "notSet": "Não definido"
     },
     "dialog": {
       "addTitle": "Add New Reminder",
@@ -1768,18 +1768,18 @@
       "editDescription": "Update reminder settings",
       "type": "Reminder Type",
       "selectType": "Select type",
-      "cancel": "Annuleren",
-      "saving": "Opslaan...",
+      "cancel": "Cancelar",
+      "saving": "A guardar...",
       "saveChanges": "Save Changes",
       "addReminder": "Add Reminder"
     },
     "toast": {
-      "errorTitle": "Fout",
+      "errorTitle": "Erro",
       "errorLoadingReminders": "Failed to load reminders. Please try again.",
       "reminderAdded": "Reminder added successfully",
       "reminderAddedDesc": "New {type} reminder added. Don't forget to save!",
       "reminderUpdated": "Reminder updated successfully",
-      "successTitle": "Succes",
+      "successTitle": "Sucesso",
       "reminderDeleted": "Reminder deleted successfully",
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
@@ -1809,10 +1809,10 @@
       "placeholder": "Select a clan"
     },
     "tabs": {
-      "clan": "De clan",
-      "war": "Oorlog",
-      "capital": "Hoofdstad",
-      "player": "Speler",
+      "clan": "Clã",
+      "war": "Guerra",
+      "capital": "Capital do clã",
+      "player": "Jogador",
       "server": "Server"
     },
     "clanLogs": {
@@ -1853,7 +1853,7 @@
     },
     "warLogs": {
       "warLog": {
-        "label": "Oorlogslogboek",
+        "label": "Registo de guerra",
         "description": "Track war attacks and results"
       },
       "warPanel": {
@@ -1930,7 +1930,7 @@
       }
     },
     "logCard": {
-      "active": "Actief",
+      "active": "Ativo",
       "issue": "Issue",
       "disabled": "Disabled",
       "enable": "Enable",
@@ -1957,8 +1957,8 @@
     "title": "General Settings",
     "description": "Configure server-wide bot behavior and appearance",
     "loading": "Loading settings...",
-    "reset": "Resetten",
-    "saving": "Opslaan...",
+    "reset": "Reiniciar",
+    "saving": "A guardar...",
     "saveChanges": "Save Changes",
     "settingsSaved": "Settings saved successfully!",
     "infoBanner": {
@@ -1981,15 +1981,15 @@
         "playerTag": "Player tag",
         "playerTownhall": "TH level",
         "playerTownhallSmall": "TH superscript",
-        "playerWarstars": "Oorlogssterren",
+        "playerWarstars": "Estrelas de guerra",
         "playerRole": "Clan role",
         "playerClan": "Clan name",
-        "playerLeague": "Competitie",
+        "playerLeague": "Liga",
         "playerClanAbbr": "Clan abbr"
       }
     },
     "appearance": {
-      "title": "Weergave",
+      "title": "Aparência",
       "description": "Customize bot embed messages",
       "embedColor": "Embed Color",
       "embedColorDesc": "Color of the side bar on all bot embed messages in Discord",
@@ -1998,7 +1998,7 @@
       "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages",
       "editColor": "Edit Color",
       "resetToDefault": "Reset to Default",
-      "apply": "Toepassen"
+      "apply": "Aplicar"
     },
     "security": {
       "title": "Security & Permissions",
@@ -2022,9 +2022,9 @@
       "types": {
         "family": "Family",
         "notFamily": "Non-Family",
-        "elder": "Oudste",
-        "coLeader": "Co-leider",
-        "leader": "Leider"
+        "elder": "Ancião",
+        "coLeader": "Colíder",
+        "leader": "Líder"
       },
       "descriptions": {
         "family": "Has at least one account in family clans",
@@ -2052,7 +2052,7 @@
       "unknownRole": "Unknown role"
     },
     "prefix": "Command Prefix",
-    "language": "Taal",
+    "language": "Linguagem",
     "timezone": "Timezone",
     "theme": "Theme"
   },
@@ -2060,8 +2060,8 @@
     "title": "Family Settings",
     "description": "Configure family roles and nickname formatting for clan members",
     "loading": "Loading settings...",
-    "reset": "Resetten",
-    "saving": "Opslaan...",
+    "reset": "Reiniciar",
+    "saving": "A guardar...",
     "saveChanges": "Save Changes",
     "settingsSaved": "Settings saved successfully!",
     "nickname": {
@@ -2080,10 +2080,10 @@
         "playerTag": "Player tag",
         "playerTownhall": "TH level",
         "playerTownhallSmall": "TH superscript",
-        "playerWarstars": "Oorlogssterren",
+        "playerWarstars": "Estrelas de guerra",
         "playerRole": "Clan role",
         "playerClan": "Clan name",
-        "playerLeague": "Competitie",
+        "playerLeague": "Liga",
         "playerClanAbbr": "Clan abbr"
       }
     },
@@ -2102,9 +2102,9 @@
       "types": {
         "family": "Family",
         "notFamily": "Non-Family",
-        "elder": "Oudste",
-        "coLeader": "Co-leider",
-        "leader": "Leider"
+        "elder": "Ancião",
+        "coLeader": "Colíder",
+        "leader": "Líder"
       },
       "descriptions": {
         "family": "Has at least one account in family clans",
@@ -2116,13 +2116,13 @@
     }
   },
   "LanguageSwitcher": {
-    "label": "Taal"
+    "label": "Linguagem"
   },
   "ThemeSwitcher": {
     "label": "Theme",
-    "light": "Licht",
-    "dark": "Donker",
-    "system": "Systeem"
+    "light": "Luz",
+    "dark": "Escuro",
+    "system": "Sistema"
   },
   "AuthCallback": {
     "authenticating": "Authenticating...",
@@ -2137,7 +2137,7 @@
     "errorAuthenticateFailed": "Failed to authenticate with Discord.",
     "loadingVillages": "Logging in with Discord...",
     "loadingClanData": "Loading server list...",
-    "loadingWarStats": "Bijna klaar..."
+    "loadingWarStats": "Quase pronto..."
   },
   "LoginPage": {
     "redirecting": "Redirecting to Discord..."
@@ -2196,7 +2196,7 @@
     "discord": {
       "title": "Discord Support",
       "description": "Need more help? Join our Discord community to ask questions, report bugs, or chat with other users.",
-      "cta": "Doe mee op Discord"
+      "cta": "Juntar-se ao Discord"
     }
   },
   "OpenSourcePage": {
@@ -2248,7 +2248,7 @@
       "cta": "Support on Patreon"
     },
     "creatorCode": {
-      "title": "Gebruik makerscode",
+      "title": "Usar código de criador",
       "description": "Support us for free by using creator code",
       "descriptionSuffix": "in-game or in the Supercell Store.",
       "ctaGame": "Use in Game",
@@ -2263,8 +2263,8 @@
     "title": "Select a Server",
     "description": "Choose a server to configure ClashKing bot settings. You must be the Discord server owner or an administrator.",
     "backToHome": "Back to Home",
-    "backToLogin": "Terug naar inloggen",
-    "error": "Fout",
+    "backToLogin": "Voltar ao início de sessão",
+    "error": "Erro",
     "configure": "Configure",
     "invite": "Invite",
     "members": "members",
@@ -2287,8 +2287,8 @@
       "edit": "Edit AutoBoard",
       "delete": "Delete AutoBoard",
       "save": "Save changes",
-      "cancel": "Annuleren",
-      "retry": "Opnieuw proberen"
+      "cancel": "Cancelar",
+      "retry": "Tentar novamente"
     },
     "metrics": {
       "total": "Configured",
@@ -2296,7 +2296,7 @@
       "send": "Scheduled sends"
     },
     "filters": {
-      "all": "Alle"
+      "all": "Tudo"
     },
     "list": {
       "title": "Configured AutoBoards",
@@ -2326,7 +2326,7 @@
       "scopeDescription": "Family scope uses every configured family clan and has no explicit targets.",
       "family": "Family",
       "custom": "Custom targets",
-      "values": "Doelen",
+      "values": "Alvos",
       "count": "Provide between {min} and {max} targets for this board type.",
       "placeholder": "Enter a {kind} target",
       "add": "Add target",
@@ -2335,7 +2335,7 @@
     "modes": {
       "label": "Delivery mode",
       "description": "The registry controls which delivery modes this board supports.",
-      "refresh": "Vernieuwen",
+      "refresh": "Atualizar",
       "send": "Scheduled send"
     },
     "destination": {
@@ -2460,10 +2460,10 @@
     "selectChannel": "Select a channel...",
     "savedSuccess": "Panel \"{panel}\" saved successfully.",
     "tabChannels": "Ticket panel",
-    "tabSettings": "Instellingen",
+    "tabSettings": "Definições",
     "tabButtons": "Buttons",
     "tabMessages": "Messages",
-    "autoSaveSaving": "Opslaan...",
+    "autoSaveSaving": "A guardar...",
     "autoSaveSaved": "Saved",
     "autoSaveErrorTitle": "Auto-save failed",
     "autoSaveErrorDescription": "Could not save these ticket settings.",
@@ -2533,7 +2533,7 @@
     "thRequirementsHint": "Minimum hero levels required per Town Hall level to open this ticket.",
     "thHeroLegend": "BK = Barbarian King · AQ = Archer Queen · GW = Grand Warden · RC = Royal Champion · WARST = War Stars",
     "addThLevel": "Add TH level",
-    "thLevel": "SH",
+    "thLevel": "CV",
     "numApplyHint": "Max number of CoC accounts the user can apply with (1–25).",
     "embeds": "Embeds",
     "embedsHint": "Discord embeds used as panel messages or ticket open messages.",
@@ -2547,7 +2547,7 @@
     "copyDiscohookUrl": "Copy Discohook URL",
     "copyDiscohookUrlDone": "URL copied!",
     "editEmbed": "Edit",
-    "deleteEmbed": "Verwijderen",
+    "deleteEmbed": "Eliminar",
     "confirmDeleteEmbed": "Delete embed \"{name}\"?",
     "confirmDeleteEmbedHint": "This only removes it from ClashKing. It will not affect already-posted Discord messages.",
     "embedSaved": "Embed \"{name}\" saved.",
@@ -2582,7 +2582,7 @@
     "content": "Content",
     "contentPlaceholder": "Message content shown above embeds...",
     "profileSection": "Profile",
-    "profileName": "Naam",
+    "profileName": "Nome",
     "profileAvatarUrl": "Avatar URL",
     "profileUnsupportedWarning": "Warning: the bot currently does not support updating this profile.",
     "import": "Import",
@@ -2590,7 +2590,7 @@
     "importMultipleMessagesWarning": "This link contains multiple messages. Only the first message was imported — the bot supports one message per embed.",
     "colorSection": "Color",
     "authorSection": "Author",
-    "authorName": "Naam",
+    "authorName": "Nome",
     "authorIconUrl": "Icon URL",
     "authorUrl": "Author URL",
     "bodySection": "Body",
@@ -2602,7 +2602,7 @@
     "fieldsSection": "Fields",
     "addField": "Add field",
     "field": "Field",
-    "fieldName": "Naam",
+    "fieldName": "Nome",
     "fieldValue": "Value",
     "fieldInline": "Inline",
     "imagesSection": "Images",
@@ -2612,7 +2612,7 @@
     "footerText": "Footer text",
     "footerIconUrl": "Footer icon URL",
     "timestamp": "Include timestamp",
-    "preview": "Voorbeeld",
+    "preview": "Visualização",
     "previewEmpty": "Fill in fields to see a preview",
     "modeToggleV1": "Classic (V1)",
     "modeToggleV2": "Components (V2)",
@@ -2652,7 +2652,7 @@
     "selectPlaceholder": "Placeholder text",
     "selectMinValues": "Min values",
     "selectMaxValues": "Max values",
-    "selectOptions": "Opties",
+    "selectOptions": "Opções",
     "selectOption": "Option",
     "selectOptionLabel": "Label",
     "selectOptionValue": "Value",
@@ -2668,7 +2668,7 @@
     "buttonStyle": "Style",
     "buttonStylePrimary": "Primary",
     "buttonStyleSecondary": "Secondary",
-    "buttonStyleSuccess": "Succes",
+    "buttonStyleSuccess": "Sucesso",
     "buttonStyleDanger": "Danger",
     "buttonStyleLink": "Link",
     "tabMentions": "Mentions",
@@ -2725,7 +2725,7 @@
     "editDialogDescription": "Update embed, buttons, and button colour with a live preview before saving.",
     "welcomeAutosaveSuccess": "Welcome channel saved.",
     "welcomeAutosaveDisabled": "Welcome channel disabled.",
-    "previewSection": "Voorbeeld",
+    "previewSection": "Visualização",
     "previewHint": "How the panel will look in Discord.",
     "previewNoEmbed": "No embed selected",
     "previewEmbedNoData": "Embed has no preview data",
@@ -2753,12 +2753,12 @@
       "general": "General",
       "messages": "Messages",
       "restrictions": "Restrictions",
-      "advanced": "Geavanceerd"
+      "advanced": "Avançado"
     },
     "tabs": {
-      "ongoing": "Bezig",
-      "upcoming": "Binnenkort",
-      "ended": "Afgelopen"
+      "ongoing": "Em andamento",
+      "upcoming": "Em breve",
+      "ended": "Terminou"
     },
     "stats": {
       "total": "Total giveaways",
@@ -2783,7 +2783,7 @@
     "status": {
       "scheduled": "Scheduled",
       "ongoing": "Live",
-      "ended": "Afgelopen"
+      "ended": "Terminou"
     },
     "table": {
       "giveaway": "Giveaway",
@@ -2910,7 +2910,7 @@
     },
     "toast": {
       "errorTitle": "Something went wrong",
-      "successTitle": "Succes",
+      "successTitle": "Sucesso",
       "loadError": "Failed to load giveaways.",
       "saveError": "Failed to save the giveaway.",
       "deleteError": "Failed to delete the giveaway.",
@@ -3001,13 +3001,13 @@
       "homeLabel": "ClashKing home",
       "mobileApp": "Mobile App",
       "discordBot": "Discord Bot",
-      "dashboard": "Hoofdpaneel"
+      "dashboard": "Painel"
     },
     "language": {
-      "label": "Taal"
+      "label": "Linguagem"
     },
     "appearance": {
-      "label": "Weergave",
+      "label": "Aparência",
       "day": "Day",
       "sunset": "Sunset"
     },
@@ -3026,7 +3026,7 @@
           "third": "clan."
         },
         "accounts": {
-          "first": "Beheren",
+          "first": "Gerir",
           "second": "your",
           "third": "accounts."
         },
@@ -3054,11 +3054,11 @@
           "copy": "View your wars at a glance."
         },
         "notifications": {
-          "title": "Meldingen",
+          "title": "Notificações",
           "copy": "Get notified when you have an attack or an upgrade finishes."
         },
         "accounts": {
-          "title": "Gekoppelde accounts",
+          "title": "Contas vinculadas",
           "copy": "Keep all of your Clash accounts together."
         }
       }
@@ -3078,13 +3078,13 @@
           "copy": "Check attacks, lineups, and reminders in Discord."
         },
         "accounts": {
-          "title": "Gekoppelde accounts",
+          "title": "Contas vinculadas",
           "copy": "Keep all of your Clash accounts together."
         }
       }
     },
     "dashboard": {
-      "title": "Hoofdpaneel",
+      "title": "Painel",
       "intro": "Manage rosters, reminders, and server settings from one place.",
       "imageLabel": "Builder Hut representing clan management tools",
       "imageAlt": "Builder Hut level 8",
@@ -3113,7 +3113,7 @@
     "footer": {
       "tagline": "Clash of Clans tools for everyone",
       "docs": "Docs",
-      "privacy": "Privacybeleid",
+      "privacy": "Política de privacidade",
       "terms": "Terms of Service",
       "legal": "This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell."
     }
@@ -3124,7 +3124,7 @@
       "title": "Privacy Policy | ClashKing",
       "openGraphTitle": "ClashKing Privacy Policy",
       "description": "How ClashKing collects, uses, stores, and protects account, game, and app data.",
-      "heading": "Privacybeleid",
+      "heading": "Política de privacidade",
       "eyebrow": "Effective 17 July 2026"
     },
     "terms": {

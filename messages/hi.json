@@ -1,15 +1,15 @@
 {
   "Common": {
-    "loading": "Laden...",
-    "save": "Opslaan",
-    "cancel": "Annuleren",
-    "delete": "Verwijderen",
+    "loading": "लोड हो रहा है...",
+    "save": "सहेजें",
+    "cancel": "रद्द करना",
+    "delete": "हटाएँ",
     "edit": "Edit",
     "search": "Search",
-    "filter": "Filteren",
+    "filter": "फ़िल्टर",
     "add": "Add",
     "remove": "Remove",
-    "refresh": "Vernieuwen",
+    "refresh": "रीफ़्रेश",
     "close": "Close",
     "openMenu": "Open menu",
     "submit": "Submit",
@@ -27,31 +27,31 @@
     "searchRoles": "Search roles...",
     "addRole": "Add role...",
     "error": "An error occurred",
-    "success": "Succes",
+    "success": "सफलता",
     "actions": "Actions",
-    "details": "Detailscherm",
+    "details": "विवरण",
     "view": "View",
-    "unknown": "Onbekend",
-    "confirm": "Bevestigen",
-    "settings": "Instellingen",
+    "unknown": "अज्ञात",
+    "confirm": "पुष्टि करें",
+    "settings": "सेटिंग्स",
     "status": "Status",
-    "retry": "Opnieuw proberen",
+    "retry": "पुनः प्रयास करें",
     "disabled": "Disabled",
-    "name": "Naam",
+    "name": "नाम",
     "description": "Description",
     "createdAt": "Created At",
     "updatedAt": "Updated At",
-    "dashboard": "Hoofdpaneel",
+    "dashboard": "डैशबोर्ड",
     "loadError": "Failed to load data.",
-    "tryAgain": "Probeer het opnieuw",
+    "tryAgain": "फिर से कोशिश करें",
     "create": "Create",
     "viewClashProfile": "View Clash profile",
-    "openInGame": "Openen in game",
+    "openInGame": "गेम में खोलें",
     "openChannelInDiscord": "Open this channel in Discord",
     "playerProfile": {
-      "clan": "De clan",
+      "clan": "कबेला",
       "townHallLevel": "Town Hall level",
-      "trophies": "Trofeeën",
+      "trophies": "ट्राफी",
       "warPreference": "War preference",
       "warPreferenceIn": "In",
       "warPreferenceOut": "Out",
@@ -73,12 +73,12 @@
     "openDashboard": "Open Dashboard",
     "dashboardSettings": "Dashboard Settings",
     "logout": "Logout",
-    "settings": "Instellingen",
+    "settings": "सेटिंग्स",
     "theme": "Theme",
     "systemTheme": "Follow System",
     "lightTheme": "Light Theme",
     "darkTheme": "Dark Theme",
-    "language": "Taal",
+    "language": "भाषा",
     "browserLanguage": "Browser Language"
   },
   "HomePage": {
@@ -107,7 +107,7 @@
         "description": "Automatically assign roles based on player status, clan position, and achievements. Keep your server organized effortlessly."
       },
       "playerStats": {
-        "title": "Spelerstatistieken",
+        "title": "प्लेयर आँकड़े",
         "description": "Track detailed player stats, progress graphs, and attack history. See who's improving and who needs help."
       },
       "leaderboards": {
@@ -115,7 +115,7 @@
         "description": "Create competitive leaderboards for donations, trophies, war stars, and custom metrics. Boost engagement."
       },
       "warTracking": {
-        "title": "Oorlog volgen",
+        "title": "वॉर ट्रैकिंग",
         "description": "Monitor war lineups, track attacks in real-time, and get post-war analytics. Never miss a war detail."
       },
       "smartReminders": {
@@ -146,7 +146,7 @@
     "footer": {
       "tagline": "The most powerful Clash of Clans bot for Discord communities.",
       "about": {
-        "title": "Over",
+        "title": "के बारे में",
         "features": "Features",
         "help": "Need Help?",
         "openSource": "Open Source",
@@ -154,11 +154,11 @@
       },
       "bot": {
         "title": "Bot",
-        "dashboard": "Hoofdpaneel",
+        "dashboard": "डैशबोर्ड",
         "inviteBot": "Invite Bot"
       },
       "resources": {
-        "title": "Grondstoffen",
+        "title": "संसाधन",
         "documentation": "Documentation",
         "quickStart": "Quick Start Guide",
         "github": "GitHub"
@@ -172,7 +172,7 @@
       },
       "legal": {
         "copyright": "ClashKing. All rights reserved.",
-        "privacy": "Privacybeleid",
+        "privacy": "गोपनीयता नीति",
         "terms": "Terms of Service"
       }
     }
@@ -191,7 +191,7 @@
   },
   "Sidebar": {
     "overview": {
-      "name": "Overzicht",
+      "name": "सिंहावलोकन",
       "description": "Dashboard home"
     },
     "general": {
@@ -207,7 +207,7 @@
       "description": "Family roles and nicknames"
     },
     "clans": {
-      "name": "Clans zoeken",
+      "name": "कुलों",
       "description": "Manage your clans"
     },
     "logs": {
@@ -219,7 +219,7 @@
       "description": "Role automation"
     },
     "reminders": {
-      "name": "Herinneringen",
+      "name": "रिमाइंडर",
       "description": "All reminder types"
     },
     "rosters": {
@@ -259,7 +259,7 @@
       "description": "Moderation tools"
     },
     "wars": {
-      "name": "Oorlogen",
+      "name": "युद्धों",
       "description": "War statistics"
     },
     "leaderboards": {
@@ -268,23 +268,23 @@
     },
     "sections": {
       "configuration": "Configuration",
-      "clanManagement": "Clan beheer",
+      "clanManagement": "क्लैन प्रबंधन",
       "playerManagement": "Player Management",
       "automation": "Automation",
-      "statistics": "Statistieken"
+      "statistics": "आंकड़े"
     },
     "switchServer": "Switch Server",
     "goHome": "Homepage"
   },
   "BasesPage": {
-    "eyebrow": "Clan beheer",
+    "eyebrow": "क्लैन प्रबंधन",
     "title": "Bases",
     "description": "Review shared layouts, engagement history, and Discord source messages.",
-    "refresh": "Vernieuwen",
+    "refresh": "रीफ़्रेश",
     "create": "Add base",
-    "retry": "Probeer het opnieuw",
+    "retry": "फिर से कोशिश करें",
     "dismiss": "Dismiss",
-    "cancel": "Annuleren",
+    "cancel": "रद्द करना",
     "previous": "Previous",
     "next": "Next",
     "pagination": "Page {page} of {total}",
@@ -308,7 +308,7 @@
       "resolve": "Resolve profile"
     },
     "delete": {
-      "action": "Verwijderen",
+      "action": "हटाएँ",
       "confirmTitle": "Delete this base?",
       "confirmDescription": "This permanently removes the database record and first attempts to delete its Discord source message. The base cannot be restored.",
       "confirmAction": "Delete base",
@@ -420,11 +420,11 @@
         "getStarted": "Add a ban to get started with player moderation"
       },
       "table": {
-        "player": "Speler",
+        "player": "खिलाड़ी",
         "reason": "Reason",
         "bannedBy": "Banned By",
         "date": "Date",
-        "daysAgo": "{days} dagen geleden",
+        "daysAgo": "{days} दिन पहले",
         "noReason": "No reason provided"
       },
       "addDialog": {
@@ -492,15 +492,15 @@
         "viewGrouped": "By Player"
       },
       "table": {
-        "player": "Speler",
+        "player": "खिलाड़ी",
         "reason": "Reason",
         "weight": "Weight",
         "addedBy": "Added By",
         "date": "Date",
         "expires": "Expires",
-        "never": "Nooit",
+        "never": "कभी नहीं",
         "noReason": "No reason provided",
-        "daysAgo": "{days} dagen geleden",
+        "daysAgo": "{days} दिन पहले",
         "totalStrikes": "Total Strikes",
         "totalWeight": "Total Weight",
         "lastStrike": "Last Strike"
@@ -555,11 +555,11 @@
       "totalMembers": "Total Members",
       "clanRosters": "Clan Rosters",
       "familyRosters": "Family Rosters",
-      "members": "Leden",
-      "avgTh": "Gem. TH",
+      "members": "सदस्यों",
+      "avgTh": "औसत TH",
       "avgHitrate": "Avg Hitrate",
       "distribution": "Distribution",
-      "clan": "De clan",
+      "clan": "कबेला",
       "family": "Family",
       "external": "External",
       "thDistribution": "TH Distribution",
@@ -567,14 +567,14 @@
     },
     "filters": {
       "search": "Search rosters...",
-      "type": "Clantype",
-      "all": "Alle",
-      "clan": "De clan",
+      "type": "प्रकार",
+      "all": "सभी",
+      "clan": "कबेला",
       "family": "Family",
-      "clear": "Wissen"
+      "clear": "स्पष्ट"
     },
     "comparisonMode": {
-      "cancel": "Annuleren",
+      "cancel": "रद्द करना",
       "compare": "Compare",
       "compareRosters": "Compare Rosters",
       "selectRosters": "Select rosters",
@@ -588,16 +588,16 @@
       "aliasLabel": "Roster Name",
       "aliasPlaceholder": "e.g., CWL Roster",
       "typeLabel": "Roster Type",
-      "typeClan": "De clan",
+      "typeClan": "कबेला",
       "typeFamily": "Family",
       "signupScopeLabel": "Signup Scope",
       "scopeClanOnly": "Clan Only",
       "scopeFamilyWide": "Family Wide",
-      "clanLabel": "De clan",
+      "clanLabel": "कबेला",
       "clanPlaceholder": "Select a clan",
       "descriptionLabel": "Description (Optional)",
       "descriptionPlaceholder": "Roster description...",
-      "cancel": "Annuleren",
+      "cancel": "रद्द करना",
       "creating": "Creating...",
       "create": "Create Roster"
     },
@@ -617,8 +617,8 @@
       "columnsPlaceholder": "Select columns to display",
       "sortLabel": "Sort Order",
       "sortPlaceholder": "Select sort fields",
-      "cancel": "Annuleren",
-      "saving": "Opslaan...",
+      "cancel": "रद्द करना",
+      "saving": "सहेजा जा रहा है...",
       "save": "Save Changes"
     },
     "addMembersDialog": {
@@ -629,47 +629,47 @@
       "searchLabel": "Search Members",
       "searchPlaceholder": "Search by name or tag...",
       "selectFromClan": "Select from Clan Members",
-      "selectedCount": "Geselecteerd",
+      "selectedCount": "चयनित",
       "noMembers": "No members available",
       "noMembersSelected": "No members selected",
       "noMembersSelectedDesc": "Please select members or enter player tags.",
-      "cancel": "Annuleren",
+      "cancel": "रद्द करना",
       "adding": "Adding...",
       "add": "Add Members"
     },
     "detailsDialog": {
       "title": "Roster Details",
       "edit": "Edit",
-      "refresh": "Vernieuwen",
+      "refresh": "रीफ़्रेश",
       "refreshing": "Refreshing...",
-      "delete": "Verwijderen",
+      "delete": "हटाएँ",
       "deleting": "Deleting...",
       "addMembers": "Add Members",
       "close": "Close",
       "noMembers": "No members in this roster",
       "noMembersDesc": "Add members to get started",
-      "memberCount": "Leden",
-      "thRestriction": "SH level",
-      "avgTh": "Gem. TH",
+      "memberCount": "सदस्यों",
+      "thRestriction": "TH स्तर",
+      "avgTh": "औसत TH",
       "avgHitrate": "Avg Hitrate",
-      "clan": "De clan",
+      "clan": "कबेला",
       "family": "Family",
       "external": "External",
       "substitute": "SUB",
       "removeMember": "Remove"
     },
     "rosterCard": {
-      "members": "Leden",
-      "thLevel": "SH level",
-      "avgTh": "Gem. TH",
+      "members": "सदस्यों",
+      "thLevel": "TH स्तर",
+      "avgTh": "औसत TH",
       "avgHitrate": "Avg Hitrate",
-      "clan": "De clan",
+      "clan": "कबेला",
       "family": "Family",
       "external": "External",
       "noRestriction": "No restriction",
       "view": "View",
       "edit": "Edit",
-      "delete": "Verwijderen",
+      "delete": "हटाएँ",
       "noGroup": "No group",
       "moveToGroup": "Move to group",
       "clone": "Clone",
@@ -677,16 +677,16 @@
       "manageRosters": "Manage your war rosters and lineups"
     },
     "memberColumns": {
-      "name": "Naam",
-      "townhall": "Stadhuis",
+      "name": "नाम",
+      "townhall": "टाउन हॉल",
       "tag": "Tag",
       "hitrate": "Hit Rate",
       "current_clan": "Current Clan",
       "current_clan_tag": "Clan Tag",
       "discord": "Discord",
-      "hero_lvs": "Helden",
+      "hero_lvs": "नायकों",
       "war_pref": "War Opt",
-      "trophies": "Trofeeën",
+      "trophies": "ट्राफी",
       "signup_group": "Signup Group"
     },
     "columns": {
@@ -700,10 +700,10 @@
     },
     "sortFields": {
       "townhall": "Townhall Level",
-      "name": "Naam",
+      "name": "नाम",
       "tag": "Tag",
-      "heroLvs": "Helden",
-      "trophies": "Trofeeën",
+      "heroLvs": "नायकों",
+      "trophies": "ट्राफी",
       "hitrate": "30 Day Hitrate",
       "currentClanTag": "Clan Tag",
       "addedAt": "Added At"
@@ -722,8 +722,8 @@
       "noMatchDesc": "Try adjusting your search or filter criteria"
     },
     "toast": {
-      "errorTitle": "Fout",
-      "successTitle": "Succes",
+      "errorTitle": "त्रुटि",
+      "successTitle": "सफलता",
       "errorLoadingRosters": "Failed to load rosters. Please try again.",
       "errorLoadingMembers": "Failed to load clan members.",
       "rosterCreated": "Roster created successfully!",
@@ -754,9 +754,9 @@
       "aliasLabel": "New Roster Name",
       "aliasPlaceholder": "Enter name for cloned roster",
       "copyMembers": "Copy members to new roster",
-      "memberCount": "{count} leden",
+      "memberCount": "{count} सदस्य",
       "originalRoster": "Original roster:",
-      "cancel": "Annuleren",
+      "cancel": "रद्द करना",
       "cloning": "Cloning...",
       "clone": "Clone Roster",
       "copyMembersHint": "Members will be copied from the original roster"
@@ -766,7 +766,7 @@
       "description": "Clan members not registered in this roster",
       "coverage": "Roster Coverage",
       "registered": "registered",
-      "missing": "ontbrekend",
+      "missing": "अनुपलब्ध",
       "total": "total",
       "selectAll": "Select All",
       "selected": "selected",
@@ -786,7 +786,7 @@
       "label": "Event Start Time",
       "timezone": "Your timezone",
       "utc": "UTC",
-      "clear": "Wissen"
+      "clear": "स्पष्ट"
     },
     "bulkValidation": {
       "valid": "valid",
@@ -802,12 +802,12 @@
       "groupHeading": "Server Members",
       "selectedLabel": "Selected Members",
       "membersSelected": "member(s) selected",
-      "selected": "Geselecteerd",
+      "selected": "चयनित",
       "clanMembersLabel": "Or Select from Clan Members"
     },
-    "retry": "Opnieuw proberen",
+    "retry": "पुनः प्रयास करें",
     "back": "Back",
-    "refresh": "Vernieuwen",
+    "refresh": "रीफ़्रेश",
     "createRoster": "Create Roster",
     "searchPlaceholder": "Search rosters...",
     "noRosters": "No rosters yet",
@@ -815,7 +815,7 @@
     "noSearchResults": "No rosters found",
     "noSearchResultsHint": "Try a different search term",
     "createFirstRoster": "Create First Roster",
-    "deleteConfirm": "Weet je zeker dat je \"{name}\" wilt verwijderen?",
+    "deleteConfirm": "क्या आप वाकई \"{name}\" हटाना चाहते हैं?",
     "deleteSuccess": "Roster Deleted",
     "deleteSuccessDesc": "Roster \"{name}\" has been deleted",
     "deleteError": "Failed to delete roster",
@@ -852,16 +852,16 @@
     "categoryDeleted": "Category deleted",
     "categoryError": "Failed to save category",
     "common": {
-      "cancel": "Annuleren",
-      "save": "Opslaan",
+      "cancel": "रद्द करना",
+      "save": "सहेजें",
       "close": "Close"
     },
     "tabs": {
-      "members": "Leden",
+      "members": "सदस्यों",
       "automations": "Automations",
       "groups": "Groups",
       "categories": "Categories",
-      "settings": "Instellingen"
+      "settings": "सेटिंग्स"
     },
     "members": {
       "count": "members",
@@ -891,7 +891,7 @@
       "enterMode": "Compare",
       "modeTitle": "Compare Mode",
       "modeHint": "Click on rosters to select them (2 to 4 rosters)",
-      "exitMode": "Annuleren",
+      "exitMode": "रद्द करना",
       "selected": "roster(s) selected",
       "button": "Compare",
       "title": "Compare Rosters",
@@ -914,10 +914,10 @@
       "create": "Create Automation",
       "empty": "No automations",
       "emptyHint": "Create an automation to schedule actions",
-      "active": "Actief",
-      "inactive": "Inactief",
-      "executed": "Klaar",
-      "missed": "Gemist",
+      "active": "सक्रिय",
+      "inactive": "निष्क्रिय",
+      "executed": "पूर्ण",
+      "missed": "छूटा",
       "lastRun": "Last run",
       "enable": "Enable",
       "disable": "Disable",
@@ -941,7 +941,7 @@
       "channel": "Discord Channel",
       "selectChannel": "Select a channel",
       "channelHint": "Channel where the action will be posted/executed",
-      "activeLabel": "Actief",
+      "activeLabel": "सक्रिय",
       "target": "Target",
       "targetThisRoster": "This roster",
       "targetGroups": "Groups",
@@ -1025,12 +1025,12 @@
       "restrictions": "Restrictions & Limits",
       "name": "Roster Name",
       "rosterType": "Roster Type",
-      "typeClan": "De clan",
+      "typeClan": "कबेला",
       "typeFamily": "Family",
       "signupScope": "Signup Scope",
       "scopeClanOnly": "Clan Only",
       "scopeFamilyWide": "Family Wide",
-      "clan": "De clan",
+      "clan": "कबेला",
       "selectClan": "Select a clan",
       "description": "Description",
       "descriptionPlaceholder": "Enter a description for this roster...",
@@ -1063,7 +1063,7 @@
       "defaultSignupCategoryNone": "None (no default)",
       "defaultSignupCategoryHint": "Pre-selected category when a member signs up.",
       "categoriesManagedByGroup": "Signup categories are managed at the group level. Open the group settings from the Rosters page to configure which categories are available for all rosters in this group.",
-      "saving": "Opslaan...",
+      "saving": "सहेजा जा रहा है...",
       "save": "Save Settings"
     }
   },
@@ -1071,7 +1071,7 @@
     "title": "Links Management",
     "description": "Manage Discord member account links and verify player ownership",
     "tabs": {
-      "overview": "Overzicht",
+      "overview": "सिंहावलोकन",
       "pending": "Pending",
       "bulk": "Bulk Actions",
       "analytics": "Analytics"
@@ -1113,7 +1113,7 @@
       "account": "account",
       "accounts": "accounts",
       "more": "more",
-      "unknown": "Onbekend"
+      "unknown": "अज्ञात"
     },
     "pending": {
       "title": "Pending Verifications",
@@ -1135,7 +1135,7 @@
       "title": "Link Analytics",
       "description": "Overview of linking statistics and trends",
       "verificationRate": "Verification Rate",
-      "verified": "Geverifiëerd",
+      "verified": "सत्यापित",
       "unverified": "Unverified",
       "accountDistribution": "Account Distribution",
       "oneAccount": "1 account",
@@ -1157,21 +1157,21 @@
     "deleteDialog": {
       "title": "Unlink Account",
       "description": "Are you sure you want to unlink {playerName}? This action cannot be undone.",
-      "cancel": "Annuleren",
+      "cancel": "रद्द करना",
       "unlinking": "Unlinking...",
       "unlink": "Unlink"
     },
     "bulkDialog": {
       "title": "Bulk Unlink Accounts",
       "description": "Are you sure you want to unlink all accounts for {count} selected members? This action cannot be undone.",
-      "cancel": "Annuleren",
+      "cancel": "रद्द करना",
       "unlinkAll": "Unlink All"
     },
     "toast": {
       "unlinkFailed": "Failed to unlink account. Please try again."
     },
     "badges": {
-      "verified": "Geverifiëerd",
+      "verified": "सत्यापित",
       "unverified": "Unverified",
       "pending": "Pending"
     },
@@ -1191,23 +1191,23 @@
       "applyFilters": "Apply Filters"
     },
     "filters": {
-      "title": "Filteropties",
+      "title": "फिल्टर",
       "description": "Filter war statistics by various criteria",
-      "clan": "De clan",
+      "clan": "कबेला",
       "allClans": "All Clans",
-      "townHall": "Stadhuis",
-      "townHallShort": "SH",
+      "townHall": "टाउन हॉल",
+      "townHallShort": "वां",
       "allTownHalls": "All TH Levels",
       "townHallLevel": "TH {level}",
-      "period": "Periode",
+      "period": "अवधि",
       "last7Days": "Last 7 days",
       "last30Days": "Last 30 days",
       "last90Days": "Last 90 days",
       "last6Months": "Last 6 months",
       "lastYear": "Last year",
-      "custom": "Aangepast",
-      "startDate": "Startdatum",
-      "endDate": "Einddatum",
+      "custom": "कस्टम",
+      "startDate": "आरंभ तिथि",
+      "endDate": "समाप्ति तिथि",
       "warTypes": "War Types"
     },
     "summaryStats": {
@@ -1224,9 +1224,9 @@
       "dailyPerformance": {
         "title": "War Performance by Week",
         "description": "Weekly wins, losses, and draws over the selected period",
-        "wins": "Overwinningen",
-        "losses": "Nederlagen",
-        "draws": "Gelijkspel"
+        "wins": "जीत",
+        "losses": "हानि",
+        "draws": "खींचता"
       },
       "thSuccessRate": {
         "title": "Attack Success Rate by Town Hall",
@@ -1237,9 +1237,9 @@
       "warTypeDistribution": {
         "title": "War Type Distribution",
         "description": "Breakdown by war type",
-        "cwl": "CWL",
-        "random": "Willekeurig",
-        "friendly": "Vriendschappelijk"
+        "cwl": "सीडब्ल्यूएल",
+        "random": "यादृच्छिक",
+        "friendly": "दोस्ताना"
       },
       "topPerformers": {
         "title": "Top Performers",
@@ -1248,7 +1248,7 @@
         "noData": "No player data available. Try adjusting your filters."
       },
       "missedAttacks": {
-        "title": "Gemiste aanvallen",
+        "title": "छूटे हुए हमले",
         "description": "Players who did not use all their attacks",
         "attacks": "attacks missed"
       },
@@ -1275,9 +1275,9 @@
       "title": "Clan War Statistics",
       "description": "Detailed statistics for each clan",
       "headers": {
-        "clan": "De clan",
+        "clan": "कबेला",
         "status": "Status",
-        "wars": "Oorlogen",
+        "wars": "युद्धों",
         "record": "W/L/D",
         "winRate": "Win Rate",
         "avgDestruction": "Avg Destruction",
@@ -1285,14 +1285,14 @@
         "avgDefenseStars": "Stars/Defense"
       },
       "status": {
-        "inWar": "In oorlog",
-        "cwl": "CWL",
+        "inWar": "वॉर में",
+        "cwl": "सीडब्ल्यूएल",
         "peace": "Peace"
       },
       "noData": "No clan statistics available. Try applying filters or wait for data to load."
     },
     "toast": {
-      "errorTitle": "Fout",
+      "errorTitle": "त्रुटि",
       "errorLoadingClans": "Failed to load clans. Please try again.",
       "errorLoadingWarData": "Failed to load war data. Please try again.",
       "errorNoClans": "No clans available",
@@ -1305,21 +1305,21 @@
     "comingSoon": "This feature is coming soon. Check back later!",
     "stats": {
       "totalEntries": "Total Entries",
-      "type": "Clantype",
-      "league": "Competitie",
+      "type": "प्रकार",
+      "league": "संघ",
       "weekend": "Weekend"
     },
     "filters": {
-      "title": "Filteropties",
+      "title": "फिल्टर",
       "description": "Customize your leaderboard view",
-      "type": "Clantype",
+      "type": "प्रकार",
       "metric": "Metric",
-      "league": "Competitie",
+      "league": "संघ",
       "weekend": "Weekend"
     },
     "types": {
-      "player": "Spelers",
-      "clan": "Clans zoeken"
+      "player": "खिलाड़ी",
+      "clan": "कुलों"
     },
     "metrics": {
       "capital": {
@@ -1335,14 +1335,14 @@
       }
     },
     "leagues": {
-      "all": "Alle",
-      "legendLeague": "Legendarische Divisie",
+      "all": "सभी",
+      "legendLeague": "लीजेंड लीग",
       "titanLeagueI": "Titan League I",
       "titanLeagueII": "Titan League II",
       "titanLeagueIII": "Titan League III"
     },
     "rankings": {
-      "title": "Ranglijsten",
+      "title": "रैंकिंग",
       "description": "Top {count} {type} for {weekend}",
       "players": "players",
       "clans": "clans"
@@ -1353,7 +1353,7 @@
     }
   },
   "ClansPage": {
-    "title": "Clan beheer",
+    "title": "क्लैन प्रबंधन",
     "description": "Configure your clans and their Discord integration settings",
     "addClan": "Add Clan",
     "addNewClan": "Add New Clan",
@@ -1371,25 +1371,25 @@
     "getStartedAdding": "Get started by adding your first clan",
     "addFirstClan": "Add Your First Clan",
     "level": "Level",
-    "members": "Leden",
+    "members": "सदस्यों",
     "status": "Status",
     "configuredBadge": "Configured",
     "setupRequired": "Setup Required",
     "configure": "Configure",
     "sorting": {
       "label": "Sort clans",
-      "sortBy": "Sorteren op",
+      "sortBy": "क्रमबद्ध करें",
       "toggleDirection": "Toggle sort direction",
       "added": "Added on",
       "name": "Clan name",
       "level": "Clan level",
-      "members": "Leden"
+      "members": "सदस्यों"
     },
     "configureClan": "Configure {name} ({tag})",
     "customizeIntegration": "Customize Discord integration settings for this clan",
     "tabs": {
       "basic": "Discord Setup",
-      "war": "Oorlog"
+      "war": "युद्ध"
     },
     "memberRole": "Member Role",
     "leaderRole": "Leader Role",
@@ -1410,7 +1410,7 @@
     "categories": {
       "title": "Clan categories",
       "description": "Create and maintain the categories available to this server's clans.",
-      "refresh": "Vernieuwen",
+      "refresh": "रीफ़्रेश",
       "createLabel": "New category",
       "name": "Category name",
       "namePlaceholder": "e.g., Competitive",
@@ -1452,8 +1452,8 @@
     "roleIdPlaceholder": "Role ID",
     "abbreviationPlaceholder": "e.g., CK",
     "categoryPlaceholder": "Category name",
-    "notAvailable": "N.v.t.",
-    "saving": "Opslaan...",
+    "notAvailable": "N/A",
+    "saving": "सहेजा जा रहा है...",
     "saveChanges": "Save Changes",
     "deleteConfirm": "Are you sure you want to remove {tag}? This will also delete all associated reminders and logs.",
     "toast": {
@@ -1491,15 +1491,15 @@
       "title": "Auto-Evaluation Settings",
       "description": "Configure automatic role evaluation and assignment",
       "saveButton": "Save Settings",
-      "saving": "Opslaan...",
+      "saving": "सहेजा जा रहा है...",
       "enableAutoEval": "Enable Auto-Evaluation",
       "enableAutoEvalDesc": "Automatically assign and remove roles based on player stats",
       "autoNickname": "Auto-Update Nicknames",
       "autoNicknameDesc": "Update nicknames when roles are evaluated"
     },
     "roleTypes": {
-      "townhall": "Stadhuis",
-      "league": "Competitie",
+      "townhall": "टाउन हॉल",
+      "league": "संघ",
       "builderhall": "Builder Hall",
       "builderLeague": "Builder League",
       "achievement": "Achievement",
@@ -1507,13 +1507,13 @@
       "familyPosition": "Family Position"
     },
     "familyPositions": {
-      "member": "Lid",
-      "elder": "Oudste",
-      "coLeader": "Co-leider",
-      "leader": "Leider"
+      "member": "सदस्य",
+      "elder": "ज्येष्ठ",
+      "coLeader": "सह-मुखिया",
+      "leader": "नेता "
     },
     "leagues": {
-      "legend": "Legendarische Divisie",
+      "legend": "लीजेंड लीग",
       "electroDragon": "Electro Dragon",
       "dragon": "Dragon",
       "electroTitan": "Electro Titan",
@@ -1567,7 +1567,7 @@
       "leagueSuperfan": "League Superfan",
       "leagueFanatic": "League Fanatic",
       "leagueMaster": "League Master",
-      "legendLeague": "Legendarische Divisie",
+      "legendLeague": "लीजेंड लीग",
       "humiliator": "Humiliator",
       "notSoEasyThisTime": "Not So Easy This Time",
       "unionBuster": "Union Buster",
@@ -1608,7 +1608,7 @@
       "addRoleToStart": "Click \"Add Role\" to create one",
       "discordRole": "Discord Role",
       "criteria": "Criteria",
-      "mode": "Modus",
+      "mode": "मोड",
       "modeBoth": "Add and remove",
       "modeAdd": "Add only",
       "modeRemove": "Remove only",
@@ -1622,13 +1622,13 @@
       "title": "Add New Role",
       "description": "Configure a new automatic role assignment rule",
       "roleType": "Role Type",
-      "mode": "Modus",
+      "mode": "मोड",
       "discordRole": "Discord Role",
       "selectRole": "Select a role",
       "townHallLevel": "Town Hall Level",
       "selectThLevel": "Select TH level",
-      "thPrefix": "SH",
-      "league": "Competitie",
+      "thPrefix": "वां",
+      "league": "संघ",
       "selectLeague": "Select league",
       "builderHallLevel": "Builder Hall Level",
       "selectBhLevel": "Select BH level",
@@ -1643,7 +1643,7 @@
       "monthsPlaceholder": "6",
       "familyPosition": "Family Position",
       "selectPosition": "Select position",
-      "cancel": "Annuleren",
+      "cancel": "रद्द करना",
       "addRole": "Add Role",
       "errorDuplicateExact": "This criterion is already linked to this role.",
       "errorDuplicateCriterion": "This criterion already has a role assigned. Remove the existing one first."
@@ -1680,18 +1680,18 @@
     }
   },
   "RemindersPage": {
-    "title": "Herinneringen",
+    "title": "रिमाइंडर",
     "description": "Configure automatic reminders for wars, raids, clan games, and inactivity",
     "types": {
       "war": "War Reminders",
-      "capital": "Clan Hoofdstad",
-      "clanGames": "Clanspelen",
+      "capital": "कबीले की राजधानी",
+      "clanGames": "क्लैन गेम्स",
       "inactivity": "Inactivity"
     },
     "tabs": {
-      "war": "Oorlog",
-      "capital": "Hoofdstad",
-      "clanGames": "Clanspelen",
+      "war": "युद्ध",
+      "capital": "पूंजी",
+      "clanGames": "क्लैन गेम्स",
       "inactivity": "Inactivity"
     },
     "stats": {
@@ -1705,14 +1705,14 @@
       "otherRemindersDesc": "Games & inactivity"
     },
     "actions": {
-      "saving": "Opslaan...",
+      "saving": "सहेजा जा रहा है...",
       "saveChanges": "Save Changes",
       "addReminder": "Add Reminder",
       "addWarReminder": "Add War Reminder",
       "addCapitalReminder": "Add Capital Reminder",
       "addClanGamesReminder": "Add Clan Games Reminder",
       "addInactivityReminder": "Add Inactivity Reminder",
-      "retry": "Opnieuw proberen"
+      "retry": "पुनः प्रयास करें"
     },
     "clanSelector": {
       "label": "Clan:",
@@ -1727,7 +1727,7 @@
       "getStarted": "Get started by creating your first reminder"
     },
     "card": {
-      "new": "Nieuw",
+      "new": "नया",
       "before": "before",
       "timeBefore": "Remaining time",
       "timeBeforePlaceholder": "e.g. 6",
@@ -1743,23 +1743,23 @@
       "forumPost": "Forum post",
       "forumPostPlaceholder": "Select a forum post",
       "forumPostRequired": "A forum post is required for forum channels.",
-      "clan": "De clan",
+      "clan": "कबेला",
       "clanPlaceholder": "Select clan",
       "customMessage": "Custom Message",
       "customMessagePlaceholder": "Don't forget to use your attacks!",
       "customMessagePlaceholderClanGames": "Try to get more points in clan games!",
       "customMessagePlaceholderInactivity": "You've been inactive in the clan for a while :(",
       "warTypes": "War Types",
-      "random": "Willekeurig",
-      "friendly": "Vriendschappelijk",
-      "cwl": "CWL",
+      "random": "यादृच्छिक",
+      "friendly": "दोस्ताना",
+      "cwl": "सीडब्ल्यूएल",
       "pointThreshold": "Point Threshold",
       "pointThresholdPlaceholder": "4000",
       "pointThresholdHelp": "Will ping people who have fewer than {threshold} points.",
       "attackThreshold": "Attack Threshold",
       "attackThresholdPlaceholder": "1",
       "attackThresholdHelp": "Will ping people if they have {threshold} or more attacks remaining.",
-      "notSet": "Niet ingesteld"
+      "notSet": "सेट नहीं"
     },
     "dialog": {
       "addTitle": "Add New Reminder",
@@ -1768,18 +1768,18 @@
       "editDescription": "Update reminder settings",
       "type": "Reminder Type",
       "selectType": "Select type",
-      "cancel": "Annuleren",
-      "saving": "Opslaan...",
+      "cancel": "रद्द करना",
+      "saving": "सहेजा जा रहा है...",
       "saveChanges": "Save Changes",
       "addReminder": "Add Reminder"
     },
     "toast": {
-      "errorTitle": "Fout",
+      "errorTitle": "त्रुटि",
       "errorLoadingReminders": "Failed to load reminders. Please try again.",
       "reminderAdded": "Reminder added successfully",
       "reminderAddedDesc": "New {type} reminder added. Don't forget to save!",
       "reminderUpdated": "Reminder updated successfully",
-      "successTitle": "Succes",
+      "successTitle": "सफलता",
       "reminderDeleted": "Reminder deleted successfully",
       "failedToDelete": "Failed to delete reminder",
       "allRemindersSaved": "All reminders saved successfully",
@@ -1809,10 +1809,10 @@
       "placeholder": "Select a clan"
     },
     "tabs": {
-      "clan": "De clan",
-      "war": "Oorlog",
-      "capital": "Hoofdstad",
-      "player": "Speler",
+      "clan": "कबेला",
+      "war": "युद्ध",
+      "capital": "पूंजी",
+      "player": "खिलाड़ी",
       "server": "Server"
     },
     "clanLogs": {
@@ -1853,7 +1853,7 @@
     },
     "warLogs": {
       "warLog": {
-        "label": "Oorlogslogboek",
+        "label": "युद्ध लॉग",
         "description": "Track war attacks and results"
       },
       "warPanel": {
@@ -1930,7 +1930,7 @@
       }
     },
     "logCard": {
-      "active": "Actief",
+      "active": "सक्रिय",
       "issue": "Issue",
       "disabled": "Disabled",
       "enable": "Enable",
@@ -1957,8 +1957,8 @@
     "title": "General Settings",
     "description": "Configure server-wide bot behavior and appearance",
     "loading": "Loading settings...",
-    "reset": "Resetten",
-    "saving": "Opslaan...",
+    "reset": "रीसेट करें",
+    "saving": "सहेजा जा रहा है...",
     "saveChanges": "Save Changes",
     "settingsSaved": "Settings saved successfully!",
     "infoBanner": {
@@ -1981,15 +1981,15 @@
         "playerTag": "Player tag",
         "playerTownhall": "TH level",
         "playerTownhallSmall": "TH superscript",
-        "playerWarstars": "Oorlogssterren",
+        "playerWarstars": "युद्ध सितारे",
         "playerRole": "Clan role",
         "playerClan": "Clan name",
-        "playerLeague": "Competitie",
+        "playerLeague": "संघ",
         "playerClanAbbr": "Clan abbr"
       }
     },
     "appearance": {
-      "title": "Weergave",
+      "title": "उपस्थिति",
       "description": "Customize bot embed messages",
       "embedColor": "Embed Color",
       "embedColorDesc": "Color of the side bar on all bot embed messages in Discord",
@@ -1998,7 +1998,7 @@
       "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages",
       "editColor": "Edit Color",
       "resetToDefault": "Reset to Default",
-      "apply": "Toepassen"
+      "apply": "आवेदन करना"
     },
     "security": {
       "title": "Security & Permissions",
@@ -2022,9 +2022,9 @@
       "types": {
         "family": "Family",
         "notFamily": "Non-Family",
-        "elder": "Oudste",
-        "coLeader": "Co-leider",
-        "leader": "Leider"
+        "elder": "ज्येष्ठ",
+        "coLeader": "सह-मुखिया",
+        "leader": "नेता "
       },
       "descriptions": {
         "family": "Has at least one account in family clans",
@@ -2052,7 +2052,7 @@
       "unknownRole": "Unknown role"
     },
     "prefix": "Command Prefix",
-    "language": "Taal",
+    "language": "भाषा",
     "timezone": "Timezone",
     "theme": "Theme"
   },
@@ -2060,8 +2060,8 @@
     "title": "Family Settings",
     "description": "Configure family roles and nickname formatting for clan members",
     "loading": "Loading settings...",
-    "reset": "Resetten",
-    "saving": "Opslaan...",
+    "reset": "रीसेट करें",
+    "saving": "सहेजा जा रहा है...",
     "saveChanges": "Save Changes",
     "settingsSaved": "Settings saved successfully!",
     "nickname": {
@@ -2080,10 +2080,10 @@
         "playerTag": "Player tag",
         "playerTownhall": "TH level",
         "playerTownhallSmall": "TH superscript",
-        "playerWarstars": "Oorlogssterren",
+        "playerWarstars": "युद्ध सितारे",
         "playerRole": "Clan role",
         "playerClan": "Clan name",
-        "playerLeague": "Competitie",
+        "playerLeague": "संघ",
         "playerClanAbbr": "Clan abbr"
       }
     },
@@ -2102,9 +2102,9 @@
       "types": {
         "family": "Family",
         "notFamily": "Non-Family",
-        "elder": "Oudste",
-        "coLeader": "Co-leider",
-        "leader": "Leider"
+        "elder": "ज्येष्ठ",
+        "coLeader": "सह-मुखिया",
+        "leader": "नेता "
       },
       "descriptions": {
         "family": "Has at least one account in family clans",
@@ -2116,13 +2116,13 @@
     }
   },
   "LanguageSwitcher": {
-    "label": "Taal"
+    "label": "भाषा"
   },
   "ThemeSwitcher": {
     "label": "Theme",
-    "light": "Licht",
-    "dark": "Donker",
-    "system": "Systeem"
+    "light": "रोशनी",
+    "dark": "अँधेरा",
+    "system": "प्रणाली"
   },
   "AuthCallback": {
     "authenticating": "Authenticating...",
@@ -2137,7 +2137,7 @@
     "errorAuthenticateFailed": "Failed to authenticate with Discord.",
     "loadingVillages": "Logging in with Discord...",
     "loadingClanData": "Loading server list...",
-    "loadingWarStats": "Bijna klaar..."
+    "loadingWarStats": "लगभग तैयार..."
   },
   "LoginPage": {
     "redirecting": "Redirecting to Discord..."
@@ -2196,7 +2196,7 @@
     "discord": {
       "title": "Discord Support",
       "description": "Need more help? Join our Discord community to ask questions, report bugs, or chat with other users.",
-      "cta": "Doe mee op Discord"
+      "cta": "Discord से जुड़ें"
     }
   },
   "OpenSourcePage": {
@@ -2248,7 +2248,7 @@
       "cta": "Support on Patreon"
     },
     "creatorCode": {
-      "title": "Gebruik makerscode",
+      "title": "क्रिएटर कोड इस्तेमाल करें",
       "description": "Support us for free by using creator code",
       "descriptionSuffix": "in-game or in the Supercell Store.",
       "ctaGame": "Use in Game",
@@ -2263,8 +2263,8 @@
     "title": "Select a Server",
     "description": "Choose a server to configure ClashKing bot settings. You must be the Discord server owner or an administrator.",
     "backToHome": "Back to Home",
-    "backToLogin": "Terug naar inloggen",
-    "error": "Fout",
+    "backToLogin": "लॉगिन पर वापस जाएँ",
+    "error": "त्रुटि",
     "configure": "Configure",
     "invite": "Invite",
     "members": "members",
@@ -2287,8 +2287,8 @@
       "edit": "Edit AutoBoard",
       "delete": "Delete AutoBoard",
       "save": "Save changes",
-      "cancel": "Annuleren",
-      "retry": "Opnieuw proberen"
+      "cancel": "रद्द करना",
+      "retry": "पुनः प्रयास करें"
     },
     "metrics": {
       "total": "Configured",
@@ -2296,7 +2296,7 @@
       "send": "Scheduled sends"
     },
     "filters": {
-      "all": "Alle"
+      "all": "सभी"
     },
     "list": {
       "title": "Configured AutoBoards",
@@ -2326,7 +2326,7 @@
       "scopeDescription": "Family scope uses every configured family clan and has no explicit targets.",
       "family": "Family",
       "custom": "Custom targets",
-      "values": "Doelen",
+      "values": "लक्ष्य",
       "count": "Provide between {min} and {max} targets for this board type.",
       "placeholder": "Enter a {kind} target",
       "add": "Add target",
@@ -2335,7 +2335,7 @@
     "modes": {
       "label": "Delivery mode",
       "description": "The registry controls which delivery modes this board supports.",
-      "refresh": "Vernieuwen",
+      "refresh": "रीफ़्रेश",
       "send": "Scheduled send"
     },
     "destination": {
@@ -2460,10 +2460,10 @@
     "selectChannel": "Select a channel...",
     "savedSuccess": "Panel \"{panel}\" saved successfully.",
     "tabChannels": "Ticket panel",
-    "tabSettings": "Instellingen",
+    "tabSettings": "सेटिंग्स",
     "tabButtons": "Buttons",
     "tabMessages": "Messages",
-    "autoSaveSaving": "Opslaan...",
+    "autoSaveSaving": "सहेजा जा रहा है...",
     "autoSaveSaved": "Saved",
     "autoSaveErrorTitle": "Auto-save failed",
     "autoSaveErrorDescription": "Could not save these ticket settings.",
@@ -2533,7 +2533,7 @@
     "thRequirementsHint": "Minimum hero levels required per Town Hall level to open this ticket.",
     "thHeroLegend": "BK = Barbarian King · AQ = Archer Queen · GW = Grand Warden · RC = Royal Champion · WARST = War Stars",
     "addThLevel": "Add TH level",
-    "thLevel": "SH",
+    "thLevel": "वां",
     "numApplyHint": "Max number of CoC accounts the user can apply with (1–25).",
     "embeds": "Embeds",
     "embedsHint": "Discord embeds used as panel messages or ticket open messages.",
@@ -2547,7 +2547,7 @@
     "copyDiscohookUrl": "Copy Discohook URL",
     "copyDiscohookUrlDone": "URL copied!",
     "editEmbed": "Edit",
-    "deleteEmbed": "Verwijderen",
+    "deleteEmbed": "हटाएँ",
     "confirmDeleteEmbed": "Delete embed \"{name}\"?",
     "confirmDeleteEmbedHint": "This only removes it from ClashKing. It will not affect already-posted Discord messages.",
     "embedSaved": "Embed \"{name}\" saved.",
@@ -2582,7 +2582,7 @@
     "content": "Content",
     "contentPlaceholder": "Message content shown above embeds...",
     "profileSection": "Profile",
-    "profileName": "Naam",
+    "profileName": "नाम",
     "profileAvatarUrl": "Avatar URL",
     "profileUnsupportedWarning": "Warning: the bot currently does not support updating this profile.",
     "import": "Import",
@@ -2590,7 +2590,7 @@
     "importMultipleMessagesWarning": "This link contains multiple messages. Only the first message was imported — the bot supports one message per embed.",
     "colorSection": "Color",
     "authorSection": "Author",
-    "authorName": "Naam",
+    "authorName": "नाम",
     "authorIconUrl": "Icon URL",
     "authorUrl": "Author URL",
     "bodySection": "Body",
@@ -2602,7 +2602,7 @@
     "fieldsSection": "Fields",
     "addField": "Add field",
     "field": "Field",
-    "fieldName": "Naam",
+    "fieldName": "नाम",
     "fieldValue": "Value",
     "fieldInline": "Inline",
     "imagesSection": "Images",
@@ -2612,7 +2612,7 @@
     "footerText": "Footer text",
     "footerIconUrl": "Footer icon URL",
     "timestamp": "Include timestamp",
-    "preview": "Voorbeeld",
+    "preview": "पूर्व दर्शन",
     "previewEmpty": "Fill in fields to see a preview",
     "modeToggleV1": "Classic (V1)",
     "modeToggleV2": "Components (V2)",
@@ -2652,7 +2652,7 @@
     "selectPlaceholder": "Placeholder text",
     "selectMinValues": "Min values",
     "selectMaxValues": "Max values",
-    "selectOptions": "Opties",
+    "selectOptions": "विकल्प",
     "selectOption": "Option",
     "selectOptionLabel": "Label",
     "selectOptionValue": "Value",
@@ -2668,7 +2668,7 @@
     "buttonStyle": "Style",
     "buttonStylePrimary": "Primary",
     "buttonStyleSecondary": "Secondary",
-    "buttonStyleSuccess": "Succes",
+    "buttonStyleSuccess": "सफलता",
     "buttonStyleDanger": "Danger",
     "buttonStyleLink": "Link",
     "tabMentions": "Mentions",
@@ -2725,7 +2725,7 @@
     "editDialogDescription": "Update embed, buttons, and button colour with a live preview before saving.",
     "welcomeAutosaveSuccess": "Welcome channel saved.",
     "welcomeAutosaveDisabled": "Welcome channel disabled.",
-    "previewSection": "Voorbeeld",
+    "previewSection": "पूर्व दर्शन",
     "previewHint": "How the panel will look in Discord.",
     "previewNoEmbed": "No embed selected",
     "previewEmbedNoData": "Embed has no preview data",
@@ -2753,12 +2753,12 @@
       "general": "General",
       "messages": "Messages",
       "restrictions": "Restrictions",
-      "advanced": "Geavanceerd"
+      "advanced": "उन्नत"
     },
     "tabs": {
-      "ongoing": "Bezig",
-      "upcoming": "Binnenkort",
-      "ended": "Afgelopen"
+      "ongoing": "चल रहे",
+      "upcoming": "आगामी",
+      "ended": "समाप्त"
     },
     "stats": {
       "total": "Total giveaways",
@@ -2783,7 +2783,7 @@
     "status": {
       "scheduled": "Scheduled",
       "ongoing": "Live",
-      "ended": "Afgelopen"
+      "ended": "समाप्त"
     },
     "table": {
       "giveaway": "Giveaway",
@@ -2910,7 +2910,7 @@
     },
     "toast": {
       "errorTitle": "Something went wrong",
-      "successTitle": "Succes",
+      "successTitle": "सफलता",
       "loadError": "Failed to load giveaways.",
       "saveError": "Failed to save the giveaway.",
       "deleteError": "Failed to delete the giveaway.",
@@ -3001,13 +3001,13 @@
       "homeLabel": "ClashKing home",
       "mobileApp": "Mobile App",
       "discordBot": "Discord Bot",
-      "dashboard": "Hoofdpaneel"
+      "dashboard": "डैशबोर्ड"
     },
     "language": {
-      "label": "Taal"
+      "label": "भाषा"
     },
     "appearance": {
-      "label": "Weergave",
+      "label": "उपस्थिति",
       "day": "Day",
       "sunset": "Sunset"
     },
@@ -3026,7 +3026,7 @@
           "third": "clan."
         },
         "accounts": {
-          "first": "Beheren",
+          "first": "प्रबंधित करना",
           "second": "your",
           "third": "accounts."
         },
@@ -3054,11 +3054,11 @@
           "copy": "View your wars at a glance."
         },
         "notifications": {
-          "title": "Meldingen",
+          "title": "सूचनाएं",
           "copy": "Get notified when you have an attack or an upgrade finishes."
         },
         "accounts": {
-          "title": "Gekoppelde accounts",
+          "title": "लिंक किए गए खाते",
           "copy": "Keep all of your Clash accounts together."
         }
       }
@@ -3078,13 +3078,13 @@
           "copy": "Check attacks, lineups, and reminders in Discord."
         },
         "accounts": {
-          "title": "Gekoppelde accounts",
+          "title": "लिंक किए गए खाते",
           "copy": "Keep all of your Clash accounts together."
         }
       }
     },
     "dashboard": {
-      "title": "Hoofdpaneel",
+      "title": "डैशबोर्ड",
       "intro": "Manage rosters, reminders, and server settings from one place.",
       "imageLabel": "Builder Hut representing clan management tools",
       "imageAlt": "Builder Hut level 8",
@@ -3113,7 +3113,7 @@
     "footer": {
       "tagline": "Clash of Clans tools for everyone",
       "docs": "Docs",
-      "privacy": "Privacybeleid",
+      "privacy": "गोपनीयता नीति",
       "terms": "Terms of Service",
       "legal": "This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell."
     }
@@ -3124,7 +3124,7 @@
       "title": "Privacy Policy | ClashKing",
       "openGraphTitle": "ClashKing Privacy Policy",
       "description": "How ClashKing collects, uses, stores, and protects account, game, and app data.",
-      "heading": "Privacybeleid",
+      "heading": "गोपनीयता नीति",
       "eyebrow": "Effective 17 July 2026"
     },
     "terms": {
