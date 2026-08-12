@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Laden...",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filteren",
+    "add": "Add",
+    "remove": "Remove",
+    "refresh": "Vernieuwen",
+    "close": "Close",
+    "openMenu": "Open menu",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "poweredBy": "Powered by",
+    "noData": "No data available",
+    "noChannelFound": "No channel found.",
+    "searchChannels": "Search channels...",
+    "searchClans": "Search clans...",
+    "noClanFound": "No clan found.",
+    "searchCategories": "Search categories...",
+    "noRoleFound": "No role found.",
+    "searchRoles": "Search roles...",
+    "addRole": "Add role...",
+    "error": "An error occurred",
+    "success": "Succes",
+    "actions": "Actions",
+    "details": "Detailscherm",
+    "view": "View",
+    "unknown": "Onbekend",
+    "confirm": "Bevestigen",
+    "settings": "Instellingen",
+    "status": "Status",
+    "retry": "Opnieuw proberen",
+    "disabled": "Disabled",
+    "name": "Naam",
+    "description": "Description",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "dashboard": "Hoofdpaneel",
+    "loadError": "Failed to load data.",
+    "tryAgain": "Probeer het opnieuw",
+    "create": "Create",
+    "viewClashProfile": "View Clash profile",
+    "openInGame": "Openen in game",
+    "openChannelInDiscord": "Open this channel in Discord",
+    "playerProfile": {
+      "clan": "De clan",
+      "townHallLevel": "Town Hall level",
+      "trophies": "Trofeeën",
+      "warPreference": "War preference",
+      "warPreferenceIn": "In",
+      "warPreferenceOut": "Out",
+      "signupGroup": "Signup group",
+      "heroLevels": "Hero levels",
+      "hitrate30d": "30 day hit rate"
+    }
+  },
+  "Navigation": {
+    "features": "Features",
+    "openSource": "Open Source",
+    "help": "Need Help?",
+    "support": "Support Us",
+    "commands": "Commands",
+    "premium": "Premium",
+    "documentation": "Documentation",
+    "loginWithDiscord": "Login with Discord",
+    "addToDiscord": "Add to Discord",
+    "openDashboard": "Open Dashboard",
+    "dashboardSettings": "Dashboard Settings",
+    "logout": "Logout",
+    "settings": "Instellingen",
+    "theme": "Theme",
+    "systemTheme": "Follow System",
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme",
+    "language": "Taal",
+    "browserLanguage": "Browser Language"
+  },
+  "HomePage": {
+    "badge": "{serverCount}+ servers already using ClashKing",
+    "title": "The Most Powerful",
+    "titleHighlight": "Clash of Clans Bot",
+    "subtitle": "Automate your clan management, track player stats, manage wars, and keep your community engaged.",
+    "cta": {
+      "heading": "Ready to Transform Your Clan?",
+      "description": "Join {serverCount}+ Discord servers already using ClashKing to elevate their Clash of Clans community. Setup takes just 2 minutes.",
+      "button": "Add ClashKing to Discord",
+      "trustBadge": "Free forever • No credit card required • {serverCount}+ servers",
+      "addToDiscord": "Add to Discord",
+      "openDashboard": "Open Dashboard"
+    },
+    "stats": {
+      "servers": "Discord Servers",
+      "users": "Active Users",
+      "clans": "Clans Tracked"
+    },
+    "features": {
+      "title": "Everything You Need to Manage Your Clan",
+      "subtitle": "Powerful features designed specifically for Clash of Clans communities",
+      "autoRoles": {
+        "title": "Auto Role Management",
+        "description": "Automatically assign roles based on player status, clan position, and achievements. Keep your server organized effortlessly."
+      },
+      "playerStats": {
+        "title": "Spelerstatistieken",
+        "description": "Track detailed player stats, progress graphs, and attack history. See who's improving and who needs help."
+      },
+      "leaderboards": {
+        "title": "Leaderboards",
+        "description": "Create competitive leaderboards for donations, trophies, war stars, and custom metrics. Boost engagement."
+      },
+      "warTracking": {
+        "title": "Oorlog volgen",
+        "description": "Monitor war lineups, track attacks in real-time, and get post-war analytics. Never miss a war detail."
+      },
+      "smartReminders": {
+        "title": "Smart Reminders",
+        "description": "Automated reminders for Clan Games, war attacks, Clan War League, and custom events. Keep everyone informed."
+      },
+      "customization": {
+        "title": "Full Customization",
+        "description": "Customize commands, embed colors, nicknames, and permissions. Make ClashKing truly yours."
+      },
+      "familyManagement": {
+        "title": "Family Management",
+        "description": "Manage multiple clans as a family. Cross-clan stats, shared leaderboards, and unified roles."
+      },
+      "analytics": {
+        "title": "Advanced Analytics",
+        "description": "Deep insights into clan performance, player activity patterns, and growth trends. Data-driven decisions."
+      },
+      "performance": {
+        "title": "Lightning Fast",
+        "description": "Built for performance with instant command responses and real-time updates. No lag, no delays."
+      },
+      "security": {
+        "title": "Secure & Reliable",
+        "description": "99.9% uptime, encrypted data, and regular backups. Your clan data is safe with us."
+      }
+    },
+    "footer": {
+      "tagline": "The most powerful Clash of Clans bot for Discord communities.",
+      "about": {
+        "title": "Over",
+        "features": "Features",
+        "help": "Need Help?",
+        "openSource": "Open Source",
+        "support": "Support Us"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Hoofdpaneel",
+        "inviteBot": "Invite Bot"
+      },
+      "resources": {
+        "title": "Grondstoffen",
+        "documentation": "Documentation",
+        "quickStart": "Quick Start Guide",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Community",
+        "discord": "Discord Server",
+        "twitter": "X (Twitter)",
+        "reportBug": "Report a Bug",
+        "requestFeature": "Request Feature"
+      },
+      "legal": {
+        "copyright": "ClashKing. All rights reserved.",
+        "privacy": "Privacybeleid",
+        "terms": "Terms of Service"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Not on server",
+    "unknownUser": "Unknown user",
+    "notLinked": "Not linked",
+    "status": {
+      "onServer": "On server",
+      "notOnServer": "Not on server"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "View Discord profile",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Overzicht",
+      "description": "Dashboard home"
+    },
+    "general": {
+      "name": "General Settings",
+      "description": "Server configuration"
+    },
+    "dashboardAccess": {
+      "name": "Dashboard Access",
+      "description": "Delegate dashboard sections"
+    },
+    "familySettings": {
+      "name": "Family Settings",
+      "description": "Family roles and nicknames"
+    },
+    "clans": {
+      "name": "Clans zoeken",
+      "description": "Manage your clans"
+    },
+    "logs": {
+      "name": "Logs",
+      "description": "Webhook configuration"
+    },
+    "roles": {
+      "name": "Roles",
+      "description": "Role automation"
+    },
+    "reminders": {
+      "name": "Herinneringen",
+      "description": "All reminder types"
+    },
+    "rosters": {
+      "name": "Rosters",
+      "description": "Roster management"
+    },
+    "bases": {
+      "name": "Bases",
+      "description": "Layout library and engagement"
+    },
+    "autoboards": {
+      "name": "Autoboards",
+      "description": "Automated leaderboards"
+    },
+    "giveaways": {
+      "name": "Giveaways",
+      "description": "Manage giveaway campaigns"
+    },
+    "panels": {
+      "name": "Panels",
+      "description": "Interactive member panels with action buttons"
+    },
+    "tickets": {
+      "name": "Tickets",
+      "description": "Recruitment & support tickets"
+    },
+    "embeds": {
+      "name": "Embeds",
+      "description": "Discord embed templates"
+    },
+    "links": {
+      "name": "Links",
+      "description": "Player-Discord linking"
+    },
+    "bans": {
+      "name": "Bans & Strikes",
+      "description": "Moderation tools"
+    },
+    "wars": {
+      "name": "Oorlogen",
+      "description": "War statistics"
+    },
+    "leaderboards": {
+      "name": "Leaderboards",
+      "description": "Global rankings"
+    },
+    "sections": {
+      "configuration": "Configuration",
+      "clanManagement": "Clan beheer",
+      "playerManagement": "Player Management",
+      "automation": "Automation",
+      "statistics": "Statistieken"
+    },
+    "switchServer": "Switch Server",
+    "goHome": "Homepage"
+  },
+  "BasesPage": {
+    "eyebrow": "Clan beheer",
+    "title": "Bases",
+    "description": "Review shared layouts, engagement history, and Discord source messages.",
+    "refresh": "Vernieuwen",
+    "create": "Add base",
+    "retry": "Probeer het opnieuw",
+    "dismiss": "Dismiss",
+    "cancel": "Annuleren",
+    "previous": "Previous",
+    "next": "Next",
+    "pagination": "Page {page} of {total}",
+    "imageAlt": "Base layout image {index}",
+    "noDescription": "No description provided.",
+    "openLayout": "Open layout",
+    "openMessage": "Discord message",
+    "summary": {
+      "total": "Total bases",
+      "page": "Current page",
+      "visible": "Visible"
+    },
+    "counts": {
+      "downloads": "Unique downloads",
+      "upvotes": "Upvotes",
+      "downvotes": "Downvotes"
+    },
+    "history": {
+      "title": "Downloader history ({count})",
+      "empty": "No downloader IDs have been recorded.",
+      "resolve": "Resolve profile"
+    },
+    "delete": {
+      "action": "Verwijderen",
+      "confirmTitle": "Delete this base?",
+      "confirmDescription": "This permanently removes the database record and first attempts to delete its Discord source message. The base cannot be restored.",
+      "confirmAction": "Delete base",
+      "deleting": "Deleting…",
+      "baseId": "Base ID",
+      "discordSource": "Discord source",
+      "successTitle": "Base deleted",
+      "successDeleted": "The database record and Discord message were deleted.",
+      "successAlreadyMissing": "The database record was deleted; the Discord message was already missing.",
+      "cleanupFailedTitle": "Base retained; Discord cleanup failed",
+      "cleanupCompleteTitle": "Discord cleanup completed; base retained",
+      "failureTitle": "Base was not deleted",
+      "failureFallback": "The delete request failed.",
+      "retryable": "Retry is safe",
+      "notRetryable": "Not retryable",
+      "cleanup": {
+        "deleted": "Discord message deleted",
+        "alreadyMissing": "Discord message already missing",
+        "failed": "Discord cleanup failed"
+      }
+    },
+    "empty": {
+      "title": "No bases shared yet",
+      "description": "Add the first layout by choosing its Discord channel and Clash of Clans layout link."
+    },
+    "form": {
+      "title": "Add a base",
+      "description": "Bases cannot be edited after creation. Choose where ClashKing should post the Discord message and confirm the layout link.",
+      "channel": "Discord channel",
+      "channelPlaceholder": "Select a channel",
+      "channelSearch": "Search channels…",
+      "channelsLoading": "Loading channels…",
+      "baseLink": "Layout link",
+      "descriptionLabel": "Description",
+      "images": "Images",
+      "chooseImages": "Choose layout images",
+      "imageLimit": "Up to four images; uploads finish before the base is created.",
+      "submit": "Create base",
+      "creating": "Uploading and creating…",
+      "createRejectedTitle": "Base was not created",
+      "createCleanupCompleteTitle": "Discord cleanup completed; base was not created",
+      "createCleanupFailedTitle": "Discord message may remain; base was not created",
+      "databaseNotInserted": "Database record not inserted",
+      "discordMessageCreated": "Discord message was created",
+      "discordMessageId": "Discord message ID",
+      "retryable": "Retry is safe",
+      "notRetryable": "Do not retry automatically",
+      "cleanup": {
+        "notNeeded": "Discord cleanup not needed",
+        "deleted": "Discord message deleted",
+        "alreadyMissing": "Discord message already missing",
+        "failed": "Discord cleanup failed"
+      }
+    },
+    "errors": {
+      "title": "Bases unavailable",
+      "load": "Failed to load bases.",
+      "create": "Failed to create the base.",
+      "upload": "Failed to upload an image.",
+      "downloader": "Failed to resolve this downloader.",
+      "channels": "Failed to load Discord channels.",
+      "channelRequired": "Select a Discord channel.",
+      "linkRequired": "Layout link is required.",
+      "descriptionTooLong": "Description must be 1,000 characters or fewer.",
+      "tooManyImages": "Choose no more than four images."
+    }
+  },
+  "BansPage": {
+    "title": "Moderation",
+    "description": "Manage player bans and strikes",
+    "viewClashProfile": "View Clash profile",
+    "tabs": {
+      "bans": "Bans",
+      "strikes": "Strikes"
+    },
+    "bans": {
+      "title": "Banned Players",
+      "noBans": "No banned players found",
+      "addBan": "Add Ban",
+      "removeBan": "Remove Ban",
+      "confirmRemove": "Are you sure you want to remove this ban?",
+      "playerTag": "Player Tag",
+      "playerName": "Player Name",
+      "reason": "Reason",
+      "bannedAt": "Banned At",
+      "search": "Search by name or tag...",
+      "howItWorks": {
+        "title": "How Bans Work",
+        "description": "If a banned player joins one of your clans, a warning will be sent to the clan channel you setup in the <clansTab>clans tab</clansTab>. This bot cannot prevent people from joining your clan but it can only give a warning."
+      },
+      "stats": {
+        "total": "Total Bans",
+        "recent": "Recent Bans (7 days)",
+        "commonReason": "Most Common Reason",
+        "activeOnServer": "Active bans on server",
+        "last7Days": "In the last 7 days",
+        "commonReasonValue": "Harassment & Toxicity",
+        "noBans": "No bans yet",
+        "percentOfAll": "{percent}% of all bans",
+        "percentOfAllLabel": "of all bans"
+      },
+      "list": {
+        "title": "Banned Players",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
+        "searchPlaceholder": "Search by name, tag, or reason...",
+        "noBansFound": "No bans found",
+        "noBans": "No banned players",
+        "adjustSearch": "Try adjusting your search query",
+        "getStarted": "Add a ban to get started with player moderation"
+      },
+      "table": {
+        "player": "Speler",
+        "reason": "Reason",
+        "bannedBy": "Banned By",
+        "date": "Date",
+        "daysAgo": "{days} dagen geleden",
+        "noReason": "No reason provided"
+      },
+      "addDialog": {
+        "title": "Ban a Player",
+        "description": "Add a player to the ban list. They will be prevented from joining any clan on this server.",
+        "playerTagLabel": "Player Tag",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Player Name (optional)",
+        "playerNamePlaceholder": "Enter player name",
+        "reasonLabel": "Reason for Ban",
+        "reasonPlaceholder": "Explain why this player is being banned...",
+        "submit": "Ban Player"
+      },
+      "bestPractices": {
+        "title": "Best Practices",
+        "document": {
+          "title": "Document thoroughly:",
+          "desc": "Always provide a detailed reason for each ban to help other moderators understand the context."
+        },
+        "review": {
+          "title": "Review regularly:",
+          "desc": "Periodically review your ban list to ensure all bans are still necessary and justified."
+        },
+        "consistent": {
+          "title": "Be consistent:",
+          "desc": "Apply bans fairly and consistently across all players to maintain a healthy community."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Player Strikes",
+      "noStrikes": "No strikes found",
+      "addStrike": "Add Strike",
+      "removeStrike": "Remove Strike",
+      "confirmRemove": "Are you sure you want to remove this strike?",
+      "playerTag": "Player Tag",
+      "reason": "Reason",
+      "weight": "Weight",
+      "rolloverDays": "Rollover Days",
+      "createdAt": "Created At",
+      "search": "Search by player tag...",
+      "howItWorks": {
+        "title": "How Strikes Work",
+        "description": "Strikes are warnings given to players for rule violations. Each strike has a weight (severity) and can optionally expire after a set number of days. Strikes help track player behavior before issuing bans."
+      },
+      "stats": {
+        "total": "Total Strikes",
+        "recent": "Recent Strikes (7 days)",
+        "totalWeight": "Total Strike Weight",
+        "activeOnServer": "Active strikes on server",
+        "last7Days": "In the last 7 days",
+        "cumulativeWeight": "Cumulative strike weight",
+        "commonReason": "Most Common Reason",
+        "commonReasonValue": "Spamming"
+      },
+      "list": {
+        "title": "Player Strikes",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
+        "searchPlaceholder": "Search by name, tag, or reason...",
+        "noStrikesFound": "No strikes found",
+        "noStrikes": "No strikes issued",
+        "adjustSearch": "Try adjusting your search query",
+        "getStarted": "Add a strike to start tracking player violations",
+        "viewAll": "All Strikes",
+        "viewGrouped": "By Player"
+      },
+      "table": {
+        "player": "Speler",
+        "reason": "Reason",
+        "weight": "Weight",
+        "addedBy": "Added By",
+        "date": "Date",
+        "expires": "Expires",
+        "never": "Nooit",
+        "noReason": "No reason provided",
+        "daysAgo": "{days} dagen geleden",
+        "totalStrikes": "Total Strikes",
+        "totalWeight": "Total Weight",
+        "lastStrike": "Last Strike"
+      },
+      "addDialog": {
+        "title": "Add a Strike",
+        "description": "Issue a strike to a player. Strikes can have different weights and expiration dates.",
+        "playerTagLabel": "Player Tag",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Reason",
+        "reasonPlaceholder": "Explain why this strike is being issued...",
+        "weightLabel": "Strike Weight",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Expires in (days)",
+        "rolloverPlaceholder": "Optional",
+        "submit": "Add Strike"
+      },
+      "guidelines": {
+        "title": "Strike Guidelines",
+        "weights": {
+          "title": "Use weights wisely:",
+          "desc": "Assign higher weights (2-3) for serious violations and lower weights (1) for minor issues."
+        },
+        "expiration": {
+          "title": "Set expiration dates:",
+          "desc": "Consider setting expiration dates for strikes to give players a chance to improve their behavior over time."
+        },
+        "patterns": {
+          "title": "Track patterns:",
+          "desc": "Use strikes to identify repeat offenders before escalating to permanent bans."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Ban added successfully",
+      "banRemoved": "Ban removed successfully",
+      "strikeAdded": "Strike added successfully",
+      "strikeRemoved": "Strike removed successfully",
+      "errorLoadingBans": "Failed to load banned players",
+      "errorLoadingStrikes": "Failed to load strikes",
+      "errorAddingBan": "Failed to add ban",
+      "errorAddingStrike": "Failed to add strike",
+      "errorRemovingBan": "Failed to remove ban",
+      "errorRemovingStrike": "Failed to remove strike"
+    }
+  },
+  "RostersPage": {
+    "title": "Rosters & Lineups",
+    "description": "Manage war rosters, lineups, and member assignments",
+    "stats": {
+      "totalRosters": "Total Rosters",
+      "totalMembers": "Total Members",
+      "clanRosters": "Clan Rosters",
+      "familyRosters": "Family Rosters",
+      "members": "Leden",
+      "avgTh": "Gem. TH",
+      "avgHitrate": "Avg Hitrate",
+      "distribution": "Distribution",
+      "clan": "De clan",
+      "family": "Family",
+      "external": "External",
+      "thDistribution": "TH Distribution",
+      "capacity": "capacity"
+    },
+    "filters": {
+      "search": "Search rosters...",
+      "type": "Clantype",
+      "all": "Alle",
+      "clan": "De clan",
+      "family": "Family",
+      "clear": "Wissen"
+    },
+    "comparisonMode": {
+      "cancel": "Annuleren",
+      "compare": "Compare",
+      "compareRosters": "Compare Rosters",
+      "selectRosters": "Select rosters",
+      "selectRostersDesc": "Please select at least 2 rosters to compare",
+      "maxReached": "Maximum reached",
+      "maxReachedDesc": "You can compare up to 5 rosters at a time"
+    },
+    "createDialog": {
+      "title": "Create New Roster",
+      "description": "Set up a new roster for your clan",
+      "aliasLabel": "Roster Name",
+      "aliasPlaceholder": "e.g., CWL Roster",
+      "typeLabel": "Roster Type",
+      "typeClan": "De clan",
+      "typeFamily": "Family",
+      "signupScopeLabel": "Signup Scope",
+      "scopeClanOnly": "Clan Only",
+      "scopeFamilyWide": "Family Wide",
+      "clanLabel": "De clan",
+      "clanPlaceholder": "Select a clan",
+      "descriptionLabel": "Description (Optional)",
+      "descriptionPlaceholder": "Roster description...",
+      "cancel": "Annuleren",
+      "creating": "Creating...",
+      "create": "Create Roster"
+    },
+    "editDialog": {
+      "title": "Edit Roster",
+      "description": "Modify roster settings and configuration",
+      "aliasLabel": "Roster Name",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Roster description...",
+      "minThLabel": "Minimum Town Hall",
+      "minThPlaceholder": "e.g., 13",
+      "maxThLabel": "Maximum Town Hall",
+      "maxThPlaceholder": "e.g., 16",
+      "rosterSizeLabel": "Roster Size",
+      "rosterSizePlaceholder": "e.g., 50",
+      "columnsLabel": "Display Columns",
+      "columnsPlaceholder": "Select columns to display",
+      "sortLabel": "Sort Order",
+      "sortPlaceholder": "Select sort fields",
+      "cancel": "Annuleren",
+      "saving": "Opslaan...",
+      "save": "Save Changes"
+    },
+    "addMembersDialog": {
+      "title": "Add Members to Roster",
+      "description": "Select members from your clan or enter player tags",
+      "bulkTagsLabel": "Bulk Add by Tags",
+      "bulkTagsPlaceholder": "Enter player tags (one per line or comma-separated)",
+      "searchLabel": "Search Members",
+      "searchPlaceholder": "Search by name or tag...",
+      "selectFromClan": "Select from Clan Members",
+      "selectedCount": "Geselecteerd",
+      "noMembers": "No members available",
+      "noMembersSelected": "No members selected",
+      "noMembersSelectedDesc": "Please select members or enter player tags.",
+      "cancel": "Annuleren",
+      "adding": "Adding...",
+      "add": "Add Members"
+    },
+    "detailsDialog": {
+      "title": "Roster Details",
+      "edit": "Edit",
+      "refresh": "Vernieuwen",
+      "refreshing": "Refreshing...",
+      "delete": "Verwijderen",
+      "deleting": "Deleting...",
+      "addMembers": "Add Members",
+      "close": "Close",
+      "noMembers": "No members in this roster",
+      "noMembersDesc": "Add members to get started",
+      "memberCount": "Leden",
+      "thRestriction": "SH level",
+      "avgTh": "Gem. TH",
+      "avgHitrate": "Avg Hitrate",
+      "clan": "De clan",
+      "family": "Family",
+      "external": "External",
+      "substitute": "SUB",
+      "removeMember": "Remove"
+    },
+    "rosterCard": {
+      "members": "Leden",
+      "thLevel": "SH level",
+      "avgTh": "Gem. TH",
+      "avgHitrate": "Avg Hitrate",
+      "clan": "De clan",
+      "family": "Family",
+      "external": "External",
+      "noRestriction": "No restriction",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Verwijderen",
+      "noGroup": "No group",
+      "moveToGroup": "Move to group",
+      "clone": "Clone",
+      "allRosters": "All Rosters",
+      "manageRosters": "Manage your war rosters and lineups"
+    },
+    "memberColumns": {
+      "name": "Naam",
+      "townhall": "Stadhuis",
+      "tag": "Tag",
+      "hitrate": "Hit Rate",
+      "current_clan": "Current Clan",
+      "current_clan_tag": "Clan Tag",
+      "discord": "Discord",
+      "hero_lvs": "Helden",
+      "war_pref": "War Opt",
+      "trophies": "Trofeeën",
+      "signup_group": "Signup Group"
+    },
+    "columns": {
+      "configure": "Columns",
+      "title": "Configure Columns",
+      "description": "Choose which columns to display and their order",
+      "selected": "Selected Columns",
+      "available": "Available Columns",
+      "save": "Save Columns",
+      "reset": "Reset Columns"
+    },
+    "sortFields": {
+      "townhall": "Townhall Level",
+      "name": "Naam",
+      "tag": "Tag",
+      "heroLvs": "Helden",
+      "trophies": "Trofeeën",
+      "hitrate": "30 Day Hitrate",
+      "currentClanTag": "Clan Tag",
+      "addedAt": "Added At"
+    },
+    "thRestrictions": {
+      "only": "TH{th} only",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "No restriction"
+    },
+    "emptyState": {
+      "noRosters": "No rosters created yet",
+      "noRostersDesc": "Create your first roster to get started",
+      "noMatch": "No rosters match your filters",
+      "noMatchDesc": "Try adjusting your search or filter criteria"
+    },
+    "toast": {
+      "errorTitle": "Fout",
+      "successTitle": "Succes",
+      "errorLoadingRosters": "Failed to load rosters. Please try again.",
+      "errorLoadingMembers": "Failed to load clan members.",
+      "rosterCreated": "Roster created successfully!",
+      "errorCreatingRoster": "Failed to create roster. Please try again.",
+      "rosterUpdated": "Roster updated successfully!",
+      "errorUpdatingRoster": "Failed to update roster. Please try again.",
+      "rosterDeleted": "Roster deleted successfully!",
+      "errorDeletingRoster": "Failed to delete roster. Please try again.",
+      "membersAdded": "Added {count} member(s) to roster!",
+      "errorAddingMembers": "Failed to add members. Please try again.",
+      "memberRemoved": "Member removed from roster!",
+      "errorRemovingMember": "Failed to remove member. Please try again.",
+      "substituteMarked": "Member marked as substitute!",
+      "substituteUnmarked": "Member unmarked as substitute!",
+      "errorUpdatingMember": "Failed to update member. Please try again.",
+      "rosterRefreshed": "Roster data refreshed successfully!",
+      "errorRefreshingRoster": "Failed to refresh roster data. Please try again.",
+      "memberTransferred": "Member transferred between rosters successfully!",
+      "errorTransferringMember": "Failed to transfer member. Please try again.",
+      "rosterCloned": "Roster cloned successfully!",
+      "errorCloningRoster": "Failed to clone roster. Please try again.",
+      "missingMembersAdded": "Added {count} missing member(s) to roster!",
+      "errorLoadingMissingMembers": "Failed to load missing members."
+    },
+    "cloneDialog": {
+      "title": "Clone Roster",
+      "description": "Create a copy of this roster",
+      "aliasLabel": "New Roster Name",
+      "aliasPlaceholder": "Enter name for cloned roster",
+      "copyMembers": "Copy members to new roster",
+      "memberCount": "{count} leden",
+      "originalRoster": "Original roster:",
+      "cancel": "Annuleren",
+      "cloning": "Cloning...",
+      "clone": "Clone Roster",
+      "copyMembersHint": "Members will be copied from the original roster"
+    },
+    "missingMembers": {
+      "title": "Missing Members",
+      "description": "Clan members not registered in this roster",
+      "coverage": "Roster Coverage",
+      "registered": "registered",
+      "missing": "ontbrekend",
+      "total": "total",
+      "selectAll": "Select All",
+      "selected": "selected",
+      "addSelected": "Add {count} Member(s)",
+      "button": "Missing Members",
+      "addAll": "Add All",
+      "adding": "Adding...",
+      "close": "Close",
+      "allCaughtUp": "All caught up!",
+      "allCaughtUpDesc": "All clan members are registered in this roster",
+      "clanOnly": "Missing members analysis is only available for clan rosters",
+      "error": "Failed to load missing members",
+      "thisRoster": "This roster",
+      "wholeGroup": "Whole group"
+    },
+    "eventTime": {
+      "label": "Event Start Time",
+      "timezone": "Your timezone",
+      "utc": "UTC",
+      "clear": "Wissen"
+    },
+    "bulkValidation": {
+      "valid": "valid",
+      "invalid": "invalid",
+      "invalidTags": "Invalid"
+    },
+    "memberAutocomplete": {
+      "label": "Or Search Server Members",
+      "placeholder": "Click to search members...",
+      "searchPlaceholder": "Search by name, tag or clan...",
+      "loading": "Loading members...",
+      "noResults": "No members found",
+      "groupHeading": "Server Members",
+      "selectedLabel": "Selected Members",
+      "membersSelected": "member(s) selected",
+      "selected": "Geselecteerd",
+      "clanMembersLabel": "Or Select from Clan Members"
+    },
+    "retry": "Opnieuw proberen",
+    "back": "Back",
+    "refresh": "Vernieuwen",
+    "createRoster": "Create Roster",
+    "searchPlaceholder": "Search rosters...",
+    "noRosters": "No rosters yet",
+    "noRostersHint": "Create your first roster to get started",
+    "noSearchResults": "No rosters found",
+    "noSearchResultsHint": "Try a different search term",
+    "createFirstRoster": "Create First Roster",
+    "deleteConfirm": "Weet je zeker dat je \"{name}\" wilt verwijderen?",
+    "deleteSuccess": "Roster Deleted",
+    "deleteSuccessDesc": "Roster \"{name}\" has been deleted",
+    "deleteError": "Failed to delete roster",
+    "createSuccess": "Roster Created",
+    "createSuccessDesc": "Roster \"{name}\" has been created",
+    "createError": "Failed to create roster",
+    "createErrorAlias": "Please enter a roster name",
+    "createErrorClan": "Please select a clan",
+    "refreshSuccess": "Roster data refreshed",
+    "refreshError": "Failed to refresh roster",
+    "saveSuccess": "Settings saved",
+    "saveError": "Failed to save settings",
+    "columnsUpdated": "Columns updated",
+    "columnsError": "Failed to update columns",
+    "addMembersSuccess": "Members Added",
+    "addMembersSuccessDesc": "Added {count} member(s) to roster",
+    "addMembersError": "Failed to add members",
+    "removeMemberSuccess": "Member removed",
+    "removeMemberError": "Failed to remove member",
+    "clearMembers": "Clear members",
+    "clearMembersConfirm": "Remove all members from \"{name}\"? This cannot be undone.",
+    "clearMembersSuccess": "All members removed",
+    "clearMembersError": "Failed to clear members",
+    "automationCreated": "Automation created",
+    "automationUpdated": "Automation updated",
+    "automationDeleted": "Automation deleted",
+    "automationError": "Automation error",
+    "groupCreated": "Group created",
+    "groupUpdated": "Group updated",
+    "groupDeleted": "Group deleted",
+    "groupError": "Failed to save group",
+    "categoryCreated": "Category created",
+    "categoryUpdated": "Category updated",
+    "categoryDeleted": "Category deleted",
+    "categoryError": "Failed to save category",
+    "common": {
+      "cancel": "Annuleren",
+      "save": "Opslaan",
+      "close": "Close"
+    },
+    "tabs": {
+      "members": "Leden",
+      "automations": "Automations",
+      "groups": "Groups",
+      "categories": "Categories",
+      "settings": "Instellingen"
+    },
+    "members": {
+      "count": "members",
+      "noMembers": "No members in this roster",
+      "noMembersHint": "Add members to get started",
+      "actions": "Actions",
+      "viewList": "List view",
+      "viewGrouped": "View by signup category",
+      "unassigned": "Unassigned",
+      "dragHere": "Drag members here",
+      "clickToGroup": "Click to view by category",
+      "apiErrorTooltip": "Data could not be fetched from the API",
+      "staleDataTooltip": "Data may be outdated, last updated:",
+      "refresh": "Refresh member data",
+      "alsoIn": "Also in",
+      "addCategory": "Add group",
+      "removeCategory": "Remove group"
+    },
+    "addMembers": {
+      "title": "Add Members to Roster",
+      "description": "Select members from your clans or enter player tags",
+      "bulkTagsLabel": "Player Tags (one per line or comma-separated)",
+      "adding": "Adding...",
+      "submit": "Add Members"
+    },
+    "compare": {
+      "enterMode": "Compare",
+      "modeTitle": "Compare Mode",
+      "modeHint": "Click on rosters to select them (2 to 4 rosters)",
+      "exitMode": "Annuleren",
+      "selected": "roster(s) selected",
+      "button": "Compare",
+      "title": "Compare Rosters",
+      "dragToMove": "Drag and drop members between rosters to move them",
+      "loadError": "Failed to load rosters",
+      "memberMoved": "Member moved",
+      "memberMovedDesc": "{name} moved from {from} to {to}",
+      "moveError": "Failed to move member",
+      "selectAtLeast2": "Select at least 2 rosters to compare",
+      "moving": "Moving member...",
+      "compareGroup": "Compare Group",
+      "dragToMoveCategory": "Drag members between rosters and categories",
+      "categoryChanged": "Category changed",
+      "categoryChangedDesc": "{name} moved to {category}",
+      "uncategorized": "Uncategorized"
+    },
+    "ungrouped": "Ungrouped",
+    "automations": {
+      "description": "Schedule automated actions for this roster",
+      "create": "Create Automation",
+      "empty": "No automations",
+      "emptyHint": "Create an automation to schedule actions",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "executed": "Klaar",
+      "missed": "Gemist",
+      "lastRun": "Last run",
+      "enable": "Enable",
+      "disable": "Disable",
+      "createTitle": "Create Automation",
+      "editTitle": "Edit Automation",
+      "createDesc": "Schedule an automated action",
+      "actionType": "Action Type",
+      "offsetFromEvent": "Timing relative to event",
+      "offsetBefore": "Before event",
+      "offsetAfter": "After event",
+      "offsetUnit_minutes": "minutes",
+      "offsetUnit_hours": "hours",
+      "offsetUnit_days": "days",
+      "offsetPreview": "Will execute at: {date}",
+      "offsetNoEventDate": "Set an event start time in settings to preview the execution date",
+      "offsetAtStart": "At event start",
+      "pingType": "Reminder type",
+      "pingType_signup_reminder": "Signup reminder",
+      "pingType_missing": "Missing from clan",
+      "pingType_sub_needed": "Sub needed",
+      "channel": "Discord Channel",
+      "selectChannel": "Select a channel",
+      "channelHint": "Channel where the action will be posted/executed",
+      "activeLabel": "Actief",
+      "target": "Target",
+      "targetThisRoster": "This roster",
+      "targetGroups": "Groups",
+      "targetHint": "Apply the automation to this roster only or to all rosters in a group",
+      "group": "Group",
+      "groupAutomationHint": "Manage via Groups tab",
+      "targetRoster": "Roster",
+      "targetGroup": "Group",
+      "willExecute": "Will execute at the scheduled time",
+      "paused": "Paused - will not execute",
+      "actions": {
+        "ping": "Send Reminder",
+        "post": "Post Roster",
+        "openSignup": "Open Signups",
+        "closeSignup": "Close Signups",
+        "delete": "Delete Roster",
+        "clear": "Clear Members",
+        "archive": "Archive Roster"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Sends a reminder to members who haven't signed up or are in the wrong clan",
+        "roster_post": "Posts the final roster list in the selected channel",
+        "roster_signup": "Opens signups so players can register",
+        "roster_signup_close": "Closes signups and prevents new registrations",
+        "roster_delete": "Permanently deletes the roster and all its data",
+        "roster_clear": "Removes all members from the roster without deleting it",
+        "roster_archive": "Archives the roster, making it read-only"
+      },
+      "infoBox": "Automations are triggered relative to the event start time. Set an offset (e.g. 3 days before) and the bot will execute the action at that time automatically — including for recurring events."
+    },
+    "groups": {
+      "title": "Roster Groups",
+      "description": "Organize rosters into groups for better management",
+      "create": "New Group",
+      "noGroups": "No groups created yet",
+      "rostersCount": "rosters",
+      "createTitle": "Create Group",
+      "editTitle": "Edit Group",
+      "nameLabel": "Group Name",
+      "namePlaceholder": "e.g., CWL Groups",
+      "infoBox": "Groups let you organize multiple rosters together (e.g., all CWL rosters). You can assign a roster to a group from the Settings tab, and apply automations to all rosters in a group at once.",
+      "manageAutomations": "Manage automations",
+      "automationsTitle": "Group Automations",
+      "automationsDesc": "These automations apply to all rosters in this group",
+      "noAutomations": "No automations",
+      "noAutomationsHint": "Create an automation for this group",
+      "addAutomation": "Add Automation",
+      "deleteConfirm": "Delete group \"{name}\"? Rosters in this group will become ungrouped.",
+      "emptyGroup": "No rosters in this group yet",
+      "rules": {
+        "title": "Group Rules",
+        "rulesHint": "These rules apply to all rosters in the group and are propagated immediately.",
+        "maxAccounts": "Max accounts/user",
+        "maxAccountsBadge": "Max {count}/user",
+        "rosterSize": "Roster size",
+        "rosterSizeBadge": "Size {size}",
+        "minSignups": "Fill threshold",
+        "minSignupsBadge": "Threshold {count}",
+        "categoriesTitle": "Signup Categories",
+        "categoriesHint": "Select which categories are available for this group. Applied to all rosters immediately.",
+        "categoriesBadge": "{count} categories",
+        "noCategories": "No categories yet.",
+        "newCategoryPlaceholder": "New category name…"
+      }
+    },
+    "categories": {
+      "title": "Signup Categories",
+      "description": "Categories for player signups and roster filtering",
+      "manage": "Manage Categories",
+      "create": "New Category",
+      "noCategories": "No categories created yet",
+      "createTitle": "Create Category",
+      "editTitle": "Edit Category",
+      "deleteConfirm": "Delete category \"{name}\"?",
+      "idLabel": "Category ID",
+      "nameLabel": "Category Name",
+      "infoBox": "Categories allow players to indicate their availability or role when signing up (e.g., 'Available', 'Tentative', 'Only if needed'). Categories are shared across all rosters on this server. For grouped rosters, configure which categories apply via the group settings."
+    },
+    "settings": {
+      "general": "Identity & Configuration",
+      "restrictions": "Restrictions & Limits",
+      "name": "Roster Name",
+      "rosterType": "Roster Type",
+      "typeClan": "De clan",
+      "typeFamily": "Family",
+      "signupScope": "Signup Scope",
+      "scopeClanOnly": "Clan Only",
+      "scopeFamilyWide": "Family Wide",
+      "clan": "De clan",
+      "selectClan": "Select a clan",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter a description for this roster...",
+      "typeAndScope": "Type & Scope",
+      "eventTime": "Event Start Time",
+      "eventTimeHint": "When the event starts. Used for automations and countdown displays.",
+      "recurrenceDays": "Repeat every",
+      "recurrenceModeDays": "Every N days",
+      "recurrenceModeMonthly": "Day of month",
+      "recurrenceDaysUnit": "days",
+      "recurrenceDayOfMonthPrefix": "On day",
+      "recurrenceDayOfMonthSuffix": "of each month",
+      "recurrenceDaysHint": "Leave empty for a one-time event. Enter the number of days between occurrences (e.g. 30 for monthly CWL).",
+      "recurrenceDayOfMonthHint": "Repeats on this day each month (e.g. 1 = 1st).",
+      "group": "Group",
+      "noGroup": "No Group",
+      "thRequirements": "Town Hall Requirements",
+      "minTh": "Minimum TH",
+      "maxTh": "Maximum TH",
+      "signupLimits": "Signup Limits",
+      "rosterSize": "Roster Size",
+      "rosterSizeHint": "Maximum number of members",
+      "minSignups": "Min Signups",
+      "minSignupsHint": "Required signups per user",
+      "maxAccountsPerUser": "Max Accounts per User",
+      "maxAccountsHint": "Limit accounts per Discord user",
+      "allowedCategories": "Allowed Signup Categories",
+      "allowedCategoriesHint": "Click to toggle. If none selected, all categories are allowed.",
+      "defaultSignupCategory": "Default Signup Category",
+      "defaultSignupCategoryNone": "None (no default)",
+      "defaultSignupCategoryHint": "Pre-selected category when a member signs up.",
+      "categoriesManagedByGroup": "Signup categories are managed at the group level. Open the group settings from the Rosters page to configure which categories are available for all rosters in this group.",
+      "saving": "Opslaan...",
+      "save": "Save Settings"
+    }
+  },
+  "LinksPage": {
+    "title": "Links Management",
+    "description": "Manage Discord member account links and verify player ownership",
+    "tabs": {
+      "overview": "Overzicht",
+      "pending": "Pending",
+      "bulk": "Bulk Actions",
+      "analytics": "Analytics"
+    },
+    "stats": {
+      "totalMembers": "Total Members",
+      "membersWithLinks": "Members with Links",
+      "totalLinkedAccounts": "Total Linked Accounts",
+      "verifiedAccounts": "Verified Accounts",
+      "ofTotal": "of total",
+      "avgPerMember": "Avg:",
+      "perMember": "per member",
+      "verified": "verified"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by member name, username, player name, or tag...",
+      "filterByStatus": "Filter by status",
+      "allAccounts": "All Accounts",
+      "verifiedOnly": "Verified Only",
+      "unverifiedOnly": "Unverified Only",
+      "minAccounts": "Min accounts",
+      "allMembers": "All Members",
+      "oneOrMore": "1+ accounts",
+      "twoOrMore": "2+ accounts",
+      "threeOrMore": "3+ accounts",
+      "fiveOrMore": "5+ accounts"
+    },
+    "overview": {
+      "title": "Account Links",
+      "description": "View and manage all Discord-Clash of Clans account links",
+      "showingMembers": "Showing {count} {members}",
+      "member": "member",
+      "members": "members",
+      "noMembers": "No members found",
+      "adjustFilters": "Try adjusting your search or filters.",
+      "noLinkedAccounts": "No members with linked accounts.",
+      "exportCSV": "Export CSV",
+      "exportJSON": "Export JSON",
+      "account": "account",
+      "accounts": "accounts",
+      "more": "more",
+      "unknown": "Onbekend"
+    },
+    "pending": {
+      "title": "Pending Verifications",
+      "description": "{count} accounts awaiting verification",
+      "allVerified": "All accounts verified!",
+      "noPending": "There are no pending verifications at this time.",
+      "linked": "Linked:"
+    },
+    "bulk": {
+      "title": "Bulk Actions",
+      "description": "Perform actions on multiple members at once",
+      "selectAll": "Select All ({count})",
+      "deselectAll": "Deselect All",
+      "unlinkSelected": "Unlink Selected ({count})",
+      "linked": "linked",
+      "comingSoon": "Bulk unlink feature coming soon!"
+    },
+    "analytics": {
+      "title": "Link Analytics",
+      "description": "Overview of linking statistics and trends",
+      "verificationRate": "Verification Rate",
+      "verified": "Geverifiëerd",
+      "unverified": "Unverified",
+      "accountDistribution": "Account Distribution",
+      "oneAccount": "1 account",
+      "twoToThreeAccounts": "2-3 accounts",
+      "fourPlusAccounts": "4+ accounts",
+      "townHallLevels": "Town Hall Levels",
+      "other": "Other",
+      "coverage": "Coverage",
+      "linkedMembers": "Linked members",
+      "coverageRate": "Coverage rate",
+      "linkInsights": "Link Insights",
+      "avgAccountsPerMember": "Average accounts per member:",
+      "mostLinkedAccounts": "Most linked accounts:",
+      "membersWithoutLinks": "Members without links:"
+    },
+    "actions": {
+      "unlinkAccount": "Unlink Account"
+    },
+    "deleteDialog": {
+      "title": "Unlink Account",
+      "description": "Are you sure you want to unlink {playerName}? This action cannot be undone.",
+      "cancel": "Annuleren",
+      "unlinking": "Unlinking...",
+      "unlink": "Unlink"
+    },
+    "bulkDialog": {
+      "title": "Bulk Unlink Accounts",
+      "description": "Are you sure you want to unlink all accounts for {count} selected members? This action cannot be undone.",
+      "cancel": "Annuleren",
+      "unlinkAll": "Unlink All"
+    },
+    "toast": {
+      "unlinkFailed": "Failed to unlink account. Please try again."
+    },
+    "badges": {
+      "verified": "Geverifiëerd",
+      "unverified": "Unverified",
+      "pending": "Pending"
+    },
+    "pagination": {
+      "showing": "Showing {start} - {end} of {total} members",
+      "page": "Page {current} of {total}",
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
+  "WarsPage": {
+    "title": "War Statistics",
+    "description": "Track war performance and analyze battle statistics",
+    "actions": {
+      "exportData": "Export Data",
+      "resetFilters": "Reset Filters",
+      "applyFilters": "Apply Filters"
+    },
+    "filters": {
+      "title": "Filteropties",
+      "description": "Filter war statistics by various criteria",
+      "clan": "De clan",
+      "allClans": "All Clans",
+      "townHall": "Stadhuis",
+      "townHallShort": "SH",
+      "allTownHalls": "All TH Levels",
+      "townHallLevel": "TH {level}",
+      "period": "Periode",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days",
+      "last6Months": "Last 6 months",
+      "lastYear": "Last year",
+      "custom": "Aangepast",
+      "startDate": "Startdatum",
+      "endDate": "Einddatum",
+      "warTypes": "War Types"
+    },
+    "summaryStats": {
+      "totalWins": "Total Wins",
+      "totalWinsDesc": "Out of {totalWars} total wars",
+      "totalLosses": "Total Losses",
+      "totalLossesDesc": "{totalDraws} draws",
+      "winRate": "Win Rate",
+      "winRateDesc": "Overall performance",
+      "activeWars": "Active Wars",
+      "activeWarsDesc": "{activeCwl} in CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "War Performance by Week",
+        "description": "Weekly wins, losses, and draws over the selected period",
+        "wins": "Overwinningen",
+        "losses": "Nederlagen",
+        "draws": "Gelijkspel"
+      },
+      "thSuccessRate": {
+        "title": "Attack Success Rate by Town Hall",
+        "description": "3-star rate per TH level",
+        "threeStarPercent": "3-Star %",
+        "otherPercent": "Other %"
+      },
+      "warTypeDistribution": {
+        "title": "War Type Distribution",
+        "description": "Breakdown by war type",
+        "cwl": "CWL",
+        "random": "Willekeurig",
+        "friendly": "Vriendschappelijk"
+      },
+      "topPerformers": {
+        "title": "Top Performers",
+        "description": "Best warriors by total stars",
+        "attacksAndStars": "{attacks} attacks • {stars} stars",
+        "noData": "No player data available. Try adjusting your filters."
+      },
+      "missedAttacks": {
+        "title": "Gemiste aanvallen",
+        "description": "Players who did not use all their attacks",
+        "attacks": "attacks missed"
+      },
+      "topDefenders": {
+        "title": "Top Defenders",
+        "description": "Best defenders by average stars given up",
+        "defensesAndStars": "{defenses} defenses • {stars} stars given up",
+        "noData": "No defender data available. Try adjusting your filters."
+      },
+      "worstAttackers": {
+        "title": "Worst Attackers",
+        "description": "Players with the lowest average stars per attack (min. 3 attacks)",
+        "attacksAndStars": "{attacks} attacks • {stars} stars",
+        "noData": "No player data available. Try adjusting your filters."
+      },
+      "worstDefenders": {
+        "title": "Worst Defenders",
+        "description": "Players who gave up the most stars on defense (min. 3 defenses)",
+        "defensesAndStars": "{defenses} defenses • {stars} stars given up",
+        "noData": "No defender data available. Try adjusting your filters."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Clan War Statistics",
+      "description": "Detailed statistics for each clan",
+      "headers": {
+        "clan": "De clan",
+        "status": "Status",
+        "wars": "Oorlogen",
+        "record": "W/L/D",
+        "winRate": "Win Rate",
+        "avgDestruction": "Avg Destruction",
+        "avgStarsPerAttack": "Stars / Attack",
+        "avgDefenseStars": "Stars/Defense"
+      },
+      "status": {
+        "inWar": "In oorlog",
+        "cwl": "CWL",
+        "peace": "Peace"
+      },
+      "noData": "No clan statistics available. Try applying filters or wait for data to load."
+    },
+    "toast": {
+      "errorTitle": "Fout",
+      "errorLoadingClans": "Failed to load clans. Please try again.",
+      "errorLoadingWarData": "Failed to load war data. Please try again.",
+      "errorNoClans": "No clans available",
+      "errorApplyingFilters": "Failed to apply filters. Please try again."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Leaderboards",
+    "description": "Global leaderboards for Clan Capital and more",
+    "comingSoon": "This feature is coming soon. Check back later!",
+    "stats": {
+      "totalEntries": "Total Entries",
+      "type": "Clantype",
+      "league": "Competitie",
+      "weekend": "Weekend"
+    },
+    "filters": {
+      "title": "Filteropties",
+      "description": "Customize your leaderboard view",
+      "type": "Clantype",
+      "metric": "Metric",
+      "league": "Competitie",
+      "weekend": "Weekend"
+    },
+    "types": {
+      "player": "Spelers",
+      "clan": "Clans zoeken"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Capital Looted"
+        },
+        "clan": {
+          "capitalTotalLoot": "Total Loot",
+          "raidsCompleted": "Raids Completed",
+          "enemyDistrictsDestroyed": "Districts Destroyed",
+          "medals": "Medals"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Alle",
+      "legendLeague": "Legendarische Divisie",
+      "titanLeagueI": "Titan League I",
+      "titanLeagueII": "Titan League II",
+      "titanLeagueIII": "Titan League III"
+    },
+    "rankings": {
+      "title": "Ranglijsten",
+      "description": "Top {count} {type} for {weekend}",
+      "players": "players",
+      "clans": "clans"
+    },
+    "empty": {
+      "title": "No data available",
+      "description": "Try selecting a different weekend or league"
+    }
+  },
+  "ClansPage": {
+    "title": "Clan beheer",
+    "description": "Configure your clans and their Discord integration settings",
+    "addClan": "Add Clan",
+    "addNewClan": "Add New Clan",
+    "addClanDescription": "Enter your clan tag to add it to this server",
+    "clanTag": "Clan Tag",
+    "totalClans": "Total Clans",
+    "registeredClans": "Registered clans",
+    "configured": "Configured",
+    "withSettingsConfigured": "With settings configured",
+    "totalMembers": "Total Members",
+    "acrossAllClans": "Across all clans",
+    "channels": "Channels",
+    "availableChannels": "Available channels",
+    "noClansYet": "No Clans Yet",
+    "getStartedAdding": "Get started by adding your first clan",
+    "addFirstClan": "Add Your First Clan",
+    "level": "Level",
+    "members": "Leden",
+    "status": "Status",
+    "configuredBadge": "Configured",
+    "setupRequired": "Setup Required",
+    "configure": "Configure",
+    "sorting": {
+      "label": "Sort clans",
+      "sortBy": "Sorteren op",
+      "toggleDirection": "Toggle sort direction",
+      "added": "Added on",
+      "name": "Clan name",
+      "level": "Clan level",
+      "members": "Leden"
+    },
+    "configureClan": "Configure {name} ({tag})",
+    "customizeIntegration": "Customize Discord integration settings for this clan",
+    "tabs": {
+      "basic": "Discord Setup",
+      "war": "Oorlog"
+    },
+    "memberRole": "Member Role",
+    "leaderRole": "Leader Role",
+    "selectRole": "Select role",
+    "none": "None",
+    "clanAbbreviation": "Clan Abbreviation",
+    "warScoreCountdown": "War Score Countdown",
+    "warScoreCountdownDescription": "Creates a voice channel displaying the current war score",
+    "warTimerCountdown": "War Timer Countdown",
+    "warTimerCountdownDescription": "Creates a voice channel displaying time remaining in war",
+    "category": "Category",
+    "categoryOptions": {
+      "none": "No category",
+      "premade": "Common categories",
+      "usedByServer": "Used by other clans",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}"
+    },
+    "categories": {
+      "title": "Clan categories",
+      "description": "Create and maintain the categories available to this server's clans.",
+      "refresh": "Vernieuwen",
+      "createLabel": "New category",
+      "name": "Category name",
+      "namePlaceholder": "e.g., Competitive",
+      "nameHelp": "{count}/{max} characters after whitespace normalization",
+      "create": "Create category",
+      "empty": "No clan categories have been created.",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}",
+      "renameAction": "Rename {name}",
+      "deleteAction": "Delete {name}",
+      "renameTitle": "Rename clan category",
+      "renameDescription": "The normalized name will update every assigned clan.",
+      "saveRename": "Save name",
+      "deleteTitle": "Delete clan category?",
+      "deleteWarning": "Deleting “{name}” will make {count, plural, one {# clan} other {# clans}} uncategorized.",
+      "deleteCountMayChange": "This preview is current now. The completed deletion will report the actual locked clan count.",
+      "confirmDelete": "Delete category",
+      "deleteSuccessTitle": "Deleted {name}",
+      "deleteSuccessDescription": "{count, plural, =0 {No clans were changed.} one {# clan is now uncategorized.} other {# clans are now uncategorized.}}",
+      "created": "Created {name}.",
+      "renamed": "Renamed category to {name}.",
+      "errors": {
+        "title": "Categories unavailable",
+        "load": "Failed to load clan categories.",
+        "create": "Failed to create the clan category.",
+        "rename": "Failed to rename the clan category.",
+        "preview": "Failed to load the deletion preview.",
+        "delete": "Failed to delete the clan category.",
+        "refresh": "The category changed, but refreshed category or clan state could not be loaded.",
+        "invalidName": "Use a non-empty name of at most 64 characters without control characters."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Show more information",
+      "memberRole": "The role that the members of this clan should receive. So on your discord, if the bot managed the roles, every person in this clan would get this role. Helpful if you are making clan specific channels.",
+      "leaderRole": "The role that co-leaders and the leader of this clan will receive. In a typical Discord server, this is useful for a clan leader chat or one shared leader chat across all clans.",
+      "clanAbbreviation": "Give your clan an abbreviation so members can have it in their name when rename is enabled. You can configure this format in <familySettingsLink>Family Settings</familySettingsLink>.",
+      "category": "This is a way to organize your clans. Many clan families have 5 or more clans. Sometimes some are only for CWL or Event clans."
+    },
+    "roleIdPlaceholder": "Role ID",
+    "abbreviationPlaceholder": "e.g., CK",
+    "categoryPlaceholder": "Category name",
+    "notAvailable": "N.v.t.",
+    "saving": "Opslaan...",
+    "saveChanges": "Save Changes",
+    "deleteConfirm": "Are you sure you want to remove {tag}? This will also delete all associated reminders and logs.",
+    "toast": {
+      "errorLoadingClans": "Failed to load clans",
+      "errorLoadingSettings": "Failed to load clan settings",
+      "errorEmptyClanTag": "Please enter a clan tag",
+      "clanAdded": "Clan added successfully",
+      "errorAddingClan": "Failed to add clan",
+      "clanRemoved": "Clan removed successfully",
+      "errorRemovingClan": "Failed to remove clan",
+      "settingsSaved": "Settings saved successfully",
+      "errorSavingSettings": "Failed to save settings",
+      "countdownEnabled": "Countdown voice channel created",
+      "countdownDisabled": "Countdown voice channel removed",
+      "errorTogglingCountdown": "Failed to toggle countdown"
+    }
+  },
+  "RolesPage": {
+    "title": "Role Management",
+    "description": "Configure automatic role assignment based on player stats",
+    "stats": {
+      "totalRoles": "Total Roles",
+      "totalRolesDesc": "Configured role assignments",
+      "autoEvaluation": "Auto-Evaluation",
+      "autoEvaluationOn": "On",
+      "autoEvaluationOff": "Off",
+      "autoEvaluationActiveDesc": "Automatically assigning roles",
+      "autoEvaluationInactiveDesc": "Manual role assignment only",
+      "activeTypes": "Active Types",
+      "activeTypesDesc": "Role types in use",
+      "discordRoles": "Discord Roles",
+      "discordRolesDesc": "Available on server"
+    },
+    "settings": {
+      "title": "Auto-Evaluation Settings",
+      "description": "Configure automatic role evaluation and assignment",
+      "saveButton": "Save Settings",
+      "saving": "Opslaan...",
+      "enableAutoEval": "Enable Auto-Evaluation",
+      "enableAutoEvalDesc": "Automatically assign and remove roles based on player stats",
+      "autoNickname": "Auto-Update Nicknames",
+      "autoNicknameDesc": "Update nicknames when roles are evaluated"
+    },
+    "roleTypes": {
+      "townhall": "Stadhuis",
+      "league": "Competitie",
+      "builderhall": "Builder Hall",
+      "builderLeague": "Builder League",
+      "achievement": "Achievement",
+      "status": "Discord tenure",
+      "familyPosition": "Family Position"
+    },
+    "familyPositions": {
+      "member": "Lid",
+      "elder": "Oudste",
+      "coLeader": "Co-leider",
+      "leader": "Leider"
+    },
+    "leagues": {
+      "legend": "Legendarische Divisie",
+      "electroDragon": "Electro Dragon",
+      "dragon": "Dragon",
+      "electroTitan": "Electro Titan",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Witch",
+      "valkyrie": "Valkyrie",
+      "wizard": "Wizard",
+      "archer": "Archer",
+      "barbarian": "Barbarian",
+      "skeleton": "Skeleton"
+    },
+    "builderLeagues": {
+      "diamond": "Diamond",
+      "ruby": "Ruby",
+      "emerald": "Emerald",
+      "platinum": "Platinum",
+      "titanium": "Titanium",
+      "steel": "Steel",
+      "iron": "Iron",
+      "brass": "Brass",
+      "copper": "Copper",
+      "stone": "Stone",
+      "clay": "Clay",
+      "wood": "Wood"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Keep Your Account Safe!",
+      "biggerAndBetter": "Bigger & Better",
+      "discoverNewTroops": "Discover New Troops",
+      "biggerCoffers": "Bigger Coffers",
+      "goldGrab": "Gold Grab",
+      "elixirEscapade": "Elixir Escapade",
+      "heroicHeist": "Heroic Heist",
+      "wellSeasoned": "Well Seasoned",
+      "niceAndTidy": "Nice and Tidy",
+      "empireBuilder": "Empire Builder",
+      "clanWarWealth": "Clan War Wealth",
+      "friendInNeed": "Friend in Need",
+      "sharingIsCaring": "Sharing is caring",
+      "siegeSharer": "Siege Sharer",
+      "warHero": "War Hero",
+      "warLeagueLegend": "War League Legend",
+      "gamesChampion": "Games Champion",
+      "unbreakable": "Unbreakable",
+      "sweetVictory": "Sweet Victory!",
+      "conqueror": "Conqueror",
+      "leagueAllStar": "League All-Star",
+      "leagueFollower": "League Follower",
+      "leagueEnthusiast": "League Enthusiast",
+      "leagueSuperfan": "League Superfan",
+      "leagueFanatic": "League Fanatic",
+      "leagueMaster": "League Master",
+      "legendLeague": "Legendarische Divisie",
+      "humiliator": "Humiliator",
+      "notSoEasyThisTime": "Not So Easy This Time",
+      "unionBuster": "Union Buster",
+      "bustThis": "Bust This!",
+      "wallBuster": "Wall Buster",
+      "mortarMauler": "Mortar Mauler",
+      "xBowExterminator": "X-Bow Exterminator",
+      "firefighter": "Firefighter",
+      "antiArtillery": "Anti-Artillery",
+      "shatteredAndScatter": "Shattered and Scattered",
+      "counterspell": "Counterspell",
+      "monolithMasher": "Monolith Masher",
+      "multiArcherTowerTerminator": "Multi-Archer Tower Terminator",
+      "ricochetCannonCrusher": "Ricochet Cannon Crusher",
+      "firespitterFinisher": "Firespitter Finisher",
+      "multiGearTowerTrampler": "Multi-Gear Tower Trampler",
+      "craftersNightmare": "Crafter's Nightmare",
+      "getThoseGoblins": "Get those Goblins!",
+      "supercharger": "Supercharger",
+      "craftingConnoisseur": "Crafting Connoisseur",
+      "getThoseOtherGoblins": "Get those other Goblins!",
+      "getEvenMoreGoblins": "Get even more Goblins!",
+      "dragonSlayer": "Dragon Slayer",
+      "ungratefulChild": "Ungrateful Child",
+      "superbWork": "Superb Work",
+      "masterEngineering": "Master Engineering",
+      "hiddenTreasures": "Hidden Treasures",
+      "highGear": "High Gear",
+      "nextGenerationModel": "Next Generation Model",
+      "unBuildIt": "Un-Build It",
+      "championBuilder": "Champion Builder",
+      "aggressiveCapitalism": "Aggressive Capitalism",
+      "mostValuableClanmate": "Most Valuable Clanmate"
+    },
+    "configuredRoles": {
+      "title": "Configured Roles",
+      "noRolesConfigured": "No {roleType} roles configured",
+      "addRoleToStart": "Click \"Add Role\" to create one",
+      "discordRole": "Discord Role",
+      "criteria": "Criteria",
+      "mode": "Modus",
+      "modeBoth": "Add and remove",
+      "modeAdd": "Add only",
+      "modeRemove": "Remove only",
+      "actions": "Actions",
+      "unknownRole": "Unknown Role",
+      "remove": "Remove",
+      "month": "month",
+      "months": "months"
+    },
+    "addRoleDialog": {
+      "title": "Add New Role",
+      "description": "Configure a new automatic role assignment rule",
+      "roleType": "Role Type",
+      "mode": "Modus",
+      "discordRole": "Discord Role",
+      "selectRole": "Select a role",
+      "townHallLevel": "Town Hall Level",
+      "selectThLevel": "Select TH level",
+      "thPrefix": "SH",
+      "league": "Competitie",
+      "selectLeague": "Select league",
+      "builderHallLevel": "Builder Hall Level",
+      "selectBhLevel": "Select BH level",
+      "bhPrefix": "BH",
+      "builderLeague": "Builder League",
+      "selectBuilderLeague": "Select builder league",
+      "achievementName": "Achievement",
+      "selectAchievement": "Select achievement",
+      "searchAchievement": "Search achievement...",
+      "noAchievementFound": "No achievement found.",
+      "monthsInServer": "Months in Server",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Family Position",
+      "selectPosition": "Select position",
+      "cancel": "Annuleren",
+      "addRole": "Add Role",
+      "errorDuplicateExact": "This criterion is already linked to this role.",
+      "errorDuplicateCriterion": "This criterion already has a role assigned. Remove the existing one first."
+    },
+    "infoCard": {
+      "title": "💡 How Auto-Roles Work",
+      "automaticEvaluation": "Automatic Evaluation:",
+      "automaticEvaluationDesc": "When enabled, the bot will periodically check players and assign/remove roles based on their current stats.",
+      "rolePriority": "Role Priority:",
+      "rolePriorityDesc": "If multiple roles match a player's stats, the highest level role will be assigned.",
+      "manualOverride": "Manual Override:",
+      "manualOverrideDesc": "Server admins can manually assign roles, which will not be removed by auto-evaluation."
+    },
+    "categoryRoles": {
+      "title": "Category Roles",
+      "description": "Assign a Discord role to each clan category. Members of clans in that category automatically receive the corresponding role.",
+      "addButton": "Add Category",
+      "categoryName": "Category",
+      "categoryNamePlaceholder": "Category name",
+      "noCategoryRoles": "No category roles configured",
+      "noCategoryRolesDesc": "Click \"Add Category\" to create one",
+      "addTitle": "Add Category Role",
+      "addConfirm": "Add",
+      "errorCategoryRequired": "Category name is required",
+      "errorRoleRequired": "Discord role is required",
+      "errorCategoryExists": "This category already has a role configured"
+    },
+    "toast": {
+      "changesSaved": "Changes saved successfully!",
+      "errorLoading": "Failed to load roles",
+      "errorSaving": "Failed to save settings",
+      "errorAdding": "Failed to add role",
+      "errorDeleting": "Failed to delete role"
+    }
+  },
+  "RemindersPage": {
+    "title": "Herinneringen",
+    "description": "Configure automatic reminders for wars, raids, clan games, and inactivity",
+    "types": {
+      "war": "War Reminders",
+      "capital": "Clan Hoofdstad",
+      "clanGames": "Clanspelen",
+      "inactivity": "Inactivity"
+    },
+    "tabs": {
+      "war": "Oorlog",
+      "capital": "Hoofdstad",
+      "clanGames": "Clanspelen",
+      "inactivity": "Inactivity"
+    },
+    "stats": {
+      "totalReminders": "Total Reminders",
+      "totalRemindersDesc": "Active reminders configured",
+      "warReminders": "War Reminders",
+      "warRemindersDesc": "Regular & CWL wars",
+      "capitalReminders": "Capital Reminders",
+      "capitalRemindersDesc": "Raid weekend attacks",
+      "otherReminders": "Other Reminders",
+      "otherRemindersDesc": "Games & inactivity"
+    },
+    "actions": {
+      "saving": "Opslaan...",
+      "saveChanges": "Save Changes",
+      "addReminder": "Add Reminder",
+      "addWarReminder": "Add War Reminder",
+      "addCapitalReminder": "Add Capital Reminder",
+      "addClanGamesReminder": "Add Clan Games Reminder",
+      "addInactivityReminder": "Add Inactivity Reminder",
+      "retry": "Opnieuw proberen"
+    },
+    "clanSelector": {
+      "label": "Clan:",
+      "placeholder": "Select a clan",
+      "allClans": "All Clans"
+    },
+    "empty": {
+      "noWarReminders": "No War Reminders",
+      "noCapitalReminders": "No Capital Reminders",
+      "noClanGamesReminders": "No Clan Games Reminders",
+      "noInactivityReminders": "No Inactivity Reminders",
+      "getStarted": "Get started by creating your first reminder"
+    },
+    "card": {
+      "new": "Nieuw",
+      "before": "before",
+      "timeBefore": "Remaining time",
+      "timeBeforePlaceholder": "e.g. 6",
+      "timeInactive": "Inactivity of",
+      "timeInactivePlaceholder": "e.g. 160",
+      "timeUnit": "hours",
+      "hoursRemaining": "hrs remaining",
+      "channel": "Channel",
+      "channelPlaceholder": "Select channel",
+      "threadOptional": "Thread (optional)",
+      "threadPlaceholder": "Select a thread",
+      "noThread": "Post directly in the channel",
+      "forumPost": "Forum post",
+      "forumPostPlaceholder": "Select a forum post",
+      "forumPostRequired": "A forum post is required for forum channels.",
+      "clan": "De clan",
+      "clanPlaceholder": "Select clan",
+      "customMessage": "Custom Message",
+      "customMessagePlaceholder": "Don't forget to use your attacks!",
+      "customMessagePlaceholderClanGames": "Try to get more points in clan games!",
+      "customMessagePlaceholderInactivity": "You've been inactive in the clan for a while :(",
+      "warTypes": "War Types",
+      "random": "Willekeurig",
+      "friendly": "Vriendschappelijk",
+      "cwl": "CWL",
+      "pointThreshold": "Point Threshold",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Will ping people who have fewer than {threshold} points.",
+      "attackThreshold": "Attack Threshold",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Will ping people if they have {threshold} or more attacks remaining.",
+      "notSet": "Niet ingesteld"
+    },
+    "dialog": {
+      "addTitle": "Add New Reminder",
+      "addDescription": "Configure a new reminder for your server",
+      "editTitle": "Edit Reminder",
+      "editDescription": "Update reminder settings",
+      "type": "Reminder Type",
+      "selectType": "Select type",
+      "cancel": "Annuleren",
+      "saving": "Opslaan...",
+      "saveChanges": "Save Changes",
+      "addReminder": "Add Reminder"
+    },
+    "toast": {
+      "errorTitle": "Fout",
+      "errorLoadingReminders": "Failed to load reminders. Please try again.",
+      "reminderAdded": "Reminder added successfully",
+      "reminderAddedDesc": "New {type} reminder added. Don't forget to save!",
+      "reminderUpdated": "Reminder updated successfully",
+      "successTitle": "Succes",
+      "reminderDeleted": "Reminder deleted successfully",
+      "failedToDelete": "Failed to delete reminder",
+      "allRemindersSaved": "All reminders saved successfully",
+      "failedToSave": "Failed to save reminders",
+      "forumPostRequired": "Select a forum post before saving this reminder.",
+      "invalidDestination": "The selected thread does not belong to this channel.",
+      "timeExceedsLimit": "Remaining time must be between {min} and {max} hours",
+      "pointThresholdInvalid": "Point threshold must be between {min} and {max}",
+      "attackThresholdInvalid": "Attack threshold must be between {min} and {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Activity Logs",
+    "description": "Configure automatic logging for clan and player activities",
+    "stats": {
+      "activeLogs": "Active Logs",
+      "activeLogsDesc": "Across all family clans and server logs",
+      "logChannels": "Log Channels",
+      "logChannelsDesc": "Available channels",
+      "trackedClans": "Tracked Clans",
+      "trackedClansDesc": "Configured clans",
+      "issues": "Issues",
+      "issuesDesc": "Across the complete family"
+    },
+    "clanSelector": {
+      "label": "Clan:",
+      "placeholder": "Select a clan"
+    },
+    "tabs": {
+      "clan": "De clan",
+      "war": "Oorlog",
+      "capital": "Hoofdstad",
+      "player": "Speler",
+      "server": "Server"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Member Join",
+        "description": "Track members joining the clan"
+      },
+      "leaveLog": {
+        "label": "Member Leave",
+        "description": "Track members leaving the clan"
+      },
+      "donationLog": {
+        "label": "Member Donation",
+        "description": "Track troop and spell donations"
+      },
+      "clanAchievementLog": {
+        "label": "Clan Achievements",
+        "description": "Track clan achievements earned"
+      },
+      "clanRequirementsLog": {
+        "label": "Clan Requirements",
+        "description": "Track changes to clan requirements"
+      },
+      "clanDescriptionLog": {
+        "label": "Clan Description",
+        "description": "Track changes to clan description"
+      },
+      "banAlert": {
+        "label": "Ban Alerts",
+        "description": "Publish alerts when a banned player joins this clan"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit Feed",
+        "description": "Publish the server Reddit feed"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Oorlogslogboek",
+        "description": "Track war attacks and results"
+      },
+      "warPanel": {
+        "label": "War Panel",
+        "description": "Interactive war panel with live updates"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL Lineup Change",
+        "description": "Track CWL lineup changes"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Capital Donations",
+        "description": "Track capital gold donations"
+      },
+      "capitalAttacks": {
+        "label": "Capital Attacks",
+        "description": "Track raid weekend attacks"
+      },
+      "raidPanel": {
+        "label": "Capital Panel",
+        "description": "Interactive raid panel with live updates"
+      },
+      "capitalWeeklySummary": {
+        "label": "Capital Weekly Summary",
+        "description": "Weekly summary of capital performance"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Role Change",
+        "description": "Track player role changes in clan"
+      },
+      "troopUpgrade": {
+        "label": "Troop Upgrade",
+        "description": "Track troop level upgrades"
+      },
+      "superTroopBoostLog": {
+        "label": "Super Troop Boosts",
+        "description": "Track super troop activations"
+      },
+      "thUpgrade": {
+        "label": "Townhall Upgrade",
+        "description": "Track town hall upgrades"
+      },
+      "leagueChange": {
+        "label": "League Change",
+        "description": "Track league tier changes"
+      },
+      "spellUpgrade": {
+        "label": "Spell Upgrade",
+        "description": "Track spell level upgrades"
+      },
+      "heroUpgrade": {
+        "label": "Hero Upgrade",
+        "description": "Track hero level upgrades"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Hero Equipment Upgrade",
+        "description": "Track hero equipment upgrades"
+      },
+      "nameChange": {
+        "label": "Name Change",
+        "description": "Track player name changes"
+      },
+      "legendLogAttacks": {
+        "label": "Legend Attacks",
+        "description": "Track legend league attacks"
+      },
+      "legendLogDefenses": {
+        "label": "Legend Defenses",
+        "description": "Track legend league defenses"
+      }
+    },
+    "logCard": {
+      "active": "Actief",
+      "issue": "Issue",
+      "disabled": "Disabled",
+      "enable": "Enable",
+      "disable": "Disable",
+      "channel": "Channel",
+      "channelPlaceholder": "Select channel",
+      "thread": "Thread (Optional)",
+      "threadPlaceholder": "Select thread",
+      "noThread": "No Thread",
+      "forumPost": "Forum post",
+      "forumPostPlaceholder": "Select a forum post",
+      "forumPostRequired": "Select a forum post before saving this log.",
+      "invalidThread": "The selected thread does not belong to this channel.",
+      "saveDestination": "Save destination",
+      "channelDeleted": "This channel no longer exists. Select a new one or disable the log.",
+      "enableToConfig": "Enable this log to configure it",
+      "configuring": "Configuring",
+      "on": "On",
+      "off": "Off",
+      "example": "example"
+    }
+  },
+  "GeneralPage": {
+    "title": "General Settings",
+    "description": "Configure server-wide bot behavior and appearance",
+    "loading": "Loading settings...",
+    "reset": "Resetten",
+    "saving": "Opslaan...",
+    "saveChanges": "Save Changes",
+    "settingsSaved": "Settings saved successfully!",
+    "infoBanner": {
+      "title": "Looking for more settings?",
+      "description": "Family roles and nickname settings are in **Family Settings** page. Role management settings are in **Roles** page. Clan-specific settings (ban/strike logs, war channels) are in **Clans** page."
+    },
+    "nickname": {
+      "title": "Nickname Management",
+      "description": "Control how nicknames are formatted",
+      "automaticChanges": "Automatic Changes",
+      "automaticChangesDesc": "Allow bot to update member nicknames",
+      "familyFormat": "Family Members Format",
+      "availablePlaceholders": "Available Placeholders",
+      "preview": "Preview:",
+      "nonFamilyFormat": "Non-Family Members Format",
+      "placeholders": {
+        "discordName": "Discord username",
+        "discordDisplayName": "Server nickname",
+        "playerName": "CoC player name",
+        "playerTag": "Player tag",
+        "playerTownhall": "TH level",
+        "playerTownhallSmall": "TH superscript",
+        "playerWarstars": "Oorlogssterren",
+        "playerRole": "Clan role",
+        "playerClan": "Clan name",
+        "playerLeague": "Competitie",
+        "playerClanAbbr": "Clan abbr"
+      }
+    },
+    "appearance": {
+      "title": "Weergave",
+      "description": "Customize bot embed messages",
+      "embedColor": "Embed Color",
+      "embedColorDesc": "Color of the side bar on all bot embed messages in Discord",
+      "embedColorDefault": "Default: **#D90709** (ClashKing Red)",
+      "embedPreview": "Embed Preview",
+      "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages",
+      "editColor": "Edit Color",
+      "resetToDefault": "Reset to Default",
+      "apply": "Toepassen"
+    },
+    "security": {
+      "title": "Security & Permissions",
+      "description": "Control access and verification",
+      "fullWhitelistRole": "Full Whitelist Role",
+      "fullWhitelistRoleDesc": "Discord role with full access to all bot commands (bypasses all permission checks)",
+      "noRole": "No Role"
+    },
+    "familyRoles": {
+      "title": "Family Roles",
+      "description": "Manage automatic roles based on family membership and clan positions",
+      "selectRole": "Select a role",
+      "addRole": "Add a role...",
+      "deletedRole": "Deleted role",
+      "noRolesConfigured": "No roles configured",
+      "modes": {
+        "both": "Add and remove",
+        "add": "Add only",
+        "remove": "Remove only"
+      },
+      "types": {
+        "family": "Family",
+        "notFamily": "Non-Family",
+        "elder": "Oudste",
+        "coLeader": "Co-leider",
+        "leader": "Leider"
+      },
+      "descriptions": {
+        "family": "Has at least one account in family clans",
+        "notFamily": "Has no accounts in family clans",
+        "elder": "Has Elder position in any family clan",
+        "coLeader": "Has Co-Leader position in any family clan",
+        "leader": "Has Leader position in any family clan"
+      }
+    },
+    "tenureRoles": {
+      "title": "Discord Tenure Roles",
+      "description": "Automatically assign roles based on how long members have been in the server",
+      "addRole": "Add Tenure Role",
+      "addDialogTitle": "Add Tenure Role",
+      "addDialogDescription": "Assign a role to members who have been in the server for a specific number of months",
+      "monthsInServer": "Months in Server",
+      "discordRole": "Discord Role",
+      "selectRole": "Select a role",
+      "noRolesConfigured": "No tenure roles configured",
+      "addRoleToStart": "Add a tenure role to get started",
+      "months": "Months",
+      "month": "month",
+      "actions": "Actions",
+      "remove": "Remove",
+      "unknownRole": "Unknown role"
+    },
+    "prefix": "Command Prefix",
+    "language": "Taal",
+    "timezone": "Timezone",
+    "theme": "Theme"
+  },
+  "FamilySettingsPage": {
+    "title": "Family Settings",
+    "description": "Configure family roles and nickname formatting for clan members",
+    "loading": "Loading settings...",
+    "reset": "Resetten",
+    "saving": "Opslaan...",
+    "saveChanges": "Save Changes",
+    "settingsSaved": "Settings saved successfully!",
+    "nickname": {
+      "title": "Nickname Management",
+      "description": "Control how nicknames are formatted",
+      "automaticChanges": "Automatic Changes",
+      "automaticChangesDesc": "Allow bot to update member nicknames",
+      "familyFormat": "Family Members Format",
+      "availablePlaceholders": "Available Placeholders",
+      "preview": "Preview:",
+      "nonFamilyFormat": "Non-Family Members Format",
+      "placeholders": {
+        "discordName": "Discord username",
+        "discordDisplayName": "Server nickname",
+        "playerName": "CoC player name",
+        "playerTag": "Player tag",
+        "playerTownhall": "TH level",
+        "playerTownhallSmall": "TH superscript",
+        "playerWarstars": "Oorlogssterren",
+        "playerRole": "Clan role",
+        "playerClan": "Clan name",
+        "playerLeague": "Competitie",
+        "playerClanAbbr": "Clan abbr"
+      }
+    },
+    "familyRoles": {
+      "title": "Family Roles",
+      "description": "Manage automatic roles based on family membership and clan positions",
+      "selectRole": "Select a role",
+      "addRole": "Add a role...",
+      "deletedRole": "Deleted role",
+      "noRolesConfigured": "No roles configured",
+      "modes": {
+        "both": "Add and remove",
+        "add": "Add only",
+        "remove": "Remove only"
+      },
+      "types": {
+        "family": "Family",
+        "notFamily": "Non-Family",
+        "elder": "Oudste",
+        "coLeader": "Co-leider",
+        "leader": "Leider"
+      },
+      "descriptions": {
+        "family": "Has at least one account in family clans",
+        "notFamily": "Has no accounts in family clans",
+        "elder": "Has Elder position in any family clan",
+        "coLeader": "Has Co-Leader position in any family clan",
+        "leader": "Has Leader position in any family clan"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Taal"
+  },
+  "ThemeSwitcher": {
+    "label": "Theme",
+    "light": "Licht",
+    "dark": "Donker",
+    "system": "Systeem"
+  },
+  "AuthCallback": {
+    "authenticating": "Authenticating...",
+    "authenticatingDescription": "Please wait while we log you in with Discord",
+    "authenticationFailed": "Authentication Failed",
+    "tryAgain": "Try Again",
+    "backToHome": "Back to Home",
+    "errorCancelled": "Login cancelled in Discord. Please try again when you're ready.",
+    "errorDiscordFailedWithReason": "Discord authentication failed: {reason}",
+    "errorNoAuthorizationCode": "No authorization code received from Discord.",
+    "errorCodeVerifierMissing": "Code verifier not found. Please try logging in again.",
+    "errorAuthenticateFailed": "Failed to authenticate with Discord.",
+    "loadingVillages": "Logging in with Discord...",
+    "loadingClanData": "Loading server list...",
+    "loadingWarStats": "Bijna klaar..."
+  },
+  "LoginPage": {
+    "redirecting": "Redirecting to Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Features",
+      "subtitle": "Discover the powerful tools ClashKing offers to help you manage and grow your clan across Discord, Mobile, and Web."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "ClashKing Bot is the only Discord bot you need to manage your Clash of Clans clan and community. It's packed with unique features to keep your clan organized, engaged, and growing.",
+        "items": [
+          "Real-Time Logs: Track wars, CWL, clan games, raids, donations, and member events.",
+          "Ticketing System: Recruitment ticket system in addition to standard support tickets.",
+          "Auto Roles: Automatically assign roles based on clan status or family management.",
+          "Reminders: Send pings for war attacks, clan games, or anything else.",
+          "Detailed Stats: Insights into player and clan performance with activity tracking.",
+          "Roster Management: Organize and optimize your war rosters with ease."
+        ],
+        "ctaPrimary": "Invite Bot",
+        "ctaSecondary": "Join Community"
+      },
+      "app": {
+        "title": "ClashKing App (Open Beta)",
+        "description": "ClashKing App is the perfect extension to the ClashKing Bot, bringing essential tools and insights directly to your mobile device. It helps you stay connected anytime, anywhere, even without Discord.",
+        "items": [
+          "Real-Time Stats: Detailed stats for players and clans synced with the bot.",
+          "Clan Progress Tracking: Monitor your clan's progress over time seamlessly.",
+          "Multi account Management: Switch easily between your accounts and track performance.",
+          "Built-In History: Access historical data to analyze trends and improve strategies.",
+          "Discord Server Management: (Coming Soon) Manage roles and tickets from the app.",
+          "Advanced Notifications: (Coming Soon) Customize alerts for important events."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Build your own tools or projects using the ClashKing API. It's free to use as long as you credit the ClashKing project.",
+        "items": [],
+        "ctaPrimary": "API Documentation",
+        "ctaSecondary": "API on GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Need Help?",
+    "subtitle": "Whether you're looking for documentation or direct support, we've got you covered.",
+    "documentation": {
+      "title": "Documentation",
+      "description": "Check out our comprehensive guides and command references to get the most out of ClashKing.",
+      "cta": "View Docs"
+    },
+    "discord": {
+      "title": "Discord Support",
+      "description": "Need more help? Join our Discord community to ask questions, report bugs, or chat with other users.",
+      "cta": "Doe mee op Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "An Open Source Project",
+    "subtitle": "ClashKing is a totally free and open source project, and we believe in the power of community to make it even better. Both the bot and the API are fully open source, giving you the freedom to contribute or use them for your own projects.",
+    "github": {
+      "title": "GitHub Organization",
+      "description": "Explore our source code, contribute to the bot, or check out our other open-source tools.",
+      "ctaPrimary": "View Organization",
+      "repos": {
+        "bot": "Bot Repo",
+        "app": "App Repo",
+        "api": "API Repo",
+        "assets": "Assets Repo"
+      }
+    },
+    "api": {
+      "title": "API Documentation",
+      "description": "Build your own tools or projects using the ClashKing API. It's free to use as long as you credit the ClashKing project.",
+      "cta": "API Docs"
+    },
+    "translation": {
+      "title": "Help Us Translate",
+      "description": "Help us translate ClashKing into your language! You can contribute to translating the website, the bot, and all related texts through our Crowdin projects.",
+      "app": "Translate App",
+      "bot": "Translate Bot"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Contribute",
+        "description": "Help us improve by fixing bugs, adding new features, or enhancing existing ones. Every contribution counts!"
+      },
+      "community": {
+        "title": "Community",
+        "description": "Join our Discord community to discuss ideas, get help, and collaborate with other developers."
+      },
+      "learn": {
+        "title": "Learn",
+        "description": "Check out our documentation and examples to learn how to use the bot and API effectively."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Support Us",
+    "subtitle": "ClashKing is a free, open-source project. Your support helps us keep the servers running and continue developing new features for the community.",
+    "patreon": {
+      "title": "Become a Patreon",
+      "description": "Support us monthly on Patreon to get exclusive perks, early access to features, and help cover our hosting costs.",
+      "cta": "Support on Patreon"
+    },
+    "creatorCode": {
+      "title": "Gebruik makerscode",
+      "description": "Support us for free by using creator code",
+      "descriptionSuffix": "in-game or in the Supercell Store.",
+      "ctaGame": "Use in Game",
+      "ctaStore": "Use in Supercell Store"
+    },
+    "whySupport": {
+      "title": "Why support us?",
+      "description": "Every contribution, no matter how small, goes directly towards server costs and API fees. Using our creator code costs you nothing extra but helps us immensely!"
+    }
+  },
+  "ServersPage": {
+    "title": "Select a Server",
+    "description": "Choose a server to configure ClashKing bot settings. You must be the Discord server owner or an administrator.",
+    "backToHome": "Back to Home",
+    "backToLogin": "Terug naar inloggen",
+    "error": "Fout",
+    "configure": "Configure",
+    "invite": "Invite",
+    "members": "members",
+    "server": "Server",
+    "roles": {
+      "owner": "Owner",
+      "administrator": "Administrator",
+      "manager": "Manager"
+    },
+    "noServers": {
+      "title": "No Servers Found",
+      "description": "No Discord server found where you are an administrator or the owner."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Refresh a live board or send new boards on an operational schedule",
+    "actions": {
+      "create": "Create AutoBoard",
+      "edit": "Edit AutoBoard",
+      "delete": "Delete AutoBoard",
+      "save": "Save changes",
+      "cancel": "Annuleren",
+      "retry": "Opnieuw proberen"
+    },
+    "metrics": {
+      "total": "Configured",
+      "refresh": "Refresh boards",
+      "send": "Scheduled sends"
+    },
+    "filters": {
+      "all": "Alle"
+    },
+    "list": {
+      "title": "Configured AutoBoards",
+      "description": "Manager-controlled delivery, targets, destination, and runtime state",
+      "empty": "No AutoBoards in this view",
+      "emptyDescription": "Create one when the API registry exposes an available board type."
+    },
+    "registry": {
+      "emptyTitle": "No board types are available",
+      "emptyDescription": "The API registry is currently empty. AutoBoards can be created when a board type is enabled there.",
+      "typeUnavailable": "This board type is no longer available in the registry, so it cannot be edited."
+    },
+    "dialog": {
+      "createTitle": "Create AutoBoard",
+      "editTitle": "Edit AutoBoard",
+      "description": "Capabilities and limits come from the live board registry."
+    },
+    "boardType": {
+      "label": "Board type",
+      "description": "Available types come directly from the API registry.",
+      "placeholder": "Select a board type"
+    },
+    "targets": {
+      "kind": "Target type: {kind}",
+      "kindDescription": "The registry defines how each target value is interpreted.",
+      "scope": "Target scope",
+      "scopeDescription": "Family scope uses every configured family clan and has no explicit targets.",
+      "family": "Family",
+      "custom": "Custom targets",
+      "values": "Doelen",
+      "count": "Provide between {min} and {max} targets for this board type.",
+      "placeholder": "Enter a {kind} target",
+      "add": "Add target",
+      "remove": "Remove target"
+    },
+    "modes": {
+      "label": "Delivery mode",
+      "description": "The registry controls which delivery modes this board supports.",
+      "refresh": "Vernieuwen",
+      "send": "Scheduled send"
+    },
+    "destination": {
+      "label": "Destination",
+      "channel": "Parent channel",
+      "channelDescription": "Text and announcement channels can deliver directly; forums use a child post.",
+      "selectChannel": "Select a channel",
+      "thread": "Thread or forum post",
+      "selectThread": "Select a thread",
+      "threadOptional": "Optional for text and announcement channels.",
+      "forumRequired": "A forum post is required for this destination.",
+      "direct": "Send directly to the channel",
+      "deleted": "Channel no longer exists"
+    },
+    "refresh": {
+      "interval": "Refresh interval (minutes)",
+      "intervalDescription": "Allowed range: {minimum}–{maximum} minutes."
+    },
+    "schedule": {
+      "label": "Schedule",
+      "kind": "Schedule pattern",
+      "kindDescription": "Send daily, on selected weekdays, or once per month.",
+      "daily": "Daily",
+      "weekdays": "Selected weekdays",
+      "dayOfMonth": "Day of month",
+      "selectWeekdays": "Weekdays",
+      "monthDay": "Day of month",
+      "monthDayDescription": "Use a value from 1 through 31.",
+      "timezone": "Timezone",
+      "timeOfDay": "Time of day",
+      "nextRun": "Next run"
+    },
+    "weekdays": {
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday",
+      "7": "Sunday"
+    },
+    "status": {
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "enabledDescription": "Disabled boards keep their configuration but do not run.",
+      "messageId": "Current refresh message: {id}"
+    },
+    "delete": {
+      "title": "Delete this AutoBoard?",
+      "description": "This removes the configuration and cannot be undone."
+    },
+    "feedback": {
+      "created": "AutoBoard created",
+      "updated": "AutoBoard updated",
+      "deleted": "AutoBoard deleted"
+    },
+    "validation": {
+      "boardType": "Select a board type from the live registry.",
+      "targetScope": "Select a target scope supported by this board type.",
+      "familyTargets": "Family scope cannot include explicit targets.",
+      "targetCount": "Enter between {min} and {max} non-empty targets.",
+      "deliveryMode": "Select a delivery mode supported by this board type.",
+      "destination": "Select a valid destination. Forum channels require a child post.",
+      "refreshInterval": "Enter a refresh interval between {minimum} and {maximum} minutes.",
+      "timezone": "Enter an IANA timezone.",
+      "timeOfDay": "Enter a valid time of day.",
+      "weekdays": "Select at least one weekday.",
+      "dayOfMonth": "Enter a day from 1 through 31."
+    },
+    "errors": {
+      "title": "AutoBoards unavailable",
+      "session": "Your session has expired.",
+      "request": "The AutoBoards request failed.",
+      "load": "Failed to load AutoBoards.",
+      "save": "Failed to save the AutoBoard.",
+      "delete": "Failed to delete the AutoBoard."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Ticket Panel Settings",
+    "description": "Configure categories and log channels for each ticket panel.",
+    "noPanels": "No ticket panels found",
+    "noPanelsHint": "Create your first panel using the button above.",
+    "createPanel": "New panel",
+    "createPanelTitle": "Create ticket panel",
+    "createPanelDescription": "Give your panel a unique name. You can configure buttons and channels after creating it.",
+    "panelNameLabel": "Panel name",
+    "panelNamePlaceholder": "e.g. Applications",
+    "panelCreated": "Panel \"{name}\" created.",
+    "confirmDeletePanel": "Delete panel \"{name}\"?",
+    "confirmDeletePanelHint": "This will permanently delete the panel and all its button configurations.",
+    "panelDeleted": "Panel deleted.",
+    "panelHint": "Click to expand and configure this panel.",
+    "panelEmbed": "Panel embed",
+    "panelEmbedHint": "Embed used when posting the ticket panel in Discord.",
+    "panelEmbedInfoLine1": "To create a new embed or edit an existing one, go to the %s page in the {dashboardLabel}.",
+    "panelEmbedInfoLine2": "To add or edit buttons, go to %s within this ticket.",
+    "panelEmbedPreview": "Embed preview",
+    "panelEmbedPreviewEmpty": "No embed preview available for the selected panel embed.",
+    "ticketOpenEmbed": "Ticket opening embed",
+    "ticketOpenEmbedHint": "Optional custom embed sent when this button opens a ticket.",
+    "selectEmbed": "Select an embed",
+    "defaultEmbed": "No panel embed override",
+    "noCustomMessage": "Use default ticket message",
+    "buttons": "buttons",
+    "buttonList": "Buttons",
+    "categories": "Categories",
+    "openCategory": "Open tickets category",
+    "open_category": "Open tickets category",
+    "sleepCategory": "Sleeping tickets category",
+    "sleep_category": "Sleeping tickets category",
+    "closedCategory": "Closed tickets category",
+    "closed_category": "Closed tickets category",
+    "selectCategory": "Select a category...",
+    "logChannels": "Log Channels",
+    "statusChangeLog": "Status change log",
+    "status_change_log": "Status change log",
+    "buttonClickLog": "Button click log",
+    "ticket_button_click_log": "Button click log",
+    "closeLog": "Ticket close log",
+    "ticket_close_log": "Ticket close log",
+    "selectChannel": "Select a channel...",
+    "savedSuccess": "Panel \"{panel}\" saved successfully.",
+    "tabChannels": "Ticket panel",
+    "tabSettings": "Instellingen",
+    "tabButtons": "Buttons",
+    "tabMessages": "Messages",
+    "autoSaveSaving": "Opslaan...",
+    "autoSaveSaved": "Saved",
+    "autoSaveErrorTitle": "Auto-save failed",
+    "autoSaveErrorDescription": "Could not save these ticket settings.",
+    "messages": "messages",
+    "noButtons": "No buttons yet. Add one to get started.",
+    "addButton": "Add button",
+    "addButtonTitle": "Add button",
+    "addButtonDescription": "Configure the appearance of the new button.",
+    "buttonLabel": "Button text label",
+    "buttonLabelPlaceholder": "e.g. Apply",
+    "buttonStyle": "Button color",
+    "buttonStyleBlue": "Blue",
+    "buttonStyleGrey": "Grey",
+    "buttonStyleGreen": "Green",
+    "buttonStyleRed": "Red",
+    "buttonAdded": "Button added.",
+    "buttonDeleted": "Button deleted.",
+    "editButtonTitle": "Edit button settings",
+    "editButtonDescription": "Configure this ticket button.",
+    "buttonAppearanceSaved": "Appearance saved.",
+    "confirmDeleteButton": "Delete button \"{label}\"?",
+    "confirmDeleteButtonHint": "This will delete the button and all its configuration (roles, questions, etc.).",
+    "modRoles": "Staff roles (pinged)",
+    "modRolesHint": "These roles are mentioned when a ticket is opened.",
+    "noPingRoles": "Staff roles (silent)",
+    "noPingRolesHint": "These roles can see tickets but are not pinged.",
+    "questions": "Questions",
+    "questionsHint": "Up to 5 questions shown in a modal when the ticket is opened.",
+    "question": "Question",
+    "privateThread": "Private thread",
+    "privateThreadHint": "Creates a separate private thread for staff.",
+    "accountApply": "Require CoC account",
+    "accountApplyHint": "User must link a Clash of Clans account.",
+    "playerInfo": "Show player info",
+    "playerInfoHint": "Displays account stats when the ticket opens.",
+    "thMin": "Min. Town Hall",
+    "numApply": "Max accounts",
+    "naming": "Naming convention",
+    "namingPlaceholders": "Naming placeholders",
+    "namingVariables": "Variables: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Button \"{label}\" saved.",
+    "badge": {
+      "accountApply": "CoC required",
+      "privateThread": "Private thread"
+    },
+    "approveMessages": "Approval / Denial messages",
+    "approveMessagesHint": "Pre-written messages staff can send to applicants (max 25).",
+    "messagesMaxHint": "You can add up to 25 messages.",
+    "editMessagesButton": "Edit messages",
+    "editMessagesTitle": "Edit pre-written messages",
+    "editMessagesDescription": "Add, remove, and update your pre-written ticket messages.",
+    "addMessage": "Add message",
+    "noMessages": "No messages yet. Add one to get started.",
+    "messageName": "Message name",
+    "contentLabel": "Content",
+    "messageContent": "Message content...",
+    "messageNameRequired": "All messages must have a name.",
+    "messagesSaved": "Approval messages saved.",
+    "rolesToAdd": "Roles to grant",
+    "rolesToAddHint": "Roles automatically granted to the user when a ticket is opened.",
+    "rolesToRemove": "Roles to revoke",
+    "rolesToRemoveHint": "Roles automatically removed from the user when a ticket is opened.",
+    "applyClans": "Allowed clans",
+    "applyClansHint": "Only members of these clans can open this ticket. Leave empty to allow anyone.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Town Hall requirements",
+    "thRequirementsHint": "Minimum hero levels required per Town Hall level to open this ticket.",
+    "thHeroLegend": "BK = Barbarian King · AQ = Archer Queen · GW = Grand Warden · RC = Royal Champion · WARST = War Stars",
+    "addThLevel": "Add TH level",
+    "thLevel": "SH",
+    "numApplyHint": "Max number of CoC accounts the user can apply with (1–25).",
+    "embeds": "Embeds",
+    "embedsHint": "Discord embeds used as panel messages or ticket open messages.",
+    "newEmbed": "New embed",
+    "embedName": "Embed name",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "Discohook URL",
+    "embedDiscohookHint": "Design your embed on Discohook, copy the page URL, then paste it here.",
+    "openDiscohook": "Open Discohook",
+    "openInDiscohook": "Open in Discohook",
+    "copyDiscohookUrl": "Copy Discohook URL",
+    "copyDiscohookUrlDone": "URL copied!",
+    "editEmbed": "Edit",
+    "deleteEmbed": "Verwijderen",
+    "confirmDeleteEmbed": "Delete embed \"{name}\"?",
+    "confirmDeleteEmbedHint": "This only removes it from ClashKing. It will not affect already-posted Discord messages.",
+    "embedSaved": "Embed \"{name}\" saved.",
+    "embedCreated": "Embed \"{name}\" created.",
+    "embedDeleted": "Embed deleted.",
+    "noEmbeds": "No embeds yet.",
+    "noEmbedsHint": "Create an embed here, then assign it to a panel or button.",
+    "legacyEmbed": "Created via bot — paste a Discohook URL to enable editing.",
+    "invalidDiscohookUrl": "Invalid URL. Paste a Discohook page URL (discohook.app/?data=... or discohook.app/?share=...).",
+    "tabEmbeds": "Embeds"
+  },
+  "EmbedsPage": {
+    "title": "Embeds",
+    "description": "Create and manage Discord embed templates for your ticket panels and buttons.",
+    "nameHint": "Give your embed a unique identifier. You can change the content afterwards."
+  },
+  "EmbedEditor": {
+    "importSection": "Import from Discohook",
+    "addMessage": "Add message",
+    "addMessageDialogTitle": "Add message",
+    "addMessageDialogDescription": "Choose how advanced your message should be.",
+    "addMessageClassicTitle": "Classic",
+    "addMessageClassicDescription": "Simple and reliable: text + embeds. If you're not sure which one to pick, choose this.",
+    "addMessageV2Title": "Components v2",
+    "addMessageV2Description": "More advanced layouts and interactive components (buttons, selects, sections). Best for advanced setups.",
+    "betaTag": "Beta",
+    "importExport": "Import & export",
+    "importExportDescription": "Import an embed from Discohook or export your current embed to Discohook.",
+    "importFromDiscohook": "Import from Discohook",
+    "copyDiscohookUrl": "Copy Discohook URL",
+    "openInDiscohook": "Open in Discohook",
+    "content": "Content",
+    "contentPlaceholder": "Message content shown above embeds...",
+    "profileSection": "Profile",
+    "profileName": "Naam",
+    "profileAvatarUrl": "Avatar URL",
+    "profileUnsupportedWarning": "Warning: the bot currently does not support updating this profile.",
+    "import": "Import",
+    "importError": "Invalid Discohook URL. Paste a Discohook page URL.",
+    "importMultipleMessagesWarning": "This link contains multiple messages. Only the first message was imported — the bot supports one message per embed.",
+    "colorSection": "Color",
+    "authorSection": "Author",
+    "authorName": "Naam",
+    "authorIconUrl": "Icon URL",
+    "authorUrl": "Author URL",
+    "bodySection": "Body",
+    "title": "Title",
+    "titleUrl": "Title URL",
+    "sidebarColor": "Sidebar colour",
+    "description": "Description",
+    "descriptionPlaceholder": "Embed description...",
+    "fieldsSection": "Fields",
+    "addField": "Add field",
+    "field": "Field",
+    "fieldName": "Naam",
+    "fieldValue": "Value",
+    "fieldInline": "Inline",
+    "imagesSection": "Images",
+    "thumbnailUrl": "Thumbnail URL",
+    "imageUrl": "Image URL",
+    "footerSection": "Footer",
+    "footerText": "Footer text",
+    "footerIconUrl": "Footer icon URL",
+    "timestamp": "Include timestamp",
+    "preview": "Voorbeeld",
+    "previewEmpty": "Fill in fields to see a preview",
+    "modeToggleV1": "Classic (V1)",
+    "modeToggleV2": "Components (V2)",
+    "componentsSection": "Components",
+    "addComponent": "Add component",
+    "containerLabel": "Container",
+    "textDisplayLabel": "Text Display",
+    "separatorLabel": "Separator",
+    "mediaGalleryLabel": "Media Gallery",
+    "sectionLabel": "Section",
+    "dividerLine": "Show divider line",
+    "spacing": "Spacing",
+    "spacingSmall": "Small",
+    "spacingLarge": "Large",
+    "imageDescription": "Alt text",
+    "imageSpoiler": "Spoiler",
+    "addImage": "Add image",
+    "addTextBlock": "Add text block",
+    "accessory": "Accessory",
+    "accessoryNone": "None",
+    "accessoryThumbnail": "Thumbnail",
+    "accessoryButton": "Button",
+    "thumbnailAlt": "Thumbnail alt text",
+    "accentColor": "Accent colour",
+    "addContainer": "Add child component",
+    "containerSpoiler": "Spoiler container",
+    "stringSelectLabel": "String Select",
+    "userSelectLabel": "User Select",
+    "roleSelectLabel": "Role Select",
+    "mentionableSelectLabel": "Mentionable Select",
+    "channelSelectLabel": "Channel Select",
+    "fileLabel": "File",
+    "fileUrl": "File URL",
+    "fileUploadButton": "Upload",
+    "fileSpoiler": "Spoiler",
+    "selectCustomId": "Custom ID",
+    "selectPlaceholder": "Placeholder text",
+    "selectMinValues": "Min values",
+    "selectMaxValues": "Max values",
+    "selectOptions": "Opties",
+    "selectOption": "Option",
+    "selectOptionLabel": "Label",
+    "selectOptionValue": "Value",
+    "selectOptionDescription": "Description",
+    "selectOptionDefault": "Default selected",
+    "addSelectOption": "Add option",
+    "selectDisabled": "Disabled",
+    "actionRowMode": "Row type",
+    "actionRowModeButtons": "Buttons",
+    "actionRowLabel": "Action Row",
+    "addButton": "Add button",
+    "buttonLabel": "Label",
+    "buttonStyle": "Style",
+    "buttonStylePrimary": "Primary",
+    "buttonStyleSecondary": "Secondary",
+    "buttonStyleSuccess": "Succes",
+    "buttonStyleDanger": "Danger",
+    "buttonStyleLink": "Link",
+    "tabMentions": "Mentions",
+    "tabTime": "Time",
+    "tabEmojis": "Emojis",
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "mentionsChannels": "Channels",
+    "mentionsSpecial": "Special",
+    "mentionsChannelList": "All channels",
+    "mentionsRoles": "Roles",
+    "mentionsServerGuide": "Server Guide",
+    "mentionsBrowseChannels": "Browse Channels",
+    "mentionsChannelsAndRoles": "Channels and Roles",
+    "mentionsNoChannels": "No channels match your search.",
+    "mentionsNoRoles": "No roles match your search.",
+    "styleLabel": "Style",
+    "timeRelativeNow": "0 seconds ago",
+    "emojiSearchPlaceholder": "Find the perfect emoji",
+    "emojiToneLabel": "Emoji skin tone",
+    "emojiCategory": {
+      "people": "People",
+      "nature": "Nature",
+      "food": "Food",
+      "activities": "Activities",
+      "travel": "Travel",
+      "objects": "Objects",
+      "symbols": "Symbols",
+      "flags": "Flags"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Disabled",
+    "unknownComponent": "Unknown component",
+    "unknownComponentHint": "This component type cannot be edited here but will be preserved when saved."
+  },
+  "PanelsPage": {
+    "title": "Panels",
+    "description": "Configure the interactive member panel posted in your server. Members can link their account, refresh their roles, and more with a single click.",
+    "saved": "Panel configuration saved.",
+    "embedSection": "Embed",
+    "embedHint": "Optional embed displayed above the buttons.",
+    "embedLabel": "Embed",
+    "noEmbed": "No embed (buttons only)",
+    "buttonsSection": "Buttons",
+    "buttonsHint": "Select the action buttons to display. Order follows your selection.",
+    "colorSection": "Button colour",
+    "colorHint": "Applies to all buttons.",
+    "welcomeSection": "Welcome channel",
+    "welcomeHint": "When set, the panel is automatically posted when a new member joins.",
+    "welcomeChannel": "Channel",
+    "welcomeChannelPlaceholder": "Select a channel...",
+    "editPanelButton": "Edit panel",
+    "editDialogTitle": "Edit panel",
+    "editDialogDescription": "Update embed, buttons, and button colour with a live preview before saving.",
+    "welcomeAutosaveSuccess": "Welcome channel saved.",
+    "welcomeAutosaveDisabled": "Welcome channel disabled.",
+    "previewSection": "Voorbeeld",
+    "previewHint": "How the panel will look in Discord.",
+    "previewNoEmbed": "No embed selected",
+    "previewEmbedNoData": "Embed has no preview data",
+    "previewNoButtons": "No buttons selected",
+    "color": {
+      "Blue": "Blue",
+      "Green": "Green",
+      "Grey": "Grey",
+      "Red": "Red"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Giveaways",
+    "description": "Create, schedule and manage giveaway campaigns for your server.",
+    "create": "Create giveaway",
+    "listTitle": "Giveaway dashboard",
+    "listDescription": "Track scheduled, live and finished giveaways from one place.",
+    "empty": "No giveaways to display yet.",
+    "confirmDeleteTitle": "Delete Giveaway",
+    "confirmDelete": "Are you sure you want to delete this giveaway?",
+    "discardTitle": "Discard changes?",
+    "discardDescription": "You have unsaved changes. If you close now, your changes will be lost.",
+    "discardConfirm": "Discard",
+    "formTabs": {
+      "general": "General",
+      "messages": "Messages",
+      "restrictions": "Restrictions",
+      "advanced": "Geavanceerd"
+    },
+    "tabs": {
+      "ongoing": "Bezig",
+      "upcoming": "Binnenkort",
+      "ended": "Afgelopen"
+    },
+    "stats": {
+      "total": "Total giveaways",
+      "totalEntries": "Total entries",
+      "ongoing": "Ongoing giveaways",
+      "upcoming": "Upcoming giveaways",
+      "ended": "Ended giveaways"
+    },
+    "statsDescriptions": {
+      "total": "All giveaways configured on this server.",
+      "totalEntries": "Combined entries across all giveaways.",
+      "ongoing": "Currently active and accepting entries.",
+      "upcoming": "Scheduled to start later.",
+      "ended": "Already completed giveaways."
+    },
+    "emptyTab": {
+      "title": "No giveaways here",
+      "ongoing": "No giveaways are currently running.",
+      "upcoming": "No giveaways are scheduled. Create one to get started.",
+      "ended": "No giveaways have ended yet."
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "ongoing": "Live",
+      "ended": "Afgelopen"
+    },
+    "table": {
+      "giveaway": "Giveaway",
+      "channel": "Channel",
+      "entries": "Entries",
+      "timing": "Timing",
+      "start": "Starts",
+      "end": "Ends",
+      "winnersHeader": "Winners",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "noChannel": "No channel",
+      "noChannelHelp": "No channel assigned. Edit this giveaway to fix it.",
+      "endsAt": "Ends at",
+      "endedAt": "Ended at",
+      "duplicate": "Duplicate",
+      "showingEnded": "Showing {shown} of {total} ended giveaways",
+      "showMore": "Show {count} more",
+      "pendingUpdate": "Pending update",
+      "pendingUpdateHelp": "This giveaway has pending changes the bot will apply shortly.",
+      "openInDiscord": "Open in Discord",
+      "viewInDiscord": "View in Discord",
+      "reroll": "Reroll winners",
+      "rerolledCount": "{count, plural, one {# rerolled} other {# rerolled}}",
+      "viewEntries": "View entries"
+    },
+    "entries": {
+      "description": "List of participants and their win probability.",
+      "totalEntries": "Total entries",
+      "uniqueUsers": "Unique users",
+      "noEntrants": "No entries yet.",
+      "userId": "User ID",
+      "entryCount": "Entries",
+      "winChance": "Win chance"
+    },
+    "dialog": {
+      "createTitle": "Create giveaway",
+      "editTitle": "Edit giveaway",
+      "description": "Configure the giveaway message, timing and requirements.",
+      "create": "Create giveaway",
+      "saveChanges": "Save changes"
+    },
+    "form": {
+      "prize": "Prize",
+      "prizePlaceholder": "Example: Gold Pass",
+      "channel": "Channel",
+      "channelPlaceholder": "Select a channel",
+      "startTime": "Start time",
+      "startNow": "Start immediately",
+      "endTime": "End time",
+      "winners": "Number of winners",
+      "mentions": "Mentioned roles",
+      "roleRequirements": "Required or excluded roles",
+      "rolesMode": "Role mode",
+      "rolesModeOptions": {
+        "none": "No role restriction",
+        "allow": "Only these roles can enter",
+        "deny": "These roles cannot enter"
+      },
+      "rolesModeHelp": {
+        "none": "All users can enter this giveaway.",
+        "allow": "Only users with one of the selected roles can enter.",
+        "deny": "Users with any of the selected roles cannot enter."
+      },
+      "textAboveEmbed": "Text above embed",
+      "textEmbedDefault": "Click the button below to participate.",
+      "textInEmbed": "Embed description",
+      "textEndDefault": "Congratulations to the winner(s)! We will contact you shortly.",
+      "textOnEnd": "Message on giveaway end",
+      "image": "Giveaway image",
+      "removeImage": "Remove current image",
+      "imagePreviewAlt": "Giveaway preview",
+      "previewGiveaway": "Preview giveaway",
+      "previewEnd": "Preview end message",
+      "boosters": "Entry boosters",
+      "addBooster": "Add booster",
+      "noBoosters": "No boosters configured.",
+      "boosterLabel": "Booster {index}",
+      "boostValue": "Multiplier",
+      "boostRoles": "Boosted roles",
+      "requirements": "Entry requirements",
+      "profilePictureRequired": "Require a Discord profile picture",
+      "cocAccountRequired": "Require a linked Clash of Clans account"
+    },
+    "validation": {
+      "prizeRequired": "Prize is required.",
+      "channelRequired": "Channel is required.",
+      "startTimeRequired": "Start time is required unless the giveaway starts now.",
+      "endTimeRequired": "End time is required.",
+      "endAfterStart": "End time must be after the start time.",
+      "imageTooLarge": "Image must be under 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Live summary",
+      "discordPreview": "Discord preview",
+      "giveawayTitle": "Giveaway preview",
+      "giveawayDescription": "This is how the active giveaway message will look.",
+      "endTitle": "End message preview",
+      "endDescription": "This is the message sent when the giveaway finishes.",
+      "winnerCount": "Winners",
+      "winnerWord": "winner{count, plural, one {} other {s}}",
+      "mentionCount": "Mentioned roles",
+      "requirementCount": "Requirements",
+      "boosterCount": "Boosters",
+      "profileRequired": "Profile picture required",
+      "accountRequired": "Linked CoC account required",
+      "rolesAllow": "Restricted to selected roles",
+      "rolesDeny": "Selected roles excluded",
+      "noChannel": "No channel selected yet",
+      "noPrize": "Your prize will appear here",
+      "noEmbedText": "Add the embed text to preview the giveaway body.",
+      "noEndText": "Add a closing message for winners.",
+      "startsAt": "Starts: {date}",
+      "endsAt": "Ends: {date}",
+      "endsOn": "Ends on {date}",
+      "endsFooter": "Ends",
+      "notScheduled": "Not scheduled",
+      "schedule": "Schedule",
+      "endMessage": "Winning message",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
+      "totalParticipants": "Total Participants: {count}",
+      "participate": "Participate",
+      "buttonHint": "Primary action button shown under the Discord post."
+    },
+    "toast": {
+      "errorTitle": "Something went wrong",
+      "successTitle": "Succes",
+      "loadError": "Failed to load giveaways.",
+      "saveError": "Failed to save the giveaway.",
+      "deleteError": "Failed to delete the giveaway.",
+      "created": "Giveaway created successfully.",
+      "updated": "Giveaway updated successfully.",
+      "deleted": "Giveaway deleted successfully.",
+      "rerolled": "Winners rerolled successfully.",
+      "rerollError": "Failed to reroll winners."
+    },
+    "reroll": {
+      "title": "Reroll winners",
+      "description": "Select the winners to replace. New winners will be drawn from eligible participants.",
+      "selectWinners": "Select winners to replace:",
+      "confirm": "Reroll {count, plural, one {# winner} other {# winners}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Dashboard Overview",
+    "description": "Monitor your server statistics and get started",
+    "stats": {
+      "linkedPlayers": "Linked Players",
+      "linkedPlayersDesc": "Players linked in this server",
+      "clansConfigured": "Clans Configured",
+      "clansConfiguredDesc": "Clans tracked for this server",
+      "activeRosters": "Active Rosters",
+      "activeRostersDesc": "War rosters created",
+      "totalAccounts": "Linked Accounts",
+      "totalAccountsDesc": "Total CoC accounts linked",
+      "playersTracked": "Players Tracked",
+      "globalPlayers": "Total players in database",
+      "clansTracked": "Clans Tracked",
+      "globalClans": "Total clans in database",
+      "botStatus": "Bot Status",
+      "online": "Online",
+      "offline": "Offline",
+      "memoryUsage": "Memory: {used}MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Bot Statistics",
+    "clans": {
+      "title": "Your Clans",
+      "description": "{count, plural, one {# clan configured} other {# clans configured}}",
+      "manage": "Manage Clans",
+      "addFirst": "Add Your First Clan"
+    },
+    "quickStart": {
+      "title": "Quick Start",
+      "description": "Get started with configuring your ClashKing bot",
+      "step1": {
+        "title": "Configure General Settings",
+        "description": "Set up nickname conventions, embed colors, and logging channels"
+      },
+      "step2": {
+        "title": "Add Your Clans",
+        "description": "Connect your Clash of Clans clans and configure roles"
+      },
+      "step3": {
+        "title": "Set Up Auto Roles",
+        "description": "Configure automatic role assignment based on Town Hall, trophies, etc."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Bot Statistics",
+    "description": "Global ClashKing bot statistics and system health",
+    "about": {
+      "title": "About These Statistics",
+      "description": "These are global statistics for the entire ClashKing bot network",
+      "globalStats": "Global Statistics",
+      "globalStatsDesc": "Player and clan counts represent all tracked entities across all Discord servers using ClashKing",
+      "systemHealth": "System Health",
+      "systemHealthDesc": "CPU and memory usage indicate the current load on the ClashKing API infrastructure"
+    }
+  },
+  "NotFound": {
+    "title": "404 - Page Not Found",
+    "description": "The page you are looking for does not exist.",
+    "goHome": "Go to Home"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord bot, mobile app, and clan dashboard",
+      "description": "Manage wars, rosters, accounts, reminders, and clan settings with ClashKing across Discord, mobile, and the web.",
+      "openGraphTitle": "ClashKing | Run your clan"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing navigation",
+      "homeLabel": "ClashKing home",
+      "mobileApp": "Mobile App",
+      "discordBot": "Discord Bot",
+      "dashboard": "Hoofdpaneel"
+    },
+    "language": {
+      "label": "Taal"
+    },
+    "appearance": {
+      "label": "Weergave",
+      "day": "Day",
+      "sunset": "Sunset"
+    },
+    "actions": {
+      "addToDiscord": "Add to Discord",
+      "addClashKing": "Add ClashKing",
+      "openDashboard": "Open dashboard",
+      "joinTestFlight": "Join TestFlight",
+      "getAndroidApp": "Get Android app"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Run",
+          "second": "your",
+          "third": "clan."
+        },
+        "accounts": {
+          "first": "Beheren",
+          "second": "your",
+          "third": "accounts."
+        },
+        "stats": {
+          "first": "Explore",
+          "second": "the",
+          "third": "stats."
+        }
+      },
+      "rotatingLabel": "Run your clan. Manage your accounts. Explore the stats.",
+      "copy": "Wars, rosters, accounts, and clan settings across Discord, mobile, and the web."
+    },
+    "app": {
+      "title": "Mobile App",
+      "intro": "Your Clash account companion.",
+      "stageLabel": "ClashKing Mobile App clan, upgrade, and war widget screens",
+      "images": {
+        "clanOverview": "ClashKing Mobile App clan overview",
+        "upgradeStats": "ClashKing Mobile App Grand Warden upgrade statistics",
+        "warWidget": "ClashKing war result widget"
+      },
+      "features": {
+        "widgets": {
+          "title": "Widgets",
+          "copy": "View your wars at a glance."
+        },
+        "notifications": {
+          "title": "Meldingen",
+          "copy": "Get notified when you have an attack or an upgrade finishes."
+        },
+        "accounts": {
+          "title": "Gekoppelde accounts",
+          "copy": "Keep all of your Clash accounts together."
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord Bot",
+      "intro": "Clan stats and tools, right inside Discord.",
+      "imageLabel": "ClashKing clan command in Discord",
+      "imageAlt": "ClashKing clan command showing ArcLine clan statistics in Discord",
+      "features": {
+        "rosters": {
+          "title": "Rosters",
+          "copy": "Manage accounts for CWL or events."
+        },
+        "warTools": {
+          "title": "War tools",
+          "copy": "Check attacks, lineups, and reminders in Discord."
+        },
+        "accounts": {
+          "title": "Gekoppelde accounts",
+          "copy": "Keep all of your Clash accounts together."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Hoofdpaneel",
+      "intro": "Manage rosters, reminders, and server settings from one place.",
+      "imageLabel": "Builder Hut representing clan management tools",
+      "imageAlt": "Builder Hut level 8",
+      "features": {
+        "settings": {
+          "title": "Clan settings",
+          "copy": "Configure clans, roles, and channels."
+        },
+        "rosters": {
+          "title": "Rosters",
+          "copy": "Manage accounts for CWL or events."
+        },
+        "automation": {
+          "title": "Automation",
+          "copy": "Schedule reminders and server tasks."
+        }
+      }
+    },
+    "resources": {
+      "title": "Build with ClashKing.",
+      "copy": "Guides, source, and structured data for community tools.",
+      "ariaLabel": "Developer resources",
+      "documentation": "Documentation",
+      "publicApi": "Public API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans tools for everyone",
+      "docs": "Docs",
+      "privacy": "Privacybeleid",
+      "terms": "Terms of Service",
+      "legal": "This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing for Discord, mobile, and the web",
+    "privacy": {
+      "title": "Privacy Policy | ClashKing",
+      "openGraphTitle": "ClashKing Privacy Policy",
+      "description": "How ClashKing collects, uses, stores, and protects account, game, and app data.",
+      "heading": "Privacybeleid",
+      "eyebrow": "Effective 17 July 2026"
+    },
+    "terms": {
+      "title": "Terms of Service | ClashKing",
+      "openGraphTitle": "ClashKing Terms of Service",
+      "description": "The terms that apply when you use ClashKing websites, apps, services, and community tools.",
+      "heading": "Terms of Service",
+      "eyebrow": "ClashKing legal"
+    }
+  }
+}
