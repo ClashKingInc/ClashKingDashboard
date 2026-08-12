@@ -1,7 +1,7 @@
 preserve_hierarchy: true
 files:
   - source: /messages/en.json
-    translation: /messages/%locale%.json
+    translation: /messages/%two_letters_code%.json
     dest: /dashboard/en.json
     update_option: update_as_unapproved
 commit_message: 'chore(l10n): new Crowdin translations'
