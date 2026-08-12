@@ -1336,7 +1336,7 @@
     },
     "leagues": {
       "all": "All",
-      "legendLeague": "Legend League",
+      "legendLeague": "Inaccurate data?",
       "titanLeagueI": "Titan League I",
       "titanLeagueII": "Titan League II",
       "titanLeagueIII": "Titan League III"
@@ -1513,7 +1513,7 @@
       "leader": "Leader"
     },
     "leagues": {
-      "legend": "Legend League",
+      "legend": "Inaccurate data?",
       "electroDragon": "Electro Dragon",
       "dragon": "Dragon",
       "electroTitan": "Electro Titan",
@@ -1567,7 +1567,7 @@
       "leagueSuperfan": "League Superfan",
       "leagueFanatic": "League Fanatic",
       "leagueMaster": "League Master",
-      "legendLeague": "Legend League",
+      "legendLeague": "Inaccurate data?",
       "humiliator": "Humiliator",
       "notSoEasyThisTime": "Not So Easy This Time",
       "unionBuster": "Union Buster",
@@ -3003,8 +3003,14 @@
       "discordBot": "Discord Bot",
       "dashboard": "Dashboard"
     },
-    "language": { "label": "Language" },
-    "appearance": { "label": "Appearance", "day": "Day", "sunset": "Sunset" },
+    "language": {
+      "label": "Language"
+    },
+    "appearance": {
+      "label": "Appearance",
+      "day": "Day",
+      "sunset": "Sunset"
+    },
     "actions": {
       "addToDiscord": "Add to Discord",
       "addClashKing": "Add ClashKing",
@@ -3014,9 +3020,21 @@
     },
     "hero": {
       "phrases": {
-        "run": { "first": "Run", "second": "your", "third": "clan." },
-        "accounts": { "first": "Manage", "second": "your", "third": "accounts." },
-        "stats": { "first": "Explore", "second": "the", "third": "stats." }
+        "run": {
+          "first": "Run",
+          "second": "your",
+          "third": "clan."
+        },
+        "accounts": {
+          "first": "Manage",
+          "second": "your",
+          "third": "accounts."
+        },
+        "stats": {
+          "first": "Explore",
+          "second": "the",
+          "third": "stats."
+        }
       },
       "rotatingLabel": "Run your clan. Manage your accounts. Explore the stats.",
       "copy": "Wars, rosters, accounts, and clan settings across Discord, mobile, and the web."
@@ -3031,9 +3049,18 @@
         "warWidget": "ClashKing war result widget"
       },
       "features": {
-        "widgets": { "title": "Widgets", "copy": "View your wars at a glance." },
-        "notifications": { "title": "Notifications", "copy": "Get notified when you have an attack or an upgrade finishes." },
-        "accounts": { "title": "Linked accounts", "copy": "Keep all of your Clash accounts together." }
+        "widgets": {
+          "title": "Widgets",
+          "copy": "View your wars at a glance."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "copy": "Get notified when you have an attack or an upgrade finishes."
+        },
+        "accounts": {
+          "title": "Linked accounts",
+          "copy": "Keep all of your Clash accounts together."
+        }
       }
     },
     "bot": {
@@ -3042,9 +3069,18 @@
       "imageLabel": "ClashKing clan command in Discord",
       "imageAlt": "ClashKing clan command showing ArcLine clan statistics in Discord",
       "features": {
-        "rosters": { "title": "Rosters", "copy": "Manage accounts for CWL or events." },
-        "warTools": { "title": "War tools", "copy": "Check attacks, lineups, and reminders in Discord." },
-        "accounts": { "title": "Linked accounts", "copy": "Keep all of your Clash accounts together." }
+        "rosters": {
+          "title": "Rosters",
+          "copy": "Manage accounts for CWL or events."
+        },
+        "warTools": {
+          "title": "War tools",
+          "copy": "Check attacks, lineups, and reminders in Discord."
+        },
+        "accounts": {
+          "title": "Linked accounts",
+          "copy": "Keep all of your Clash accounts together."
+        }
       }
     },
     "dashboard": {
@@ -3053,9 +3089,18 @@
       "imageLabel": "Builder Hut representing clan management tools",
       "imageAlt": "Builder Hut level 8",
       "features": {
-        "settings": { "title": "Clan settings", "copy": "Configure clans, roles, and channels." },
-        "rosters": { "title": "Rosters", "copy": "Manage accounts for CWL or events." },
-        "automation": { "title": "Automation", "copy": "Schedule reminders and server tasks." }
+        "settings": {
+          "title": "Clan settings",
+          "copy": "Configure clans, roles, and channels."
+        },
+        "rosters": {
+          "title": "Rosters",
+          "copy": "Manage accounts for CWL or events."
+        },
+        "automation": {
+          "title": "Automation",
+          "copy": "Schedule reminders and server tasks."
+        }
       }
     },
     "resources": {
