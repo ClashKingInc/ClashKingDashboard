@@ -6,7 +6,7 @@ import { ClanSignalWordmark } from "./clan-signal/brand";
 import { ClanSignalFooter } from "./clan-signal/footer";
 import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
 import { RotatingHeadline } from "./clan-signal/rotating-headline";
-import { publicPath, type SupportedLocale } from "@/lib/locale-preference";
+import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 import "../../../app/explorations/clan-signal.css";
 
 const SHARED = "/concepts/local/assets";
@@ -58,7 +58,7 @@ function FeatureList({ features }: { features: readonly Feature[] }) {
   );
 }
 
-export async function ClanSignal({ locale = "en" }: { readonly locale?: SupportedLocale }) {
+export async function ClanSignal({ locale = "en" }: { readonly locale?: PublicLocale }) {
   const t = await getTranslations({ locale, namespace: "ClanSignal" });
   const landingTheme = "day";
   const headlinePhrases = [

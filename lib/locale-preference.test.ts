@@ -1,10 +1,21 @@
 import { describe, it, expect } from "vitest";
 import {
+  LANGUAGE_OPTIONS,
+  PUBLIC_LANGUAGE_OPTIONS,
+  SUPPORTED_LOCALES,
   resolveBrowserLocale,
   getLocaleModeFromStorage,
   getPublicRoute,
   publicPath,
 } from "./locale-preference";
+
+describe("locale catalog", () => {
+  it("offers every translated Dashboard locale while keeping public routes scoped", () => {
+    expect(SUPPORTED_LOCALES).toHaveLength(30);
+    expect(LANGUAGE_OPTIONS.map(({ code }) => code)).toEqual(SUPPORTED_LOCALES);
+    expect(PUBLIC_LANGUAGE_OPTIONS.map(({ code }) => code)).toEqual(["en", "fr", "nl"]);
+  });
+});
 
 describe("resolveBrowserLocale", () => {
   it("returns 'en' for empty array", () => {
@@ -15,12 +26,17 @@ describe("resolveBrowserLocale", () => {
     expect(resolveBrowserLocale(["fr"])).toBe("fr");
     expect(resolveBrowserLocale(["nl"])).toBe("nl");
     expect(resolveBrowserLocale(["en"])).toBe("en");
+    expect(resolveBrowserLocale(["de"])).toBe("de");
+    expect(resolveBrowserLocale(["zh"])).toBe("zh");
   });
 
   it("matches base locale from language tag", () => {
     expect(resolveBrowserLocale(["fr-FR"])).toBe("fr");
     expect(resolveBrowserLocale(["nl-NL"])).toBe("nl");
     expect(resolveBrowserLocale(["en-US"])).toBe("en");
+    expect(resolveBrowserLocale(["pt-BR"])).toBe("pt");
+    expect(resolveBrowserLocale(["zh-CN"])).toBe("zh");
+    expect(resolveBrowserLocale(["nb-NO"])).toBe("no");
   });
 
   it("is case insensitive", () => {
@@ -29,11 +45,11 @@ describe("resolveBrowserLocale", () => {
   });
 
   it("returns first supported locale from list", () => {
-    expect(resolveBrowserLocale(["de", "fr", "en"])).toBe("fr");
+    expect(resolveBrowserLocale(["xx", "de", "fr"])).toBe("de");
   });
 
   it("falls back to 'en' when no supported locale found", () => {
-    expect(resolveBrowserLocale(["de", "es", "it"])).toBe("en");
+    expect(resolveBrowserLocale(["xx", "yy", "zz"])).toBe("en");
   });
 });
 

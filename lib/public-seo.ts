@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import englishMessages from "@/messages/en.json";
 import frenchMessages from "@/messages/fr.json";
 import dutchMessages from "@/messages/nl.json";
-import { publicPath, type SupportedLocale } from "@/lib/locale-preference";
+import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 
 export type PublicPage = "home" | "privacy" | "terms";
 
@@ -13,7 +13,7 @@ const messages = {
   en: englishMessages,
   fr: frenchMessages,
   nl: dutchMessages,
-} satisfies Record<SupportedLocale, typeof englishMessages>;
+} satisfies Record<PublicLocale, typeof englishMessages>;
 
 const pagePaths = {
   home: "/",
@@ -21,13 +21,13 @@ const pagePaths = {
   terms: "/terms",
 } as const;
 
-const openGraphLocales: Record<SupportedLocale, string> = {
+const openGraphLocales: Record<PublicLocale, string> = {
   en: "en_US",
   fr: "fr_FR",
   nl: "nl_NL",
 };
 
-export function getPublicPageCopy(locale: SupportedLocale, page: PublicPage) {
+export function getPublicPageCopy(locale: PublicLocale, page: PublicPage) {
   const localized = messages[locale];
   if (page === "home") {
     return {
@@ -46,7 +46,7 @@ export function getPublicPageCopy(locale: SupportedLocale, page: PublicPage) {
   };
 }
 
-export function getPublicMetadata(locale: SupportedLocale, page: PublicPage): Metadata {
+export function getPublicMetadata(locale: PublicLocale, page: PublicPage): Metadata {
   const copy = getPublicPageCopy(locale, page);
   const pagePath = pagePaths[page];
   const localizedPath = publicPath(locale, pagePath);

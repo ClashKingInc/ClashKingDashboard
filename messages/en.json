@@ -397,7 +397,7 @@
       "search": "Search by name or tag...",
       "howItWorks": {
         "title": "How Bans Work",
-        "description": "If a banned player joins one of your clans, a warning will be sent to the clan channel you setup in the <clansTab>clans tab</clansTab>. This bot cannot prevent people from joining your clan but it can only give a warning."
+        "description": "If a banned player joins one of your clans, a warning will be sent to the clan channel you set up in the <clansTab>clans tab</clansTab>. The bot cannot prevent players from joining; it can only send a warning."
       },
       "stats": {
         "total": "Total Bans",
@@ -429,7 +429,7 @@
       },
       "addDialog": {
         "title": "Ban a Player",
-        "description": "Add a player to the ban list. They will be prevented from joining any clan on this server.",
+        "description": "Add a player to the ban list. You will receive a warning if they join any clan on this server.",
         "playerTagLabel": "Player Tag",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Player Name (optional)",
@@ -580,7 +580,7 @@
       "selectRosters": "Select rosters",
       "selectRostersDesc": "Please select at least 2 rosters to compare",
       "maxReached": "Maximum reached",
-      "maxReachedDesc": "You can compare up to 5 rosters at a time"
+      "maxReachedDesc": "You can compare up to 4 rosters at a time"
     },
     "createDialog": {
       "title": "Create New Roster",
@@ -699,7 +699,7 @@
       "reset": "Reset Columns"
     },
     "sortFields": {
-      "townhall": "Townhall Level",
+      "townhall": "Town Hall Level",
       "name": "Name",
       "tag": "Tag",
       "heroLvs": "Heroes",
@@ -1054,7 +1054,7 @@
       "rosterSize": "Roster Size",
       "rosterSizeHint": "Maximum number of members",
       "minSignups": "Min Signups",
-      "minSignupsHint": "Required signups per user",
+      "minSignupsHint": "Minimum number of signups required to fill the roster",
       "maxAccountsPerUser": "Max Accounts per User",
       "maxAccountsHint": "Limit accounts per Discord user",
       "allowedCategories": "Allowed Signup Categories",
@@ -1336,7 +1336,7 @@
     },
     "leagues": {
       "all": "All",
-      "legendLeague": "Inaccurate data?",
+      "legendLeague": "Legend League",
       "titanLeagueI": "Titan League I",
       "titanLeagueII": "Titan League II",
       "titanLeagueIII": "Titan League III"
@@ -1425,7 +1425,7 @@
       "saveRename": "Save name",
       "deleteTitle": "Delete clan category?",
       "deleteWarning": "Deleting “{name}” will make {count, plural, one {# clan} other {# clans}} uncategorized.",
-      "deleteCountMayChange": "This preview is current now. The completed deletion will report the actual locked clan count.",
+      "deleteCountMayChange": "This preview reflects the current state. The completed deletion will report the actual number of affected clans.",
       "confirmDelete": "Delete category",
       "deleteSuccessTitle": "Deleted {name}",
       "deleteSuccessDescription": "{count, plural, =0 {No clans were changed.} one {# clan is now uncategorized.} other {# clans are now uncategorized.}}",
@@ -1513,7 +1513,7 @@
       "leader": "Leader"
     },
     "leagues": {
-      "legend": "Inaccurate data?",
+      "legend": "Legend",
       "electroDragon": "Electro Dragon",
       "dragon": "Dragon",
       "electroTitan": "Electro Titan",
@@ -1567,7 +1567,7 @@
       "leagueSuperfan": "League Superfan",
       "leagueFanatic": "League Fanatic",
       "leagueMaster": "League Master",
-      "legendLeague": "Inaccurate data?",
+      "legendLeague": "Legend League",
       "humiliator": "Humiliator",
       "notSoEasyThisTime": "Not So Easy This Time",
       "unionBuster": "Union Buster",
@@ -1897,7 +1897,7 @@
         "description": "Track super troop activations"
       },
       "thUpgrade": {
-        "label": "Townhall Upgrade",
+        "label": "Town Hall Upgrade",
         "description": "Track town hall upgrades"
       },
       "leagueChange": {
@@ -1963,7 +1963,7 @@
     "settingsSaved": "Settings saved successfully!",
     "infoBanner": {
       "title": "Looking for more settings?",
-      "description": "Family roles and nickname settings are in **Family Settings** page. Role management settings are in **Roles** page. Clan-specific settings (ban/strike logs, war channels) are in **Clans** page."
+      "description": "Family roles and nickname settings are on the **Family Settings** page. Role management settings are on the **Roles** page. Clan roles, abbreviations, categories, and war countdowns are on the **Clans** page."
     },
     "nickname": {
       "title": "Nickname Management",
@@ -1992,10 +1992,10 @@
       "title": "Appearance",
       "description": "Customize bot embed messages",
       "embedColor": "Embed Color",
-      "embedColorDesc": "Color of the side bar on all bot embed messages in Discord",
+      "embedColorDesc": "Color of the sidebar on all bot embeds in Discord",
       "embedColorDefault": "Default: **#D90709** (ClashKing Red)",
       "embedPreview": "Embed Preview",
-      "embedPreviewDesc": "This colored bar will appear on the left side of all bot messages",
+      "embedPreviewDesc": "This colored bar will appear beside all bot embeds",
       "editColor": "Edit Color",
       "resetToDefault": "Reset to Default",
       "apply": "Apply"
@@ -2168,7 +2168,7 @@
         "items": [
           "Real-Time Stats: Detailed stats for players and clans synced with the bot.",
           "Clan Progress Tracking: Monitor your clan's progress over time seamlessly.",
-          "Multi account Management: Switch easily between your accounts and track performance.",
+          "Multi-Account Management: Switch easily between your accounts and track performance.",
           "Built-In History: Access historical data to analyze trends and improve strategies.",
           "Discord Server Management: (Coming Soon) Manage roles and tickets from the app.",
           "Advanced Notifications: (Coming Soon) Customize alerts for important events."
@@ -2243,7 +2243,7 @@
     "title": "Support Us",
     "subtitle": "ClashKing is a free, open-source project. Your support helps us keep the servers running and continue developing new features for the community.",
     "patreon": {
-      "title": "Become a Patreon",
+      "title": "Become a Patron",
       "description": "Support us monthly on Patreon to get exclusive perks, early access to features, and help cover our hosting costs.",
       "cta": "Support on Patreon"
     },
@@ -2432,7 +2432,7 @@
     "panelEmbed": "Panel embed",
     "panelEmbedHint": "Embed used when posting the ticket panel in Discord.",
     "panelEmbedInfoLine1": "To create a new embed or edit an existing one, go to the %s page in the {dashboardLabel}.",
-    "panelEmbedInfoLine2": "To add or edit buttons, go to %s within this ticket.",
+    "panelEmbedInfoLine2": "To add or edit buttons, go to %s for this panel.",
     "panelEmbedPreview": "Embed preview",
     "panelEmbedPreviewEmpty": "No embed preview available for the selected panel embed.",
     "ticketOpenEmbed": "Ticket opening embed",
@@ -2521,7 +2521,7 @@
     "contentLabel": "Content",
     "messageContent": "Message content...",
     "messageNameRequired": "All messages must have a name.",
-    "messagesSaved": "Approval messages saved.",
+    "messagesSaved": "Approval and denial messages saved.",
     "rolesToAdd": "Roles to grant",
     "rolesToAddHint": "Roles automatically granted to the user when a ticket is opened.",
     "rolesToRemove": "Roles to revoke",
@@ -2851,7 +2851,7 @@
       "textAboveEmbed": "Text above embed",
       "textEmbedDefault": "Click the button below to participate.",
       "textInEmbed": "Embed description",
-      "textEndDefault": "Congratulations to the winner(s)! We will contact you shortly.",
+      "textEndDefault": "Congratulations to everyone selected! We will contact you shortly.",
       "textOnEnd": "Message on giveaway end",
       "image": "Giveaway image",
       "removeImage": "Remove current image",
@@ -3055,7 +3055,7 @@
         },
         "notifications": {
           "title": "Notifications",
-          "copy": "Get notified when you have an attack or an upgrade finishes."
+          "copy": "Get notified when an attack is available or an upgrade finishes."
         },
         "accounts": {
           "title": "Linked accounts",

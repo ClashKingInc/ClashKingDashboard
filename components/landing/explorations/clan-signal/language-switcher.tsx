@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   getPublicRoute,
-  LANGUAGE_OPTIONS,
+  PUBLIC_LANGUAGE_OPTIONS,
   publicPath,
-  type SupportedLocale,
+  type PublicLocale,
 } from "@/lib/locale-preference";
 
 type LandingLanguageSwitcherProps = {
@@ -38,15 +38,15 @@ export function LandingLanguageSwitcher({
   sunsetLabel,
   initialTheme,
 }: Readonly<LandingLanguageSwitcherProps>) {
-  const locale = useLocale() as SupportedLocale;
+  const locale = useLocale() as PublicLocale;
   const pathname = usePathname();
   const router = useRouter();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
   const [isPending, startTransition] = useTransition();
-  const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
+  const currentLanguage = PUBLIC_LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? PUBLIC_LANGUAGE_OPTIONS[0];
 
-  const switchLocale = (nextLocale: SupportedLocale) => {
+  const switchLocale = (nextLocale: PublicLocale) => {
     const page = getPublicRoute(pathname)?.page ?? "/";
     const hash = globalThis.location.hash;
     startTransition(() => router.push(`${publicPath(nextLocale, page)}${hash}`));
@@ -80,7 +80,7 @@ export function LandingLanguageSwitcher({
         className="cs-language-menu"
         data-landing-theme={landingTheme}
       >
-        {LANGUAGE_OPTIONS.map((language) => (
+        {PUBLIC_LANGUAGE_OPTIONS.map((language) => (
           <DropdownMenuItem
             key={language.code}
             className="cs-language-option"

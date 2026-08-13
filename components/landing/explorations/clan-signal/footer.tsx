@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ClanSignalWordmark } from "./brand";
-import { publicPath, type SupportedLocale } from "@/lib/locale-preference";
+import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 
-export async function ClanSignalFooter({ locale = "en" }: { readonly locale?: SupportedLocale }) {
+export async function ClanSignalFooter({ locale = "en" }: { readonly locale?: PublicLocale }) {
   const t = await getTranslations({ locale, namespace: "ClanSignal" });
 
   return (
