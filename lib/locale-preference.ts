@@ -118,11 +118,16 @@ export function resolveDashboardLocalePreference(
 ): { locale: SupportedLocale; mode: LocaleMode } {
   const hasStoredLocale = isSupportedLocale(storedLocale);
   const mode = getLocaleModeFromStorage(storedMode, storedLocale);
+  let locale: SupportedLocale = "en";
+
+  if (mode === "browser") {
+    locale = resolveBrowserLocale(browserLanguages);
+  } else if (hasStoredLocale) {
+    locale = storedLocale;
+  }
 
   return {
-    locale: mode === "browser"
-      ? resolveBrowserLocale(browserLanguages)
-      : hasStoredLocale ? storedLocale : "en",
+    locale,
     mode,
   };
 }

@@ -8,10 +8,13 @@ import {
 } from "@/lib/locale-preference";
 import { LandingLanguageSwitcher } from "./language-switcher";
 
-const { pushMock } = vi.hoisted(() => ({ pushMock: vi.fn() }));
+const { navigationMock, pushMock } = vi.hoisted(() => ({
+  navigationMock: { pathname: "/" },
+  pushMock: vi.fn(),
+}));
 
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
+  usePathname: () => navigationMock.pathname,
   useRouter: () => ({ push: pushMock }),
 }));
 
@@ -46,6 +49,7 @@ function openLanguageMenu() {
 describe("LandingLanguageSwitcher", () => {
   beforeEach(() => {
     pushMock.mockClear();
+    navigationMock.pathname = "/";
     localStorage.clear();
     globalThis.history.replaceState({}, "", "/");
     Object.defineProperty(navigator, "languages", {
@@ -59,7 +63,10 @@ describe("LandingLanguageSwitcher", () => {
 
     openLanguageMenu();
 
-    expect(await screen.findByRole("menuitem", { name: /Browser Language/ })).toBeInTheDocument();
+    const browserLanguageOption = await screen.findByRole("menuitem", {
+      name: /Browser Language|Langue du navigateur/,
+    });
+    expect(browserLanguageOption).toBeInTheDocument();
     expect(screen.getByRole("menuitem", { name: /Afrikaans/ })).toBeInTheDocument();
     expect(screen.getByRole("menuitem", { name: /Deutsch/ })).toBeInTheDocument();
     expect(screen.getByRole("menuitem", { name: /Polski/ })).toBeInTheDocument();
@@ -90,6 +97,32 @@ describe("LandingLanguageSwitcher", () => {
     fireEvent.click(await screen.findByRole("menuitem", { name: /Browser Language/ }));
 
     await waitFor(() => expect(screen.getByTestId("locale-probe")).toHaveTextContent("fr:browser"));
+    expect(localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY)).toBe("browser");
+  });
+
+  it("keeps browser-language selection on a legal page and hides unsupported locales", async () => {
+    navigationMock.pathname = "/fr/privacy";
+    globalThis.history.replaceState({}, "", "/fr/privacy");
+    Object.defineProperty(navigator, "languages", {
+      configurable: true,
+      value: ["de-DE"],
+    });
+    renderSwitcher();
+
+    openLanguageMenu();
+
+    const browserLanguageOption = await screen.findByRole("menuitem", {
+      name: /Browser Language|Langue du navigateur/,
+    });
+    expect(browserLanguageOption).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Deutsch/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: /English/ })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: /Français/ })).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: /Nederlands/ })).toBeInTheDocument();
+
+    fireEvent.click(browserLanguageOption);
+
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/privacy"));
     expect(localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY)).toBe("browser");
   });
 });

@@ -18,9 +18,11 @@ import {
   getPublicRoute,
   isPublicLocale,
   LANGUAGE_OPTIONS,
+  PUBLIC_LANGUAGE_OPTIONS,
   publicPath,
   resolveBrowserLocale,
   type LocaleMode,
+  type PublicPagePath,
   type SupportedLocale,
 } from "@/lib/locale-preference";
 
@@ -35,6 +37,20 @@ type LandingLanguageSwitcherProps = {
 type LandingTheme = "day" | "sunset";
 
 const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
+
+function getLocaleDestination(
+  locale: SupportedLocale,
+  mode: LocaleMode,
+  page: PublicPagePath,
+): string {
+  if (page !== "/") {
+    return publicPath(isPublicLocale(locale) ? locale : "en", page);
+  }
+  if (mode === "manual" && isPublicLocale(locale)) {
+    return publicPath(locale, page);
+  }
+  return "/";
+}
 
 export function LandingLanguageSwitcher({
   label,
@@ -52,14 +68,13 @@ export function LandingLanguageSwitcher({
   const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
   const [isPending, startTransition] = useTransition();
   const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
+  const currentPage = getPublicRoute(pathname)?.page ?? "/";
+  const availableLanguages = currentPage === "/" ? LANGUAGE_OPTIONS : PUBLIC_LANGUAGE_OPTIONS;
 
   const switchLocale = (nextLocale: SupportedLocale, nextMode: LocaleMode) => {
-    const page = getPublicRoute(pathname)?.page ?? "/";
     const hash = globalThis.location.hash;
-    const destination = nextMode === "browser"
-      ? "/"
-      : isPublicLocale(nextLocale) ? publicPath(nextLocale, page) : "/";
-    const destinationWithHash = `${destination}${page === "/" ? hash : ""}`;
+    const destination = getLocaleDestination(nextLocale, nextMode, currentPage);
+    const destinationWithHash = `${destination}${currentPage === "/" ? hash : ""}`;
 
     startTransition(() => {
       setDashboardLocale(nextLocale, nextMode);
@@ -109,7 +124,7 @@ export function LandingLanguageSwitcher({
           <span className="cs-language-code">AUTO</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator className="cs-language-separator" />
-        {LANGUAGE_OPTIONS.map((language) => (
+        {availableLanguages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             className="cs-language-option"
