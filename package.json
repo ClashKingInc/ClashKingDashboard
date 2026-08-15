@@ -46,7 +46,7 @@
     "@remotion/player": "^4.0.507",
     "@swc/helpers": "^0.5.23",
     "@tailwindcss/postcss": "^4.3.2",
-    "@vinext/cloudflare": "^1.0.0-beta.4",
+    "@vinext/cloudflare": "^1.0.0-beta.5",
     "axios": "^1.19.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
