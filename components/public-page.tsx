@@ -3,20 +3,20 @@ import { PrivacyPolicy } from "@/components/landing/explorations/clan-signal/pri
 import { TermsOfService } from "@/components/landing/explorations/clan-signal/terms-of-service";
 import { PublicLocaleProvider } from "@/components/public-locale-provider";
 import { getPublicPageCopy, type PublicPage as PublicPageName } from "@/lib/public-seo";
-import type { SupportedLocale } from "@/lib/locale-preference";
+import type { PublicLocale } from "@/lib/locale-preference";
 
 export function PublicPage({
   locale,
   page,
 }: {
-  readonly locale: SupportedLocale;
+  readonly locale: PublicLocale;
   readonly page: PublicPageName;
 }) {
   const copy = getPublicPageCopy(locale, page);
 
   return (
     <PublicLocaleProvider locale={locale}>
-      {page === "home" && <ClanSignal locale={locale} />}
+      {page === "home" && <ClanSignal />}
       {page === "privacy" && (
         <PrivacyPolicy locale={locale} title={copy.heading} eyebrow={copy.eyebrow} />
       )}

@@ -11,18 +11,20 @@ export function RotatingHeadline({ phrases, label }: Readonly<RotatingHeadlinePr
   const [index, setIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const widthSensorRef = useRef<HTMLSpanElement>(null);
   const timeoutRef = useRef<number | null>(null);
 
   useLayoutEffect(() => {
     const heading = headingRef.current;
-    if (!heading) return;
+    const widthSensor = widthSensorRef.current;
+    if (!heading || !widthSensor) return;
 
     const measuredWords = Array.from(
       heading.querySelectorAll<HTMLElement>("[data-headline-measure-word]"),
     );
 
     const fitHeadline = () => {
-      const availableWidth = heading.clientWidth;
+      const availableWidth = widthSensor.clientWidth;
       const widestWord = Math.max(...measuredWords.map((word) => word.getBoundingClientRect().width));
       const baseSize = Number.parseFloat(getComputedStyle(measuredWords[0]).fontSize);
 
@@ -34,7 +36,7 @@ export function RotatingHeadline({ phrases, label }: Readonly<RotatingHeadlinePr
 
     fitHeadline();
     const resizeObserver = new ResizeObserver(fitHeadline);
-    resizeObserver.observe(heading);
+    resizeObserver.observe(widthSensor);
     void document.fonts?.ready.then(fitHeadline);
 
     return () => resizeObserver.disconnect();
@@ -61,6 +63,12 @@ export function RotatingHeadline({ phrases, label }: Readonly<RotatingHeadlinePr
 
   return (
     <h1 ref={headingRef} id="cs-hero-title" aria-label={label}>
+      <span
+        ref={widthSensorRef}
+        className="cs-headline-width-sensor"
+        data-headline-width-sensor
+        aria-hidden="true"
+      />
       <span className={`cs-headline-phrase${isVisible ? "" : " is-hidden"}`} aria-hidden="true">
         {phrase.map((word) => <span key={word}>{word}</span>)}
       </span>
