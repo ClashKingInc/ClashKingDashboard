@@ -5,3 +5,4 @@ files:
     dest: /dashboard/en.json
     update_option: update_as_unapproved
 commit_message: 'chore(l10n): new Crowdin translations'
+append_commit_message: false
