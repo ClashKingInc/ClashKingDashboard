@@ -180,6 +180,7 @@
 .cs-headline-phrase { display: grid; transition: opacity 240ms ease-out, transform 240ms cubic-bezier(.22, .61, .36, 1); }
 .cs-headline-phrase > span { display: block; white-space: nowrap; }
 .cs-headline-phrase.is-hidden { opacity: 0; transform: translateY(-10px); }
+.cs-headline-width-sensor { position: absolute; inset: 0 0 auto; height: 1px; visibility: hidden; pointer-events: none; }
 .cs-headline-measure { position: absolute; width: max-content; height: 0; overflow: hidden; visibility: hidden; pointer-events: none; font-size: var(--cs-headline-base-size); }
 .cs-headline-measure > span { display: block; width: max-content; white-space: nowrap; }
 .cs-hero-copy > p { max-width: 470px; margin-top: 22px; font-size: clamp(1rem, 1.3vw, 1.16rem); }
