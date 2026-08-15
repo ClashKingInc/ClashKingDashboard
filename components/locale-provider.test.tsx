@@ -10,10 +10,11 @@ import {
 
 function LocaleProbe() {
   const locale = useLocale();
-  const { setDashboardLocale } = useAppLocale();
+  const { mode, setDashboardLocale } = useAppLocale();
   return (
     <>
       <span>{locale}</span>
+      <span data-testid="locale-mode">{mode}</span>
       <button type="button" onClick={() => setDashboardLocale("nl", "manual")}>
         Dutch
       </button>
@@ -36,9 +37,54 @@ function LocaleProbe() {
 describe("LocaleProvider", () => {
   beforeEach(() => {
     localStorage.clear();
+    Object.defineProperty(navigator, "languages", {
+      configurable: true,
+      value: ["en-US"],
+    });
     document.documentElement.lang = "en";
     document.documentElement.dir = "ltr";
     globalThis.history.replaceState({}, "", "/dashboard");
+  });
+
+  it("uses the browser language by default for a first-time visitor", async () => {
+    Object.defineProperty(navigator, "languages", {
+      configurable: true,
+      value: ["fr-CA", "en-US"],
+    });
+
+    render(
+      <LocaleProvider>
+        <LocaleProbe />
+      </LocaleProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText("fr")).toBeInTheDocument());
+    expect(screen.getByTestId("locale-mode")).toHaveTextContent("browser");
+    expect(document.documentElement.lang).toBe("fr");
+  });
+
+  it("updates automatically when the browser language changes in browser mode", async () => {
+    Object.defineProperty(navigator, "languages", {
+      configurable: true,
+      value: ["de-DE"],
+    });
+
+    render(
+      <LocaleProvider>
+        <LocaleProbe />
+      </LocaleProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText("de")).toBeInTheDocument());
+
+    Object.defineProperty(navigator, "languages", {
+      configurable: true,
+      value: ["fr-FR"],
+    });
+    globalThis.dispatchEvent(new Event("languagechange"));
+
+    await waitFor(() => expect(screen.getByText("fr")).toBeInTheDocument());
+    expect(document.documentElement.lang).toBe("fr");
   });
 
   it("loads every Dashboard locale independently of the URL and sets RTL direction", async () => {

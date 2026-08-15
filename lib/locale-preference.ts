@@ -102,8 +102,29 @@ export function resolveBrowserLocale(browserLanguages: readonly string[] = []): 
   return "en";
 }
 
-export function getLocaleModeFromStorage(value: string | null): LocaleMode {
-  return value === "browser" ? "browser" : "manual";
+export function getLocaleModeFromStorage(
+  value: string | null,
+  storedLocale: string | null = null,
+): LocaleMode {
+  if (value === "browser") return "browser";
+  if (value === "manual" || isSupportedLocale(storedLocale)) return "manual";
+  return "browser";
+}
+
+export function resolveDashboardLocalePreference(
+  storedMode: string | null,
+  storedLocale: string | null,
+  browserLanguages: readonly string[] = [],
+): { locale: SupportedLocale; mode: LocaleMode } {
+  const hasStoredLocale = isSupportedLocale(storedLocale);
+  const mode = getLocaleModeFromStorage(storedMode, storedLocale);
+
+  return {
+    locale: mode === "browser"
+      ? resolveBrowserLocale(browserLanguages)
+      : hasStoredLocale ? storedLocale : "en",
+    mode,
+  };
 }
 
 export function getPublicRoute(pathname: string): {

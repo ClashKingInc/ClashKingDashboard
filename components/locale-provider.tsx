@@ -6,10 +6,9 @@ import englishMessages from "@/messages/en.json";
 import {
   DASHBOARD_LOCALE_MODE_STORAGE_KEY,
   DASHBOARD_LOCALE_STORAGE_KEY,
-  getLocaleModeFromStorage,
   getPublicRoute,
-  isSupportedLocale,
   resolveBrowserLocale,
+  resolveDashboardLocalePreference,
   type LocaleMode,
   type SupportedLocale,
 } from "@/lib/locale-preference";
@@ -100,16 +99,14 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
       return;
     }
 
-    const storedMode = getLocaleModeFromStorage(
+    const preference = resolveDashboardLocalePreference(
       localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY),
+      localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY),
+      navigator.languages,
     );
-    const storedLocale = localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY);
-    const nextLocale = storedMode === "browser"
-      ? resolveBrowserLocale(navigator.languages)
-      : isSupportedLocale(storedLocale) ? storedLocale : "en";
 
-    setMode(storedMode);
-    void applyLocale(nextLocale);
+    setMode(preference.mode);
+    void applyLocale(preference.locale);
   }, [applyLocale, children]);
 
   useEffect(() => {
@@ -123,20 +120,35 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
         return;
       }
 
-      const storedMode = getLocaleModeFromStorage(
+      const preference = resolveDashboardLocalePreference(
         localStorage.getItem(DASHBOARD_LOCALE_MODE_STORAGE_KEY),
+        localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY),
+        navigator.languages,
       );
-      const storedLocale = localStorage.getItem(DASHBOARD_LOCALE_STORAGE_KEY);
-      const nextLocale = storedMode === "browser"
-        ? resolveBrowserLocale(navigator.languages)
-        : isSupportedLocale(storedLocale) ? storedLocale : "en";
-      setMode(storedMode);
-      void applyLocale(nextLocale);
+      setMode(preference.mode);
+      void applyLocale(preference.locale);
     };
 
     globalThis.addEventListener("storage", handleStorage);
     return () => globalThis.removeEventListener("storage", handleStorage);
   }, [applyLocale]);
+
+  useEffect(() => {
+    if (
+      mode !== "browser" ||
+      getPublicRoute(globalThis.location.pathname) ||
+      globalThis.location.pathname === "/concepts/clan-signal"
+    ) {
+      return;
+    }
+
+    const handleLanguageChange = () => {
+      void applyLocale(resolveBrowserLocale(navigator.languages));
+    };
+
+    globalThis.addEventListener("languagechange", handleLanguageChange);
+    return () => globalThis.removeEventListener("languagechange", handleLanguageChange);
+  }, [applyLocale, mode]);
 
   const value = useMemo(
     () => ({ locale, mode, setDashboardLocale }),
