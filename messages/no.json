@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Utestengte spillere",
-        "count": "{count, plural, one {# spiller utestengt} other {# spillere utestengt}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noBansFound": "Ingen utestengelser funnet",
         "noBans": "Ingen utestengte spillere",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Spilleradvarsler",
-        "count": "{count, plural, one {# advarsel utstedt} other {# advarsler utstedt}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Søk etter navn, tag eller årsak...",
         "noStrikesFound": "Ingen advarsler funnet",
         "noStrikes": "Ingen advarsler utstedt",
@@ -567,7 +567,7 @@
     },
     "filters": {
       "search": "Søk spillerlister...",
-      "type": "Type",
+      "type": "Klantype",
       "all": "Alle",
       "clan": "Klan",
       "family": "Familie",
@@ -683,7 +683,7 @@
       "hitrate": "Treffprosent",
       "current_clan": "Nåværende klan",
       "current_clan_tag": "Klantag",
-      "discord": "Discord",
+      "discord": "Uenighed",
       "hero_lvs": "Heltenivåer",
       "war_pref": "Krigspreferanse",
       "trophies": "Trofeer",
@@ -1305,14 +1305,14 @@
     "comingSoon": "Denne funksjonen kommer snart. Kom tilbake igjen senere!",
     "stats": {
       "totalEntries": "Deltakelser totalt",
-      "type": "Type",
+      "type": "Klantype",
       "league": "Liga",
       "weekend": "Helg"
     },
     "filters": {
       "title": "Filtre",
       "description": "Tilpass topplistevisningen",
-      "type": "Type",
+      "type": "Klantype",
       "metric": "Måling",
       "league": "Liga",
       "weekend": "Helg"
@@ -2793,8 +2793,8 @@
       "start": "Starter",
       "end": "Slutter",
       "winnersHeader": "Vinnere",
-      "winners": "{count, plural, one {# vinner} other {# vinnere}}",
-      "boosters": "{count, plural, one {# booster} other {# boostere}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal tildelt. Rediger giveawayen for å rette det.",
       "endsAt": "Slutter kl.",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Ikke planlagt",
       "schedule": "Tidsplan",
       "endMessage": "Vinnermelding",
-      "endSummary": "{winners, plural, one {# vinner blir kunngjort her.} other {# vinnere blir kunngjort her.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Deltakere totalt: {count}",
       "participate": "Bli med",
       "buttonHint": "Den primære handlingsknappen vises under Discord-innlegget."
