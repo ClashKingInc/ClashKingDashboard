@@ -53,6 +53,9 @@ const messageLoaders: Record<SupportedLocale, () => Promise<Messages>> = {
 
 const RTL_LOCALES = new Set<SupportedLocale>(["ar", "he", "ur"]);
 
+const getFixedPublicRoute = (pathname: string) =>
+  pathname === "/" ? undefined : getPublicRoute(pathname);
+
 type LocaleContextValue = {
   locale: SupportedLocale;
   mode: LocaleMode;
@@ -89,7 +92,7 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
 
   useEffect(() => {
     const pathname = globalThis.location.pathname;
-    const publicRoute = getPublicRoute(pathname);
+    const publicRoute = getFixedPublicRoute(pathname);
     if (publicRoute) {
       void applyLocale(publicRoute.locale);
       return;
@@ -112,7 +115,7 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
   useEffect(() => {
     const handleStorage = (event: StorageEvent) => {
       if (
-        getPublicRoute(globalThis.location.pathname) ||
+        getFixedPublicRoute(globalThis.location.pathname) ||
         globalThis.location.pathname === "/concepts/clan-signal" ||
         (event.key !== DASHBOARD_LOCALE_STORAGE_KEY &&
           event.key !== DASHBOARD_LOCALE_MODE_STORAGE_KEY)
@@ -136,7 +139,7 @@ export function LocaleProvider({ children }: { readonly children: React.ReactNod
   useEffect(() => {
     if (
       mode !== "browser" ||
-      getPublicRoute(globalThis.location.pathname) ||
+      getFixedPublicRoute(globalThis.location.pathname) ||
       globalThis.location.pathname === "/concepts/clan-signal"
     ) {
       return;

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ConceptPage() {
   return (
     <PublicLocaleProvider locale="en">
-      <ClanSignal locale="en" />
+      <ClanSignal />
     </PublicLocaleProvider>
   );
 }

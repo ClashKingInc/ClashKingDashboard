@@ -16,7 +16,7 @@ export function PublicPage({
 
   return (
     <PublicLocaleProvider locale={locale}>
-      {page === "home" && <ClanSignal locale={locale} />}
+      {page === "home" && <ClanSignal />}
       {page === "privacy" && (
         <PrivacyPolicy locale={locale} title={copy.heading} eyebrow={copy.eyebrow} />
       )}

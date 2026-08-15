@@ -63,6 +63,41 @@ describe("LocaleProvider", () => {
     expect(document.documentElement.lang).toBe("fr");
   });
 
+  it("uses browser detection on the unprefixed landing page", async () => {
+    globalThis.history.replaceState({}, "", "/");
+    Object.defineProperty(navigator, "languages", {
+      configurable: true,
+      value: ["de-DE"],
+    });
+
+    render(
+      <LocaleProvider>
+        <LocaleProbe />
+      </LocaleProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText("de")).toBeInTheDocument());
+    expect(screen.getByTestId("locale-mode")).toHaveTextContent("browser");
+    expect(document.documentElement.lang).toBe("de");
+  });
+
+  it("keeps explicit localized landing routes pinned to their route locale", async () => {
+    globalThis.history.replaceState({}, "", "/fr");
+    Object.defineProperty(navigator, "languages", {
+      configurable: true,
+      value: ["de-DE"],
+    });
+
+    render(
+      <LocaleProvider>
+        <LocaleProbe />
+      </LocaleProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText("fr")).toBeInTheDocument());
+    expect(document.documentElement.lang).toBe("fr");
+  });
+
   it("updates automatically when the browser language changes in browser mode", async () => {
     Object.defineProperty(navigator, "languages", {
       configurable: true,

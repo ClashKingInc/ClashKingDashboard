@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
+import { Globe } from "lucide-react";
+import { useAppLocale } from "@/components/locale-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +16,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   getPublicRoute,
-  PUBLIC_LANGUAGE_OPTIONS,
+  isPublicLocale,
+  LANGUAGE_OPTIONS,
   publicPath,
-  type PublicLocale,
+  resolveBrowserLocale,
+  type LocaleMode,
+  type SupportedLocale,
 } from "@/lib/locale-preference";
 
 type LandingLanguageSwitcherProps = {
@@ -38,18 +43,32 @@ export function LandingLanguageSwitcher({
   sunsetLabel,
   initialTheme,
 }: Readonly<LandingLanguageSwitcherProps>) {
-  const locale = useLocale() as PublicLocale;
+  const locale = useLocale() as SupportedLocale;
+  const { mode: localeMode, setDashboardLocale } = useAppLocale();
+  const navigationT = useTranslations("Navigation");
   const pathname = usePathname();
   const router = useRouter();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
   const [isPending, startTransition] = useTransition();
-  const currentLanguage = PUBLIC_LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? PUBLIC_LANGUAGE_OPTIONS[0];
+  const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
 
-  const switchLocale = (nextLocale: PublicLocale) => {
+  const switchLocale = (nextLocale: SupportedLocale, nextMode: LocaleMode) => {
     const page = getPublicRoute(pathname)?.page ?? "/";
     const hash = globalThis.location.hash;
-    startTransition(() => router.push(`${publicPath(nextLocale, page)}${hash}`));
+    const destination = nextMode === "browser"
+      ? "/"
+      : isPublicLocale(nextLocale) ? publicPath(nextLocale, page) : "/";
+    const destinationWithHash = `${destination}${page === "/" ? hash : ""}`;
+
+    startTransition(() => {
+      setDashboardLocale(nextLocale, nextMode);
+      if (destination !== pathname) router.push(destinationWithHash);
+    });
+  };
+
+  const useBrowserLanguage = () => {
+    switchLocale(resolveBrowserLocale(navigator.languages), "browser");
   };
 
   const switchLandingTheme = (nextTheme: LandingTheme) => {
@@ -80,12 +99,22 @@ export function LandingLanguageSwitcher({
         className="cs-language-menu"
         data-landing-theme={landingTheme}
       >
-        {PUBLIC_LANGUAGE_OPTIONS.map((language) => (
+        <DropdownMenuItem
+          className="cs-language-option"
+          aria-current={localeMode === "browser" ? "true" : undefined}
+          onClick={useBrowserLanguage}
+        >
+          <Globe className="cs-language-auto-icon" aria-hidden="true" />
+          <span>{navigationT("browserLanguage")}</span>
+          <span className="cs-language-code">AUTO</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="cs-language-separator" />
+        {LANGUAGE_OPTIONS.map((language) => (
           <DropdownMenuItem
             key={language.code}
             className="cs-language-option"
-            aria-current={locale === language.code ? "true" : undefined}
-            onClick={() => switchLocale(language.code)}
+            aria-current={localeMode === "manual" && locale === language.code ? "true" : undefined}
+            onClick={() => switchLocale(language.code, "manual")}
           >
             <span className="cs-language-flag">
               <Image

@@ -53,7 +53,7 @@ export async function ClanSignalLegalShell({
       </section>
 
       <article className="cs-legal-document">{children}</article>
-      <ClanSignalFooter locale={locale} />
+      <ClanSignalFooter />
     </main>
   );
 }
