@@ -49,7 +49,7 @@
     "openInGame": "Obre al joc",
     "openChannelInDiscord": "Obre aquest canal a Discord",
     "playerProfile": {
-      "clan": "El clan",
+      "clan": "Clan",
       "townHallLevel": "Nivell de l’Ajuntament",
       "trophies": "Trofeus",
       "warPreference": "Preferència de guerra",
@@ -207,7 +207,7 @@
       "description": "Rols i sobrenoms de la família"
     },
     "clans": {
-      "name": "Cerca de clans",
+      "name": "Clans",
       "description": "Gestiona els teus clans"
     },
     "logs": {
@@ -559,7 +559,7 @@
       "avgTh": "Mitjana TH",
       "avgHitrate": "Taxa mitjana d’encerts",
       "distribution": "Distribució",
-      "clan": "El clan",
+      "clan": "Clan",
       "family": "Família",
       "external": "Extern",
       "thDistribution": "Distribució per TH",
@@ -569,7 +569,7 @@
       "search": "Cerca llistes...",
       "type": "Tipus",
       "all": "Tot",
-      "clan": "El clan",
+      "clan": "Clan",
       "family": "Família",
       "clear": "Neteja"
     },
@@ -588,12 +588,12 @@
       "aliasLabel": "Nom de la llista",
       "aliasPlaceholder": "p. ex., llista de la CWL",
       "typeLabel": "Tipus de llista",
-      "typeClan": "El clan",
+      "typeClan": "Clan",
       "typeFamily": "Família",
       "signupScopeLabel": "Àmbit d’inscripció",
       "scopeClanOnly": "Només el clan",
       "scopeFamilyWide": "Tota la família",
-      "clanLabel": "El clan",
+      "clanLabel": "Clan",
       "clanPlaceholder": "Selecciona un clan",
       "descriptionLabel": "Descripció (opcional)",
       "descriptionPlaceholder": "Descripció de la llista...",
@@ -652,7 +652,7 @@
       "thRestriction": "Nivell d'Ajuntament",
       "avgTh": "Mitjana TH",
       "avgHitrate": "Taxa mitjana d’encerts",
-      "clan": "El clan",
+      "clan": "Clan",
       "family": "Família",
       "external": "Extern",
       "substitute": "SUPLENT",
@@ -663,7 +663,7 @@
       "thLevel": "Nivell d'Ajuntament",
       "avgTh": "Mitjana TH",
       "avgHitrate": "Taxa mitjana d’encerts",
-      "clan": "El clan",
+      "clan": "Clan",
       "family": "Família",
       "external": "Extern",
       "noRestriction": "Sense restriccions",
@@ -1025,12 +1025,12 @@
       "restrictions": "Restriccions i límits",
       "name": "Nom de la llista",
       "rosterType": "Tipus de llista",
-      "typeClan": "El clan",
+      "typeClan": "Clan",
       "typeFamily": "Família",
       "signupScope": "Àmbit d’inscripció",
       "scopeClanOnly": "Només el clan",
       "scopeFamilyWide": "Tota la família",
-      "clan": "El clan",
+      "clan": "Clan",
       "selectClan": "Selecciona un clan",
       "description": "Descripció",
       "descriptionPlaceholder": "Introdueix una descripció per a aquesta llista...",
@@ -1193,7 +1193,7 @@
     "filters": {
       "title": "Filtres",
       "description": "Filtra les estadístiques de guerra segons diferents criteris",
-      "clan": "El clan",
+      "clan": "Clan",
       "allClans": "Tots els clans",
       "townHall": "Ajuntament",
       "townHallShort": "TH",
@@ -1275,7 +1275,7 @@
       "title": "Estadístiques de guerra del clan",
       "description": "Estadístiques detallades de cada clan",
       "headers": {
-        "clan": "El clan",
+        "clan": "Clan",
         "status": "Estat",
         "wars": "Guerres",
         "record": "V/D/E",
@@ -1319,7 +1319,7 @@
     },
     "types": {
       "player": "Jugadors",
-      "clan": "Cerca de clans"
+      "clan": "Clans"
     },
     "metrics": {
       "capital": {
@@ -1743,7 +1743,7 @@
       "forumPost": "Publicació del fòrum",
       "forumPostPlaceholder": "Selecciona una publicació del fòrum",
       "forumPostRequired": "Els canals de fòrum requereixen una publicació.",
-      "clan": "El clan",
+      "clan": "Clan",
       "clanPlaceholder": "Selecciona un clan",
       "customMessage": "Missatge personalitzat",
       "customMessagePlaceholder": "No oblidis fer servir els teus atacs!",
@@ -1809,7 +1809,7 @@
       "placeholder": "Selecciona un clan"
     },
     "tabs": {
-      "clan": "El clan",
+      "clan": "Clan",
       "war": "Guerra",
       "capital": "Capital del clan",
       "player": "Jugador",
@@ -2793,8 +2793,8 @@
       "start": "Comença",
       "end": "Acaba",
       "winnersHeader": "Guanyadors",
-      "winners": "{count} winner{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "winners": "{count, plural, one {# guanyador} other {# guanyadors}}",
+      "boosters": "{count, plural, one {# multiplicador} other {# multiplicadors}}",
       "noChannel": "Sense canal",
       "noChannelHelp": "No hi ha cap canal assignat. Edita el sorteig per corregir-ho.",
       "endsAt": "Acaba a les",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Sense programar",
       "schedule": "Programació",
       "endMessage": "Missatge per als guanyadors",
-      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
+      "endSummary": "{winners, plural, one {Aquí s’anunciarà # guanyador.} other {Aquí s’anunciaran # guanyadors.}}",
       "totalParticipants": "Total de participants: {count}",
       "participate": "Participa",
       "buttonHint": "Botó d’acció principal sota la publicació de Discord."

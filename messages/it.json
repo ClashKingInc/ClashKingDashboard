@@ -41,7 +41,7 @@
     "description": "Descrizione",
     "createdAt": "Creato il",
     "updatedAt": "Aggiornato il",
-    "dashboard": "Cruscotto",
+    "dashboard": "Dashboard",
     "loadError": "Impossibile caricare i dati.",
     "tryAgain": "Riprova",
     "create": "Crea",
@@ -49,7 +49,7 @@
     "openInGame": "Apri nel gioco",
     "openChannelInDiscord": "Apri questo canale in Discord",
     "playerProfile": {
-      "clan": "Il clan",
+      "clan": "Clan",
       "townHallLevel": "Livello municipio",
       "trophies": "Trofei",
       "warPreference": "Preferenza di guerra",
@@ -154,7 +154,7 @@
       },
       "bot": {
         "title": "Bot",
-        "dashboard": "Cruscotto",
+        "dashboard": "Dashboard",
         "inviteBot": "Invita il bot"
       },
       "resources": {
@@ -559,7 +559,7 @@
       "avgTh": "TH medio",
       "avgHitrate": "Percentuale di successo media",
       "distribution": "Distribuzione",
-      "clan": "Il clan",
+      "clan": "Clan",
       "family": "Famiglia",
       "external": "Esterni",
       "thDistribution": "Distribuzione TH",
@@ -569,7 +569,7 @@
       "search": "Cerca roster...",
       "type": "Tipo",
       "all": "Tutti",
-      "clan": "Il clan",
+      "clan": "Clan",
       "family": "Famiglia",
       "clear": "Reimposta"
     },
@@ -588,12 +588,12 @@
       "aliasLabel": "Nome roster",
       "aliasPlaceholder": "es. Roster CWL",
       "typeLabel": "Tipo di roster",
-      "typeClan": "Il clan",
+      "typeClan": "Clan",
       "typeFamily": "Famiglia",
       "signupScopeLabel": "Ambito delle iscrizioni",
       "scopeClanOnly": "Solo clan",
       "scopeFamilyWide": "Intera famiglia",
-      "clanLabel": "Il clan",
+      "clanLabel": "Clan",
       "clanPlaceholder": "Seleziona un clan",
       "descriptionLabel": "Descrizione (facoltativa)",
       "descriptionPlaceholder": "Descrizione del roster...",
@@ -652,7 +652,7 @@
       "thRestriction": "Livello TH",
       "avgTh": "TH medio",
       "avgHitrate": "Percentuale di successo media",
-      "clan": "Il clan",
+      "clan": "Clan",
       "family": "Famiglia",
       "external": "Esterno",
       "substitute": "RIS",
@@ -663,7 +663,7 @@
       "thLevel": "Livello TH",
       "avgTh": "TH medio",
       "avgHitrate": "Percentuale di successo media",
-      "clan": "Il clan",
+      "clan": "Clan",
       "family": "Famiglia",
       "external": "Esterno",
       "noRestriction": "Nessuna restrizione",
@@ -1025,12 +1025,12 @@
       "restrictions": "Restrizioni e limiti",
       "name": "Nome roster",
       "rosterType": "Tipo di roster",
-      "typeClan": "Il clan",
+      "typeClan": "Clan",
       "typeFamily": "Famiglia",
       "signupScope": "Ambito delle iscrizioni",
       "scopeClanOnly": "Solo clan",
       "scopeFamilyWide": "Intera famiglia",
-      "clan": "Il clan",
+      "clan": "Clan",
       "selectClan": "Seleziona un clan",
       "description": "Descrizione",
       "descriptionPlaceholder": "Inserisci una descrizione del roster...",
@@ -1193,7 +1193,7 @@
     "filters": {
       "title": "Filtri",
       "description": "Filtra le statistiche di guerra secondo vari criteri",
-      "clan": "Il clan",
+      "clan": "Clan",
       "allClans": "Tutti i clan",
       "townHall": "Municipio",
       "townHallShort": "TH",
@@ -1275,7 +1275,7 @@
       "title": "Statistiche delle guerre tra clan",
       "description": "Statistiche dettagliate per ogni clan",
       "headers": {
-        "clan": "Il clan",
+        "clan": "Clan",
         "status": "Stato",
         "wars": "Guerre",
         "record": "V/S/P",
@@ -1743,7 +1743,7 @@
       "forumPost": "Post del forum",
       "forumPostPlaceholder": "Seleziona un post del forum",
       "forumPostRequired": "Per i canali forum è richiesto un post del forum.",
-      "clan": "Il clan",
+      "clan": "Clan",
       "clanPlaceholder": "Seleziona clan",
       "customMessage": "Messaggio personalizzato",
       "customMessagePlaceholder": "Non dimenticare di usare i tuoi attacchi!",
@@ -1809,7 +1809,7 @@
       "placeholder": "Seleziona un clan"
     },
     "tabs": {
-      "clan": "Il clan",
+      "clan": "Clan",
       "war": "Guerra",
       "capital": "Capitale",
       "player": "Giocatore",
@@ -3001,7 +3001,7 @@
       "homeLabel": "Home di ClashKing",
       "mobileApp": "App mobile",
       "discordBot": "Bot Discord",
-      "dashboard": "Cruscotto"
+      "dashboard": "Dashboard"
     },
     "language": {
       "label": "Lingua"
@@ -3084,7 +3084,7 @@
       }
     },
     "dashboard": {
-      "title": "Cruscotto",
+      "title": "Dashboard",
       "intro": "Gestisci roster, promemoria e impostazioni del server da un unico posto.",
       "imageLabel": "Capanna del costruttore che rappresenta gli strumenti di gestione del clan",
       "imageAlt": "Capanna del costruttore livello 8",

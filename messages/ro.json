@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Jucători interziși",
-        "count": "{count} player{count, plural, one {} other {s}} banned",
+        "count": "{count, plural, one {# jucător interzis} other {# jucători interziși}}",
         "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
         "noBansFound": "Nu au fost găsite interdicții",
         "noBans": "Niciun jucător interzis",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Avertismentele jucătorilor",
-        "count": "{count} strike{count, plural, one {} other {s}} issued",
+        "count": "{count, plural, one {# avertisment emis} other {# avertismente emise}}",
         "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
         "noStrikesFound": "Nu au fost găsite avertismente",
         "noStrikes": "Niciun avertisment emis",
@@ -2793,8 +2793,8 @@
       "start": "Începe",
       "end": "Se termină",
       "winnersHeader": "Câștigători",
-      "winners": "{count} winner{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "winners": "{count, plural, one {# câștigător} other {# câștigători}}",
+      "boosters": "{count, plural, one {# multiplicator} other {# multiplicatori}}",
       "noChannel": "Fără canal",
       "noChannelHelp": "Nu este atribuit niciun canal. Editează concursul pentru a corecta situația.",
       "endsAt": "Se termină la",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Neprogramat",
       "schedule": "Programare",
       "endMessage": "Mesaj pentru câștigători",
-      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
+      "endSummary": "{winners, plural, one {Aici va fi anunțat # câștigător.} other {Aici vor fi anunțați # câștigători.}}",
       "totalParticipants": "Total de participanți: {count}",
       "participate": "Participă",
       "buttonHint": "Butonul principal de acțiune de sub postarea Discord."

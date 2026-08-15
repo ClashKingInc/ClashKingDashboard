@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Zabranjeni igrači",
-        "count": "{count} player{count, plural, one {} other {s}} banned",
+        "count": "{count, plural, one {# igrač je zabranjen} few {# igrača su zabranjena} other {# igrača je zabranjeno}}",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noBansFound": "Zabrane nisu pronađene",
         "noBans": "Nema zabranjenih igrača",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Opomene igrača",
-        "count": "{count} strike{count, plural, one {} other {s}} issued",
+        "count": "{count, plural, one {Izdana je # opomena} few {Izdane su # opomene} other {Izdano je # opomena}}",
         "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
         "noStrikesFound": "Opomene nisu pronađene",
         "noStrikes": "Nema izdatih opomena",
@@ -1199,7 +1199,7 @@
       "townHallShort": "TH",
       "allTownHalls": "Svi nivoi TH-a",
       "townHallLevel": "TH {level}",
-      "period": "Период",
+      "period": "Period",
       "last7Days": "Poslednjih 7 dana",
       "last30Days": "Poslednjih 30 dana",
       "last90Days": "Poslednjih 90 dana",
@@ -1237,7 +1237,7 @@
       "warTypeDistribution": {
         "title": "Raspodela vrsta ratova",
         "description": "Raspodela prema vrsti rata",
-        "cwl": "ЦВЛ",
+        "cwl": "CWL",
         "random": "Nasumični",
         "friendly": "Prijateljski"
       },
@@ -1286,7 +1286,7 @@
       },
       "status": {
         "inWar": "U ratu",
-        "cwl": "ЦВЛ",
+        "cwl": "CWL",
         "peace": "Mir"
       },
       "noData": "Nema dostupne statistike klanova. Primenite filtere ili sačekajte da se podaci učitaju."
@@ -1752,7 +1752,7 @@
       "warTypes": "Vrste ratova",
       "random": "Nasumični",
       "friendly": "Prijateljski",
-      "cwl": "ЦВЛ",
+      "cwl": "CWL",
       "pointThreshold": "Prag poena",
       "pointThresholdPlaceholder": "4000",
       "pointThresholdHelp": "Pomenuće osobe koje imaju manje od {threshold} poena.",
@@ -2793,8 +2793,8 @@
       "start": "Počinje",
       "end": "Završava se",
       "winnersHeader": "Dobitnici",
-      "winners": "{count} winner{count, plural, one {} other {s}}",
-      "boosters": "{count} booster{count, plural, one {} other {s}}",
+      "winners": "{count, plural, one {# dobitnik} few {# dobitnika} other {# dobitnika}}",
+      "boosters": "{count, plural, one {# pojačivač} few {# pojačivača} other {# pojačivača}}",
       "noChannel": "Bez kanala",
       "noChannelHelp": "Kanal nije dodeljen. Izmenite nagradnu igru da biste to ispravili.",
       "endsAt": "Završava se",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Nije zakazano",
       "schedule": "Raspored",
       "endMessage": "Poruka dobitnicima",
-      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
+      "endSummary": "{winners, plural, one {Ovde će biti objavljen # dobitnik.} few {Ovde će biti objavljena # dobitnika.} other {Ovde će biti objavljeno # dobitnika.}}",
       "totalParticipants": "Ukupno učesnika: {count}",
       "participate": "Učestvuj",
       "buttonHint": "Glavno dugme radnje prikazano ispod Discord objave."
