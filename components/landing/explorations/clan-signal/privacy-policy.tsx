@@ -1,12 +1,12 @@
 import { ClanSignalLegalShell } from "@/components/landing/explorations/clan-signal/legal-shell";
-import type { SupportedLocale } from "@/lib/locale-preference";
+import type { PublicLocale } from "@/lib/locale-preference";
 
 export function PrivacyPolicy({
   locale,
   title,
   eyebrow,
 }: {
-  readonly locale: SupportedLocale;
+  readonly locale: PublicLocale;
   readonly title: string;
   readonly eyebrow: string;
 }) {
