@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ClanSignalWordmark } from "./brand";
 import { ClanSignalFooter } from "./footer";
 import { LandingLanguageSwitcher } from "./language-switcher";
-import { publicPath, type SupportedLocale } from "@/lib/locale-preference";
+import { publicPath, type PublicLocale } from "@/lib/locale-preference";
 import "../../../../app/explorations/clan-signal.css";
 
 
@@ -15,7 +15,7 @@ export async function ClanSignalLegalShell({
 }: Readonly<{
   title: string;
   eyebrow: string;
-  locale?: SupportedLocale;
+  locale?: PublicLocale;
   children: React.ReactNode;
 }>) {
   const t = await getTranslations({ locale, namespace: "ClanSignal" });
@@ -53,7 +53,7 @@ export async function ClanSignalLegalShell({
       </section>
 
       <article className="cs-legal-document">{children}</article>
-      <ClanSignalFooter locale={locale} />
+      <ClanSignalFooter />
     </main>
   );
 }
