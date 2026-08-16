@@ -78,11 +78,7 @@ import {
   getSortLabel,
   getSortInternal,
   ROSTER_COLUMNS,
-  buildOffsetSeconds,
-  parseOffsetSeconds,
-  formatOffsetSeconds,
 } from "../_lib";
-import type { OffsetUnit } from "../_lib";
 import type { EditRosterFormData, RosterAutomation, AutomationActionType, RosterGroup } from "../_lib/types";
 import { fetchRosters } from "../_lib/api";
 
@@ -189,13 +185,11 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     group_id: "",
   });
 
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string; _offsetVal?: string; _offsetUnit?: 'minutes' | 'hours' | 'days' }>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string }>({
     action_type: "roster_ping",
-    offset_seconds: -86400,
+    scheduled_at: new Date(Date.now() + 86400000).toISOString(),
     active: true,
     target_type: 'roster',
-    _offsetVal: '1',
-    _offsetUnit: 'days',
   });
 
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
@@ -409,7 +403,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
         roster_id: newAutomation.target_type === 'roster' ? rosterId : undefined,
         group_id: newAutomation.target_type === 'group' ? newAutomation.target_group_id : undefined,
         action_type: newAutomation.action_type as AutomationActionType,
-        offset_seconds: newAutomation.offset_seconds ?? -86400,
+        scheduled_at: newAutomation.scheduled_at ?? new Date(Date.now() + 86400000).toISOString(),
         discord_channel_id: newAutomation.discord_channel_id,
         options: newAutomation.options,
         active: true,
@@ -418,11 +412,9 @@ export default function RosterDetailPage() { // NOSONAR — React page component
       setCreateAutomationDialogOpen(false);
       setNewAutomation({
         action_type: "roster_ping",
-        offset_seconds: -86400,
+        scheduled_at: new Date(Date.now() + 86400000).toISOString(),
         active: true,
         target_type: 'roster',
-        _offsetVal: '1',
-        _offsetUnit: 'days',
       });
     } catch (err) {
       toast({
@@ -469,7 +461,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     try {
       await updateAutomation(editingAutomation.automation_id, {
         action_type: editingAutomation.action_type,
-        offset_seconds: editingAutomation.offset_seconds,
+        scheduled_at: editingAutomation.scheduled_at,
         discord_channel_id: editingAutomation.discord_channel_id,
         options: editingAutomation.options,
         active: editingAutomation.active,
@@ -888,9 +880,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                               </Badge>
                             )
                           ) : (() => {
-            const currentTrigger = roster?.event_start_time == null
-              ? null
-              : roster.event_start_time + automation.offset_seconds;
+			const currentTrigger = Math.floor(new Date(automation.scheduled_at).getTime() / 1000);
                             const isCurrentMissed = currentTrigger != null && (automation.last_missed_at ?? 0) >= currentTrigger;
                             const isCurrentTriggered = currentTrigger != null && (automation.last_triggered_at ?? 0) >= currentTrigger;
                             if (isCurrentMissed) return (
@@ -934,14 +924,8 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                       <div className="space-y-1.5 mb-4">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="w-4 h-4 flex-shrink-0" />
-                          <span className="truncate">{formatOffsetSeconds(automation.offset_seconds, t)}</span>
+                          <span className="truncate">{formatTimestamp(Math.floor(new Date(automation.scheduled_at).getTime() / 1000))}</span>
                         </div>
-                        {roster?.event_start_time && (
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
-                            <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span className="truncate">{formatTimestamp(roster.event_start_time + automation.offset_seconds)}</span>
-                          </div>
-                        )}
                         {automation.discord_channel_id && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Hash className="w-4 h-4 flex-shrink-0" />
@@ -1405,49 +1389,14 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               )}
             </div>
             <div className="space-y-2">
-              <Label>{t("automations.offsetFromEvent")}</Label>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{t("automations.offsetBefore")}</span>
-                <Input
-                  type="number"
-                  min={1}
-                  value={newAutomation._offsetVal ?? '1'}
-                  onChange={(e) => {
-                    const val = Number.parseInt(e.target.value) || 1;
-                    const unit = (newAutomation._offsetUnit ?? 'days') as OffsetUnit;
-                    setNewAutomation({ ...newAutomation, _offsetVal: e.target.value, offset_seconds: buildOffsetSeconds('before', val, unit) });
-                  }}
-                  className="bg-background w-20"
-                />
-                <Select
-                  value={newAutomation._offsetUnit ?? 'days'}
-                  onValueChange={(v) => {
-                    const unit = v as OffsetUnit;
-                    const val = Number.parseInt(newAutomation._offsetVal ?? '1') || 1;
-                    setNewAutomation({ ...newAutomation, _offsetUnit: unit, offset_seconds: buildOffsetSeconds('before', val, unit) });
-                  }}
-                >
-                  <SelectTrigger className="bg-background w-28">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
-                    <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
-                    <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {roster?.event_start_time ? (
-                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
-                  {t("automations.offsetPreview", { date: formatTimestamp(roster.event_start_time + (newAutomation.offset_seconds ?? -86400)) })}
-                </p>
-              ) : (
-                <p className="text-xs text-amber-500 flex items-center gap-1">
-                  <Info className="w-3 h-3" />
-                  {t("automations.offsetNoEventDate")}
-                </p>
-              )}
+			  <Label>{t("automations.scheduledAt")}</Label>
+			  <Input
+				type="datetime-local"
+				value={newAutomation.scheduled_at ? unixToDatetimeLocal(Math.floor(new Date(newAutomation.scheduled_at).getTime() / 1000)) : ""}
+				onChange={(e) => setNewAutomation({ ...newAutomation, scheduled_at: new Date(datetimeLocalToUnix(e.target.value) * 1000).toISOString() })}
+				className="bg-muted/55 border-0 shadow-sm shadow-black/5"
+			  />
+			  <p className="text-xs text-muted-foreground">{t("automations.scheduledAtHint")}</p>
             </div>
             {newAutomation.action_type === "roster_ping" && (
               <div className="space-y-2">
@@ -1587,54 +1536,16 @@ export default function RosterDetailPage() { // NOSONAR — React page component
               )}
             </div>
             <div className="space-y-2">
-              <Label>{t("automations.offsetFromEvent")}</Label>
-              {editingAutomation && (() => {
-                const parsed = parseOffsetSeconds(editingAutomation.offset_seconds ?? 0);
-                return (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">{t("automations.offsetBefore")}</span>
-                      <Input
-                        type="number"
-                        min={1}
-                        value={parsed.val}
-                        onChange={(e) => {
-                          const val = Number.parseInt(e.target.value) || 1;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', val, parsed.unit) } : null);
-                        }}
-                        className="bg-background w-20"
-                      />
-                      <Select
-                        value={parsed.unit}
-                        onValueChange={(v) => {
-                          const unit = v as OffsetUnit;
-                          setEditingAutomation(prev => prev ? { ...prev, offset_seconds: buildOffsetSeconds('before', parsed.val, unit) } : null);
-                        }}
-                      >
-                        <SelectTrigger className="bg-background w-28">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="minutes">{t("automations.offsetUnit_minutes")}</SelectItem>
-                          <SelectItem value="hours">{t("automations.offsetUnit_hours")}</SelectItem>
-                          <SelectItem value="days">{t("automations.offsetUnit_days")}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    {roster?.event_start_time ? (
-                      <p className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {t("automations.offsetPreview", { date: formatTimestamp(roster.event_start_time + editingAutomation.offset_seconds) })}
-                      </p>
-                    ) : (
-                      <p className="text-xs text-amber-500 flex items-center gap-1">
-                        <Info className="w-3 h-3" />
-                        {t("automations.offsetNoEventDate")}
-                      </p>
-                    )}
-                  </>
-                );
-              })()}
+			  <Label>{t("automations.scheduledAt")}</Label>
+			  {editingAutomation && (
+				<Input
+				  type="datetime-local"
+				  value={unixToDatetimeLocal(Math.floor(new Date(editingAutomation.scheduled_at).getTime() / 1000))}
+				  onChange={(e) => setEditingAutomation(prev => prev ? { ...prev, scheduled_at: new Date(datetimeLocalToUnix(e.target.value) * 1000).toISOString() } : null)}
+				  className="bg-muted/55 border-0 shadow-sm shadow-black/5"
+				/>
+			  )}
+			  <p className="text-xs text-muted-foreground">{t("automations.scheduledAtHint")}</p>
             </div>
             {editingAutomation?.action_type === "roster_ping" && (
               <div className="space-y-2">
@@ -1750,7 +1661,7 @@ export default function RosterDetailPage() { // NOSONAR — React page component
                     </div>
                     <div>
                       <p className="font-medium text-sm">{getAutomationLabel(automation.action_type)}</p>
-                      <p className="text-xs text-muted-foreground">{formatOffsetSeconds(automation.offset_seconds, t)}</p>
+					  <p className="text-xs text-muted-foreground">{formatTimestamp(Math.floor(new Date(automation.scheduled_at).getTime() / 1000))}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

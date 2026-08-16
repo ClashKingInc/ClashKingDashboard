@@ -136,8 +136,8 @@ type PlayerChatContext = {
 };
 
 function rosterAssistantUrl(): string {
-  const configured = process.env.NEXT_PUBLIC_ASSISTANT_URL?.trim();
-  if (configured) return configured;
+  const configured = process.env.NEXT_PUBLIC_CLASHKING_AI_ORIGIN?.trim().replace(/\/$/, "");
+  if (configured) return `${configured}/chat`;
   const apiBaseUrl = getDefaultBaseUrl();
   if (apiBaseUrl.includes("localhost") || apiBaseUrl.includes("127.0.0.1")) {
     return "http://localhost:8788/chat";

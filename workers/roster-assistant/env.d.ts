@@ -7,9 +7,9 @@ interface ExecutionContext {
   waitUntil(promise: Promise<unknown>): void;
 }
 
-interface RosterAssistantEnv {
-  LOADER: WorkerLoader;
+interface RosterAssistantRuntimeEnv {
+  LOADER: RosterAssistantBindings["LOADER"];
+  CLASHKING_API_ORIGIN: string;
   OPENAI_API_KEY: string;
-  CLASHKING_API_URL: string;
-  AI_USAGE_SECRET?: string;
+  AI_USAGE_SECRET: string;
 }

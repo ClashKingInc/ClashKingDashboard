@@ -1063,6 +1063,8 @@
       "editTitle": "Automatisering Bewerken",
       "createDesc": "Plan een automatische actie",
       "actionType": "Actietype",
+      "scheduledAt": "Gepland tijdstip",
+      "scheduledAtHint": "Deze automatisering wordt op deze exacte datum en tijd uitgevoerd.",
       "offsetFromEvent": "Timing relatief aan evenement",
       "offsetBefore": "Voor het evenement",
       "offsetAfter": "Na het evenement",

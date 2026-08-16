@@ -12,25 +12,23 @@ The graphics editor has no AI assistant endpoint.
 ## Release order
 
 1. **Create and migrate the target Timescale database.** Apply the authoritative DevKit Goose baseline from `database/timescale`. A fresh database applies `001_initial_stats.sql` and `002_initial_settings.sql` and ends at Goose version 2. Run the DevKit data importers required for the cutover before sending production traffic to the new API.
-2. **Deploy the Go API against the migrated database.** Point its `TIMESCALE_*` values at the target database, publish it on `v2-api.clashk.ing`, and confirm its health and authentication endpoints before deploying clients.
+2. **Deploy the Go API against the migrated database.** Map its canonical `TIMESCALE_*`, `VALKEY_*`, origin, and trust values from the Coolify server environment, publish it on `v2-api.clashk.ing`, and confirm its health and authentication endpoints before deploying clients.
 3. **Deploy the admin panel.** It uses the same Timescale database. The seeded `subscription_support` flag appears under **Dashboard & billing** and starts disabled.
-4. **Configure and deploy the roster-assistant Worker.** Set both Worker secrets, then deploy `wrangler.assistant.jsonc` to `ai.clashk.ing`.
+4. **Configure and deploy the roster-assistant Worker.** Create both account secrets in Cloudflare Secrets Store, bind them through the generated Wrangler configuration, then deploy to `ai.clashk.ing`.
 5. **Deploy the dashboard Worker.** `npm run deploy:dashboard` builds with the production API and assistant origins before deploying `wrangler.deploy.jsonc` to the marketing and dashboard domains. `npm run deploy` performs steps 4 and 5 together after the API is ready.
 
 ## API environment
 
-Use `clashking-api/example.env` as the key inventory. The production-specific values are:
+Use `clashking-api/example.env` and the DevKit production-environment contract as the key inventory. URLs are derived from canonical origins:
 
 ```dotenv
-WEB_ALLOWED_ORIGINS=https://clashk.ing,https://dash.clashk.ing
-DISCORD_REDIRECT_URI=https://dash.clashk.ing/auth/callback
+CLASHKING_LANDING_ORIGIN=https://clashk.ing
+CLASHKING_DASHBOARD_ORIGIN=https://dash.clashk.ing
+CLASHKING_PROXY_INTERNAL_ORIGIN=http://clashking-proxy:8011
 AI_USAGE_SECRET=<same strong secret used by the roster-assistant Worker>
-STRIPE_CHECKOUT_SUCCESS_URL=https://dash.clashk.ing/dashboard/settings?checkout=success
-STRIPE_CHECKOUT_CANCEL_URL=https://dash.clashk.ing/dashboard/settings?checkout=cancelled
-STRIPE_PORTAL_RETURN_URL=https://dash.clashk.ing/dashboard/settings
 ```
 
-`AI_USAGE_SECRET` is required outside local mode. Keep it out of Wrangler variables and source control. Stripe checkout remains unavailable while `subscription_support` is disabled, even if Stripe keys are present and someone calls the API endpoint directly. Existing subscribers can still open the Stripe portal.
+`AI_USAGE_SECRET` is required outside local mode. Keep it out of Wrangler variables and source control. Stripe checkout remains unavailable while `subscription_support` is disabled, even when the three `STRIPE_*` values are configured.
 
 Add `https://dash.clashk.ing/auth/callback` to the Discord application’s allowed OAuth redirect URIs. When Stripe checkout is eventually enabled, configure its webhook destination as `https://v2-api.clashk.ing/v2/billing/stripe/webhook` and use that endpoint’s signing secret as `STRIPE_WEBHOOK_SECRET`.
 
@@ -41,17 +39,19 @@ When subscriptions are ready, update `subscription_support` in the admin panel: 
 The dashboard has no runtime secrets; its public API, assistant, and Discord client values are pinned by `build:production`. The roster assistant has one non-secret variable in `wrangler.assistant.jsonc`:
 
 ```text
-CLASHKING_API_URL=https://v2-api.clashk.ing
+CLASHKING_API_ORIGIN=https://v2-api.clashk.ing
 ```
 
-Set the assistant secrets in Cloudflare before its first production deploy:
+Create the account-level secrets, then expose the non-secret store ID to the deployment job:
 
 ```bash
-npx wrangler secret put OPENAI_API_KEY --config wrangler.assistant.jsonc
-npx wrangler secret put AI_USAGE_SECRET --config wrangler.assistant.jsonc
+npx wrangler secrets-store store list
+npx wrangler secrets-store secret create <STORE_ID> --name OPENAI_API_KEY --scopes workers --remote
+npx wrangler secrets-store secret create <STORE_ID> --name AI_USAGE_SECRET --scopes workers --remote
+CLOUDFLARE_SECRETS_STORE_ID=<STORE_ID> npm run deploy:assistant
 ```
 
-The second value must exactly match the API environment. The checked-in `.dev.vars` is local-only and does not configure production.
+The `AI_USAGE_SECRET` value must exactly match the API environment. The preparation script replaces only the public store ID in a gitignored generated config; secret values never enter source files.
 
 Run these checks before release:
 
@@ -61,7 +61,8 @@ npm run lint
 npm test
 npm run build:production
 npx wrangler deploy --dry-run --config wrangler.deploy.jsonc
-npx wrangler deploy --dry-run --config wrangler.assistant.jsonc
+CLOUDFLARE_SECRETS_STORE_ID=<STORE_ID> npm run assistant:config
+npx wrangler deploy --dry-run --config .wrangler/wrangler.assistant.generated.jsonc
 ```
 
 Wrangler needs an authenticated Cloudflare session or `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the deployment environment. Do not use temporary preview-account deployment for production.

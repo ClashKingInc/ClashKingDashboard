@@ -974,6 +974,8 @@
       "editTitle": "Modifier l'Automatisation",
       "createDesc": "Planifier une action automatique",
       "actionType": "Type d'Action",
+      "scheduledAt": "Heure planifiée",
+      "scheduledAtHint": "Cette automatisation s'exécute à cette date et heure précises.",
       "offsetFromEvent": "Timing relatif à l'événement",
       "offsetBefore": "Avant l'événement",
       "offsetAfter": "Après l'événement",
