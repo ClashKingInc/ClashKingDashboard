@@ -20,7 +20,19 @@
   "worker_loaders": [
     { "binding": "LOADER" }
   ],
+  "secrets_store_secrets": [
+    {
+      "binding": "OPENAI_API_KEY_SECRET",
+      "store_id": "__CLOUDFLARE_SECRETS_STORE_ID__",
+      "secret_name": "OPENAI_API_KEY"
+    },
+    {
+      "binding": "AI_USAGE_SECRET_SECRET",
+      "store_id": "__CLOUDFLARE_SECRETS_STORE_ID__",
+      "secret_name": "AI_USAGE_SECRET"
+    }
+  ],
   "vars": {
-    "CLASHKING_API_URL": "https://v2-api.clashk.ing"
+    "CLASHKING_API_ORIGIN": "https://v2-api.clashk.ing"
   }
 }

@@ -14,8 +14,6 @@ interface AIUsageSettlementOptions {
   retryDelayMs?: number;
 }
 
-const LOCAL_METERING_SECRET = "clashking-local-ai-metering";
-
 export function normalizeAIUsage(usage: LanguageModelUsage): NormalizedAIUsage {
   return {
     inputTokens: usage.inputTokens ?? 0,
@@ -42,9 +40,8 @@ export function sumAIUsage(usages: readonly NormalizedAIUsage[]): NormalizedAIUs
   });
 }
 
-export function aiUsageSettlementHeaders(env: RosterAssistantEnv): Record<string, string> {
-  const localAPI = /^https?:\/\/(?:127\.0\.0\.1|localhost)(?::\d+)?(?:\/|$)/i.test(env.CLASHKING_API_URL);
-  const secret = env.AI_USAGE_SECRET?.trim() || (localAPI ? LOCAL_METERING_SECRET : "");
+export function aiUsageSettlementHeaders(env: RosterAssistantRuntimeEnv): Record<string, string> {
+  const secret = env.AI_USAGE_SECRET.trim();
   if (!secret) throw new Error("AI usage settlement is not configured");
   return {
     "content-type": "application/json",
@@ -57,7 +54,7 @@ function wait(delayMs: number): Promise<void> {
 }
 
 export async function settleAIUsage(
-  env: RosterAssistantEnv,
+  env: RosterAssistantRuntimeEnv,
   endpoint: string,
   payload: unknown,
   options: AIUsageSettlementOptions = {},
@@ -65,7 +62,7 @@ export async function settleAIUsage(
   const fetcher = options.fetcher ?? fetch;
   const attempts = Math.max(1, options.attempts ?? 3);
   const retryDelayMs = Math.max(0, options.retryDelayMs ?? 250);
-  const url = `${env.CLASHKING_API_URL.replace(/\/$/, "")}${endpoint}`;
+  const url = `${env.CLASHKING_API_ORIGIN.replace(/\/$/, "")}${endpoint}`;
   let lastError: Error | undefined;
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {

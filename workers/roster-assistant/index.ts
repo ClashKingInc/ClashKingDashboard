@@ -114,8 +114,8 @@ async function sourceWorkerId(sourceCode: string, sourceVersion: number): Promis
   return `roster-view-v${sourceVersion}-${hash}`;
 }
 
-async function apiRequest(env: RosterAssistantEnv, body: AssistantRequest, path: string, input: unknown, signal: AbortSignal): Promise<any> {
-  const response = await fetch(`${env.CLASHKING_API_URL.replace(/\/$/, "")}${path}`, {
+async function apiRequest(env: RosterAssistantRuntimeEnv, body: AssistantRequest, path: string, input: unknown, signal: AbortSignal): Promise<any> {
+  const response = await fetch(`${env.CLASHKING_API_ORIGIN.replace(/\/$/, "")}${path}`, {
     method: "POST",
     headers: {
       "authorization": `Bearer ${body.userToken}`,
@@ -135,7 +135,7 @@ async function apiRequest(env: RosterAssistantEnv, body: AssistantRequest, path:
   return payload;
 }
 
-async function prepareRequest(env: RosterAssistantEnv, request: AssistantBrowserRequest, userToken: string, signal: AbortSignal): Promise<AssistantRequest> {
+async function prepareRequest(env: RosterAssistantRuntimeEnv, request: AssistantBrowserRequest, userToken: string, signal: AbortSignal): Promise<AssistantRequest> {
   // Only user-authored text crosses the browser trust boundary. The same
   // transcript is authorized by the API and then forwarded to the model.
   const messages = buildTrustedUserTranscript(request.messages);
@@ -143,7 +143,7 @@ async function prepareRequest(env: RosterAssistantEnv, request: AssistantBrowser
     ...request,
     messages,
   };
-  const response = await fetch(`${env.CLASHKING_API_URL.replace(/\/$/, "")}/v2/roster/ai/context`, {
+  const response = await fetch(`${env.CLASHKING_API_ORIGIN.replace(/\/$/, "")}/v2/roster/ai/context`, {
     method: "POST",
     headers: {
       "authorization": `Bearer ${userToken}`,
@@ -275,7 +275,7 @@ function markLatestUserCacheBreakpoint(messages: ModelMessage[]): ModelMessage[]
 }
 
 const rosterAssistantWorker = {
-  async fetch(request: Request, env: RosterAssistantEnv, ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, bindings: RosterAssistantBindings, ctx: ExecutionContext): Promise<Response> {
     const pathname = new URL(request.url).pathname;
     if (request.method === "OPTIONS" && pathname === "/chat") {
       const headers = corsHeaders(request);
@@ -292,7 +292,23 @@ const rosterAssistantWorker = {
     if (!browserRequest?.serverId || !Array.isArray(browserRequest.rosterIds) || !Array.isArray(browserRequest.messages) || browserRequest.rosterIds.length < 1 || browserRequest.rosterIds.length > MAX_ROSTERS) {
       return json(request, { error: `rosterIds must contain 1 to ${MAX_ROSTERS} rosters` }, 400);
     }
-    if (!env.OPENAI_API_KEY && browserRequest.mode !== "replay") return json(request, { error: "OpenAI is not configured" }, 503);
+    let env: RosterAssistantRuntimeEnv;
+    try {
+      const [openAIAPIKey, aiUsageSecret] = await Promise.all([
+        bindings.OPENAI_API_KEY_SECRET.get(),
+        bindings.AI_USAGE_SECRET_SECRET.get(),
+      ]);
+      if (!openAIAPIKey.trim() || !aiUsageSecret.trim()) throw new Error("required secret is empty");
+      env = {
+        LOADER: bindings.LOADER,
+        CLASHKING_API_ORIGIN: bindings.CLASHKING_API_ORIGIN,
+        OPENAI_API_KEY: openAIAPIKey,
+        AI_USAGE_SECRET: aiUsageSecret,
+      };
+    } catch (error) {
+      console.error(JSON.stringify({ event: "roster_secrets_unavailable", error: error instanceof Error ? error.message : String(error) }));
+      return json(request, { error: "Roster assistant secrets are unavailable" }, 503);
+    }
     let body: AssistantRequest;
     try {
       body = await prepareRequest(env, browserRequest, token, request.signal);

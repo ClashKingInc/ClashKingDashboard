@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vinext dev --hostname 127.0.0.1 --port 3002",
     "build": "npm run validate:messages && vinext build && node scripts/postprocess-static-html.mjs && npm run check:bundles",
-    "build:production": "NEXT_PUBLIC_API_URL=https://v2-api.clashk.ing NEXT_PUBLIC_ASSISTANT_URL=https://ai.clashk.ing/chat NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227 npm run build",
+    "build:production": "NEXT_PUBLIC_CLASHKING_API_ORIGIN=https://v2-api.clashk.ing NEXT_PUBLIC_CLASHKING_AI_ORIGIN=https://ai.clashk.ing NEXT_PUBLIC_DISCORD_CLIENT_ID=824653933347209227 npm run build",
     "start": "vinext start --port 3002",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit && tsc --noEmit -p workers/dashboard-edge/tsconfig.json",
@@ -21,11 +21,12 @@
     "test:coverage": "NODE_OPTIONS=--no-experimental-webstorage vitest run --coverage",
     "preview": "wrangler dev",
     "worker:types": "wrangler types --config wrangler.deploy.jsonc",
-    "assistant:dev": "wrangler dev --config wrangler.assistant.jsonc --port 8788",
-    "assistant:types": "wrangler types workers/roster-assistant/bindings.d.ts --config wrangler.assistant.jsonc --env-interface RosterAssistantBindings --include-runtime false",
+    "assistant:config": "node scripts/prepare-assistant-wrangler-config.mjs",
+    "assistant:dev": "npm run assistant:config && wrangler dev --config .wrangler/wrangler.assistant.generated.jsonc --port 8788",
+    "assistant:types": "npm run assistant:config && wrangler types workers/roster-assistant/bindings.d.ts --config .wrangler/wrangler.assistant.generated.jsonc --env-interface RosterAssistantBindings --include-runtime false",
     "assistant:check": "tsc --noEmit -p workers/roster-assistant/tsconfig.json",
     "deploy:dashboard": "npm run build:production && wrangler deploy --config wrangler.deploy.jsonc",
-    "deploy:assistant": "npm run assistant:check && wrangler deploy --config wrangler.assistant.jsonc",
+    "deploy:assistant": "npm run assistant:check && npm run assistant:config && wrangler deploy --config .wrangler/wrangler.assistant.generated.jsonc",
     "deploy": "npm run deploy:assistant && npm run deploy:dashboard"
   },
   "dependencies": {
