@@ -67,14 +67,14 @@ export interface RosterAutomation {
   roster_id?: string;
   group_id?: string;
   action_type: AutomationActionType;
-  offset_seconds: number;
+  scheduled_at: string;
   discord_channel_id?: string;
   options?: RosterAutomationOptions;
   active: boolean;
   executed: boolean;
   executed_at?: number | null;
   last_triggered_at?: number | null;
-  execution_status?: 'triggered' | 'missed';
+  execution_status?: 'pending' | 'processing' | 'completed' | 'failed' | 'missed';
   last_missed_at?: number | null;
   created_at?: number;
   updated_at?: number;

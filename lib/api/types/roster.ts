@@ -37,10 +37,14 @@ export interface UpdateRosterGroupModel {
 }
 
 export interface CreateRosterAutomationModel {
-  action: string;
+  server_id: string | number;
   roster_id?: string;
   group_id?: string;
-  schedule: any;
+  action_type: string;
+  scheduled_at: string;
+  discord_channel_id?: string;
+  options?: { ping_type?: 'signup_reminder' | 'missing' };
+  active?: boolean;
 }
 
 export interface RosterCloneModel {

@@ -1063,6 +1063,8 @@
       "editTitle": "Edit Automation",
       "createDesc": "Schedule an automated action",
       "actionType": "Action Type",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Timing relative to event",
       "offsetBefore": "Before event",
       "offsetAfter": "After event",
