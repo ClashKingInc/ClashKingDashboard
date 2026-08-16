@@ -6,7 +6,7 @@
     "delete": "Supprimer",
     "edit": "Modifier",
     "search": "Rechercher",
-    "filter": "Filtrer",
+    "filter": "Filtre",
     "add": "Ajouter",
     "remove": "Retirer",
     "refresh": "Actualiser",
@@ -16,16 +16,17 @@
     "back": "Retour",
     "next": "Suivant",
     "previous": "Précédent",
+    "poweredBy": "Propulsé par",
     "noData": "Aucune donnée disponible",
-    "noChannelFound": "Aucun canal trouvé.",
-    "searchChannels": "Rechercher des canaux...",
+    "noChannelFound": "Aucun salon trouvé.",
+    "searchChannels": "Rechercher des salons...",
     "searchClans": "Rechercher des clans...",
     "noClanFound": "Aucun clan trouvé.",
     "searchCategories": "Rechercher des catégories...",
     "noRoleFound": "Aucun rôle trouvé.",
     "searchRoles": "Rechercher des rôles...",
     "addRole": "Ajouter un rôle...",
-    "error": "Une erreur s'est produite",
+    "error": "Une erreur s’est produite",
     "success": "Succès",
     "actions": "Actions",
     "details": "Détails",
@@ -46,163 +47,99 @@
     "create": "Créer",
     "viewClashProfile": "Voir le profil Clash",
     "openInGame": "Ouvrir dans le jeu",
-    "openChannelInDiscord": "Ouvrir ce canal dans Discord",
+    "openChannelInDiscord": "Ouvrir ce salon dans Discord",
     "playerProfile": {
       "clan": "Clan",
-      "townHallLevel": "Niveau d'hotel de ville",
-      "trophies": "Trophees",
-      "warPreference": "Preference de guerre",
+      "townHallLevel": "Niveau d’hôtel de ville",
+      "trophies": "Trophées",
+      "warPreference": "Préférence de guerre",
       "warPreferenceIn": "Inclus",
       "warPreferenceOut": "Exclu",
-      "signupGroup": "Groupe d'inscription",
-      "heroLevels": "Niveaux des heros",
-      "hitrate30d": "Taux de reussite sur 30 jours"
+      "signupGroup": "Groupe d’inscription",
+      "heroLevels": "Niveaux des héros",
+      "hitrate30d": "Taux de réussite sur 30 jours"
     }
   },
   "Navigation": {
     "features": "Fonctionnalités",
     "openSource": "Open Source",
-    "help": "Besoin d'aide ?",
+    "help": "Besoin d’aide ?",
     "support": "Nous soutenir",
     "commands": "Commandes",
     "premium": "Premium",
     "documentation": "Documentation",
     "loginWithDiscord": "Connexion avec Discord",
     "addToDiscord": "Ajouter à Discord",
-    "openDashboard": "Ouvrir le Tableau de Bord",
-    "dashboardSettings": "Paramètres du Tableau de Bord",
+    "openDashboard": "Ouvrir le tableau de bord",
+    "dashboardSettings": "Paramètres du tableau de bord",
     "logout": "Déconnexion",
     "settings": "Paramètres",
     "theme": "Thème",
-    "systemTheme": "Suivre le Système",
-    "lightTheme": "Thème Clair",
-    "darkTheme": "Thème Sombre",
+    "systemTheme": "Suivre le système",
+    "lightTheme": "Thème clair",
+    "darkTheme": "Thème sombre",
     "language": "Langue",
-    "browserLanguage": "Langue du navigateur",
-    "accountSettings": "Paramètres du compte"
-  },
-  "AccountSettings": {
-    "title": "Paramètres du compte",
-    "description": "Gérez votre profil ClashKing, vos préférences, votre utilisation et votre abonnement.",
-    "retry": "Réessayer",
-    "profile": {
-      "title": "Profil",
-      "description": "L’identité associée à votre compte ClashKing.",
-      "discord": "Discord",
-      "account": "ClashKing",
-      "synced": "Votre nom et votre photo de profil sont synchronisés depuis Discord.",
-      "local": "Ce profil est géré par votre compte ClashKing."
-    },
-    "appearance": {
-      "title": "Apparence et langue",
-      "description": "Choisissez l’apparence et la langue du tableau de bord.",
-      "theme": "Thème",
-      "themes": { "system": "Système", "light": "Clair", "dark": "Sombre" },
-      "language": "Langue",
-      "browserLanguage": "Utiliser la langue du navigateur"
-    },
-    "usage": {
-      "title": "Utilisation des assistants IA",
-      "serverDescription": "Utilisation du serveur Discord sélectionné ce mois-ci.",
-      "serverName": "Utilisation de {name} ce mois-ci.",
-      "accountDescription": "Utilisation de votre compte abonné ce mois-ci.",
-      "used": "utilisés ce mois-ci",
-      "of": "sur {limit}",
-      "available": "Utilisation disponible",
-      "freePoolUsed": "L’utilisation gratuite partagée est indisponible",
-      "resets": "Réinitialisation le {date}",
-      "progressLabel": "{percent} % de l’utilisation mensuelle utilisée",
-      "infoLabel": "Fonctionnement de l’utilisation gratuite",
-      "freePoolInfo": "L’utilisation gratuite par serveur est disponible tant que l’allocation mensuelle partagée de ClashKing le permet. Elle peut être suspendue avant que votre serveur atteigne sa propre limite et se réinitialise au début de chaque mois UTC.",
-      "subscribers": "Crédit de {count, plural, one {# abonnement} other {# abonnements}}"
-    },
-    "billing": {
-      "active": "Actif",
-      "free": "Forfait gratuit",
-      "currentPlan": "Abonnement ClashKing",
-      "supportTitle": "Soutenir ClashKing ❤️",
-      "price": "6,99 $ par mois",
-      "activeDescription": "Votre abonnement Stripe est actif.",
-      "description": "Attribuez un abonnement à un serveur Discord. Les fonctions du compte restent disponibles sur le tableau de bord et l’application mobile.",
-      "notifications": "Notifications pour jusqu’à {limit} joueurs favoris",
-      "credit": "{credit} d’utilisation des assistants IA chaque mois",
-      "crossPlatform": "Disponible sur le tableau de bord et l’application mobile",
-      "manage": "Gérer l’abonnement dans Stripe",
-      "subscribe": "6,99 $/mois",
-      "learnMore": "En savoir plus",
-      "secure": "Le paiement et la gestion de la facturation sont sécurisés par Stripe.",
-      "stripeUnavailable": "Stripe est indisponible pour le moment.",
-      "checkoutUnavailable": "Les abonnements ne sont pas encore disponibles. Chaque serveur utilise actuellement l’allocation mensuelle de 0,05 $ pour l’IA.",
-      "checkoutSuccess": "Paiement terminé. Votre abonnement sera mis à jour dès la confirmation de Stripe.",
-      "checkoutCancelled": "Le paiement a été annulé. Aucun montant n’a été débité.",
-      "compactDescription": "6,99 $ par mois, avec les avantages serveur et 5,00 $ d’utilisation des assistants IA.",
-      "assignServer": "Serveur de l’abonnement",
-      "selectServer": "Sélectionner un serveur",
-      "assignmentHelp": "Les avantages suivent cette sélection. Un déplacement peut désactiver les tableaux au-delà de la limite gratuite sur l’ancien serveur ; l’utilisation IA déjà consommée reste liée à votre compte.",
-      "checkoutAssignmentHelp": "Choisissez le serveur qui reçoit les avantages et les 5,00 $ de crédit IA mensuel inclus.",
-      "subscriptionRequired": "Abonnez-vous pour choisir le serveur qui reçoit les avantages.",
-      "selectServerFirst": "Choisissez un serveur avant de procéder au paiement."
-    }
+    "browserLanguage": "Langue du navigateur"
   },
   "HomePage": {
     "badge": "Plus de {serverCount} serveurs utilisent déjà ClashKing",
-    "title": "Le Bot le Plus Puissant pour",
+    "title": "Le bot le plus puissant pour",
     "titleHighlight": "Clash of Clans",
     "subtitle": "Automatisez la gestion de votre clan, suivez les statistiques des joueurs, gérez les guerres et gardez votre communauté engagée.",
     "cta": {
-      "heading": "Prêt à Transformer Votre Clan ?",
-      "description": "Rejoignez plus de {serverCount} serveurs Discord qui utilisent déjà ClashKing pour élever leur communauté Clash of Clans. Configuration en seulement 2 minutes.",
+      "heading": "Prêt à transformer votre clan ?",
+      "description": "Rejoignez plus de {serverCount} serveurs Discord qui utilisent déjà ClashKing pour développer leur communauté Clash of Clans. La configuration ne prend que 2 minutes.",
       "button": "Ajouter ClashKing à Discord",
       "trustBadge": "Gratuit pour toujours • Aucune carte de crédit requise • Plus de {serverCount} serveurs",
       "addToDiscord": "Ajouter à Discord",
-      "openDashboard": "Ouvrir le Tableau de Bord"
+      "openDashboard": "Ouvrir le tableau de bord"
     },
     "stats": {
       "servers": "Serveurs Discord",
-      "users": "Utilisateurs Actifs",
-      "clans": "Clans Suivis"
+      "users": "Utilisateurs actifs",
+      "clans": "Clans suivis"
     },
     "features": {
-      "title": "Tout ce Dont Vous Avez Besoin pour Gérer Votre Clan",
+      "title": "Tout ce dont vous avez besoin pour gérer votre clan",
       "subtitle": "Des fonctionnalités puissantes conçues spécifiquement pour les communautés Clash of Clans",
       "autoRoles": {
-        "title": "Gestion Automatique des Rôles",
+        "title": "Gestion automatique des rôles",
         "description": "Attribuez automatiquement des rôles en fonction du statut du joueur, de sa position dans le clan et de ses réalisations. Gardez votre serveur organisé sans effort."
       },
       "playerStats": {
-        "title": "Statistiques des Joueurs",
-        "description": "Suivez les statistiques détaillées des joueurs, les graphiques de progression et l'historique des attaques. Voyez qui s'améliore et qui a besoin d'aide."
+        "title": "Statistiques de joueurs",
+        "description": "Suivez les statistiques détaillées des joueurs, les graphiques de progression et l’historique des attaques. Voyez qui s’améliore et qui a besoin d’aide."
       },
       "leaderboards": {
         "title": "Classements",
-        "description": "Créez des classements compétitifs pour les dons, les trophées, les étoiles de guerre et les métriques personnalisées. Boostez l'engagement."
+        "description": "Créez des classements compétitifs pour les dons, les trophées, les étoiles de guerre et les métriques personnalisées. Boostez l’engagement."
       },
       "warTracking": {
-        "title": "Suivi des Guerres",
+        "title": "Suivi des guerres",
         "description": "Surveillez les compositions de guerre, suivez les attaques en temps réel et obtenez des analyses post-guerre. Ne manquez aucun détail de guerre."
       },
       "smartReminders": {
-        "title": "Rappels Intelligents",
-        "description": "Rappels automatisés pour les Jeux de Clan, les attaques de guerre, la Ligue des Clans et les événements personnalisés. Gardez tout le monde informé."
+        "title": "Rappels intelligents",
+        "description": "Envoyez des rappels automatiques pour les jeux de clan, les attaques de guerre, la Ligue de guerre de clans et les événements personnalisés afin que tout le monde reste informé."
       },
       "customization": {
-        "title": "Personnalisation Complète",
+        "title": "Personnalisation complète",
         "description": "Personnalisez les commandes, les couleurs des embeds, les pseudonymes et les permissions. Faites de ClashKing le vôtre."
       },
       "familyManagement": {
-        "title": "Gestion de Famille",
+        "title": "Gestion de la famille",
         "description": "Gérez plusieurs clans en tant que famille. Statistiques inter-clans, classements partagés et rôles unifiés."
       },
       "analytics": {
-        "title": "Analyses Avancées",
-        "description": "Informations approfondies sur les performances du clan, les modèles d'activité des joueurs et les tendances de croissance. Décisions basées sur les données."
+        "title": "Analyses avancées",
+        "description": "Informations approfondies sur les performances du clan, les modèles d’activité des joueurs et les tendances de croissance. Décisions basées sur les données."
       },
       "performance": {
-        "title": "Ultra Rapide",
+        "title": "Ultra-rapide",
         "description": "Conçu pour la performance avec des réponses instantanées aux commandes et des mises à jour en temps réel. Aucun lag, aucun délai."
       },
       "security": {
-        "title": "Sécurisé et Fiable",
+        "title": "Sécurisé et fiable",
         "description": "99,9% de disponibilité, données cryptées et sauvegardes régulières. Les données de votre clan sont en sécurité avec nous."
       }
     },
@@ -211,32 +148,32 @@
       "about": {
         "title": "À propos",
         "features": "Fonctionnalités",
-        "help": "Besoin d'aide ?",
+        "help": "Besoin d’aide ?",
         "openSource": "Open Source",
         "support": "Nous soutenir"
       },
       "bot": {
         "title": "Bot",
-        "dashboard": "Tableau de Bord",
-        "inviteBot": "Inviter le Bot"
+        "dashboard": "Tableau de bord",
+        "inviteBot": "Inviter le bot"
       },
       "resources": {
         "title": "Ressources",
         "documentation": "Documentation",
-        "quickStart": "Guide de Démarrage Rapide",
+        "quickStart": "Guide de démarrage rapide",
         "github": "GitHub"
       },
       "community": {
         "title": "Communauté",
         "discord": "Serveur Discord",
         "twitter": "X (Twitter)",
-        "reportBug": "Signaler un Bug",
-        "requestFeature": "Demander une Fonctionnalité"
+        "reportBug": "Signaler un bug",
+        "requestFeature": "Demander une fonctionnalité"
       },
       "legal": {
         "copyright": "ClashKing. Tous droits réservés.",
-        "privacy": "Politique de Confidentialité",
-        "terms": "Conditions d'Utilisation"
+        "privacy": "Politique de confidentialité",
+        "terms": "Conditions d’utilisation"
       }
     }
   },
@@ -253,16 +190,24 @@
     "idPrefix": "ID: {id}"
   },
   "Sidebar": {
+    "overview": {
+      "name": "Vue d’ensemble",
+      "description": "Accueil du tableau de bord"
+    },
     "general": {
-      "name": "Paramètres Généraux",
+      "name": "Paramètres généraux",
       "description": "Configuration du serveur"
     },
+    "dashboardAccess": {
+      "name": "Accès au tableau de bord",
+      "description": "Déléguer des sections du tableau de bord"
+    },
     "familySettings": {
-      "name": "Paramètres Famille",
+      "name": "Paramètres de la famille",
       "description": "Rôles de famille et pseudos"
     },
     "clans": {
-      "name": "Clans",
+      "name": "Liste des clans",
       "description": "Gérer vos clans"
     },
     "logs": {
@@ -278,11 +223,11 @@
       "description": "Tous les types de rappels"
     },
     "rosters": {
-      "name": "Rosters",
-      "description": "Gestion des rosters"
+      "name": "Compositions",
+      "description": "Gestion des compositions"
     },
     "bases": {
-      "name": "Bases",
+      "name": "Plans",
       "description": "Bibliothèque de plans et engagement"
     },
     "autoboards": {
@@ -290,51 +235,51 @@
       "description": "Classements automatisés"
     },
     "giveaways": {
-      "name": "Giveaways",
-      "description": "Gestion des giveaways"
+      "name": "Concours",
+      "description": "Gestion des concours"
     },
     "panels": {
       "name": "Panneaux",
-      "description": "Panneaux membres interactifs avec boutons d'action"
+      "description": "Panneaux membres interactifs avec boutons d’action"
     },
     "tickets": {
       "name": "Tickets",
-      "description": "Tickets de recrutement & support"
+      "description": "Tickets de recrutement et d’assistance"
     },
     "embeds": {
       "name": "Embeds",
-      "description": "Modèles d'embeds Discord"
-    },
-    "graphics": {
-      "name": "Graphiques",
-      "description": "Modèles d'images dynamiques"
+      "description": "Modèles d’embeds Discord"
     },
     "links": {
       "name": "Liens",
-      "description": "Liaison Joueur-Discord"
+      "description": "Liaison joueur-Discord"
     },
     "bans": {
-      "name": "Bannissements & Avertissements",
+      "name": "Bannissements et avertissements",
       "description": "Outils de modération"
     },
-    "sections": {
-      "general": "Général",
-      "clanManagement": "Gestion des Clans",
-      "playerManagement": "Gestion des Joueurs",
-      "serverManagement": "Gestion du Serveur"
+    "wars": {
+      "name": "Guerres",
+      "description": "Statistiques de guerre"
     },
-    "switchServer": "Changer de Serveur",
-    "inactiveServer": "Le suivi est désactivé pour ce serveur",
+    "leaderboards": {
+      "name": "Classements",
+      "description": "Classements mondiaux"
+    },
+    "sections": {
+      "configuration": "Configuration",
+      "clanManagement": "Gestion de clan",
+      "playerManagement": "Gestion des joueurs",
+      "automation": "Automatisation",
+      "statistics": "Statistiques"
+    },
+    "switchServer": "Changer de serveur",
     "goHome": "Accueil"
   },
-  "GraphicsPage": {
-    "desktopOnlyTitle": "Graphics est disponible sur ordinateur",
-    "desktopOnlyDescription": "L’éditeur graphique nécessite un espace de travail de bureau. Ouvrez cette page sur un écran d’au moins 1 024 pixels de large."
-  },
   "BasesPage": {
-    "eyebrow": "Gestion des Clans",
-    "title": "Bases",
-    "description": "Consultez les plans partagés, l'historique d'engagement et les messages Discord sources.",
+    "eyebrow": "Gestion de clan",
+    "title": "Plans",
+    "description": "Consultez les plans partagés, l’historique d’engagement et les messages Discord sources.",
     "refresh": "Actualiser",
     "create": "Ajouter une base",
     "retry": "Réessayer",
@@ -365,17 +310,17 @@
     "delete": {
       "action": "Supprimer",
       "confirmTitle": "Supprimer cette base ?",
-      "confirmDescription": "Cette action supprime définitivement l'enregistrement après avoir tenté de supprimer son message Discord source. La base ne peut pas être restaurée.",
+      "confirmDescription": "Cette action supprime définitivement l’enregistrement après avoir tenté de supprimer son message Discord source. La base ne peut pas être restaurée.",
       "confirmAction": "Supprimer la base",
       "deleting": "Suppression…",
       "baseId": "ID de la base",
       "discordSource": "Source Discord",
       "successTitle": "Base supprimée",
-      "successDeleted": "L'enregistrement et le message Discord ont été supprimés.",
-      "successAlreadyMissing": "L'enregistrement a été supprimé ; le message Discord était déjà absent.",
+      "successDeleted": "L’enregistrement et le message Discord ont été supprimés.",
+      "successAlreadyMissing": "L’enregistrement a été supprimé ; le message Discord était déjà absent.",
       "cleanupFailedTitle": "Base conservée ; nettoyage Discord échoué",
       "cleanupCompleteTitle": "Nettoyage Discord terminé ; base conservée",
-      "failureTitle": "La base n'a pas été supprimée",
+      "failureTitle": "La base n’a pas été supprimée",
       "failureFallback": "La demande de suppression a échoué.",
       "retryable": "Nouvelle tentative sûre",
       "notRetryable": "Nouvelle tentative déconseillée",
@@ -400,10 +345,10 @@
       "descriptionLabel": "Description",
       "images": "Images",
       "chooseImages": "Choisir les images du plan",
-      "imageLimit": "Jusqu'à quatre images, téléversées avant la création.",
+      "imageLimit": "Jusqu’à quatre images, téléversées avant la création.",
       "submit": "Créer la base",
       "creating": "Téléversement et création…",
-      "createRejectedTitle": "La base n'a pas été créée",
+      "createRejectedTitle": "La base n’a pas été créée",
       "createCleanupCompleteTitle": "Nettoyage Discord terminé ; base non créée",
       "createCleanupFailedTitle": "Le message Discord peut subsister ; base non créée",
       "databaseNotInserted": "Enregistrement non inséré",
@@ -439,24 +384,6 @@
       "bans": "Bannissements",
       "strikes": "Avertissements"
     },
-    "image": {
-      "label": "URL de l'image de preuve (facultatif)",
-      "placeholder": "https://example.com/preuve.png",
-      "help": "Joignez une image accessible publiquement à cet enregistrement.",
-      "invalid": "Saisissez une URL d'image http ou https valide.",
-      "view": "Voir la preuve"
-    },
-    "sort": {
-      "label": "Trier les enregistrements",
-      "newest": "Plus récents d'abord",
-      "oldest": "Plus anciens d'abord",
-      "player": "Nom du joueur",
-      "reason": "Raison",
-      "moderator": "Modérateur",
-      "weight": "Poids le plus élevé",
-      "count": "Plus d'avertissements",
-      "recent": "Avertissement le plus récent"
-    },
     "bans": {
       "title": "Joueurs Bannis",
       "noBans": "Aucun joueur banni trouvé",
@@ -470,7 +397,7 @@
       "search": "Rechercher par nom ou tag...",
       "howItWorks": {
         "title": "Comment fonctionnent les bannissements",
-        "description": "Si un joueur banni rejoint l'un de vos clans, un avertissement sera envoyé dans le canal de clan que vous avez configuré dans l'<clansTab>onglet clans</clansTab>. Ce bot ne peut pas empêcher les joueurs de rejoindre votre clan, il peut seulement envoyer un avertissement."
+        "description": "Si un joueur banni rejoint l’un de vos clans, un avertissement sera envoyé dans le salon de clan que vous avez configuré dans l’<clansTab>onglet clans</clansTab>. Ce bot ne peut pas empêcher les joueurs de rejoindre votre clan, il peut seulement envoyer un avertissement."
       },
       "stats": {
         "total": "Total des bannissements",
@@ -485,11 +412,11 @@
       },
       "list": {
         "title": "Joueurs bannis",
-        "count": "{count} joueur{count, plural, one {} other {s}} banni{count, plural, one {} other {s}}",
+        "count": "{count} {count, plural, one {joueur banni} other {joueurs bannis}}",
         "searchPlaceholder": "Rechercher par nom, tag ou raison...",
         "noBansFound": "Aucun bannissement trouvé",
         "noBans": "Aucun joueur banni",
-        "adjustSearch": "Essayez d'ajuster votre recherche",
+        "adjustSearch": "Essayez d’ajuster votre recherche",
         "getStarted": "Ajoutez un bannissement pour commencer la modération des joueurs"
       },
       "table": {
@@ -502,7 +429,7 @@
       },
       "addDialog": {
         "title": "Bannir un joueur",
-        "description": "Ajoutez un joueur à la liste de bannissement partagée. Le bot avertira votre équipe s'il rejoint un clan configuré.",
+        "description": "Ajoutez un joueur à la liste des bannissements. Vous recevrez un avertissement s’il rejoint un clan de ce serveur.",
         "playerTagLabel": "Tag du Joueur",
         "playerTagPlaceholder": "#ABC123DEF",
         "playerNameLabel": "Nom du Joueur (optionnel)",
@@ -515,11 +442,11 @@
         "title": "Bonnes pratiques",
         "document": {
           "title": "Documentez minutieusement :",
-          "desc": "Fournissez toujours une raison détaillée pour chaque bannissement afin d'aider les autres modérateurs à comprendre le contexte."
+          "desc": "Fournissez toujours une raison détaillée pour chaque bannissement afin d’aider les autres modérateurs à comprendre le contexte."
         },
         "review": {
           "title": "Révisez régulièrement :",
-          "desc": "Révisez périodiquement votre liste de bannissements pour vous assurer qu'ils sont toujours nécessaires et justifiés."
+          "desc": "Révisez périodiquement votre liste de bannissements pour vous assurer qu’ils sont toujours nécessaires et justifiés."
         },
         "consistent": {
           "title": "Soyez cohérent :",
@@ -531,7 +458,7 @@
       "title": "Avertissements des Joueurs",
       "noStrikes": "Aucun avertissement trouvé",
       "addStrike": "Ajouter un Avertissement",
-      "removeStrike": "Retirer l'Avertissement",
+      "removeStrike": "Retirer l’Avertissement",
       "confirmRemove": "Êtes-vous sûr de vouloir retirer cet avertissement ?",
       "playerTag": "Tag du Joueur",
       "reason": "Raison",
@@ -541,7 +468,7 @@
       "search": "Rechercher par tag de joueur...",
       "howItWorks": {
         "title": "Comment fonctionnent les avertissements",
-        "description": "Les avertissements sont des mises en garde données aux joueurs pour des violations de règles. Chaque avertissement a un poids (gravité) et peut éventuellement expirer après un nombre de jours défini. Les avertissements aident à suivre le comportement des joueurs avant d'émettre des bannissements."
+        "description": "Les avertissements sont des mises en garde données aux joueurs pour des violations de règles. Chaque avertissement a un poids (gravité) et peut éventuellement expirer après un nombre de jours défini. Les avertissements aident à suivre le comportement des joueurs avant d’émettre des bannissements."
       },
       "stats": {
         "total": "Total des avertissements",
@@ -559,7 +486,7 @@
         "searchPlaceholder": "Rechercher par nom, tag ou raison...",
         "noStrikesFound": "Aucun avertissement trouvé",
         "noStrikes": "Aucun avertissement émis",
-        "adjustSearch": "Essayez d'ajuster votre recherche",
+        "adjustSearch": "Essayez d’ajuster votre recherche",
         "getStarted": "Ajoutez un avertissement pour commencer à suivre les violations des joueurs",
         "viewAll": "Tous les avertissements",
         "viewGrouped": "Par Joueur"
@@ -580,16 +507,16 @@
       },
       "addDialog": {
         "title": "Ajouter un avertissement",
-        "description": "Émettre un avertissement à un joueur. Les avertissements peuvent avoir différents poids et dates d'expiration.",
+        "description": "Émettre un avertissement à un joueur. Les avertissements peuvent avoir différents poids et dates d’expiration.",
         "playerTagLabel": "Tag du Joueur",
         "playerTagPlaceholder": "#ABC123DEF",
         "reasonLabel": "Raison",
         "reasonPlaceholder": "Expliquez pourquoi cet avertissement est émis...",
-        "weightLabel": "Poids de l'avertissement",
+        "weightLabel": "Poids de l’avertissement",
         "weightPlaceholder": "1",
         "rolloverLabel": "Expire dans (jours)",
         "rolloverPlaceholder": "Optionnel",
-        "submit": "Ajouter l'Avertissement"
+        "submit": "Ajouter l’Avertissement"
       },
       "guidelines": {
         "title": "Directives pour les avertissements",
@@ -598,8 +525,8 @@
           "desc": "Attribuez des poids plus élevés (2-3) pour les violations graves et des poids plus faibles (1) pour les problèmes mineurs."
         },
         "expiration": {
-          "title": "Définissez des dates d'expiration :",
-          "desc": "Envisagez de définir des dates d'expiration pour les avertissements afin de donner aux joueurs une chance d'améliorer leur comportement au fil du temps."
+          "title": "Définissez des dates d’expiration :",
+          "desc": "Envisagez de définir des dates d’expiration pour les avertissements afin de donner aux joueurs une chance d’améliorer leur comportement au fil du temps."
         },
         "patterns": {
           "title": "Suivez les modèles :",
@@ -614,68 +541,22 @@
       "strikeRemoved": "Avertissement retiré avec succès",
       "errorLoadingBans": "Échec du chargement des joueurs bannis",
       "errorLoadingStrikes": "Échec du chargement des avertissements",
-      "errorAddingBan": "Échec de l'ajout du bannissement",
-      "errorAddingStrike": "Échec de l'ajout de l'avertissement",
+      "errorAddingBan": "Échec de l’ajout du bannissement",
+      "errorAddingStrike": "Échec de l’ajout de l’avertissement",
       "errorRemovingBan": "Échec de la suppression du bannissement",
-      "errorRemovingStrike": "Échec de la suppression de l'avertissement"
+      "errorRemovingStrike": "Échec de la suppression de l’avertissement"
     }
   },
   "RostersPage": {
-    "title": "Rosters",
-    "description": "Gérer vos rosters de guerre",
-    "aiBuilder": {
-      "button": "Assistant de roster",
-      "new": "Nouveau",
-      "title": "Assistant de roster",
-      "description": "Créez et enregistrez des vues de roster réutilisables en langage naturel."
-    },
-    "cwlBonuses": {
-      "button": "Bonus de LDC",
-      "title": "Bonus de LDC",
-      "description": "Calculez et attribuez les bonus saisonniers disponibles.",
-      "back": "Retour aux rosters",
-      "clan": "Clan",
-      "selectClan": "Sélectionner un clan",
-      "searchClans": "Rechercher des clans",
-      "noClanFound": "Aucun clan trouvé",
-      "season": "Saison",
-      "noStoredSeasons": "Aucune saison enregistrée",
-      "unknownLeague": "Ligue inconnue",
-      "unrankedLeague": "Ligue LDC non classée",
-      "loading": "Chargement des données LDC…",
-      "loadClansError": "Échec du chargement des clans configurés.",
-      "loadMedalRulesError": "Échec du chargement des règles de médailles LDC.",
-      "loadDataError": "Échec du chargement des données LDC.",
-      "league": "Ligue",
-      "rank": "Rang",
-      "warsWon": "Guerres gagnées",
-      "leagueMedals": "Médailles de ligue",
-      "bonusSlots": "Places bonus",
-      "movement": {
-        "promoted": "Position de promotion",
-        "demoted": "Position de rétrogradation",
-        "unchanged": "Ligue inchangée"
-      },
-      "incomplete": "Le groupe enregistré est incomplet. Toutes les guerres doivent être enregistrées et terminées avant l'attribution des bonus.",
-      "awardBonuses": "Attribuer les bonus",
-      "selectionSummary": "{selected}/{total} sélectionnés · {medals} médailles chacun",
-      "selectionLocked": "La sélection sera disponible lorsque le groupe enregistré sera complet.",
-      "ready": "Prêt à enregistrer",
-      "chooseMore": "{count, plural, one {Choisissez encore # destinataire.} other {Choisissez encore # destinataires.}}",
-      "save": "Enregistrer les bonus",
-      "saved": "Destinataires des bonus LDC enregistrés",
-      "townHallAlt": "Hôtel de ville {level}",
-      "stars": "{count, plural, one {# étoile} other {# étoiles}}",
-      "attacks": "{count, plural, one {# attaque} other {# attaques}}",
-      "noPlayers": "Aucun joueur disponible pour cette saison LDC."
-    },
+    "title": "Compositions",
+    "description": "Gérer vos compositions de guerre",
     "stats": {
-      "totalRosters": "Total des Rosters",
-      "totalMembers": "Total des Membres",
-      "clanRosters": "Rosters de Clan",
-      "familyRosters": "Rosters Famille",
+      "totalRosters": "Total des compositions",
+      "totalMembers": "Total des membres",
+      "clanRosters": "Compositions de clan",
+      "familyRosters": "Compositions familiales",
       "members": "Membres",
-      "avgTh": "TH Moyen",
+      "avgTh": "HDV moy.",
       "avgHitrate": "Taux de Réussite",
       "distribution": "Répartition",
       "clan": "Clan",
@@ -684,25 +565,32 @@
       "thDistribution": "Distribution TH",
       "capacity": "capacité"
     },
-    "noRosters": "Aucun roster trouvé",
-    "createRoster": "Créer un Roster",
     "filters": {
-      "search": "Rechercher des rosters...",
-      "type": "Type",
+      "search": "Rechercher des compositions...",
+      "type": "Type de clan",
       "all": "Tous",
       "clan": "Clan",
-      "clear": "Effacer",
-      "family": "Famille"
+      "family": "Famille",
+      "clear": "Effacer"
+    },
+    "comparisonMode": {
+      "cancel": "Annuler",
+      "compare": "Comparer",
+      "compareRosters": "Comparer les compositions",
+      "selectRosters": "Sélectionner des compositions",
+      "selectRostersDesc": "Veuillez sélectionner au moins 2 compositions pour comparer",
+      "maxReached": "Maximum atteint",
+      "maxReachedDesc": "Vous pouvez comparer jusqu’à 4 compositions à la fois"
     },
     "createDialog": {
-      "title": "Créer un Nouveau Roster",
-      "description": "Configurer un nouveau roster pour votre clan",
-      "aliasLabel": "Nom de la Composition",
+      "title": "Créer une nouvelle composition",
+      "description": "Configurer une nouvelle composition pour votre clan",
+      "aliasLabel": "Nom de la composition",
       "aliasPlaceholder": "ex: Composition LDC",
-      "typeLabel": "Type de Composition",
+      "typeLabel": "Type de composition",
       "typeClan": "Clan",
       "typeFamily": "Famille",
-      "signupScopeLabel": "Portée d'Inscription",
+      "signupScopeLabel": "Portée d’Inscription",
       "scopeClanOnly": "Clan Uniquement",
       "scopeFamilyWide": "Toute la Famille",
       "clanLabel": "Clan",
@@ -711,12 +599,69 @@
       "descriptionPlaceholder": "Description de la composition...",
       "cancel": "Annuler",
       "creating": "Création...",
-      "create": "Créer la Composition"
+      "create": "Créer la composition"
+    },
+    "editDialog": {
+      "title": "Modifier la composition",
+      "description": "Modifier les paramètres et la configuration de la composition",
+      "aliasLabel": "Nom de la composition",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Description de la composition...",
+      "minThLabel": "Hôtel de ville minimum",
+      "minThPlaceholder": "ex: 13",
+      "maxThLabel": "Hôtel de ville maximum",
+      "maxThPlaceholder": "ex: 16",
+      "rosterSizeLabel": "Taille de la composition",
+      "rosterSizePlaceholder": "ex: 50",
+      "columnsLabel": "Colonnes d’Affichage",
+      "columnsPlaceholder": "Sélectionner les colonnes à afficher",
+      "sortLabel": "Ordre de Tri",
+      "sortPlaceholder": "Sélectionner les champs de tri",
+      "cancel": "Annuler",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer les Modifications"
+    },
+    "addMembersDialog": {
+      "title": "Ajouter des membres à la composition",
+      "description": "Sélectionner des membres de votre clan ou saisir des tags de joueur",
+      "bulkTagsLabel": "Ajout en lot par Tags",
+      "bulkTagsPlaceholder": "Saisissez les tags joueur (un par ligne ou séparés par virgule)",
+      "searchLabel": "Rechercher des Membres",
+      "searchPlaceholder": "Rechercher par nom ou tag...",
+      "selectFromClan": "Sélectionner parmi les Membres du Clan",
+      "selectedCount": "Sélectionnés",
+      "noMembers": "Aucun membre disponible",
+      "noMembersSelected": "Aucun membre sélectionné",
+      "noMembersSelectedDesc": "Veuillez sélectionner des membres ou saisir des tags joueur.",
+      "cancel": "Annuler",
+      "adding": "Ajout...",
+      "add": "Ajouter des Membres"
+    },
+    "detailsDialog": {
+      "title": "Détails de la composition",
+      "edit": "Modifier",
+      "refresh": "Actualiser",
+      "refreshing": "Actualisation...",
+      "delete": "Supprimer",
+      "deleting": "Suppression...",
+      "addMembers": "Ajouter des Membres",
+      "close": "Fermer",
+      "noMembers": "Aucun membre dans cette composition",
+      "noMembersDesc": "Ajoutez des membres pour commencer",
+      "memberCount": "Membres",
+      "thRestriction": "Niveau d’HDV",
+      "avgTh": "HDV moy.",
+      "avgHitrate": "Moy. Taux de Réussite",
+      "clan": "Clan",
+      "family": "Famille",
+      "external": "Externe",
+      "substitute": "REM",
+      "removeMember": "Retirer"
     },
     "rosterCard": {
       "members": "Membres",
-      "thLevel": "HdV",
-      "avgTh": "Moy. HdV",
+      "thLevel": "Niveau d’HDV",
+      "avgTh": "HDV moy.",
       "avgHitrate": "Moy. Taux de victoire",
       "clan": "Clan",
       "family": "Famille",
@@ -728,78 +673,117 @@
       "noGroup": "Aucun groupe",
       "moveToGroup": "Déplacer vers un groupe",
       "clone": "Dupliquer",
-      "rename": "Renommer {name}",
-      "actions": "Actions pour {name}",
-      "renameInput": "Nom du roster",
-      "renameSave": "Enregistrer le nom du roster",
-      "renameCancel": "Annuler le renommage",
-      "renameSuccess": "Roster renommé en {name}",
       "allRosters": "Toutes les compositions",
       "manageRosters": "Gérez vos compositions de guerre"
     },
+    "memberColumns": {
+      "name": "Nom",
+      "townhall": "Hôtel de ville",
+      "tag": "Tag",
+      "hitrate": "Taux de Réussite",
+      "current_clan": "Clan Actuel",
+      "current_clan_tag": "Tag de Clan",
+      "discord": "Discord",
+      "hero_lvs": "Héros",
+      "war_pref": "Préf. Guerre",
+      "trophies": "Trophées",
+      "signup_group": "Groupe d’Inscription"
+    },
+    "columns": {
+      "configure": "Colonnes",
+      "title": "Configurer les Colonnes",
+      "description": "Choisir les colonnes à afficher et leur ordre",
+      "selected": "Colonnes Sélectionnées",
+      "available": "Colonnes Disponibles",
+      "save": "Enregistrer",
+      "reset": "Réinitialiser les colonnes"
+    },
+    "sortFields": {
+      "townhall": "Niveau de l’Hôtel de ville",
+      "name": "Nom",
+      "tag": "Tag",
+      "heroLvs": "Héros",
+      "trophies": "Trophées",
+      "hitrate": "Taux de Réussite 30 jours",
+      "currentClanTag": "Tag du Clan",
+      "addedAt": "Ajouté le"
+    },
+    "thRestrictions": {
+      "only": "HDV{th} uniquement",
+      "range": "HDV{min}-{max}",
+      "minimum": "HDV{th}+",
+      "maximum": "HDV1-{th}",
+      "noRestriction": "Pas de restriction"
+    },
+    "emptyState": {
+      "noRosters": "Aucune composition créée",
+      "noRostersDesc": "Créez votre première composition pour commencer",
+      "noMatch": "Aucune composition ne correspond à vos filtres",
+      "noMatchDesc": "Essayez d’ajuster votre recherche ou vos critères de filtre"
+    },
     "toast": {
-      "rosterCreated": "Roster créé avec succès",
-      "rosterDeleted": "Roster supprimé avec succès",
-      "memberRemoved": "Membre retiré avec succès",
-      "rosterCloned": "Roster cloné avec succès !",
-      "errorCloningRoster": "Échec du clonage du roster. Veuillez réessayer.",
-      "missingMembersAdded": "{count} membre(s) manquant(s) ajouté(s) au roster !",
-      "errorLoadingMissingMembers": "Échec du chargement des membres manquants.",
       "errorTitle": "Erreur",
       "successTitle": "Succès",
-      "errorLoadingRosters": "Échec du chargement des rosters. Veuillez réessayer.",
+      "errorLoadingRosters": "Échec du chargement des compositions. Veuillez réessayer.",
       "errorLoadingMembers": "Échec du chargement des membres du clan.",
-      "errorCreatingRoster": "Échec de la création du roster. Veuillez réessayer.",
-      "rosterUpdated": "Roster mis à jour avec succès !",
-      "errorUpdatingRoster": "Échec de la mise à jour du roster. Veuillez réessayer.",
-      "errorDeletingRoster": "Échec de la suppression du roster. Veuillez réessayer.",
-      "membersAdded": "{count} membre(s) ajouté(s) au roster !",
-      "errorAddingMembers": "Échec de l'ajout des membres. Veuillez réessayer.",
+      "rosterCreated": "Composition créée avec succès",
+      "errorCreatingRoster": "Échec de la création de la composition. Veuillez réessayer.",
+      "rosterUpdated": "Composition mise à jour avec succès !",
+      "errorUpdatingRoster": "Échec de la mise à jour de la composition. Veuillez réessayer.",
+      "rosterDeleted": "Composition supprimée avec succès",
+      "errorDeletingRoster": "Échec de la suppression de la composition. Veuillez réessayer.",
+      "membersAdded": "Membres ajoutés à la composition : {count}",
+      "errorAddingMembers": "Échec de l’ajout des membres. Veuillez réessayer.",
+      "memberRemoved": "Membre retiré avec succès",
       "errorRemovingMember": "Échec du retrait du membre. Veuillez réessayer.",
       "substituteMarked": "Membre marqué comme remplaçant !",
       "substituteUnmarked": "Membre retiré des remplaçants !",
       "errorUpdatingMember": "Échec de la mise à jour du membre. Veuillez réessayer.",
-      "rosterRefreshed": "Données du roster actualisées avec succès !",
-      "errorRefreshingRoster": "Échec de l'actualisation des données du roster. Veuillez réessayer.",
-      "memberTransferred": "Membre transféré entre rosters avec succès !",
-      "errorTransferringMember": "Échec du transfert du membre. Veuillez réessayer."
+      "rosterRefreshed": "Données de la composition actualisées avec succès !",
+      "errorRefreshingRoster": "Échec de l’actualisation des données de la composition. Veuillez réessayer.",
+      "memberTransferred": "Membre transféré entre compositions avec succès !",
+      "errorTransferringMember": "Échec du transfert du membre. Veuillez réessayer.",
+      "rosterCloned": "Composition dupliquée avec succès !",
+      "errorCloningRoster": "Échec du clonage de la composition. Veuillez réessayer.",
+      "missingMembersAdded": "Membres manquants ajoutés à la composition : {count}",
+      "errorLoadingMissingMembers": "Échec du chargement des membres manquants."
     },
     "cloneDialog": {
-      "title": "Cloner le Roster",
-      "description": "Créer une copie de ce roster",
-      "aliasLabel": "Nom du Nouveau Roster",
-      "aliasPlaceholder": "Entrez le nom du roster cloné",
-      "copyMembers": "Copier les membres dans le nouveau roster",
-      "memberCount": "{count} membres",
-      "originalRoster": "Roster original :",
+      "title": "Dupliquer la composition",
+      "description": "Créer une copie de cette composition",
+      "aliasLabel": "Nom de la nouvelle composition",
+      "aliasPlaceholder": "Entrez le nom de la composition clonée",
+      "copyMembers": "Copier les membres dans la nouvelle composition",
+      "memberCount": "Nombre de membres : {count}",
+      "originalRoster": "Composition originale :",
       "cancel": "Annuler",
       "cloning": "Clonage...",
-      "clone": "Cloner le Roster",
-      "copyMembersHint": "Les membres seront copiés depuis le roster original"
+      "clone": "Dupliquer la composition",
+      "copyMembersHint": "Les membres seront copiés depuis la composition originale"
     },
     "missingMembers": {
       "title": "Membres Manquants",
-      "description": "Membres du clan non inscrits dans ce roster",
-      "coverage": "Couverture du Roster",
+      "description": "Membres du clan non inscrits dans cette composition",
+      "coverage": "Couverture de la composition",
       "registered": "inscrit(s)",
-      "missing": "manquant(s)",
+      "missing": "manquants",
       "total": "total",
       "selectAll": "Tout Sélectionner",
       "selected": "sélectionné(s)",
-      "addSelected": "Ajouter {count} Membre(s)",
+      "addSelected": "Ajouter la sélection ({count})",
       "button": "Membres Manquants",
       "addAll": "Tout Ajouter",
       "adding": "Ajout...",
       "close": "Fermer",
       "allCaughtUp": "Tout est à jour !",
       "allCaughtUpDesc": "Tous les membres du clan sont inscrits dans cette composition",
-      "clanOnly": "L'analyse des membres manquants n'est disponible que pour les compositions de clan",
+      "clanOnly": "L’analyse des membres manquants n’est disponible que pour les compositions de clan",
       "error": "Erreur lors du chargement des membres manquants",
-      "thisRoster": "Ce roster",
+      "thisRoster": "Cette composition",
       "wholeGroup": "Tout le groupe"
     },
     "eventTime": {
-      "label": "Date de l'Événement",
+      "label": "Date de l’Événement",
       "timezone": "Votre fuseau horaire",
       "utc": "UTC",
       "clear": "Effacer"
@@ -817,34 +801,38 @@
       "noResults": "Aucun membre trouvé",
       "groupHeading": "Membres du Serveur",
       "selectedLabel": "Membres Sélectionnés",
-      "membersSelected": "membre(s) sélectionné(s)",
-      "selected": "Sélectionné",
+      "membersSelected": "Membres sélectionnés",
+      "selected": "Sélectionnés",
       "clanMembersLabel": "Ou Sélectionner parmi les Membres du Clan"
     },
     "retry": "Réessayer",
     "back": "Retour",
     "refresh": "Actualiser",
-    "searchPlaceholder": "Rechercher des rosters...",
-    "noRostersHint": "Créez votre premier roster pour commencer",
-    "noSearchResults": "Aucun roster trouvé",
+    "createRoster": "Créer une composition",
+    "searchPlaceholder": "Rechercher des compositions...",
+    "noRosters": "Aucune composition trouvée",
+    "noRostersHint": "Créez votre première composition pour commencer",
+    "noSearchResults": "Aucune composition trouvée",
     "noSearchResultsHint": "Essayez un autre terme de recherche",
-    "createFirstRoster": "Créer un Premier Roster",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer \"{name}\" ?",
-    "deleteSuccess": "Roster Supprimé",
-    "deleteSuccessDesc": "Le roster \"{name}\" a été supprimé",
+    "createFirstRoster": "Créer une première composition",
+    "deleteConfirm": "Voulez-vous vraiment supprimer \"{name}\" ?",
+    "deleteSuccess": "Composition supprimée",
+    "deleteSuccessDesc": "La composition \"{name}\" a été supprimée",
     "deleteError": "Échec de la suppression",
-    "createSuccess": "Roster Créé",
-    "createSuccessDesc": "Le roster \"{name}\" a été créé",
+    "createSuccess": "Composition créée",
+    "createSuccessDesc": "La composition \"{name}\" a été créée",
     "createError": "Échec de la création",
-    "createErrorAlias": "Veuillez entrer un nom de roster",
+    "createErrorAlias": "Veuillez entrer un nom de composition",
     "createErrorClan": "Veuillez sélectionner un clan",
     "refreshSuccess": "Données actualisées",
-    "refreshError": "Échec de l'actualisation",
+    "refreshError": "Échec de l’actualisation",
     "saveSuccess": "Paramètres sauvegardés",
     "saveError": "Échec de la sauvegarde",
+    "columnsUpdated": "Colonnes mises à jour",
+    "columnsError": "Échec de mise à jour des colonnes",
     "addMembersSuccess": "Membres Ajoutés",
     "addMembersSuccessDesc": "{count} membre(s) ajouté(s)",
-    "addMembersError": "Échec de l'ajout",
+    "addMembersError": "Échec de l’ajout",
     "removeMemberSuccess": "Membre retiré",
     "removeMemberError": "Échec du retrait",
     "clearMembers": "Vider les membres",
@@ -854,7 +842,7 @@
     "automationCreated": "Automatisation créée",
     "automationUpdated": "Automatisation mise à jour",
     "automationDeleted": "Automatisation supprimée",
-    "automationError": "Erreur d'automatisation",
+    "automationError": "Erreur d’automatisation",
     "groupCreated": "Groupe créé",
     "groupUpdated": "Groupe modifié",
     "groupDeleted": "Groupe supprimé",
@@ -863,30 +851,6 @@
     "categoryUpdated": "Catégorie modifiée",
     "categoryDeleted": "Catégorie supprimée",
     "categoryError": "Échec de sauvegarde de catégorie",
-    "columnsUpdated": "Colonnes mises à jour",
-    "columnsError": "Échec de mise à jour des colonnes",
-    "memberColumns": {
-      "name": "Nom",
-      "townhall": "Hôtel de Ville",
-      "tag": "Tag",
-      "hitrate": "Taux de Réussite",
-      "current_clan": "Clan Actuel",
-      "current_clan_tag": "Tag de Clan",
-      "discord": "Discord",
-      "hero_lvs": "Héros",
-      "war_pref": "Préf. Guerre",
-      "trophies": "Trophées",
-      "signup_group": "Groupe d'Inscription"
-    },
-    "columns": {
-      "configure": "Colonnes",
-      "title": "Configurer les Colonnes",
-      "description": "Choisir les colonnes à afficher et leur ordre",
-      "selected": "Colonnes Sélectionnées",
-      "available": "Colonnes Disponibles",
-      "save": "Sauvegarder",
-      "reset": "Réinitialiser les colonnes"
-    },
     "common": {
       "cancel": "Annuler",
       "save": "Enregistrer",
@@ -901,15 +865,15 @@
     },
     "members": {
       "count": "membres",
-      "noMembers": "Aucun membre dans ce roster",
+      "noMembers": "Aucun membre dans cette composition",
       "noMembersHint": "Ajoutez des membres pour commencer",
       "actions": "Actions",
       "viewList": "Vue liste",
-      "viewGrouped": "Vue par catégorie d'inscription",
+      "viewGrouped": "Vue par catégorie d’inscription",
       "unassigned": "Non assigné",
       "dragHere": "Déposez des membres ici",
       "clickToGroup": "Cliquer pour voir par catégorie",
-      "apiErrorTooltip": "Les données n'ont pas pu être récupérées depuis l'API",
+      "apiErrorTooltip": "Les données n’ont pas pu être récupérées depuis l’API",
       "staleDataTooltip": "Données potentiellement obsolètes, dernière mise à jour :",
       "refresh": "Rafraîchir les données du membre",
       "alsoIn": "Aussi dans",
@@ -925,37 +889,24 @@
     },
     "compare": {
       "enterMode": "Modification groupée",
-      "modeTitle": "Modifier plusieurs rosters",
-      "modeHint": "Sélectionnez 2 à 4 rosters à modifier ensemble",
+      "modeTitle": "Modifier plusieurs compositions",
+      "modeHint": "Sélectionnez 2 à 4 compositions à modifier ensemble",
       "exitMode": "Annuler",
-      "selected": "roster(s) sélectionné(s)",
-      "button": "Ouvrir l'éditeur groupé",
-      "title": "Modifier plusieurs rosters",
-      "description": "Glissez les joueurs entre les rosters pour les déplacer.",
-      "dragToMove": "Glissez-déposez les membres entre les rosters pour les déplacer",
-      "loadError": "Échec du chargement des rosters",
+      "selected": "Compositions sélectionnées",
+      "button": "Ouvrir l’éditeur groupé",
+      "title": "Modifier plusieurs compositions",
+      "dragToMove": "Glissez-déposez les membres entre les compositions pour les déplacer",
+      "loadError": "Échec du chargement des compositions",
       "memberMoved": "Membre déplacé",
       "memberMovedDesc": "{name} déplacé de {from} vers {to}",
       "moveError": "Échec du déplacement du membre",
-      "selectAtLeast2": "Sélectionnez au moins 2 rosters à modifier",
+      "selectAtLeast2": "Sélectionnez au moins 2 compositions à modifier",
       "moving": "Déplacement en cours...",
       "compareGroup": "Modifier le groupe",
-      "dragToMoveCategory": "Glissez les membres entre rosters et catégories",
+      "dragToMoveCategory": "Glissez les membres entre compositions et catégories",
       "categoryChanged": "Catégorie modifiée",
       "categoryChangedDesc": "{name} déplacé vers {category}",
-      "uncategorized": "Sans catégorie",
-      "back": "Retour aux rosters",
-      "unknownError": "Une erreur inconnue s'est produite",
-      "memberCount": "{count, plural, one {# membre} other {# membres}}",
-      "dragPlayer": "Déplacer {name}",
-      "townHallAlt": "Hôtel de ville {level}",
-      "duplicate": "Ce joueur apparaît dans plusieurs rosters",
-      "dropHere": "Déposez un joueur ici",
-      "status": {
-        "clan": "Clan",
-        "family": "Famille",
-        "external": "Externe"
-      }
+      "uncategorized": "Sans catégorie"
     },
     "ungrouped": "Sans groupe",
     "automations": {
@@ -965,129 +916,129 @@
       "emptyHint": "Créez une automatisation pour planifier des actions",
       "active": "Actif",
       "inactive": "Inactif",
-      "executed": "Exécutée",
-      "missed": "Ratée",
+      "executed": "Terminé",
+      "missed": "Manquée",
       "lastRun": "Dernière exéc.",
       "enable": "Activer",
       "disable": "Désactiver",
       "createTitle": "Créer une Automatisation",
-      "editTitle": "Modifier l'Automatisation",
+      "editTitle": "Modifier l’Automatisation",
       "createDesc": "Planifier une action automatique",
-      "actionType": "Type d'Action",
+      "actionType": "Type d’Action",
       "scheduledAt": "Heure planifiée",
       "scheduledAtHint": "Cette automatisation s'exécute à cette date et heure précises.",
-      "offsetFromEvent": "Timing relatif à l'événement",
-      "offsetBefore": "Avant l'événement",
-      "offsetAfter": "Après l'événement",
+      "offsetFromEvent": "Planification relative à l’événement",
+      "offsetBefore": "Avant l’événement",
+      "offsetAfter": "Après l’événement",
       "offsetUnit_minutes": "minutes",
       "offsetUnit_hours": "heures",
       "offsetUnit_days": "jours",
       "offsetPreview": "Exécution prévue le : {date}",
-      "offsetNoEventDate": "Configurez une date d'événement dans les paramètres pour voir la date d'exécution",
-      "offsetAtStart": "Au début de l'événement",
+      "offsetNoEventDate": "Configurez une date d’événement dans les paramètres pour voir la date d’exécution",
+      "offsetAtStart": "Au début de l’événement",
       "pingType": "Type de rappel",
-      "pingType_signup_reminder": "Rappel d'inscription",
+      "pingType_signup_reminder": "Rappel d’inscription",
       "pingType_missing": "Absent du clan",
       "pingType_sub_needed": "Remplaçant requis",
-      "channel": "Canal Discord",
-      "selectChannel": "Sélectionner un canal",
-      "channelHint": "Canal où l'action sera postée/exécutée",
+      "channel": "Salon Discord",
+      "selectChannel": "Sélectionner un salon",
+      "channelHint": "Salon où l’action sera postée/exécutée",
       "activeLabel": "Actif",
       "target": "Cible",
-      "targetThisRoster": "Ce roster",
+      "targetThisRoster": "Cette composition",
       "targetGroups": "Groupes",
-      "targetHint": "Appliquer l'automatisation à ce roster uniquement ou à tous les rosters d'un groupe",
+      "targetHint": "Appliquer l’automatisation à cette composition uniquement ou à toutes les compositions d’un groupe",
       "group": "Groupe",
-      "groupAutomationHint": "Gérer via l'onglet Groupes",
-      "targetRoster": "Roster",
+      "groupAutomationHint": "Gérer via l’onglet Groupes",
+      "targetRoster": "Composition",
       "targetGroup": "Groupe",
-      "willExecute": "S'exécutera à l'heure prévue",
-      "paused": "En pause - ne s'exécutera pas",
+      "willExecute": "S’exécutera à l’heure prévue",
+      "paused": "En pause - ne s’exécutera pas",
       "actions": {
         "ping": "Envoyer un rappel",
-        "post": "Publier le roster",
+        "post": "Publier la composition",
         "openSignup": "Ouvrir les inscriptions",
         "closeSignup": "Fermer les inscriptions",
-        "delete": "Supprimer le roster",
+        "delete": "Supprimer la composition",
         "clear": "Vider les membres",
-        "archive": "Archiver le roster"
+        "archive": "Archiver la composition"
       },
       "actionDescriptions": {
         "roster_ping": "Envoie un rappel aux membres non inscrits ou dans le mauvais clan",
-        "roster_post": "Publie la liste finale du roster dans le canal sélectionné",
-        "roster_signup": "Ouvre les inscriptions pour que les joueurs puissent s'inscrire",
+        "roster_post": "Publie la liste finale de la composition dans le salon sélectionné",
+        "roster_signup": "Ouvre les inscriptions pour que les joueurs puissent s’inscrire",
         "roster_signup_close": "Ferme les inscriptions et empêche les nouvelles inscriptions",
-        "roster_delete": "Supprime définitivement le roster et toutes ses données",
-        "roster_clear": "Retire tous les membres du roster sans le supprimer",
-        "roster_archive": "Archive le roster en le passant en lecture seule"
+        "roster_delete": "Supprime définitivement la composition et toutes ses données",
+        "roster_clear": "Retire tous les membres de la composition sans la supprimer",
+        "roster_archive": "Archive la composition en la passant en lecture seule"
       },
-      "infoBox": "Les automatisations se déclenchent par rapport à la date de l'événement. Définissez un offset (ex : 3 jours avant) et le bot exécutera l'action automatiquement — y compris pour les événements récurrents."
+      "infoBox": "Les automatisations se déclenchent par rapport à la date de l’événement. Définissez un offset (ex : 3 jours avant) et le bot exécutera l’action automatiquement — y compris pour les événements récurrents."
     },
     "groups": {
-      "title": "Groupes de Rosters",
-      "description": "Organiser les rosters en groupes pour une meilleure gestion",
-      "create": "Nouveau Groupe",
+      "title": "Groupes de compositions",
+      "description": "Organiser les compositions en groupes pour une meilleure gestion",
+      "create": "Nouveau groupe",
       "noGroups": "Aucun groupe créé",
-      "rostersCount": "rosters",
-      "createTitle": "Créer un Groupe",
-      "editTitle": "Modifier le Groupe",
-      "nameLabel": "Nom du Groupe",
+      "rostersCount": "compositions",
+      "createTitle": "Créer un groupe",
+      "editTitle": "Modifier le groupe",
+      "nameLabel": "Nom du groupe",
       "namePlaceholder": "ex: Groupes CWL",
-      "infoBox": "Les groupes permettent d'organiser plusieurs rosters ensemble (ex: tous les rosters CWL). Vous pouvez assigner un roster à un groupe depuis l'onglet Paramètres, et appliquer des automatisations à tous les rosters d'un groupe en une seule fois.",
+      "infoBox": "Les groupes permettent d’organiser plusieurs compositions ensemble (ex: toutes les compositions CWL). Vous pouvez assigner une composition à un groupe depuis l’onglet Paramètres, et appliquer des automatisations à toutes les compositions d’un groupe en une seule fois.",
       "manageAutomations": "Gérer les automatisations",
       "automationsTitle": "Automatisations du groupe",
-      "automationsDesc": "Ces automatisations s'appliquent à tous les rosters de ce groupe",
+      "automationsDesc": "Ces automatisations s’appliquent à toutes les compositions de ce groupe",
       "noAutomations": "Aucune automatisation",
       "noAutomationsHint": "Créez une automatisation pour ce groupe",
       "addAutomation": "Ajouter une automatisation",
-      "deleteConfirm": "Supprimer le groupe \"{name}\" ? Les rosters de ce groupe seront dissociés.",
-      "emptyGroup": "Aucun roster dans ce groupe pour l'instant",
+      "deleteConfirm": "Supprimer le groupe \"{name}\" ? Les compositions de ce groupe seront dissociées.",
+      "emptyGroup": "Aucune composition dans ce groupe pour l’instant",
       "rules": {
         "title": "Règles du groupe",
-        "rulesHint": "Ces règles s'appliquent à tous les rosters du groupe et sont propagées immédiatement.",
+        "rulesHint": "Ces règles s’appliquent à toutes les compositions du groupe et sont propagées immédiatement.",
         "maxAccounts": "Max comptes/utilisateur",
-        "maxAccountsBadge": "Max {count}/user",
-        "rosterSize": "Taille du roster",
+        "maxAccountsBadge": "Max. {count}/utilisateur",
+        "rosterSize": "Taille de la composition",
         "rosterSizeBadge": "Taille {size}",
         "minSignups": "Seuil de remplissage",
         "minSignupsBadge": "Seuil {count}",
-        "categoriesTitle": "Catégories d'inscription",
-        "categoriesHint": "Sélectionnez les catégories disponibles pour ce groupe. Appliquées immédiatement à tous les rosters.",
+        "categoriesTitle": "Catégories d’inscription",
+        "categoriesHint": "Sélectionnez les catégories disponibles pour ce groupe. Appliquées immédiatement à toutes les compositions.",
         "categoriesBadge": "{count} catégories",
-        "noCategories": "Aucune catégorie pour l'instant.",
+        "noCategories": "Aucune catégorie pour l’instant.",
         "newCategoryPlaceholder": "Nom de la nouvelle catégorie…"
       }
     },
     "categories": {
-      "title": "Catégories d'Inscription",
-      "description": "Catégories pour les inscriptions et le filtrage des rosters",
+      "title": "Catégories d’inscription",
+      "description": "Catégories pour les inscriptions et le filtrage des compositions",
       "manage": "Gérer les catégories",
-      "create": "Nouvelle Catégorie",
+      "create": "Nouvelle catégorie",
       "noCategories": "Aucune catégorie créée",
-      "editTitle": "Modifier la Catégorie",
-      "createTitle": "Créer une Catégorie",
+      "createTitle": "Créer une catégorie",
+      "editTitle": "Modifier la catégorie",
       "deleteConfirm": "Supprimer la catégorie \"{name}\" ?",
-      "idLabel": "ID de la Catégorie",
-      "nameLabel": "Nom de la Catégorie",
-      "infoBox": "Les catégories permettent aux joueurs d'indiquer leur disponibilité ou rôle lors de l'inscription (ex: 'Disponible', 'Incertain', 'Seulement si besoin'). Les catégories sont partagées sur tous les rosters du serveur. Pour les rosters dans un groupe, configurez les catégories applicables via les paramètres du groupe."
+      "idLabel": "ID de la catégorie",
+      "nameLabel": "Nom de la catégorie",
+      "infoBox": "Les catégories permettent aux joueurs d’indiquer leur disponibilité ou leur rôle lors de l’inscription (par ex. « Disponible », « Incertain », « Seulement si besoin »). Les catégories sont partagées entre toutes les compositions du serveur. Pour les compositions d’un groupe, configurez les catégories applicables dans les paramètres du groupe."
     },
     "settings": {
-      "general": "Identité & Configuration",
-      "restrictions": "Restrictions & Limites",
-      "name": "Nom du Roster",
-      "rosterType": "Type de Roster",
+      "general": "Identité et configuration",
+      "restrictions": "Restrictions et limites",
+      "name": "Nom de la composition",
+      "rosterType": "Type de composition",
       "typeClan": "Clan",
       "typeFamily": "Famille",
-      "signupScope": "Portée des Inscriptions",
+      "signupScope": "Portée des inscriptions",
       "scopeClanOnly": "Clan Uniquement",
       "scopeFamilyWide": "Famille Entière",
       "clan": "Clan",
       "selectClan": "Sélectionner un clan",
       "description": "Description",
-      "descriptionPlaceholder": "Entrez une description pour ce roster...",
-      "typeAndScope": "Type & Portée",
-      "eventTime": "Date de l'Événement",
-      "eventTimeHint": "Date de début de l'événement. Utilisé pour les automatisations et les compteurs.",
+      "descriptionPlaceholder": "Entrez une description pour cette composition...",
+      "typeAndScope": "Type et portée",
+      "eventTime": "Date de l’Événement",
+      "eventTimeHint": "Date de début de l’événement. Utilisé pour les automatisations et les compteurs.",
       "recurrenceDays": "Répéter tous les",
       "recurrenceModeDays": "Tous les N jours",
       "recurrenceModeMonthly": "Jour du mois",
@@ -1097,121 +1048,32 @@
       "recurrenceDaysHint": "Laissez vide pour un événement unique. Entrez le nombre de jours entre chaque occurrence (ex : 30 pour la CWL mensuelle).",
       "recurrenceDayOfMonthHint": "Se répète ce jour chaque mois (ex : 1 = 1er).",
       "group": "Groupe",
-      "noGroup": "Aucun Groupe",
-      "thRequirements": "Exigences d'Hôtel de Ville",
-      "minTh": "TH Minimum",
-      "maxTh": "TH Maximum",
-      "signupLimits": "Limites d'Inscription",
-      "rosterSize": "Taille du Roster",
+      "noGroup": "Aucun groupe",
+      "thRequirements": "Exigences d’hôtel de ville",
+      "minTh": "HDV minimum",
+      "maxTh": "HDV maximum",
+      "signupLimits": "Limites d’inscription",
+      "rosterSize": "Taille de la composition",
       "rosterSizeHint": "Nombre maximum de membres",
       "minSignups": "Seuil de remplissage",
-      "minSignupsHint": "Nombre minimum d'inscrits pour considérer le roster comme complet",
-      "maxAccountsPerUser": "Comptes Max par Utilisateur",
+      "minSignupsHint": "Nombre minimum d’inscrits pour considérer la composition comme complète",
+      "maxAccountsPerUser": "Nombre maximal de comptes par utilisateur",
       "maxAccountsHint": "Limite de comptes par utilisateur Discord",
-      "allowedCategories": "Catégories Autorisées",
+      "allowedCategories": "Catégories autorisées",
       "allowedCategoriesHint": "Cliquez pour activer/désactiver. Si aucune sélection, toutes sont autorisées.",
-      "defaultSignupCategory": "Catégorie d'inscription par défaut",
+      "defaultSignupCategory": "Catégorie d’inscription par défaut",
       "defaultSignupCategoryNone": "Aucune (pas de défaut)",
-      "defaultSignupCategoryHint": "Catégorie pré-sélectionnée lors de l'inscription d'un membre.",
-      "categoriesManagedByGroup": "Les catégories d'inscription sont gérées au niveau du groupe. Ouvrez les paramètres du groupe depuis la page Rosters pour configurer les catégories disponibles pour tous les rosters du groupe.",
-      "saving": "Sauvegarde...",
-      "save": "Sauvegarder"
-    },
-    "addMembersDialog": {
-      "title": "Ajouter des Membres au Roster",
-      "description": "Sélectionner des membres de votre clan ou saisir des tags de joueur",
-      "bulkTagsLabel": "Ajout en lot par Tags",
-      "bulkTagsPlaceholder": "Saisissez les tags joueur (un par ligne ou séparés par virgule)",
-      "searchLabel": "Rechercher des Membres",
-      "searchPlaceholder": "Rechercher par nom ou tag...",
-      "selectFromClan": "Sélectionner parmi les Membres du Clan",
-      "selectedCount": "Sélectionné(s)",
-      "noMembers": "Aucun membre disponible",
-      "noMembersSelected": "Aucun membre sélectionné",
-      "noMembersSelectedDesc": "Veuillez sélectionner des membres ou saisir des tags joueur.",
-      "cancel": "Annuler",
-      "adding": "Ajout...",
-      "add": "Ajouter des Membres"
-    },
-    "comparisonMode": {
-      "cancel": "Annuler",
-      "compare": "Comparer",
-      "compareRosters": "Comparer les Rosters",
-      "selectRosters": "Sélectionner des rosters",
-      "selectRostersDesc": "Veuillez sélectionner au moins 2 rosters pour comparer",
-      "maxReached": "Maximum atteint",
-      "maxReachedDesc": "Vous pouvez comparer jusqu'à 5 rosters à la fois"
-    },
-    "detailsDialog": {
-      "title": "Détails du Roster",
-      "edit": "Modifier",
-      "refresh": "Actualiser",
-      "refreshing": "Actualisation...",
-      "delete": "Supprimer",
-      "deleting": "Suppression...",
-      "addMembers": "Ajouter des Membres",
-      "close": "Fermer",
-      "noMembers": "Aucun membre dans ce roster",
-      "noMembersDesc": "Ajoutez des membres pour commencer",
-      "memberCount": "Membres",
-      "thRestriction": "Niveau HdV",
-      "avgTh": "Moy. HdV",
-      "avgHitrate": "Moy. Taux de Réussite",
-      "clan": "Clan",
-      "family": "Famille",
-      "external": "Externe",
-      "substitute": "REM",
-      "removeMember": "Retirer"
-    },
-    "editDialog": {
-      "title": "Modifier le Roster",
-      "description": "Modifier les paramètres et la configuration du roster",
-      "aliasLabel": "Nom du Roster",
-      "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Description du roster...",
-      "minThLabel": "Hôtel de Ville Minimum",
-      "minThPlaceholder": "ex: 13",
-      "maxThLabel": "Hôtel de Ville Maximum",
-      "maxThPlaceholder": "ex: 16",
-      "rosterSizeLabel": "Taille du Roster",
-      "rosterSizePlaceholder": "ex: 50",
-      "columnsLabel": "Colonnes d'Affichage",
-      "columnsPlaceholder": "Sélectionner les colonnes à afficher",
-      "sortLabel": "Ordre de Tri",
-      "sortPlaceholder": "Sélectionner les champs de tri",
-      "cancel": "Annuler",
-      "saving": "Sauvegarde...",
-      "save": "Enregistrer les Modifications"
-    },
-    "emptyState": {
-      "noRosters": "Aucun roster créé",
-      "noRostersDesc": "Créez votre premier roster pour commencer",
-      "noMatch": "Aucun roster ne correspond à vos filtres",
-      "noMatchDesc": "Essayez d'ajuster votre recherche ou vos critères de filtre"
-    },
-    "sortFields": {
-      "townhall": "Niveau Hôtel de Ville",
-      "name": "Nom",
-      "tag": "Tag",
-      "heroLvs": "Héros",
-      "trophies": "Trophées",
-      "hitrate": "Taux de Réussite 30 jours",
-      "currentClanTag": "Tag du Clan",
-      "addedAt": "Ajouté le"
-    },
-    "thRestrictions": {
-      "only": "HdV{th} uniquement",
-      "range": "HdV{min}-{max}",
-      "minimum": "HdV{th}+",
-      "maximum": "HdV1-{th}",
-      "noRestriction": "Pas de restriction"
+      "defaultSignupCategoryHint": "Catégorie pré-sélectionnée lors de l’inscription d’un membre.",
+      "categoriesManagedByGroup": "Les catégories d’inscription sont gérées au niveau du groupe. Ouvrez les paramètres du groupe depuis la page Compositions pour configurer les catégories disponibles pour toutes les compositions du groupe.",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer"
     }
   },
   "LinksPage": {
     "title": "Gestion des Liens",
     "description": "Gérer les liens de comptes des membres Discord et vérifier la propriété des joueurs",
     "tabs": {
-      "overview": "Aperçu",
+      "overview": "Vue d’ensemble",
       "pending": "En Attente",
       "bulk": "Actions Groupées",
       "analytics": "Analyses"
@@ -1227,7 +1089,7 @@
       "verified": "vérifiés"
     },
     "filters": {
-      "searchPlaceholder": "Rechercher par nom de membre, nom d'utilisateur, nom de joueur ou tag...",
+      "searchPlaceholder": "Rechercher par nom de membre, nom d’utilisateur, nom de joueur ou tag...",
       "filterByStatus": "Filtrer par statut",
       "allAccounts": "Tous les Comptes",
       "verifiedOnly": "Vérifiés Uniquement",
@@ -1246,7 +1108,7 @@
       "member": "membre",
       "members": "membres",
       "noMembers": "Aucun membre trouvé",
-      "adjustFilters": "Essayez d'ajuster votre recherche ou vos filtres.",
+      "adjustFilters": "Essayez d’ajuster votre recherche ou vos filtres.",
       "noLinkedAccounts": "Aucun membre avec des comptes liés.",
       "exportCSV": "Exporter CSV",
       "exportJSON": "Exporter JSON",
@@ -1259,7 +1121,7 @@
       "title": "Vérifications en Attente",
       "description": "{count} comptes en attente de vérification",
       "allVerified": "Tous les comptes sont vérifiés !",
-      "noPending": "Il n'y a aucune vérification en attente pour le moment.",
+      "noPending": "Il n’y a aucune vérification en attente pour le moment.",
       "linked": "Lié le :"
     },
     "bulk": {
@@ -1275,13 +1137,13 @@
       "title": "Analyses des Liens",
       "description": "Aperçu des statistiques et tendances de liaison",
       "verificationRate": "Taux de Vérification",
-      "verified": "Vérifiés",
+      "verified": "Vérifié",
       "unverified": "Non Vérifiés",
       "accountDistribution": "Distribution des Comptes",
       "oneAccount": "1 compte",
       "twoToThreeAccounts": "2-3 comptes",
       "fourPlusAccounts": "4+ comptes",
-      "townHallLevels": "Niveaux d'Hôtel de Ville",
+      "townHallLevels": "Niveaux d’Hôtel de Ville",
       "other": "Autre",
       "coverage": "Couverture",
       "linkedMembers": "Membres liés",
@@ -1322,22 +1184,182 @@
       "next": "Suivant"
     }
   },
+  "WarsPage": {
+    "title": "Statistiques de guerre",
+    "description": "Suivez les performances de guerre et analysez les statistiques de combat",
+    "actions": {
+      "exportData": "Exporter les données",
+      "resetFilters": "Réinitialiser les filtres",
+      "applyFilters": "Appliquer les filtres"
+    },
+    "filters": {
+      "title": "Filtres",
+      "description": "Filtrer les statistiques de guerre selon différents critères",
+      "clan": "Clan",
+      "allClans": "Tous les clans",
+      "townHall": "Hôtel de ville",
+      "townHallShort": "HDV",
+      "allTownHalls": "Tous les niveaux d’HDV",
+      "townHallLevel": "HDV {level}",
+      "period": "Période",
+      "last7Days": "7 derniers jours",
+      "last30Days": "30 derniers jours",
+      "last90Days": "90 derniers jours",
+      "last6Months": "6 derniers mois",
+      "lastYear": "Année dernière",
+      "custom": "Personnalisée",
+      "startDate": "Date de départ",
+      "endDate": "Date de fin",
+      "warTypes": "Types de guerre"
+    },
+    "summaryStats": {
+      "totalWins": "Victoires totales",
+      "totalWinsDesc": "Sur {totalWars} guerres au total",
+      "totalLosses": "Défaites totales",
+      "totalLossesDesc": "{totalDraws} matchs nuls",
+      "winRate": "Taux de victoire",
+      "winRateDesc": "Performance d’ensemble",
+      "activeWars": "Guerres en cours",
+      "activeWarsDesc": "{activeCwl} en CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Performances de guerre par semaine",
+        "description": "Victoires, défaites et matchs nuls hebdomadaires sur la période sélectionnée",
+        "wins": "Victoires",
+        "losses": "Défaites",
+        "draws": "Égalités"
+      },
+      "thSuccessRate": {
+        "title": "Taux de réussite des attaques par hôtel de ville",
+        "description": "Taux de 3 étoiles par niveau d’HDV",
+        "threeStarPercent": "3 étoiles %",
+        "otherPercent": "Autres %"
+      },
+      "warTypeDistribution": {
+        "title": "Répartition des types de guerre",
+        "description": "Répartition par type de guerre",
+        "cwl": "LDC",
+        "random": "Classique",
+        "friendly": "Amicale"
+      },
+      "topPerformers": {
+        "title": "Meilleurs attaquants",
+        "description": "Meilleurs guerriers selon le nombre total d’étoiles",
+        "attacksAndStars": "{attacks} attaques • {stars} étoiles",
+        "noData": "Aucune donnée de joueur disponible. Essayez de modifier vos filtres."
+      },
+      "missedAttacks": {
+        "title": "Attaques manquées",
+        "description": "Joueurs qui n’ont pas utilisé toutes leurs attaques",
+        "attacks": "attaques manquées"
+      },
+      "topDefenders": {
+        "title": "Meilleurs défenseurs",
+        "description": "Meilleurs défenseurs selon la moyenne d’étoiles concédées",
+        "defensesAndStars": "{defenses} défenses • {stars} étoiles concédées",
+        "noData": "Aucune donnée de défense disponible. Essayez de modifier vos filtres."
+      },
+      "worstAttackers": {
+        "title": "Moins bons attaquants",
+        "description": "Joueurs ayant la plus faible moyenne d’étoiles par attaque (3 attaques min.)",
+        "attacksAndStars": "{attacks} attaques • {stars} étoiles",
+        "noData": "Aucune donnée de joueur disponible. Essayez de modifier vos filtres."
+      },
+      "worstDefenders": {
+        "title": "Moins bons défenseurs",
+        "description": "Joueurs ayant concédé le plus d’étoiles en défense (3 défenses min.)",
+        "defensesAndStars": "{defenses} défenses • {stars} étoiles concédées",
+        "noData": "Aucune donnée de défense disponible. Essayez de modifier vos filtres."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Statistiques de guerre des clans",
+      "description": "Statistiques détaillées de chaque clan",
+      "headers": {
+        "clan": "Clan",
+        "status": "Statut",
+        "wars": "Guerres",
+        "record": "W/L/D",
+        "winRate": "Taux de victoire",
+        "avgDestruction": "Destruction moy.",
+        "avgStarsPerAttack": "Étoiles / attaque",
+        "avgDefenseStars": "Étoiles / défense"
+      },
+      "status": {
+        "inWar": "En guerre",
+        "cwl": "LDC",
+        "peace": "Hors guerre"
+      },
+      "noData": "Aucune statistique de clan disponible. Essayez d’appliquer des filtres ou attendez le chargement des données."
+    },
+    "toast": {
+      "errorTitle": "Erreur",
+      "errorLoadingClans": "Impossible de charger les clans. Veuillez réessayer.",
+      "errorLoadingWarData": "Impossible de charger les données de guerre. Veuillez réessayer.",
+      "errorNoClans": "Aucun clan disponible",
+      "errorApplyingFilters": "Impossible d’appliquer les filtres. Veuillez réessayer."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Classements",
+    "description": "Classements mondiaux pour la capitale de clan et plus encore",
+    "comingSoon": "Cette fonctionnalité arrive bientôt. Revenez plus tard !",
+    "stats": {
+      "totalEntries": "Nombre total de participations",
+      "type": "Type de clan",
+      "league": "Ligue",
+      "weekend": "Week-end"
+    },
+    "filters": {
+      "title": "Filtres",
+      "description": "Personnalisez l’affichage du classement",
+      "type": "Type de clan",
+      "metric": "Mesure",
+      "league": "Ligue",
+      "weekend": "Week-end"
+    },
+    "types": {
+      "player": "Joueurs",
+      "clan": "Liste des clans"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Butin de capitale pillé"
+        },
+        "clan": {
+          "capitalTotalLoot": "Butin total",
+          "raidsCompleted": "Raids terminés",
+          "enemyDistrictsDestroyed": "Districts détruits",
+          "medals": "Médailles"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Tous",
+      "legendLeague": "Ligue légende",
+      "titanLeagueI": "Ligue Titan I",
+      "titanLeagueII": "Ligue Titan II",
+      "titanLeagueIII": "Ligue Titan III"
+    },
+    "rankings": {
+      "title": "Classements",
+      "description": "Top {count} des {type} pour le week-end du {weekend}",
+      "players": "joueurs",
+      "clans": "clans"
+    },
+    "empty": {
+      "title": "Aucune donnée disponible",
+      "description": "Essayez de sélectionner un autre week-end ou une autre ligue"
+    }
+  },
   "ClansPage": {
-    "title": "Clans",
+    "title": "Gestion de clan",
     "description": "Gérez les clans connectés à ce serveur Discord.",
-    "listTitle": "Clans connectés",
-    "memberSummary": "{count, plural, one {# membre} other {# membres}}",
-    "memberCount": "{count}/50 membres",
-    "searchLabel": "Rechercher des clans",
-    "searchPlaceholder": "Rechercher par nom, tag ou catégorie",
-    "noSearchResults": "Aucun clan ne correspond à cette recherche.",
-    "unknownClan": "Clan inconnu",
-    "badgeAlt": "Badge du clan {name}",
-    "addedOn": "Ajouté à ce serveur le {date}",
-    "addedOnLabel": "Afficher la date d’ajout de {name}",
     "addClan": "Ajouter un Clan",
     "addNewClan": "Ajouter un Nouveau Clan",
-    "addClanDescription": "Entrez votre tag de clan pour l'ajouter à ce serveur",
+    "addClanDescription": "Entrez votre tag de clan pour l’ajouter à ce serveur",
     "clanTag": "Tag du Clan",
     "totalClans": "Total des Clans",
     "registeredClans": "Clans enregistrés",
@@ -1345,45 +1367,59 @@
     "withSettingsConfigured": "Avec paramètres configurés",
     "totalMembers": "Total des Membres",
     "acrossAllClans": "Dans tous les clans",
-    "channels": "Canaux",
-    "availableChannels": "Canaux disponibles",
+    "channels": "Salons",
+    "availableChannels": "Salons disponibles",
     "noClansYet": "Configurez votre premier clan",
-    "getStartedAdding": "Vous n'avez encore connecté aucun clan à ce serveur. Ajoutez-en un ici pour commencer à configurer ClashKing.",
+    "getStartedAdding": "Vous n’avez encore connecté aucun clan à ce serveur. Ajoutez-en un ici pour commencer à configurer ClashKing.",
     "addFirstClan": "Ajouter votre premier clan",
     "level": "Niveau",
     "members": "Membres",
     "status": "Statut",
     "configuredBadge": "Configuré",
     "setupRequired": "Configuration Requise",
-    "configureClanLabel": "Configurer {name}",
+    "configure": "Configurer",
+    "sorting": {
+      "label": "Trier les clans",
+      "sortBy": "Trier par",
+      "toggleDirection": "Inverser le sens du tri",
+      "added": "Ajouté le",
+      "name": "Nom du clan",
+      "level": "Niveau du clan",
+      "members": "Membres"
+    },
     "configureClan": "Configurer {name} ({tag})",
+    "customizeIntegration": "Personnaliser les paramètres d’intégration Discord de ce clan",
+    "tabs": {
+      "basic": "Configuration Discord",
+      "war": "Guerre"
+    },
     "memberRole": "Rôle de Membre",
     "leaderRole": "Rôle de Chef",
     "selectRole": "Sélectionner un rôle",
     "none": "Aucun",
     "clanAbbreviation": "Abréviation du Clan",
+    "warScoreCountdown": "Compte à rebours du score de guerre",
+    "warScoreCountdownDescription": "Crée un salon vocal affichant le score actuel de la guerre",
+    "warTimerCountdown": "Compte à rebours de la guerre",
+    "warTimerCountdownDescription": "Crée un salon vocal affichant le temps restant avant la fin de la guerre",
     "category": "Catégorie",
     "categoryOptions": {
       "none": "Aucune catégorie",
       "premade": "Catégories courantes",
-      "usedByServer": "Utilisées par d'autres clans",
+      "usedByServer": "Utilisées par d’autres clans",
       "clanCount": "{count, plural, one {# clan} other {# clans}}"
     },
     "categories": {
       "title": "Catégories de clans",
       "description": "Créez et gérez les catégories disponibles pour les clans de ce serveur.",
-      "manage": "Gérer les catégories",
-      "uncategorized": "Sans catégorie",
-      "sectionCount": "{count, plural, one {# clan} other {# clans}}",
       "refresh": "Actualiser",
       "createLabel": "Nouvelle catégorie",
       "name": "Nom de la catégorie",
       "namePlaceholder": "ex. Compétitif",
       "nameHelp": "{count}/{max} caractères après normalisation des espaces",
       "create": "Créer la catégorie",
-      "empty": "Aucune catégorie de clan n'a été créée.",
+      "empty": "Aucune catégorie de clan n’a été créée.",
       "clanCount": "{count, plural, one {# clan} other {# clans}}",
-      "reorderAction": "Réorganiser {name}",
       "renameAction": "Renommer {name}",
       "deleteAction": "Supprimer {name}",
       "renameTitle": "Renommer la catégorie",
@@ -1391,31 +1427,29 @@
       "saveRename": "Enregistrer le nom",
       "deleteTitle": "Supprimer la catégorie ?",
       "deleteWarning": "La suppression de « {name} » laissera {count, plural, one {# clan sans catégorie} other {# clans sans catégorie}}.",
-      "deleteCountMayChange": "Cet aperçu est actuel. La suppression terminée indiquera le nombre verrouillé réel de clans.",
+      "deleteCountMayChange": "Cet aperçu reflète l’état actuel. Une fois la suppression terminée, le nombre réel de clans affectés sera indiqué.",
       "confirmDelete": "Supprimer la catégorie",
       "deleteSuccessTitle": "{name} supprimée",
-      "deleteSuccessDescription": "{count, plural, =0 {Aucun clan n'a été modifié.} one {# clan est maintenant sans catégorie.} other {# clans sont maintenant sans catégorie.}}",
+      "deleteSuccessDescription": "{count, plural, =0 {Aucun clan n’a été modifié.} one {# clan est maintenant sans catégorie.} other {# clans sont maintenant sans catégorie.}}",
       "created": "{name} créée.",
       "renamed": "Catégorie renommée en {name}.",
-      "reordered": "Ordre des catégories enregistré.",
       "errors": {
         "title": "Catégories indisponibles",
         "load": "Impossible de charger les catégories de clans.",
         "create": "Impossible de créer la catégorie.",
         "rename": "Impossible de renommer la catégorie.",
-        "reorder": "Impossible d’enregistrer l’ordre des catégories.",
-        "preview": "Impossible de charger l'aperçu de suppression.",
+        "preview": "Impossible de charger l’aperçu de suppression.",
         "delete": "Impossible de supprimer la catégorie.",
-        "refresh": "La catégorie a changé, mais l'état actualisé des catégories ou des clans n'a pas pu être chargé.",
+        "refresh": "La catégorie a changé, mais l’état actualisé des catégories ou des clans n’a pas pu être chargé.",
         "invalidName": "Utilisez un nom non vide de 64 caractères maximum, sans caractère de contrôle."
       }
     },
     "fieldHelp": {
-      "infoButtonLabel": "Afficher plus d'informations",
-      "memberRole": "Le role que les membres de ce clan doivent recevoir. Si le bot gère les roles, chaque personne de ce clan recevra ce role. Utile pour créer des salons spécifiques à un clan.",
-      "leaderRole": "Le role que les co-leaders et le leader de ce clan recevront. Sur un serveur Discord classique, c'est utile pour un salon de chefs de clan ou un salon de chefs commun à tous les clans.",
-      "clanAbbreviation": "Donnez une abréviation à votre clan pour que les membres puissent l'avoir dans leur nom quand le renommage est activé. Vous pouvez configurer cela dans <familySettingsLink>Paramètres de famille</familySettingsLink>.",
-      "category": "Un moyen d'organiser vos clans. Beaucoup de familles de clans ont 5 clans ou plus. Certains servent uniquement pour la CWL ou des événements."
+      "infoButtonLabel": "Afficher plus d’informations",
+      "memberRole": "Le rôle que les membres de ce clan doivent recevoir. Si le bot gère les rôles, chaque personne de ce clan recevra ce rôle. Utile pour créer des salons propres à un clan.",
+      "leaderRole": "Le rôle que les chefs adjoints et le chef de ce clan recevront. Sur un serveur Discord classique, c’est utile pour un salon des chefs de clan ou un salon commun à tous les chefs.",
+      "clanAbbreviation": "Donnez une abréviation à votre clan pour que les membres puissent l’avoir dans leur nom quand le renommage est activé. Vous pouvez configurer cela dans <familySettingsLink>Paramètres de famille</familySettingsLink>.",
+      "category": "Un moyen d’organiser vos clans. Beaucoup de familles de clans ont 5 clans ou plus. Certains servent uniquement pour la CWL ou des événements."
     },
     "roleIdPlaceholder": "ID du Rôle",
     "abbreviationPlaceholder": "ex: CK",
@@ -1423,67 +1457,65 @@
     "notAvailable": "N/A",
     "saving": "Enregistrement...",
     "saveChanges": "Enregistrer les Modifications",
-    "deleteClan": "Supprimer le clan",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {name} ? Cela supprimera également tous les rappels et journaux associés.",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer {tag} ? Cela supprimera également tous les rappels et journaux associés.",
     "toast": {
       "errorLoadingClans": "Échec du chargement des clans",
       "errorLoadingSettings": "Échec du chargement des paramètres du clan",
       "errorEmptyClanTag": "Veuillez entrer un tag de clan",
       "clanAdded": "Clan ajouté avec succès",
-      "errorAddingClan": "Échec de l'ajout du clan",
+      "errorAddingClan": "Échec de l’ajout du clan",
       "clanRemoved": "Clan retiré avec succès",
       "errorRemovingClan": "Échec de la suppression du clan",
       "settingsSaved": "Paramètres enregistrés avec succès",
-      "errorSavingSettings": "Échec de l'enregistrement des paramètres",
+      "errorSavingSettings": "Échec de l’enregistrement des paramètres",
       "countdownEnabled": "Salon vocal de compte à rebours créé",
       "countdownDisabled": "Salon vocal de compte à rebours supprimé",
       "errorTogglingCountdown": "Échec de la bascule du compte à rebours"
     }
   },
   "RolesPage": {
-    "title": "Gestion des Rôles",
-    "description": "Configurer l'attribution automatique des rôles basée sur les statistiques des joueurs",
+    "title": "Gestion des rôles",
+    "description": "Configurer l’attribution automatique des rôles basée sur les statistiques des joueurs",
     "stats": {
-      "totalRoles": "Rôles Totaux",
+      "totalRoles": "Total des rôles",
       "totalRolesDesc": "Attributions de rôles configurées",
-      "autoEvaluation": "Auto-Évaluation",
+      "autoEvaluation": "Évaluation automatique",
       "autoEvaluationOn": "Activée",
       "autoEvaluationOff": "Désactivée",
       "autoEvaluationActiveDesc": "Attribution automatique des rôles",
       "autoEvaluationInactiveDesc": "Attribution manuelle uniquement",
-      "activeTypes": "Types Actifs",
+      "activeTypes": "Types actifs",
       "activeTypesDesc": "Types de rôles utilisés",
       "discordRoles": "Rôles Discord",
       "discordRolesDesc": "Disponibles sur le serveur"
     },
     "settings": {
-      "title": "Paramètres d'Auto-Évaluation",
-      "description": "Configurer l'évaluation et l'attribution automatique des rôles",
-      "saveButton": "Enregistrer les Paramètres",
+      "title": "Paramètres d’évaluation automatique",
+      "description": "Configurer l’évaluation et l’attribution automatique des rôles",
+      "saveButton": "Enregistrer les paramètres",
       "saving": "Enregistrement...",
-      "enableAutoEval": "Activer l'Auto-Évaluation",
+      "enableAutoEval": "Activer l’évaluation automatique",
       "enableAutoEvalDesc": "Attribuer et retirer automatiquement les rôles selon les statistiques des joueurs",
-      "autoNickname": "Mise à Jour Automatique des Pseudos",
-      "autoNicknameDesc": "Mettre à jour les pseudos lors de l'évaluation des rôles"
+      "autoNickname": "Mise à jour automatique des pseudos",
+      "autoNicknameDesc": "Mettre à jour les pseudos lors de l’évaluation des rôles"
     },
     "roleTypes": {
-      "townhall": "Hôtel de Ville",
+      "townhall": "Hôtel de ville",
       "league": "Ligue",
       "builderhall": "Maison des Ouvriers",
       "builderLeague": "Ligue MDO",
-      "clanCategory": "Catégorie de clan",
       "achievement": "Succès",
       "status": "Ancienneté sur Discord",
       "familyPosition": "Rôle de clan"
     },
     "familyPositions": {
       "member": "Membre",
-      "elder": "Ainé",
-      "coLeader": "Chef Adjoint",
+      "elder": "Aîné",
+      "coLeader": "Adjoint",
       "leader": "Chef"
     },
     "leagues": {
-      "legend": "Ligue Légende",
+      "legend": "Légende",
       "electroDragon": "Électro Dragon",
       "dragon": "Dragon",
       "electroTitan": "Électro Titan",
@@ -1492,7 +1524,7 @@
       "witch": "Sorcière",
       "valkyrie": "Valkyrie",
       "wizard": "Sorcier",
-      "archer": "Archer",
+      "archer": "Archère",
       "barbarian": "Barbare",
       "skeleton": "Squelette"
     },
@@ -1515,15 +1547,15 @@
       "biggerAndBetter": "Plus grand et meilleur",
       "discoverNewTroops": "Découvrez de nouvelles troupes",
       "biggerCoffers": "Coffres plus grands",
-      "goldGrab": "Accro à l'or",
-      "elixirEscapade": "Escapade d'élixir",
+      "goldGrab": "Accro à l’or",
+      "elixirEscapade": "Escapade d’élixir",
       "heroicHeist": "Casse héroïque",
       "wellSeasoned": "Bien chevronné",
       "niceAndTidy": "Tout beau, tout propre",
-      "empireBuilder": "Bâtisseur d'empire",
+      "empireBuilder": "Bâtisseur d’empire",
       "clanWarWealth": "Richesse de guerre de clans",
       "friendInNeed": "Ami dans le besoin",
-      "sharingIsCaring": "Le partage, c'est la vie",
+      "sharingIsCaring": "Le partage, c’est la vie",
       "siegeSharer": "Partageur de siège",
       "warHero": "Héros de guerre",
       "warLeagueLegend": "Légende de ligue de guerre",
@@ -1537,24 +1569,24 @@
       "leagueSuperfan": "Superfan de ligue",
       "leagueFanatic": "Fanatique de ligue",
       "leagueMaster": "Maître de ligue",
-      "legendLeague": "Ligue Légende",
+      "legendLeague": "Ligue légende",
       "humiliator": "Humiliateur",
       "notSoEasyThisTime": "Pas si facile cette fois",
-      "unionBuster": "Casseur d'ouvriers",
+      "unionBuster": "Casseur d’ouvriers",
       "bustThis": "Explose ça !",
       "wallBuster": "Casseur de murs",
       "mortarMauler": "Broyeur de mortiers",
-      "xBowExterminator": "Exterminateur d'arcs-X",
+      "xBowExterminator": "Exterminateur d’arcs-X",
       "firefighter": "Pompier",
       "antiArtillery": "Anti-Artillerie",
       "shatteredAndScatter": "Brisé et dispersé",
       "counterspell": "Contre-sort",
       "monolithMasher": "Écraseur de monolithe",
-      "multiArcherTowerTerminator": "Terminator de tour d'archères multiple",
+      "multiArcherTowerTerminator": "Terminator de tour d’archères multiple",
       "ricochetCannonCrusher": "Écraseur de canon à ricochet",
       "firespitterFinisher": "Finisseur de cracheur de feu",
       "multiGearTowerTrampler": "Piétineur de tour multi-engrenages",
-      "craftersNightmare": "Cauchemar de l'artisan",
+      "craftersNightmare": "Cauchemar de l’artisan",
       "getThoseGoblins": "Attrapez ces gobelins !",
       "supercharger": "Superchargeur",
       "craftingConnoisseur": "Connaisseur en artisanat",
@@ -1573,7 +1605,7 @@
       "mostValuableClanmate": "Membre le plus précieux"
     },
     "configuredRoles": {
-      "title": "Rôles Configurés",
+      "title": "Rôles configurés",
       "noRolesConfigured": "Aucun rôle {roleType} configuré",
       "addRoleToStart": "Cliquez sur \"Ajouter un Rôle\" pour en créer un",
       "discordRole": "Rôle Discord",
@@ -1583,19 +1615,19 @@
       "modeAdd": "Ajouter seulement",
       "modeRemove": "Retirer seulement",
       "actions": "Actions",
-      "unknownRole": "Rôle Inconnu",
+      "unknownRole": "Rôle inconnu",
       "remove": "Retirer",
       "month": "mois",
       "months": "mois"
     },
     "addRoleDialog": {
-      "title": "Ajouter un Nouveau Rôle",
-      "description": "Configurer une nouvelle règle d'attribution automatique de rôle",
-      "roleType": "Type de Rôle",
+      "title": "Ajouter un nouveau rôle",
+      "description": "Configurer une nouvelle règle d’attribution automatique de rôle",
+      "roleType": "Type de rôle",
       "mode": "Mode",
       "discordRole": "Rôle Discord",
       "selectRole": "Sélectionner un rôle",
-      "townHallLevel": "Niveau d'Hôtel de Ville",
+      "townHallLevel": "Niveau d’Hôtel de Ville",
       "selectThLevel": "Sélectionner le niveau HDV",
       "thPrefix": "HDV",
       "league": "Ligue",
@@ -1609,33 +1641,33 @@
       "selectAchievement": "Sélectionner un succès",
       "searchAchievement": "Rechercher un succès...",
       "noAchievementFound": "Aucun succès trouvé.",
-      "monthsInServer": "Mois sur le Serveur",
+      "monthsInServer": "Mois sur le serveur",
       "monthsPlaceholder": "6",
-      "familyPosition": "Position Familiale",
+      "familyPosition": "Position dans la famille",
       "selectPosition": "Sélectionner une position",
       "cancel": "Annuler",
-      "addRole": "Ajouter un Rôle",
+      "addRole": "Ajouter un rôle",
       "errorDuplicateExact": "Ce critère est déjà lié à ce rôle.",
-      "errorDuplicateCriterion": "Ce critère a déjà un rôle assigné. Supprimez l'existant d'abord."
+      "errorDuplicateCriterion": "Ce critère a déjà un rôle assigné. Supprimez l’existant d’abord."
     },
     "infoCard": {
-      "title": "💡 Fonctionnement des Rôles Automatiques",
-      "automaticEvaluation": "Évaluation Automatique :",
-      "automaticEvaluationDesc": "Lorsqu'activé, le bot vérifiera périodiquement les joueurs et attribuera/retirera les rôles selon leurs statistiques actuelles.",
-      "rolePriority": "Priorité des Rôles :",
-      "rolePriorityDesc": "Si plusieurs rôles correspondent aux statistiques d'un joueur, le rôle de plus haut niveau sera attribué.",
-      "manualOverride": "Remplacement Manuel :",
-      "manualOverrideDesc": "Les administrateurs du serveur peuvent attribuer manuellement des rôles, qui ne seront pas retirés par l'auto-évaluation."
+      "title": "💡 Fonctionnement des rôles automatiques",
+      "automaticEvaluation": "Évaluation automatique :",
+      "automaticEvaluationDesc": "Lorsqu’activé, le bot vérifiera périodiquement les joueurs et attribuera/retirera les rôles selon leurs statistiques actuelles.",
+      "rolePriority": "Priorité des rôles :",
+      "rolePriorityDesc": "Si plusieurs rôles correspondent aux statistiques d’un joueur, le rôle de plus haut niveau sera attribué.",
+      "manualOverride": "Remplacement manuel :",
+      "manualOverrideDesc": "Les administrateurs du serveur peuvent attribuer manuellement des rôles, qui ne seront pas retirés par l’auto-évaluation."
     },
     "categoryRoles": {
-      "title": "Rôles de Catégorie",
+      "title": "Rôles de catégorie",
       "description": "Attribuez un rôle Discord à chaque catégorie de clan. Les membres des clans appartenant à cette catégorie reçoivent automatiquement le rôle correspondant.",
-      "addButton": "Ajouter une Catégorie",
+      "addButton": "Ajouter une catégorie",
       "categoryName": "Catégorie",
       "categoryNamePlaceholder": "Nom de la catégorie",
       "noCategoryRoles": "Aucun rôle de catégorie configuré",
       "noCategoryRolesDesc": "Cliquez sur « Ajouter une Catégorie » pour en créer un",
-      "addTitle": "Ajouter un Rôle de Catégorie",
+      "addTitle": "Ajouter un rôle de catégorie",
       "addConfirm": "Ajouter",
       "errorCategoryRequired": "Le nom de la catégorie est requis",
       "errorRoleRequired": "Le rôle Discord est requis",
@@ -1644,8 +1676,8 @@
     "toast": {
       "changesSaved": "Modifications enregistrées avec succès !",
       "errorLoading": "Échec du chargement des rôles",
-      "errorSaving": "Échec de l'enregistrement des paramètres",
-      "errorAdding": "Échec de l'ajout du rôle",
+      "errorSaving": "Échec de l’enregistrement des paramètres",
+      "errorAdding": "Échec de l’ajout du rôle",
       "errorDeleting": "Échec de la suppression du rôle"
     }
   },
@@ -1654,27 +1686,14 @@
     "description": "Configurez des rappels automatiques pour les guerres, raids, jeux de clan et inactivité",
     "types": {
       "war": "Rappels de Guerre",
-      "capital": "Capitale de Clan",
-      "clanGames": "Jeux de Clan",
+      "capital": "Capitale de clan",
+      "clanGames": "Jeux de clan",
       "inactivity": "Inactivité"
-    },
-    "section": {
-      "title": "Rappels configurés",
-      "description": "Filtrez par clan, puis choisissez un type de rappel pour consulter ou modifier sa diffusion."
-    },
-    "issues": {
-      "title": "{count, plural, one {1 rappel nécessite votre attention} other {# rappels nécessitent votre attention}}",
-      "description": "Ces rappels pointent vers un canal, un fil ou une publication de forum qui n’est plus disponible.",
-      "channelMissing": "Le canal {channelId} a été supprimé ou n’est pas disponible",
-      "threadMissing": "Le fil ou la publication de forum a été supprimé ou n’est pas disponible",
-      "showDetails": "Afficher les détails",
-      "hideDetails": "Masquer les détails",
-      "review": "Vérifier"
     },
     "tabs": {
       "war": "Guerre",
-      "capital": "Capitale",
-      "clanGames": "Jeux de Clan",
+      "capital": "Capitale de clan",
+      "clanGames": "Jeux de clan",
       "inactivity": "Inactivité"
     },
     "stats": {
@@ -1685,7 +1704,7 @@
       "capitalReminders": "Rappels de Capitale",
       "capitalRemindersDesc": "Attaques du week-end de raid",
       "otherReminders": "Autres Rappels",
-      "otherRemindersDesc": "Jeux & inactivité"
+      "otherRemindersDesc": "Jeux de clan et inactivité"
     },
     "actions": {
       "saving": "Enregistrement...",
@@ -1694,11 +1713,7 @@
       "addWarReminder": "Ajouter un Rappel de Guerre",
       "addCapitalReminder": "Ajouter un Rappel de Capitale",
       "addClanGamesReminder": "Ajouter un Rappel de Jeux de Clan",
-      "addInactivityReminder": "Ajouter un Rappel d'Inactivité",
-      "clone": "Dupliquer le rappel",
-      "edit": "Modifier le rappel",
-      "delete": "Supprimer le rappel",
-      "more": "Actions du rappel",
+      "addInactivityReminder": "Ajouter un Rappel d’Inactivité",
       "retry": "Réessayer"
     },
     "clanSelector": {
@@ -1710,7 +1725,7 @@
       "noWarReminders": "Aucun Rappel de Guerre",
       "noCapitalReminders": "Aucun Rappel de Capitale",
       "noClanGamesReminders": "Aucun Rappel de Jeux de Clan",
-      "noInactivityReminders": "Aucun Rappel d'Inactivité",
+      "noInactivityReminders": "Aucun Rappel d’Inactivité",
       "getStarted": "Commencez par créer votre premier rappel"
     },
     "card": {
@@ -1722,44 +1737,31 @@
       "timeInactivePlaceholder": "Par ex. 160",
       "timeUnit": "heures",
       "hoursRemaining": "h restantes",
-      "channel": "Canal",
-      "channelPlaceholder": "Sélectionner un canal",
+      "channel": "Salon",
+      "channelPlaceholder": "Sélectionner un salon",
       "threadOptional": "Fil (facultatif)",
       "threadPlaceholder": "Sélectionner un fil",
-      "noThread": "Publier directement dans le canal",
+      "noThread": "Publier directement dans le salon",
       "forumPost": "Publication du forum",
       "forumPostPlaceholder": "Sélectionner une publication du forum",
-      "forumPostRequired": "Une publication est requise pour les canaux de forum.",
+      "forumPostRequired": "Une publication est requise pour les salons de forum.",
       "clan": "Clan",
       "clanPlaceholder": "Sélectionner un clan",
       "customMessage": "Message Personnalisé",
-      "customMessagePlaceholder": "N'oubliez pas d'utiliser vos attaques !",
-      "customMessagePlaceholderClanGames": "Essayez d'obtenir plus de points dans les jeux de clan !",
+      "customMessagePlaceholder": "N’oubliez pas d’utiliser vos attaques !",
+      "customMessagePlaceholderClanGames": "Essayez d’obtenir plus de points dans les jeux de clan !",
       "customMessagePlaceholderInactivity": "Vous êtes inactif dans le clan depuis un moment :(",
       "warTypes": "Types de Guerre",
-      "random": "Aléatoire",
+      "random": "Classique",
       "friendly": "Amicale",
       "cwl": "LDC",
       "pointThreshold": "Seuil de Points",
       "pointThresholdPlaceholder": "4000",
       "pointThresholdHelp": "Mentionnera les membres qui ont moins de {threshold} points.",
-      "attackThreshold": "Seuil d'Attaques",
+      "attackThreshold": "Seuil d’Attaques",
       "attackThresholdPlaceholder": "1",
-      "attackThresholdHelp": "Mentionnera les membres s'il leur reste au moins {threshold} attaques à effectuer.",
-      "pointsValue": "{count} points",
-      "attacksValue": "{count, plural, one {1 attaque restante} other {# attaques restantes}}",
-      "customImageAlt": "Image personnalisée du rappel",
-      "customGifTitle": "GIF personnalisé du rappel",
+      "attackThresholdHelp": "Mentionnera les membres s’il leur reste au moins {threshold} attaques à effectuer.",
       "notSet": "Non défini"
-    },
-    "clone": {
-      "title": "Dupliquer le rappel",
-      "description": "Choisissez un autre clan. L’heure, le canal, le message et tous les autres paramètres resteront identiques.",
-      "targetClan": "Nouveau clan",
-      "selectClan": "Sélectionner un autre clan",
-      "noOtherClans": "Ajoutez un autre clan à ce serveur avant de dupliquer ce rappel.",
-      "action": "Dupliquer le rappel",
-      "cloning": "Duplication..."
     },
     "dialog": {
       "addTitle": "Ajouter un Nouveau Rappel",
@@ -1777,51 +1779,33 @@
       "errorTitle": "Erreur",
       "errorLoadingReminders": "Échec du chargement des rappels. Veuillez réessayer.",
       "reminderAdded": "Rappel ajouté avec succès",
-      "reminderAddedDesc": "Nouveau rappel {type} ajouté. N'oubliez pas d'enregistrer !",
+      "reminderAddedDesc": "Nouveau rappel {type} ajouté. N’oubliez pas d’enregistrer !",
       "reminderUpdated": "Rappel mis à jour avec succès",
-      "reminderCloned": "Rappel dupliqué avec succès",
       "successTitle": "Succès",
       "reminderDeleted": "Rappel supprimé avec succès",
       "failedToDelete": "Échec de la suppression du rappel",
       "allRemindersSaved": "Tous les rappels enregistrés avec succès",
-      "failedToSave": "Échec de l'enregistrement des rappels",
-      "failedToClone": "Échec de la duplication du rappel",
-      "forumPostRequired": "Sélectionnez une publication du forum avant d'enregistrer ce rappel.",
-      "invalidDestination": "Le fil sélectionné n'appartient pas à ce canal.",
+      "failedToSave": "Échec de l’enregistrement des rappels",
+      "forumPostRequired": "Sélectionnez une publication du forum avant d’enregistrer ce rappel.",
+      "invalidDestination": "Le fil sélectionné n’appartient pas à ce salon.",
       "timeExceedsLimit": "Le temps restant doit être compris entre {min} et {max} heures",
       "pointThresholdInvalid": "Le seuil de points doit être entre {min} et {max}",
-      "attackThresholdInvalid": "Le seuil d'attaques doit être entre {min} et {max}"
+      "attackThresholdInvalid": "Le seuil d’attaques doit être entre {min} et {max}"
     }
   },
   "LogsPage": {
-    "title": "Journaux d'Activité",
+    "title": "Journaux d’Activité",
     "description": "Configurez les activités du serveur et des clans envoyées sur Discord.",
-    "source": {
-      "title": "Choisissez ce que vous configurez",
-      "description": "Sélectionnez un clan pour ses journaux et sa configuration, ou le serveur pour les journaux et la configuration à l’échelle du serveur.",
-      "label": "Serveur ou clan",
-      "placeholder": "Sélectionnez un serveur ou un clan",
-      "searchPlaceholder": "Rechercher le serveur ou les clans",
-      "serverDescription": "Journaux, comptes à rebours et panneau d'arrivée",
-      "serverFallback": "Ce serveur"
+    "stats": {
+      "activeLogs": "Journaux actifs",
+      "activeLogsDesc": "Pour tous les clans de la famille et les journaux du serveur",
+      "logChannels": "Salons de journalisation",
+      "logChannelsDesc": "Salons disponibles",
+      "trackedClans": "Clans suivis",
+      "trackedClansDesc": "Clans configurés",
+      "issues": "Problèmes",
+      "issuesDesc": "Dans l’ensemble de la famille"
     },
-    "scope": {
-      "clan": "Clan",
-      "server": "Serveur",
-      "serverTitle": "Journaux du serveur",
-      "serverDescription": "Ces flux s'appliquent à tout le serveur Discord et ne changent pas selon le clan sélectionné."
-    },
-    "issues": {
-      "title": "{count, plural, one {1 destination nécessite votre attention} other {# destinations nécessitent votre attention}}",
-      "description": "Ces journaux actifs pointent vers un canal, un fil ou une publication de forum qui n'est plus disponible.",
-      "serverScope": "Tout le serveur",
-      "channelMissing": "Le canal {channelId} a été supprimé ou n'est plus disponible",
-      "threadMissing": "Le fil ou la publication de forum a été supprimé ou n'est plus disponible",
-      "showDetails": "Afficher les détails",
-      "hideDetails": "Masquer les détails",
-      "review": "Vérifier"
-    },
-    "emptyClans": "Ajoutez un clan à ce serveur avant de configurer les journaux de clan.",
     "clanSelector": {
       "label": "Clan :",
       "placeholder": "Sélectionner un clan"
@@ -1829,29 +1813,9 @@
     "tabs": {
       "clan": "Clan",
       "war": "Guerre",
-      "capital": "Capitale",
+      "capital": "Capitale de clan",
       "player": "Joueur",
-      "countdowns": "Comptes à rebours"
-    },
-    "serverTabs": {
-      "logs": "Journaux",
-      "countdowns": "Comptes à rebours",
-      "joinPanel": "Panneau d'arrivée"
-    },
-    "countdowns": {
-      "loadError": "Échec du chargement des comptes à rebours.",
-      "updateError": "Échec de la mise à jour du compte à rebours.",
-      "empty": "Aucun type de compte à rebours n'est disponible.",
-      "toggle": "Activer ou désactiver {name}",
-      "types": {
-        "clan_games_timer": { "label": "Jeux de clan", "description": "Affiche le temps restant des Jeux de clan dans un salon vocal." },
-        "cwl_timer": { "label": "Ligue de guerre de clans", "description": "Affiche le temps restant de la Ligue de guerre dans un salon vocal." },
-        "raid_weekend_timer": { "label": "Week-end de raid", "description": "Affiche le temps restant du week-end de raid dans un salon vocal." },
-        "season_end_timer": { "label": "Fin de saison", "description": "Affiche le temps restant de la saison dans un salon vocal." },
-        "season_day_timer": { "label": "Jour de saison", "description": "Affiche le jour actuel de la saison dans un salon vocal." },
-        "war_score": { "label": "Score de guerre", "description": "Affiche le score de guerre actuel de ce clan dans un salon vocal." },
-        "war_timer": { "label": "Temps de guerre", "description": "Affiche le temps restant de la guerre actuelle de ce clan dans un salon vocal." }
-      }
+      "server": "Serveur"
     },
     "clanLogs": {
       "joinLog": {
@@ -1880,7 +1844,7 @@
       },
       "banAlert": {
         "label": "Alertes de bannissement",
-        "description": "Publier une alerte lorsqu'un joueur banni rejoint ce clan"
+        "description": "Publier une alerte lorsqu’un joueur banni rejoint ce clan"
       }
     },
     "serverLogs": {
@@ -1891,7 +1855,7 @@
     },
     "warLogs": {
       "warLog": {
-        "label": "Journal de Guerre",
+        "label": "Journal",
         "description": "Suivre les attaques et résultats de guerre"
       },
       "warPanel": {
@@ -1906,7 +1870,7 @@
     "capitalLogs": {
       "capitalDonations": {
         "label": "Dons à la Capitale",
-        "description": "Suivre les dons d'or de capitale"
+        "description": "Suivre les dons d’or de capitale"
       },
       "capitalAttacks": {
         "label": "Attaques de Capitale",
@@ -1935,8 +1899,8 @@
         "description": "Suivre les activations de super troupes"
       },
       "thUpgrade": {
-        "label": "Amélioration d'Hôtel de Ville",
-        "description": "Suivre les améliorations d'hôtel de ville"
+        "label": "Amélioration de l’Hôtel de ville",
+        "description": "Suivre les améliorations d’hôtel de ville"
       },
       "leagueChange": {
         "label": "Changement de Ligue",
@@ -1951,8 +1915,8 @@
         "description": "Suivre les améliorations de niveau de héros"
       },
       "heroEquipmentUpgrade": {
-        "label": "Amélioration d'Équipement de Héros",
-        "description": "Suivre les améliorations d'équipement de héros"
+        "label": "Amélioration d’Équipement de Héros",
+        "description": "Suivre les améliorations d’équipement de héros"
       },
       "nameChange": {
         "label": "Changement de Nom",
@@ -1973,17 +1937,17 @@
       "disabled": "Désactivé",
       "enable": "Activer",
       "disable": "Désactiver",
-      "channel": "Canal",
-      "channelPlaceholder": "Sélectionner un canal",
+      "channel": "Salon",
+      "channelPlaceholder": "Sélectionner un salon",
       "thread": "Fil (Optionnel)",
       "threadPlaceholder": "Sélectionner un fil",
       "noThread": "Aucun Fil",
       "forumPost": "Publication du forum",
       "forumPostPlaceholder": "Sélectionner une publication du forum",
-      "forumPostRequired": "Sélectionnez une publication du forum avant d'enregistrer ce journal.",
-      "invalidThread": "Le fil sélectionné n'appartient pas à ce canal.",
+      "forumPostRequired": "Sélectionnez une publication du forum avant d’enregistrer ce journal.",
+      "invalidThread": "Le fil sélectionné n’appartient pas à ce salon.",
       "saveDestination": "Enregistrer la destination",
-      "channelDeleted": "Ce canal n'existe plus. Sélectionnez-en un nouveau ou désactivez le journal.",
+      "channelDeleted": "Ce salon n’existe plus. Sélectionnez-en un nouveau ou désactivez le journal.",
       "enableToConfig": "Activez ce journal pour le configurer",
       "configuring": "Configuration",
       "on": "Actif",
@@ -1992,15 +1956,19 @@
     }
   },
   "GeneralPage": {
-    "title": "Paramètres Généraux",
-    "description": "Configurer le comportement et l'apparence du bot pour le serveur",
+    "title": "Paramètres généraux",
+    "description": "Configurer le comportement et l’apparence du bot pour le serveur",
     "loading": "Chargement des paramètres...",
     "reset": "Réinitialiser",
     "saving": "Enregistrement...",
     "saveChanges": "Enregistrer les Modifications",
     "settingsSaved": "Paramètres enregistrés avec succès !",
+    "infoBanner": {
+      "title": "Vous cherchez d’autres paramètres ?",
+      "description": "Les rôles familiaux et les paramètres de surnom se trouvent sur la page **Paramètres de la famille**. La gestion des rôles se trouve sur la page **Rôles**. Les rôles, abréviations, catégories et comptes à rebours de guerre des clans se trouvent sur la page **Clans**."
+    },
     "nickname": {
-      "title": "Gestion des Pseudos",
+      "title": "Gestion des pseudos",
       "description": "Contrôler le formatage des pseudonymes",
       "automaticChanges": "Modifications Automatiques",
       "automaticChangesDesc": "Autoriser le bot à mettre à jour les pseudos des membres",
@@ -2009,11 +1977,11 @@
       "preview": "Aperçu :",
       "nonFamilyFormat": "Format des Non-Membres de la Famille",
       "placeholders": {
-        "discordName": "Nom d'utilisateur Discord",
+        "discordName": "Nom d’utilisateur Discord",
         "discordDisplayName": "Pseudo du serveur",
         "playerName": "Nom du joueur CoC",
         "playerTag": "Tag du joueur",
-        "playerTownhall": "Niveau d'HDV",
+        "playerTownhall": "Niveau d’HDV",
         "playerTownhallSmall": "HDV en exposant",
         "playerWarstars": "Étoiles de guerre",
         "playerRole": "Rôle dans le clan",
@@ -2025,37 +1993,25 @@
     "appearance": {
       "title": "Apparence",
       "description": "Personnaliser les messages embed du bot",
-      "embedColor": "Couleur d'Embed",
+      "embedColor": "Couleur d’Embed",
       "embedColorDesc": "Couleur de la barre latérale sur tous les messages embed du bot dans Discord",
       "embedColorDefault": "Par défaut : **#D90709** (Rouge ClashKing)",
-      "embedPreview": "Aperçu d'Embed",
-      "embedPreviewDesc": "Cette barre colorée apparaîtra sur le côté gauche de tous les messages du bot",
+      "embedPreview": "Aperçu d’Embed",
+      "embedPreviewDesc": "Cette barre colorée apparaîtra à côté de tous les embeds du bot",
       "editColor": "Modifier la Couleur",
       "resetToDefault": "Réinitialiser par Défaut",
       "apply": "Appliquer"
     },
     "security": {
       "title": "Sécurité et Permissions",
-      "description": "Contrôler l'accès et la vérification",
+      "description": "Contrôler l’accès et la vérification",
       "fullWhitelistRole": "Rôle super-administrateur",
       "fullWhitelistRoleDesc": "Rôle Discord avec un accès complet à toutes les commandes du bot (contourne toutes les vérifications de permissions)",
-      "noRole": "Aucun Rôle",
-      "dashboardAccess": {
-        "title": "Accès au tableau de bord",
-        "description": "Accordez aux rôles Discord un accès en lecture ou en gestion à certaines sections. Les rôles se cumulent.",
-        "loadError": "Impossible de charger les accès au tableau de bord",
-        "retry": "Réessayer",
-        "selectRole": "Sélectionner un rôle Discord",
-        "addRole": "Ajouter le rôle",
-        "empty": "Aucun rôle de tableau de bord n'a été ajouté.",
-        "removeRole": "Supprimer {role}",
-        "levels": { "none": "Aucun accès", "view": "Lecture", "manage": "Gestion" },
-        "status": { "saving": "Enregistrement", "saved": "Enregistré", "pending": "Modifications en attente", "error": "Non enregistré" }
-      }
+      "noRole": "Aucun Rôle"
     },
     "familyRoles": {
       "title": "Rôles de Famille",
-      "description": "Gérer les rôles automatiques basés sur l'appartenance à la famille et les positions dans le clan",
+      "description": "Gérer les rôles automatiques basés sur l’appartenance à la famille et les positions dans le clan",
       "selectRole": "Sélectionner un rôle",
       "addRole": "Ajouter un rôle...",
       "deletedRole": "Rôle supprimé",
@@ -2068,29 +2024,29 @@
       "types": {
         "family": "Famille",
         "notFamily": "Non-Famille",
-        "elder": "Ainé",
-        "coLeader": "Chef Adjoint",
+        "elder": "Aîné",
+        "coLeader": "Adjoint",
         "leader": "Chef"
       },
       "descriptions": {
         "family": "A au moins un compte dans les clans famille",
-        "notFamily": "N'a aucun compte dans les clans famille",
-        "elder": "A le rang Ainé dans un clan famille",
-        "coLeader": "A le rang Chef Adjoint dans un clan famille",
-        "leader": "A le rang Chef dans un clan famille"
+        "notFamily": "N’a aucun compte dans les clans famille",
+        "elder": "A le rang d’aîné dans un clan de la famille",
+        "coLeader": "A le rang de chef adjoint dans un clan de la famille",
+        "leader": "A le rang de chef dans un clan de la famille"
       }
     },
     "tenureRoles": {
-      "title": "Rôles d'Ancienneté Discord",
+      "title": "Rôles d’Ancienneté Discord",
       "description": "Attribuer automatiquement des rôles en fonction de la durée de présence des membres sur le serveur",
-      "addRole": "Ajouter un Rôle d'Ancienneté",
-      "addDialogTitle": "Ajouter un Rôle d'Ancienneté",
+      "addRole": "Ajouter un Rôle d’Ancienneté",
+      "addDialogTitle": "Ajouter un Rôle d’Ancienneté",
       "addDialogDescription": "Attribuer un rôle aux membres qui sont sur le serveur depuis un certain nombre de mois",
       "monthsInServer": "Mois sur le Serveur",
       "discordRole": "Rôle Discord",
       "selectRole": "Sélectionner un rôle",
-      "noRolesConfigured": "Aucun rôle d'ancienneté configuré",
-      "addRoleToStart": "Ajoutez un rôle d'ancienneté pour commencer",
+      "noRolesConfigured": "Aucun rôle d’ancienneté configuré",
+      "addRoleToStart": "Ajoutez un rôle d’ancienneté pour commencer",
       "months": "Mois",
       "month": "mois",
       "actions": "Actions",
@@ -2103,7 +2059,7 @@
     "theme": "Thème"
   },
   "FamilySettingsPage": {
-    "title": "Paramètres Famille",
+    "title": "Paramètres de la famille",
     "description": "Configurer les rôles de famille et le formatage des pseudos pour les membres du clan",
     "loading": "Chargement des paramètres...",
     "reset": "Réinitialiser",
@@ -2115,19 +2071,16 @@
       "description": "Contrôler le formatage des pseudonymes",
       "automaticChanges": "Modifications Automatiques",
       "automaticChangesDesc": "Autoriser le bot à mettre à jour les pseudos des membres",
-      "autocompleteHint": "Tapez une accolade ouvrante pour insérer un paramètre",
-      "pending": "En attente d’enregistrement",
-      "saved": "Enregistré",
       "familyFormat": "Format des Membres de la Famille",
       "availablePlaceholders": "Paramètres disponibles",
       "preview": "Aperçu :",
       "nonFamilyFormat": "Format des Non-Membres de la Famille",
       "placeholders": {
-        "discordName": "Nom d'utilisateur Discord",
+        "discordName": "Nom d’utilisateur Discord",
         "discordDisplayName": "Pseudo du serveur",
         "playerName": "Nom du joueur CoC",
         "playerTag": "Tag du joueur",
-        "playerTownhall": "Niveau d'HDV",
+        "playerTownhall": "Niveau d’HDV",
         "playerTownhallSmall": "HDV en exposant",
         "playerWarstars": "Étoiles de guerre",
         "playerRole": "Rôle dans le clan",
@@ -2138,7 +2091,7 @@
     },
     "familyRoles": {
       "title": "Rôles de Famille",
-      "description": "Gérer les rôles automatiques basés sur l'appartenance à la famille et les positions dans le clan",
+      "description": "Gérer les rôles automatiques basés sur l’appartenance à la famille et les positions dans le clan",
       "selectRole": "Sélectionner un rôle",
       "addRole": "Ajouter un rôle...",
       "deletedRole": "Rôle supprimé",
@@ -2151,16 +2104,16 @@
       "types": {
         "family": "Famille",
         "notFamily": "Non-Famille",
-        "elder": "Ainé",
-        "coLeader": "Chef Adjoint",
+        "elder": "Aîné",
+        "coLeader": "Adjoint",
         "leader": "Chef"
       },
       "descriptions": {
         "family": "A au moins un compte dans les clans famille",
-        "notFamily": "N'a aucun compte dans les clans famille",
-        "elder": "A le rang Ainé dans un clan famille",
-        "coLeader": "A le rang Chef Adjoint dans un clan famille",
-        "leader": "A le rang Chef dans un clan famille"
+        "notFamily": "N’a aucun compte dans les clans famille",
+        "elder": "A le rang d’aîné dans un clan de la famille",
+        "coLeader": "A le rang de chef adjoint dans un clan de la famille",
+        "leader": "A le rang de chef dans un clan de la famille"
       }
     }
   },
@@ -2176,34 +2129,20 @@
   "AuthCallback": {
     "authenticating": "Authentification...",
     "authenticatingDescription": "Veuillez patienter pendant que nous vous connectons avec Discord",
-    "authenticationFailed": "Échec de l'Authentification",
+    "authenticationFailed": "Échec de l’Authentification",
     "tryAgain": "Réessayer",
-    "backToHome": "Retour à l'accueil",
+    "backToHome": "Retour à l’accueil",
     "errorCancelled": "La connexion dans Discord a été annulée. Réessayez quand vous êtes prêt.",
-    "errorDiscordFailedWithReason": "Échec de l'authentification Discord : {reason}",
-    "errorNoAuthorizationCode": "Aucun code d'autorisation reçu de Discord.",
+    "errorDiscordFailedWithReason": "Échec de l’authentification Discord : {reason}",
+    "errorNoAuthorizationCode": "Aucun code d’autorisation reçu de Discord.",
     "errorCodeVerifierMissing": "Code verifier introuvable. Veuillez réessayer de vous connecter.",
-    "errorAuthenticateFailed": "Échec de l'authentification avec Discord.",
+    "errorAuthenticateFailed": "Échec de l’authentification avec Discord.",
     "loadingVillages": "Connexion avec Discord...",
     "loadingClanData": "Chargement de la liste des serveurs...",
     "loadingWarStats": "Presque prêt..."
   },
   "LoginPage": {
-    "redirecting": "Redirection vers Discord...",
-    "dashboardLabel": "Tableau de bord",
-    "eyebrow": "Tableau de bord ClashKing",
-    "title": "Bienvenue, Chef.",
-    "subtitle": "Connectez-vous pour gérer vos serveurs Discord, configurer ClashKing et assurer le bon fonctionnement de votre clan.",
-    "continueWithDiscord": "Continuer avec Discord",
-    "checkingSession": "Vérification de votre session...",
-    "openingDiscord": "Ouverture de Discord...",
-    "helper": "Discord confirme votre identité. ClashKing ne voit ni ne stocke jamais votre mot de passe Discord.",
-    "artCaption": "Votre centre de commandement vous attend",
-    "backToHome": "Retour à ClashKing",
-    "footer": "Conçu pour les clans qui visent haut.",
-    "legalLabel": "Liens juridiques",
-    "privacy": "Confidentialité",
-    "terms": "Conditions"
+    "redirecting": "Redirection vers Discord..."
   },
   "FeaturesPage": {
     "hero": {
@@ -2212,36 +2151,36 @@
     },
     "sections": {
       "bot": {
-        "title": "ClashKing Bot",
-        "description": "ClashKing Bot est le seul bot Discord dont vous avez besoin pour gérer votre clan et votre communauté Clash of Clans. Il regorge de fonctionnalités uniques pour garder votre clan organisé, impliqué et en croissance.",
+        "title": "Bot ClashKing",
+        "description": "Le bot ClashKing réunit les outils nécessaires pour gérer votre clan et votre communauté Clash of Clans sur Discord. Ses fonctionnalités facilitent l’organisation, l’engagement et la progression du clan.",
         "items": [
-          "Logs en temps réel : Suivez les guerres, la LDC, les jeux de clan, les raids, les dons et les événements des membres.",
-          "Système de tickets : Système de tickets de recrutement en plus des tickets de support standards.",
-          "Rôles automatiques : Attribuez automatiquement des rôles selon le statut du clan ou la gestion de la famille.",
-          "Rappels : Envoyez des pings pour les attaques de guerre, les jeux de clan ou tout autre événement.",
-          "Statistiques détaillées : Des insights sur les performances des joueurs et du clan avec suivi d'activité.",
-          "Gestion des rosters : Organisez et optimisez vos compositions de guerre facilement."
+          "Journaux en temps réel : suivez les guerres, la CWL, les jeux de clan, les raids, les dons et les événements des membres.",
+          "Système de tickets : un système de tickets de recrutement en plus des tickets d’assistance classiques.",
+          "Rôles automatiques : attribuez automatiquement des rôles selon le statut dans le clan ou la gestion de la famille.",
+          "Rappels : envoyez des notifications pour les attaques de guerre, les jeux de clan ou tout autre événement.",
+          "Statistiques détaillées : analysez les performances des joueurs et des clans grâce au suivi de l’activité.",
+          "Gestion des compositions : organisez et optimisez facilement vos compositions de guerre."
         ],
         "ctaPrimary": "Inviter le Bot",
         "ctaSecondary": "Rejoindre la communauté"
       },
       "app": {
-        "title": "ClashKing App (Bêta Ouverte)",
-        "description": "ClashKing App est l'extension idéale du ClashKing Bot, apportant des outils essentiels et des insights directement sur votre mobile. Elle vous aide à rester connecté à tout moment, même sans Discord.",
+        "title": "Application ClashKing (bêta ouverte)",
+        "description": "L’application ClashKing complète le bot avec des outils essentiels et des analyses directement sur votre mobile. Elle vous permet de rester connecté à tout moment, même sans Discord.",
         "items": [
-          "Statistiques en temps réel : Statistiques détaillées des joueurs et clans synchronisées avec le bot.",
-          "Suivi de progression du clan : Surveillez l'évolution de votre clan au fil du temps sans effort.",
-          "Gestion multi-compte : Basculez facilement entre vos comptes et suivez leurs performances.",
-          "Historique intégré : Accédez aux données historiques pour analyser les tendances et améliorer les stratégies.",
-          "Gestion du serveur Discord : (Bientôt) Gérez les rôles et tickets depuis l'application.",
-          "Notifications avancées : (Bientôt) Personnalisez les alertes pour les événements importants."
+          "Statistiques en temps réel : statistiques détaillées des joueurs et des clans, synchronisées avec le bot.",
+          "Suivi de la progression du clan : surveillez facilement la progression de votre clan au fil du temps.",
+          "Gestion de plusieurs comptes : passez facilement d’un compte à l’autre et suivez leurs performances.",
+          "Historique intégré : consultez les données historiques pour analyser les tendances et améliorer vos stratégies.",
+          "Gestion du serveur Discord : (bientôt disponible) gérez les rôles et les tickets depuis l’application.",
+          "Notifications avancées : (bientôt disponible) personnalisez les alertes pour les événements importants."
         ],
         "ctaPrimary": "Bêta Android",
         "ctaSecondary": "TestFlight iOS"
       },
       "api": {
         "title": "ClashKing API",
-        "description": "Créez vos propres outils ou projets en utilisant l'API ClashKing. Elle est gratuite tant que vous créditez le projet ClashKing.",
+        "description": "Créez vos propres outils ou projets en utilisant l’API ClashKing. Elle est gratuite tant que vous créditez le projet ClashKing.",
         "items": [],
         "ctaPrimary": "Documentation API",
         "ctaSecondary": "API sur GitHub"
@@ -2249,7 +2188,7 @@
     }
   },
   "HelpPage": {
-    "title": "Besoin d'aide ?",
+    "title": "Besoin d’aide ?",
     "subtitle": "Que vous cherchiez la documentation ou un support direct, nous sommes là.",
     "documentation": {
       "title": "Documentation",
@@ -2258,33 +2197,33 @@
     },
     "discord": {
       "title": "Support Discord",
-      "description": "Besoin d'aide supplémentaire ? Rejoignez notre communauté Discord pour poser vos questions, signaler des bugs ou discuter avec les autres utilisateurs.",
+      "description": "Besoin d’aide supplémentaire ? Rejoignez notre communauté Discord pour poser vos questions, signaler des bugs ou discuter avec les autres utilisateurs.",
       "cta": "Rejoindre Discord"
     }
   },
   "OpenSourcePage": {
     "title": "Un projet open source",
-    "subtitle": "ClashKing est un projet totalement gratuit et open source, et nous croyons au pouvoir de la communauté pour l'améliorer encore. Le bot et l'API sont entièrement open source, vous offrant la liberté de contribuer ou de les utiliser dans vos propres projets.",
+    "subtitle": "ClashKing est un projet totalement gratuit et open source, et nous croyons au pouvoir de la communauté pour l’améliorer encore. Le bot et l’API sont entièrement open source, vous offrant la liberté de contribuer ou de les utiliser dans vos propres projets.",
     "github": {
       "title": "Organisation GitHub",
       "description": "Explorez notre code source, contribuez au bot ou découvrez nos autres outils open source.",
-      "ctaPrimary": "Voir l'organisation",
+      "ctaPrimary": "Voir l’organisation",
       "repos": {
         "bot": "Repo du Bot",
-        "app": "Repo de l'App",
-        "api": "Repo de l'API",
+        "app": "Repo de l’App",
+        "api": "Repo de l’API",
         "assets": "Repo des Assets"
       }
     },
     "api": {
       "title": "Documentation API",
-      "description": "Créez vos propres outils ou projets en utilisant l'API ClashKing. Elle est gratuite tant que vous créditez le projet ClashKing.",
+      "description": "Créez vos propres outils ou projets en utilisant l’API ClashKing. Elle est gratuite tant que vous créditez le projet ClashKing.",
       "cta": "Docs API"
     },
     "translation": {
       "title": "Aidez-nous à traduire",
       "description": "Aidez-nous à traduire ClashKing dans votre langue ! Vous pouvez contribuer à la traduction du site web, du bot et de tous les textes associés via nos projets Crowdin.",
-      "app": "Traduire l'App",
+      "app": "Traduire l’App",
       "bot": "Traduire le bot"
     },
     "pillars": {
@@ -2294,29 +2233,21 @@
       },
       "community": {
         "title": "Communauté",
-        "description": "Rejoignez notre communauté Discord pour discuter d'idées, obtenir de l'aide et collaborer avec d'autres développeurs."
+        "description": "Rejoignez notre communauté Discord pour discuter d’idées, obtenir de l’aide et collaborer avec d’autres développeurs."
       },
       "learn": {
         "title": "Apprendre",
-        "description": "Consultez notre documentation et nos exemples pour apprendre à utiliser efficacement le bot et l'API."
+        "description": "Consultez notre documentation et nos exemples pour apprendre à utiliser efficacement le bot et l’API."
       }
     }
   },
   "SupportPage": {
     "title": "Nous soutenir",
-    "subtitle": "ClashKing est open source, et ses fonctionnalités principales sont gratuites pour tous. Les abonnements facultatifs débloquent quelques avantages et contribuent aux coûts d'hébergement, d'API et d'IA.",
-    "subscription": {
-      "title": "Soutenez le projet et profitez de plus d'avantages",
-      "price": "6,99 $ / mois",
-      "perks": {
-        "notifications": "Notifications pour jusqu'à 10 joueurs favoris",
-        "credit": "5 $ d'utilisation des assistants IA chaque mois",
-        "botProfile": "Personnalisez le nom et la photo de profil du bot",
-        "autoBoards": "Faites passer un serveur de {freeLimit} à {paidLimit} tableaux automatiques",
-        "crossPlatform": "Un abonnement pour le tableau de bord et l'application mobile"
-      },
-      "cta": "Se connecter pour s'abonner",
-      "ctaDashboard": "Voir l'abonnement"
+    "subtitle": "ClashKing est open source, et ses fonctionnalités principales sont gratuites pour tous. Les abonnements facultatifs débloquent quelques avantages et contribuent aux coûts d’hébergement, d’API et d’IA.",
+    "patreon": {
+      "title": "Devenir mécène sur Patreon",
+      "description": "Soutenez-nous chaque mois sur Patreon pour obtenir des avantages exclusifs, accéder aux fonctionnalités en avant-première et nous aider à couvrir nos frais d’hébergement.",
+      "cta": "Nous soutenir sur Patreon"
     },
     "creatorCode": {
       "title": "Utiliser le code créateur",
@@ -2327,36 +2258,26 @@
     },
     "whySupport": {
       "title": "Pourquoi nous soutenir ?",
-      "description": "Les abonnements et les revenus du code créateur financent les serveurs, les frais d'API et le développement continu. Utiliser notre code créateur ne vous coûte rien de plus."
+      "description": "Les abonnements et les revenus du code créateur financent les serveurs, les frais d’API et le développement continu. Utiliser notre code créateur ne vous coûte rien de plus."
     }
   },
   "ServersPage": {
-    "title": "Sélectionner un Serveur",
+    "title": "Sélectionner un serveur",
     "description": "Choisissez un serveur pour configurer les paramètres du bot ClashKing. Vous devez être le propriétaire ou un administrateur du serveur Discord.",
-    "backToHome": "Retour à l'Accueil",
-    "backToLogin": "Retour à la Connexion",
+    "backToHome": "Retour à l’Accueil",
+    "backToLogin": "Retour à la page de connexion",
     "error": "Erreur",
     "configure": "Configurer",
     "invite": "Inviter",
     "members": "membres",
     "server": "Serveur",
-    "inactive": {
-      "tooltip": "Suivi désactivé après 90 jours d’inactivité",
-      "title": "Réactiver le suivi du serveur ?",
-      "description": "Les automatisations et le suivi du serveur ont été désactivés car ce serveur est resté inactif pendant plus de 90 jours.",
-      "lastUsed": "Dernière commande : {date}",
-      "unknown": "Aucun historique de commande",
-      "cancel": "Pas maintenant",
-      "confirm": "Réactiver",
-      "reactivating": "Réactivation..."
-    },
     "roles": {
       "owner": "Propriétaire",
       "administrator": "Administrateur",
       "manager": "Gestionnaire"
     },
     "noServers": {
-      "title": "Aucun Serveur Trouvé",
+      "title": "Aucun serveur trouvé",
       "description": "Aucun serveur Discord trouvé où vous êtes administrateur ou propriétaire."
     }
   },
@@ -2374,8 +2295,7 @@
     "metrics": {
       "total": "Tableaux utilisés",
       "refresh": "Tableaux actualisés",
-      "send": "Envois programmés",
-      "remaining": "disponibles"
+      "send": "Envois programmés"
     },
     "filters": {
       "all": "Tous"
@@ -2386,15 +2306,10 @@
       "empty": "Aucun tableau automatique pour le moment",
       "emptyDescription": "Créez un tableau pour maintenir les informations utiles de votre serveur à jour dans Discord."
     },
-    "entitlement": {
-      "title": "Chaque serveur inclut {freeLimit} tableaux automatiques",
-      "description": "Attribuez un abonnement à ce serveur pour en débloquer jusqu'à {paidLimit}. Plusieurs abonnements n'augmentent pas cette limite.",
-      "current": "Ce serveur autorise actuellement {limit} tableaux automatiques."
-    },
     "registry": {
       "emptyTitle": "Aucun type de tableau disponible",
-      "emptyDescription": "Le registre API est vide. La création sera disponible lorsqu'un type y sera activé.",
-      "typeUnavailable": "Ce type n'est plus disponible dans le registre et ne peut pas être modifié."
+      "emptyDescription": "Le registre API est vide. La création sera disponible lorsqu’un type y sera activé.",
+      "typeUnavailable": "Ce type n’est plus disponible dans le registre et ne peut pas être modifié."
     },
     "dialog": {
       "createTitle": "Créer un tableau automatique",
@@ -2408,7 +2323,7 @@
     },
     "targets": {
       "kind": "Type de cible : {kind}",
-      "kindDescription": "Le registre définit l'interprétation de chaque cible.",
+      "kindDescription": "Le registre définit l’interprétation de chaque cible.",
       "scope": "Portée des cibles",
       "scopeDescription": "La portée famille utilise tous les clans configurés sans cible explicite.",
       "family": "Famille",
@@ -2422,23 +2337,23 @@
     "modes": {
       "label": "Mode de livraison",
       "description": "Le registre contrôle les modes disponibles pour ce tableau.",
-      "refresh": "Actualisation",
+      "refresh": "Actualiser",
       "send": "Envoi programmé"
     },
     "destination": {
       "label": "Destination",
-      "channel": "Canal parent",
-      "channelDescription": "Les canaux texte et annonces acceptent l'envoi direct ; les forums utilisent une publication enfant.",
-      "selectChannel": "Sélectionner un canal",
+      "channel": "Salon parent",
+      "channelDescription": "Les salons texte et annonces acceptent l’envoi direct ; les forums utilisent une publication enfant.",
+      "selectChannel": "Sélectionner un salon",
       "thread": "Fil ou publication de forum",
       "selectThread": "Sélectionner un fil",
-      "threadOptional": "Facultatif pour les canaux texte et annonces.",
+      "threadOptional": "Facultatif pour les salons texte et annonces.",
       "forumRequired": "Une publication de forum est obligatoire.",
-      "direct": "Envoyer directement dans le canal",
-      "deleted": "Le canal n'existe plus"
+      "direct": "Envoyer directement dans le salon",
+      "deleted": "Le salon n’existe plus"
     },
     "refresh": {
-      "interval": "Intervalle d'actualisation (minutes)",
+      "interval": "Intervalle d’actualisation (minutes)",
       "intervalDescription": "Plage autorisée : {minimum}–{maximum} minutes."
     },
     "schedule": {
@@ -2467,8 +2382,8 @@
     "status": {
       "enabled": "Activé",
       "disabled": "Désactivé",
-      "enabledDescription": "Un tableau désactivé conserve sa configuration sans s'exécuter.",
-      "messageId": "Message d'actualisation actuel : {id}"
+      "enabledDescription": "Un tableau désactivé conserve sa configuration sans s’exécuter.",
+      "messageId": "Message d’actualisation actuel : {id}"
     },
     "delete": {
       "title": "Supprimer ce tableau automatique ?",
@@ -2497,29 +2412,18 @@
       "session": "Votre session a expiré.",
       "request": "La requête a échoué.",
       "load": "Impossible de charger les tableaux.",
-      "save": "Impossible d'enregistrer le tableau.",
+      "save": "Impossible d’enregistrer le tableau.",
       "delete": "Impossible de supprimer le tableau."
     }
   },
   "TicketsSettingsPage": {
-    "panelEmbed": "Embed du panneau",
-    "panelEmbedHint": "Embed utilisÃ© lors de la publication du panneau de tickets sur Discord.",
-    "panelEmbedInfoLine1": "Pour creer un nouvel embed ou modifier un embed existant, allez sur la page %s dans {dashboardLabel}.",
-    "panelEmbedInfoLine2": "Pour ajouter ou modifier des boutons, allez dans %s dans ce ticket.",
-    "panelEmbedPreview": "Aperçu de l'embed",
-    "panelEmbedPreviewEmpty": "Aucun aperçu disponible pour l'embed de panneau sélectionné.",
-    "ticketOpenEmbed": "Embed d'ouverture du ticket",
-    "ticketOpenEmbedHint": "Embed personnalisÃ© optionnel envoyÃ© quand ce bouton ouvre un ticket.",
-    "selectEmbed": "SÃ©lectionner un embed",
-    "defaultEmbed": "Pas de remplacement d'embed du panneau",
-    "noCustomMessage": "Utiliser le message de ticket par dÃ©faut",
     "title": "Paramètres des panneaux",
-    "description": "Configurez les catégories et les canaux de logs pour chaque panneau de tickets.",
+    "description": "Configurez les catégories et les salons de logs pour chaque panneau de tickets.",
     "noPanels": "Aucun panneau de tickets trouvé",
     "noPanelsHint": "Créez votre premier panneau avec le bouton ci-dessus.",
     "createPanel": "Nouveau panneau",
     "createPanelTitle": "Créer un panneau de tickets",
-    "createPanelDescription": "Donnez un nom unique à votre panneau. Vous pourrez configurer les boutons et les canaux après la création.",
+    "createPanelDescription": "Donnez un nom unique à votre panneau. Vous pourrez configurer les boutons et les salons après la création.",
     "panelNameLabel": "Nom du panneau",
     "panelNamePlaceholder": "ex. Candidatures",
     "panelCreated": "Panneau \"{name}\" créé.",
@@ -2527,12 +2431,17 @@
     "confirmDeletePanelHint": "Cela supprimera définitivement le panneau et toutes ses configurations de boutons.",
     "panelDeleted": "Panneau supprimé.",
     "panelHint": "Consultez et configurez ce panneau.",
-    "configurePanel": "Configurer",
-    "configurePanelDescription": "Gérez le message du panneau, les boutons, les messages prédéfinis, les catégories et les journaux.",
-    "categoryCoverage": "{configured}/{total} catégories",
-    "logCoverage": "{configured}/{total} journaux",
-    "panelPreview": "Aperçu Discord",
-    "panelPreviewHint": "Cet aperçu combine l'embed du panneau et les boutons de ticket afin de vérifier ce que les membres verront avant de le configurer.",
+    "panelEmbed": "Embed du panneau",
+    "panelEmbedHint": "Embed utilisé lors de la publication du panneau de tickets sur Discord.",
+    "panelEmbedInfoLine1": "Pour créer un nouvel embed ou modifier un embed existant, allez sur la page %s dans {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Pour ajouter ou modifier des boutons, allez dans %s pour ce panneau.",
+    "panelEmbedPreview": "Aperçu de l’embed",
+    "panelEmbedPreviewEmpty": "Aucun aperçu disponible pour l’embed de panneau sélectionné.",
+    "ticketOpenEmbed": "Embed d’ouverture du ticket",
+    "ticketOpenEmbedHint": "Embed personnalisé facultatif envoyé lorsque ce bouton ouvre un ticket.",
+    "selectEmbed": "Sélectionner un embed",
+    "defaultEmbed": "Pas de remplacement d’embed du panneau",
+    "noCustomMessage": "Utiliser le message de ticket par défaut",
     "buttons": "boutons",
     "buttonList": "Boutons",
     "categories": "Catégories",
@@ -2543,14 +2452,14 @@
     "closedCategory": "Catégorie tickets fermés",
     "closed_category": "Catégorie tickets fermés",
     "selectCategory": "Choisir une catégorie...",
-    "logChannels": "Canaux de logs",
+    "logChannels": "Salons de logs",
     "statusChangeLog": "Log de changement de statut",
     "status_change_log": "Log de changement de statut",
     "buttonClickLog": "Log de clic sur bouton",
     "ticket_button_click_log": "Log de clic sur bouton",
     "closeLog": "Log de fermeture de ticket",
     "ticket_close_log": "Log de fermeture de ticket",
-    "selectChannel": "Choisir un canal...",
+    "selectChannel": "Choisir un salon...",
     "savedSuccess": "Panneau \"{panel}\" enregistré avec succès.",
     "tabChannels": "Panneau ticket",
     "tabSettings": "Paramètres",
@@ -2558,13 +2467,13 @@
     "tabMessages": "Messages",
     "autoSaveSaving": "Enregistrement...",
     "autoSaveSaved": "Enregistré",
-    "autoSaveErrorTitle": "Échec de l'enregistrement automatique",
-    "autoSaveErrorDescription": "Impossible d'enregistrer ces paramètres de ticket.",
-    "messages": "messages",
+    "autoSaveErrorTitle": "Échec de l’enregistrement automatique",
+    "autoSaveErrorDescription": "Impossible d’enregistrer ces paramètres de ticket.",
+    "messages": "Messages",
     "noButtons": "Aucun bouton encore. Ajoutez-en un pour commencer.",
     "addButton": "Ajouter un bouton",
     "addButtonTitle": "Ajouter un bouton",
-    "addButtonDescription": "Configurez l'apparence du nouveau bouton.",
+    "addButtonDescription": "Configurez l’apparence du nouveau bouton.",
     "buttonLabel": "Libellé du texte du bouton",
     "buttonLabelPlaceholder": "ex. Candidater",
     "buttonStyle": "Couleur du bouton",
@@ -2579,19 +2488,19 @@
     "buttonAppearanceSaved": "Apparence enregistrée.",
     "confirmDeleteButton": "Supprimer le bouton \"{label}\" ?",
     "confirmDeleteButtonHint": "Cela supprimera le bouton et toute sa configuration (rôles, questions, etc.).",
-    "modRoles": "Rôles staff (mentionnés)",
-    "modRolesHint": "Ces rôles sont mentionnés à l'ouverture d'un ticket.",
-    "noPingRoles": "Rôles staff (silencieux)",
+    "modRoles": "Rôles de l’équipe (mentionnés)",
+    "modRolesHint": "Ces rôles sont mentionnés à l’ouverture d’un ticket.",
+    "noPingRoles": "Rôles de l’équipe (sans notification)",
     "noPingRolesHint": "Ces rôles voient les tickets mais ne sont pas mentionnés.",
     "questions": "Questions",
-    "questionsHint": "Jusqu'à 5 questions affichées à l'ouverture du ticket.",
+    "questionsHint": "Jusqu’à 5 questions affichées à l’ouverture du ticket.",
     "question": "Question",
-    "privateThread": "Thread privé",
-    "privateThreadHint": "Crée un thread privé séparé pour le staff.",
+    "privateThread": "Fil privé",
+    "privateThreadHint": "Crée un fil privé séparé pour l’équipe.",
     "accountApply": "Compte CoC requis",
-    "accountApplyHint": "L'utilisateur doit lier un compte Clash of Clans.",
+    "accountApplyHint": "L’utilisateur doit lier un compte Clash of Clans.",
     "playerInfo": "Afficher les stats",
-    "playerInfoHint": "Affiche les stats du compte à l'ouverture.",
+    "playerInfoHint": "Affiche les stats du compte à l’ouverture.",
     "thMin": "TH minimum",
     "numApply": "Comptes max",
     "naming": "Convention de nommage",
@@ -2600,11 +2509,11 @@
     "buttonSaved": "Bouton \"{label}\" enregistré.",
     "badge": {
       "accountApply": "CoC requis",
-      "privateThread": "Thread privé"
+      "privateThread": "Fil privé"
     },
-    "approveMessages": "Messages d'approbation / refus",
-    "approveMessagesHint": "Messages pré-écrits que le staff peut envoyer aux candidats (max 25).",
-    "messagesMaxHint": "Vous pouvez ajouter jusqu'a 25 messages.",
+    "approveMessages": "Messages d’approbation / refus",
+    "approveMessagesHint": "Messages pré-écrits que l’équipe peut envoyer aux candidats (25 au maximum).",
+    "messagesMaxHint": "Vous pouvez ajouter jusqu’à 25 messages.",
     "editMessagesButton": "Modifier les messages",
     "editMessagesTitle": "Modifier les messages pré-écrits",
     "editMessagesDescription": "Ajoutez, supprimez et modifiez vos messages de ticket pré-écrits.",
@@ -2614,47 +2523,47 @@
     "contentLabel": "Contenu",
     "messageContent": "Contenu du message...",
     "messageNameRequired": "Tous les messages doivent avoir un nom.",
-    "messagesSaved": "Messages d'approbation enregistrés.",
+    "messagesSaved": "Messages d’approbation et de refus enregistrés.",
     "rolesToAdd": "Rôles à attribuer",
-    "rolesToAddHint": "Rôles automatiquement attribués à l'utilisateur à l'ouverture du ticket.",
+    "rolesToAddHint": "Rôles automatiquement attribués à l’utilisateur à l’ouverture du ticket.",
     "rolesToRemove": "Rôles à retirer",
-    "rolesToRemoveHint": "Rôles automatiquement retirés à l'utilisateur à l'ouverture du ticket.",
+    "rolesToRemoveHint": "Rôles automatiquement retirés à l’utilisateur à l’ouverture du ticket.",
     "applyClans": "Clans autorisés",
     "applyClansHint": "Seuls les membres de ces clans peuvent ouvrir ce ticket. Laissez vide pour autoriser tout le monde.",
     "clanTagPlaceholder": "#TAGDUCLAN",
-    "thRequirements": "Exigences par niveau d'Hôtel de Ville",
-    "thRequirementsHint": "Niveaux minimum des héros requis par niveau d'HdV pour ouvrir ce ticket.",
+    "thRequirements": "Exigences par niveau d’Hôtel de Ville",
+    "thRequirementsHint": "Niveaux minimum des héros requis par niveau d’HDV pour ouvrir ce ticket.",
     "thHeroLegend": "BK = Roi Barbare · AQ = Reine Archère · GW = Grand Gardien · RC = Championne Royale · WARST = Étoiles de guerre",
-    "addThLevel": "Ajouter un niveau d'HdV",
-    "thLevel": "HdV",
-    "numApplyHint": "Nombre max de comptes CoC avec lesquels l'utilisateur peut postuler (1–25).",
-    "embeds": "Embeds",
-    "embedsHint": "Embeds Discord utilisés comme messages de panel ou d'ouverture de ticket.",
+    "addThLevel": "Ajouter un niveau d’HDV",
+    "thLevel": "HDV",
+    "numApplyHint": "Nombre max de comptes CoC avec lesquels l’utilisateur peut postuler (1–25).",
+    "embeds": "Embeds Discord",
+    "embedsHint": "Embeds Discord utilisés comme messages de panel ou d’ouverture de ticket.",
     "newEmbed": "Nouvel embed",
-    "embedName": "Nom de l'embed",
+    "embedName": "Nom de l’embed",
     "embedNamePlaceholder": "mon-embed",
     "discohookUrl": "URL Discohook",
-    "embedDiscohookHint": "Créez votre embed sur Discohook, copiez l'URL de la page, puis collez-la ici.",
+    "embedDiscohookHint": "Créez votre embed sur Discohook, copiez l’URL de la page, puis collez-la ici.",
     "openDiscohook": "Ouvrir Discohook",
     "openInDiscohook": "Ouvrir dans Discohook",
-    "copyDiscohookUrl": "Copier l'URL Discohook",
+    "copyDiscohookUrl": "Copier l’URL Discohook",
     "copyDiscohookUrlDone": "URL copiée !",
     "editEmbed": "Modifier",
     "deleteEmbed": "Supprimer",
-    "confirmDeleteEmbed": "Supprimer l'embed \"{name}\" ?",
+    "confirmDeleteEmbed": "Supprimer l’embed \"{name}\" ?",
     "confirmDeleteEmbedHint": "Cela le supprime uniquement de ClashKing. Les messages Discord déjà envoyés ne seront pas affectés.",
     "embedSaved": "Embed \"{name}\" sauvegardé.",
     "embedCreated": "Embed \"{name}\" créé.",
     "embedDeleted": "Embed supprimé.",
-    "noEmbeds": "Aucun embed pour l'instant.",
+    "noEmbeds": "Aucun embed pour l’instant.",
     "noEmbedsHint": "Créez un embed ici, puis assignez-le à un panel ou un bouton.",
     "legacyEmbed": "Créé via le bot — collez une URL Discohook pour activer la modification.",
     "invalidDiscohookUrl": "URL invalide. Collez une URL de page Discohook (discohook.app/?data=... ou discohook.app/?share=...).",
-    "tabEmbeds": "Embeds"
+    "tabEmbeds": "Embeds Discord"
   },
   "EmbedsPage": {
-    "title": "Embeds",
-    "description": "Créez et gérez des modèles d'embeds Discord pour vos panels et boutons de tickets.",
+    "title": "Embeds Discord",
+    "description": "Créez et gérez des modèles d’embeds Discord pour vos panneaux et boutons de tickets.",
     "nameHint": "Donnez un identifiant unique à votre embed. Vous pourrez modifier le contenu ensuite."
   },
   "EmbedEditor": {
@@ -2667,16 +2576,16 @@
     "addMessageV2Title": "Composants v2",
     "addMessageV2Description": "Mises en page plus avancées et composants interactifs (boutons, menus de sélection, sections). Idéal pour les configurations avancées.",
     "betaTag": "Bêta",
-    "importExport": "Import & export",
+    "importExport": "Importation et exportation",
     "importExportDescription": "Importez un embed depuis Discohook ou exportez votre embed actuel vers Discohook.",
     "importFromDiscohook": "Importer depuis Discohook",
-    "copyDiscohookUrl": "Copier l'URL Discohook",
+    "copyDiscohookUrl": "Copier l’URL Discohook",
     "openInDiscohook": "Ouvrir dans Discohook",
     "content": "Contenu",
     "contentPlaceholder": "Texte du message affiché au-dessus des embeds...",
     "profileSection": "Profil",
     "profileName": "Nom",
-    "profileAvatarUrl": "URL de l'avatar",
+    "profileAvatarUrl": "URL de l’avatar",
     "profileUnsupportedWarning": "Attention : le bot ne prend actuellement pas en charge la modification de ce profil.",
     "import": "Importer",
     "importError": "URL Discohook invalide. Collez une URL de page Discohook.",
@@ -2684,27 +2593,27 @@
     "colorSection": "Couleur",
     "authorSection": "Auteur",
     "authorName": "Nom",
-    "authorIconUrl": "URL de l'icône",
-    "authorUrl": "URL de l'auteur",
-    "bodySection": "Body",
+    "authorIconUrl": "URL de l’icône",
+    "authorUrl": "URL de l’auteur",
+    "bodySection": "Corps",
     "title": "Titre",
     "titleUrl": "URL du titre",
-    "sidebarColor": "Couleur de la barre laterale",
+    "sidebarColor": "Couleur de la barre latérale",
     "description": "Description",
-    "descriptionPlaceholder": "Description de l'embed...",
+    "descriptionPlaceholder": "Description de l’embed...",
     "fieldsSection": "Champs",
     "addField": "Ajouter un champ",
     "field": "Champ",
     "fieldName": "Nom",
     "fieldValue": "Valeur",
-    "fieldInline": "Inline",
+    "fieldInline": "Sur la même ligne",
     "imagesSection": "Images",
     "thumbnailUrl": "URL de la miniature",
-    "imageUrl": "URL de l'image",
+    "imageUrl": "URL de l’image",
     "footerSection": "Pied de page",
     "footerText": "Texte du pied de page",
-    "footerIconUrl": "URL de l'icône du pied de page",
-    "timestamp": "Inclure l'horodatage",
+    "footerIconUrl": "URL de l’icône du pied de page",
+    "timestamp": "Inclure l’horodatage",
     "preview": "Aperçu",
     "previewEmpty": "Remplissez des champs pour voir un aperçu",
     "modeToggleV1": "Classique (V1)",
@@ -2729,7 +2638,7 @@
     "accessoryThumbnail": "Miniature",
     "accessoryButton": "Bouton",
     "thumbnailAlt": "Texte alternatif de la miniature",
-    "accentColor": "Couleur d'accentuation",
+    "accentColor": "Couleur d’accentuation",
     "addContainer": "Ajouter un composant enfant",
     "containerSpoiler": "Conteneur spoiler",
     "stringSelectLabel": "Sélection texte",
@@ -2755,7 +2664,7 @@
     "selectDisabled": "Désactivé",
     "actionRowMode": "Type de ligne",
     "actionRowModeButtons": "Boutons",
-    "actionRowLabel": "Ligne d'action",
+    "actionRowLabel": "Ligne d’action",
     "addButton": "Ajouter un bouton",
     "buttonLabel": "Texte",
     "buttonStyle": "Style",
@@ -2769,14 +2678,14 @@
     "tabEmojis": "Emojis",
     "dateLabel": "Date",
     "timeLabel": "Heure",
-    "mentionsChannels": "Canaux",
+    "mentionsChannels": "Salons",
     "mentionsSpecial": "Spécial",
-    "mentionsChannelList": "Tous les canaux",
+    "mentionsChannelList": "Tous les salons",
     "mentionsRoles": "Rôles",
     "mentionsServerGuide": "Guide du serveur",
-    "mentionsBrowseChannels": "Parcourir les canaux",
-    "mentionsChannelsAndRoles": "Canaux et rôles",
-    "mentionsNoChannels": "Aucun canal trouvé.",
+    "mentionsBrowseChannels": "Parcourir les salons",
+    "mentionsChannelsAndRoles": "Salons et rôles",
+    "mentionsNoChannels": "Aucun salon trouvé.",
     "mentionsNoRoles": "Aucun rôle trouvé.",
     "styleLabel": "Style",
     "timeRelativeNow": "il y a 0 seconde",
@@ -2806,24 +2715,22 @@
     "embedLabel": "Embed",
     "noEmbed": "Aucun embed (boutons uniquement)",
     "buttonsSection": "Boutons",
-    "buttonsHint": "Sélectionnez les boutons d'action à afficher.",
+    "buttonsHint": "Sélectionnez les boutons d’action à afficher.",
     "colorSection": "Couleur des boutons",
     "colorHint": "Appliquée à tous les boutons.",
-    "welcomeSection": "Channel de bienvenue",
-    "joinPanelTitle": "Panneau d'arrivée",
-    "enabled": "Activer le panneau d'arrivée",
-    "welcomeHint": "Si défini, le panneau est automatiquement posté à l'arrivée d'un nouveau membre.",
-    "welcomeChannel": "Channel",
-    "welcomeChannelPlaceholder": "Sélectionner un channel...",
+    "welcomeSection": "Salon de bienvenue",
+    "welcomeHint": "Si défini, le panneau est automatiquement posté à l’arrivée d’un nouveau membre.",
+    "welcomeChannel": "Salon",
+    "welcomeChannelPlaceholder": "Sélectionner un salon...",
     "editPanelButton": "Modifier le panneau",
     "editDialogTitle": "Modifier le panneau",
-    "editDialogDescription": "Mettez à jour l'embed, les boutons et leur couleur avec un aperçu en direct avant d'enregistrer.",
-    "welcomeAutosaveSuccess": "Channel de bienvenue enregistré.",
-    "welcomeAutosaveDisabled": "Channel de bienvenue désactivé.",
+    "editDialogDescription": "Mettez à jour l’embed, les boutons et leur couleur avec un aperçu en direct avant d’enregistrer.",
+    "welcomeAutosaveSuccess": "Salon de bienvenue enregistré.",
+    "welcomeAutosaveDisabled": "Salon de bienvenue désactivé.",
     "previewSection": "Aperçu",
     "previewHint": "Rendu du panneau dans Discord.",
     "previewNoEmbed": "Aucun embed sélectionné",
-    "previewEmbedNoData": "L'embed n'a pas de données de prévisualisation",
+    "previewEmbedNoData": "L’embed n’a pas de données de prévisualisation",
     "previewNoButtons": "Aucun bouton sélectionné",
     "color": {
       "Blue": "Bleu",
@@ -2833,12 +2740,14 @@
     }
   },
   "GiveawaysPage": {
-    "title": "Giveaways",
-    "description": "Créez, planifiez et gérez les giveaways de votre serveur.",
-    "create": "Créer un giveaway",
-    "empty": "Aucun giveaway à afficher pour le moment.",
-    "confirmDeleteTitle": "Supprimer le giveaway",
-    "confirmDelete": "Voulez-vous vraiment supprimer ce giveaway ?",
+    "title": "Concours",
+    "description": "Créez, planifiez et gérez les concours de votre serveur.",
+    "create": "Créer un concours",
+    "listTitle": "Tableau de bord des concours",
+    "listDescription": "Suivez les concours planifiés, en cours et terminés depuis un seul endroit.",
+    "empty": "Aucun concours à afficher pour le moment.",
+    "confirmDeleteTitle": "Supprimer le concours",
+    "confirmDelete": "Voulez-vous vraiment supprimer ce concours ?",
     "discardTitle": "Annuler les modifications ?",
     "discardDescription": "Vous avez des modifications non enregistrées. Si vous fermez maintenant, elles seront perdues.",
     "discardConfirm": "Annuler les modifications",
@@ -2846,8 +2755,7 @@
       "general": "Général",
       "messages": "Messages",
       "restrictions": "Restrictions",
-      "advanced": "Avancé",
-      "winners": "Gagnants"
+      "advanced": "Avancé"
     },
     "tabs": {
       "ongoing": "En cours",
@@ -2855,24 +2763,24 @@
       "ended": "Terminés"
     },
     "stats": {
-      "total": "Giveaways au total",
+      "total": "Concours au total",
       "totalEntries": "Total de participations",
-      "ongoing": "Giveaways en cours",
-      "upcoming": "Giveaways à venir",
-      "ended": "Giveaways terminés"
+      "ongoing": "Concours en cours",
+      "upcoming": "Concours à venir",
+      "ended": "Concours terminés"
     },
     "statsDescriptions": {
-      "total": "Tous les giveaways configurés sur ce serveur.",
-      "totalEntries": "Participations cumulées sur tous les giveaways.",
+      "total": "Tous les concours configurés sur ce serveur.",
+      "totalEntries": "Participations cumulées sur tous les concours.",
       "ongoing": "Actuellement actifs et ouverts aux participations.",
       "upcoming": "Planifiés pour plus tard.",
-      "ended": "Giveaways déjà terminés."
+      "ended": "Concours déjà terminés."
     },
     "emptyTab": {
-      "title": "Aucun giveaway ici",
-      "ongoing": "Aucun giveaway n'est actuellement en cours.",
-      "upcoming": "Aucun giveaway planifié. Créez-en un pour commencer.",
-      "ended": "Aucun giveaway n'a encore été terminé."
+      "title": "Aucun concours ici",
+      "ongoing": "Aucun concours n’est actuellement en cours.",
+      "upcoming": "Aucun concours planifié. Créez-en un pour commencer.",
+      "ended": "Aucun concours n’a encore été terminé."
     },
     "status": {
       "scheduled": "Planifié",
@@ -2880,62 +2788,51 @@
       "ended": "Terminé"
     },
     "table": {
-      "giveaway": "Giveaway",
-      "channel": "Canal",
+      "giveaway": "Concours",
+      "channel": "Salon",
       "entries": "Participations",
-      "timing": "Timing",
+      "timing": "Planification",
       "start": "Début",
       "end": "Fin",
       "winnersHeader": "Gagnants",
       "winners": "{count} gagnant{count, plural, one {} other {s}}",
-      "boosters": "{count} boost{count, plural, one {} other {s}}",
-      "noChannel": "Aucun canal",
-      "noChannelHelp": "Aucun canal assigné. Modifiez ce giveaway pour corriger ça.",
+      "boosters": "{count} bonus de participation{count, plural, one {} other {}}",
+      "noChannel": "Aucun salon",
+      "noChannelHelp": "Aucun salon assigné. Modifiez ce concours pour corriger ça.",
       "endsAt": "Se termine à",
       "endedAt": "Terminé à",
       "duplicate": "Dupliquer",
-      "viewGiveaway": "Voir le giveaway",
-      "editGiveaway": "Modifier le giveaway",
-      "moreActions": "Plus d'actions pour le giveaway",
-      "showingEnded": "Affichage de {shown} sur {total} giveaways terminés",
+      "showingEnded": "Affichage de {shown} sur {total} concours terminés",
       "showMore": "Afficher {count} de plus",
       "pendingUpdate": "Mise à jour en attente",
-      "pendingUpdateHelp": "Ce giveaway a des modifications en attente que le bot appliquera bientôt.",
+      "pendingUpdateHelp": "Ce concours a des modifications en attente que le bot appliquera bientôt.",
       "openInDiscord": "Ouvrir dans Discord",
       "viewInDiscord": "Voir sur Discord",
-      "viewEntries": "Voir les participants",
-      "reroll": "Relancer les gagnants",
-      "rerolledCount": "{count, plural, one {# relancé} other {# relancés}}"
+      "reroll": "Retirer les gagnants au sort",
+      "rerolledCount": "{count, plural, one {# gagnant retiré au sort} other {# gagnants retirés au sort}}",
+      "viewEntries": "Voir les participants"
     },
     "entries": {
       "description": "Liste des participants et leur probabilité de gain.",
       "totalEntries": "Total de participations",
       "uniqueUsers": "Utilisateurs uniques",
-      "noEntrants": "Aucune participation pour l'instant.",
+      "noEntrants": "Aucune participation pour l’instant.",
       "userId": "ID utilisateur",
       "entryCount": "Participations",
       "winChance": "Chance de gagner"
     },
-    "winners": {
-      "description": "Sélectionnez un gagnant pour copier son identifiant Discord ou ouvrir son profil Discord.",
-      "current": "Gagnants actuels",
-      "rerolled": "Gagnants relancés",
-      "onServer": "Sur le serveur",
-      "notOnServer": "Absent du serveur",
-      "none": "Aucun gagnant n'a été enregistré."
-    },
     "dialog": {
-      "createTitle": "Créer un giveaway",
-      "editTitle": "Modifier le giveaway",
+      "createTitle": "Créer un concours",
+      "editTitle": "Modifier le concours",
       "description": "Configurez le message, la planification et les conditions.",
-      "create": "Créer le giveaway",
+      "create": "Créer le concours",
       "saveChanges": "Enregistrer"
     },
     "form": {
       "prize": "Récompense",
-      "prizePlaceholder": "Exemple : Gold Pass",
-      "channel": "Canal",
-      "channelPlaceholder": "Sélectionnez un canal",
+      "prizePlaceholder": "Exemple : Pass Or",
+      "channel": "Salon",
+      "channelPlaceholder": "Sélectionnez un salon",
       "startTime": "Heure de début",
       "startNow": "Démarrer immédiatement",
       "endTime": "Heure de fin",
@@ -2949,57 +2846,57 @@
         "deny": "Ces rôles ne peuvent pas participer"
       },
       "rolesModeHelp": {
-        "none": "Tous les utilisateurs peuvent participer à ce giveaway.",
-        "allow": "Seuls les utilisateurs ayant l'un des rôles sélectionnés peuvent participer.",
-        "deny": "Les utilisateurs ayant l'un des rôles sélectionnés ne peuvent pas participer."
+        "none": "Tous les utilisateurs peuvent participer à ce concours.",
+        "allow": "Seuls les utilisateurs ayant l’un des rôles sélectionnés peuvent participer.",
+        "deny": "Les utilisateurs ayant l’un des rôles sélectionnés ne peuvent pas participer."
       },
-      "textAboveEmbed": "Texte au-dessus de l'embed",
+      "textAboveEmbed": "Texte au-dessus de l’embed",
       "textEmbedDefault": "Cliquez sur le bouton ci-dessous pour participer.",
-      "textEndDefault": "Félicitations au(x) gagnant(s) ! Nous vous contacterons prochainement.",
-      "textInEmbed": "Description de l'embed",
-      "textOnEnd": "Message à la fin du giveaway",
-      "image": "Image du giveaway",
-      "removeImage": "Retirer l'image actuelle",
-      "imagePreviewAlt": "Aperçu du giveaway",
-      "previewGiveaway": "Aperçu du giveaway",
+      "textInEmbed": "Description de l’embed",
+      "textEndDefault": "Félicitations à toutes les personnes sélectionnées ! Nous vous contacterons prochainement.",
+      "textOnEnd": "Message à la fin du concours",
+      "image": "Image du concours",
+      "removeImage": "Retirer l’image actuelle",
+      "imagePreviewAlt": "Aperçu du concours",
+      "previewGiveaway": "Aperçu du concours",
       "previewEnd": "Aperçu du message final",
-      "boosters": "Boosts de participation",
-      "addBooster": "Ajouter un boost",
-      "noBoosters": "Aucun boost configure.",
-      "boosterLabel": "Boost {index}",
+      "boosters": "Bonus de participation",
+      "addBooster": "Ajouter un bonus",
+      "noBoosters": "Aucun bonus configuré.",
+      "boosterLabel": "Bonus {index}",
       "boostValue": "Multiplicateur",
-      "boostRoles": "Roles boostes",
+      "boostRoles": "Rôles bénéficiant du bonus",
       "requirements": "Conditions de participation",
       "profilePictureRequired": "Exiger une photo de profil Discord",
       "cocAccountRequired": "Exiger un compte Clash of Clans lié"
     },
     "validation": {
       "prizeRequired": "La récompense est obligatoire.",
-      "channelRequired": "Le canal est obligatoire.",
-      "startTimeRequired": "L'heure de début est obligatoire si le giveaway ne démarre pas immédiatement.",
-      "endTimeRequired": "L'heure de fin est obligatoire.",
-      "endAfterStart": "L'heure de fin doit être après l'heure de début.",
-      "imageTooLarge": "L'image doit faire moins de 8 Mo."
+      "channelRequired": "Le salon est obligatoire.",
+      "startTimeRequired": "L’heure de début est obligatoire si le concours ne démarre pas immédiatement.",
+      "endTimeRequired": "L’heure de fin est obligatoire.",
+      "endAfterStart": "L’heure de fin doit être après l’heure de début.",
+      "imageTooLarge": "L’image doit faire moins de 8 Mo."
     },
     "preview": {
       "liveSummary": "Résumé en direct",
       "discordPreview": "Aperçu Discord",
-      "giveawayTitle": "Aperçu du giveaway",
-      "giveawayDescription": "Voici le rendu du message du giveaway en cours.",
+      "giveawayTitle": "Aperçu du concours",
+      "giveawayDescription": "Voici le rendu du message du concours en cours.",
       "endTitle": "Aperçu du message final",
-      "endDescription": "Voici le message envoyé lorsque le giveaway se termine.",
+      "endDescription": "Voici le message envoyé lorsque le concours se termine.",
       "winnerCount": "Gagnants",
       "winnerWord": "gagnant{count, plural, one {} other {s}}",
       "mentionCount": "Rôles mentionnés",
       "requirementCount": "Conditions",
-      "boosterCount": "Boosts",
+      "boosterCount": "Bonus",
       "profileRequired": "Photo de profil requise",
       "accountRequired": "Compte CoC lié requis",
       "rolesAllow": "Participation limitée aux rôles sélectionnés",
       "rolesDeny": "Rôles sélectionnés exclus",
-      "noChannel": "Aucun canal sélectionné",
+      "noChannel": "Aucun salon sélectionné",
       "noPrize": "La récompense apparaîtra ici",
-      "noEmbedText": "Ajoutez le texte de l'embed pour prévisualiser le giveaway.",
+      "noEmbedText": "Ajoutez le texte de l’embed pour prévisualiser le concours.",
       "noEndText": "Ajoutez un message de fin pour les gagnants.",
       "startsAt": "Débute : {date}",
       "endsAt": "Se termine : {date}",
@@ -3011,25 +2908,71 @@
       "endSummary": "{winners} gagnant{winners, plural, one {} other {s}} sera annoncé ici.",
       "totalParticipants": "Participants au total : {count}",
       "participate": "Participer",
-      "buttonHint": "Bouton d'action principal affiché sous le message Discord."
+      "buttonHint": "Bouton d’action principal affiché sous le message Discord."
     },
     "toast": {
       "errorTitle": "Une erreur est survenue",
       "successTitle": "Succès",
-      "loadError": "Impossible de charger les giveaways.",
-      "saveError": "Impossible d'enregistrer le giveaway.",
-      "deleteError": "Impossible de supprimer le giveaway.",
-      "created": "Giveaway créé avec succès.",
-      "updated": "Giveaway mis à jour avec succès.",
-      "deleted": "Giveaway supprimé avec succès.",
-      "rerolled": "Gagnants relancés avec succès.",
-      "rerollError": "Impossible de relancer les gagnants."
+      "loadError": "Impossible de charger les concours.",
+      "saveError": "Impossible d’enregistrer le concours.",
+      "deleteError": "Impossible de supprimer le concours.",
+      "created": "Concours créé avec succès.",
+      "updated": "Concours mis à jour avec succès.",
+      "deleted": "Concours supprimé avec succès.",
+      "rerolled": "Les gagnants ont été retirés au sort.",
+      "rerollError": "Impossible de retirer de nouveaux gagnants au sort."
     },
     "reroll": {
-      "title": "Relancer les gagnants",
+      "title": "Retirer les gagnants au sort",
       "description": "Sélectionnez les gagnants à remplacer. De nouveaux gagnants seront tirés parmi les participants éligibles.",
       "selectWinners": "Sélectionnez les gagnants à remplacer :",
-      "confirm": "Relancer {count, plural, one {# gagnant} other {# gagnants}}"
+      "confirm": "Retirer {count, plural, one {# gagnant} other {# gagnants}} au sort"
+    }
+  },
+  "OverviewPage": {
+    "title": "Vue d’ensemble du tableau de bord",
+    "description": "Consultez les statistiques de votre serveur et lancez-vous",
+    "stats": {
+      "linkedPlayers": "Joueurs liés",
+      "linkedPlayersDesc": "Joueurs liés sur ce serveur",
+      "clansConfigured": "Clans configurés",
+      "clansConfiguredDesc": "Clans suivis pour ce serveur",
+      "activeRosters": "Compositions actifs",
+      "activeRostersDesc": "Compositions de guerre créés",
+      "totalAccounts": "Comptes liés",
+      "totalAccountsDesc": "Nombre total de comptes CoC liés",
+      "playersTracked": "Joueurs suivis",
+      "globalPlayers": "Nombre total de joueurs dans la base de données",
+      "clansTracked": "Clans suivis",
+      "globalClans": "Nombre total de clans dans la base de données",
+      "botStatus": "État du bot",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "memoryUsage": "Mémoire : {used} Mo ({percent} %)",
+      "cpuUsage": "Processeur : {percent} %"
+    },
+    "botSection": "Statistiques du bot",
+    "clans": {
+      "title": "Vos clans",
+      "description": "{count, plural, one {# clan configuré} other {# clans configurés}}",
+      "manage": "Gérer les clans",
+      "addFirst": "Ajouter votre premier clan"
+    },
+    "quickStart": {
+      "title": "Démarrage rapide",
+      "description": "Commencez à configurer votre bot ClashKing",
+      "step1": {
+        "title": "Configurer les paramètres généraux",
+        "description": "Définissez les conventions de surnom, les couleurs des embeds et les salons de journalisation"
+      },
+      "step2": {
+        "title": "Ajouter vos clans",
+        "description": "Connectez vos clans Clash of Clans et configurez les rôles"
+      },
+      "step3": {
+        "title": "Configurer les rôles automatiques",
+        "description": "Configurez l’attribution automatique des rôles selon l’hôtel de ville, les trophées, etc."
+      }
     }
   },
   "BotStatsPage": {
@@ -3041,18 +2984,18 @@
       "globalStats": "Statistiques Globales",
       "globalStatsDesc": "Les nombres de joueurs et de clans représentent toutes les entités suivies sur tous les serveurs Discord utilisant ClashKing",
       "systemHealth": "Santé du Système",
-      "systemHealthDesc": "L'utilisation du CPU et de la mémoire indique la charge actuelle sur l'infrastructure API de ClashKing"
+      "systemHealthDesc": "L’utilisation du CPU et de la mémoire indique la charge actuelle sur l’infrastructure API de ClashKing"
     }
   },
   "NotFound": {
     "title": "404 - Page Non Trouvée",
-    "description": "La page que vous recherchez n'existe pas.",
-    "goHome": "Retour à l'Accueil"
+    "description": "La page que vous recherchez n’existe pas.",
+    "goHome": "Retour à l’Accueil"
   },
   "ClanSignal": {
     "metadata": {
       "title": "ClashKing | Bot Discord, application mobile et tableau de bord",
-      "description": "Gérez les guerres, les rosters, les comptes, les rappels et les réglages de votre clan avec ClashKing sur Discord, mobile et le web.",
+      "description": "Gérez les guerres, les compositions, les comptes, les rappels et les réglages de votre clan avec ClashKing sur Discord, mobile et le web.",
       "openGraphTitle": "ClashKing | Gérez votre clan"
     },
     "navigation": {
@@ -3062,42 +3005,64 @@
       "discordBot": "Bot Discord",
       "dashboard": "Tableau de bord"
     },
-    "language": { "label": "Langue" },
-    "appearance": { "label": "Apparence", "day": "Jour", "sunset": "Coucher de soleil" },
+    "language": {
+      "label": "Langue"
+    },
+    "appearance": {
+      "label": "Apparence",
+      "day": "Jour",
+      "sunset": "Coucher de soleil"
+    },
     "actions": {
       "addToDiscord": "Ajouter à Discord",
-    "addClashKing": "Ajouter ClashKing",
-    "openDashboard": "Ouvrir le tableau de bord",
-    "login": "Se connecter",
-    "dashboard": "Tableau de bord",
-    "iosApp": "Application iOS",
-    "androidApp": "Application Android",
-    "addDiscordBot": "Ajouter le bot Discord",
-    "joinTestFlight": "Rejoindre TestFlight",
+      "addClashKing": "Ajouter ClashKing",
+      "openDashboard": "Ouvrir le tableau de bord",
+      "joinTestFlight": "Rejoindre TestFlight",
       "getAndroidApp": "Télécharger sur Android"
     },
     "hero": {
       "phrases": {
-        "run": { "first": "Gérez", "second": "votre", "third": "clan." },
-        "accounts": { "first": "Gérez", "second": "vos", "third": "comptes." },
-        "stats": { "first": "Explorez", "second": "les", "third": "statistiques." }
+        "run": {
+          "first": "Gérez",
+          "second": "votre",
+          "third": "clan."
+        },
+        "accounts": {
+          "first": "Gérez",
+          "second": "vos",
+          "third": "comptes."
+        },
+        "stats": {
+          "first": "Explorez",
+          "second": "les",
+          "third": "statistiques."
+        }
       },
       "rotatingLabel": "Gérez votre clan. Gérez vos comptes. Explorez les statistiques.",
-      "copy": "Guerres, rosters, comptes et réglages du clan sur Discord, mobile et le web."
+      "copy": "Guerres, compositions, comptes et réglages du clan sur Discord, mobile et le web."
     },
     "app": {
       "title": "Application mobile",
-      "intro": "L'application qui accompagne vos comptes Clash.",
-      "stageLabel": "Écrans de clan, d'amélioration et de widget de guerre de l'application mobile ClashKing",
+      "intro": "L’application qui accompagne vos comptes Clash.",
+      "stageLabel": "Écrans de clan, d’amélioration et de widget de guerre de l’application mobile ClashKing",
       "images": {
-        "clanOverview": "Aperçu d'un clan dans l'application mobile ClashKing",
-        "upgradeStats": "Statistiques d'amélioration du Grand Gardien dans l'application mobile ClashKing",
+        "clanOverview": "Aperçu d’un clan dans l’application mobile ClashKing",
+        "upgradeStats": "Statistiques d’amélioration du Grand Gardien dans l’application mobile ClashKing",
         "warWidget": "Widget de résultat de guerre ClashKing"
       },
       "features": {
-        "widgets": { "title": "Widgets", "copy": "Consultez vos guerres en un coup d'œil." },
-        "notifications": { "title": "Notifications", "copy": "Soyez prévenu lorsqu'il vous reste une attaque ou qu'une amélioration se termine." },
-        "accounts": { "title": "Comptes liés", "copy": "Regroupez tous vos comptes Clash au même endroit." }
+        "widgets": {
+          "title": "Widgets",
+          "copy": "Consultez vos guerres en un coup d’œil."
+        },
+        "notifications": {
+          "title": "Alertes",
+          "copy": "Soyez averti lorsqu’une attaque est disponible ou qu’une amélioration se termine."
+        },
+        "accounts": {
+          "title": "Comptes liés",
+          "copy": "Regroupez tous vos comptes Clash au même endroit."
+        }
       }
     },
     "bot": {
@@ -3106,20 +3071,38 @@
       "imageLabel": "Commande de clan ClashKing dans Discord",
       "imageAlt": "Commande ClashKing affichant les statistiques du clan ArcLine dans Discord",
       "features": {
-        "rosters": { "title": "Rosters", "copy": "Gérez les comptes pour la LDC ou vos événements." },
-        "warTools": { "title": "Outils de guerre", "copy": "Consultez les attaques, les compositions et les rappels dans Discord." },
-        "accounts": { "title": "Comptes liés", "copy": "Regroupez tous vos comptes Clash au même endroit." }
+        "rosters": {
+          "title": "Compositions",
+          "copy": "Gérez les comptes pour la LDC ou vos événements."
+        },
+        "warTools": {
+          "title": "Outils de guerre",
+          "copy": "Consultez les attaques, les compositions et les rappels dans Discord."
+        },
+        "accounts": {
+          "title": "Comptes liés",
+          "copy": "Regroupez tous vos comptes Clash au même endroit."
+        }
       }
     },
     "dashboard": {
       "title": "Tableau de bord",
-      "intro": "Gérez les rosters, les rappels et les réglages du serveur au même endroit.",
-      "imageLabel": "Cabane d'ouvrier représentant les outils de gestion du clan",
-      "imageAlt": "Cabane d'ouvrier niveau 8",
+      "intro": "Gérez les compositions, les rappels et les réglages du serveur au même endroit.",
+      "imageLabel": "Cabane d’ouvrier représentant les outils de gestion du clan",
+      "imageAlt": "Cabane d’ouvrier niveau 8",
       "features": {
-        "settings": { "title": "Réglages du clan", "copy": "Configurez les clans, les rôles et les salons." },
-        "rosters": { "title": "Rosters", "copy": "Gérez les comptes pour la LDC ou vos événements." },
-        "automation": { "title": "Automatisation", "copy": "Programmez les rappels et les tâches du serveur." }
+        "settings": {
+          "title": "Réglages du clan",
+          "copy": "Configurez les clans, les rôles et les salons."
+        },
+        "rosters": {
+          "title": "Compositions",
+          "copy": "Gérez les comptes pour la LDC ou vos événements."
+        },
+        "automation": {
+          "title": "Automatisation",
+          "copy": "Programmez les rappels et les tâches du serveur."
+        }
       }
     },
     "resources": {
@@ -3134,7 +3117,7 @@
       "docs": "Documentation",
       "privacy": "Politique de confidentialité",
       "terms": "Conditions d’utilisation",
-      "legal": "Ce contenu n'est ni affilié à Supercell, ni approuvé, sponsorisé ou spécifiquement autorisé par Supercell."
+      "legal": "Ce contenu n’est ni affilié à Supercell, ni approuvé, sponsorisé ou spécifiquement autorisé par Supercell."
     }
   },
   "PublicSeo": {

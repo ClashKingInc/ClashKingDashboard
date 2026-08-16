@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Ladataan...",
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "search": "Hae",
+    "filter": "Suodatin",
+    "add": "Lisää",
+    "remove": "Poista",
+    "refresh": "Päivitä",
+    "close": "Sulje",
+    "openMenu": "Avaa valikko",
+    "submit": "Lähetä",
+    "back": "Takaisin",
+    "next": "Seuraava",
+    "previous": "Edellinen",
+    "poweredBy": "Palvelun tarjoaa",
+    "noData": "Tietoja ei ole saatavilla",
+    "noChannelFound": "Kanavaa ei löytynyt.",
+    "searchChannels": "Hae kanavia...",
+    "searchClans": "Hae klaaneja...",
+    "noClanFound": "Klaania ei löytynyt.",
+    "searchCategories": "Hae kategorioita...",
+    "noRoleFound": "Roolia ei löytynyt.",
+    "searchRoles": "Hae rooleja...",
+    "addRole": "Lisää rooli...",
+    "error": "Tapahtui virhe",
+    "success": "Onnistui",
+    "actions": "Toiminnot",
+    "details": "Yksityiskohdat",
+    "view": "Näytä",
+    "unknown": "Tuntematon",
+    "confirm": "Vahvista",
+    "settings": "Asetukset",
+    "status": "Tila",
+    "retry": "Yritä uudelleen",
+    "disabled": "Poistettu käytöstä",
+    "name": "Nimi",
+    "description": "Kuvaus",
+    "createdAt": "Luotu",
+    "updatedAt": "Päivitetty",
+    "dashboard": "Hallintapaneeli",
+    "loadError": "Tietojen lataaminen epäonnistui.",
+    "tryAgain": "Yritä uudelleen",
+    "create": "Luo",
+    "viewClashProfile": "Näytä Clash-profiili",
+    "openInGame": "Avaa pelissä",
+    "openChannelInDiscord": "Avaa tämä kanava Discordissa",
+    "playerProfile": {
+      "clan": "Klaani",
+      "townHallLevel": "Kaupungintalon taso",
+      "trophies": "Pokaalit",
+      "warPreference": "Sotavalinta",
+      "warPreferenceIn": "Mukana",
+      "warPreferenceOut": "Ei mukana",
+      "signupGroup": "Ilmoittautumisryhmä",
+      "heroLevels": "Sankareiden tasot",
+      "hitrate30d": "30 päivän osumaprosentti"
+    }
+  },
+  "Navigation": {
+    "features": "Ominaisuudet",
+    "openSource": "Avoin lähdekoodi",
+    "help": "Tarvitsetko apua?",
+    "support": "Tue meitä",
+    "commands": "Komennot",
+    "premium": "Premium",
+    "documentation": "Dokumentaatio",
+    "loginWithDiscord": "Kirjaudu Discordilla",
+    "addToDiscord": "Lisää Discordiin",
+    "openDashboard": "Avaa hallintapaneeli",
+    "dashboardSettings": "Hallintapaneelin asetukset",
+    "logout": "Kirjaudu ulos",
+    "settings": "Asetukset",
+    "theme": "Teema",
+    "systemTheme": "Noudata järjestelmää",
+    "lightTheme": "Vaalea teema",
+    "darkTheme": "Tumma teema",
+    "language": "Kieli",
+    "browserLanguage": "Selaimen kieli"
+  },
+  "HomePage": {
+    "badge": "Yli {serverCount} palvelinta käyttää jo ClashKingiä",
+    "title": "Tehokkain",
+    "titleHighlight": "Clash of Clans -botti",
+    "subtitle": "Automatisoi klaanin hallinta, seuraa pelaajatilastoja, hallitse sotia ja pidä yhteisösi aktiivisena.",
+    "cta": {
+      "heading": "Oletko valmis uudistamaan klaanisi?",
+      "description": "Liity yli {serverCount} Discord-palvelimen joukkoon, jotka kehittävät Clash of Clans -yhteisöään ClashKingillä. Käyttöönotto vie vain kaksi minuuttia.",
+      "button": "Lisää ClashKing Discordiin",
+      "trustBadge": "Aina ilmainen • Luottokorttia ei tarvita • Yli {serverCount} palvelinta",
+      "addToDiscord": "Lisää Discordiin",
+      "openDashboard": "Avaa hallintapaneeli"
+    },
+    "stats": {
+      "servers": "Discord-palvelimet",
+      "users": "Aktiiviset käyttäjät",
+      "clans": "Seuratut klaanit"
+    },
+    "features": {
+      "title": "Kaikki tarvittava klaanisi hallintaan",
+      "subtitle": "Tehokkaat ominaisuudet erityisesti Clash of Clans -yhteisöille",
+      "autoRoles": {
+        "title": "Automaattinen roolien hallinta",
+        "description": "Määritä roolit automaattisesti pelaajan tilan, klaaniaseman ja saavutusten perusteella. Pidä palvelimesi helposti järjestyksessä."
+      },
+      "playerStats": {
+        "title": "Pelaajatilastot",
+        "description": "Seuraa yksityiskohtaisia pelaajatilastoja, kehityskaavioita ja hyökkäyshistoriaa. Näe, kuka kehittyy ja kuka tarvitsee apua."
+      },
+      "leaderboards": {
+        "title": "Tulostaulut",
+        "description": "Luo kilpailullisia tulostauluja lahjoituksille, pokaaleille, sotatähdille ja omille mittareille. Lisää aktiivisuutta."
+      },
+      "warTracking": {
+        "title": "Sotien seuranta",
+        "description": "Valvo sotakokoonpanoja, seuraa hyökkäyksiä reaaliajassa ja tarkastele sodanjälkeisiä analyyseja. Et menetä yhtäkään yksityiskohtaa."
+      },
+      "smartReminders": {
+        "title": "Älykkäät muistutukset",
+        "description": "Automaattiset muistutukset klaanipeleistä, sotahyökkäyksistä, klaanisotaliigasta ja omista tapahtumista pitävät kaikki ajan tasalla."
+      },
+      "customization": {
+        "title": "Täysi mukautettavuus",
+        "description": "Mukauta komentoja, upotusten värejä, lempinimiä ja käyttöoikeuksia. Tee ClashKingistä omasi."
+      },
+      "familyManagement": {
+        "title": "Klaaniperheen hallinta",
+        "description": "Hallitse useita klaaneja perheenä yhteisillä tilastoilla, tulostauluilla ja rooleilla."
+      },
+      "analytics": {
+        "title": "Edistynyt analytiikka",
+        "description": "Syvälliset tiedot klaanin suorituskyvystä, pelaajien aktiivisuudesta ja kasvutrendeistä tukevat tietoon perustuvia päätöksiä."
+      },
+      "performance": {
+        "title": "Salamannopea",
+        "description": "Suunniteltu tehokkaaksi: komennot vastaavat heti ja tiedot päivittyvät reaaliajassa ilman viivettä."
+      },
+      "security": {
+        "title": "Turvallinen ja luotettava",
+        "description": "99,9 % käytettävyys, salatut tiedot ja säännölliset varmuuskopiot pitävät klaanisi tiedot turvassa."
+      }
+    },
+    "footer": {
+      "tagline": "Tehokkain Clash of Clans -botti Discord-yhteisöille.",
+      "about": {
+        "title": "Tietoa",
+        "features": "Ominaisuudet",
+        "help": "Tarvitsetko apua?",
+        "openSource": "Avoin lähdekoodi",
+        "support": "Tue meitä"
+      },
+      "bot": {
+        "title": "Botti",
+        "dashboard": "Hallintapaneeli",
+        "inviteBot": "Kutsu botti"
+      },
+      "resources": {
+        "title": "Resurssit",
+        "documentation": "Dokumentaatio",
+        "quickStart": "Pikaopas",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Yhteisö",
+        "discord": "Discord-palvelin",
+        "twitter": "X (Twitter)",
+        "reportBug": "Ilmoita virheestä",
+        "requestFeature": "Ehdota ominaisuutta"
+      },
+      "legal": {
+        "copyright": "ClashKing. Kaikki oikeudet pidätetään.",
+        "privacy": "Tietosuojakäytäntö",
+        "terms": "Käyttöehdot"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Ei palvelimella",
+    "unknownUser": "Tuntematon käyttäjä",
+    "notLinked": "Ei linkitetty",
+    "status": {
+      "onServer": "Palvelimella",
+      "notOnServer": "Ei palvelimella"
+    },
+    "discordId": "Discord-tunnus",
+    "viewProfile": "Näytä Discord-profiili",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Yleiskatsaus",
+      "description": "Hallintapaneelin etusivu"
+    },
+    "general": {
+      "name": "Yleiset asetukset",
+      "description": "Palvelimen määritys"
+    },
+    "dashboardAccess": {
+      "name": "Hallintapaneelin käyttöoikeudet",
+      "description": "Delegoi hallintapaneelin osiot"
+    },
+    "familySettings": {
+      "name": "Perheasetukset",
+      "description": "Perheroolit ja lempinimet"
+    },
+    "clans": {
+      "name": "Klaanit",
+      "description": "Hallitse klaanejasi"
+    },
+    "logs": {
+      "name": "Lokit",
+      "description": "Webhook-määritys"
+    },
+    "roles": {
+      "name": "Roolit",
+      "description": "Roolien automatisointi"
+    },
+    "reminders": {
+      "name": "Muistutukset",
+      "description": "Kaikki muistutustyypit"
+    },
+    "rosters": {
+      "name": "Kokoonpanot",
+      "description": "Kokoonpanojen hallinta"
+    },
+    "bases": {
+      "name": "Tukikohdat",
+      "description": "Asettelukirjasto ja vuorovaikutus"
+    },
+    "autoboards": {
+      "name": "Automaattitaulut",
+      "description": "Automaattiset tulostaulut"
+    },
+    "giveaways": {
+      "name": "Arvonnat",
+      "description": "Hallitse arvontoja"
+    },
+    "panels": {
+      "name": "Paneelit",
+      "description": "Vuorovaikutteiset jäsenpaneelit toimintopainikkeineen"
+    },
+    "tickets": {
+      "name": "Tukipyynnöt",
+      "description": "Rekrytointi- ja tukipyynnöt"
+    },
+    "embeds": {
+      "name": "Upotukset",
+      "description": "Discord-upotusten mallit"
+    },
+    "links": {
+      "name": "Linkitykset",
+      "description": "Pelaajien ja Discordin linkitys"
+    },
+    "bans": {
+      "name": "Porttikiellot ja varoitukset",
+      "description": "Moderointityökalut"
+    },
+    "wars": {
+      "name": "Sodat",
+      "description": "Sotatilastot"
+    },
+    "leaderboards": {
+      "name": "Tulostaulut",
+      "description": "Maailmanlaajuiset sijoitukset"
+    },
+    "sections": {
+      "configuration": "Määritykset",
+      "clanManagement": "Klaanin hallinta",
+      "playerManagement": "Pelaajien hallinta",
+      "automation": "Automatisointi",
+      "statistics": "Tilastot"
+    },
+    "switchServer": "Vaihda palvelinta",
+    "goHome": "Etusivu"
+  },
+  "BasesPage": {
+    "eyebrow": "Klaanin hallinta",
+    "title": "Tukikohdat",
+    "description": "Tarkastele jaettuja asetteluja, käyttöhistoriaa ja Discord-lähdeviestejä.",
+    "refresh": "Päivitä",
+    "create": "Lisää tukikohta",
+    "retry": "Yritä uudelleen",
+    "dismiss": "Sulje",
+    "cancel": "Peruuta",
+    "previous": "Edellinen",
+    "next": "Seuraava",
+    "pagination": "Sivu {page}/{total}",
+    "imageAlt": "Tukikohdan asettelukuva {index}",
+    "noDescription": "Kuvausta ei ole annettu.",
+    "openLayout": "Avaa asettelu",
+    "openMessage": "Discord-viesti",
+    "summary": {
+      "total": "Tukikohtia yhteensä",
+      "page": "Nykyinen sivu",
+      "visible": "Näkyvissä"
+    },
+    "counts": {
+      "downloads": "Yksilölliset lataukset",
+      "upvotes": "Kannatusäänet",
+      "downvotes": "Vastustusäänet"
+    },
+    "history": {
+      "title": "Lataushistoria ({count})",
+      "empty": "Lataajien tunnuksia ei ole tallennettu.",
+      "resolve": "Selvitä profiili"
+    },
+    "delete": {
+      "action": "Poista",
+      "confirmTitle": "Poistetaanko tämä tukikohta?",
+      "confirmDescription": "Tämä poistaa tietokantatietueen pysyvästi ja yrittää ensin poistaa sen Discord-lähdeviestin. Tukikohtaa ei voi palauttaa.",
+      "confirmAction": "Poista tukikohta",
+      "deleting": "Poistetaan…",
+      "baseId": "Tukikohdan tunnus",
+      "discordSource": "Discord-lähde",
+      "successTitle": "Tukikohta poistettu",
+      "successDeleted": "Tietokantatietue ja Discord-viesti poistettiin.",
+      "successAlreadyMissing": "Tietokantatietue poistettiin; Discord-viesti puuttui jo.",
+      "cleanupFailedTitle": "Tukikohta säilytettiin; Discord-siivous epäonnistui",
+      "cleanupCompleteTitle": "Discord-siivous valmistui; tukikohta säilytettiin",
+      "failureTitle": "Tukikohtaa ei poistettu",
+      "failureFallback": "Poistopyyntö epäonnistui.",
+      "retryable": "Uudelleen yrittäminen on turvallista",
+      "notRetryable": "Ei voi yrittää uudelleen",
+      "cleanup": {
+        "deleted": "Discord-viesti poistettu",
+        "alreadyMissing": "Discord-viesti puuttuu jo",
+        "failed": "Discord-siivous epäonnistui"
+      }
+    },
+    "empty": {
+      "title": "Tukikohtia ei ole vielä jaettu",
+      "description": "Lisää ensimmäinen asettelu valitsemalla sen Discord-kanava ja Clash of Clans -asettelulinkki."
+    },
+    "form": {
+      "title": "Lisää tukikohta",
+      "description": "Tukikohtia ei voi muokata luomisen jälkeen. Valitse, mihin ClashKing lähettää Discord-viestin, ja vahvista asettelulinkki.",
+      "channel": "Discord-kanava",
+      "channelPlaceholder": "Valitse kanava",
+      "channelSearch": "Hae kanavia…",
+      "channelsLoading": "Ladataan kanavia…",
+      "baseLink": "Asettelulinkki",
+      "descriptionLabel": "Kuvaus",
+      "images": "Kuvat",
+      "chooseImages": "Valitse asettelukuvat",
+      "imageLimit": "Enintään neljä kuvaa; lataukset valmistuvat ennen tukikohdan luomista.",
+      "submit": "Luo tukikohta",
+      "creating": "Ladataan ja luodaan…",
+      "createRejectedTitle": "Tukikohtaa ei luotu",
+      "createCleanupCompleteTitle": "Discord-siivous valmistui; tukikohtaa ei luotu",
+      "createCleanupFailedTitle": "Discord-viesti saattaa jäädä; tukikohtaa ei luotu",
+      "databaseNotInserted": "Tietokantatietuetta ei lisätty",
+      "discordMessageCreated": "Discord-viesti luotiin",
+      "discordMessageId": "Discord-viestin tunnus",
+      "retryable": "Uudelleen yrittäminen on turvallista",
+      "notRetryable": "Älä yritä automaattisesti uudelleen",
+      "cleanup": {
+        "notNeeded": "Discord-siivousta ei tarvita",
+        "deleted": "Discord-viesti poistettu",
+        "alreadyMissing": "Discord-viesti puuttuu jo",
+        "failed": "Discord-siivous epäonnistui"
+      }
+    },
+    "errors": {
+      "title": "Tukikohdat eivät ole saatavilla",
+      "load": "Tukikohtien lataaminen epäonnistui.",
+      "create": "Tukikohdan luominen epäonnistui.",
+      "upload": "Kuvan lataaminen epäonnistui.",
+      "downloader": "Lataajan selvittäminen epäonnistui.",
+      "channels": "Discord-kanavien lataaminen epäonnistui.",
+      "channelRequired": "Valitse Discord-kanava.",
+      "linkRequired": "Asettelulinkki vaaditaan.",
+      "descriptionTooLong": "Kuvauksen enimmäispituus on 1 000 merkkiä.",
+      "tooManyImages": "Valitse enintään neljä kuvaa."
+    }
+  },
+  "BansPage": {
+    "title": "Moderointi",
+    "description": "Hallitse pelaajien porttikieltoja ja varoituksia",
+    "viewClashProfile": "Näytä Clash-profiili",
+    "tabs": {
+      "bans": "Porttikiellot",
+      "strikes": "Varoitukset"
+    },
+    "bans": {
+      "title": "Porttikiellossa olevat pelaajat",
+      "noBans": "Porttikiellossa olevia pelaajia ei löytynyt",
+      "addBan": "Lisää porttikielto",
+      "removeBan": "Poista porttikielto",
+      "confirmRemove": "Haluatko varmasti poistaa tämän porttikiellon?",
+      "playerTag": "Pelaajatunnus",
+      "playerName": "Pelaajan nimi",
+      "reason": "Syy",
+      "bannedAt": "Porttikielto annettu",
+      "search": "Hae nimellä tai tunnuksella...",
+      "howItWorks": {
+        "title": "Porttikieltojen toiminta",
+        "description": "Jos porttikiellossa oleva pelaaja liittyy johonkin klaaniisi, varoitus lähetetään <clansTab>klaanit-välilehdellä</clansTab> määrittämällesi kanavalle. Botti ei voi estää pelaajaa liittymästä klaaniin, vaan voi ainoastaan varoittaa."
+      },
+      "stats": {
+        "total": "Porttikieltoja yhteensä",
+        "recent": "Viimeaikaiset porttikiellot (7 päivää)",
+        "commonReason": "Yleisin syy",
+        "activeOnServer": "Palvelimen aktiiviset porttikiellot",
+        "last7Days": "Viimeisten 7 päivän aikana",
+        "commonReasonValue": "Häirintä ja asiaton käytös",
+        "noBans": "Ei porttikieltoja",
+        "percentOfAll": "{percent} % kaikista porttikielloista",
+        "percentOfAllLabel": "kaikista porttikielloista"
+      },
+      "list": {
+        "title": "Porttikiellossa olevat pelaajat",
+        "count": "{count} {count, plural, one {pelaaja porttikiellossa} other {pelaajaa porttikiellossa}}",
+        "searchPlaceholder": "Hae nimellä, tunnuksella tai syyllä...",
+        "noBansFound": "Porttikieltoja ei löytynyt",
+        "noBans": "Ei porttikiellossa olevia pelaajia",
+        "adjustSearch": "Yritä muuttaa hakua",
+        "getStarted": "Aloita pelaajien moderointi lisäämällä porttikielto"
+      },
+      "table": {
+        "player": "Pelaaja",
+        "reason": "Syy",
+        "bannedBy": "Porttikiellon antaja",
+        "date": "Päivämäärä",
+        "daysAgo": "{days} päivää sitten",
+        "noReason": "Syytä ei ole annettu"
+      },
+      "addDialog": {
+        "title": "Anna pelaajalle porttikielto",
+        "description": "Lisää pelaaja porttikieltolistalle. Saat varoituksen, jos hän liittyy johonkin tämän palvelimen klaaniin.",
+        "playerTagLabel": "Pelaajatunnus",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Pelaajan nimi (valinnainen)",
+        "playerNamePlaceholder": "Anna pelaajan nimi",
+        "reasonLabel": "Porttikiellon syy",
+        "reasonPlaceholder": "Kerro, miksi pelaajalle annetaan porttikielto...",
+        "submit": "Anna porttikielto"
+      },
+      "bestPractices": {
+        "title": "Parhaat käytännöt",
+        "document": {
+          "title": "Dokumentoi huolellisesti:",
+          "desc": "Anna aina tarkka syy jokaiseen porttikieltoon, jotta muut moderaattorit ymmärtävät tilanteen."
+        },
+        "review": {
+          "title": "Tarkista säännöllisesti:",
+          "desc": "Tarkista porttikieltolista säännöllisesti varmistaaksesi, että kaikki kiellot ovat edelleen tarpeellisia ja perusteltuja."
+        },
+        "consistent": {
+          "title": "Ole johdonmukainen:",
+          "desc": "Anna porttikiellot oikeudenmukaisesti ja johdonmukaisesti kaikille pelaajille terveen yhteisön säilyttämiseksi."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Pelaajien varoitukset",
+      "noStrikes": "Varoituksia ei löytynyt",
+      "addStrike": "Lisää varoitus",
+      "removeStrike": "Poista varoitus",
+      "confirmRemove": "Haluatko varmasti poistaa tämän varoituksen?",
+      "playerTag": "Pelaajatunnus",
+      "reason": "Syy",
+      "weight": "Painoarvo",
+      "rolloverDays": "Voimassaolopäivät",
+      "createdAt": "Luotu",
+      "search": "Hae pelaajatunnuksella...",
+      "howItWorks": {
+        "title": "Varoitusten toiminta",
+        "description": "Varoituksia annetaan pelaajille sääntörikkomuksista. Jokaisella varoituksella on painoarvo, ja se voi vanhentua määritetyn ajan kuluttua. Varoitukset auttavat seuraamaan käyttäytymistä ennen porttikiellon antamista."
+      },
+      "stats": {
+        "total": "Varoituksia yhteensä",
+        "recent": "Viimeaikaiset varoitukset (7 päivää)",
+        "totalWeight": "Varoitusten kokonaispaino",
+        "activeOnServer": "Palvelimen aktiiviset varoitukset",
+        "last7Days": "Viimeisten 7 päivän aikana",
+        "cumulativeWeight": "Varoitusten yhteispaino",
+        "commonReason": "Yleisin syy",
+        "commonReasonValue": "Roskapostitus"
+      },
+      "list": {
+        "title": "Pelaajien varoitukset",
+        "count": "{count} {count, plural, one {varoitus annettu} other {varoitusta annettu}}",
+        "searchPlaceholder": "Hae nimellä, tunnuksella tai syyllä...",
+        "noStrikesFound": "Varoituksia ei löytynyt",
+        "noStrikes": "Varoituksia ei ole annettu",
+        "adjustSearch": "Yritä muuttaa hakua",
+        "getStarted": "Aloita pelaajien rikkomusten seuranta lisäämällä varoitus",
+        "viewAll": "Kaikki varoitukset",
+        "viewGrouped": "Pelaajittain"
+      },
+      "table": {
+        "player": "Pelaaja",
+        "reason": "Syy",
+        "weight": "Painoarvo",
+        "addedBy": "Lisännyt",
+        "date": "Päivämäärä",
+        "expires": "Vanhenee",
+        "never": "Ei koskaan",
+        "noReason": "Syytä ei ole annettu",
+        "daysAgo": "{days} päivää sitten",
+        "totalStrikes": "Varoituksia yhteensä",
+        "totalWeight": "Kokonaispaino",
+        "lastStrike": "Viimeisin varoitus"
+      },
+      "addDialog": {
+        "title": "Lisää varoitus",
+        "description": "Anna pelaajalle varoitus. Varoituksilla voi olla eri painoarvoja ja vanhenemispäiviä.",
+        "playerTagLabel": "Pelaajatunnus",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Syy",
+        "reasonPlaceholder": "Kerro, miksi varoitus annetaan...",
+        "weightLabel": "Varoituksen painoarvo",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Vanhenee (päivää)",
+        "rolloverPlaceholder": "Valinnainen",
+        "submit": "Lisää varoitus"
+      },
+      "guidelines": {
+        "title": "Varoitusten ohjeet",
+        "weights": {
+          "title": "Käytä painoarvoja harkiten:",
+          "desc": "Anna vakaville rikkomuksille suurempi painoarvo (2–3) ja pienille rikkomuksille pienempi (1)."
+        },
+        "expiration": {
+          "title": "Määritä vanhenemispäivät:",
+          "desc": "Harkitse varoitusten vanhenemispäiviä, jotta pelaajat voivat parantaa käytöstään ajan myötä."
+        },
+        "patterns": {
+          "title": "Seuraa toistuvuutta:",
+          "desc": "Tunnista toistuvat rikkojat varoitushistorian avulla ennen pysyvän porttikiellon antamista."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Porttikielto lisätty",
+      "banRemoved": "Porttikielto poistettu",
+      "strikeAdded": "Varoitus lisätty",
+      "strikeRemoved": "Varoitus poistettu",
+      "errorLoadingBans": "Porttikiellossa olevien pelaajien lataaminen epäonnistui",
+      "errorLoadingStrikes": "Varoitusten lataaminen epäonnistui",
+      "errorAddingBan": "Porttikiellon lisääminen epäonnistui",
+      "errorAddingStrike": "Varoituksen lisääminen epäonnistui",
+      "errorRemovingBan": "Porttikiellon poistaminen epäonnistui",
+      "errorRemovingStrike": "Varoituksen poistaminen epäonnistui"
+    }
+  },
+  "RostersPage": {
+    "title": "Kokoonpanot",
+    "description": "Hallitse sotakokoonpanoja ja jäsenten sijoittelua",
+    "stats": {
+      "totalRosters": "Kokoonpanoja yhteensä",
+      "totalMembers": "Jäseniä yhteensä",
+      "clanRosters": "Klaanikokoonpanot",
+      "familyRosters": "Perhekokoonpanot",
+      "members": "Jäsenet",
+      "avgTh": "Keskim. KT",
+      "avgHitrate": "Keskimääräinen osumaprosentti",
+      "distribution": "Jakauma",
+      "clan": "Klaani",
+      "family": "Perhe",
+      "external": "Ulkopuolinen",
+      "thDistribution": "Kaupungintalojakauma",
+      "capacity": "kapasiteetti"
+    },
+    "filters": {
+      "search": "Hae kokoonpanoja...",
+      "type": "Tyyppi",
+      "all": "Kaikki",
+      "clan": "Klaani",
+      "family": "Perhe",
+      "clear": "Tyhjennä"
+    },
+    "comparisonMode": {
+      "cancel": "Peruuta",
+      "compare": "Vertaa",
+      "compareRosters": "Vertaa kokoonpanoja",
+      "selectRosters": "Valitse kokoonpanot",
+      "selectRostersDesc": "Valitse vähintään kaksi vertailtavaa kokoonpanoa",
+      "maxReached": "Enimmäismäärä saavutettu",
+      "maxReachedDesc": "Voit vertailla enintään neljää kokoonpanoa kerrallaan"
+    },
+    "createDialog": {
+      "title": "Luo uusi kokoonpano",
+      "description": "Luo klaanillesi uusi kokoonpano",
+      "aliasLabel": "Kokoonpanon nimi",
+      "aliasPlaceholder": "esim. CWL-kokoonpano",
+      "typeLabel": "Kokoonpanon tyyppi",
+      "typeClan": "Klaani",
+      "typeFamily": "Perhe",
+      "signupScopeLabel": "Ilmoittautumisen laajuus",
+      "scopeClanOnly": "Vain klaani",
+      "scopeFamilyWide": "Koko perhe",
+      "clanLabel": "Klaani",
+      "clanPlaceholder": "Valitse klaani",
+      "descriptionLabel": "Kuvaus (valinnainen)",
+      "descriptionPlaceholder": "Kokoonpanon kuvaus...",
+      "cancel": "Peruuta",
+      "creating": "Luodaan...",
+      "create": "Luo kokoonpano"
+    },
+    "editDialog": {
+      "title": "Muokkaa kokoonpanoa",
+      "description": "Muokkaa kokoonpanon asetuksia ja määrityksiä",
+      "aliasLabel": "Kokoonpanon nimi",
+      "descriptionLabel": "Kuvaus",
+      "descriptionPlaceholder": "Kokoonpanon kuvaus...",
+      "minThLabel": "Kaupungintalon vähimmäistaso",
+      "minThPlaceholder": "esim. 13",
+      "maxThLabel": "Kaupungintalon enimmäistaso",
+      "maxThPlaceholder": "esim. 16",
+      "rosterSizeLabel": "Kokoonpanon koko",
+      "rosterSizePlaceholder": "esim. 50",
+      "columnsLabel": "Näytettävät sarakkeet",
+      "columnsPlaceholder": "Valitse näytettävät sarakkeet",
+      "sortLabel": "Lajittelujärjestys",
+      "sortPlaceholder": "Valitse lajittelukentät",
+      "cancel": "Peruuta",
+      "saving": "Tallennetaan…",
+      "save": "Tallenna muutokset"
+    },
+    "addMembersDialog": {
+      "title": "Lisää jäseniä kokoonpanoon",
+      "description": "Valitse jäseniä klaanistasi tai anna pelaajatunnuksia",
+      "bulkTagsLabel": "Lisää useita tunnuksilla",
+      "bulkTagsPlaceholder": "Anna pelaajatunnukset (yksi riville tai pilkuilla eroteltuna)",
+      "searchLabel": "Hae jäseniä",
+      "searchPlaceholder": "Hae nimellä tai tunnuksella...",
+      "selectFromClan": "Valitse klaanin jäsenistä",
+      "selectedCount": "Valittu",
+      "noMembers": "Jäseniä ei ole saatavilla",
+      "noMembersSelected": "Jäseniä ei ole valittu",
+      "noMembersSelectedDesc": "Valitse jäseniä tai anna pelaajatunnuksia.",
+      "cancel": "Peruuta",
+      "adding": "Lisätään...",
+      "add": "Lisää jäseniä"
+    },
+    "detailsDialog": {
+      "title": "Kokoonpanon tiedot",
+      "edit": "Muokkaa",
+      "refresh": "Päivitä",
+      "refreshing": "Päivitetään...",
+      "delete": "Poista",
+      "deleting": "Poistetaan...",
+      "addMembers": "Lisää jäseniä",
+      "close": "Sulje",
+      "noMembers": "Tässä kokoonpanossa ei ole jäseniä",
+      "noMembersDesc": "Aloita lisäämällä jäseniä",
+      "memberCount": "Jäsenet",
+      "thRestriction": "KT-taso",
+      "avgTh": "Keskim. KT",
+      "avgHitrate": "Keskimääräinen osumaprosentti",
+      "clan": "Klaani",
+      "family": "Perhe",
+      "external": "Ulkopuolinen",
+      "substitute": "VARA",
+      "removeMember": "Poista"
+    },
+    "rosterCard": {
+      "members": "Jäsenet",
+      "thLevel": "KT-taso",
+      "avgTh": "Keskim. KT",
+      "avgHitrate": "Keskimääräinen osumaprosentti",
+      "clan": "Klaani",
+      "family": "Perhe",
+      "external": "Ulkopuolinen",
+      "noRestriction": "Ei rajoitusta",
+      "view": "Näytä",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "noGroup": "Ei ryhmää",
+      "moveToGroup": "Siirrä ryhmään",
+      "clone": "Kloonaa",
+      "allRosters": "Kaikki kokoonpanot",
+      "manageRosters": "Hallitse sotakokoonpanojasi"
+    },
+    "memberColumns": {
+      "name": "Nimi",
+      "townhall": "Kaupungintalo",
+      "tag": "Tunnus",
+      "hitrate": "Osumaprosentti",
+      "current_clan": "Nykyinen klaani",
+      "current_clan_tag": "Klaanitunnus",
+      "discord": "Discord",
+      "hero_lvs": "Sankarit",
+      "war_pref": "Sotavalinta",
+      "trophies": "Pokaalit",
+      "signup_group": "Ilmoittautumisryhmä"
+    },
+    "columns": {
+      "configure": "Sarakkeet",
+      "title": "Määritä sarakkeet",
+      "description": "Valitse näytettävät sarakkeet ja niiden järjestys",
+      "selected": "Valitut sarakkeet",
+      "available": "Saatavilla olevat sarakkeet",
+      "save": "Tallenna sarakkeet",
+      "reset": "Palauta sarakkeet"
+    },
+    "sortFields": {
+      "townhall": "Kaupungintalon taso",
+      "name": "Nimi",
+      "tag": "Tunnus",
+      "heroLvs": "Sankarit",
+      "trophies": "Pokaalit",
+      "hitrate": "30 päivän osumaprosentti",
+      "currentClanTag": "Klaanitunnus",
+      "addedAt": "Lisätty"
+    },
+    "thRestrictions": {
+      "only": "Vain KT{th}",
+      "range": "KT{min}–{max}",
+      "minimum": "KT{th}+",
+      "maximum": "KT1–{th}",
+      "noRestriction": "Ei rajoitusta"
+    },
+    "emptyState": {
+      "noRosters": "Kokoonpanoja ei ole vielä luotu",
+      "noRostersDesc": "Aloita luomalla ensimmäinen kokoonpanosi",
+      "noMatch": "Yksikään kokoonpano ei vastaa suodattimia",
+      "noMatchDesc": "Yritä muuttaa hakua tai suodattimia"
+    },
+    "toast": {
+      "errorTitle": "Virhe",
+      "successTitle": "Onnistui",
+      "errorLoadingRosters": "Kokoonpanojen lataaminen epäonnistui. Yritä uudelleen.",
+      "errorLoadingMembers": "Klaanin jäsenten lataaminen epäonnistui.",
+      "rosterCreated": "Kokoonpano luotu!",
+      "errorCreatingRoster": "Kokoonpanon luominen epäonnistui. Yritä uudelleen.",
+      "rosterUpdated": "Kokoonpano päivitetty!",
+      "errorUpdatingRoster": "Kokoonpanon päivittäminen epäonnistui. Yritä uudelleen.",
+      "rosterDeleted": "Kokoonpano poistettu!",
+      "errorDeletingRoster": "Kokoonpanon poistaminen epäonnistui. Yritä uudelleen.",
+      "membersAdded": "Kokoonpanoon lisättiin {count} jäsentä!",
+      "errorAddingMembers": "Jäsenten lisääminen epäonnistui. Yritä uudelleen.",
+      "memberRemoved": "Jäsen poistettiin kokoonpanosta!",
+      "errorRemovingMember": "Jäsenen poistaminen epäonnistui. Yritä uudelleen.",
+      "substituteMarked": "Jäsen merkittiin varapelaajaksi!",
+      "substituteUnmarked": "Jäsenen varapelaajamerkintä poistettiin!",
+      "errorUpdatingMember": "Jäsenen päivittäminen epäonnistui. Yritä uudelleen.",
+      "rosterRefreshed": "Kokoonpanon tiedot päivitettiin!",
+      "errorRefreshingRoster": "Kokoonpanon tietojen päivittäminen epäonnistui. Yritä uudelleen.",
+      "memberTransferred": "Jäsen siirrettiin kokoonpanojen välillä!",
+      "errorTransferringMember": "Jäsenen siirtäminen epäonnistui. Yritä uudelleen.",
+      "rosterCloned": "Kokoonpano kloonattiin!",
+      "errorCloningRoster": "Kokoonpanon kloonaaminen epäonnistui. Yritä uudelleen.",
+      "missingMembersAdded": "Kokoonpanoon lisättiin {count} puuttuvaa jäsentä!",
+      "errorLoadingMissingMembers": "Puuttuvien jäsenten lataaminen epäonnistui."
+    },
+    "cloneDialog": {
+      "title": "Kloonaa kokoonpano",
+      "description": "Luo kopio tästä kokoonpanosta",
+      "aliasLabel": "Uuden kokoonpanon nimi",
+      "aliasPlaceholder": "Anna kloonatun kokoonpanon nimi",
+      "copyMembers": "Kopioi jäsenet uuteen kokoonpanoon",
+      "memberCount": "{count} jäsentä",
+      "originalRoster": "Alkuperäinen kokoonpano:",
+      "cancel": "Peruuta",
+      "cloning": "Kloonataan...",
+      "clone": "Kloonaa kokoonpano",
+      "copyMembersHint": "Jäsenet kopioidaan alkuperäisestä kokoonpanosta"
+    },
+    "missingMembers": {
+      "title": "Puuttuvat jäsenet",
+      "description": "Klaanin jäsenet, joita ei ole rekisteröity tähän kokoonpanoon",
+      "coverage": "Kokoonpanon kattavuus",
+      "registered": "rekisteröity",
+      "missing": "puuttuu",
+      "total": "yhteensä",
+      "selectAll": "Valitse kaikki",
+      "selected": "valittu",
+      "addSelected": "Lisää {count} jäsentä",
+      "button": "Puuttuvat jäsenet",
+      "addAll": "Lisää kaikki",
+      "adding": "Lisätään...",
+      "close": "Sulje",
+      "allCaughtUp": "Kaikki ajan tasalla!",
+      "allCaughtUpDesc": "Kaikki klaanin jäsenet on rekisteröity tähän kokoonpanoon",
+      "clanOnly": "Puuttuvien jäsenten analyysi on käytettävissä vain klaanikokoonpanoissa",
+      "error": "Puuttuvien jäsenten lataaminen epäonnistui",
+      "thisRoster": "Tämä kokoonpano",
+      "wholeGroup": "Koko ryhmä"
+    },
+    "eventTime": {
+      "label": "Tapahtuman alkamisaika",
+      "timezone": "Aikavyöhykkeesi",
+      "utc": "UTC",
+      "clear": "Tyhjennä"
+    },
+    "bulkValidation": {
+      "valid": "kelvollinen",
+      "invalid": "virheellinen",
+      "invalidTags": "Virheellinen"
+    },
+    "memberAutocomplete": {
+      "label": "Tai hae palvelimen jäseniä",
+      "placeholder": "Hae jäseniä napsauttamalla...",
+      "searchPlaceholder": "Hae nimellä, tunnuksella tai klaanilla...",
+      "loading": "Ladataan jäseniä...",
+      "noResults": "Jäseniä ei löytynyt",
+      "groupHeading": "Palvelimen jäsenet",
+      "selectedLabel": "Valitut jäsenet",
+      "membersSelected": "jäsentä valittu",
+      "selected": "Valittu",
+      "clanMembersLabel": "Tai valitse klaanin jäsenistä"
+    },
+    "retry": "Yritä uudelleen",
+    "back": "Takaisin",
+    "refresh": "Päivitä",
+    "createRoster": "Luo kokoonpano",
+    "searchPlaceholder": "Hae kokoonpanoja...",
+    "noRosters": "Ei vielä kokoonpanoja",
+    "noRostersHint": "Aloita luomalla ensimmäinen kokoonpanosi",
+    "noSearchResults": "Kokoonpanoja ei löytynyt",
+    "noSearchResultsHint": "Kokeile toista hakusanaa",
+    "createFirstRoster": "Luo ensimmäinen kokoonpano",
+    "deleteConfirm": "Haluatko varmasti poistaa kokoonpanon \"{name}\"?",
+    "deleteSuccess": "Kokoonpano poistettu",
+    "deleteSuccessDesc": "Kokoonpano ”{name}” on poistettu",
+    "deleteError": "Kokoonpanon poistaminen epäonnistui",
+    "createSuccess": "Kokoonpano luotu",
+    "createSuccessDesc": "Kokoonpano ”{name}” on luotu",
+    "createError": "Kokoonpanon luominen epäonnistui",
+    "createErrorAlias": "Anna kokoonpanon nimi",
+    "createErrorClan": "Valitse klaani",
+    "refreshSuccess": "Kokoonpanon tiedot päivitetty",
+    "refreshError": "Kokoonpanon päivittäminen epäonnistui",
+    "saveSuccess": "Asetukset tallennettu",
+    "saveError": "Asetusten tallentaminen epäonnistui",
+    "columnsUpdated": "Sarakkeet päivitetty",
+    "columnsError": "Sarakkeiden päivittäminen epäonnistui",
+    "addMembersSuccess": "Jäsenet lisätty",
+    "addMembersSuccessDesc": "Kokoonpanoon lisättiin {count} jäsentä",
+    "addMembersError": "Jäsenten lisääminen epäonnistui",
+    "removeMemberSuccess": "Jäsen poistettu",
+    "removeMemberError": "Jäsenen poistaminen epäonnistui",
+    "clearMembers": "Poista kaikki jäsenet",
+    "clearMembersConfirm": "Poistetaanko kaikki jäsenet kokoonpanosta ”{name}”? Tätä ei voi kumota.",
+    "clearMembersSuccess": "Kaikki jäsenet poistettu",
+    "clearMembersError": "Kaikkien jäsenten poistaminen epäonnistui",
+    "automationCreated": "Automaatio luotu",
+    "automationUpdated": "Automaatio päivitetty",
+    "automationDeleted": "Automaatio poistettu",
+    "automationError": "Automaatiovirhe",
+    "groupCreated": "Ryhmä luotu",
+    "groupUpdated": "Ryhmä päivitetty",
+    "groupDeleted": "Ryhmä poistettu",
+    "groupError": "Ryhmän tallentaminen epäonnistui",
+    "categoryCreated": "Kategoria luotu",
+    "categoryUpdated": "Kategoria päivitetty",
+    "categoryDeleted": "Kategoria poistettu",
+    "categoryError": "Kategorian tallentaminen epäonnistui",
+    "common": {
+      "cancel": "Peruuta",
+      "save": "Tallenna",
+      "close": "Sulje"
+    },
+    "tabs": {
+      "members": "Jäsenet",
+      "automations": "Automaatiot",
+      "groups": "Ryhmät",
+      "categories": "Kategoriat",
+      "settings": "Asetukset"
+    },
+    "members": {
+      "count": "jäsentä",
+      "noMembers": "Tässä kokoonpanossa ei ole jäseniä",
+      "noMembersHint": "Aloita lisäämällä jäseniä",
+      "actions": "Toiminnot",
+      "viewList": "Luettelonäkymä",
+      "viewGrouped": "Näytä ilmoittautumiskategorioittain",
+      "unassigned": "Määrittämätön",
+      "dragHere": "Vedä jäsenet tähän",
+      "clickToGroup": "Näytä kategorioittain napsauttamalla",
+      "apiErrorTooltip": "Tietoja ei voitu hakea rajapinnasta",
+      "staleDataTooltip": "Tiedot saattavat olla vanhentuneita, päivitetty viimeksi:",
+      "refresh": "Päivitä jäsentiedot",
+      "alsoIn": "Myös kohteessa",
+      "addCategory": "Lisää ryhmä",
+      "removeCategory": "Poista ryhmä"
+    },
+    "addMembers": {
+      "title": "Lisää jäseniä kokoonpanoon",
+      "description": "Valitse jäseniä klaaneistasi tai anna pelaajatunnuksia",
+      "bulkTagsLabel": "Pelaajatunnukset (yksi riville tai pilkuilla eroteltuna)",
+      "adding": "Lisätään...",
+      "submit": "Lisää jäseniä"
+    },
+    "compare": {
+      "enterMode": "Vertaa",
+      "modeTitle": "Vertailutila",
+      "modeHint": "Valitse kokoonpanot napsauttamalla niitä (2–4 kokoonpanoa)",
+      "exitMode": "Peruuta",
+      "selected": "kokoonpanoa valittu",
+      "button": "Vertaa",
+      "title": "Vertaa kokoonpanoja",
+      "dragToMove": "Siirrä jäseniä vetämällä heitä kokoonpanojen välillä",
+      "loadError": "Kokoonpanojen lataaminen epäonnistui",
+      "memberMoved": "Jäsen siirretty",
+      "memberMovedDesc": "{name} siirrettiin kohteesta {from} kohteeseen {to}",
+      "moveError": "Jäsenen siirtäminen epäonnistui",
+      "selectAtLeast2": "Valitse vähintään kaksi vertailtavaa kokoonpanoa",
+      "moving": "Siirretään jäsentä...",
+      "compareGroup": "Vertaa ryhmää",
+      "dragToMoveCategory": "Vedä jäseniä kokoonpanojen ja kategorioiden välillä",
+      "categoryChanged": "Kategoria vaihdettu",
+      "categoryChangedDesc": "{name} siirrettiin kategoriaan {category}",
+      "uncategorized": "Ilman kategoriaa"
+    },
+    "ungrouped": "Ilman ryhmää",
+    "automations": {
+      "description": "Ajasta tämän kokoonpanon automaattisia toimintoja",
+      "create": "Luo automaatio",
+      "empty": "Ei automaatioita",
+      "emptyHint": "Ajasta toimintoja luomalla automaatio",
+      "active": "Aktiivinen",
+      "inactive": "Ei käytössä",
+      "executed": "Valmis",
+      "missed": "Ohitettu",
+      "lastRun": "Viimeisin suoritus",
+      "enable": "Ota käyttöön",
+      "disable": "Poista käytöstä",
+      "createTitle": "Luo automaatio",
+      "editTitle": "Muokkaa automaatiota",
+      "createDesc": "Ajasta automaattinen toiminto",
+      "actionType": "Toiminnon tyyppi",
+      "offsetFromEvent": "Ajoitus suhteessa tapahtumaan",
+      "offsetBefore": "Ennen tapahtumaa",
+      "offsetAfter": "Tapahtuman jälkeen",
+      "offsetUnit_minutes": "minuuttia",
+      "offsetUnit_hours": "tuntia",
+      "offsetUnit_days": "päivää",
+      "offsetPreview": "Suoritetaan: {date}",
+      "offsetNoEventDate": "Esikatsele suoritusaikaa määrittämällä tapahtuman alkamisaika asetuksissa",
+      "offsetAtStart": "Tapahtuman alkaessa",
+      "pingType": "Muistutuksen tyyppi",
+      "pingType_signup_reminder": "Ilmoittautumismuistutus",
+      "pingType_missing": "Puuttuu klaanista",
+      "pingType_sub_needed": "Varapelaaja tarvitaan",
+      "channel": "Discord-kanava",
+      "selectChannel": "Valitse kanava",
+      "channelHint": "Kanava, jossa toiminto julkaistaan tai suoritetaan",
+      "activeLabel": "Aktiivinen",
+      "target": "Kohde",
+      "targetThisRoster": "Tämä kokoonpano",
+      "targetGroups": "Ryhmät",
+      "targetHint": "Käytä automaatiota vain tähän kokoonpanoon tai ryhmän kaikkiin kokoonpanoihin",
+      "group": "Ryhmä",
+      "groupAutomationHint": "Hallitse Ryhmät-välilehdellä",
+      "targetRoster": "Kokoonpano",
+      "targetGroup": "Ryhmä",
+      "willExecute": "Suoritetaan ajastettuna aikana",
+      "paused": "Keskeytetty – ei suoriteta",
+      "actions": {
+        "ping": "Lähetä muistutus",
+        "post": "Julkaise kokoonpano",
+        "openSignup": "Avaa ilmoittautuminen",
+        "closeSignup": "Sulje ilmoittautuminen",
+        "delete": "Poista kokoonpano",
+        "clear": "Poista jäsenet",
+        "archive": "Arkistoi kokoonpano"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Lähettää muistutuksen jäsenille, jotka eivät ole ilmoittautuneet tai ovat väärässä klaanissa",
+        "roster_post": "Julkaisee lopullisen kokoonpanon valitulla kanavalla",
+        "roster_signup": "Avaa ilmoittautumisen pelaajille",
+        "roster_signup_close": "Sulkee ilmoittautumisen ja estää uudet rekisteröinnit",
+        "roster_delete": "Poistaa kokoonpanon ja kaikki sen tiedot pysyvästi",
+        "roster_clear": "Poistaa kaikki jäsenet poistamatta kokoonpanoa",
+        "roster_archive": "Arkistoi kokoonpanon kirjoitussuojattuun tilaan"
+      },
+      "infoBox": "Automaatiot käynnistyvät suhteessa tapahtuman alkamisaikaan. Määritä siirtymä (esim. kolme päivää ennen), niin botti suorittaa toiminnon automaattisesti myös toistuvissa tapahtumissa."
+    },
+    "groups": {
+      "title": "Kokoonpanoryhmät",
+      "description": "Järjestä kokoonpanot ryhmiin hallinnan helpottamiseksi",
+      "create": "Uusi ryhmä",
+      "noGroups": "Ryhmiä ei ole vielä luotu",
+      "rostersCount": "kokoonpanoa",
+      "createTitle": "Luo ryhmä",
+      "editTitle": "Muokkaa ryhmää",
+      "nameLabel": "Ryhmän nimi",
+      "namePlaceholder": "esim. CWL-ryhmät",
+      "infoBox": "Ryhmillä voit järjestää useita kokoonpanoja yhteen, kuten kaikki CWL-kokoonpanot. Voit liittää kokoonpanon ryhmään Asetukset-välilehdellä ja käyttää automaatioita ryhmän kaikkiin kokoonpanoihin.",
+      "manageAutomations": "Hallitse automaatioita",
+      "automationsTitle": "Ryhmän automaatiot",
+      "automationsDesc": "Nämä automaatiot koskevat kaikkia ryhmän kokoonpanoja",
+      "noAutomations": "Ei automaatioita",
+      "noAutomationsHint": "Luo automaatio tälle ryhmälle",
+      "addAutomation": "Lisää automaatio",
+      "deleteConfirm": "Poistetaanko ryhmä ”{name}”? Ryhmän kokoonpanot jäävät ilman ryhmää.",
+      "emptyGroup": "Ryhmässä ei ole vielä kokoonpanoja",
+      "rules": {
+        "title": "Ryhmän säännöt",
+        "rulesHint": "Nämä säännöt koskevat ryhmän kaikkia kokoonpanoja ja tulevat voimaan heti.",
+        "maxAccounts": "Tilejä enintään käyttäjää kohti",
+        "maxAccountsBadge": "Enintään {count}/käyttäjä",
+        "rosterSize": "Kokoonpanon koko",
+        "rosterSizeBadge": "Koko {size}",
+        "minSignups": "Täyttöraja",
+        "minSignupsBadge": "Raja {count}",
+        "categoriesTitle": "Ilmoittautumiskategoriat",
+        "categoriesHint": "Valitse ryhmän käytettävissä olevat kategoriat. Ne otetaan heti käyttöön kaikissa kokoonpanoissa.",
+        "categoriesBadge": "{count} kategoriaa",
+        "noCategories": "Ei vielä kategorioita.",
+        "newCategoryPlaceholder": "Uuden kategorian nimi…"
+      }
+    },
+    "categories": {
+      "title": "Ilmoittautumiskategoriat",
+      "description": "Kategoriat pelaajien ilmoittautumiseen ja kokoonpanojen suodatukseen",
+      "manage": "Hallitse kategorioita",
+      "create": "Uusi kategoria",
+      "noCategories": "Kategorioita ei ole vielä luotu",
+      "createTitle": "Luo kategoria",
+      "editTitle": "Muokkaa kategoriaa",
+      "deleteConfirm": "Poistetaanko kategoria ”{name}”?",
+      "idLabel": "Kategorian tunnus",
+      "nameLabel": "Kategorian nimi",
+      "infoBox": "Kategorioilla pelaajat voivat ilmoittaa saatavuutensa tai roolinsa ilmoittautuessaan (esim. ”Saatavilla”, ”Alustava” tai ”Vain tarvittaessa”). Kategoriat jaetaan palvelimen kaikkien kokoonpanojen kesken. Määritä ryhmitetyille kokoonpanoille käytettävät kategoriat ryhmän asetuksissa."
+    },
+    "settings": {
+      "general": "Tunnistetiedot ja määritykset",
+      "restrictions": "Rajoitukset ja rajat",
+      "name": "Kokoonpanon nimi",
+      "rosterType": "Kokoonpanon tyyppi",
+      "typeClan": "Klaani",
+      "typeFamily": "Perhe",
+      "signupScope": "Ilmoittautumisen laajuus",
+      "scopeClanOnly": "Vain klaani",
+      "scopeFamilyWide": "Koko perhe",
+      "clan": "Klaani",
+      "selectClan": "Valitse klaani",
+      "description": "Kuvaus",
+      "descriptionPlaceholder": "Anna kokoonpanon kuvaus...",
+      "typeAndScope": "Tyyppi ja laajuus",
+      "eventTime": "Tapahtuman alkamisaika",
+      "eventTimeHint": "Tapahtuman alkamisaika. Käytetään automaatioissa ja lähtölaskennoissa.",
+      "recurrenceDays": "Toista joka",
+      "recurrenceModeDays": "N päivän välein",
+      "recurrenceModeMonthly": "Kuukauden päivä",
+      "recurrenceDaysUnit": "päivää",
+      "recurrenceDayOfMonthPrefix": "Päivänä",
+      "recurrenceDayOfMonthSuffix": "joka kuukausi",
+      "recurrenceDaysHint": "Jätä tyhjäksi kertaluonteisessa tapahtumassa. Anna tapahtumien välisten päivien määrä (esim. 30 kuukausittaiselle CWL:lle).",
+      "recurrenceDayOfMonthHint": "Toistuu kuukauden samana päivänä (esim. 1 = ensimmäinen päivä).",
+      "group": "Ryhmä",
+      "noGroup": "Ei ryhmää",
+      "thRequirements": "Kaupungintalovaatimukset",
+      "minTh": "KT vähintään",
+      "maxTh": "KT enintään",
+      "signupLimits": "Ilmoittautumisrajat",
+      "rosterSize": "Kokoonpanon koko",
+      "rosterSizeHint": "Jäsenten enimmäismäärä",
+      "minSignups": "Ilmoittautumisia vähintään",
+      "minSignupsHint": "Kokoonpanon täyttämiseen vaadittava ilmoittautumisten vähimmäismäärä",
+      "maxAccountsPerUser": "Tilejä enintään käyttäjää kohti",
+      "maxAccountsHint": "Rajoita Discord-käyttäjän tilien määrää",
+      "allowedCategories": "Sallitut ilmoittautumiskategoriat",
+      "allowedCategoriesHint": "Vaihda napsauttamalla. Jos mitään ei valita, kaikki kategoriat sallitaan.",
+      "defaultSignupCategory": "Oletusarvoinen ilmoittautumiskategoria",
+      "defaultSignupCategoryNone": "Ei mitään (ei oletusta)",
+      "defaultSignupCategoryHint": "Jäsenen ilmoittautuessa valmiiksi valittu kategoria.",
+      "categoriesManagedByGroup": "Ilmoittautumiskategorioita hallitaan ryhmätasolla. Avaa ryhmän asetukset Kokoonpanot-sivulta määrittääksesi ryhmän kaikkien kokoonpanojen käytettävissä olevat kategoriat.",
+      "saving": "Tallennetaan…",
+      "save": "Tallenna asetukset"
+    }
+  },
+  "LinksPage": {
+    "title": "Linkitysten hallinta",
+    "description": "Hallitse Discord-jäsenten tililinkityksiä ja vahvista pelitilien omistus",
+    "tabs": {
+      "overview": "Yleiskatsaus",
+      "pending": "Odottaa",
+      "bulk": "Joukkotoiminnot",
+      "analytics": "Analytiikka"
+    },
+    "stats": {
+      "totalMembers": "Jäseniä yhteensä",
+      "membersWithLinks": "Jäsenet, joilla on linkityksiä",
+      "totalLinkedAccounts": "Linkitettyjä tilejä yhteensä",
+      "verifiedAccounts": "Vahvistetut tilit",
+      "ofTotal": "kokonaismäärästä",
+      "avgPerMember": "Keskiarvo:",
+      "perMember": "jäsentä kohti",
+      "verified": "vahvistettu"
+    },
+    "filters": {
+      "searchPlaceholder": "Hae jäsenen nimellä, käyttäjänimellä, pelaajan nimellä tai tunnuksella...",
+      "filterByStatus": "Suodata tilan mukaan",
+      "allAccounts": "Kaikki tilit",
+      "verifiedOnly": "Vain vahvistetut",
+      "unverifiedOnly": "Vain vahvistamattomat",
+      "minAccounts": "Tilejä vähintään",
+      "allMembers": "Kaikki jäsenet",
+      "oneOrMore": "Vähintään 1 tili",
+      "twoOrMore": "Vähintään 2 tiliä",
+      "threeOrMore": "Vähintään 3 tiliä",
+      "fiveOrMore": "Vähintään 5 tiliä"
+    },
+    "overview": {
+      "title": "Tililinkitykset",
+      "description": "Tarkastele ja hallitse kaikkia Discordin ja Clash of Clansin välisiä tililinkityksiä",
+      "showingMembers": "Näytetään {count} {members}",
+      "member": "jäsen",
+      "members": "jäsentä",
+      "noMembers": "Jäseniä ei löytynyt",
+      "adjustFilters": "Yritä muuttaa hakua tai suodattimia.",
+      "noLinkedAccounts": "Ei jäseniä, joilla on linkitettyjä tilejä.",
+      "exportCSV": "Vie CSV",
+      "exportJSON": "Vie JSON",
+      "account": "tili",
+      "accounts": "tilit",
+      "more": "lisää",
+      "unknown": "Tuntematon"
+    },
+    "pending": {
+      "title": "Odottavat vahvistukset",
+      "description": "{count} tiliä odottaa vahvistusta",
+      "allVerified": "Kaikki tilit on vahvistettu!",
+      "noPending": "Odottavia vahvistuksia ei ole tällä hetkellä.",
+      "linked": "Linkitetty:"
+    },
+    "bulk": {
+      "title": "Joukkotoiminnot",
+      "description": "Suorita toimintoja useille jäsenille kerralla",
+      "selectAll": "Valitse kaikki ({count})",
+      "deselectAll": "Poista kaikki valinnat",
+      "unlinkSelected": "Poista valitut linkitykset ({count})",
+      "linked": "linkitetty",
+      "comingSoon": "Linkitysten joukkopoisto on tulossa pian!"
+    },
+    "analytics": {
+      "title": "Linkitysanalytiikka",
+      "description": "Linkitystilastojen ja trendien yleiskatsaus",
+      "verificationRate": "Vahvistusaste",
+      "verified": "Vahvistettu",
+      "unverified": "Vahvistamaton",
+      "accountDistribution": "Tilijakauma",
+      "oneAccount": "1 tili",
+      "twoToThreeAccounts": "2–3 tiliä",
+      "fourPlusAccounts": "Vähintään 4 tiliä",
+      "townHallLevels": "Kaupungintalotasot",
+      "other": "Muu",
+      "coverage": "Kattavuus",
+      "linkedMembers": "Linkitetyt jäsenet",
+      "coverageRate": "Kattavuusaste",
+      "linkInsights": "Linkitysten tiedot",
+      "avgAccountsPerMember": "Tilejä keskimäärin jäsentä kohti:",
+      "mostLinkedAccounts": "Eniten linkitettyjä tilejä:",
+      "membersWithoutLinks": "Jäsenet ilman linkityksiä:"
+    },
+    "actions": {
+      "unlinkAccount": "Poista tililinkitys"
+    },
+    "deleteDialog": {
+      "title": "Poista tililinkitys",
+      "description": "Haluatko varmasti poistaa pelaajan {playerName} linkityksen? Toimintoa ei voi kumota.",
+      "cancel": "Peruuta",
+      "unlinking": "Poistetaan linkitystä...",
+      "unlink": "Poista linkitys"
+    },
+    "bulkDialog": {
+      "title": "Poista useita tililinkityksiä",
+      "description": "Haluatko varmasti poistaa kaikki tililinkitykset {count} valitulta jäseneltä? Toimintoa ei voi kumota.",
+      "cancel": "Peruuta",
+      "unlinkAll": "Poista kaikki linkitykset"
+    },
+    "toast": {
+      "unlinkFailed": "Tililinkityksen poistaminen epäonnistui. Yritä uudelleen."
+    },
+    "badges": {
+      "verified": "Vahvistettu",
+      "unverified": "Vahvistamattomat",
+      "pending": "Odottaa"
+    },
+    "pagination": {
+      "showing": "Näytetään {start}–{end}/{total} jäsentä",
+      "page": "Sivu {current}/{total}",
+      "previous": "Edellinen",
+      "next": "Seuraava"
+    }
+  },
+  "WarsPage": {
+    "title": "Sotatilastot",
+    "description": "Seuraa sotasuorituksia ja analysoi taistelutilastoja",
+    "actions": {
+      "exportData": "Vie tiedot",
+      "resetFilters": "Palauta suodattimet",
+      "applyFilters": "Käytä suodattimia"
+    },
+    "filters": {
+      "title": "Suodattimet",
+      "description": "Suodata sotatilastoja eri ehdoilla",
+      "clan": "Klaani",
+      "allClans": "Kaikki klaanit",
+      "townHall": "Kaupungintalo",
+      "townHallShort": "KT",
+      "allTownHalls": "Kaikki KT-tasot",
+      "townHallLevel": "KT {level}",
+      "period": "Kausi",
+      "last7Days": "Viimeiset 7 päivää",
+      "last30Days": "Viimeiset 30 päivää",
+      "last90Days": "Viimeiset 90 päivää",
+      "last6Months": "Viimeiset 6 kuukautta",
+      "lastYear": "Viime vuosi",
+      "custom": "Mukautettu",
+      "startDate": "Aloituspäivä",
+      "endDate": "Päättymispäivä",
+      "warTypes": "Sotatyypit"
+    },
+    "summaryStats": {
+      "totalWins": "Voittoja yhteensä",
+      "totalWinsDesc": "Yhteensä {totalWars} sodasta",
+      "totalLosses": "Tappioita yhteensä",
+      "totalLossesDesc": "{totalDraws} tasapeliä",
+      "winRate": "Voittoprosentti",
+      "winRateDesc": "Kokonaissuoritus",
+      "activeWars": "Aktiiviset sodat",
+      "activeWarsDesc": "{activeCwl} CWL:ssä"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Sotasuoritus viikoittain",
+        "description": "Viikoittaiset voitot, tappiot ja tasapelit valitulla ajanjaksolla",
+        "wins": "Voittoja",
+        "losses": "Tappiot",
+        "draws": "Tasapelit"
+      },
+      "thSuccessRate": {
+        "title": "Hyökkäysten onnistuminen kaupungintaloittain",
+        "description": "Kolmen tähden osuus KT-tasoittain",
+        "threeStarPercent": "3 tähden osuus",
+        "otherPercent": "Muut"
+      },
+      "warTypeDistribution": {
+        "title": "Sotatyyppien jakauma",
+        "description": "Jakauma sotatyypeittäin",
+        "cwl": "CWL",
+        "random": "Tavallinen sota",
+        "friendly": "Ystävyyssota"
+      },
+      "topPerformers": {
+        "title": "Parhaiten suoriutuneet",
+        "description": "Parhaat soturit tähtien kokonaismäärän mukaan",
+        "attacksAndStars": "{attacks} hyökkäystä • {stars} tähteä",
+        "noData": "Pelaajatietoja ei ole saatavilla. Yritä muuttaa suodattimia."
+      },
+      "missedAttacks": {
+        "title": "Käyttämättä jääneet hyökkäykset",
+        "description": "Pelaajat, jotka eivät käyttäneet kaikkia hyökkäyksiään",
+        "attacks": "hyökkäystä käyttämättä"
+      },
+      "topDefenders": {
+        "title": "Parhaat puolustajat",
+        "description": "Parhaat puolustajat menetettyjen tähtien keskiarvon mukaan",
+        "defensesAndStars": "{defenses} puolustusta • {stars} menetettyä tähteä",
+        "noData": "Puolustajatietoja ei ole saatavilla. Yritä muuttaa suodattimia."
+      },
+      "worstAttackers": {
+        "title": "Heikoimmat hyökkääjät",
+        "description": "Pelaajat, joilla on pienin tähtikeskiarvo hyökkäystä kohti (vähintään 3 hyökkäystä)",
+        "attacksAndStars": "{attacks} hyökkäystä • {stars} tähteä",
+        "noData": "Pelaajatietoja ei ole saatavilla. Yritä muuttaa suodattimia."
+      },
+      "worstDefenders": {
+        "title": "Heikoimmat puolustajat",
+        "description": "Pelaajat, jotka menettivät puolustuksessa eniten tähtiä (vähintään 3 puolustusta)",
+        "defensesAndStars": "{defenses} puolustusta • {stars} menetettyä tähteä",
+        "noData": "Puolustajatietoja ei ole saatavilla. Yritä muuttaa suodattimia."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Klaanien sotatilastot",
+      "description": "Yksityiskohtaiset tilastot kustakin klaanista",
+      "headers": {
+        "clan": "Klaani",
+        "status": "Tila",
+        "wars": "Sodat",
+        "record": "V/H/T",
+        "winRate": "Voittoprosentti",
+        "avgDestruction": "Keskimääräinen tuho",
+        "avgStarsPerAttack": "Tähtiä/hyökkäys",
+        "avgDefenseStars": "Tähtiä/puolustus"
+      },
+      "status": {
+        "inWar": "Sodassa",
+        "cwl": "CWL",
+        "peace": "Rauha"
+      },
+      "noData": "Klaanitilastoja ei ole saatavilla. Kokeile suodattimia tai odota tietojen latautumista."
+    },
+    "toast": {
+      "errorTitle": "Virhe",
+      "errorLoadingClans": "Klaanien lataaminen epäonnistui. Yritä uudelleen.",
+      "errorLoadingWarData": "Sotatietojen lataaminen epäonnistui. Yritä uudelleen.",
+      "errorNoClans": "Klaaneja ei ole saatavilla",
+      "errorApplyingFilters": "Suodattimien käyttäminen epäonnistui. Yritä uudelleen."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Tulostaulut",
+    "description": "Klaanipääkaupungin ja muiden pelimuotojen maailmanlaajuiset tulostaulut",
+    "comingSoon": "Tämä ominaisuus on tulossa pian. Palaa myöhemmin!",
+    "stats": {
+      "totalEntries": "Tuloksia yhteensä",
+      "type": "Tyyppi",
+      "league": "Liiga",
+      "weekend": "Viikonloppu"
+    },
+    "filters": {
+      "title": "Suodattimet",
+      "description": "Mukauta tulostaulunäkymää",
+      "type": "Tyyppi",
+      "metric": "Mittari",
+      "league": "Liiga",
+      "weekend": "Viikonloppu"
+    },
+    "types": {
+      "player": "Pelaajat",
+      "clan": "Klaanit"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Ryöstetty pääkaupunkikulta"
+        },
+        "clan": {
+          "capitalTotalLoot": "Saalista yhteensä",
+          "raidsCompleted": "Suoritetut ryöstöt",
+          "enemyDistrictsDestroyed": "Tuhotut alueet",
+          "medals": "Mitalit"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Kaikki",
+      "legendLeague": "Legendaliiga",
+      "titanLeagueI": "Titaaniliiga I",
+      "titanLeagueII": "Titaaniliiga II",
+      "titanLeagueIII": "Titaaniliiga III"
+    },
+    "rankings": {
+      "title": "Sijoitukset",
+      "description": "Parhaat {count} {type}, {weekend}",
+      "players": "pelaajat",
+      "clans": "klaanit"
+    },
+    "empty": {
+      "title": "Tietoja ei ole saatavilla",
+      "description": "Kokeile toista viikonloppua tai liigaa"
+    }
+  },
+  "ClansPage": {
+    "title": "Klaanin hallinta",
+    "description": "Määritä klaanisi ja niiden Discord-integraatioasetukset",
+    "addClan": "Lisää klaani",
+    "addNewClan": "Lisää uusi klaani",
+    "addClanDescription": "Lisää klaani palvelimelle antamalla sen tunnus",
+    "clanTag": "Klaanitunnus",
+    "totalClans": "Klaaneja yhteensä",
+    "registeredClans": "Rekisteröidyt klaanit",
+    "configured": "Määritetty",
+    "withSettingsConfigured": "Asetukset määritetty",
+    "totalMembers": "Jäseniä yhteensä",
+    "acrossAllClans": "Kaikissa klaaneissa",
+    "channels": "Kanavat",
+    "availableChannels": "Saatavilla olevat kanavat",
+    "noClansYet": "Ei vielä klaaneja",
+    "getStartedAdding": "Aloita lisäämällä ensimmäinen klaanisi",
+    "addFirstClan": "Lisää ensimmäinen klaanisi",
+    "level": "Taso",
+    "members": "Jäsenet",
+    "status": "Tila",
+    "configuredBadge": "Määritetty",
+    "setupRequired": "Määritys vaaditaan",
+    "configure": "Määritä",
+    "sorting": {
+      "label": "Lajittele klaanit",
+      "sortBy": "Lajitteluperuste",
+      "toggleDirection": "Vaihda lajittelusuuntaa",
+      "added": "Lisätty",
+      "name": "Klaanin nimi",
+      "level": "Klaanin taso",
+      "members": "Jäsenet"
+    },
+    "configureClan": "Määritä {name} ({tag})",
+    "customizeIntegration": "Mukauta tämän klaanin Discord-integraatioasetuksia",
+    "tabs": {
+      "basic": "Discord-määritys",
+      "war": "Sota"
+    },
+    "memberRole": "Jäsenrooli",
+    "leaderRole": "Johtajarooli",
+    "selectRole": "Valitse rooli",
+    "none": "Ei mitään",
+    "clanAbbreviation": "Klaanin lyhenne",
+    "warScoreCountdown": "Sotapisteiden lähtölaskenta",
+    "warScoreCountdownDescription": "Luo äänikanavan, joka näyttää sodan nykyiset pisteet",
+    "warTimerCountdown": "Sota-ajan lähtölaskenta",
+    "warTimerCountdownDescription": "Luo äänikanavan, joka näyttää sodan jäljellä olevan ajan",
+    "category": "Kategoria",
+    "categoryOptions": {
+      "none": "Ei kategoriaa",
+      "premade": "Yleiset kategoriat",
+      "usedByServer": "Muiden klaanien käyttämät",
+      "clanCount": "{count, plural, one {# klaani} other {# klaania}}"
+    },
+    "categories": {
+      "title": "Klaanikategoriat",
+      "description": "Luo ja ylläpidä palvelimen klaanien käytettävissä olevia kategorioita.",
+      "refresh": "Päivitä",
+      "createLabel": "Uusi kategoria",
+      "name": "Kategorian nimi",
+      "namePlaceholder": "esim. Kilpailullinen",
+      "nameHelp": "{count}/{max} merkkiä välilyöntien normalisoinnin jälkeen",
+      "create": "Luo kategoria",
+      "empty": "Klaanikategorioita ei ole luotu.",
+      "clanCount": "{count, plural, one {# klaani} other {# klaania}}",
+      "renameAction": "Nimeä {name} uudelleen",
+      "deleteAction": "Poista {name}",
+      "renameTitle": "Nimeä klaanikategoria uudelleen",
+      "renameDescription": "Normalisoitu nimi päivitetään kaikille liitetyille klaaneille.",
+      "saveRename": "Tallenna nimi",
+      "deleteTitle": "Poistetaanko klaanikategoria?",
+      "deleteWarning": "Kategorian ”{name}” poistaminen jättää {count, plural, one {# klaanin} other {# klaania}} ilman kategoriaa.",
+      "deleteCountMayChange": "Esikatselu vastaa nykyistä tilannetta. Poiston valmistuttua näytetään niiden klaanien todellinen määrä, joihin poisto vaikutti.",
+      "confirmDelete": "Poista kategoria",
+      "deleteSuccessTitle": "{name} poistettu",
+      "deleteSuccessDescription": "{count, plural, =0 {Klaaneja ei muutettu.} one {# klaani on nyt ilman kategoriaa.} other {# klaania on nyt ilman kategoriaa.}}",
+      "created": "{name} luotu.",
+      "renamed": "Kategorian nimeksi vaihdettiin {name}.",
+      "errors": {
+        "title": "Kategoriat eivät ole saatavilla",
+        "load": "Klaanikategorioiden lataaminen epäonnistui.",
+        "create": "Klaanikategorian luominen epäonnistui.",
+        "rename": "Klaanikategorian uudelleennimeäminen epäonnistui.",
+        "preview": "Poiston esikatselun lataaminen epäonnistui.",
+        "delete": "Klaanikategorian poistaminen epäonnistui.",
+        "refresh": "Kategoria muuttui, mutta päivitettyä kategoria- tai klaanitilaa ei voitu ladata.",
+        "invalidName": "Käytä enintään 64 merkin nimeä, joka ei ole tyhjä eikä sisällä ohjausmerkkejä."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Näytä lisätietoja",
+      "memberRole": "Rooli, jonka klaanin jäsenet saavat. Jos botti hallitsee Discord-palvelimesi rooleja, jokainen klaanin jäsen saa tämän roolin. Hyödyllinen klaanikohtaisille kanaville.",
+      "leaderRole": "Rooli, jonka klaanin apujohtajat ja johtaja saavat. Se sopii klaanin johtajakeskusteluun tai kaikkien klaanien yhteiseen johtajakeskusteluun.",
+      "clanAbbreviation": "Anna klaanille lyhenne, jotta jäsenet voivat käyttää sitä nimessään automaattisen nimeämisen ollessa käytössä. Määritä muoto <familySettingsLink>Perheasetuksissa</familySettingsLink>.",
+      "category": "Tällä voit järjestää klaanejasi. Monissa klaaniperheissä on vähintään viisi klaania, joista osa voi olla vain CWL:ää tai tapahtumia varten."
+    },
+    "roleIdPlaceholder": "Roolitunnus",
+    "abbreviationPlaceholder": "esim. CK",
+    "categoryPlaceholder": "Kategorian nimi",
+    "notAvailable": "Ei saatavilla",
+    "saving": "Tallennetaan…",
+    "saveChanges": "Tallenna muutokset",
+    "deleteConfirm": "Haluatko varmasti poistaa tunnuksen {tag}? Myös kaikki siihen liittyvät muistutukset ja lokit poistetaan.",
+    "toast": {
+      "errorLoadingClans": "Klaanien lataaminen epäonnistui",
+      "errorLoadingSettings": "Klaanin asetusten lataaminen epäonnistui",
+      "errorEmptyClanTag": "Anna klaanitunnus",
+      "clanAdded": "Klaani lisätty",
+      "errorAddingClan": "Klaanin lisääminen epäonnistui",
+      "clanRemoved": "Klaani poistettu",
+      "errorRemovingClan": "Klaanin poistaminen epäonnistui",
+      "settingsSaved": "Asetukset tallennettu",
+      "errorSavingSettings": "Asetusten tallentaminen epäonnistui",
+      "countdownEnabled": "Lähtölaskennan äänikanava luotu",
+      "countdownDisabled": "Lähtölaskennan äänikanava poistettu",
+      "errorTogglingCountdown": "Lähtölaskennan vaihtaminen epäonnistui"
+    }
+  },
+  "RolesPage": {
+    "title": "Roolien hallinta",
+    "description": "Määritä automaattinen roolien jako pelaajatilastojen perusteella",
+    "stats": {
+      "totalRoles": "Rooleja yhteensä",
+      "totalRolesDesc": "Määritetyt roolit",
+      "autoEvaluation": "Automaattinen arviointi",
+      "autoEvaluationOn": "Käytössä",
+      "autoEvaluationOff": "Ei käytössä",
+      "autoEvaluationActiveDesc": "Roolit jaetaan automaattisesti",
+      "autoEvaluationInactiveDesc": "Vain manuaalinen roolien jako",
+      "activeTypes": "Aktiiviset tyypit",
+      "activeTypesDesc": "Käytössä olevat roolityypit",
+      "discordRoles": "Discord-roolit",
+      "discordRolesDesc": "Saatavilla palvelimella"
+    },
+    "settings": {
+      "title": "Automaattisen arvioinnin asetukset",
+      "description": "Määritä roolien automaattinen arviointi ja jako",
+      "saveButton": "Tallenna asetukset",
+      "saving": "Tallennetaan…",
+      "enableAutoEval": "Ota automaattinen arviointi käyttöön",
+      "enableAutoEvalDesc": "Jaa ja poista rooleja automaattisesti pelaajatilastojen perusteella",
+      "autoNickname": "Päivitä lempinimet automaattisesti",
+      "autoNicknameDesc": "Päivitä lempinimet roolien arvioinnin yhteydessä"
+    },
+    "roleTypes": {
+      "townhall": "Kaupungintalo",
+      "league": "Liiga",
+      "builderhall": "Rakentajan halli",
+      "builderLeague": "Rakentajaliiga",
+      "achievement": "Saavutus",
+      "status": "Aika Discordissa",
+      "familyPosition": "Asema perheessä"
+    },
+    "familyPositions": {
+      "member": "Jäsen",
+      "elder": "Vanhin",
+      "coLeader": "Apujohtaja",
+      "leader": "Johtaja"
+    },
+    "leagues": {
+      "legend": "Legenda",
+      "electroDragon": "Sähkölohikäärme",
+      "dragon": "Lohikäärme",
+      "electroTitan": "Sähkötitaani",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Noita",
+      "valkyrie": "Valkyyria",
+      "wizard": "Velho",
+      "archer": "Jousiampuja",
+      "barbarian": "Barbaari",
+      "skeleton": "Luuranko"
+    },
+    "builderLeagues": {
+      "diamond": "Timantti",
+      "ruby": "Rubiini",
+      "emerald": "Smaragdi",
+      "platinum": "Platina",
+      "titanium": "Titaani",
+      "steel": "Teräs",
+      "iron": "Rauta",
+      "brass": "Messinki",
+      "copper": "Kupari",
+      "stone": "Kivi",
+      "clay": "Savi",
+      "wood": "Puu"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Suojaa tilisi!",
+      "biggerAndBetter": "Isompi ja parempi",
+      "discoverNewTroops": "Löydä uusia joukkoja",
+      "biggerCoffers": "Suuremmat varastot",
+      "goldGrab": "Kultakahmija",
+      "elixirEscapade": "Eliksiiriseikkailu",
+      "heroicHeist": "Sankarillinen ryöstö",
+      "wellSeasoned": "Kokenut",
+      "niceAndTidy": "Siistiä jälkeä",
+      "empireBuilder": "Imperiumin rakentaja",
+      "clanWarWealth": "Klaanisotien rikkaudet",
+      "friendInNeed": "Hädässä ystävä tunnetaan",
+      "sharingIsCaring": "Jakaminen on välittämistä",
+      "siegeSharer": "Piirityskoneiden lahjoittaja",
+      "warHero": "Sotasankari",
+      "warLeagueLegend": "Sotaliigan legenda",
+      "gamesChampion": "Klaanipelien mestari",
+      "unbreakable": "Murtumaton",
+      "sweetVictory": "Makea voitto!",
+      "conqueror": "Valloittaja",
+      "leagueAllStar": "Liigan tähtipelaaja",
+      "leagueFollower": "Liigaseuraaja",
+      "leagueEnthusiast": "Liigaintoilija",
+      "leagueSuperfan": "Liigan superfani",
+      "leagueFanatic": "Liigafanaatikko",
+      "leagueMaster": "Liigamestari",
+      "legendLeague": "Legendaliiga",
+      "humiliator": "Nöyryyttäjä",
+      "notSoEasyThisTime": "Tällä kertaa ei niin helppoa",
+      "unionBuster": "Liitonmurtaja",
+      "bustThis": "Murra tämä!",
+      "wallBuster": "Muurinmurtaja",
+      "mortarMauler": "Kranaatinheitinten murskaaja",
+      "xBowExterminator": "Varsijousien tuhoaja",
+      "firefighter": "Palomies",
+      "antiArtillery": "Tykistön torjuja",
+      "shatteredAndScatter": "Sirpaleina ja hajallaan",
+      "counterspell": "Vastaloitsu",
+      "monolithMasher": "Monoliittien murskaaja",
+      "multiArcherTowerTerminator": "Monijousiampujatornien tuhoaja",
+      "ricochetCannonCrusher": "Kimmoketykkien murskaaja",
+      "firespitterFinisher": "Tulensylkijöiden tuhoaja",
+      "multiGearTowerTrampler": "Monivaihteisten tornien tallaaja",
+      "craftersNightmare": "Rakentajan painajainen",
+      "getThoseGoblins": "Nappaa nuo hiidet!",
+      "supercharger": "Superlataaja",
+      "craftingConnoisseur": "Rakentamisen tuntija",
+      "getThoseOtherGoblins": "Nappaa nuo muutkin hiidet!",
+      "getEvenMoreGoblins": "Nappaa vielä lisää hiisiä!",
+      "dragonSlayer": "Lohikäärmeentappaja",
+      "ungratefulChild": "Kiittämätön lapsi",
+      "superbWork": "Loistavaa työtä",
+      "masterEngineering": "Insinööritaidon mestari",
+      "hiddenTreasures": "Kätketyt aarteet",
+      "highGear": "Täysi vauhti",
+      "nextGenerationModel": "Seuraavan sukupolven malli",
+      "unBuildIt": "Pura se",
+      "championBuilder": "Mestarirakentaja",
+      "aggressiveCapitalism": "Aggressiivista kapitalismia",
+      "mostValuableClanmate": "Arvokkain klaanitoveri"
+    },
+    "configuredRoles": {
+      "title": "Määritetyt roolit",
+      "noRolesConfigured": "Tyypin {roleType} rooleja ei ole määritetty",
+      "addRoleToStart": "Luo rooli napsauttamalla ”Lisää rooli”",
+      "discordRole": "Discord-rooli",
+      "criteria": "Ehdot",
+      "mode": "Tila",
+      "modeBoth": "Lisää ja poista",
+      "modeAdd": "Vain lisää",
+      "modeRemove": "Vain poista",
+      "actions": "Toiminnot",
+      "unknownRole": "Tuntematon rooli",
+      "remove": "Poista",
+      "month": "kuukausi",
+      "months": "kuukautta"
+    },
+    "addRoleDialog": {
+      "title": "Lisää uusi rooli",
+      "description": "Määritä uusi automaattisen roolijaon sääntö",
+      "roleType": "Roolityyppi",
+      "mode": "Tila",
+      "discordRole": "Discord-rooli",
+      "selectRole": "Valitse rooli",
+      "townHallLevel": "Kaupungintalon taso",
+      "selectThLevel": "Valitse KT-taso",
+      "thPrefix": "KT",
+      "league": "Liiga",
+      "selectLeague": "Valitse liiga",
+      "builderHallLevel": "Rakentajan hallin taso",
+      "selectBhLevel": "Valitse RH-taso",
+      "bhPrefix": "RH",
+      "builderLeague": "Rakentajaliiga",
+      "selectBuilderLeague": "Valitse rakentajaliiga",
+      "achievementName": "Saavutus",
+      "selectAchievement": "Valitse saavutus",
+      "searchAchievement": "Hae saavutusta...",
+      "noAchievementFound": "Saavutusta ei löytynyt.",
+      "monthsInServer": "Kuukausia palvelimella",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Asema perheessä",
+      "selectPosition": "Valitse asema",
+      "cancel": "Peruuta",
+      "addRole": "Lisää rooli",
+      "errorDuplicateExact": "Tämä ehto on jo liitetty tähän rooliin.",
+      "errorDuplicateCriterion": "Tälle ehdolle on jo määritetty rooli. Poista ensin nykyinen rooli."
+    },
+    "infoCard": {
+      "title": "💡 Automaattisten roolien toiminta",
+      "automaticEvaluation": "Automaattinen arviointi:",
+      "automaticEvaluationDesc": "Kun toiminto on käytössä, botti tarkistaa pelaajat säännöllisesti ja jakaa tai poistaa rooleja nykyisten tilastojen perusteella.",
+      "rolePriority": "Roolien tärkeysjärjestys:",
+      "rolePriorityDesc": "Jos pelaajan tilastoihin sopii useita rooleja, hänelle annetaan korkeimman tason rooli.",
+      "manualOverride": "Manuaalinen ohitus:",
+      "manualOverrideDesc": "Palvelimen ylläpitäjät voivat jakaa rooleja manuaalisesti, eikä automaattinen arviointi poista niitä."
+    },
+    "categoryRoles": {
+      "title": "Kategoriaroolit",
+      "description": "Määritä kullekin klaanikategorialle Discord-rooli. Kategorian klaanien jäsenet saavat vastaavan roolin automaattisesti.",
+      "addButton": "Lisää kategoria",
+      "categoryName": "Kategoria",
+      "categoryNamePlaceholder": "Kategorian nimi",
+      "noCategoryRoles": "Kategoriarooleja ei ole määritetty",
+      "noCategoryRolesDesc": "Luo kategoria napsauttamalla ”Lisää kategoria”",
+      "addTitle": "Lisää kategoriarooli",
+      "addConfirm": "Lisää",
+      "errorCategoryRequired": "Kategorian nimi vaaditaan",
+      "errorRoleRequired": "Discord-rooli vaaditaan",
+      "errorCategoryExists": "Kategorialle on jo määritetty rooli"
+    },
+    "toast": {
+      "changesSaved": "Muutokset tallennettu!",
+      "errorLoading": "Roolien lataaminen epäonnistui",
+      "errorSaving": "Asetusten tallentaminen epäonnistui",
+      "errorAdding": "Roolin lisääminen epäonnistui",
+      "errorDeleting": "Roolin poistaminen epäonnistui"
+    }
+  },
+  "RemindersPage": {
+    "title": "Muistutukset",
+    "description": "Määritä automaattiset muistutukset sotia, ryöstöjä, klaanipelejä ja epäaktiivisuutta varten",
+    "types": {
+      "war": "Sotamuistutukset",
+      "capital": "Klaanipääkaupunki",
+      "clanGames": "Klaanipelit",
+      "inactivity": "Epäaktiivisuus"
+    },
+    "tabs": {
+      "war": "Sota",
+      "capital": "Klaanipääkaupunki",
+      "clanGames": "Klaanipelit",
+      "inactivity": "Epäaktiivisuus"
+    },
+    "stats": {
+      "totalReminders": "Muistutuksia yhteensä",
+      "totalRemindersDesc": "Määritetyt aktiiviset muistutukset",
+      "warReminders": "Sotamuistutukset",
+      "warRemindersDesc": "Tavalliset sodat ja CWL",
+      "capitalReminders": "Klaanipääkaupunkimuistutukset",
+      "capitalRemindersDesc": "Ryöstöviikonlopun hyökkäykset",
+      "otherReminders": "Muut muistutukset",
+      "otherRemindersDesc": "Pelit ja epäaktiivisuus"
+    },
+    "actions": {
+      "saving": "Tallennetaan…",
+      "saveChanges": "Tallenna muutokset",
+      "addReminder": "Lisää muistutus",
+      "addWarReminder": "Lisää sotamuistutus",
+      "addCapitalReminder": "Lisää klaanipääkaupunkimuistutus",
+      "addClanGamesReminder": "Lisää klaanipelimuistutus",
+      "addInactivityReminder": "Lisää epäaktiivisuusmuistutus",
+      "retry": "Yritä uudelleen"
+    },
+    "clanSelector": {
+      "label": "Klaani:",
+      "placeholder": "Valitse klaani",
+      "allClans": "Kaikki klaanit"
+    },
+    "empty": {
+      "noWarReminders": "Ei sotamuistutuksia",
+      "noCapitalReminders": "Ei klaanipääkaupunkimuistutuksia",
+      "noClanGamesReminders": "Ei klaanipelimuistutuksia",
+      "noInactivityReminders": "Ei epäaktiivisuusmuistutuksia",
+      "getStarted": "Aloita luomalla ensimmäinen muistutuksesi"
+    },
+    "card": {
+      "new": "Uusi",
+      "before": "ennen",
+      "timeBefore": "Jäljellä oleva aika",
+      "timeBeforePlaceholder": "esim. 6",
+      "timeInactive": "Epäaktiivisuusaika",
+      "timeInactivePlaceholder": "esim. 160",
+      "timeUnit": "tuntia",
+      "hoursRemaining": "tuntia jäljellä",
+      "channel": "Kanava",
+      "channelPlaceholder": "Valitse kanava",
+      "threadOptional": "Ketju (valinnainen)",
+      "threadPlaceholder": "Valitse ketju",
+      "noThread": "Julkaise suoraan kanavalle",
+      "forumPost": "Foorumijulkaisu",
+      "forumPostPlaceholder": "Valitse foorumijulkaisu",
+      "forumPostRequired": "Foorumikanaville vaaditaan foorumijulkaisu.",
+      "clan": "Klaani",
+      "clanPlaceholder": "Valitse klaani",
+      "customMessage": "Mukautettu viesti",
+      "customMessagePlaceholder": "Muista käyttää hyökkäyksesi!",
+      "customMessagePlaceholderClanGames": "Yritä kerätä lisää pisteitä klaanipeleissä!",
+      "customMessagePlaceholderInactivity": "Olet ollut epäaktiivinen klaanissa jo jonkin aikaa :(",
+      "warTypes": "Sotatyypit",
+      "random": "Tavallinen sota",
+      "friendly": "Ystävyyssota",
+      "cwl": "CWL",
+      "pointThreshold": "Pisteraja",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Ilmoittaa henkilöille, joilla on alle {threshold} pistettä.",
+      "attackThreshold": "Hyökkäysraja",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Ilmoittaa henkilöille, joilla on vähintään {threshold} hyökkäystä jäljellä.",
+      "notSet": "Ei asetettu"
+    },
+    "dialog": {
+      "addTitle": "Lisää uusi muistutus",
+      "addDescription": "Määritä palvelimelle uusi muistutus",
+      "editTitle": "Muokkaa muistutusta",
+      "editDescription": "Päivitä muistutuksen asetukset",
+      "type": "Muistutuksen tyyppi",
+      "selectType": "Valitse tyyppi",
+      "cancel": "Peruuta",
+      "saving": "Tallennetaan…",
+      "saveChanges": "Tallenna muutokset",
+      "addReminder": "Lisää muistutus"
+    },
+    "toast": {
+      "errorTitle": "Virhe",
+      "errorLoadingReminders": "Muistutusten lataaminen epäonnistui. Yritä uudelleen.",
+      "reminderAdded": "Muistutus lisätty",
+      "reminderAddedDesc": "Uusi {type}-muistutus lisätty. Muista tallentaa!",
+      "reminderUpdated": "Muistutus päivitetty",
+      "successTitle": "Onnistui",
+      "reminderDeleted": "Muistutus poistettu",
+      "failedToDelete": "Muistutuksen poistaminen epäonnistui",
+      "allRemindersSaved": "Kaikki muistutukset tallennettu",
+      "failedToSave": "Muistutusten tallentaminen epäonnistui",
+      "forumPostRequired": "Valitse foorumijulkaisu ennen muistutuksen tallentamista.",
+      "invalidDestination": "Valittu ketju ei kuulu tähän kanavaan.",
+      "timeExceedsLimit": "Jäljellä olevan ajan on oltava {min}–{max} tuntia",
+      "pointThresholdInvalid": "Pisterajan on oltava {min}–{max}",
+      "attackThresholdInvalid": "Hyökkäysrajan on oltava {min}–{max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Toimintalokit",
+    "description": "Määritä klaani- ja pelaajatoiminnan automaattinen lokitus",
+    "stats": {
+      "activeLogs": "Aktiiviset lokit",
+      "activeLogsDesc": "Kaikissa perheen klaaneissa ja palvelinlokeissa",
+      "logChannels": "Lokikanavat",
+      "logChannelsDesc": "Saatavilla olevat kanavat",
+      "trackedClans": "Seuratut klaanit",
+      "trackedClansDesc": "Määritetyt klaanit",
+      "issues": "Ongelmat",
+      "issuesDesc": "Koko perheessä"
+    },
+    "clanSelector": {
+      "label": "Klaani:",
+      "placeholder": "Valitse klaani"
+    },
+    "tabs": {
+      "clan": "Klaani",
+      "war": "Sota",
+      "capital": "Klaanipääkaupunki",
+      "player": "Pelaaja",
+      "server": "Palvelin"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Jäsen liittyy",
+        "description": "Seuraa jäsenten liittymistä klaaniin"
+      },
+      "leaveLog": {
+        "label": "Jäsen poistuu",
+        "description": "Seuraa klaanista poistuvia jäseniä"
+      },
+      "donationLog": {
+        "label": "Jäsenen lahjoitus",
+        "description": "Seuraa joukkojen ja loitsujen lahjoituksia"
+      },
+      "clanAchievementLog": {
+        "label": "Klaanin saavutukset",
+        "description": "Seuraa klaanin ansaitsemia saavutuksia"
+      },
+      "clanRequirementsLog": {
+        "label": "Klaanin vaatimukset",
+        "description": "Seuraa klaanin vaatimusten muutoksia"
+      },
+      "clanDescriptionLog": {
+        "label": "Klaanin kuvaus",
+        "description": "Seuraa klaanin kuvauksen muutoksia"
+      },
+      "banAlert": {
+        "label": "Porttikieltovaroitukset",
+        "description": "Julkaise varoitus, kun porttikiellossa oleva pelaaja liittyy klaaniin"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit-syöte",
+        "description": "Julkaise palvelimen Reddit-syöte"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Sotaloki",
+        "description": "Seuraa sotahyökkäyksiä ja tuloksia"
+      },
+      "warPanel": {
+        "label": "Sotapaneeli",
+        "description": "Vuorovaikutteinen sotapaneeli reaaliaikaisilla päivityksillä"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL-kokoonpanon muutos",
+        "description": "Seuraa CWL-kokoonpanon muutoksia"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Pääkaupunkilahjoitukset",
+        "description": "Seuraa pääkaupunkikullan lahjoituksia"
+      },
+      "capitalAttacks": {
+        "label": "Pääkaupunkihyökkäykset",
+        "description": "Seuraa ryöstöviikonlopun hyökkäyksiä"
+      },
+      "raidPanel": {
+        "label": "Pääkaupunkipaneeli",
+        "description": "Vuorovaikutteinen ryöstöpaneeli reaaliaikaisilla päivityksillä"
+      },
+      "capitalWeeklySummary": {
+        "label": "Pääkaupungin viikkoyhteenveto",
+        "description": "Pääkaupungin suorituskyvyn viikkoyhteenveto"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Roolin muutos",
+        "description": "Seuraa pelaajien roolimuutoksia klaanissa"
+      },
+      "troopUpgrade": {
+        "label": "Joukon päivitys",
+        "description": "Seuraa joukkojen tasopäivityksiä"
+      },
+      "superTroopBoostLog": {
+        "label": "Superjoukkojen tehostukset",
+        "description": "Seuraa superjoukkojen aktivointeja"
+      },
+      "thUpgrade": {
+        "label": "Kaupungintalon päivitys",
+        "description": "Seuraa kaupungintalon päivityksiä"
+      },
+      "leagueChange": {
+        "label": "Liigan muutos",
+        "description": "Seuraa liigatason muutoksia"
+      },
+      "spellUpgrade": {
+        "label": "Loitsun päivitys",
+        "description": "Seuraa loitsujen tasopäivityksiä"
+      },
+      "heroUpgrade": {
+        "label": "Sankarin päivitys",
+        "description": "Seuraa sankareiden tasopäivityksiä"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Sankarivarusteen päivitys",
+        "description": "Seuraa sankarivarusteiden päivityksiä"
+      },
+      "nameChange": {
+        "label": "Nimenmuutos",
+        "description": "Seuraa pelaajien nimimuutoksia"
+      },
+      "legendLogAttacks": {
+        "label": "Legendaliigan hyökkäykset",
+        "description": "Seuraa legendaliigan hyökkäyksiä"
+      },
+      "legendLogDefenses": {
+        "label": "Legendaliigan puolustukset",
+        "description": "Seuraa legendaliigan puolustuksia"
+      }
+    },
+    "logCard": {
+      "active": "Aktiivinen",
+      "issue": "Ongelma",
+      "disabled": "Poistettu käytöstä",
+      "enable": "Ota käyttöön",
+      "disable": "Poista käytöstä",
+      "channel": "Kanava",
+      "channelPlaceholder": "Valitse kanava",
+      "thread": "Ketju (valinnainen)",
+      "threadPlaceholder": "Valitse ketju",
+      "noThread": "Ei ketjua",
+      "forumPost": "Foorumijulkaisu",
+      "forumPostPlaceholder": "Valitse foorumijulkaisu",
+      "forumPostRequired": "Valitse foorumijulkaisu ennen lokin tallentamista.",
+      "invalidThread": "Valittu ketju ei kuulu tähän kanavaan.",
+      "saveDestination": "Tallenna kohde",
+      "channelDeleted": "Kanavaa ei enää ole. Valitse uusi kanava tai poista loki käytöstä.",
+      "enableToConfig": "Määritä loki ottamalla se käyttöön",
+      "configuring": "Määritetään",
+      "on": "Käytössä",
+      "off": "Ei käytössä",
+      "example": "esimerkki"
+    }
+  },
+  "GeneralPage": {
+    "title": "Yleiset asetukset",
+    "description": "Määritä botin toiminta ja ulkoasu koko palvelimelle",
+    "loading": "Ladataan asetuksia...",
+    "reset": "Nollaa",
+    "saving": "Tallennetaan…",
+    "saveChanges": "Tallenna muutokset",
+    "settingsSaved": "Asetukset tallennettu!",
+    "infoBanner": {
+      "title": "Etsitkö lisää asetuksia?",
+      "description": "Perheroolit ja lempinimiasetukset ovat **Perheasetukset**-sivulla. Roolien hallinta on **Roolit**-sivulla. Klaanien roolit, lyhenteet, luokat ja sodan lähtölaskennat ovat **Klaanit**-sivulla."
+    },
+    "nickname": {
+      "title": "Lempinimien hallinta",
+      "description": "Hallitse lempinimien muotoilua",
+      "automaticChanges": "Automaattiset muutokset",
+      "automaticChangesDesc": "Salli botin päivittää jäsenten lempinimet",
+      "familyFormat": "Perheen jäsenten muoto",
+      "availablePlaceholders": "Käytettävissä olevat paikkamerkit",
+      "preview": "Esikatselu:",
+      "nonFamilyFormat": "Perheen ulkopuolisten muoto",
+      "placeholders": {
+        "discordName": "Discord-käyttäjänimi",
+        "discordDisplayName": "Palvelimen lempinimi",
+        "playerName": "CoC-pelaajan nimi",
+        "playerTag": "Pelaajatunnus",
+        "playerTownhall": "Kaupungintalon taso",
+        "playerTownhallSmall": "KT yläindeksinä",
+        "playerWarstars": "Sodan tähdet",
+        "playerRole": "Klaanirooli",
+        "playerClan": "Klaanin nimi",
+        "playerLeague": "Liiga",
+        "playerClanAbbr": "Klaanin lyhenne"
+      }
+    },
+    "appearance": {
+      "title": "Ulkonäkö",
+      "description": "Mukauta botin upotusviestejä",
+      "embedColor": "Upotuksen väri",
+      "embedColorDesc": "Kaikkien botin Discord-upotusviestien sivupalkin väri",
+      "embedColorDefault": "Oletus: **#D90709** (ClashKingin punainen)",
+      "embedPreview": "Upotuksen esikatselu",
+      "embedPreviewDesc": "Tämä värillinen palkki näkyy kaikkien botin upotusviestien vieressä",
+      "editColor": "Muokkaa väriä",
+      "resetToDefault": "Palauta oletus",
+      "apply": "Käytä"
+    },
+    "security": {
+      "title": "Suojaus ja käyttöoikeudet",
+      "description": "Hallitse käyttöoikeuksia ja vahvistusta",
+      "fullWhitelistRole": "Täyden käyttöoikeuden rooli",
+      "fullWhitelistRoleDesc": "Discord-rooli, jolla on täydet oikeudet kaikkiin botin komentoihin ja joka ohittaa käyttöoikeustarkistukset",
+      "noRole": "Ei roolia"
+    },
+    "familyRoles": {
+      "title": "Perheroolit",
+      "description": "Hallitse automaattisia rooleja perhejäsenyyden ja klaaniaseman perusteella",
+      "selectRole": "Valitse rooli",
+      "addRole": "Lisää rooli...",
+      "deletedRole": "Poistettu rooli",
+      "noRolesConfigured": "Rooleja ei ole määritetty",
+      "modes": {
+        "both": "Lisää ja poista",
+        "add": "Vain lisää",
+        "remove": "Vain poista"
+      },
+      "types": {
+        "family": "Perhe",
+        "notFamily": "Perheen ulkopuolinen",
+        "elder": "Vanhin",
+        "coLeader": "Apujohtaja",
+        "leader": "Johtaja"
+      },
+      "descriptions": {
+        "family": "Vähintään yksi tili perheen klaaneissa",
+        "notFamily": "Ei tilejä perheen klaaneissa",
+        "elder": "Vanhimman asema jossakin perheen klaanissa",
+        "coLeader": "Apujohtajan asema jossakin perheen klaanissa",
+        "leader": "Johtajan asema jossakin perheen klaanissa"
+      }
+    },
+    "tenureRoles": {
+      "title": "Discord-jäsenyyden roolit",
+      "description": "Jaa rooleja automaattisesti palvelimen jäsenyyden keston perusteella",
+      "addRole": "Lisää jäsenyysrooli",
+      "addDialogTitle": "Lisää jäsenyysrooli",
+      "addDialogDescription": "Määritä rooli jäsenille, jotka ovat olleet palvelimella tietyn määrän kuukausia",
+      "monthsInServer": "Kuukausia palvelimella",
+      "discordRole": "Discord-rooli",
+      "selectRole": "Valitse rooli",
+      "noRolesConfigured": "Jäsenyysrooleja ei ole määritetty",
+      "addRoleToStart": "Aloita lisäämällä jäsenyysrooli",
+      "months": "Kuukaudet",
+      "month": "kuukausi",
+      "actions": "Toiminnot",
+      "remove": "Poista",
+      "unknownRole": "Tuntematon rooli"
+    },
+    "prefix": "Komentojen etuliite",
+    "language": "Kieli",
+    "timezone": "Aikavyöhyke",
+    "theme": "Teema"
+  },
+  "FamilySettingsPage": {
+    "title": "Perheasetukset",
+    "description": "Määritä klaanin jäsenten perheroolit ja lempinimien muotoilu",
+    "loading": "Ladataan asetuksia...",
+    "reset": "Nollaa",
+    "saving": "Tallennetaan…",
+    "saveChanges": "Tallenna muutokset",
+    "settingsSaved": "Asetukset tallennettu!",
+    "nickname": {
+      "title": "Lempinimien hallinta",
+      "description": "Hallitse lempinimien muotoilua",
+      "automaticChanges": "Automaattiset muutokset",
+      "automaticChangesDesc": "Salli botin päivittää jäsenten lempinimet",
+      "familyFormat": "Perheen jäsenten muoto",
+      "availablePlaceholders": "Käytettävissä olevat paikkamerkit",
+      "preview": "Esikatselu:",
+      "nonFamilyFormat": "Perheen ulkopuolisten muoto",
+      "placeholders": {
+        "discordName": "Discord-käyttäjänimi",
+        "discordDisplayName": "Palvelimen lempinimi",
+        "playerName": "CoC-pelaajan nimi",
+        "playerTag": "Pelaajatunnus",
+        "playerTownhall": "Kaupungintalon taso",
+        "playerTownhallSmall": "KT yläindeksinä",
+        "playerWarstars": "Sodan tähdet",
+        "playerRole": "Klaanirooli",
+        "playerClan": "Klaanin nimi",
+        "playerLeague": "Liiga",
+        "playerClanAbbr": "Klaanin lyhenne"
+      }
+    },
+    "familyRoles": {
+      "title": "Perheroolit",
+      "description": "Hallitse automaattisia rooleja perhejäsenyyden ja klaaniaseman perusteella",
+      "selectRole": "Valitse rooli",
+      "addRole": "Lisää rooli...",
+      "deletedRole": "Poistettu rooli",
+      "noRolesConfigured": "Rooleja ei ole määritetty",
+      "modes": {
+        "both": "Lisää ja poista",
+        "add": "Vain lisää",
+        "remove": "Vain poista"
+      },
+      "types": {
+        "family": "Perhe",
+        "notFamily": "Perheen ulkopuolinen",
+        "elder": "Vanhin",
+        "coLeader": "Apujohtaja",
+        "leader": "Johtaja"
+      },
+      "descriptions": {
+        "family": "Vähintään yksi tili perheen klaaneissa",
+        "notFamily": "Ei tilejä perheen klaaneissa",
+        "elder": "Vanhimman asema jossakin perheen klaanissa",
+        "coLeader": "Apujohtajan asema jossakin perheen klaanissa",
+        "leader": "Johtajan asema jossakin perheen klaanissa"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Kieli"
+  },
+  "ThemeSwitcher": {
+    "label": "Teema",
+    "light": "Vaalea",
+    "dark": "Tumma",
+    "system": "Järjestelmä"
+  },
+  "AuthCallback": {
+    "authenticating": "Todennetaan...",
+    "authenticatingDescription": "Odota, kun kirjaamme sinut sisään Discordilla",
+    "authenticationFailed": "Todennus epäonnistui",
+    "tryAgain": "Yritä uudelleen",
+    "backToHome": "Takaisin etusivulle",
+    "errorCancelled": "Kirjautuminen peruutettiin Discordissa. Yritä uudelleen, kun olet valmis.",
+    "errorDiscordFailedWithReason": "Discord-todennus epäonnistui: {reason}",
+    "errorNoAuthorizationCode": "Discordilta ei saatu valtuutuskoodia.",
+    "errorCodeVerifierMissing": "Koodin vahvistinta ei löytynyt. Yritä kirjautua uudelleen.",
+    "errorAuthenticateFailed": "Todentaminen Discordilla epäonnistui.",
+    "loadingVillages": "Kirjaudutaan Discordilla...",
+    "loadingClanData": "Ladataan palvelinluetteloa...",
+    "loadingWarStats": "Melkein valmis..."
+  },
+  "LoginPage": {
+    "redirecting": "Siirrytään Discordiin..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Ominaisuudet",
+      "subtitle": "Tutustu ClashKingin tehokkaisiin työkaluihin, joilla hallitset ja kasvatat klaaniasi Discordissa, mobiilisovelluksessa ja verkossa."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing-botti",
+        "description": "ClashKing-botti on ainoa Discord-botti, jonka tarvitset Clash of Clans -klaanisi ja yhteisösi hallintaan. Sen ainutlaatuiset ominaisuudet pitävät klaanin järjestyksessä, aktiivisena ja kasvavana.",
+        "items": [
+          "Reaaliaikaiset lokit: Seuraa sotia, CWL:ää, klaanipelejä, ryöstöjä, lahjoituksia ja jäsentapahtumia.",
+          "Tukipyyntöjärjestelmä: Rekrytointipyynnöt tavallisten tukipyyntöjen lisäksi.",
+          "Automaattiset roolit: Jaa rooleja automaattisesti klaanin tilan tai perhehallinnan perusteella.",
+          "Muistutukset: Lähetä ilmoituksia sotahyökkäyksistä, klaanipeleistä tai muista asioista.",
+          "Yksityiskohtaiset tilastot: Pelaajien ja klaanien suoritustiedot aktiivisuuden seurannalla.",
+          "Kokoonpanojen hallinta: Järjestä ja optimoi sotakokoonpanosi helposti."
+        ],
+        "ctaPrimary": "Kutsu botti",
+        "ctaSecondary": "Liity yhteisöön"
+      },
+      "app": {
+        "title": "ClashKing-sovellus (avoin beta)",
+        "description": "ClashKing-sovellus täydentää bottia tuomalla tärkeät työkalut ja tiedot mobiililaitteeseesi. Pysyt yhteydessä missä ja milloin tahansa, myös ilman Discordia.",
+        "items": [
+          "Reaaliaikaiset tilastot: Botin kanssa synkronoidut yksityiskohtaiset pelaaja- ja klaanitilastot.",
+          "Klaanin kehityksen seuranta: Seuraa klaanisi kehitystä sujuvasti ajan myötä.",
+          "Useiden tilien hallinta: Vaihda helposti tilien välillä ja seuraa suorituksia.",
+          "Sisäänrakennettu historia: Analysoi trendejä ja kehitä strategioita historiatietojen avulla.",
+          "Discord-palvelimen hallinta: (Tulossa pian) Hallitse rooleja ja tukipyyntöjä sovelluksesta.",
+          "Edistyneet ilmoitukset: (Tulossa pian) Mukauta tärkeiden tapahtumien ilmoituksia."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Rakenna omia työkaluja tai projekteja ClashKing API:lla. Käyttö on ilmaista, kun mainitset ClashKing-projektin.",
+        "items": [],
+        "ctaPrimary": "API-dokumentaatio",
+        "ctaSecondary": "API GitHubissa"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Tarvitsetko apua?",
+    "subtitle": "Etsitpä dokumentaatiota tai suoraa tukea, autamme sinua.",
+    "documentation": {
+      "title": "Dokumentaatio",
+      "description": "Tutustu kattaviin oppaisiimme ja komentoviitteisiin saadaksesi ClashKingistä kaiken irti.",
+      "cta": "Näytä dokumentaatio"
+    },
+    "discord": {
+      "title": "Discord-tuki",
+      "description": "Tarvitsetko lisää apua? Liity Discord-yhteisöömme kysymään, ilmoittamaan virheistä tai keskustelemaan muiden käyttäjien kanssa.",
+      "cta": "Liity Discordiin"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Avoimen lähdekoodin projekti",
+    "subtitle": "ClashKing on täysin ilmainen avoimen lähdekoodin projekti, jonka yhteisö voi tehdä entistä paremmaksi. Sekä botti että API ovat täysin avoimia, joten voit osallistua tai käyttää niitä omissa projekteissasi.",
+    "github": {
+      "title": "GitHub-organisaatio",
+      "description": "Tutustu lähdekoodiimme, osallistu botin kehitykseen tai katso muita avoimen lähdekoodin työkalujamme.",
+      "ctaPrimary": "Näytä organisaatio",
+      "repos": {
+        "bot": "Botin koodivarasto",
+        "app": "Sovelluksen koodivarasto",
+        "api": "API:n koodivarasto",
+        "assets": "Resurssien koodivarasto"
+      }
+    },
+    "api": {
+      "title": "API-dokumentaatio",
+      "description": "Rakenna omia työkaluja tai projekteja ClashKing API:lla. Käyttö on ilmaista, kun mainitset ClashKing-projektin.",
+      "cta": "API-dokumentaatio"
+    },
+    "translation": {
+      "title": "Auta meitä kääntämään",
+      "description": "Auta kääntämään ClashKing omalle kielellesi! Voit osallistua verkkosivuston, botin ja muiden tekstien kääntämiseen Crowdin-projekteissamme.",
+      "app": "Käännä sovellus",
+      "bot": "Käännä botti"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Osallistu",
+        "description": "Auta parantamaan projektia korjaamalla virheitä, lisäämällä ominaisuuksia tai kehittämällä nykyisiä. Jokainen panos merkitsee!"
+      },
+      "community": {
+        "title": "Yhteisö",
+        "description": "Liity Discord-yhteisöömme keskustelemaan ideoista, saamaan apua ja tekemään yhteistyötä muiden kehittäjien kanssa."
+      },
+      "learn": {
+        "title": "Opi",
+        "description": "Opi käyttämään bottia ja API:a tehokkaasti dokumentaation ja esimerkkien avulla."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Tue meitä",
+    "subtitle": "ClashKing on ilmainen avoimen lähdekoodin projekti. Tukesi auttaa pitämään palvelimet käynnissä ja kehittämään uusia ominaisuuksia yhteisölle.",
+    "patreon": {
+      "title": "Ryhdy Patreon-tukijaksi",
+      "description": "Tue meitä kuukausittain Patreonissa, saat erityisetuja ja ennakkopääsyn ominaisuuksiin sekä autat kattamaan palvelinkulut.",
+      "cta": "Tue Patreonissa"
+    },
+    "creatorCode": {
+      "title": "Käytä luojakoodia",
+      "description": "Tue meitä ilmaiseksi käyttämällä sisällöntuottajakoodia",
+      "descriptionSuffix": "pelissä tai Supercell Storessa.",
+      "ctaGame": "Käytä pelissä",
+      "ctaStore": "Käytä Supercell Storessa"
+    },
+    "whySupport": {
+      "title": "Miksi tukea meitä?",
+      "description": "Jokainen tuki menee suoraan palvelin- ja API-kuluihin. Sisällöntuottajakoodimme käyttö ei maksa sinulle mitään, mutta auttaa meitä valtavasti!"
+    }
+  },
+  "ServersPage": {
+    "title": "Valitse palvelin",
+    "description": "Valitse palvelin ClashKing-botin asetusten määrittämiseksi. Sinun on oltava Discord-palvelimen omistaja tai ylläpitäjä.",
+    "backToHome": "Takaisin etusivulle",
+    "backToLogin": "Takaisin kirjautumiseen",
+    "error": "Virhe",
+    "configure": "Määritä",
+    "invite": "Kutsu",
+    "members": "jäsentä",
+    "server": "Palvelin",
+    "roles": {
+      "owner": "Omistaja",
+      "administrator": "Ylläpitäjä",
+      "manager": "Hallinnoija"
+    },
+    "noServers": {
+      "title": "Palvelimia ei löytynyt",
+      "description": "Discord-palvelinta, jonka omistaja tai ylläpitäjä olet, ei löytynyt."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Päivitä reaaliaikainen taulu tai lähetä uusia tauluja toiminta-aikataulun mukaan",
+    "actions": {
+      "create": "Luo automaattitaulu",
+      "edit": "Muokkaa automaattitaulua",
+      "delete": "Poista automaattitaulu",
+      "save": "Tallenna muutokset",
+      "cancel": "Peruuta",
+      "retry": "Yritä uudelleen"
+    },
+    "metrics": {
+      "total": "Määritetty",
+      "refresh": "Päivitettävät taulut",
+      "send": "Ajastetut lähetykset"
+    },
+    "filters": {
+      "all": "Kaikki"
+    },
+    "list": {
+      "title": "Määritetyt automaattitaulut",
+      "description": "Ylläpitäjän hallitsema toimitus, kohteet, määränpää ja ajonaikainen tila",
+      "empty": "Tässä näkymässä ei ole automaattitauluja",
+      "emptyDescription": "Voit luoda taulun, kun API-rekisteri tarjoaa käytettävissä olevan taulutyypin."
+    },
+    "registry": {
+      "emptyTitle": "Taulutyyppejä ei ole saatavilla",
+      "emptyDescription": "API-rekisteri on tällä hetkellä tyhjä. Automaattitauluja voi luoda, kun siellä otetaan käyttöön taulutyyppi.",
+      "typeUnavailable": "Taulutyyppiä ei enää ole rekisterissä, joten sitä ei voi muokata."
+    },
+    "dialog": {
+      "createTitle": "Luo automaattitaulu",
+      "editTitle": "Muokkaa automaattitaulua",
+      "description": "Ominaisuudet ja rajat tulevat ajantasaisesta taulurekisteristä."
+    },
+    "boardType": {
+      "label": "Taulutyyppi",
+      "description": "Saatavilla olevat tyypit tulevat suoraan API-rekisteristä.",
+      "placeholder": "Valitse taulutyyppi"
+    },
+    "targets": {
+      "kind": "Kohteen tyyppi: {kind}",
+      "kindDescription": "Rekisteri määrittää, miten kukin kohdearvo tulkitaan.",
+      "scope": "Kohteen laajuus",
+      "scopeDescription": "Perhelaajuus käyttää kaikkia määritettyjä perheklaaneja eikä sisällä erillisiä kohteita.",
+      "family": "Perhe",
+      "custom": "Mukautetut kohteet",
+      "values": "Kohteet",
+      "count": "Anna tälle taulutyypille {min}–{max} kohdetta.",
+      "placeholder": "Anna tyypin {kind} kohde",
+      "add": "Lisää kohde",
+      "remove": "Poista kohde"
+    },
+    "modes": {
+      "label": "Toimitustapa",
+      "description": "Rekisteri määrittää taulun tukemat toimitustavat.",
+      "refresh": "Päivitä",
+      "send": "Ajastettu lähetys"
+    },
+    "destination": {
+      "label": "Määränpää",
+      "channel": "Pääkanava",
+      "channelDescription": "Teksti- ja ilmoituskanavat voivat toimittaa suoraan; foorumit käyttävät alijulkaisua.",
+      "selectChannel": "Valitse kanava",
+      "thread": "Ketju tai foorumijulkaisu",
+      "selectThread": "Valitse ketju",
+      "threadOptional": "Valinnainen teksti- ja ilmoituskanaville.",
+      "forumRequired": "Tälle määränpäälle vaaditaan foorumijulkaisu.",
+      "direct": "Lähetä suoraan kanavalle",
+      "deleted": "Kanavaa ei enää ole"
+    },
+    "refresh": {
+      "interval": "Päivitysväli (minuuttia)",
+      "intervalDescription": "Sallittu väli: {minimum}–{maximum} minuuttia."
+    },
+    "schedule": {
+      "label": "Aikataulu",
+      "kind": "Aikataulumalli",
+      "kindDescription": "Lähetä päivittäin, valittuina viikonpäivinä tai kerran kuukaudessa.",
+      "daily": "Päivittäin",
+      "weekdays": "Valitut viikonpäivät",
+      "dayOfMonth": "Kuukauden päivä",
+      "selectWeekdays": "Viikonpäivät",
+      "monthDay": "Kuukauden päivä",
+      "monthDayDescription": "Käytä arvoa 1–31.",
+      "timezone": "Aikavyöhyke",
+      "timeOfDay": "Kellonaika",
+      "nextRun": "Seuraava suoritus"
+    },
+    "weekdays": {
+      "1": "Maanantai",
+      "2": "Tiistai",
+      "3": "Keskiviikko",
+      "4": "Torstai",
+      "5": "Perjantai",
+      "6": "Lauantai",
+      "7": "Sunnuntai"
+    },
+    "status": {
+      "enabled": "Käytössä",
+      "disabled": "Poistettu käytöstä",
+      "enabledDescription": "Käytöstä poistetut taulut säilyttävät määrityksensä, mutta niitä ei suoriteta.",
+      "messageId": "Nykyinen päivitysviesti: {id}"
+    },
+    "delete": {
+      "title": "Poistetaanko tämä automaattitaulu?",
+      "description": "Tämä poistaa määrityksen, eikä toimintoa voi kumota."
+    },
+    "feedback": {
+      "created": "Automaattitaulu luotu",
+      "updated": "Automaattitaulu päivitetty",
+      "deleted": "Automaattitaulu poistettu"
+    },
+    "validation": {
+      "boardType": "Valitse taulutyyppi ajantasaisesta rekisteristä.",
+      "targetScope": "Valitse taulutyypin tukema kohteen laajuus.",
+      "familyTargets": "Perhelaajuus ei voi sisältää erillisiä kohteita.",
+      "targetCount": "Anna {min}–{max} kohdetta, jotka eivät ole tyhjiä.",
+      "deliveryMode": "Valitse taulutyypin tukema toimitustapa.",
+      "destination": "Valitse kelvollinen määränpää. Foorumikanavat vaativat alijulkaisun.",
+      "refreshInterval": "Anna päivitysväli {minimum}–{maximum} minuuttia.",
+      "timezone": "Anna IANA-aikavyöhyke.",
+      "timeOfDay": "Anna kelvollinen kellonaika.",
+      "weekdays": "Valitse vähintään yksi viikonpäivä.",
+      "dayOfMonth": "Anna päivä väliltä 1–31."
+    },
+    "errors": {
+      "title": "Automaattitaulut eivät ole saatavilla",
+      "session": "Istuntosi on vanhentunut.",
+      "request": "Automaattitaulupyyntö epäonnistui.",
+      "load": "Automaattitaulujen lataaminen epäonnistui.",
+      "save": "Automaattitaulun tallentaminen epäonnistui.",
+      "delete": "Automaattitaulun poistaminen epäonnistui."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Tukipyyntöpaneelien asetukset",
+    "description": "Määritä kunkin tukipyyntöpaneelin kategoriat ja lokikanavat.",
+    "noPanels": "Tukipyyntöpaneeleja ei löytynyt",
+    "noPanelsHint": "Luo ensimmäinen paneelisi yllä olevalla painikkeella.",
+    "createPanel": "Uusi paneeli",
+    "createPanelTitle": "Luo tukipyyntöpaneeli",
+    "createPanelDescription": "Anna paneelille yksilöllinen nimi. Voit määrittää painikkeet ja kanavat luomisen jälkeen.",
+    "panelNameLabel": "Paneelin nimi",
+    "panelNamePlaceholder": "esim. Hakemukset",
+    "panelCreated": "Paneeli ”{name}” luotu.",
+    "confirmDeletePanel": "Poistetaanko paneeli ”{name}”?",
+    "confirmDeletePanelHint": "Tämä poistaa paneelin ja kaikki sen painikemääritykset pysyvästi.",
+    "panelDeleted": "Paneeli poistettu.",
+    "panelHint": "Laajenna ja määritä paneeli napsauttamalla.",
+    "panelEmbed": "Paneelin upotus",
+    "panelEmbedHint": "Upotus, jota käytetään julkaistaessa tukipyyntöpaneeli Discordiin.",
+    "panelEmbedInfoLine1": "Luo uusi upotus tai muokkaa nykyistä siirtymällä sivulle %s kohdassa {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Lisää tai muokkaa painikkeita siirtymällä tämän paneelin kohtaan %s.",
+    "panelEmbedPreview": "Upotuksen esikatselu",
+    "panelEmbedPreviewEmpty": "Valitulle paneelin upotukselle ei ole esikatselua.",
+    "ticketOpenEmbed": "Tukipyynnön avausupotus",
+    "ticketOpenEmbedHint": "Valinnainen mukautettu upotus, joka lähetetään painikkeen avatessa tukipyynnön.",
+    "selectEmbed": "Valitse upotus",
+    "defaultEmbed": "Ei paneelin upotuksen ohitusta",
+    "noCustomMessage": "Käytä tukipyynnön oletusviestiä",
+    "buttons": "painikkeet",
+    "buttonList": "Painikkeet",
+    "categories": "Kategoriat",
+    "openCategory": "Avointen tukipyyntöjen kategoria",
+    "open_category": "Avointen tukipyyntöjen kategoria",
+    "sleepCategory": "Odottavien tukipyyntöjen kategoria",
+    "sleep_category": "Odottavien tukipyyntöjen kategoria",
+    "closedCategory": "Suljettujen tukipyyntöjen kategoria",
+    "closed_category": "Suljettujen tukipyyntöjen kategoria",
+    "selectCategory": "Valitse kategoria...",
+    "logChannels": "Lokikanavat",
+    "statusChangeLog": "Tilamuutosten loki",
+    "status_change_log": "Tilamuutosten loki",
+    "buttonClickLog": "Painikkeiden napsautusloki",
+    "ticket_button_click_log": "Painikkeiden napsautusloki",
+    "closeLog": "Tukipyyntöjen sulkemisloki",
+    "ticket_close_log": "Tukipyyntöjen sulkemisloki",
+    "selectChannel": "Valitse kanava...",
+    "savedSuccess": "Paneeli ”{panel}” tallennettu.",
+    "tabChannels": "Tukipyyntöpaneeli",
+    "tabSettings": "Asetukset",
+    "tabButtons": "Painikkeet",
+    "tabMessages": "Viestit",
+    "autoSaveSaving": "Tallennetaan…",
+    "autoSaveSaved": "Tallennettu",
+    "autoSaveErrorTitle": "Automaattinen tallennus epäonnistui",
+    "autoSaveErrorDescription": "Tukipyyntöasetuksia ei voitu tallentaa.",
+    "messages": "viestit",
+    "noButtons": "Painikkeita ei ole vielä. Aloita lisäämällä painike.",
+    "addButton": "Lisää painike",
+    "addButtonTitle": "Lisää painike",
+    "addButtonDescription": "Määritä uuden painikkeen ulkoasu.",
+    "buttonLabel": "Painikkeen teksti",
+    "buttonLabelPlaceholder": "esim. Hae",
+    "buttonStyle": "Painikkeen väri",
+    "buttonStyleBlue": "Sininen",
+    "buttonStyleGrey": "Harmaa",
+    "buttonStyleGreen": "Vihreä",
+    "buttonStyleRed": "Punainen",
+    "buttonAdded": "Painike lisätty.",
+    "buttonDeleted": "Painike poistettu.",
+    "editButtonTitle": "Muokkaa painikkeen asetuksia",
+    "editButtonDescription": "Määritä tämä tukipyyntöpainike.",
+    "buttonAppearanceSaved": "Ulkoasu tallennettu.",
+    "confirmDeleteButton": "Poistetaanko painike ”{label}”?",
+    "confirmDeleteButtonHint": "Tämä poistaa painikkeen ja kaikki sen määritykset, kuten roolit ja kysymykset.",
+    "modRoles": "Henkilöstöroolit (ilmoitetaan)",
+    "modRolesHint": "Nämä roolit mainitaan tukipyynnön avaamisen yhteydessä.",
+    "noPingRoles": "Henkilöstöroolit (hiljaiset)",
+    "noPingRolesHint": "Nämä roolit näkevät tukipyynnöt, mutta niille ei ilmoiteta.",
+    "questions": "Kysymykset",
+    "questionsHint": "Tukipyynnön avautuessa ikkunassa näytetään enintään viisi kysymystä.",
+    "question": "Kysymys",
+    "privateThread": "Yksityinen ketju",
+    "privateThreadHint": "Luo henkilöstölle erillisen yksityisen ketjun.",
+    "accountApply": "Vaadi CoC-tili",
+    "accountApplyHint": "Käyttäjän on linkitettävä Clash of Clans -tili.",
+    "playerInfo": "Näytä pelaajan tiedot",
+    "playerInfoHint": "Näyttää tilin tilastot tukipyynnön avautuessa.",
+    "thMin": "Kaupungintalo vähintään",
+    "numApply": "Tilejä enintään",
+    "naming": "Nimeämismuoto",
+    "namingPlaceholders": "Nimen paikkamerkit",
+    "namingVariables": "Muuttujat: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Painike ”{label}” tallennettu.",
+    "badge": {
+      "accountApply": "CoC vaaditaan",
+      "privateThread": "Yksityinen ketju"
+    },
+    "approveMessages": "Hyväksyntä- ja hylkäysviestit",
+    "approveMessagesHint": "Valmiit viestit, joita henkilöstö voi lähettää hakijoille (enintään 25).",
+    "messagesMaxHint": "Voit lisätä enintään 25 viestiä.",
+    "editMessagesButton": "Muokkaa viestejä",
+    "editMessagesTitle": "Muokkaa valmiita viestejä",
+    "editMessagesDescription": "Lisää, poista ja päivitä valmiita tukipyyntöviestejä.",
+    "addMessage": "Lisää viesti",
+    "noMessages": "Viestejä ei ole vielä. Aloita lisäämällä viesti.",
+    "messageName": "Viestin nimi",
+    "contentLabel": "Sisältö",
+    "messageContent": "Viestin sisältö...",
+    "messageNameRequired": "Kaikilla viesteillä on oltava nimi.",
+    "messagesSaved": "Hyväksyntä- ja hylkäysviestit tallennettu.",
+    "rolesToAdd": "Myönnettävät roolit",
+    "rolesToAddHint": "Roolit, jotka myönnetään käyttäjälle automaattisesti tukipyynnön avautuessa.",
+    "rolesToRemove": "Poistettavat roolit",
+    "rolesToRemoveHint": "Roolit, jotka poistetaan käyttäjältä automaattisesti tukipyynnön avautuessa.",
+    "applyClans": "Sallitut klaanit",
+    "applyClansHint": "Vain näiden klaanien jäsenet voivat avata tukipyynnön. Jätä tyhjäksi salliaksesi kaikki.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Kaupungintalovaatimukset",
+    "thRequirementsHint": "Tukipyynnön avaamiseen vaaditut sankareiden vähimmäistasot kaupungintalotasoittain.",
+    "thHeroLegend": "BK = Barbaarikuningas · AQ = Jousikuningatar · GW = Suurvartija · RC = Kuninkaallinen mestari · WARST = Sotatähdet",
+    "addThLevel": "Lisää KT-taso",
+    "thLevel": "KT",
+    "numApplyHint": "CoC-tilien enimmäismäärä, jolla käyttäjä voi hakea (1–25).",
+    "embeds": "Upotukset",
+    "embedsHint": "Discord-upotukset, joita käytetään paneeli- tai tukipyynnön avausviesteinä.",
+    "newEmbed": "Uusi upotus",
+    "embedName": "Upotuksen nimi",
+    "embedNamePlaceholder": "oma-upotus",
+    "discohookUrl": "Discohook-osoite",
+    "embedDiscohookHint": "Suunnittele upotus Discohookissa, kopioi sivun osoite ja liitä se tähän.",
+    "openDiscohook": "Avaa Discohook",
+    "openInDiscohook": "Avaa Discohookissa",
+    "copyDiscohookUrl": "Kopioi Discohook-osoite",
+    "copyDiscohookUrlDone": "Osoite kopioitu!",
+    "editEmbed": "Muokkaa",
+    "deleteEmbed": "Poista",
+    "confirmDeleteEmbed": "Poistetaanko upotus ”{name}”?",
+    "confirmDeleteEmbedHint": "Tämä poistaa sen vain ClashKingistä eikä vaikuta jo julkaistuihin Discord-viesteihin.",
+    "embedSaved": "Upotus ”{name}” tallennettu.",
+    "embedCreated": "Upotus ”{name}” luotu.",
+    "embedDeleted": "Upotus poistettu.",
+    "noEmbeds": "Upotuksia ei ole vielä.",
+    "noEmbedsHint": "Luo upotus täällä ja liitä se sitten paneeliin tai painikkeeseen.",
+    "legacyEmbed": "Luotu botilla – ota muokkaus käyttöön liittämällä Discohook-osoite.",
+    "invalidDiscohookUrl": "Virheellinen osoite. Liitä Discohook-sivun osoite (discohook.app/?data=... tai discohook.app/?share=...).",
+    "tabEmbeds": "Upotukset"
+  },
+  "EmbedsPage": {
+    "title": "Upotukset",
+    "description": "Luo ja hallitse tukipyyntöpaneelien ja painikkeiden Discord-upotusmalleja.",
+    "nameHint": "Anna upotukselle yksilöllinen tunniste. Voit muuttaa sisältöä myöhemmin."
+  },
+  "EmbedEditor": {
+    "importSection": "Tuo Discohookista",
+    "addMessage": "Lisää viesti",
+    "addMessageDialogTitle": "Lisää viesti",
+    "addMessageDialogDescription": "Valitse viestin edistyneisyys.",
+    "addMessageClassicTitle": "Perinteinen",
+    "addMessageClassicDescription": "Yksinkertainen ja luotettava: tekstiä ja upotuksia. Valitse tämä, jos olet epävarma.",
+    "addMessageV2Title": "Komponentit v2",
+    "addMessageV2Description": "Edistyneemmät asettelut ja vuorovaikutteiset komponentit, kuten painikkeet, valinnat ja osiot.",
+    "betaTag": "Beta",
+    "importExport": "Tuonti ja vienti",
+    "importExportDescription": "Tuo upotus Discohookista tai vie nykyinen upotus Discohookiin.",
+    "importFromDiscohook": "Tuo Discohookista",
+    "copyDiscohookUrl": "Kopioi Discohook-osoite",
+    "openInDiscohook": "Avaa Discohookissa",
+    "content": "Sisältö",
+    "contentPlaceholder": "Upotusten yläpuolella näkyvä viestin sisältö...",
+    "profileSection": "Profiili",
+    "profileName": "Nimi",
+    "profileAvatarUrl": "Avatarin osoite",
+    "profileUnsupportedWarning": "Varoitus: botti ei tällä hetkellä tue tämän profiilin päivittämistä.",
+    "import": "Tuo",
+    "importError": "Virheellinen Discohook-osoite. Liitä Discohook-sivun osoite.",
+    "importMultipleMessagesWarning": "Linkki sisältää useita viestejä. Vain ensimmäinen tuotiin, sillä botti tukee yhtä viestiä upotusta kohti.",
+    "colorSection": "Väri",
+    "authorSection": "Tekijä",
+    "authorName": "Nimi",
+    "authorIconUrl": "Kuvakkeen osoite",
+    "authorUrl": "Tekijän osoite",
+    "bodySection": "Sisältö",
+    "title": "Otsikko",
+    "titleUrl": "Otsikon osoite",
+    "sidebarColor": "Sivupalkin väri",
+    "description": "Kuvaus",
+    "descriptionPlaceholder": "Upotuksen kuvaus...",
+    "fieldsSection": "Kentät",
+    "addField": "Lisää kenttä",
+    "field": "Kenttä",
+    "fieldName": "Nimi",
+    "fieldValue": "Arvo",
+    "fieldInline": "Samalla rivillä",
+    "imagesSection": "Kuvat",
+    "thumbnailUrl": "Pikkukuvan osoite",
+    "imageUrl": "Kuvan osoite",
+    "footerSection": "Alatunniste",
+    "footerText": "Alatunnisteen teksti",
+    "footerIconUrl": "Alatunnistekuvakkeen osoite",
+    "timestamp": "Sisällytä aikaleima",
+    "preview": "Esikatselu",
+    "previewEmpty": "Täytä kentät nähdäksesi esikatselun",
+    "modeToggleV1": "Perinteinen (V1)",
+    "modeToggleV2": "Komponentit (V2)",
+    "componentsSection": "Komponentit",
+    "addComponent": "Lisää komponentti",
+    "containerLabel": "Säilö",
+    "textDisplayLabel": "Tekstin näyttö",
+    "separatorLabel": "Erotin",
+    "mediaGalleryLabel": "Mediagalleria",
+    "sectionLabel": "Osio",
+    "dividerLine": "Näytä erotinviiva",
+    "spacing": "Välistys",
+    "spacingSmall": "Pieni",
+    "spacingLarge": "Suuri",
+    "imageDescription": "Vaihtoehtoinen teksti",
+    "imageSpoiler": "Spoileri",
+    "addImage": "Lisää kuva",
+    "addTextBlock": "Lisää tekstilohko",
+    "accessory": "Lisäosa",
+    "accessoryNone": "Ei mitään",
+    "accessoryThumbnail": "Pikkukuva",
+    "accessoryButton": "Painike",
+    "thumbnailAlt": "Pikkukuvan vaihtoehtoinen teksti",
+    "accentColor": "Korostusväri",
+    "addContainer": "Lisää alikomponentti",
+    "containerSpoiler": "Spoilerisäilö",
+    "stringSelectLabel": "Tekstivalinta",
+    "userSelectLabel": "Käyttäjävalinta",
+    "roleSelectLabel": "Roolivalinta",
+    "mentionableSelectLabel": "Mainittavan valinta",
+    "channelSelectLabel": "Kanavavalinta",
+    "fileLabel": "Tiedosto",
+    "fileUrl": "Tiedoston osoite",
+    "fileUploadButton": "Lataa",
+    "fileSpoiler": "Spoileri",
+    "selectCustomId": "Mukautettu tunnus",
+    "selectPlaceholder": "Paikkamerkkiteksti",
+    "selectMinValues": "Arvoja vähintään",
+    "selectMaxValues": "Arvoja enintään",
+    "selectOptions": "Vaihtoehdot",
+    "selectOption": "Vaihtoehto",
+    "selectOptionLabel": "Nimiö",
+    "selectOptionValue": "Arvo",
+    "selectOptionDescription": "Kuvaus",
+    "selectOptionDefault": "Valittu oletuksena",
+    "addSelectOption": "Lisää vaihtoehto",
+    "selectDisabled": "Poistettu käytöstä",
+    "actionRowMode": "Rivityyppi",
+    "actionRowModeButtons": "Painikkeet",
+    "actionRowLabel": "Toimintorivi",
+    "addButton": "Lisää painike",
+    "buttonLabel": "Nimiö",
+    "buttonStyle": "Tyyli",
+    "buttonStylePrimary": "Ensisijainen",
+    "buttonStyleSecondary": "Toissijainen",
+    "buttonStyleSuccess": "Onnistunut",
+    "buttonStyleDanger": "Vaarallinen",
+    "buttonStyleLink": "Linkki",
+    "tabMentions": "Maininnat",
+    "tabTime": "Aika",
+    "tabEmojis": "Emojit",
+    "dateLabel": "Päivämäärä",
+    "timeLabel": "Aika",
+    "mentionsChannels": "Kanavat",
+    "mentionsSpecial": "Erityiset",
+    "mentionsChannelList": "Kaikki kanavat",
+    "mentionsRoles": "Roolit",
+    "mentionsServerGuide": "Palvelinopas",
+    "mentionsBrowseChannels": "Selaa kanavia",
+    "mentionsChannelsAndRoles": "Kanavat ja roolit",
+    "mentionsNoChannels": "Yksikään kanava ei vastaa hakuasi.",
+    "mentionsNoRoles": "Yksikään rooli ei vastaa hakuasi.",
+    "styleLabel": "Tyyli",
+    "timeRelativeNow": "0 sekuntia sitten",
+    "emojiSearchPlaceholder": "Etsi sopiva emoji",
+    "emojiToneLabel": "Emojin ihonsävy",
+    "emojiCategory": {
+      "people": "Ihmiset",
+      "nature": "Luonto",
+      "food": "Ruoka",
+      "activities": "Toiminnot",
+      "travel": "Matkailu",
+      "objects": "Esineet",
+      "symbols": "Symbolit",
+      "flags": "Liput"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Poistettu käytöstä",
+    "unknownComponent": "Tuntematon komponentti",
+    "unknownComponentHint": "Tätä komponenttityyppiä ei voi muokata täällä, mutta se säilytetään tallennettaessa."
+  },
+  "PanelsPage": {
+    "title": "Paneelit",
+    "description": "Määritä palvelimelle julkaistava vuorovaikutteinen jäsenpaneeli. Jäsenet voivat yhdellä napsautuksella linkittää tilinsä, päivittää roolinsa ja tehdä muita toimintoja.",
+    "saved": "Paneelin määritys tallennettu.",
+    "embedSection": "Upotus",
+    "embedHint": "Valinnainen upotus, joka näytetään painikkeiden yläpuolella.",
+    "embedLabel": "Upotus",
+    "noEmbed": "Ei upotusta (vain painikkeet)",
+    "buttonsSection": "Painikkeet",
+    "buttonsHint": "Valitse näytettävät toimintopainikkeet. Järjestys seuraa valintaasi.",
+    "colorSection": "Painikkeen väri",
+    "colorHint": "Koskee kaikkia painikkeita.",
+    "welcomeSection": "Tervetulokanava",
+    "welcomeHint": "Kun tämä on määritetty, paneeli julkaistaan automaattisesti uuden jäsenen liittyessä.",
+    "welcomeChannel": "Kanava",
+    "welcomeChannelPlaceholder": "Valitse kanava...",
+    "editPanelButton": "Muokkaa paneelia",
+    "editDialogTitle": "Muokkaa paneelia",
+    "editDialogDescription": "Päivitä upotus, painikkeet ja painikkeiden väri reaaliaikaisen esikatselun avulla ennen tallennusta.",
+    "welcomeAutosaveSuccess": "Tervetulokanava tallennettu.",
+    "welcomeAutosaveDisabled": "Tervetulokanava poistettu käytöstä.",
+    "previewSection": "Esikatselu",
+    "previewHint": "Paneelin ulkoasu Discordissa.",
+    "previewNoEmbed": "Upotusta ei ole valittu",
+    "previewEmbedNoData": "Upotuksella ei ole esikatselutietoja",
+    "previewNoButtons": "Painikkeita ei ole valittu",
+    "color": {
+      "Blue": "Sininen",
+      "Green": "Vihreä",
+      "Grey": "Harmaa",
+      "Red": "Punainen"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Arvonnat",
+    "description": "Luo, ajasta ja hallitse palvelimesi arvontoja.",
+    "create": "Luo arvonta",
+    "listTitle": "Arvontojen yleiskatsaus",
+    "listDescription": "Seuraa ajastettuja, käynnissä olevia ja päättyneitä arvontoja yhdessä paikassa.",
+    "empty": "Näytettäviä arvontoja ei vielä ole.",
+    "confirmDeleteTitle": "Poista arvonta",
+    "confirmDelete": "Haluatko varmasti poistaa tämän arvonnan?",
+    "discardTitle": "Hylätäänkö muutokset?",
+    "discardDescription": "Sinulla on tallentamattomia muutoksia. Jos suljet nyt, muutokset menetetään.",
+    "discardConfirm": "Hylkää",
+    "formTabs": {
+      "general": "Yleiset",
+      "messages": "Viestit",
+      "restrictions": "Rajoitukset",
+      "advanced": "Lisäasetukset"
+    },
+    "tabs": {
+      "ongoing": "Meneillään",
+      "upcoming": "Tulossa",
+      "ended": "Päättynyt"
+    },
+    "stats": {
+      "total": "Arvontoja yhteensä",
+      "totalEntries": "Arpoja yhteensä",
+      "ongoing": "Käynnissä olevat arvonnat",
+      "upcoming": "Tulevat arvonnat",
+      "ended": "Päättyneet arvonnat"
+    },
+    "statsDescriptions": {
+      "total": "Kaikki palvelimelle määritetyt arvonnat.",
+      "totalEntries": "Kaikkien arvontojen arvat yhteensä.",
+      "ongoing": "Parhaillaan aktiiviset ja osallistujia vastaanottavat arvonnat.",
+      "upcoming": "Ajastettu alkamaan myöhemmin.",
+      "ended": "Jo päättyneet arvonnat."
+    },
+    "emptyTab": {
+      "title": "Ei arvontoja",
+      "ongoing": "Arvontoja ei ole käynnissä.",
+      "upcoming": "Arvontoja ei ole ajastettu. Aloita luomalla arvonta.",
+      "ended": "Yksikään arvonta ei ole vielä päättynyt."
+    },
+    "status": {
+      "scheduled": "Ajastettu",
+      "ongoing": "Käynnissä",
+      "ended": "Päättynyt"
+    },
+    "table": {
+      "giveaway": "Arvonta",
+      "channel": "Kanava",
+      "entries": "Arvat",
+      "timing": "Ajankohta",
+      "start": "Alkaa",
+      "end": "Päättyy",
+      "winnersHeader": "Voittajat",
+      "winners": "{count} {count, plural, one {voittaja} other {voittajaa}}",
+      "boosters": "{count} {count, plural, one {tehostus} other {tehostusta}}",
+      "noChannel": "Ei kanavaa",
+      "noChannelHelp": "Kanavaa ei ole määritetty. Korjaa asia muokkaamalla arvontaa.",
+      "endsAt": "Päättyy",
+      "endedAt": "Päättyi",
+      "duplicate": "Monista",
+      "showingEnded": "Näytetään {shown}/{total} päättynyttä arvontaa",
+      "showMore": "Näytä vielä {count}",
+      "pendingUpdate": "Odottava päivitys",
+      "pendingUpdateHelp": "Arvonnassa on odottavia muutoksia, jotka botti ottaa pian käyttöön.",
+      "openInDiscord": "Avaa Discordissa",
+      "viewInDiscord": "Näytä Discordissa",
+      "reroll": "Arvo uudet voittajat",
+      "rerolledCount": "{count, plural, one {# arvottu uudelleen} other {# arvottu uudelleen}}",
+      "viewEntries": "Näytä arvat"
+    },
+    "entries": {
+      "description": "Luettelo osallistujista ja heidän voittotodennäköisyydestään.",
+      "totalEntries": "Arpoja yhteensä",
+      "uniqueUsers": "Yksilölliset käyttäjät",
+      "noEntrants": "Arpoja ei vielä ole.",
+      "userId": "Käyttäjätunnus",
+      "entryCount": "Arvat",
+      "winChance": "Voittomahdollisuus"
+    },
+    "dialog": {
+      "createTitle": "Luo arvonta",
+      "editTitle": "Muokkaa arvontaa",
+      "description": "Määritä arvonnan viesti, ajankohta ja vaatimukset.",
+      "create": "Luo arvonta",
+      "saveChanges": "Tallenna muutokset"
+    },
+    "form": {
+      "prize": "Palkinto",
+      "prizePlaceholder": "Esimerkki: Kultapassi",
+      "channel": "Kanava",
+      "channelPlaceholder": "Valitse kanava",
+      "startTime": "Alkamisaika",
+      "startNow": "Aloita heti",
+      "endTime": "Päättymisaika",
+      "winners": "Voittajien määrä",
+      "mentions": "Mainittavat roolit",
+      "roleRequirements": "Vaaditut tai estetyt roolit",
+      "rolesMode": "Roolitila",
+      "rolesModeOptions": {
+        "none": "Ei roolirajoitusta",
+        "allow": "Vain nämä roolit voivat osallistua",
+        "deny": "Nämä roolit eivät voi osallistua"
+      },
+      "rolesModeHelp": {
+        "none": "Kaikki käyttäjät voivat osallistua arvontaan.",
+        "allow": "Vain käyttäjät, joilla on jokin valituista rooleista, voivat osallistua.",
+        "deny": "Käyttäjät, joilla on jokin valituista rooleista, eivät voi osallistua."
+      },
+      "textAboveEmbed": "Teksti upotuksen yläpuolella",
+      "textEmbedDefault": "Osallistu napsauttamalla alla olevaa painiketta.",
+      "textInEmbed": "Upotuksen kuvaus",
+      "textEndDefault": "Onnittelut kaikille valituille! Otamme teihin pian yhteyttä.",
+      "textOnEnd": "Viesti arvonnan päättyessä",
+      "image": "Arvonnan kuva",
+      "removeImage": "Poista nykyinen kuva",
+      "imagePreviewAlt": "Arvonnan esikatselu",
+      "previewGiveaway": "Esikatsele arvontaa",
+      "previewEnd": "Esikatsele lopetusviestiä",
+      "boosters": "Arpojen tehostukset",
+      "addBooster": "Lisää tehostus",
+      "noBoosters": "Tehostuksia ei ole määritetty.",
+      "boosterLabel": "Tehostus {index}",
+      "boostValue": "Kerroin",
+      "boostRoles": "Tehostetut roolit",
+      "requirements": "Osallistumisvaatimukset",
+      "profilePictureRequired": "Vaadi Discord-profiilikuva",
+      "cocAccountRequired": "Vaadi linkitetty Clash of Clans -tili"
+    },
+    "validation": {
+      "prizeRequired": "Palkinto vaaditaan.",
+      "channelRequired": "Kanava vaaditaan.",
+      "startTimeRequired": "Alkamisaika vaaditaan, ellei arvonta ala heti.",
+      "endTimeRequired": "Päättymisaika vaaditaan.",
+      "endAfterStart": "Päättymisajan on oltava alkamisajan jälkeen.",
+      "imageTooLarge": "Kuvan koon on oltava alle 8 Mt."
+    },
+    "preview": {
+      "liveSummary": "Ajantasainen yhteenveto",
+      "discordPreview": "Discord-esikatselu",
+      "giveawayTitle": "Arvonnan esikatselu",
+      "giveawayDescription": "Tältä aktiivisen arvonnan viesti näyttää.",
+      "endTitle": "Lopetusviestin esikatselu",
+      "endDescription": "Tämä viesti lähetetään arvonnan päättyessä.",
+      "winnerCount": "Voittajat",
+      "winnerWord": "{count, plural, one {voittaja} other {voittajaa}}",
+      "mentionCount": "Mainittavat roolit",
+      "requirementCount": "Vaatimukset",
+      "boosterCount": "Tehostukset",
+      "profileRequired": "Profiilikuva vaaditaan",
+      "accountRequired": "Linkitetty CoC-tili vaaditaan",
+      "rolesAllow": "Rajoitettu valittuihin rooleihin",
+      "rolesDeny": "Valitut roolit estetty",
+      "noChannel": "Kanavaa ei ole vielä valittu",
+      "noPrize": "Palkintosi näkyy tässä",
+      "noEmbedText": "Esikatsele arvonnan sisältöä lisäämällä upotuksen teksti.",
+      "noEndText": "Lisää voittajille lopetusviesti.",
+      "startsAt": "Alkaa: {date}",
+      "endsAt": "Päättyy: {date}",
+      "endsOn": "Päättyy {date}",
+      "endsFooter": "Päättyy",
+      "notScheduled": "Ei ajastettu",
+      "schedule": "Aikataulu",
+      "endMessage": "Voittajaviesti",
+      "endSummary": "{winners} {winners, plural, one {voittaja ilmoitetaan tässä.} other {voittajaa ilmoitetaan tässä.}}",
+      "totalParticipants": "Osallistujia yhteensä: {count}",
+      "participate": "Osallistu",
+      "buttonHint": "Ensisijainen toimintopainike, joka näkyy Discord-julkaisun alla."
+    },
+    "toast": {
+      "errorTitle": "Jokin meni pieleen",
+      "successTitle": "Onnistui",
+      "loadError": "Arvontojen lataaminen epäonnistui.",
+      "saveError": "Arvonnan tallentaminen epäonnistui.",
+      "deleteError": "Arvonnan poistaminen epäonnistui.",
+      "created": "Arvonta luotu.",
+      "updated": "Arvonta päivitetty.",
+      "deleted": "Arvonta poistettu.",
+      "rerolled": "Uudet voittajat arvottu.",
+      "rerollError": "Uusien voittajien arpominen epäonnistui."
+    },
+    "reroll": {
+      "title": "Arvo uudet voittajat",
+      "description": "Valitse korvattavat voittajat. Uudet voittajat arvotaan kelvollisista osallistujista.",
+      "selectWinners": "Valitse korvattavat voittajat:",
+      "confirm": "{count, plural, one {Arvo # voittaja uudelleen} other {Arvo # voittajaa uudelleen}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Hallintapaneelin yleiskatsaus",
+    "description": "Seuraa palvelimesi tilastoja ja aloita",
+    "stats": {
+      "linkedPlayers": "Linkitetyt pelaajat",
+      "linkedPlayersDesc": "Tälle palvelimelle linkitetyt pelaajat",
+      "clansConfigured": "Määritetyt klaanit",
+      "clansConfiguredDesc": "Palvelimella seuratut klaanit",
+      "activeRosters": "Aktiiviset kokoonpanot",
+      "activeRostersDesc": "Luodut sotakokoonpanot",
+      "totalAccounts": "Linkitetyt tilit",
+      "totalAccountsDesc": "Linkitettyjä CoC-tilejä yhteensä",
+      "playersTracked": "Seuratut pelaajat",
+      "globalPlayers": "Pelaajia tietokannassa yhteensä",
+      "clansTracked": "Seuratut klaanit",
+      "globalClans": "Klaaneja tietokannassa yhteensä",
+      "botStatus": "Botin tila",
+      "online": "Verkossa",
+      "offline": "Ei yhteyttä",
+      "memoryUsage": "Muisti: {used} Mt ({percent} %)",
+      "cpuUsage": "Suoritin: {percent} %"
+    },
+    "botSection": "Botin tilastot",
+    "clans": {
+      "title": "Klaanisi",
+      "description": "{count, plural, one {# klaani määritetty} other {# klaania määritetty}}",
+      "manage": "Hallitse klaaneja",
+      "addFirst": "Lisää ensimmäinen klaanisi"
+    },
+    "quickStart": {
+      "title": "Pika-aloitus",
+      "description": "Aloita ClashKing-botin määrittäminen",
+      "step1": {
+        "title": "Määritä yleiset asetukset",
+        "description": "Määritä lempinimien muodot, upotusten värit ja lokikanavat"
+      },
+      "step2": {
+        "title": "Lisää klaanisi",
+        "description": "Yhdistä Clash of Clans -klaanisi ja määritä roolit"
+      },
+      "step3": {
+        "title": "Määritä automaattiset roolit",
+        "description": "Määritä automaattinen roolien jako kaupungintalon, pokaalien ja muiden tietojen perusteella."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Botin tilastot",
+    "description": "ClashKing-botin maailmanlaajuiset tilastot ja järjestelmän tila",
+    "about": {
+      "title": "Tietoja näistä tilastoista",
+      "description": "Nämä ovat koko ClashKing-bottiverkoston maailmanlaajuiset tilastot",
+      "globalStats": "Maailmanlaajuiset tilastot",
+      "globalStatsDesc": "Pelaaja- ja klaanimäärät sisältävät kaikki seuratut kohteet kaikilla ClashKingiä käyttävillä Discord-palvelimilla",
+      "systemHealth": "Järjestelmän tila",
+      "systemHealthDesc": "Suorittimen ja muistin käyttö osoittavat ClashKingin API-infrastruktuurin nykyisen kuormituksen"
+    }
+  },
+  "NotFound": {
+    "title": "404 – Sivua ei löytynyt",
+    "description": "Etsimääsi sivua ei ole.",
+    "goHome": "Siirry etusivulle"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord-botti, mobiilisovellus ja klaanien hallintapaneeli",
+      "description": "Hallitse sotia, kokoonpanoja, tilejä, muistutuksia ja klaaniasetuksia ClashKingillä Discordissa, mobiilisovelluksessa ja verkossa.",
+      "openGraphTitle": "ClashKing | Johda klaaniasi"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing-navigointi",
+      "homeLabel": "ClashKingin etusivu",
+      "mobileApp": "Mobiilisovellus",
+      "discordBot": "Discord-botti",
+      "dashboard": "Hallintapaneeli"
+    },
+    "language": {
+      "label": "Kieli"
+    },
+    "appearance": {
+      "label": "Ulkonäkö",
+      "day": "Päivä",
+      "sunset": "Auringonlasku"
+    },
+    "actions": {
+      "addToDiscord": "Lisää Discordiin",
+      "addClashKing": "Lisää ClashKing",
+      "openDashboard": "Avaa hallintapaneeli",
+      "joinTestFlight": "Liity TestFlightiin",
+      "getAndroidApp": "Hanki Android-sovellus"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Johda",
+          "second": "omaa",
+          "third": "klaania."
+        },
+        "accounts": {
+          "first": "Hallitse",
+          "second": "omia",
+          "third": "tilejä."
+        },
+        "stats": {
+          "first": "Tutki",
+          "second": "kaikkia",
+          "third": "tilastoja."
+        }
+      },
+      "rotatingLabel": "Johda klaaniasi. Hallitse tilejäsi. Tutki tilastoja.",
+      "copy": "Sodat, kokoonpanot, tilit ja klaaniasetukset Discordissa, mobiilisovelluksessa ja verkossa."
+    },
+    "app": {
+      "title": "Mobiilisovellus",
+      "intro": "Clash-tiliesi kumppani.",
+      "stageLabel": "ClashKing-mobiilisovelluksen klaani-, päivitys- ja sotapienoisohjelmanäkymät",
+      "images": {
+        "clanOverview": "ClashKing-mobiilisovelluksen klaaniyleiskatsaus",
+        "upgradeStats": "ClashKing-mobiilisovelluksen Suurvartijan päivitystilastot",
+        "warWidget": "ClashKingin sotatulospienoisohjelma"
+      },
+      "features": {
+        "widgets": {
+          "title": "Pienoisohjelmat",
+          "copy": "Näe sotasi yhdellä silmäyksellä."
+        },
+        "notifications": {
+          "title": "Ilmoitukset",
+          "copy": "Saat ilmoituksen, kun hyökkäys on käytettävissä tai päivitys valmistuu."
+        },
+        "accounts": {
+          "title": "Linkitetyt tilit",
+          "copy": "Pidä kaikki Clash-tilisi yhdessä."
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord-botti",
+      "intro": "Klaanitilastot ja työkalut suoraan Discordissa.",
+      "imageLabel": "ClashKingin klaanikomento Discordissa",
+      "imageAlt": "ClashKingin klaanikomento näyttää ArcLine-klaanin tilastot Discordissa",
+      "features": {
+        "rosters": {
+          "title": "Kokoonpanot",
+          "copy": "Hallitse CWL- tai tapahtumatilejä."
+        },
+        "warTools": {
+          "title": "Sotatyökalut",
+          "copy": "Tarkista hyökkäykset, kokoonpanot ja muistutukset Discordissa."
+        },
+        "accounts": {
+          "title": "Linkitetyt tilit",
+          "copy": "Pidä kaikki Clash-tilisi yhdessä."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Hallintapaneeli",
+      "intro": "Hallitse kokoonpanoja, muistutuksia ja palvelinasetuksia yhdessä paikassa.",
+      "imageLabel": "Rakentajan maja kuvaa klaaninhallintatyökaluja",
+      "imageAlt": "Rakentajan maja tasolla 8",
+      "features": {
+        "settings": {
+          "title": "Klaaniasetukset",
+          "copy": "Määritä klaanit, roolit ja kanavat."
+        },
+        "rosters": {
+          "title": "Kokoonpanot",
+          "copy": "Hallitse CWL- tai tapahtumatilejä."
+        },
+        "automation": {
+          "title": "Automatisointi",
+          "copy": "Ajasta muistutuksia ja palvelintehtäviä."
+        }
+      }
+    },
+    "resources": {
+      "title": "Rakenna ClashKingillä.",
+      "copy": "Oppaita, lähdekoodia ja jäsenneltyä dataa yhteisötyökaluille.",
+      "ariaLabel": "Kehittäjäresurssit",
+      "documentation": "Dokumentaatio",
+      "publicApi": "Julkinen API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans -työkaluja kaikille",
+      "docs": "Dokumentaatio",
+      "privacy": "Tietosuojakäytäntö",
+      "terms": "Käyttöehdot",
+      "legal": "Tämä sisältö ei liity Supercelliin eikä ole sen hyväksymä, sponsoroima tai erikseen hyväksymä."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing Discordiin, mobiiliin ja verkkoon",
+    "privacy": {
+      "title": "Tietosuojakäytäntö | ClashKing",
+      "openGraphTitle": "ClashKingin tietosuojakäytäntö",
+      "description": "Miten ClashKing kerää, käyttää, säilyttää ja suojaa tili-, peli- ja sovellustietoja.",
+      "heading": "Tietosuojakäytäntö",
+      "eyebrow": "Voimassa 17. heinäkuuta 2026 alkaen"
+    },
+    "terms": {
+      "title": "Käyttöehdot | ClashKing",
+      "openGraphTitle": "ClashKingin käyttöehdot",
+      "description": "ClashKingin verkkosivustojen, sovellusten, palvelujen ja yhteisötyökalujen käyttöä koskevat ehdot.",
+      "heading": "Käyttöehdot",
+      "eyebrow": "ClashKingin lakitiedot"
+    }
+  }
+}

@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Läser in...",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "delete": "Ta bort",
+    "edit": "Redigera",
+    "search": "Sök",
+    "filter": "Filtrera",
+    "add": "Lägg till",
+    "remove": "Ta bort",
+    "refresh": "Uppdatera",
+    "close": "Stäng",
+    "openMenu": "Öppna menyn",
+    "submit": "Skicka",
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "previous": "Föregående",
+    "poweredBy": "Drivs av",
+    "noData": "Inga data tillgängliga",
+    "noChannelFound": "Ingen kanal hittades.",
+    "searchChannels": "Sök efter kanaler...",
+    "searchClans": "Sök efter klaner...",
+    "noClanFound": "Ingen klan hittades.",
+    "searchCategories": "Sök efter kategorier...",
+    "noRoleFound": "Ingen roll hittades.",
+    "searchRoles": "Sök efter roller...",
+    "addRole": "Lägg till roll...",
+    "error": "Ett fel uppstod",
+    "success": "Lyckades",
+    "actions": "Åtgärder",
+    "details": "Detaljer",
+    "view": "Visa",
+    "unknown": "Okänd",
+    "confirm": "Bekräfta",
+    "settings": "Inställningar",
+    "status": "Status",
+    "retry": "Försök igen",
+    "disabled": "Inaktiverad",
+    "name": "Namn",
+    "description": "Beskrivning",
+    "createdAt": "Skapad",
+    "updatedAt": "Uppdaterad",
+    "dashboard": "Instrumentpanel",
+    "loadError": "Det gick inte att läsa in data.",
+    "tryAgain": "Försök igen",
+    "create": "Skapa",
+    "viewClashProfile": "Visa Clash-profil",
+    "openInGame": "Öppna i spelet",
+    "openChannelInDiscord": "Öppna den här kanalen i Discord",
+    "playerProfile": {
+      "clan": "Klan",
+      "townHallLevel": "Rådhusnivå",
+      "trophies": "Troféer",
+      "warPreference": "Krigsinställning",
+      "warPreferenceIn": "Deltar",
+      "warPreferenceOut": "Deltar inte",
+      "signupGroup": "Anmälningsgrupp",
+      "heroLevels": "Hjältenivåer",
+      "hitrate30d": "Träffprocent, 30 dagar"
+    }
+  },
+  "Navigation": {
+    "features": "Funktioner",
+    "openSource": "Öppen källkod",
+    "help": "Behöver du hjälp?",
+    "support": "Stöd oss",
+    "commands": "Kommandon",
+    "premium": "Premium",
+    "documentation": "Dokumentation",
+    "loginWithDiscord": "Logga in med Discord",
+    "addToDiscord": "Lägg till i Discord",
+    "openDashboard": "Öppna kontrollpanelen",
+    "dashboardSettings": "Inställningar för kontrollpanelen",
+    "logout": "Logga ut",
+    "settings": "Inställningar",
+    "theme": "Tema",
+    "systemTheme": "Följ systemet",
+    "lightTheme": "Ljust tema",
+    "darkTheme": "Mörkt tema",
+    "language": "Språk",
+    "browserLanguage": "Webbläsarens språk"
+  },
+  "HomePage": {
+    "badge": "{serverCount}+ servrar använder redan ClashKing",
+    "title": "Den kraftfullaste",
+    "titleHighlight": "Clash of Clans-boten",
+    "subtitle": "Automatisera klanhanteringen, följ spelarstatistik, hantera krig och håll gemenskapen engagerad.",
+    "cta": {
+      "heading": "Redo att förändra din klan?",
+      "description": "Gå med bland de fler än {serverCount} Discord-servrar som redan använder ClashKing för att lyfta sin Clash of Clans-gemenskap. Installationen tar bara två minuter.",
+      "button": "Lägg till ClashKing i Discord",
+      "trustBadge": "Gratis för alltid • Inget kreditkort krävs • {serverCount}+ servrar",
+      "addToDiscord": "Lägg till i Discord",
+      "openDashboard": "Öppna kontrollpanelen"
+    },
+    "stats": {
+      "servers": "Discord-servrar",
+      "users": "Aktiva användare",
+      "clans": "Spårade klaner"
+    },
+    "features": {
+      "title": "Allt du behöver för att hantera din klan",
+      "subtitle": "Kraftfulla funktioner utformade särskilt för Clash of Clans-gemenskaper",
+      "autoRoles": {
+        "title": "Automatisk rollhantering",
+        "description": "Tilldela automatiskt roller utifrån spelarstatus, klanposition och prestationer. Håll enkelt ordning på servern."
+      },
+      "playerStats": {
+        "title": "Spelarstatistik",
+        "description": "Följ detaljerad spelarstatistik, utvecklingsdiagram och attackhistorik. Se vem som förbättras och vem som behöver hjälp."
+      },
+      "leaderboards": {
+        "title": "Topplistor",
+        "description": "Skapa konkurrensinriktade topplistor för donationer, troféer, krigsstjärnor och egna mätvärden. Öka engagemanget."
+      },
+      "warTracking": {
+        "title": "Krigsspårning",
+        "description": "Övervaka krigsuppställningar, följ attacker i realtid och få analyser efter kriget. Missa aldrig en krigsdetalj."
+      },
+      "smartReminders": {
+        "title": "Smarta påminnelser",
+        "description": "Automatiska påminnelser för klanspelen, krigsattacker, klankrigsligan och egna evenemang. Håll alla informerade."
+      },
+      "customization": {
+        "title": "Fullständig anpassning",
+        "description": "Anpassa kommandon, färger på inbäddningar, smeknamn och behörigheter. Gör ClashKing till ditt."
+      },
+      "familyManagement": {
+        "title": "Familjehantering",
+        "description": "Hantera flera klaner som en familj med klanöverskridande statistik, delade topplistor och gemensamma roller."
+      },
+      "analytics": {
+        "title": "Avancerad analys",
+        "description": "Få djupa insikter i klanens resultat, spelarnas aktivitetsmönster och tillväxttrender. Fatta databaserade beslut."
+      },
+      "performance": {
+        "title": "Blixtsnabb",
+        "description": "Byggd för prestanda med omedelbara kommandosvar och uppdateringar i realtid. Ingen fördröjning och inga väntetider."
+      },
+      "security": {
+        "title": "Säker och tillförlitlig",
+        "description": "99,9 % drifttid, krypterade data och regelbundna säkerhetskopior. Din klans data är säkra hos oss."
+      }
+    },
+    "footer": {
+      "tagline": "Den kraftfullaste Clash of Clans-boten för Discord-gemenskaper.",
+      "about": {
+        "title": "Om",
+        "features": "Funktioner",
+        "help": "Behöver du hjälp?",
+        "openSource": "Öppen källkod",
+        "support": "Stöd oss"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Instrumentpanel",
+        "inviteBot": "Bjud in boten"
+      },
+      "resources": {
+        "title": "Resurser",
+        "documentation": "Dokumentation",
+        "quickStart": "Snabbstartsguide",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Gemenskap",
+        "discord": "Discord-server",
+        "twitter": "X (Twitter)",
+        "reportBug": "Rapportera ett fel",
+        "requestFeature": "Föreslå en funktion"
+      },
+      "legal": {
+        "copyright": "ClashKing. Alla rättigheter förbehållna.",
+        "privacy": "Integritetspolicy",
+        "terms": "Användarvillkor"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Inte på servern",
+    "unknownUser": "Okänd användare",
+    "notLinked": "Inte länkad",
+    "status": {
+      "onServer": "På servern",
+      "notOnServer": "Inte på servern"
+    },
+    "discordId": "Discord-ID",
+    "viewProfile": "Visa Discord-profil",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Översikt",
+      "description": "Kontrollpanelens startsida"
+    },
+    "general": {
+      "name": "Allmänna inställningar",
+      "description": "Serverkonfiguration"
+    },
+    "dashboardAccess": {
+      "name": "Åtkomst till kontrollpanelen",
+      "description": "Delegera delar av kontrollpanelen"
+    },
+    "familySettings": {
+      "name": "Familjeinställningar",
+      "description": "Familjeroller och smeknamn"
+    },
+    "clans": {
+      "name": "Klaner",
+      "description": "Hantera dina klaner"
+    },
+    "logs": {
+      "name": "Loggar",
+      "description": "Webhook-konfiguration"
+    },
+    "roles": {
+      "name": "Roller",
+      "description": "Rollautomatisering"
+    },
+    "reminders": {
+      "name": "Påminnelser",
+      "description": "Alla typer av påminnelser"
+    },
+    "rosters": {
+      "name": "Laguppställningar",
+      "description": "Hantering av laguppställningar"
+    },
+    "bases": {
+      "name": "Baser",
+      "description": "Layoutbibliotek och engagemang"
+    },
+    "autoboards": {
+      "name": "Automatiska topplistor",
+      "description": "Automatiserade topplistor"
+    },
+    "giveaways": {
+      "name": "Utlottningar",
+      "description": "Hantera utlottningar"
+    },
+    "panels": {
+      "name": "Paneler",
+      "description": "Interaktiva medlemspaneler med åtgärdsknappar"
+    },
+    "tickets": {
+      "name": "Ärenden",
+      "description": "Rekryterings- och supportärenden"
+    },
+    "embeds": {
+      "name": "Inbäddningar",
+      "description": "Mallar för Discord-inbäddningar"
+    },
+    "links": {
+      "name": "Länkar",
+      "description": "Länkning mellan spelare och Discord"
+    },
+    "bans": {
+      "name": "Avstängningar och varningar",
+      "description": "Modereringsverktyg"
+    },
+    "wars": {
+      "name": "Krig",
+      "description": "Krigsstatistik"
+    },
+    "leaderboards": {
+      "name": "Topplistor",
+      "description": "Globala rankningar"
+    },
+    "sections": {
+      "configuration": "Konfiguration",
+      "clanManagement": "Klanhantering",
+      "playerManagement": "Spelarhantering",
+      "automation": "Automatisering",
+      "statistics": "Statistik"
+    },
+    "switchServer": "Byt server",
+    "goHome": "Startsida"
+  },
+  "BasesPage": {
+    "eyebrow": "Klanhantering",
+    "title": "Baser",
+    "description": "Granska delade layouter, aktivitetshistorik och källmeddelanden i Discord.",
+    "refresh": "Uppdatera",
+    "create": "Lägg till bas",
+    "retry": "Försök igen",
+    "dismiss": "Stäng",
+    "cancel": "Avbryt",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "pagination": "Sida {page} av {total}",
+    "imageAlt": "Bild {index} av baslayout",
+    "noDescription": "Ingen beskrivning angiven.",
+    "openLayout": "Öppna layout",
+    "openMessage": "Discord-meddelande",
+    "summary": {
+      "total": "Totalt antal baser",
+      "page": "Aktuell sida",
+      "visible": "Synliga"
+    },
+    "counts": {
+      "downloads": "Unika nedladdningar",
+      "upvotes": "Uppröster",
+      "downvotes": "Nedröster"
+    },
+    "history": {
+      "title": "Nedladdningshistorik ({count})",
+      "empty": "Inga ID:n för nedladdare har registrerats.",
+      "resolve": "Hitta profil"
+    },
+    "delete": {
+      "action": "Ta bort",
+      "confirmTitle": "Ta bort den här basen?",
+      "confirmDescription": "Detta tar permanent bort databasposten efter ett första försök att radera dess källmeddelande i Discord. Basen kan inte återställas.",
+      "confirmAction": "Ta bort bas",
+      "deleting": "Tar bort…",
+      "baseId": "Bas-ID",
+      "discordSource": "Discord-källa",
+      "successTitle": "Basen har tagits bort",
+      "successDeleted": "Databasposten och Discord-meddelandet togs bort.",
+      "successAlreadyMissing": "Databasposten togs bort; Discord-meddelandet saknades redan.",
+      "cleanupFailedTitle": "Basen behölls; Discord-rensningen misslyckades",
+      "cleanupCompleteTitle": "Discord-rensningen slutfördes; basen behölls",
+      "failureTitle": "Basen togs inte bort",
+      "failureFallback": "Borttagningsbegäran misslyckades.",
+      "retryable": "Det går säkert att försöka igen",
+      "notRetryable": "Det går inte att försöka igen",
+      "cleanup": {
+        "deleted": "Discord-meddelandet har tagits bort",
+        "alreadyMissing": "Discord-meddelandet saknas redan",
+        "failed": "Discord-rensningen misslyckades"
+      }
+    },
+    "empty": {
+      "title": "Inga baser har delats ännu",
+      "description": "Lägg till den första layouten genom att välja dess Discord-kanal och Clash of Clans-layoutlänk."
+    },
+    "form": {
+      "title": "Lägg till en bas",
+      "description": "Baser kan inte redigeras efter att de har skapats. Välj var ClashKing ska publicera Discord-meddelandet och bekräfta layoutlänken.",
+      "channel": "Discord-kanal",
+      "channelPlaceholder": "Välj en kanal",
+      "channelSearch": "Sök efter kanaler…",
+      "channelsLoading": "Läser in kanaler…",
+      "baseLink": "Layoutlänk",
+      "descriptionLabel": "Beskrivning",
+      "images": "Bilder",
+      "chooseImages": "Välj layoutbilder",
+      "imageLimit": "Högst fyra bilder; uppladdningarna slutförs innan basen skapas.",
+      "submit": "Skapa bas",
+      "creating": "Laddar upp och skapar…",
+      "createRejectedTitle": "Basen skapades inte",
+      "createCleanupCompleteTitle": "Discord-rensningen slutfördes; basen skapades inte",
+      "createCleanupFailedTitle": "Discord-meddelandet kan finnas kvar; basen skapades inte",
+      "databaseNotInserted": "Databasposten infogades inte",
+      "discordMessageCreated": "Discord-meddelandet skapades",
+      "discordMessageId": "Discord-meddelande-ID",
+      "retryable": "Det går säkert att försöka igen",
+      "notRetryable": "Försök inte igen automatiskt",
+      "cleanup": {
+        "notNeeded": "Discord-rensning behövs inte",
+        "deleted": "Discord-meddelandet har tagits bort",
+        "alreadyMissing": "Discord-meddelandet saknas redan",
+        "failed": "Discord-rensningen misslyckades"
+      }
+    },
+    "errors": {
+      "title": "Baser är inte tillgängliga",
+      "load": "Det gick inte att läsa in baserna.",
+      "create": "Det gick inte att skapa basen.",
+      "upload": "Det gick inte att ladda upp en bild.",
+      "downloader": "Det gick inte att hitta den här nedladdaren.",
+      "channels": "Det gick inte att läsa in Discord-kanaler.",
+      "channelRequired": "Välj en Discord-kanal.",
+      "linkRequired": "Layoutlänk krävs.",
+      "descriptionTooLong": "Beskrivningen får innehålla högst 1 000 tecken.",
+      "tooManyImages": "Välj högst fyra bilder."
+    }
+  },
+  "BansPage": {
+    "title": "Moderering",
+    "description": "Hantera avstängningar och varningar för spelare",
+    "viewClashProfile": "Visa Clash-profil",
+    "tabs": {
+      "bans": "Avstängningar",
+      "strikes": "Varningar"
+    },
+    "bans": {
+      "title": "Avstängda spelare",
+      "noBans": "Inga avstängda spelare hittades",
+      "addBan": "Lägg till avstängning",
+      "removeBan": "Ta bort avstängning",
+      "confirmRemove": "Är du säker på att du vill ta bort den här avstängningen?",
+      "playerTag": "Spelartagg",
+      "playerName": "Spelarnamn",
+      "reason": "Orsak",
+      "bannedAt": "Avstängd den",
+      "search": "Sök efter namn eller tagg...",
+      "howItWorks": {
+        "title": "Så fungerar avstängningar",
+        "description": "Om en avstängd spelare går med i en av dina klaner skickas en varning till klankanalen som du ställde in på <clansTab>klanfliken</clansTab>. Boten kan inte hindra spelare från att gå med, utan endast skicka en varning."
+      },
+      "stats": {
+        "total": "Totalt antal avstängningar",
+        "recent": "Senaste avstängningarna (7 dagar)",
+        "commonReason": "Vanligaste orsaken",
+        "activeOnServer": "Aktiva avstängningar på servern",
+        "last7Days": "Under de senaste 7 dagarna",
+        "commonReasonValue": "Trakasserier och toxicitet",
+        "noBans": "Inga avstängningar ännu",
+        "percentOfAll": "{percent} % av alla avstängningar",
+        "percentOfAllLabel": "av alla avstängningar"
+      },
+      "list": {
+        "title": "Avstängda spelare",
+        "count": "{count, plural, one {# avstängd spelare} other {# avstängda spelare}}",
+        "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
+        "noBansFound": "Inga avstängningar hittades",
+        "noBans": "Inga avstängda spelare",
+        "adjustSearch": "Försök att ändra sökningen",
+        "getStarted": "Lägg till en avstängning för att börja moderera spelare"
+      },
+      "table": {
+        "player": "Spelare",
+        "reason": "Orsak",
+        "bannedBy": "Avstängd av",
+        "date": "Datum",
+        "daysAgo": "För {days} dygn sedan",
+        "noReason": "Ingen orsak angiven"
+      },
+      "addDialog": {
+        "title": "Stäng av en spelare",
+        "description": "Lägg till en spelare i avstängningslistan. Du får en varning om spelaren går med i någon klan på den här servern.",
+        "playerTagLabel": "Spelartagg",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Spelarnamn (valfritt)",
+        "playerNamePlaceholder": "Ange spelarens namn",
+        "reasonLabel": "Orsak till avstängningen",
+        "reasonPlaceholder": "Förklara varför spelaren stängs av...",
+        "submit": "Stäng av spelare"
+      },
+      "bestPractices": {
+        "title": "Rekommenderade metoder",
+        "document": {
+          "title": "Dokumentera noggrant:",
+          "desc": "Ange alltid en utförlig orsak till varje avstängning så att andra moderatorer förstår sammanhanget."
+        },
+        "review": {
+          "title": "Granska regelbundet:",
+          "desc": "Granska avstängningslistan regelbundet för att säkerställa att alla avstängningar fortfarande är nödvändiga och motiverade."
+        },
+        "consistent": {
+          "title": "Var konsekvent:",
+          "desc": "Tillämpa avstängningar rättvist och konsekvent för alla spelare för att bevara en sund gemenskap."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Spelarvarningar",
+      "noStrikes": "Inga varningar hittades",
+      "addStrike": "Lägg till varning",
+      "removeStrike": "Ta bort varning",
+      "confirmRemove": "Är du säker på att du vill ta bort den här varningen?",
+      "playerTag": "Spelartagg",
+      "reason": "Orsak",
+      "weight": "Vikt",
+      "rolloverDays": "Giltighetstid i dagar",
+      "createdAt": "Skapad",
+      "search": "Sök efter spelartagg...",
+      "howItWorks": {
+        "title": "Så fungerar varningar",
+        "description": "Varningar ges till spelare vid regelbrott. Varje varning har en vikt (allvarlighetsgrad) och kan valfritt upphöra efter ett bestämt antal dagar. Varningarna hjälper till att följa spelarens beteende innan en avstängning utfärdas."
+      },
+      "stats": {
+        "total": "Totalt antal varningar",
+        "recent": "Senaste varningarna (7 dagar)",
+        "totalWeight": "Varningarnas totala vikt",
+        "activeOnServer": "Aktiva varningar på servern",
+        "last7Days": "Under de senaste 7 dagarna",
+        "cumulativeWeight": "Sammanlagd varningsvikt",
+        "commonReason": "Vanligaste orsaken",
+        "commonReasonValue": "Skräppost"
+      },
+      "list": {
+        "title": "Spelarvarningar",
+        "count": "{count, plural, one {# utfärdad varning} other {# utfärdade varningar}}",
+        "searchPlaceholder": "Sök efter namn, tagg eller orsak...",
+        "noStrikesFound": "Inga varningar hittades",
+        "noStrikes": "Inga varningar utfärdade",
+        "adjustSearch": "Försök att ändra sökningen",
+        "getStarted": "Lägg till en varning för att börja följa spelaröverträdelser",
+        "viewAll": "Alla varningar",
+        "viewGrouped": "Efter spelare"
+      },
+      "table": {
+        "player": "Spelare",
+        "reason": "Orsak",
+        "weight": "Vikt",
+        "addedBy": "Tillagd av",
+        "date": "Datum",
+        "expires": "Upphör",
+        "never": "Aldrig",
+        "noReason": "Ingen orsak angiven",
+        "daysAgo": "För {days} dygn sedan",
+        "totalStrikes": "Totalt antal varningar",
+        "totalWeight": "Total vikt",
+        "lastStrike": "Senaste varningen"
+      },
+      "addDialog": {
+        "title": "Lägg till en varning",
+        "description": "Utfärda en varning till en spelare. Varningar kan ha olika vikt och slutdatum.",
+        "playerTagLabel": "Spelartagg",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Orsak",
+        "reasonPlaceholder": "Förklara varför varningen utfärdas...",
+        "weightLabel": "Varningens vikt",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Upphör om (dagar)",
+        "rolloverPlaceholder": "Valfritt",
+        "submit": "Lägg till varning"
+      },
+      "guidelines": {
+        "title": "Riktlinjer för varningar",
+        "weights": {
+          "title": "Använd vikter klokt:",
+          "desc": "Tilldela högre vikt (2–3) vid allvarliga överträdelser och lägre vikt (1) vid mindre problem."
+        },
+        "expiration": {
+          "title": "Ange slutdatum:",
+          "desc": "Överväg att ange slutdatum för varningar så att spelare får möjlighet att förbättra sitt beteende över tid."
+        },
+        "patterns": {
+          "title": "Följ mönster:",
+          "desc": "Använd varningar för att identifiera återkommande regelbrytare innan du går vidare till permanenta avstängningar."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Avstängningen har lagts till",
+      "banRemoved": "Avstängningen har tagits bort",
+      "strikeAdded": "Varningen har lagts till",
+      "strikeRemoved": "Varningen har tagits bort",
+      "errorLoadingBans": "Det gick inte att läsa in avstängda spelare",
+      "errorLoadingStrikes": "Det gick inte att läsa in varningar",
+      "errorAddingBan": "Det gick inte att lägga till avstängningen",
+      "errorAddingStrike": "Det gick inte att lägga till varningen",
+      "errorRemovingBan": "Det gick inte att ta bort avstängningen",
+      "errorRemovingStrike": "Det gick inte att ta bort varningen"
+    }
+  },
+  "RostersPage": {
+    "title": "Laguppställningar",
+    "description": "Hantera krigsuppställningar och medlemstilldelningar",
+    "stats": {
+      "totalRosters": "Totalt antal laguppställningar",
+      "totalMembers": "Totalt antal medlemmar",
+      "clanRosters": "Klanuppställningar",
+      "familyRosters": "Familjeuppställningar",
+      "members": "Medlemmar",
+      "avgTh": "Genomsnittligt RH",
+      "avgHitrate": "Genomsnittlig träffprocent",
+      "distribution": "Fördelning",
+      "clan": "Klan",
+      "family": "Familj",
+      "external": "Extern",
+      "thDistribution": "Rådhusfördelning",
+      "capacity": "kapacitet"
+    },
+    "filters": {
+      "search": "Sök laguppställningar...",
+      "type": "Typ",
+      "all": "Alla",
+      "clan": "Klan",
+      "family": "Familj",
+      "clear": "Rensa"
+    },
+    "comparisonMode": {
+      "cancel": "Avbryt",
+      "compare": "Jämför",
+      "compareRosters": "Jämför laguppställningar",
+      "selectRosters": "Välj laguppställningar",
+      "selectRostersDesc": "Välj minst två laguppställningar att jämföra",
+      "maxReached": "Maxgränsen har nåtts",
+      "maxReachedDesc": "Du kan jämföra högst fyra laguppställningar åt gången"
+    },
+    "createDialog": {
+      "title": "Skapa ny laguppställning",
+      "description": "Skapa en ny laguppställning för din klan",
+      "aliasLabel": "Laguppställningens namn",
+      "aliasPlaceholder": "t.ex. CWL-uppställning",
+      "typeLabel": "Typ av laguppställning",
+      "typeClan": "Klan",
+      "typeFamily": "Familj",
+      "signupScopeLabel": "Anmälningsomfattning",
+      "scopeClanOnly": "Endast klanen",
+      "scopeFamilyWide": "Hela familjen",
+      "clanLabel": "Klan",
+      "clanPlaceholder": "Välj en klan",
+      "descriptionLabel": "Beskrivning (valfritt)",
+      "descriptionPlaceholder": "Beskrivning av laguppställningen...",
+      "cancel": "Avbryt",
+      "creating": "Skapar...",
+      "create": "Skapa laguppställning"
+    },
+    "editDialog": {
+      "title": "Redigera laguppställning",
+      "description": "Ändra laguppställningens inställningar och konfiguration",
+      "aliasLabel": "Laguppställningens namn",
+      "descriptionLabel": "Beskrivning",
+      "descriptionPlaceholder": "Beskrivning av laguppställningen...",
+      "minThLabel": "Lägsta rådhusnivå",
+      "minThPlaceholder": "t.ex. 13",
+      "maxThLabel": "Högsta rådhusnivå",
+      "maxThPlaceholder": "t.ex. 16",
+      "rosterSizeLabel": "Laguppställningens storlek",
+      "rosterSizePlaceholder": "t.ex. 50",
+      "columnsLabel": "Visade kolumner",
+      "columnsPlaceholder": "Välj kolumner att visa",
+      "sortLabel": "Sorteringsordning",
+      "sortPlaceholder": "Välj sorteringsfält",
+      "cancel": "Avbryt",
+      "saving": "Sparar...",
+      "save": "Spara ändringar"
+    },
+    "addMembersDialog": {
+      "title": "Lägg till medlemmar i laguppställningen",
+      "description": "Välj medlemmar från klanen eller ange spelartaggar",
+      "bulkTagsLabel": "Lägg till flera via taggar",
+      "bulkTagsPlaceholder": "Ange spelartaggar (en per rad eller kommaseparerade)",
+      "searchLabel": "Sök medlemmar",
+      "searchPlaceholder": "Sök efter namn eller tagg...",
+      "selectFromClan": "Välj bland klanmedlemmar",
+      "selectedCount": "Valda",
+      "noMembers": "Inga medlemmar tillgängliga",
+      "noMembersSelected": "Inga medlemmar har valts",
+      "noMembersSelectedDesc": "Välj medlemmar eller ange spelartaggar.",
+      "cancel": "Avbryt",
+      "adding": "Lägger till...",
+      "add": "Lägg till medlemmar"
+    },
+    "detailsDialog": {
+      "title": "Information om laguppställningen",
+      "edit": "Redigera",
+      "refresh": "Uppdatera",
+      "refreshing": "Uppdaterar...",
+      "delete": "Ta bort",
+      "deleting": "Tar bort...",
+      "addMembers": "Lägg till medlemmar",
+      "close": "Stäng",
+      "noMembers": "Inga medlemmar i den här laguppställningen",
+      "noMembersDesc": "Lägg till medlemmar för att komma igång",
+      "memberCount": "Medlemmar",
+      "thRestriction": "Rådhusnivå",
+      "avgTh": "Genomsnittligt RH",
+      "avgHitrate": "Genomsnittlig träffprocent",
+      "clan": "Klan",
+      "family": "Familj",
+      "external": "Extern",
+      "substitute": "RES",
+      "removeMember": "Ta bort"
+    },
+    "rosterCard": {
+      "members": "Medlemmar",
+      "thLevel": "Rådhusnivå",
+      "avgTh": "Genomsnittligt RH",
+      "avgHitrate": "Genomsnittlig träffprocent",
+      "clan": "Klan",
+      "family": "Familj",
+      "external": "Extern",
+      "noRestriction": "Ingen begränsning",
+      "view": "Visa",
+      "edit": "Redigera",
+      "delete": "Ta bort",
+      "noGroup": "Ingen grupp",
+      "moveToGroup": "Flytta till grupp",
+      "clone": "Klona",
+      "allRosters": "Alla laguppställningar",
+      "manageRosters": "Hantera dina krigsuppställningar"
+    },
+    "memberColumns": {
+      "name": "Namn",
+      "townhall": "Rådhus",
+      "tag": "Tagg",
+      "hitrate": "Träffprocent",
+      "current_clan": "Nuvarande klan",
+      "current_clan_tag": "Klantagg",
+      "discord": "Discord",
+      "hero_lvs": "Hjältar",
+      "war_pref": "Krigsdeltagande",
+      "trophies": "Troféer",
+      "signup_group": "Anmälningsgrupp"
+    },
+    "columns": {
+      "configure": "Kolumner",
+      "title": "Konfigurera kolumner",
+      "description": "Välj vilka kolumner som ska visas och i vilken ordning",
+      "selected": "Valda kolumner",
+      "available": "Tillgängliga kolumner",
+      "save": "Spara kolumner",
+      "reset": "Återställ kolumner"
+    },
+    "sortFields": {
+      "townhall": "Rådhusnivå",
+      "name": "Namn",
+      "tag": "Tagg",
+      "heroLvs": "Hjältar",
+      "trophies": "Troféer",
+      "hitrate": "Träffprocent, 30 dagar",
+      "currentClanTag": "Klantagg",
+      "addedAt": "Tillagd den"
+    },
+    "thRestrictions": {
+      "only": "Endast RH{th}",
+      "range": "RH{min}–{max}",
+      "minimum": "RH{th}+",
+      "maximum": "RH1–{th}",
+      "noRestriction": "Ingen begränsning"
+    },
+    "emptyState": {
+      "noRosters": "Inga laguppställningar har skapats ännu",
+      "noRostersDesc": "Skapa din första laguppställning för att komma igång",
+      "noMatch": "Inga laguppställningar matchar filtren",
+      "noMatchDesc": "Försök att ändra sökningen eller filtervillkoren"
+    },
+    "toast": {
+      "errorTitle": "Fel",
+      "successTitle": "Lyckades",
+      "errorLoadingRosters": "Det gick inte att läsa in laguppställningarna. Försök igen.",
+      "errorLoadingMembers": "Det gick inte att läsa in klanmedlemmarna.",
+      "rosterCreated": "Laguppställningen har skapats!",
+      "errorCreatingRoster": "Det gick inte att skapa laguppställningen. Försök igen.",
+      "rosterUpdated": "Laguppställningen har uppdaterats!",
+      "errorUpdatingRoster": "Det gick inte att uppdatera laguppställningen. Försök igen.",
+      "rosterDeleted": "Laguppställningen har tagits bort!",
+      "errorDeletingRoster": "Det gick inte att ta bort laguppställningen. Försök igen.",
+      "membersAdded": "Lade till {count} spelare i laguppställningen!",
+      "errorAddingMembers": "Det gick inte att lägga till medlemmar. Försök igen.",
+      "memberRemoved": "Medlemmen har tagits bort från laguppställningen!",
+      "errorRemovingMember": "Det gick inte att ta bort medlemmen. Försök igen.",
+      "substituteMarked": "Medlemmen har markerats som reserv!",
+      "substituteUnmarked": "Medlemmen är inte längre markerad som reserv!",
+      "errorUpdatingMember": "Det gick inte att uppdatera medlemmen. Försök igen.",
+      "rosterRefreshed": "Laguppställningens data har uppdaterats!",
+      "errorRefreshingRoster": "Det gick inte att uppdatera laguppställningens data. Försök igen.",
+      "memberTransferred": "Medlemmen har flyttats mellan laguppställningarna!",
+      "errorTransferringMember": "Det gick inte att flytta medlemmen. Försök igen.",
+      "rosterCloned": "Laguppställningen har klonats!",
+      "errorCloningRoster": "Det gick inte att klona laguppställningen. Försök igen.",
+      "missingMembersAdded": "Saknade medlemmar tillagda i laguppställningen: {count}!",
+      "errorLoadingMissingMembers": "Det gick inte att läsa in saknade medlemmar."
+    },
+    "cloneDialog": {
+      "title": "Klona laguppställning",
+      "description": "Skapa en kopia av den här laguppställningen",
+      "aliasLabel": "Den nya laguppställningens namn",
+      "aliasPlaceholder": "Ange namn för den klonade laguppställningen",
+      "copyMembers": "Kopiera medlemmar till den nya laguppställningen",
+      "memberCount": "Antal medlemmar: {count}",
+      "originalRoster": "Ursprunglig laguppställning:",
+      "cancel": "Avbryt",
+      "cloning": "Klonar...",
+      "clone": "Klona laguppställning",
+      "copyMembersHint": "Medlemmarna kopieras från den ursprungliga laguppställningen"
+    },
+    "missingMembers": {
+      "title": "Saknade medlemmar",
+      "description": "Klanmedlemmar som inte är registrerade i den här laguppställningen",
+      "coverage": "Laguppställningens täckning",
+      "registered": "registrerade",
+      "missing": "saknas",
+      "total": "totalt",
+      "selectAll": "Välj alla",
+      "selected": "valda",
+      "addSelected": "Lägg till valda medlemmar ({count})",
+      "button": "Saknade medlemmar",
+      "addAll": "Lägg till alla",
+      "adding": "Lägger till...",
+      "close": "Stäng",
+      "allCaughtUp": "Allt är klart!",
+      "allCaughtUpDesc": "Alla klanmedlemmar är registrerade i den här laguppställningen",
+      "clanOnly": "Analys av saknade medlemmar är endast tillgänglig för klanuppställningar",
+      "error": "Det gick inte att läsa in saknade medlemmar",
+      "thisRoster": "Den här laguppställningen",
+      "wholeGroup": "Hela gruppen"
+    },
+    "eventTime": {
+      "label": "Evenemangets starttid",
+      "timezone": "Din tidszon",
+      "utc": "UTC",
+      "clear": "Rensa"
+    },
+    "bulkValidation": {
+      "valid": "giltiga",
+      "invalid": "ogiltiga",
+      "invalidTags": "Ogiltiga"
+    },
+    "memberAutocomplete": {
+      "label": "Eller sök bland servermedlemmar",
+      "placeholder": "Klicka för att söka efter medlemmar...",
+      "searchPlaceholder": "Sök efter namn, tagg eller klan...",
+      "loading": "Läser in medlemmar...",
+      "noResults": "Inga medlemmar hittades",
+      "groupHeading": "Servermedlemmar",
+      "selectedLabel": "Valda medlemmar",
+      "membersSelected": "medlemmar valda",
+      "selected": "Vald",
+      "clanMembersLabel": "Eller välj bland klanmedlemmar"
+    },
+    "retry": "Försök igen",
+    "back": "Tillbaka",
+    "refresh": "Uppdatera",
+    "createRoster": "Skapa laguppställning",
+    "searchPlaceholder": "Sök laguppställningar...",
+    "noRosters": "Inga laguppställningar ännu",
+    "noRostersHint": "Skapa din första laguppställning för att komma igång",
+    "noSearchResults": "Inga laguppställningar hittades",
+    "noSearchResultsHint": "Försök med ett annat sökord",
+    "createFirstRoster": "Skapa den första laguppställningen",
+    "deleteConfirm": "Är du säker på att du vill ta bort ”{name}”?",
+    "deleteSuccess": "Laguppställningen har tagits bort",
+    "deleteSuccessDesc": "Laguppställningen ”{name}” har tagits bort",
+    "deleteError": "Det gick inte att ta bort laguppställningen",
+    "createSuccess": "Laguppställningen har skapats",
+    "createSuccessDesc": "Laguppställningen ”{name}” har skapats",
+    "createError": "Det gick inte att skapa laguppställningen",
+    "createErrorAlias": "Ange ett namn på laguppställningen",
+    "createErrorClan": "Välj en klan",
+    "refreshSuccess": "Laguppställningens data har uppdaterats",
+    "refreshError": "Det gick inte att uppdatera laguppställningen",
+    "saveSuccess": "Inställningarna har sparats",
+    "saveError": "Det gick inte att spara inställningarna",
+    "columnsUpdated": "Kolumnerna har uppdaterats",
+    "columnsError": "Det gick inte att uppdatera kolumnerna",
+    "addMembersSuccess": "Medlemmar har lagts till",
+    "addMembersSuccessDesc": "Lade till {count} spelare i laguppställningen",
+    "addMembersError": "Det gick inte att lägga till medlemmar",
+    "removeMemberSuccess": "Medlemmen har tagits bort",
+    "removeMemberError": "Det gick inte att ta bort medlemmen",
+    "clearMembers": "Ta bort alla medlemmar",
+    "clearMembersConfirm": "Ta bort alla medlemmar från ”{name}”? Detta kan inte ångras.",
+    "clearMembersSuccess": "Alla medlemmar har tagits bort",
+    "clearMembersError": "Det gick inte att ta bort alla medlemmar",
+    "automationCreated": "Automatiseringen har skapats",
+    "automationUpdated": "Automatiseringen har uppdaterats",
+    "automationDeleted": "Automatiseringen har tagits bort",
+    "automationError": "Automatiseringsfel",
+    "groupCreated": "Gruppen har skapats",
+    "groupUpdated": "Gruppen har uppdaterats",
+    "groupDeleted": "Gruppen har tagits bort",
+    "groupError": "Det gick inte att spara gruppen",
+    "categoryCreated": "Kategorin har skapats",
+    "categoryUpdated": "Kategorin har uppdaterats",
+    "categoryDeleted": "Kategorin har tagits bort",
+    "categoryError": "Det gick inte att spara kategorin",
+    "common": {
+      "cancel": "Avbryt",
+      "save": "Spara",
+      "close": "Stäng"
+    },
+    "tabs": {
+      "members": "Medlemmar",
+      "automations": "Automatiseringar",
+      "groups": "Grupper",
+      "categories": "Kategorier",
+      "settings": "Inställningar"
+    },
+    "members": {
+      "count": "medlemmar",
+      "noMembers": "Inga medlemmar i den här laguppställningen",
+      "noMembersHint": "Lägg till medlemmar för att komma igång",
+      "actions": "Åtgärder",
+      "viewList": "Listvy",
+      "viewGrouped": "Visa efter anmälningskategori",
+      "unassigned": "Ej tilldelade",
+      "dragHere": "Dra medlemmar hit",
+      "clickToGroup": "Klicka för att visa efter kategori",
+      "apiErrorTooltip": "Data kunde inte hämtas från API:t",
+      "staleDataTooltip": "Data kan vara inaktuella, senast uppdaterade:",
+      "refresh": "Uppdatera medlemsdata",
+      "alsoIn": "Även i",
+      "addCategory": "Lägg till grupp",
+      "removeCategory": "Ta bort grupp"
+    },
+    "addMembers": {
+      "title": "Lägg till medlemmar i laguppställningen",
+      "description": "Välj medlemmar från dina klaner eller ange spelartaggar",
+      "bulkTagsLabel": "Spelartaggar (en per rad eller kommaseparerade)",
+      "adding": "Lägger till...",
+      "submit": "Lägg till medlemmar"
+    },
+    "compare": {
+      "enterMode": "Jämför",
+      "modeTitle": "Jämförelseläge",
+      "modeHint": "Klicka på laguppställningar för att välja dem (2 till 4 laguppställningar)",
+      "exitMode": "Avbryt",
+      "selected": "laguppställningar valda",
+      "button": "Jämför",
+      "title": "Jämför laguppställningar",
+      "dragToMove": "Dra och släpp medlemmar mellan laguppställningar för att flytta dem",
+      "loadError": "Det gick inte att läsa in laguppställningarna",
+      "memberMoved": "Medlemmen har flyttats",
+      "memberMovedDesc": "{name} flyttades från {from} till {to}",
+      "moveError": "Det gick inte att flytta medlemmen",
+      "selectAtLeast2": "Välj minst två laguppställningar att jämföra",
+      "moving": "Flyttar medlem...",
+      "compareGroup": "Jämför grupp",
+      "dragToMoveCategory": "Dra medlemmar mellan laguppställningar och kategorier",
+      "categoryChanged": "Kategorin har ändrats",
+      "categoryChangedDesc": "{name} flyttades till {category}",
+      "uncategorized": "Utan kategori"
+    },
+    "ungrouped": "Utan grupp",
+    "automations": {
+      "description": "Schemalägg automatiska åtgärder för den här laguppställningen",
+      "create": "Skapa automatisering",
+      "empty": "Inga automatiseringar",
+      "emptyHint": "Skapa en automatisering för att schemalägga åtgärder",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "executed": "Klar",
+      "missed": "Missad",
+      "lastRun": "Senaste körningen",
+      "enable": "Aktivera",
+      "disable": "Inaktivera",
+      "createTitle": "Skapa automatisering",
+      "editTitle": "Redigera automatisering",
+      "createDesc": "Schemalägg en automatisk åtgärd",
+      "actionType": "Åtgärdstyp",
+      "offsetFromEvent": "Tid i förhållande till evenemanget",
+      "offsetBefore": "Före evenemanget",
+      "offsetAfter": "Efter evenemanget",
+      "offsetUnit_minutes": "minuter",
+      "offsetUnit_hours": "timmar",
+      "offsetUnit_days": "dagar",
+      "offsetPreview": "Körs: {date}",
+      "offsetNoEventDate": "Ange evenemangets starttid i inställningarna för att förhandsgranska körningsdatumet",
+      "offsetAtStart": "När evenemanget börjar",
+      "pingType": "Typ av påminnelse",
+      "pingType_signup_reminder": "Anmälningspåminnelse",
+      "pingType_missing": "Saknas i klanen",
+      "pingType_sub_needed": "Reserv behövs",
+      "channel": "Discord-kanal",
+      "selectChannel": "Välj en kanal",
+      "channelHint": "Kanal där åtgärden publiceras eller körs",
+      "activeLabel": "Aktiv",
+      "target": "Mål",
+      "targetThisRoster": "Den här laguppställningen",
+      "targetGroups": "Grupper",
+      "targetHint": "Tillämpa automatiseringen endast på den här laguppställningen eller på alla i en grupp",
+      "group": "Grupp",
+      "groupAutomationHint": "Hantera via fliken Grupper",
+      "targetRoster": "Laguppställning",
+      "targetGroup": "Grupp",
+      "willExecute": "Körs vid den schemalagda tiden",
+      "paused": "Pausad – kommer inte att köras",
+      "actions": {
+        "ping": "Skicka påminnelse",
+        "post": "Publicera laguppställning",
+        "openSignup": "Öppna anmälningar",
+        "closeSignup": "Stäng anmälningar",
+        "delete": "Ta bort laguppställning",
+        "clear": "Ta bort medlemmar",
+        "archive": "Arkivera laguppställning"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Skickar en påminnelse till medlemmar som inte har anmält sig eller befinner sig i fel klan",
+        "roster_post": "Publicerar den slutliga laguppställningen i den valda kanalen",
+        "roster_signup": "Öppnar anmälan så att spelare kan registrera sig",
+        "roster_signup_close": "Stänger anmälan och förhindrar nya registreringar",
+        "roster_delete": "Tar permanent bort laguppställningen och alla dess data",
+        "roster_clear": "Tar bort alla medlemmar från laguppställningen utan att radera den",
+        "roster_archive": "Arkiverar laguppställningen och gör den skrivskyddad"
+      },
+      "infoBox": "Automatiseringar utlöses i förhållande till evenemangets starttid. Ange en förskjutning (t.ex. tre dagar före), så utför boten åtgärden automatiskt vid den tiden, även för återkommande evenemang."
+    },
+    "groups": {
+      "title": "Grupper för laguppställningar",
+      "description": "Ordna laguppställningar i grupper för enklare hantering",
+      "create": "Ny grupp",
+      "noGroups": "Inga grupper har skapats ännu",
+      "rostersCount": "laguppställningar",
+      "createTitle": "Skapa grupp",
+      "editTitle": "Redigera grupp",
+      "nameLabel": "Gruppnamn",
+      "namePlaceholder": "t.ex. CWL-grupper",
+      "infoBox": "Med grupper kan du ordna flera laguppställningar tillsammans (t.ex. alla CWL-uppställningar). På fliken Inställningar kan du tilldela en laguppställning till en grupp och tillämpa automatiseringar på alla laguppställningar i gruppen samtidigt.",
+      "manageAutomations": "Hantera automatiseringar",
+      "automationsTitle": "Gruppautomatiseringar",
+      "automationsDesc": "Dessa automatiseringar gäller alla laguppställningar i gruppen",
+      "noAutomations": "Inga automatiseringar",
+      "noAutomationsHint": "Skapa en automatisering för gruppen",
+      "addAutomation": "Lägg till automatisering",
+      "deleteConfirm": "Ta bort gruppen ”{name}”? Laguppställningarna i gruppen kommer inte längre att tillhöra någon grupp.",
+      "emptyGroup": "Inga laguppställningar i gruppen ännu",
+      "rules": {
+        "title": "Gruppregler",
+        "rulesHint": "Dessa regler gäller alla laguppställningar i gruppen och tillämpas omedelbart.",
+        "maxAccounts": "Maximalt antal konton per användare",
+        "maxAccountsBadge": "Högst {count} per användare",
+        "rosterSize": "Laguppställningens storlek",
+        "rosterSizeBadge": "Storlek {size}",
+        "minSignups": "Fyllnadsgräns",
+        "minSignupsBadge": "Gräns {count}",
+        "categoriesTitle": "Anmälningskategorier",
+        "categoriesHint": "Välj vilka kategorier som är tillgängliga för gruppen. De tillämpas omedelbart på alla laguppställningar.",
+          "categoriesBadge": "Kategorier: {count}",
+        "noCategories": "Inga kategorier ännu.",
+        "newCategoryPlaceholder": "Nytt kategorinamn…"
+      }
+    },
+    "categories": {
+      "title": "Anmälningskategorier",
+      "description": "Kategorier för spelaranmälningar och filtrering av laguppställningar",
+      "manage": "Hantera kategorier",
+      "create": "Ny kategori",
+      "noCategories": "Inga kategorier har skapats ännu",
+      "createTitle": "Skapa kategori",
+      "editTitle": "Redigera kategori",
+      "deleteConfirm": "Ta bort kategorin ”{name}”?",
+      "idLabel": "Kategori-ID",
+      "nameLabel": "Kategorinamn",
+      "infoBox": "Med kategorier kan spelare ange sin tillgänglighet eller roll när de anmäler sig (t.ex. ”Tillgänglig”, ”Preliminär” eller ”Endast vid behov”). Kategorier delas av alla laguppställningar på servern. För grupperade laguppställningar väljer du tillämpliga kategorier i gruppinställningarna."
+    },
+    "settings": {
+      "general": "Identitet och konfiguration",
+      "restrictions": "Begränsningar och gränser",
+      "name": "Laguppställningens namn",
+      "rosterType": "Typ av laguppställning",
+      "typeClan": "Klan",
+      "typeFamily": "Familj",
+      "signupScope": "Anmälningsomfattning",
+      "scopeClanOnly": "Endast klanen",
+      "scopeFamilyWide": "Hela familjen",
+      "clan": "Klan",
+      "selectClan": "Välj en klan",
+      "description": "Beskrivning",
+      "descriptionPlaceholder": "Ange en beskrivning av laguppställningen...",
+      "typeAndScope": "Typ och omfattning",
+      "eventTime": "Evenemangets starttid",
+      "eventTimeHint": "Tidpunkten då evenemanget börjar. Används för automatiseringar och nedräkningar.",
+      "recurrenceDays": "Upprepa var",
+      "recurrenceModeDays": "Var N:e dag",
+      "recurrenceModeMonthly": "Dag i månaden",
+      "recurrenceDaysUnit": "dagar",
+      "recurrenceDayOfMonthPrefix": "På dag",
+      "recurrenceDayOfMonthSuffix": "varje månad",
+      "recurrenceDaysHint": "Lämna tomt för ett engångsevenemang. Ange antalet dagar mellan tillfällena (t.ex. 30 för CWL varje månad).",
+      "recurrenceDayOfMonthHint": "Upprepas denna dag varje månad (t.ex. 1 = den första).",
+      "group": "Grupp",
+      "noGroup": "Ingen grupp",
+      "thRequirements": "Krav på rådhusnivå",
+      "minTh": "Lägsta RH",
+      "maxTh": "Högsta RH",
+      "signupLimits": "Anmälningsgränser",
+      "rosterSize": "Laguppställningens storlek",
+      "rosterSizeHint": "Maximalt antal medlemmar",
+      "minSignups": "Minsta antal anmälningar",
+      "minSignupsHint": "Minsta antal anmälningar som krävs för att fylla laguppställningen",
+      "maxAccountsPerUser": "Maximalt antal konton per användare",
+      "maxAccountsHint": "Begränsa antalet konton per Discord-användare",
+      "allowedCategories": "Tillåtna anmälningskategorier",
+      "allowedCategoriesHint": "Klicka för att växla. Om ingen väljs tillåts alla kategorier.",
+      "defaultSignupCategory": "Förvald anmälningskategori",
+      "defaultSignupCategoryNone": "Ingen (inget förval)",
+      "defaultSignupCategoryHint": "Kategori som är förvald när en medlem anmäler sig.",
+      "categoriesManagedByGroup": "Anmälningskategorier hanteras på gruppnivå. Öppna gruppinställningarna från sidan Laguppställningar för att ange vilka kategorier som är tillgängliga för alla laguppställningar i gruppen.",
+      "saving": "Sparar...",
+      "save": "Spara inställningar"
+    }
+  },
+  "LinksPage": {
+    "title": "Länkhantering",
+    "description": "Hantera Discord-medlemmars kontolänkar och verifiera spelarägande",
+    "tabs": {
+      "overview": "Översikt",
+      "pending": "Väntande",
+      "bulk": "Massåtgärder",
+      "analytics": "Analys"
+    },
+    "stats": {
+      "totalMembers": "Totalt antal medlemmar",
+      "membersWithLinks": "Medlemmar med länkar",
+      "totalLinkedAccounts": "Totalt antal länkade konton",
+      "verifiedAccounts": "Verifierade konton",
+      "ofTotal": "av totalt",
+      "avgPerMember": "Genomsnitt:",
+      "perMember": "per medlem",
+      "verified": "verifierat"
+    },
+    "filters": {
+      "searchPlaceholder": "Sök efter medlemsnamn, användarnamn, spelarnamn eller tagg...",
+      "filterByStatus": "Filtrera efter status",
+      "allAccounts": "Alla konton",
+      "verifiedOnly": "Endast verifierade",
+      "unverifiedOnly": "Endast overifierade",
+      "minAccounts": "Minsta antal konton",
+      "allMembers": "Alla medlemmar",
+      "oneOrMore": "Minst 1 konto",
+      "twoOrMore": "Minst 2 konton",
+      "threeOrMore": "Minst 3 konton",
+      "fiveOrMore": "Minst 5 konton"
+    },
+    "overview": {
+      "title": "Kontolänkar",
+      "description": "Visa och hantera alla kontolänkar mellan Discord och Clash of Clans",
+      "showingMembers": "Visar {count} {members}",
+      "member": "medlem",
+      "members": "medlemmar",
+      "noMembers": "Inga medlemmar hittades",
+      "adjustFilters": "Försök att ändra sökningen eller filtren.",
+      "noLinkedAccounts": "Inga medlemmar med länkade konton.",
+      "exportCSV": "Exportera CSV",
+      "exportJSON": "Exportera JSON",
+      "account": "konto",
+      "accounts": "konton",
+      "more": "fler",
+      "unknown": "Okänd"
+    },
+    "pending": {
+      "title": "Väntande verifieringar",
+      "description": "Konton som väntar på verifiering: {count}",
+      "allVerified": "Alla konton är verifierade!",
+      "noPending": "Det finns inga väntande verifieringar just nu.",
+      "linked": "Länkat:"
+    },
+    "bulk": {
+      "title": "Massåtgärder",
+      "description": "Utför åtgärder på flera medlemmar samtidigt",
+      "selectAll": "Välj alla ({count})",
+      "deselectAll": "Avmarkera alla",
+      "unlinkSelected": "Ta bort länken för valda ({count})",
+      "linked": "länkat",
+      "comingSoon": "Massborttagning av länkar kommer snart!"
+    },
+    "analytics": {
+      "title": "Länkanalys",
+      "description": "Översikt över länkstatistik och trender",
+      "verificationRate": "Verifieringsgrad",
+      "verified": "Verifierad",
+      "unverified": "Overifierad",
+      "accountDistribution": "Kontofördelning",
+      "oneAccount": "1 konto",
+      "twoToThreeAccounts": "2–3 konton",
+      "fourPlusAccounts": "Minst 4 konton",
+      "townHallLevels": "Rådhusnivåer",
+      "other": "Övrigt",
+      "coverage": "Täckning",
+      "linkedMembers": "Länkade medlemmar",
+      "coverageRate": "Täckningsgrad",
+      "linkInsights": "Länkinsikter",
+      "avgAccountsPerMember": "Genomsnittligt antal konton per medlem:",
+      "mostLinkedAccounts": "Flest länkade konton:",
+      "membersWithoutLinks": "Medlemmar utan länkar:"
+    },
+    "actions": {
+      "unlinkAccount": "Ta bort kontolänk"
+    },
+    "deleteDialog": {
+      "title": "Ta bort kontolänk",
+      "description": "Är du säker på att du vill ta bort länken för {playerName}? Åtgärden kan inte ångras.",
+      "cancel": "Avbryt",
+      "unlinking": "Tar bort länken...",
+      "unlink": "Ta bort länk"
+    },
+    "bulkDialog": {
+      "title": "Ta bort flera kontolänkar",
+      "description": "Vill du koppla bort samtliga konton för urvalet (antal valda medlemmar: {count})? Åtgärden kan inte ångras.",
+      "cancel": "Avbryt",
+      "unlinkAll": "Ta bort alla länkar"
+    },
+    "toast": {
+      "unlinkFailed": "Det gick inte att ta bort kontolänken. Försök igen."
+    },
+    "badges": {
+      "verified": "Verifierad",
+      "unverified": "Overifierad",
+      "pending": "Väntande"
+    },
+    "pagination": {
+      "showing": "Visar {start}–{end} av {total} medlemmar",
+      "page": "Sida {current} av {total}",
+      "previous": "Föregående",
+      "next": "Nästa"
+    }
+  },
+  "WarsPage": {
+    "title": "Krigsstatistik",
+    "description": "Följ krigsresultat och analysera stridsstatistik",
+    "actions": {
+      "exportData": "Exportera data",
+      "resetFilters": "Återställ filter",
+      "applyFilters": "Använd filter"
+    },
+    "filters": {
+      "title": "Filter",
+      "description": "Filtrera krigsstatistik efter olika villkor",
+      "clan": "Klan",
+      "allClans": "Alla klaner",
+      "townHall": "Rådhus",
+      "townHallShort": "RH",
+      "allTownHalls": "Alla RH-nivåer",
+      "townHallLevel": "RH {level}",
+      "period": "Period",
+      "last7Days": "Senaste 7 dagarna",
+      "last30Days": "Senaste 30 dagarna",
+      "last90Days": "Senaste 90 dagarna",
+      "last6Months": "Senaste 6 månaderna",
+      "lastYear": "Senaste året",
+      "custom": "Anpassad",
+      "startDate": "Startdatum",
+      "endDate": "Slutdatum",
+      "warTypes": "Krigstyper"
+    },
+    "summaryStats": {
+      "totalWins": "Totalt antal segrar",
+      "totalWinsDesc": "Totalt antal krig: {totalWars}",
+      "totalLosses": "Totalt antal förluster",
+      "totalLossesDesc": "Oavgjorda krig: {totalDraws}",
+      "winRate": "Vinstprocent",
+      "winRateDesc": "Övergripande resultat",
+      "activeWars": "Aktiva krig",
+      "activeWarsDesc": "{activeCwl} i CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Krigsresultat per vecka",
+        "description": "Veckovisa segrar, förluster och oavgjorda under den valda perioden",
+        "wins": "Vinster",
+        "losses": "Förluster",
+        "draws": "Oavgjorda"
+      },
+      "thSuccessRate": {
+        "title": "Attackernas framgång per rådhusnivå",
+        "description": "Andel trestjärniga attacker per RH-nivå",
+        "threeStarPercent": "Trestjärniga (%)",
+        "otherPercent": "Övriga (%)"
+      },
+      "warTypeDistribution": {
+        "title": "Fördelning av krigstyper",
+        "description": "Fördelning efter krigstyp",
+        "cwl": "CWL",
+        "random": "Slumpmässigt",
+        "friendly": "Vänskapskrig"
+      },
+      "topPerformers": {
+        "title": "Bäst presterande",
+        "description": "Bästa krigarna efter totalt antal stjärnor",
+        "attacksAndStars": "Attacker: {attacks} • Stjärnor: {stars}",
+        "noData": "Inga spelardata är tillgängliga. Försök att ändra filtren."
+      },
+      "missedAttacks": {
+        "title": "Missade attacker",
+        "description": "Spelare som inte använde alla sina attacker",
+        "attacks": "missade attacker"
+      },
+      "topDefenders": {
+        "title": "Bästa försvararna",
+        "description": "Bästa försvararna efter genomsnittligt antal förlorade stjärnor",
+        "defensesAndStars": "Försvar: {defenses} • Förlorade stjärnor: {stars}",
+        "noData": "Inga försvarsdata är tillgängliga. Försök att ändra filtren."
+      },
+      "worstAttackers": {
+        "title": "Sämsta angriparna",
+        "description": "Spelare med lägst genomsnittligt antal stjärnor per attack (minst 3 attacker)",
+        "attacksAndStars": "Attacker: {attacks} • Stjärnor: {stars}",
+        "noData": "Inga spelardata är tillgängliga. Försök att ändra filtren."
+      },
+      "worstDefenders": {
+        "title": "Sämsta försvararna",
+        "description": "Spelare som förlorade flest stjärnor i försvar (minst 3 försvar)",
+        "defensesAndStars": "Försvar: {defenses} • Förlorade stjärnor: {stars}",
+        "noData": "Inga försvarsdata är tillgängliga. Försök att ändra filtren."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Krigsstatistik för klaner",
+      "description": "Detaljerad statistik för varje klan",
+      "headers": {
+        "clan": "Klan",
+        "status": "Status",
+        "wars": "Krig",
+        "record": "V/F/O",
+        "winRate": "Vinstprocent",
+        "avgDestruction": "Genomsnittlig förstörelse",
+        "avgStarsPerAttack": "Stjärnor/attack",
+        "avgDefenseStars": "Stjärnor/försvar"
+      },
+      "status": {
+        "inWar": "I krig",
+        "cwl": "CWL",
+        "peace": "Fred"
+      },
+      "noData": "Ingen klanstatistik är tillgänglig. Försök att använda filter eller vänta tills uppgifterna har lästs in."
+    },
+    "toast": {
+      "errorTitle": "Fel",
+      "errorLoadingClans": "Det gick inte att läsa in klanerna. Försök igen.",
+      "errorLoadingWarData": "Det gick inte att läsa in krigsdata. Försök igen.",
+      "errorNoClans": "Inga klaner tillgängliga",
+      "errorApplyingFilters": "Det gick inte att tillämpa filtren. Försök igen."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Topplistor",
+    "description": "Globala topplistor för klanhuvudstaden och mer",
+    "comingSoon": "Den här funktionen kommer snart. Kom tillbaka senare!",
+    "stats": {
+      "totalEntries": "Totalt antal poster",
+      "type": "Typ",
+      "league": "Liga",
+      "weekend": "Helg"
+    },
+    "filters": {
+      "title": "Filter",
+      "description": "Anpassa topplistevyn",
+      "type": "Typ",
+      "metric": "Mätvärde",
+      "league": "Liga",
+      "weekend": "Helg"
+    },
+    "types": {
+      "player": "Spelare",
+      "clan": "Klaner"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Plundrat i huvudstaden"
+        },
+        "clan": {
+          "capitalTotalLoot": "Totalt byte",
+          "raidsCompleted": "Slutförda räder",
+          "enemyDistrictsDestroyed": "Förstörda distrikt",
+          "medals": "Medaljer"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Alla",
+      "legendLeague": "Legendligan",
+      "titanLeagueI": "Titanligan I",
+      "titanLeagueII": "Titanligan II",
+      "titanLeagueIII": "Titanligan III"
+    },
+    "rankings": {
+      "title": "Topplista",
+      "description": "Topp {count} {type} för {weekend}",
+      "players": "spelare",
+      "clans": "klaner"
+    },
+    "empty": {
+      "title": "Inga data tillgängliga",
+      "description": "Försök att välja en annan helg eller liga"
+    }
+  },
+  "ClansPage": {
+    "title": "Klanhantering",
+    "description": "Konfigurera dina klaner och deras Discord-integrering",
+    "addClan": "Lägg till klan",
+    "addNewClan": "Lägg till ny klan",
+    "addClanDescription": "Ange klantaggen för att lägga till klanen på servern",
+    "clanTag": "Klantagg",
+    "totalClans": "Totalt antal klaner",
+    "registeredClans": "Registrerade klaner",
+    "configured": "Konfigurerade",
+    "withSettingsConfigured": "Med slutförd konfiguration",
+    "totalMembers": "Totalt antal medlemmar",
+    "acrossAllClans": "För alla klaner",
+    "channels": "Kanaler",
+    "availableChannels": "Tillgängliga kanaler",
+    "noClansYet": "Inga klaner ännu",
+    "getStartedAdding": "Kom igång genom att lägga till din första klan",
+    "addFirstClan": "Lägg till din första klan",
+    "level": "Nivå",
+    "members": "Medlemmar",
+    "status": "Status",
+    "configuredBadge": "Konfigurerade",
+    "setupRequired": "Konfiguration krävs",
+    "configure": "Konfigurera",
+    "sorting": {
+      "label": "Sortera klaner",
+      "sortBy": "Sortera efter",
+      "toggleDirection": "Växla sorteringsriktning",
+      "added": "Tillagd den",
+      "name": "Klannamn",
+      "level": "Klannivå",
+      "members": "Medlemmar"
+    },
+    "configureClan": "Konfigurera {name} ({tag})",
+    "customizeIntegration": "Anpassa Discord-integreringen för den här klanen",
+    "tabs": {
+      "basic": "Discord-konfiguration",
+      "war": "Krig"
+    },
+    "memberRole": "Medlemsroll",
+    "leaderRole": "Ledarroll",
+    "selectRole": "Välj roll",
+    "none": "Ingen",
+    "clanAbbreviation": "Klanförkortning",
+    "warScoreCountdown": "Nedräkning av krigsresultat",
+    "warScoreCountdownDescription": "Skapar en röstkanal som visar det aktuella krigsresultatet",
+    "warTimerCountdown": "Nedräkning av krigstid",
+    "warTimerCountdownDescription": "Skapar en röstkanal som visar återstående tid i kriget",
+    "category": "Kategori",
+    "categoryOptions": {
+      "none": "Ingen kategori",
+      "premade": "Vanliga kategorier",
+      "usedByServer": "Används av andra klaner",
+      "clanCount": "{count, plural, one {# klan} other {# klaner}}"
+    },
+    "categories": {
+      "title": "Klankategorier",
+      "description": "Skapa och underhåll kategorierna som är tillgängliga för serverns klaner.",
+      "refresh": "Uppdatera",
+      "createLabel": "Ny kategori",
+      "name": "Kategorinamn",
+      "namePlaceholder": "t.ex. Tävlingsinriktad",
+      "nameHelp": "{count}/{max} tecken efter normalisering av blanksteg",
+      "create": "Skapa kategori",
+      "empty": "Inga klankategorier har skapats.",
+      "clanCount": "{count, plural, one {# klan} other {# klaner}}",
+      "renameAction": "Byt namn på {name}",
+      "deleteAction": "Ta bort {name}",
+      "renameTitle": "Byt namn på klankategori",
+      "renameDescription": "Det normaliserade namnet uppdaterar alla tilldelade klaner.",
+      "saveRename": "Spara namn",
+      "deleteTitle": "Ta bort klankategorin?",
+      "deleteWarning": "Om ”{name}” tas bort blir {count, plural, one {# klan} other {# klaner}} utan kategori.",
+      "deleteCountMayChange": "Förhandsgranskningen återspeglar det aktuella läget. När borttagningen är klar visas det faktiska antalet berörda klaner.",
+      "confirmDelete": "Ta bort kategori",
+      "deleteSuccessTitle": "{name} har tagits bort",
+      "deleteSuccessDescription": "{count, plural, =0 {Inga klaner ändrades.} one {# klan saknar nu kategori.} other {# klaner saknar nu kategori.}}",
+      "created": "{name} har skapats.",
+      "renamed": "Kategorin har bytt namn till {name}.",
+      "errors": {
+        "title": "Kategorierna är inte tillgängliga",
+        "load": "Det gick inte att läsa in klankategorierna.",
+        "create": "Det gick inte att skapa klankategorin.",
+        "rename": "Det gick inte att byta namn på klankategorin.",
+        "preview": "Det gick inte att läsa in förhandsgranskningen av borttagningen.",
+        "delete": "Det gick inte att ta bort klankategorin.",
+        "refresh": "Kategorin ändrades, men det gick inte att läsa in det uppdaterade kategori- eller klanläget.",
+        "invalidName": "Använd ett namn som inte är tomt, innehåller högst 64 tecken och saknar kontrolltecken."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Visa mer information",
+      "memberRole": "Rollen som medlemmarna i klanen ska få. Om boten hanterar roller på din Discord-server får alla i klanen denna roll. Det är användbart för klanspecifika kanaler.",
+      "leaderRole": "Rollen som klanens medledare och ledare får. På en vanlig Discord-server är den användbar för en ledarchatt för klanen eller en gemensam ledarchatt för alla klaner.",
+      "clanAbbreviation": "Ge klanen en förkortning så att medlemmarna kan ha den i sitt namn när namnbyte är aktiverat. Du kan konfigurera formatet i <familySettingsLink>Familjeinställningar</familySettingsLink>.",
+      "category": "Detta är ett sätt att organisera klanerna. Många klanfamiljer har fem eller fler klaner, och vissa används ibland endast för CWL eller evenemang."
+    },
+    "roleIdPlaceholder": "Roll-ID",
+    "abbreviationPlaceholder": "t.ex. CK",
+    "categoryPlaceholder": "Kategorinamn",
+    "notAvailable": "Ej tillgängligt",
+    "saving": "Sparar...",
+    "saveChanges": "Spara ändringar",
+    "deleteConfirm": "Är du säker på att du vill ta bort {tag}? Alla tillhörande påminnelser och loggar tas också bort.",
+    "toast": {
+      "errorLoadingClans": "Det gick inte att läsa in klanerna",
+      "errorLoadingSettings": "Det gick inte att läsa in klaninställningarna",
+      "errorEmptyClanTag": "Ange en klantagg",
+      "clanAdded": "Klanen har lagts till",
+      "errorAddingClan": "Det gick inte att lägga till klanen",
+      "clanRemoved": "Klanen har tagits bort",
+      "errorRemovingClan": "Det gick inte att ta bort klanen",
+      "settingsSaved": "Inställningarna har sparats",
+      "errorSavingSettings": "Det gick inte att spara inställningarna",
+      "countdownEnabled": "Röstkanalen med nedräkning har skapats",
+      "countdownDisabled": "Röstkanalen med nedräkning har tagits bort",
+      "errorTogglingCountdown": "Det gick inte att växla nedräkningen"
+    }
+  },
+  "RolesPage": {
+    "title": "Rollhantering",
+    "description": "Konfigurera automatisk rolltilldelning utifrån spelarstatistik",
+    "stats": {
+      "totalRoles": "Totalt antal roller",
+      "totalRolesDesc": "Konfigurerade rolltilldelningar",
+      "autoEvaluation": "Automatisk utvärdering",
+      "autoEvaluationOn": "På",
+      "autoEvaluationOff": "Av",
+      "autoEvaluationActiveDesc": "Tilldelar roller automatiskt",
+      "autoEvaluationInactiveDesc": "Endast manuell rolltilldelning",
+      "activeTypes": "Aktiva typer",
+      "activeTypesDesc": "Rolltyper som används",
+      "discordRoles": "Discord-roller",
+      "discordRolesDesc": "Tillgängliga på servern"
+    },
+    "settings": {
+      "title": "Inställningar för automatisk utvärdering",
+      "description": "Konfigurera automatisk utvärdering och tilldelning av roller",
+      "saveButton": "Spara inställningar",
+      "saving": "Sparar...",
+      "enableAutoEval": "Aktivera automatisk utvärdering",
+      "enableAutoEvalDesc": "Tilldela och ta automatiskt bort roller utifrån spelarstatistik",
+      "autoNickname": "Uppdatera smeknamn automatiskt",
+      "autoNicknameDesc": "Uppdatera smeknamn när roller utvärderas"
+    },
+    "roleTypes": {
+      "townhall": "Rådhus",
+      "league": "Liga",
+      "builderhall": "Byggarhall",
+      "builderLeague": "Byggarliga",
+      "achievement": "Prestation",
+      "status": "Tid på Discord",
+      "familyPosition": "Familjeposition"
+    },
+    "familyPositions": {
+      "member": "Medlem",
+      "elder": "Äldste",
+      "coLeader": "Medledare",
+      "leader": "Ledare"
+    },
+    "leagues": {
+      "legend": "Legend",
+      "electroDragon": "Elektrodrake",
+      "dragon": "Drake",
+      "electroTitan": "Elektrotitan",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Häxa",
+      "valkyrie": "Valkyria",
+      "wizard": "Trollkarl",
+      "archer": "Bågskytt",
+      "barbarian": "Barbar",
+      "skeleton": "Skelett"
+    },
+    "builderLeagues": {
+      "diamond": "Diamant",
+      "ruby": "Rubin",
+      "emerald": "Smaragd",
+      "platinum": "Platina",
+      "titanium": "Titan",
+      "steel": "Stål",
+      "iron": "Järn",
+      "brass": "Mässing",
+      "copper": "Koppar",
+      "stone": "Sten",
+      "clay": "Lera",
+      "wood": "Trä"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Skydda ditt konto!",
+      "biggerAndBetter": "Större och bättre",
+      "discoverNewTroops": "Upptäck nya trupper",
+      "biggerCoffers": "Större kassakistor",
+      "goldGrab": "Guldrusch",
+      "elixirEscapade": "Elixiräventyr",
+      "heroicHeist": "Hjältemodig kupp",
+      "wellSeasoned": "Rutinerad veteran",
+      "niceAndTidy": "Snyggt och prydligt",
+      "empireBuilder": "Imperiebyggare",
+      "clanWarWealth": "Rikedom från klankrig",
+      "friendInNeed": "En vän i nöden",
+      "sharingIsCaring": "Att dela är att bry sig",
+      "siegeSharer": "Belägringsdonator",
+      "warHero": "Krigshjälte",
+      "warLeagueLegend": "Krigsligalegend",
+      "gamesChampion": "Klanspelsmästare",
+      "unbreakable": "Okuvlig",
+      "sweetVictory": "Härlig seger!",
+      "conqueror": "Erövrare",
+      "leagueAllStar": "Ligastjärna",
+      "leagueFollower": "Ligaanhängare",
+      "leagueEnthusiast": "Ligaentusiast",
+      "leagueSuperfan": "Ligasuperfan",
+      "leagueFanatic": "Ligafanatiker",
+      "leagueMaster": "Ligamästare",
+      "legendLeague": "Legendligan",
+      "humiliator": "Förnedraren",
+      "notSoEasyThisTime": "Inte så lätt den här gången",
+      "unionBuster": "Förbundskrossare",
+      "bustThis": "Krossa det här!",
+      "wallBuster": "Murkrossare",
+      "mortarMauler": "Mortelkrossare",
+      "xBowExterminator": "X-bågsutrotare",
+      "firefighter": "Brandbekämpare",
+      "antiArtillery": "Artilleribekämpare",
+      "shatteredAndScatter": "Krossat och skingrat",
+      "counterspell": "Motbesvärjelse",
+      "monolithMasher": "Monolitkrossare",
+      "multiArcherTowerTerminator": "Multibågskyttetornens baneman",
+      "ricochetCannonCrusher": "Rikoschettkanonkrossare",
+      "firespitterFinisher": "Eldspottarnas baneman",
+      "multiGearTowerTrampler": "Flerväxeltornens baneman",
+      "craftersNightmare": "Hantverkarens mardröm",
+      "getThoseGoblins": "Ta de där goblinerna!",
+      "supercharger": "Superladdare",
+      "craftingConnoisseur": "Hantverkskännare",
+      "getThoseOtherGoblins": "Ta de andra goblinerna!",
+      "getEvenMoreGoblins": "Ta ännu fler gobliner!",
+      "dragonSlayer": "Drakdräpare",
+      "ungratefulChild": "Otacksamt barn",
+      "superbWork": "Strålande arbete",
+      "masterEngineering": "Mästerlig ingenjörskonst",
+      "hiddenTreasures": "Dolda skatter",
+      "highGear": "Högsta växeln",
+      "nextGenerationModel": "Nästa generations modell",
+      "unBuildIt": "Riv det",
+      "championBuilder": "Mästarbyggare",
+      "aggressiveCapitalism": "Aggressiv kapitalism",
+      "mostValuableClanmate": "Klanens värdefullaste medlem"
+    },
+    "configuredRoles": {
+      "title": "Konfigurerade roller",
+      "noRolesConfigured": "Inga roller av typen {roleType} har konfigurerats",
+      "addRoleToStart": "Klicka på ”Lägg till roll” för att skapa en",
+      "discordRole": "Discord-roll",
+      "criteria": "Villkor",
+      "mode": "Läge",
+      "modeBoth": "Lägg till och ta bort",
+      "modeAdd": "Endast lägga till",
+      "modeRemove": "Endast ta bort",
+      "actions": "Åtgärder",
+      "unknownRole": "Okänd roll",
+      "remove": "Ta bort",
+      "month": "månad",
+      "months": "månader"
+    },
+    "addRoleDialog": {
+      "title": "Lägg till ny roll",
+      "description": "Konfigurera en ny regel för automatisk rolltilldelning",
+      "roleType": "Rolltyp",
+      "mode": "Läge",
+      "discordRole": "Discord-roll",
+      "selectRole": "Välj en roll",
+      "townHallLevel": "Rådhusnivå",
+      "selectThLevel": "Välj RH-nivå",
+      "thPrefix": "RH",
+      "league": "Liga",
+      "selectLeague": "Välj liga",
+      "builderHallLevel": "Byggarhallsnivå",
+      "selectBhLevel": "Välj BH-nivå",
+      "bhPrefix": "BH",
+      "builderLeague": "Byggarliga",
+      "selectBuilderLeague": "Välj byggarliga",
+      "achievementName": "Prestation",
+      "selectAchievement": "Välj prestation",
+      "searchAchievement": "Sök prestation...",
+      "noAchievementFound": "Ingen prestation hittades.",
+      "monthsInServer": "Månader på servern",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Familjeposition",
+      "selectPosition": "Välj position",
+      "cancel": "Avbryt",
+      "addRole": "Lägg till roll",
+      "errorDuplicateExact": "Det här villkoret är redan kopplat till rollen.",
+      "errorDuplicateCriterion": "Det här villkoret har redan en tilldelad roll. Ta bort den befintliga först."
+    },
+    "infoCard": {
+      "title": "💡 Så fungerar automatiska roller",
+      "automaticEvaluation": "Automatisk utvärdering:",
+      "automaticEvaluationDesc": "När funktionen är aktiverad kontrollerar boten regelbundet spelarna och tilldelar eller tar bort roller utifrån deras aktuella statistik.",
+      "rolePriority": "Rollprioritet:",
+      "rolePriorityDesc": "Om flera roller matchar spelarens statistik tilldelas rollen på högst nivå.",
+      "manualOverride": "Manuell åsidosättning:",
+      "manualOverrideDesc": "Serveradministratörer kan tilldela roller manuellt, och de tas inte bort av den automatiska utvärderingen."
+    },
+    "categoryRoles": {
+      "title": "Kategoriroller",
+      "description": "Tilldela varje klankategori en Discord-roll. Medlemmar i klaner inom kategorin får automatiskt motsvarande roll.",
+      "addButton": "Lägg till kategori",
+      "categoryName": "Kategori",
+      "categoryNamePlaceholder": "Kategorinamn",
+      "noCategoryRoles": "Inga kategoriroller har konfigurerats",
+      "noCategoryRolesDesc": "Klicka på ”Lägg till kategori” för att skapa en",
+      "addTitle": "Lägg till kategoriroll",
+      "addConfirm": "Lägg till",
+      "errorCategoryRequired": "Kategorinamn krävs",
+      "errorRoleRequired": "Discord-roll krävs",
+      "errorCategoryExists": "Kategorin har redan en konfigurerad roll"
+    },
+    "toast": {
+      "changesSaved": "Ändringarna har sparats!",
+      "errorLoading": "Det gick inte att läsa in roller",
+      "errorSaving": "Det gick inte att spara inställningarna",
+      "errorAdding": "Det gick inte att lägga till rollen",
+      "errorDeleting": "Det gick inte att ta bort rollen"
+    }
+  },
+  "RemindersPage": {
+    "title": "Påminnelser",
+    "description": "Konfigurera automatiska påminnelser för krig, räder, klanspel och inaktivitet",
+    "types": {
+      "war": "Krigspåminnelser",
+      "capital": "Klanhuvudstad",
+      "clanGames": "Klanspel",
+      "inactivity": "Inaktivitet"
+    },
+    "tabs": {
+      "war": "Krig",
+      "capital": "Huvudstad",
+      "clanGames": "Klanspel",
+      "inactivity": "Inaktivitet"
+    },
+    "stats": {
+      "totalReminders": "Totalt antal påminnelser",
+      "totalRemindersDesc": "Konfigurerade aktiva påminnelser",
+      "warReminders": "Krigspåminnelser",
+      "warRemindersDesc": "Vanliga krig och CWL",
+      "capitalReminders": "Huvudstadspåminnelser",
+      "capitalRemindersDesc": "Attacker under rädhelgen",
+      "otherReminders": "Övriga påminnelser",
+      "otherRemindersDesc": "Spel och inaktivitet"
+    },
+    "actions": {
+      "saving": "Sparar...",
+      "saveChanges": "Spara ändringar",
+      "addReminder": "Lägg till påminnelse",
+      "addWarReminder": "Lägg till krigspåminnelse",
+      "addCapitalReminder": "Lägg till huvudstadspåminnelse",
+      "addClanGamesReminder": "Lägg till påminnelse om klanspelen",
+      "addInactivityReminder": "Lägg till inaktivitetspåminnelse",
+      "retry": "Försök igen"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Välj en klan",
+      "allClans": "Alla klaner"
+    },
+    "empty": {
+      "noWarReminders": "Inga krigspåminnelser",
+      "noCapitalReminders": "Inga huvudstadspåminnelser",
+      "noClanGamesReminders": "Inga påminnelser om klanspelen",
+      "noInactivityReminders": "Inga inaktivitetspåminnelser",
+      "getStarted": "Kom igång genom att skapa din första påminnelse"
+    },
+    "card": {
+      "new": "Ny",
+      "before": "före",
+      "timeBefore": "Återstående tid",
+      "timeBeforePlaceholder": "t.ex. 6",
+      "timeInactive": "Inaktiv i",
+      "timeInactivePlaceholder": "t.ex. 160",
+      "timeUnit": "timmar",
+      "hoursRemaining": "timmar kvar",
+      "channel": "Kanal",
+      "channelPlaceholder": "Välj kanal",
+      "threadOptional": "Tråd (valfritt)",
+      "threadPlaceholder": "Välj en tråd",
+      "noThread": "Publicera direkt i kanalen",
+      "forumPost": "Foruminlägg",
+      "forumPostPlaceholder": "Välj ett foruminlägg",
+      "forumPostRequired": "Ett foruminlägg krävs för forumkanaler.",
+      "clan": "Klan",
+      "clanPlaceholder": "Välj klan",
+      "customMessage": "Eget meddelande",
+      "customMessagePlaceholder": "Glöm inte att använda dina attacker!",
+      "customMessagePlaceholderClanGames": "Försök att få fler poäng i klanspelen!",
+      "customMessagePlaceholderInactivity": "Du har varit inaktiv i klanen ett tag :(",
+      "warTypes": "Krigstyper",
+      "random": "Slumpmässigt",
+      "friendly": "Vänskapskrig",
+      "cwl": "CWL",
+      "pointThreshold": "Poänggräns",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Uppmärksammar personer som har färre än {threshold} poäng.",
+      "attackThreshold": "Attackgräns",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Uppmärksammar personer som har minst {threshold} attacker kvar.",
+      "notSet": "Inte angivet"
+    },
+    "dialog": {
+      "addTitle": "Lägg till ny påminnelse",
+      "addDescription": "Konfigurera en ny påminnelse för servern",
+      "editTitle": "Redigera påminnelse",
+      "editDescription": "Uppdatera påminnelseinställningarna",
+      "type": "Typ av påminnelse",
+      "selectType": "Välj typ",
+      "cancel": "Avbryt",
+      "saving": "Sparar...",
+      "saveChanges": "Spara ändringar",
+      "addReminder": "Lägg till påminnelse"
+    },
+    "toast": {
+      "errorTitle": "Fel",
+      "errorLoadingReminders": "Det gick inte att läsa in påminnelserna. Försök igen.",
+      "reminderAdded": "Påminnelsen har lagts till",
+      "reminderAddedDesc": "En ny påminnelse av typen {type} har lagts till. Glöm inte att spara!",
+      "reminderUpdated": "Påminnelsen har uppdaterats",
+      "successTitle": "Lyckades",
+      "reminderDeleted": "Påminnelsen har tagits bort",
+      "failedToDelete": "Det gick inte att ta bort påminnelsen",
+      "allRemindersSaved": "Alla påminnelser har sparats",
+      "failedToSave": "Det gick inte att spara påminnelserna",
+      "forumPostRequired": "Välj ett foruminlägg innan du sparar påminnelsen.",
+      "invalidDestination": "Den valda tråden tillhör inte den här kanalen.",
+      "timeExceedsLimit": "Återstående tid måste vara mellan {min} och {max} timmar",
+      "pointThresholdInvalid": "Poänggränsen måste vara mellan {min} och {max}",
+      "attackThresholdInvalid": "Attackgränsen måste vara mellan {min} och {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Aktivitetsloggar",
+    "description": "Konfigurera automatisk loggning av klan- och spelaraktiviteter",
+    "stats": {
+      "activeLogs": "Aktiva loggar",
+      "activeLogsDesc": "I alla familjeklaner och serverloggar",
+      "logChannels": "Loggkanaler",
+      "logChannelsDesc": "Tillgängliga kanaler",
+      "trackedClans": "Spårade klaner",
+      "trackedClansDesc": "Konfigurerade klaner",
+      "issues": "Problem",
+      "issuesDesc": "I hela familjen"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Välj en klan"
+    },
+    "tabs": {
+      "clan": "Klan",
+      "war": "Krig",
+      "capital": "Huvudstad",
+      "player": "Spelare",
+      "server": "Server"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Medlem går med",
+        "description": "Spåra medlemmar som går med i klanen"
+      },
+      "leaveLog": {
+        "label": "Medlem lämnar",
+        "description": "Spåra medlemmar som lämnar klanen"
+      },
+      "donationLog": {
+        "label": "Medlemsdonation",
+        "description": "Spåra donationer av trupper och trollformler"
+      },
+      "clanAchievementLog": {
+        "label": "Klanprestationer",
+        "description": "Spåra klanprestationer som uppnås"
+      },
+      "clanRequirementsLog": {
+        "label": "Klankrav",
+        "description": "Spåra ändringar av klankraven"
+      },
+      "clanDescriptionLog": {
+        "label": "Klanbeskrivning",
+        "description": "Spåra ändringar av klanbeskrivningen"
+      },
+      "banAlert": {
+        "label": "Avstängningsvarningar",
+        "description": "Publicera varningar när en avstängd spelare går med i klanen"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit-flöde",
+        "description": "Publicera serverns Reddit-flöde"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Krigslogg",
+        "description": "Spåra krigsattacker och resultat"
+      },
+      "warPanel": {
+        "label": "Krigspanel",
+        "description": "Interaktiv krigspanel med realtidsuppdateringar"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Ändring av CWL-uppställning",
+        "description": "Spåra ändringar av CWL-uppställningen"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Huvudstadsdonationer",
+        "description": "Spåra donationer av huvudstadsguld"
+      },
+      "capitalAttacks": {
+        "label": "Huvudstadsattacker",
+        "description": "Spåra attacker under rädhelgen"
+      },
+      "raidPanel": {
+        "label": "Huvudstadspanel",
+        "description": "Interaktiv rädpanel med realtidsuppdateringar"
+      },
+      "capitalWeeklySummary": {
+        "label": "Veckosammanfattning för huvudstaden",
+        "description": "Veckosammanfattning av huvudstadens resultat"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Rolländring",
+        "description": "Spåra ändringar av spelarroller i klanen"
+      },
+      "troopUpgrade": {
+        "label": "Truppuppgradering",
+        "description": "Spåra uppgraderingar av truppnivåer"
+      },
+      "superTroopBoostLog": {
+        "label": "Förstärkningar av supertrupper",
+        "description": "Spåra aktiveringar av supertrupper"
+      },
+      "thUpgrade": {
+        "label": "Rådhusuppgradering",
+        "description": "Spåra rådhusuppgraderingar"
+      },
+      "leagueChange": {
+        "label": "Ligaändring",
+        "description": "Spåra ändringar av liganivå"
+      },
+      "spellUpgrade": {
+        "label": "Uppgradering av trollformel",
+        "description": "Spåra uppgraderingar av trollformler"
+      },
+      "heroUpgrade": {
+        "label": "Hjälteuppgradering",
+        "description": "Spåra uppgraderingar av hjältenivåer"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Uppgradering av hjälteutrustning",
+        "description": "Spåra uppgraderingar av hjälteutrustning"
+      },
+      "nameChange": {
+        "label": "Namnändring",
+        "description": "Spåra ändringar av spelarnamn"
+      },
+      "legendLogAttacks": {
+        "label": "Legendattacker",
+        "description": "Spåra attacker i legendligan"
+      },
+      "legendLogDefenses": {
+        "label": "Legendförsvar",
+        "description": "Spåra försvar i legendligan"
+      }
+    },
+    "logCard": {
+      "active": "Aktiv",
+      "issue": "Problem",
+      "disabled": "Inaktiverad",
+      "enable": "Aktivera",
+      "disable": "Inaktivera",
+      "channel": "Kanal",
+      "channelPlaceholder": "Välj kanal",
+      "thread": "Tråd (valfritt)",
+      "threadPlaceholder": "Välj tråd",
+      "noThread": "Ingen tråd",
+      "forumPost": "Foruminlägg",
+      "forumPostPlaceholder": "Välj ett foruminlägg",
+      "forumPostRequired": "Välj ett foruminlägg innan du sparar loggen.",
+      "invalidThread": "Den valda tråden tillhör inte den här kanalen.",
+      "saveDestination": "Spara mål",
+      "channelDeleted": "Kanalen finns inte längre. Välj en ny kanal eller inaktivera loggen.",
+      "enableToConfig": "Aktivera loggen för att konfigurera den",
+      "configuring": "Konfigurerar",
+      "on": "På",
+      "off": "Av",
+      "example": "exempel"
+    }
+  },
+  "GeneralPage": {
+    "title": "Allmänna inställningar",
+    "description": "Konfigurera botens beteende och utseende för hela servern",
+    "loading": "Läser in inställningar...",
+    "reset": "Återställ",
+    "saving": "Sparar...",
+    "saveChanges": "Spara ändringar",
+    "settingsSaved": "Inställningarna har sparats!",
+    "infoBanner": {
+      "title": "Letar du efter fler inställningar?",
+      "description": "Familjeroller och smeknamnsinställningar finns på sidan **Familjeinställningar**, och rollhanteringen finns på sidan **Roller**. Klanroller, förkortningar, kategorier och krigsnedräkningar finns på sidan **Klaner**."
+    },
+    "nickname": {
+      "title": "Smeknamnshantering",
+      "description": "Bestäm hur smeknamn formateras",
+      "automaticChanges": "Automatiska ändringar",
+      "automaticChangesDesc": "Tillåt boten att uppdatera medlemmarnas smeknamn",
+      "familyFormat": "Format för familjemedlemmar",
+      "availablePlaceholders": "Tillgängliga platshållare",
+      "preview": "Förhandsgranskning:",
+      "nonFamilyFormat": "Format för personer utanför familjen",
+      "placeholders": {
+        "discordName": "Discord-användarnamn",
+        "discordDisplayName": "Serversmeknamn",
+        "playerName": "CoC-spelarnamn",
+        "playerTag": "Spelartagg",
+        "playerTownhall": "Rådhusnivå",
+        "playerTownhallSmall": "RH i upphöjd stil",
+        "playerWarstars": "Krigsstjärnor",
+        "playerRole": "Klanroll",
+        "playerClan": "Klannamn",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Klanförkortning"
+      }
+    },
+    "appearance": {
+      "title": "Utseende",
+      "description": "Anpassa botens inbäddade meddelanden",
+      "embedColor": "Färg på inbäddning",
+      "embedColorDesc": "Färg på sidofältet i alla botens embeds i Discord",
+      "embedColorDefault": "Standard: **#D90709** (ClashKing-röd)",
+      "embedPreview": "Förhandsgranskning av inbäddning",
+      "embedPreviewDesc": "Det färgade fältet visas bredvid alla botens embeds",
+      "editColor": "Redigera färg",
+      "resetToDefault": "Återställ till standard",
+      "apply": "Tillämpa"
+    },
+    "security": {
+      "title": "Säkerhet och behörigheter",
+      "description": "Styr åtkomst och verifiering",
+      "fullWhitelistRole": "Roll med fullständig åtkomst",
+      "fullWhitelistRoleDesc": "Discord-roll med fullständig åtkomst till alla botkommandon (förbigår alla behörighetskontroller)",
+      "noRole": "Ingen roll"
+    },
+    "familyRoles": {
+      "title": "Familjeroller",
+      "description": "Hantera automatiska roller utifrån familjemedlemskap och klanpositioner",
+      "selectRole": "Välj en roll",
+      "addRole": "Lägg till en roll...",
+      "deletedRole": "Borttagen roll",
+      "noRolesConfigured": "Inga roller har konfigurerats",
+      "modes": {
+        "both": "Lägg till och ta bort",
+        "add": "Endast lägga till",
+        "remove": "Endast ta bort"
+      },
+      "types": {
+        "family": "Familj",
+        "notFamily": "Utanför familjen",
+        "elder": "Äldste",
+        "coLeader": "Medledare",
+        "leader": "Ledare"
+      },
+      "descriptions": {
+        "family": "Har minst ett konto i familjens klaner",
+        "notFamily": "Har inga konton i familjens klaner",
+        "elder": "Är äldste i någon av familjens klaner",
+        "coLeader": "Är medledare i någon av familjens klaner",
+        "leader": "Är ledare i någon av familjens klaner"
+      }
+    },
+    "tenureRoles": {
+      "title": "Discord-roller efter medlemstid",
+      "description": "Tilldela automatiskt roller utifrån hur länge medlemmarna har funnits på servern",
+      "addRole": "Lägg till roll efter medlemstid",
+      "addDialogTitle": "Lägg till roll efter medlemstid",
+      "addDialogDescription": "Tilldela en roll till medlemmar som har funnits på servern i ett visst antal månader",
+      "monthsInServer": "Månader på servern",
+      "discordRole": "Discord-roll",
+      "selectRole": "Välj en roll",
+      "noRolesConfigured": "Inga roller efter medlemstid har konfigurerats",
+      "addRoleToStart": "Lägg till en roll efter medlemstid för att komma igång",
+      "months": "Månader",
+      "month": "månad",
+      "actions": "Åtgärder",
+      "remove": "Ta bort",
+      "unknownRole": "Okänd roll"
+    },
+    "prefix": "Kommandoprefix",
+    "language": "Språk",
+    "timezone": "Tidszon",
+    "theme": "Tema"
+  },
+  "FamilySettingsPage": {
+    "title": "Familjeinställningar",
+    "description": "Konfigurera familjeroller och smeknamnsformat för klanmedlemmar",
+    "loading": "Läser in inställningar...",
+    "reset": "Återställ",
+    "saving": "Sparar...",
+    "saveChanges": "Spara ändringar",
+    "settingsSaved": "Inställningarna har sparats!",
+    "nickname": {
+      "title": "Smeknamnshantering",
+      "description": "Bestäm hur smeknamn formateras",
+      "automaticChanges": "Automatiska ändringar",
+      "automaticChangesDesc": "Tillåt boten att uppdatera medlemmarnas smeknamn",
+      "familyFormat": "Format för familjemedlemmar",
+      "availablePlaceholders": "Tillgängliga platshållare",
+      "preview": "Förhandsgranskning:",
+      "nonFamilyFormat": "Format för personer utanför familjen",
+      "placeholders": {
+        "discordName": "Discord-användarnamn",
+        "discordDisplayName": "Serversmeknamn",
+        "playerName": "CoC-spelarnamn",
+        "playerTag": "Spelartagg",
+        "playerTownhall": "Rådhusnivå",
+        "playerTownhallSmall": "RH i upphöjd stil",
+        "playerWarstars": "Krigsstjärnor",
+        "playerRole": "Klanroll",
+        "playerClan": "Klannamn",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Klanförkortning"
+      }
+    },
+    "familyRoles": {
+      "title": "Familjeroller",
+      "description": "Hantera automatiska roller utifrån familjemedlemskap och klanpositioner",
+      "selectRole": "Välj en roll",
+      "addRole": "Lägg till en roll...",
+      "deletedRole": "Borttagen roll",
+      "noRolesConfigured": "Inga roller har konfigurerats",
+      "modes": {
+        "both": "Lägg till och ta bort",
+        "add": "Endast lägga till",
+        "remove": "Endast ta bort"
+      },
+      "types": {
+        "family": "Familj",
+        "notFamily": "Utanför familjen",
+        "elder": "Äldste",
+        "coLeader": "Medledare",
+        "leader": "Ledare"
+      },
+      "descriptions": {
+        "family": "Har minst ett konto i familjens klaner",
+        "notFamily": "Har inga konton i familjens klaner",
+        "elder": "Är äldste i någon av familjens klaner",
+        "coLeader": "Är medledare i någon av familjens klaner",
+        "leader": "Är ledare i någon av familjens klaner"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Språk"
+  },
+  "ThemeSwitcher": {
+    "label": "Tema",
+    "light": "Ljus",
+    "dark": "Mörk",
+    "system": "Systemstandard"
+  },
+  "AuthCallback": {
+    "authenticating": "Autentiserar...",
+    "authenticatingDescription": "Vänta medan vi loggar in dig med Discord",
+    "authenticationFailed": "Autentiseringen misslyckades",
+    "tryAgain": "Försök igen",
+    "backToHome": "Tillbaka till startsidan",
+    "errorCancelled": "Inloggningen avbröts i Discord. Försök igen när du är redo.",
+    "errorDiscordFailedWithReason": "Discord-autentiseringen misslyckades: {reason}",
+    "errorNoAuthorizationCode": "Ingen auktoriseringskod togs emot från Discord.",
+    "errorCodeVerifierMissing": "Kodverifieraren hittades inte. Försök att logga in igen.",
+    "errorAuthenticateFailed": "Det gick inte att autentisera med Discord.",
+    "loadingVillages": "Loggar in med Discord...",
+    "loadingClanData": "Läser in serverlistan...",
+    "loadingWarStats": "Nästan klart..."
+  },
+  "LoginPage": {
+    "redirecting": "Omdirigerar till Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Funktioner",
+      "subtitle": "Upptäck de kraftfulla verktyg som ClashKing erbjuder för att hantera och utveckla klanen på Discord, mobilen och webben."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing-boten",
+        "description": "ClashKing-boten är den enda Discord-bot du behöver för att hantera din Clash of Clans-klan och gemenskap. Den är full av unika funktioner som håller klanen organiserad, engagerad och växande.",
+        "items": [
+          "Realtidsloggar: Spåra krig, CWL, klanspel, räder, donationer och medlemshändelser.",
+          "Ärendesystem: Rekryteringsärenden utöver vanliga supportärenden.",
+          "Automatiska roller: Tilldela roller automatiskt utifrån klanstatus eller familjehantering.",
+          "Påminnelser: Skicka aviseringar om krigsattacker, klanspel eller annat.",
+          "Detaljerad statistik: Insikter i spelarnas och klanernas resultat med aktivitetsspårning.",
+          "Hantering av laguppställningar: Organisera och optimera enkelt dina krigsuppställningar."
+        ],
+        "ctaPrimary": "Bjud in boten",
+        "ctaSecondary": "Gå med i gemenskapen"
+      },
+      "app": {
+        "title": "ClashKing-appen (öppen beta)",
+        "description": "ClashKing-appen kompletterar boten med viktiga verktyg och insikter direkt på mobilen. Den hjälper dig att hålla kontakten när och var som helst, även utan Discord.",
+        "items": [
+          "Realtidsstatistik: Detaljerad statistik för spelare och klaner som synkroniseras med boten.",
+          "Spåra klanens utveckling: Följ smidigt klanens utveckling över tid.",
+          "Hantering av flera konton: Växla enkelt mellan kontona och följ deras resultat.",
+          "Inbyggd historik: Använd historiska data för att analysera trender och förbättra strategier.",
+          "Hantering av Discord-servern: (Kommer snart) Hantera roller och ärenden från appen.",
+          "Avancerade aviseringar: (Kommer snart) Anpassa aviseringar om viktiga händelser."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Bygg egna verktyg eller projekt med ClashKing API. Det är gratis att använda så länge du anger ClashKing-projektet som källa.",
+        "items": [],
+        "ctaPrimary": "API-dokumentation",
+        "ctaSecondary": "API på GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Behöver du hjälp?",
+    "subtitle": "Oavsett om du söker dokumentation eller direkt hjälp finns vi här för dig.",
+    "documentation": {
+      "title": "Dokumentation",
+      "description": "Läs våra omfattande guider och kommandoreferenser för att få ut så mycket som möjligt av ClashKing.",
+      "cta": "Visa dokumentation"
+    },
+    "discord": {
+      "title": "Support på Discord",
+      "description": "Behöver du mer hjälp? Gå med i vår Discord-gemenskap för att ställa frågor, rapportera fel eller prata med andra användare.",
+      "cta": "Gå med i Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Ett projekt med öppen källkod",
+    "subtitle": "ClashKing är ett helt kostnadsfritt projekt med öppen källkod, och vi tror på gemenskapens förmåga att göra det ännu bättre. Både boten och API:t har helt öppen källkod, så du kan bidra eller använda dem i egna projekt.",
+    "github": {
+      "title": "GitHub-organisation",
+      "description": "Utforska vår källkod, bidra till boten eller titta på våra andra verktyg med öppen källkod.",
+      "ctaPrimary": "Visa organisation",
+      "repos": {
+        "bot": "Botens kodförråd",
+        "app": "Appens kodförråd",
+        "api": "API:ts kodförråd",
+        "assets": "Resursernas kodförråd"
+      }
+    },
+    "api": {
+      "title": "API-dokumentation",
+      "description": "Bygg egna verktyg eller projekt med ClashKing API. Det är gratis att använda så länge du anger ClashKing-projektet som källa.",
+      "cta": "API-dokumentation"
+    },
+    "translation": {
+      "title": "Hjälp oss att översätta",
+      "description": "Hjälp oss att översätta ClashKing till ditt språk! Via våra Crowdin-projekt kan du bidra till att översätta webbplatsen, boten och alla relaterade texter.",
+      "app": "Översätt appen",
+      "bot": "Översätt boten"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Bidra",
+        "description": "Hjälp oss att förbättra projektet genom att rätta fel, lägga till nya funktioner eller förbättra befintliga. Varje bidrag räknas!"
+      },
+      "community": {
+        "title": "Gemenskap",
+        "description": "Gå med i vår Discord-gemenskap för att diskutera idéer, få hjälp och samarbeta med andra utvecklare."
+      },
+      "learn": {
+        "title": "Lär dig",
+        "description": "Läs dokumentationen och exemplen för att lära dig använda boten och API:t effektivt."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Stöd oss",
+    "subtitle": "ClashKing är ett kostnadsfritt projekt med öppen källkod. Ditt stöd hjälper oss att hålla servrarna igång och fortsätta utveckla nya funktioner för gemenskapen.",
+    "patreon": {
+      "title": "Bli supporter",
+      "description": "Stöd oss varje månad på Patreon för att få exklusiva förmåner och tidig åtkomst till funktioner samt hjälpa till att täcka driftkostnaderna.",
+      "cta": "Stöd oss på Patreon"
+    },
+    "creatorCode": {
+      "title": "Använd skaparkod",
+      "description": "Stöd oss kostnadsfritt genom att använda kreatörskoden",
+      "descriptionSuffix": "i spelet eller i Supercell Store.",
+      "ctaGame": "Använd i spelet",
+      "ctaStore": "Använd i Supercell Store"
+    },
+    "whySupport": {
+      "title": "Varför stödja oss?",
+      "description": "Varje bidrag, oavsett storlek, går direkt till serverkostnader och API-avgifter. Det kostar inget extra att använda vår kreatörskod, men hjälper oss enormt mycket!"
+    }
+  },
+  "ServersPage": {
+    "title": "Välj en server",
+    "description": "Välj en server för att konfigurera ClashKing-boten. Du måste vara ägare eller administratör för Discord-servern.",
+    "backToHome": "Tillbaka till startsidan",
+    "backToLogin": "Tillbaka till inloggning",
+    "error": "Fel",
+    "configure": "Konfigurera",
+    "invite": "Bjud in",
+    "members": "medlemmar",
+    "server": "Server",
+    "roles": {
+      "owner": "Ägare",
+      "administrator": "Administratör",
+      "manager": "Ansvarig"
+    },
+    "noServers": {
+      "title": "Inga servrar hittades",
+      "description": "Ingen Discord-server där du är administratör eller ägare hittades."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "Automatiska paneler",
+    "description": "Uppdatera en panel i realtid eller skicka nya paneler enligt ett driftschema",
+    "actions": {
+      "create": "Skapa automatisk panel",
+      "edit": "Redigera automatisk panel",
+      "delete": "Ta bort automatisk panel",
+      "save": "Spara ändringar",
+      "cancel": "Avbryt",
+      "retry": "Försök igen"
+    },
+    "metrics": {
+      "total": "Konfigurerade",
+      "refresh": "Uppdateringspaneler",
+      "send": "Schemalagda utskick"
+    },
+    "filters": {
+      "all": "Alla"
+    },
+    "list": {
+      "title": "Konfigurerade automatiska paneler",
+      "description": "Leverans, mål, destination och körningsstatus som styrs av administratören",
+      "empty": "Inga automatiska paneler i den här vyn",
+      "emptyDescription": "Skapa en när API-registret visar en tillgänglig paneltyp."
+    },
+    "registry": {
+      "emptyTitle": "Inga paneltyper är tillgängliga",
+      "emptyDescription": "API-registret är tomt just nu. Automatiska paneler kan skapas när en paneltyp aktiveras där.",
+      "typeUnavailable": "Paneltypen finns inte längre i registret och kan därför inte redigeras."
+    },
+    "dialog": {
+      "createTitle": "Skapa automatisk panel",
+      "editTitle": "Redigera automatisk panel",
+      "description": "Funktioner och gränser hämtas från det aktuella panelregistret."
+    },
+    "boardType": {
+      "label": "Paneltyp",
+      "description": "Tillgängliga typer hämtas direkt från API-registret.",
+      "placeholder": "Välj en paneltyp"
+    },
+    "targets": {
+      "kind": "Måltyp: {kind}",
+      "kindDescription": "Registret anger hur varje målvärde tolkas.",
+      "scope": "Målomfattning",
+      "scopeDescription": "Familjeomfattningen använder alla konfigurerade familjeklaner och har inga specifika mål.",
+      "family": "Familj",
+      "custom": "Egna mål",
+      "values": "Mål",
+      "count": "Ange mellan {min} och {max} mål för paneltypen.",
+      "placeholder": "Ange ett mål av typen {kind}",
+      "add": "Lägg till mål",
+      "remove": "Ta bort mål"
+    },
+    "modes": {
+      "label": "Leveransläge",
+      "description": "Registret styr vilka leveranslägen panelen stöder.",
+      "refresh": "Uppdatera",
+      "send": "Schemalagt utskick"
+    },
+    "destination": {
+      "label": "Leveransmål",
+      "channel": "Överordnad kanal",
+      "channelDescription": "Meddelanden kan skickas direkt till text- och aviseringskanaler; forum använder ett underordnat inlägg.",
+      "selectChannel": "Välj en kanal",
+      "thread": "Tråd eller foruminlägg",
+      "selectThread": "Välj en tråd",
+      "threadOptional": "Valfritt för text- och aviseringskanaler.",
+      "forumRequired": "Ett foruminlägg krävs för destinationen.",
+      "direct": "Skicka direkt till kanalen",
+      "deleted": "Kanalen finns inte längre"
+    },
+    "refresh": {
+      "interval": "Uppdateringsintervall (minuter)",
+      "intervalDescription": "Tillåtet intervall: {minimum}–{maximum} minuter."
+    },
+    "schedule": {
+      "label": "Schema",
+      "kind": "Schemamönster",
+      "kindDescription": "Skicka dagligen, på valda veckodagar eller en gång i månaden.",
+      "daily": "Dagligen",
+      "weekdays": "Valda veckodagar",
+      "dayOfMonth": "Dag i månaden",
+      "selectWeekdays": "Veckodagar",
+      "monthDay": "Dag i månaden",
+      "monthDayDescription": "Använd ett värde mellan 1 och 31.",
+      "timezone": "Tidszon",
+      "timeOfDay": "Tid på dagen",
+      "nextRun": "Nästa körning"
+    },
+    "weekdays": {
+      "1": "Måndag",
+      "2": "Tisdag",
+      "3": "Onsdag",
+      "4": "Torsdag",
+      "5": "Fredag",
+      "6": "Lördag",
+      "7": "Söndag"
+    },
+    "status": {
+      "enabled": "Aktiverad",
+      "disabled": "Inaktiverad",
+      "enabledDescription": "Inaktiverade paneler behåller sin konfiguration men körs inte.",
+      "messageId": "Aktuellt uppdateringsmeddelande: {id}"
+    },
+    "delete": {
+      "title": "Ta bort den här automatiska panelen?",
+      "description": "Detta tar bort konfigurationen och kan inte ångras."
+    },
+    "feedback": {
+      "created": "Den automatiska panelen har skapats",
+      "updated": "Den automatiska panelen har uppdaterats",
+      "deleted": "Den automatiska panelen har tagits bort"
+    },
+    "validation": {
+      "boardType": "Välj en paneltyp från det aktuella registret.",
+      "targetScope": "Välj en målomfattning som stöds av paneltypen.",
+      "familyTargets": "Familjeomfattningen får inte innehålla specifika mål.",
+      "targetCount": "Ange mellan {min} och {max} mål som inte är tomma.",
+      "deliveryMode": "Välj ett leveransläge som stöds av paneltypen.",
+      "destination": "Välj en giltig destination. Forumkanaler kräver ett underordnat inlägg.",
+      "refreshInterval": "Ange ett uppdateringsintervall mellan {minimum} och {maximum} minuter.",
+      "timezone": "Ange en IANA-tidszon.",
+      "timeOfDay": "Ange en giltig tid på dagen.",
+      "weekdays": "Välj minst en veckodag.",
+      "dayOfMonth": "Ange en dag mellan 1 och 31."
+    },
+    "errors": {
+      "title": "Automatiska paneler är inte tillgängliga",
+      "session": "Din session har upphört.",
+      "request": "Begäran om automatiska paneler misslyckades.",
+      "load": "Det gick inte att läsa in de automatiska panelerna.",
+      "save": "Det gick inte att spara den automatiska panelen.",
+      "delete": "Det gick inte att ta bort den automatiska panelen."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Inställningar för ärendepaneler",
+    "description": "Konfigurera kategorier och loggkanaler för varje ärendepanel.",
+    "noPanels": "Inga ärendepaneler hittades",
+    "noPanelsHint": "Skapa din första panel med knappen ovan.",
+    "createPanel": "Ny panel",
+    "createPanelTitle": "Skapa ärendepanel",
+    "createPanelDescription": "Ge panelen ett unikt namn. Du kan konfigurera knappar och kanaler efter att den har skapats.",
+    "panelNameLabel": "Panelnamn",
+    "panelNamePlaceholder": "t.ex. Ansökningar",
+    "panelCreated": "Panelen ”{name}” har skapats.",
+    "confirmDeletePanel": "Ta bort panelen ”{name}”?",
+    "confirmDeletePanelHint": "Detta tar permanent bort panelen och all knappkonfiguration.",
+    "panelDeleted": "Panelen har tagits bort.",
+    "panelHint": "Klicka för att expandera och konfigurera panelen.",
+    "panelEmbed": "Panelinbäddning",
+    "panelEmbedHint": "Inbäddning som används när ärendepanelen publiceras i Discord.",
+    "panelEmbedInfoLine1": "För att skapa en ny inbäddning eller redigera en befintlig går du till sidan %s i {dashboardLabel}.",
+    "panelEmbedInfoLine2": "För att lägga till eller redigera knappar går du till %s för den här panelen.",
+    "panelEmbedPreview": "Förhandsgranskning av inbäddning",
+    "panelEmbedPreviewEmpty": "Ingen förhandsgranskning är tillgänglig för den valda panelinbäddningen.",
+    "ticketOpenEmbed": "Inbäddning när ärendet öppnas",
+    "ticketOpenEmbedHint": "Valfri egen inbäddning som skickas när knappen öppnar ett ärende.",
+    "selectEmbed": "Välj en inbäddning",
+    "defaultEmbed": "Ingen åsidosättning av panelinbäddningen",
+    "noCustomMessage": "Använd standardmeddelandet för ärenden",
+    "buttons": "knappar",
+    "buttonList": "Knappar",
+    "categories": "Kategorier",
+    "openCategory": "Kategori för öppna ärenden",
+    "open_category": "Kategori för öppna ärenden",
+    "sleepCategory": "Kategori för vilande ärenden",
+    "sleep_category": "Kategori för vilande ärenden",
+    "closedCategory": "Kategori för stängda ärenden",
+    "closed_category": "Kategori för stängda ärenden",
+    "selectCategory": "Välj en kategori...",
+    "logChannels": "Loggkanaler",
+    "statusChangeLog": "Logg över statusändringar",
+    "status_change_log": "Logg över statusändringar",
+    "buttonClickLog": "Logg över knapptryckningar",
+    "ticket_button_click_log": "Logg över knapptryckningar",
+    "closeLog": "Logg över stängda ärenden",
+    "ticket_close_log": "Logg över stängda ärenden",
+    "selectChannel": "Välj en kanal...",
+    "savedSuccess": "Panelen ”{panel}” har sparats.",
+    "tabChannels": "Ärendepanel",
+    "tabSettings": "Inställningar",
+    "tabButtons": "Knappar",
+    "tabMessages": "Meddelanden",
+    "autoSaveSaving": "Sparar...",
+    "autoSaveSaved": "Sparat",
+    "autoSaveErrorTitle": "Automatisk lagring misslyckades",
+    "autoSaveErrorDescription": "Det gick inte att spara ärendeinställningarna.",
+    "messages": "meddelanden",
+    "noButtons": "Inga knappar ännu. Lägg till en för att komma igång.",
+    "addButton": "Lägg till knapp",
+    "addButtonTitle": "Lägg till knapp",
+    "addButtonDescription": "Konfigurera den nya knappens utseende.",
+    "buttonLabel": "Knapptext",
+    "buttonLabelPlaceholder": "t.ex. Ansök",
+    "buttonStyle": "Knappfärg",
+    "buttonStyleBlue": "Blå",
+    "buttonStyleGrey": "Grå",
+    "buttonStyleGreen": "Grön",
+    "buttonStyleRed": "Röd",
+    "buttonAdded": "Knappen har lagts till.",
+    "buttonDeleted": "Knappen har tagits bort.",
+    "editButtonTitle": "Redigera knappinställningar",
+    "editButtonDescription": "Konfigurera den här ärendeknappen.",
+    "buttonAppearanceSaved": "Utseendet har sparats.",
+    "confirmDeleteButton": "Ta bort knappen ”{label}”?",
+    "confirmDeleteButtonHint": "Detta tar bort knappen och all dess konfiguration (roller, frågor med mera).",
+    "modRoles": "Personalroller (uppmärksammas)",
+    "modRolesHint": "Dessa roller omnämns när ett ärende öppnas.",
+    "noPingRoles": "Personalroller (tysta)",
+    "noPingRolesHint": "Dessa roller kan se ärenden men uppmärksammas inte.",
+    "questions": "Frågor",
+    "questionsHint": "Högst fem frågor visas i en dialogruta när ärendet öppnas.",
+    "question": "Fråga",
+    "privateThread": "Privat tråd",
+    "privateThreadHint": "Skapar en separat privat tråd för personalen.",
+    "accountApply": "Kräv CoC-konto",
+    "accountApplyHint": "Användaren måste länka ett Clash of Clans-konto.",
+    "playerInfo": "Visa spelarinformation",
+    "playerInfoHint": "Visar kontostatistik när ärendet öppnas.",
+    "thMin": "Lägsta rådhusnivå",
+    "numApply": "Maximalt antal konton",
+    "naming": "Namnformat",
+    "namingPlaceholders": "Platshållare för namn",
+    "namingVariables": "Variabler: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Knappen ”{label}” har sparats.",
+    "badge": {
+      "accountApply": "CoC krävs",
+      "privateThread": "Privat tråd"
+    },
+    "approveMessages": "Meddelanden för godkännande och avslag",
+    "approveMessagesHint": "Förberedda meddelanden som personalen kan skicka till sökande (högst 25).",
+    "messagesMaxHint": "Du kan lägga till högst 25 meddelanden.",
+    "editMessagesButton": "Redigera meddelanden",
+    "editMessagesTitle": "Redigera förberedda meddelanden",
+    "editMessagesDescription": "Lägg till, ta bort och uppdatera dina förberedda ärendemeddelanden.",
+    "addMessage": "Lägg till meddelande",
+    "noMessages": "Inga meddelanden ännu. Lägg till ett för att komma igång.",
+    "messageName": "Meddelandenamn",
+    "contentLabel": "Innehåll",
+    "messageContent": "Meddelandets innehåll...",
+    "messageNameRequired": "Alla meddelanden måste ha ett namn.",
+    "messagesSaved": "Godkännande- och avslagsmeddelandena har sparats.",
+    "rolesToAdd": "Roller att tilldela",
+    "rolesToAddHint": "Roller som automatiskt tilldelas användaren när ett ärende öppnas.",
+    "rolesToRemove": "Roller att återkalla",
+    "rolesToRemoveHint": "Roller som automatiskt tas bort från användaren när ett ärende öppnas.",
+    "applyClans": "Tillåtna klaner",
+    "applyClansHint": "Endast medlemmar i dessa klaner kan öppna ärendet. Lämna tomt för att tillåta alla.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Krav på rådhusnivå",
+    "thRequirementsHint": "Lägsta hjältenivåer som krävs per rådhusnivå för att öppna ärendet.",
+    "thHeroLegend": "BK = Barbarkungen · AQ = Bågskyttedrottningen · GW = Storväktaren · RC = Kungliga mästaren · WARST = Krigsstjärnor",
+    "addThLevel": "Lägg till RH-nivå",
+    "thLevel": "RH",
+    "numApplyHint": "Maximalt antal CoC-konton som användaren kan ansöka med (1–25).",
+    "embeds": "Inbäddningar",
+    "embedsHint": "Discord-inbäddningar som används som panelmeddelanden eller meddelanden när ärenden öppnas.",
+    "newEmbed": "Ny inbäddning",
+    "embedName": "Inbäddningens namn",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "Discohook-webbadress",
+    "embedDiscohookHint": "Utforma inbäddningen på Discohook, kopiera sidans webbadress och klistra in den här.",
+    "openDiscohook": "Öppna Discohook",
+    "openInDiscohook": "Öppna i Discohook",
+    "copyDiscohookUrl": "Kopiera Discohook-webbadress",
+    "copyDiscohookUrlDone": "Webbadressen har kopierats!",
+    "editEmbed": "Redigera",
+    "deleteEmbed": "Ta bort",
+    "confirmDeleteEmbed": "Ta bort inbäddningen ”{name}”?",
+    "confirmDeleteEmbedHint": "Detta tar endast bort den från ClashKing och påverkar inte redan publicerade Discord-meddelanden.",
+    "embedSaved": "Inbäddningen ”{name}” har sparats.",
+    "embedCreated": "Inbäddningen ”{name}” har skapats.",
+    "embedDeleted": "Inbäddningen har tagits bort.",
+    "noEmbeds": "Inga inbäddningar ännu.",
+    "noEmbedsHint": "Skapa en inbäddning här och tilldela den sedan till en panel eller knapp.",
+    "legacyEmbed": "Skapad via boten – klistra in en Discohook-webbadress för att aktivera redigering.",
+    "invalidDiscohookUrl": "Ogiltig webbadress. Klistra in en webbadress till en Discohook-sida (discohook.app/?data=... eller discohook.app/?share=...).",
+    "tabEmbeds": "Inbäddningar"
+  },
+  "EmbedsPage": {
+    "title": "Inbäddningar",
+    "description": "Skapa och hantera mallar för Discord-inbäddningar för ärendepaneler och knappar.",
+    "nameHint": "Ge inbäddningen en unik identifierare. Du kan ändra innehållet senare."
+  },
+  "EmbedEditor": {
+    "importSection": "Importera från Discohook",
+    "addMessage": "Lägg till meddelande",
+    "addMessageDialogTitle": "Lägg till meddelande",
+    "addMessageDialogDescription": "Välj hur avancerat meddelandet ska vara.",
+    "addMessageClassicTitle": "Klassisk",
+    "addMessageClassicDescription": "Enkel och tillförlitlig: text och inbäddningar. Välj detta om du är osäker.",
+    "addMessageV2Title": "Komponenter v2",
+    "addMessageV2Description": "Mer avancerade layouter och interaktiva komponenter (knappar, väljare och avsnitt). Passar avancerade konfigurationer.",
+    "betaTag": "Beta",
+    "importExport": "Import och export",
+    "importExportDescription": "Importera en inbäddning från Discohook eller exportera den aktuella inbäddningen dit.",
+    "importFromDiscohook": "Importera från Discohook",
+    "copyDiscohookUrl": "Kopiera Discohook-webbadress",
+    "openInDiscohook": "Öppna i Discohook",
+    "content": "Innehåll",
+    "contentPlaceholder": "Meddelandeinnehåll som visas ovanför inbäddningarna...",
+    "profileSection": "Profil",
+    "profileName": "Namn",
+    "profileAvatarUrl": "Avatarens webbadress",
+    "profileUnsupportedWarning": "Varning: boten stöder för närvarande inte uppdatering av profilen.",
+    "import": "Importera",
+    "importError": "Ogiltig Discohook-webbadress. Klistra in webbadressen till en Discohook-sida.",
+    "importMultipleMessagesWarning": "Länken innehåller flera meddelanden. Endast det första importerades – boten stöder ett meddelande per inbäddning.",
+    "colorSection": "Färg",
+    "authorSection": "Författare",
+    "authorName": "Namn",
+    "authorIconUrl": "Ikonens webbadress",
+    "authorUrl": "Författarens webbadress",
+    "bodySection": "Brödtext",
+    "title": "Titel",
+    "titleUrl": "Titelns webbadress",
+    "sidebarColor": "Sidofältets färg",
+    "description": "Beskrivning",
+    "descriptionPlaceholder": "Beskrivning av inbäddningen...",
+    "fieldsSection": "Fält",
+    "addField": "Lägg till fält",
+    "field": "Fält",
+    "fieldName": "Namn",
+    "fieldValue": "Värde",
+    "fieldInline": "På samma rad",
+    "imagesSection": "Bilder",
+    "thumbnailUrl": "Miniatyrens webbadress",
+    "imageUrl": "Bildens webbadress",
+    "footerSection": "Sidfot",
+    "footerText": "Sidfotstext",
+    "footerIconUrl": "Sidfotsikonens webbadress",
+    "timestamp": "Inkludera tidsstämpel",
+    "preview": "Förhandsvisning",
+    "previewEmpty": "Fyll i fälten för att se en förhandsgranskning",
+    "modeToggleV1": "Klassisk (V1)",
+    "modeToggleV2": "Komponenter (V2)",
+    "componentsSection": "Komponenter",
+    "addComponent": "Lägg till komponent",
+    "containerLabel": "Behållare",
+    "textDisplayLabel": "Textvisning",
+    "separatorLabel": "Avgränsare",
+    "mediaGalleryLabel": "Mediegalleri",
+    "sectionLabel": "Avsnitt",
+    "dividerLine": "Visa avdelare",
+    "spacing": "Avstånd",
+    "spacingSmall": "Litet",
+    "spacingLarge": "Stort",
+    "imageDescription": "Alternativtext",
+    "imageSpoiler": "Spoiler",
+    "addImage": "Lägg till bild",
+    "addTextBlock": "Lägg till textblock",
+    "accessory": "Tillbehör",
+    "accessoryNone": "Ingen",
+    "accessoryThumbnail": "Miniatyr",
+    "accessoryButton": "Knapp",
+    "thumbnailAlt": "Miniatyrens alternativtext",
+    "accentColor": "Accentfärg",
+    "addContainer": "Lägg till underordnad komponent",
+    "containerSpoiler": "Spoilerbehållare",
+    "stringSelectLabel": "Textväljare",
+    "userSelectLabel": "Användarväljare",
+    "roleSelectLabel": "Rollväljare",
+    "mentionableSelectLabel": "Väljare för omnämnbara",
+    "channelSelectLabel": "Kanalväljare",
+    "fileLabel": "Fil",
+    "fileUrl": "Filens webbadress",
+    "fileUploadButton": "Ladda upp",
+    "fileSpoiler": "Spoiler",
+    "selectCustomId": "Eget ID",
+    "selectPlaceholder": "Platshållartext",
+    "selectMinValues": "Minsta antal värden",
+    "selectMaxValues": "Maximalt antal värden",
+    "selectOptions": "Alternativ",
+    "selectOption": "Alternativ",
+    "selectOptionLabel": "Etikett",
+    "selectOptionValue": "Värde",
+    "selectOptionDescription": "Beskrivning",
+    "selectOptionDefault": "Förvalt",
+    "addSelectOption": "Lägg till alternativ",
+    "selectDisabled": "Inaktiverad",
+    "actionRowMode": "Radtyp",
+    "actionRowModeButtons": "Knappar",
+    "actionRowLabel": "Åtgärdsrad",
+    "addButton": "Lägg till knapp",
+    "buttonLabel": "Etikett",
+    "buttonStyle": "Stil",
+    "buttonStylePrimary": "Primär",
+    "buttonStyleSecondary": "Sekundär",
+    "buttonStyleSuccess": "Lyckades",
+    "buttonStyleDanger": "Fara",
+    "buttonStyleLink": "Länk",
+    "tabMentions": "Omnämnanden",
+    "tabTime": "Tid",
+    "tabEmojis": "Emojier",
+    "dateLabel": "Datum",
+    "timeLabel": "Tid",
+    "mentionsChannels": "Kanaler",
+    "mentionsSpecial": "Särskilt",
+    "mentionsChannelList": "Alla kanaler",
+    "mentionsRoles": "Roller",
+    "mentionsServerGuide": "Serverguide",
+    "mentionsBrowseChannels": "Bläddra bland kanaler",
+    "mentionsChannelsAndRoles": "Kanaler och roller",
+    "mentionsNoChannels": "Inga kanaler matchar sökningen.",
+    "mentionsNoRoles": "Inga roller matchar sökningen.",
+    "styleLabel": "Stil",
+    "timeRelativeNow": "för 0 sekunder sedan",
+    "emojiSearchPlaceholder": "Hitta den perfekta emojin",
+    "emojiToneLabel": "Hudton för emoji",
+    "emojiCategory": {
+      "people": "Personer",
+      "nature": "Natur",
+      "food": "Mat",
+      "activities": "Aktiviteter",
+      "travel": "Resor",
+      "objects": "Föremål",
+      "symbols": "Symboler",
+      "flags": "Flaggor"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Inaktiverad",
+    "unknownComponent": "Okänd komponent",
+    "unknownComponentHint": "Komponenttypen kan inte redigeras här men bevaras när du sparar."
+  },
+  "PanelsPage": {
+    "title": "Paneler",
+    "description": "Konfigurera den interaktiva medlemspanelen som publiceras på servern. Medlemmar kan länka kontot, uppdatera roller och mycket mer med ett enda klick.",
+    "saved": "Panelkonfigurationen har sparats.",
+    "embedSection": "Inbäddning",
+    "embedHint": "Valfri inbäddning som visas ovanför knapparna.",
+    "embedLabel": "Inbäddning",
+    "noEmbed": "Ingen inbäddning (endast knappar)",
+    "buttonsSection": "Knappar",
+    "buttonsHint": "Välj vilka åtgärdsknappar som ska visas. Ordningen följer ditt val.",
+    "colorSection": "Knappfärg",
+    "colorHint": "Gäller alla knappar.",
+    "welcomeSection": "Välkomstkanal",
+    "welcomeHint": "När detta är inställt publiceras panelen automatiskt när en ny medlem går med.",
+    "welcomeChannel": "Kanal",
+    "welcomeChannelPlaceholder": "Välj en kanal...",
+    "editPanelButton": "Redigera panel",
+    "editDialogTitle": "Redigera panel",
+    "editDialogDescription": "Uppdatera inbäddningen, knapparna och knappfärgen med en förhandsgranskning i realtid innan du sparar.",
+    "welcomeAutosaveSuccess": "Välkomstkanalen har sparats.",
+    "welcomeAutosaveDisabled": "Välkomstkanalen har inaktiverats.",
+    "previewSection": "Förhandsvisning",
+    "previewHint": "Så här ser panelen ut i Discord.",
+    "previewNoEmbed": "Ingen inbäddning har valts",
+    "previewEmbedNoData": "Inbäddningen saknar förhandsgranskningsdata",
+    "previewNoButtons": "Inga knappar har valts",
+    "color": {
+      "Blue": "Blå",
+      "Green": "Grön",
+      "Grey": "Grå",
+      "Red": "Röd"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Utlottningar",
+    "description": "Skapa, schemalägg och hantera utlottningar på servern.",
+    "create": "Skapa utlottning",
+    "listTitle": "Översikt över utlottningar",
+    "listDescription": "Följ schemalagda, pågående och avslutade utlottningar på ett ställe.",
+    "empty": "Inga utlottningar att visa ännu.",
+    "confirmDeleteTitle": "Ta bort utlottning",
+    "confirmDelete": "Är du säker på att du vill ta bort utlottningen?",
+    "discardTitle": "Ignorera ändringarna?",
+    "discardDescription": "Du har ändringar som inte har sparats. Om du stänger nu går de förlorade.",
+    "discardConfirm": "Ignorera",
+    "formTabs": {
+      "general": "Allmänt",
+      "messages": "Meddelanden",
+      "restrictions": "Begränsningar",
+      "advanced": "Avancerat"
+    },
+    "tabs": {
+      "ongoing": "Pågående",
+      "upcoming": "Kommande",
+      "ended": "Avslutad"
+    },
+    "stats": {
+      "total": "Totalt antal utlottningar",
+      "totalEntries": "Totalt antal lotter",
+      "ongoing": "Pågående utlottningar",
+      "upcoming": "Kommande utlottningar",
+      "ended": "Avslutade utlottningar"
+    },
+    "statsDescriptions": {
+      "total": "Alla utlottningar som har konfigurerats på servern.",
+      "totalEntries": "Sammanlagt antal lotter i alla utlottningar.",
+      "ongoing": "Pågår och tar emot deltagare just nu.",
+      "upcoming": "Schemalagda att starta senare.",
+      "ended": "Redan slutförda utlottningar."
+    },
+    "emptyTab": {
+      "title": "Inga utlottningar här",
+      "ongoing": "Inga utlottningar pågår just nu.",
+      "upcoming": "Inga utlottningar är schemalagda. Skapa en för att komma igång.",
+      "ended": "Inga utlottningar har avslutats ännu."
+    },
+    "status": {
+      "scheduled": "Schemalagd",
+      "ongoing": "Pågår",
+      "ended": "Avslutad"
+    },
+    "table": {
+      "giveaway": "Utlottning",
+      "channel": "Kanal",
+      "entries": "Lotter",
+      "timing": "Tid",
+      "start": "Startar",
+      "end": "Slutar",
+      "winnersHeader": "Vinnare",
+      "winners": "{count, plural, one {# vinnare} other {# vinnare}}",
+      "boosters": "{count, plural, one {# bonus} other {# bonusar}}",
+      "noChannel": "Ingen kanal",
+      "noChannelHelp": "Ingen kanal har tilldelats. Redigera utlottningen för att rätta till det.",
+      "endsAt": "Slutar",
+      "endedAt": "Avslutades",
+      "duplicate": "Duplicera",
+      "showingEnded": "Visade: {shown} av {total}",
+      "showMore": "Visa fler: {count}",
+      "pendingUpdate": "Väntande uppdatering",
+      "pendingUpdateHelp": "Utlottningen har väntande ändringar som boten snart tillämpar.",
+      "openInDiscord": "Öppna i Discord",
+      "viewInDiscord": "Visa i Discord",
+      "reroll": "Dra nya vinnare",
+      "rerolledCount": "{count, plural, one {# vinnare har dragits om} other {# vinnare har dragits om}}",
+      "viewEntries": "Visa lotter"
+    },
+    "entries": {
+      "description": "Lista över deltagarna och deras vinstchans.",
+      "totalEntries": "Totalt antal lotter",
+      "uniqueUsers": "Unika användare",
+      "noEntrants": "Inga lotter ännu.",
+      "userId": "Användar-ID",
+      "entryCount": "Lotter",
+      "winChance": "Vinstchans"
+    },
+    "dialog": {
+      "createTitle": "Skapa utlottning",
+      "editTitle": "Redigera utlottning",
+      "description": "Konfigurera utlottningens meddelande, tider och krav.",
+      "create": "Skapa utlottning",
+      "saveChanges": "Spara ändringar"
+    },
+    "form": {
+      "prize": "Pris",
+      "prizePlaceholder": "Exempel: Guldpass",
+      "channel": "Kanal",
+      "channelPlaceholder": "Välj en kanal",
+      "startTime": "Starttid",
+      "startNow": "Starta omedelbart",
+      "endTime": "Sluttid",
+      "winners": "Antal vinnare",
+      "mentions": "Omnämnda roller",
+      "roleRequirements": "Obligatoriska eller uteslutna roller",
+      "rolesMode": "Rollläge",
+      "rolesModeOptions": {
+        "none": "Ingen rollbegränsning",
+        "allow": "Endast dessa roller får delta",
+        "deny": "Dessa roller får inte delta"
+      },
+      "rolesModeHelp": {
+        "none": "Alla användare får delta i utlottningen.",
+        "allow": "Endast användare med någon av de valda rollerna får delta.",
+        "deny": "Användare med någon av de valda rollerna får inte delta."
+      },
+      "textAboveEmbed": "Text ovanför inbäddningen",
+      "textEmbedDefault": "Klicka på knappen nedan för att delta.",
+      "textInEmbed": "Beskrivning i inbäddningen",
+      "textEndDefault": "Grattis till alla som valdes ut! Vi kontaktar er snart.",
+      "textOnEnd": "Meddelande när utlottningen avslutas",
+      "image": "Bild för utlottningen",
+      "removeImage": "Ta bort aktuell bild",
+      "imagePreviewAlt": "Förhandsgranskning av utlottning",
+      "previewGiveaway": "Förhandsgranska utlottning",
+      "previewEnd": "Förhandsgranska slutmeddelande",
+      "boosters": "Lottbonusar",
+      "addBooster": "Lägg till bonus",
+      "noBoosters": "Inga bonusar har konfigurerats.",
+      "boosterLabel": "Bonus {index}",
+      "boostValue": "Multiplikator",
+      "boostRoles": "Bonusroller",
+      "requirements": "Krav för deltagande",
+      "profilePictureRequired": "Kräv en Discord-profilbild",
+      "cocAccountRequired": "Kräv ett länkat Clash of Clans-konto"
+    },
+    "validation": {
+      "prizeRequired": "Pris krävs.",
+      "channelRequired": "Kanal krävs.",
+      "startTimeRequired": "Starttid krävs om utlottningen inte börjar nu.",
+      "endTimeRequired": "Sluttid krävs.",
+      "endAfterStart": "Sluttiden måste vara efter starttiden.",
+      "imageTooLarge": "Bilden måste vara mindre än 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Aktuell sammanfattning",
+      "discordPreview": "Förhandsgranskning i Discord",
+      "giveawayTitle": "Förhandsgranskning av utlottning",
+      "giveawayDescription": "Så här ser meddelandet för den aktiva utlottningen ut.",
+      "endTitle": "Förhandsgranskning av slutmeddelande",
+      "endDescription": "Detta meddelande skickas när utlottningen avslutas.",
+      "winnerCount": "Vinnare",
+      "winnerWord": "{count, plural, one {vinnare} other {vinnare}}",
+      "mentionCount": "Omnämnda roller",
+      "requirementCount": "Krav",
+      "boosterCount": "Bonusar",
+      "profileRequired": "Profilbild krävs",
+      "accountRequired": "Länkat CoC-konto krävs",
+      "rolesAllow": "Begränsad till valda roller",
+      "rolesDeny": "Valda roller är uteslutna",
+      "noChannel": "Ingen kanal har valts ännu",
+      "noPrize": "Ditt pris visas här",
+      "noEmbedText": "Lägg till texten i inbäddningen för att förhandsgranska utlottningens innehåll.",
+      "noEndText": "Lägg till ett avslutande meddelande till vinnarna.",
+      "startsAt": "Startar: {date}",
+      "endsAt": "Slutar: {date}",
+      "endsOn": "Slutar {date}",
+      "endsFooter": "Slutar",
+      "notScheduled": "Inte schemalagd",
+      "schedule": "Schema",
+      "endMessage": "Vinnarmeddelande",
+      "endSummary": "{winners, plural, one {# vinnare meddelas här.} other {# vinnare meddelas här.}}",
+      "totalParticipants": "Totalt antal deltagare: {count}",
+      "participate": "Delta",
+      "buttonHint": "Primär åtgärdsknapp som visas under Discord-inlägget."
+    },
+    "toast": {
+      "errorTitle": "Något gick fel",
+      "successTitle": "Lyckades",
+      "loadError": "Det gick inte att läsa in utlottningarna.",
+      "saveError": "Det gick inte att spara utlottningen.",
+      "deleteError": "Det gick inte att ta bort utlottningen.",
+      "created": "Utlottningen har skapats.",
+      "updated": "Utlottningen har uppdaterats.",
+      "deleted": "Utlottningen har tagits bort.",
+      "rerolled": "Nya vinnare har dragits.",
+      "rerollError": "Det gick inte att dra nya vinnare."
+    },
+    "reroll": {
+      "title": "Dra nya vinnare",
+      "description": "Välj vilka vinnare som ska ersättas. Nya vinnare dras bland behöriga deltagare.",
+      "selectWinners": "Välj vinnare att ersätta:",
+      "confirm": "{count, plural, one {Dra om # vinnare} other {Dra om # vinnare}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Översikt över kontrollpanelen",
+    "description": "Övervaka serverstatistiken och slutför grundinställningen",
+    "stats": {
+      "linkedPlayers": "Länkade spelare",
+      "linkedPlayersDesc": "Spelare som är länkade på servern",
+      "clansConfigured": "Konfigurerade klaner",
+      "clansConfiguredDesc": "Klaner som spåras på servern",
+      "activeRosters": "Aktiva laguppställningar",
+      "activeRostersDesc": "Skapade krigsuppställningar",
+      "totalAccounts": "Länkade konton",
+      "totalAccountsDesc": "Totalt antal länkade CoC-konton",
+      "playersTracked": "Spårade spelare",
+      "globalPlayers": "Totalt antal spelare i databasen",
+      "clansTracked": "Spårade klaner",
+      "globalClans": "Totalt antal klaner i databasen",
+      "botStatus": "Botstatus",
+      "online": "Online",
+      "offline": "Offline",
+      "memoryUsage": "Minne: {used} MB ({percent} %)",
+      "cpuUsage": "CPU: {percent} %"
+    },
+    "botSection": "Botstatistik",
+    "clans": {
+      "title": "Dina klaner",
+      "description": "{count, plural, one {# klan konfigurerad} other {# klaner konfigurerade}}",
+      "manage": "Hantera klaner",
+      "addFirst": "Lägg till din första klan"
+    },
+    "quickStart": {
+      "title": "Snabbstart",
+      "description": "Kom igång med att konfigurera ClashKing-boten",
+      "step1": {
+        "title": "Konfigurera allmänna inställningar",
+        "description": "Konfigurera smeknamnsformat, färger på inbäddningar och loggkanaler"
+      },
+      "step2": {
+        "title": "Lägg till dina klaner",
+        "description": "Anslut dina Clash of Clans-klaner och konfigurera roller"
+      },
+      "step3": {
+        "title": "Konfigurera automatiska roller",
+        "description": "Konfigurera automatisk rolltilldelning utifrån rådhusnivå, troféer med mera."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Botstatistik",
+    "description": "Global statistik och systemstatus för ClashKing-boten",
+    "about": {
+      "title": "Om statistiken",
+      "description": "Detta är global statistik för hela ClashKing-botnätverket",
+      "globalStats": "Global statistik",
+      "globalStatsDesc": "Antalet spelare och klaner omfattar alla spårade objekt på samtliga Discord-servrar som använder ClashKing",
+      "systemHealth": "Systemstatus",
+      "systemHealthDesc": "CPU- och minnesanvändningen visar den aktuella belastningen på ClashKings API-infrastruktur"
+    }
+  },
+  "NotFound": {
+    "title": "404 – Sidan hittades inte",
+    "description": "Sidan du söker finns inte.",
+    "goHome": "Gå till startsidan"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord-bot, mobilapp och klankontrollpanel",
+      "description": "Hantera krig, laguppställningar, konton, påminnelser och klaninställningar med ClashKing på Discord, mobilen och webben.",
+      "openGraphTitle": "ClashKing | Led din klan"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing-navigering",
+      "homeLabel": "ClashKings startsida",
+      "mobileApp": "Mobilapp",
+      "discordBot": "Discord-bot",
+      "dashboard": "Instrumentpanel"
+    },
+    "language": {
+      "label": "Språk"
+    },
+    "appearance": {
+      "label": "Utseende",
+      "day": "Dag",
+      "sunset": "Solnedgång"
+    },
+    "actions": {
+      "addToDiscord": "Lägg till i Discord",
+      "addClashKing": "Lägg till ClashKing",
+      "openDashboard": "Öppna kontrollpanelen",
+      "joinTestFlight": "Gå med i TestFlight",
+      "getAndroidApp": "Hämta Android-appen"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Led",
+          "second": "din",
+          "third": "klan."
+        },
+        "accounts": {
+          "first": "Hantera",
+          "second": "dina",
+          "third": "konton."
+        },
+        "stats": {
+          "first": "Utforska",
+          "second": "all",
+          "third": "statistik."
+        }
+      },
+      "rotatingLabel": "Led din klan. Hantera dina konton. Utforska all statistik.",
+      "copy": "Krig, laguppställningar, konton och klaninställningar på Discord, mobilen och webben."
+    },
+    "app": {
+      "title": "Mobilapp",
+      "intro": "Din följeslagare för Clash-konton.",
+      "stageLabel": "Skärmar för klan, uppgraderingar och krigswidgetar i ClashKing-mobilappen",
+      "images": {
+        "clanOverview": "Klanöversikt i ClashKing-mobilappen",
+        "upgradeStats": "Uppgraderingsstatistik för Storväktaren i ClashKing-mobilappen",
+        "warWidget": "ClashKing-widget för krigsresultat"
+      },
+      "features": {
+        "widgets": {
+          "title": "Widgetar",
+          "copy": "Se dina krig med en snabb blick."
+        },
+        "notifications": {
+          "title": "Aviseringar",
+          "copy": "Få en avisering när en attack blir tillgänglig eller när en uppgradering slutförs."
+        },
+        "accounts": {
+          "title": "Länkade konton",
+          "copy": "Samla alla dina Clash-konton på ett ställe."
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord-bot",
+      "intro": "Klanstatistik och verktyg direkt i Discord.",
+      "imageLabel": "ClashKing-klankommando i Discord",
+      "imageAlt": "ClashKing-klankommando som visar ArcLine-klanens statistik i Discord",
+      "features": {
+        "rosters": {
+          "title": "Laguppställningar",
+          "copy": "Hantera konton för CWL eller evenemang."
+        },
+        "warTools": {
+          "title": "Krigsverktyg",
+          "copy": "Kontrollera attacker, laguppställningar och påminnelser i Discord."
+        },
+        "accounts": {
+          "title": "Länkade konton",
+          "copy": "Samla alla dina Clash-konton på ett ställe."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Instrumentpanel",
+      "intro": "Hantera laguppställningar, påminnelser och serverinställningar på ett ställe.",
+      "imageLabel": "Byggarhydda som representerar verktyg för klanhantering",
+      "imageAlt": "Byggarhydda nivå 8",
+      "features": {
+        "settings": {
+          "title": "Klaninställningar",
+          "copy": "Konfigurera klaner, roller och kanaler."
+        },
+        "rosters": {
+          "title": "Laguppställningar",
+          "copy": "Hantera konton för CWL eller evenemang."
+        },
+        "automation": {
+          "title": "Automatisering",
+          "copy": "Schemalägg påminnelser och serveruppgifter."
+        }
+      }
+    },
+    "resources": {
+      "title": "Bygg med ClashKing.",
+      "copy": "Guider, källkod och strukturerade data för gemenskapsverktyg.",
+      "ariaLabel": "Utvecklarresurser",
+      "documentation": "Dokumentation",
+      "publicApi": "Offentligt API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans-verktyg för alla",
+      "docs": "Dokumentation",
+      "privacy": "Integritetspolicy",
+      "terms": "Användarvillkor",
+      "legal": "Detta innehåll är inte knutet till, stött, sponsrat eller uttryckligen godkänt av Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing för Discord, mobilen och webben",
+    "privacy": {
+      "title": "Integritetspolicy | ClashKing",
+      "openGraphTitle": "ClashKings integritetspolicy",
+      "description": "Hur ClashKing samlar in, använder, lagrar och skyddar konto-, spel- och appdata.",
+      "heading": "Integritetspolicy",
+      "eyebrow": "Gäller från den 17 juli 2026"
+    },
+    "terms": {
+      "title": "Användarvillkor | ClashKing",
+      "openGraphTitle": "ClashKings användarvillkor",
+      "description": "Villkoren som gäller när du använder ClashKings webbplatser, appar, tjänster och gemenskapsverktyg.",
+      "heading": "Användarvillkor",
+      "eyebrow": "Juridisk information om ClashKing"
+    }
+  }
+}

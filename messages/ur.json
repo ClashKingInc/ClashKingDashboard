@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "لوڈ ہو رہا ہے...",
+    "save": "محفوظ کریں",
+    "cancel": "منسوخ کریں۔",
+    "delete": "حذف کریں",
+    "edit": "ترمیم کریں",
+    "search": "تلاش کریں",
+    "filter": "فلٹر",
+    "add": "شامل کریں",
+    "remove": "ہٹائیں",
+    "refresh": "ریفریش",
+    "close": "بند کریں",
+    "openMenu": "مینو کھولیں",
+    "submit": "جمع کریں",
+    "back": "واپس",
+    "next": "اگلا",
+    "previous": "پچھلا",
+    "poweredBy": "پیشکش از",
+    "noData": "کوئی ڈیٹا دستیاب نہیں۔",
+    "noChannelFound": "کوئی چینل نہیں ملا۔",
+    "searchChannels": "چینلز تلاش کریں...",
+    "searchClans": "کلینز تلاش کریں...",
+    "noClanFound": "کوئی کلین نہیں ملا۔",
+    "searchCategories": "زمرے تلاش کریں...",
+    "noRoleFound": "کوئی رول نہیں ملا۔",
+    "searchRoles": "رولز تلاش کریں...",
+    "addRole": "رول شامل کریں...",
+    "error": "ایک خرابی پیش آ گئی",
+    "success": "کامیابی",
+    "actions": "کارروائیاں",
+    "details": "تفصیلات",
+    "view": "دیکھیں",
+    "unknown": "نامعلوم",
+    "confirm": "تصدیق کریں",
+    "settings": "ترتیبات",
+    "status": "حالت",
+    "retry": "دوبارہ کوشش کریں",
+    "disabled": "غیر فعال",
+    "name": "نام",
+    "description": "تفصیل",
+    "createdAt": "بنانے کی تاریخ",
+    "updatedAt": "تازہ کاری کی تاریخ",
+    "dashboard": "ڈیش بورڈ",
+    "loadError": "ڈیٹا لوڈ نہیں ہو سکا۔",
+    "tryAgain": "دوبارہ کوشش کریں",
+    "create": "بنائیں",
+    "viewClashProfile": "Clash پروفائل دیکھیں",
+    "openInGame": "گیم میں کھولیں",
+    "openChannelInDiscord": "یہ چینل Discord میں کھولیں",
+    "playerProfile": {
+      "clan": "کلین",
+      "townHallLevel": "ٹاؤن ہال کی سطح",
+      "trophies": "ٹرافیاں",
+      "warPreference": "جنگ کی ترجیح",
+      "warPreferenceIn": "شامل",
+      "warPreferenceOut": "غیر شامل",
+      "signupGroup": "سائن اپ گروپ",
+      "heroLevels": "ہیروز کی سطحیں",
+      "hitrate30d": "30 دن کی ہٹ ریٹ"
+    }
+  },
+  "Navigation": {
+    "features": "خصوصیات",
+    "openSource": "اوپن سورس",
+    "help": "مدد درکار ہے؟",
+    "support": "ہماری مدد کریں",
+    "commands": "کمانڈز",
+    "premium": "پریمیم",
+    "documentation": "دستاویزات",
+    "loginWithDiscord": "Discord کے ذریعے لاگ اِن کریں",
+    "addToDiscord": "Discord میں شامل کریں",
+    "openDashboard": "ڈیش بورڈ کھولیں",
+    "dashboardSettings": "ڈیش بورڈ کی ترتیبات",
+    "logout": "لاگ آؤٹ",
+    "settings": "ترتیبات",
+    "theme": "تھیم",
+    "systemTheme": "سسٹم کے مطابق",
+    "lightTheme": "روشن تھیم",
+    "darkTheme": "تاریک تھیم",
+    "language": "زبان",
+    "browserLanguage": "براؤزر کی زبان"
+  },
+  "HomePage": {
+    "badge": "{serverCount}+ سرورز پہلے ہی ClashKing استعمال کر رہے ہیں",
+    "title": "سب سے طاقتور",
+    "titleHighlight": "Clash of Clans بوٹ",
+    "subtitle": "اپنے کلین کا انتظام خودکار بنائیں، کھلاڑیوں کے اعدادوشمار اور جنگوں کو ٹریک کریں، اور اپنی کمیونٹی کو متحرک رکھیں۔",
+    "cta": {
+      "heading": "اپنے کلین کو بہتر بنانے کے لیے تیار ہیں؟",
+      "description": "ان {serverCount}+ Discord سرورز میں شامل ہوں جو ClashKing کے ذریعے اپنی Clash of Clans کمیونٹی بہتر بنا رہے ہیں۔ سیٹ اپ میں صرف 2 منٹ لگتے ہیں۔",
+      "button": "ClashKing کو Discord میں شامل کریں",
+      "trustBadge": "ہمیشہ مفت • کریڈٹ کارڈ درکار نہیں • {serverCount}+ سرورز",
+      "addToDiscord": "Discord میں شامل کریں",
+      "openDashboard": "ڈیش بورڈ کھولیں"
+    },
+    "stats": {
+      "servers": "Discord سرورز",
+      "users": "فعال صارفین",
+      "clans": "ٹریک کیے گئے کلینز"
+    },
+    "features": {
+      "title": "اپنے کلین کے انتظام کے لیے درکار ہر چیز",
+      "subtitle": "Clash of Clans کمیونٹیز کے لیے خاص طور پر تیار کردہ طاقتور خصوصیات",
+      "autoRoles": {
+        "title": "رولز کا خودکار انتظام",
+        "description": "کھلاڑی کی حالت، کلین میں عہدے اور کامیابیوں کی بنیاد پر رولز خودکار طور پر تفویض کریں، اور اپنے سرور کو آسانی سے منظم رکھیں۔"
+      },
+      "playerStats": {
+        "title": "کھلاڑی کے اعدادوشمار",
+        "description": "کھلاڑیوں کے تفصیلی اعدادوشمار، پیش رفت کے گراف اور حملوں کی تاریخ ٹریک کریں۔ دیکھیں کون بہتر ہو رہا ہے اور کسے مدد درکار ہے۔"
+      },
+      "leaderboards": {
+        "title": "لیڈر بورڈز",
+        "description": "عطیات، ٹرافیوں، جنگی ستاروں اور حسب ضرورت پیمانوں کے مسابقتی لیڈر بورڈز بنائیں اور سرگرمی بڑھائیں۔"
+      },
+      "warTracking": {
+        "title": "وار ٹریکنگ",
+        "description": "جنگی لائن اپس کی نگرانی کریں، حملے براہِ راست ٹریک کریں اور جنگ کے بعد کا تجزیہ حاصل کریں۔ جنگ کی کوئی تفصیل نہ چھوٹنے دیں۔"
+      },
+      "smartReminders": {
+        "title": "ذہین یاد دہانیاں",
+        "description": "کلین گیمز، جنگی حملوں، کلین وار لیگ اور حسب ضرورت ایونٹس کے لیے خودکار یاد دہانیاں بھیجیں، تاکہ سب باخبر رہیں۔"
+      },
+      "customization": {
+        "title": "مکمل حسب ضرورت ترتیب",
+        "description": "کمانڈز، ایمبیڈ کے رنگ، عرفی نام اور اجازتیں اپنی مرضی کے مطابق بنائیں۔ ClashKing کو واقعی اپنا بنائیں۔"
+      },
+      "familyManagement": {
+        "title": "فیملی کا انتظام",
+        "description": "متعدد کلینز کو ایک فیملی کے طور پر منظم کریں، بین الکلین اعدادوشمار، مشترکہ لیڈر بورڈز اور یکساں رولز استعمال کریں۔"
+      },
+      "analytics": {
+        "title": "اعلیٰ تجزیات",
+        "description": "کلین کی کارکردگی، کھلاڑیوں کی سرگرمی کے انداز اور ترقی کے رجحانات کی گہری معلومات حاصل کریں، تاکہ ڈیٹا کی بنیاد پر فیصلے کیے جا سکیں۔"
+      },
+      "performance": {
+        "title": "انتہائی تیز",
+        "description": "فوری کمانڈ جوابات اور براہِ راست اپ ڈیٹس کے ساتھ بہترین کارکردگی کے لیے بنایا گیا ہے۔ نہ وقفہ، نہ تاخیر۔"
+      },
+      "security": {
+        "title": "محفوظ اور قابلِ اعتماد",
+        "description": "99.9% اپ ٹائم، انکرپٹڈ ڈیٹا اور باقاعدہ بیک اپس کے ساتھ آپ کے کلین کا ڈیٹا ہمارے پاس محفوظ ہے۔"
+      }
+    },
+    "footer": {
+      "tagline": "Discord کمیونٹیز کے لیے سب سے طاقتور Clash of Clans بوٹ۔",
+      "about": {
+        "title": "کے بارے میں",
+        "features": "خصوصیات",
+        "help": "مدد درکار ہے؟",
+        "openSource": "اوپن سورس",
+        "support": "ہماری مدد کریں"
+      },
+      "bot": {
+        "title": "بوٹ",
+        "dashboard": "ڈیش بورڈ",
+        "inviteBot": "بوٹ کو مدعو کریں"
+      },
+      "resources": {
+        "title": "وسائل",
+        "documentation": "دستاویزات",
+        "quickStart": "فوری آغاز کی رہنمائی",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "کمیونٹی",
+        "discord": "Discord سرور",
+        "twitter": "X (Twitter)",
+        "reportBug": "خرابی کی اطلاع دیں",
+        "requestFeature": "خصوصیت کی درخواست کریں"
+      },
+      "legal": {
+        "copyright": "ClashKing۔ جملہ حقوق محفوظ ہیں۔",
+        "privacy": "پرائیویسی پالیسی",
+        "terms": "سروس کی شرائط"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "سرور پر موجود نہیں",
+    "unknownUser": "نامعلوم صارف",
+    "notLinked": "منسلک نہیں",
+    "status": {
+      "onServer": "سرور پر موجود",
+      "notOnServer": "سرور پر موجود نہیں"
+    },
+    "discordId": "Discord آئی ڈی",
+    "viewProfile": "Discord پروفائل دیکھیں",
+    "idPrefix": "آئی ڈی: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "جائزہ",
+      "description": "ڈیش بورڈ کا مرکزی صفحہ"
+    },
+    "general": {
+      "name": "عمومی ترتیبات",
+      "description": "سرور کی ترتیب"
+    },
+    "dashboardAccess": {
+      "name": "ڈیش بورڈ تک رسائی",
+      "description": "ڈیش بورڈ کے حصوں تک رسائی تفویض کریں"
+    },
+    "familySettings": {
+      "name": "فیملی کی ترتیبات",
+      "description": "فیملی رولز اور عرفی نام"
+    },
+    "clans": {
+      "name": "کلینز",
+      "description": "اپنے کلینز منظم کریں"
+    },
+    "logs": {
+      "name": "لاگز",
+      "description": "ویب ہک کی ترتیب"
+    },
+    "roles": {
+      "name": "رولز",
+      "description": "رولز کی خودکاری"
+    },
+    "reminders": {
+      "name": "یاد دہانیاں",
+      "description": "یاد دہانیوں کی تمام اقسام"
+    },
+    "rosters": {
+      "name": "روسٹرز",
+      "description": "روسٹر کا انتظام"
+    },
+    "bases": {
+      "name": "بیسز",
+      "description": "لے آؤٹ لائبریری اور سرگرمی"
+    },
+    "autoboards": {
+      "name": "آٹو بورڈز",
+      "description": "خودکار لیڈر بورڈز"
+    },
+    "giveaways": {
+      "name": "انعامی قرعہ اندازیاں",
+      "description": "انعامی مہمات منظم کریں"
+    },
+    "panels": {
+      "name": "پینلز",
+      "description": "کارروائی کے بٹنز والے تعاملی رکن پینلز"
+    },
+    "tickets": {
+      "name": "ٹکٹس",
+      "description": "بھرتی اور معاونت کے ٹکٹس"
+    },
+    "embeds": {
+      "name": "ایمبیڈز",
+      "description": "Discord ایمبیڈ ٹیمپلیٹس"
+    },
+    "links": {
+      "name": "لنکس",
+      "description": "کھلاڑی اور Discord کو منسلک کرنا"
+    },
+    "bans": {
+      "name": "پابندیاں اور اسٹرائیکس",
+      "description": "نگرانی کے ٹولز"
+    },
+    "wars": {
+      "name": "جنگیں",
+      "description": "جنگ کے اعدادوشمار"
+    },
+    "leaderboards": {
+      "name": "لیڈر بورڈز",
+      "description": "عالمی درجہ بندیاں"
+    },
+    "sections": {
+      "configuration": "ترتیب",
+      "clanManagement": "کلین مینجمنٹ",
+      "playerManagement": "کھلاڑیوں کا انتظام",
+      "automation": "خودکاری",
+      "statistics": "شماریات"
+    },
+    "switchServer": "سرور تبدیل کریں",
+    "goHome": "مرکزی صفحہ"
+  },
+  "BasesPage": {
+    "eyebrow": "کلین مینجمنٹ",
+    "title": "بیسز",
+    "description": "مشترکہ لے آؤٹس، سرگرمی کی تاریخ اور اصل Discord پیغامات کا جائزہ لیں۔",
+    "refresh": "ریفریش",
+    "create": "بیس شامل کریں",
+    "retry": "دوبارہ کوشش کریں",
+    "dismiss": "نظر انداز کریں",
+    "cancel": "منسوخ کریں۔",
+    "previous": "پچھلا",
+    "next": "اگلا",
+    "pagination": "صفحہ {page} از {total}",
+    "imageAlt": "بیس لے آؤٹ کی تصویر {index}",
+    "noDescription": "کوئی تفصیل فراہم نہیں کی گئی۔",
+    "openLayout": "لے آؤٹ کھولیں",
+    "openMessage": "Discord پیغام",
+    "summary": {
+      "total": "کل بیسز",
+      "page": "موجودہ صفحہ",
+      "visible": "نظر آنے والے"
+    },
+    "counts": {
+      "downloads": "منفرد ڈاؤن لوڈز",
+      "upvotes": "مثبت ووٹس",
+      "downvotes": "منفی ووٹس"
+    },
+    "history": {
+      "title": "ڈاؤن لوڈ کرنے والوں کی تاریخ ({count})",
+      "empty": "ڈاؤن لوڈ کرنے والوں کی کوئی ID ریکارڈ نہیں ہوئی۔",
+      "resolve": "پروفائل معلوم کریں"
+    },
+    "delete": {
+      "action": "حذف کریں",
+      "confirmTitle": "یہ بیس حذف کریں؟",
+      "confirmDescription": "اس سے ڈیٹا بیس ریکارڈ مستقل طور پر حذف ہو جائے گا اور پہلے اس کا اصل Discord پیغام حذف کرنے کی کوشش کی جائے گی۔ بیس بحال نہیں کیا جا سکے گا۔",
+      "confirmAction": "بیس حذف کریں",
+      "deleting": "حذف کیا جا رہا ہے…",
+      "baseId": "بیس ID",
+      "discordSource": "Discord ماخذ",
+      "successTitle": "بیس حذف کر دیا گیا",
+      "successDeleted": "ڈیٹا بیس ریکارڈ اور Discord پیغام حذف کر دیے گئے۔",
+      "successAlreadyMissing": "ڈیٹا بیس ریکارڈ حذف کر دیا گیا؛ Discord پیغام پہلے ہی موجود نہیں تھا۔",
+      "cleanupFailedTitle": "بیس برقرار ہے؛ Discord کی صفائی ناکام رہی",
+      "cleanupCompleteTitle": "Discord کی صفائی مکمل ہوئی؛ بیس برقرار ہے",
+      "failureTitle": "بیس حذف نہیں ہوا",
+      "failureFallback": "حذف کرنے کی درخواست ناکام رہی۔",
+      "retryable": "دوبارہ کوشش محفوظ ہے",
+      "notRetryable": "دوبارہ کوشش ممکن نہیں",
+      "cleanup": {
+        "deleted": "Discord پیغام حذف ہو گیا",
+        "alreadyMissing": "Discord پیغام پہلے ہی موجود نہیں تھا",
+        "failed": "Discord کی صفائی ناکام رہی"
+      }
+    },
+    "empty": {
+      "title": "ابھی کوئی بیس شیئر نہیں کیا گیا",
+      "description": "اس کا Discord چینل اور Clash of Clans لے آؤٹ لنک منتخب کر کے پہلا لے آؤٹ شامل کریں۔"
+    },
+    "form": {
+      "title": "بیس شامل کریں",
+      "description": "بیس بنانے کے بعد اس میں ترمیم نہیں ہو سکتی۔ وہ مقام منتخب کریں جہاں ClashKing کو Discord پیغام پوسٹ کرنا چاہیے اور لے آؤٹ لنک کی تصدیق کریں۔",
+      "channel": "Discord چینل",
+      "channelPlaceholder": "چینل منتخب کریں",
+      "channelSearch": "چینلز تلاش کریں…",
+      "channelsLoading": "چینلز لوڈ ہو رہے ہیں…",
+      "baseLink": "لے آؤٹ لنک",
+      "descriptionLabel": "تفصیل",
+      "images": "تصاویر",
+      "chooseImages": "لے آؤٹ کی تصاویر منتخب کریں",
+      "imageLimit": "زیادہ سے زیادہ چار تصاویر؛ بیس بننے سے پہلے اپ لوڈ مکمل ہوں گے۔",
+      "submit": "بیس بنائیں",
+      "creating": "اپ لوڈ اور تخلیق جاری ہے…",
+      "createRejectedTitle": "بیس نہیں بنایا گیا",
+      "createCleanupCompleteTitle": "Discord کی صفائی مکمل ہوئی؛ بیس نہیں بنایا گیا",
+      "createCleanupFailedTitle": "Discord پیغام باقی رہ سکتا ہے؛ بیس نہیں بنایا گیا",
+      "databaseNotInserted": "ڈیٹا بیس ریکارڈ شامل نہیں ہوا",
+      "discordMessageCreated": "Discord پیغام بنا دیا گیا",
+      "discordMessageId": "Discord پیغام ID",
+      "retryable": "دوبارہ کوشش محفوظ ہے",
+      "notRetryable": "خودکار طور پر دوبارہ کوشش نہ کریں",
+      "cleanup": {
+        "notNeeded": "Discord کی صفائی درکار نہیں",
+        "deleted": "Discord پیغام حذف ہو گیا",
+        "alreadyMissing": "Discord پیغام پہلے ہی موجود نہیں تھا",
+        "failed": "Discord کی صفائی ناکام رہی"
+      }
+    },
+    "errors": {
+      "title": "بیسز دستیاب نہیں",
+      "load": "بیسز لوڈ نہیں ہو سکے۔",
+      "create": "بیس نہیں بنایا جا سکا۔",
+      "upload": "تصویر اپ لوڈ نہیں ہو سکی۔",
+      "downloader": "اس ڈاؤن لوڈر کا پروفائل معلوم نہیں ہو سکا۔",
+      "channels": "Discord چینلز لوڈ نہیں ہو سکے۔",
+      "channelRequired": "Discord چینل منتخب کریں۔",
+      "linkRequired": "لے آؤٹ لنک درکار ہے۔",
+      "descriptionTooLong": "تفصیل 1,000 حروف یا اس سے کم ہونی چاہیے۔",
+      "tooManyImages": "زیادہ سے زیادہ چار تصاویر منتخب کریں۔"
+    }
+  },
+  "BansPage": {
+    "title": "نگرانی",
+    "description": "کھلاڑیوں کی پابندیوں اور اسٹرائیکس کا انتظام کریں",
+    "viewClashProfile": "Clash پروفائل دیکھیں",
+    "tabs": {
+      "bans": "پابندیاں",
+      "strikes": "اسٹرائیکس"
+    },
+    "bans": {
+      "title": "پابندی یافتہ کھلاڑی",
+      "noBans": "کوئی پابندی یافتہ کھلاڑی نہیں ملا",
+      "addBan": "پابندی شامل کریں",
+      "removeBan": "پابندی ہٹائیں",
+      "confirmRemove": "کیا آپ واقعی یہ پابندی ہٹانا چاہتے ہیں؟",
+      "playerTag": "کھلاڑی کا ٹیگ",
+      "playerName": "کھلاڑی کا نام",
+      "reason": "وجہ",
+      "bannedAt": "پابندی کی تاریخ",
+      "search": "نام یا ٹیگ سے تلاش کریں...",
+      "howItWorks": {
+        "title": "پابندیاں کیسے کام کرتی ہیں",
+        "description": "اگر کوئی پابندی یافتہ کھلاڑی آپ کے کسی کلین میں شامل ہو تو اس کلین چینل پر تنبیہ بھیجی جائے گی جسے آپ نے <clansTab>کلینز ٹیب</clansTab> میں ترتیب دیا ہے۔ بوٹ کھلاڑیوں کو شامل ہونے سے نہیں روک سکتا؛ وہ صرف تنبیہ بھیج سکتا ہے۔"
+      },
+      "stats": {
+        "total": "کل پابندیاں",
+        "recent": "حالیہ پابندیاں (7 دن)",
+        "commonReason": "سب سے عام وجہ",
+        "activeOnServer": "سرور پر فعال پابندیاں",
+        "last7Days": "گزشتہ 7 دنوں میں",
+        "commonReasonValue": "ہراسانی اور بدسلوکی",
+        "noBans": "ابھی کوئی پابندی نہیں",
+        "percentOfAll": "تمام پابندیوں کا {percent}%",
+        "percentOfAllLabel": "تمام پابندیوں میں سے"
+      },
+      "list": {
+        "title": "پابندی یافتہ کھلاڑی",
+        "count": "{count} {count, plural, one {پابندی یافتہ کھلاڑی} other {پابندی یافتہ کھلاڑی}}",
+        "searchPlaceholder": "نام، ٹیگ یا وجہ سے تلاش کریں...",
+        "noBansFound": "کوئی پابندی نہیں ملی",
+        "noBans": "کوئی پابندی یافتہ کھلاڑی نہیں",
+        "adjustSearch": "اپنی تلاش تبدیل کر کے دیکھیں",
+        "getStarted": "کھلاڑیوں کی نگرانی شروع کرنے کے لیے پابندی شامل کریں"
+      },
+      "table": {
+        "player": "کھلاڑی",
+        "reason": "وجہ",
+        "bannedBy": "پابندی لگانے والا",
+        "date": "تاریخ",
+        "daysAgo": "{days} دن پہلے",
+        "noReason": "کوئی وجہ فراہم نہیں کی گئی"
+      },
+      "addDialog": {
+        "title": "کھلاڑی پر پابندی لگائیں",
+        "description": "کھلاڑی کو پابندی کی فہرست میں شامل کریں۔ اگر وہ اس سرور کے کسی کلین میں شامل ہوا تو آپ کو تنبیہ ملے گی۔",
+        "playerTagLabel": "کھلاڑی کا ٹیگ",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "کھلاڑی کا نام (اختیاری)",
+        "playerNamePlaceholder": "کھلاڑی کا نام درج کریں",
+        "reasonLabel": "پابندی کی وجہ",
+        "reasonPlaceholder": "وضاحت کریں کہ اس کھلاڑی پر پابندی کیوں لگائی جا رہی ہے...",
+        "submit": "کھلاڑی پر پابندی لگائیں"
+      },
+      "bestPractices": {
+        "title": "بہترین طریقے",
+        "document": {
+          "title": "مکمل تفصیل درج کریں:",
+          "desc": "ہر پابندی کی تفصیلی وجہ ضرور دیں تاکہ دوسرے منتظمین پس منظر سمجھ سکیں۔"
+        },
+        "review": {
+          "title": "باقاعدگی سے جائزہ لیں:",
+          "desc": "وقتاً فوقتاً پابندیوں کی فہرست کا جائزہ لیں تاکہ تمام پابندیاں اب بھی ضروری اور مناسب ہوں۔"
+        },
+        "consistent": {
+          "title": "یکساں رویہ رکھیں:",
+          "desc": "صحت مند کمیونٹی برقرار رکھنے کے لیے تمام کھلاڑیوں پر پابندیاں منصفانہ اور یکساں طور پر لاگو کریں۔"
+        }
+      }
+    },
+    "strikes": {
+      "title": "کھلاڑیوں کے اسٹرائیکس",
+      "noStrikes": "کوئی اسٹرائیک نہیں ملا",
+      "addStrike": "اسٹرائیک شامل کریں",
+      "removeStrike": "اسٹرائیک ہٹائیں",
+      "confirmRemove": "کیا آپ واقعی یہ اسٹرائیک ہٹانا چاہتے ہیں؟",
+      "playerTag": "کھلاڑی کا ٹیگ",
+      "reason": "وجہ",
+      "weight": "وزن",
+      "rolloverDays": "میعاد کے دن",
+      "createdAt": "بنانے کی تاریخ",
+      "search": "کھلاڑی کے ٹیگ سے تلاش کریں...",
+      "howItWorks": {
+        "title": "اسٹرائیکس کیسے کام کرتے ہیں",
+        "description": "اسٹرائیکس قواعد کی خلاف ورزی پر کھلاڑیوں کو دی جانے والی تنبیہات ہیں۔ ہر اسٹرائیک کا ایک وزن (سنگینی) ہوتا ہے اور اسے مقررہ دنوں کے بعد اختیاری طور پر ختم کیا جا سکتا ہے۔ پابندی لگانے سے پہلے اسٹرائیکس کھلاڑی کے رویے کو ٹریک کرنے میں مدد دیتے ہیں۔"
+      },
+      "stats": {
+        "total": "کل اسٹرائیکس",
+        "recent": "حالیہ اسٹرائیکس (7 دن)",
+        "totalWeight": "اسٹرائیکس کا کل وزن",
+        "activeOnServer": "سرور پر فعال اسٹرائیکس",
+        "last7Days": "گزشتہ 7 دنوں میں",
+        "cumulativeWeight": "اسٹرائیکس کا مجموعی وزن",
+        "commonReason": "سب سے عام وجہ",
+        "commonReasonValue": "اسپیم کرنا"
+      },
+      "list": {
+        "title": "کھلاڑیوں کے اسٹرائیکس",
+        "count": "{count} {count, plural, one {اسٹرائیک جاری ہوا} other {اسٹرائیکس جاری ہوئے}}",
+        "searchPlaceholder": "نام، ٹیگ یا وجہ سے تلاش کریں...",
+        "noStrikesFound": "کوئی اسٹرائیک نہیں ملا",
+        "noStrikes": "کوئی اسٹرائیک جاری نہیں ہوا",
+        "adjustSearch": "اپنی تلاش تبدیل کر کے دیکھیں",
+        "getStarted": "کھلاڑی کی خلاف ورزیاں ٹریک کرنے کے لیے اسٹرائیک شامل کریں",
+        "viewAll": "تمام اسٹرائیکس",
+        "viewGrouped": "کھلاڑی کے لحاظ سے"
+      },
+      "table": {
+        "player": "کھلاڑی",
+        "reason": "وجہ",
+        "weight": "وزن",
+        "addedBy": "شامل کرنے والا",
+        "date": "تاریخ",
+        "expires": "میعاد ختم ہونے کی تاریخ",
+        "never": "کبھی نہیں",
+        "noReason": "کوئی وجہ فراہم نہیں کی گئی",
+        "daysAgo": "{days} دن پہلے",
+        "totalStrikes": "کل اسٹرائیکس",
+        "totalWeight": "کل وزن",
+        "lastStrike": "آخری اسٹرائیک"
+      },
+      "addDialog": {
+        "title": "اسٹرائیک شامل کریں",
+        "description": "کھلاڑی کو اسٹرائیک جاری کریں۔ اسٹرائیکس کے وزن اور میعاد ختم ہونے کی تاریخیں مختلف ہو سکتی ہیں۔",
+        "playerTagLabel": "کھلاڑی کا ٹیگ",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "وجہ",
+        "reasonPlaceholder": "وضاحت کریں کہ یہ اسٹرائیک کیوں جاری کیا جا رہا ہے...",
+        "weightLabel": "اسٹرائیک کا وزن",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "میعاد (دنوں میں)",
+        "rolloverPlaceholder": "اختیاری",
+        "submit": "اسٹرائیک شامل کریں"
+      },
+      "guidelines": {
+        "title": "اسٹرائیک کی رہنما ہدایات",
+        "weights": {
+          "title": "وزن سمجھ داری سے استعمال کریں:",
+          "desc": "سنگین خلاف ورزیوں کے لیے زیادہ وزن (2-3) اور معمولی مسائل کے لیے کم وزن (1) مقرر کریں۔"
+        },
+        "expiration": {
+          "title": "میعاد ختم ہونے کی تاریخ مقرر کریں:",
+          "desc": "اسٹرائیکس کی میعاد مقرر کرنے پر غور کریں تاکہ کھلاڑیوں کو وقت کے ساتھ اپنا رویہ بہتر بنانے کا موقع ملے۔"
+        },
+        "patterns": {
+          "title": "رویے کے انداز ٹریک کریں:",
+          "desc": "مستقل پابندی لگانے سے پہلے بار بار خلاف ورزی کرنے والوں کی شناخت کے لیے اسٹرائیکس استعمال کریں۔"
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "پابندی کامیابی سے شامل ہو گئی",
+      "banRemoved": "پابندی کامیابی سے ہٹا دی گئی",
+      "strikeAdded": "اسٹرائیک کامیابی سے شامل ہو گیا",
+      "strikeRemoved": "اسٹرائیک کامیابی سے ہٹا دیا گیا",
+      "errorLoadingBans": "پابندی یافتہ کھلاڑی لوڈ نہیں ہو سکے",
+      "errorLoadingStrikes": "اسٹرائیکس لوڈ نہیں ہو سکے",
+      "errorAddingBan": "پابندی شامل نہیں ہو سکی",
+      "errorAddingStrike": "اسٹرائیک شامل نہیں ہو سکا",
+      "errorRemovingBan": "پابندی ہٹائی نہیں جا سکی",
+      "errorRemovingStrike": "اسٹرائیک ہٹایا نہیں جا سکا"
+    }
+  },
+  "RostersPage": {
+    "title": "روسٹرز اور لائن اپس",
+    "description": "جنگی روسٹرز، لائن اپس اور ارکان کی تفویض کا انتظام کریں",
+    "stats": {
+      "totalRosters": "کل روسٹرز",
+      "totalMembers": "کل ارکان",
+      "clanRosters": "کلین روسٹرز",
+      "familyRosters": "فیملی روسٹرز",
+      "members": "ارکان",
+      "avgTh": "اوسط TH",
+      "avgHitrate": "اوسط ہٹ ریٹ",
+      "distribution": "تقسیم",
+      "clan": "کلین",
+      "family": "فیملی",
+      "external": "بیرونی",
+      "thDistribution": "TH کی تقسیم",
+      "capacity": "گنجائش"
+    },
+    "filters": {
+      "search": "روسٹرز تلاش کریں...",
+      "type": "قسم",
+      "all": "تمام",
+      "clan": "کلین",
+      "family": "فیملی",
+      "clear": "فلٹرز صاف کریں"
+    },
+    "comparisonMode": {
+      "cancel": "منسوخ کریں۔",
+      "compare": "موازنہ کریں",
+      "compareRosters": "روسٹرز کا موازنہ کریں",
+      "selectRosters": "روسٹرز منتخب کریں",
+      "selectRostersDesc": "موازنے کے لیے کم از کم 2 روسٹرز منتخب کریں",
+      "maxReached": "زیادہ سے زیادہ حد پوری ہو گئی",
+      "maxReachedDesc": "آپ ایک وقت میں زیادہ سے زیادہ 4 روسٹرز کا موازنہ کر سکتے ہیں"
+    },
+    "createDialog": {
+      "title": "نیا روسٹر بنائیں",
+      "description": "اپنے کلین کے لیے نیا روسٹر ترتیب دیں",
+      "aliasLabel": "روسٹر کا نام",
+      "aliasPlaceholder": "مثلاً CWL روسٹر",
+      "typeLabel": "روسٹر کی قسم",
+      "typeClan": "کلین",
+      "typeFamily": "فیملی",
+      "signupScopeLabel": "سائن اپ کا دائرہ",
+      "scopeClanOnly": "صرف کلین",
+      "scopeFamilyWide": "پوری فیملی",
+      "clanLabel": "کلین",
+      "clanPlaceholder": "کلین منتخب کریں",
+      "descriptionLabel": "تفصیل (اختیاری)",
+      "descriptionPlaceholder": "روسٹر کی تفصیل...",
+      "cancel": "منسوخ کریں۔",
+      "creating": "بنایا جا رہا ہے...",
+      "create": "روسٹر بنائیں"
+    },
+    "editDialog": {
+      "title": "روسٹر میں ترمیم کریں",
+      "description": "روسٹر کی ترتیبات اور تشکیل تبدیل کریں",
+      "aliasLabel": "روسٹر کا نام",
+      "descriptionLabel": "تفصیل",
+      "descriptionPlaceholder": "روسٹر کی تفصیل...",
+      "minThLabel": "کم از کم ٹاؤن ہال",
+      "minThPlaceholder": "مثلاً 13",
+      "maxThLabel": "زیادہ سے زیادہ ٹاؤن ہال",
+      "maxThPlaceholder": "مثلاً 16",
+      "rosterSizeLabel": "روسٹر کا حجم",
+      "rosterSizePlaceholder": "مثلاً 50",
+      "columnsLabel": "دکھائے جانے والے کالم",
+      "columnsPlaceholder": "دکھانے کے لیے کالم منتخب کریں",
+      "sortLabel": "ترتیب کا معیار",
+      "sortPlaceholder": "ترتیب کے فیلڈز منتخب کریں",
+      "cancel": "منسوخ کریں۔",
+      "saving": "محفوظ ہو رہا ہے...",
+      "save": "تبدیلیاں محفوظ کریں"
+    },
+    "addMembersDialog": {
+      "title": "روسٹر میں ارکان شامل کریں",
+      "description": "اپنے کلین سے ارکان منتخب کریں یا کھلاڑیوں کے ٹیگز درج کریں",
+      "bulkTagsLabel": "ٹیگز کے ذریعے اجتماعی اضافہ",
+      "bulkTagsPlaceholder": "کھلاڑیوں کے ٹیگز درج کریں (ہر سطر میں ایک یا کوما سے جدا)",
+      "searchLabel": "ارکان تلاش کریں",
+      "searchPlaceholder": "نام یا ٹیگ سے تلاش کریں...",
+      "selectFromClan": "کلین کے ارکان میں سے منتخب کریں",
+      "selectedCount": "منتخب",
+      "noMembers": "کوئی رکن دستیاب نہیں",
+      "noMembersSelected": "کوئی رکن منتخب نہیں",
+      "noMembersSelectedDesc": "ارکان منتخب کریں یا کھلاڑیوں کے ٹیگز درج کریں۔",
+      "cancel": "منسوخ کریں۔",
+      "adding": "شامل کیا جا رہا ہے...",
+      "add": "ارکان شامل کریں"
+    },
+    "detailsDialog": {
+      "title": "روسٹر کی تفصیلات",
+      "edit": "ترمیم کریں",
+      "refresh": "ریفریش",
+      "refreshing": "تازہ کیا جا رہا ہے...",
+      "delete": "حذف کریں",
+      "deleting": "حذف کیا جا رہا ہے...",
+      "addMembers": "ارکان شامل کریں",
+      "close": "بند کریں",
+      "noMembers": "اس روسٹر میں کوئی رکن نہیں",
+      "noMembersDesc": "شروع کرنے کے لیے ارکان شامل کریں",
+      "memberCount": "ارکان",
+      "thRestriction": "TH کی سطح",
+      "avgTh": "اوسط TH",
+      "avgHitrate": "اوسط ہٹ ریٹ",
+      "clan": "کلین",
+      "family": "فیملی",
+      "external": "بیرونی",
+      "substitute": "متبادل",
+      "removeMember": "ہٹائیں"
+    },
+    "rosterCard": {
+      "members": "ارکان",
+      "thLevel": "TH کی سطح",
+      "avgTh": "اوسط TH",
+      "avgHitrate": "اوسط ہٹ ریٹ",
+      "clan": "کلین",
+      "family": "فیملی",
+      "external": "بیرونی",
+      "noRestriction": "کوئی پابندی نہیں",
+      "view": "دیکھیں",
+      "edit": "ترمیم کریں",
+      "delete": "حذف کریں",
+      "noGroup": "کوئی گروپ نہیں",
+      "moveToGroup": "گروپ میں منتقل کریں",
+      "clone": "نقل بنائیں",
+      "allRosters": "تمام روسٹرز",
+      "manageRosters": "اپنے جنگی روسٹرز اور لائن اپس کا انتظام کریں"
+    },
+    "memberColumns": {
+      "name": "نام",
+      "townhall": "ٹاؤن ہال",
+      "tag": "ٹیگ",
+      "hitrate": "ہٹ ریٹ",
+      "current_clan": "موجودہ کلین",
+      "current_clan_tag": "کلین ٹیگ",
+      "discord": "Discord",
+      "hero_lvs": "ہیرو",
+      "war_pref": "جنگ میں شرکت",
+      "trophies": "ٹرافیاں",
+      "signup_group": "سائن اپ گروپ"
+    },
+    "columns": {
+      "configure": "کالم",
+      "title": "کالم ترتیب دیں",
+      "description": "دکھائے جانے والے کالم اور ان کی ترتیب منتخب کریں",
+      "selected": "منتخب کالم",
+      "available": "دستیاب کالم",
+      "save": "کالم محفوظ کریں",
+      "reset": "کالم دوبارہ ترتیب دیں"
+    },
+    "sortFields": {
+      "townhall": "ٹاؤن ہال کی سطح",
+      "name": "نام",
+      "tag": "ٹیگ",
+      "heroLvs": "ہیرو",
+      "trophies": "ٹرافیاں",
+      "hitrate": "30 دن کی ہٹ ریٹ",
+      "currentClanTag": "کلین ٹیگ",
+      "addedAt": "شامل کرنے کی تاریخ"
+    },
+    "thRestrictions": {
+      "only": "صرف TH{th}",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "کوئی پابندی نہیں"
+    },
+    "emptyState": {
+      "noRosters": "ابھی کوئی روسٹر نہیں بنایا گیا",
+      "noRostersDesc": "شروع کرنے کے لیے اپنا پہلا روسٹر بنائیں",
+      "noMatch": "کوئی روسٹر آپ کے فلٹرز سے مطابقت نہیں رکھتا",
+      "noMatchDesc": "تلاش یا فلٹر کا معیار تبدیل کر کے دیکھیں"
+    },
+    "toast": {
+      "errorTitle": "خرابی",
+      "successTitle": "کامیابی",
+      "errorLoadingRosters": "روسٹرز لوڈ نہیں ہو سکے۔ دوبارہ کوشش کریں۔",
+      "errorLoadingMembers": "کلین کے ارکان لوڈ نہیں ہو سکے۔",
+      "rosterCreated": "روسٹر کامیابی سے بن گیا!",
+      "errorCreatingRoster": "روسٹر نہیں بن سکا۔ دوبارہ کوشش کریں۔",
+      "rosterUpdated": "روسٹر کامیابی سے اپ ڈیٹ ہو گیا!",
+      "errorUpdatingRoster": "روسٹر اپ ڈیٹ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "rosterDeleted": "روسٹر کامیابی سے حذف ہو گیا!",
+      "errorDeletingRoster": "روسٹر حذف نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "membersAdded": "روسٹر میں {count} ارکان شامل کر دیے گئے!",
+      "errorAddingMembers": "ارکان شامل نہیں ہو سکے۔ دوبارہ کوشش کریں۔",
+      "memberRemoved": "رکن روسٹر سے ہٹا دیا گیا!",
+      "errorRemovingMember": "رکن ہٹایا نہیں جا سکا۔ دوبارہ کوشش کریں۔",
+      "substituteMarked": "رکن کو متبادل کے طور پر نشان زد کر دیا گیا!",
+      "substituteUnmarked": "رکن سے متبادل کا نشان ہٹا دیا گیا!",
+      "errorUpdatingMember": "رکن اپ ڈیٹ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "rosterRefreshed": "روسٹر کا ڈیٹا کامیابی سے تازہ ہو گیا!",
+      "errorRefreshingRoster": "روسٹر کا ڈیٹا تازہ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "memberTransferred": "رکن کامیابی سے روسٹرز کے درمیان منتقل ہو گیا!",
+      "errorTransferringMember": "رکن منتقل نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "rosterCloned": "روسٹر کی نقل کامیابی سے بن گئی!",
+      "errorCloningRoster": "روسٹر کی نقل نہیں بن سکی۔ دوبارہ کوشش کریں۔",
+      "missingMembersAdded": "روسٹر میں {count} غیر موجود ارکان شامل کر دیے گئے!",
+      "errorLoadingMissingMembers": "غیر موجود ارکان لوڈ نہیں ہو سکے۔"
+    },
+    "cloneDialog": {
+      "title": "روسٹر کی نقل بنائیں",
+      "description": "اس روسٹر کی نقل بنائیں",
+      "aliasLabel": "نئے روسٹر کا نام",
+      "aliasPlaceholder": "نقل شدہ روسٹر کا نام درج کریں",
+      "copyMembers": "ارکان کو نئے روسٹر میں نقل کریں",
+      "memberCount": "{count} ارکان",
+      "originalRoster": "اصل روسٹر:",
+      "cancel": "منسوخ کریں۔",
+      "cloning": "نقل بنائی جا رہی ہے...",
+      "clone": "روسٹر کی نقل بنائیں",
+      "copyMembersHint": "ارکان اصل روسٹر سے نقل کیے جائیں گے"
+    },
+    "missingMembers": {
+      "title": "غیر موجود ارکان",
+      "description": "کلین کے وہ ارکان جو اس روسٹر میں رجسٹرڈ نہیں",
+      "coverage": "روسٹر کی کوریج",
+      "registered": "رجسٹرڈ",
+      "missing": "غیر موجود",
+      "total": "کل",
+      "selectAll": "سب منتخب کریں",
+      "selected": "منتخب",
+      "addSelected": "{count} ارکان شامل کریں",
+      "button": "غیر موجود ارکان",
+      "addAll": "سب شامل کریں",
+      "adding": "شامل کیا جا رہا ہے...",
+      "close": "بند کریں",
+      "allCaughtUp": "سب مکمل ہے!",
+      "allCaughtUpDesc": "کلین کے تمام ارکان اس روسٹر میں رجسٹرڈ ہیں",
+      "clanOnly": "غیر موجود ارکان کا تجزیہ صرف کلین روسٹرز کے لیے دستیاب ہے",
+      "error": "غیر موجود ارکان لوڈ نہیں ہو سکے",
+      "thisRoster": "یہ روسٹر",
+      "wholeGroup": "پورا گروپ"
+    },
+    "eventTime": {
+      "label": "ایونٹ شروع ہونے کا وقت",
+      "timezone": "آپ کا ٹائم زون",
+      "utc": "UTC",
+      "clear": "وقت ہٹائیں"
+    },
+    "bulkValidation": {
+      "valid": "درست",
+      "invalid": "غلط",
+      "invalidTags": "غلط"
+    },
+    "memberAutocomplete": {
+      "label": "یا سرور کے ارکان تلاش کریں",
+      "placeholder": "ارکان تلاش کرنے کے لیے کلک کریں...",
+      "searchPlaceholder": "نام، ٹیگ یا کلین سے تلاش کریں...",
+      "loading": "ارکان لوڈ ہو رہے ہیں...",
+      "noResults": "کوئی رکن نہیں ملا",
+      "groupHeading": "سرور کے ارکان",
+      "selectedLabel": "منتخب ارکان",
+      "membersSelected": "ارکان منتخب",
+      "selected": "منتخب",
+      "clanMembersLabel": "یا کلین کے ارکان میں سے منتخب کریں"
+    },
+    "retry": "دوبارہ کوشش کریں",
+    "back": "واپس",
+    "refresh": "ریفریش",
+    "createRoster": "روسٹر بنائیں",
+    "searchPlaceholder": "روسٹرز تلاش کریں...",
+    "noRosters": "ابھی کوئی روسٹر نہیں",
+    "noRostersHint": "شروع کرنے کے لیے اپنا پہلا روسٹر بنائیں",
+    "noSearchResults": "کوئی روسٹر نہیں ملا",
+    "noSearchResultsHint": "تلاش کے لیے مختلف الفاظ آزمائیں",
+    "createFirstRoster": "پہلا روسٹر بنائیں",
+    "deleteConfirm": "کیا آپ واقعی \"{name}\" کو حذف کرنا چاہتے ہیں؟",
+    "deleteSuccess": "روسٹر حذف ہو گیا",
+    "deleteSuccessDesc": "روسٹر \"{name}\" حذف کر دیا گیا ہے",
+    "deleteError": "روسٹر حذف نہیں ہو سکا",
+    "createSuccess": "روسٹر بن گیا",
+    "createSuccessDesc": "روسٹر \"{name}\" بنا دیا گیا ہے",
+    "createError": "روسٹر نہیں بن سکا",
+    "createErrorAlias": "روسٹر کا نام درج کریں",
+    "createErrorClan": "کلین منتخب کریں",
+    "refreshSuccess": "روسٹر کا ڈیٹا تازہ ہو گیا",
+    "refreshError": "روسٹر تازہ نہیں ہو سکا",
+    "saveSuccess": "ترتیبات محفوظ ہو گئیں",
+    "saveError": "ترتیبات محفوظ نہیں ہو سکیں",
+    "columnsUpdated": "کالم اپ ڈیٹ ہو گئے",
+    "columnsError": "کالم اپ ڈیٹ نہیں ہو سکے",
+    "addMembersSuccess": "ارکان شامل ہو گئے",
+    "addMembersSuccessDesc": "روسٹر میں {count} ارکان شامل کر دیے گئے",
+    "addMembersError": "ارکان شامل نہیں ہو سکے",
+    "removeMemberSuccess": "رکن ہٹا دیا گیا",
+    "removeMemberError": "رکن ہٹایا نہیں جا سکا",
+    "clearMembers": "ارکان ہٹائیں",
+    "clearMembersConfirm": "\"{name}\" سے تمام ارکان ہٹائیں؟ یہ عمل واپس نہیں ہو سکتا۔",
+    "clearMembersSuccess": "تمام ارکان ہٹا دیے گئے",
+    "clearMembersError": "تمام ارکان نہیں ہٹائے جا سکے",
+    "automationCreated": "خودکاری بن گئی",
+    "automationUpdated": "خودکاری اپ ڈیٹ ہو گئی",
+    "automationDeleted": "خودکاری حذف ہو گئی",
+    "automationError": "خودکاری میں خرابی",
+    "groupCreated": "گروپ بن گیا",
+    "groupUpdated": "گروپ اپ ڈیٹ ہو گیا",
+    "groupDeleted": "گروپ حذف ہو گیا",
+    "groupError": "گروپ محفوظ نہیں ہو سکا",
+    "categoryCreated": "زمرہ بن گیا",
+    "categoryUpdated": "زمرہ اپ ڈیٹ ہو گیا",
+    "categoryDeleted": "زمرہ حذف ہو گیا",
+    "categoryError": "زمرہ محفوظ نہیں ہو سکا",
+    "common": {
+      "cancel": "منسوخ کریں۔",
+      "save": "محفوظ کریں",
+      "close": "بند کریں"
+    },
+    "tabs": {
+      "members": "ارکان",
+      "automations": "خودکاریاں",
+      "groups": "گروپس",
+      "categories": "زمرے",
+      "settings": "ترتیبات"
+    },
+    "members": {
+      "count": "ارکان",
+      "noMembers": "اس روسٹر میں کوئی رکن نہیں",
+      "noMembersHint": "شروع کرنے کے لیے ارکان شامل کریں",
+      "actions": "کارروائیاں",
+      "viewList": "فہرست کا منظر",
+      "viewGrouped": "سائن اپ زمرے کے لحاظ سے دیکھیں",
+      "unassigned": "غیر تفویض شدہ",
+      "dragHere": "ارکان کو یہاں کھینچیں",
+      "clickToGroup": "زمرے کے لحاظ سے دیکھنے کے لیے کلک کریں",
+      "apiErrorTooltip": "API سے ڈیٹا حاصل نہیں ہو سکا",
+      "staleDataTooltip": "ڈیٹا پرانا ہو سکتا ہے، آخری تازہ کاری:",
+      "refresh": "ارکان کا ڈیٹا تازہ کریں",
+      "alsoIn": "یہاں بھی موجود",
+      "addCategory": "گروپ شامل کریں",
+      "removeCategory": "گروپ ہٹائیں"
+    },
+    "addMembers": {
+      "title": "روسٹر میں ارکان شامل کریں",
+      "description": "اپنے کلینز سے ارکان منتخب کریں یا کھلاڑیوں کے ٹیگز درج کریں",
+      "bulkTagsLabel": "کھلاڑیوں کے ٹیگز (ہر سطر میں ایک یا کوما سے جدا)",
+      "adding": "شامل کیا جا رہا ہے...",
+      "submit": "ارکان شامل کریں"
+    },
+    "compare": {
+      "enterMode": "موازنہ کریں",
+      "modeTitle": "موازنے کا موڈ",
+      "modeHint": "روسٹرز منتخب کرنے کے لیے ان پر کلک کریں (2 سے 4 روسٹرز)",
+      "exitMode": "منسوخ کریں۔",
+      "selected": "روسٹرز منتخب",
+      "button": "موازنہ کریں",
+      "title": "روسٹرز کا موازنہ کریں",
+      "dragToMove": "ارکان کو منتقل کرنے کے لیے روسٹرز کے درمیان کھینچ کر چھوڑیں",
+      "loadError": "روسٹرز لوڈ نہیں ہو سکے",
+      "memberMoved": "رکن منتقل ہو گیا",
+      "memberMovedDesc": "{name} کو {from} سے {to} منتقل کر دیا گیا",
+      "moveError": "رکن منتقل نہیں ہو سکا",
+      "selectAtLeast2": "موازنے کے لیے کم از کم 2 روسٹرز منتخب کریں",
+      "moving": "رکن منتقل کیا جا رہا ہے...",
+      "compareGroup": "گروپ کا موازنہ کریں",
+      "dragToMoveCategory": "ارکان کو روسٹرز اور زمروں کے درمیان کھینچیں",
+      "categoryChanged": "زمرہ تبدیل ہو گیا",
+      "categoryChangedDesc": "{name} کو {category} میں منتقل کر دیا گیا",
+      "uncategorized": "بلا زمرہ"
+    },
+    "ungrouped": "بلا گروپ",
+    "automations": {
+      "description": "اس روسٹر کے لیے خودکار کارروائیاں شیڈول کریں",
+      "create": "خودکاری بنائیں",
+      "empty": "کوئی خودکاری نہیں",
+      "emptyHint": "کارروائیاں شیڈول کرنے کے لیے خودکاری بنائیں",
+      "active": "فعال",
+      "inactive": "غیر فعال",
+      "executed": "مکمل",
+      "missed": "رہ گیا",
+      "lastRun": "آخری عمل",
+      "enable": "فعال کریں",
+      "disable": "غیر فعال کریں",
+      "createTitle": "خودکاری بنائیں",
+      "editTitle": "خودکاری میں ترمیم کریں",
+      "createDesc": "خودکار کارروائی شیڈول کریں",
+      "actionType": "کارروائی کی قسم",
+      "offsetFromEvent": "ایونٹ کے لحاظ سے وقت",
+      "offsetBefore": "ایونٹ سے پہلے",
+      "offsetAfter": "ایونٹ کے بعد",
+      "offsetUnit_minutes": "منٹ",
+      "offsetUnit_hours": "گھنٹے",
+      "offsetUnit_days": "دن",
+      "offsetPreview": "اس وقت چلے گا: {date}",
+      "offsetNoEventDate": "عمل کی تاریخ دیکھنے کے لیے ترتیبات میں ایونٹ شروع ہونے کا وقت مقرر کریں",
+      "offsetAtStart": "ایونٹ کے آغاز پر",
+      "pingType": "یاد دہانی کی قسم",
+      "pingType_signup_reminder": "سائن اپ کی یاد دہانی",
+      "pingType_missing": "کلین سے غیر موجود",
+      "pingType_sub_needed": "متبادل درکار",
+      "channel": "Discord چینل",
+      "selectChannel": "چینل منتخب کریں",
+      "channelHint": "وہ چینل جہاں کارروائی پوسٹ یا انجام دی جائے گی",
+      "activeLabel": "فعال",
+      "target": "ہدف",
+      "targetThisRoster": "یہ روسٹر",
+      "targetGroups": "گروپس",
+      "targetHint": "خودکاری صرف اس روسٹر یا گروپ کے تمام روسٹرز پر لاگو کریں",
+      "group": "گروپ",
+      "groupAutomationHint": "گروپس ٹیب سے انتظام کریں",
+      "targetRoster": "روسٹر",
+      "targetGroup": "گروپ",
+      "willExecute": "طے شدہ وقت پر چلے گا",
+      "paused": "موقوف — عمل نہیں ہوگا",
+      "actions": {
+        "ping": "یاد دہانی بھیجیں",
+        "post": "روسٹر پوسٹ کریں",
+        "openSignup": "سائن اپ کھولیں",
+        "closeSignup": "سائن اپ بند کریں",
+        "delete": "روسٹر حذف کریں",
+        "clear": "ارکان ہٹائیں",
+        "archive": "روسٹر محفوظ شدہ میں ڈالیں"
+      },
+      "actionDescriptions": {
+        "roster_ping": "ان ارکان کو یاد دہانی بھیجتا ہے جنہوں نے سائن اپ نہیں کیا یا جو غلط کلین میں ہیں",
+        "roster_post": "حتمی روسٹر فہرست منتخب چینل میں پوسٹ کرتا ہے",
+        "roster_signup": "سائن اپ کھولتا ہے تاکہ کھلاڑی رجسٹر ہو سکیں",
+        "roster_signup_close": "سائن اپ بند کرتا ہے اور نئی رجسٹریشن روکتا ہے",
+        "roster_delete": "روسٹر اور اس کا تمام ڈیٹا مستقل طور پر حذف کرتا ہے",
+        "roster_clear": "روسٹر حذف کیے بغیر اس سے تمام ارکان ہٹاتا ہے",
+        "roster_archive": "روسٹر محفوظ شدہ میں ڈال کر اسے صرف پڑھنے کے قابل بناتا ہے"
+      },
+      "infoBox": "خودکاریاں ایونٹ شروع ہونے کے وقت کے لحاظ سے چلتی ہیں۔ وقفہ مقرر کریں (مثلاً 3 دن پہلے) تو بوٹ اس وقت کارروائی خودکار طور پر انجام دے گا، بار بار ہونے والے ایونٹس کے لیے بھی۔"
+    },
+    "groups": {
+      "title": "روسٹر گروپس",
+      "description": "بہتر انتظام کے لیے روسٹرز کو گروپس میں منظم کریں",
+      "create": "نیا گروپ",
+      "noGroups": "ابھی کوئی گروپ نہیں بنایا گیا",
+      "rostersCount": "روسٹرز",
+      "createTitle": "گروپ بنائیں",
+      "editTitle": "گروپ میں ترمیم کریں",
+      "nameLabel": "گروپ کا نام",
+      "namePlaceholder": "مثلاً CWL گروپس",
+      "infoBox": "گروپس متعدد روسٹرز کو ایک ساتھ منظم کرنے دیتے ہیں (مثلاً تمام CWL روسٹرز)۔ آپ ترتیبات ٹیب سے روسٹر کو گروپ میں تفویض کر سکتے ہیں اور گروپ کے تمام روسٹرز پر ایک ساتھ خودکاریاں لاگو کر سکتے ہیں۔",
+      "manageAutomations": "خودکاریوں کا انتظام کریں",
+      "automationsTitle": "گروپ کی خودکاریاں",
+      "automationsDesc": "یہ خودکاریاں اس گروپ کے تمام روسٹرز پر لاگو ہوتی ہیں",
+      "noAutomations": "کوئی خودکاری نہیں",
+      "noAutomationsHint": "اس گروپ کے لیے خودکاری بنائیں",
+      "addAutomation": "خودکاری شامل کریں",
+      "deleteConfirm": "گروپ \"{name}\" حذف کریں؟ اس گروپ کے روسٹرز بلا گروپ ہو جائیں گے۔",
+      "emptyGroup": "ابھی اس گروپ میں کوئی روسٹر نہیں",
+      "rules": {
+        "title": "گروپ کے قواعد",
+        "rulesHint": "یہ قواعد گروپ کے تمام روسٹرز پر لاگو ہوتے ہیں اور فوراً نافذ ہو جاتے ہیں۔",
+        "maxAccounts": "فی صارف زیادہ سے زیادہ اکاؤنٹس",
+        "maxAccountsBadge": "فی صارف زیادہ سے زیادہ {count}",
+        "rosterSize": "روسٹر کا حجم",
+        "rosterSizeBadge": "حجم {size}",
+        "minSignups": "کم از کم بھراؤ",
+        "minSignupsBadge": "حد {count}",
+        "categoriesTitle": "سائن اپ کے زمرے",
+        "categoriesHint": "اس گروپ کے لیے دستیاب زمرے منتخب کریں۔ یہ فوراً تمام روسٹرز پر لاگو ہوں گے۔",
+        "categoriesBadge": "{count} زمرے",
+        "noCategories": "ابھی کوئی زمرہ نہیں۔",
+        "newCategoryPlaceholder": "نئے زمرے کا نام…"
+      }
+    },
+    "categories": {
+      "title": "سائن اپ کے زمرے",
+      "description": "کھلاڑیوں کے سائن اپ اور روسٹر فلٹرنگ کے زمرے",
+      "manage": "زمروں کا انتظام کریں",
+      "create": "نیا زمرہ",
+      "noCategories": "ابھی کوئی زمرہ نہیں بنایا گیا",
+      "createTitle": "زمرہ بنائیں",
+      "editTitle": "زمرے میں ترمیم کریں",
+      "deleteConfirm": "زمرہ \"{name}\" حذف کریں؟",
+      "idLabel": "زمرہ ID",
+      "nameLabel": "زمرے کا نام",
+      "infoBox": "زمرے کھلاڑیوں کو سائن اپ کے وقت اپنی دستیابی یا کردار بتانے دیتے ہیں (مثلاً 'دستیاب'، 'غیر یقینی'، 'صرف ضرورت پر')۔ زمرے اس سرور کے تمام روسٹرز میں مشترک ہوتے ہیں۔ گروپ شدہ روسٹرز کے لیے گروپ کی ترتیبات سے قابل اطلاق زمرے منتخب کریں۔"
+    },
+    "settings": {
+      "general": "شناخت اور ترتیب",
+      "restrictions": "پابندیاں اور حدود",
+      "name": "روسٹر کا نام",
+      "rosterType": "روسٹر کی قسم",
+      "typeClan": "کلین",
+      "typeFamily": "فیملی",
+      "signupScope": "سائن اپ کا دائرہ",
+      "scopeClanOnly": "صرف کلین",
+      "scopeFamilyWide": "پوری فیملی",
+      "clan": "کلین",
+      "selectClan": "کلین منتخب کریں",
+      "description": "تفصیل",
+      "descriptionPlaceholder": "اس روسٹر کی تفصیل درج کریں...",
+      "typeAndScope": "قسم اور دائرہ",
+      "eventTime": "ایونٹ شروع ہونے کا وقت",
+      "eventTimeHint": "ایونٹ شروع ہونے کا وقت۔ خودکاریوں اور الٹی گنتی کے لیے استعمال ہوتا ہے۔",
+      "recurrenceDays": "ہر اتنی مدت بعد دہرائیں",
+      "recurrenceModeDays": "ہر N دن بعد",
+      "recurrenceModeMonthly": "مہینے کا دن",
+      "recurrenceDaysUnit": "دن",
+      "recurrenceDayOfMonthPrefix": "دن",
+      "recurrenceDayOfMonthSuffix": "ہر مہینے کا",
+      "recurrenceDaysHint": "ایک بار کے ایونٹ کے لیے خالی چھوڑیں۔ ہر تکرار کے درمیان دنوں کی تعداد درج کریں (مثلاً ماہانہ CWL کے لیے 30)۔",
+      "recurrenceDayOfMonthHint": "ہر ماہ اس دن دہرایا جاتا ہے (مثلاً 1 = پہلی تاریخ)۔",
+      "group": "گروپ",
+      "noGroup": "کوئی گروپ نہیں",
+      "thRequirements": "ٹاؤن ہال کے تقاضے",
+      "minTh": "کم از کم TH",
+      "maxTh": "زیادہ سے زیادہ TH",
+      "signupLimits": "سائن اپ کی حدود",
+      "rosterSize": "روسٹر کا حجم",
+      "rosterSizeHint": "ارکان کی زیادہ سے زیادہ تعداد",
+      "minSignups": "کم از کم سائن اپس",
+      "minSignupsHint": "روسٹر بھرنے کے لیے درکار سائن اپس کی کم از کم تعداد",
+      "maxAccountsPerUser": "فی صارف زیادہ سے زیادہ اکاؤنٹس",
+      "maxAccountsHint": "ہر Discord صارف کے اکاؤنٹس محدود کریں",
+      "allowedCategories": "اجازت یافتہ سائن اپ زمرے",
+      "allowedCategoriesHint": "تبدیل کرنے کے لیے کلک کریں۔ اگر کچھ منتخب نہ ہو تو تمام زمروں کی اجازت ہوگی۔",
+      "defaultSignupCategory": "پہلے سے طے شدہ سائن اپ زمرہ",
+      "defaultSignupCategoryNone": "کوئی نہیں (پہلے سے طے شدہ نہیں)",
+      "defaultSignupCategoryHint": "رکن کے سائن اپ کرتے وقت پہلے سے منتخب زمرہ۔",
+      "categoriesManagedByGroup": "سائن اپ زمروں کا انتظام گروپ کی سطح پر ہوتا ہے۔ اس گروپ کے تمام روسٹرز کے لیے دستیاب زمرے ترتیب دینے کی خاطر روسٹرز صفحے سے گروپ کی ترتیبات کھولیں۔",
+      "saving": "محفوظ ہو رہا ہے...",
+      "save": "ترتیبات محفوظ کریں"
+    }
+  },
+  "LinksPage": {
+    "title": "لنکس کا نظم",
+    "description": "Discord ارکان کے اکاؤنٹ لنکس کا نظم کریں اور کھلاڑی کی ملکیت کی تصدیق کریں",
+    "tabs": {
+      "overview": "جائزہ",
+      "pending": "زیر التوا",
+      "bulk": "اجتماعی کارروائیاں",
+      "analytics": "تجزیات"
+    },
+    "stats": {
+      "totalMembers": "کل ارکان",
+      "membersWithLinks": "لنک شدہ اکاؤنٹس والے ارکان",
+      "totalLinkedAccounts": "کل لنک شدہ اکاؤنٹس",
+      "verifiedAccounts": "تصدیق شدہ اکاؤنٹس",
+      "ofTotal": "کل میں سے",
+      "avgPerMember": "اوسط",
+      "perMember": "فی رکن",
+      "verified": "تصدیق شدہ"
+    },
+    "filters": {
+      "searchPlaceholder": "رکن کے نام، صارف نام، کھلاڑی کے نام یا ٹیگ سے تلاش کریں...",
+      "filterByStatus": "حیثیت کے لحاظ سے فلٹر کریں",
+      "allAccounts": "تمام اکاؤنٹس",
+      "verifiedOnly": "صرف تصدیق شدہ",
+      "unverifiedOnly": "صرف غیر تصدیق شدہ",
+      "minAccounts": "کم از کم اکاؤنٹس",
+      "allMembers": "تمام ارکان",
+      "oneOrMore": "1 یا زیادہ اکاؤنٹس",
+      "twoOrMore": "2 یا زیادہ اکاؤنٹس",
+      "threeOrMore": "3 یا زیادہ اکاؤنٹس",
+      "fiveOrMore": "5 یا زیادہ اکاؤنٹس"
+    },
+    "overview": {
+      "title": "اکاؤنٹ لنکس",
+      "description": "Discord اور Clash of Clans کے تمام اکاؤنٹ لنکس دیکھیں اور ان کا نظم کریں",
+      "showingMembers": "{count} {members} دکھائے جا رہے ہیں",
+      "member": "رکن",
+      "members": "ارکان",
+      "noMembers": "کوئی رکن نہیں ملا",
+      "adjustFilters": "اپنی تلاش یا فلٹرز تبدیل کر کے دیکھیں۔",
+      "noLinkedAccounts": "لنک شدہ اکاؤنٹس والا کوئی رکن نہیں ہے۔",
+      "exportCSV": "CSV برآمد کریں",
+      "exportJSON": "JSON برآمد کریں",
+      "account": "اکاؤنٹ",
+      "accounts": "اکاؤنٹس",
+      "more": "مزید",
+      "unknown": "نامعلوم"
+    },
+    "pending": {
+      "title": "زیر التوا تصدیقات",
+      "description": "{count} اکاؤنٹس تصدیق کے منتظر ہیں",
+      "allVerified": "تمام اکاؤنٹس کی تصدیق ہو چکی ہے!",
+      "noPending": "اس وقت کوئی تصدیق زیر التوا نہیں ہے۔",
+      "linked": "منسلک"
+    },
+    "bulk": {
+      "title": "اجتماعی کارروائیاں",
+      "description": "ایک ساتھ متعدد ارکان پر کارروائی کریں",
+      "selectAll": "سبھی منتخب کریں ({count})",
+      "deselectAll": "سبھی کا انتخاب ہٹائیں",
+      "unlinkSelected": "منتخب اکاؤنٹس کے لنکس ختم کریں ({count})",
+      "linked": "منسلک",
+      "comingSoon": "اجتماعی طور پر لنک ختم کرنے کی سہولت جلد آ رہی ہے!"
+    },
+    "analytics": {
+      "title": "لنکس کے تجزیات",
+      "description": "لنک کرنے کے اعداد و شمار اور رجحانات کا جائزہ",
+      "verificationRate": "تصدیق کی شرح",
+      "verified": "تصدیق شدہ",
+      "unverified": "غیر تصدیق شدہ",
+      "accountDistribution": "اکاؤنٹس کی تقسیم",
+      "oneAccount": "1 اکاؤنٹ",
+      "twoToThreeAccounts": "2 سے 3 اکاؤنٹس",
+      "fourPlusAccounts": "4 یا زیادہ اکاؤنٹس",
+      "townHallLevels": "ٹاؤن ہال کی سطحیں",
+      "other": "دیگر",
+      "coverage": "دائرۂ کار",
+      "linkedMembers": "لنک شدہ ارکان",
+      "coverageRate": "دائرۂ کار کی شرح",
+      "linkInsights": "لنکس کی تفصیلات",
+      "avgAccountsPerMember": "فی رکن اکاؤنٹس کی اوسط:",
+      "mostLinkedAccounts": "سب سے زیادہ لنک شدہ اکاؤنٹس:",
+      "membersWithoutLinks": "بغیر لنکس والے ارکان:"
+    },
+    "actions": {
+      "unlinkAccount": "اکاؤنٹ کا لنک ختم کریں"
+    },
+    "deleteDialog": {
+      "title": "اکاؤنٹ کا لنک ختم کریں",
+      "description": "کیا آپ واقعی {playerName} کا لنک ختم کرنا چاہتے ہیں؟ یہ کارروائی واپس نہیں لی جا سکتی۔",
+      "cancel": "منسوخ کریں۔",
+      "unlinking": "لنک ختم کیا جا رہا ہے...",
+      "unlink": "لنک ختم کریں"
+    },
+    "bulkDialog": {
+      "title": "اکاؤنٹس کے لنکس اجتماعی طور پر ختم کریں",
+      "description": "کیا آپ واقعی منتخب کردہ {count} ارکان کے تمام اکاؤنٹس کے لنکس ختم کرنا چاہتے ہیں؟ یہ کارروائی واپس نہیں لی جا سکتی۔",
+      "cancel": "منسوخ کریں۔",
+      "unlinkAll": "سبھی کے لنکس ختم کریں"
+    },
+    "toast": {
+      "unlinkFailed": "اکاؤنٹ کا لنک ختم نہیں ہو سکا۔ دوبارہ کوشش کریں۔"
+    },
+    "badges": {
+      "verified": "تصدیق شدہ",
+      "unverified": "غیر تصدیق شدہ",
+      "pending": "زیر التوا"
+    },
+    "pagination": {
+      "showing": "کل {total} ارکان میں سے {start} تا {end} دکھائے جا رہے ہیں",
+      "page": "کل {total} میں سے صفحہ {current}",
+      "previous": "پچھلا",
+      "next": "اگلا"
+    }
+  },
+  "WarsPage": {
+    "title": "جنگ کے اعداد و شمار",
+    "description": "جنگی کارکردگی پر نظر رکھیں اور لڑائی کے اعداد و شمار کا تجزیہ کریں",
+    "actions": {
+      "exportData": "ڈیٹا برآمد کریں",
+      "resetFilters": "فلٹرز دوبارہ ترتیب دیں",
+      "applyFilters": "فلٹرز"
+    },
+    "filters": {
+      "title": "فلٹرز",
+      "description": "مختلف معیار کے لحاظ سے جنگ کے اعداد و شمار فلٹر کریں",
+      "clan": "کلین",
+      "allClans": "تمام کلینز",
+      "townHall": "ٹاؤن ہال",
+      "townHallShort": "TH",
+      "allTownHalls": "تمام TH سطحیں",
+      "townHallLevel": "TH {level}",
+      "period": "مدت",
+      "last7Days": "گزشتہ 7 دن",
+      "last30Days": "آخری 30 دن",
+      "last90Days": "گزشتہ 90 دن",
+      "last6Months": "گزشتہ 6 ماہ",
+      "lastYear": "گزشتہ سال",
+      "custom": "حسب ضرورت",
+      "startDate": "شروع تاریخ",
+      "endDate": "اختتام تاریخ",
+      "warTypes": "جنگ کی اقسام"
+    },
+    "summaryStats": {
+      "totalWins": "کل فتوحات",
+      "totalWinsDesc": "کل {totalWars} جنگوں میں سے",
+      "totalLosses": "کل شکستیں",
+      "totalLossesDesc": "{totalDraws} برابر",
+      "winRate": "جیت کی شرح",
+      "winRateDesc": "مجموعی کارکردگی",
+      "activeWars": "جاری جنگیں",
+      "activeWarsDesc": "CWL میں {activeCwl}"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "ہفتہ وار جنگی کارکردگی",
+        "description": "منتخب مدت کے دوران ہفتہ وار فتوحات، شکستیں اور برابر مقابلے",
+        "wins": "فتوحات",
+        "losses": "شکستیں",
+        "draws": "برابر مقابلے"
+      },
+      "thSuccessRate": {
+        "title": "ٹاؤن ہال کے لحاظ سے حملوں کی کامیابی کی شرح",
+        "description": "فی TH سطح 3 اسٹار کی شرح",
+        "threeStarPercent": "3 اسٹار %",
+        "otherPercent": "دیگر %"
+      },
+      "warTypeDistribution": {
+        "title": "جنگ کی اقسام کی تقسیم",
+        "description": "جنگ کی قسم کے لحاظ سے تفصیل",
+        "cwl": "سی ڈبلیو ایل",
+        "random": "عام جنگیں",
+        "friendly": "دوستانہ جنگیں"
+      },
+      "topPerformers": {
+        "title": "بہترین کارکردگی دکھانے والے",
+        "description": "کل اسٹارز کے لحاظ سے بہترین جنگجو",
+        "attacksAndStars": "{attacks} حملے • {stars} اسٹارز",
+        "noData": "کھلاڑیوں کا کوئی ڈیٹا دستیاب نہیں ہے۔ اپنے فلٹرز تبدیل کر کے دیکھیں۔"
+      },
+      "missedAttacks": {
+        "title": "ضائع شدہ حملے",
+        "description": "وہ کھلاڑی جنہوں نے اپنے تمام حملے استعمال نہیں کیے",
+        "attacks": "ضائع شدہ حملے"
+      },
+      "topDefenders": {
+        "title": "بہترین دفاع کرنے والے",
+        "description": "گنوائے گئے اوسط اسٹارز کے لحاظ سے بہترین دفاع کرنے والے",
+        "defensesAndStars": "{defenses} دفاع • {stars} اسٹارز گنوائے",
+        "noData": "دفاع کا کوئی ڈیٹا دستیاب نہیں ہے۔ اپنے فلٹرز تبدیل کر کے دیکھیں۔"
+      },
+      "worstAttackers": {
+        "title": "کمزور ترین حملہ آور",
+        "description": "فی حملہ سب سے کم اوسط اسٹارز والے کھلاڑی (کم از کم 3 حملے)",
+        "attacksAndStars": "{attacks} حملے • {stars} اسٹارز",
+        "noData": "کھلاڑیوں کا کوئی ڈیٹا دستیاب نہیں ہے۔ اپنے فلٹرز تبدیل کر کے دیکھیں۔"
+      },
+      "worstDefenders": {
+        "title": "کمزور ترین دفاع کرنے والے",
+        "description": "دفاع میں سب سے زیادہ اسٹارز گنوانے والے کھلاڑی (کم از کم 3 دفاع)",
+        "defensesAndStars": "{defenses} دفاع • {stars} اسٹارز گنوائے",
+        "noData": "دفاع کا کوئی ڈیٹا دستیاب نہیں ہے۔ اپنے فلٹرز تبدیل کر کے دیکھیں۔"
+      }
+    },
+    "clanStatsTable": {
+      "title": "کلین جنگ کے اعدادوشمار",
+      "description": "ہر کلین کے تفصیلی اعداد و شمار",
+      "headers": {
+        "clan": "کلین",
+        "status": "حالت",
+        "wars": "جنگیں",
+        "record": "W/L/D",
+        "winRate": "جیت کی شرح",
+        "avgDestruction": "اوسط تباہی",
+        "avgStarsPerAttack": "فی حملہ اسٹارز",
+        "avgDefenseStars": "فی دفاع اسٹارز"
+      },
+      "status": {
+        "inWar": "جنگ جاری ہے",
+        "cwl": "سی ڈبلیو ایل",
+        "peace": "جنگ نہیں"
+      },
+      "noData": "کلین کے اعداد و شمار دستیاب نہیں ہیں۔ فلٹرز لگا کر دیکھیں یا ڈیٹا لوڈ ہونے کا انتظار کریں۔"
+    },
+    "toast": {
+      "errorTitle": "خرابی",
+      "errorLoadingClans": "کلینز لوڈ نہیں ہو سکے۔ دوبارہ کوشش کریں۔",
+      "errorLoadingWarData": "جنگ کا ڈیٹا لوڈ نہیں ہو سکا۔ دوبارہ کوشش کریں۔",
+      "errorNoClans": "کوئی کلین دستیاب نہیں ہے",
+      "errorApplyingFilters": "فلٹرز لاگو نہیں ہو سکے۔ دوبارہ کوشش کریں۔"
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "لیڈر بورڈز",
+    "description": "کلین کیپیٹل اور دیگر عالمی لیڈر بورڈز",
+    "comingSoon": "یہ سہولت جلد آ رہی ہے۔ بعد میں دوبارہ دیکھیں!",
+    "stats": {
+      "totalEntries": "کل اندراجات",
+      "type": "قسم",
+      "league": "لیگ",
+      "weekend": "اختتامِ ہفتہ"
+    },
+    "filters": {
+      "title": "فلٹرز",
+      "description": "اپنا لیڈر بورڈ منظر حسب ضرورت بنائیں",
+      "type": "قسم",
+      "metric": "پیمانہ",
+      "league": "لیگ",
+      "weekend": "اختتامِ ہفتہ"
+    },
+    "types": {
+      "player": "کھلاڑی",
+      "clan": "کلینز"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "لوٹا گیا کیپیٹل گولڈ"
+        },
+        "clan": {
+          "capitalTotalLoot": "کل لوٹ",
+          "raidsCompleted": "چھاپے مکمل",
+          "enemyDistrictsDestroyed": "اضلاع تباہ",
+          "medals": "میڈلز"
+        }
+      }
+    },
+    "leagues": {
+      "all": "تمام",
+      "legendLeague": "لیجنڈ لیگ",
+      "titanLeagueI": "ٹائٹن لیگ I",
+      "titanLeagueII": "ٹائٹن لیگ II",
+      "titanLeagueIII": "ٹائٹن لیگ III"
+    },
+    "rankings": {
+      "title": "درجہ بندی",
+      "description": "{weekend} کے لیے سرفہرست {count} {type}",
+      "players": "کھلاڑی",
+      "clans": "کلینز"
+    },
+    "empty": {
+      "title": "کوئی ڈیٹا دستیاب نہیں ہے.",
+      "description": "کوئی دوسرا اختتام ہفتہ یا لیگ منتخب کر کے دیکھیں"
+    }
+  },
+  "ClansPage": {
+    "title": "کلین مینجمنٹ",
+    "description": "اپنے کلینز اور ان کی Discord انضمام ترتیبات تشکیل دیں",
+    "addClan": "کلین شامل کریں",
+    "addNewClan": "نیا کلین شامل کریں",
+    "addClanDescription": "اس سرور میں شامل کرنے کے لیے اپنے کلین کا ٹیگ درج کریں",
+    "clanTag": "کلین ٹیگ",
+    "totalClans": "کل کلینز",
+    "registeredClans": "رجسٹرڈ کلینز",
+    "configured": "ترتیب شدہ",
+    "withSettingsConfigured": "ترتیبات مکمل شدہ",
+    "totalMembers": "کل ارکان",
+    "acrossAllClans": "تمام کلینز میں",
+    "channels": "چینلز",
+    "availableChannels": "دستیاب چینلز",
+    "noClansYet": "ابھی کوئی کلین نہیں",
+    "getStartedAdding": "اپنا پہلا کلین شامل کر کے شروع کریں",
+    "addFirstClan": "اپنا پہلا کلین شامل کریں",
+    "level": "سطح",
+    "members": "ارکان",
+    "status": "حالت",
+    "configuredBadge": "ترتیب شدہ",
+    "setupRequired": "سیٹ اپ درکار",
+    "configure": "ترتیب دیں",
+    "sorting": {
+      "label": "کلینز ترتیب دیں",
+      "sortBy": "ترتیب دیں۔",
+      "toggleDirection": "ترتیب کی سمت بدلیں",
+      "added": "شامل کرنے کی تاریخ",
+      "name": "کلین کا نام",
+      "level": "کلین لیول",
+      "members": "ارکان"
+    },
+    "configureClan": "{name} ({tag}) کو ترتیب دیں",
+    "customizeIntegration": "اس کلین کے لیے Discord انضمام کی ترتیبات حسب ضرورت بنائیں",
+    "tabs": {
+      "basic": "Discord سیٹ اپ",
+      "war": "جنگ"
+    },
+    "memberRole": "رکن رول",
+    "leaderRole": "لیڈر رول",
+    "selectRole": "رول منتخب کریں",
+    "none": "کوئی نہیں",
+    "clanAbbreviation": "کلین کا مخفف",
+    "warScoreCountdown": "جنگی اسکور کی الٹی گنتی",
+    "warScoreCountdownDescription": "موجودہ جنگی اسکور دکھانے والا وائس چینل بناتا ہے",
+    "warTimerCountdown": "جنگی وقت کی الٹی گنتی",
+    "warTimerCountdownDescription": "جنگ میں باقی وقت دکھانے والا وائس چینل بناتا ہے",
+    "category": "زمرہ",
+    "categoryOptions": {
+      "none": "کوئی زمرہ نہیں",
+      "premade": "عام زمرے",
+      "usedByServer": "دوسرے کلینز کے زیر استعمال",
+      "clanCount": "{count, plural, one {# کلین} other {# کلینز}}"
+    },
+    "categories": {
+      "title": "کلین کے زمرے",
+      "description": "اس سرور کے کلینز کے لیے دستیاب زمرے بنائیں اور برقرار رکھیں۔",
+      "refresh": "ریفریش",
+      "createLabel": "نیا زمرہ",
+      "name": "زمرے کا نام",
+      "namePlaceholder": "مثلاً مسابقتی",
+      "nameHelp": "خالی جگہیں درست کرنے کے بعد {count}/{max} حروف",
+      "create": "زمرہ بنائیں",
+      "empty": "کلین کا کوئی زمرہ نہیں بنایا گیا۔",
+      "clanCount": "{count, plural, one {# کلین} other {# کلینز}}",
+      "renameAction": "{name} کا نام بدلیں",
+      "deleteAction": "{name} حذف کریں",
+      "renameTitle": "کلین زمرے کا نام بدلیں",
+      "renameDescription": "درست کیا گیا نام ہر تفویض شدہ کلین میں اپ ڈیٹ ہوگا۔",
+      "saveRename": "نام محفوظ کریں",
+      "deleteTitle": "کلین زمرہ حذف کریں؟",
+      "deleteWarning": "“{name}” حذف کرنے سے {count, plural, one {# کلین} other {# کلینز}} بلا زمرہ ہو جائیں گے۔",
+      "deleteCountMayChange": "یہ پیش منظر موجودہ حالت دکھاتا ہے۔ حذف مکمل ہونے پر متاثرہ کلینز کی اصل تعداد بتائی جائے گی۔",
+      "confirmDelete": "زمرہ حذف کریں",
+      "deleteSuccessTitle": "{name} حذف ہو گیا",
+      "deleteSuccessDescription": "{count, plural, =0 {کوئی کلین تبدیل نہیں ہوا۔} one {# کلین اب بلا زمرہ ہے۔} other {# کلینز اب بلا زمرہ ہیں۔}}",
+      "created": "{name} بنا دیا گیا۔",
+      "renamed": "زمرے کا نام بدل کر {name} کر دیا گیا۔",
+      "errors": {
+        "title": "زمرے دستیاب نہیں",
+        "load": "کلین کے زمرے لوڈ نہیں ہو سکے۔",
+        "create": "کلین زمرہ نہیں بن سکا۔",
+        "rename": "کلین زمرے کا نام نہیں بدلا جا سکا۔",
+        "preview": "حذف کرنے کا پیش منظر لوڈ نہیں ہو سکا۔",
+        "delete": "کلین زمرہ حذف نہیں ہو سکا۔",
+        "refresh": "زمرہ تبدیل ہو گیا، لیکن تازہ زمرہ یا کلین کی حالت لوڈ نہیں ہو سکی۔",
+        "invalidName": "کنٹرول حروف کے بغیر زیادہ سے زیادہ 64 حروف کا نام استعمال کریں۔"
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "مزید معلومات دکھائیں",
+      "memberRole": "یہ رول اس کلین کے ارکان کو ملے گا۔ اگر بوٹ آپ کے Discord پر رولز منظم کرتا ہے تو اس کلین کے ہر فرد کو یہ رول دیا جائے گا۔ یہ کلین کے مخصوص چینلز بنانے میں مفید ہے۔",
+      "leaderRole": "یہ رول اس کلین کے شریک لیڈرز اور لیڈر کو ملے گا۔ عام Discord سرور میں یہ کلین لیڈرز کی چیٹ یا تمام کلینز کی مشترکہ لیڈر چیٹ کے لیے مفید ہے۔",
+      "clanAbbreviation": "اپنے کلین کا مخفف مقرر کریں تاکہ نام بدلنے کی سہولت فعال ہونے پر ارکان اسے اپنے نام میں رکھ سکیں۔ یہ فارمیٹ <familySettingsLink>فیملی ترتیبات</familySettingsLink> میں ترتیب دیا جا سکتا ہے۔",
+      "category": "یہ آپ کے کلینز منظم کرنے کا طریقہ ہے۔ بہت سی کلین فیملیز میں 5 یا زیادہ کلینز ہوتے ہیں، جن میں سے کچھ صرف CWL یا ایونٹس کے لیے ہو سکتے ہیں۔"
+    },
+    "roleIdPlaceholder": "رول ID",
+    "abbreviationPlaceholder": "مثلاً CK",
+    "categoryPlaceholder": "زمرے کا نام",
+    "notAvailable": "N/A",
+    "saving": "محفوظ ہو رہا ہے...",
+    "saveChanges": "تبدیلیاں محفوظ کریں",
+    "deleteConfirm": "کیا آپ واقعی {tag} ہٹانا چاہتے ہیں؟ اس سے تمام متعلقہ یاد دہانیاں اور لاگز بھی حذف ہو جائیں گے۔",
+    "toast": {
+      "errorLoadingClans": "کلینز لوڈ نہیں ہو سکے",
+      "errorLoadingSettings": "کلین کی ترتیبات لوڈ نہیں ہو سکیں",
+      "errorEmptyClanTag": "کلین ٹیگ درج کریں",
+      "clanAdded": "کلین کامیابی سے شامل ہو گیا",
+      "errorAddingClan": "کلین شامل نہیں ہو سکا",
+      "clanRemoved": "کلین کامیابی سے ہٹا دیا گیا",
+      "errorRemovingClan": "کلین ہٹایا نہیں جا سکا",
+      "settingsSaved": "ترتیبات کامیابی سے محفوظ ہو گئیں",
+      "errorSavingSettings": "ترتیبات محفوظ نہیں ہو سکیں",
+      "countdownEnabled": "الٹی گنتی کا وائس چینل بن گیا",
+      "countdownDisabled": "الٹی گنتی کا وائس چینل ہٹا دیا گیا",
+      "errorTogglingCountdown": "الٹی گنتی کی حالت تبدیل نہیں ہو سکی"
+    }
+  },
+  "RolesPage": {
+    "title": "رولز کا انتظام",
+    "description": "کھلاڑیوں کے اعدادوشمار کی بنیاد پر خودکار رول تفویض ترتیب دیں",
+    "stats": {
+      "totalRoles": "کل رولز",
+      "totalRolesDesc": "ترتیب شدہ رول تفویض",
+      "autoEvaluation": "خودکار جانچ",
+      "autoEvaluationOn": "آن",
+      "autoEvaluationOff": "آف",
+      "autoEvaluationActiveDesc": "رولز خودکار طور پر تفویض ہو رہے ہیں",
+      "autoEvaluationInactiveDesc": "صرف دستی رول تفویض",
+      "activeTypes": "فعال اقسام",
+      "activeTypesDesc": "زیر استعمال رول اقسام",
+      "discordRoles": "Discord رولز",
+      "discordRolesDesc": "سرور پر دستیاب"
+    },
+    "settings": {
+      "title": "خودکار جانچ کی ترتیبات",
+      "description": "رولز کی خودکار جانچ اور تفویض ترتیب دیں",
+      "saveButton": "ترتیبات محفوظ کریں",
+      "saving": "محفوظ ہو رہا ہے...",
+      "enableAutoEval": "خودکار جانچ فعال کریں",
+      "enableAutoEvalDesc": "کھلاڑیوں کے اعدادوشمار کی بنیاد پر رولز خودکار طور پر تفویض اور ہٹائیں",
+      "autoNickname": "عرفی نام خودکار اپ ڈیٹ کریں",
+      "autoNicknameDesc": "رولز کی جانچ کے وقت عرفی نام اپ ڈیٹ کریں"
+    },
+    "roleTypes": {
+      "townhall": "ٹاؤن ہال",
+      "league": "لیگ",
+      "builderhall": "بلڈر ہال",
+      "builderLeague": "بلڈر لیگ",
+      "achievement": "کامیابی",
+      "status": "Discord پر مدت",
+      "familyPosition": "فیملی میں عہدہ"
+    },
+    "familyPositions": {
+      "member": "رکن",
+      "elder": "ایلڈر",
+      "coLeader": "شریک لیڈر",
+      "leader": "لیڈر"
+    },
+    "leagues": {
+      "legend": "لیجنڈ",
+      "electroDragon": "الیکٹرو ڈریگن",
+      "dragon": "ڈریگن",
+      "electroTitan": "الیکٹرو ٹائٹن",
+      "pekka": "P.E.K.K.A",
+      "golem": "گولم",
+      "witch": "وِچ",
+      "valkyrie": "والکیری",
+      "wizard": "وزرڈ",
+      "archer": "آرچر",
+      "barbarian": "باربیرین",
+      "skeleton": "اسکیلیٹن"
+    },
+    "builderLeagues": {
+      "diamond": "ڈائمنڈ",
+      "ruby": "روبی",
+      "emerald": "ایمرلڈ",
+      "platinum": "پلاٹینم",
+      "titanium": "ٹائٹینیم",
+      "steel": "اسٹیل",
+      "iron": "آئرن",
+      "brass": "پیتل",
+      "copper": "تانبا",
+      "stone": "پتھر",
+      "clay": "مٹی",
+      "wood": "لکڑی"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "اپنا اکاؤنٹ محفوظ رکھیں!",
+      "biggerAndBetter": "بڑا اور بہتر",
+      "discoverNewTroops": "نئے دستے دریافت کریں",
+      "biggerCoffers": "بڑے خزانے",
+      "goldGrab": "سونے کی لوٹ",
+      "elixirEscapade": "ایلکسر کی مہم",
+      "heroicHeist": "دلیرانہ ڈکیتی",
+      "wellSeasoned": "تجربہ کار",
+      "niceAndTidy": "صاف ستھرا",
+      "empireBuilder": "سلطنت کا معمار",
+      "clanWarWealth": "کلین جنگ کی دولت",
+      "friendInNeed": "مشکل میں دوست",
+      "sharingIsCaring": "بانٹنا خیال رکھنے کی علامت ہے",
+      "siegeSharer": "سیج مشینیں بانٹنے والا",
+      "warHero": "جنگی ہیرو",
+      "warLeagueLegend": "وار لیگ کا لیجنڈ",
+      "gamesChampion": "گیمز چیمپیئن",
+      "unbreakable": "ناقابلِ تسخیر",
+      "sweetVictory": "شاندار فتح!",
+      "conqueror": "فاتح",
+      "leagueAllStar": "لیگ کا آل اسٹار",
+      "leagueFollower": "لیگ کا پیروکار",
+      "leagueEnthusiast": "لیگ کا شوقین",
+      "leagueSuperfan": "لیگ کا سپر فین",
+      "leagueFanatic": "لیگ کا دیوانہ",
+      "leagueMaster": "لیگ کا ماسٹر",
+      "legendLeague": "لیجنڈ لیگ",
+      "humiliator": "رسوا کرنے والا",
+      "notSoEasyThisTime": "اس بار اتنا آسان نہیں",
+      "unionBuster": "اتحاد شکن",
+      "bustThis": "اسے توڑو!",
+      "wallBuster": "دیوار شکن",
+      "mortarMauler": "مارٹر تباہ کن",
+      "xBowExterminator": "ایکس بو تباہ کن",
+      "firefighter": "آگ بجھانے والا",
+      "antiArtillery": "توپ خانے کا دشمن",
+      "shatteredAndScatter": "چکنا چور اور منتشر",
+      "counterspell": "جوابی اسپیل",
+      "monolithMasher": "مونولتھ تباہ کن",
+      "multiArcherTowerTerminator": "ملٹی آرچر ٹاور تباہ کن",
+      "ricochetCannonCrusher": "ریکوشے کینن تباہ کن",
+      "firespitterFinisher": "فائر اسپیٹر تباہ کن",
+      "multiGearTowerTrampler": "ملٹی گیئر ٹاور تباہ کن",
+      "craftersNightmare": "کاریگر کا ڈراؤنا خواب",
+      "getThoseGoblins": "ان گوبلنز کو پکڑو!",
+      "supercharger": "سپر چارجر",
+      "craftingConnoisseur": "دستکاری کا ماہر",
+      "getThoseOtherGoblins": "ان دوسرے گوبلنز کو پکڑو!",
+      "getEvenMoreGoblins": "مزید گوبلنز کو پکڑو!",
+      "dragonSlayer": "ڈریگن کا قاتل",
+      "ungratefulChild": "ناشکرا بچہ",
+      "superbWork": "شاندار کام",
+      "masterEngineering": "اعلیٰ انجینئرنگ",
+      "hiddenTreasures": "چھپے خزانے",
+      "highGear": "تیز رفتار",
+      "nextGenerationModel": "اگلی نسل کا ماڈل",
+      "unBuildIt": "اسے توڑ دو",
+      "championBuilder": "چیمپیئن معمار",
+      "aggressiveCapitalism": "جارحانہ سرمایہ داری",
+      "mostValuableClanmate": "سب سے قیمتی کلین ساتھی"
+    },
+    "configuredRoles": {
+      "title": "ترتیب شدہ رولز",
+      "noRolesConfigured": "کوئی {roleType} رول ترتیب نہیں دیا گیا",
+      "addRoleToStart": "بنانے کے لیے \"رول شامل کریں\" پر کلک کریں",
+      "discordRole": "Discord رول",
+      "criteria": "معیار",
+      "mode": "موڈ",
+      "modeBoth": "شامل اور ہٹائیں",
+      "modeAdd": "صرف شامل کریں",
+      "modeRemove": "صرف ہٹائیں",
+      "actions": "کارروائیاں",
+      "unknownRole": "نامعلوم رول",
+      "remove": "ہٹائیں",
+      "month": "مہینہ",
+      "months": "مہینے"
+    },
+    "addRoleDialog": {
+      "title": "نیا رول شامل کریں",
+      "description": "خودکار رول تفویض کا نیا قاعدہ ترتیب دیں",
+      "roleType": "رول کی قسم",
+      "mode": "موڈ",
+      "discordRole": "Discord رول",
+      "selectRole": "رول منتخب کریں",
+      "townHallLevel": "ٹاؤن ہال کی سطح",
+      "selectThLevel": "TH کی سطح منتخب کریں",
+      "thPrefix": "TH",
+      "league": "لیگ",
+      "selectLeague": "لیگ منتخب کریں",
+      "builderHallLevel": "بلڈر ہال کی سطح",
+      "selectBhLevel": "BH کی سطح منتخب کریں",
+      "bhPrefix": "BH",
+      "builderLeague": "بلڈر لیگ",
+      "selectBuilderLeague": "بلڈر لیگ منتخب کریں",
+      "achievementName": "کامیابی",
+      "selectAchievement": "کامیابی منتخب کریں",
+      "searchAchievement": "کامیابی تلاش کریں...",
+      "noAchievementFound": "کوئی کامیابی نہیں ملی۔",
+      "monthsInServer": "سرور میں مہینے",
+      "monthsPlaceholder": "6",
+      "familyPosition": "فیملی میں عہدہ",
+      "selectPosition": "عہدہ منتخب کریں",
+      "cancel": "منسوخ کریں۔",
+      "addRole": "رول شامل کریں",
+      "errorDuplicateExact": "یہ معیار پہلے ہی اس رول سے منسلک ہے۔",
+      "errorDuplicateCriterion": "اس معیار کو پہلے ہی ایک رول تفویض ہے۔ پہلے موجودہ رول ہٹائیں۔"
+    },
+    "infoCard": {
+      "title": "💡 خودکار رولز کیسے کام کرتے ہیں",
+      "automaticEvaluation": "خودکار جانچ:",
+      "automaticEvaluationDesc": "فعال ہونے پر بوٹ وقفے وقفے سے کھلاڑیوں کی جانچ کرے گا اور ان کے موجودہ اعدادوشمار کی بنیاد پر رولز تفویض یا ہٹائے گا۔",
+      "rolePriority": "رول کی ترجیح:",
+      "rolePriorityDesc": "اگر متعدد رولز کھلاڑی کے اعدادوشمار سے مطابقت رکھیں تو بلند ترین سطح کا رول تفویض ہوگا۔",
+      "manualOverride": "دستی تبدیلی:",
+      "manualOverrideDesc": "سرور ایڈمن دستی طور پر رولز تفویض کر سکتے ہیں، جنہیں خودکار جانچ نہیں ہٹائے گی۔"
+    },
+    "categoryRoles": {
+      "title": "زمرہ رولز",
+      "description": "ہر کلین زمرے کو Discord رول تفویض کریں۔ اس زمرے کے کلینز کے ارکان کو متعلقہ رول خودکار طور پر ملے گا۔",
+      "addButton": "زمرہ شامل کریں",
+      "categoryName": "زمرہ",
+      "categoryNamePlaceholder": "زمرے کا نام",
+      "noCategoryRoles": "کوئی زمرہ رول ترتیب نہیں دیا گیا",
+      "noCategoryRolesDesc": "بنانے کے لیے \"زمرہ شامل کریں\" پر کلک کریں",
+      "addTitle": "زمرہ رول شامل کریں",
+      "addConfirm": "شامل کریں",
+      "errorCategoryRequired": "زمرے کا نام درکار ہے",
+      "errorRoleRequired": "Discord رول درکار ہے",
+      "errorCategoryExists": "اس زمرے کے لیے پہلے ہی رول ترتیب دیا گیا ہے"
+    },
+    "toast": {
+      "changesSaved": "تبدیلیاں کامیابی سے محفوظ ہو گئیں!",
+      "errorLoading": "رولز لوڈ نہیں ہو سکے",
+      "errorSaving": "ترتیبات محفوظ نہیں ہو سکیں",
+      "errorAdding": "رول شامل نہیں ہو سکا",
+      "errorDeleting": "رول حذف نہیں ہو سکا"
+    }
+  },
+  "RemindersPage": {
+    "title": "یاد دہانیاں",
+    "description": "جنگوں، ریڈز، کلین گیمز اور غیر فعالیت کے لیے خودکار یاد دہانیاں ترتیب دیں",
+    "types": {
+      "war": "جنگی یاد دہانیاں",
+      "capital": "کلین کیپٹل",
+      "clanGames": "کلین گیمز",
+      "inactivity": "غیر فعالیت"
+    },
+    "tabs": {
+      "war": "جنگ",
+      "capital": "کلین کیپیٹل",
+      "clanGames": "کلین گیمز",
+      "inactivity": "غیر فعالیت"
+    },
+    "stats": {
+      "totalReminders": "کل یاد دہانیاں",
+      "totalRemindersDesc": "فعال یاد دہانیاں ترتیب دی گئی ہیں",
+      "warReminders": "جنگی یاد دہانیاں",
+      "warRemindersDesc": "باقاعدہ اور CWL جنگیں",
+      "capitalReminders": "کلین کیپیٹل کی یاد دہانیاں",
+      "capitalRemindersDesc": "ریڈ ویک اینڈ کے حملے",
+      "otherReminders": "دیگر یاد دہانیاں",
+      "otherRemindersDesc": "کلین گیمز اور غیر فعالیت"
+    },
+    "actions": {
+      "saving": "محفوظ ہو رہا ہے...",
+      "saveChanges": "تبدیلیاں محفوظ کریں",
+      "addReminder": "یاد دہانی شامل کریں",
+      "addWarReminder": "جنگ کی یاد دہانی شامل کریں",
+      "addCapitalReminder": "کلین کیپیٹل کی یاد دہانی شامل کریں",
+      "addClanGamesReminder": "کلین گیمز کی یاد دہانی شامل کریں",
+      "addInactivityReminder": "غیر فعالیت کی یاد دہانی شامل کریں",
+      "retry": "دوبارہ کوشش کریں"
+    },
+    "clanSelector": {
+      "label": "کلین",
+      "placeholder": "کلین منتخب کریں",
+      "allClans": "تمام کلینز"
+    },
+    "empty": {
+      "noWarReminders": "جنگ کی کوئی یاد دہانی نہیں",
+      "noCapitalReminders": "کلین کیپیٹل کی کوئی یاد دہانی نہیں",
+      "noClanGamesReminders": "کلین گیمز کی کوئی یاد دہانی نہیں",
+      "noInactivityReminders": "غیر فعالیت کی کوئی یاد دہانی نہیں",
+      "getStarted": "اپنی پہلی یاد دہانی بنا کر آغاز کریں"
+    },
+    "card": {
+      "new": "نیا",
+      "before": "پہلے",
+      "timeBefore": "باقی وقت",
+      "timeBeforePlaceholder": "مثلاً 6",
+      "timeInactive": "غیر فعالیت کی مدت",
+      "timeInactivePlaceholder": "مثلاً 160",
+      "timeUnit": "گھنٹے",
+      "hoursRemaining": "گھنٹے باقی",
+      "channel": "چینل",
+      "channelPlaceholder": "چینل منتخب کریں",
+      "threadOptional": "تھریڈ (اختیاری)",
+      "threadPlaceholder": "تھریڈ منتخب کریں",
+      "noThread": "براہ راست چینل میں پوسٹ کریں",
+      "forumPost": "فورم پوسٹ",
+      "forumPostPlaceholder": "فورم پوسٹ منتخب کریں",
+      "forumPostRequired": "فورم چینلز کے لیے فورم پوسٹ درکار ہے۔",
+      "clan": "کلین",
+      "clanPlaceholder": "کلین منتخب کریں",
+      "customMessage": "حسب ضرورت پیغام",
+      "customMessagePlaceholder": "اپنے حملے استعمال کرنا نہ بھولیں!",
+      "customMessagePlaceholderClanGames": "کلین گیمز میں مزید پوائنٹس حاصل کرنے کی کوشش کریں!",
+      "customMessagePlaceholderInactivity": "آپ کچھ عرصے سے کلین میں غیر فعال ہیں :(",
+      "warTypes": "جنگ کی اقسام",
+      "random": "عام جنگ",
+      "friendly": "دوستانہ جنگ",
+      "cwl": "سی ڈبلیو ایل",
+      "pointThreshold": "پوائنٹس کی حد",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "جن لوگوں کے پوائنٹس {threshold} سے کم ہوں گے انہیں پنگ کیا جائے گا۔",
+      "attackThreshold": "حملوں کی حد",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "جن لوگوں کے {threshold} یا زیادہ حملے باقی ہوں گے انہیں پنگ کیا جائے گا۔",
+      "notSet": "سیٹ نہیں ہے۔"
+    },
+    "dialog": {
+      "addTitle": "نئی یاد دہانی شامل کریں",
+      "addDescription": "اپنے سرور کے لیے نئی یاد دہانی ترتیب دیں",
+      "editTitle": "یاد دہانی میں ترمیم کریں",
+      "editDescription": "یاد دہانی کی ترتیبات اپ ڈیٹ کریں",
+      "type": "یاد دہانی کی قسم",
+      "selectType": "قسم منتخب کریں",
+      "cancel": "منسوخ کریں۔",
+      "saving": "محفوظ ہو رہا ہے...",
+      "saveChanges": "تبدیلیاں محفوظ کریں",
+      "addReminder": "یاد دہانی شامل کریں"
+    },
+    "toast": {
+      "errorTitle": "خرابی",
+      "errorLoadingReminders": "یاد دہانیاں لوڈ نہیں ہو سکیں۔ دوبارہ کوشش کریں۔",
+      "reminderAdded": "یاد دہانی کامیابی سے شامل ہو گئی",
+      "reminderAddedDesc": "نئی {type} یاد دہانی شامل ہو گئی۔ محفوظ کرنا نہ بھولیں!",
+      "reminderUpdated": "یاد دہانی کامیابی سے اپ ڈیٹ ہو گئی",
+      "successTitle": "کامیابی",
+      "reminderDeleted": "یاد دہانی کامیابی سے حذف ہو گئی",
+      "failedToDelete": "یاد دہانی حذف نہیں ہو سکی",
+      "allRemindersSaved": "تمام یاد دہانیاں کامیابی سے محفوظ ہو گئیں",
+      "failedToSave": "یاد دہانیاں محفوظ نہیں ہو سکیں",
+      "forumPostRequired": "یہ یاد دہانی محفوظ کرنے سے پہلے فورم پوسٹ منتخب کریں۔",
+      "invalidDestination": "منتخب تھریڈ اس چینل سے تعلق نہیں رکھتا۔",
+      "timeExceedsLimit": "باقی وقت {min} سے {max} گھنٹوں کے درمیان ہونا چاہیے",
+      "pointThresholdInvalid": "پوائنٹس کی حد {min} سے {max} کے درمیان ہونی چاہیے",
+      "attackThresholdInvalid": "حملوں کی حد {min} سے {max} کے درمیان ہونی چاہیے"
+    }
+  },
+  "LogsPage": {
+    "title": "سرگرمی کے لاگز",
+    "description": "کلین اور کھلاڑیوں کی سرگرمیوں کی خودکار لاگنگ ترتیب دیں",
+    "stats": {
+      "activeLogs": "فعال لاگز",
+      "activeLogsDesc": "تمام فیملی کلینز اور سرور لاگز میں",
+      "logChannels": "لاگ چینلز",
+      "logChannelsDesc": "دستیاب چینلز",
+      "trackedClans": "ٹریک کیے گئے کلینز",
+      "trackedClansDesc": "ترتیب شدہ کلینز",
+      "issues": "مسائل",
+      "issuesDesc": "پوری فیملی میں"
+    },
+    "clanSelector": {
+      "label": "کلین",
+      "placeholder": "کلین منتخب کریں"
+    },
+    "tabs": {
+      "clan": "کلین",
+      "war": "جنگ",
+      "capital": "کلین کیپیٹل",
+      "player": "کھلاڑی",
+      "server": "سرور"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "رکن کی شمولیت",
+        "description": "کلین میں شامل ہونے والے ارکان ٹریک کریں"
+      },
+      "leaveLog": {
+        "label": "رکن کا اخراج",
+        "description": "کلین چھوڑنے والے ارکان ٹریک کریں"
+      },
+      "donationLog": {
+        "label": "رکن کے عطیات",
+        "description": "دستوں اور اسپلز کے عطیات ٹریک کریں"
+      },
+      "clanAchievementLog": {
+        "label": "کلین کی کامیابیاں",
+        "description": "حاصل شدہ کلین کامیابیاں ٹریک کریں"
+      },
+      "clanRequirementsLog": {
+        "label": "کلین کے تقاضے",
+        "description": "کلین کے تقاضوں میں تبدیلیاں ٹریک کریں"
+      },
+      "clanDescriptionLog": {
+        "label": "کلین کی تفصیل",
+        "description": "کلین کی تفصیل میں تبدیلیاں ٹریک کریں"
+      },
+      "banAlert": {
+        "label": "پابندی کے انتباہات",
+        "description": "پابندی یافتہ کھلاڑی کے کلین میں شامل ہونے پر انتباہ شائع کریں"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit فیڈ",
+        "description": "سرور کی Reddit فیڈ شائع کریں"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "جنگی ریکارڈ",
+        "description": "جنگی حملے اور نتائج ٹریک کریں"
+      },
+      "warPanel": {
+        "label": "جنگی پینل",
+        "description": "براہِ راست اپ ڈیٹس والا تعاملی جنگی پینل"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL لائن اپ میں تبدیلی",
+        "description": "CWL لائن اپ کی تبدیلیاں ٹریک کریں"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "کیپیٹل عطیات",
+        "description": "کیپیٹل گولڈ کے عطیات ٹریک کریں"
+      },
+      "capitalAttacks": {
+        "label": "کیپیٹل حملے",
+        "description": "ریڈ ویک اینڈ کے حملے ٹریک کریں"
+      },
+      "raidPanel": {
+        "label": "کیپیٹل پینل",
+        "description": "براہِ راست اپ ڈیٹس والا تعاملی ریڈ پینل"
+      },
+      "capitalWeeklySummary": {
+        "label": "کیپیٹل کا ہفتہ وار خلاصہ",
+        "description": "کیپیٹل کی کارکردگی کا ہفتہ وار خلاصہ"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "رول میں تبدیلی",
+        "description": "کلین میں کھلاڑی کے رول کی تبدیلیاں ٹریک کریں"
+      },
+      "troopUpgrade": {
+        "label": "دستے کی اپ گریڈ",
+        "description": "دستوں کی سطح کی اپ گریڈز ٹریک کریں"
+      },
+      "superTroopBoostLog": {
+        "label": "سپر ٹروپ بوسٹس",
+        "description": "سپر ٹروپ کی فعالیت ٹریک کریں"
+      },
+      "thUpgrade": {
+        "label": "ٹاؤن ہال اپ گریڈ",
+        "description": "ٹاؤن ہال اپ گریڈز ٹریک کریں"
+      },
+      "leagueChange": {
+        "label": "لیگ میں تبدیلی",
+        "description": "لیگ درجے کی تبدیلیاں ٹریک کریں"
+      },
+      "spellUpgrade": {
+        "label": "اسپیل اپ گریڈ",
+        "description": "اسپیل کی سطح کی اپ گریڈز ٹریک کریں"
+      },
+      "heroUpgrade": {
+        "label": "ہیرو اپ گریڈ",
+        "description": "ہیرو کی سطح کی اپ گریڈز ٹریک کریں"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "ہیرو سازوسامان اپ گریڈ",
+        "description": "ہیرو سازوسامان کی اپ گریڈز ٹریک کریں"
+      },
+      "nameChange": {
+        "label": "نام میں تبدیلی",
+        "description": "کھلاڑی کے نام کی تبدیلیاں ٹریک کریں"
+      },
+      "legendLogAttacks": {
+        "label": "لیجنڈ حملے",
+        "description": "لیجنڈ لیگ کے حملے ٹریک کریں"
+      },
+      "legendLogDefenses": {
+        "label": "لیجنڈ دفاع",
+        "description": "لیجنڈ لیگ کے دفاع ٹریک کریں"
+      }
+    },
+    "logCard": {
+      "active": "فعال",
+      "issue": "مسئلہ",
+      "disabled": "غیر فعال",
+      "enable": "فعال کریں",
+      "disable": "غیر فعال کریں",
+      "channel": "چینل",
+      "channelPlaceholder": "چینل منتخب کریں",
+      "thread": "تھریڈ (اختیاری)",
+      "threadPlaceholder": "تھریڈ منتخب کریں",
+      "noThread": "کوئی تھریڈ نہیں",
+      "forumPost": "فورم پوسٹ",
+      "forumPostPlaceholder": "فورم پوسٹ منتخب کریں",
+      "forumPostRequired": "یہ لاگ محفوظ کرنے سے پہلے فورم پوسٹ منتخب کریں۔",
+      "invalidThread": "منتخب تھریڈ اس چینل سے تعلق نہیں رکھتا۔",
+      "saveDestination": "منزل محفوظ کریں",
+      "channelDeleted": "یہ چینل اب موجود نہیں۔ نیا چینل منتخب کریں یا لاگ غیر فعال کریں۔",
+      "enableToConfig": "ترتیب دینے کے لیے یہ لاگ فعال کریں",
+      "configuring": "ترتیب جاری ہے",
+      "on": "آن",
+      "off": "آف",
+      "example": "مثال"
+    }
+  },
+  "GeneralPage": {
+    "title": "عمومی ترتیبات",
+    "description": "پورے سرور کے لیے بوٹ کے رویّے اور ظاہری شکل کو ترتیب دیں",
+    "loading": "ترتیبات لوڈ ہو رہی ہیں...",
+    "reset": "دوبارہ ترتیب دیں۔",
+    "saving": "محفوظ ہو رہا ہے...",
+    "saveChanges": "تبدیلیاں محفوظ کریں",
+    "settingsSaved": "ترتیبات کامیابی سے محفوظ ہو گئیں!",
+    "infoBanner": {
+      "title": "مزید ترتیبات تلاش کر رہے ہیں؟",
+      "description": "فیملی رولز اور عرفی نام کی ترتیبات **فیملی کی ترتیبات** کے صفحے پر ہیں، جبکہ رولز کا انتظام **رولز** کے صفحے پر ہے۔ کلین رولز، مخففات، زمرے اور جنگ کے کاؤنٹ ڈاؤن **کلینز** کے صفحے پر ہیں۔"
+    },
+    "nickname": {
+      "title": "عرفی نام کا انتظام",
+      "description": "عرفی ناموں کی ساخت کنٹرول کریں",
+      "automaticChanges": "خودکار تبدیلیاں",
+      "automaticChangesDesc": "بوٹ کو ارکان کے عرفی نام اپ ڈیٹ کرنے دیں",
+      "familyFormat": "فیملی ارکان کا فارمیٹ",
+      "availablePlaceholders": "دستیاب پلیس ہولڈرز",
+      "preview": "پیش منظر:",
+      "nonFamilyFormat": "غیر فیملی ارکان کا فارمیٹ",
+      "placeholders": {
+        "discordName": "Discord صارف نام",
+        "discordDisplayName": "سرور کا عرفی نام",
+        "playerName": "CoC کھلاڑی کا نام",
+        "playerTag": "کھلاڑی کا ٹیگ",
+        "playerTownhall": "TH کی سطح",
+        "playerTownhallSmall": "بالائی عدد میں TH",
+        "playerWarstars": "جنگی ستارے۔",
+        "playerRole": "کلین رول",
+        "playerClan": "کلین کا نام",
+        "playerLeague": "لیگ",
+        "playerClanAbbr": "کلین کا مخفف"
+      }
+    },
+    "appearance": {
+      "title": "ظاہری شکل",
+      "description": "بوٹ کے ایمبیڈ پیغامات کو اپنی مرضی کے مطابق بنائیں",
+      "embedColor": "ایمبیڈ کا رنگ",
+      "embedColorDesc": "Discord میں بوٹ کے تمام ایمبیڈز کی بغلی پٹی کا رنگ",
+      "embedColorDefault": "ڈیفالٹ: **#D90709** (ClashKing سرخ)",
+      "embedPreview": "ایمبیڈ کا پیش منظر",
+      "embedPreviewDesc": "یہ رنگین پٹی بوٹ کے تمام ایمبیڈز کے ساتھ دکھائی دے گی",
+      "editColor": "رنگ میں ترمیم کریں",
+      "resetToDefault": "ڈیفالٹ پر بحال کریں",
+      "apply": "لگائیں"
+    },
+    "security": {
+      "title": "سیکیورٹی اور اجازتیں",
+      "description": "رسائی اور تصدیق کو کنٹرول کریں",
+      "fullWhitelistRole": "مکمل وائٹ لسٹ رول",
+      "fullWhitelistRoleDesc": "تمام بوٹ کمانڈز تک مکمل رسائی رکھنے والا Discord رول (اجازتوں کی تمام جانچ سے مستثنیٰ)",
+      "noRole": "کوئی رول نہیں"
+    },
+    "familyRoles": {
+      "title": "فیملی رولز",
+      "description": "فیملی کی رکنیت اور کلین میں عہدوں کی بنیاد پر خودکار رولز کا انتظام کریں",
+      "selectRole": "رول منتخب کریں",
+      "addRole": "رول شامل کریں...",
+      "deletedRole": "حذف شدہ رول",
+      "noRolesConfigured": "کوئی رول ترتیب نہیں دیا گیا",
+      "modes": {
+        "both": "شامل اور ہٹائیں",
+        "add": "صرف شامل کریں",
+        "remove": "صرف ہٹائیں"
+      },
+      "types": {
+        "family": "فیملی",
+        "notFamily": "غیر فیملی",
+        "elder": "ایلڈر",
+        "coLeader": "شریک لیڈر",
+        "leader": "لیڈر"
+      },
+      "descriptions": {
+        "family": "فیملی کلینز میں کم از کم ایک اکاؤنٹ موجود ہے",
+        "notFamily": "فیملی کلینز میں کوئی اکاؤنٹ موجود نہیں ہے",
+        "elder": "کسی فیملی کلین میں ایلڈر کا عہدہ رکھتا ہے",
+        "coLeader": "کسی فیملی کلین میں شریک لیڈر کا عہدہ رکھتا ہے",
+        "leader": "کسی فیملی کلین میں لیڈر کا عہدہ رکھتا ہے"
+      }
+    },
+    "tenureRoles": {
+      "title": "Discord پر مدتِ رکنیت کے رولز",
+      "description": "ارکان کو سرور میں گزارے گئے وقت کی بنیاد پر خودکار طور پر رولز تفویض کریں",
+      "addRole": "مدت کا رول شامل کریں",
+      "addDialogTitle": "مدت کا رول شامل کریں",
+      "addDialogDescription": "ایسے ارکان کو رول تفویض کریں جو مخصوص تعداد میں مہینوں سے سرور میں موجود ہیں",
+      "monthsInServer": "سرور میں مہینے",
+      "discordRole": "Discord رول",
+      "selectRole": "رول منتخب کریں",
+      "noRolesConfigured": "مدتِ رکنیت کا کوئی رول ترتیب نہیں دیا گیا",
+      "addRoleToStart": "شروع کرنے کے لیے مدتِ رکنیت کا رول شامل کریں",
+      "months": "مہینے",
+      "month": "مہینہ",
+      "actions": "کارروائیاں",
+      "remove": "ہٹائیں",
+      "unknownRole": "نامعلوم رول"
+    },
+    "prefix": "کمانڈ پری فکس",
+    "language": "زبان",
+    "timezone": "ٹائم زون",
+    "theme": "تھیم"
+  },
+  "FamilySettingsPage": {
+    "title": "فیملی کی ترتیبات",
+    "description": "کلین ارکان کے لیے فیملی رولز اور عرفی ناموں کی ساخت ترتیب دیں",
+    "loading": "ترتیبات لوڈ ہو رہی ہیں...",
+    "reset": "دوبارہ ترتیب دیں۔",
+    "saving": "محفوظ ہو رہا ہے...",
+    "saveChanges": "تبدیلیاں محفوظ کریں",
+    "settingsSaved": "ترتیبات کامیابی سے محفوظ ہو گئیں!",
+    "nickname": {
+      "title": "عرفی نام کا انتظام",
+      "description": "عرفی ناموں کی ساخت کنٹرول کریں",
+      "automaticChanges": "خودکار تبدیلیاں",
+      "automaticChangesDesc": "بوٹ کو ارکان کے عرفی نام اپ ڈیٹ کرنے دیں",
+      "familyFormat": "فیملی ارکان کا فارمیٹ",
+      "availablePlaceholders": "دستیاب پلیس ہولڈرز",
+      "preview": "پیش منظر:",
+      "nonFamilyFormat": "غیر فیملی ارکان کا فارمیٹ",
+      "placeholders": {
+        "discordName": "Discord صارف نام",
+        "discordDisplayName": "سرور کا عرفی نام",
+        "playerName": "CoC کھلاڑی کا نام",
+        "playerTag": "کھلاڑی کا ٹیگ",
+        "playerTownhall": "TH کی سطح",
+        "playerTownhallSmall": "بالائی عدد میں TH",
+        "playerWarstars": "جنگی ستارے۔",
+        "playerRole": "کلین رول",
+        "playerClan": "کلین کا نام",
+        "playerLeague": "لیگ",
+        "playerClanAbbr": "کلین کا مخفف"
+      }
+    },
+    "familyRoles": {
+      "title": "فیملی رولز",
+      "description": "فیملی کی رکنیت اور کلین میں عہدوں کی بنیاد پر خودکار رولز کا انتظام کریں",
+      "selectRole": "رول منتخب کریں",
+      "addRole": "رول شامل کریں...",
+      "deletedRole": "حذف شدہ رول",
+      "noRolesConfigured": "کوئی رول ترتیب نہیں دیا گیا",
+      "modes": {
+        "both": "شامل اور ہٹائیں",
+        "add": "صرف شامل کریں",
+        "remove": "صرف ہٹائیں"
+      },
+      "types": {
+        "family": "فیملی",
+        "notFamily": "غیر فیملی",
+        "elder": "ایلڈر",
+        "coLeader": "شریک لیڈر",
+        "leader": "لیڈر"
+      },
+      "descriptions": {
+        "family": "فیملی کلینز میں کم از کم ایک اکاؤنٹ موجود ہے",
+        "notFamily": "فیملی کلینز میں کوئی اکاؤنٹ موجود نہیں ہے",
+        "elder": "کسی فیملی کلین میں ایلڈر کا عہدہ رکھتا ہے",
+        "coLeader": "کسی فیملی کلین میں شریک لیڈر کا عہدہ رکھتا ہے",
+        "leader": "کسی فیملی کلین میں لیڈر کا عہدہ رکھتا ہے"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "زبان"
+  },
+  "ThemeSwitcher": {
+    "label": "تھیم",
+    "light": "روشن",
+    "dark": "تاریک",
+    "system": "سسٹم کے مطابق"
+  },
+  "AuthCallback": {
+    "authenticating": "تصدیق کی جا رہی ہے...",
+    "authenticatingDescription": "براہ کرم انتظار کریں، Discord کے ذریعے آپ کو لاگ اِن کیا جا رہا ہے",
+    "authenticationFailed": "تصدیق ناکام ہو گئی",
+    "tryAgain": "دوبارہ کوشش کریں",
+    "backToHome": "مرکزی صفحے پر واپس جائیں",
+    "errorCancelled": "Discord میں لاگ اِن منسوخ کر دیا گیا۔ تیار ہونے پر دوبارہ کوشش کریں۔",
+    "errorDiscordFailedWithReason": "Discord کی تصدیق ناکام ہو گئی: {reason}",
+    "errorNoAuthorizationCode": "Discord سے اجازت کا کوئی کوڈ موصول نہیں ہوا۔",
+    "errorCodeVerifierMissing": "کوڈ ویریفائر نہیں ملا۔ براہ کرم دوبارہ لاگ اِن کرنے کی کوشش کریں۔",
+    "errorAuthenticateFailed": "Discord کے ذریعے تصدیق نہیں ہو سکی۔",
+    "loadingVillages": "Discord کے ذریعے لاگ اِن کیا جا رہا ہے...",
+    "loadingClanData": "سرورز کی فہرست لوڈ ہو رہی ہے...",
+    "loadingWarStats": "تقریباً تیار..."
+  },
+  "LoginPage": {
+    "redirecting": "Discord پر بھیجا جا رہا ہے..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "خصوصیات",
+      "subtitle": "ان طاقتور ٹولز کے بارے میں جانیں جو ClashKing آپ کو Discord، موبائل اور ویب پر اپنے کلین کا انتظام کرنے اور اسے ترقی دینے کے لیے فراہم کرتا ہے۔"
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing بوٹ",
+        "description": "ClashKing بوٹ وہ واحد Discord بوٹ ہے جو آپ کو اپنے Clash of Clans کلین اور کمیونٹی کے انتظام کے لیے درکار ہے۔ اس کی منفرد خصوصیات آپ کے کلین کو منظم، سرگرم اور ترقی پذیر رکھتی ہیں۔",
+        "items": [
+          "براہِ راست لاگز: جنگوں، CWL، کلین گیمز، ریڈز، عطیات اور ارکان سے متعلق واقعات کو ٹریک کریں۔",
+          "ٹکٹنگ سسٹم: عام معاونتی ٹکٹس کے ساتھ بھرتی کے لیے ٹکٹنگ سسٹم۔",
+          "خودکار رولز: کلین کی حالت یا فیملی کے انتظام کی بنیاد پر رولز خودکار طور پر تفویض کریں۔",
+          "یاد دہانیاں: جنگی حملوں، کلین گیمز یا کسی اور مقصد کے لیے پنگز بھیجیں۔",
+          "تفصیلی اعدادوشمار: سرگرمی کی ٹریکنگ کے ساتھ کھلاڑیوں اور کلین کی کارکردگی کے بارے میں معلومات۔",
+          "روسٹر کا انتظام: اپنے جنگی روسٹرز کو آسانی سے منظم اور بہتر بنائیں۔"
+        ],
+        "ctaPrimary": "بوٹ کو مدعو کریں",
+        "ctaSecondary": "کمیونٹی میں شامل ہوں"
+      },
+      "app": {
+        "title": "ClashKing ایپ (اوپن بیٹا)",
+        "description": "ClashKing ایپ، ClashKing بوٹ کی بہترین توسیع ہے جو ضروری ٹولز اور معلومات براہِ راست آپ کے موبائل پر فراہم کرتی ہے۔ اس کی مدد سے آپ Discord کے بغیر بھی کسی بھی وقت، کہیں سے بھی رابطے میں رہ سکتے ہیں۔",
+        "items": [
+          "براہِ راست اعدادوشمار: بوٹ کے ساتھ ہم وقت کھلاڑیوں اور کلینز کے تفصیلی اعدادوشمار۔",
+          "کلین کی پیش رفت کی ٹریکنگ: وقت کے ساتھ اپنے کلین کی پیش رفت کی آسانی سے نگرانی کریں۔",
+          "متعدد اکاؤنٹس کا انتظام: اپنے اکاؤنٹس کے درمیان آسانی سے منتقل ہوں اور کارکردگی ٹریک کریں۔",
+          "بلٹ اِن تاریخ: رجحانات کا تجزیہ کرنے اور حکمتِ عملی بہتر بنانے کے لیے تاریخی ڈیٹا دیکھیں۔",
+          "Discord سرور کا انتظام: (جلد آ رہا ہے) ایپ سے رولز اور ٹکٹس کا انتظام کریں۔",
+          "اعلیٰ اطلاعات: (جلد آ رہا ہے) اہم واقعات کے لیے الرٹس اپنی مرضی کے مطابق بنائیں۔"
+        ],
+        "ctaPrimary": "Android بیٹا حاصل کریں",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "ClashKing API استعمال کر کے اپنے ٹولز یا پروجیکٹس بنائیں۔ ClashKing پروجیکٹ کو کریڈٹ دینے کی شرط پر اس کا استعمال مفت ہے۔",
+        "items": [],
+        "ctaPrimary": "API دستاویزات",
+        "ctaSecondary": "GitHub پر API"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "مدد درکار ہے؟",
+    "subtitle": "چاہے آپ کو دستاویزات درکار ہوں یا براہِ راست مدد، ہم آپ کی معاونت کے لیے موجود ہیں۔",
+    "documentation": {
+      "title": "دستاویزات",
+      "description": "ClashKing سے بھرپور فائدہ اٹھانے کے لیے ہماری جامع رہنما دستاویزات اور کمانڈ حوالہ جات دیکھیں۔",
+      "cta": "دستاویزات دیکھیں"
+    },
+    "discord": {
+      "title": "Discord معاونت",
+      "description": "مزید مدد درکار ہے؟ سوالات پوچھنے، خرابیوں کی اطلاع دینے یا دیگر صارفین سے گفتگو کرنے کے لیے ہماری Discord کمیونٹی میں شامل ہوں۔",
+      "cta": "Discord میں شامل ہوں"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "ایک اوپن سورس پروجیکٹ",
+    "subtitle": "ClashKing مکمل طور پر مفت اور اوپن سورس پروجیکٹ ہے، اور ہمارا یقین ہے کہ کمیونٹی کی طاقت اسے مزید بہتر بنا سکتی ہے۔ بوٹ اور API دونوں مکمل طور پر اوپن سورس ہیں، اس لیے آپ انہیں بہتر بنانے میں حصہ لے سکتے ہیں یا اپنے پروجیکٹس کے لیے استعمال کر سکتے ہیں۔",
+    "github": {
+      "title": "GitHub تنظیم",
+      "description": "ہمارا سورس کوڈ دیکھیں، بوٹ میں تعاون کریں یا ہمارے دیگر اوپن سورس ٹولز کا جائزہ لیں۔",
+      "ctaPrimary": "تنظیم دیکھیں",
+      "repos": {
+        "bot": "بوٹ ریپو",
+        "app": "ایپ ریپو",
+        "api": "API ریپو",
+        "assets": "اثاثوں کا ریپو"
+      }
+    },
+    "api": {
+      "title": "API دستاویزات",
+      "description": "ClashKing API استعمال کر کے اپنے ٹولز یا پروجیکٹس بنائیں۔ ClashKing پروجیکٹ کو کریڈٹ دینے کی شرط پر اس کا استعمال مفت ہے۔",
+      "cta": "API دستاویزات"
+    },
+    "translation": {
+      "title": "ترجمہ کرنے میں ہماری مدد کریں۔",
+      "description": "ClashKing کا اپنی زبان میں ترجمہ کرنے میں ہماری مدد کریں! آپ ہمارے Crowdin پروجیکٹس کے ذریعے ویب سائٹ، بوٹ اور تمام متعلقہ متن کے ترجمے میں حصہ لے سکتے ہیں۔",
+      "app": "ایپ کا ترجمہ کریں",
+      "bot": "بوٹ کا ترجمہ کریں"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "تعاون کریں",
+        "description": "خرابیاں درست کرنے، نئی خصوصیات شامل کرنے یا موجودہ خصوصیات بہتر بنانے میں ہماری مدد کریں۔ ہر تعاون اہم ہے!"
+      },
+      "community": {
+        "title": "کمیونٹی",
+        "description": "خیالات پر گفتگو کرنے، مدد لینے اور دیگر ڈویلپرز کے ساتھ مل کر کام کرنے کے لیے ہماری Discord کمیونٹی میں شامل ہوں۔"
+      },
+      "learn": {
+        "title": "سیکھیں",
+        "description": "بوٹ اور API کو مؤثر طریقے سے استعمال کرنا سیکھنے کے لیے ہماری دستاویزات اور مثالیں دیکھیں۔"
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "ہماری مدد کریں",
+    "subtitle": "ClashKing ایک مفت، اوپن سورس پروجیکٹ ہے۔ آپ کی مدد ہمیں سرورز چلانے اور کمیونٹی کے لیے نئی خصوصیات تیار کرتے رہنے میں معاونت دیتی ہے۔",
+    "patreon": {
+      "title": "سرپرست بنیں",
+      "description": "خصوصی فوائد اور نئی خصوصیات تک جلد رسائی حاصل کرنے، اور ہمارے ہوسٹنگ اخراجات پورے کرنے میں مدد دینے کے لیے Patreon پر ماہانہ معاونت کریں۔",
+      "cta": "Patreon پر معاونت کریں"
+    },
+    "creatorCode": {
+      "title": "کریئیٹر کوڈ استعمال کریں",
+      "description": "مفت میں ہماری مدد کے لیے تخلیق کار کوڈ",
+      "descriptionSuffix": "گیم میں یا Supercell Store پر استعمال کریں۔",
+      "ctaGame": "گیم میں استعمال کریں",
+      "ctaStore": "Supercell Store میں استعمال کریں"
+    },
+    "whySupport": {
+      "title": "ہماری مدد کیوں کریں؟",
+      "description": "ہر تعاون، چاہے کتنا ہی چھوٹا ہو، براہِ راست سرور کے اخراجات اور API فیس پر خرچ ہوتا ہے۔ ہمارا تخلیق کار کوڈ استعمال کرنے پر آپ کو کوئی اضافی قیمت ادا نہیں کرنی پڑتی، مگر اس سے ہمیں بہت مدد ملتی ہے!"
+    }
+  },
+  "ServersPage": {
+    "title": "سرور منتخب کریں",
+    "description": "ClashKing بوٹ کی ترتیبات کے لیے سرور منتخب کریں۔ آپ کا Discord سرور کا مالک یا منتظم ہونا ضروری ہے۔",
+    "backToHome": "مرکزی صفحے پر واپس جائیں",
+    "backToLogin": "لاگ اِن پر واپس",
+    "error": "خرابی",
+    "configure": "ترتیب دیں",
+    "invite": "مدعو کریں",
+    "members": "ارکان",
+    "server": "سرور",
+    "roles": {
+      "owner": "مالک",
+      "administrator": "منتظم",
+      "manager": "منیجر"
+    },
+    "noServers": {
+      "title": "کوئی سرور نہیں ملا",
+      "description": "ایسا کوئی Discord سرور نہیں ملا جس کے آپ منتظم یا مالک ہوں۔"
+    }
+  },
+  "AutoboardsPage": {
+    "title": "آٹو بورڈز",
+    "description": "فعال بورڈ تازہ کریں یا عملی شیڈول کے مطابق نئے بورڈز بھیجیں",
+    "actions": {
+      "create": "آٹو بورڈ بنائیں",
+      "edit": "آٹو بورڈ میں ترمیم کریں",
+      "delete": "آٹو بورڈ حذف کریں",
+      "save": "تبدیلیاں محفوظ کریں",
+      "cancel": "منسوخ کریں۔",
+      "retry": "دوبارہ کوشش کریں"
+    },
+    "metrics": {
+      "total": "ترتیب شدہ",
+      "refresh": "بورڈز تازہ کریں",
+      "send": "شیڈول شدہ ترسیلات"
+    },
+    "filters": {
+      "all": "تمام"
+    },
+    "list": {
+      "title": "ترتیب شدہ آٹو بورڈز",
+      "description": "منتظم کے زیر کنٹرول ترسیل، اہداف، منزل اور عملی حالت",
+      "empty": "اس منظر میں کوئی آٹو بورڈ نہیں",
+      "emptyDescription": "API رجسٹری میں بورڈ کی قسم دستیاب ہونے پر ایک بنائیں۔"
+    },
+    "registry": {
+      "emptyTitle": "بورڈ کی کوئی قسم دستیاب نہیں",
+      "emptyDescription": "API رجسٹری فی الحال خالی ہے۔ وہاں بورڈ کی قسم فعال ہونے پر آٹو بورڈ بنایا جا سکتا ہے۔",
+      "typeUnavailable": "بورڈ کی یہ قسم اب رجسٹری میں دستیاب نہیں، اس لیے اس میں ترمیم نہیں ہو سکتی۔"
+    },
+    "dialog": {
+      "createTitle": "آٹو بورڈ بنائیں",
+      "editTitle": "آٹو بورڈ میں ترمیم کریں",
+      "description": "صلاحیتیں اور حدود فعال بورڈ رجسٹری سے آتی ہیں۔"
+    },
+    "boardType": {
+      "label": "بورڈ کی قسم",
+      "description": "دستیاب اقسام براہِ راست API رجسٹری سے آتی ہیں۔",
+      "placeholder": "بورڈ کی قسم منتخب کریں"
+    },
+    "targets": {
+      "kind": "ہدف کی قسم: {kind}",
+      "kindDescription": "رجسٹری طے کرتی ہے کہ ہر ہدف کی قدر کیسے سمجھی جائے۔",
+      "scope": "ہدف کا دائرہ",
+      "scopeDescription": "فیملی کا دائرہ ہر ترتیب شدہ فیملی کلین استعمال کرتا ہے اور اس کے واضح اہداف نہیں ہوتے۔",
+      "family": "فیملی",
+      "custom": "حسب ضرورت اہداف",
+      "values": "اہداف",
+      "count": "اس بورڈ کی قسم کے لیے {min} سے {max} اہداف دیں۔",
+      "placeholder": "{kind} ہدف درج کریں",
+      "add": "ہدف شامل کریں",
+      "remove": "ہدف ہٹائیں"
+    },
+    "modes": {
+      "label": "ترسیل کا موڈ",
+      "description": "رجسٹری طے کرتی ہے کہ یہ بورڈ کون سے ترسیلی موڈز کی معاونت کرتا ہے۔",
+      "refresh": "ریفریش",
+      "send": "شیڈول شدہ ترسیل"
+    },
+    "destination": {
+      "label": "منزل",
+      "channel": "اصل چینل",
+      "channelDescription": "متن اور اعلانات کے چینلز براہِ راست بھیج سکتے ہیں؛ فورمز ذیلی پوسٹ استعمال کرتے ہیں۔",
+      "selectChannel": "چینل منتخب کریں",
+      "thread": "تھریڈ یا فورم پوسٹ",
+      "selectThread": "تھریڈ منتخب کریں",
+      "threadOptional": "متن اور اعلانات کے چینلز کے لیے اختیاری۔",
+      "forumRequired": "اس منزل کے لیے فورم پوسٹ درکار ہے۔",
+      "direct": "براہِ راست چینل میں بھیجیں",
+      "deleted": "چینل اب موجود نہیں"
+    },
+    "refresh": {
+      "interval": "تازہ کاری کا وقفہ (منٹ)",
+      "intervalDescription": "اجازت یافتہ حد: {minimum}–{maximum} منٹ۔"
+    },
+    "schedule": {
+      "label": "شیڈول",
+      "kind": "شیڈول کا انداز",
+      "kindDescription": "روزانہ، منتخب ہفتہ وار دنوں پر یا ماہ میں ایک بار بھیجیں۔",
+      "daily": "روزانہ",
+      "weekdays": "منتخب ہفتہ وار دن",
+      "dayOfMonth": "مہینے کا دن",
+      "selectWeekdays": "ہفتہ وار دن",
+      "monthDay": "مہینے کا دن",
+      "monthDayDescription": "1 سے 31 تک قدر استعمال کریں۔",
+      "timezone": "ٹائم زون",
+      "timeOfDay": "دن کا وقت",
+      "nextRun": "اگلا عمل"
+    },
+    "weekdays": {
+      "1": "پیر",
+      "2": "منگل",
+      "3": "بدھ",
+      "4": "جمعرات",
+      "5": "جمعہ",
+      "6": "ہفتہ",
+      "7": "اتوار"
+    },
+    "status": {
+      "enabled": "فعال",
+      "disabled": "غیر فعال",
+      "enabledDescription": "غیر فعال بورڈز اپنی ترتیب رکھتے ہیں مگر چلتے نہیں۔",
+      "messageId": "موجودہ تازہ کاری پیغام: {id}"
+    },
+    "delete": {
+      "title": "یہ آٹو بورڈ حذف کریں؟",
+      "description": "اس سے ترتیب حذف ہو جائے گی اور عمل واپس نہیں ہو سکتا۔"
+    },
+    "feedback": {
+      "created": "آٹو بورڈ بن گیا",
+      "updated": "آٹو بورڈ اپ ڈیٹ ہو گیا",
+      "deleted": "آٹو بورڈ حذف ہو گیا"
+    },
+    "validation": {
+      "boardType": "فعال رجسٹری سے بورڈ کی قسم منتخب کریں۔",
+      "targetScope": "اس بورڈ کی قسم کا معاون ہدف دائرہ منتخب کریں۔",
+      "familyTargets": "فیملی دائرے میں واضح اہداف شامل نہیں ہو سکتے۔",
+      "targetCount": "{min} سے {max} غیر خالی اہداف درج کریں۔",
+      "deliveryMode": "اس بورڈ کی قسم کا معاون ترسیلی موڈ منتخب کریں۔",
+      "destination": "درست منزل منتخب کریں۔ فورم چینلز کے لیے ذیلی پوسٹ درکار ہے۔",
+      "refreshInterval": "تازہ کاری کا وقفہ {minimum} سے {maximum} منٹ درج کریں۔",
+      "timezone": "IANA ٹائم زون درج کریں۔",
+      "timeOfDay": "دن کا درست وقت درج کریں۔",
+      "weekdays": "کم از کم ایک ہفتہ وار دن منتخب کریں۔",
+      "dayOfMonth": "1 سے 31 تک دن درج کریں۔"
+    },
+    "errors": {
+      "title": "آٹو بورڈز دستیاب نہیں",
+      "session": "آپ کا سیشن ختم ہو گیا ہے۔",
+      "request": "آٹو بورڈز کی درخواست ناکام رہی۔",
+      "load": "آٹو بورڈز لوڈ نہیں ہو سکے۔",
+      "save": "آٹو بورڈ محفوظ نہیں ہو سکا۔",
+      "delete": "آٹو بورڈ حذف نہیں ہو سکا۔"
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "ٹکٹ پینل کی ترتیبات",
+    "description": "ہر ٹکٹ پینل کے زمرے اور لاگ چینلز ترتیب دیں۔",
+    "noPanels": "کوئی ٹکٹ پینل نہیں ملا",
+    "noPanelsHint": "اوپر دیے گئے بٹن سے اپنا پہلا پینل بنائیں۔",
+    "createPanel": "نیا پینل",
+    "createPanelTitle": "ٹکٹ پینل بنائیں",
+    "createPanelDescription": "اپنے پینل کو منفرد نام دیں۔ اسے بنانے کے بعد بٹنز اور چینلز ترتیب دیے جا سکتے ہیں۔",
+    "panelNameLabel": "پینل کا نام",
+    "panelNamePlaceholder": "مثلاً درخواستیں",
+    "panelCreated": "پینل \"{name}\" بن گیا۔",
+    "confirmDeletePanel": "پینل \"{name}\" حذف کریں؟",
+    "confirmDeletePanelHint": "اس سے پینل اور اس کے تمام بٹن کی ترتیبات مستقل طور پر حذف ہو جائیں گی۔",
+    "panelDeleted": "پینل حذف ہو گیا۔",
+    "panelHint": "اس پینل کو کھولنے اور ترتیب دینے کے لیے کلک کریں۔",
+    "panelEmbed": "پینل ایمبیڈ",
+    "panelEmbedHint": "Discord میں ٹکٹ پینل پوسٹ کرتے وقت استعمال ہونے والا ایمبیڈ۔",
+    "panelEmbedInfoLine1": "نیا ایمبیڈ بنانے یا موجودہ ایمبیڈ میں ترمیم کے لیے {dashboardLabel} میں %s صفحے پر جائیں۔",
+    "panelEmbedInfoLine2": "بٹنز شامل کرنے یا ان میں ترمیم کے لیے اس پینل کے %s پر جائیں۔",
+    "panelEmbedPreview": "ایمبیڈ کا پیش منظر",
+    "panelEmbedPreviewEmpty": "منتخب پینل ایمبیڈ کا پیش منظر دستیاب نہیں۔",
+    "ticketOpenEmbed": "ٹکٹ کھلنے کا ایمبیڈ",
+    "ticketOpenEmbedHint": "اس بٹن سے ٹکٹ کھلنے پر بھیجا جانے والا اختیاری حسب ضرورت ایمبیڈ۔",
+    "selectEmbed": "ایمبیڈ منتخب کریں",
+    "defaultEmbed": "پینل ایمبیڈ کی کوئی تبدیلی نہیں",
+    "noCustomMessage": "پہلے سے طے شدہ ٹکٹ پیغام استعمال کریں",
+    "buttons": "بٹنز",
+    "buttonList": "بٹنز",
+    "categories": "زمرے",
+    "openCategory": "کھلے ٹکٹس کا زمرہ",
+    "open_category": "کھلے ٹکٹس کا زمرہ",
+    "sleepCategory": "غیر فعال ٹکٹس کا زمرہ",
+    "sleep_category": "غیر فعال ٹکٹس کا زمرہ",
+    "closedCategory": "بند ٹکٹس کا زمرہ",
+    "closed_category": "بند ٹکٹس کا زمرہ",
+    "selectCategory": "زمرہ منتخب کریں...",
+    "logChannels": "لاگ چینلز",
+    "statusChangeLog": "حالت کی تبدیلی کا لاگ",
+    "status_change_log": "حالت کی تبدیلی کا لاگ",
+    "buttonClickLog": "بٹن کلک لاگ",
+    "ticket_button_click_log": "بٹن کلک لاگ",
+    "closeLog": "ٹکٹ بند ہونے کا لاگ",
+    "ticket_close_log": "ٹکٹ بند ہونے کا لاگ",
+    "selectChannel": "چینل منتخب کریں...",
+    "savedSuccess": "پینل \"{panel}\" کامیابی سے محفوظ ہو گیا۔",
+    "tabChannels": "ٹکٹ پینل",
+    "tabSettings": "ترتیبات",
+    "tabButtons": "بٹنز",
+    "tabMessages": "پیغامات",
+    "autoSaveSaving": "محفوظ ہو رہا ہے...",
+    "autoSaveSaved": "محفوظ",
+    "autoSaveErrorTitle": "خودکار محفوظ کاری ناکام رہی",
+    "autoSaveErrorDescription": "ٹکٹ کی یہ ترتیبات محفوظ نہیں ہو سکیں۔",
+    "messages": "پیغامات",
+    "noButtons": "ابھی کوئی بٹن نہیں۔ شروع کرنے کے لیے ایک شامل کریں۔",
+    "addButton": "بٹن شامل کریں",
+    "addButtonTitle": "بٹن شامل کریں",
+    "addButtonDescription": "نئے بٹن کی ظاہری شکل ترتیب دیں۔",
+    "buttonLabel": "بٹن کا متن",
+    "buttonLabelPlaceholder": "مثلاً درخواست دیں",
+    "buttonStyle": "بٹن کا رنگ",
+    "buttonStyleBlue": "نیلا",
+    "buttonStyleGrey": "سرمئی",
+    "buttonStyleGreen": "سبز",
+    "buttonStyleRed": "سرخ",
+    "buttonAdded": "بٹن شامل ہو گیا۔",
+    "buttonDeleted": "بٹن حذف ہو گیا۔",
+    "editButtonTitle": "بٹن کی ترتیبات میں ترمیم کریں",
+    "editButtonDescription": "اس ٹکٹ بٹن کو ترتیب دیں۔",
+    "buttonAppearanceSaved": "ظاہری شکل محفوظ ہو گئی۔",
+    "confirmDeleteButton": "بٹن \"{label}\" حذف کریں؟",
+    "confirmDeleteButtonHint": "اس سے بٹن اور اس کی تمام ترتیبات (رولز، سوالات وغیرہ) حذف ہو جائیں گی۔",
+    "modRoles": "عملے کے رولز (پنگ کیے جائیں گے)",
+    "modRolesHint": "ٹکٹ کھلنے پر ان رولز کا ذکر کیا جاتا ہے۔",
+    "noPingRoles": "عملے کے رولز (خاموش)",
+    "noPingRolesHint": "یہ رولز ٹکٹس دیکھ سکتے ہیں مگر انہیں پنگ نہیں کیا جاتا۔",
+    "questions": "سوالات",
+    "questionsHint": "ٹکٹ کھلنے پر موڈل میں زیادہ سے زیادہ 5 سوالات دکھائے جاتے ہیں۔",
+    "question": "سوال",
+    "privateThread": "نجی تھریڈ",
+    "privateThreadHint": "عملے کے لیے الگ نجی تھریڈ بناتا ہے۔",
+    "accountApply": "CoC اکاؤنٹ لازمی کریں",
+    "accountApplyHint": "صارف کو Clash of Clans اکاؤنٹ منسلک کرنا ہوگا۔",
+    "playerInfo": "کھلاڑی کی معلومات دکھائیں",
+    "playerInfoHint": "ٹکٹ کھلنے پر اکاؤنٹ کے اعدادوشمار دکھاتا ہے۔",
+    "thMin": "کم از کم ٹاؤن ہال",
+    "numApply": "زیادہ سے زیادہ اکاؤنٹس",
+    "naming": "نام رکھنے کا طریقہ",
+    "namingPlaceholders": "نام کے پلیس ہولڈرز",
+    "namingVariables": "متغیرات: '{ticket_count}'، '{user}'، '{account_name}'، '{account_th}'، '{ticket_status}'، '{emoji_status}'",
+    "buttonSaved": "بٹن \"{label}\" محفوظ ہو گیا۔",
+    "badge": {
+      "accountApply": "CoC درکار",
+      "privateThread": "نجی تھریڈ"
+    },
+    "approveMessages": "منظوری / انکار کے پیغامات",
+    "approveMessagesHint": "پہلے سے لکھے پیغامات جو عملہ درخواست گزاروں کو بھیج سکتا ہے (زیادہ سے زیادہ 25)۔",
+    "messagesMaxHint": "آپ زیادہ سے زیادہ 25 پیغامات شامل کر سکتے ہیں۔",
+    "editMessagesButton": "پیغامات میں ترمیم کریں",
+    "editMessagesTitle": "پہلے سے لکھے پیغامات میں ترمیم کریں",
+    "editMessagesDescription": "اپنے پہلے سے لکھے ٹکٹ پیغامات شامل، ہٹائیں اور اپ ڈیٹ کریں۔",
+    "addMessage": "پیغام شامل کریں",
+    "noMessages": "ابھی کوئی پیغام نہیں۔ شروع کرنے کے لیے ایک شامل کریں۔",
+    "messageName": "پیغام کا نام",
+    "contentLabel": "مواد",
+    "messageContent": "پیغام کا متن...",
+    "messageNameRequired": "تمام پیغامات کا نام ہونا ضروری ہے۔",
+    "messagesSaved": "منظوری اور انکار کے پیغامات محفوظ ہو گئے۔",
+    "rolesToAdd": "دیے جانے والے رولز",
+    "rolesToAddHint": "ٹکٹ کھلنے پر صارف کو خودکار طور پر دیے جانے والے رولز۔",
+    "rolesToRemove": "واپس لیے جانے والے رولز",
+    "rolesToRemoveHint": "ٹکٹ کھلنے پر صارف سے خودکار طور پر ہٹائے جانے والے رولز۔",
+    "applyClans": "اجازت یافتہ کلینز",
+    "applyClansHint": "صرف ان کلینز کے ارکان یہ ٹکٹ کھول سکتے ہیں۔ سب کو اجازت دینے کے لیے خالی چھوڑیں۔",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "ٹاؤن ہال کے تقاضے",
+    "thRequirementsHint": "یہ ٹکٹ کھولنے کے لیے ہر ٹاؤن ہال سطح پر درکار ہیروز کی کم از کم سطحیں۔",
+    "thHeroLegend": "BK = باربیرین کنگ · AQ = آرچر کوئین · GW = گرینڈ وارڈن · RC = رائل چیمپیئن · WARST = جنگی ستارے",
+    "addThLevel": "TH سطح شامل کریں",
+    "thLevel": "TH",
+    "numApplyHint": "CoC اکاؤنٹس کی زیادہ سے زیادہ تعداد جن کے ساتھ صارف درخواست دے سکتا ہے (1–25)۔",
+    "embeds": "ایمبیڈز",
+    "embedsHint": "پینل یا ٹکٹ کھلنے کے پیغامات کے طور پر استعمال ہونے والے Discord ایمبیڈز۔",
+    "newEmbed": "نیا ایمبیڈ",
+    "embedName": "ایمبیڈ کا نام",
+    "embedNamePlaceholder": "mera-embed",
+    "discohookUrl": "Discohook کا URL",
+    "embedDiscohookHint": "Discohook پر اپنا ایمبیڈ بنائیں، صفحے کا URL کاپی کریں اور یہاں چسپاں کریں۔",
+    "openDiscohook": "Discohook کھولیں",
+    "openInDiscohook": "Discohook میں کھولیں",
+    "copyDiscohookUrl": "Discohook URL کاپی کریں",
+    "copyDiscohookUrlDone": "URL کاپی ہو گیا!",
+    "editEmbed": "ترمیم کریں",
+    "deleteEmbed": "حذف کریں",
+    "confirmDeleteEmbed": "ایمبیڈ \"{name}\" حذف کریں؟",
+    "confirmDeleteEmbedHint": "یہ صرف اسے ClashKing سے ہٹائے گا۔ پہلے سے پوسٹ کیے گئے Discord پیغامات متاثر نہیں ہوں گے۔",
+    "embedSaved": "ایمبیڈ \"{name}\" محفوظ ہو گیا۔",
+    "embedCreated": "ایمبیڈ \"{name}\" بن گیا۔",
+    "embedDeleted": "ایمبیڈ حذف ہو گیا۔",
+    "noEmbeds": "ابھی کوئی ایمبیڈ نہیں۔",
+    "noEmbedsHint": "یہاں ایمبیڈ بنائیں، پھر اسے پینل یا بٹن کو تفویض کریں۔",
+    "legacyEmbed": "بوٹ کے ذریعے بنایا گیا — ترمیم فعال کرنے کے لیے Discohook URL چسپاں کریں۔",
+    "invalidDiscohookUrl": "غلط URL۔ Discohook صفحے کا URL چسپاں کریں (discohook.app/?data=... یا discohook.app/?share=...)۔",
+    "tabEmbeds": "ایمبیڈز"
+  },
+  "EmbedsPage": {
+    "title": "ایمبیڈز",
+    "description": "اپنے ٹکٹ پینلز اور بٹنز کے لیے Discord ایمبیڈ ٹیمپلیٹس بنائیں اور ان کا انتظام کریں۔",
+    "nameHint": "اپنے ایمبیڈ کو منفرد شناختی نام دیں۔ بعد میں اس کا مواد تبدیل کیا جا سکتا ہے۔"
+  },
+  "EmbedEditor": {
+    "importSection": "Discohook سے درآمد کریں",
+    "addMessage": "پیغام شامل کریں",
+    "addMessageDialogTitle": "پیغام شامل کریں",
+    "addMessageDialogDescription": "اپنے پیغام کی پیچیدگی منتخب کریں۔",
+    "addMessageClassicTitle": "کلاسک",
+    "addMessageClassicDescription": "سادہ اور قابلِ اعتماد: متن اور ایمبیڈز۔ انتخاب کا یقین نہ ہو تو اسے چنیں۔",
+    "addMessageV2Title": "کمپونینٹس v2",
+    "addMessageV2Description": "زیادہ جدید لے آؤٹس اور تعاملی کمپونینٹس (بٹنز، انتخاب، حصے)۔ جدید سیٹ اپ کے لیے موزوں۔",
+    "betaTag": "بیٹا",
+    "importExport": "درآمد اور برآمد",
+    "importExportDescription": "Discohook سے ایمبیڈ درآمد کریں یا موجودہ ایمبیڈ Discohook کو برآمد کریں۔",
+    "importFromDiscohook": "Discohook سے درآمد کریں",
+    "copyDiscohookUrl": "Discohook URL کاپی کریں",
+    "openInDiscohook": "Discohook میں کھولیں",
+    "content": "مواد",
+    "contentPlaceholder": "ایمبیڈز کے اوپر دکھایا جانے والا پیغام...",
+    "profileSection": "پروفائل",
+    "profileName": "نام",
+    "profileAvatarUrl": "اوتار URL",
+    "profileUnsupportedWarning": "تنبیہ: بوٹ فی الحال اس پروفائل کو اپ ڈیٹ نہیں کر سکتا۔",
+    "import": "درآمد کریں",
+    "importError": "غلط Discohook URL۔ Discohook صفحے کا URL چسپاں کریں۔",
+    "importMultipleMessagesWarning": "اس لنک میں متعدد پیغامات ہیں۔ صرف پہلا پیغام درآمد ہوا کیونکہ بوٹ فی ایمبیڈ ایک پیغام کی معاونت کرتا ہے۔",
+    "colorSection": "رنگ",
+    "authorSection": "مصنف",
+    "authorName": "نام",
+    "authorIconUrl": "آئیکن URL",
+    "authorUrl": "مصنف کا URL",
+    "bodySection": "متن",
+    "title": "عنوان",
+    "titleUrl": "عنوان کا URL",
+    "sidebarColor": "سائیڈ بار کا رنگ",
+    "description": "تفصیل",
+    "descriptionPlaceholder": "ایمبیڈ کی تفصیل...",
+    "fieldsSection": "فیلڈز",
+    "addField": "فیلڈ شامل کریں",
+    "field": "فیلڈ",
+    "fieldName": "نام",
+    "fieldValue": "قدر",
+    "fieldInline": "اسی سطر میں",
+    "imagesSection": "تصاویر",
+    "thumbnailUrl": "تھمب نیل URL",
+    "imageUrl": "تصویر کا URL",
+    "footerSection": "ذیلی متن",
+    "footerText": "ذیلی متن",
+    "footerIconUrl": "ذیلی آئیکن URL",
+    "timestamp": "ٹائم اسٹیمپ شامل کریں",
+    "preview": "پیش منظر",
+    "previewEmpty": "پیش منظر کے لیے فیلڈز پُر کریں",
+    "modeToggleV1": "کلاسک (V1)",
+    "modeToggleV2": "کمپونینٹس (V2)",
+    "componentsSection": "کمپونینٹس",
+    "addComponent": "کمپونینٹ شامل کریں",
+    "containerLabel": "کنٹینر",
+    "textDisplayLabel": "متن کی نمائش",
+    "separatorLabel": "جداکار",
+    "mediaGalleryLabel": "میڈیا گیلری",
+    "sectionLabel": "حصہ",
+    "dividerLine": "تقسیمی لکیر دکھائیں",
+    "spacing": "فاصلہ",
+    "spacingSmall": "چھوٹا",
+    "spacingLarge": "بڑا",
+    "imageDescription": "متبادل متن",
+    "imageSpoiler": "اسپوئلر",
+    "addImage": "تصویر شامل کریں",
+    "addTextBlock": "متن کا بلاک شامل کریں",
+    "accessory": "ملحق",
+    "accessoryNone": "کوئی نہیں",
+    "accessoryThumbnail": "تھمب نیل",
+    "accessoryButton": "بٹن",
+    "thumbnailAlt": "تھمب نیل کا متبادل متن",
+    "accentColor": "نمایاں رنگ",
+    "addContainer": "ذیلی کمپونینٹ شامل کریں",
+    "containerSpoiler": "اسپوئلر کنٹینر",
+    "stringSelectLabel": "متن کا انتخاب",
+    "userSelectLabel": "صارف کا انتخاب",
+    "roleSelectLabel": "رول کا انتخاب",
+    "mentionableSelectLabel": "قابلِ ذکر کا انتخاب",
+    "channelSelectLabel": "چینل کا انتخاب",
+    "fileLabel": "فائل",
+    "fileUrl": "فائل URL",
+    "fileUploadButton": "اپ لوڈ کریں",
+    "fileSpoiler": "اسپوئلر",
+    "selectCustomId": "حسب ضرورت ID",
+    "selectPlaceholder": "اشاری متن",
+    "selectMinValues": "کم از کم قدریں",
+    "selectMaxValues": "زیادہ سے زیادہ قدریں",
+    "selectOptions": "اختیارات",
+    "selectOption": "اختیار",
+    "selectOptionLabel": "لیبل",
+    "selectOptionValue": "قدر",
+    "selectOptionDescription": "تفصیل",
+    "selectOptionDefault": "پہلے سے منتخب",
+    "addSelectOption": "اختیار شامل کریں",
+    "selectDisabled": "غیر فعال",
+    "actionRowMode": "قطار کی قسم",
+    "actionRowModeButtons": "بٹنز",
+    "actionRowLabel": "کارروائی کی قطار",
+    "addButton": "بٹن شامل کریں",
+    "buttonLabel": "لیبل",
+    "buttonStyle": "انداز",
+    "buttonStylePrimary": "بنیادی",
+    "buttonStyleSecondary": "ثانوی",
+    "buttonStyleSuccess": "کامیابی",
+    "buttonStyleDanger": "خطرہ",
+    "buttonStyleLink": "لنک",
+    "tabMentions": "ذکر",
+    "tabTime": "وقت",
+    "tabEmojis": "ایموجیز",
+    "dateLabel": "تاریخ",
+    "timeLabel": "وقت",
+    "mentionsChannels": "چینلز",
+    "mentionsSpecial": "خصوصی",
+    "mentionsChannelList": "تمام چینلز",
+    "mentionsRoles": "رولز",
+    "mentionsServerGuide": "سرور رہنما",
+    "mentionsBrowseChannels": "چینلز دیکھیں",
+    "mentionsChannelsAndRoles": "چینلز اور رولز",
+    "mentionsNoChannels": "کوئی چینل آپ کی تلاش سے مطابقت نہیں رکھتا۔",
+    "mentionsNoRoles": "کوئی رول آپ کی تلاش سے مطابقت نہیں رکھتا۔",
+    "styleLabel": "انداز",
+    "timeRelativeNow": "0 سیکنڈ پہلے",
+    "emojiSearchPlaceholder": "موزوں ایموجی تلاش کریں",
+    "emojiToneLabel": "ایموجی کی جلد کا رنگ",
+    "emojiCategory": {
+      "people": "لوگ",
+      "nature": "فطرت",
+      "food": "کھانا",
+      "activities": "سرگرمیاں",
+      "travel": "سفر",
+      "objects": "اشیاء",
+      "symbols": "علامات",
+      "flags": "جھنڈے"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "غیر فعال",
+    "unknownComponent": "نامعلوم کمپونینٹ",
+    "unknownComponentHint": "اس قسم کے کمپونینٹ میں یہاں ترمیم نہیں ہو سکتی، مگر محفوظ کرتے وقت یہ برقرار رہے گا۔"
+  },
+  "PanelsPage": {
+    "title": "پینلز",
+    "description": "اپنے سرور پر پوسٹ کیے جانے والے تعاملی رکن پینل کو ترتیب دیں۔ ارکان ایک کلک سے اپنا اکاؤنٹ منسلک کر سکتے ہیں، اپنے رولز تازہ کر سکتے ہیں اور مزید کارروائیاں انجام دے سکتے ہیں۔",
+    "saved": "پینل کی ترتیب محفوظ ہو گئی۔",
+    "embedSection": "ایمبیڈ",
+    "embedHint": "بٹنز کے اوپر دکھایا جانے والا اختیاری ایمبیڈ۔",
+    "embedLabel": "ایمبیڈ",
+    "noEmbed": "کوئی ایمبیڈ نہیں (صرف بٹنز)",
+    "buttonsSection": "بٹنز",
+    "buttonsHint": "دکھانے کے لیے کارروائی والے بٹنز منتخب کریں۔ ترتیب آپ کے انتخاب کے مطابق ہوگی۔",
+    "colorSection": "بٹن کا رنگ",
+    "colorHint": "تمام بٹنز پر لاگو ہوتا ہے۔",
+    "welcomeSection": "خوش آمدیدی چینل",
+    "welcomeHint": "یہ مقرر ہونے پر نئے رکن کی شمولیت کے ساتھ پینل خودکار طور پر پوسٹ ہو جاتا ہے۔",
+    "welcomeChannel": "چینل",
+    "welcomeChannelPlaceholder": "چینل منتخب کریں...",
+    "editPanelButton": "پینل میں ترمیم کریں",
+    "editDialogTitle": "پینل میں ترمیم کریں",
+    "editDialogDescription": "محفوظ کرنے سے پہلے براہِ راست پیش نظارے کے ساتھ ایمبیڈ، بٹنز اور بٹن کا رنگ تبدیل کریں۔",
+    "welcomeAutosaveSuccess": "خوش آمدیدی چینل محفوظ ہو گیا۔",
+    "welcomeAutosaveDisabled": "خوش آمدیدی چینل غیر فعال کر دیا گیا۔",
+    "previewSection": "پیش نظارہ",
+    "previewHint": "Discord میں پینل کی ظاہری شکل۔",
+    "previewNoEmbed": "کوئی ایمبیڈ منتخب نہیں",
+    "previewEmbedNoData": "ایمبیڈ کے پیش نظارے کے لیے کوئی ڈیٹا نہیں",
+    "previewNoButtons": "کوئی بٹن منتخب نہیں",
+    "color": {
+      "Blue": "نیلا",
+      "Green": "سبز",
+      "Grey": "سرمئی",
+      "Red": "سرخ"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "انعامی قرعہ اندازیاں",
+    "description": "اپنے سرور کے لیے انعامی مہمات بنائیں، شیڈول کریں اور منظم کریں۔",
+    "create": "انعامی قرعہ اندازی بنائیں",
+    "listTitle": "انعامی قرعہ اندازی کا ڈیش بورڈ",
+    "listDescription": "شیڈول شدہ، جاری اور مکمل انعامی قرعہ اندازیوں کو ایک جگہ ٹریک کریں۔",
+    "empty": "ابھی دکھانے کے لیے کوئی انعامی قرعہ اندازی نہیں۔",
+    "confirmDeleteTitle": "انعامی قرعہ اندازی حذف کریں",
+    "confirmDelete": "کیا آپ واقعی یہ انعامی قرعہ اندازی حذف کرنا چاہتے ہیں؟",
+    "discardTitle": "تبدیلیاں ضائع کریں؟",
+    "discardDescription": "آپ کی کچھ تبدیلیاں محفوظ نہیں ہوئیں۔ ابھی بند کرنے پر وہ ضائع ہو جائیں گی۔",
+    "discardConfirm": "ضائع کریں",
+    "formTabs": {
+      "general": "عمومی",
+      "messages": "پیغامات",
+      "restrictions": "پابندیاں",
+      "advanced": "اعلیٰ ترتیبات"
+    },
+    "tabs": {
+      "ongoing": "جاری",
+      "upcoming": "آنے والا",
+      "ended": "ختم شدہ"
+    },
+    "stats": {
+      "total": "کل انعامی قرعہ اندازیاں",
+      "totalEntries": "کل اندراجات",
+      "ongoing": "جاری انعامی قرعہ اندازیاں",
+      "upcoming": "آنے والی انعامی قرعہ اندازیاں",
+      "ended": "مکمل انعامی قرعہ اندازیاں"
+    },
+    "statsDescriptions": {
+      "total": "اس سرور پر ترتیب دی گئی تمام انعامی قرعہ اندازیاں۔",
+      "totalEntries": "تمام انعامی قرعہ اندازیوں کے مجموعی اندراجات۔",
+      "ongoing": "اس وقت فعال اور اندراجات قبول کر رہی ہیں۔",
+      "upcoming": "بعد میں شروع ہونے کے لیے شیڈول ہیں۔",
+      "ended": "پہلے ہی مکمل شدہ انعامی قرعہ اندازیاں۔"
+    },
+    "emptyTab": {
+      "title": "یہاں کوئی انعامی قرعہ اندازی نہیں",
+      "ongoing": "اس وقت کوئی انعامی قرعہ اندازی جاری نہیں۔",
+      "upcoming": "کوئی انعامی قرعہ اندازی شیڈول نہیں۔ شروع کرنے کے لیے ایک بنائیں۔",
+      "ended": "ابھی کوئی انعامی قرعہ اندازی ختم نہیں ہوئی۔"
+    },
+    "status": {
+      "scheduled": "شیڈول شدہ",
+      "ongoing": "جاری",
+      "ended": "ختم شدہ"
+    },
+    "table": {
+      "giveaway": "انعامی قرعہ اندازی",
+      "channel": "چینل",
+      "entries": "اندراجات",
+      "timing": "اوقات",
+      "start": "آغاز",
+      "end": "اختتام",
+      "winnersHeader": "فاتحین",
+      "winners": "{count} {count, plural, one {فاتح} other {فاتحین}}",
+      "boosters": "{count} {count, plural, one {بوسٹر} other {بوسٹرز}}",
+      "noChannel": "کوئی چینل نہیں",
+      "noChannelHelp": "کوئی چینل تفویض نہیں۔ درست کرنے کے لیے اس انعامی قرعہ اندازی میں ترمیم کریں۔",
+      "endsAt": "اختتام کا وقت",
+      "endedAt": "اختتام ہوا",
+      "duplicate": "نقل بنائیں",
+      "showingEnded": "ختم شدہ {total} میں سے {shown} انعامی قرعہ اندازیاں دکھائی جا رہی ہیں",
+      "showMore": "مزید {count} دکھائیں",
+      "pendingUpdate": "اپ ڈیٹ زیر التوا",
+      "pendingUpdateHelp": "اس انعامی قرعہ اندازی کی تبدیلیاں زیر التوا ہیں، بوٹ انہیں جلد لاگو کرے گا۔",
+      "openInDiscord": "Discord میں کھولیں",
+      "viewInDiscord": "Discord میں دیکھیں",
+      "reroll": "فاتحین دوبارہ منتخب کریں",
+      "rerolledCount": "{count, plural, one {# دوبارہ منتخب} other {# دوبارہ منتخب}}",
+      "viewEntries": "اندراجات دیکھیں"
+    },
+    "entries": {
+      "description": "شرکاء اور ان کے جیتنے کے امکانات کی فہرست۔",
+      "totalEntries": "کل اندراجات",
+      "uniqueUsers": "منفرد صارفین",
+      "noEntrants": "ابھی کوئی اندراج نہیں۔",
+      "userId": "صارف ID",
+      "entryCount": "اندراجات",
+      "winChance": "جیتنے کا امکان"
+    },
+    "dialog": {
+      "createTitle": "انعامی قرعہ اندازی بنائیں",
+      "editTitle": "انعامی قرعہ اندازی میں ترمیم کریں",
+      "description": "انعامی قرعہ اندازی کا پیغام، اوقات اور تقاضے ترتیب دیں۔",
+      "create": "انعامی قرعہ اندازی بنائیں",
+      "saveChanges": "تبدیلیاں محفوظ کریں"
+    },
+    "form": {
+      "prize": "انعام",
+      "prizePlaceholder": "مثال: گولڈ پاس",
+      "channel": "چینل",
+      "channelPlaceholder": "چینل منتخب کریں",
+      "startTime": "شروع ہونے کا وقت",
+      "startNow": "فوراً شروع کریں",
+      "endTime": "اختتام کا وقت",
+      "winners": "فاتحین کی تعداد",
+      "mentions": "ذکر کردہ رولز",
+      "roleRequirements": "درکار یا خارج کردہ رولز",
+      "rolesMode": "رول موڈ",
+      "rolesModeOptions": {
+        "none": "رول کی کوئی پابندی نہیں",
+        "allow": "صرف یہ رولز شامل ہو سکتے ہیں",
+        "deny": "یہ رولز شامل نہیں ہو سکتے"
+      },
+      "rolesModeHelp": {
+        "none": "تمام صارفین اس انعامی قرعہ اندازی میں شامل ہو سکتے ہیں۔",
+        "allow": "صرف منتخب رولز میں سے کوئی رول رکھنے والے صارفین شامل ہو سکتے ہیں۔",
+        "deny": "منتخب رولز میں سے کوئی رول رکھنے والے صارفین شامل نہیں ہو سکتے۔"
+      },
+      "textAboveEmbed": "ایمبیڈ کے اوپر متن",
+      "textEmbedDefault": "حصہ لینے کے لیے نیچے دیا گیا بٹن دبائیں۔",
+      "textInEmbed": "ایمبیڈ کی تفصیل",
+      "textEndDefault": "منتخب ہونے والے تمام افراد کو مبارک ہو! ہم جلد آپ سے رابطہ کریں گے۔",
+      "textOnEnd": "انعامی قرعہ اندازی ختم ہونے کا پیغام",
+      "image": "انعامی قرعہ اندازی کی تصویر",
+      "removeImage": "موجودہ تصویر ہٹائیں",
+      "imagePreviewAlt": "انعامی قرعہ اندازی کا پیش منظر",
+      "previewGiveaway": "انعامی قرعہ اندازی کا پیش منظر",
+      "previewEnd": "اختتامی پیغام کا پیش منظر",
+      "boosters": "اندراج بوسٹرز",
+      "addBooster": "بوسٹر شامل کریں",
+      "noBoosters": "کوئی بوسٹر ترتیب نہیں دیا گیا۔",
+      "boosterLabel": "بوسٹر {index}",
+      "boostValue": "ضرب کنندہ",
+      "boostRoles": "بوسٹ کیے گئے رولز",
+      "requirements": "اندراج کے تقاضے",
+      "profilePictureRequired": "Discord پروفائل تصویر لازمی کریں",
+      "cocAccountRequired": "منسلک Clash of Clans اکاؤنٹ لازمی کریں"
+    },
+    "validation": {
+      "prizeRequired": "انعام درکار ہے۔",
+      "channelRequired": "چینل درکار ہے۔",
+      "startTimeRequired": "اگر انعامی قرعہ اندازی ابھی شروع نہیں ہوتی تو آغاز کا وقت درکار ہے۔",
+      "endTimeRequired": "اختتام کا وقت درکار ہے۔",
+      "endAfterStart": "اختتام کا وقت آغاز کے وقت کے بعد ہونا چاہیے۔",
+      "imageTooLarge": "تصویر 8 MB سے کم ہونی چاہیے۔"
+    },
+    "preview": {
+      "liveSummary": "جاری خلاصہ",
+      "discordPreview": "Discord پیش منظر",
+      "giveawayTitle": "انعامی قرعہ اندازی کا پیش منظر",
+      "giveawayDescription": "فعال انعامی قرعہ اندازی کا پیغام اس طرح نظر آئے گا۔",
+      "endTitle": "اختتامی پیغام کا پیش منظر",
+      "endDescription": "انعامی قرعہ اندازی ختم ہونے پر یہ پیغام بھیجا جائے گا۔",
+      "winnerCount": "فاتحین",
+      "winnerWord": "{count, plural, one {فاتح} other {فاتحین}}",
+      "mentionCount": "ذکر کردہ رولز",
+      "requirementCount": "تقاضے",
+      "boosterCount": "بوسٹرز",
+      "profileRequired": "پروفائل تصویر درکار",
+      "accountRequired": "منسلک CoC اکاؤنٹ درکار",
+      "rolesAllow": "صرف منتخب رولز تک محدود",
+      "rolesDeny": "منتخب رولز خارج",
+      "noChannel": "ابھی کوئی چینل منتخب نہیں",
+      "noPrize": "آپ کا انعام یہاں دکھائی دے گا",
+      "noEmbedText": "انعامی قرعہ اندازی کا متن دیکھنے کے لیے ایمبیڈ متن شامل کریں۔",
+      "noEndText": "فاتحین کے لیے اختتامی پیغام شامل کریں۔",
+      "startsAt": "آغاز: {date}",
+      "endsAt": "اختتام: {date}",
+      "endsOn": "{date} کو ختم ہوگی",
+      "endsFooter": "اختتام",
+      "notScheduled": "شیڈول نہیں",
+      "schedule": "شیڈول",
+      "endMessage": "فاتحین کا پیغام",
+      "endSummary": "{winners} {winners, plural, one {فاتح کا اعلان یہاں ہوگا۔} other {فاتحین کا اعلان یہاں ہوگا۔}}",
+      "totalParticipants": "کل شرکاء: {count}",
+      "participate": "حصہ لیں",
+      "buttonHint": "Discord پوسٹ کے نیچے دکھایا جانے والا بنیادی کارروائی بٹن۔"
+    },
+    "toast": {
+      "errorTitle": "کچھ غلط ہو گیا",
+      "successTitle": "کامیابی",
+      "loadError": "انعامی قرعہ اندازیاں لوڈ نہیں ہو سکیں۔",
+      "saveError": "انعامی قرعہ اندازی محفوظ نہیں ہو سکی۔",
+      "deleteError": "انعامی قرعہ اندازی حذف نہیں ہو سکی۔",
+      "created": "انعامی قرعہ اندازی کامیابی سے بن گئی۔",
+      "updated": "انعامی قرعہ اندازی کامیابی سے اپ ڈیٹ ہو گئی۔",
+      "deleted": "انعامی قرعہ اندازی کامیابی سے حذف ہو گئی۔",
+      "rerolled": "فاتحین کامیابی سے دوبارہ منتخب ہو گئے۔",
+      "rerollError": "فاتحین دوبارہ منتخب نہیں ہو سکے۔"
+    },
+    "reroll": {
+      "title": "فاتحین دوبارہ منتخب کریں",
+      "description": "جن فاتحین کو بدلنا ہے انہیں منتخب کریں۔ نئے فاتحین اہل شرکاء میں سے چنے جائیں گے۔",
+      "selectWinners": "بدلنے کے لیے فاتحین منتخب کریں:",
+      "confirm": "{count, plural, one {# فاتح} other {# فاتحین}} دوبارہ منتخب کریں"
+    }
+  },
+  "OverviewPage": {
+    "title": "ڈیش بورڈ کا جائزہ",
+    "description": "اپنے سرور کے اعدادوشمار دیکھیں اور آغاز کریں",
+    "stats": {
+      "linkedPlayers": "منسلک کھلاڑی",
+      "linkedPlayersDesc": "اس سرور سے منسلک کھلاڑی",
+      "clansConfigured": "ترتیب دیے گئے کلینز",
+      "clansConfiguredDesc": "اس سرور کے لیے ٹریک کیے گئے کلینز",
+      "activeRosters": "فعال روسٹرز",
+      "activeRostersDesc": "بنائے گئے جنگی روسٹرز",
+      "totalAccounts": "منسلک اکاؤنٹس",
+      "totalAccountsDesc": "منسلک CoC اکاؤنٹس کی کل تعداد",
+      "playersTracked": "ٹریک کیے گئے کھلاڑی",
+      "globalPlayers": "ڈیٹا بیس میں کھلاڑیوں کی کل تعداد",
+      "clansTracked": "ٹریک کیے گئے کلینز",
+      "globalClans": "ڈیٹا بیس میں کلینز کی کل تعداد",
+      "botStatus": "بوٹ کی حالت",
+      "online": "آن لائن",
+      "offline": "آف لائن",
+      "memoryUsage": "میموری: {used}MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "بوٹ کے اعدادوشمار",
+    "clans": {
+      "title": "آپ کے کلینز",
+      "description": "{count, plural, one {# کلین ترتیب دیا گیا ہے} other {# کلینز ترتیب دیے گئے ہیں}}",
+      "manage": "کلینز کا انتظام کریں",
+      "addFirst": "اپنا پہلا کلین شامل کریں"
+    },
+    "quickStart": {
+      "title": "فوری آغاز",
+      "description": "اپنے ClashKing بوٹ کی ترتیب شروع کریں",
+      "step1": {
+        "title": "عمومی ترتیبات ترتیب دیں",
+        "description": "عرفی ناموں کے اصول، ایمبیڈ کے رنگ اور لاگنگ چینلز ترتیب دیں"
+      },
+      "step2": {
+        "title": "اپنے کلینز شامل کریں",
+        "description": "اپنے Clash of Clans کلینز منسلک کریں اور رولز ترتیب دیں"
+      },
+      "step3": {
+        "title": "خودکار رولز ترتیب دیں",
+        "description": "ٹاؤن ہال، ٹرافیوں وغیرہ کی بنیاد پر رولز کی خودکار تفویض ترتیب دیں"
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "بوٹ کے اعدادوشمار",
+    "description": "ClashKing بوٹ کے عالمی اعدادوشمار اور نظام کی حالت",
+    "about": {
+      "title": "ان اعدادوشمار کے بارے میں",
+      "description": "یہ پورے ClashKing بوٹ نیٹ ورک کے عالمی اعدادوشمار ہیں",
+      "globalStats": "عالمی اعدادوشمار",
+      "globalStatsDesc": "کھلاڑیوں اور کلینز کی تعداد ان تمام Discord سرورز پر ٹریک کیے گئے اداروں کو ظاہر کرتی ہے جو ClashKing استعمال کرتے ہیں",
+      "systemHealth": "نظام کی حالت",
+      "systemHealthDesc": "CPU اور میموری کا استعمال ClashKing API کے بنیادی ڈھانچے پر موجودہ بوجھ ظاہر کرتا ہے"
+    }
+  },
+  "NotFound": {
+    "title": "404 - صفحہ نہیں ملا",
+    "description": "آپ جس صفحے کو تلاش کر رہے ہیں وہ موجود نہیں ہے۔",
+    "goHome": "مرکزی صفحے پر جائیں"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord بوٹ، موبائل ایپ اور کلین ڈیش بورڈ",
+      "description": "Discord، موبائل اور ویب پر ClashKing کے ذریعے جنگوں، روسٹرز، اکاؤنٹس، یاد دہانیوں اور کلین کی ترتیبات کا انتظام کریں۔",
+      "openGraphTitle": "ClashKing | اپنے کلین کا انتظام کریں"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing نیویگیشن",
+      "homeLabel": "ClashKing ہوم پیج",
+      "mobileApp": "موبائل ایپ",
+      "discordBot": "Discord بوٹ",
+      "dashboard": "ڈیش بورڈ"
+    },
+    "language": {
+      "label": "زبان"
+    },
+    "appearance": {
+      "label": "ظاہری شکل",
+      "day": "دن",
+      "sunset": "غروبِ آفتاب"
+    },
+    "actions": {
+      "addToDiscord": "Discord میں شامل کریں",
+      "addClashKing": "ClashKing شامل کریں",
+      "openDashboard": "ڈیش بورڈ کھولیں",
+      "joinTestFlight": "TestFlight میں شامل ہوں",
+      "getAndroidApp": "Android ایپ حاصل کریں"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "چلائیں",
+          "second": "اپنا",
+          "third": "کلین"
+        },
+        "accounts": {
+          "first": "انتظام کریں۔",
+          "second": "اپنے",
+          "third": "اکاؤنٹس"
+        },
+        "stats": {
+          "first": "دیکھیں",
+          "second": "تمام",
+          "third": "اعدادوشمار"
+        }
+      },
+      "rotatingLabel": "اپنے کلین کا انتظام کریں۔ اپنے اکاؤنٹس سنبھالیں۔ اعدادوشمار دیکھیں۔",
+      "copy": "Discord، موبائل اور ویب پر جنگوں، روسٹرز، اکاؤنٹس اور کلین کی ترتیبات کا انتظام کریں۔"
+    },
+    "app": {
+      "title": "موبائل ایپ",
+      "intro": "آپ کے Clash اکاؤنٹ کا ساتھی۔",
+      "stageLabel": "ClashKing موبائل ایپ کی کلین، اپ گریڈ اور جنگی وجیٹ والی اسکرینیں",
+      "images": {
+        "clanOverview": "ClashKing موبائل ایپ میں کلین کا جائزہ",
+        "upgradeStats": "ClashKing موبائل ایپ میں گرینڈ وارڈن کے اپ گریڈ کے اعدادوشمار",
+        "warWidget": "ClashKing کا جنگی نتیجے والا وجیٹ"
+      },
+      "features": {
+        "widgets": {
+          "title": "وجیٹس",
+          "copy": "اپنی جنگوں کی صورتحال ایک نظر میں دیکھیں۔"
+        },
+        "notifications": {
+          "title": "اطلاعات",
+          "copy": "حملہ دستیاب ہونے یا اپ گریڈ مکمل ہونے پر اطلاع پائیں۔"
+        },
+        "accounts": {
+          "title": "منسلک اکاؤنٹس",
+          "copy": "اپنے تمام Clash اکاؤنٹس ایک جگہ رکھیں۔"
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord بوٹ",
+      "intro": "کلین کے اعدادوشمار اور ٹولز، براہِ راست Discord میں۔",
+      "imageLabel": "Discord میں ClashKing کا کلین کمانڈ",
+      "imageAlt": "Discord میں ArcLine کلین کے اعدادوشمار دکھاتا ClashKing کلین کمانڈ",
+      "features": {
+        "rosters": {
+          "title": "روسٹرز",
+          "copy": "CWL یا ایونٹس کے لیے اکاؤنٹس کا انتظام کریں۔"
+        },
+        "warTools": {
+          "title": "جنگی ٹولز",
+          "copy": "Discord میں حملے، لائن اپس اور یاد دہانیاں چیک کریں۔"
+        },
+        "accounts": {
+          "title": "منسلک اکاؤنٹس",
+          "copy": "اپنے تمام Clash اکاؤنٹس ایک جگہ رکھیں۔"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "ڈیش بورڈ",
+      "intro": "روسٹرز، یاد دہانیوں اور سرور کی ترتیبات کا ایک ہی جگہ سے انتظام کریں۔",
+      "imageLabel": "کلین کے انتظامی ٹولز کی نمائندگی کرتی بلڈر ہٹ",
+      "imageAlt": "لیول 8 بلڈر ہٹ",
+      "features": {
+        "settings": {
+          "title": "کلین کی ترتیبات",
+          "copy": "کلینز، رولز اور چینلز ترتیب دیں۔"
+        },
+        "rosters": {
+          "title": "روسٹرز",
+          "copy": "CWL یا ایونٹس کے لیے اکاؤنٹس کا انتظام کریں۔"
+        },
+        "automation": {
+          "title": "خودکاری",
+          "copy": "یاد دہانیاں اور سرور کی کارروائیاں شیڈول کریں۔"
+        }
+      }
+    },
+    "resources": {
+      "title": "ClashKing کے ساتھ بنائیں۔",
+      "copy": "کمیونٹی ٹولز کے لیے رہنما مواد، سورس اور منظم ڈیٹا۔",
+      "ariaLabel": "ڈویلپر کے وسائل",
+      "documentation": "دستاویزات",
+      "publicApi": "عوامی API"
+    },
+    "footer": {
+      "tagline": "ہر ایک کے لیے Clash of Clans کے ٹولز",
+      "docs": "دستاویزات",
+      "privacy": "پرائیویسی پالیسی",
+      "terms": "سروس کی شرائط",
+      "legal": "یہ مواد Supercell سے وابستہ نہیں اور نہ ہی Supercell نے اس کی توثیق، سرپرستی یا خصوصی منظوری دی ہے۔"
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "Discord، موبائل اور ویب کے لیے ClashKing",
+    "privacy": {
+      "title": "رازداری کی پالیسی | ClashKing",
+      "openGraphTitle": "ClashKing کی رازداری کی پالیسی",
+      "description": "ClashKing اکاؤنٹ، گیم اور ایپ کا ڈیٹا کیسے جمع، استعمال، محفوظ اور مامون رکھتا ہے۔",
+      "heading": "پرائیویسی پالیسی",
+      "eyebrow": "مؤثر از 17 جولائی 2026"
+    },
+    "terms": {
+      "title": "سروس کی شرائط | ClashKing",
+      "openGraphTitle": "ClashKing کی سروس کی شرائط",
+      "description": "وہ شرائط جو ClashKing کی ویب سائٹس، ایپس، سروسز اور کمیونٹی ٹولز استعمال کرتے وقت لاگو ہوتی ہیں۔",
+      "heading": "سروس کی شرائط",
+      "eyebrow": "ClashKing قانونی معلومات"
+    }
+  }
+}

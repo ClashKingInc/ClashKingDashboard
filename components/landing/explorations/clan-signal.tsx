@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { useLocale, useTranslations } from "next-intl";
 import { ClanSignalHeroModel } from "./clan-signal/hero-model";
 import { ClanSignalWordmark } from "./clan-signal/brand";
 import { ClanSignalFooter } from "./clan-signal/footer";
@@ -8,7 +10,7 @@ import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
 import { RotatingHeadline } from "./clan-signal/rotating-headline";
 import { LandingSessionAction } from "./clan-signal/session-action";
 import { HeroActions } from "./clan-signal/hero-actions";
-import { publicPath, type SupportedLocale } from "@/lib/locale-preference";
+import { isPublicLocale, publicPath, type SupportedLocale } from "@/lib/locale-preference";
 import "../../../app/explorations/clan-signal.css";
 
 const SHARED = "/concepts/local/assets";
@@ -60,9 +62,11 @@ function FeatureList({ features }: { features: readonly Feature[] }) {
   );
 }
 
-export async function ClanSignal({ locale = "en" }: { readonly locale?: SupportedLocale }) {
-  const t = await getTranslations({ locale, namespace: "ClanSignal" });
+export function ClanSignal() {
+  const locale = useLocale() as SupportedLocale;
+  const t = useTranslations("ClanSignal");
   const landingTheme = "day";
+  const homePath = isPublicLocale(locale) ? publicPath(locale, "/") : "/";
   const headlinePhrases = [
     [t("hero.phrases.run.first"), t("hero.phrases.run.second"), t("hero.phrases.run.third")],
     [t("hero.phrases.accounts.first"), t("hero.phrases.accounts.second"), t("hero.phrases.accounts.third")],
@@ -88,7 +92,7 @@ export async function ClanSignal({ locale = "en" }: { readonly locale?: Supporte
     <main className="clan-signal" data-cs-theme={landingTheme}>
       <header className="cs-nav-shell">
         <nav className="cs-nav" aria-label={t("navigation.ariaLabel")}>
-          <Link href={publicPath(locale, "/")} aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
+          <Link href={homePath} aria-label={t("navigation.homeLabel")} className="cs-nav-brand">
             <ClanSignalWordmark priority />
           </Link>
           <div className="cs-nav-links">
@@ -195,9 +199,9 @@ export async function ClanSignal({ locale = "en" }: { readonly locale?: Supporte
           <h2 id="cs-dashboard-title">{t("dashboard.title")}</h2>
           <p className="cs-section-intro">{t("dashboard.intro")}</p>
           <FeatureList features={dashboardFeatures} />
-          <Link className="cs-text-link" href="/servers">
+          <button className="cs-text-link cs-disabled" type="button" disabled>
             {t("actions.openDashboard")} <ArrowAsset />
-          </Link>
+          </button>
         </div>
         <figure className="cs-dashboard-art" aria-label={t("dashboard.imageLabel")}>
           <Image
@@ -219,11 +223,11 @@ export async function ClanSignal({ locale = "en" }: { readonly locale?: Supporte
         <nav aria-label={t("resources.ariaLabel")}>
           <a href="https://docs.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.documentation")} <ArrowAsset /></a>
           <a href="https://github.com/ClashKingInc" target="_blank" rel="noreferrer">GitHub <ArrowAsset /></a>
-          <a href="https://v2-api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
+          <a href="https://go.api.clashk.ing/" target="_blank" rel="noreferrer">{t("resources.publicApi")} <ArrowAsset /></a>
         </nav>
       </section>
 
-      <ClanSignalFooter locale={locale} />
+      <ClanSignalFooter />
     </main>
   );
 }

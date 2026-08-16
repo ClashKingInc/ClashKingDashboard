@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "読み込み中...",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "search": "検索",
+    "filter": "フィルター",
+    "add": "追加",
+    "remove": "削除",
+    "refresh": "更新",
+    "close": "閉じる",
+    "openMenu": "メニューを開く",
+    "submit": "送信",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "poweredBy": "提供",
+    "noData": "利用可能なデータがありません。",
+    "noChannelFound": "チャンネルが見つかりません。",
+    "searchChannels": "チャンネルを検索...",
+    "searchClans": "クランを検索...",
+    "noClanFound": "クランが見つかりません。",
+    "searchCategories": "カテゴリーを検索...",
+    "noRoleFound": "ロールが見つかりません。",
+    "searchRoles": "ロールを検索...",
+    "addRole": "ロールを追加...",
+    "error": "エラーが発生しました",
+    "success": "成功",
+    "actions": "アクション",
+    "details": "詳細",
+    "view": "表示",
+    "unknown": "不明",
+    "confirm": "確認",
+    "settings": "設定",
+    "status": "ステータス",
+    "retry": "再試行",
+    "disabled": "無効",
+    "name": "名前",
+    "description": "説明",
+    "createdAt": "作成日時",
+    "updatedAt": "更新日時",
+    "dashboard": "ダッシュボード",
+    "loadError": "データの読み込みに失敗しました。",
+    "tryAgain": "もう一度試す",
+    "create": "作成",
+    "viewClashProfile": "Clashプロフィールを表示",
+    "openInGame": "ゲーム内で開く",
+    "openChannelInDiscord": "Discordでこのチャンネルを開く",
+    "playerProfile": {
+      "clan": "クラン",
+      "townHallLevel": "タウンホールレベル",
+      "trophies": "トロフィー",
+      "warPreference": "クラン対戦の希望",
+      "warPreferenceIn": "参加",
+      "warPreferenceOut": "不参加",
+      "signupGroup": "参加登録グループ",
+      "heroLevels": "ヒーローレベル",
+      "hitrate30d": "30日間の攻撃成功率"
+    }
+  },
+  "Navigation": {
+    "features": "機能",
+    "openSource": "オープンソース",
+    "help": "ヘルプが必要ですか？",
+    "support": "サポート",
+    "commands": "コマンド",
+    "premium": "プレミアム",
+    "documentation": "ドキュメント",
+    "loginWithDiscord": "Discordでログイン",
+    "addToDiscord": "Discordに追加",
+    "openDashboard": "ダッシュボードを開く",
+    "dashboardSettings": "ダッシュボード設定",
+    "logout": "ログアウト",
+    "settings": "設定",
+    "theme": "テーマ",
+    "systemTheme": "システム設定に従う",
+    "lightTheme": "ライトテーマ",
+    "darkTheme": "ダークテーマ",
+    "language": "言語",
+    "browserLanguage": "ブラウザーの言語"
+  },
+  "HomePage": {
+    "badge": "{serverCount}以上のサーバーがClashKingを利用中",
+    "title": "最も強力な",
+    "titleHighlight": "Clash of Clansボット",
+    "subtitle": "クラン管理を自動化し、プレイヤー統計とクラン対戦を管理してコミュニティを活性化します。",
+    "cta": {
+      "heading": "クラン運営を変える準備はできましたか？",
+      "description": "ClashKingを利用する{serverCount}以上のDiscordサーバーに加わり、Clash of Clansコミュニティを強化しましょう。セットアップはわずか2分です。",
+      "button": "ClashKingをDiscordに追加",
+      "trustBadge": "永久無料 • クレジットカード不要 • {serverCount}以上のサーバー",
+      "addToDiscord": "Discordに追加",
+      "openDashboard": "ダッシュボードを開く"
+    },
+    "stats": {
+      "servers": "Discordサーバー",
+      "users": "アクティブユーザー",
+      "clans": "追跡中のクラン"
+    },
+    "features": {
+      "title": "クラン管理に必要なすべての機能",
+      "subtitle": "Clash of Clansコミュニティ専用に設計された強力な機能",
+      "autoRoles": {
+        "title": "自動ロール管理",
+        "description": "プレイヤーの状態、クランでの役職、達成項目に応じてロールを自動割り当てし、サーバーを簡単に整理できます。"
+      },
+      "playerStats": {
+        "title": "プレイヤー統計",
+        "description": "詳細なプレイヤー統計、成長グラフ、攻撃履歴を追跡し、成長中のプレイヤーや支援が必要なプレイヤーを把握できます。"
+      },
+      "leaderboards": {
+        "title": "リーダーボード",
+        "description": "寄付、トロフィー、対戦の星、カスタム指標のリーダーボードを作成し、参加を促します。"
+      },
+      "warTracking": {
+        "title": "対戦追跡",
+        "description": "対戦メンバーを監視し、攻撃をリアルタイムで追跡し、対戦後の分析を取得します。対戦の詳細を見逃しません。"
+      },
+      "smartReminders": {
+        "title": "スマートリマインダー",
+        "description": "クランゲーム、対戦攻撃、クラン対戦リーグ、カスタムイベントを自動で通知します。"
+      },
+      "customization": {
+        "title": "完全カスタマイズ",
+        "description": "コマンド、埋め込みの色、ニックネーム、権限をカスタマイズし、ClashKingを自分仕様にできます。"
+      },
+      "familyManagement": {
+        "title": "クランファミリー管理",
+        "description": "複数のクランをファミリーとして管理し、クラン横断統計、共有リーダーボード、統一ロールを利用できます。"
+      },
+      "analytics": {
+        "title": "高度な分析",
+        "description": "クランのパフォーマンス、プレイヤーの活動パターン、成長傾向を深く分析し、データに基づいた判断を支援します。"
+      },
+      "performance": {
+        "title": "高速動作",
+        "description": "即時のコマンド応答とリアルタイム更新により、遅延なく高速に動作します。"
+      },
+      "security": {
+        "title": "安全で信頼性が高い",
+        "description": "99.9%の稼働率、暗号化されたデータ、定期バックアップにより、クランデータを安全に保護します。"
+      }
+    },
+    "footer": {
+      "tagline": "Discordコミュニティ向けの最強Clash of Clansボット。",
+      "about": {
+        "title": "概要",
+        "features": "機能",
+        "help": "ヘルプが必要ですか？",
+        "openSource": "オープンソース",
+        "support": "サポート"
+      },
+      "bot": {
+        "title": "ボット",
+        "dashboard": "ダッシュボード",
+        "inviteBot": "ボットを招待"
+      },
+      "resources": {
+        "title": "リソース",
+        "documentation": "ドキュメント",
+        "quickStart": "クイックスタートガイド",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "コミュニティ",
+        "discord": "Discordサーバー",
+        "twitter": "X (Twitter)",
+        "reportBug": "バグを報告",
+        "requestFeature": "機能を提案"
+      },
+      "legal": {
+        "copyright": "ClashKing. 無断転載を禁じます。",
+        "privacy": "プライバシーポリシー",
+        "terms": "利用規約"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "サーバー外",
+    "unknownUser": "不明なユーザー",
+    "notLinked": "未連携",
+    "status": {
+      "onServer": "サーバー内",
+      "notOnServer": "サーバー外"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "Discordプロフィールを表示",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "概要",
+      "description": "ダッシュボードホーム"
+    },
+    "general": {
+      "name": "一般設定",
+      "description": "サーバー設定"
+    },
+    "dashboardAccess": {
+      "name": "ダッシュボードのアクセス権",
+      "description": "ダッシュボードのセクション権限を委譲"
+    },
+    "familySettings": {
+      "name": "ファミリー設定",
+      "description": "ファミリーのロールとニックネーム"
+    },
+    "clans": {
+      "name": "クラン",
+      "description": "クランを管理"
+    },
+    "logs": {
+      "name": "ログ",
+      "description": "Webhook設定"
+    },
+    "roles": {
+      "name": "ロール",
+      "description": "ロール自動化"
+    },
+    "reminders": {
+      "name": "リマインダー",
+      "description": "すべてのリマインダー種類"
+    },
+    "rosters": {
+      "name": "ロースター",
+      "description": "ロースター管理"
+    },
+    "bases": {
+      "name": "拠点",
+      "description": "レイアウトライブラリとエンゲージメント"
+    },
+    "autoboards": {
+      "name": "自動ボード",
+      "description": "自動リーダーボード"
+    },
+    "giveaways": {
+      "name": "ギブアウェイ",
+      "description": "ギブアウェイキャンペーンを管理"
+    },
+    "panels": {
+      "name": "パネル",
+      "description": "アクションボタン付きのメンバーパネル"
+    },
+    "tickets": {
+      "name": "チケット",
+      "description": "募集・サポートチケット"
+    },
+    "embeds": {
+      "name": "埋め込み",
+      "description": "Discord埋め込みテンプレート"
+    },
+    "links": {
+      "name": "連携",
+      "description": "プレイヤーとDiscordの連携"
+    },
+    "bans": {
+      "name": "BANとストライク",
+      "description": "モデレーションツール"
+    },
+    "wars": {
+      "name": "クラン対戦",
+      "description": "クラン対戦統計"
+    },
+    "leaderboards": {
+      "name": "リーダーボード",
+      "description": "グローバルランキング"
+    },
+    "sections": {
+      "configuration": "設定",
+      "clanManagement": "クラン管理",
+      "playerManagement": "プレイヤー管理",
+      "automation": "自動化",
+      "statistics": "統計"
+    },
+    "switchServer": "サーバーを切り替え",
+    "goHome": "ホームページ"
+  },
+  "BasesPage": {
+    "eyebrow": "クラン管理",
+    "title": "配置",
+    "description": "共有された配置、利用履歴、Discordの元メッセージを確認します。",
+    "refresh": "更新",
+    "create": "配置を追加",
+    "retry": "もう一度試す",
+    "dismiss": "閉じる",
+    "cancel": "キャンセル",
+    "previous": "前へ",
+    "next": "次へ",
+    "pagination": "{total}ページ中{page}ページ",
+    "imageAlt": "配置画像 {index}",
+    "noDescription": "説明はありません。",
+    "openLayout": "配置を開く",
+    "openMessage": "Discordメッセージ",
+    "summary": {
+      "total": "配置の合計",
+      "page": "現在のページ",
+      "visible": "表示中"
+    },
+    "counts": {
+      "downloads": "ユニークダウンロード数",
+      "upvotes": "高評価",
+      "downvotes": "低評価"
+    },
+    "history": {
+      "title": "ダウンロード履歴（{count}件）",
+      "empty": "ダウンロードしたユーザーのIDは記録されていません。",
+      "resolve": "プロフィールを取得"
+    },
+    "delete": {
+      "action": "削除",
+      "confirmTitle": "この配置を削除しますか？",
+      "confirmDescription": "まずDiscordの元メッセージの削除を試みた後、データベースの記録を完全に削除します。配置は復元できません。",
+      "confirmAction": "配置を削除",
+      "deleting": "削除中…",
+      "baseId": "配置ID",
+      "discordSource": "Discordの参照元",
+      "successTitle": "配置を削除しました",
+      "successDeleted": "データベースの記録とDiscordメッセージを削除しました。",
+      "successAlreadyMissing": "データベースの記録を削除しました。Discordメッセージはすでに存在しませんでした。",
+      "cleanupFailedTitle": "配置を保持しました。Discordのクリーンアップに失敗しました",
+      "cleanupCompleteTitle": "Discordのクリーンアップが完了しました。配置は保持されています",
+      "failureTitle": "配置は削除されませんでした",
+      "failureFallback": "削除リクエストに失敗しました。",
+      "retryable": "安全に再試行できます",
+      "notRetryable": "再試行できません",
+      "cleanup": {
+        "deleted": "Discordメッセージを削除しました",
+        "alreadyMissing": "Discordメッセージはすでに存在しません",
+        "failed": "Discordのクリーンアップに失敗しました"
+      }
+    },
+    "empty": {
+      "title": "共有された配置はまだありません",
+      "description": "DiscordチャンネルとClash of Clansの配置リンクを選択して、最初の配置を追加します。"
+    },
+    "form": {
+      "title": "配置を追加",
+      "description": "作成後に配置を編集することはできません。ClashKingがDiscordメッセージを投稿する場所を選び、配置リンクを確認してください。",
+      "channel": "Discordチャンネル",
+      "channelPlaceholder": "チャンネルを選択",
+      "channelSearch": "チャンネルを検索…",
+      "channelsLoading": "チャンネルを読み込み中…",
+      "baseLink": "配置リンク",
+      "descriptionLabel": "説明",
+      "images": "画像",
+      "chooseImages": "配置画像を選択",
+      "imageLimit": "画像は最大4枚です。配置を作成する前にアップロードが完了します。",
+      "submit": "配置を作成",
+      "creating": "アップロードして作成中…",
+      "createRejectedTitle": "配置は作成されませんでした",
+      "createCleanupCompleteTitle": "Discordのクリーンアップが完了しました。配置は作成されませんでした",
+      "createCleanupFailedTitle": "Discordメッセージが残っている可能性があります。配置は作成されませんでした",
+      "databaseNotInserted": "データベースに記録されませんでした",
+      "discordMessageCreated": "Discordメッセージを作成しました",
+      "discordMessageId": "DiscordメッセージID",
+      "retryable": "安全に再試行できます",
+      "notRetryable": "自動的に再試行しない",
+      "cleanup": {
+        "notNeeded": "Discordのクリーンアップは不要です",
+        "deleted": "Discordメッセージを削除しました",
+        "alreadyMissing": "Discordメッセージはすでに存在しません",
+        "failed": "Discordのクリーンアップに失敗しました"
+      }
+    },
+    "errors": {
+      "title": "配置を利用できません",
+      "load": "配置の読み込みに失敗しました。",
+      "create": "配置の作成に失敗しました。",
+      "upload": "画像のアップロードに失敗しました。",
+      "downloader": "このダウンロードユーザーの取得に失敗しました。",
+      "channels": "Discordチャンネルの読み込みに失敗しました。",
+      "channelRequired": "Discordチャンネルを選択してください。",
+      "linkRequired": "配置リンクは必須です。",
+      "descriptionTooLong": "説明は1,000文字以内にしてください。",
+      "tooManyImages": "画像は4枚以内で選択してください。"
+    }
+  },
+  "BansPage": {
+    "title": "モデレーション",
+    "description": "プレイヤーのBANと警告を管理します",
+    "viewClashProfile": "Clashプロフィールを表示",
+    "tabs": {
+      "bans": "BAN",
+      "strikes": "警告"
+    },
+    "bans": {
+      "title": "BANされたプレイヤー",
+      "noBans": "BANされたプレイヤーが見つかりません",
+      "addBan": "BANを追加",
+      "removeBan": "BANを解除",
+      "confirmRemove": "このBANを解除してもよろしいですか？",
+      "playerTag": "プレイヤータグ",
+      "playerName": "プレイヤー名",
+      "reason": "理由",
+      "bannedAt": "BAN日時",
+      "search": "名前またはタグで検索...",
+      "howItWorks": {
+        "title": "BANの仕組み",
+        "description": "BANされたプレイヤーがいずれかのクランに参加すると、<clansTab>クランタブ</clansTab>で設定したクランチャンネルに警告が送信されます。このボットはクランへの参加を阻止することはできず、警告のみを送信します。"
+      },
+      "stats": {
+        "total": "BANの合計",
+        "recent": "最近のBAN（7日間）",
+        "commonReason": "最も多い理由",
+        "activeOnServer": "サーバー内の有効なBAN",
+        "last7Days": "過去7日間",
+        "commonReasonValue": "嫌がらせ・迷惑行為",
+        "noBans": "BANはまだありません",
+        "percentOfAll": "全BANの{percent}%",
+        "percentOfAllLabel": "全BANのうち"
+      },
+      "list": {
+        "title": "BANされたプレイヤー",
+        "count": "BAN中のプレイヤー：{count}人{count, plural, one {} other {}}",
+        "searchPlaceholder": "名前、タグ、理由で検索...",
+        "noBansFound": "BANが見つかりません",
+        "noBans": "BANされたプレイヤーはいません",
+        "adjustSearch": "検索条件を変更してみてください",
+        "getStarted": "BANを追加してプレイヤーのモデレーションを開始します"
+      },
+      "table": {
+        "player": "プレイヤー",
+        "reason": "理由",
+        "bannedBy": "BAN実行者",
+        "date": "日付",
+        "daysAgo": "{days}日前",
+        "noReason": "理由は指定されていません"
+      },
+      "addDialog": {
+        "title": "プレイヤーをBAN",
+        "description": "プレイヤーをBANリストに追加します。そのプレイヤーがこのサーバーのいずれかのクランに参加すると、警告が届きます。",
+        "playerTagLabel": "プレイヤータグ",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "プレイヤー名（任意）",
+        "playerNamePlaceholder": "プレイヤー名を入力",
+        "reasonLabel": "BANの理由",
+        "reasonPlaceholder": "このプレイヤーをBANする理由を入力...",
+        "submit": "プレイヤーをBAN"
+      },
+      "bestPractices": {
+        "title": "推奨事項",
+        "document": {
+          "title": "詳しく記録する：",
+          "desc": "他のモデレーターが状況を理解できるよう、BANごとに詳しい理由を記載してください。"
+        },
+        "review": {
+          "title": "定期的に確認する：",
+          "desc": "BANリストを定期的に確認し、各BANが引き続き必要で妥当かを確認してください。"
+        },
+        "consistent": {
+          "title": "一貫性を保つ：",
+          "desc": "健全なコミュニティを維持するため、すべてのプレイヤーに公平かつ一貫してBANを適用してください。"
+        }
+      }
+    },
+    "strikes": {
+      "title": "プレイヤーの警告",
+      "noStrikes": "警告が見つかりません",
+      "addStrike": "警告を追加",
+      "removeStrike": "警告を削除",
+      "confirmRemove": "この警告を削除してもよろしいですか？",
+      "playerTag": "プレイヤータグ",
+      "reason": "理由",
+      "weight": "重み",
+      "rolloverDays": "有効日数",
+      "createdAt": "作成日時",
+      "search": "プレイヤータグで検索...",
+      "howItWorks": {
+        "title": "警告の仕組み",
+        "description": "警告はルール違反をしたプレイヤーに与えられます。各警告には重み（重大度）があり、指定日数後に期限切れにすることもできます。BANする前にプレイヤーの行動を追跡するために役立ちます。"
+      },
+      "stats": {
+        "total": "警告の合計",
+        "recent": "最近の警告（7日間）",
+        "totalWeight": "警告の重み合計",
+        "activeOnServer": "サーバー内の有効な警告",
+        "last7Days": "過去7日間",
+        "cumulativeWeight": "警告の累積重み",
+        "commonReason": "最も多い理由",
+        "commonReasonValue": "スパム行為"
+      },
+      "list": {
+        "title": "プレイヤーの警告",
+        "count": "{count}件の警告を発行{count, plural, one {} other {}}",
+        "searchPlaceholder": "名前、タグ、理由で検索...",
+        "noStrikesFound": "警告が見つかりません",
+        "noStrikes": "発行された警告はありません",
+        "adjustSearch": "検索条件を変更してみてください",
+        "getStarted": "警告を追加してプレイヤーの違反追跡を開始します",
+        "viewAll": "すべての警告",
+        "viewGrouped": "プレイヤー別"
+      },
+      "table": {
+        "player": "プレイヤー",
+        "reason": "理由",
+        "weight": "重み",
+        "addedBy": "追加者",
+        "date": "日付",
+        "expires": "有効期限",
+        "never": "なし",
+        "noReason": "理由は指定されていません",
+        "daysAgo": "{days}日前",
+        "totalStrikes": "警告の合計",
+        "totalWeight": "重みの合計",
+        "lastStrike": "最新の警告"
+      },
+      "addDialog": {
+        "title": "警告を追加",
+        "description": "プレイヤーに警告を発行します。警告ごとに異なる重みと有効期限を設定できます。",
+        "playerTagLabel": "プレイヤータグ",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "理由",
+        "reasonPlaceholder": "この警告を発行する理由を入力...",
+        "weightLabel": "警告の重み",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "有効期限（日数）",
+        "rolloverPlaceholder": "任意",
+        "submit": "警告を追加"
+      },
+      "guidelines": {
+        "title": "警告のガイドライン",
+        "weights": {
+          "title": "重みを適切に使う：",
+          "desc": "重大な違反には高い重み（2～3）、軽微な問題には低い重み（1）を設定してください。"
+        },
+        "expiration": {
+          "title": "有効期限を設定する：",
+          "desc": "プレイヤーが時間をかけて行動を改善できるよう、警告に有効期限を設定することを検討してください。"
+        },
+        "patterns": {
+          "title": "傾向を追跡する：",
+          "desc": "永久BANに進む前に、警告を使って違反を繰り返すプレイヤーを特定してください。"
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "BANを追加しました",
+      "banRemoved": "BANを解除しました",
+      "strikeAdded": "警告を追加しました",
+      "strikeRemoved": "警告を削除しました",
+      "errorLoadingBans": "BANされたプレイヤーの読み込みに失敗しました",
+      "errorLoadingStrikes": "警告の読み込みに失敗しました",
+      "errorAddingBan": "BANの追加に失敗しました",
+      "errorAddingStrike": "警告の追加に失敗しました",
+      "errorRemovingBan": "BANの解除に失敗しました",
+      "errorRemovingStrike": "警告の削除に失敗しました"
+    }
+  },
+  "RostersPage": {
+    "title": "ロスターと編成",
+    "description": "対戦ロスター、編成、メンバー割り当てを管理します",
+    "stats": {
+      "totalRosters": "ロスターの合計",
+      "totalMembers": "メンバーの合計",
+      "clanRosters": "クランロスター",
+      "familyRosters": "ファミリーロスター",
+      "members": "メンバー",
+      "avgTh": "平均TH",
+      "avgHitrate": "平均成功率",
+      "distribution": "分布",
+      "clan": "クラン",
+      "family": "ファミリー",
+      "external": "外部",
+      "thDistribution": "TH分布",
+      "capacity": "定員"
+    },
+    "filters": {
+      "search": "ロスターを検索...",
+      "type": "タイプ",
+      "all": "すべて",
+      "clan": "クラン",
+      "family": "ファミリー",
+      "clear": "クリア"
+    },
+    "comparisonMode": {
+      "cancel": "キャンセル",
+      "compare": "比較",
+      "compareRosters": "ロスターを比較",
+      "selectRosters": "ロスターを選択",
+      "selectRostersDesc": "比較するロスターを2つ以上選択してください",
+      "maxReached": "上限に達しました",
+      "maxReachedDesc": "一度に最大4つのロスターを比較できます"
+    },
+    "createDialog": {
+      "title": "新しいロスターを作成",
+      "description": "クラン用の新しいロスターを設定します",
+      "aliasLabel": "ロスター名",
+      "aliasPlaceholder": "例：CWLロスター",
+      "typeLabel": "ロスターの種類",
+      "typeClan": "クラン",
+      "typeFamily": "ファミリー",
+      "signupScopeLabel": "参加登録の範囲",
+      "scopeClanOnly": "クランのみ",
+      "scopeFamilyWide": "ファミリー全体",
+      "clanLabel": "クラン",
+      "clanPlaceholder": "クランを選択",
+      "descriptionLabel": "説明（任意）",
+      "descriptionPlaceholder": "ロスターの説明...",
+      "cancel": "キャンセル",
+      "creating": "作成中...",
+      "create": "ロスターを作成"
+    },
+    "editDialog": {
+      "title": "ロスターを編集",
+      "description": "ロスターの設定を変更します",
+      "aliasLabel": "ロスター名",
+      "descriptionLabel": "説明",
+      "descriptionPlaceholder": "ロスターの説明...",
+      "minThLabel": "最小タウンホール",
+      "minThPlaceholder": "例：13",
+      "maxThLabel": "最大タウンホール",
+      "maxThPlaceholder": "例：16",
+      "rosterSizeLabel": "ロスターの定員",
+      "rosterSizePlaceholder": "例：50",
+      "columnsLabel": "表示列",
+      "columnsPlaceholder": "表示する列を選択",
+      "sortLabel": "並び順",
+      "sortPlaceholder": "並べ替え項目を選択",
+      "cancel": "キャンセル",
+      "saving": "保存中...",
+      "save": "変更を保存"
+    },
+    "addMembersDialog": {
+      "title": "ロスターにメンバーを追加",
+      "description": "クランメンバーを選択するか、プレイヤータグを入力します",
+      "bulkTagsLabel": "タグで一括追加",
+      "bulkTagsPlaceholder": "プレイヤータグを1行に1つ、またはカンマ区切りで入力",
+      "searchLabel": "メンバーを検索する",
+      "searchPlaceholder": "名前またはタグで検索...",
+      "selectFromClan": "クランメンバーから選択",
+      "selectedCount": "選択済み",
+      "noMembers": "利用可能なメンバーはいません",
+      "noMembersSelected": "メンバーが選択されていません",
+      "noMembersSelectedDesc": "メンバーを選択するか、プレイヤータグを入力してください。",
+      "cancel": "キャンセル",
+      "adding": "追加中...",
+      "add": "メンバーを追加"
+    },
+    "detailsDialog": {
+      "title": "ロスターの詳細",
+      "edit": "編集",
+      "refresh": "更新",
+      "refreshing": "更新中...",
+      "delete": "削除",
+      "deleting": "削除中...",
+      "addMembers": "メンバーを追加",
+      "close": "閉じる",
+      "noMembers": "このロスターにメンバーはいません",
+      "noMembersDesc": "メンバーを追加して始めましょう",
+      "memberCount": "メンバー",
+      "thRestriction": "THレベル",
+      "avgTh": "平均TH",
+      "avgHitrate": "平均成功率",
+      "clan": "クラン",
+      "family": "ファミリー",
+      "external": "外部",
+      "substitute": "補欠",
+      "removeMember": "削除"
+    },
+    "rosterCard": {
+      "members": "メンバー",
+      "thLevel": "THレベル",
+      "avgTh": "平均TH",
+      "avgHitrate": "平均成功率",
+      "clan": "クラン",
+      "family": "ファミリー",
+      "external": "外部",
+      "noRestriction": "制限なし",
+      "view": "表示",
+      "edit": "編集",
+      "delete": "削除",
+      "noGroup": "グループなし",
+      "moveToGroup": "グループへ移動",
+      "clone": "複製",
+      "allRosters": "すべてのロスター",
+      "manageRosters": "対戦ロスターと編成を管理します"
+    },
+    "memberColumns": {
+      "name": "名前",
+      "townhall": "タウンホール",
+      "tag": "タグ",
+      "hitrate": "成功率",
+      "current_clan": "現在のクラン",
+      "current_clan_tag": "クランタグ",
+      "discord": "Discord",
+      "hero_lvs": "ヒーロー",
+      "war_pref": "対戦参加設定",
+      "trophies": "トロフィー",
+      "signup_group": "参加登録グループ"
+    },
+    "columns": {
+      "configure": "列",
+      "title": "列を設定",
+      "description": "表示する列と順序を選択します",
+      "selected": "選択済みの列",
+      "available": "利用可能な列",
+      "save": "列を保存",
+      "reset": "列をリセット"
+    },
+    "sortFields": {
+      "townhall": "タウンホールレベル",
+      "name": "名前",
+      "tag": "タグ",
+      "heroLvs": "ヒーロー",
+      "trophies": "トロフィー",
+      "hitrate": "30日間の成功率",
+      "currentClanTag": "クランタグ",
+      "addedAt": "追加日時"
+    },
+    "thRestrictions": {
+      "only": "TH{th}のみ",
+      "range": "TH{min}～{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1～{th}",
+      "noRestriction": "制限なし"
+    },
+    "emptyState": {
+      "noRosters": "作成済みのロスターはありません",
+      "noRostersDesc": "最初のロスターを作成して始めましょう",
+      "noMatch": "フィルターに一致するロスターはありません",
+      "noMatchDesc": "検索またはフィルター条件を変更してみてください"
+    },
+    "toast": {
+      "errorTitle": "エラー",
+      "successTitle": "成功",
+      "errorLoadingRosters": "ロスターの読み込みに失敗しました。もう一度お試しください。",
+      "errorLoadingMembers": "クランメンバーの読み込みに失敗しました。",
+      "rosterCreated": "ロスターを作成しました！",
+      "errorCreatingRoster": "ロスターの作成に失敗しました。もう一度お試しください。",
+      "rosterUpdated": "ロスターを更新しました！",
+      "errorUpdatingRoster": "ロスターの更新に失敗しました。もう一度お試しください。",
+      "rosterDeleted": "ロスターを削除しました！",
+      "errorDeletingRoster": "ロスターの削除に失敗しました。もう一度お試しください。",
+      "membersAdded": "ロスターに{count}人のメンバーを追加しました！",
+      "errorAddingMembers": "メンバーの追加に失敗しました。もう一度お試しください。",
+      "memberRemoved": "ロスターからメンバーを削除しました！",
+      "errorRemovingMember": "メンバーの削除に失敗しました。もう一度お試しください。",
+      "substituteMarked": "メンバーを補欠に設定しました！",
+      "substituteUnmarked": "メンバーの補欠設定を解除しました！",
+      "errorUpdatingMember": "メンバーの更新に失敗しました。もう一度お試しください。",
+      "rosterRefreshed": "ロスターデータを更新しました！",
+      "errorRefreshingRoster": "ロスターデータの更新に失敗しました。もう一度お試しください。",
+      "memberTransferred": "メンバーをロスター間で移動しました！",
+      "errorTransferringMember": "メンバーの移動に失敗しました。もう一度お試しください。",
+      "rosterCloned": "ロスターを複製しました！",
+      "errorCloningRoster": "ロスターの複製に失敗しました。もう一度お試しください。",
+      "missingMembersAdded": "不足していた{count}人のメンバーをロスターに追加しました！",
+      "errorLoadingMissingMembers": "未登録メンバーの読み込みに失敗しました。"
+    },
+    "cloneDialog": {
+      "title": "ロスターを複製",
+      "description": "このロスターのコピーを作成します",
+      "aliasLabel": "新しいロスター名",
+      "aliasPlaceholder": "複製するロスターの名前を入力",
+      "copyMembers": "メンバーを新しいロスターにコピー",
+      "memberCount": "{count}人のメンバー",
+      "originalRoster": "元のロスター：",
+      "cancel": "キャンセル",
+      "cloning": "複製中...",
+      "clone": "ロスターを複製",
+      "copyMembersHint": "元のロスターからメンバーがコピーされます"
+    },
+    "missingMembers": {
+      "title": "未登録メンバー",
+      "description": "このロスターに登録されていないクランメンバー",
+      "coverage": "ロスター登録率",
+      "registered": "登録済み",
+      "missing": "未登録",
+      "total": "合計",
+      "selectAll": "すべて選択",
+      "selected": "選択済み",
+      "addSelected": "{count}人のメンバーを追加",
+      "button": "未登録メンバー",
+      "addAll": "すべて追加",
+      "adding": "追加中...",
+      "close": "閉じる",
+      "allCaughtUp": "すべて登録済みです！",
+      "allCaughtUpDesc": "すべてのクランメンバーがこのロスターに登録されています",
+      "clanOnly": "未登録メンバーの分析はクランロスターでのみ利用できます",
+      "error": "未登録メンバーの読み込みに失敗しました",
+      "thisRoster": "このロスター",
+      "wholeGroup": "グループ全体"
+    },
+    "eventTime": {
+      "label": "イベント開始時刻",
+      "timezone": "現在のタイムゾーン",
+      "utc": "UTC",
+      "clear": "クリア"
+    },
+    "bulkValidation": {
+      "valid": "有効",
+      "invalid": "無効",
+      "invalidTags": "無効"
+    },
+    "memberAutocomplete": {
+      "label": "またはサーバーメンバーを検索",
+      "placeholder": "クリックしてメンバーを検索...",
+      "searchPlaceholder": "名前、タグ、クランで検索...",
+      "loading": "メンバーを読み込み中...",
+      "noResults": "メンバーが見つかりません",
+      "groupHeading": "サーバーメンバー",
+      "selectedLabel": "選択済みメンバー",
+      "membersSelected": "メンバーを選択中",
+      "selected": "選択済み",
+      "clanMembersLabel": "またはクランメンバーから選択"
+    },
+    "retry": "再試行",
+    "back": "戻る",
+    "refresh": "更新",
+    "createRoster": "ロスターを作成",
+    "searchPlaceholder": "ロスターを検索...",
+    "noRosters": "ロスターはまだありません",
+    "noRostersHint": "最初のロスターを作成して始めましょう",
+    "noSearchResults": "ロスターが見つかりません",
+    "noSearchResultsHint": "別の検索語をお試しください",
+    "createFirstRoster": "最初のロスターを作成",
+    "deleteConfirm": "「{name}」を削除してもよろしいですか？",
+    "deleteSuccess": "ロスターを削除しました",
+    "deleteSuccessDesc": "ロスター「{name}」を削除しました",
+    "deleteError": "ロスターの削除に失敗しました",
+    "createSuccess": "ロスターを作成しました",
+    "createSuccessDesc": "ロスター「{name}」を作成しました",
+    "createError": "ロスターの作成に失敗しました",
+    "createErrorAlias": "ロスター名を入力してください",
+    "createErrorClan": "クランを選択してください",
+    "refreshSuccess": "ロスターデータを更新しました",
+    "refreshError": "ロスターの更新に失敗しました",
+    "saveSuccess": "設定を保存しました",
+    "saveError": "設定の保存に失敗しました",
+    "columnsUpdated": "列を更新しました",
+    "columnsError": "列の更新に失敗しました",
+    "addMembersSuccess": "メンバーを追加しました",
+    "addMembersSuccessDesc": "ロスターに{count}人のメンバーを追加しました",
+    "addMembersError": "メンバーの追加に失敗しました",
+    "removeMemberSuccess": "メンバーを削除しました",
+    "removeMemberError": "メンバーの削除に失敗しました",
+    "clearMembers": "メンバーをすべて削除",
+    "clearMembersConfirm": "「{name}」からすべてのメンバーを削除しますか？この操作は元に戻せません。",
+    "clearMembersSuccess": "すべてのメンバーを削除しました",
+    "clearMembersError": "メンバーの一括削除に失敗しました",
+    "automationCreated": "自動処理を作成しました",
+    "automationUpdated": "自動処理を更新しました",
+    "automationDeleted": "自動処理を削除しました",
+    "automationError": "自動処理エラー",
+    "groupCreated": "グループを作成しました",
+    "groupUpdated": "グループを更新しました",
+    "groupDeleted": "グループを削除しました",
+    "groupError": "グループの保存に失敗しました",
+    "categoryCreated": "カテゴリーを作成しました",
+    "categoryUpdated": "カテゴリーを更新しました",
+    "categoryDeleted": "カテゴリーを削除しました",
+    "categoryError": "カテゴリーの保存に失敗しました",
+    "common": {
+      "cancel": "キャンセル",
+      "save": "保存",
+      "close": "閉じる"
+    },
+    "tabs": {
+      "members": "メンバー",
+      "automations": "自動処理",
+      "groups": "グループ",
+      "categories": "カテゴリー",
+      "settings": "設定"
+    },
+    "members": {
+      "count": "メンバー",
+      "noMembers": "このロスターにメンバーはいません",
+      "noMembersHint": "メンバーを追加して始めましょう",
+      "actions": "アクション",
+      "viewList": "リスト表示",
+      "viewGrouped": "参加カテゴリー別に表示",
+      "unassigned": "未割り当て",
+      "dragHere": "ここにメンバーをドラッグ",
+      "clickToGroup": "クリックしてカテゴリー別に表示",
+      "apiErrorTooltip": "APIからデータを取得できませんでした",
+      "staleDataTooltip": "データが古い可能性があります。最終更新：",
+      "refresh": "メンバーデータを更新",
+      "alsoIn": "ほかの所属",
+      "addCategory": "グループを追加",
+      "removeCategory": "グループを削除"
+    },
+    "addMembers": {
+      "title": "ロスターにメンバーを追加",
+      "description": "クランからメンバーを選択するか、プレイヤータグを入力します",
+      "bulkTagsLabel": "プレイヤータグ（1行に1つ、またはカンマ区切り）",
+      "adding": "追加中...",
+      "submit": "メンバーを追加"
+    },
+    "compare": {
+      "enterMode": "比較",
+      "modeTitle": "比較モード",
+      "modeHint": "ロスターをクリックして選択します（2～4個）",
+      "exitMode": "キャンセル",
+      "selected": "ロスターを選択中",
+      "button": "比較",
+      "title": "ロスターを比較",
+      "dragToMove": "ロスター間でメンバーをドラッグ＆ドロップして移動します",
+      "loadError": "ロスターの読み込みに失敗しました",
+      "memberMoved": "メンバーを移動しました",
+      "memberMovedDesc": "{name}を{from}から{to}へ移動しました",
+      "moveError": "メンバーの移動に失敗しました",
+      "selectAtLeast2": "比較するロスターを2つ以上選択してください",
+      "moving": "メンバーを移動中...",
+      "compareGroup": "グループを比較",
+      "dragToMoveCategory": "ロスターとカテゴリー間でメンバーをドラッグします",
+      "categoryChanged": "カテゴリーを変更しました",
+      "categoryChangedDesc": "{name}を{category}へ移動しました",
+      "uncategorized": "カテゴリーなし"
+    },
+    "ungrouped": "グループなし",
+    "automations": {
+      "description": "このロスターの自動処理をスケジュールします",
+      "create": "自動処理を作成",
+      "empty": "自動処理はありません",
+      "emptyHint": "自動処理を作成して操作をスケジュールします",
+      "active": "アクティブ",
+      "inactive": "非アクティブ",
+      "executed": "完了",
+      "missed": "未消化",
+      "lastRun": "最終実行",
+      "enable": "有効化",
+      "disable": "無効化",
+      "createTitle": "自動処理を作成",
+      "editTitle": "自動処理を編集",
+      "createDesc": "自動処理をスケジュールします",
+      "actionType": "操作の種類",
+      "offsetFromEvent": "イベントを基準にしたタイミング",
+      "offsetBefore": "イベント前",
+      "offsetAfter": "イベント後",
+      "offsetUnit_minutes": "分",
+      "offsetUnit_hours": "時間",
+      "offsetUnit_days": "日",
+      "offsetPreview": "実行予定：{date}",
+      "offsetNoEventDate": "実行日時を確認するには設定でイベント開始時刻を指定してください",
+      "offsetAtStart": "イベント開始時",
+      "pingType": "リマインダーの種類",
+      "pingType_signup_reminder": "参加登録リマインダー",
+      "pingType_missing": "クランに不在",
+      "pingType_sub_needed": "補欠が必要",
+      "channel": "Discordチャンネル",
+      "selectChannel": "チャンネルを選択",
+      "channelHint": "操作を投稿・実行するチャンネル",
+      "activeLabel": "アクティブ",
+      "target": "対象",
+      "targetThisRoster": "このロスター",
+      "targetGroups": "グループ",
+      "targetHint": "このロスターのみ、またはグループ内のすべてのロスターに自動処理を適用します",
+      "group": "グループ",
+      "groupAutomationHint": "グループタブで管理",
+      "targetRoster": "ロスター",
+      "targetGroup": "グループ",
+      "willExecute": "予定時刻に実行されます",
+      "paused": "一時停止中 - 実行されません",
+      "actions": {
+        "ping": "リマインダーを送信",
+        "post": "ロスターを投稿",
+        "openSignup": "参加登録を開始",
+        "closeSignup": "参加登録を終了",
+        "delete": "ロスターを削除",
+        "clear": "メンバーをすべて削除",
+        "archive": "ロスターをアーカイブ"
+      },
+      "actionDescriptions": {
+        "roster_ping": "未登録または別のクランにいるメンバーへリマインダーを送信します",
+        "roster_post": "確定したロスターを選択したチャンネルに投稿します",
+        "roster_signup": "プレイヤーが登録できるよう参加受付を開始します",
+        "roster_signup_close": "参加受付を終了し、新規登録を停止します",
+        "roster_delete": "ロスターとすべてのデータを完全に削除します",
+        "roster_clear": "ロスターを削除せずにすべてのメンバーを外します",
+        "roster_archive": "ロスターをアーカイブして読み取り専用にします"
+      },
+      "infoBox": "自動処理はイベント開始時刻を基準に実行されます。オフセット（例：3日前）を設定すると、繰り返しイベントを含め、その時刻にボットが自動実行します。"
+    },
+    "groups": {
+      "title": "ロスターグループ",
+      "description": "ロスターをグループに整理して管理しやすくします",
+      "create": "新しいグループ",
+      "noGroups": "グループはまだ作成されていません",
+      "rostersCount": "ロスター",
+      "createTitle": "グループを作成",
+      "editTitle": "グループを編集",
+      "nameLabel": "グループ名",
+      "namePlaceholder": "例：CWLグループ",
+      "infoBox": "グループを使うと複数のロスター（例：すべてのCWLロスター）をまとめて整理できます。設定タブからロスターをグループに割り当て、グループ内の全ロスターへ自動処理を一括適用できます。",
+      "manageAutomations": "自動処理を管理",
+      "automationsTitle": "グループの自動処理",
+      "automationsDesc": "これらの自動処理はグループ内のすべてのロスターに適用されます",
+      "noAutomations": "自動処理はありません",
+      "noAutomationsHint": "このグループ用の自動処理を作成します",
+      "addAutomation": "自動処理を追加",
+      "deleteConfirm": "グループ「{name}」を削除しますか？このグループのロスターはグループなしになります。",
+      "emptyGroup": "このグループにロスターはまだありません",
+      "rules": {
+        "title": "グループルール",
+        "rulesHint": "これらのルールはグループ内のすべてのロスターに適用され、すぐに反映されます。",
+        "maxAccounts": "ユーザーあたりの最大アカウント数",
+        "maxAccountsBadge": "ユーザーあたり最大{count}件",
+        "rosterSize": "ロスターの定員",
+        "rosterSizeBadge": "定員{size}人",
+        "minSignups": "充足しきい値",
+        "minSignupsBadge": "しきい値{count}",
+        "categoriesTitle": "参加カテゴリー",
+        "categoriesHint": "このグループで利用できるカテゴリーを選択します。すべてのロスターにすぐ反映されます。",
+        "categoriesBadge": "カテゴリー{count}件",
+        "noCategories": "カテゴリーはまだありません。",
+        "newCategoryPlaceholder": "新しいカテゴリー名…"
+      }
+    },
+    "categories": {
+      "title": "参加カテゴリー",
+      "description": "プレイヤーの参加登録とロスター絞り込み用のカテゴリー",
+      "manage": "カテゴリーを管理",
+      "create": "新しいカテゴリー",
+      "noCategories": "カテゴリーはまだ作成されていません",
+      "createTitle": "カテゴリーを作成",
+      "editTitle": "カテゴリーを編集",
+      "deleteConfirm": "カテゴリー「{name}」を削除しますか？",
+      "idLabel": "カテゴリーID",
+      "nameLabel": "カテゴリー名",
+      "infoBox": "カテゴリーを使うと、参加登録時にプレイヤーが参加可否や役割（例：「参加可能」「未定」「必要な場合のみ」）を指定できます。カテゴリーはこのサーバーの全ロスターで共有されます。グループ化したロスターでは、グループ設定から使用するカテゴリーを指定してください。"
+    },
+    "settings": {
+      "general": "基本情報と設定",
+      "restrictions": "制限と上限",
+      "name": "ロスター名",
+      "rosterType": "ロスターの種類",
+      "typeClan": "クラン",
+      "typeFamily": "ファミリー",
+      "signupScope": "参加登録の範囲",
+      "scopeClanOnly": "クランのみ",
+      "scopeFamilyWide": "ファミリー全体",
+      "clan": "クラン",
+      "selectClan": "クランを選択",
+      "description": "説明",
+      "descriptionPlaceholder": "このロスターの説明を入力...",
+      "typeAndScope": "種類と範囲",
+      "eventTime": "イベント開始時刻",
+      "eventTimeHint": "イベントの開始時刻です。自動処理とカウントダウン表示に使用されます。",
+      "recurrenceDays": "繰り返し間隔",
+      "recurrenceModeDays": "N日ごと",
+      "recurrenceModeMonthly": "月の日付",
+      "recurrenceDaysUnit": "日",
+      "recurrenceDayOfMonthPrefix": "毎月",
+      "recurrenceDayOfMonthSuffix": "日",
+      "recurrenceDaysHint": "1回限りのイベントでは空欄にします。繰り返す間隔の日数を入力してください（例：毎月のCWLなら30）。",
+      "recurrenceDayOfMonthHint": "毎月この日に繰り返します（例：1 = 1日）。",
+      "group": "グループ",
+      "noGroup": "グループなし",
+      "thRequirements": "タウンホール条件",
+      "minTh": "最小TH",
+      "maxTh": "最大TH",
+      "signupLimits": "参加登録の制限",
+      "rosterSize": "ロスターの定員",
+      "rosterSizeHint": "メンバーの最大人数",
+      "minSignups": "最小登録数",
+      "minSignupsHint": "ロスターを埋めるために必要な最小登録数",
+      "maxAccountsPerUser": "ユーザーあたりの最大アカウント数",
+      "maxAccountsHint": "Discordユーザーごとのアカウント数を制限します",
+      "allowedCategories": "許可する参加カテゴリー",
+      "allowedCategoriesHint": "クリックして切り替えます。未選択の場合はすべてのカテゴリーが許可されます。",
+      "defaultSignupCategory": "デフォルトの参加カテゴリー",
+      "defaultSignupCategoryNone": "なし（デフォルトなし）",
+      "defaultSignupCategoryHint": "メンバーの参加登録時にあらかじめ選択されるカテゴリーです。",
+      "categoriesManagedByGroup": "参加カテゴリーはグループ単位で管理されます。ロスターページからグループ設定を開き、このグループの全ロスターで利用できるカテゴリーを設定してください。",
+      "saving": "保存中...",
+      "save": "設定を保存"
+    }
+  },
+  "LinksPage": {
+    "title": "リンク管理",
+    "description": "Discordメンバーのアカウント連携を管理し、プレイヤーの所有権を確認します",
+    "tabs": {
+      "overview": "概要",
+      "pending": "保留中",
+      "bulk": "一括操作",
+      "analytics": "分析"
+    },
+    "stats": {
+      "totalMembers": "メンバーの合計",
+      "membersWithLinks": "連携済みメンバー",
+      "totalLinkedAccounts": "連携アカウントの合計",
+      "verifiedAccounts": "確認済みアカウント",
+      "ofTotal": "全体のうち",
+      "avgPerMember": "平均",
+      "perMember": "メンバーあたり",
+      "verified": "確認済み"
+    },
+    "filters": {
+      "searchPlaceholder": "メンバー名、ユーザー名、プレイヤー名、タグで検索...",
+      "filterByStatus": "ステータスで絞り込む",
+      "allAccounts": "すべてのアカウント",
+      "verifiedOnly": "確認済みのみ",
+      "unverifiedOnly": "未確認のみ",
+      "minAccounts": "最小アカウント数",
+      "allMembers": "すべてのメンバー",
+      "oneOrMore": "1件以上",
+      "twoOrMore": "2件以上",
+      "threeOrMore": "3件以上",
+      "fiveOrMore": "5件以上"
+    },
+    "overview": {
+      "title": "アカウント連携",
+      "description": "DiscordとClash of Clansのすべてのアカウント連携を表示・管理します",
+      "showingMembers": "全{members}人中{count}人を表示",
+      "member": "メンバー",
+      "members": "メンバー",
+      "noMembers": "メンバーが見つかりません",
+      "adjustFilters": "検索条件またはフィルターを変更してみてください。",
+      "noLinkedAccounts": "連携済みアカウントを持つメンバーはいません。",
+      "exportCSV": "CSVをエクスポート",
+      "exportJSON": "JSONをエクスポート",
+      "account": "アカウント",
+      "accounts": "アカウント",
+      "more": "その他",
+      "unknown": "不明"
+    },
+    "pending": {
+      "title": "確認待ち",
+      "description": "{count}件のアカウントが確認待ちです",
+      "allVerified": "すべてのアカウントを確認済みです！",
+      "noPending": "現在、確認待ちのアカウントはありません。",
+      "linked": "リンク済み"
+    },
+    "bulk": {
+      "title": "一括操作",
+      "description": "複数のメンバーをまとめて操作します",
+      "selectAll": "すべて選択（{count}）",
+      "deselectAll": "すべて選択解除",
+      "unlinkSelected": "選択した連携を解除（{count}）",
+      "linked": "リンク済み",
+      "comingSoon": "一括連携解除機能は近日公開予定です！"
+    },
+    "analytics": {
+      "title": "連携分析",
+      "description": "連携の統計と傾向の概要",
+      "verificationRate": "確認率",
+      "verified": "確認済み",
+      "unverified": "未確認",
+      "accountDistribution": "アカウント数の分布",
+      "oneAccount": "1アカウント",
+      "twoToThreeAccounts": "2～3アカウント",
+      "fourPlusAccounts": "4アカウント以上",
+      "townHallLevels": "タウンホールレベル",
+      "other": "その他",
+      "coverage": "連携率",
+      "linkedMembers": "連携済みメンバー",
+      "coverageRate": "連携率",
+      "linkInsights": "連携の詳細",
+      "avgAccountsPerMember": "メンバーあたりの平均アカウント数：",
+      "mostLinkedAccounts": "最多連携アカウント数：",
+      "membersWithoutLinks": "未連携のメンバー："
+    },
+    "actions": {
+      "unlinkAccount": "アカウント連携を解除"
+    },
+    "deleteDialog": {
+      "title": "アカウント連携を解除",
+      "description": "{playerName}の連携を解除してもよろしいですか？この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "unlinking": "連携解除中...",
+      "unlink": "連携解除"
+    },
+    "bulkDialog": {
+      "title": "アカウント連携を一括解除",
+      "description": "選択した{count}人のメンバーについて、すべてのアカウント連携を解除してもよろしいですか？この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "unlinkAll": "すべて連携解除"
+    },
+    "toast": {
+      "unlinkFailed": "アカウントの連携解除に失敗しました。もう一度お試しください。"
+    },
+    "badges": {
+      "verified": "確認済み",
+      "unverified": "未確認",
+      "pending": "保留中"
+    },
+    "pagination": {
+      "showing": "全{total}人中{start}～{end}人を表示",
+      "page": "{total}ページ中{current}ページ",
+      "previous": "前へ",
+      "next": "次へ"
+    }
+  },
+  "WarsPage": {
+    "title": "対戦統計",
+    "description": "対戦成績を追跡し、対戦統計を分析します",
+    "actions": {
+      "exportData": "データをエクスポート",
+      "resetFilters": "フィルターをリセット",
+      "applyFilters": "フィルターを適用"
+    },
+    "filters": {
+      "title": "フィルター",
+      "description": "さまざまな条件で対戦統計を絞り込みます",
+      "clan": "クラン",
+      "allClans": "すべてのクラン",
+      "townHall": "タウンホール",
+      "townHallShort": "TH",
+      "allTownHalls": "すべてのTHレベル",
+      "townHallLevel": "TH {level}",
+      "period": "期間",
+      "last7Days": "過去7日間",
+      "last30Days": "直近30日",
+      "last90Days": "過去90日間",
+      "last6Months": "過去6か月",
+      "lastYear": "過去1年間",
+      "custom": "カスタム",
+      "startDate": "開始日",
+      "endDate": "終了日",
+      "warTypes": "対戦タイプ"
+    },
+    "summaryStats": {
+      "totalWins": "勝利数",
+      "totalWinsDesc": "全{totalWars}対戦中",
+      "totalLosses": "敗北数",
+      "totalLossesDesc": "引き分け{totalDraws}回",
+      "winRate": "勝率",
+      "winRateDesc": "総合成績",
+      "activeWars": "進行中の対戦",
+      "activeWarsDesc": "CWLで{activeCwl}件"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "週別の対戦成績",
+        "description": "選択期間内の週ごとの勝利、敗北、引き分け",
+        "wins": "勝利",
+        "losses": "敗北",
+        "draws": "引き分け"
+      },
+      "thSuccessRate": {
+        "title": "タウンホール別の攻撃成功率",
+        "description": "THレベルごとの全壊率",
+        "threeStarPercent": "全壊率",
+        "otherPercent": "その他の割合"
+      },
+      "warTypeDistribution": {
+        "title": "対戦タイプの分布",
+        "description": "対戦タイプ別の内訳",
+        "cwl": "CWL",
+        "random": "ランダム対戦",
+        "friendly": "フレンド対戦"
+      },
+      "topPerformers": {
+        "title": "成績上位",
+        "description": "合計獲得星数が多いプレイヤー",
+        "attacksAndStars": "攻撃{attacks}回 • 星{stars}個",
+        "noData": "プレイヤーデータがありません。フィルターを変更してみてください。"
+      },
+      "missedAttacks": {
+        "title": "未消化攻撃",
+        "description": "攻撃をすべて使わなかったプレイヤー",
+        "attacks": "未使用の攻撃"
+      },
+      "topDefenders": {
+        "title": "防衛成績上位",
+        "description": "平均被獲得星数が少ない防衛者",
+        "defensesAndStars": "防衛{defenses}回 • 被獲得星{stars}個",
+        "noData": "防衛データがありません。フィルターを変更してみてください。"
+      },
+      "worstAttackers": {
+        "title": "攻撃成績下位",
+        "description": "攻撃あたりの平均獲得星数が最も少ないプレイヤー（3回以上攻撃）",
+        "attacksAndStars": "攻撃{attacks}回 • 星{stars}個",
+        "noData": "プレイヤーデータがありません。フィルターを変更してみてください。"
+      },
+      "worstDefenders": {
+        "title": "防衛成績下位",
+        "description": "防衛で最も多く星を奪われたプレイヤー（3回以上防衛）",
+        "defensesAndStars": "防衛{defenses}回 • 被獲得星{stars}個",
+        "noData": "防衛データがありません。フィルターを変更してみてください。"
+      }
+    },
+    "clanStatsTable": {
+      "title": "クラン対戦統計",
+      "description": "クランごとの詳細統計",
+      "headers": {
+        "clan": "クラン",
+        "status": "ステータス",
+        "wars": "対戦",
+        "record": "勝/敗/分",
+        "winRate": "勝率",
+        "avgDestruction": "平均破壊率",
+        "avgStarsPerAttack": "攻撃あたりの星",
+        "avgDefenseStars": "防衛あたりの被獲得星"
+      },
+      "status": {
+        "inWar": "対戦中",
+        "cwl": "CWL",
+        "peace": "平常時"
+      },
+      "noData": "クラン統計がありません。フィルターを適用するか、データの読み込みをお待ちください。"
+    },
+    "toast": {
+      "errorTitle": "エラー",
+      "errorLoadingClans": "クランの読み込みに失敗しました。もう一度お試しください。",
+      "errorLoadingWarData": "対戦データの読み込みに失敗しました。もう一度お試しください。",
+      "errorNoClans": "利用可能なクランはありません",
+      "errorApplyingFilters": "フィルターの適用に失敗しました。もう一度お試しください。"
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "リーダーボード",
+    "description": "クランの都などのグローバルリーダーボード",
+    "comingSoon": "この機能は近日公開予定です。しばらくしてからご確認ください！",
+    "stats": {
+      "totalEntries": "エントリー総数",
+      "type": "タイプ",
+      "league": "リーグ",
+      "weekend": "週末"
+    },
+    "filters": {
+      "title": "フィルター",
+      "description": "リーダーボードの表示をカスタマイズ",
+      "type": "タイプ",
+      "metric": "指標",
+      "league": "リーグ",
+      "weekend": "週末"
+    },
+    "types": {
+      "player": "プレイヤー",
+      "clan": "クラン"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "都で獲得した資源"
+        },
+        "clan": {
+          "capitalTotalLoot": "獲得資源の合計",
+          "raidsCompleted": "完了したレイド",
+          "enemyDistrictsDestroyed": "破壊した地区",
+          "medals": "メダル"
+        }
+      }
+    },
+    "leagues": {
+      "all": "すべて",
+      "legendLeague": "レジェンドリーグ",
+      "titanLeagueI": "タイタンリーグI",
+      "titanLeagueII": "タイタンリーグII",
+      "titanLeagueIII": "タイタンリーグIII"
+    },
+    "rankings": {
+      "title": "ランキング",
+      "description": "{weekend}の{type}上位{count}件",
+      "players": "プレイヤー",
+      "clans": "クラン"
+    },
+    "empty": {
+      "title": "利用可能なデータがありません。",
+      "description": "別の週末またはリーグを選択してみてください"
+    }
+  },
+  "ClansPage": {
+    "title": "クラン管理",
+    "description": "クランとDiscord連携の設定を管理します",
+    "addClan": "クランを追加",
+    "addNewClan": "新しいクランを追加",
+    "addClanDescription": "クランタグを入力してこのサーバーに追加します",
+    "clanTag": "クランタグ",
+    "totalClans": "クランの合計",
+    "registeredClans": "登録済みクラン",
+    "configured": "設定済み",
+    "withSettingsConfigured": "設定が完了しています",
+    "totalMembers": "メンバーの合計",
+    "acrossAllClans": "全クラン合計",
+    "channels": "チャンネル",
+    "availableChannels": "利用可能なチャンネル",
+    "noClansYet": "クランはまだありません",
+    "getStartedAdding": "最初のクランを追加して始めましょう",
+    "addFirstClan": "最初のクランを追加",
+    "level": "レベル",
+    "members": "メンバー",
+    "status": "ステータス",
+    "configuredBadge": "設定済み",
+    "setupRequired": "設定が必要",
+    "configure": "設定",
+    "sorting": {
+      "label": "クランを並べ替え",
+      "sortBy": "並べ替え",
+      "toggleDirection": "並び順を切り替え",
+      "added": "追加日",
+      "name": "クラン名",
+      "level": "クランレベル",
+      "members": "メンバー"
+    },
+    "configureClan": "{name}（{tag}）を設定",
+    "customizeIntegration": "このクランのDiscord連携設定をカスタマイズします",
+    "tabs": {
+      "basic": "Discord設定",
+      "war": "対戦"
+    },
+    "memberRole": "メンバーロール",
+    "leaderRole": "リーダーロール",
+    "selectRole": "ロールを選択",
+    "none": "なし",
+    "clanAbbreviation": "クラン略称",
+    "warScoreCountdown": "対戦スコア表示",
+    "warScoreCountdownDescription": "現在の対戦スコアを表示するボイスチャンネルを作成します",
+    "warTimerCountdown": "対戦残り時間表示",
+    "warTimerCountdownDescription": "対戦の残り時間を表示するボイスチャンネルを作成します",
+    "category": "カテゴリー",
+    "categoryOptions": {
+      "none": "カテゴリーなし",
+      "premade": "共通カテゴリー",
+      "usedByServer": "他のクランが使用中",
+      "clanCount": "{count, plural, one {クラン#件} other {クラン#件}}"
+    },
+    "categories": {
+      "title": "クランカテゴリー",
+      "description": "このサーバーのクランが利用できるカテゴリーを作成・管理します。",
+      "refresh": "更新",
+      "createLabel": "新しいカテゴリー",
+      "name": "カテゴリー名",
+      "namePlaceholder": "例：対戦重視",
+      "nameHelp": "空白の正規化後：{count}/{max}文字",
+      "create": "カテゴリーを作成",
+      "empty": "クランカテゴリーはまだ作成されていません。",
+      "clanCount": "{count, plural, one {クラン#件} other {クラン#件}}",
+      "renameAction": "{name}の名前を変更",
+      "deleteAction": "{name}を削除",
+      "renameTitle": "クランカテゴリー名を変更",
+      "renameDescription": "正規化された名前が割り当て済みのすべてのクランに反映されます。",
+      "saveRename": "名前を保存",
+      "deleteTitle": "クランカテゴリーを削除しますか？",
+      "deleteWarning": "「{name}」を削除すると、{count, plural, one {#件のクラン} other {#件のクラン}}がカテゴリーなしになります。",
+      "deleteCountMayChange": "このプレビューは現在の状態です。削除完了時に実際に対象となったクラン数が表示されます。",
+      "confirmDelete": "カテゴリーを削除",
+      "deleteSuccessTitle": "{name}を削除しました",
+      "deleteSuccessDescription": "{count, plural, =0 {変更されたクランはありません。} one {#件のクランがカテゴリーなしになりました。} other {#件のクランがカテゴリーなしになりました。}}",
+      "created": "{name}を作成しました。",
+      "renamed": "カテゴリー名を{name}に変更しました。",
+      "errors": {
+        "title": "カテゴリーを利用できません",
+        "load": "クランカテゴリーの読み込みに失敗しました。",
+        "create": "クランカテゴリーの作成に失敗しました。",
+        "rename": "クランカテゴリー名の変更に失敗しました。",
+        "preview": "削除プレビューの読み込みに失敗しました。",
+        "delete": "クランカテゴリーの削除に失敗しました。",
+        "refresh": "カテゴリーは変更されましたが、更新後のカテゴリーまたはクランの状態を読み込めませんでした。",
+        "invalidName": "制御文字を含まない1～64文字の名前を入力してください。"
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "詳細を表示",
+      "memberRole": "このクランのメンバーに付与するロールです。ボットがDiscordのロールを管理している場合、クランの全メンバーにこのロールが付与されます。クラン専用チャンネルを作る際に便利です。",
+      "leaderRole": "このクランのリーダーとサブリーダーに付与するロールです。クラン運営者用チャットや、全クラン共通のリーダー用チャットに役立ちます。",
+      "clanAbbreviation": "クランの略称を設定すると、名前変更が有効な場合にメンバー名へ追加できます。形式は<familySettingsLink>ファミリー設定</familySettingsLink>で変更できます。",
+      "category": "クランを整理するための機能です。5つ以上のクランを持つファミリーや、CWL・イベント専用クランがある場合に便利です。"
+    },
+    "roleIdPlaceholder": "ロールID",
+    "abbreviationPlaceholder": "例：CK",
+    "categoryPlaceholder": "カテゴリー名",
+    "notAvailable": "該当なし",
+    "saving": "保存中...",
+    "saveChanges": "変更を保存",
+    "deleteConfirm": "{tag}を削除してもよろしいですか？関連するリマインダーとログもすべて削除されます。",
+    "toast": {
+      "errorLoadingClans": "クランの読み込みに失敗しました",
+      "errorLoadingSettings": "クラン設定の読み込みに失敗しました",
+      "errorEmptyClanTag": "クランタグを入力してください",
+      "clanAdded": "クランを追加しました",
+      "errorAddingClan": "クランの追加に失敗しました",
+      "clanRemoved": "クランを削除しました",
+      "errorRemovingClan": "クランの削除に失敗しました",
+      "settingsSaved": "設定を保存しました",
+      "errorSavingSettings": "設定の保存に失敗しました",
+      "countdownEnabled": "カウントダウン用ボイスチャンネルを作成しました",
+      "countdownDisabled": "カウントダウン用ボイスチャンネルを削除しました",
+      "errorTogglingCountdown": "カウントダウンの切り替えに失敗しました"
+    }
+  },
+  "RolesPage": {
+    "title": "ロール管理",
+    "description": "プレイヤー統計に基づくロールの自動付与を設定します",
+    "stats": {
+      "totalRoles": "ロールの合計",
+      "totalRolesDesc": "設定済みのロール割り当て",
+      "autoEvaluation": "自動判定",
+      "autoEvaluationOn": "オン",
+      "autoEvaluationOff": "オフ",
+      "autoEvaluationActiveDesc": "ロールを自動的に割り当てています",
+      "autoEvaluationInactiveDesc": "手動でのロール割り当てのみ",
+      "activeTypes": "有効な種類",
+      "activeTypesDesc": "使用中のロール種類",
+      "discordRoles": "Discordロール",
+      "discordRolesDesc": "サーバーで利用可能"
+    },
+    "settings": {
+      "title": "自動判定設定",
+      "description": "ロールの自動判定と割り当てを設定します",
+      "saveButton": "設定を保存",
+      "saving": "保存中...",
+      "enableAutoEval": "自動判定を有効化",
+      "enableAutoEvalDesc": "プレイヤー統計に基づいてロールを自動的に付与・削除します",
+      "autoNickname": "ニックネームを自動更新",
+      "autoNicknameDesc": "ロール判定時にニックネームを更新します"
+    },
+    "roleTypes": {
+      "townhall": "タウンホール",
+      "league": "リーグ",
+      "builderhall": "ビルダーホール",
+      "builderLeague": "ビルダーリーグ",
+      "achievement": "達成項目",
+      "status": "Discord在籍期間",
+      "familyPosition": "ファミリー内役職"
+    },
+    "familyPositions": {
+      "member": "メンバー",
+      "elder": "長老",
+      "coLeader": "サブリーダー",
+      "leader": "リーダー"
+    },
+    "leagues": {
+      "legend": "レジェンド",
+      "electroDragon": "ライトニングドラゴン",
+      "dragon": "ドラゴン",
+      "electroTitan": "エレクトロタイタン",
+      "pekka": "P.E.K.K.A",
+      "golem": "ゴーレム",
+      "witch": "ネクロマンサー",
+      "valkyrie": "バルキリー",
+      "wizard": "ウィザード",
+      "archer": "アーチャー",
+      "barbarian": "バーバリアン",
+      "skeleton": "スケルトン"
+    },
+    "builderLeagues": {
+      "diamond": "ダイヤモンド",
+      "ruby": "ルビー",
+      "emerald": "エメラルド",
+      "platinum": "プラチナ",
+      "titanium": "チタン",
+      "steel": "スチール",
+      "iron": "アイアン",
+      "brass": "ブラス",
+      "copper": "カッパー",
+      "stone": "ストーン",
+      "clay": "クレイ",
+      "wood": "ウッド"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "アカウントを守ろう！",
+      "biggerAndBetter": "より大きく、より強く",
+      "discoverNewTroops": "新しいユニットを発見",
+      "biggerCoffers": "大きな金庫",
+      "goldGrab": "ゴールドラッシュ",
+      "elixirEscapade": "エリクサー大作戦",
+      "heroicHeist": "華麗なる強奪",
+      "wellSeasoned": "百戦錬磨",
+      "niceAndTidy": "きれいさっぱり",
+      "empireBuilder": "帝国の建設者",
+      "clanWarWealth": "クラン対戦で大儲け",
+      "friendInNeed": "困ったときの友",
+      "sharingIsCaring": "分かち合いの心",
+      "siegeSharer": "突破兵器の寄付",
+      "warHero": "対戦の英雄",
+      "warLeagueLegend": "対戦リーグの伝説",
+      "gamesChampion": "クランゲームの王者",
+      "unbreakable": "不屈",
+      "sweetVictory": "うれしい勝利！",
+      "conqueror": "征服者",
+      "leagueAllStar": "リーグのスター",
+      "leagueFollower": "リーグ参加者",
+      "leagueEnthusiast": "リーグ愛好家",
+      "leagueSuperfan": "リーグの大ファン",
+      "leagueFanatic": "リーグ狂",
+      "leagueMaster": "リーグマスター",
+      "legendLeague": "レジェンドリーグ",
+      "humiliator": "圧倒的勝利",
+      "notSoEasyThisTime": "今度はそう簡単じゃない",
+      "unionBuster": "労働組合つぶし",
+      "bustThis": "これを壊せ！",
+      "wallBuster": "壁の破壊者",
+      "mortarMauler": "迫撃砲クラッシャー",
+      "xBowExterminator": "クロスボウキラー",
+      "firefighter": "消防士",
+      "antiArtillery": "対イーグル砲",
+      "shatteredAndScatter": "木っ端みじん",
+      "counterspell": "カウンタースペル",
+      "monolithMasher": "モノリスクラッシャー",
+      "multiArcherTowerTerminator": "マルチアーチャータワーキラー",
+      "ricochetCannonCrusher": "跳弾砲クラッシャー",
+      "firespitterFinisher": "竜炎砲キラー",
+      "multiGearTowerTrampler": "マルチギアタワーキラー",
+      "craftersNightmare": "職人の悪夢",
+      "getThoseGoblins": "あのゴブリンを捕まえろ！",
+      "supercharger": "スーパーチャージャー",
+      "craftingConnoisseur": "クラフト通",
+      "getThoseOtherGoblins": "あっちのゴブリンも捕まえろ！",
+      "getEvenMoreGoblins": "もっとゴブリンを捕まえろ！",
+      "dragonSlayer": "ドラゴンスレイヤー",
+      "ungratefulChild": "恩知らずな子",
+      "superbWork": "素晴らしい仕事",
+      "masterEngineering": "一流エンジニア",
+      "hiddenTreasures": "隠された宝",
+      "highGear": "フル稼働",
+      "nextGenerationModel": "次世代モデル",
+      "unBuildIt": "解体せよ",
+      "championBuilder": "チャンピオンビルダー",
+      "aggressiveCapitalism": "攻めの資本主義",
+      "mostValuableClanmate": "最優秀クランメンバー"
+    },
+    "configuredRoles": {
+      "title": "設定済みロール",
+      "noRolesConfigured": "{roleType}のロールは設定されていません",
+      "addRoleToStart": "「ロールを追加」をクリックして作成します",
+      "discordRole": "Discordロール",
+      "criteria": "条件",
+      "mode": "モード",
+      "modeBoth": "追加と削除",
+      "modeAdd": "追加のみ",
+      "modeRemove": "削除のみ",
+      "actions": "アクション",
+      "unknownRole": "不明なロール",
+      "remove": "削除",
+      "month": "月",
+      "months": "か月"
+    },
+    "addRoleDialog": {
+      "title": "新しいロールを追加",
+      "description": "新しい自動ロール割り当てルールを設定します",
+      "roleType": "ロールの種類",
+      "mode": "モード",
+      "discordRole": "Discordロール",
+      "selectRole": "ロールを選択",
+      "townHallLevel": "タウンホールレベル",
+      "selectThLevel": "THレベルを選択",
+      "thPrefix": "TH",
+      "league": "リーグ",
+      "selectLeague": "リーグを選択",
+      "builderHallLevel": "ビルダーホールレベル",
+      "selectBhLevel": "BHレベルを選択",
+      "bhPrefix": "BH",
+      "builderLeague": "ビルダーリーグ",
+      "selectBuilderLeague": "ビルダーリーグを選択",
+      "achievementName": "達成項目",
+      "selectAchievement": "達成項目を選択",
+      "searchAchievement": "達成項目を検索...",
+      "noAchievementFound": "達成項目が見つかりません。",
+      "monthsInServer": "サーバー在籍月数",
+      "monthsPlaceholder": "6",
+      "familyPosition": "ファミリー内役職",
+      "selectPosition": "役職を選択",
+      "cancel": "キャンセル",
+      "addRole": "ロールを追加",
+      "errorDuplicateExact": "この条件はすでにこのロールに関連付けられています。",
+      "errorDuplicateCriterion": "この条件にはすでにロールが割り当てられています。先に既存のロールを削除してください。"
+    },
+    "infoCard": {
+      "title": "💡 自動ロールの仕組み",
+      "automaticEvaluation": "自動判定：",
+      "automaticEvaluationDesc": "有効にすると、ボットが定期的にプレイヤーを確認し、現在の統計に基づいてロールを付与・削除します。",
+      "rolePriority": "ロールの優先順位：",
+      "rolePriorityDesc": "プレイヤーの統計に複数のロールが一致する場合、最も高いレベルのロールが付与されます。",
+      "manualOverride": "手動設定：",
+      "manualOverrideDesc": "サーバー管理者が手動で付与したロールは、自動判定では削除されません。"
+    },
+    "categoryRoles": {
+      "title": "カテゴリーロール",
+      "description": "各クランカテゴリーにDiscordロールを割り当てます。そのカテゴリーのクランメンバーには対応するロールが自動付与されます。",
+      "addButton": "カテゴリーを追加",
+      "categoryName": "カテゴリー",
+      "categoryNamePlaceholder": "カテゴリー名",
+      "noCategoryRoles": "カテゴリーロールは設定されていません",
+      "noCategoryRolesDesc": "「カテゴリーを追加」をクリックして作成します",
+      "addTitle": "カテゴリーロールを追加",
+      "addConfirm": "追加",
+      "errorCategoryRequired": "カテゴリー名は必須です",
+      "errorRoleRequired": "Discordロールは必須です",
+      "errorCategoryExists": "このカテゴリーにはすでにロールが設定されています"
+    },
+    "toast": {
+      "changesSaved": "変更を保存しました！",
+      "errorLoading": "ロールの読み込みに失敗しました",
+      "errorSaving": "設定の保存に失敗しました",
+      "errorAdding": "ロールの追加に失敗しました",
+      "errorDeleting": "ロールの削除に失敗しました"
+    }
+  },
+  "RemindersPage": {
+    "title": "リマインダー",
+    "description": "対戦、レイド、クランゲーム、非アクティブ状態の自動リマインダーを設定します",
+    "types": {
+      "war": "対戦リマインダー",
+      "capital": "クランの都",
+      "clanGames": "クランゲーム",
+      "inactivity": "非アクティブ"
+    },
+    "tabs": {
+      "war": "対戦",
+      "capital": "クランの都",
+      "clanGames": "クランゲーム",
+      "inactivity": "非アクティブ"
+    },
+    "stats": {
+      "totalReminders": "リマインダーの合計",
+      "totalRemindersDesc": "設定済みの有効なリマインダー",
+      "warReminders": "対戦リマインダー",
+      "warRemindersDesc": "通常対戦とCWL",
+      "capitalReminders": "クランの都リマインダー",
+      "capitalRemindersDesc": "週末合戦の攻撃",
+      "otherReminders": "その他のリマインダー",
+      "otherRemindersDesc": "クランゲームと非アクティブ"
+    },
+    "actions": {
+      "saving": "保存中...",
+      "saveChanges": "変更を保存",
+      "addReminder": "リマインダーを追加",
+      "addWarReminder": "対戦リマインダーを追加",
+      "addCapitalReminder": "都リマインダーを追加",
+      "addClanGamesReminder": "クランゲームリマインダーを追加",
+      "addInactivityReminder": "非アクティブリマインダーを追加",
+      "retry": "再試行"
+    },
+    "clanSelector": {
+      "label": "クラン",
+      "placeholder": "クランを選択",
+      "allClans": "すべてのクラン"
+    },
+    "empty": {
+      "noWarReminders": "対戦リマインダーはありません",
+      "noCapitalReminders": "都リマインダーはありません",
+      "noClanGamesReminders": "クランゲームリマインダーはありません",
+      "noInactivityReminders": "非アクティブリマインダーはありません",
+      "getStarted": "最初のリマインダーを作成して始めましょう"
+    },
+    "card": {
+      "new": "新規",
+      "before": "前",
+      "timeBefore": "残り時間",
+      "timeBeforePlaceholder": "例：6",
+      "timeInactive": "非アクティブ期間",
+      "timeInactivePlaceholder": "例：160",
+      "timeUnit": "時間",
+      "hoursRemaining": "時間残り",
+      "channel": "チャンネル",
+      "channelPlaceholder": "チャンネルを選択",
+      "threadOptional": "スレッド（任意）",
+      "threadPlaceholder": "スレッドを選択",
+      "noThread": "チャンネルに直接投稿",
+      "forumPost": "フォーラム投稿",
+      "forumPostPlaceholder": "フォーラム投稿を選択",
+      "forumPostRequired": "フォーラムチャンネルではフォーラム投稿が必要です。",
+      "clan": "クラン",
+      "clanPlaceholder": "クランを選択",
+      "customMessage": "カスタムメッセージ",
+      "customMessagePlaceholder": "攻撃を使い忘れないでください！",
+      "customMessagePlaceholderClanGames": "クランゲームでもっとポイントを獲得しましょう！",
+      "customMessagePlaceholderInactivity": "しばらくクランで活動していません :(",
+      "warTypes": "対戦タイプ",
+      "random": "ランダム対戦",
+      "friendly": "フレンド対戦",
+      "cwl": "CWL",
+      "pointThreshold": "ポイントしきい値",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "{threshold}ポイント未満のユーザーをメンションします。",
+      "attackThreshold": "攻撃回数しきい値",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "残り攻撃回数が{threshold}回以上のユーザーをメンションします。",
+      "notSet": "未設定"
+    },
+    "dialog": {
+      "addTitle": "新しいリマインダーを追加",
+      "addDescription": "サーバー用の新しいリマインダーを設定します",
+      "editTitle": "リマインダーを編集",
+      "editDescription": "リマインダー設定を更新します",
+      "type": "リマインダーの種類",
+      "selectType": "種類を選択",
+      "cancel": "キャンセル",
+      "saving": "保存中...",
+      "saveChanges": "変更を保存",
+      "addReminder": "リマインダーを追加"
+    },
+    "toast": {
+      "errorTitle": "エラー",
+      "errorLoadingReminders": "リマインダーの読み込みに失敗しました。もう一度お試しください。",
+      "reminderAdded": "リマインダーを追加しました",
+      "reminderAddedDesc": "新しい{type}リマインダーを追加しました。保存を忘れないでください！",
+      "reminderUpdated": "リマインダーを更新しました",
+      "successTitle": "成功",
+      "reminderDeleted": "リマインダーを削除しました",
+      "failedToDelete": "リマインダーの削除に失敗しました",
+      "allRemindersSaved": "すべてのリマインダーを保存しました",
+      "failedToSave": "リマインダーの保存に失敗しました",
+      "forumPostRequired": "このリマインダーを保存する前にフォーラム投稿を選択してください。",
+      "invalidDestination": "選択したスレッドはこのチャンネルに属していません。",
+      "timeExceedsLimit": "残り時間は{min}～{max}時間にしてください",
+      "pointThresholdInvalid": "ポイントしきい値は{min}～{max}にしてください",
+      "attackThresholdInvalid": "攻撃回数しきい値は{min}～{max}にしてください"
+    }
+  },
+  "LogsPage": {
+    "title": "アクティビティログ",
+    "description": "クランとプレイヤーの活動を自動記録する設定を行います",
+    "stats": {
+      "activeLogs": "有効なログ",
+      "activeLogsDesc": "全ファミリークランとサーバーログの合計",
+      "logChannels": "ログチャンネル",
+      "logChannelsDesc": "利用可能なチャンネル",
+      "trackedClans": "追跡中のクラン",
+      "trackedClansDesc": "設定済みクラン",
+      "issues": "問題",
+      "issuesDesc": "ファミリー全体"
+    },
+    "clanSelector": {
+      "label": "クラン",
+      "placeholder": "クランを選択"
+    },
+    "tabs": {
+      "clan": "クラン",
+      "war": "対戦",
+      "capital": "クランの都",
+      "player": "プレイヤー",
+      "server": "サーバー"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "メンバー参加",
+        "description": "クランに参加したメンバーを記録"
+      },
+      "leaveLog": {
+        "label": "メンバー脱退",
+        "description": "クランを脱退したメンバーを記録"
+      },
+      "donationLog": {
+        "label": "メンバーの寄付",
+        "description": "ユニットと呪文の寄付を記録"
+      },
+      "clanAchievementLog": {
+        "label": "クランの実績",
+        "description": "獲得したクラン実績を記録"
+      },
+      "clanRequirementsLog": {
+        "label": "クラン参加条件",
+        "description": "クラン参加条件の変更を記録"
+      },
+      "clanDescriptionLog": {
+        "label": "クラン説明",
+        "description": "クラン説明の変更を記録"
+      },
+      "banAlert": {
+        "label": "BANアラート",
+        "description": "BANされたプレイヤーがこのクランに参加したときにアラートを投稿"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Redditフィード",
+        "description": "サーバーのRedditフィードを投稿"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "対戦ログ",
+        "description": "対戦の攻撃と結果を記録"
+      },
+      "warPanel": {
+        "label": "対戦パネル",
+        "description": "リアルタイム更新される対戦用インタラクティブパネル"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL編成変更",
+        "description": "CWL編成の変更を記録"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "都への寄付",
+        "description": "都ゴールドの寄付を記録"
+      },
+      "capitalAttacks": {
+        "label": "都の攻撃",
+        "description": "週末合戦の攻撃を記録"
+      },
+      "raidPanel": {
+        "label": "都パネル",
+        "description": "リアルタイム更新されるレイド用インタラクティブパネル"
+      },
+      "capitalWeeklySummary": {
+        "label": "都の週間まとめ",
+        "description": "クランの都の成績を週ごとにまとめます"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "役職変更",
+        "description": "クラン内でのプレイヤー役職変更を記録"
+      },
+      "troopUpgrade": {
+        "label": "ユニットのアップグレード",
+        "description": "ユニットレベルのアップグレードを記録"
+      },
+      "superTroopBoostLog": {
+        "label": "スーパーユニットのブースト",
+        "description": "スーパーユニットの有効化を記録"
+      },
+      "thUpgrade": {
+        "label": "タウンホールのアップグレード",
+        "description": "タウンホールのアップグレードを記録"
+      },
+      "leagueChange": {
+        "label": "リーグ変更",
+        "description": "リーグ帯の変更を記録"
+      },
+      "spellUpgrade": {
+        "label": "呪文のアップグレード",
+        "description": "呪文レベルのアップグレードを記録"
+      },
+      "heroUpgrade": {
+        "label": "ヒーローのアップグレード",
+        "description": "ヒーローレベルのアップグレードを記録"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "ヒーロー装備のアップグレード",
+        "description": "ヒーロー装備のアップグレードを記録"
+      },
+      "nameChange": {
+        "label": "名前変更",
+        "description": "プレイヤー名の変更を記録"
+      },
+      "legendLogAttacks": {
+        "label": "レジェンドリーグの攻撃",
+        "description": "レジェンドリーグの攻撃を記録"
+      },
+      "legendLogDefenses": {
+        "label": "レジェンドリーグの防衛",
+        "description": "レジェンドリーグの防衛を記録"
+      }
+    },
+    "logCard": {
+      "active": "アクティブ",
+      "issue": "問題",
+      "disabled": "無効",
+      "enable": "有効化",
+      "disable": "無効化",
+      "channel": "チャンネル",
+      "channelPlaceholder": "チャンネルを選択",
+      "thread": "スレッド（任意）",
+      "threadPlaceholder": "スレッドを選択",
+      "noThread": "スレッドなし",
+      "forumPost": "フォーラム投稿",
+      "forumPostPlaceholder": "フォーラム投稿を選択",
+      "forumPostRequired": "このログを保存する前にフォーラム投稿を選択してください。",
+      "invalidThread": "選択したスレッドはこのチャンネルに属していません。",
+      "saveDestination": "保存先を保存",
+      "channelDeleted": "このチャンネルは存在しません。新しいチャンネルを選ぶか、ログを無効にしてください。",
+      "enableToConfig": "設定するにはこのログを有効にしてください",
+      "configuring": "設定中",
+      "on": "オン",
+      "off": "オフ",
+      "example": "例"
+    }
+  },
+  "GeneralPage": {
+    "title": "一般設定",
+    "description": "サーバー全体のボットの動作と外観を設定します",
+    "loading": "設定を読み込み中...",
+    "reset": "リセット",
+    "saving": "保存中...",
+    "saveChanges": "変更を保存",
+    "settingsSaved": "設定を保存しました！",
+    "infoBanner": {
+      "title": "その他の設定をお探しですか？",
+      "description": "ファミリーロールとニックネーム設定は**ファミリー設定**ページ、ロール管理は**ロール**ページ、クランロール、略称、カテゴリー、対戦カウントダウンは**クラン**ページにあります。"
+    },
+    "nickname": {
+      "title": "ニックネーム管理",
+      "description": "ニックネームの形式を管理します",
+      "automaticChanges": "自動変更",
+      "automaticChangesDesc": "ボットによるメンバーのニックネーム更新を許可",
+      "familyFormat": "ファミリーメンバーの形式",
+      "availablePlaceholders": "利用可能なプレースホルダー",
+      "preview": "プレビュー",
+      "nonFamilyFormat": "ファミリー外メンバーの形式",
+      "placeholders": {
+        "discordName": "Discordユーザー名",
+        "discordDisplayName": "サーバー内ニックネーム",
+        "playerName": "CoCプレイヤー名",
+        "playerTag": "プレイヤータグ",
+        "playerTownhall": "THレベル",
+        "playerTownhallSmall": "TH上付き文字",
+        "playerWarstars": "対戦の星",
+        "playerRole": "クラン内役職",
+        "playerClan": "クラン名",
+        "playerLeague": "リーグ",
+        "playerClanAbbr": "クラン略称"
+      }
+    },
+    "appearance": {
+      "title": "外観",
+      "description": "ボットの埋め込みメッセージをカスタマイズ",
+      "embedColor": "埋め込みの色",
+      "embedColorDesc": "Discord上のすべてのボット埋め込みメッセージのサイドバー色",
+      "embedColorDefault": "デフォルト：**#D90709**（ClashKingレッド）",
+      "embedPreview": "埋め込みプレビュー",
+      "embedPreviewDesc": "この色付きバーがすべてのボット埋め込みメッセージの横に表示されます",
+      "editColor": "色を編集",
+      "resetToDefault": "デフォルトに戻す",
+      "apply": "適用"
+    },
+    "security": {
+      "title": "セキュリティと権限",
+      "description": "アクセスと確認を管理します",
+      "fullWhitelistRole": "フルアクセスロール",
+      "fullWhitelistRoleDesc": "すべてのボットコマンドにフルアクセスできるDiscordロール（すべての権限チェックをスキップ）",
+      "noRole": "ロールなし"
+    },
+    "familyRoles": {
+      "title": "ファミリーロール",
+      "description": "ファミリー所属とクラン内役職に基づく自動ロールを管理します",
+      "selectRole": "ロールを選択",
+      "addRole": "ロールを追加...",
+      "deletedRole": "削除済みロール",
+      "noRolesConfigured": "設定済みのロールはありません",
+      "modes": {
+        "both": "追加と削除",
+        "add": "追加のみ",
+        "remove": "削除のみ"
+      },
+      "types": {
+        "family": "ファミリー",
+        "notFamily": "ファミリー外",
+        "elder": "長老",
+        "coLeader": "サブリーダー",
+        "leader": "リーダー"
+      },
+      "descriptions": {
+        "family": "ファミリークランに1つ以上のアカウントがある",
+        "notFamily": "ファミリークランにアカウントがない",
+        "elder": "いずれかのファミリークランで長老である",
+        "coLeader": "いずれかのファミリークランでサブリーダーである",
+        "leader": "いずれかのファミリークランでリーダーである"
+      }
+    },
+    "tenureRoles": {
+      "title": "Discord在籍期間ロール",
+      "description": "メンバーのサーバー在籍期間に応じてロールを自動付与します",
+      "addRole": "在籍期間ロールを追加",
+      "addDialogTitle": "在籍期間ロールを追加",
+      "addDialogDescription": "指定した月数以上サーバーに在籍しているメンバーにロールを付与します",
+      "monthsInServer": "サーバー在籍月数",
+      "discordRole": "Discordロール",
+      "selectRole": "ロールを選択",
+      "noRolesConfigured": "在籍期間ロールは設定されていません",
+      "addRoleToStart": "在籍期間ロールを追加して始めましょう",
+      "months": "か月",
+      "month": "月",
+      "actions": "アクション",
+      "remove": "削除",
+      "unknownRole": "不明なロール"
+    },
+    "prefix": "コマンドプレフィックス",
+    "language": "言語",
+    "timezone": "タイムゾーン",
+    "theme": "テーマ"
+  },
+  "FamilySettingsPage": {
+    "title": "ファミリー設定",
+    "description": "クランメンバーのファミリーロールとニックネーム形式を設定します",
+    "loading": "設定を読み込み中...",
+    "reset": "リセット",
+    "saving": "保存中...",
+    "saveChanges": "変更を保存",
+    "settingsSaved": "設定を保存しました！",
+    "nickname": {
+      "title": "ニックネーム管理",
+      "description": "ニックネームの形式を管理します",
+      "automaticChanges": "自動変更",
+      "automaticChangesDesc": "ボットによるメンバーのニックネーム更新を許可",
+      "familyFormat": "ファミリーメンバーの形式",
+      "availablePlaceholders": "利用可能なプレースホルダー",
+      "preview": "プレビュー",
+      "nonFamilyFormat": "ファミリー外メンバーの形式",
+      "placeholders": {
+        "discordName": "Discordユーザー名",
+        "discordDisplayName": "サーバー内ニックネーム",
+        "playerName": "CoCプレイヤー名",
+        "playerTag": "プレイヤータグ",
+        "playerTownhall": "THレベル",
+        "playerTownhallSmall": "TH上付き文字",
+        "playerWarstars": "対戦の星",
+        "playerRole": "クラン内役職",
+        "playerClan": "クラン名",
+        "playerLeague": "リーグ",
+        "playerClanAbbr": "クラン略称"
+      }
+    },
+    "familyRoles": {
+      "title": "ファミリーロール",
+      "description": "ファミリー所属とクラン内役職に基づく自動ロールを管理します",
+      "selectRole": "ロールを選択",
+      "addRole": "ロールを追加...",
+      "deletedRole": "削除済みロール",
+      "noRolesConfigured": "設定済みのロールはありません",
+      "modes": {
+        "both": "追加と削除",
+        "add": "追加のみ",
+        "remove": "削除のみ"
+      },
+      "types": {
+        "family": "ファミリー",
+        "notFamily": "ファミリー外",
+        "elder": "長老",
+        "coLeader": "サブリーダー",
+        "leader": "リーダー"
+      },
+      "descriptions": {
+        "family": "ファミリークランに1つ以上のアカウントがある",
+        "notFamily": "ファミリークランにアカウントがない",
+        "elder": "いずれかのファミリークランで長老である",
+        "coLeader": "いずれかのファミリークランでサブリーダーである",
+        "leader": "いずれかのファミリークランでリーダーである"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "言語"
+  },
+  "ThemeSwitcher": {
+    "label": "テーマ",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム"
+  },
+  "AuthCallback": {
+    "authenticating": "認証中...",
+    "authenticatingDescription": "Discordでのログイン処理が完了するまでお待ちください",
+    "authenticationFailed": "認証に失敗しました",
+    "tryAgain": "もう一度試す",
+    "backToHome": "ホームに戻る",
+    "errorCancelled": "Discordでログインがキャンセルされました。準備ができたら再試行してください。",
+    "errorDiscordFailedWithReason": "Discord認証に失敗しました：{reason}",
+    "errorNoAuthorizationCode": "Discordから認可コードを受信できませんでした。",
+    "errorCodeVerifierMissing": "コード検証子が見つかりません。再度ログインしてください。",
+    "errorAuthenticateFailed": "Discordでの認証に失敗しました。",
+    "loadingVillages": "Discordでログイン中...",
+    "loadingClanData": "サーバー一覧を読み込み中...",
+    "loadingWarStats": "まもなく準備完了..."
+  },
+  "LoginPage": {
+    "redirecting": "Discordにリダイレクト中..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "機能",
+      "subtitle": "Discord、モバイル、Webでクランの管理と成長を支援するClashKingの強力なツールをご覧ください。"
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKingボット",
+        "description": "ClashKingボットは、Clash of Clansのクランとコミュニティ管理に必要な唯一のDiscordボットです。クランの整理、活性化、成長に役立つ独自機能が満載です。",
+        "items": [
+          "リアルタイムログ: 対戦、CWL、クランゲーム、週末合戦、寄付、メンバーイベントを追跡します。",
+          "チケットシステム: 標準のサポートチケットに加え、募集チケットシステムを提供します。",
+          "自動ロール: クランの状態やファミリー管理に応じてロールを自動割り当てします。",
+          "リマインダー: 対戦攻撃、クランゲーム、その他の通知を送信します。",
+          "詳細統計: 活動追跡を使ってプレイヤーとクランのパフォーマンスを分析します。",
+          "ロースター管理: 対戦ロースターを簡単に整理し、最適化します。"
+        ],
+        "ctaPrimary": "ボットを招待",
+        "ctaSecondary": "コミュニティに参加"
+      },
+      "app": {
+        "title": "ClashKingアプリ（オープンベータ）",
+        "description": "ClashKingアプリはClashKingボットを補完し、必要なツールとデータをモバイル端末に直接届けます。Discordがなくても、いつでもどこでもつながれます。",
+        "items": [
+          "リアルタイム統計: ボットと同期されたプレイヤーとクランの詳細統計を確認できます。",
+          "クラン進捗追跡: クランの成長を継続的に監視します。",
+          "複数アカウント管理: アカウントを簡単に切り替え、パフォーマンスを追跡します。",
+          "組み込み履歴: 過去のデータにアクセスし、傾向の分析と戦略の改善に役立てます。",
+          "Discordサーバー管理: （近日公開）アプリからロールとチケットを管理します。",
+          "高度な通知: （近日公開）重要なイベントのアラートをカスタマイズします。"
+        ],
+        "ctaPrimary": "Androidベータ",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "ClashKing APIを使って独自のツールやプロジェクトを構築できます。ClashKingプロジェクトをクレジットすれば無料で利用できます。",
+        "items": [],
+        "ctaPrimary": "APIドキュメント",
+        "ctaSecondary": "GitHubのAPI"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "ヘルプが必要ですか？",
+    "subtitle": "ドキュメントの確認から直接サポートまで、必要な支援を提供します。",
+    "documentation": {
+      "title": "ドキュメント",
+      "description": "ClashKingを最大限に活用するための詳細なガイドとコマンドリファレンスをご覧ください。",
+      "cta": "ドキュメントを表示"
+    },
+    "discord": {
+      "title": "Discordサポート",
+      "description": "さらにサポートが必要ですか？Discordコミュニティに参加し、質問、バグ報告、他のユーザーとの交流をお楽しみください。",
+      "cta": "Discordに参加"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "オープンソースプロジェクト",
+    "subtitle": "ClashKingは完全無料のオープンソースプロジェクトです。コミュニティの力でさらに改善できると信じています。ボットとAPIはどちらも全面的にオープンソースで、自由に貢献したり、自分のプロジェクトに利用したりできます。",
+    "github": {
+      "title": "GitHub組織",
+      "description": "ソースコードの閲覧、ボットへの貢献、その他のオープンソースツールの確認ができます。",
+      "ctaPrimary": "組織を表示",
+      "repos": {
+        "bot": "ボットのリポジトリ",
+        "app": "アプリのリポジトリ",
+        "api": "APIリポジトリ",
+        "assets": "アセットのリポジトリ"
+      }
+    },
+    "api": {
+      "title": "APIドキュメント",
+      "description": "ClashKing APIを使って独自のツールやプロジェクトを構築できます。ClashKingプロジェクトをクレジットすれば無料で利用できます。",
+      "cta": "APIドキュメント"
+    },
+    "translation": {
+      "title": "翻訳に協力する",
+      "description": "ClashKingの翻訳にご協力ください！Crowdinプロジェクトを通じて、Webサイト、ボット、その他の関連テキストをお使いの言語に翻訳できます。",
+      "app": "アプリを翻訳",
+      "bot": "ボットを翻訳"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "貢献",
+        "description": "バグの修正、新機能の追加、既存機能の強化で改善にご協力ください。すべての貢献が大切です！"
+      },
+      "community": {
+        "title": "コミュニティ",
+        "description": "Discordコミュニティに参加し、アイデアの議論、サポート、他の開発者とのコラボレーションを行えます。"
+      },
+      "learn": {
+        "title": "学ぶ",
+        "description": "ボットとAPIを効果的に使う方法は、ドキュメントと例で学べます。"
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "サポート",
+    "subtitle": "ClashKingは無料のオープンソースプロジェクトです。皆さまの支援により、サーバーを維持し、コミュニティ向けの新機能を開発し続けることができます。",
+    "patreon": {
+      "title": "Patreonサポーターになる",
+      "description": "Patreonで毎月支援して、限定特典や機能への早期アクセスを受け取り、ホスティング費用を支援できます。",
+      "cta": "Patreonでサポート"
+    },
+    "creatorCode": {
+      "title": "クリエイターコードを使う",
+      "description": "クリエイターコードを使って無料でサポート",
+      "descriptionSuffix": "ゲーム内またはSupercellストアでご利用ください。",
+      "ctaGame": "ゲーム内で使用",
+      "ctaStore": "Supercellストアで使用"
+    },
+    "whySupport": {
+      "title": "サポートが必要な理由",
+      "description": "規模にかかわらず、すべての貢献がサーバー費用とAPI料金に直接使われます。クリエイターコードの使用に追加費用はかからず、私たちの大きな支えになります！"
+    }
+  },
+  "ServersPage": {
+    "title": "サーバーを選択",
+    "description": "ClashKingボットの設定を行うサーバーを選択してください。Discordサーバーのオーナーまたは管理者である必要があります。",
+    "backToHome": "ホームに戻る",
+    "backToLogin": "ログインに戻る",
+    "error": "エラー",
+    "configure": "設定",
+    "invite": "招待",
+    "members": "メンバー",
+    "server": "サーバー",
+    "roles": {
+      "owner": "オーナー",
+      "administrator": "管理者",
+      "manager": "マネージャー"
+    },
+    "noServers": {
+      "title": "サーバーが見つかりません",
+      "description": "あなたが管理者またはオーナーであるDiscordサーバーが見つかりません。"
+    }
+  },
+  "AutoboardsPage": {
+    "title": "自動ボード",
+    "description": "ライブボードを更新するか、運用スケジュールに従って新しいボードを送信します",
+    "actions": {
+      "create": "自動ボードを作成",
+      "edit": "自動ボードを編集",
+      "delete": "自動ボードを削除",
+      "save": "変更を保存",
+      "cancel": "キャンセル",
+      "retry": "再試行"
+    },
+    "metrics": {
+      "total": "設定済み",
+      "refresh": "ボードを更新",
+      "send": "予約送信"
+    },
+    "filters": {
+      "all": "すべて"
+    },
+    "list": {
+      "title": "設定済みの自動ボード",
+      "description": "管理者が制御する配信方法、対象、送信先、実行状態",
+      "empty": "この表示には自動ボードがありません",
+      "emptyDescription": "APIレジストリで利用可能なボードタイプが公開されたら作成できます。"
+    },
+    "registry": {
+      "emptyTitle": "利用可能なボードタイプがありません",
+      "emptyDescription": "APIレジストリは現在空です。ボードタイプが有効になると自動ボードを作成できます。",
+      "typeUnavailable": "このボードタイプはレジストリで利用できなくなったため編集できません。"
+    },
+    "dialog": {
+      "createTitle": "自動ボードを作成",
+      "editTitle": "自動ボードを編集",
+      "description": "機能と制限はライブボードレジストリから取得されます。"
+    },
+    "boardType": {
+      "label": "ボードタイプ",
+      "description": "利用可能なタイプはAPIレジストリから直接取得されます。",
+      "placeholder": "ボードタイプを選択"
+    },
+    "targets": {
+      "kind": "対象タイプ：{kind}",
+      "kindDescription": "各対象値の解釈方法はレジストリで定義されます。",
+      "scope": "対象範囲",
+      "scopeDescription": "ファミリー範囲では設定済みのすべてのファミリークランを使用し、個別の対象は指定しません。",
+      "family": "ファミリー",
+      "custom": "カスタム対象",
+      "values": "対象",
+      "count": "このボードタイプには{min}～{max}件の対象を指定してください。",
+      "placeholder": "{kind}の対象を入力",
+      "add": "対象を追加",
+      "remove": "対象を削除"
+    },
+    "modes": {
+      "label": "配信モード",
+      "description": "このボードが対応する配信モードはレジストリで管理されます。",
+      "refresh": "更新",
+      "send": "予約送信"
+    },
+    "destination": {
+      "label": "送信先",
+      "channel": "親チャンネル",
+      "channelDescription": "テキストチャンネルとアナウンスチャンネルには直接送信でき、フォーラムでは子投稿を使用します。",
+      "selectChannel": "チャンネルを選択",
+      "thread": "スレッドまたはフォーラム投稿",
+      "selectThread": "スレッドを選択",
+      "threadOptional": "テキストチャンネルとアナウンスチャンネルでは任意です。",
+      "forumRequired": "この送信先にはフォーラム投稿が必要です。",
+      "direct": "チャンネルへ直接送信",
+      "deleted": "チャンネルは存在しません"
+    },
+    "refresh": {
+      "interval": "更新間隔（分）",
+      "intervalDescription": "許可範囲：{minimum}～{maximum}分"
+    },
+    "schedule": {
+      "label": "スケジュール",
+      "kind": "スケジュール形式",
+      "kindDescription": "毎日、選択した曜日、または月1回送信します。",
+      "daily": "毎日",
+      "weekdays": "選択した曜日",
+      "dayOfMonth": "月の日付",
+      "selectWeekdays": "曜日",
+      "monthDay": "月の日付",
+      "monthDayDescription": "1～31の値を使用してください。",
+      "timezone": "タイムゾーン",
+      "timeOfDay": "時刻",
+      "nextRun": "次回実行"
+    },
+    "weekdays": {
+      "1": "月曜日",
+      "2": "火曜日",
+      "3": "水曜日",
+      "4": "木曜日",
+      "5": "金曜日",
+      "6": "土曜日",
+      "7": "日曜日"
+    },
+    "status": {
+      "enabled": "有効",
+      "disabled": "無効",
+      "enabledDescription": "無効なボードは設定を保持しますが実行されません。",
+      "messageId": "現在の更新メッセージ：{id}"
+    },
+    "delete": {
+      "title": "この自動ボードを削除しますか？",
+      "description": "設定が削除され、元に戻せません。"
+    },
+    "feedback": {
+      "created": "自動ボードを作成しました",
+      "updated": "自動ボードを更新しました",
+      "deleted": "自動ボードを削除しました"
+    },
+    "validation": {
+      "boardType": "ライブレジストリからボードタイプを選択してください。",
+      "targetScope": "このボードタイプが対応する対象範囲を選択してください。",
+      "familyTargets": "ファミリー範囲では個別の対象を指定できません。",
+      "targetCount": "空でない対象を{min}～{max}件入力してください。",
+      "deliveryMode": "このボードタイプが対応する配信モードを選択してください。",
+      "destination": "有効な送信先を選択してください。フォーラムチャンネルには子投稿が必要です。",
+      "refreshInterval": "更新間隔を{minimum}～{maximum}分で入力してください。",
+      "timezone": "IANAタイムゾーンを入力してください。",
+      "timeOfDay": "有効な時刻を入力してください。",
+      "weekdays": "曜日を1つ以上選択してください。",
+      "dayOfMonth": "1～31の日付を入力してください。"
+    },
+    "errors": {
+      "title": "自動ボードを利用できません",
+      "session": "セッションの有効期限が切れました。",
+      "request": "自動ボードのリクエストに失敗しました。",
+      "load": "自動ボードの読み込みに失敗しました。",
+      "save": "自動ボードの保存に失敗しました。",
+      "delete": "自動ボードの削除に失敗しました。"
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "チケットパネル設定",
+    "description": "各チケットパネルのカテゴリーとログチャンネルを設定します。",
+    "noPanels": "チケットパネルがありません",
+    "noPanelsHint": "上のボタンから最初のパネルを作成してください。",
+    "createPanel": "新しいパネル",
+    "createPanelTitle": "チケットパネルを作成",
+    "createPanelDescription": "パネルに固有の名前を付けてください。作成後にボタンとチャンネルを設定できます。",
+    "panelNameLabel": "パネル名",
+    "panelNamePlaceholder": "例：応募",
+    "panelCreated": "パネル「{name}」を作成しました。",
+    "confirmDeletePanel": "パネル「{name}」を削除しますか？",
+    "confirmDeletePanelHint": "パネルとすべてのボタン設定が完全に削除されます。",
+    "panelDeleted": "パネルを削除しました。",
+    "panelHint": "クリックして展開し、このパネルを設定します。",
+    "panelEmbed": "パネルの埋め込み",
+    "panelEmbedHint": "Discordにチケットパネルを投稿するときに使用する埋め込みです。",
+    "panelEmbedInfoLine1": "新しい埋め込みの作成や既存の埋め込みの編集は、{dashboardLabel}の%sページで行えます。",
+    "panelEmbedInfoLine2": "ボタンの追加や編集は、このパネルの%sで行えます。",
+    "panelEmbedPreview": "埋め込みプレビュー",
+    "panelEmbedPreviewEmpty": "選択したパネル埋め込みにはプレビューがありません。",
+    "ticketOpenEmbed": "チケット開始時の埋め込み",
+    "ticketOpenEmbedHint": "このボタンでチケットを開いたときに送信する任意のカスタム埋め込みです。",
+    "selectEmbed": "埋め込みを選択",
+    "defaultEmbed": "パネル埋め込みを上書きしない",
+    "noCustomMessage": "既定のチケットメッセージを使用",
+    "buttons": "ボタン",
+    "buttonList": "ボタン",
+    "categories": "カテゴリー",
+    "openCategory": "受付中チケットのカテゴリー",
+    "open_category": "受付中チケットのカテゴリー",
+    "sleepCategory": "保留中チケットのカテゴリー",
+    "sleep_category": "保留中チケットのカテゴリー",
+    "closedCategory": "終了済みチケットのカテゴリー",
+    "closed_category": "終了済みチケットのカテゴリー",
+    "selectCategory": "カテゴリーを選択...",
+    "logChannels": "ログチャンネル",
+    "statusChangeLog": "ステータス変更ログ",
+    "status_change_log": "ステータス変更ログ",
+    "buttonClickLog": "ボタンクリックログ",
+    "ticket_button_click_log": "ボタンクリックログ",
+    "closeLog": "チケット終了ログ",
+    "ticket_close_log": "チケット終了ログ",
+    "selectChannel": "チャンネルを選択...",
+    "savedSuccess": "パネル「{panel}」を保存しました。",
+    "tabChannels": "チケットパネル",
+    "tabSettings": "設定",
+    "tabButtons": "ボタン",
+    "tabMessages": "メッセージ",
+    "autoSaveSaving": "保存中...",
+    "autoSaveSaved": "保存済み",
+    "autoSaveErrorTitle": "自動保存に失敗しました",
+    "autoSaveErrorDescription": "チケット設定を保存できませんでした。",
+    "messages": "メッセージ",
+    "noButtons": "ボタンはまだありません。追加して開始してください。",
+    "addButton": "ボタンを追加",
+    "addButtonTitle": "ボタンを追加",
+    "addButtonDescription": "新しいボタンの外観を設定します。",
+    "buttonLabel": "ボタンの表示テキスト",
+    "buttonLabelPlaceholder": "例：応募",
+    "buttonStyle": "ボタンの色",
+    "buttonStyleBlue": "青",
+    "buttonStyleGrey": "グレー",
+    "buttonStyleGreen": "緑",
+    "buttonStyleRed": "赤",
+    "buttonAdded": "ボタンを追加しました。",
+    "buttonDeleted": "ボタンを削除しました。",
+    "editButtonTitle": "ボタン設定を編集",
+    "editButtonDescription": "このチケットボタンを設定します。",
+    "buttonAppearanceSaved": "外観を保存しました。",
+    "confirmDeleteButton": "ボタン「{label}」を削除しますか？",
+    "confirmDeleteButtonHint": "ボタンと、ロールや質問などのすべての設定が削除されます。",
+    "modRoles": "スタッフロール（メンションあり）",
+    "modRolesHint": "チケットが開かれたときに、これらのロールをメンションします。",
+    "noPingRoles": "スタッフロール（メンションなし）",
+    "noPingRolesHint": "これらのロールはチケットを閲覧できますが、メンションされません。",
+    "questions": "質問",
+    "questionsHint": "チケットを開くときに、最大5件の質問をモーダルに表示します。",
+    "question": "質問",
+    "privateThread": "非公開スレッド",
+    "privateThreadHint": "スタッフ用の非公開スレッドを別途作成します。",
+    "accountApply": "CoCアカウントを必須にする",
+    "accountApplyHint": "ユーザーはClash of Clansアカウントを連携する必要があります。",
+    "playerInfo": "プレイヤー情報を表示",
+    "playerInfoHint": "チケットを開いたときにアカウント統計を表示します。",
+    "thMin": "最低タウンホール",
+    "numApply": "最大アカウント数",
+    "naming": "命名規則",
+    "namingPlaceholders": "命名用プレースホルダー",
+    "namingVariables": "変数：'{ticket_count}'、'{user}'、'{account_name}'、'{account_th}'、'{ticket_status}'、'{emoji_status}'",
+    "buttonSaved": "ボタン「{label}」を保存しました。",
+    "badge": {
+      "accountApply": "CoC必須",
+      "privateThread": "非公開スレッド"
+    },
+    "approveMessages": "承認・却下メッセージ",
+    "approveMessagesHint": "スタッフが応募者に送信できる定型メッセージです（最大25件）。",
+    "messagesMaxHint": "最大25件のメッセージを追加できます。",
+    "editMessagesButton": "メッセージを編集",
+    "editMessagesTitle": "定型メッセージを編集",
+    "editMessagesDescription": "チケット用定型メッセージの追加、削除、更新を行います。",
+    "addMessage": "メッセージを追加",
+    "noMessages": "メッセージはまだありません。追加して開始してください。",
+    "messageName": "メッセージ名",
+    "contentLabel": "内容",
+    "messageContent": "メッセージ内容...",
+    "messageNameRequired": "すべてのメッセージに名前が必要です。",
+    "messagesSaved": "承認・却下メッセージを保存しました。",
+    "rolesToAdd": "付与するロール",
+    "rolesToAddHint": "チケットを開いたときにユーザーへ自動付与するロールです。",
+    "rolesToRemove": "解除するロール",
+    "rolesToRemoveHint": "チケットを開いたときにユーザーから自動解除するロールです。",
+    "applyClans": "許可するクラン",
+    "applyClansHint": "これらのクランのメンバーだけがチケットを開けます。誰でも許可する場合は空欄にしてください。",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "タウンホール要件",
+    "thRequirementsHint": "チケットを開くために必要な、タウンホールレベルごとの最低ヒーローレベルです。",
+    "thHeroLegend": "BK = バーバリアンキング · AQ = アーチャークイーン · GW = グランドウォーデン · RC = ロイヤルチャンピオン · WARST = 対戦の星",
+    "addThLevel": "THレベルを追加",
+    "thLevel": "TH",
+    "numApplyHint": "ユーザーが応募に使用できるCoCアカウントの最大数です（1～25）。",
+    "embeds": "埋め込み",
+    "embedsHint": "パネルメッセージやチケット開始メッセージに使用するDiscord埋め込みです。",
+    "newEmbed": "新しい埋め込み",
+    "embedName": "埋め込み名",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "DiscohookのURL",
+    "embedDiscohookHint": "Discohookで埋め込みを作成し、ページURLをコピーしてここに貼り付けます。",
+    "openDiscohook": "Discohookを開く",
+    "openInDiscohook": "Discohookで開く",
+    "copyDiscohookUrl": "DiscohookのURLをコピー",
+    "copyDiscohookUrlDone": "URLをコピーしました！",
+    "editEmbed": "編集",
+    "deleteEmbed": "削除",
+    "confirmDeleteEmbed": "埋め込み「{name}」を削除しますか？",
+    "confirmDeleteEmbedHint": "ClashKingから削除されるだけで、投稿済みのDiscordメッセージには影響しません。",
+    "embedSaved": "埋め込み「{name}」を保存しました。",
+    "embedCreated": "埋め込み「{name}」を作成しました。",
+    "embedDeleted": "埋め込みを削除しました。",
+    "noEmbeds": "埋め込みはまだありません。",
+    "noEmbedsHint": "ここで埋め込みを作成し、パネルまたはボタンに割り当ててください。",
+    "legacyEmbed": "ボットで作成されています。編集を有効にするにはDiscohookのURLを貼り付けてください。",
+    "invalidDiscohookUrl": "URLが無効です。DiscohookページのURL（discohook.app/?data=... または discohook.app/?share=...）を貼り付けてください。",
+    "tabEmbeds": "埋め込み"
+  },
+  "EmbedsPage": {
+    "title": "埋め込み",
+    "description": "チケットパネルとボタン用のDiscord埋め込みテンプレートを作成・管理します。",
+    "nameHint": "埋め込みに固有の識別子を付けてください。内容は後から変更できます。"
+  },
+  "EmbedEditor": {
+    "importSection": "Discohookからインポート",
+    "addMessage": "メッセージを追加",
+    "addMessageDialogTitle": "メッセージを追加",
+    "addMessageDialogDescription": "メッセージ形式を選択してください。",
+    "addMessageClassicTitle": "クラシック",
+    "addMessageClassicDescription": "シンプルで確実な、テキストと埋め込みの形式です。迷った場合はこちらを選択してください。",
+    "addMessageV2Title": "コンポーネントv2",
+    "addMessageV2Description": "ボタン、選択メニュー、セクションなどを使った高度なレイアウトです。複雑な設定に適しています。",
+    "betaTag": "ベータ",
+    "importExport": "インポートとエクスポート",
+    "importExportDescription": "Discohookから埋め込みをインポートするか、現在の埋め込みをDiscohookへエクスポートします。",
+    "importFromDiscohook": "Discohookからインポート",
+    "copyDiscohookUrl": "DiscohookのURLをコピー",
+    "openInDiscohook": "Discohookで開く",
+    "content": "内容",
+    "contentPlaceholder": "埋め込みの上に表示するメッセージ...",
+    "profileSection": "プロフィール",
+    "profileName": "名前",
+    "profileAvatarUrl": "アバターURL",
+    "profileUnsupportedWarning": "警告：現在、ボットはこのプロフィールの更新に対応していません。",
+    "import": "インポート",
+    "importError": "DiscohookのURLが無効です。DiscohookページのURLを貼り付けてください。",
+    "importMultipleMessagesWarning": "このリンクには複数のメッセージが含まれています。ボットは埋め込み1件につき1メッセージのみ対応するため、最初のメッセージだけをインポートしました。",
+    "colorSection": "色",
+    "authorSection": "作成者",
+    "authorName": "名前",
+    "authorIconUrl": "アイコンURL",
+    "authorUrl": "作成者URL",
+    "bodySection": "本文",
+    "title": "タイトル",
+    "titleUrl": "タイトルURL",
+    "sidebarColor": "サイドバーの色",
+    "description": "説明",
+    "descriptionPlaceholder": "埋め込みの説明...",
+    "fieldsSection": "フィールド",
+    "addField": "フィールドを追加",
+    "field": "フィールド",
+    "fieldName": "名前",
+    "fieldValue": "値",
+    "fieldInline": "インライン",
+    "imagesSection": "画像",
+    "thumbnailUrl": "サムネイルURL",
+    "imageUrl": "画像URL",
+    "footerSection": "フッター",
+    "footerText": "フッターテキスト",
+    "footerIconUrl": "フッターアイコンURL",
+    "timestamp": "タイムスタンプを含める",
+    "preview": "プレビュー",
+    "previewEmpty": "フィールドを入力するとプレビューが表示されます",
+    "modeToggleV1": "クラシック (V1)",
+    "modeToggleV2": "コンポーネント (V2)",
+    "componentsSection": "コンポーネント",
+    "addComponent": "コンポーネントを追加",
+    "containerLabel": "コンテナ",
+    "textDisplayLabel": "テキスト表示",
+    "separatorLabel": "区切り",
+    "mediaGalleryLabel": "メディアギャラリー",
+    "sectionLabel": "セクション",
+    "dividerLine": "区切り線を表示",
+    "spacing": "間隔",
+    "spacingSmall": "小",
+    "spacingLarge": "大",
+    "imageDescription": "代替テキスト",
+    "imageSpoiler": "スポイラー",
+    "addImage": "画像を追加",
+    "addTextBlock": "テキストブロックを追加",
+    "accessory": "アクセサリ",
+    "accessoryNone": "なし",
+    "accessoryThumbnail": "サムネイル",
+    "accessoryButton": "ボタン",
+    "thumbnailAlt": "サムネイルの代替テキスト",
+    "accentColor": "アクセントカラー",
+    "addContainer": "子コンポーネントを追加",
+    "containerSpoiler": "スポイラーコンテナ",
+    "stringSelectLabel": "文字列選択",
+    "userSelectLabel": "ユーザー選択",
+    "roleSelectLabel": "ロール選択",
+    "mentionableSelectLabel": "メンション対象選択",
+    "channelSelectLabel": "チャンネル選択",
+    "fileLabel": "ファイル",
+    "fileUrl": "ファイルURL",
+    "fileUploadButton": "アップロード",
+    "fileSpoiler": "スポイラー",
+    "selectCustomId": "カスタムID",
+    "selectPlaceholder": "プレースホルダーテキスト",
+    "selectMinValues": "最小選択数",
+    "selectMaxValues": "最大選択数",
+    "selectOptions": "オプション",
+    "selectOption": "選択肢",
+    "selectOptionLabel": "ラベル",
+    "selectOptionValue": "値",
+    "selectOptionDescription": "説明",
+    "selectOptionDefault": "既定で選択",
+    "addSelectOption": "選択肢を追加",
+    "selectDisabled": "無効",
+    "actionRowMode": "行の種類",
+    "actionRowModeButtons": "ボタン",
+    "actionRowLabel": "アクション行",
+    "addButton": "ボタンを追加",
+    "buttonLabel": "ラベル",
+    "buttonStyle": "スタイル",
+    "buttonStylePrimary": "プライマリ",
+    "buttonStyleSecondary": "セカンダリ",
+    "buttonStyleSuccess": "成功",
+    "buttonStyleDanger": "危険",
+    "buttonStyleLink": "リンク",
+    "tabMentions": "メンション",
+    "tabTime": "時刻",
+    "tabEmojis": "絵文字",
+    "dateLabel": "日付",
+    "timeLabel": "時刻",
+    "mentionsChannels": "チャンネル",
+    "mentionsSpecial": "特殊",
+    "mentionsChannelList": "すべてのチャンネル",
+    "mentionsRoles": "ロール",
+    "mentionsServerGuide": "サーバーガイド",
+    "mentionsBrowseChannels": "チャンネルを参照",
+    "mentionsChannelsAndRoles": "チャンネルとロール",
+    "mentionsNoChannels": "検索に一致するチャンネルがありません。",
+    "mentionsNoRoles": "検索に一致するロールがありません。",
+    "styleLabel": "スタイル",
+    "timeRelativeNow": "0秒前",
+    "emojiSearchPlaceholder": "絵文字を検索",
+    "emojiToneLabel": "絵文字の肌色",
+    "emojiCategory": {
+      "people": "人物",
+      "nature": "自然",
+      "food": "食べ物",
+      "activities": "アクティビティ",
+      "travel": "旅行",
+      "objects": "物",
+      "symbols": "記号",
+      "flags": "旗"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "無効",
+    "unknownComponent": "不明なコンポーネント",
+    "unknownComponentHint": "この種類のコンポーネントはここでは編集できませんが、保存時に保持されます。"
+  },
+  "PanelsPage": {
+    "title": "パネル",
+    "description": "サーバーに投稿する対話型メンバーパネルを設定します。メンバーはワンクリックでアカウント連携やロール更新などを実行できます。",
+    "saved": "パネル設定を保存しました。",
+    "embedSection": "埋め込み",
+    "embedHint": "ボタンの上に表示する任意の埋め込みです。",
+    "embedLabel": "埋め込み",
+    "noEmbed": "埋め込みなし（ボタンのみ）",
+    "buttonsSection": "ボタン",
+    "buttonsHint": "表示するアクションボタンを選択します。選択順に表示されます。",
+    "colorSection": "ボタンの色",
+    "colorHint": "すべてのボタンに適用されます。",
+    "welcomeSection": "ウェルカムチャンネル",
+    "welcomeHint": "設定すると、新しいメンバーの参加時にパネルが自動投稿されます。",
+    "welcomeChannel": "チャンネル",
+    "welcomeChannelPlaceholder": "チャンネルを選択...",
+    "editPanelButton": "パネルを編集",
+    "editDialogTitle": "パネルを編集",
+    "editDialogDescription": "保存前にライブプレビューを確認しながら、埋め込み、ボタン、ボタンの色を更新します。",
+    "welcomeAutosaveSuccess": "ウェルカムチャンネルを保存しました。",
+    "welcomeAutosaveDisabled": "ウェルカムチャンネルを無効にしました。",
+    "previewSection": "プレビュー",
+    "previewHint": "Discordでのパネル表示です。",
+    "previewNoEmbed": "埋め込みが選択されていません",
+    "previewEmbedNoData": "埋め込みにプレビューデータがありません",
+    "previewNoButtons": "ボタンが選択されていません",
+    "color": {
+      "Blue": "青",
+      "Green": "緑",
+      "Grey": "グレー",
+      "Red": "赤"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "プレゼント企画",
+    "description": "サーバーのプレゼント企画を作成、予約、管理します。",
+    "create": "プレゼント企画を作成",
+    "listTitle": "プレゼント企画ダッシュボード",
+    "listDescription": "予定、開催中、終了済みのプレゼント企画をまとめて確認できます。",
+    "empty": "表示するプレゼント企画はまだありません。",
+    "confirmDeleteTitle": "プレゼント企画を削除",
+    "confirmDelete": "このプレゼント企画を削除しますか？",
+    "discardTitle": "変更を破棄しますか？",
+    "discardDescription": "未保存の変更があります。今閉じると変更内容は失われます。",
+    "discardConfirm": "破棄",
+    "formTabs": {
+      "general": "一般",
+      "messages": "メッセージ",
+      "restrictions": "制限",
+      "advanced": "詳細"
+    },
+    "tabs": {
+      "ongoing": "進行中",
+      "upcoming": "今後の予定",
+      "ended": "終了済み"
+    },
+    "stats": {
+      "total": "プレゼント企画総数",
+      "totalEntries": "総応募数",
+      "ongoing": "開催中",
+      "upcoming": "開催予定",
+      "ended": "終了済み"
+    },
+    "statsDescriptions": {
+      "total": "このサーバーに設定されたすべてのプレゼント企画です。",
+      "totalEntries": "すべてのプレゼント企画の応募数合計です。",
+      "ongoing": "現在開催中で応募を受け付けています。",
+      "upcoming": "今後開始する予定です。",
+      "ended": "すでに終了したプレゼント企画です。"
+    },
+    "emptyTab": {
+      "title": "該当するプレゼント企画はありません",
+      "ongoing": "現在開催中のプレゼント企画はありません。",
+      "upcoming": "予定されているプレゼント企画はありません。作成して開始してください。",
+      "ended": "終了したプレゼント企画はまだありません。"
+    },
+    "status": {
+      "scheduled": "予定",
+      "ongoing": "開催中",
+      "ended": "終了済み"
+    },
+    "table": {
+      "giveaway": "プレゼント企画",
+      "channel": "チャンネル",
+      "entries": "応募",
+      "timing": "日時",
+      "start": "開始",
+      "end": "終了",
+      "winnersHeader": "当選者",
+      "winners": "当選者 {count}名{count, plural, one {} other {}}",
+      "boosters": "ブースター {count}件{count, plural, one {} other {}}",
+      "noChannel": "チャンネルなし",
+      "noChannelHelp": "チャンネルが割り当てられていません。編集して修正してください。",
+      "endsAt": "終了日時",
+      "endedAt": "終了日時",
+      "duplicate": "複製",
+      "showingEnded": "終了済み {total}件中{shown}件を表示",
+      "showMore": "さらに{count}件表示",
+      "pendingUpdate": "更新待ち",
+      "pendingUpdateHelp": "ボットがまもなく適用する保留中の変更があります。",
+      "openInDiscord": "Discordで開く",
+      "viewInDiscord": "Discordで表示",
+      "reroll": "当選者を再抽選",
+      "rerolledCount": "{count, plural, one {#名を再抽選} other {#名を再抽選}}",
+      "viewEntries": "応募者を表示"
+    },
+    "entries": {
+      "description": "参加者と当選確率の一覧です。",
+      "totalEntries": "総応募数",
+      "uniqueUsers": "ユニークユーザー",
+      "noEntrants": "応募はまだありません。",
+      "userId": "ユーザーID",
+      "entryCount": "応募",
+      "winChance": "当選確率"
+    },
+    "dialog": {
+      "createTitle": "プレゼント企画を作成",
+      "editTitle": "プレゼント企画を編集",
+      "description": "プレゼント企画のメッセージ、日時、要件を設定します。",
+      "create": "プレゼント企画を作成",
+      "saveChanges": "変更を保存"
+    },
+    "form": {
+      "prize": "賞品",
+      "prizePlaceholder": "例：ゴールドパス",
+      "channel": "チャンネル",
+      "channelPlaceholder": "チャンネルを選択",
+      "startTime": "開始時刻",
+      "startNow": "すぐに開始",
+      "endTime": "終了時刻",
+      "winners": "当選者数",
+      "mentions": "メンションするロール",
+      "roleRequirements": "必須または除外するロール",
+      "rolesMode": "ロール制限",
+      "rolesModeOptions": {
+        "none": "ロール制限なし",
+        "allow": "これらのロールのみ応募可能",
+        "deny": "これらのロールは応募不可"
+      },
+      "rolesModeHelp": {
+        "none": "すべてのユーザーが応募できます。",
+        "allow": "選択したロールのいずれかを持つユーザーのみ応募できます。",
+        "deny": "選択したロールのいずれかを持つユーザーは応募できません。"
+      },
+      "textAboveEmbed": "埋め込みの上のテキスト",
+      "textEmbedDefault": "下のボタンをクリックして参加してください。",
+      "textInEmbed": "埋め込みの説明",
+      "textEndDefault": "選ばれた皆さん、おめでとうございます！追ってご連絡します。",
+      "textOnEnd": "終了時のメッセージ",
+      "image": "プレゼント企画の画像",
+      "removeImage": "現在の画像を削除",
+      "imagePreviewAlt": "プレゼント企画のプレビュー",
+      "previewGiveaway": "開催中メッセージをプレビュー",
+      "previewEnd": "終了メッセージをプレビュー",
+      "boosters": "応募ブースター",
+      "addBooster": "ブースターを追加",
+      "noBoosters": "ブースターは設定されていません。",
+      "boosterLabel": "ブースター {index}",
+      "boostValue": "倍率",
+      "boostRoles": "ブースト対象ロール",
+      "requirements": "応募要件",
+      "profilePictureRequired": "Discordプロフィール画像を必須にする",
+      "cocAccountRequired": "連携済みClash of Clansアカウントを必須にする"
+    },
+    "validation": {
+      "prizeRequired": "賞品は必須です。",
+      "channelRequired": "チャンネルは必須です。",
+      "startTimeRequired": "すぐに開始しない場合は開始時刻が必須です。",
+      "endTimeRequired": "終了時刻は必須です。",
+      "endAfterStart": "終了時刻は開始時刻より後にしてください。",
+      "imageTooLarge": "画像は8MB未満にしてください。"
+    },
+    "preview": {
+      "liveSummary": "開催状況",
+      "discordPreview": "Discordプレビュー",
+      "giveawayTitle": "プレゼント企画のプレビュー",
+      "giveawayDescription": "開催中のプレゼント企画メッセージはこのように表示されます。",
+      "endTitle": "終了メッセージのプレビュー",
+      "endDescription": "プレゼント企画の終了時に送信されるメッセージです。",
+      "winnerCount": "当選者",
+      "winnerWord": "{count, plural, one {当選者} other {当選者}}",
+      "mentionCount": "メンションするロール",
+      "requirementCount": "要件",
+      "boosterCount": "ブースター",
+      "profileRequired": "プロフィール画像必須",
+      "accountRequired": "連携済みCoCアカウント必須",
+      "rolesAllow": "選択したロールのみに制限",
+      "rolesDeny": "選択したロールを除外",
+      "noChannel": "チャンネルがまだ選択されていません",
+      "noPrize": "賞品がここに表示されます",
+      "noEmbedText": "埋め込みテキストを追加すると本文をプレビューできます。",
+      "noEndText": "当選者向けの終了メッセージを追加してください。",
+      "startsAt": "開始：{date}",
+      "endsAt": "終了：{date}",
+      "endsOn": "{date}に終了",
+      "endsFooter": "終了",
+      "notScheduled": "未設定",
+      "schedule": "スケジュール",
+      "endMessage": "当選メッセージ",
+      "endSummary": "ここで{winners}名の当選者を発表します。{winners, plural, one {} other {}}",
+      "totalParticipants": "参加者合計：{count}",
+      "participate": "参加する",
+      "buttonHint": "Discord投稿の下に表示されるメインアクションボタンです。"
+    },
+    "toast": {
+      "errorTitle": "問題が発生しました",
+      "successTitle": "成功",
+      "loadError": "プレゼント企画の読み込みに失敗しました。",
+      "saveError": "プレゼント企画の保存に失敗しました。",
+      "deleteError": "プレゼント企画の削除に失敗しました。",
+      "created": "プレゼント企画を作成しました。",
+      "updated": "プレゼント企画を更新しました。",
+      "deleted": "プレゼント企画を削除しました。",
+      "rerolled": "当選者を再抽選しました。",
+      "rerollError": "当選者の再抽選に失敗しました。"
+    },
+    "reroll": {
+      "title": "当選者を再抽選",
+      "description": "入れ替える当選者を選択してください。新しい当選者は対象参加者から抽選されます。",
+      "selectWinners": "入れ替える当選者を選択：",
+      "confirm": "{count, plural, one {#名の当選者を再抽選} other {#名の当選者を再抽選}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "ダッシュボード概要",
+    "description": "サーバー統計を確認して設定を始めましょう",
+    "stats": {
+      "linkedPlayers": "連携済みプレイヤー",
+      "linkedPlayersDesc": "このサーバーで連携済みのプレイヤー",
+      "clansConfigured": "設定済みクラン",
+      "clansConfiguredDesc": "このサーバーで追跡中のクラン",
+      "activeRosters": "有効なロスター",
+      "activeRostersDesc": "作成済みの対戦ロスター",
+      "totalAccounts": "リンクされたアカウント",
+      "totalAccountsDesc": "連携済みCoCアカウント総数",
+      "playersTracked": "追跡中のプレイヤー",
+      "globalPlayers": "データベース内のプレイヤー総数",
+      "clansTracked": "追跡中のクラン",
+      "globalClans": "データベース内のクラン総数",
+      "botStatus": "ボットの状態",
+      "online": "オンライン",
+      "offline": "オフライン",
+      "memoryUsage": "メモリ：{used}MB（{percent}%）",
+      "cpuUsage": "CPU：{percent}%"
+    },
+    "botSection": "ボット統計",
+    "clans": {
+      "title": "あなたのクラン",
+      "description": "{count, plural, one {クランを#件設定済み} other {クランを#件設定済み}}",
+      "manage": "クランを管理",
+      "addFirst": "最初のクランを追加"
+    },
+    "quickStart": {
+      "title": "クイックスタート",
+      "description": "ClashKingボットの設定を始めましょう",
+      "step1": {
+        "title": "一般設定を構成",
+        "description": "ニックネーム規則、埋め込みの色、ログチャンネルを設定します"
+      },
+      "step2": {
+        "title": "クランを追加",
+        "description": "Clash of Clansのクランを連携してロールを設定します"
+      },
+      "step3": {
+        "title": "自動ロールを設定",
+        "description": "タウンホールやトロフィーなどに基づく自動ロール付与を設定します"
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "ボット統計",
+    "description": "ClashKingボットのグローバル統計とシステム状態",
+    "about": {
+      "title": "この統計について",
+      "description": "ClashKingボットネットワーク全体のグローバル統計です",
+      "globalStats": "グローバル統計",
+      "globalStatsDesc": "プレイヤー数とクラン数は、ClashKingを利用するすべてのDiscordサーバーで追跡中のデータを表します",
+      "systemHealth": "システム状態",
+      "systemHealthDesc": "CPUとメモリの使用率は、ClashKing APIインフラの現在の負荷を示します"
+    }
+  },
+  "NotFound": {
+    "title": "404 - ページが見つかりません",
+    "description": "お探しのページは存在しません。",
+    "goHome": "ホームへ移動"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discordボット、モバイルアプリ、クランダッシュボード",
+      "description": "ClashKingを使って、Discord、モバイル、Webから対戦、ロスター、アカウント、リマインダー、クラン設定を管理できます。",
+      "openGraphTitle": "ClashKing | クランを運営"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKingナビゲーション",
+      "homeLabel": "ClashKingホーム",
+      "mobileApp": "モバイルアプリ",
+      "discordBot": "Discordボット",
+      "dashboard": "ダッシュボード"
+    },
+    "language": {
+      "label": "言語"
+    },
+    "appearance": {
+      "label": "外観",
+      "day": "昼",
+      "sunset": "夕暮れ"
+    },
+    "actions": {
+      "addToDiscord": "Discordに追加",
+      "addClashKing": "ClashKingを追加",
+      "openDashboard": "ダッシュボードを開く",
+      "joinTestFlight": "TestFlightに参加",
+      "getAndroidApp": "Androidアプリを入手"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "運営する",
+          "second": "あなたの",
+          "third": "クラン"
+        },
+        "accounts": {
+          "first": "管理",
+          "second": "あなたの",
+          "third": "アカウント"
+        },
+        "stats": {
+          "first": "見る",
+          "second": "",
+          "third": "統計"
+        }
+      },
+      "rotatingLabel": "クランを運営し、アカウントを管理し、統計を確認。",
+      "copy": "Discord、モバイル、Webから対戦、ロスター、アカウント、クラン設定を管理。"
+    },
+    "app": {
+      "title": "モバイルアプリ",
+      "intro": "Clashアカウントの頼れる相棒。",
+      "stageLabel": "ClashKingモバイルアプリのクラン、アップグレード、対戦ウィジェット画面",
+      "images": {
+        "clanOverview": "ClashKingモバイルアプリのクラン概要",
+        "upgradeStats": "ClashKingモバイルアプリのグランドウォーデン強化統計",
+        "warWidget": "ClashKingの対戦結果ウィジェット"
+      },
+      "features": {
+        "widgets": {
+          "title": "ウィジェット",
+          "copy": "対戦状況をひと目で確認できます。"
+        },
+        "notifications": {
+          "title": "通知",
+          "copy": "攻撃可能になったときやアップグレード完了時に通知を受け取れます。"
+        },
+        "accounts": {
+          "title": "リンクされたアカウント",
+          "copy": "すべてのClashアカウントをまとめて管理できます。"
+        }
+      }
+    },
+    "bot": {
+      "title": "Discordボット",
+      "intro": "クラン統計とツールをDiscord内で利用できます。",
+      "imageLabel": "Discord内のClashKingクランコマンド",
+      "imageAlt": "DiscordでArcLineクラン統計を表示するClashKingクランコマンド",
+      "features": {
+        "rosters": {
+          "title": "ロスター",
+          "copy": "CWLやイベント用のアカウントを管理します。"
+        },
+        "warTools": {
+          "title": "対戦ツール",
+          "copy": "Discordで攻撃、編成、リマインダーを確認できます。"
+        },
+        "accounts": {
+          "title": "リンクされたアカウント",
+          "copy": "すべてのClashアカウントをまとめて管理できます。"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "ダッシュボード",
+      "intro": "ロスター、リマインダー、サーバー設定を一か所で管理できます。",
+      "imageLabel": "クラン管理ツールを表す大工の小屋",
+      "imageAlt": "レベル8の大工の小屋",
+      "features": {
+        "settings": {
+          "title": "クラン設定",
+          "copy": "クラン、ロール、チャンネルを設定します。"
+        },
+        "rosters": {
+          "title": "ロスター",
+          "copy": "CWLやイベント用のアカウントを管理します。"
+        },
+        "automation": {
+          "title": "自動化",
+          "copy": "リマインダーとサーバータスクをスケジュールします。"
+        }
+      }
+    },
+    "resources": {
+      "title": "ClashKingで構築。",
+      "copy": "コミュニティツール向けのガイド、ソース、構造化データ。",
+      "ariaLabel": "開発者向けリソース",
+      "documentation": "ドキュメント",
+      "publicApi": "公開API"
+    },
+    "footer": {
+      "tagline": "すべての人のためのClash of Clansツール",
+      "docs": "ドキュメント",
+      "privacy": "プライバシーポリシー",
+      "terms": "利用規約",
+      "legal": "このコンテンツはSupercellと提携しておらず、承認、支援、または特別な許可を受けたものではありません。"
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "Discord、モバイル、Web向けのClashKing",
+    "privacy": {
+      "title": "プライバシーポリシー | ClashKing",
+      "openGraphTitle": "ClashKingプライバシーポリシー",
+      "description": "ClashKingがアカウント、ゲーム、アプリのデータを収集、使用、保存、保護する方法です。",
+      "heading": "プライバシーポリシー",
+      "eyebrow": "2026年7月17日施行"
+    },
+    "terms": {
+      "title": "利用規約 | ClashKing",
+      "openGraphTitle": "ClashKing利用規約",
+      "description": "ClashKingのWebサイト、アプリ、サービス、コミュニティツールの利用に適用される規約です。",
+      "heading": "利用規約",
+      "eyebrow": "ClashKingの法的情報"
+    }
+  }
+}

@@ -24,12 +24,6 @@ import {
 } from "@/lib/locale-preference";
 import { useAppLocale } from "@/components/locale-provider";
 
-const BROWSER_LANGUAGE_LABEL_BY_LOCALE: Record<SupportedLocale, string> = {
-  en: "Browser Language",
-  fr: "Langue du navigateur",
-  nl: "Browsertaal",
-};
-
 interface SettingsDropdownProps {
   locale: string;
   align?: "start" | "end";
@@ -66,7 +60,6 @@ export function SettingsDropdown({
   };
 
   const browserLocale = mounted ? resolveBrowserLocale(navigator.languages) : "en";
-  const browserLanguageLabel = BROWSER_LANGUAGE_LABEL_BY_LOCALE[browserLocale];
   const currentLocale = mounted && localeMode === "browser"
     ? browserLocale
     : locale;
@@ -136,7 +129,7 @@ export function SettingsDropdown({
               className={cn(itemClassName, localeMode === "browser" && selectedItemClassName)}
             >
               <Globe className="h-4 w-4" />
-              <span className={textClassName}>{browserLanguageLabel}</span>
+              <span className={textClassName}>{t("browserLanguage")}</span>
             </DropdownMenuItem>
             {LANGUAGE_OPTIONS.map((lang) => (
               <DropdownMenuItem

@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
+import { Globe } from "lucide-react";
+import { useAppLocale } from "@/components/locale-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +16,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   getPublicRoute,
+  isPublicLocale,
   LANGUAGE_OPTIONS,
+  PUBLIC_LANGUAGE_OPTIONS,
   publicPath,
+  resolveBrowserLocale,
+  type LocaleMode,
+  type PublicPagePath,
   type SupportedLocale,
 } from "@/lib/locale-preference";
 
@@ -31,6 +38,20 @@ type LandingTheme = "day" | "sunset";
 
 const LANDING_THEME_COOKIE = "CK_LANDING_THEME";
 
+function getLocaleDestination(
+  locale: SupportedLocale,
+  mode: LocaleMode,
+  page: PublicPagePath,
+): string {
+  if (page !== "/") {
+    return publicPath(isPublicLocale(locale) ? locale : "en", page);
+  }
+  if (mode === "manual" && isPublicLocale(locale)) {
+    return publicPath(locale, page);
+  }
+  return "/";
+}
+
 export function LandingLanguageSwitcher({
   label,
   appearanceLabel,
@@ -39,17 +60,30 @@ export function LandingLanguageSwitcher({
   initialTheme,
 }: Readonly<LandingLanguageSwitcherProps>) {
   const locale = useLocale() as SupportedLocale;
+  const { mode: localeMode, setDashboardLocale } = useAppLocale();
+  const navigationT = useTranslations("Navigation");
   const pathname = usePathname();
   const router = useRouter();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [landingTheme, setLandingTheme] = useState<LandingTheme>(initialTheme);
   const [isPending, startTransition] = useTransition();
   const currentLanguage = LANGUAGE_OPTIONS.find((language) => language.code === locale) ?? LANGUAGE_OPTIONS[0];
+  const currentPage = getPublicRoute(pathname)?.page ?? "/";
+  const availableLanguages = currentPage === "/" ? LANGUAGE_OPTIONS : PUBLIC_LANGUAGE_OPTIONS;
 
-  const switchLocale = (nextLocale: SupportedLocale) => {
-    const page = getPublicRoute(pathname)?.page ?? "/";
+  const switchLocale = (nextLocale: SupportedLocale, nextMode: LocaleMode) => {
     const hash = globalThis.location.hash;
-    startTransition(() => router.push(`${publicPath(nextLocale, page)}${hash}`));
+    const destination = getLocaleDestination(nextLocale, nextMode, currentPage);
+    const destinationWithHash = `${destination}${currentPage === "/" ? hash : ""}`;
+
+    startTransition(() => {
+      setDashboardLocale(nextLocale, nextMode);
+      if (destination !== pathname) router.push(destinationWithHash);
+    });
+  };
+
+  const useBrowserLanguage = () => {
+    switchLocale(resolveBrowserLocale(navigator.languages), "browser");
   };
 
   const switchLandingTheme = (nextTheme: LandingTheme) => {
@@ -80,12 +114,22 @@ export function LandingLanguageSwitcher({
         className="cs-language-menu"
         data-landing-theme={landingTheme}
       >
-        {LANGUAGE_OPTIONS.map((language) => (
+        <DropdownMenuItem
+          className="cs-language-option"
+          aria-current={localeMode === "browser" ? "true" : undefined}
+          onClick={useBrowserLanguage}
+        >
+          <Globe className="cs-language-auto-icon" aria-hidden="true" />
+          <span>{navigationT("browserLanguage")}</span>
+          <span className="cs-language-code">AUTO</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="cs-language-separator" />
+        {availableLanguages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             className="cs-language-option"
-            aria-current={locale === language.code ? "true" : undefined}
-            onClick={() => switchLocale(language.code)}
+            aria-current={localeMode === "manual" && locale === language.code ? "true" : undefined}
+            onClick={() => switchLocale(language.code, "manual")}
           >
             <span className="cs-language-flag">
               <Image

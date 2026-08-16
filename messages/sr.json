@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Učitava...",
+    "save": "Sačuvaj",
+    "cancel": "Otkaži",
+    "delete": "Obriši",
+    "edit": "Izmeni",
+    "search": "Pretraži",
+    "filter": "Filteri",
+    "add": "Dodaj",
+    "remove": "Ukloni",
+    "refresh": "Osveži",
+    "close": "Zatvori",
+    "openMenu": "Otvori meni",
+    "submit": "Pošalji",
+    "back": "Nazad",
+    "next": "Sledeće",
+    "previous": "Prethodno",
+    "poweredBy": "Pokreće",
+    "noData": "Nema dostupnih podataka",
+    "noChannelFound": "Kanal nije pronađen.",
+    "searchChannels": "Pretraži kanale...",
+    "searchClans": "Pretraži klanove...",
+    "noClanFound": "Klan nije pronađen.",
+    "searchCategories": "Pretraži kategorije...",
+    "noRoleFound": "Uloga nije pronađena.",
+    "searchRoles": "Pretraži uloge...",
+    "addRole": "Dodaj ulogu...",
+    "error": "Došlo je do greške",
+    "success": "Uspeh",
+    "actions": "Radnje",
+    "details": "Detalji",
+    "view": "Prikaži",
+    "unknown": "Nepoznato",
+    "confirm": "Potvrdi",
+    "settings": "Podešavanja",
+    "status": "Status",
+    "retry": "Pokušaj ponovo",
+    "disabled": "Onemogućeno",
+    "name": "Ime",
+    "description": "Opis",
+    "createdAt": "Napravljeno",
+    "updatedAt": "Ažurirano",
+    "dashboard": "Kontrolna tabla",
+    "loadError": "Učitavanje podataka nije uspelo.",
+    "tryAgain": "Pokušaj ponovo",
+    "create": "Napravi",
+    "viewClashProfile": "Prikaži Clash profil",
+    "openInGame": "Otvori u igri",
+    "openChannelInDiscord": "Otvori ovaj kanal u Discordu",
+    "playerProfile": {
+      "clan": "Klan",
+      "townHallLevel": "Nivo gradske kuće",
+      "trophies": "Trofeji",
+      "warPreference": "Izbor za rat",
+      "warPreferenceIn": "Učestvuje",
+      "warPreferenceOut": "Ne učestvuje",
+      "signupGroup": "Grupa za prijavu",
+      "heroLevels": "Nivoi heroja",
+      "hitrate30d": "Uspešnost u poslednjih 30 dana"
+    }
+  },
+  "Navigation": {
+    "features": "Funkcije",
+    "openSource": "Otvoreni kod",
+    "help": "Treba vam pomoć?",
+    "support": "Podržite nas",
+    "commands": "Komande",
+    "premium": "Premijum",
+    "documentation": "Dokumentacija",
+    "loginWithDiscord": "Prijavi se putem Discorda",
+    "addToDiscord": "Dodaj u Discord",
+    "openDashboard": "Otvori kontrolnu tablu",
+    "dashboardSettings": "Podešavanja kontrolne table",
+    "logout": "Odjavi se",
+    "settings": "Podešavanja",
+    "theme": "Tema",
+    "systemTheme": "Prati sistem",
+    "lightTheme": "Svetla tema",
+    "darkTheme": "Tamna tema",
+    "language": "Jezik",
+    "browserLanguage": "Jezik pregledača"
+  },
+  "HomePage": {
+    "badge": "Više od {serverCount} servera već koristi ClashKing",
+    "title": "Najmoćniji",
+    "titleHighlight": "Clash of Clans bot",
+    "subtitle": "Automatizujte upravljanje klanom, pratite statistiku igrača, upravljajte ratovima i održavajte zajednicu aktivnom.",
+    "cta": {
+      "heading": "Spremni da preobrazite svoj klan?",
+      "description": "Pridružite se više od {serverCount} Discord servera koji koriste ClashKing da unaprede svoju Clash of Clans zajednicu. Podešavanje traje samo dva minuta.",
+      "button": "Dodaj ClashKing u Discord",
+      "trustBadge": "Zauvek besplatno • Kreditna kartica nije potrebna • Više od {serverCount} servera",
+      "addToDiscord": "Dodaj u Discord",
+      "openDashboard": "Otvori kontrolnu tablu"
+    },
+    "stats": {
+      "servers": "Discord serveri",
+      "users": "Aktivni korisnici",
+      "clans": "Praćeni klanovi"
+    },
+    "features": {
+      "title": "Sve što vam treba za upravljanje klanom",
+      "subtitle": "Moćne funkcije napravljene posebno za Clash of Clans zajednice",
+      "autoRoles": {
+        "title": "Automatsko upravljanje ulogama",
+        "description": "Automatski dodeljujte uloge na osnovu statusa igrača, položaja u klanu i dostignuća. Lako održavajte server urednim."
+      },
+      "playerStats": {
+        "title": "Statistika igrača",
+        "description": "Pratite detaljnu statistiku igrača, grafikone napretka i istoriju napada. Pogledajte ko napreduje, a kome treba pomoć."
+      },
+      "leaderboards": {
+        "title": "Rang-liste",
+        "description": "Napravite takmičarske rang-liste za donacije, trofeje, ratne zvezde i prilagođene pokazatelje."
+      },
+      "warTracking": {
+        "title": "Praćenje ratova",
+        "description": "Pratite ratne sastave i napade uživo i pregledajte analitiku nakon rata."
+      },
+      "smartReminders": {
+        "title": "Pametni podsetnici",
+        "description": "Automatski podsetnici za Klanske igre, ratne napade, Ligu klanskih ratova i prilagođene događaje drže sve obaveštenim."
+      },
+      "customization": {
+        "title": "Potpuno prilagođavanje",
+        "description": "Prilagodite komande, boje ugrađenih poruka, nadimke i dozvole. Učinite ClashKing svojim."
+      },
+      "familyManagement": {
+        "title": "Upravljanje porodicom klanova",
+        "description": "Upravljajte većim brojem klanova kao porodicom uz zajedničku statistiku, rang-liste i uloge."
+      },
+      "analytics": {
+        "title": "Napredna analitika",
+        "description": "Detaljan uvid u učinak klana, obrasce aktivnosti igrača i trendove rasta omogućava odluke zasnovane na podacima."
+      },
+      "performance": {
+        "title": "Munjevito brzo",
+        "description": "Napravljeno za brzinu uz trenutne odgovore na komande i ažuriranja uživo, bez kašnjenja."
+      },
+      "security": {
+        "title": "Bezbedno i pouzdano",
+        "description": "Dostupnost od 99,9%, šifrovani podaci i redovne rezervne kopije čuvaju podatke vašeg klana."
+      }
+    },
+    "footer": {
+      "tagline": "Najmoćniji Clash of Clans bot za Discord zajednice.",
+      "about": {
+        "title": "O nama",
+        "features": "Funkcije",
+        "help": "Treba vam pomoć?",
+        "openSource": "Otvoreni kod",
+        "support": "Podržite nas"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Kontrolna tabla",
+        "inviteBot": "Pozovi bota"
+      },
+      "resources": {
+        "title": "Resursi",
+        "documentation": "Dokumentacija",
+        "quickStart": "Vodič za brzi početak",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Zajednica",
+        "discord": "Discord server",
+        "twitter": "X (Twitter)",
+        "reportBug": "Prijavi grešku",
+        "requestFeature": "Predloži funkciju"
+      },
+      "legal": {
+        "copyright": "ClashKing. Sva prava zadržana.",
+        "privacy": "Politika privatnosti",
+        "terms": "Uslovi korišćenja"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Nije na serveru",
+    "unknownUser": "Nepoznat korisnik",
+    "notLinked": "Nije povezano",
+    "status": {
+      "onServer": "Na serveru",
+      "notOnServer": "Nije na serveru"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "Prikaži Discord profil",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Pregled",
+      "description": "Početna stranica kontrolne table"
+    },
+    "general": {
+      "name": "Opšta podešavanja",
+      "description": "Konfiguracija servera"
+    },
+    "dashboardAccess": {
+      "name": "Pristup kontrolnoj tabli",
+      "description": "Delegiraj odeljke kontrolne table"
+    },
+    "familySettings": {
+      "name": "Podešavanja porodice",
+      "description": "Porodične uloge i nadimci"
+    },
+    "clans": {
+      "name": "Klanovi",
+      "description": "Upravljajte klanovima"
+    },
+    "logs": {
+      "name": "Evidencije",
+      "description": "Webhook konfiguracija"
+    },
+    "roles": {
+      "name": "Uloge",
+      "description": "Automatizacija uloga"
+    },
+    "reminders": {
+      "name": "Podsetnici",
+      "description": "Sve vrste podsetnika"
+    },
+    "rosters": {
+      "name": "Sastavi",
+      "description": "Upravljanje sastavima"
+    },
+    "bases": {
+      "name": "Baze",
+      "description": "Biblioteka rasporeda i interakcije"
+    },
+    "autoboards": {
+      "name": "Automatske table",
+      "description": "Automatske rang-liste"
+    },
+    "giveaways": {
+      "name": "Nagradne igre",
+      "description": "Upravljajte nagradnim igrama"
+    },
+    "panels": {
+      "name": "Paneli",
+      "description": "Interaktivni paneli članova sa dugmadima"
+    },
+    "tickets": {
+      "name": "Tiketi",
+      "description": "Tiketi za regrutovanje i podršku"
+    },
+    "embeds": {
+      "name": "Ugrađene poruke",
+      "description": "Šabloni Discord ugrađenih poruka"
+    },
+    "links": {
+      "name": "Veze",
+      "description": "Povezivanje igrača i Discorda"
+    },
+    "bans": {
+      "name": "Zabrane i opomene",
+      "description": "Alati za moderaciju"
+    },
+    "wars": {
+      "name": "Ratovi",
+      "description": "Ratna statistika"
+    },
+    "leaderboards": {
+      "name": "Rang-liste",
+      "description": "Globalni plasman"
+    },
+    "sections": {
+      "configuration": "Konfiguracija",
+      "clanManagement": "Upravljanje klanom",
+      "playerManagement": "Upravljanje igračima",
+      "automation": "Automatizacija",
+      "statistics": "Statistika"
+    },
+    "switchServer": "Promeni server",
+    "goHome": "Početna stranica"
+  },
+  "BasesPage": {
+    "eyebrow": "Upravljanje klanom",
+    "title": "Baze",
+    "description": "Pregledajte deljene rasporede, istoriju interakcija i izvorne Discord poruke.",
+    "refresh": "Osveži",
+    "create": "Dodaj bazu",
+    "retry": "Pokušaj ponovo",
+    "dismiss": "Zatvori",
+    "cancel": "Otkaži",
+    "previous": "Prethodno",
+    "next": "Sledeće",
+    "pagination": "Stranica {page} od {total}",
+    "imageAlt": "Slika rasporeda baze {index}",
+    "noDescription": "Opis nije naveden.",
+    "openLayout": "Otvori raspored",
+    "openMessage": "Discord poruka",
+    "summary": {
+      "total": "Ukupno baza",
+      "page": "Trenutna stranica",
+      "visible": "Vidljivo"
+    },
+    "counts": {
+      "downloads": "Jedinstvena preuzimanja",
+      "upvotes": "Pozitivni glasovi",
+      "downvotes": "Negativni glasovi"
+    },
+    "history": {
+      "title": "Istorija preuzimanja ({count})",
+      "empty": "Nijedan ID korisnika koji je preuzeo raspored nije zabeležen.",
+      "resolve": "Pronađi profil"
+    },
+    "delete": {
+      "action": "Obriši",
+      "confirmTitle": "Obrisati ovu bazu?",
+      "confirmDescription": "Ovo trajno uklanja zapis iz baze podataka nakon pokušaja brisanja izvorne Discord poruke. Bazu nije moguće vratiti.",
+      "confirmAction": "Obriši bazu",
+      "deleting": "Brisanje…",
+      "baseId": "ID baze",
+      "discordSource": "Discord izvor",
+      "successTitle": "Baza je obrisana",
+      "successDeleted": "Zapis iz baze podataka i Discord poruka su obrisani.",
+      "successAlreadyMissing": "Zapis iz baze podataka je obrisan; Discord poruka je već nedostajala.",
+      "cleanupFailedTitle": "Baza je zadržana; čišćenje Discorda nije uspelo",
+      "cleanupCompleteTitle": "Čišćenje Discorda završeno; baza je zadržana",
+      "failureTitle": "Baza nije obrisana",
+      "failureFallback": "Zahtev za brisanje nije uspeo.",
+      "retryable": "Bezbedno je pokušati ponovo",
+      "notRetryable": "Nije moguće ponoviti",
+      "cleanup": {
+        "deleted": "Discord poruka je obrisana",
+        "alreadyMissing": "Discord poruka već nedostaje",
+        "failed": "Čišćenje Discorda nije uspelo"
+      }
+    },
+    "empty": {
+      "title": "Još nema deljenih baza",
+      "description": "Dodajte prvi raspored tako što ćete izabrati Discord kanal i Clash of Clans vezu rasporeda."
+    },
+    "form": {
+      "title": "Dodaj bazu",
+      "description": "Baze se ne mogu menjati nakon pravljenja. Izaberite gde ClashKing treba da pošalje Discord poruku i potvrdite vezu rasporeda.",
+      "channel": "Discord kanal",
+      "channelPlaceholder": "Izaberi kanal",
+      "channelSearch": "Pretraži kanale…",
+      "channelsLoading": "Učitavanje kanala…",
+      "baseLink": "Veza rasporeda",
+      "descriptionLabel": "Opis",
+      "images": "Slike",
+      "chooseImages": "Izaberi slike rasporeda",
+      "imageLimit": "Najviše četiri slike; otpremanje se završava pre pravljenja baze.",
+      "submit": "Napravi bazu",
+      "creating": "Otpremanje i pravljenje…",
+      "createRejectedTitle": "Baza nije napravljena",
+      "createCleanupCompleteTitle": "Čišćenje Discorda završeno; baza nije napravljena",
+      "createCleanupFailedTitle": "Discord poruka može ostati; baza nije napravljena",
+      "databaseNotInserted": "Zapis nije unet u bazu podataka",
+      "discordMessageCreated": "Discord poruka je napravljena",
+      "discordMessageId": "ID Discord poruke",
+      "retryable": "Bezbedno je pokušati ponovo",
+      "notRetryable": "Ne pokušavaj automatski ponovo",
+      "cleanup": {
+        "notNeeded": "Čišćenje Discorda nije potrebno",
+        "deleted": "Discord poruka je obrisana",
+        "alreadyMissing": "Discord poruka već nedostaje",
+        "failed": "Čišćenje Discorda nije uspelo"
+      }
+    },
+    "errors": {
+      "title": "Baze nisu dostupne",
+      "load": "Učitavanje baza nije uspelo.",
+      "create": "Pravljenje baze nije uspelo.",
+      "upload": "Otpremanje slike nije uspelo.",
+      "downloader": "Pronalaženje ovog korisnika nije uspelo.",
+      "channels": "Učitavanje Discord kanala nije uspelo.",
+      "channelRequired": "Izaberite Discord kanal.",
+      "linkRequired": "Veza rasporeda je obavezna.",
+      "descriptionTooLong": "Opis može imati najviše 1.000 znakova.",
+      "tooManyImages": "Izaberite najviše četiri slike."
+    }
+  },
+  "BansPage": {
+    "title": "Moderacija",
+    "description": "Upravljajte zabranama i opomenama igrača",
+    "viewClashProfile": "Prikaži Clash profil",
+    "tabs": {
+      "bans": "Zabrane",
+      "strikes": "Opomene"
+    },
+    "bans": {
+      "title": "Zabranjeni igrači",
+      "noBans": "Nema zabranjenih igrača",
+      "addBan": "Dodaj zabranu",
+      "removeBan": "Ukloni zabranu",
+      "confirmRemove": "Da li sigurno želite da uklonite ovu zabranu?",
+      "playerTag": "Oznaka igrača",
+      "playerName": "Ime igrača",
+      "reason": "Razlog",
+      "bannedAt": "Vreme zabrane",
+      "search": "Pretraži po imenu ili oznaci...",
+      "howItWorks": {
+        "title": "Kako zabrane funkcionišu",
+        "description": "Ako se zabranjeni igrač pridruži nekom od vaših klanova, upozorenje će biti poslato na kanal podešen na <clansTab>kartici klanova</clansTab>. Bot ne može sprečiti igrače da se pridruže, već samo poslati upozorenje."
+      },
+      "stats": {
+        "total": "Ukupno zabrana",
+        "recent": "Nedavne zabrane (7 dana)",
+        "commonReason": "Najčešći razlog",
+        "activeOnServer": "Aktivne zabrane na serveru",
+        "last7Days": "U poslednjih 7 dana",
+        "commonReasonValue": "Uznemiravanje i nepristojno ponašanje",
+        "noBans": "Još nema zabrana",
+        "percentOfAll": "{percent}% svih zabrana",
+        "percentOfAllLabel": "od svih zabrana"
+      },
+      "list": {
+        "title": "Zabranjeni igrači",
+        "count": "{count, plural, one {# igrač je zabranjen} few {# igrača su zabranjena} other {# igrača je zabranjeno}}",
+        "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
+        "noBansFound": "Zabrane nisu pronađene",
+        "noBans": "Nema zabranjenih igrača",
+        "adjustSearch": "Pokušajte da promenite pretragu",
+        "getStarted": "Dodajte zabranu da biste počeli sa moderacijom igrača"
+      },
+      "table": {
+        "player": "Igrač",
+        "reason": "Razlog",
+        "bannedBy": "Zabranu je dao",
+        "date": "Datum",
+        "daysAgo": "pre {days} dana",
+        "noReason": "Razlog nije naveden"
+      },
+      "addDialog": {
+        "title": "Zabrani igrača",
+        "description": "Dodajte igrača na listu zabrana. Dobićete upozorenje ako se pridruži bilo kom klanu na ovom serveru.",
+        "playerTagLabel": "Oznaka igrača",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Ime igrača (opciono)",
+        "playerNamePlaceholder": "Unesite ime igrača",
+        "reasonLabel": "Razlog zabrane",
+        "reasonPlaceholder": "Objasnite zašto se ovom igraču daje zabrana...",
+        "submit": "Zabrani igrača"
+      },
+      "bestPractices": {
+        "title": "Najbolje prakse",
+        "document": {
+          "title": "Detaljno dokumentujte:",
+          "desc": "Uvek navedite detaljan razlog kako bi drugi moderatori razumeli kontekst zabrane."
+        },
+        "review": {
+          "title": "Redovno pregledajte:",
+          "desc": "Povremeno pregledajte listu zabrana kako biste proverili da li su i dalje potrebne i opravdane."
+        },
+        "consistent": {
+          "title": "Budite dosledni:",
+          "desc": "Primenjujte zabrane pravedno i dosledno na sve igrače da biste održali zdravu zajednicu."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Opomene igrača",
+      "noStrikes": "Opomene nisu pronađene",
+      "addStrike": "Dodaj opomenu",
+      "removeStrike": "Ukloni opomenu",
+      "confirmRemove": "Da li sigurno želite da uklonite ovu opomenu?",
+      "playerTag": "Oznaka igrača",
+      "reason": "Razlog",
+      "weight": "Težina",
+      "rolloverDays": "Dani važenja",
+      "createdAt": "Napravljeno",
+      "search": "Pretraži po oznaci igrača...",
+      "howItWorks": {
+        "title": "Kako opomene funkcionišu",
+        "description": "Opomene se daju igračima zbog kršenja pravila. Svaka ima težinu i može isteći nakon određenog broja dana. Pomažu u praćenju ponašanja pre davanja zabrane."
+      },
+      "stats": {
+        "total": "Ukupno opomena",
+        "recent": "Nedavne opomene (7 dana)",
+        "totalWeight": "Ukupna težina opomena",
+        "activeOnServer": "Aktivne opomene na serveru",
+        "last7Days": "U poslednjih 7 dana",
+        "cumulativeWeight": "Zbirna težina opomena",
+        "commonReason": "Najčešći razlog",
+        "commonReasonValue": "Neželjene poruke"
+      },
+      "list": {
+        "title": "Opomene igrača",
+        "count": "{count, plural, one {Izdana je # opomena} few {Izdane su # opomene} other {Izdano je # opomena}}",
+        "searchPlaceholder": "Pretraži po imenu, oznaci ili razlogu...",
+        "noStrikesFound": "Opomene nisu pronađene",
+        "noStrikes": "Nema izdatih opomena",
+        "adjustSearch": "Pokušajte da promenite pretragu",
+        "getStarted": "Dodajte opomenu da biste počeli da pratite prekršaje igrača",
+        "viewAll": "Sve opomene",
+        "viewGrouped": "Po igraču"
+      },
+      "table": {
+        "player": "Igrač",
+        "reason": "Razlog",
+        "weight": "Težina",
+        "addedBy": "Dodao",
+        "date": "Datum",
+        "expires": "Ističe",
+        "never": "Nikad",
+        "noReason": "Razlog nije naveden",
+        "daysAgo": "pre {days} dana",
+        "totalStrikes": "Ukupno opomena",
+        "totalWeight": "Ukupna težina",
+        "lastStrike": "Poslednja opomena"
+      },
+      "addDialog": {
+        "title": "Dodaj opomenu",
+        "description": "Dajte igraču opomenu. Opomene mogu imati različite težine i datume isteka.",
+        "playerTagLabel": "Oznaka igrača",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Razlog",
+        "reasonPlaceholder": "Objasnite zašto se ova opomena izdaje...",
+        "weightLabel": "Težina opomene",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Ističe za (dana)",
+        "rolloverPlaceholder": "Opciono",
+        "submit": "Dodaj opomenu"
+      },
+      "guidelines": {
+        "title": "Smernice za opomene",
+        "weights": {
+          "title": "Pažljivo koristite težine:",
+          "desc": "Dodelite veću težinu (2–3) ozbiljnim prekršajima, a manju (1) lakšim problemima."
+        },
+        "expiration": {
+          "title": "Podesite datum isteka:",
+          "desc": "Razmotrite datum isteka opomena kako bi igrači imali priliku da vremenom poprave ponašanje."
+        },
+        "patterns": {
+          "title": "Pratite obrasce:",
+          "desc": "Koristite opomene da prepoznate ponavljače pre izdavanja trajne zabrane."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Zabrana je dodata",
+      "banRemoved": "Zabrana je uklonjena",
+      "strikeAdded": "Opomena je dodata",
+      "strikeRemoved": "Opomena je uklonjena",
+      "errorLoadingBans": "Učitavanje zabranjenih igrača nije uspelo",
+      "errorLoadingStrikes": "Učitavanje opomena nije uspelo",
+      "errorAddingBan": "Dodavanje zabrane nije uspelo",
+      "errorAddingStrike": "Dodavanje opomene nije uspelo",
+      "errorRemovingBan": "Uklanjanje zabrane nije uspelo",
+      "errorRemovingStrike": "Uklanjanje opomene nije uspelo"
+    }
+  },
+  "RostersPage": {
+    "title": "Sastavi i postave",
+    "description": "Upravljajte ratnim sastavima, postavama i rasporedom članova",
+    "stats": {
+      "totalRosters": "Ukupno sastava",
+      "totalMembers": "Ukupno članova",
+      "clanRosters": "Klanovski sastavi",
+      "familyRosters": "Porodični sastavi",
+      "members": "Članovi",
+      "avgTh": "Prosečan TH",
+      "avgHitrate": "Prosečna uspešnost",
+      "distribution": "Raspodela",
+      "clan": "Klan",
+      "family": "Porodica",
+      "external": "Spoljni",
+      "thDistribution": "Raspodela gradskih kuća",
+      "capacity": "kapacitet"
+    },
+    "filters": {
+      "search": "Pretraži sastave...",
+      "type": "Vrsta",
+      "all": "Sve",
+      "clan": "Klan",
+      "family": "Porodica",
+      "clear": "Obriši"
+    },
+    "comparisonMode": {
+      "cancel": "Otkaži",
+      "compare": "Uporedi",
+      "compareRosters": "Uporedi sastave",
+      "selectRosters": "Izaberite sastave",
+      "selectRostersDesc": "Izaberite najmanje dva sastava za poređenje",
+      "maxReached": "Dostignut maksimum",
+      "maxReachedDesc": "Možete porediti najviše četiri sastava istovremeno"
+    },
+    "createDialog": {
+      "title": "Napravi novi sastav",
+      "description": "Napravite novi sastav za klan",
+      "aliasLabel": "Naziv sastava",
+      "aliasPlaceholder": "npr. CWL sastav",
+      "typeLabel": "Vrsta sastava",
+      "typeClan": "Klan",
+      "typeFamily": "Porodica",
+      "signupScopeLabel": "Obuhvat prijave",
+      "scopeClanOnly": "Samo klan",
+      "scopeFamilyWide": "Cela porodica",
+      "clanLabel": "Klan",
+      "clanPlaceholder": "Izaberite klan",
+      "descriptionLabel": "Opis (opciono)",
+      "descriptionPlaceholder": "Opis sastava...",
+      "cancel": "Otkaži",
+      "creating": "Pravljenje...",
+      "create": "Napravi sastav"
+    },
+    "editDialog": {
+      "title": "Izmeni sastav",
+      "description": "Izmenite podešavanja i konfiguraciju sastava",
+      "aliasLabel": "Naziv sastava",
+      "descriptionLabel": "Opis",
+      "descriptionPlaceholder": "Opis sastava...",
+      "minThLabel": "Najniži nivo gradske kuće",
+      "minThPlaceholder": "npr. 13",
+      "maxThLabel": "Najviši nivo gradske kuće",
+      "maxThPlaceholder": "npr. 16",
+      "rosterSizeLabel": "Veličina sastava",
+      "rosterSizePlaceholder": "npr. 50",
+      "columnsLabel": "Prikazane kolone",
+      "columnsPlaceholder": "Izaberite kolone za prikaz",
+      "sortLabel": "Redosled sortiranja",
+      "sortPlaceholder": "Izaberite polja za sortiranje",
+      "cancel": "Otkaži",
+      "saving": "Čuvanje...",
+      "save": "Sačuvaj izmene"
+    },
+    "addMembersDialog": {
+      "title": "Dodaj članove u sastav",
+      "description": "Izaberite članove klana ili unesite oznake igrača",
+      "bulkTagsLabel": "Grupno dodavanje oznakama",
+      "bulkTagsPlaceholder": "Unesite oznake igrača, jednu po redu ili odvojene zarezima",
+      "searchLabel": "Pretraži članove",
+      "searchPlaceholder": "Pretraži po imenu ili oznaci...",
+      "selectFromClan": "Izaberite među članovima klana",
+      "selectedCount": "Izabrano",
+      "noMembers": "Nema dostupnih članova",
+      "noMembersSelected": "Nijedan član nije izabran",
+      "noMembersSelectedDesc": "Izaberite članove ili unesite oznake igrača.",
+      "cancel": "Otkaži",
+      "adding": "Dodavanje...",
+      "add": "Dodaj članove"
+    },
+    "detailsDialog": {
+      "title": "Detalji sastava",
+      "edit": "Izmeni",
+      "refresh": "Osveži",
+      "refreshing": "Osvežavanje...",
+      "delete": "Obriši",
+      "deleting": "Brisanje...",
+      "addMembers": "Dodaj članove",
+      "close": "Zatvori",
+      "noMembers": "Nema članova u ovom sastavu",
+      "noMembersDesc": "Dodajte članove da biste počeli",
+      "memberCount": "Članovi",
+      "thRestriction": "Nivo TH-a",
+      "avgTh": "Prosečan TH",
+      "avgHitrate": "Prosečna uspešnost",
+      "clan": "Klan",
+      "family": "Porodica",
+      "external": "Spoljni",
+      "substitute": "ZAMENA",
+      "removeMember": "Ukloni"
+    },
+    "rosterCard": {
+      "members": "Članovi",
+      "thLevel": "Nivo TH-a",
+      "avgTh": "Prosečan TH",
+      "avgHitrate": "Prosečna uspešnost",
+      "clan": "Klan",
+      "family": "Porodica",
+      "external": "Spoljni",
+      "noRestriction": "Bez ograničenja",
+      "view": "Prikaži",
+      "edit": "Izmeni",
+      "delete": "Obriši",
+      "noGroup": "Bez grupe",
+      "moveToGroup": "Premesti u grupu",
+      "clone": "Kloniraj",
+      "allRosters": "Svi sastavi",
+      "manageRosters": "Upravljajte ratnim sastavima i postavama"
+    },
+    "memberColumns": {
+      "name": "Ime",
+      "townhall": "Gradska kuća",
+      "tag": "Oznaka",
+      "hitrate": "Uspešnost",
+      "current_clan": "Trenutni klan",
+      "current_clan_tag": "Oznaka klana",
+      "discord": "Discord",
+      "hero_lvs": "Heroji",
+      "war_pref": "Izbor za rat",
+      "trophies": "Trofeji",
+      "signup_group": "Grupa za prijavu"
+    },
+    "columns": {
+      "configure": "Kolone",
+      "title": "Podesi kolone",
+      "description": "Izaberite kolone za prikaz i njihov redosled",
+      "selected": "Izabrane kolone",
+      "available": "Dostupne kolone",
+      "save": "Sačuvaj kolone",
+      "reset": "Vrati kolone"
+    },
+    "sortFields": {
+      "townhall": "Nivo gradske kuće",
+      "name": "Ime",
+      "tag": "Oznaka",
+      "heroLvs": "Heroji",
+      "trophies": "Trofeji",
+      "hitrate": "Uspešnost u poslednjih 30 dana",
+      "currentClanTag": "Oznaka klana",
+      "addedAt": "Dodato"
+    },
+    "thRestrictions": {
+      "only": "Samo TH{th}",
+      "range": "TH{min}–{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1–{th}",
+      "noRestriction": "Bez ograničenja"
+    },
+    "emptyState": {
+      "noRosters": "Još nema napravljenih sastava",
+      "noRostersDesc": "Napravite prvi sastav da biste počeli",
+      "noMatch": "Nijedan sastav ne odgovara filterima",
+      "noMatchDesc": "Pokušajte da promenite pretragu ili filtere"
+    },
+    "toast": {
+      "errorTitle": "Greška",
+      "successTitle": "Uspeh",
+      "errorLoadingRosters": "Učitavanje sastava nije uspelo. Pokušajte ponovo.",
+      "errorLoadingMembers": "Učitavanje članova klana nije uspelo.",
+      "rosterCreated": "Sastav je napravljen!",
+      "errorCreatingRoster": "Pravljenje sastava nije uspelo. Pokušajte ponovo.",
+      "rosterUpdated": "Sastav je ažuriran!",
+      "errorUpdatingRoster": "Ažuriranje sastava nije uspelo. Pokušajte ponovo.",
+      "rosterDeleted": "Sastav je obrisan!",
+      "errorDeletingRoster": "Brisanje sastava nije uspelo. Pokušajte ponovo.",
+      "membersAdded": "U sastav je dodato {count} članova!",
+      "errorAddingMembers": "Dodavanje članova nije uspelo. Pokušajte ponovo.",
+      "memberRemoved": "Član je uklonjen iz sastava!",
+      "errorRemovingMember": "Uklanjanje člana nije uspelo. Pokušajte ponovo.",
+      "substituteMarked": "Član je označen kao zamena!",
+      "substituteUnmarked": "Oznaka zamene je uklonjena sa člana!",
+      "errorUpdatingMember": "Ažuriranje člana nije uspelo. Pokušajte ponovo.",
+      "rosterRefreshed": "Podaci sastava su osveženi!",
+      "errorRefreshingRoster": "Osvežavanje podataka sastava nije uspelo. Pokušajte ponovo.",
+      "memberTransferred": "Član je premešten između sastava!",
+      "errorTransferringMember": "Premeštanje člana nije uspelo. Pokušajte ponovo.",
+      "rosterCloned": "Sastav je kloniran!",
+      "errorCloningRoster": "Kloniranje sastava nije uspelo. Pokušajte ponovo.",
+      "missingMembersAdded": "U sastav je dodato {count} nedostajućih članova!",
+      "errorLoadingMissingMembers": "Učitavanje nedostajućih članova nije uspelo."
+    },
+    "cloneDialog": {
+      "title": "Kloniraj sastav",
+      "description": "Napravite kopiju ovog sastava",
+      "aliasLabel": "Naziv novog sastava",
+      "aliasPlaceholder": "Unesite naziv kloniranog sastava",
+      "copyMembers": "Kopiraj članove u novi sastav",
+      "memberCount": "{count} članova",
+      "originalRoster": "Originalni sastav:",
+      "cancel": "Otkaži",
+      "cloning": "Kloniranje...",
+      "clone": "Kloniraj sastav",
+      "copyMembersHint": "Članovi će biti kopirani iz originalnog sastava"
+    },
+    "missingMembers": {
+      "title": "Nedostajući članovi",
+      "description": "Članovi klana koji nisu registrovani u ovom sastavu",
+      "coverage": "Pokrivenost sastava",
+      "registered": "registrovano",
+      "missing": "nedostaje",
+      "total": "ukupno",
+      "selectAll": "Izaberi sve",
+      "selected": "izabrano",
+      "addSelected": "Dodaj {count} članova",
+      "button": "Nedostajući članovi",
+      "addAll": "Dodaj sve",
+      "adding": "Dodavanje...",
+      "close": "Zatvori",
+      "allCaughtUp": "Sve je ažurno!",
+      "allCaughtUpDesc": "Svi članovi klana su registrovani u ovom sastavu",
+      "clanOnly": "Analiza nedostajućih članova dostupna je samo za klanovske sastave",
+      "error": "Učitavanje nedostajućih članova nije uspelo",
+      "thisRoster": "Ovaj sastav",
+      "wholeGroup": "Cela grupa"
+    },
+    "eventTime": {
+      "label": "Vreme početka događaja",
+      "timezone": "Vaša vremenska zona",
+      "utc": "UTC",
+      "clear": "Obriši"
+    },
+    "bulkValidation": {
+      "valid": "ispravno",
+      "invalid": "neispravno",
+      "invalidTags": "Neispravno"
+    },
+    "memberAutocomplete": {
+      "label": "Ili pretražite članove servera",
+      "placeholder": "Kliknite za pretragu članova...",
+      "searchPlaceholder": "Pretraži po imenu, oznaci ili klanu...",
+      "loading": "Učitavanje članova...",
+      "noResults": "Članovi nisu pronađeni",
+      "groupHeading": "Članovi servera",
+      "selectedLabel": "Izabrani članovi",
+      "membersSelected": "članova izabrano",
+      "selected": "Izabrano",
+      "clanMembersLabel": "Ili izaberite među članovima klana"
+    },
+    "retry": "Pokušaj ponovo",
+    "back": "Nazad",
+    "refresh": "Osveži",
+    "createRoster": "Napravi sastav",
+    "searchPlaceholder": "Pretraži sastave...",
+    "noRosters": "Još nema sastava",
+    "noRostersHint": "Napravite prvi sastav da biste počeli",
+    "noSearchResults": "Sastavi nisu pronađeni",
+    "noSearchResultsHint": "Pokušajte sa drugim pojmom za pretragu",
+    "createFirstRoster": "Napravi prvi sastav",
+    "deleteConfirm": "Da li sigurno želite da obrišete „{name}”?",
+    "deleteSuccess": "Sastav je obrisan",
+    "deleteSuccessDesc": "Sastav \"{name}\" je obrisan",
+    "deleteError": "Brisanje sastava nije uspelo",
+    "createSuccess": "Sastav je napravljen",
+    "createSuccessDesc": "Sastav \"{name}\" je napravljen",
+    "createError": "Pravljenje sastava nije uspelo",
+    "createErrorAlias": "Unesite naziv sastava",
+    "createErrorClan": "Izaberite klan",
+    "refreshSuccess": "Podaci sastava su osveženi",
+    "refreshError": "Osvežavanje sastava nije uspelo",
+    "saveSuccess": "Podešavanja su sačuvana",
+    "saveError": "Čuvanje podešavanja nije uspelo",
+    "columnsUpdated": "Kolone su ažurirane",
+    "columnsError": "Ažuriranje kolona nije uspelo",
+    "addMembersSuccess": "Članovi su dodati",
+    "addMembersSuccessDesc": "U sastav je dodato {count} članova",
+    "addMembersError": "Dodavanje članova nije uspelo",
+    "removeMemberSuccess": "Član je uklonjen",
+    "removeMemberError": "Uklanjanje člana nije uspelo",
+    "clearMembers": "Ukloni sve članove",
+    "clearMembersConfirm": "Ukloniti sve članove iz sastava \"{name}\"? Ovu radnju nije moguće poništiti.",
+    "clearMembersSuccess": "Svi članovi su uklonjeni",
+    "clearMembersError": "Uklanjanje svih članova nije uspelo",
+    "automationCreated": "Automatizacija je napravljena",
+    "automationUpdated": "Automatizacija je ažurirana",
+    "automationDeleted": "Automatizacija je obrisana",
+    "automationError": "Greška automatizacije",
+    "groupCreated": "Grupa je napravljena",
+    "groupUpdated": "Grupa je ažurirana",
+    "groupDeleted": "Grupa je obrisana",
+    "groupError": "Čuvanje grupe nije uspelo",
+    "categoryCreated": "Kategorija je napravljena",
+    "categoryUpdated": "Kategorija je ažurirana",
+    "categoryDeleted": "Kategorija je obrisana",
+    "categoryError": "Čuvanje kategorije nije uspelo",
+    "common": {
+      "cancel": "Otkaži",
+      "save": "Sačuvaj",
+      "close": "Zatvori"
+    },
+    "tabs": {
+      "members": "Članovi",
+      "automations": "Automatizacije",
+      "groups": "Grupe",
+      "categories": "Kategorije",
+      "settings": "Podešavanja"
+    },
+    "members": {
+      "count": "članova",
+      "noMembers": "Nema članova u ovom sastavu",
+      "noMembersHint": "Dodajte članove da biste počeli",
+      "actions": "Radnje",
+      "viewList": "Prikaz liste",
+      "viewGrouped": "Prikaži po kategoriji prijave",
+      "unassigned": "Nedodeljeno",
+      "dragHere": "Prevucite članove ovde",
+      "clickToGroup": "Kliknite za prikaz po kategoriji",
+      "apiErrorTooltip": "Podaci nisu mogli da se preuzmu iz API-ja",
+      "staleDataTooltip": "Podaci su možda zastareli, poslednje ažuriranje:",
+      "refresh": "Osveži podatke članova",
+      "alsoIn": "Takođe u",
+      "addCategory": "Dodaj grupu",
+      "removeCategory": "Ukloni grupu"
+    },
+    "addMembers": {
+      "title": "Dodaj članove u sastav",
+      "description": "Izaberite članove iz svojih klanova ili unesite oznake igrača",
+      "bulkTagsLabel": "Oznake igrača (jedna po redu ili odvojene zarezima)",
+      "adding": "Dodavanje...",
+      "submit": "Dodaj članove"
+    },
+    "compare": {
+      "enterMode": "Uporedi",
+      "modeTitle": "Režim poređenja",
+      "modeHint": "Kliknite na sastave da ih izaberete (od 2 do 4 sastava)",
+      "exitMode": "Otkaži",
+      "selected": "izabranih sastava",
+      "button": "Uporedi",
+      "title": "Uporedi sastave",
+      "dragToMove": "Prevucite članove između sastava da ih premestite",
+      "loadError": "Učitavanje sastava nije uspelo",
+      "memberMoved": "Član je premešten",
+      "memberMovedDesc": "{name} je premešten iz {from} u {to}",
+      "moveError": "Premeštanje člana nije uspelo",
+      "selectAtLeast2": "Izaberite najmanje dva sastava za poređenje",
+      "moving": "Premeštanje člana...",
+      "compareGroup": "Uporedi grupu",
+      "dragToMoveCategory": "Prevucite članove između sastava i kategorija",
+      "categoryChanged": "Kategorija je promenjena",
+      "categoryChangedDesc": "{name} je premešten u kategoriju {category}",
+      "uncategorized": "Bez kategorije"
+    },
+    "ungrouped": "Bez grupe",
+    "automations": {
+      "description": "Zakažite automatske radnje za ovaj sastav",
+      "create": "Napravi automatizaciju",
+      "empty": "Nema automatizacija",
+      "emptyHint": "Napravite automatizaciju da biste zakazali radnje",
+      "active": "Aktivan",
+      "inactive": "Neaktivan",
+      "executed": "Izvršeno",
+      "missed": "Propušteno",
+      "lastRun": "Poslednje pokretanje",
+      "enable": "Omogući",
+      "disable": "Onemogući",
+      "createTitle": "Napravi automatizaciju",
+      "editTitle": "Izmeni automatizaciju",
+      "createDesc": "Zakažite automatsku radnju",
+      "actionType": "Vrsta radnje",
+      "offsetFromEvent": "Vreme u odnosu na događaj",
+      "offsetBefore": "Pre događaja",
+      "offsetAfter": "Posle događaja",
+      "offsetUnit_minutes": "minuta",
+      "offsetUnit_hours": "sati",
+      "offsetUnit_days": "dana",
+      "offsetPreview": "Izvršiće se: {date}",
+      "offsetNoEventDate": "Podesite vreme početka događaja da biste videli datum izvršenja",
+      "offsetAtStart": "Na početku događaja",
+      "pingType": "Vrsta podsetnika",
+      "pingType_signup_reminder": "Podsetnik za prijavu",
+      "pingType_missing": "Nedostaje u klanu",
+      "pingType_sub_needed": "Potrebna zamena",
+      "channel": "Discord kanal",
+      "selectChannel": "Izaberi kanal",
+      "channelHint": "Kanal na kom će radnja biti objavljena ili izvršena",
+      "activeLabel": "Aktivan",
+      "target": "Cilj",
+      "targetThisRoster": "Ovaj sastav",
+      "targetGroups": "Grupe",
+      "targetHint": "Primenite automatizaciju samo na ovaj sastav ili na sve sastave u grupi",
+      "group": "Grupa",
+      "groupAutomationHint": "Upravljajte na kartici Grupe",
+      "targetRoster": "Sastav",
+      "targetGroup": "Grupa",
+      "willExecute": "Izvršiće se u zakazano vreme",
+      "paused": "Pauzirano — neće se izvršiti",
+      "actions": {
+        "ping": "Pošalji podsetnik",
+        "post": "Objavi sastav",
+        "openSignup": "Otvori prijave",
+        "closeSignup": "Zatvori prijave",
+        "delete": "Obriši sastav",
+        "clear": "Ukloni sve članove",
+        "archive": "Arhiviraj sastav"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Šalje podsetnik članovima koji se nisu prijavili ili su u pogrešnom klanu",
+        "roster_post": "Objavljuje konačnu listu sastava na izabranom kanalu",
+        "roster_signup": "Otvara prijave kako bi igrači mogli da se prijave",
+        "roster_signup_close": "Zatvara prijave i sprečava nove prijave",
+        "roster_delete": "Trajno briše sastav i sve njegove podatke",
+        "roster_clear": "Uklanja sve članove iz sastava bez njegovog brisanja",
+        "roster_archive": "Arhivira sastav i omogućava samo čitanje"
+      },
+      "infoBox": "Automatizacije se pokreću u odnosu na vreme početka događaja. Podesite pomak (npr. tri dana ranije), a bot će tada automatski izvršiti radnju, uključujući događaje koji se ponavljaju."
+    },
+    "groups": {
+      "title": "Grupe sastava",
+      "description": "Organizujte sastave u grupe radi lakšeg upravljanja",
+      "create": "Nova grupa",
+      "noGroups": "Još nema napravljenih grupa",
+      "rostersCount": "sastava",
+      "createTitle": "Napravi grupu",
+      "editTitle": "Izmeni grupu",
+      "nameLabel": "Naziv grupe",
+      "namePlaceholder": "npr. CWL grupe",
+      "infoBox": "Grupe omogućavaju zajedničko organizovanje više sastava (npr. svih CWL sastava). Sastav možete dodeliti grupi na kartici Podešavanja i odjednom primeniti automatizacije na sve sastave u grupi.",
+      "manageAutomations": "Upravljaj automatizacijama",
+      "automationsTitle": "Automatizacije grupe",
+      "automationsDesc": "Ove automatizacije se primenjuju na sve sastave u ovoj grupi",
+      "noAutomations": "Nema automatizacija",
+      "noAutomationsHint": "Napravite automatizaciju za ovu grupu",
+      "addAutomation": "Dodaj automatizaciju",
+      "deleteConfirm": "Obrisati grupu \"{name}\"? Sastavi iz ove grupe više neće pripadati nijednoj grupi.",
+      "emptyGroup": "U ovoj grupi još nema sastava",
+      "rules": {
+        "title": "Pravila grupe",
+        "rulesHint": "Ova pravila se primenjuju na sve sastave u grupi i odmah se prenose.",
+        "maxAccounts": "Najviše naloga po korisniku",
+        "maxAccountsBadge": "Najviše {count} po korisniku",
+        "rosterSize": "Veličina sastava",
+        "rosterSizeBadge": "Veličina {size}",
+        "minSignups": "Prag popunjenosti",
+        "minSignupsBadge": "Prag {count}",
+        "categoriesTitle": "Kategorije prijave",
+        "categoriesHint": "Izaberite kategorije dostupne ovoj grupi. Odmah se primenjuju na sve sastave.",
+        "categoriesBadge": "{count} kategorija",
+        "noCategories": "Još nema kategorija.",
+        "newCategoryPlaceholder": "Naziv nove kategorije…"
+      }
+    },
+    "categories": {
+      "title": "Kategorije prijave",
+      "description": "Kategorije za prijavu igrača i filtriranje sastava",
+      "manage": "Upravljaj kategorijama",
+      "create": "Nova kategorija",
+      "noCategories": "Još nema napravljenih kategorija",
+      "createTitle": "Napravi kategoriju",
+      "editTitle": "Izmeni kategoriju",
+      "deleteConfirm": "Obrisati kategoriju \"{name}\"?",
+      "idLabel": "ID kategorije",
+      "nameLabel": "Naziv kategorije",
+      "infoBox": "Kategorije omogućavaju igračima da pri prijavi navedu dostupnost ili ulogu (npr. „Dostupan“, „Možda“ ili „Samo ako je potrebno“). Dele se između svih sastava na ovom serveru. Za grupisane sastave podesite primenljive kategorije u podešavanjima grupe."
+    },
+    "settings": {
+      "general": "Identitet i konfiguracija",
+      "restrictions": "Ograničenja",
+      "name": "Naziv sastava",
+      "rosterType": "Vrsta sastava",
+      "typeClan": "Klan",
+      "typeFamily": "Porodica",
+      "signupScope": "Obuhvat prijave",
+      "scopeClanOnly": "Samo klan",
+      "scopeFamilyWide": "Cela porodica",
+      "clan": "Klan",
+      "selectClan": "Izaberite klan",
+      "description": "Opis",
+      "descriptionPlaceholder": "Unesite opis ovog sastava...",
+      "typeAndScope": "Vrsta i obuhvat",
+      "eventTime": "Vreme početka događaja",
+      "eventTimeHint": "Vreme početka događaja. Koristi se za automatizacije i prikaz odbrojavanja.",
+      "recurrenceDays": "Ponavljaj svakih",
+      "recurrenceModeDays": "Svakih N dana",
+      "recurrenceModeMonthly": "Dan u mesecu",
+      "recurrenceDaysUnit": "dana",
+      "recurrenceDayOfMonthPrefix": "Dana",
+      "recurrenceDayOfMonthSuffix": "u svakom mesecu",
+      "recurrenceDaysHint": "Ostavite prazno za jednokratni događaj. Unesite broj dana između ponavljanja (npr. 30 za mesečni CWL).",
+      "recurrenceDayOfMonthHint": "Ponavlja se ovog dana svakog meseca (npr. 1 = prvi dan).",
+      "group": "Grupa",
+      "noGroup": "Bez grupe",
+      "thRequirements": "Uslovi za gradsku kuću",
+      "minTh": "Najniži nivo TH-a",
+      "maxTh": "Najviši nivo TH-a",
+      "signupLimits": "Ograničenja prijave",
+      "rosterSize": "Veličina sastava",
+      "rosterSizeHint": "Najveći broj članova",
+      "minSignups": "Najmanje prijava",
+      "minSignupsHint": "Najmanji broj prijava potreban da se sastav popuni",
+      "maxAccountsPerUser": "Najviše naloga po korisniku",
+      "maxAccountsHint": "Ograničite broj naloga po Discord korisniku",
+      "allowedCategories": "Dozvoljene kategorije prijave",
+      "allowedCategoriesHint": "Kliknite da promenite izbor. Ako ništa nije izabrano, dozvoljene su sve kategorije.",
+      "defaultSignupCategory": "Podrazumevana kategorija prijave",
+      "defaultSignupCategoryNone": "Nijedna (bez podrazumevane)",
+      "defaultSignupCategoryHint": "Unapred izabrana kategorija kada se član prijavi.",
+      "categoriesManagedByGroup": "Kategorijama prijave se upravlja na nivou grupe. Otvorite podešavanja grupe na stranici Sastavi da biste podesili kategorije dostupne svim sastavima u ovoj grupi.",
+      "saving": "Čuvanje...",
+      "save": "Sačuvaj podešavanja"
+    }
+  },
+  "LinksPage": {
+    "title": "Upravljanje vezama",
+    "description": "Upravljajte vezama naloga Discord članova i proveravajte vlasništvo igrača",
+    "tabs": {
+      "overview": "Pregled",
+      "pending": "Na čekanju",
+      "bulk": "Grupne radnje",
+      "analytics": "Analitika"
+    },
+    "stats": {
+      "totalMembers": "Ukupno članova",
+      "membersWithLinks": "Članovi sa povezanim nalozima",
+      "totalLinkedAccounts": "Ukupno povezanih naloga",
+      "verifiedAccounts": "Verifikovani nalozi",
+      "ofTotal": "od ukupno",
+      "avgPerMember": "Prosek:",
+      "perMember": "po članu",
+      "verified": "verifikovano"
+    },
+    "filters": {
+      "searchPlaceholder": "Pretraži po imenu člana, korisničkom imenu, imenu igrača ili oznaci...",
+      "filterByStatus": "Filtriraj po statusu",
+      "allAccounts": "Svi nalozi",
+      "verifiedOnly": "Samo verifikovani",
+      "unverifiedOnly": "Samo neverifikovani",
+      "minAccounts": "Najmanje naloga",
+      "allMembers": "Svi članovi",
+      "oneOrMore": "1+ naloga",
+      "twoOrMore": "2+ naloga",
+      "threeOrMore": "3+ naloga",
+      "fiveOrMore": "5+ naloga"
+    },
+    "overview": {
+      "title": "Veze naloga",
+      "description": "Pregledajte sve veze Discord i Clash of Clans naloga i upravljajte njima",
+      "showingMembers": "Prikazano: {count} {members}",
+      "member": "član",
+      "members": "članova",
+      "noMembers": "Članovi nisu pronađeni",
+      "adjustFilters": "Pokušajte da promenite pretragu ili filtere.",
+      "noLinkedAccounts": "Nema članova sa povezanim nalozima.",
+      "exportCSV": "Izvezi CSV",
+      "exportJSON": "Izvezi JSON",
+      "account": "nalog",
+      "accounts": "naloga",
+      "more": "još",
+      "unknown": "Nepoznato"
+    },
+    "pending": {
+      "title": "Verifikacije na čekanju",
+      "description": "{count} naloga čeka verifikaciju",
+      "allVerified": "Svi nalozi su verifikovani!",
+      "noPending": "Trenutno nema verifikacija na čekanju.",
+      "linked": "Povezano:"
+    },
+    "bulk": {
+      "title": "Grupne radnje",
+      "description": "Izvršite radnje nad više članova odjednom",
+      "selectAll": "Izaberi sve ({count})",
+      "deselectAll": "Poništi ceo izbor",
+      "unlinkSelected": "Prekini izabrane veze ({count})",
+      "linked": "povezano",
+      "comingSoon": "Grupno prekidanje veza stiže uskoro!"
+    },
+    "analytics": {
+      "title": "Analitika veza",
+      "description": "Pregled statistike i trendova povezivanja",
+      "verificationRate": "Stopa verifikacije",
+      "verified": "Verifikovano",
+      "unverified": "Neverifikovano",
+      "accountDistribution": "Raspodela naloga",
+      "oneAccount": "1 nalog",
+      "twoToThreeAccounts": "2–3 naloga",
+      "fourPlusAccounts": "4+ naloga",
+      "townHallLevels": "Nivoi gradske kuće",
+      "other": "Ostalo",
+      "coverage": "Pokrivenost",
+      "linkedMembers": "Povezani članovi",
+      "coverageRate": "Stopa pokrivenosti",
+      "linkInsights": "Uvidi o vezama",
+      "avgAccountsPerMember": "Prosečan broj naloga po članu:",
+      "mostLinkedAccounts": "Najviše povezanih naloga:",
+      "membersWithoutLinks": "Članovi bez veza:"
+    },
+    "actions": {
+      "unlinkAccount": "Prekini vezu naloga"
+    },
+    "deleteDialog": {
+      "title": "Prekini vezu naloga",
+      "description": "Da li sigurno želite da prekinete vezu igrača {playerName}? Ovu radnju nije moguće poništiti.",
+      "cancel": "Otkaži",
+      "unlinking": "Prekidanje veze...",
+      "unlink": "Prekini vezu"
+    },
+    "bulkDialog": {
+      "title": "Grupno prekidanje veza naloga",
+      "description": "Da li sigurno želite da prekinete veze svih naloga za {count} izabranih članova? Ovu radnju nije moguće poništiti.",
+      "cancel": "Otkaži",
+      "unlinkAll": "Prekini sve veze"
+    },
+    "toast": {
+      "unlinkFailed": "Prekidanje veze naloga nije uspelo. Pokušajte ponovo."
+    },
+    "badges": {
+      "verified": "Verifikovano",
+      "unverified": "Neverifikovano",
+      "pending": "Na čekanju"
+    },
+    "pagination": {
+      "showing": "Prikazano {start}–{end} od {total} članova",
+      "page": "Stranica {current} od {total}",
+      "previous": "Prethodno",
+      "next": "Sledeće"
+    }
+  },
+  "WarsPage": {
+    "title": "Ratna statistika",
+    "description": "Pratite učinak u ratovima i analizirajte statistiku borbi",
+    "actions": {
+      "exportData": "Izvezi podatke",
+      "resetFilters": "Poništi filtere",
+      "applyFilters": "Primeni filtere"
+    },
+    "filters": {
+      "title": "Filteri",
+      "description": "Filtrirajte ratnu statistiku prema različitim kriterijumima",
+      "clan": "Klan",
+      "allClans": "Svi klanovi",
+      "townHall": "Gradska kuća",
+      "townHallShort": "TH",
+      "allTownHalls": "Svi nivoi TH-a",
+      "townHallLevel": "TH {level}",
+      "period": "Period",
+      "last7Days": "Poslednjih 7 dana",
+      "last30Days": "Poslednjih 30 dana",
+      "last90Days": "Poslednjih 90 dana",
+      "last6Months": "Poslednjih 6 meseci",
+      "lastYear": "Prošla godina",
+      "custom": "Prilagođeno",
+      "startDate": "Datum početka",
+      "endDate": "Datum završetka",
+      "warTypes": "Vrste ratova"
+    },
+    "summaryStats": {
+      "totalWins": "Ukupno pobeda",
+      "totalWinsDesc": "Od ukupno {totalWars} ratova",
+      "totalLosses": "Ukupno poraza",
+      "totalLossesDesc": "{totalDraws} nerešenih",
+      "winRate": "Stopa pobeda",
+      "winRateDesc": "Ukupan učinak",
+      "activeWars": "Aktivni ratovi",
+      "activeWarsDesc": "{activeCwl} u CWL-u"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Ratni učinak po nedeljama",
+        "description": "Nedeljne pobede, porazi i nerešeni ishodi u izabranom periodu",
+        "wins": "Pobede",
+        "losses": "Porazi",
+        "draws": "Nerešeno"
+      },
+      "thSuccessRate": {
+        "title": "Uspešnost napada po nivou gradske kuće",
+        "description": "Stopa osvojenih 3 zvezdice po nivou TH-a",
+        "threeStarPercent": "3 zvezdice %",
+        "otherPercent": "Ostalo %"
+      },
+      "warTypeDistribution": {
+        "title": "Raspodela vrsta ratova",
+        "description": "Raspodela prema vrsti rata",
+        "cwl": "CWL",
+        "random": "Nasumični",
+        "friendly": "Prijateljski"
+      },
+      "topPerformers": {
+        "title": "Najbolji igrači",
+        "description": "Najbolji ratnici prema ukupnom broju zvezdica",
+        "attacksAndStars": "{attacks} napada • {stars} zvezdica",
+        "noData": "Nema dostupnih podataka o igračima. Pokušajte da promenite filtere."
+      },
+      "missedAttacks": {
+        "title": "Propušteni napadi",
+        "description": "Igrači koji nisu iskoristili sve napade",
+        "attacks": "propuštenih napada"
+      },
+      "topDefenders": {
+        "title": "Najbolji branioci",
+        "description": "Najbolji branioci prema prosečnom broju prepuštenih zvezdica",
+        "defensesAndStars": "{defenses} odbrana • prepušteno {stars} zvezdica",
+        "noData": "Nema dostupnih podataka o braniocima. Pokušajte da promenite filtere."
+      },
+      "worstAttackers": {
+        "title": "Najlošiji napadači",
+        "description": "Igrači sa najmanjim prosekom zvezdica po napadu (najmanje 3 napada)",
+        "attacksAndStars": "{attacks} napada • {stars} zvezdica",
+        "noData": "Nema dostupnih podataka o igračima. Pokušajte da promenite filtere."
+      },
+      "worstDefenders": {
+        "title": "Najlošiji branioci",
+        "description": "Igrači koji su u odbrani prepustili najviše zvezdica (najmanje 3 odbrane)",
+        "defensesAndStars": "{defenses} odbrana • prepušteno {stars} zvezdica",
+        "noData": "Nema dostupnih podataka o braniocima. Pokušajte da promenite filtere."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Statistika klanskih ratova",
+      "description": "Detaljna statistika za svaki klan",
+      "headers": {
+        "clan": "Klan",
+        "status": "Status",
+        "wars": "Ratovi",
+        "record": "P/P/N",
+        "winRate": "Stopa pobeda",
+        "avgDestruction": "Prosečno uništenje",
+        "avgStarsPerAttack": "Zvezdice po napadu",
+        "avgDefenseStars": "Zvezdice po odbrani"
+      },
+      "status": {
+        "inWar": "U ratu",
+        "cwl": "CWL",
+        "peace": "Mir"
+      },
+      "noData": "Nema dostupne statistike klanova. Primenite filtere ili sačekajte da se podaci učitaju."
+    },
+    "toast": {
+      "errorTitle": "Greška",
+      "errorLoadingClans": "Učitavanje klanova nije uspelo. Pokušajte ponovo.",
+      "errorLoadingWarData": "Učitavanje ratnih podataka nije uspelo. Pokušajte ponovo.",
+      "errorNoClans": "Nema dostupnih klanova",
+      "errorApplyingFilters": "Primena filtera nije uspela. Pokušajte ponovo."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Rang-liste",
+    "description": "Globalne rang-liste za prestonicu klana i još mnogo toga",
+    "comingSoon": "Ova funkcija stiže uskoro. Proverite ponovo kasnije!",
+    "stats": {
+      "totalEntries": "Ukupno stavki",
+      "type": "Vrsta",
+      "league": "Liga",
+      "weekend": "Vikend"
+    },
+    "filters": {
+      "title": "Filteri",
+      "description": "Prilagodite prikaz rang-liste",
+      "type": "Vrsta",
+      "metric": "Pokazatelj",
+      "league": "Liga",
+      "weekend": "Vikend"
+    },
+    "types": {
+      "player": "Igrači",
+      "clan": "Klanovi"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Opljačkano u prestonici"
+        },
+        "clan": {
+          "capitalTotalLoot": "Ukupan plen",
+          "raidsCompleted": "Završenih prepada",
+          "enemyDistrictsDestroyed": "Uništenih oblasti",
+          "medals": "Medalje"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Sve",
+      "legendLeague": "Liga legendi",
+      "titanLeagueI": "Titan liga I",
+      "titanLeagueII": "Titan liga II",
+      "titanLeagueIII": "Titan liga III"
+    },
+    "rankings": {
+      "title": "Rang-lista",
+      "description": "Najboljih {count} {type} za vikend {weekend}",
+      "players": "igrača",
+      "clans": "klanova"
+    },
+    "empty": {
+      "title": "Nema dostupnih podataka",
+      "description": "Izaberite drugi vikend ili ligu"
+    }
+  },
+  "ClansPage": {
+    "title": "Upravljanje klanom",
+    "description": "Podesite klanove i njihovu integraciju sa Discordom",
+    "addClan": "Dodaj klan",
+    "addNewClan": "Dodaj novi klan",
+    "addClanDescription": "Unesite oznaku klana da biste ga dodali na ovaj server",
+    "clanTag": "Oznaka klana",
+    "totalClans": "Ukupno klanova",
+    "registeredClans": "Registrovani klanovi",
+    "configured": "Podešeno",
+    "withSettingsConfigured": "Sa podešenim postavkama",
+    "totalMembers": "Ukupno članova",
+    "acrossAllClans": "U svim klanovima",
+    "channels": "Kanali",
+    "availableChannels": "Dostupni kanali",
+    "noClansYet": "Još nema klanova",
+    "getStartedAdding": "Dodajte prvi klan da biste počeli",
+    "addFirstClan": "Dodaj prvi klan",
+    "level": "Nivo",
+    "members": "Članovi",
+    "status": "Status",
+    "configuredBadge": "Podešeno",
+    "setupRequired": "Potrebno podešavanje",
+    "configure": "Podesi",
+    "sorting": {
+      "label": "Sortiraj klanove",
+      "sortBy": "Sortiraj po",
+      "toggleDirection": "Promeni smer sortiranja",
+      "added": "Dodato",
+      "name": "Naziv klana",
+      "level": "Nivo klana",
+      "members": "Članovi"
+    },
+    "configureClan": "Podesi {name} ({tag})",
+    "customizeIntegration": "Prilagodite podešavanja Discord integracije za ovaj klan",
+    "tabs": {
+      "basic": "Discord podešavanje",
+      "war": "Rat"
+    },
+    "memberRole": "Uloga člana",
+    "leaderRole": "Uloga vođe",
+    "selectRole": "Izaberite ulogu",
+    "none": "Nijedno",
+    "clanAbbreviation": "Skraćenica klana",
+    "warScoreCountdown": "Odbrojavanje rezultata rata",
+    "warScoreCountdownDescription": "Pravi glasovni kanal koji prikazuje trenutni rezultat rata",
+    "warTimerCountdown": "Odbrojavanje vremena rata",
+    "warTimerCountdownDescription": "Pravi glasovni kanal koji prikazuje preostalo vreme rata",
+    "category": "Kategorija",
+    "categoryOptions": {
+      "none": "Bez kategorije",
+      "premade": "Uobičajene kategorije",
+      "usedByServer": "Koriste drugi klanovi",
+      "clanCount": "{count, plural, one {# klan} few {# klana} other {# klanova}}"
+    },
+    "categories": {
+      "title": "Kategorije klanova",
+      "description": "Pravite i održavajte kategorije dostupne klanovima ovog servera.",
+      "refresh": "Osveži",
+      "createLabel": "Nova kategorija",
+      "name": "Naziv kategorije",
+      "namePlaceholder": "npr. Takmičarski",
+      "nameHelp": "{count}/{max} znakova nakon sređivanja razmaka",
+      "create": "Napravi kategoriju",
+      "empty": "Nijedna kategorija klanova nije napravljena.",
+      "clanCount": "{count, plural, one {# klan} few {# klana} other {# klanova}}",
+      "renameAction": "Preimenuj {name}",
+      "deleteAction": "Obriši {name}",
+      "renameTitle": "Preimenuj kategoriju klana",
+      "renameDescription": "Usklađeni naziv će se ažurirati za svaki dodeljeni klan.",
+      "saveRename": "Sačuvaj naziv",
+      "deleteTitle": "Obrisati kategoriju klana?",
+      "deleteWarning": "Brisanjem kategorije „{name}“ {count, plural, one {# klan će ostati bez kategorije} few {# klana će ostati bez kategorije} other {# klanova će ostati bez kategorije}}.",
+      "deleteCountMayChange": "Ovaj pregled prikazuje trenutno stanje. Po završetku brisanja biće prikazan stvarni broj obuhvaćenih klanova.",
+      "confirmDelete": "Obriši kategoriju",
+      "deleteSuccessTitle": "Kategorija {name} je obrisana",
+      "deleteSuccessDescription": "{count, plural, =0 {Nijedan klan nije promenjen.} one {# klan je sada bez kategorije.} few {# klana su sada bez kategorije.} other {# klanova je sada bez kategorije.}}",
+      "created": "Kategorija {name} je napravljena.",
+      "renamed": "Kategorija je preimenovana u {name}.",
+      "errors": {
+        "title": "Kategorije nisu dostupne",
+        "load": "Učitavanje kategorija klanova nije uspelo.",
+        "create": "Pravljenje kategorije klana nije uspelo.",
+        "rename": "Preimenovanje kategorije klana nije uspelo.",
+        "preview": "Učitavanje pregleda brisanja nije uspelo.",
+        "delete": "Brisanje kategorije klana nije uspelo.",
+        "refresh": "Kategorija je promenjena, ali osveženo stanje kategorije ili klana nije moglo da se učita.",
+        "invalidName": "Unesite naziv sa najviše 64 znaka, bez kontrolnih znakova."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Prikaži više informacija",
+      "memberRole": "Uloga koju članovi ovog klana treba da dobiju. Ako bot upravlja ulogama na vašem Discordu, svaka osoba u ovom klanu dobiće ovu ulogu. Korisno je za kanale namenjene određenom klanu.",
+      "leaderRole": "Uloga koju će dobiti vođa i zamenici vođe ovog klana. Korisna je za razgovor vođstva klana ili zajednički razgovor vođa svih klanova.",
+      "clanAbbreviation": "Dodelite klanu skraćenicu koju članovi mogu imati u imenu kada je preimenovanje omogućeno. Format možete podesiti u <familySettingsLink>Podešavanjima porodice</familySettingsLink>.",
+      "category": "Ovako možete organizovati klanove. Mnoge porodice imaju pet ili više klanova, a neki služe samo za CWL ili događaje."
+    },
+    "roleIdPlaceholder": "ID uloge",
+    "abbreviationPlaceholder": "npr. CK",
+    "categoryPlaceholder": "Naziv kategorije",
+    "notAvailable": "Nije dostupno",
+    "saving": "Čuvanje...",
+    "saveChanges": "Sačuvaj izmene",
+    "deleteConfirm": "Da li sigurno želite da uklonite {tag}? Time će se obrisati i svi povezani podsetnici i evidencije.",
+    "toast": {
+      "errorLoadingClans": "Učitavanje klanova nije uspelo",
+      "errorLoadingSettings": "Učitavanje podešavanja klana nije uspelo",
+      "errorEmptyClanTag": "Unesite oznaku klana",
+      "clanAdded": "Klan je dodat",
+      "errorAddingClan": "Dodavanje klana nije uspelo",
+      "clanRemoved": "Klan je uklonjen",
+      "errorRemovingClan": "Uklanjanje klana nije uspelo",
+      "settingsSaved": "Podešavanja su sačuvana",
+      "errorSavingSettings": "Čuvanje podešavanja nije uspelo",
+      "countdownEnabled": "Glasovni kanal za odbrojavanje je napravljen",
+      "countdownDisabled": "Glasovni kanal za odbrojavanje je uklonjen",
+      "errorTogglingCountdown": "Promena odbrojavanja nije uspela"
+    }
+  },
+  "RolesPage": {
+    "title": "Upravljanje ulogama",
+    "description": "Podesite automatsku dodelu uloga na osnovu statistike igrača",
+    "stats": {
+      "totalRoles": "Ukupno uloga",
+      "totalRolesDesc": "Podešene dodele uloga",
+      "autoEvaluation": "Automatska procena",
+      "autoEvaluationOn": "Uključeno",
+      "autoEvaluationOff": "Isključeno",
+      "autoEvaluationActiveDesc": "Uloge se dodeljuju automatski",
+      "autoEvaluationInactiveDesc": "Samo ručna dodela uloga",
+      "activeTypes": "Aktivne vrste",
+      "activeTypesDesc": "Vrste uloga koje se koriste",
+      "discordRoles": "Discord uloge",
+      "discordRolesDesc": "Dostupno na serveru"
+    },
+    "settings": {
+      "title": "Podešavanja automatske procene",
+      "description": "Podesite automatsku procenu i dodelu uloga",
+      "saveButton": "Sačuvaj podešavanja",
+      "saving": "Čuvanje...",
+      "enableAutoEval": "Omogući automatsku procenu",
+      "enableAutoEvalDesc": "Automatski dodeljuj i uklanjaj uloge na osnovu statistike igrača",
+      "autoNickname": "Automatski ažuriraj nadimke",
+      "autoNicknameDesc": "Ažuriraj nadimke pri proceni uloga"
+    },
+    "roleTypes": {
+      "townhall": "Gradska kuća",
+      "league": "Liga",
+      "builderhall": "Graditeljska kuća",
+      "builderLeague": "Graditeljska liga",
+      "achievement": "Dostignuće",
+      "status": "Vreme na Discordu",
+      "familyPosition": "Položaj u porodici"
+    },
+    "familyPositions": {
+      "member": "Član",
+      "elder": "Starešina",
+      "coLeader": "Zamenik vođe",
+      "leader": "Vođa"
+    },
+    "leagues": {
+      "legend": "Legenda",
+      "electroDragon": "Elektro zmaj",
+      "dragon": "Zmaj",
+      "electroTitan": "Elektro titan",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Veštica",
+      "valkyrie": "Valkira",
+      "wizard": "Čarobnjak",
+      "archer": "Strelac",
+      "barbarian": "Varvarin",
+      "skeleton": "Kostur"
+    },
+    "builderLeagues": {
+      "diamond": "Dijamant",
+      "ruby": "Rubin",
+      "emerald": "Smaragd",
+      "platinum": "Platina",
+      "titanium": "Titanijum",
+      "steel": "Čelik",
+      "iron": "Gvožđe",
+      "brass": "Mesing",
+      "copper": "Bakar",
+      "stone": "Kamen",
+      "clay": "Glina",
+      "wood": "Drvo"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Zaštiti svoj nalog!",
+      "biggerAndBetter": "Veće i bolje",
+      "discoverNewTroops": "Otkrij nove trupe",
+      "biggerCoffers": "Veće riznice",
+      "goldGrab": "Zlatna groznica",
+      "elixirEscapade": "Eliksirska pustolovina",
+      "heroicHeist": "Herojska pljačka",
+      "wellSeasoned": "Iskusan borac",
+      "niceAndTidy": "Čisto i uredno",
+      "empireBuilder": "Graditelj carstva",
+      "clanWarWealth": "Bogatstvo klanskih ratova",
+      "friendInNeed": "Prijatelj u nevolji",
+      "sharingIsCaring": "Deljenje je briga",
+      "siegeSharer": "Delilac opsadnih mašina",
+      "warHero": "Ratni heroj",
+      "warLeagueLegend": "Legenda Ratne lige",
+      "gamesChampion": "Šampion Klanskih igara",
+      "unbreakable": "Nesalomiv",
+      "sweetVictory": "Slatka pobeda!",
+      "conqueror": "Osvajač",
+      "leagueAllStar": "Zvezda lige",
+      "leagueFollower": "Pratilac lige",
+      "leagueEnthusiast": "Ljubitelj lige",
+      "leagueSuperfan": "Veliki navijač lige",
+      "leagueFanatic": "Fanatik lige",
+      "leagueMaster": "Majstor lige",
+      "legendLeague": "Liga legendi",
+      "humiliator": "Ponižavatelj",
+      "notSoEasyThisTime": "Ovog puta nije tako lako",
+      "unionBuster": "Razbijač udruženja",
+      "bustThis": "Razbij ovo!",
+      "wallBuster": "Rušitelj zidova",
+      "mortarMauler": "Uništitelj minobacača",
+      "xBowExterminator": "Uništitelj X-lukova",
+      "firefighter": "Vatrogasac",
+      "antiArtillery": "Protivartiljerac",
+      "shatteredAndScatter": "Razbijeno i razbacano",
+      "counterspell": "Kontračarolija",
+      "monolithMasher": "Uništitelj monolita",
+      "multiArcherTowerTerminator": "Terminator višestrukih kula strelaca",
+      "ricochetCannonCrusher": "Razbijač rikošetnih topova",
+      "firespitterFinisher": "Dokrajčitelj bljuvača vatre",
+      "multiGearTowerTrampler": "Rušitelj višezupčastih kula",
+      "craftersNightmare": "Zanatlijska noćna mora",
+      "getThoseGoblins": "Sredi te gobline!",
+      "supercharger": "Superpunjač",
+      "craftingConnoisseur": "Poznavalac zanata",
+      "getThoseOtherGoblins": "Sredi i one gobline!",
+      "getEvenMoreGoblins": "Sredi još više goblina!",
+      "dragonSlayer": "Ubica zmajeva",
+      "ungratefulChild": "Nezahvalno dete",
+      "superbWork": "Odličan posao",
+      "masterEngineering": "Majstorsko inženjerstvo",
+      "hiddenTreasures": "Skriveno blago",
+      "highGear": "Visoka brzina",
+      "nextGenerationModel": "Model nove generacije",
+      "unBuildIt": "Razgradi to",
+      "championBuilder": "Šampionski graditelj",
+      "aggressiveCapitalism": "Agresivni kapitalizam",
+      "mostValuableClanmate": "Najvredniji član klana"
+    },
+    "configuredRoles": {
+      "title": "Podešene uloge",
+      "noRolesConfigured": "Nema podešenih uloga vrste {roleType}",
+      "addRoleToStart": "Kliknite na „Dodaj ulogu“ da biste je napravili",
+      "discordRole": "Discord uloga",
+      "criteria": "Kriterijum",
+      "mode": "Režim",
+      "modeBoth": "Dodaj i ukloni",
+      "modeAdd": "Samo dodaj",
+      "modeRemove": "Samo ukloni",
+      "actions": "Radnje",
+      "unknownRole": "Nepoznata uloga",
+      "remove": "Ukloni",
+      "month": "mesec",
+      "months": "meseci"
+    },
+    "addRoleDialog": {
+      "title": "Dodaj novu ulogu",
+      "description": "Podesite novo pravilo automatske dodele uloge",
+      "roleType": "Vrsta uloge",
+      "mode": "Režim",
+      "discordRole": "Discord uloga",
+      "selectRole": "Izaberite ulogu",
+      "townHallLevel": "Nivo gradske kuće",
+      "selectThLevel": "Izaberite nivo TH-a",
+      "thPrefix": "TH",
+      "league": "Liga",
+      "selectLeague": "Izaberite ligu",
+      "builderHallLevel": "Nivo graditeljske kuće",
+      "selectBhLevel": "Izaberite nivo graditeljske kuće",
+      "bhPrefix": "BH",
+      "builderLeague": "Graditeljska liga",
+      "selectBuilderLeague": "Izaberite graditeljsku ligu",
+      "achievementName": "Dostignuće",
+      "selectAchievement": "Izaberite dostignuće",
+      "searchAchievement": "Pretraži dostignuća...",
+      "noAchievementFound": "Dostignuće nije pronađeno.",
+      "monthsInServer": "Meseci na serveru",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Položaj u porodici",
+      "selectPosition": "Izaberite položaj",
+      "cancel": "Otkaži",
+      "addRole": "Dodaj ulogu",
+      "errorDuplicateExact": "Ovaj kriterijum je već povezan sa ovom ulogom.",
+      "errorDuplicateCriterion": "Ovom kriterijumu je već dodeljena uloga. Najpre uklonite postojeću."
+    },
+    "infoCard": {
+      "title": "💡 Kako funkcionišu automatske uloge",
+      "automaticEvaluation": "Automatska procena:",
+      "automaticEvaluationDesc": "Kada je omogućeno, bot će povremeno proveravati igrače i dodeljivati ili uklanjati uloge na osnovu trenutne statistike.",
+      "rolePriority": "Prioritet uloga:",
+      "rolePriorityDesc": "Ako statistici igrača odgovara više uloga, biće dodeljena uloga najvišeg nivoa.",
+      "manualOverride": "Ručno podešavanje:",
+      "manualOverrideDesc": "Administratori servera mogu ručno dodeliti uloge koje automatska procena neće ukloniti."
+    },
+    "categoryRoles": {
+      "title": "Uloge kategorija",
+      "description": "Dodelite Discord ulogu svakoj kategoriji klanova. Članovi klanova iz te kategorije automatski dobijaju odgovarajuću ulogu.",
+      "addButton": "Dodaj kategoriju",
+      "categoryName": "Kategorija",
+      "categoryNamePlaceholder": "Naziv kategorije",
+      "noCategoryRoles": "Nema podešenih uloga kategorija",
+      "noCategoryRolesDesc": "Kliknite na „Dodaj kategoriju“ da biste je napravili",
+      "addTitle": "Dodaj ulogu kategorije",
+      "addConfirm": "Dodaj",
+      "errorCategoryRequired": "Naziv kategorije je obavezan",
+      "errorRoleRequired": "Discord uloga je obavezna",
+      "errorCategoryExists": "Ova kategorija već ima podešenu ulogu"
+    },
+    "toast": {
+      "changesSaved": "Izmene su sačuvane!",
+      "errorLoading": "Učitavanje uloga nije uspelo",
+      "errorSaving": "Čuvanje podešavanja nije uspelo",
+      "errorAdding": "Dodavanje uloge nije uspelo",
+      "errorDeleting": "Brisanje uloge nije uspelo"
+    }
+  },
+  "RemindersPage": {
+    "title": "Podsetnici",
+    "description": "Podesite automatske podsetnike za ratove, prepade, Klanske igre i neaktivnost",
+    "types": {
+      "war": "Ratni podsetnici",
+      "capital": "Klanska prestonica",
+      "clanGames": "Klanske igre",
+      "inactivity": "Neaktivnost"
+    },
+    "tabs": {
+      "war": "Rat",
+      "capital": "Prestonica",
+      "clanGames": "Klanske igre",
+      "inactivity": "Neaktivnost"
+    },
+    "stats": {
+      "totalReminders": "Ukupno podsetnika",
+      "totalRemindersDesc": "Podešeni aktivni podsetnici",
+      "warReminders": "Ratni podsetnici",
+      "warRemindersDesc": "Obični i CWL ratovi",
+      "capitalReminders": "Podsetnici za prestonicu",
+      "capitalRemindersDesc": "Napadi tokom vikenda prepada",
+      "otherReminders": "Ostali podsetnici",
+      "otherRemindersDesc": "Klanske igre i neaktivnost"
+    },
+    "actions": {
+      "saving": "Čuvanje...",
+      "saveChanges": "Sačuvaj izmene",
+      "addReminder": "Dodaj podsetnik",
+      "addWarReminder": "Dodaj ratni podsetnik",
+      "addCapitalReminder": "Dodaj podsetnik za prestonicu",
+      "addClanGamesReminder": "Dodaj podsetnik za Klanske igre",
+      "addInactivityReminder": "Dodaj podsetnik za neaktivnost",
+      "retry": "Pokušaj ponovo"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Izaberite klan",
+      "allClans": "Svi klanovi"
+    },
+    "empty": {
+      "noWarReminders": "Nema ratnih podsetnika",
+      "noCapitalReminders": "Nema podsetnika za prestonicu",
+      "noClanGamesReminders": "Nema podsetnika za Klanske igre",
+      "noInactivityReminders": "Nema podsetnika za neaktivnost",
+      "getStarted": "Napravite prvi podsetnik da biste počeli"
+    },
+    "card": {
+      "new": "Novo",
+      "before": "ranije",
+      "timeBefore": "Preostalo vreme",
+      "timeBeforePlaceholder": "npr. 6",
+      "timeInactive": "Neaktivnost od",
+      "timeInactivePlaceholder": "npr. 160",
+      "timeUnit": "sati",
+      "hoursRemaining": "preostalih sati",
+      "channel": "Kanal",
+      "channelPlaceholder": "Izaberite kanal",
+      "threadOptional": "Nit (opciono)",
+      "threadPlaceholder": "Izaberite nit",
+      "noThread": "Objavi direktno na kanalu",
+      "forumPost": "Objava na forumu",
+      "forumPostPlaceholder": "Izaberite objavu na forumu",
+      "forumPostRequired": "Za forumske kanale je obavezna objava na forumu.",
+      "clan": "Klan",
+      "clanPlaceholder": "Izaberite klan",
+      "customMessage": "Prilagođena poruka",
+      "customMessagePlaceholder": "Ne zaboravite da iskoristite napade!",
+      "customMessagePlaceholderClanGames": "Pokušajte da osvojite više poena u Klanskim igrama!",
+      "customMessagePlaceholderInactivity": "Već neko vreme niste aktivni u klanu :(",
+      "warTypes": "Vrste ratova",
+      "random": "Nasumični",
+      "friendly": "Prijateljski",
+      "cwl": "CWL",
+      "pointThreshold": "Prag poena",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Pomenuće osobe koje imaju manje od {threshold} poena.",
+      "attackThreshold": "Prag napada",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Pomenuće osobe koje imaju najmanje {threshold} preostalih napada.",
+      "notSet": "Nije podešeno"
+    },
+    "dialog": {
+      "addTitle": "Dodaj novi podsetnik",
+      "addDescription": "Podesite novi podsetnik za server",
+      "editTitle": "Izmeni podsetnik",
+      "editDescription": "Ažurirajte podešavanja podsetnika",
+      "type": "Vrsta podsetnika",
+      "selectType": "Izaberite vrstu",
+      "cancel": "Otkaži",
+      "saving": "Čuvanje...",
+      "saveChanges": "Sačuvaj izmene",
+      "addReminder": "Dodaj podsetnik"
+    },
+    "toast": {
+      "errorTitle": "Greška",
+      "errorLoadingReminders": "Učitavanje podsetnika nije uspelo. Pokušajte ponovo.",
+      "reminderAdded": "Podsetnik je dodat",
+      "reminderAddedDesc": "Dodat je novi podsetnik vrste {type}. Ne zaboravite da sačuvate!",
+      "reminderUpdated": "Podsetnik je ažuriran",
+      "successTitle": "Uspeh",
+      "reminderDeleted": "Podsetnik je obrisan",
+      "failedToDelete": "Brisanje podsetnika nije uspelo",
+      "allRemindersSaved": "Svi podsetnici su sačuvani",
+      "failedToSave": "Čuvanje podsetnika nije uspelo",
+      "forumPostRequired": "Izaberite objavu na forumu pre čuvanja podsetnika.",
+      "invalidDestination": "Izabrana nit ne pripada ovom kanalu.",
+      "timeExceedsLimit": "Preostalo vreme mora biti između {min} i {max} sati",
+      "pointThresholdInvalid": "Prag poena mora biti između {min} i {max}",
+      "attackThresholdInvalid": "Prag napada mora biti između {min} i {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Evidencije aktivnosti",
+    "description": "Podesite automatsko beleženje aktivnosti klana i igrača",
+    "stats": {
+      "activeLogs": "Aktivne evidencije",
+      "activeLogsDesc": "U svim porodičnim klanovima i evidencijama servera",
+      "logChannels": "Kanali evidencije",
+      "logChannelsDesc": "Dostupni kanali",
+      "trackedClans": "Praćeni klanovi",
+      "trackedClansDesc": "Podešeni klanovi",
+      "issues": "Problemi",
+      "issuesDesc": "U celoj porodici"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Izaberite klan"
+    },
+    "tabs": {
+      "clan": "Klan",
+      "war": "Rat",
+      "capital": "Prestonica",
+      "player": "Igrač",
+      "server": "Server"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Pridruživanje člana",
+        "description": "Prati članove koji se pridružuju klanu"
+      },
+      "leaveLog": {
+        "label": "Odlazak člana",
+        "description": "Prati članove koji napuštaju klan"
+      },
+      "donationLog": {
+        "label": "Donacije člana",
+        "description": "Prati donacije jedinica i čarolija"
+      },
+      "clanAchievementLog": {
+        "label": "Dostignuća klana",
+        "description": "Prati osvojena dostignuća klana"
+      },
+      "clanRequirementsLog": {
+        "label": "Uslovi klana",
+        "description": "Prati izmene uslova klana"
+      },
+      "clanDescriptionLog": {
+        "label": "Opis klana",
+        "description": "Prati izmene opisa klana"
+      },
+      "banAlert": {
+        "label": "Upozorenja o zabranama",
+        "description": "Objavljuj upozorenja kada se zabranjeni igrač pridruži klanu"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit sadržaj",
+        "description": "Objavljuj Reddit sadržaj servera"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Dnevnik ratova",
+        "description": "Prati ratne napade i rezultate"
+      },
+      "warPanel": {
+        "label": "Ratni panel",
+        "description": "Interaktivni ratni panel sa ažuriranjima uživo"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Promena CWL postave",
+        "description": "Prati promene CWL postave"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Donacije prestonici",
+        "description": "Prati donacije zlata prestonici"
+      },
+      "capitalAttacks": {
+        "label": "Napadi na prestonicu",
+        "description": "Prati napade tokom vikenda prepada"
+      },
+      "raidPanel": {
+        "label": "Panel prestonice",
+        "description": "Interaktivni panel prepada sa ažuriranjima uživo"
+      },
+      "capitalWeeklySummary": {
+        "label": "Nedeljni pregled prestonice",
+        "description": "Nedeljni pregled učinka prestonice"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Promena uloge",
+        "description": "Prati promene uloge igrača u klanu"
+      },
+      "troopUpgrade": {
+        "label": "Nadogradnja jedinice",
+        "description": "Prati nadogradnje nivoa jedinica"
+      },
+      "superTroopBoostLog": {
+        "label": "Pojačanja super-jedinica",
+        "description": "Prati aktivacije super-jedinica"
+      },
+      "thUpgrade": {
+        "label": "Nadogradnja gradske kuće",
+        "description": "Prati nadogradnje gradske kuće"
+      },
+      "leagueChange": {
+        "label": "Promena lige",
+        "description": "Prati promene nivoa lige"
+      },
+      "spellUpgrade": {
+        "label": "Nadogradnja čarolije",
+        "description": "Prati nadogradnje nivoa čarolija"
+      },
+      "heroUpgrade": {
+        "label": "Nadogradnja heroja",
+        "description": "Prati nadogradnje nivoa heroja"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Nadogradnja opreme heroja",
+        "description": "Prati nadogradnje opreme heroja"
+      },
+      "nameChange": {
+        "label": "Promena imena",
+        "description": "Prati promene imena igrača"
+      },
+      "legendLogAttacks": {
+        "label": "Napadi u Ligi legendi",
+        "description": "Prati napade u Ligi legendi"
+      },
+      "legendLogDefenses": {
+        "label": "Odbrane u Ligi legendi",
+        "description": "Prati odbrane u Ligi legendi"
+      }
+    },
+    "logCard": {
+      "active": "Aktivan",
+      "issue": "Problem",
+      "disabled": "Onemogućeno",
+      "enable": "Omogući",
+      "disable": "Onemogući",
+      "channel": "Kanal",
+      "channelPlaceholder": "Izaberite kanal",
+      "thread": "Nit (opciono)",
+      "threadPlaceholder": "Izaberite nit",
+      "noThread": "Bez niti",
+      "forumPost": "Objava na forumu",
+      "forumPostPlaceholder": "Izaberite objavu na forumu",
+      "forumPostRequired": "Izaberite objavu na forumu pre čuvanja evidencije.",
+      "invalidThread": "Izabrana nit ne pripada ovom kanalu.",
+      "saveDestination": "Sačuvaj odredište",
+      "channelDeleted": "Ovaj kanal više ne postoji. Izaberite novi ili onemogućite evidenciju.",
+      "enableToConfig": "Omogućite ovu evidenciju da biste je podesili",
+      "configuring": "Podešavanje",
+      "on": "Uključeno",
+      "off": "Isključeno",
+      "example": "primer"
+    }
+  },
+  "GeneralPage": {
+    "title": "Opšta podešavanja",
+    "description": "Podesite ponašanje i izgled bota na celom serveru",
+    "loading": "Učitavanje podešavanja...",
+    "reset": "Resetuj",
+    "saving": "Čuvanje...",
+    "saveChanges": "Sačuvaj izmene",
+    "settingsSaved": "Podešavanja su sačuvana!",
+    "infoBanner": {
+      "title": "Tražite još podešavanja?",
+      "description": "Porodične uloge i podešavanja nadimaka nalaze se na stranici **Podešavanja porodice**, a upravljanje ulogama na stranici **Uloge**. Klanske uloge, skraćenice, kategorije i odbrojavanja do rata nalaze se na stranici **Klanovi**."
+    },
+    "nickname": {
+      "title": "Upravljanje nadimcima",
+      "description": "Upravljajte načinom oblikovanja nadimaka",
+      "automaticChanges": "Automatske izmene",
+      "automaticChangesDesc": "Dozvoli botu da ažurira nadimke članova",
+      "familyFormat": "Format članova porodice",
+      "availablePlaceholders": "Dostupna rezervisana mesta",
+      "preview": "Pregled:",
+      "nonFamilyFormat": "Format članova van porodice",
+      "placeholders": {
+        "discordName": "Discord korisničko ime",
+        "discordDisplayName": "Nadimak na serveru",
+        "playerName": "Ime CoC igrača",
+        "playerTag": "Oznaka igrača",
+        "playerTownhall": "Nivo TH-a",
+        "playerTownhallSmall": "TH kao eksponent",
+        "playerWarstars": "Ratne zvezde",
+        "playerRole": "Uloga u klanu",
+        "playerClan": "Naziv klana",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Skraćenica klana"
+      }
+    },
+    "appearance": {
+      "title": "Izgled",
+      "description": "Prilagodite ugrađene poruke bota",
+      "embedColor": "Boja ugrađene poruke",
+      "embedColorDesc": "Boja bočne trake na svim embedovima bota u Discordu",
+      "embedColorDefault": "Podrazumevano: **#D90709** (ClashKing crvena)",
+      "embedPreview": "Pregled ugrađene poruke",
+      "embedPreviewDesc": "Ova obojena traka će se prikazivati pored svih embedova bota",
+      "editColor": "Izmeni boju",
+      "resetToDefault": "Vrati podrazumevano",
+      "apply": "Primeni"
+    },
+    "security": {
+      "title": "Bezbednost i dozvole",
+      "description": "Upravljajte pristupom i verifikacijom",
+      "fullWhitelistRole": "Uloga sa punim pristupom",
+      "fullWhitelistRoleDesc": "Discord uloga sa punim pristupom svim komandama bota (zaobilazi sve provere dozvola)",
+      "noRole": "Bez uloge"
+    },
+    "familyRoles": {
+      "title": "Porodične uloge",
+      "description": "Upravljajte automatskim ulogama na osnovu članstva u porodici i položaja u klanu",
+      "selectRole": "Izaberite ulogu",
+      "addRole": "Dodaj ulogu...",
+      "deletedRole": "Obrisana uloga",
+      "noRolesConfigured": "Nema podešenih uloga",
+      "modes": {
+        "both": "Dodaj i ukloni",
+        "add": "Samo dodaj",
+        "remove": "Samo ukloni"
+      },
+      "types": {
+        "family": "Porodica",
+        "notFamily": "Van porodice",
+        "elder": "Starešina",
+        "coLeader": "Zamenik vođe",
+        "leader": "Vođa"
+      },
+      "descriptions": {
+        "family": "Ima najmanje jedan nalog u porodičnim klanovima",
+        "notFamily": "Nema naloga u porodičnim klanovima",
+        "elder": "Ima položaj starešine u nekom porodičnom klanu",
+        "coLeader": "Ima položaj zamenika vođe u nekom porodičnom klanu",
+        "leader": "Ima položaj vođe u nekom porodičnom klanu"
+      }
+    },
+    "tenureRoles": {
+      "title": "Uloge prema vremenu na Discordu",
+      "description": "Automatski dodeljuj uloge prema tome koliko dugo su članovi na serveru",
+      "addRole": "Dodaj ulogu prema stažu",
+      "addDialogTitle": "Dodaj ulogu prema stažu",
+      "addDialogDescription": "Dodelite ulogu članovima koji su na serveru određeni broj meseci",
+      "monthsInServer": "Meseci na serveru",
+      "discordRole": "Discord uloga",
+      "selectRole": "Izaberite ulogu",
+      "noRolesConfigured": "Nema podešenih uloga prema stažu",
+      "addRoleToStart": "Dodajte ulogu prema stažu da biste počeli",
+      "months": "Meseci",
+      "month": "mesec",
+      "actions": "Radnje",
+      "remove": "Ukloni",
+      "unknownRole": "Nepoznata uloga"
+    },
+    "prefix": "Prefiks komande",
+    "language": "Jezik",
+    "timezone": "Vremenska zona",
+    "theme": "Tema"
+  },
+  "FamilySettingsPage": {
+    "title": "Podešavanja porodice",
+    "description": "Podesite porodične uloge i oblikovanje nadimaka članova klana",
+    "loading": "Učitavanje podešavanja...",
+    "reset": "Resetuj",
+    "saving": "Čuvanje...",
+    "saveChanges": "Sačuvaj izmene",
+    "settingsSaved": "Podešavanja su sačuvana!",
+    "nickname": {
+      "title": "Upravljanje nadimcima",
+      "description": "Upravljajte načinom oblikovanja nadimaka",
+      "automaticChanges": "Automatske izmene",
+      "automaticChangesDesc": "Dozvoli botu da ažurira nadimke članova",
+      "familyFormat": "Format članova porodice",
+      "availablePlaceholders": "Dostupna rezervisana mesta",
+      "preview": "Pregled:",
+      "nonFamilyFormat": "Format članova van porodice",
+      "placeholders": {
+        "discordName": "Discord korisničko ime",
+        "discordDisplayName": "Nadimak na serveru",
+        "playerName": "Ime CoC igrača",
+        "playerTag": "Oznaka igrača",
+        "playerTownhall": "Nivo TH-a",
+        "playerTownhallSmall": "TH kao eksponent",
+        "playerWarstars": "Ratne zvezde",
+        "playerRole": "Uloga u klanu",
+        "playerClan": "Naziv klana",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Skraćenica klana"
+      }
+    },
+    "familyRoles": {
+      "title": "Porodične uloge",
+      "description": "Upravljajte automatskim ulogama na osnovu članstva u porodici i položaja u klanu",
+      "selectRole": "Izaberite ulogu",
+      "addRole": "Dodaj ulogu...",
+      "deletedRole": "Obrisana uloga",
+      "noRolesConfigured": "Nema podešenih uloga",
+      "modes": {
+        "both": "Dodaj i ukloni",
+        "add": "Samo dodaj",
+        "remove": "Samo ukloni"
+      },
+      "types": {
+        "family": "Porodica",
+        "notFamily": "Van porodice",
+        "elder": "Starešina",
+        "coLeader": "Zamenik vođe",
+        "leader": "Vođa"
+      },
+      "descriptions": {
+        "family": "Ima najmanje jedan nalog u porodičnim klanovima",
+        "notFamily": "Nema naloga u porodičnim klanovima",
+        "elder": "Ima položaj starešine u nekom porodičnom klanu",
+        "coLeader": "Ima položaj zamenika vođe u nekom porodičnom klanu",
+        "leader": "Ima položaj vođe u nekom porodičnom klanu"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Jezik"
+  },
+  "ThemeSwitcher": {
+    "label": "Tema",
+    "light": "Svetla",
+    "dark": "Tamna",
+    "system": "Sistem"
+  },
+  "AuthCallback": {
+    "authenticating": "Potvrda identiteta...",
+    "authenticatingDescription": "Sačekajte dok vas prijavljujemo putem Discorda",
+    "authenticationFailed": "Potvrda identiteta nije uspela",
+    "tryAgain": "Pokušaj ponovo",
+    "backToHome": "Nazad na početnu",
+    "errorCancelled": "Prijava je otkazana u Discordu. Pokušajte ponovo kada budete spremni.",
+    "errorDiscordFailedWithReason": "Discord potvrda identiteta nije uspela: {reason}",
+    "errorNoAuthorizationCode": "Od Discorda nije primljen autorizacioni kôd.",
+    "errorCodeVerifierMissing": "Verifikator koda nije pronađen. Pokušajte ponovo da se prijavite.",
+    "errorAuthenticateFailed": "Potvrda identiteta putem Discorda nije uspela.",
+    "loadingVillages": "Prijavljivanje putem Discorda...",
+    "loadingClanData": "Učitavanje liste servera...",
+    "loadingWarStats": "Skoro spremno..."
+  },
+  "LoginPage": {
+    "redirecting": "Preusmeravanje na Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Funkcije",
+      "subtitle": "Otkrijte moćne alate koje ClashKing nudi za upravljanje klanom i njegov razvoj na Discordu, mobilnim uređajima i vebu."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "ClashKing Bot je jedini Discord bot potreban za upravljanje Clash of Clans klanom i zajednicom. Brojne jedinstvene funkcije održavaju klan uređenim, aktivnim i uspešnim.",
+        "items": [
+          "Evidencije uživo: Pratite ratove, CWL, Klanske igre, prepade, donacije i događaje članova.",
+          "Sistem tiketa: Tiketi za regrutovanje uz standardne tikete za podršku.",
+          "Automatske uloge: Automatski dodeljujte uloge prema statusu klana ili porodičnom upravljanju.",
+          "Podsetnici: Šaljite pominjanja za ratne napade, Klanske igre i drugo.",
+          "Detaljna statistika: Uvid u učinak igrača i klana uz praćenje aktivnosti.",
+          "Upravljanje sastavima: Lako organizujte i optimizujte ratne sastave."
+        ],
+        "ctaPrimary": "Pozovi bota",
+        "ctaSecondary": "Pridruži se zajednici"
+      },
+      "app": {
+        "title": "ClashKing aplikacija (otvorena beta)",
+        "description": "ClashKing aplikacija savršeno dopunjuje ClashKing Bot jer donosi ključne alate i uvide pravo na mobilni uređaj. Ostanite povezani bilo kada i bilo gde, čak i bez Discorda.",
+        "items": [
+          "Statistika uživo: Detaljna statistika igrača i klanova sinhronizovana sa botom.",
+          "Praćenje napretka klana: Jednostavno pratite napredak klana tokom vremena.",
+          "Upravljanje većim brojem naloga: Lako prelazite između naloga i pratite učinak.",
+          "Ugrađena istorija: Pristupite istorijskim podacima radi analize trendova i poboljšanja strategije.",
+          "Upravljanje Discord serverom: (Uskoro) Upravljajte ulogama i tiketima iz aplikacije.",
+          "Napredna obaveštenja: (Uskoro) Prilagodite upozorenja za važne događaje."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Napravite sopstvene alate ili projekte pomoću ClashKing API-ja. Korišćenje je besplatno uz navođenje projekta ClashKing.",
+        "items": [],
+        "ctaPrimary": "API dokumentacija",
+        "ctaSecondary": "API na GitHubu"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Treba vam pomoć?",
+    "subtitle": "Bilo da tražite dokumentaciju ili direktnu podršku, tu smo za vas.",
+    "documentation": {
+      "title": "Dokumentacija",
+      "description": "Pogledajte detaljne vodiče i reference komandi da biste najbolje iskoristili ClashKing.",
+      "cta": "Prikaži dokumentaciju"
+    },
+    "discord": {
+      "title": "Discord podrška",
+      "description": "Treba vam još pomoći? Pridružite se našoj Discord zajednici da postavite pitanja, prijavite greške ili razgovarate sa drugim korisnicima.",
+      "cta": "Pridružite se Discordu"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Projekat otvorenog koda",
+    "subtitle": "ClashKing je potpuno besplatan projekat otvorenog koda, a verujemo da ga zajednica može dodatno unaprediti. Bot i API imaju potpuno otvoren kôd, pa možete doprineti ili ih koristiti u sopstvenim projektima.",
+    "github": {
+      "title": "GitHub organizacija",
+      "description": "Istražite izvorni kôd, doprinesite botu ili pogledajte ostale alate otvorenog koda.",
+      "ctaPrimary": "Prikaži organizaciju",
+      "repos": {
+        "bot": "Repozitorijum bota",
+        "app": "Repozitorijum aplikacije",
+        "api": "API repozitorijum",
+        "assets": "Repozitorijum resursa"
+      }
+    },
+    "api": {
+      "title": "API dokumentacija",
+      "description": "Napravite sopstvene alate ili projekte pomoću ClashKing API-ja. Korišćenje je besplatno uz navođenje projekta ClashKing.",
+      "cta": "API dokumentacija"
+    },
+    "translation": {
+      "title": "Pomozite nam sa prevodom",
+      "description": "Pomozite nam da prevedemo ClashKing na vaš jezik! Preko naših Crowdin projekata možete doprineti prevodu veb-sajta, bota i svih povezanih tekstova.",
+      "app": "Prevedi aplikaciju",
+      "bot": "Prevedi bota"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Doprinesi",
+        "description": "Pomozite nam da se poboljšamo ispravljanjem grešaka, dodavanjem funkcija ili unapređenjem postojećih. Svaki doprinos znači!"
+      },
+      "community": {
+        "title": "Zajednica",
+        "description": "Pridružite se Discord zajednici da razgovarate o idejama, dobijete pomoć i sarađujete sa drugim programerima."
+      },
+      "learn": {
+        "title": "Saznaj više",
+        "description": "Pogledajte dokumentaciju i primere da biste naučili kako da efikasno koristite bot i API."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Podržite nas",
+    "subtitle": "ClashKing je besplatan projekat otvorenog koda. Vaša podrška nam pomaže da održimo servere i nastavimo razvoj novih funkcija za zajednicu.",
+    "patreon": {
+      "title": "Postanite pokrovitelj",
+      "description": "Podržite nas mesečno na Patreonu, ostvarite ekskluzivne pogodnosti i rani pristup funkcijama i pomozite sa troškovima hostinga.",
+      "cta": "Podrži na Patreonu"
+    },
+    "creatorCode": {
+      "title": "Koristi kod kreatora",
+      "description": "Podržite nas besplatno korišćenjem koda autora",
+      "descriptionSuffix": "u igri ili Supercell prodavnici.",
+      "ctaGame": "Koristi u igri",
+      "ctaStore": "Koristi u Supercell prodavnici"
+    },
+    "whySupport": {
+      "title": "Zašto da nas podržite?",
+      "description": "Svaki doprinos, ma koliko mali, direktno pokriva troškove servera i API-ja. Korišćenje našeg koda autora vas ništa dodatno ne košta, a nama mnogo pomaže!"
+    }
+  },
+  "ServersPage": {
+    "title": "Izaberite server",
+    "description": "Izaberite server da biste podesili ClashKing bot. Morate biti vlasnik ili administrator Discord servera.",
+    "backToHome": "Nazad na početnu",
+    "backToLogin": "Nazad na prijavu",
+    "error": "Greška",
+    "configure": "Podesi",
+    "invite": "Pozovi",
+    "members": "članova",
+    "server": "Server",
+    "roles": {
+      "owner": "Vlasnik",
+      "administrator": "Administrator",
+      "manager": "Upravnik"
+    },
+    "noServers": {
+      "title": "Serveri nisu pronađeni",
+      "description": "Nije pronađen Discord server na kom ste administrator ili vlasnik."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Osvežavajte aktivnu tablu ili šaljite nove table prema rasporedu",
+    "actions": {
+      "create": "Napravi AutoBoard",
+      "edit": "Izmeni AutoBoard",
+      "delete": "Obriši AutoBoard",
+      "save": "Sačuvaj izmene",
+      "cancel": "Otkaži",
+      "retry": "Pokušaj ponovo"
+    },
+    "metrics": {
+      "total": "Podešeno",
+      "refresh": "Osvežavanje tabli",
+      "send": "Zakazana slanja"
+    },
+    "filters": {
+      "all": "Sve"
+    },
+    "list": {
+      "title": "Podešene automatske table",
+      "description": "Isporuka, ciljevi, odredište i stanje izvršavanja pod kontrolom upravnika",
+      "empty": "U ovom prikazu nema automatskih tabli",
+      "emptyDescription": "Napravite je kada API registar ponudi dostupnu vrstu table."
+    },
+    "registry": {
+      "emptyTitle": "Nema dostupnih vrsta tabli",
+      "emptyDescription": "API registar je trenutno prazan. AutoBoard se može napraviti kada se u njemu omogući neka vrsta table.",
+      "typeUnavailable": "Ova vrsta table više nije dostupna u registru, pa se ne može menjati."
+    },
+    "dialog": {
+      "createTitle": "Napravi AutoBoard",
+      "editTitle": "Izmeni AutoBoard",
+      "description": "Mogućnosti i ograničenja dolaze iz aktivnog registra tabli."
+    },
+    "boardType": {
+      "label": "Vrsta table",
+      "description": "Dostupne vrste dolaze direktno iz API registra.",
+      "placeholder": "Izaberite vrstu table"
+    },
+    "targets": {
+      "kind": "Vrsta cilja: {kind}",
+      "kindDescription": "Registar određuje kako se tumači svaka vrednost cilja.",
+      "scope": "Obuhvat cilja",
+      "scopeDescription": "Porodični obuhvat koristi svaki podešeni porodični klan i nema izričite ciljeve.",
+      "family": "Porodica",
+      "custom": "Prilagođeni ciljevi",
+      "values": "Mete",
+      "count": "Navedite između {min} i {max} ciljeva za ovu vrstu table.",
+      "placeholder": "Unesite cilj vrste {kind}",
+      "add": "Dodaj cilj",
+      "remove": "Ukloni cilj"
+    },
+    "modes": {
+      "label": "Način isporuke",
+      "description": "Registar određuje koje načine isporuke ova tabla podržava.",
+      "refresh": "Osveži",
+      "send": "Zakazano slanje"
+    },
+    "destination": {
+      "label": "Odredište",
+      "channel": "Nadređeni kanal",
+      "channelDescription": "Tekstualni kanali i kanali obaveštenja mogu isporučivati direktno, dok forumi koriste podređenu objavu.",
+      "selectChannel": "Izaberi kanal",
+      "thread": "Nit ili objava na forumu",
+      "selectThread": "Izaberite nit",
+      "threadOptional": "Opciono za tekstualne kanale i kanale obaveštenja.",
+      "forumRequired": "Za ovo odredište je obavezna objava na forumu.",
+      "direct": "Pošalji direktno na kanal",
+      "deleted": "Kanal više ne postoji"
+    },
+    "refresh": {
+      "interval": "Interval osvežavanja (minuti)",
+      "intervalDescription": "Dozvoljeni opseg: {minimum}–{maximum} minuta."
+    },
+    "schedule": {
+      "label": "Raspored",
+      "kind": "Obrazac rasporeda",
+      "kindDescription": "Šaljite svakodnevno, izabranim danima u nedelji ili jednom mesečno.",
+      "daily": "Svakodnevno",
+      "weekdays": "Izabrani dani u nedelji",
+      "dayOfMonth": "Dan u mesecu",
+      "selectWeekdays": "Dani u nedelji",
+      "monthDay": "Dan u mesecu",
+      "monthDayDescription": "Koristite vrednost od 1 do 31.",
+      "timezone": "Vremenska zona",
+      "timeOfDay": "Doba dana",
+      "nextRun": "Sledeće pokretanje"
+    },
+    "weekdays": {
+      "1": "Ponedeljak",
+      "2": "Utorak",
+      "3": "Sreda",
+      "4": "Četvrtak",
+      "5": "Petak",
+      "6": "Subota",
+      "7": "Nedelja"
+    },
+    "status": {
+      "enabled": "Omogućeno",
+      "disabled": "Onemogućeno",
+      "enabledDescription": "Onemogućene table zadržavaju podešavanja, ali se ne pokreću.",
+      "messageId": "Trenutna poruka osvežavanja: {id}"
+    },
+    "delete": {
+      "title": "Obrisati ovaj AutoBoard?",
+      "description": "Ovo uklanja konfiguraciju i ne može se poništiti."
+    },
+    "feedback": {
+      "created": "AutoBoard je napravljen",
+      "updated": "AutoBoard je ažuriran",
+      "deleted": "AutoBoard je obrisan"
+    },
+    "validation": {
+      "boardType": "Izaberite vrstu table iz aktivnog registra.",
+      "targetScope": "Izaberite obuhvat cilja koji ova vrsta table podržava.",
+      "familyTargets": "Porodični obuhvat ne može sadržati izričite ciljeve.",
+      "targetCount": "Unesite između {min} i {max} nepraznih ciljeva.",
+      "deliveryMode": "Izaberite način isporuke koji ova vrsta table podržava.",
+      "destination": "Izaberite važeće odredište. Forumski kanali zahtevaju podređenu objavu.",
+      "refreshInterval": "Unesite interval osvežavanja između {minimum} i {maximum} minuta.",
+      "timezone": "Unesite IANA vremensku zonu.",
+      "timeOfDay": "Unesite važeće doba dana.",
+      "weekdays": "Izaberite najmanje jedan dan u nedelji.",
+      "dayOfMonth": "Unesite dan od 1 do 31."
+    },
+    "errors": {
+      "title": "AutoBoards nisu dostupne",
+      "session": "Vaša sesija je istekla.",
+      "request": "Zahtev za AutoBoards nije uspeo.",
+      "load": "Učitavanje AutoBoards nije uspelo.",
+      "save": "Čuvanje AutoBoarda nije uspelo.",
+      "delete": "Brisanje AutoBoarda nije uspelo."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Podešavanja panela tiketa",
+    "description": "Podesite kategorije i kanale evidencije za svaki panel tiketa.",
+    "noPanels": "Paneli tiketa nisu pronađeni",
+    "noPanelsHint": "Napravite prvi panel pomoću dugmeta iznad.",
+    "createPanel": "Novi panel",
+    "createPanelTitle": "Napravi panel tiketa",
+    "createPanelDescription": "Dajte panelu jedinstven naziv. Dugmad i kanale možete podesiti nakon pravljenja.",
+    "panelNameLabel": "Naziv panela",
+    "panelNamePlaceholder": "npr. Prijave",
+    "panelCreated": "Panel „{name}“ je napravljen.",
+    "confirmDeletePanel": "Obrisati panel „{name}“?",
+    "confirmDeletePanelHint": "Ovo će trajno obrisati panel i sva podešavanja njegovih dugmadi.",
+    "panelDeleted": "Panel je obrisan.",
+    "panelHint": "Kliknite da proširite i podesite ovaj panel.",
+    "panelEmbed": "Ugrađena poruka panela",
+    "panelEmbedHint": "Ugrađena poruka koja se koristi pri objavljivanju panela tiketa u Discordu.",
+    "panelEmbedInfoLine1": "Da napravite novu ugrađenu poruku ili izmenite postojeću, otvorite stranicu %s u {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Da biste dodali ili izmenili dugmad, otvorite %s za ovaj panel.",
+    "panelEmbedPreview": "Pregled ugrađene poruke",
+    "panelEmbedPreviewEmpty": "Pregled izabrane ugrađene poruke panela nije dostupan.",
+    "ticketOpenEmbed": "Ugrađena poruka pri otvaranju tiketa",
+    "ticketOpenEmbedHint": "Opciona prilagođena ugrađena poruka koja se šalje kada ovo dugme otvori tiket.",
+    "selectEmbed": "Izaberite ugrađenu poruku",
+    "defaultEmbed": "Bez zamene ugrađene poruke panela",
+    "noCustomMessage": "Koristi podrazumevanu poruku tiketa",
+    "buttons": "dugmad",
+    "buttonList": "Dugmad",
+    "categories": "Kategorije",
+    "openCategory": "Kategorija otvorenih tiketa",
+    "open_category": "Kategorija otvorenih tiketa",
+    "sleepCategory": "Kategorija uspavanih tiketa",
+    "sleep_category": "Kategorija uspavanih tiketa",
+    "closedCategory": "Kategorija zatvorenih tiketa",
+    "closed_category": "Kategorija zatvorenih tiketa",
+    "selectCategory": "Izaberite kategoriju...",
+    "logChannels": "Kanali evidencije",
+    "statusChangeLog": "Evidencija promene statusa",
+    "status_change_log": "Evidencija promene statusa",
+    "buttonClickLog": "Evidencija klikova na dugme",
+    "ticket_button_click_log": "Evidencija klikova na dugme",
+    "closeLog": "Evidencija zatvaranja tiketa",
+    "ticket_close_log": "Evidencija zatvaranja tiketa",
+    "selectChannel": "Izaberite kanal...",
+    "savedSuccess": "Panel „{panel}“ je sačuvan.",
+    "tabChannels": "Panel tiketa",
+    "tabSettings": "Podešavanja",
+    "tabButtons": "Dugmad",
+    "tabMessages": "Poruke",
+    "autoSaveSaving": "Čuvanje...",
+    "autoSaveSaved": "Sačuvano",
+    "autoSaveErrorTitle": "Automatsko čuvanje nije uspelo",
+    "autoSaveErrorDescription": "Ova podešavanja tiketa nisu mogla da se sačuvaju.",
+    "messages": "poruke",
+    "noButtons": "Još nema dugmadi. Dodajte jedno da biste počeli.",
+    "addButton": "Dodaj dugme",
+    "addButtonTitle": "Dodaj dugme",
+    "addButtonDescription": "Podesite izgled novog dugmeta.",
+    "buttonLabel": "Tekst dugmeta",
+    "buttonLabelPlaceholder": "npr. Prijavi se",
+    "buttonStyle": "Boja dugmeta",
+    "buttonStyleBlue": "Plava",
+    "buttonStyleGrey": "Siva",
+    "buttonStyleGreen": "Zelena",
+    "buttonStyleRed": "Crvena",
+    "buttonAdded": "Dugme je dodato.",
+    "buttonDeleted": "Dugme je obrisano.",
+    "editButtonTitle": "Izmeni podešavanja dugmeta",
+    "editButtonDescription": "Podesite ovo dugme tiketa.",
+    "buttonAppearanceSaved": "Izgled je sačuvan.",
+    "confirmDeleteButton": "Obrisati dugme „{label}“?",
+    "confirmDeleteButtonHint": "Ovo će obrisati dugme i sva njegova podešavanja (uloge, pitanja i drugo).",
+    "modRoles": "Uloge osoblja (pominju se)",
+    "modRolesHint": "Ove uloge se pominju pri otvaranju tiketa.",
+    "noPingRoles": "Uloge osoblja (bez pominjanja)",
+    "noPingRolesHint": "Ove uloge mogu videti tikete, ali se ne pominju.",
+    "questions": "Pitanja",
+    "questionsHint": "Najviše pet pitanja prikazuje se u prozoru pri otvaranju tiketa.",
+    "question": "Pitanje",
+    "privateThread": "Privatna nit",
+    "privateThreadHint": "Pravi zasebnu privatnu nit za osoblje.",
+    "accountApply": "Zahtevaj CoC nalog",
+    "accountApplyHint": "Korisnik mora povezati Clash of Clans nalog.",
+    "playerInfo": "Prikaži podatke igrača",
+    "playerInfoHint": "Prikazuje statistiku naloga pri otvaranju tiketa.",
+    "thMin": "Najniži nivo gradske kuće",
+    "numApply": "Najviše naloga",
+    "naming": "Pravilo imenovanja",
+    "namingPlaceholders": "Rezervisana mesta za naziv",
+    "namingVariables": "Promenljive: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Dugme „{label}“ je sačuvano.",
+    "badge": {
+      "accountApply": "CoC je obavezan",
+      "privateThread": "Privatna nit"
+    },
+    "approveMessages": "Poruke prihvatanja i odbijanja",
+    "approveMessagesHint": "Unapred napisane poruke koje osoblje može poslati kandidatima (najviše 25).",
+    "messagesMaxHint": "Možete dodati najviše 25 poruka.",
+    "editMessagesButton": "Izmeni poruke",
+    "editMessagesTitle": "Izmeni unapred napisane poruke",
+    "editMessagesDescription": "Dodajte, uklonite i ažurirajte unapred napisane poruke tiketa.",
+    "addMessage": "Dodaj poruku",
+    "noMessages": "Još nema poruka. Dodajte jednu da biste počeli.",
+    "messageName": "Naziv poruke",
+    "contentLabel": "Sadržaj",
+    "messageContent": "Sadržaj poruke...",
+    "messageNameRequired": "Sve poruke moraju imati naziv.",
+    "messagesSaved": "Poruke prihvatanja i odbijanja su sačuvane.",
+    "rolesToAdd": "Uloge koje se dodeljuju",
+    "rolesToAddHint": "Uloge koje se automatski dodeljuju korisniku pri otvaranju tiketa.",
+    "rolesToRemove": "Uloge koje se oduzimaju",
+    "rolesToRemoveHint": "Uloge koje se automatski uklanjaju korisniku pri otvaranju tiketa.",
+    "applyClans": "Dozvoljeni klanovi",
+    "applyClansHint": "Samo članovi ovih klanova mogu otvoriti tiket. Ostavite prazno da biste dozvolili svima.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Uslovi gradske kuće",
+    "thRequirementsHint": "Najniži potrebni nivoi heroja za svaki nivo gradske kuće radi otvaranja tiketa.",
+    "thHeroLegend": "BK = Kralj varvarina · AQ = Kraljica strelaca · GW = Veliki čuvar · RC = Kraljevska šampionka · WARST = Ratne zvezde",
+    "addThLevel": "Dodaj nivo TH-a",
+    "thLevel": "TH",
+    "numApplyHint": "Najveći broj CoC naloga kojima korisnik može da se prijavi (1–25).",
+    "embeds": "Ugrađene poruke",
+    "embedsHint": "Discord ugrađene poruke koje se koriste kao poruke panela ili pri otvaranju tiketa.",
+    "newEmbed": "Nova ugrađena poruka",
+    "embedName": "Naziv ugrađene poruke",
+    "embedNamePlaceholder": "moja-ugradjena-poruka",
+    "discohookUrl": "Discohook URL",
+    "embedDiscohookHint": "Napravite ugrađenu poruku na Discohooku, kopirajte URL stranice i nalepite ga ovde.",
+    "openDiscohook": "Otvori Discohook",
+    "openInDiscohook": "Otvori u Discohooku",
+    "copyDiscohookUrl": "Kopiraj Discohook URL",
+    "copyDiscohookUrlDone": "URL je kopiran!",
+    "editEmbed": "Izmeni",
+    "deleteEmbed": "Obriši",
+    "confirmDeleteEmbed": "Obrisati ugrađenu poruku „{name}“?",
+    "confirmDeleteEmbedHint": "Ovo je uklanja samo iz ClashKinga i ne utiče na već objavljene Discord poruke.",
+    "embedSaved": "Ugrađena poruka „{name}“ je sačuvana.",
+    "embedCreated": "Ugrađena poruka „{name}“ je napravljena.",
+    "embedDeleted": "Ugrađena poruka je obrisana.",
+    "noEmbeds": "Još nema ugrađenih poruka.",
+    "noEmbedsHint": "Ovde napravite ugrađenu poruku, pa je dodelite panelu ili dugmetu.",
+    "legacyEmbed": "Napravljeno preko bota — nalepite Discohook URL da biste omogućili uređivanje.",
+    "invalidDiscohookUrl": "Nevažeći URL. Nalepite URL Discohook stranice (discohook.app/?data=... ili discohook.app/?share=...).",
+    "tabEmbeds": "Ugrađene poruke"
+  },
+  "EmbedsPage": {
+    "title": "Ugrađene poruke",
+    "description": "Pravite Discord šablone ugrađenih poruka za panele tiketa i dugmad i upravljajte njima.",
+    "nameHint": "Dajte ugrađenoj poruci jedinstven identifikator. Sadržaj možete kasnije promeniti."
+  },
+  "EmbedEditor": {
+    "importSection": "Uvezi iz Discohooka",
+    "addMessage": "Dodaj poruku",
+    "addMessageDialogTitle": "Dodaj poruku",
+    "addMessageDialogDescription": "Izaberite složenost poruke.",
+    "addMessageClassicTitle": "Klasično",
+    "addMessageClassicDescription": "Jednostavno i pouzdano: tekst i ugrađene poruke. Ako niste sigurni šta da izaberete, odaberite ovo.",
+    "addMessageV2Title": "Komponente v2",
+    "addMessageV2Description": "Napredniji rasporedi i interaktivne komponente, namenjeni složenijim podešavanjima.",
+    "betaTag": "Beta",
+    "importExport": "Uvoz i izvoz",
+    "importExportDescription": "Uvezite ugrađenu poruku iz Discohooka ili izvezite trenutnu poruku u Discohook.",
+    "importFromDiscohook": "Uvezi iz Discohooka",
+    "copyDiscohookUrl": "Kopiraj Discohook URL",
+    "openInDiscohook": "Otvori u Discohooku",
+    "content": "Sadržaj",
+    "contentPlaceholder": "Sadržaj poruke prikazan iznad ugrađenih poruka...",
+    "profileSection": "Profil",
+    "profileName": "Ime",
+    "profileAvatarUrl": "URL avatara",
+    "profileUnsupportedWarning": "Upozorenje: bot trenutno ne podržava ažuriranje ovog profila.",
+    "import": "Uvezi",
+    "importError": "Nevažeći Discohook URL. Nalepite URL Discohook stranice.",
+    "importMultipleMessagesWarning": "Ova veza sadrži više poruka. Uvezena je samo prva jer bot podržava jednu poruku po ugrađenoj poruci.",
+    "colorSection": "Boja",
+    "authorSection": "Autor",
+    "authorName": "Ime",
+    "authorIconUrl": "URL ikone",
+    "authorUrl": "URL autora",
+    "bodySection": "Telo",
+    "title": "Naslov",
+    "titleUrl": "URL naslova",
+    "sidebarColor": "Boja bočne trake",
+    "description": "Opis",
+    "descriptionPlaceholder": "Opis ugrađene poruke...",
+    "fieldsSection": "Polja",
+    "addField": "Dodaj polje",
+    "field": "Polje",
+    "fieldName": "Ime",
+    "fieldValue": "Vrednost",
+    "fieldInline": "U istom redu",
+    "imagesSection": "Slike",
+    "thumbnailUrl": "URL sličice",
+    "imageUrl": "URL slike",
+    "footerSection": "Podnožje",
+    "footerText": "Tekst podnožja",
+    "footerIconUrl": "URL ikone podnožja",
+    "timestamp": "Uključi vremensku oznaku",
+    "preview": "Pregled",
+    "previewEmpty": "Popunite polja da biste videli pregled",
+    "modeToggleV1": "Klasično (V1)",
+    "modeToggleV2": "Komponente (V2)",
+    "componentsSection": "Komponente",
+    "addComponent": "Dodaj komponentu",
+    "containerLabel": "Kontejner",
+    "textDisplayLabel": "Prikaz teksta",
+    "separatorLabel": "Razdvajač",
+    "mediaGalleryLabel": "Galerija medija",
+    "sectionLabel": "Odeljak",
+    "dividerLine": "Prikaži liniju razdvajanja",
+    "spacing": "Razmak",
+    "spacingSmall": "Malo",
+    "spacingLarge": "Veliko",
+    "imageDescription": "Alternativni tekst",
+    "imageSpoiler": "Skriveni sadržaj",
+    "addImage": "Dodaj sliku",
+    "addTextBlock": "Dodaj blok teksta",
+    "accessory": "Dodatak",
+    "accessoryNone": "Nijedno",
+    "accessoryThumbnail": "Sličica",
+    "accessoryButton": "Dugme",
+    "thumbnailAlt": "Alternativni tekst sličice",
+    "accentColor": "Boja naglaska",
+    "addContainer": "Dodaj podređenu komponentu",
+    "containerSpoiler": "Kontejner skrivenog sadržaja",
+    "stringSelectLabel": "Izbor teksta",
+    "userSelectLabel": "Izbor korisnika",
+    "roleSelectLabel": "Izbor uloge",
+    "mentionableSelectLabel": "Izbor za pominjanje",
+    "channelSelectLabel": "Izbor kanala",
+    "fileLabel": "Datoteka",
+    "fileUrl": "URL datoteke",
+    "fileUploadButton": "Otpremi",
+    "fileSpoiler": "Skriveni sadržaj",
+    "selectCustomId": "Prilagođeni ID",
+    "selectPlaceholder": "Tekst rezervisanog mesta",
+    "selectMinValues": "Najmanje vrednosti",
+    "selectMaxValues": "Najviše vrednosti",
+    "selectOptions": "Opcije",
+    "selectOption": "Opcija",
+    "selectOptionLabel": "Oznaka",
+    "selectOptionValue": "Vrednost",
+    "selectOptionDescription": "Opis",
+    "selectOptionDefault": "Podrazumevano izabrano",
+    "addSelectOption": "Dodaj opciju",
+    "selectDisabled": "Onemogućeno",
+    "actionRowMode": "Vrsta reda",
+    "actionRowModeButtons": "Dugmad",
+    "actionRowLabel": "Red radnji",
+    "addButton": "Dodaj dugme",
+    "buttonLabel": "Oznaka",
+    "buttonStyle": "Stil",
+    "buttonStylePrimary": "Primarno",
+    "buttonStyleSecondary": "Sekundarno",
+    "buttonStyleSuccess": "Uspeh",
+    "buttonStyleDanger": "Opasno",
+    "buttonStyleLink": "Veza",
+    "tabMentions": "Pominjanja",
+    "tabTime": "Vreme",
+    "tabEmojis": "Emodžiji",
+    "dateLabel": "Datum",
+    "timeLabel": "Vreme",
+    "mentionsChannels": "Kanali",
+    "mentionsSpecial": "Posebno",
+    "mentionsChannelList": "Svi kanali",
+    "mentionsRoles": "Uloge",
+    "mentionsServerGuide": "Vodič kroz server",
+    "mentionsBrowseChannels": "Pregledaj kanale",
+    "mentionsChannelsAndRoles": "Kanali i uloge",
+    "mentionsNoChannels": "Nijedan kanal ne odgovara pretrazi.",
+    "mentionsNoRoles": "Nijedna uloga ne odgovara pretrazi.",
+    "styleLabel": "Stil",
+    "timeRelativeNow": "pre 0 sekundi",
+    "emojiSearchPlaceholder": "Pronađite odgovarajući emodži",
+    "emojiToneLabel": "Boja kože emodžija",
+    "emojiCategory": {
+      "people": "Ljudi",
+      "nature": "Priroda",
+      "food": "Hrana",
+      "activities": "Aktivnosti",
+      "travel": "Putovanja",
+      "objects": "Predmeti",
+      "symbols": "Simboli",
+      "flags": "Zastave"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Onemogućeno",
+    "unknownComponent": "Nepoznata komponenta",
+    "unknownComponentHint": "Ova vrsta komponente se ovde ne može menjati, ali će biti sačuvana."
+  },
+  "PanelsPage": {
+    "title": "Paneli",
+    "description": "Podesite interaktivni panel članova objavljen na serveru. Članovi jednim klikom mogu povezati nalog, osvežiti uloge i još mnogo toga.",
+    "saved": "Podešavanja panela su sačuvana.",
+    "embedSection": "Ugrađena poruka",
+    "embedHint": "Opciona ugrađena poruka prikazana iznad dugmadi.",
+    "embedLabel": "Ugrađena poruka",
+    "noEmbed": "Bez ugrađene poruke (samo dugmad)",
+    "buttonsSection": "Dugmad",
+    "buttonsHint": "Izaberite dugmad radnji za prikaz. Redosled prati vaš izbor.",
+    "colorSection": "Boja dugmeta",
+    "colorHint": "Primenjuje se na svu dugmad.",
+    "welcomeSection": "Kanal dobrodošlice",
+    "welcomeHint": "Kada je podešeno, panel se automatski objavljuje kada se novi član pridruži.",
+    "welcomeChannel": "Kanal",
+    "welcomeChannelPlaceholder": "Izaberite kanal...",
+    "editPanelButton": "Izmeni panel",
+    "editDialogTitle": "Izmeni panel",
+    "editDialogDescription": "Ažurirajte ugrađenu poruku, dugmad i njihovu boju uz pregled uživo pre čuvanja.",
+    "welcomeAutosaveSuccess": "Kanal dobrodošlice je sačuvan.",
+    "welcomeAutosaveDisabled": "Kanal dobrodošlice je onemogućen.",
+    "previewSection": "Pregled",
+    "previewHint": "Kako će panel izgledati u Discordu.",
+    "previewNoEmbed": "Nije izabrana ugrađena poruka",
+    "previewEmbedNoData": "Ugrađena poruka nema podatke za pregled",
+    "previewNoButtons": "Dugmad nisu izabrana",
+    "color": {
+      "Blue": "Plava",
+      "Green": "Zelena",
+      "Grey": "Siva",
+      "Red": "Crvena"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Nagradne igre",
+    "description": "Pravite, zakazujte i upravljajte nagradnim igrama na serveru.",
+    "create": "Napravi nagradnu igru",
+    "listTitle": "Kontrolna tabla nagradnih igara",
+    "listDescription": "Pratite zakazane, aktivne i završene nagradne igre na jednom mestu.",
+    "empty": "Još nema nagradnih igara za prikaz.",
+    "confirmDeleteTitle": "Obriši nagradnu igru",
+    "confirmDelete": "Da li sigurno želite da obrišete ovu nagradnu igru?",
+    "discardTitle": "Odbaciti izmene?",
+    "discardDescription": "Imate nesačuvane izmene. Ako sada zatvorite, izmene će biti izgubljene.",
+    "discardConfirm": "Odbaci",
+    "formTabs": {
+      "general": "Opšte",
+      "messages": "Poruke",
+      "restrictions": "Ograničenja",
+      "advanced": "Napredno"
+    },
+    "tabs": {
+      "ongoing": "U toku",
+      "upcoming": "Predstojeće",
+      "ended": "Završeno"
+    },
+    "stats": {
+      "total": "Ukupno nagradnih igara",
+      "totalEntries": "Ukupno prijava",
+      "ongoing": "Aktivne nagradne igre",
+      "upcoming": "Predstojeće nagradne igre",
+      "ended": "Završene nagradne igre"
+    },
+    "statsDescriptions": {
+      "total": "Sve nagradne igre podešene na ovom serveru.",
+      "totalEntries": "Ukupan broj prijava u svim nagradnim igrama.",
+      "ongoing": "Trenutno aktivne i primaju prijave.",
+      "upcoming": "Zakazane za kasniji početak.",
+      "ended": "Već završene nagradne igre."
+    },
+    "emptyTab": {
+      "title": "Ovde nema nagradnih igara",
+      "ongoing": "Trenutno nema aktivnih nagradnih igara.",
+      "upcoming": "Nema zakazanih nagradnih igara. Napravite jednu da biste počeli.",
+      "ended": "Još nijedna nagradna igra nije završena."
+    },
+    "status": {
+      "scheduled": "Zakazano",
+      "ongoing": "Aktivno",
+      "ended": "Završeno"
+    },
+    "table": {
+      "giveaway": "Nagradna igra",
+      "channel": "Kanal",
+      "entries": "Prijave",
+      "timing": "Vreme",
+      "start": "Počinje",
+      "end": "Završava se",
+      "winnersHeader": "Dobitnici",
+      "winners": "{count, plural, one {# dobitnik} few {# dobitnika} other {# dobitnika}}",
+      "boosters": "{count, plural, one {# pojačivač} few {# pojačivača} other {# pojačivača}}",
+      "noChannel": "Bez kanala",
+      "noChannelHelp": "Kanal nije dodeljen. Izmenite nagradnu igru da biste to ispravili.",
+      "endsAt": "Završava se",
+      "endedAt": "Završeno",
+      "duplicate": "Udvostruči",
+      "showingEnded": "Prikazano {shown} od {total} završenih nagradnih igara",
+      "showMore": "Prikaži još {count}",
+      "pendingUpdate": "Ažuriranje na čekanju",
+      "pendingUpdateHelp": "Ova nagradna igra ima izmene na čekanju koje će bot uskoro primeniti.",
+      "openInDiscord": "Otvori u Discordu",
+      "viewInDiscord": "Prikaži u Discordu",
+      "reroll": "Ponovo izvuci dobitnike",
+      "rerolledCount": "{count, plural, one {Ponovo je izvučen # dobitnik} few {Ponovo su izvučena # dobitnika} other {Ponovo je izvučeno # dobitnika}}",
+      "viewEntries": "Prikaži prijave"
+    },
+    "entries": {
+      "description": "Lista učesnika i njihove verovatnoće za dobitak.",
+      "totalEntries": "Ukupno prijava",
+      "uniqueUsers": "Jedinstveni korisnici",
+      "noEntrants": "Još nema prijava.",
+      "userId": "ID korisnika",
+      "entryCount": "Prijave",
+      "winChance": "Šansa za dobitak"
+    },
+    "dialog": {
+      "createTitle": "Napravi nagradnu igru",
+      "editTitle": "Izmeni nagradnu igru",
+      "description": "Podesite poruku, vreme i uslove nagradne igre.",
+      "create": "Napravi nagradnu igru",
+      "saveChanges": "Sačuvaj izmene"
+    },
+    "form": {
+      "prize": "Nagrada",
+      "prizePlaceholder": "Primer: Gold Pass",
+      "channel": "Kanal",
+      "channelPlaceholder": "Izaberi kanal",
+      "startTime": "Vreme početka",
+      "startNow": "Počni odmah",
+      "endTime": "Vreme završetka",
+      "winners": "Broj dobitnika",
+      "mentions": "Pomenute uloge",
+      "roleRequirements": "Obavezne ili isključene uloge",
+      "rolesMode": "Režim uloga",
+      "rolesModeOptions": {
+        "none": "Bez ograničenja uloga",
+        "allow": "Samo ove uloge mogu učestvovati",
+        "deny": "Ove uloge ne mogu učestvovati"
+      },
+      "rolesModeHelp": {
+        "none": "Svi korisnici mogu učestvovati u ovoj nagradnoj igri.",
+        "allow": "Mogu učestvovati samo korisnici sa jednom od izabranih uloga.",
+        "deny": "Korisnici sa bilo kojom od izabranih uloga ne mogu učestvovati."
+      },
+      "textAboveEmbed": "Tekst iznad ugrađene poruke",
+      "textEmbedDefault": "Kliknite na dugme ispod da biste učestvovali.",
+      "textInEmbed": "Opis ugrađene poruke",
+      "textEndDefault": "Čestitamo svima koji su izabrani! Uskoro ćemo vas kontaktirati.",
+      "textOnEnd": "Poruka na kraju nagradne igre",
+      "image": "Slika nagradne igre",
+      "removeImage": "Ukloni trenutnu sliku",
+      "imagePreviewAlt": "Pregled nagradne igre",
+      "previewGiveaway": "Pregledaj nagradnu igru",
+      "previewEnd": "Pregledaj završnu poruku",
+      "boosters": "Pojačivači prijava",
+      "addBooster": "Dodaj pojačivač",
+      "noBoosters": "Nema podešenih pojačivača.",
+      "boosterLabel": "Pojačivač {index}",
+      "boostValue": "Množilac",
+      "boostRoles": "Pojačane uloge",
+      "requirements": "Uslovi za prijavu",
+      "profilePictureRequired": "Zahtevaj Discord profilnu sliku",
+      "cocAccountRequired": "Zahtevaj povezan Clash of Clans nalog"
+    },
+    "validation": {
+      "prizeRequired": "Nagrada je obavezna.",
+      "channelRequired": "Kanal je obavezan.",
+      "startTimeRequired": "Vreme početka je obavezno osim ako nagradna igra počinje odmah.",
+      "endTimeRequired": "Vreme završetka je obavezno.",
+      "endAfterStart": "Vreme završetka mora biti nakon vremena početka.",
+      "imageTooLarge": "Slika mora biti manja od 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Pregled uživo",
+      "discordPreview": "Discord pregled",
+      "giveawayTitle": "Pregled nagradne igre",
+      "giveawayDescription": "Ovako će izgledati poruka aktivne nagradne igre.",
+      "endTitle": "Pregled završne poruke",
+      "endDescription": "Ova poruka se šalje kada se nagradna igra završi.",
+      "winnerCount": "Dobitnici",
+      "winnerWord": "{count, plural, one {dobitnik} few {dobitnika} other {dobitnika}}",
+      "mentionCount": "Pomenute uloge",
+      "requirementCount": "Uslovi",
+      "boosterCount": "Pojačivači",
+      "profileRequired": "Profilna slika je obavezna",
+      "accountRequired": "Povezan CoC nalog je obavezan",
+      "rolesAllow": "Ograničeno na izabrane uloge",
+      "rolesDeny": "Izabrane uloge su isključene",
+      "noChannel": "Kanal još nije izabran",
+      "noPrize": "Vaša nagrada će se prikazati ovde",
+      "noEmbedText": "Dodajte tekst ugrađene poruke da biste pregledali sadržaj nagradne igre.",
+      "noEndText": "Dodajte završnu poruku za dobitnike.",
+      "startsAt": "Počinje: {date}",
+      "endsAt": "Završava se: {date}",
+      "endsOn": "Završava se {date}",
+      "endsFooter": "Završava se",
+      "notScheduled": "Nije zakazano",
+      "schedule": "Raspored",
+      "endMessage": "Poruka dobitnicima",
+      "endSummary": "{winners, plural, one {Ovde će biti objavljen # dobitnik.} few {Ovde će biti objavljena # dobitnika.} other {Ovde će biti objavljeno # dobitnika.}}",
+      "totalParticipants": "Ukupno učesnika: {count}",
+      "participate": "Učestvuj",
+      "buttonHint": "Glavno dugme radnje prikazano ispod Discord objave."
+    },
+    "toast": {
+      "errorTitle": "Došlo je do greške",
+      "successTitle": "Uspeh",
+      "loadError": "Učitavanje nagradnih igara nije uspelo.",
+      "saveError": "Čuvanje nagradne igre nije uspelo.",
+      "deleteError": "Brisanje nagradne igre nije uspelo.",
+      "created": "Nagradna igra je napravljena.",
+      "updated": "Nagradna igra je ažurirana.",
+      "deleted": "Nagradna igra je obrisana.",
+      "rerolled": "Dobitnici su ponovo izvučeni.",
+      "rerollError": "Ponovno izvlačenje dobitnika nije uspelo."
+    },
+    "reroll": {
+      "title": "Ponovo izvuci dobitnike",
+      "description": "Izaberite dobitnike koje treba zameniti. Novi dobitnici će biti izvučeni među učesnicima koji ispunjavaju uslove.",
+      "selectWinners": "Izaberite dobitnike za zamenu:",
+      "confirm": "{count, plural, one {Ponovo izvuci # dobitnika} few {Ponovo izvuci # dobitnika} other {Ponovo izvuci # dobitnika}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Pregled kontrolne table",
+    "description": "Pratite statistiku servera i započnite podešavanje",
+    "stats": {
+      "linkedPlayers": "Povezani igrači",
+      "linkedPlayersDesc": "Igrači povezani na ovom serveru",
+      "clansConfigured": "Podešeni klanovi",
+      "clansConfiguredDesc": "Klanovi praćeni na ovom serveru",
+      "activeRosters": "Aktivni sastavi",
+      "activeRostersDesc": "Napravljeni ratni sastavi",
+      "totalAccounts": "Povezani nalozi",
+      "totalAccountsDesc": "Ukupno povezanih CoC naloga",
+      "playersTracked": "Praćeni igrači",
+      "globalPlayers": "Ukupno igrača u bazi podataka",
+      "clansTracked": "Praćeni klanovi",
+      "globalClans": "Ukupno klanova u bazi podataka",
+      "botStatus": "Status bota",
+      "online": "Na mreži",
+      "offline": "Van mreže",
+      "memoryUsage": "Memorija: {used} MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Statistika bota",
+    "clans": {
+      "title": "Vaši klanovi",
+      "description": "{count, plural, one {Podešen je # klan} few {Podešena su # klana} other {Podešeno je # klanova}}",
+      "manage": "Upravljaj klanovima",
+      "addFirst": "Dodaj prvi klan"
+    },
+    "quickStart": {
+      "title": "Brzi početak",
+      "description": "Započnite podešavanje ClashKing bota",
+      "step1": {
+        "title": "Podesite opšta podešavanja",
+        "description": "Podesite pravila nadimaka, boje ugrađenih poruka i kanale evidencije"
+      },
+      "step2": {
+        "title": "Dodajte svoje klanove",
+        "description": "Povežite Clash of Clans klanove i podesite uloge"
+      },
+      "step3": {
+        "title": "Podesite automatske uloge",
+        "description": "Podesite automatsku dodelu uloga na osnovu gradske kuće, trofeja i drugih uslova."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Statistika bota",
+    "description": "Globalna statistika ClashKing bota i stanje sistema",
+    "about": {
+      "title": "O ovoj statistici",
+      "description": "Ovo je globalna statistika cele mreže ClashKing bota",
+      "globalStats": "Globalna statistika",
+      "globalStatsDesc": "Broj igrača i klanova obuhvata sve praćene entitete na svim Discord serverima koji koriste ClashKing",
+      "systemHealth": "Stanje sistema",
+      "systemHealthDesc": "Upotreba procesora i memorije pokazuje trenutno opterećenje ClashKing API infrastrukture"
+    }
+  },
+  "NotFound": {
+    "title": "404 — Stranica nije pronađena",
+    "description": "Stranica koju tražite ne postoji.",
+    "goHome": "Idi na početnu"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord bot, mobilna aplikacija i kontrolna tabla klana",
+      "description": "Upravljajte ratovima, sastavima, nalozima, podsetnicima i podešavanjima klana uz ClashKing na Discordu, mobilnim uređajima i vebu.",
+      "openGraphTitle": "ClashKing | Vodite svoj klan"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing navigacija",
+      "homeLabel": "ClashKing početna",
+      "mobileApp": "Mobilna aplikacija",
+      "discordBot": "Discord bot",
+      "dashboard": "Kontrolna tabla"
+    },
+    "language": {
+      "label": "Jezik"
+    },
+    "appearance": {
+      "label": "Izgled",
+      "day": "Dan",
+      "sunset": "Sumrak"
+    },
+    "actions": {
+      "addToDiscord": "Dodaj u Discord",
+      "addClashKing": "Dodaj ClashKing",
+      "openDashboard": "Otvori kontrolnu tablu",
+      "joinTestFlight": "Pridruži se TestFlightu",
+      "getAndroidApp": "Preuzmi Android aplikaciju"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Vodite",
+          "second": "svoj",
+          "third": "klan."
+        },
+        "accounts": {
+          "first": "Upravljajte",
+          "second": "svojim",
+          "third": "nalozima."
+        },
+        "stats": {
+          "first": "Istražite",
+          "second": "sve",
+          "third": "statistike."
+        }
+      },
+      "rotatingLabel": "Vodite svoj klan. Upravljajte nalozima. Istražite statistiku.",
+      "copy": "Ratovi, sastavi, nalozi i podešavanja klana na Discordu, mobilnim uređajima i vebu."
+    },
+    "app": {
+      "title": "Mobilna aplikacija",
+      "intro": "Pratilac vaših Clash naloga.",
+      "stageLabel": "Ekrani klana, nadogradnji i ratnog vidžeta u mobilnoj aplikaciji ClashKing",
+      "images": {
+        "clanOverview": "Pregled klana u mobilnoj aplikaciji ClashKing",
+        "upgradeStats": "Statistika nadogradnje Velikog čuvara u mobilnoj aplikaciji ClashKing",
+        "warWidget": "ClashKing vidžet rezultata rata"
+      },
+      "features": {
+        "widgets": {
+          "title": "Vidžeti",
+          "copy": "Pregledajte ratove jednim pogledom."
+        },
+        "notifications": {
+          "title": "Obaveštenja",
+          "copy": "Primite obaveštenje kada napad postane dostupan ili se nadogradnja završi."
+        },
+        "accounts": {
+          "title": "Povezani nalozi",
+          "copy": "Držite sve Clash naloge na jednom mestu."
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord bot",
+      "intro": "Statistika klana i alati direktno u Discordu.",
+      "imageLabel": "ClashKing komanda za klan u Discordu",
+      "imageAlt": "ClashKing komanda koja prikazuje statistiku klana ArcLine u Discordu",
+      "features": {
+        "rosters": {
+          "title": "Sastavi",
+          "copy": "Upravljajte nalozima za CWL ili događaje."
+        },
+        "warTools": {
+          "title": "Ratni alati",
+          "copy": "Proverite napade, postave i podsetnike u Discordu."
+        },
+        "accounts": {
+          "title": "Povezani nalozi",
+          "copy": "Držite sve Clash naloge na jednom mestu."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Kontrolna tabla",
+      "intro": "Upravljajte sastavima, podsetnicima i podešavanjima servera na jednom mestu.",
+      "imageLabel": "Graditeljska koliba koja predstavlja alate za upravljanje klanom",
+      "imageAlt": "Graditeljska koliba nivoa 8",
+      "features": {
+        "settings": {
+          "title": "Podešavanja klana",
+          "copy": "Podesite klanove, uloge i kanale."
+        },
+        "rosters": {
+          "title": "Sastavi",
+          "copy": "Upravljajte nalozima za CWL ili događaje."
+        },
+        "automation": {
+          "title": "Automatizacija",
+          "copy": "Zakažite podsetnike i zadatke servera."
+        }
+      }
+    },
+    "resources": {
+      "title": "Gradite uz ClashKing.",
+      "copy": "Vodiči, izvorni kôd i strukturirani podaci za alate zajednice.",
+      "ariaLabel": "Resursi za programere",
+      "documentation": "Dokumentacija",
+      "publicApi": "Javni API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans alati za sve",
+      "docs": "Dokumentacija",
+      "privacy": "Politika privatnosti",
+      "terms": "Uslovi korišćenja",
+      "legal": "Ovaj sadržaj nije povezan sa kompanijom Supercell niti ga je ona podržala, sponzorisala ili posebno odobrila."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing za Discord, mobilne uređaje i veb",
+    "privacy": {
+      "title": "Politika privatnosti | ClashKing",
+      "openGraphTitle": "ClashKing politika privatnosti",
+      "description": "Kako ClashKing prikuplja, koristi, čuva i štiti podatke naloga, igre i aplikacije.",
+      "heading": "Politika privatnosti",
+      "eyebrow": "Važi od 17. jula 2026."
+    },
+    "terms": {
+      "title": "Uslovi korišćenja | ClashKing",
+      "openGraphTitle": "ClashKing uslovi korišćenja",
+      "description": "Uslovi koji važe kada koristite ClashKing veb-sajtove, aplikacije, usluge i alate zajednice.",
+      "heading": "Uslovi korišćenja",
+      "eyebrow": "Pravni dokumenti ClashKinga"
+    }
+  }
+}

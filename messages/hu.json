@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Betöltés...",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "search": "Keresés",
+    "filter": "Szűrő",
+    "add": "Hozzáadás",
+    "remove": "Eltávolítás",
+    "refresh": "Frissítés",
+    "close": "Bezárás",
+    "openMenu": "Menü megnyitása",
+    "submit": "Küldés",
+    "back": "Vissza",
+    "next": "Következő",
+    "previous": "Előző",
+    "poweredBy": "Szolgáltató:",
+    "noData": "Nincs elérhető adat",
+    "noChannelFound": "Nem található csatorna.",
+    "searchChannels": "Csatornák keresése...",
+    "searchClans": "Klánok keresése...",
+    "noClanFound": "Nem található klán.",
+    "searchCategories": "Kategóriák keresése...",
+    "noRoleFound": "Nem található szerepkör.",
+    "searchRoles": "Szerepkörök keresése...",
+    "addRole": "Szerepkör hozzáadása...",
+    "error": "Hiba történt",
+    "success": "Siker",
+    "actions": "Műveletek",
+    "details": "Részletek",
+    "view": "Megtekintés",
+    "unknown": "Ismeretlen",
+    "confirm": "Megerősítés",
+    "settings": "Beállítások",
+    "status": "Állapot",
+    "retry": "Újrapróbálás",
+    "disabled": "Letiltva",
+    "name": "Név",
+    "description": "Leírás",
+    "createdAt": "Létrehozva",
+    "updatedAt": "Frissítve",
+    "dashboard": "Vezérlőpult",
+    "loadError": "Nem sikerült betölteni az adatokat.",
+    "tryAgain": "Próbáld újra",
+    "create": "Létrehozás",
+    "viewClashProfile": "Clash-profil megtekintése",
+    "openInGame": "Megnyitás a játékban",
+    "openChannelInDiscord": "Csatorna megnyitása a Discordon",
+    "playerProfile": {
+      "clan": "Klán",
+      "townHallLevel": "Városháza szintje",
+      "trophies": "Kupák",
+      "warPreference": "Háborús részvétel",
+      "warPreferenceIn": "Részt vesz",
+      "warPreferenceOut": "Nem vesz részt",
+      "signupGroup": "Jelentkezési csoport",
+      "heroLevels": "Hősszintek",
+      "hitrate30d": "30 napos találati arány"
+    }
+  },
+  "Navigation": {
+    "features": "Funkciók",
+    "openSource": "Nyílt forráskód",
+    "help": "Segítségre van szükséged?",
+    "support": "Támogass minket",
+    "commands": "Parancsok",
+    "premium": "Prémium",
+    "documentation": "Dokumentáció",
+    "loginWithDiscord": "Bejelentkezés Discorddal",
+    "addToDiscord": "Hozzáadás egy Discordhoz",
+    "openDashboard": "Irányítópult megnyitása",
+    "dashboardSettings": "Irányítópult beállításai",
+    "logout": "Kijelentkezés",
+    "settings": "Beállítások",
+    "theme": "Téma",
+    "systemTheme": "Rendszerbeállítás követése",
+    "lightTheme": "Világos téma",
+    "darkTheme": "Sötét téma",
+    "language": "Nyelv",
+    "browserLanguage": "Böngésző nyelve"
+  },
+  "HomePage": {
+    "badge": "Már több mint {serverCount} szerver használja a ClashKinget",
+    "title": "A legerősebb",
+    "titleHighlight": "Clash of Clans-bot",
+    "subtitle": "Automatizáld a klánod kezelését, kövesd a játékosok statisztikáit, kezeld a háborúkat, és tartsd aktívan a közösségedet.",
+    "cta": {
+      "heading": "Készen állsz átalakítani a klánodat?",
+      "description": "Csatlakozz a ClashKinget már használó több mint {serverCount} Discord-szerverhez, és emeld új szintre Clash of Clans-közösségedet. A beállítás mindössze 2 perc.",
+      "button": "ClashKing hozzáadása a Discordhoz",
+      "trustBadge": "Örökre ingyenes • Bankkártya nélkül • Több mint {serverCount} szerver",
+      "addToDiscord": "Hozzáadás egy Discordhoz",
+      "openDashboard": "Irányítópult megnyitása"
+    },
+    "stats": {
+      "servers": "Discord-szerverek",
+      "users": "Aktív felhasználók",
+      "clans": "Követett klánok"
+    },
+    "features": {
+      "title": "Minden, amire a klánod kezeléséhez szükséged lehet",
+      "subtitle": "Hatékony funkciók, kifejezetten Clash of Clans-közösségek számára",
+      "autoRoles": {
+        "title": "Automatikus szerepkörkezelés",
+        "description": "Szerepkörök automatikus hozzárendelése a játékos állapota, klánpozíciója és teljesítményei alapján. Tartsd könnyedén rendezetten a szerveredet."
+      },
+      "playerStats": {
+        "title": "Játékosstatisztikák",
+        "description": "Kövesd a részletes játékosstatisztikákat, a fejlődési grafikonokat és a támadási előzményeket. Lásd, ki fejlődik, és kinek van szüksége segítségre."
+      },
+      "leaderboards": {
+        "title": "Ranglisták",
+        "description": "Készíts versenyszellemre ösztönző ranglistákat adományok, trófeák, háborús csillagok és egyéni mutatók alapján. Növeld az aktivitást."
+      },
+      "warTracking": {
+        "title": "Háborúkövetés",
+        "description": "Figyeld a háborús felállásokat és a támadásokat valós időben, majd elemezd az eredményeket. Egyetlen részletről sem maradsz le."
+      },
+      "smartReminders": {
+        "title": "Intelligens emlékeztetők",
+        "description": "Automatikus emlékeztetők a Klánjátékokhoz, a háborús támadásokhoz, a Klánháborúligához és az egyéni eseményekhez. Így mindenki naprakész marad."
+      },
+      "customization": {
+        "title": "Teljes testreszabás",
+        "description": "Szabd személyre a parancsokat, a beágyazások színeit, a beceneveket és a jogosultságokat. Alakítsd a ClashKinget teljesen a saját igényeidre."
+      },
+      "familyManagement": {
+        "title": "Kláncsalád-kezelés",
+        "description": "Kezelj több klánt egyetlen családként, klánok közötti statisztikákkal, közös ranglistákkal és egységes szerepkörökkel."
+      },
+      "analytics": {
+        "title": "Részletes elemzések",
+        "description": "Nyerj mélyebb betekintést a klán teljesítményébe, a játékosok aktivitási mintáiba és a fejlődési trendekbe. Hozz adatalapú döntéseket."
+      },
+      "performance": {
+        "title": "Villámgyors",
+        "description": "Azonnali parancsválaszokra és valós idejű frissítésekre optimalizálva. Nincs akadozás vagy várakozás."
+      },
+      "security": {
+        "title": "Biztonságos és megbízható",
+        "description": "99,9%-os rendelkezésre állás, titkosított adatok és rendszeres biztonsági mentések. Klánod adatai nálunk biztonságban vannak."
+      }
+    },
+    "footer": {
+      "tagline": "A leghatékonyabb Clash of Clans-bot Discord-közösségek számára.",
+      "about": {
+        "title": "Rólunk",
+        "features": "Funkciók",
+        "help": "Segítségre van szükséged?",
+        "openSource": "Nyílt forráskód",
+        "support": "Támogass minket"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Vezérlőpult",
+        "inviteBot": "Bot meghívása"
+      },
+      "resources": {
+        "title": "Erőforrások",
+        "documentation": "Dokumentáció",
+        "quickStart": "Gyors útmutató",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Közösség",
+        "discord": "Discord-szerver",
+        "twitter": "X (Twitter)",
+        "reportBug": "Hiba jelentése",
+        "requestFeature": "Funkció kérése"
+      },
+      "legal": {
+        "copyright": "ClashKing. Minden jog fenntartva.",
+        "privacy": "Adatvédelmi irányelvek",
+        "terms": "Felhasználási feltételek"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Nincs a szerveren",
+    "unknownUser": "Ismeretlen felhasználó",
+    "notLinked": "Nincs összekapcsolva",
+    "status": {
+      "onServer": "A szerveren",
+      "notOnServer": "Nincs a szerveren"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "Discord-profil megtekintése",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Áttekintés",
+      "description": "Irányítópult kezdőlapja"
+    },
+    "general": {
+      "name": "Általános beállítások",
+      "description": "Szerverbeállítások"
+    },
+    "dashboardAccess": {
+      "name": "Irányítópult-hozzáférés",
+      "description": "Irányítópult-részek delegálása"
+    },
+    "familySettings": {
+      "name": "Családi beállítások",
+      "description": "Családi szerepkörök és becenevek"
+    },
+    "clans": {
+      "name": "Klánok",
+      "description": "Klánjaid kezelése"
+    },
+    "logs": {
+      "name": "Naplók",
+      "description": "Webhook konfiguráció"
+    },
+    "roles": {
+      "name": "Szerepkörök",
+      "description": "Szerepkörök automatizálása"
+    },
+    "reminders": {
+      "name": "Emlékeztetők",
+      "description": "Minden emlékeztetőtípus"
+    },
+    "rosters": {
+      "name": "Keretek",
+      "description": "Keretek kezelése"
+    },
+    "bases": {
+      "name": "Bázisok",
+      "description": "Báziselrendezések és aktivitás"
+    },
+    "autoboards": {
+      "name": "Autoboards",
+      "description": "Automatizált ranglisták"
+    },
+    "giveaways": {
+      "name": "Nyereményjátékok",
+      "description": "Nyereményjátékok kezelése"
+    },
+    "panels": {
+      "name": "Panelek",
+      "description": "Interaktív tagpanelek műveletgombokkal"
+    },
+    "tickets": {
+      "name": "Jegyek",
+      "description": "Toborzási és támogatási jegyek"
+    },
+    "embeds": {
+      "name": "Beágyazások",
+      "description": "Discord-beágyazási sablonok"
+    },
+    "links": {
+      "name": "Kapcsolatok",
+      "description": "Játékosok és Discord-fiókok összekapcsolása"
+    },
+    "bans": {
+      "name": "Kitiltások és büntetőpontok",
+      "description": "Moderációs eszközök"
+    },
+    "wars": {
+      "name": "Háborúk",
+      "description": "Háborús statisztikák"
+    },
+    "leaderboards": {
+      "name": "Ranglisták",
+      "description": "Globális rangsor"
+    },
+    "sections": {
+      "configuration": "Konfiguráció",
+      "clanManagement": "Klánkezelés",
+      "playerManagement": "Játékoskezelés",
+      "automation": "Automatizálás",
+      "statistics": "Statisztikák"
+    },
+    "switchServer": "Szerverváltás",
+    "goHome": "Kezdőlap"
+  },
+  "BasesPage": {
+    "eyebrow": "Klánkezelés",
+    "title": "Bázisok",
+    "description": "Tekintsd át a megosztott elrendezéseket, az aktivitási előzményeket és a forrásként szolgáló Discord-üzeneteket.",
+    "refresh": "Frissítés",
+    "create": "Bázis hozzáadása",
+    "retry": "Próbáld újra",
+    "dismiss": "Bezárás",
+    "cancel": "Mégse",
+    "previous": "Előző",
+    "next": "Következő",
+    "pagination": "Oldal {page} / {total}",
+    "imageAlt": "A(z) {index}. báziselrendezés képe",
+    "noDescription": "Nincs megadva leírás.",
+    "openLayout": "Elrendezés megnyitása",
+    "openMessage": "Discord-üzenet",
+    "summary": {
+      "total": "Bázisok összesen",
+      "page": "Aktuális oldal",
+      "visible": "Látható"
+    },
+    "counts": {
+      "downloads": "Egyedi letöltések",
+      "upvotes": "Pozitív szavazatok",
+      "downvotes": "Negatív szavazatok"
+    },
+    "history": {
+      "title": "Letöltési előzmények ({count})",
+      "empty": "Nincs rögzített letöltőazonosító.",
+      "resolve": "Profil megkeresése"
+    },
+    "delete": {
+      "action": "Törlés",
+      "confirmTitle": "Törlöd ezt a bázist?",
+      "confirmDescription": "Ez véglegesen eltávolítja az adatbázisrekordot, és először megpróbálja törölni a forrásüzenetet a Discordról. A bázis nem állítható vissza.",
+      "confirmAction": "Bázis törlése",
+      "deleting": "Törlés…",
+      "baseId": "Bázisazonosító",
+      "discordSource": "Discord-forrás",
+      "successTitle": "Bázis törölve",
+      "successDeleted": "Az adatbázisrekord és a Discord-üzenet törölve.",
+      "successAlreadyMissing": "Az adatbázisrekord törölve; a Discord-üzenet már nem létezett.",
+      "cleanupFailedTitle": "A bázis megmaradt; a Discord-takarítás sikertelen",
+      "cleanupCompleteTitle": "A Discord-takarítás befejeződött; a bázis megmaradt",
+      "failureTitle": "A bázist nem sikerült törölni",
+      "failureFallback": "A törlési kérés sikertelen.",
+      "retryable": "Biztonságosan újrapróbálható",
+      "notRetryable": "Nem próbálható újra",
+      "cleanup": {
+        "deleted": "Discord-üzenet törölve",
+        "alreadyMissing": "A Discord-üzenet már nem létezik",
+        "failed": "A Discord-takarítás sikertelen"
+      }
+    },
+    "empty": {
+      "title": "Még nincs megosztott bázis",
+      "description": "Az első elrendezés hozzáadásához válaszd ki a Discord-csatornát, és add meg a Clash of Clans elrendezéshivatkozását."
+    },
+    "form": {
+      "title": "Bázis hozzáadása",
+      "description": "A bázisok létrehozás után nem szerkeszthetők. Válaszd ki, hová küldje a ClashKing a Discord-üzenetet, és erősítsd meg az elrendezés hivatkozását.",
+      "channel": "Discord-csatorna",
+      "channelPlaceholder": "Válassz csatornát",
+      "channelSearch": "Csatornák keresése…",
+      "channelsLoading": "Csatornák betöltése…",
+      "baseLink": "Elrendezés hivatkozása",
+      "descriptionLabel": "Leírás",
+      "images": "Képek",
+      "chooseImages": "Elrendezésképek kiválasztása",
+      "imageLimit": "Legfeljebb négy kép tölthető fel; a feltöltés a bázis létrehozása előtt befejeződik.",
+      "submit": "Bázis létrehozása",
+      "creating": "Feltöltés és létrehozás…",
+      "createRejectedTitle": "Bázis nem jött létre",
+      "createCleanupCompleteTitle": "A Discord-takarítás befejeződött; a bázis nem jött létre",
+      "createCleanupFailedTitle": "A Discord-üzenet megmaradhat; a bázis nem jött létre",
+      "databaseNotInserted": "Az adatbázisrekord nem jött létre",
+      "discordMessageCreated": "Discord-üzenet létrejött",
+      "discordMessageId": "Discord-üzenetazonosító",
+      "retryable": "Biztonságosan újrapróbálható",
+      "notRetryable": "Ne próbáld automatikusan újra",
+      "cleanup": {
+        "notNeeded": "Nincs szükség Discord-takarításra",
+        "deleted": "Discord-üzenet törölve",
+        "alreadyMissing": "A Discord-üzenet már nem létezik",
+        "failed": "A Discord-takarítás sikertelen"
+      }
+    },
+    "errors": {
+      "title": "A bázisok nem érhetők el",
+      "load": "Nem sikerült betölteni a bázisokat.",
+      "create": "Nem sikerült létrehozni a bázist.",
+      "upload": "Nem sikerült feltölteni a képet.",
+      "downloader": "Nem sikerült megkeresni ezt a letöltőt.",
+      "channels": "Nem sikerült betölteni a Discord-csatornákat.",
+      "channelRequired": "Válassz Discord-csatornát.",
+      "linkRequired": "Az elrendezés hivatkozása kötelező.",
+      "descriptionTooLong": "A leírás legfeljebb 1000 karakter lehet.",
+      "tooManyImages": "Legfeljebb négy képet válassz."
+    }
+  },
+  "BansPage": {
+    "title": "Moderálás",
+    "description": "Játékosok kitiltásainak és figyelmeztetéseinek kezelése",
+    "viewClashProfile": "Clash-profil megtekintése",
+    "tabs": {
+      "bans": "Kitiltások",
+      "strikes": "Figyelmeztetések"
+    },
+    "bans": {
+      "title": "Kitiltott játékosok",
+      "noBans": "Nem található kitiltott játékos",
+      "addBan": "Kitiltás hozzáadása",
+      "removeBan": "Kitiltás eltávolítása",
+      "confirmRemove": "Biztosan eltávolítod ezt a kitiltást?",
+      "playerTag": "Játékosazonosító",
+      "playerName": "Játékosnév",
+      "reason": "Ok",
+      "bannedAt": "Kitiltás ideje",
+      "search": "Keresés név vagy azonosító alapján...",
+      "howItWorks": {
+        "title": "A kitiltások működése",
+        "description": "Ha egy kitiltott játékos csatlakozik valamelyik klánodhoz, figyelmeztetés érkezik a <clansTab>Klánok lapon</clansTab> beállított kláncsatornára. A bot nem tudja megakadályozni a csatlakozást, de figyelmeztethet."
+      },
+      "stats": {
+        "total": "Kitiltások összesen",
+        "recent": "Legutóbbi kitiltások (7 nap)",
+        "commonReason": "Leggyakoribb ok",
+        "activeOnServer": "Aktív kitiltások a szerveren",
+        "last7Days": "Az elmúlt 7 napban",
+        "commonReasonValue": "Zaklatás és mérgező viselkedés",
+        "noBans": "Még nincs kitiltás",
+        "percentOfAll": "Az összes kitiltás {percent}%-a",
+        "percentOfAllLabel": "az összes kitiltásból"
+      },
+      "list": {
+        "title": "Kitiltott játékosok",
+        "count": "{count} játékos kitiltva{count, plural, one {} other {}}",
+        "searchPlaceholder": "Keresés név, azonosító vagy ok alapján...",
+        "noBansFound": "Nem található kitiltás",
+        "noBans": "Nincs kitiltott játékos",
+        "adjustSearch": "Próbáld módosítani a keresést",
+        "getStarted": "A játékosok moderálásához adj hozzá egy kitiltást"
+      },
+      "table": {
+        "player": "Játékos",
+        "reason": "Ok",
+        "bannedBy": "Kitiltotta",
+        "date": "Dátum",
+        "daysAgo": "{days} napja",
+        "noReason": "Nincs megadva ok"
+      },
+      "addDialog": {
+        "title": "Játékos kitiltása",
+        "description": "Adj egy játékost a tiltólistához. Figyelmeztetést kapsz, ha a szerver bármelyik klánjához csatlakozik.",
+        "playerTagLabel": "Játékosazonosító",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Játékos neve (nem kötelező)",
+        "playerNamePlaceholder": "Add meg a játékos nevét",
+        "reasonLabel": "Kitiltás oka",
+        "reasonPlaceholder": "Magyarázd el, miért tiltod ki ezt a játékost...",
+        "submit": "Játékos kitiltása"
+      },
+      "bestPractices": {
+        "title": "Bevált módszerek",
+        "document": {
+          "title": "Dokumentáld alaposan:",
+          "desc": "Mindig adj meg részletes indoklást, hogy a többi moderátor is megértse a kitiltás körülményeit."
+        },
+        "review": {
+          "title": "Ellenőrizd rendszeresen:",
+          "desc": "Időnként nézd át a tiltólistát, és győződj meg arról, hogy minden kitiltás továbbra is szükséges és indokolt."
+        },
+        "consistent": {
+          "title": "Légy következetes:",
+          "desc": "Minden játékossal szemben méltányosan és következetesen alkalmazd a kitiltásokat, hogy a közösség egészséges maradjon."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Játékos-figyelmeztetések",
+      "noStrikes": "Nem található figyelmeztetés",
+      "addStrike": "Figyelmeztetés hozzáadása",
+      "removeStrike": "Figyelmeztetés eltávolítása",
+      "confirmRemove": "Biztosan eltávolítod ezt a figyelmeztetést?",
+      "playerTag": "Játékosazonosító",
+      "reason": "Ok",
+      "weight": "Súly",
+      "rolloverDays": "Lejárat napokban",
+      "createdAt": "Létrehozva",
+      "search": "Keresés játékosazonosító alapján...",
+      "howItWorks": {
+        "title": "A figyelmeztetések működése",
+        "description": "A figyelmeztetéseket szabálysértés miatt kapják a játékosok. Minden figyelmeztetésnek van egy súlya, amely a súlyosságát jelzi, és meghatározott nap után opcionálisan lejárhat. Segítségükkel a kitiltás előtt követhető a játékos viselkedése."
+      },
+      "stats": {
+        "total": "Figyelmeztetések összesen",
+        "recent": "Legutóbbi figyelmeztetések (7 nap)",
+        "totalWeight": "Figyelmeztetések összsúlya",
+        "activeOnServer": "Aktív figyelmeztetések a szerveren",
+        "last7Days": "Az elmúlt 7 napban",
+        "cumulativeWeight": "Figyelmeztetések együttes súlya",
+        "commonReason": "Leggyakoribb ok",
+        "commonReasonValue": "Spamelés"
+      },
+      "list": {
+        "title": "Játékos-figyelmeztetések",
+        "count": "{count} figyelmeztetés kiadva{count, plural, one {} other {}}",
+        "searchPlaceholder": "Keresés név, azonosító vagy ok alapján...",
+        "noStrikesFound": "Nem található figyelmeztetés",
+        "noStrikes": "Nincs kiadott figyelmeztetés",
+        "adjustSearch": "Próbáld módosítani a keresést",
+        "getStarted": "Adj hozzá figyelmeztetést a szabálysértések követésének megkezdéséhez",
+        "viewAll": "Minden figyelmeztetés",
+        "viewGrouped": "Játékos szerint"
+      },
+      "table": {
+        "player": "Játékos",
+        "reason": "Ok",
+        "weight": "Súly",
+        "addedBy": "Hozzáadta",
+        "date": "Dátum",
+        "expires": "Lejár",
+        "never": "Soha",
+        "noReason": "Nincs megadva ok",
+        "daysAgo": "{days} napja",
+        "totalStrikes": "Figyelmeztetések összesen",
+        "totalWeight": "Összsúly",
+        "lastStrike": "Utolsó figyelmeztetés"
+      },
+      "addDialog": {
+        "title": "Figyelmeztetés hozzáadása",
+        "description": "Adj figyelmeztetést egy játékosnak. A figyelmeztetéseknek különböző súlya és lejárati dátuma lehet.",
+        "playerTagLabel": "Játékosazonosító",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Ok",
+        "reasonPlaceholder": "Magyarázd el, miért adod ezt a figyelmeztetést...",
+        "weightLabel": "Figyelmeztetés súlya",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Lejár ennyi nap múlva",
+        "rolloverPlaceholder": "Opcionális",
+        "submit": "Figyelmeztetés hozzáadása"
+      },
+      "guidelines": {
+        "title": "Irányelvek a figyelmeztetésekhez",
+        "weights": {
+          "title": "Használd megfontoltan a súlyokat:",
+          "desc": "Súlyos szabálysértésekhez magasabb (2–3), kisebb problémákhoz alacsonyabb (1) súlyt rendelj."
+        },
+        "expiration": {
+          "title": "Állíts be lejáratot:",
+          "desc": "Fontold meg lejárati dátum beállítását, hogy a játékosoknak legyen esélyük idővel javítani a viselkedésükön."
+        },
+        "patterns": {
+          "title": "Figyeld a mintázatokat:",
+          "desc": "A figyelmeztetések segítségével azonosítsd a visszaeső szabálysértőket, mielőtt végleges kitiltást alkalmaznál."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "A kitiltás sikeresen hozzáadva",
+      "banRemoved": "A kitiltás sikeresen eltávolítva",
+      "strikeAdded": "A figyelmeztetés sikeresen hozzáadva",
+      "strikeRemoved": "A figyelmeztetés sikeresen eltávolítva",
+      "errorLoadingBans": "Nem sikerült betölteni a kitiltott játékosokat",
+      "errorLoadingStrikes": "Nem sikerült betölteni a figyelmeztetéseket",
+      "errorAddingBan": "Nem sikerült hozzáadni a kitiltást",
+      "errorAddingStrike": "Nem sikerült hozzáadni a figyelmeztetést",
+      "errorRemovingBan": "Nem sikerült eltávolítani a kitiltást",
+      "errorRemovingStrike": "Nem sikerült eltávolítani a figyelmeztetést"
+    }
+  },
+  "RostersPage": {
+    "title": "Keretek és felállások",
+    "description": "Háborús keretek, felállások és játékosbeosztások kezelése",
+    "stats": {
+      "totalRosters": "Keretek összesen",
+      "totalMembers": "Tagok összesen",
+      "clanRosters": "Klánkeretek",
+      "familyRosters": "Családi keretek",
+      "members": "Tagok",
+      "avgTh": "Átl. TH",
+      "avgHitrate": "Átlagos találati arány",
+      "distribution": "Eloszlás",
+      "clan": "Klán",
+      "family": "Család",
+      "external": "Külső",
+      "thDistribution": "VH-eloszlás",
+      "capacity": "Kapacitás"
+    },
+    "filters": {
+      "search": "Keresés a keretek között...",
+      "type": "Típus",
+      "all": "Összes",
+      "clan": "Klán",
+      "family": "Család",
+      "clear": "Törlés"
+    },
+    "comparisonMode": {
+      "cancel": "Mégse",
+      "compare": "Összehasonlítás",
+      "compareRosters": "Keretek összehasonlítása",
+      "selectRosters": "Válassz kereteket",
+      "selectRostersDesc": "Az összehasonlításhoz válassz legalább 2 keretet",
+      "maxReached": "Elérted a maximumot",
+      "maxReachedDesc": "Egyszerre legfeljebb 4 keretet hasonlíthatsz össze"
+    },
+    "createDialog": {
+      "title": "Új keret létrehozása",
+      "description": "Állíts össze új keretet a klánodhoz",
+      "aliasLabel": "Keret neve",
+      "aliasPlaceholder": "pl. CWL-keret",
+      "typeLabel": "Keret típusa",
+      "typeClan": "Klán",
+      "typeFamily": "Család",
+      "signupScopeLabel": "Jelentkezés hatóköre",
+      "scopeClanOnly": "Csak klán",
+      "scopeFamilyWide": "Teljes család",
+      "clanLabel": "Klán",
+      "clanPlaceholder": "Válassz klánt",
+      "descriptionLabel": "Leírás (nem kötelező)",
+      "descriptionPlaceholder": "A keret leírása...",
+      "cancel": "Mégse",
+      "creating": "Létrehozás...",
+      "create": "Keret létrehozása"
+    },
+    "editDialog": {
+      "title": "Keret szerkesztése",
+      "description": "A keret beállításainak módosítása",
+      "aliasLabel": "Keret neve",
+      "descriptionLabel": "Leírás",
+      "descriptionPlaceholder": "A keret leírása...",
+      "minThLabel": "Minimális Városháza-szint",
+      "minThPlaceholder": "pl. 13",
+      "maxThLabel": "Maximális Városháza-szint",
+      "maxThPlaceholder": "pl. 16",
+      "rosterSizeLabel": "Keretlétszám",
+      "rosterSizePlaceholder": "pl. 50",
+      "columnsLabel": "Megjelenített oszlopok",
+      "columnsPlaceholder": "Válaszd ki a megjelenítendő oszlopokat",
+      "sortLabel": "Rendezési sorrend",
+      "sortPlaceholder": "Válassz rendezési mezőket",
+      "cancel": "Mégse",
+      "saving": "Mentés...",
+      "save": "Változtatások mentése"
+    },
+    "addMembersDialog": {
+      "title": "Tagok hozzáadása a kerethez",
+      "description": "Válassz tagokat a klánodból, vagy adj meg játékosazonosítókat",
+      "bulkTagsLabel": "Azonosítók tömeges hozzáadása",
+      "bulkTagsPlaceholder": "Adj meg játékosazonosítókat (soronként egyet vagy vesszővel elválasztva)",
+      "searchLabel": "Tagok keresése",
+      "searchPlaceholder": "Keresés név vagy azonosító alapján...",
+      "selectFromClan": "Választás a klántagok közül",
+      "selectedCount": "Kiválasztott",
+      "noMembers": "Nincsenek elérhető tagok",
+      "noMembersSelected": "Nincs kiválasztott tag",
+      "noMembersSelectedDesc": "Válassz tagokat, vagy adj meg játékosazonosítókat.",
+      "cancel": "Mégse",
+      "adding": "Hozzáadás...",
+      "add": "Tagok hozzáadása"
+    },
+    "detailsDialog": {
+      "title": "Keret részletei",
+      "edit": "Szerkesztés",
+      "refresh": "Frissítés",
+      "refreshing": "Frissítés...",
+      "delete": "Törlés",
+      "deleting": "Törlés...",
+      "addMembers": "Tagok hozzáadása",
+      "close": "Bezárás",
+      "noMembers": "Nincsenek tagok ebben a keretben",
+      "noMembersDesc": "A kezdéshez adj hozzá tagokat",
+      "memberCount": "Tagok",
+      "thRestriction": "TH szint",
+      "avgTh": "Átl. TH",
+      "avgHitrate": "Átlagos találati arány",
+      "clan": "Klán",
+      "family": "Család",
+      "external": "Külső",
+      "substitute": "SUB",
+      "removeMember": "Eltávolítás"
+    },
+    "rosterCard": {
+      "members": "Tagok",
+      "thLevel": "TH szint",
+      "avgTh": "Átl. TH",
+      "avgHitrate": "Átlagos találati arány",
+      "clan": "Klán",
+      "family": "Család",
+      "external": "Külső",
+      "noRestriction": "Nincs korlátozás",
+      "view": "Megtekintés",
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "noGroup": "Nincs csoport",
+      "moveToGroup": "Áthelyezés csoportba",
+      "clone": "Klónozás",
+      "allRosters": "Minden keret",
+      "manageRosters": "Háborús keretek és felállások kezelése"
+    },
+    "memberColumns": {
+      "name": "Név",
+      "townhall": "Városháza",
+      "tag": "Azonosító",
+      "hitrate": "Találati arány",
+      "current_clan": "Jelenlegi klán",
+      "current_clan_tag": "Klánazonosító",
+      "discord": "Discord",
+      "hero_lvs": "Hősök",
+      "war_pref": "Háborús részvétel",
+      "trophies": "Kupák",
+      "signup_group": "Jelentkezési csoport"
+    },
+    "columns": {
+      "configure": "Oszlopok",
+      "title": "Oszlopok beállítása",
+      "description": "Válaszd ki a megjelenítendő oszlopokat és azok sorrendjét",
+      "selected": "Kiválasztott oszlopok",
+      "available": "Elérhető oszlopok",
+      "save": "Oszlopok mentése",
+      "reset": "Oszlopok visszaállítása"
+    },
+    "sortFields": {
+      "townhall": "Városházaszint",
+      "name": "Név",
+      "tag": "Azonosító",
+      "heroLvs": "Hősök",
+      "trophies": "Kupák",
+      "hitrate": "30 napos találati arány",
+      "currentClanTag": "Klánazonosító",
+      "addedAt": "Hozzáadás ideje"
+    },
+    "thRestrictions": {
+      "only": "Csak TH{th}",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "Nincs korlátozás"
+    },
+    "emptyState": {
+      "noRosters": "Még nem készült keret",
+      "noRostersDesc": "A kezdéshez hozd létre az első keretet",
+      "noMatch": "Egyetlen keret sem felel meg a szűrőknek",
+      "noMatchDesc": "Próbáld módosítani a keresési vagy szűrési feltételeket"
+    },
+    "toast": {
+      "errorTitle": "Hiba",
+      "successTitle": "Siker",
+      "errorLoadingRosters": "Nem sikerült betölteni a kereteket. Próbáld újra.",
+      "errorLoadingMembers": "Nem sikerült betölteni a klántagokat.",
+      "rosterCreated": "A keret sikeresen létrejött!",
+      "errorCreatingRoster": "Nem sikerült létrehozni a keretet. Próbáld újra.",
+      "rosterUpdated": "A keret sikeresen frissült!",
+      "errorUpdatingRoster": "Nem sikerült frissíteni a keretet. Próbáld újra.",
+      "rosterDeleted": "A keret sikeresen törölve!",
+      "errorDeletingRoster": "Nem sikerült törölni a keretet. Próbáld újra.",
+      "membersAdded": "{count} játékos hozzáadva a kerethez!",
+      "errorAddingMembers": "Nem sikerült hozzáadni a tagokat. Próbáld újra.",
+      "memberRemoved": "A játékos eltávolítva a keretből!",
+      "errorRemovingMember": "Nem sikerült eltávolítani a tagot. Próbáld újra.",
+      "substituteMarked": "A tag csereként megjelölve!",
+      "substituteUnmarked": "A tag cserejelölése törölve!",
+      "errorUpdatingMember": "Nem sikerült frissíteni a tagot. Próbáld újra.",
+      "rosterRefreshed": "A keret adatai sikeresen frissítve!",
+      "errorRefreshingRoster": "Nem sikerült frissíteni a keret adatait. Próbáld újra.",
+      "memberTransferred": "A játékos sikeresen átkerült a keretek között!",
+      "errorTransferringMember": "Nem sikerült átvinni a tagot. Próbáld újra.",
+      "rosterCloned": "A keret sikeresen másolva!",
+      "errorCloningRoster": "Nem sikerült lemásolni a keretet. Próbáld újra.",
+      "missingMembersAdded": "{count} hiányzó játékos hozzáadva a kerethez!",
+      "errorLoadingMissingMembers": "Nem sikerült betölteni a hiányzó tagokat."
+    },
+    "cloneDialog": {
+      "title": "Keret másolása",
+      "description": "Másolat készítése erről a keretről",
+      "aliasLabel": "Új keret neve",
+      "aliasPlaceholder": "Adj nevet a másolt keretnek",
+      "copyMembers": "Tagok másolása az új keretbe",
+      "memberCount": "{count} tag",
+      "originalRoster": "Eredeti keret:",
+      "cancel": "Mégse",
+      "cloning": "Klónozás...",
+      "clone": "Keret másolása",
+      "copyMembersHint": "Az eredeti keret tagjait átmásoljuk az új keretbe"
+    },
+    "missingMembers": {
+      "title": "Hiányzó tagok",
+      "description": "A keretben nem szereplő klántagok",
+      "coverage": "A keretben szereplők aránya",
+      "registered": "Regisztrálva",
+      "missing": "hiányzik",
+      "total": "összesen",
+      "selectAll": "Összes kijelölése",
+      "selected": "kiválasztva",
+      "addSelected": "{count} játékos hozzáadása",
+      "button": "Hiányzó tagok",
+      "addAll": "Összes hozzáadása",
+      "adding": "Hozzáadás...",
+      "close": "Bezárás",
+      "allCaughtUp": "Minden rendben!",
+      "allCaughtUpDesc": "Minden klántag szerepel ebben a keretben",
+      "clanOnly": "A hiányzó tagok elemzése csak klánkereteknél érhető el",
+      "error": "Nem sikerült betölteni a hiányzó tagokat",
+      "thisRoster": "Ez a keret",
+      "wholeGroup": "Teljes csoport"
+    },
+    "eventTime": {
+      "label": "Esemény kezdési ideje",
+      "timezone": "Saját időzónád",
+      "utc": "UTC",
+      "clear": "Törlés"
+    },
+    "bulkValidation": {
+      "valid": "érvényes",
+      "invalid": "érvénytelen",
+      "invalidTags": "Érvénytelen"
+    },
+    "memberAutocomplete": {
+      "label": "Vagy keress a szerver tagjai között",
+      "placeholder": "Kattints a tagok kereséséhez...",
+      "searchPlaceholder": "Keresés név, azonosító vagy klán alapján...",
+      "loading": "Tagok betöltése...",
+      "noResults": "Nem található tag",
+      "groupHeading": "Szervertagok",
+      "selectedLabel": "Kiválasztott tagok",
+      "membersSelected": "tag kiválasztva",
+      "selected": "Kiválasztott",
+      "clanMembersLabel": "Vagy válassz a klántagok közül"
+    },
+    "retry": "Újrapróbálás",
+    "back": "Vissza",
+    "refresh": "Frissítés",
+    "createRoster": "Keret létrehozása",
+    "searchPlaceholder": "Keresés a keretek között...",
+    "noRosters": "Még nincsenek keretek",
+    "noRostersHint": "A kezdéshez hozd létre az első keretet",
+    "noSearchResults": "Nem található keret",
+    "noSearchResultsHint": "Próbálj másik keresőkifejezést",
+    "createFirstRoster": "Első keret létrehozása",
+    "deleteConfirm": "Biztosan törölni szeretnéd ezt: „{name}”?",
+    "deleteSuccess": "Keret törölve",
+    "deleteSuccessDesc": "A(z) „{name}” keret törölve lett",
+    "deleteError": "Nem sikerült törölni a keretet",
+    "createSuccess": "Keret létrehozva",
+    "createSuccessDesc": "A(z) „{name}” keret létrejött",
+    "createError": "Nem sikerült létrehozni a keretet",
+    "createErrorAlias": "Adj meg nevet a keretnek",
+    "createErrorClan": "Válassz klánt",
+    "refreshSuccess": "A keret adatai frissítve",
+    "refreshError": "Nem sikerült frissíteni a keretet",
+    "saveSuccess": "Beállítások mentve",
+    "saveError": "Nem sikerült menteni a beállításokat",
+    "columnsUpdated": "Oszlopok frissítve",
+    "columnsError": "Nem sikerült frissíteni az oszlopokat",
+    "addMembersSuccess": "Tagok Hozzáadva",
+    "addMembersSuccessDesc": "{count} játékos hozzáadva a kerethez",
+    "addMembersError": "Nem sikerült hozzáadni a tagokat",
+    "removeMemberSuccess": "Azonosító eltávolítva",
+    "removeMemberError": "Nem sikerült eltávolítani a játékost",
+    "clearMembers": "Tagok törlése",
+    "clearMembersConfirm": "Eltávolítod az összes tagot innen: „{name}”? Ez nem vonható vissza.",
+    "clearMembersSuccess": "Minden tag eltávolítva",
+    "clearMembersError": "Nem sikerült törölni a tagokat",
+    "automationCreated": "Automatizálás létrehozva",
+    "automationUpdated": "Automatizálás frissítve",
+    "automationDeleted": "Automatizálás törölve",
+    "automationError": "Automatizálási hiba",
+    "groupCreated": "Csoport létrehozva",
+    "groupUpdated": "Csoport frissítve",
+    "groupDeleted": "Csoport törölve",
+    "groupError": "Nem sikerült menteni csoport",
+    "categoryCreated": "Kategória létrehozva",
+    "categoryUpdated": "Kategória frissítve",
+    "categoryDeleted": "Kategória törölve",
+    "categoryError": "Nem sikerült menteni kategória",
+    "common": {
+      "cancel": "Mégse",
+      "save": "Mentés",
+      "close": "Bezárás"
+    },
+    "tabs": {
+      "members": "Tagok",
+      "automations": "Automatizálások",
+      "groups": "Csoportok",
+      "categories": "Kategóriák",
+      "settings": "Beállítások"
+    },
+    "members": {
+      "count": "tagok",
+      "noMembers": "Nincsenek tagok ebben a keretben",
+      "noMembersHint": "A kezdéshez adj hozzá tagokat",
+      "actions": "Műveletek",
+      "viewList": "Lista megtekintés",
+      "viewGrouped": "Csoportosítás jelentkezési kategória szerint",
+      "unassigned": "Nincs hozzárendelve",
+      "dragHere": "Húzd ide a tagokat",
+      "clickToGroup": "Kattints a kategóriák szerinti nézethez",
+      "apiErrorTooltip": "Nem sikerült lekérni az adatokat az API-ból",
+      "staleDataTooltip": "Az adatok elavultak lehetnek, utolsó frissítés:",
+      "refresh": "Játékosadatok frissítése",
+      "alsoIn": "Szintén itt",
+      "addCategory": "Hozzáadás csoporthoz",
+      "removeCategory": "Eltávolítás a csoportból"
+    },
+    "addMembers": {
+      "title": "Tagok hozzáadása a kerethez",
+      "description": "Válassz tagokat a klánjaidból, vagy adj meg játékosazonosítókat",
+      "bulkTagsLabel": "Játékosazonosítók (soronként egy vagy vesszővel elválasztva)",
+      "adding": "Hozzáadás...",
+      "submit": "Tagok hozzáadása"
+    },
+    "compare": {
+      "enterMode": "Összehasonlítás",
+      "modeTitle": "Összehasonlítási mód",
+      "modeHint": "Kattints a kiválasztani kívánt keretekre (2–4 keret)",
+      "exitMode": "Mégse",
+      "selected": "keret kiválasztva",
+      "button": "Összehasonlítás",
+      "title": "Keretek összehasonlítása",
+      "dragToMove": "Húzd át a tagokat a keretek között az áthelyezésükhöz",
+      "loadError": "Nem sikerült betölteni a kereteket",
+      "memberMoved": "Azonosító áthelyezve",
+      "memberMovedDesc": "{name} áthelyezve innen: {from}, ide: {to}",
+      "moveError": "Nem sikerült áthelyezni a játékost",
+      "selectAtLeast2": "Az összehasonlításhoz válassz legalább 2 keretet",
+      "moving": "Játékos áthelyezése...",
+      "compareGroup": "Csoport összehasonlítása",
+      "dragToMoveCategory": "Húzd a tagokat a keretek és kategóriák között",
+      "categoryChanged": "Kategória módosult",
+      "categoryChangedDesc": "{name} átkerült ide: {category}",
+      "uncategorized": "Kategorizálatlan"
+    },
+    "ungrouped": "Csoportosítatlan",
+    "automations": {
+      "description": "Automatikus műveletek ütemezése ehhez a kerethez",
+      "create": "Automatizálás létrehozása",
+      "empty": "Nincsenek automatizálások",
+      "emptyHint": "Hozz létre automatizálást a műveletek ütemezéséhez",
+      "active": "Aktív",
+      "inactive": "Inaktív",
+      "executed": "Kész",
+      "missed": "Kihagyva",
+      "lastRun": "Utolsó futtatás",
+      "enable": "Engedélyezés",
+      "disable": "Letiltás",
+      "createTitle": "Automatizálás létrehozása",
+      "editTitle": "Automatizálás szerkesztése",
+      "createDesc": "Automatikus művelet ütemezése",
+      "actionType": "Művelet típusa",
+      "offsetFromEvent": "Időzítés az eseményhez képest",
+      "offsetBefore": "Esemény előtt",
+      "offsetAfter": "Esemény után",
+      "offsetUnit_minutes": "perc",
+      "offsetUnit_hours": "óra",
+      "offsetUnit_days": "nap",
+      "offsetPreview": "Végrehajtás időpontja: {date}",
+      "offsetNoEventDate": "A végrehajtás dátumának előnézetéhez adj meg eseménykezdési időt a beállításokban",
+      "offsetAtStart": "Az esemény kezdetekor",
+      "pingType": "Emlékeztető típusa",
+      "pingType_signup_reminder": "Jelentkezési emlékeztető",
+      "pingType_missing": "Hiányzik a klánból",
+      "pingType_sub_needed": "Csere szükséges",
+      "channel": "Discord-csatorna",
+      "selectChannel": "Válassz csatornát",
+      "channelHint": "A csatorna, ahol a művelet közzétételre vagy végrehajtásra kerül",
+      "activeLabel": "Aktív",
+      "target": "Cél",
+      "targetThisRoster": "Ez a keret",
+      "targetGroups": "Csoportok",
+      "targetHint": "Az automatizálás alkalmazása csak erre a keretre vagy egy csoport összes keretére",
+      "group": "Csoport",
+      "groupAutomationHint": "Kezelés a Csoportok lapon",
+      "targetRoster": "Keret",
+      "targetGroup": "Csoport",
+      "willExecute": "Az ütemezett időpontban lesz végrehajtva",
+      "paused": "Szüneteltetve – nem lesz végrehajtva",
+      "actions": {
+        "ping": "Emlékeztető küldése",
+        "post": "Keret közzététele",
+        "openSignup": "Jelentkezések megnyitása",
+        "closeSignup": "Jelentkezés lezárása",
+        "delete": "Keret törlése",
+        "clear": "Tagok törlése",
+        "archive": "Keret archiválása"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Emlékeztetőt küld azoknak a tagoknak, akik nem jelentkeztek vagy rossz klánban vannak",
+        "roster_post": "Közzéteszi a végleges keretet a kiválasztott csatornában",
+        "roster_signup": "Megnyitja a jelentkezést, hogy a játékosok regisztrálhassanak",
+        "roster_signup_close": "Lezárja a jelentkezést, és megakadályozza az új regisztrációkat",
+        "roster_delete": "Véglegesen törli a keretet és minden adatát",
+        "roster_clear": "Eltávolít minden tagot a keret törlése nélkül",
+        "roster_archive": "Archiválja a keretet, és csak olvashatóvá teszi"
+      },
+      "infoBox": "Az automatizálások az esemény kezdési idejéhez igazodnak. Adj meg egy időeltolást (például 3 nappal korábban), és a bot automatikusan végrehajtja a műveletet, az ismétlődő eseményeknél is."
+    },
+    "groups": {
+      "title": "Keretcsoportok",
+      "description": "Rendezd csoportokba a kereteket a könnyebb kezeléshez",
+      "create": "Új csoport",
+      "noGroups": "Még nem készült csoport",
+      "rostersCount": "keret",
+      "createTitle": "Csoport létrehozása",
+      "editTitle": "Csoport szerkesztése",
+      "nameLabel": "Csoport neve",
+      "namePlaceholder": "pl. CWL-csoportok",
+      "infoBox": "A csoportokkal több keretet rendszerezhetsz együtt, például az összes CWL-keretet. A Beállítások lapon rendelhetsz keretet egy csoporthoz, majd egyszerre alkalmazhatsz automatizálásokat a csoport összes keretére.",
+      "manageAutomations": "Automatizálások kezelése",
+      "automationsTitle": "Csoportautomatizálások",
+      "automationsDesc": "Ezek az automatizálások a csoport minden keretére vonatkoznak",
+      "noAutomations": "Nincsenek automatizálások",
+      "noAutomationsHint": "Hozz létre automatizálást ehhez a csoporthoz",
+      "addAutomation": "Automatizálás hozzáadása",
+      "deleteConfirm": "Törlöd a(z) „{name}” csoportot? A csoport keretei csoport nélkül maradnak.",
+      "emptyGroup": "Még nincs keret ebben a csoportban",
+      "rules": {
+        "title": "Csoportszabályok",
+        "rulesHint": "Ezek a szabályok a csoport minden keretére vonatkoznak, és azonnal életbe lépnek.",
+        "maxAccounts": "Fiókok maximális száma felhasználónként",
+        "maxAccountsBadge": "Legfeljebb {count}/felhasználó",
+        "rosterSize": "Keretlétszám",
+        "rosterSizeBadge": "Méret: {size}",
+        "minSignups": "Feltöltési küszöb",
+        "minSignupsBadge": "Küszöb: {count}",
+        "categoriesTitle": "Jelentkezési kategóriák",
+        "categoriesHint": "Válaszd ki a csoportban elérhető kategóriákat. A módosítás azonnal érvényes minden keretre.",
+        "categoriesBadge": "{count} kategória",
+        "noCategories": "Még nincsenek kategóriák.",
+        "newCategoryPlaceholder": "Új kategória név…"
+      }
+    },
+    "categories": {
+      "title": "Jelentkezési kategóriák",
+      "description": "Kategóriák a játékosok jelentkezéséhez és a keretek szűréséhez",
+      "manage": "Kategóriák kezelése",
+      "create": "Új kategória",
+      "noCategories": "Még nincs létrehozott kategória",
+      "createTitle": "Kategória létrehozása",
+      "editTitle": "Kategória szerkesztése",
+      "deleteConfirm": "Törlöd a(z) „{name}” kategóriát?",
+      "idLabel": "Kategóriaazonosító",
+      "nameLabel": "Kategória neve",
+      "infoBox": "A kategóriákkal a játékosok jelentkezéskor jelezhetik elérhetőségüket vagy szerepüket, például „Elérhető”, „Bizonytalan” vagy „Csak szükség esetén”. A kategóriák a szerver összes keretében közösek. Csoportosított kereteknél a csoport beállításaiban adhatod meg az alkalmazandó kategóriákat."
+    },
+    "settings": {
+      "general": "Azonosítás és beállítások",
+      "restrictions": "Korlátozások és limitek",
+      "name": "Keret neve",
+      "rosterType": "Keret típusa",
+      "typeClan": "Klán",
+      "typeFamily": "Család",
+      "signupScope": "Jelentkezés hatóköre",
+      "scopeClanOnly": "Csak klán",
+      "scopeFamilyWide": "Teljes család",
+      "clan": "Klán",
+      "selectClan": "Válassz klánt",
+      "description": "Leírás",
+      "descriptionPlaceholder": "Adj meg leírást ehhez a kerethez...",
+      "typeAndScope": "Típus és hatókör",
+      "eventTime": "Esemény kezdési ideje",
+      "eventTimeHint": "Az esemény kezdési ideje. Automatizálásokhoz és visszaszámláláshoz használatos.",
+      "recurrenceDays": "Ismétlés minden",
+      "recurrenceModeDays": "N naponta",
+      "recurrenceModeMonthly": "A hónap adott napján",
+      "recurrenceDaysUnit": "nap",
+      "recurrenceDayOfMonthPrefix": "A hónap",
+      "recurrenceDayOfMonthSuffix": ". napján",
+      "recurrenceDaysHint": "Egyszeri eseménynél hagyd üresen. Add meg az ismétlődések közötti napok számát (például havi CWL esetén 30).",
+      "recurrenceDayOfMonthHint": "Minden hónap ezen napján ismétlődik (például 1 = elseje).",
+      "group": "Csoport",
+      "noGroup": "Nincs csoport",
+      "thRequirements": "Városháza követelmények",
+      "minTh": "Minimális VH",
+      "maxTh": "Maximális VH",
+      "signupLimits": "Jelentkezés korlátok",
+      "rosterSize": "Keretlétszám",
+      "rosterSizeHint": "Tagok maximális száma",
+      "minSignups": "Minimális jelentkezésszám",
+      "minSignupsHint": "A keret feltöltéséhez szükséges jelentkezések minimális száma",
+      "maxAccountsPerUser": "Fiókok maximális száma felhasználónként",
+      "maxAccountsHint": "Discord-felhasználónként engedélyezett fiókok száma",
+      "allowedCategories": "Engedélyezett jelentkezési kategóriák",
+      "allowedCategoriesHint": "Kattints a váltáshoz. Ha nincs kiválasztva semmi, minden kategória engedélyezett.",
+      "defaultSignupCategory": "Alapértelmezett jelentkezési kategória",
+      "defaultSignupCategoryNone": "Nincs alapértelmezett",
+      "defaultSignupCategoryHint": "A tag jelentkezésekor előre kiválasztott kategória.",
+      "categoriesManagedByGroup": "A jelentkezési kategóriák csoportszinten kezelhetők. A Keretek oldal csoportbeállításaiban válaszd ki a csoport minden keretéhez elérhető kategóriákat.",
+      "saving": "Mentés...",
+      "save": "Beállítások mentése"
+    }
+  },
+  "LinksPage": {
+    "title": "Fiókkapcsolatok kezelése",
+    "description": "Discord-felhasználók fiókkapcsolatainak kezelése és a játékosfiókok tulajdonjogának ellenőrzése",
+    "tabs": {
+      "overview": "Áttekintés",
+      "pending": "Függőben",
+      "bulk": "Tömeges műveletek",
+      "analytics": "Elemzések"
+    },
+    "stats": {
+      "totalMembers": "Tagok összesen",
+      "membersWithLinks": "Összekapcsolt tagok",
+      "totalLinkedAccounts": "Összekapcsolt fiókok összesen",
+      "verifiedAccounts": "Ellenőrzött fiókok",
+      "ofTotal": "/ összesen",
+      "avgPerMember": "Átlag:",
+      "perMember": "/ tag",
+      "verified": "ellenőrizve"
+    },
+    "filters": {
+      "searchPlaceholder": "Keresés tagnév, felhasználónév, játékosnév vagy azonosító alapján...",
+      "filterByStatus": "Szűrés állapot szerint",
+      "allAccounts": "Összes fiók",
+      "verifiedOnly": "Csak ellenőrzöttek",
+      "unverifiedOnly": "Csak nem ellenőrzöttek",
+      "minAccounts": "Minimális fiókszám",
+      "allMembers": "Minden tag",
+      "oneOrMore": "Legalább 1 fiók",
+      "twoOrMore": "Legalább 2 fiók",
+      "threeOrMore": "Legalább 3 fiók",
+      "fiveOrMore": "Legalább 5 fiók"
+    },
+    "overview": {
+      "title": "Fiókkapcsolatok",
+      "description": "Az összes Discord- és Clash of Clans-fiókkapcsolat megtekintése és kezelése",
+      "showingMembers": "{count} {members} megjelenítve",
+      "member": "tag",
+      "members": "tagok",
+      "noMembers": "Nem található tag",
+      "adjustFilters": "Próbáld módosítani a keresést vagy a szűrőket.",
+      "noLinkedAccounts": "Nincsenek összekapcsolt fiókkal rendelkező tagok.",
+      "exportCSV": "Exportálás CSV-be",
+      "exportJSON": "Exportálás JSON-ba",
+      "account": "fiók",
+      "accounts": "fiók",
+      "more": "további",
+      "unknown": "Ismeretlen"
+    },
+    "pending": {
+      "title": "Függőben lévő ellenőrzések",
+      "description": "{count} fiók vár ellenőrzésre",
+      "allVerified": "Minden fiók ellenőrizve!",
+      "noPending": "Jelenleg nincs függőben lévő ellenőrzés.",
+      "linked": "Összekapcsolva:"
+    },
+    "bulk": {
+      "title": "Tömeges műveletek",
+      "description": "Műveletek végrehajtása egyszerre több tagon",
+      "selectAll": "Összes kijelölése ({count})",
+      "deselectAll": "Összes kijelölés megszüntetése",
+      "unlinkSelected": "Kiválasztottak leválasztása ({count})",
+      "linked": "összekapcsolva",
+      "comingSoon": "A tömeges leválasztás hamarosan érkezik!"
+    },
+    "analytics": {
+      "title": "Kapcsolati elemzések",
+      "description": "A fiókkapcsolati statisztikák és trendek áttekintése",
+      "verificationRate": "Ellenőrzési arány",
+      "verified": "Ellenőrizve",
+      "unverified": "Nincs ellenőrizve",
+      "accountDistribution": "Fiókok eloszlása",
+      "oneAccount": "1 fiók",
+      "twoToThreeAccounts": "2–3 fiók",
+      "fourPlusAccounts": "Legalább 4 fiók",
+      "townHallLevels": "Városháza-szintek",
+      "other": "Egyéb",
+      "coverage": "Lefedettség",
+      "linkedMembers": "Összekapcsolt tagok",
+      "coverageRate": "Lefedettségi arány",
+      "linkInsights": "Kapcsolat elemzések",
+      "avgAccountsPerMember": "Átlagos fiókszám tagonként:",
+      "mostLinkedAccounts": "Legtöbb összekapcsolt fiók:",
+      "membersWithoutLinks": "Kapcsolat nélküli tagok:"
+    },
+    "actions": {
+      "unlinkAccount": "Fiók leválasztása"
+    },
+    "deleteDialog": {
+      "title": "Fiók leválasztása",
+      "description": "Biztosan leválasztod {playerName} fiókját? Ez a művelet nem vonható vissza.",
+      "cancel": "Mégse",
+      "unlinking": "Leválasztás...",
+      "unlink": "Leválasztás"
+    },
+    "bulkDialog": {
+      "title": "Fiókok tömeges leválasztása",
+      "description": "Biztosan leválasztod mind a(z) {count} kiválasztott tag fiókjait? Ez a művelet nem vonható vissza.",
+      "cancel": "Mégse",
+      "unlinkAll": "Összes leválasztása"
+    },
+    "toast": {
+      "unlinkFailed": "Nem sikerült leválasztani a fiókot. Próbáld újra."
+    },
+    "badges": {
+      "verified": "Ellenőrizve",
+      "unverified": "Nincs ellenőrizve",
+      "pending": "Függőben"
+    },
+    "pagination": {
+      "showing": "{start}–{end} megjelenítése, összesen {total} tag",
+      "page": "Oldal {current} / {total}",
+      "previous": "Előző",
+      "next": "Következő"
+    }
+  },
+  "WarsPage": {
+    "title": "Háborús statisztikák",
+    "description": "Kövesd a háborús teljesítményt és elemezd a csatastatisztikákat",
+    "actions": {
+      "exportData": "Adatok exportálása",
+      "resetFilters": "Szűrők visszaállítása",
+      "applyFilters": "Szűrők alkalmazása"
+    },
+    "filters": {
+      "title": "Szűrők",
+      "description": "Háborús statisztikák szűrése különböző feltételek alapján",
+      "clan": "Klán",
+      "allClans": "Összes klán",
+      "townHall": "Városháza",
+      "townHallShort": "TH",
+      "allTownHalls": "Összes VH-szint",
+      "townHallLevel": "VH {level}",
+      "period": "Időszak",
+      "last7Days": "Utolsó 7 nap",
+      "last30Days": "Utolsó 30 nap",
+      "last90Days": "Utolsó 90 nap",
+      "last6Months": "Utolsó 6 hónap",
+      "lastYear": "Utolsó év",
+      "custom": "Egyéni",
+      "startDate": "Kezdő dátum",
+      "endDate": "Záró dátum",
+      "warTypes": "Háborútípusok"
+    },
+    "summaryStats": {
+      "totalWins": "Győzelmek összesen",
+      "totalWinsDesc": "Összesen {totalWars} háborúból",
+      "totalLosses": "Vereségek összesen",
+      "totalLossesDesc": "{totalDraws} döntetlen",
+      "winRate": "Győzelmi arány",
+      "winRateDesc": "Összteljesítmény",
+      "activeWars": "Aktív háborúk",
+      "activeWarsDesc": "{activeCwl} a CWL-ben"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Heti háborús teljesítmény",
+        "description": "Heti győzelmek, vereségek és döntetlenek a kiválasztott időszakban",
+        "wins": "Győzelem",
+        "losses": "Veszteség",
+        "draws": "Döntetlen"
+      },
+      "thSuccessRate": {
+        "title": "Támadási sikerarány Városháza-szintenként",
+        "description": "Háromcsillagos arány VH-szintenként",
+        "threeStarPercent": "3 csillagos %",
+        "otherPercent": "Egyéb %"
+      },
+      "warTypeDistribution": {
+        "title": "Háborútípusok megoszlása",
+        "description": "Megoszlás háborútípus szerint",
+        "cwl": "CWL",
+        "random": "Véletlenszerű",
+        "friendly": "Barátságos"
+      },
+      "topPerformers": {
+        "title": "Legjobb teljesítők",
+        "description": "A legtöbb csillagot szerző harcosok",
+        "attacksAndStars": "{attacks} támadás • {stars} csillag",
+        "noData": "Nincsenek elérhető játékosadatok. Próbáld módosítani a szűrőket."
+      },
+      "missedAttacks": {
+        "title": "Kihagyott támadások",
+        "description": "Játékosok, akik nem használták fel minden támadásukat",
+        "attacks": "kihagyott támadás"
+      },
+      "topDefenders": {
+        "title": "Legjobb védők",
+        "description": "A legjobb védők az átlagosan átadott csillagok alapján",
+        "defensesAndStars": "{defenses} védekezés • {stars} kapott csillag",
+        "noData": "Nincs elérhető védelmi adat. Próbáld módosítani a szűrőket."
+      },
+      "worstAttackers": {
+        "title": "Legrosszabb támadók",
+        "description": "A legalacsonyabb támadásonkénti csillagátlaggal rendelkező játékosok (legalább 3 támadás)",
+        "attacksAndStars": "{attacks} támadás • {stars} csillag",
+        "noData": "Nincsenek elérhető játékosadatok. Próbáld módosítani a szűrőket."
+      },
+      "worstDefenders": {
+        "title": "Legrosszabb védők",
+        "description": "A védekezésenként legtöbb csillagot kapó játékosok (legalább 3 védekezés)",
+        "defensesAndStars": "{defenses} védekezés • {stars} kapott csillag",
+        "noData": "Nincs elérhető védelmi adat. Próbáld módosítani a szűrőket."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Klánháborús statisztikák",
+      "description": "Részletes statisztikák minden klánról",
+      "headers": {
+        "clan": "Klán",
+        "status": "Állapot",
+        "wars": "Háborúk",
+        "record": "W/L/D",
+        "winRate": "Győzelmi arány",
+        "avgDestruction": "Átlagos pusztítás",
+        "avgStarsPerAttack": "Csillag/támadás",
+        "avgDefenseStars": "Csillag/védekezés"
+      },
+      "status": {
+        "inWar": "Háborúban",
+        "cwl": "CWL",
+        "peace": "Béke"
+      },
+      "noData": "Nincs elérhető klánstatisztika. Próbálj szűrőket alkalmazni, vagy várj az adatok betöltésére."
+    },
+    "toast": {
+      "errorTitle": "Hiba",
+      "errorLoadingClans": "Nem sikerült betölteni a klánokat. Próbáld újra.",
+      "errorLoadingWarData": "Nem sikerült betölteni a háborús adatokat. Próbáld újra.",
+      "errorNoClans": "Nincsenek elérhető klánok",
+      "errorApplyingFilters": "Nem sikerült alkalmazni a szűrőket. Próbáld újra."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Ranglisták",
+    "description": "Globális ranglisták a Klánfővároshoz és más játékmódokhoz",
+    "comingSoon": "Ez a funkció hamarosan érkezik. Nézz vissza később!",
+    "stats": {
+      "totalEntries": "Bejegyzések összesen",
+      "type": "Típus",
+      "league": "Liga",
+      "weekend": "Hétvége"
+    },
+    "filters": {
+      "title": "Szűrők",
+      "description": "A ranglistanézet testreszabása",
+      "type": "Típus",
+      "metric": "Mérőszám",
+      "league": "Liga",
+      "weekend": "Hétvége"
+    },
+    "types": {
+      "player": "Játékosok",
+      "clan": "Klánok"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Zsákmányolt fővárosi erőforrás"
+        },
+        "clan": {
+          "capitalTotalLoot": "Összes zsákmány",
+          "raidsCompleted": "Befejezett portyák",
+          "enemyDistrictsDestroyed": "Elpusztított körzetek",
+          "medals": "Érmek"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Összes",
+      "legendLeague": "Legendák Ligája",
+      "titanLeagueI": "Titán Liga I",
+      "titanLeagueII": "Titán Liga II",
+      "titanLeagueIII": "Titán Liga III"
+    },
+    "rankings": {
+      "title": "Rangsorok",
+      "description": "A legjobb {count} {type}, időszak: {weekend}",
+      "players": "játékosok",
+      "clans": "klánok"
+    },
+    "empty": {
+      "title": "Nincs elérhető adat",
+      "description": "Próbálj másik hétvégét vagy ligát választani"
+    }
+  },
+  "ClansPage": {
+    "title": "Klánkezelés",
+    "description": "Klánjaid és Discord-integrációik beállítása",
+    "addClan": "Klán hozzáadása",
+    "addNewClan": "Új klán hozzáadása",
+    "addClanDescription": "Add meg a klán azonosítóját, hogy hozzáadhasd ehhez a szerverhez",
+    "clanTag": "Klánazonosító",
+    "totalClans": "Klánok összesen",
+    "registeredClans": "Regisztrált klánok",
+    "configured": "Beállítva",
+    "withSettingsConfigured": "beállításokkal",
+    "totalMembers": "Tagok összesen",
+    "acrossAllClans": "Az összes klánban",
+    "channels": "Csatornák",
+    "availableChannels": "Elérhető csatornák",
+    "noClansYet": "Még nincsenek klánok",
+    "getStartedAdding": "A kezdéshez add hozzá az első klánodat",
+    "addFirstClan": "Első klán hozzáadása",
+    "level": "Szint",
+    "members": "Tagok",
+    "status": "Állapot",
+    "configuredBadge": "Beállítva",
+    "setupRequired": "Beállítás szükséges",
+    "configure": "Beállítás",
+    "sorting": {
+      "label": "Klánok rendezése",
+      "sortBy": "Rendezés",
+      "toggleDirection": "Rendezési irány váltása",
+      "added": "Hozzáadás ideje",
+      "name": "Klán neve",
+      "level": "Klánszint",
+      "members": "Tagok"
+    },
+    "configureClan": "{name} beállítása ({tag})",
+    "customizeIntegration": "A klán Discord-integrációjának testreszabása",
+    "tabs": {
+      "basic": "Discord-beállítások",
+      "war": "Háború"
+    },
+    "memberRole": "Tagszerepkör",
+    "leaderRole": "Vezetői szerepkör",
+    "selectRole": "Válassz szerepkör",
+    "none": "Nincs",
+    "clanAbbreviation": "Klán rövidítése",
+    "warScoreCountdown": "Háborús pontszám visszaszámlálója",
+    "warScoreCountdownDescription": "Hangcsatornát hoz létre, amely az aktuális háborús pontszámot mutatja",
+    "warTimerCountdown": "Háborús időzítő visszaszámlálója",
+    "warTimerCountdownDescription": "Hangcsatornát hoz létre, amely megjeleníti a háborúból hátralévő időt",
+    "category": "Kategória",
+    "categoryOptions": {
+      "none": "Nincs kategória",
+      "premade": "Gyakori kategóriák",
+      "usedByServer": "Más klánok által használt",
+      "clanCount": "{count, plural, one {# klán} other {# klán}}"
+    },
+    "categories": {
+      "title": "Klánkategóriák",
+      "description": "A szerver klánjai számára elérhető kategóriák létrehozása és kezelése.",
+      "refresh": "Frissítés",
+      "createLabel": "Új kategória",
+      "name": "Kategória neve",
+      "namePlaceholder": "pl. Versenyszerű",
+      "nameHelp": "{count}/{max} karakter a szóközök rendezése után",
+      "create": "Kategória létrehozása",
+      "empty": "Még nem készült klánkategória.",
+      "clanCount": "{count, plural, one {# klán} other {# klán}}",
+      "renameAction": "{name} átnevezése",
+      "deleteAction": "{name} törlése",
+      "renameTitle": "Klánkategória átnevezése",
+      "renameDescription": "Az egységesített név minden hozzárendelt klánnál frissül.",
+      "saveRename": "Név mentése",
+      "deleteTitle": "Törlöd a klánkategóriát?",
+      "deleteWarning": "A(z) „{name}” törlésével {count, plural, one {# klán} other {# klán}} kategória nélkül marad.",
+      "deleteCountMayChange": "Ez az előnézet a jelenlegi állapotot tükrözi. A törlés befejezésekor a ténylegesen érintett klánok száma jelenik meg.",
+      "confirmDelete": "Kategória törlése",
+      "deleteSuccessTitle": "{name} törölve",
+      "deleteSuccessDescription": "{count, plural, =0 {Egy klán sem változott.} one {# klán mostantól kategorizálatlan.} other {# klán mostantól kategorizálatlan.}}",
+      "created": "Létrehozva {name}.",
+      "renamed": "A kategória új neve: {name}.",
+      "errors": {
+        "title": "A kategóriák nem érhetők el",
+        "load": "Nem sikerült betölteni a klánkategóriákat.",
+        "create": "Nem sikerült létrehozni a klánkategóriát.",
+        "rename": "Nem sikerült átnevezni a klánkategóriát.",
+        "preview": "Nem sikerült betölteni a törlés előnézetét.",
+        "delete": "Nem sikerült törölni a klánkategóriát.",
+        "refresh": "A kategória módosult, de nem sikerült betölteni a frissített kategória- vagy klánállapotot.",
+        "invalidName": "Adj meg legfeljebb 64 karakteres, nem üres nevet vezérlőkarakterek nélkül."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "További információ",
+      "memberRole": "A klán tagjainak kiosztandó szerepkör. Ha a bot kezeli a szerepköröket a Discord-szerveren, a klán minden tagja megkapja ezt a szerepkört. Klánspecifikus csatornákhoz hasznos.",
+      "leaderRole": "A klán társvezetőinek és vezetőjének kiosztandó szerepkör. Egy tipikus Discord-szerveren klánvezetői csevegéshez vagy az összes klán közös vezetői csevegéséhez hasznos.",
+      "clanAbbreviation": "Adj rövidítést a klánodnak, hogy a tagok becenevébe kerülhessen, amikor az átnevezés engedélyezve van. A formátumot a <familySettingsLink>Családi beállítások</familySettingsLink> között adhatod meg.",
+      "category": "A kategóriákkal rendszerezheted a klánjaidat. Sok kláncsalád öt vagy több klánból áll, amelyek között lehetnek kizárólag CWL-hez vagy eseményekhez használt klánok is."
+    },
+    "roleIdPlaceholder": "Szerepkör-azonosító",
+    "abbreviationPlaceholder": "pl. CK",
+    "categoryPlaceholder": "Kategória név",
+    "notAvailable": "N/A",
+    "saving": "Mentés...",
+    "saveChanges": "Változtatások mentése",
+    "deleteConfirm": "Biztosan eltávolítod ezt a klánt: {tag}? Ezzel minden kapcsolódó emlékeztető és napló is törlődik.",
+    "toast": {
+      "errorLoadingClans": "Nem sikerült betölteni a klánokat",
+      "errorLoadingSettings": "Nem sikerült betölteni a klánbeállításokat",
+      "errorEmptyClanTag": "Add meg a klán azonosítóját",
+      "clanAdded": "A klán sikeresen hozzáadva",
+      "errorAddingClan": "Nem sikerült hozzáadni a klánt",
+      "clanRemoved": "A klán sikeresen eltávolítva",
+      "errorRemovingClan": "Nem sikerült eltávolítani a klánt",
+      "settingsSaved": "A beállítások sikeresen mentve",
+      "errorSavingSettings": "Nem sikerült menteni a beállításokat",
+      "countdownEnabled": "A visszaszámláló hangcsatorna létrejött",
+      "countdownDisabled": "A visszaszámláló hangcsatorna eltávolítva",
+      "errorTogglingCountdown": "Nem sikerült átváltani a visszaszámlálót"
+    }
+  },
+  "RolesPage": {
+    "title": "Szerepkörök kezelése",
+    "description": "Automatikus szerepkör-hozzárendelés beállítása a játékosok statisztikái alapján",
+    "stats": {
+      "totalRoles": "Szerepkörök összesen",
+      "totalRolesDesc": "Beállított szerepkör-hozzárendelések",
+      "autoEvaluation": "Automatikus kiértékelés",
+      "autoEvaluationOn": "Be",
+      "autoEvaluationOff": "Ki",
+      "autoEvaluationActiveDesc": "Szerepkörök automatikus hozzárendelése",
+      "autoEvaluationInactiveDesc": "Csak kézi szerepkör-hozzárendelés",
+      "activeTypes": "Aktív típusok",
+      "activeTypesDesc": "Használt szerepkörtípusok",
+      "discordRoles": "Discord-szerepkörök",
+      "discordRolesDesc": "Elérhető a szerveren"
+    },
+    "settings": {
+      "title": "Automatikus kiértékelés beállításai",
+      "description": "A szerepkörök automatikus kiértékelésének és hozzárendelésének beállítása",
+      "saveButton": "Beállítások mentése",
+      "saving": "Mentés...",
+      "enableAutoEval": "Automatikus kiértékelés engedélyezése",
+      "enableAutoEvalDesc": "Szerepkörök automatikus hozzáadása és eltávolítása a játékosok statisztikái alapján",
+      "autoNickname": "Becenevek automatikus frissítése",
+      "autoNicknameDesc": "Becenevek frissítése a szerepkörök kiértékelésekor"
+    },
+    "roleTypes": {
+      "townhall": "Városháza",
+      "league": "Liga",
+      "builderhall": "Építőcsarnok",
+      "builderLeague": "Építői liga",
+      "achievement": "Eredmény",
+      "status": "Discord-tagság ideje",
+      "familyPosition": "Családi pozíció"
+    },
+    "familyPositions": {
+      "member": "Tag",
+      "elder": "Segítő",
+      "coLeader": "Társvezető",
+      "leader": "Vezető"
+    },
+    "leagues": {
+      "legend": "Legenda",
+      "electroDragon": "Elektrosárkány",
+      "dragon": "Sárkány",
+      "electroTitan": "Elektrotitán",
+      "pekka": "P.E.K.K.A",
+      "golem": "Gólem",
+      "witch": "Boszorkány",
+      "valkyrie": "Valkűr",
+      "wizard": "Varázsló",
+      "archer": "Íjász",
+      "barbarian": "Barbár",
+      "skeleton": "Csontváz"
+    },
+    "builderLeagues": {
+      "diamond": "Gyémánt",
+      "ruby": "Rubin",
+      "emerald": "Smaragd",
+      "platinum": "Platina",
+      "titanium": "Titán",
+      "steel": "Acél",
+      "iron": "Vas",
+      "brass": "Sárgaréz",
+      "copper": "Réz",
+      "stone": "Kő",
+      "clay": "Agyag",
+      "wood": "Fa"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Védd a fiókodat!",
+      "biggerAndBetter": "Nagyobb és jobb",
+      "discoverNewTroops": "Új egységek felfedezése",
+      "biggerCoffers": "Nagyobb kincstár",
+      "goldGrab": "Aranyvadászat",
+      "elixirEscapade": "Elixírkaland",
+      "heroicHeist": "Hősies rablás",
+      "wellSeasoned": "Sok csatát megélt",
+      "niceAndTidy": "Szép és rendezett",
+      "empireBuilder": "Birodalomépítő",
+      "clanWarWealth": "Klánháborús vagyon",
+      "friendInNeed": "Bajban ismerszik meg a barát",
+      "sharingIsCaring": "Megosztani öröm",
+      "siegeSharer": "Ostromgép-adományozó",
+      "warHero": "Háborús hős",
+      "warLeagueLegend": "Háborúliga legendája",
+      "gamesChampion": "Klánjátékok bajnoka",
+      "unbreakable": "Törhetetlen",
+      "sweetVictory": "Édes győzelem!",
+      "conqueror": "Hódító",
+      "leagueAllStar": "A liga sztárja",
+      "leagueFollower": "Ligakövető",
+      "leagueEnthusiast": "Ligarajongó",
+      "leagueSuperfan": "Liga-szuperrajongó",
+      "leagueFanatic": "Ligafanatikus",
+      "leagueMaster": "Ligamester",
+      "legendLeague": "Legendák Ligája",
+      "humiliator": "Megalázó",
+      "notSoEasyThisTime": "Most nem lesz olyan könnyű",
+      "unionBuster": "Szövetségtörő",
+      "bustThis": "Ezt törd össze!",
+      "wallBuster": "Falromboló",
+      "mortarMauler": "Mozsárzúzó",
+      "xBowExterminator": "Íjpusztító",
+      "firefighter": "Tűzoltó",
+      "antiArtillery": "Tüzérségelhárító",
+      "shatteredAndScatter": "Szétzúzva és szétszórva",
+      "counterspell": "Ellenszer",
+      "monolithMasher": "Monolitzúzó",
+      "multiArcherTowerTerminator": "Többíjászos torony pusztítója",
+      "ricochetCannonCrusher": "Gellertágyú-zúzó",
+      "firespitterFinisher": "Tűzköpő-végző",
+      "multiGearTowerTrampler": "Többfogaskerekes torony tiprója",
+      "craftersNightmare": "A kézműves rémálma",
+      "getThoseGoblins": "Kapd el a goblinokat!",
+      "supercharger": "Szupertöltő",
+      "craftingConnoisseur": "Kézműves ínyenc",
+      "getThoseOtherGoblins": "Kapd el a többi goblint is!",
+      "getEvenMoreGoblins": "Kapj el még több goblint!",
+      "dragonSlayer": "Sárkányölő",
+      "ungratefulChild": "Hálátlan gyermek",
+      "superbWork": "Kiváló munka",
+      "masterEngineering": "Mérnöki mestermű",
+      "hiddenTreasures": "Rejtett kincsek",
+      "highGear": "Magasabb fokozat",
+      "nextGenerationModel": "Új generációs modell",
+      "unBuildIt": "Építsd vissza!",
+      "championBuilder": "Bajnok építő",
+      "aggressiveCapitalism": "Agresszív kapitalizmus",
+      "mostValuableClanmate": "A legértékesebb klántárs"
+    },
+    "configuredRoles": {
+      "title": "Beállított szerepkörök",
+      "noRolesConfigured": "Nincs beállított {roleType} szerepkör",
+      "addRoleToStart": "Új létrehozásához kattints a „Szerepkör hozzáadása” gombra",
+      "discordRole": "Discord-szerepkör",
+      "criteria": "Feltételek",
+      "mode": "Mód",
+      "modeBoth": "Hozzáadás és eltávolítás",
+      "modeAdd": "Csak hozzáadás",
+      "modeRemove": "Csak eltávolítás",
+      "actions": "Műveletek",
+      "unknownRole": "Ismeretlen szerepkör",
+      "remove": "Eltávolítás",
+      "month": "hónap",
+      "months": "hónap"
+    },
+    "addRoleDialog": {
+      "title": "Új szerepkör hozzáadása",
+      "description": "Új automatikus szerepkör-hozzárendelési szabály beállítása",
+      "roleType": "Szerepkör típusa",
+      "mode": "Mód",
+      "discordRole": "Discord-szerepkör",
+      "selectRole": "Válassz szerepkört",
+      "townHallLevel": "Városháza szint",
+      "selectThLevel": "Válassz TH szint",
+      "thPrefix": "TH",
+      "league": "Liga",
+      "selectLeague": "Válassz ligát",
+      "builderHallLevel": "Építőcsarnok szint",
+      "selectBhLevel": "Válassz BH szint",
+      "bhPrefix": "BH",
+      "builderLeague": "Építői liga",
+      "selectBuilderLeague": "Válassz Építői ligát",
+      "achievementName": "Eredmény",
+      "selectAchievement": "Válassz eredményt",
+      "searchAchievement": "Eredmény keresése...",
+      "noAchievementFound": "Nem található eredmény.",
+      "monthsInServer": "Szerveren töltött hónapok",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Családi pozíció",
+      "selectPosition": "Válassz pozíciót",
+      "cancel": "Mégse",
+      "addRole": "Szerepkör hozzáadása",
+      "errorDuplicateExact": "Ez a feltétel már ehhez a szerepkörhöz tartozik.",
+      "errorDuplicateCriterion": "Ehhez a feltételhez már tartozik szerepkör. Előbb távolítsd el a meglévőt."
+    },
+    "infoCard": {
+      "title": "💡 Az automatikus szerepkörök működése",
+      "automaticEvaluation": "Automatikus kiértékelés:",
+      "automaticEvaluationDesc": "Ha engedélyezed, a bot rendszeresen ellenőrzi a játékosokat, majd az aktuális statisztikáik alapján hozzáadja vagy eltávolítja a szerepköröket.",
+      "rolePriority": "Szerepkör-prioritás:",
+      "rolePriorityDesc": "Ha egy játékos statisztikái több szerepkörnek is megfelelnek, a legmagasabb szintű szerepkört kapja meg.",
+      "manualOverride": "Kézi felülbírálás:",
+      "manualOverrideDesc": "A szerveradminisztrátorok kézzel rendelhetnek hozzá szerepköröket, amelyeket az automatikus kiértékelés nem távolít el."
+    },
+    "categoryRoles": {
+      "title": "Kategóriaszerepkörök",
+      "description": "Rendelj Discord-szerepkört minden klánkategóriához. A kategória klánjainak tagjai automatikusan megkapják a megfelelő szerepkört.",
+      "addButton": "Kategória hozzáadása",
+      "categoryName": "Kategória",
+      "categoryNamePlaceholder": "Kategória név",
+      "noCategoryRoles": "Nincsenek beállított kategóriaszerepkörök",
+      "noCategoryRolesDesc": "Új létrehozásához kattints a „Kategória hozzáadása” gombra",
+      "addTitle": "Kategóriaszerepkör hozzáadása",
+      "addConfirm": "Hozzáadás",
+      "errorCategoryRequired": "Kategória név kötelező",
+      "errorRoleRequired": "Discord szerepkör kötelező",
+      "errorCategoryExists": "Ehhez a kategóriához már tartozik szerepkör"
+    },
+    "toast": {
+      "changesSaved": "A változtatások sikeresen mentve!",
+      "errorLoading": "Nem sikerült betölteni a szerepköröket",
+      "errorSaving": "Nem sikerült menteni a beállításokat",
+      "errorAdding": "Nem sikerült hozzáadni a szerepkört",
+      "errorDeleting": "Nem sikerült törölni a szerepkört"
+    }
+  },
+  "RemindersPage": {
+    "title": "Emlékeztetők",
+    "description": "Automatikus emlékeztetők beállítása háborúkhoz, portyákhoz, Klánjátékokhoz és inaktivitáshoz",
+    "types": {
+      "war": "Háborús emlékeztetők",
+      "capital": "Klánfőváros",
+      "clanGames": "Klánjátékok",
+      "inactivity": "Inaktivitás"
+    },
+    "tabs": {
+      "war": "Háború",
+      "capital": "Klánfőváros",
+      "clanGames": "Klánjátékok",
+      "inactivity": "Inaktivitás"
+    },
+    "stats": {
+      "totalReminders": "Emlékeztetők összesen",
+      "totalRemindersDesc": "Beállított aktív emlékeztetők",
+      "warReminders": "Háborús emlékeztetők",
+      "warRemindersDesc": "Normál háborúk és CWL",
+      "capitalReminders": "Klánfővárosi emlékeztetők",
+      "capitalRemindersDesc": "Rajtaütési hétvége támadásai",
+      "otherReminders": "Egyéb emlékeztetők",
+      "otherRemindersDesc": "Klánjátékok és inaktivitás"
+    },
+    "actions": {
+      "saving": "Mentés...",
+      "saveChanges": "Változtatások mentése",
+      "addReminder": "Emlékeztető hozzáadása",
+      "addWarReminder": "Háborús emlékeztető hozzáadása",
+      "addCapitalReminder": "Klánfővárosi emlékeztető hozzáadása",
+      "addClanGamesReminder": "Klánjáték-emlékeztető hozzáadása",
+      "addInactivityReminder": "Inaktivitási emlékeztető hozzáadása",
+      "retry": "Újrapróbálás"
+    },
+    "clanSelector": {
+      "label": "Klán:",
+      "placeholder": "Válassz klánt",
+      "allClans": "Összes klán"
+    },
+    "empty": {
+      "noWarReminders": "Nincsenek háborús emlékeztetők",
+      "noCapitalReminders": "Nincsenek klánfővárosi emlékeztetők",
+      "noClanGamesReminders": "Nincsenek Klánjáték-emlékeztetők",
+      "noInactivityReminders": "Nincsenek inaktivitási emlékeztetők",
+      "getStarted": "A kezdéshez hozd létre az első emlékeztetőt"
+    },
+    "card": {
+      "new": "Új",
+      "before": "előtt",
+      "timeBefore": "Hátralévő idő",
+      "timeBeforePlaceholder": "pl. 6",
+      "timeInactive": "Inaktivitás ideje",
+      "timeInactivePlaceholder": "pl. 160",
+      "timeUnit": "óra",
+      "hoursRemaining": "óra van hátra",
+      "channel": "Csatorna",
+      "channelPlaceholder": "Válassz csatornát",
+      "threadOptional": "Szál (nem kötelező)",
+      "threadPlaceholder": "Válassz szálat",
+      "noThread": "Közzététel közvetlenül a csatornában",
+      "forumPost": "Fórumbejegyzés",
+      "forumPostPlaceholder": "Válassz fórumbejegyzést",
+      "forumPostRequired": "Fórumcsatornák esetén fórumbejegyzést kell választani.",
+      "clan": "Klán",
+      "clanPlaceholder": "Válassz klánt",
+      "customMessage": "Egyéni üzenet",
+      "customMessagePlaceholder": "Ne felejtsd el felhasználni a támadásaidat!",
+      "customMessagePlaceholderClanGames": "Próbálj több pontot szerezni a klánjátékokban!",
+      "customMessagePlaceholderInactivity": "Már egy ideje inaktív vagy a klánban :(",
+      "warTypes": "Háborútípusok",
+      "random": "Véletlenszerű",
+      "friendly": "Barátságos",
+      "cwl": "CWL",
+      "pointThreshold": "Pontküszöb",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Megjelöli azokat, akiknek {threshold} pontnál kevesebbjük van.",
+      "attackThreshold": "Támadási küszöb",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Megjelöli azokat, akiknek legalább {threshold} támadása maradt.",
+      "notSet": "Nincs beállítva"
+    },
+    "dialog": {
+      "addTitle": "Új emlékeztető hozzáadása",
+      "addDescription": "Új emlékeztető beállítása a szerverhez",
+      "editTitle": "Emlékeztető szerkesztése",
+      "editDescription": "Az emlékeztető beállításainak frissítése",
+      "type": "Emlékeztető típusa",
+      "selectType": "Válassz típust",
+      "cancel": "Mégse",
+      "saving": "Mentés...",
+      "saveChanges": "Változtatások mentése",
+      "addReminder": "Emlékeztető hozzáadása"
+    },
+    "toast": {
+      "errorTitle": "Hiba",
+      "errorLoadingReminders": "Nem sikerült betölteni az emlékeztetőket. Próbáld újra.",
+      "reminderAdded": "Az emlékeztető sikeresen hozzáadva",
+      "reminderAddedDesc": "Új {type} emlékeztető hozzáadva. Ne felejtsd el menteni!",
+      "reminderUpdated": "Az emlékeztető sikeresen frissítve",
+      "successTitle": "Siker",
+      "reminderDeleted": "Az emlékeztető sikeresen törölve",
+      "failedToDelete": "Nem sikerült törölni az emlékeztetőt",
+      "allRemindersSaved": "Minden emlékeztető sikeresen mentve",
+      "failedToSave": "Nem sikerült menteni az emlékeztetőket",
+      "forumPostRequired": "Az emlékeztető mentése előtt válassz fórumbejegyzést.",
+      "invalidDestination": "A kiválasztott szál nem ehhez a csatornához tartozik.",
+      "timeExceedsLimit": "A hátralévő időnek {min} és {max} óra között kell lennie",
+      "pointThresholdInvalid": "A pontküszöbnek {min} és {max} között kell lennie",
+      "attackThresholdInvalid": "A támadási küszöbnek {min} és {max} között kell lennie"
+    }
+  },
+  "LogsPage": {
+    "title": "Aktivitási naplók",
+    "description": "Klán- és játékosaktivitások automatikus naplózásának beállítása",
+    "stats": {
+      "activeLogs": "Aktív naplók",
+      "activeLogsDesc": "A családi klánok és a szerver naplói között",
+      "logChannels": "Naplócsatornák",
+      "logChannelsDesc": "Elérhető csatornák",
+      "trackedClans": "Követett klánok",
+      "trackedClansDesc": "Beállított klánok",
+      "issues": "Problémák",
+      "issuesDesc": "A teljes kláncsaládban"
+    },
+    "clanSelector": {
+      "label": "Klán:",
+      "placeholder": "Válassz klánt"
+    },
+    "tabs": {
+      "clan": "Klán",
+      "war": "Háború",
+      "capital": "Klánfőváros",
+      "player": "Játékos",
+      "server": "Szerver"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Tag csatlakozása",
+        "description": "A klánhoz csatlakozó tagok követése"
+      },
+      "leaveLog": {
+        "label": "Tag távozása",
+        "description": "A klánból távozó tagok követése"
+      },
+      "donationLog": {
+        "label": "Tag adományai",
+        "description": "Egység- és varázslatadományok követése"
+      },
+      "clanAchievementLog": {
+        "label": "Kláneredmények",
+        "description": "A klán által megszerzett eredmények követése"
+      },
+      "clanRequirementsLog": {
+        "label": "Klánkövetelmények",
+        "description": "A klánkövetelmények változásainak követése"
+      },
+      "clanDescriptionLog": {
+        "label": "Klánleírás",
+        "description": "A klánleírás változásainak követése"
+      },
+      "banAlert": {
+        "label": "Kitiltás riasztások",
+        "description": "Riasztás közzététele, amikor egy kitiltott játékos csatlakozik a klánhoz"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit-hírfolyam",
+        "description": "A szerver Reddit-hírfolyamának közzététele"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Háborús napló",
+        "description": "Háborús támadások és eredmények követése"
+      },
+      "warPanel": {
+        "label": "Háborús panel",
+        "description": "Interaktív háborús panel élő frissítésekkel"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL-felállás változása",
+        "description": "A CWL-felállás változásainak követése"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Fővárosi adományok",
+        "description": "Klánfővárosi aranyadományok követése"
+      },
+      "capitalAttacks": {
+        "label": "Fővárosi támadások",
+        "description": "A Portyahétvége támadásainak követése"
+      },
+      "raidPanel": {
+        "label": "Fővárosi panel",
+        "description": "Interaktív portyapanel élő frissítésekkel"
+      },
+      "capitalWeeklySummary": {
+        "label": "Klánfővárosi heti összefoglaló",
+        "description": "A klánfővárosi teljesítmény heti összefoglalója"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Szerepkörváltozás",
+        "description": "A játékos klánbeli szerepkörváltozásainak követése"
+      },
+      "troopUpgrade": {
+        "label": "Egységfejlesztés",
+        "description": "Az egységszintek fejlesztéseinek követése"
+      },
+      "superTroopBoostLog": {
+        "label": "Szuperegység-erősítések",
+        "description": "A szuperegységek aktiválásainak követése"
+      },
+      "thUpgrade": {
+        "label": "Városházafejlesztés",
+        "description": "A Városháza-fejlesztések követése"
+      },
+      "leagueChange": {
+        "label": "Ligaváltás",
+        "description": "A ligaszint változásainak követése"
+      },
+      "spellUpgrade": {
+        "label": "Varázslatfejlesztés",
+        "description": "A varázslatszintek fejlesztéseinek követése"
+      },
+      "heroUpgrade": {
+        "label": "Hősfejlesztés",
+        "description": "A hősszintek fejlesztéseinek követése"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Hősfelszerelés fejlesztése",
+        "description": "A hősfelszerelések fejlesztéseinek követése"
+      },
+      "nameChange": {
+        "label": "Névváltozás",
+        "description": "A játékosnév változásainak követése"
+      },
+      "legendLogAttacks": {
+        "label": "Legenda-támadások",
+        "description": "A Legendák Ligája támadásainak követése"
+      },
+      "legendLogDefenses": {
+        "label": "Legenda-védelmek",
+        "description": "A Legendák Ligája védelmeinek követése"
+      }
+    },
+    "logCard": {
+      "active": "Aktív",
+      "issue": "Probléma",
+      "disabled": "Letiltva",
+      "enable": "Engedélyezés",
+      "disable": "Letiltás",
+      "channel": "Csatorna",
+      "channelPlaceholder": "Válassz csatornát",
+      "thread": "Szál (nem kötelező)",
+      "threadPlaceholder": "Válassz szálat",
+      "noThread": "Nincs szál",
+      "forumPost": "Fórumbejegyzés",
+      "forumPostPlaceholder": "Válassz fórumbejegyzést",
+      "forumPostRequired": "A napló mentése előtt válassz fórumbejegyzést.",
+      "invalidThread": "A kiválasztott szál nem ehhez a csatornához tartozik.",
+      "saveDestination": "Célhely mentése",
+      "channelDeleted": "Ez a csatorna már nem létezik. Válassz újat, vagy tiltsd le a naplót.",
+      "enableToConfig": "A beállításhoz engedélyezd ezt a naplót",
+      "configuring": "Beállítás",
+      "on": "Be",
+      "off": "Ki",
+      "example": "példa"
+    }
+  },
+  "GeneralPage": {
+    "title": "Általános beállítások",
+    "description": "A bot szerverszintű viselkedésének és megjelenésének beállítása",
+    "loading": "Beállítások betöltése...",
+    "reset": "Visszaállítás",
+    "saving": "Mentés...",
+    "saveChanges": "Változtatások mentése",
+    "settingsSaved": "A beállítások sikeresen mentve!",
+    "infoBanner": {
+      "title": "További beállításokat keresel?",
+      "description": "A családi szerepkörök és becenevek a **Családi beállítások** oldalon, a szerepkörkezelés a **Szerepkörök** oldalon, a klánszerepkörök, rövidítések, kategóriák és háborús visszaszámlálók pedig a **Klánok** oldalon találhatók."
+    },
+    "nickname": {
+      "title": "Becenevek kezelése",
+      "description": "A becenevek formázásának szabályozása",
+      "automaticChanges": "Automatikus módosítások",
+      "automaticChangesDesc": "A bot frissítheti a tagok becenevét",
+      "familyFormat": "Családtagok formátuma",
+      "availablePlaceholders": "Elérhető helyőrzők",
+      "preview": "Előnézet:",
+      "nonFamilyFormat": "Nem családtagok formátuma",
+      "placeholders": {
+        "discordName": "Discord-felhasználónév",
+        "discordDisplayName": "Szerver becenév",
+        "playerName": "CoC játékosnév",
+        "playerTag": "Játékosazonosító",
+        "playerTownhall": "VH-szint",
+        "playerTownhallSmall": "VH felső indexben",
+        "playerWarstars": "Háborús csillagok",
+        "playerRole": "Klánbeli szerepkör",
+        "playerClan": "Klán neve",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Klánrövidítés"
+      }
+    },
+    "appearance": {
+      "title": "Megjelenés",
+      "description": "A bot beágyazott üzeneteinek testreszabása",
+      "embedColor": "Beágyazás színe",
+      "embedColorDesc": "A bot összes Discord-beágyazásának oldalsávszíne",
+      "embedColorDefault": "Alapértelmezett: **#D90709** (ClashKing-piros)",
+      "embedPreview": "Beágyazás előnézete",
+      "embedPreviewDesc": "Ez a színes sáv jelenik meg a bot minden beágyazása mellett",
+      "editColor": "Szín szerkesztése",
+      "resetToDefault": "Alapértelmezett visszaállítása",
+      "apply": "Alkalmaz"
+    },
+    "security": {
+      "title": "Biztonság és jogosultságok",
+      "description": "A hozzáférés és az ellenőrzés szabályozása",
+      "fullWhitelistRole": "Teljes hozzáférésű szerepkör",
+      "fullWhitelistRoleDesc": "Discord-szerepkör, amely minden botparancshoz teljes hozzáférést ad, és megkerüli a jogosultság-ellenőrzéseket",
+      "noRole": "Nincs szerepkör"
+    },
+    "familyRoles": {
+      "title": "Családi szerepkörök",
+      "description": "Automatikus szerepkörök kezelése a családtagság és a klánbeli pozíciók alapján",
+      "selectRole": "Válassz szerepkört",
+      "addRole": "Szerepkör hozzáadása...",
+      "deletedRole": "Törölt szerepkör",
+      "noRolesConfigured": "Nincsenek beállított szerepkörök",
+      "modes": {
+        "both": "Hozzáadás és eltávolítás",
+        "add": "Csak hozzáadás",
+        "remove": "Csak eltávolítás"
+      },
+      "types": {
+        "family": "Család",
+        "notFamily": "Nem családtag",
+        "elder": "Segítő",
+        "coLeader": "Társvezető",
+        "leader": "Vezető"
+      },
+      "descriptions": {
+        "family": "Legalább egy fiókja családi klánban van",
+        "notFamily": "Egyetlen fiókja sincs családi klánban",
+        "elder": "Legalább egy családi klánban segítő",
+        "coLeader": "Legalább egy családi klánban társvezető",
+        "leader": "Legalább egy családi klánban vezető"
+      }
+    },
+    "tenureRoles": {
+      "title": "Discord-tagsági idő szerepkörei",
+      "description": "Szerepkörök automatikus hozzárendelése a tagok szerveren eltöltött ideje alapján",
+      "addRole": "Tagsági szerepkör hozzáadása",
+      "addDialogTitle": "Tagsági szerepkör hozzáadása",
+      "addDialogDescription": "Szerepkör hozzárendelése azokhoz a tagokhoz, akik meghatározott számú hónapot töltöttek a szerveren",
+      "monthsInServer": "Szerveren töltött hónapok",
+      "discordRole": "Discord-szerepkör",
+      "selectRole": "Válassz szerepkört",
+      "noRolesConfigured": "Nincsenek beállított tagsági szerepkörök",
+      "addRoleToStart": "A kezdéshez adj hozzá egy tagsági szerepkört",
+      "months": "Hónap",
+      "month": "hónap",
+      "actions": "Műveletek",
+      "remove": "Eltávolítás",
+      "unknownRole": "Ismeretlen szerepkör"
+    },
+    "prefix": "Parancselőtag",
+    "language": "Nyelv",
+    "timezone": "Időzóna",
+    "theme": "Téma"
+  },
+  "FamilySettingsPage": {
+    "title": "Családi beállítások",
+    "description": "Családi szerepkörök és a klántagok becenévformátumának beállítása",
+    "loading": "Beállítások betöltése...",
+    "reset": "Visszaállítás",
+    "saving": "Mentés...",
+    "saveChanges": "Változtatások mentése",
+    "settingsSaved": "A beállítások sikeresen mentve!",
+    "nickname": {
+      "title": "Becenevek kezelése",
+      "description": "A becenevek formázásának szabályozása",
+      "automaticChanges": "Automatikus módosítások",
+      "automaticChangesDesc": "A bot frissítheti a tagok becenevét",
+      "familyFormat": "Családtagok formátuma",
+      "availablePlaceholders": "Elérhető helyőrzők",
+      "preview": "Előnézet:",
+      "nonFamilyFormat": "Nem családtagok formátuma",
+      "placeholders": {
+        "discordName": "Discord-felhasználónév",
+        "discordDisplayName": "Szerver becenév",
+        "playerName": "CoC játékosnév",
+        "playerTag": "Játékosazonosító",
+        "playerTownhall": "VH-szint",
+        "playerTownhallSmall": "VH felső indexben",
+        "playerWarstars": "Háborús csillagok",
+        "playerRole": "Klánbeli szerepkör",
+        "playerClan": "Klán neve",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Klánrövidítés"
+      }
+    },
+    "familyRoles": {
+      "title": "Családi szerepkörök",
+      "description": "Automatikus szerepkörök kezelése a családtagság és a klánbeli pozíciók alapján",
+      "selectRole": "Válassz szerepkört",
+      "addRole": "Szerepkör hozzáadása...",
+      "deletedRole": "Törölt szerepkör",
+      "noRolesConfigured": "Nincsenek beállított szerepkörök",
+      "modes": {
+        "both": "Hozzáadás és eltávolítás",
+        "add": "Csak hozzáadás",
+        "remove": "Csak eltávolítás"
+      },
+      "types": {
+        "family": "Család",
+        "notFamily": "Nem családtag",
+        "elder": "Segítő",
+        "coLeader": "Társvezető",
+        "leader": "Vezető"
+      },
+      "descriptions": {
+        "family": "Legalább egy fiókja családi klánban van",
+        "notFamily": "Egyetlen fiókja sincs családi klánban",
+        "elder": "Legalább egy családi klánban segítő",
+        "coLeader": "Legalább egy családi klánban társvezető",
+        "leader": "Legalább egy családi klánban vezető"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Nyelv"
+  },
+  "ThemeSwitcher": {
+    "label": "Téma",
+    "light": "Világos",
+    "dark": "Sötét",
+    "system": "Rendszer"
+  },
+  "AuthCallback": {
+    "authenticating": "Hitelesítés...",
+    "authenticatingDescription": "Várj, amíg bejelentkeztetünk a Discorddal",
+    "authenticationFailed": "A hitelesítés sikertelen",
+    "tryAgain": "Próbáld újra",
+    "backToHome": "Vissza a kezdőlapra",
+    "errorCancelled": "A Discord-bejelentkezést megszakítottad. Próbáld újra, amikor készen állsz.",
+    "errorDiscordFailedWithReason": "A Discord-hitelesítés sikertelen: {reason}",
+    "errorNoAuthorizationCode": "Nem érkezett hitelesítési kód a Discordtól.",
+    "errorCodeVerifierMissing": "A kódellenőrző nem található. Próbálj újra bejelentkezni.",
+    "errorAuthenticateFailed": "Nem sikerült hitelesíteni a Discorddal.",
+    "loadingVillages": "Bejelentkezés a Discorddal...",
+    "loadingClanData": "Szerverlista betöltése...",
+    "loadingWarStats": "Mindjárt kész..."
+  },
+  "LoginPage": {
+    "redirecting": "Átirányítás a Discordra..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Funkciók",
+      "subtitle": "Fedezd fel a ClashKing hatékony eszközeit, amelyek segítenek a klánod kezelésében és fejlesztésében Discordon, mobilon és weben."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "A ClashKing Bot az egyetlen Discord-bot, amelyre Clash of Clans-klánod és közösséged kezeléséhez szükséged lehet. Egyedi funkciói segítenek rendezetten és aktívan tartani, valamint fejleszteni a klánodat.",
+        "items": [
+          "Valós idejű naplók: Kövesd a háborúkat, a CWL-t, a Klánjátékokat, a portyákat, az adományokat és a tagok eseményeit.",
+          "Jegyrendszer: Toborzási jegyek a szokásos támogatási jegyek mellett.",
+          "Automatikus szerepkörök: Szerepkörök automatikus kiosztása a klánállapot vagy a családi beállítások alapján.",
+          "Emlékeztetők: Értesítések küldése háborús támadásokról, Klánjátékokról vagy bármilyen más eseményről.",
+          "Részletes statisztikák: Játékos- és klánteljesítmény elemzése aktivitáskövetéssel.",
+          "Keretkezelés: Háborús kereteid egyszerű rendszerezése és optimalizálása."
+        ],
+        "ctaPrimary": "Bot meghívása",
+        "ctaSecondary": "Csatlakozás a közösséghez"
+      },
+      "app": {
+        "title": "ClashKing alkalmazás (nyílt béta)",
+        "description": "A ClashKing alkalmazás tökéletes kiegészítője a ClashKing Botnak: a legfontosabb eszközöket és elemzéseket közvetlenül a mobileszközödre hozza. Bárhol és bármikor kapcsolatban maradhatsz, Discord nélkül is.",
+        "items": [
+          "Valós idejű statisztikák: A játékosok és klánok részletes, bottal szinkronizált statisztikái.",
+          "Klánfejlődés követése: Klánod fejlődésének zökkenőmentes nyomon követése.",
+          "Több fiók kezelése: Egyszerű váltás a fiókjaid között és teljesítményük követése.",
+          "Beépített előzmények: Korábbi adatok elemzése a trendek felismeréséhez és a stratégiák fejlesztéséhez.",
+          "Discord-szerver kezelése: (Hamarosan) Szerepkörök és jegyek kezelése az alkalmazásból.",
+          "Speciális értesítések: (Hamarosan) Fontos események riasztásainak testreszabása."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Készíts saját eszközöket vagy projekteket a ClashKing API-val. Ingyenesen használható, ha feltünteted a ClashKing projektet.",
+        "items": [],
+        "ctaPrimary": "API-dokumentáció",
+        "ctaSecondary": "API a GitHubon"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Segítségre van szükséged?",
+    "subtitle": "Akár dokumentációt, akár közvetlen támogatást keresel, segítünk.",
+    "documentation": {
+      "title": "Dokumentáció",
+      "description": "Átfogó útmutatóink és parancsreferenciáink segítenek a legtöbbet kihozni a ClashKingből.",
+      "cta": "Dokumentáció megtekintése"
+    },
+    "discord": {
+      "title": "Discord-támogatás",
+      "description": "További segítségre van szükséged? Csatlakozz Discord-közösségünkhöz, kérdezz, jelents hibát, vagy beszélgess más felhasználókkal.",
+      "cta": "Csatlakozz a Discord-hoz"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Nyílt forráskódú projekt",
+    "subtitle": "A ClashKing teljesen ingyenes, nyílt forráskódú projekt. Hiszünk abban, hogy a közösség még jobbá teheti. A bot és az API is nyílt forráskódú, így szabadon közreműködhetsz vagy felhasználhatod őket saját projektjeidben.",
+    "github": {
+      "title": "GitHub-szervezet",
+      "description": "Fedezd fel a forráskódunkat, járulj hozzá a bothoz, vagy tekintsd meg más nyílt forráskódú eszközeinket.",
+      "ctaPrimary": "Szervezet megtekintése",
+      "repos": {
+        "bot": "Bot repozitóriuma",
+        "app": "Alkalmazás repozitóriuma",
+        "api": "API repozitóriuma",
+        "assets": "Eszközök repozitóriuma"
+      }
+    },
+    "api": {
+      "title": "API-dokumentáció",
+      "description": "Készíts saját eszközöket vagy projekteket a ClashKing API-val. Ingyenesen használható, ha feltünteted a ClashKing projektet.",
+      "cta": "API-dokumentáció"
+    },
+    "translation": {
+      "title": "Segíts a fordításban",
+      "description": "Segíts lefordítani a ClashKinget a nyelvedre! Crowdin-projektjeinken keresztül közreműködhetsz a webhely, a bot és minden kapcsolódó szöveg fordításában.",
+      "app": "Alkalmazás fordítása",
+      "bot": "Bot fordítása"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Közreműködés",
+        "description": "Segíts hibák javításával, új funkciók hozzáadásával vagy a meglévők fejlesztésével. Minden hozzájárulás számít!"
+      },
+      "community": {
+        "title": "Közösség",
+        "description": "Csatlakozz Discord-közösségünkhöz, beszéljétek meg az ötleteket, kérj segítséget, és dolgozz együtt más fejlesztőkkel."
+      },
+      "learn": {
+        "title": "Tanulás",
+        "description": "Tekintsd meg dokumentációnkat és példáinkat, hogy megtanuld hatékonyan használni a botot és az API-t."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Támogass minket",
+    "subtitle": "A ClashKing ingyenes, nyílt forráskódú projekt. Támogatásoddal működtethetjük a szervereket, és új funkciókat fejleszthetünk a közösségnek.",
+    "patreon": {
+      "title": "Támogass a Patreonon",
+      "description": "Támogass minket havonta a Patreonon exkluzív előnyökért és a funkciók korai eléréséért, miközben segítesz fedezni az üzemeltetési költségeket.",
+      "cta": "Támogatás a Patreonon"
+    },
+    "creatorCode": {
+      "title": "Készítői kód használata",
+      "description": "Támogass minket ingyen az alkotói kód használatával",
+      "descriptionSuffix": "a játékban vagy a Supercell Store-ban.",
+      "ctaGame": "Használat a játékban",
+      "ctaStore": "Használat a Supercell Áruházban"
+    },
+    "whySupport": {
+      "title": "Miért támogass minket?",
+      "description": "Minden hozzájárulás közvetlenül a szerverköltségeket és az API-díjakat fedezi. Az alkotói kódunk használata neked nem kerül többe, nekünk viszont sokat segít!"
+    }
+  },
+  "ServersPage": {
+    "title": "Válassz szervert",
+    "description": "Válassz szervert a ClashKing Bot beállításához. A Discord-szerver tulajdonosának vagy adminisztrátorának kell lenned.",
+    "backToHome": "Vissza a kezdőlapra",
+    "backToLogin": "Vissza a bejelentkezéshez",
+    "error": "Hiba",
+    "configure": "Beállítás",
+    "invite": "Meghívás",
+    "members": "tagok",
+    "server": "Szerver",
+    "roles": {
+      "owner": "Tulajdonos",
+      "administrator": "Adminisztrátor",
+      "manager": "Kezelő"
+    },
+    "noServers": {
+      "title": "Nem található szerver",
+      "description": "Nem található olyan Discord-szerver, amelynek tulajdonosa vagy adminisztrátora lennél."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Aktív táblák frissítése vagy új táblák küldése ütemezés szerint",
+    "actions": {
+      "create": "AutoBoard létrehozása",
+      "edit": "AutoBoard szerkesztése",
+      "delete": "AutoBoard törlése",
+      "save": "Változtatások mentése",
+      "cancel": "Mégse",
+      "retry": "Újrapróbálás"
+    },
+    "metrics": {
+      "total": "Beállítva",
+      "refresh": "Táblák frissítése",
+      "send": "Ütemezett küldések"
+    },
+    "filters": {
+      "all": "Összes"
+    },
+    "list": {
+      "title": "Beállított AutoBoardok",
+      "description": "Kezelő által vezérelt kézbesítés, célok, célhely és futásidejű állapot",
+      "empty": "Ebben a nézetben nincs AutoBoard",
+      "emptyDescription": "Hozz létre egyet, amikor az API-nyilvántartás elérhető táblatípust kínál."
+    },
+    "registry": {
+      "emptyTitle": "Nincsenek elérhető táblatípusok",
+      "emptyDescription": "Az API-nyilvántartás jelenleg üres. Az automatikus táblák egy táblatípus engedélyezése után hozhatók létre.",
+      "typeUnavailable": "Ez a táblatípus már nem érhető el a nyilvántartásban, ezért nem szerkeszthető."
+    },
+    "dialog": {
+      "createTitle": "AutoBoard létrehozása",
+      "editTitle": "AutoBoard szerkesztése",
+      "description": "A képességeket és korlátokat az aktív táblanyilvántartás határozza meg."
+    },
+    "boardType": {
+      "label": "Táblatípus",
+      "description": "Az elérhető típusok közvetlenül az API-nyilvántartásból származnak.",
+      "placeholder": "Válassz táblatípust"
+    },
+    "targets": {
+      "kind": "Cél típusa: {kind}",
+      "kindDescription": "A nyilvántartás határozza meg az egyes célértékek értelmezését.",
+      "scope": "Cél hatóköre",
+      "scopeDescription": "A családi hatókör minden beállított családi klánt használ, külön célok nélkül.",
+      "family": "Család",
+      "custom": "Egyéni célok",
+      "values": "Célpontok",
+      "count": "Ehhez a táblatípushoz {min}–{max} célt adj meg.",
+      "placeholder": "Adj meg egy {kind} célt",
+      "add": "Cél hozzáadása",
+      "remove": "Cél eltávolítása"
+    },
+    "modes": {
+      "label": "Kézbesítési mód",
+      "description": "A nyilvántartás szabályozza, hogy ez a tábla mely kézbesítési módokat támogatja.",
+      "refresh": "Frissítés",
+      "send": "Ütemezett küldés"
+    },
+    "destination": {
+      "label": "Célhely",
+      "channel": "Szülőcsatorna",
+      "channelDescription": "A szöveges és közleménycsatornák közvetlenül kézbesíthetnek; a fórumok albejegyzést használnak.",
+      "selectChannel": "Válassz csatornát",
+      "thread": "Szál vagy fórumbejegyzés",
+      "selectThread": "Válassz szálat",
+      "threadOptional": "Opcionális szöveges és közleménycsatornáknál.",
+      "forumRequired": "Ehhez a célhelyhez fórumbejegyzést kell választani.",
+      "direct": "Küldés közvetlenül a csatornába",
+      "deleted": "Csatorna már nem létezik"
+    },
+    "refresh": {
+      "interval": "Frissítési időköz (perc)",
+      "intervalDescription": "Engedélyezett tartomány: {minimum}–{maximum} perc."
+    },
+    "schedule": {
+      "label": "Ütemezés",
+      "kind": "Ütemezési minta",
+      "kindDescription": "Küldés naponta, a kiválasztott hétköznapokon vagy havonta egyszer.",
+      "daily": "Naponta",
+      "weekdays": "Kiválasztott hétköznapok",
+      "dayOfMonth": "Hónap napja",
+      "selectWeekdays": "Hétköznapok",
+      "monthDay": "Hónap napja",
+      "monthDayDescription": "1 és 31 közötti értéket adj meg.",
+      "timezone": "Időzóna",
+      "timeOfDay": "Napszak",
+      "nextRun": "Következő futtatás"
+    },
+    "weekdays": {
+      "1": "Hétfő",
+      "2": "Kedd",
+      "3": "Szerda",
+      "4": "Csütörtök",
+      "5": "Péntek",
+      "6": "Szombat",
+      "7": "Vasárnap"
+    },
+    "status": {
+      "enabled": "Engedélyezve",
+      "disabled": "Letiltva",
+      "enabledDescription": "A letiltott táblák megőrzik a beállításaikat, de nem futnak.",
+      "messageId": "Aktuális frissítési üzenet: {id}"
+    },
+    "delete": {
+      "title": "Törlöd ezt az AutoBoardot?",
+      "description": "Ezzel eltávolítod a beállításait; a művelet nem vonható vissza."
+    },
+    "feedback": {
+      "created": "AutoBoard létrehozva",
+      "updated": "AutoBoard frissítve",
+      "deleted": "AutoBoard törölve"
+    },
+    "validation": {
+      "boardType": "Válassz táblatípust az aktív nyilvántartásból.",
+      "targetScope": "Válassz a táblatípus által támogatott célhatókört.",
+      "familyTargets": "A családi hatókör nem tartalmazhat kifejezett célokat.",
+      "targetCount": "Adj meg {min}–{max} nem üres célt.",
+      "deliveryMode": "Válassz a táblatípus által támogatott kézbesítési módot.",
+      "destination": "Válassz érvényes célhelyet. Fórumcsatornánál albejegyzés szükséges.",
+      "refreshInterval": "Adj meg {minimum} és {maximum} perc közötti frissítési időközt.",
+      "timezone": "Adj meg egy IANA-időzónát.",
+      "timeOfDay": "Adj meg érvényes időpontot.",
+      "weekdays": "Válassz legalább egy hétköznapot.",
+      "dayOfMonth": "Adj meg egy 1 és 31 közötti napot."
+    },
+    "errors": {
+      "title": "Az AutoBoardok nem érhetők el",
+      "session": "A munkameneted lejárt.",
+      "request": "Az AutoBoard-kérés sikertelen.",
+      "load": "Nem sikerült betölteni az AutoBoardokat.",
+      "save": "Nem sikerült menteni az AutoBoardot.",
+      "delete": "Nem sikerült törölni az AutoBoardot."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Jegypanelek beállításai",
+    "description": "Kategóriák és naplócsatornák beállítása minden jegypanelhez.",
+    "noPanels": "Nem található jegypanel",
+    "noPanelsHint": "Hozd létre az első panelt a fenti gombbal.",
+    "createPanel": "Új panel",
+    "createPanelTitle": "Jegypanel létrehozása",
+    "createPanelDescription": "Adj egyedi nevet a panelnek. Létrehozása után beállíthatod a gombokat és a csatornákat.",
+    "panelNameLabel": "Panel neve",
+    "panelNamePlaceholder": "pl. Jelentkezések",
+    "panelCreated": "Panel \"{name}\" létrehozva.",
+    "confirmDeletePanel": "Törlöd a(z) „{name}” panelt?",
+    "confirmDeletePanelHint": "Ezzel végleg törlöd a panelt és minden gombbeállítását.",
+    "panelDeleted": "Panel törölve.",
+    "panelHint": "Kattints a panel kibontásához és beállításához.",
+    "panelEmbed": "Panel beágyazása",
+    "panelEmbedHint": "A jegypanel Discordon történő közzétételekor használt beágyazás.",
+    "panelEmbedInfoLine1": "Új beágyazás létrehozásához vagy meglévő szerkesztéséhez nyisd meg a(z) %s oldalt a(z) {dashboardLabel} területén.",
+    "panelEmbedInfoLine2": "Gombok hozzáadásához vagy szerkesztéséhez nyisd meg a(z) %s részt ennél a panelnél.",
+    "panelEmbedPreview": "Beágyazás előnézete",
+    "panelEmbedPreviewEmpty": "A kiválasztott panelbeágyazáshoz nem érhető el előnézet.",
+    "ticketOpenEmbed": "Jegynyitási beágyazás",
+    "ticketOpenEmbedHint": "Nem kötelező egyéni beágyazás, amelyet a bot a jegy megnyitásakor küld.",
+    "selectEmbed": "Válassz beágyazást",
+    "defaultEmbed": "Nincs egyéni panelbeágyazás",
+    "noCustomMessage": "Alapértelmezett jegyüzenet használata",
+    "buttons": "Gombok",
+    "buttonList": "Gombok",
+    "categories": "Kategóriák",
+    "openCategory": "Nyitott jegyek kategóriája",
+    "open_category": "Nyitott jegyek kategóriája",
+    "sleepCategory": "Pihentetett jegyek kategóriája",
+    "sleep_category": "Pihentetett jegyek kategóriája",
+    "closedCategory": "Lezárt jegyek kategóriája",
+    "closed_category": "Lezárt jegyek kategóriája",
+    "selectCategory": "Válassz kategóriát...",
+    "logChannels": "Naplócsatornák",
+    "statusChangeLog": "Állapotváltozási napló",
+    "status_change_log": "Állapotváltozási napló",
+    "buttonClickLog": "Gombkattintási napló",
+    "ticket_button_click_log": "Gombkattintási napló",
+    "closeLog": "Jegylezárási napló",
+    "ticket_close_log": "Jegylezárási napló",
+    "selectChannel": "Válassz csatornát...",
+    "savedSuccess": "Panel \"{panel}\" mentve sikeresen.",
+    "tabChannels": "Jegy panel",
+    "tabSettings": "Beállítások",
+    "tabButtons": "Gombok",
+    "tabMessages": "Üzenetek",
+    "autoSaveSaving": "Mentés...",
+    "autoSaveSaved": "Mentve",
+    "autoSaveErrorTitle": "Az automatikus mentés sikertelen",
+    "autoSaveErrorDescription": "Nem sikerült menteni ezeket a jegybeállításokat.",
+    "messages": "Üzenetek",
+    "noButtons": "Még nincsenek gombok. A kezdéshez adj hozzá egyet.",
+    "addButton": "Gomb hozzáadása",
+    "addButtonTitle": "Gomb hozzáadása",
+    "addButtonDescription": "Az új gomb megjelenésének beállítása.",
+    "buttonLabel": "Gomb szöveg címke",
+    "buttonLabelPlaceholder": "pl. Jelentkezés",
+    "buttonStyle": "Gomb szín",
+    "buttonStyleBlue": "Kék",
+    "buttonStyleGrey": "Szürke",
+    "buttonStyleGreen": "Zöld",
+    "buttonStyleRed": "Piros",
+    "buttonAdded": "Gomb hozzáadva.",
+    "buttonDeleted": "Gomb törölve.",
+    "editButtonTitle": "Gombbeállítások szerkesztése",
+    "editButtonDescription": "A jegygomb beállítása.",
+    "buttonAppearanceSaved": "A megjelenés mentve.",
+    "confirmDeleteButton": "Törlöd a(z) „{label}” gombot?",
+    "confirmDeleteButtonHint": "Ezzel törlöd a gombot és minden beállítását (szerepkörök, kérdések stb.).",
+    "modRoles": "Személyzeti szerepkörök (megjelöléssel)",
+    "modRolesHint": "Ezeket a szerepköröket megemlíti a bot a jegy megnyitásakor.",
+    "noPingRoles": "Személyzeti szerepkörök (értesítés nélkül)",
+    "noPingRolesHint": "Ezek a szerepkörök láthatják a jegyeket, de nem kapnak megjelölést.",
+    "questions": "Kérdések",
+    "questionsHint": "Legfeljebb 5 kérdés jelenik meg egy párbeszédablakban a jegy megnyitásakor.",
+    "question": "Kérdés",
+    "privateThread": "Privát szál",
+    "privateThreadHint": "Külön privát szál létrehozása a személyzet számára.",
+    "accountApply": "CoC-fiók megkövetelése",
+    "accountApplyHint": "A felhasználónak össze kell kapcsolnia egy Clash of Clans-fiókot.",
+    "playerInfo": "Játékosadatok megjelenítése",
+    "playerInfoHint": "Fiókstatisztikák megjelenítése a jegy megnyitásakor.",
+    "thMin": "Min. Városháza",
+    "numApply": "Fiókok maximális száma",
+    "naming": "Elnevezési szabály",
+    "namingPlaceholders": "Elnevezési helyőrzők",
+    "namingVariables": "Változók: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Gomb \"{label}\" mentve.",
+    "badge": {
+      "accountApply": "CoC kötelező",
+      "privateThread": "Privát szál"
+    },
+    "approveMessages": "Jóváhagyási és elutasítási üzenetek",
+    "approveMessagesHint": "A személyzet által a jelentkezőknek küldhető előre megírt üzenetek (legfeljebb 25).",
+    "messagesMaxHint": "Legfeljebb 25 üzenetet adhatsz hozzá.",
+    "editMessagesButton": "Üzenetek szerkesztése",
+    "editMessagesTitle": "Előre megírt üzenetek szerkesztése",
+    "editMessagesDescription": "Előre megírt jegyüzenetek hozzáadása, eltávolítása és frissítése.",
+    "addMessage": "Üzenet hozzáadása",
+    "noMessages": "Még nincsenek üzenetek. A kezdéshez adj hozzá egyet.",
+    "messageName": "Üzenet neve",
+    "contentLabel": "Tartalom",
+    "messageContent": "Üzenet tartalom...",
+    "messageNameRequired": "Minden üzenetnek nevet kell adni.",
+    "messagesSaved": "A jóváhagyási és elutasítási üzenetek mentve.",
+    "rolesToAdd": "Hozzáadandó szerepkörök",
+    "rolesToAddHint": "A jegy megnyitásakor a felhasználó automatikusan megkapja ezeket a szerepköröket.",
+    "rolesToRemove": "Eltávolítandó szerepkörök",
+    "rolesToRemoveHint": "A jegy megnyitásakor a bot automatikusan eltávolítja ezeket a szerepköröket a felhasználótól.",
+    "applyClans": "Engedélyezett klánok",
+    "applyClansHint": "Csak ezeknek a klánoknak a tagjai nyithatják meg a jegyet. Hagyd üresen, ha bárkinek engedélyeznéd.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Városháza-követelmények",
+    "thRequirementsHint": "A jegy megnyitásához szükséges minimális hősszintek Városháza-szintenként.",
+    "thHeroLegend": "BK = Barbárkirály · AQ = Íjászkirálynő · GW = Nagy Őrző · RC = Királyi Bajnok · WARST = Háborús csillagok",
+    "addThLevel": "VH-szint hozzáadása",
+    "thLevel": "TH",
+    "numApplyHint": "A jelentkezéshez használható CoC-fiókok maximális száma felhasználónként (1–25).",
+    "embeds": "Beágyazások",
+    "embedsHint": "Panelüzenetként vagy jegynyitási üzenetként használt Discord-beágyazások.",
+    "newEmbed": "Új beágyazás",
+    "embedName": "Beágyazás neve",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "Discohook URL",
+    "embedDiscohookHint": "Tervezd meg a beágyazást a Discohookon, másold ki az oldal URL-jét, majd illeszd be ide.",
+    "openDiscohook": "Discohook megnyitása",
+    "openInDiscohook": "Megnyitás a Discohookban",
+    "copyDiscohookUrl": "Discohook URL másolása",
+    "copyDiscohookUrlDone": "URL másolva!",
+    "editEmbed": "Szerkesztés",
+    "deleteEmbed": "Törlés",
+    "confirmDeleteEmbed": "Törlöd a(z) „{name}” beágyazást?",
+    "confirmDeleteEmbedHint": "Ez csak a ClashKingből távolítja el; a már közzétett Discord-üzeneteket nem érinti.",
+    "embedSaved": "A(z) „{name}” beágyazás mentve.",
+    "embedCreated": "A(z) „{name}” beágyazás létrehozva.",
+    "embedDeleted": "A beágyazás törölve.",
+    "noEmbeds": "Még nincsenek beágyazások.",
+    "noEmbedsHint": "Hozz létre itt egy beágyazást, majd rendeld hozzá egy panelhez vagy gombhoz.",
+    "legacyEmbed": "A bottal készült — a szerkesztés engedélyezéséhez illessz be egy Discohook URL-t.",
+    "invalidDiscohookUrl": "Érvénytelen URL. Egy Discohook-oldal URL-jét illeszd be (discohook.app/?data=... vagy discohook.app/?share=...).",
+    "tabEmbeds": "Beágyazások"
+  },
+  "EmbedsPage": {
+    "title": "Beágyazások",
+    "description": "Discord-beágyazási sablonok létrehozása és kezelése jegypanelekhez és gombokhoz.",
+    "nameHint": "Adj egyedi azonosítót a beágyazásnak. A tartalmát később is módosíthatod."
+  },
+  "EmbedEditor": {
+    "importSection": "Importálás a Discohookból",
+    "addMessage": "Üzenet hozzáadása",
+    "addMessageDialogTitle": "Üzenet hozzáadása",
+    "addMessageDialogDescription": "Válaszd ki az üzenet összetettségét.",
+    "addMessageClassicTitle": "Klasszikus",
+    "addMessageClassicDescription": "Egyszerű és megbízható: szöveg és beágyazások. Ha bizonytalan vagy, válaszd ezt.",
+    "addMessageV2Title": "Komponensek v2",
+    "addMessageV2Description": "Összetettebb elrendezések és interaktív elemek (gombok, választók, szakaszok). Haladó beállításokhoz ajánlott.",
+    "betaTag": "Béta",
+    "importExport": "Importálás és exportálás",
+    "importExportDescription": "Beágyazás importálása a Discohookból vagy az aktuális beágyazás exportálása a Discohookba.",
+    "importFromDiscohook": "Importálás a Discohookból",
+    "copyDiscohookUrl": "Discohook URL másolása",
+    "openInDiscohook": "Megnyitás a Discohookban",
+    "content": "Tartalom",
+    "contentPlaceholder": "A beágyazások felett megjelenő üzenettartalom...",
+    "profileSection": "Profil",
+    "profileName": "Név",
+    "profileAvatarUrl": "Avatar URL-címe",
+    "profileUnsupportedWarning": "Figyelem: a bot jelenleg nem támogatja ennek a profilnak a frissítését.",
+    "import": "Importálás",
+    "importError": "Érvénytelen Discohook URL. Egy Discohook-oldal URL-jét illeszd be.",
+    "importMultipleMessagesWarning": "A hivatkozás több üzenetet tartalmaz. Csak az elsőt importáltuk, mert a bot beágyazásonként egy üzenetet támogat.",
+    "colorSection": "Szín",
+    "authorSection": "Szerző",
+    "authorName": "Név",
+    "authorIconUrl": "Ikon URL-címe",
+    "authorUrl": "Szerző URL-címe",
+    "bodySection": "Törzs",
+    "title": "Cím",
+    "titleUrl": "Cím URL",
+    "sidebarColor": "Oldalsáv színe",
+    "description": "Leírás",
+    "descriptionPlaceholder": "Beágyazás leírása...",
+    "fieldsSection": "Mezők",
+    "addField": "Mező hozzáadása",
+    "field": "Mező",
+    "fieldName": "Név",
+    "fieldValue": "Érték",
+    "fieldInline": "Soron belüli",
+    "imagesSection": "Képek",
+    "thumbnailUrl": "Bélyegkép URL-címe",
+    "imageUrl": "Kép URL",
+    "footerSection": "Lábléc",
+    "footerText": "Lábléc szövege",
+    "footerIconUrl": "Láblécikon URL-címe",
+    "timestamp": "Időbélyeg megjelenítése",
+    "preview": "Előnézet",
+    "previewEmpty": "Az előnézethez töltsd ki a mezőket",
+    "modeToggleV1": "Klasszikus (V1)",
+    "modeToggleV2": "Komponensek (V2)",
+    "componentsSection": "Komponensek",
+    "addComponent": "Komponens hozzáadása",
+    "containerLabel": "Tároló",
+    "textDisplayLabel": "Szöveges megjelenítés",
+    "separatorLabel": "Elválasztó",
+    "mediaGalleryLabel": "Médiagaléria",
+    "sectionLabel": "Szakasz",
+    "dividerLine": "Elválasztóvonal megjelenítése",
+    "spacing": "Térköz",
+    "spacingSmall": "Kicsi",
+    "spacingLarge": "Nagy",
+    "imageDescription": "Helyettesítő szöveg",
+    "imageSpoiler": "Spoiler",
+    "addImage": "Kép hozzáadása",
+    "addTextBlock": "Szövegblokk hozzáadása",
+    "accessory": "Kiegészítő",
+    "accessoryNone": "Nincs",
+    "accessoryThumbnail": "Bélyegkép",
+    "accessoryButton": "Gomb",
+    "thumbnailAlt": "Bélyegkép helyettesítő szövege",
+    "accentColor": "Kiemelőszín",
+    "addContainer": "Alkomponens hozzáadása",
+    "containerSpoiler": "Spoilertároló",
+    "stringSelectLabel": "Szövegválasztó",
+    "userSelectLabel": "Felhasználóválasztó",
+    "roleSelectLabel": "Szerepkörválasztó",
+    "mentionableSelectLabel": "Megemlíthető elem választója",
+    "channelSelectLabel": "Csatornaválasztó",
+    "fileLabel": "Fájl",
+    "fileUrl": "Fájl URL-címe",
+    "fileUploadButton": "Feltöltés",
+    "fileSpoiler": "Spoiler",
+    "selectCustomId": "Egyéni azonosító",
+    "selectPlaceholder": "Helyőrző szöveg",
+    "selectMinValues": "Értékek minimuma",
+    "selectMaxValues": "Értékek maximuma",
+    "selectOptions": "Beállítások",
+    "selectOption": "Beállítás",
+    "selectOptionLabel": "Címke",
+    "selectOptionValue": "Érték",
+    "selectOptionDescription": "Leírás",
+    "selectOptionDefault": "Alapértelmezés szerint kiválasztva",
+    "addSelectOption": "Beállítás hozzáadása",
+    "selectDisabled": "Letiltva",
+    "actionRowMode": "Sor típusa",
+    "actionRowModeButtons": "Gombok",
+    "actionRowLabel": "Műveletsor",
+    "addButton": "Gomb hozzáadása",
+    "buttonLabel": "Címke",
+    "buttonStyle": "Stílus",
+    "buttonStylePrimary": "Elsődleges",
+    "buttonStyleSecondary": "Másodlagos",
+    "buttonStyleSuccess": "Siker",
+    "buttonStyleDanger": "Veszélyes",
+    "buttonStyleLink": "Hivatkozás",
+    "tabMentions": "Megemlítések",
+    "tabTime": "Idő",
+    "tabEmojis": "Emojik",
+    "dateLabel": "Dátum",
+    "timeLabel": "Idő",
+    "mentionsChannels": "Csatornák",
+    "mentionsSpecial": "Speciális",
+    "mentionsChannelList": "Minden csatorna",
+    "mentionsRoles": "Szerepkörök",
+    "mentionsServerGuide": "Szerverútmutató",
+    "mentionsBrowseChannels": "Csatornák böngészése",
+    "mentionsChannelsAndRoles": "Csatornák és szerepkörök",
+    "mentionsNoChannels": "Egyetlen csatorna sem felel meg a keresésnek.",
+    "mentionsNoRoles": "Egyetlen szerepkör sem felel meg a keresésnek.",
+    "styleLabel": "Stílus",
+    "timeRelativeNow": "0 másodperce",
+    "emojiSearchPlaceholder": "Találd meg a tökéletes emojit",
+    "emojiToneLabel": "Emoji bőrtónusa",
+    "emojiCategory": {
+      "people": "Emberek",
+      "nature": "Természet",
+      "food": "Étel",
+      "activities": "Tevékenységek",
+      "travel": "Utazás",
+      "objects": "Tárgyak",
+      "symbols": "Szimbólumok",
+      "flags": "Zászlók"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Letiltva",
+    "unknownComponent": "Ismeretlen komponens",
+    "unknownComponentHint": "Ez a komponenstípus itt nem szerkeszthető, de mentéskor megmarad."
+  },
+  "PanelsPage": {
+    "title": "Panelek",
+    "description": "Állíts be interaktív tagpanelt a szervereden. A tagok egyetlen kattintással összekapcsolhatják a fiókjukat, frissíthetik a szerepköreiket és további műveleteket végezhetnek.",
+    "saved": "Panel konfiguráció mentve.",
+    "embedSection": "Beágyazás",
+    "embedHint": "A gombok felett megjelenő, nem kötelező beágyazás.",
+    "embedLabel": "Beágyazás",
+    "noEmbed": "Nincs beágyazás (csak gombok)",
+    "buttonsSection": "Gombok",
+    "buttonsHint": "Válaszd ki a megjelenítendő műveletgombokat. A sorrend a kiválasztás sorrendjét követi.",
+    "colorSection": "Gomb színe",
+    "colorHint": "Minden gombra érvényes.",
+    "welcomeSection": "Üdvözlőcsatorna",
+    "welcomeHint": "Beállítása esetén a panel automatikusan megjelenik, amikor új tag csatlakozik.",
+    "welcomeChannel": "Csatorna",
+    "welcomeChannelPlaceholder": "Válassz csatornát...",
+    "editPanelButton": "Panel szerkesztése",
+    "editDialogTitle": "Panel szerkesztése",
+    "editDialogDescription": "Frissítsd a beágyazást, a gombokat és a gombszínt; mentés előtt élő előnézetet látsz.",
+    "welcomeAutosaveSuccess": "Az üdvözlőcsatorna mentve.",
+    "welcomeAutosaveDisabled": "Az üdvözlőcsatorna letiltva.",
+    "previewSection": "Előnézet",
+    "previewHint": "Így fog kinézni a panel a Discordon.",
+    "previewNoEmbed": "Nincs kiválasztva beágyazás",
+    "previewEmbedNoData": "A beágyazáshoz nincs előnézeti adat",
+    "previewNoButtons": "Nincs kiválasztott gomb",
+    "color": {
+      "Blue": "Kék",
+      "Green": "Zöld",
+      "Grey": "Szürke",
+      "Red": "Piros"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Nyereményjátékok",
+    "description": "Nyereményjátékok létrehozása, ütemezése és kezelése a szerveren.",
+    "create": "Nyereményjáték létrehozása",
+    "listTitle": "Nyereményjátékok vezérlőpultja",
+    "listDescription": "Ütemezett, aktív és befejezett nyereményjátékok követése egy helyen.",
+    "empty": "Még nincs megjeleníthető nyereményjáték.",
+    "confirmDeleteTitle": "Nyereményjáték törlése",
+    "confirmDelete": "Biztosan törlöd ezt a nyereményjátékot?",
+    "discardTitle": "Elveted a módosításokat?",
+    "discardDescription": "Nem mentett módosításaid vannak. Ha most bezárod, elvesznek.",
+    "discardConfirm": "Elvetés",
+    "formTabs": {
+      "general": "Általános",
+      "messages": "Üzenetek",
+      "restrictions": "Korlátozások",
+      "advanced": "Haladó"
+    },
+    "tabs": {
+      "ongoing": "Folyamatban",
+      "upcoming": "Közelgő",
+      "ended": "Befejezve"
+    },
+    "stats": {
+      "total": "Nyereményjátékok összesen",
+      "totalEntries": "Jelentkezések összesen",
+      "ongoing": "Folyamatban lévő nyereményjátékok",
+      "upcoming": "Közelgő nyereményjátékok",
+      "ended": "Befejezett nyereményjátékok"
+    },
+    "statsDescriptions": {
+      "total": "A szerveren beállított összes nyereményjáték.",
+      "totalEntries": "Az összes nyereményjáték jelentkezéseinek együttes száma.",
+      "ongoing": "Jelenleg aktív és fogad jelentkezéseket.",
+      "upcoming": "Későbbi kezdésre ütemezve.",
+      "ended": "Már befejezett nyereményjátékok."
+    },
+    "emptyTab": {
+      "title": "Itt nincsenek nyereményjátékok",
+      "ongoing": "Jelenleg nincs folyamatban nyereményjáték.",
+      "upcoming": "Nincs ütemezett nyereményjáték. A kezdéshez hozz létre egyet.",
+      "ended": "Még nincs befejezett nyereményjáték."
+    },
+    "status": {
+      "scheduled": "Ütemezve",
+      "ongoing": "Folyamatban",
+      "ended": "Befejezve"
+    },
+    "table": {
+      "giveaway": "Nyereményjáték",
+      "channel": "Csatorna",
+      "entries": "Jelentkezések",
+      "timing": "Időzítés",
+      "start": "Kezdés",
+      "end": "Befejezés",
+      "winnersHeader": "Nyertesek",
+      "winners": "{count} nyertes{count, plural, one {} other {}}",
+      "boosters": "{count} erősítő{count, plural, one {} other {}}",
+      "noChannel": "Nincs csatorna",
+      "noChannelHelp": "Nincs hozzárendelt csatorna. A javításhoz szerkeszd a nyereményjátékot.",
+      "endsAt": "Befejezés ekkor",
+      "endedAt": "Befejeződött ekkor",
+      "duplicate": "Másolat készítése",
+      "showingEnded": "{shown} megjelenítve a(z) {total} befejezett nyereményjátékból",
+      "showMore": "További {count} megjelenítése",
+      "pendingUpdate": "Függőben lévő frissítés",
+      "pendingUpdateHelp": "A nyereményjátéknak függőben lévő módosításai vannak, amelyeket a bot hamarosan alkalmaz.",
+      "openInDiscord": "Megnyitás a Discordon",
+      "viewInDiscord": "Megtekintés a Discordon",
+      "reroll": "Nyertesek újrasorsolása",
+      "rerolledCount": "{count, plural, one {# újrasorsolva} other {# újrasorsolva}}",
+      "viewEntries": "Jelentkezések megtekintése"
+    },
+    "entries": {
+      "description": "A résztvevők és nyerési esélyeik listája.",
+      "totalEntries": "Jelentkezések összesen",
+      "uniqueUsers": "Egyedi felhasználók",
+      "noEntrants": "Még nincsenek jelentkezések.",
+      "userId": "Felhasználó-azonosító",
+      "entryCount": "Jelentkezések",
+      "winChance": "Nyerési esély"
+    },
+    "dialog": {
+      "createTitle": "Nyereményjáték létrehozása",
+      "editTitle": "Nyereményjáték szerkesztése",
+      "description": "A nyereményjáték üzenetének, időzítésének és követelményeinek beállítása.",
+      "create": "Nyereményjáték létrehozása",
+      "saveChanges": "Változtatások mentése"
+    },
+    "form": {
+      "prize": "Nyeremény",
+      "prizePlaceholder": "Példa: Gold Pass",
+      "channel": "Csatorna",
+      "channelPlaceholder": "Válassz csatornát",
+      "startTime": "Kezdési idő",
+      "startNow": "Kezdés azonnal",
+      "endTime": "Befejezési idő",
+      "winners": "Nyertesek száma",
+      "mentions": "Megemlített szerepkörök",
+      "roleRequirements": "Kötelező vagy kizárt szerepkörök",
+      "rolesMode": "Szerepkör mód",
+      "rolesModeOptions": {
+        "none": "Nincs szerepkör-korlátozás",
+        "allow": "Csak ezek a szerepkörök vehetnek részt",
+        "deny": "Ezekkel a szerepkörökkel nem lehet részt venni"
+      },
+      "rolesModeHelp": {
+        "none": "Minden felhasználó részt vehet a nyereményjátékban.",
+        "allow": "Csak a kiválasztott szerepkörök legalább egyikével rendelkező felhasználók vehetnek részt.",
+        "deny": "A kiválasztott szerepkörök bármelyikével rendelkező felhasználók nem vehetnek részt."
+      },
+      "textAboveEmbed": "Szöveg a beágyazás felett",
+      "textEmbedDefault": "A részvételhez kattints az alábbi gombra.",
+      "textInEmbed": "Beágyazás leírása",
+      "textEndDefault": "Gratulálunk minden kiválasztottnak! Hamarosan felvesszük veletek a kapcsolatot.",
+      "textOnEnd": "Üzenet a nyereményjáték végén",
+      "image": "Nyereményjáték kép",
+      "removeImage": "Aktuális kép eltávolítása",
+      "imagePreviewAlt": "Nyereményjáték előnézet",
+      "previewGiveaway": "Nyereményjáték előnézete",
+      "previewEnd": "Befejezési üzenet előnézete",
+      "boosters": "Jelentkezési erősítők",
+      "addBooster": "Erősítő hozzáadása",
+      "noBoosters": "Nincsenek beállított erősítők.",
+      "boosterLabel": "{index}. erősítő",
+      "boostValue": "Szorzó",
+      "boostRoles": "Erősített szerepkörök",
+      "requirements": "Jelentkezési követelmények",
+      "profilePictureRequired": "Discord-profilkép megkövetelése",
+      "cocAccountRequired": "Összekapcsolt Clash of Clans-fiók megkövetelése"
+    },
+    "validation": {
+      "prizeRequired": "A nyeremény megadása kötelező.",
+      "channelRequired": "Csatorna kötelező.",
+      "startTimeRequired": "A kezdési idő kötelező, kivéve, ha a nyereményjáték most kezdődik.",
+      "endTimeRequired": "A befejezési idő kötelező.",
+      "endAfterStart": "A befejezési időnek a kezdési idő után kell lennie.",
+      "imageTooLarge": "A kép mérete legfeljebb 8 MB lehet."
+    },
+    "preview": {
+      "liveSummary": "Élő összefoglaló",
+      "discordPreview": "Discord előnézet",
+      "giveawayTitle": "Nyereményjáték előnézet",
+      "giveawayDescription": "Így fog kinézni az aktív nyereményjáték üzenete.",
+      "endTitle": "Befejezési üzenet előnézete",
+      "endDescription": "Ezt az üzenetet küldi a bot a nyereményjáték befejezésekor.",
+      "winnerCount": "Nyertesek",
+      "winnerWord": "{count, plural, one {nyertes} other {nyertes}}",
+      "mentionCount": "Megemlített szerepkörök",
+      "requirementCount": "Követelmények",
+      "boosterCount": "Erősítők",
+      "profileRequired": "Profilkép szükséges",
+      "accountRequired": "Összekapcsolt CoC-fiók szükséges",
+      "rolesAllow": "Csak a kiválasztott szerepkörök",
+      "rolesDeny": "A kiválasztott szerepkörök kizárva",
+      "noChannel": "Még nincs kiválasztott csatorna",
+      "noPrize": "Itt jelenik majd meg a nyeremény",
+      "noEmbedText": "A nyereményjáték törzsének előnézetéhez adj meg beágyazási szöveget.",
+      "noEndText": "Adj meg záróüzenetet a nyerteseknek.",
+      "startsAt": "Kezdés: {date}",
+      "endsAt": "Befejezés: {date}",
+      "endsOn": "Befejezés: {date}",
+      "endsFooter": "Befejezés",
+      "notScheduled": "Nincs ütemezve",
+      "schedule": "Ütemezés",
+      "endMessage": "Nyertesi üzenet",
+      "endSummary": "{winners} nyertest{winners, plural, one {} other {}} itt jelentünk be.",
+      "totalParticipants": "Résztvevők összesen: {count}",
+      "participate": "Részvétel",
+      "buttonHint": "A Discord-bejegyzés alatt megjelenő elsődleges műveletgomb."
+    },
+    "toast": {
+      "errorTitle": "Hiba történt",
+      "successTitle": "Siker",
+      "loadError": "Nem sikerült betölteni a nyereményjátékokat.",
+      "saveError": "Nem sikerült menteni a nyereményjátékot.",
+      "deleteError": "Nem sikerült törölni a nyereményjátékot.",
+      "created": "A nyereményjáték sikeresen létrejött.",
+      "updated": "A nyereményjáték sikeresen frissült.",
+      "deleted": "A nyereményjáték sikeresen törölve.",
+      "rerolled": "A nyertesek sikeresen újrasorsolva.",
+      "rerollError": "Nem sikerült újrasorsolni a nyerteseket."
+    },
+    "reroll": {
+      "title": "Nyertesek újrasorsolása",
+      "description": "Válaszd ki a lecserélendő nyerteseket. Az új nyerteseket a jogosult résztvevők közül sorsoljuk ki.",
+      "selectWinners": "Válaszd ki a lecserélendő nyerteseket:",
+      "confirm": "{count, plural, one {# nyertes újrasorsolása} other {# nyertes újrasorsolása}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Irányítópult áttekintése",
+    "description": "Tekintsd át a szerver statisztikáit, és kezdd el a beállítást",
+    "stats": {
+      "linkedPlayers": "Összekapcsolt játékosok",
+      "linkedPlayersDesc": "A szerveren összekapcsolt játékosok",
+      "clansConfigured": "Beállított klánok",
+      "clansConfiguredDesc": "A szerveren követett klánok",
+      "activeRosters": "Aktív keretek",
+      "activeRostersDesc": "Létrehozott háborús keretek",
+      "totalAccounts": "Összekapcsolt fiókok",
+      "totalAccountsDesc": "Összekapcsolt CoC-fiókok összesen",
+      "playersTracked": "Követett játékosok",
+      "globalPlayers": "Játékosok összesen az adatbázisban",
+      "clansTracked": "Követett klánok",
+      "globalClans": "Klánok összesen az adatbázisban",
+      "botStatus": "Bot állapota",
+      "online": "Elérhető",
+      "offline": "Nem elérhető",
+      "memoryUsage": "Memória: {used} MB ({percent}%)",
+      "cpuUsage": "Processzor: {percent}%"
+    },
+    "botSection": "Botstatisztikák",
+    "clans": {
+      "title": "A klánjaid",
+      "description": "{count, plural, one {# klán beállítva} other {# klán beállítva}}",
+      "manage": "Klánok kezelése",
+      "addFirst": "Első klán hozzáadása"
+    },
+    "quickStart": {
+      "title": "Gyors kezdés",
+      "description": "A ClashKing Bot első beállítási lépései",
+      "step1": {
+        "title": "Általános beállítások megadása",
+        "description": "Állítsd be a becenévre vonatkozó szabályokat, a beágyazások színeit és a naplócsatornákat"
+      },
+      "step2": {
+        "title": "Klánjaid hozzáadása",
+        "description": "Kapcsold össze Clash of Clans-klánjaidat, és állítsd be a szerepköröket"
+      },
+      "step3": {
+        "title": "Automatikus szerepkörök beállítása",
+        "description": "Állíts be automatikus szerepkör-hozzárendelést Városháza-szint, trófeák és más adatok alapján"
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Botstatisztikák",
+    "description": "A ClashKing Bot globális statisztikái és rendszerállapota",
+    "about": {
+      "title": "A statisztikákról",
+      "description": "A teljes ClashKing Bot-hálózat globális statisztikái",
+      "globalStats": "Globális statisztikák",
+      "globalStatsDesc": "A játékosok és klánok száma a ClashKinget használó összes Discord-szerveren követett elemeket jelenti",
+      "systemHealth": "Rendszer állapota",
+      "systemHealthDesc": "A CPU- és memóriahasználat a ClashKing API infrastruktúrájának aktuális terhelését jelzi"
+    }
+  },
+  "NotFound": {
+    "title": "404 – Az oldal nem található",
+    "description": "A keresett oldal nem létezik.",
+    "goHome": "Ugrás a kezdőlapra"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord-bot, mobilalkalmazás és klánvezérlőpult",
+      "description": "Kezeld a háborúkat, kereteket, fiókokat, emlékeztetőket és klánbeállításokat a ClashKinggel Discordon, mobilon és weben.",
+      "openGraphTitle": "ClashKing | Irányítsd a klánodat"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing-navigáció",
+      "homeLabel": "ClashKing kezdőlapja",
+      "mobileApp": "Mobilalkalmazás",
+      "discordBot": "Discord-bot",
+      "dashboard": "Vezérlőpult"
+    },
+    "language": {
+      "label": "Nyelv"
+    },
+    "appearance": {
+      "label": "Megjelenés",
+      "day": "Nap",
+      "sunset": "Naplemente"
+    },
+    "actions": {
+      "addToDiscord": "Hozzáadás egy Discordhoz",
+      "addClashKing": "ClashKing hozzáadása",
+      "openDashboard": "Vezérlőpult megnyitása",
+      "joinTestFlight": "Csatlakozás a TestFlighthoz",
+      "getAndroidApp": "Android-alkalmazás letöltése"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Irányítsd",
+          "second": "a",
+          "third": "klánodat."
+        },
+        "accounts": {
+          "first": "Kezeld",
+          "second": "a",
+          "third": "fiókjaidat."
+        },
+        "stats": {
+          "first": "Fedezd fel",
+          "second": "a",
+          "third": "statisztikákat."
+        }
+      },
+      "rotatingLabel": "Irányítsd a klánodat. Kezeld a fiókjaidat. Fedezd fel a statisztikákat.",
+      "copy": "Háborúk, keretek, fiókok és klánbeállítások Discordon, mobilon és weben."
+    },
+    "app": {
+      "title": "Mobilalkalmazás",
+      "intro": "A Clash-fiókod társa.",
+      "stageLabel": "A ClashKing mobilalkalmazás klán-, fejlesztési és háborús widgetképernyői",
+      "images": {
+        "clanOverview": "A ClashKing mobilalkalmazás klánáttekintése",
+        "upgradeStats": "A ClashKing mobilalkalmazás Nagy Őrző-fejlesztési statisztikái",
+        "warWidget": "ClashKing háborús eredmény widget"
+      },
+      "features": {
+        "widgets": {
+          "title": "Widgetek",
+          "copy": "Lásd háborúidat egyetlen pillantással."
+        },
+        "notifications": {
+          "title": "Értesítések",
+          "copy": "Értesítést kapsz, amikor elérhetővé válik egy támadás, vagy befejeződik egy fejlesztés."
+        },
+        "accounts": {
+          "title": "Összekapcsolt fiókok",
+          "copy": "Tartsd együtt az összes Clash-fiókodat."
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord-bot",
+      "intro": "Klánstatisztikák és eszközök közvetlenül a Discordon.",
+      "imageLabel": "ClashKing klánparancs a Discordon",
+      "imageAlt": "A ClashKing klánparancsa az ArcLine klán statisztikáival a Discordon",
+      "features": {
+        "rosters": {
+          "title": "Keretek",
+          "copy": "Fiókok kezelése CWL-hez vagy eseményekhez."
+        },
+        "warTools": {
+          "title": "Háborús eszközök",
+          "copy": "Támadások, felállások és emlékeztetők kezelése a Discordon."
+        },
+        "accounts": {
+          "title": "Összekapcsolt fiókok",
+          "copy": "Tartsd együtt az összes Clash-fiókodat."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Vezérlőpult",
+      "intro": "Keretek, emlékeztetők és szerverbeállítások kezelése egy helyen.",
+      "imageLabel": "Klánkezelési eszközöket jelképező Építőkunyhó",
+      "imageAlt": "8. szintű Építőkunyhó",
+      "features": {
+        "settings": {
+          "title": "Klánbeállítások",
+          "copy": "Klánok, szerepkörök és csatornák beállítása."
+        },
+        "rosters": {
+          "title": "Keretek",
+          "copy": "Fiókok kezelése CWL-hez vagy eseményekhez."
+        },
+        "automation": {
+          "title": "Automatizálás",
+          "copy": "Emlékeztetők és szerverfeladatok ütemezése."
+        }
+      }
+    },
+    "resources": {
+      "title": "Építs a ClashKinggel.",
+      "copy": "Útmutatók, forráskód és strukturált adatok közösségi eszközökhöz.",
+      "ariaLabel": "Fejlesztői erőforrások",
+      "documentation": "Dokumentáció",
+      "publicApi": "Nyilvános API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans-eszközök mindenkinek",
+      "docs": "Dokumentáció",
+      "privacy": "Adatvédelmi irányelvek",
+      "terms": "Felhasználási feltételek",
+      "legal": "Ez a tartalom nem áll kapcsolatban a Supercell-lel, és a Supercell nem támogatja, nem szponzorálja, illetve nem hagyta kifejezetten jóvá."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing Discordra, mobilra és webre",
+    "privacy": {
+      "title": "Adatvédelmi irányelvek | ClashKing",
+      "openGraphTitle": "ClashKing adatvédelmi irányelvei",
+      "description": "Hogyan gyűjti, használja, tárolja és védi a ClashKing a fiók-, játék- és alkalmazásadatokat.",
+      "heading": "Adatvédelmi irányelvek",
+      "eyebrow": "Hatályos 2026. július 17-től"
+    },
+    "terms": {
+      "title": "Felhasználási feltételek | ClashKing",
+      "openGraphTitle": "A ClashKing felhasználási feltételei",
+      "description": "A ClashKing webhelyeinek, alkalmazásainak, szolgáltatásainak és közösségi eszközeinek használatára vonatkozó feltételek.",
+      "heading": "Szolgáltatási feltételek",
+      "eyebrow": "ClashKing jogi információk"
+    }
+  }
+}

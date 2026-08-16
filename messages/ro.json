@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Se încarcă...",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "search": "Caută",
+    "filter": "Filtru",
+    "add": "Adaugă",
+    "remove": "Elimină",
+    "refresh": "Reîmprospătează",
+    "close": "Închide",
+    "openMenu": "Deschide meniul",
+    "submit": "Trimite",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "previous": "Anterior",
+    "poweredBy": "Oferit de",
+    "noData": "Nu sunt disponibile date.",
+    "noChannelFound": "Nu a fost găsit niciun canal.",
+    "searchChannels": "Caută canale...",
+    "searchClans": "Caută clanuri...",
+    "noClanFound": "Nu a fost găsit niciun clan.",
+    "searchCategories": "Caută categorii...",
+    "noRoleFound": "Nu a fost găsit niciun rol.",
+    "searchRoles": "Caută roluri...",
+    "addRole": "Adaugă rol...",
+    "error": "A apărut o eroare",
+    "success": "Succes",
+    "actions": "Acțiuni",
+    "details": "Detalii",
+    "view": "Vezi",
+    "unknown": "Necunoscut",
+    "confirm": "Confirmă",
+    "settings": "Setări",
+    "status": "Stare",
+    "retry": "Reîncearcă",
+    "disabled": "Dezactivat",
+    "name": "Nume",
+    "description": "Descriere",
+    "createdAt": "Creat la",
+    "updatedAt": "Actualizat la",
+    "dashboard": "Panou",
+    "loadError": "Nu s-au putut încărca date.",
+    "tryAgain": "Încearcă din nou",
+    "create": "Creează",
+    "viewClashProfile": "Vezi profilul Clash",
+    "openInGame": "Deschide în joc",
+    "openChannelInDiscord": "Deschide acest canal pe Discord",
+    "playerProfile": {
+      "clan": "Clanul",
+      "townHallLevel": "Nivelul Primăriei",
+      "trophies": "Trofee",
+      "warPreference": "Preferință de război",
+      "warPreferenceIn": "Participă",
+      "warPreferenceOut": "Nu participă",
+      "signupGroup": "Grup de înscriere",
+      "heroLevels": "Nivelurile eroilor",
+      "hitrate30d": "Rată de reușită în ultimele 30 de zile"
+    }
+  },
+  "Navigation": {
+    "features": "Funcții",
+    "openSource": "Cod sursă deschis",
+    "help": "Ai nevoie de ajutor?",
+    "support": "Susține-ne",
+    "commands": "Comenzi",
+    "premium": "Premium",
+    "documentation": "Documentație",
+    "loginWithDiscord": "Conectează-te cu Discord",
+    "addToDiscord": "Adaugă pe Discord",
+    "openDashboard": "Deschide panoul",
+    "dashboardSettings": "Setările panoului",
+    "logout": "Deconectează-te",
+    "settings": "Setări",
+    "theme": "Temă",
+    "systemTheme": "Urmează sistemul",
+    "lightTheme": "Temă luminoasă",
+    "darkTheme": "Temă întunecată",
+    "language": "Limbă",
+    "browserLanguage": "Limba browserului"
+  },
+  "HomePage": {
+    "badge": "Peste {serverCount} de servere folosesc deja ClashKing",
+    "title": "Cel mai puternic",
+    "titleHighlight": "bot de Clash of Clans",
+    "subtitle": "Automatizează gestionarea clanului, urmărește statisticile jucătorilor, gestionează războaiele și menține comunitatea activă.",
+    "cta": {
+      "heading": "Ești gata să-ți transformi clanul?",
+      "description": "Alătură-te celor peste {serverCount} de servere Discord care folosesc deja ClashKing. Configurarea durează doar 2 minute.",
+      "button": "Adaugă ClashKing pe Discord",
+      "trustBadge": "Gratuit pentru totdeauna • Nu necesită card • Peste {serverCount} de servere",
+      "addToDiscord": "Adaugă pe Discord",
+      "openDashboard": "Deschide panoul"
+    },
+    "stats": {
+      "servers": "Servere Discord",
+      "users": "Utilizatori activi",
+      "clans": "Clanuri urmărite"
+    },
+    "features": {
+      "title": "Tot ce ai nevoie pentru a-ți gestiona clanul",
+      "subtitle": "Funcții puternice concepute special pentru comunitățile Clash of Clans",
+      "autoRoles": {
+        "title": "Gestionare automată a rolurilor",
+        "description": "Atribuie automat roluri în funcție de starea, poziția în clan și realizările jucătorului. Păstrează serverul organizat fără efort."
+      },
+      "playerStats": {
+        "title": "Statisticile jucătorilor",
+        "description": "Consultă statistici detaliate, grafice de progres și istoricul atacurilor. Află cine progresează și cine are nevoie de ajutor."
+      },
+      "leaderboards": {
+        "title": "Clasamente",
+        "description": "Creează clasamente competitive pentru donații, trofee, stele de război și indicatori personalizați. Încurajează participarea."
+      },
+      "warTracking": {
+        "title": "Urmărirea războaielor",
+        "description": "Monitorizează formațiile de război, urmărește atacurile în timp real și consultă analizele ulterioare. Nu rata niciun detaliu."
+      },
+      "smartReminders": {
+        "title": "Mementouri inteligente",
+        "description": "Trimite automat mementouri pentru Jocurile Clanului, atacurile de război, Liga Războaielor Clanurilor și evenimente personalizate. Ține-i pe toți la curent."
+      },
+      "customization": {
+        "title": "Personalizare completă",
+        "description": "Personalizează comenzile, culorile, poreclele și permisiunile. Adaptează ClashKing nevoilor tale."
+      },
+      "familyManagement": {
+        "title": "Gestionarea familiilor",
+        "description": "Gestionează mai multe clanuri ca o singură familie, cu statistici comune, clasamente partajate și roluri unificate."
+      },
+      "analytics": {
+        "title": "Analize avansate",
+        "description": "Obține informații detaliate despre performanța clanului, activitatea jucătorilor și tendințele de creștere. Ia decizii bazate pe date."
+      },
+      "performance": {
+        "title": "Ultrarapid",
+        "description": "Creat pentru performanță, cu răspunsuri instantanee și actualizări în timp real, fără întârzieri."
+      },
+      "security": {
+        "title": "Sigur și fiabil",
+        "description": "Disponibilitate de 99,9%, date criptate și copii de siguranță periodice. Datele clanului tău sunt în siguranță."
+      }
+    },
+    "footer": {
+      "tagline": "Cel mai puternic bot Clash of Clans pentru comunitățile Discord.",
+      "about": {
+        "title": "Despre",
+        "features": "Funcții",
+        "help": "Ai nevoie de ajutor?",
+        "openSource": "Cod sursă deschis",
+        "support": "Susține-ne"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Panou",
+        "inviteBot": "Invită bot"
+      },
+      "resources": {
+        "title": "Resurse",
+        "documentation": "Documentație",
+        "quickStart": "Ghid de pornire rapidă",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Comunitate",
+        "discord": "Server de Discord",
+        "twitter": "X (Twitter)",
+        "reportBug": "Raportează o eroare",
+        "requestFeature": "Solicită o funcție"
+      },
+      "legal": {
+        "copyright": "ClashKing. Toate drepturile rezervate.",
+        "privacy": "Politica de confidențialitate",
+        "terms": "Termenii serviciului"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Nu este pe server",
+    "unknownUser": "Utilizator necunoscut",
+    "notLinked": "Neconectat",
+    "status": {
+      "onServer": "Pe server",
+      "notOnServer": "Nu este pe server"
+    },
+    "discordId": "ID de Discord",
+    "viewProfile": "Vezi profilul Discord",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Prezentare generală",
+      "description": "Pagina principală a panoului"
+    },
+    "general": {
+      "name": "Setări generale",
+      "description": "Setările serverului"
+    },
+    "dashboardAccess": {
+      "name": "Acces la panou",
+      "description": "Delegarea secțiunilor panoului"
+    },
+    "familySettings": {
+      "name": "Setările familiei",
+      "description": "Rolurile și poreclele familiei"
+    },
+    "clans": {
+      "name": "Clanuri",
+      "description": "Gestionează clanurile"
+    },
+    "logs": {
+      "name": "Jurnale",
+      "description": "Configurarea webhookurilor"
+    },
+    "roles": {
+      "name": "Roluri",
+      "description": "Automatizarea rolurilor"
+    },
+    "reminders": {
+      "name": "Mementouri",
+      "description": "Toate tipurile de mementouri"
+    },
+    "rosters": {
+      "name": "Liste",
+      "description": "Gestionarea listelor"
+    },
+    "bases": {
+      "name": "Baze",
+      "description": "Bibliotecă de aranjamente și interacțiuni"
+    },
+    "autoboards": {
+      "name": "Panouri automate",
+      "description": "Clasamente automatizate"
+    },
+    "giveaways": {
+      "name": "Concursuri",
+      "description": "Gestionează campaniile de concursuri"
+    },
+    "panels": {
+      "name": "Panouri",
+      "description": "Panouri interactive pentru membri, cu butoane de acțiune"
+    },
+    "tickets": {
+      "name": "Tichete",
+      "description": "Tichete pentru recrutare și asistență"
+    },
+    "embeds": {
+      "name": "Încorporări",
+      "description": "Lista încorporărilor Discord"
+    },
+    "links": {
+      "name": "Legături",
+      "description": "Conectarea jucătorilor la Discord"
+    },
+    "bans": {
+      "name": "Interdicții și avertismente",
+      "description": "Instrumente de moderare"
+    },
+    "wars": {
+      "name": "Războaie",
+      "description": "Statistici de război"
+    },
+    "leaderboards": {
+      "name": "Clasamente",
+      "description": "Clasamente globale"
+    },
+    "sections": {
+      "configuration": "Configurare",
+      "clanManagement": "Gestionarea clanului",
+      "playerManagement": "Gestionarea jucătorilor",
+      "automation": "Automatizare",
+      "statistics": "Statistici"
+    },
+    "switchServer": "Schimbă serverul",
+    "goHome": "Pagina principală"
+  },
+  "BasesPage": {
+    "eyebrow": "Gestionarea clanului",
+    "title": "Baze",
+    "description": "Consultă aranjamentele partajate, istoricul interacțiunilor și mesajele sursă de pe Discord.",
+    "refresh": "Reîmprospătează",
+    "create": "Adaugă o bază",
+    "retry": "Încearcă din nou",
+    "dismiss": "Renunță",
+    "cancel": "Anulează",
+    "previous": "Înapoi",
+    "next": "Următorul",
+    "pagination": "Pagina {page} din {total}",
+    "imageAlt": "Imaginea aranjamentului de bază {index}",
+    "noDescription": "Nu a fost furnizată nicio descriere.",
+    "openLayout": "Deschide aranjamentul",
+    "openMessage": "Mesaj Discord",
+    "summary": {
+      "total": "Total baze",
+      "page": "Pagina curentă",
+      "visible": "Vizibile"
+    },
+    "counts": {
+      "downloads": "Descărcări unice",
+      "upvotes": "Voturi pozitive",
+      "downvotes": "Voturi negative"
+    },
+    "history": {
+      "title": "Istoricul descărcărilor ({count})",
+      "empty": "Nu a fost înregistrat niciun ID de descărcare.",
+      "resolve": "Identifică profilul"
+    },
+    "delete": {
+      "action": "Șterge",
+      "confirmTitle": "Ștergi această bază?",
+      "confirmDescription": "Aceasta șterge definitiv înregistrarea din baza de date și încearcă mai întâi să șteargă mesajul sursă din Discord. Baza nu poate fi restaurată.",
+      "confirmAction": "Șterge baza",
+      "deleting": "Se șterge…",
+      "baseId": "ID-ul bazei",
+      "discordSource": "Sursa Discord",
+      "successTitle": "Baza a fost ștearsă",
+      "successDeleted": "Înregistrarea din baza de date și mesajul Discord au fost șterse.",
+      "successAlreadyMissing": "Înregistrarea din baza de date a fost ștearsă; mesajul Discord lipsea deja.",
+      "cleanupFailedTitle": "Baza a fost păstrată; curățarea pe Discord a eșuat",
+      "cleanupCompleteTitle": "Curățarea pe Discord s-a încheiat; baza a fost păstrată",
+      "failureTitle": "Baza nu a fost ștearsă",
+      "failureFallback": "Solicitarea de ștergere a eșuat.",
+      "retryable": "Poți reîncerca în siguranță",
+      "notRetryable": "Nu reîncerca",
+      "cleanup": {
+        "deleted": "Mesaj Discord șters",
+        "alreadyMissing": "Mesajul Discord lipsea deja",
+        "failed": "Curățarea pe Discord a eșuat"
+      }
+    },
+    "empty": {
+      "title": "Nu a fost partajată încă nicio bază",
+      "description": "Adaugă primul aranjament alegând canalul Discord și linkul aranjamentului Clash of Clans."
+    },
+    "form": {
+      "title": "Adaugă o bază",
+      "description": "Bazele nu pot fi editate după creare. Alege canalul în care ClashKing va publica mesajul Discord și confirmă linkul aranjamentului.",
+      "channel": "Canal Discord",
+      "channelPlaceholder": "Selectează un canal",
+      "channelSearch": "Caută canale…",
+      "channelsLoading": "Se încarcă canalele…",
+      "baseLink": "Linkul aranjamentului",
+      "descriptionLabel": "Descriere",
+      "images": "Imagini",
+      "chooseImages": "Alege imaginile aranjamentului",
+      "imageLimit": "Poți alege cel mult patru imagini; încărcarea lor se încheie înainte de crearea bazei.",
+      "submit": "Creează baza",
+      "creating": "Se încarcă și se creează…",
+      "createRejectedTitle": "Baza nu a fost creată",
+      "createCleanupCompleteTitle": "Curățarea pe Discord s-a încheiat; baza nu a fost creată",
+      "createCleanupFailedTitle": "Mesajul Discord poate rămâne; baza nu a fost creată",
+      "databaseNotInserted": "Înregistrarea nu a fost adăugată în baza de date",
+      "discordMessageCreated": "Mesajul Discord a fost creat",
+      "discordMessageId": "ID-ul mesajului Discord",
+      "retryable": "Poți reîncerca în siguranță",
+      "notRetryable": "Nu reîncerca automat",
+      "cleanup": {
+        "notNeeded": "Curățarea pe Discord nu este necesară",
+        "deleted": "Mesaj Discord șters",
+        "alreadyMissing": "Mesajul Discord lipsea deja",
+        "failed": "Curățarea pe Discord a eșuat"
+      }
+    },
+    "errors": {
+      "title": "Bazele nu sunt disponibile",
+      "load": "Bazele nu au putut fi încărcate.",
+      "create": "Baza nu a putut fi creată.",
+      "upload": "Imaginea nu a putut fi încărcată.",
+      "downloader": "Utilizatorul care a descărcat baza nu a putut fi identificat.",
+      "channels": "Canalele Discord nu au putut fi încărcate.",
+      "channelRequired": "Selectează un canal de Discord.",
+      "linkRequired": "Linkul aranjamentului este obligatoriu.",
+      "descriptionTooLong": "Descrierea trebuie să aibă cel mult 1.000 de caractere.",
+      "tooManyImages": "Alege cel mult patru imagini."
+    }
+  },
+  "BansPage": {
+    "title": "Moderare",
+    "description": "Gestionează interdicțiile și avertismentele jucătorilor",
+    "viewClashProfile": "Vezi profilul Clash",
+    "tabs": {
+      "bans": "Interdicții",
+      "strikes": "Avertismente"
+    },
+    "bans": {
+      "title": "Jucători interziși",
+      "noBans": "Nu au fost găsiți jucători interziși",
+      "addBan": "Adaugă o interdicție",
+      "removeBan": "Elimină interdicția",
+      "confirmRemove": "Sigur vrei să ștergi această interdicție?",
+      "playerTag": "Eticheta jucătorului",
+      "playerName": "Numele jucătorului",
+      "reason": "Motiv",
+      "bannedAt": "Interzis la",
+      "search": "Caută după nume sau etichetă...",
+      "howItWorks": {
+        "title": "Cum funcționează interdicțiile",
+        "description": "Dacă un jucător interzis intră într-unul dintre clanurile tale, va fi trimis un avertisment pe canalul de clan configurat în <clansTab>fila Clanuri</clansTab>. Botul nu poate împiedica jucătorii să intre în clan, ci doar poate trimite un avertisment."
+      },
+      "stats": {
+        "total": "Total interdicții",
+        "recent": "Interdicții recente (7 zile)",
+        "commonReason": "Cel mai frecvent motiv",
+        "activeOnServer": "Interdicții active pe server",
+        "last7Days": "În ultimele 7 zile",
+        "commonReasonValue": "Hărțuire și comportament toxic",
+        "noBans": "Nu există încă interdicții",
+        "percentOfAll": "{percent}% din toate interdicțiile",
+        "percentOfAllLabel": "din toate interdicțiile"
+      },
+      "list": {
+        "title": "Jucători interziși",
+        "count": "{count, plural, one {# jucător interzis} other {# jucători interziși}}",
+        "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
+        "noBansFound": "Nu au fost găsite interdicții",
+        "noBans": "Niciun jucător interzis",
+        "adjustSearch": "Încearcă să modifici căutarea",
+        "getStarted": "Adaugă o interdicție pentru a începe moderarea jucătorilor"
+      },
+      "table": {
+        "player": "Jucător",
+        "reason": "Motiv",
+        "bannedBy": "Interzis de",
+        "date": "Dată",
+        "daysAgo": "acum {days} zile",
+        "noReason": "Nu a fost furnizat niciun motiv"
+      },
+      "addDialog": {
+        "title": "Interzice un jucător",
+        "description": "Adaugă un jucător pe lista de interdicții. Vei primi un avertisment dacă intră în oricare dintre clanurile de pe acest server.",
+        "playerTagLabel": "Eticheta jucătorului",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Numele jucătorului (opțional)",
+        "playerNamePlaceholder": "Introdu numele jucătorului",
+        "reasonLabel": "Motivul interdicției",
+        "reasonPlaceholder": "Explică de ce este interzis acest jucător...",
+        "submit": "Interzice jucătorul"
+      },
+      "bestPractices": {
+        "title": "Recomandări",
+        "document": {
+          "title": "Documentează temeinic:",
+          "desc": "Oferă întotdeauna un motiv detaliat pentru fiecare interdicție, astfel încât ceilalți moderatori să înțeleagă situația."
+        },
+        "review": {
+          "title": "Verifică periodic:",
+          "desc": "Verifică periodic lista pentru a te asigura că toate interdicțiile sunt în continuare necesare și justificate."
+        },
+        "consistent": {
+          "title": "Fii consecvent:",
+          "desc": "Aplică interdicțiile echitabil și consecvent tuturor jucătorilor, pentru a menține o comunitate sănătoasă."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Avertismentele jucătorilor",
+      "noStrikes": "Nu au fost găsite avertismente",
+      "addStrike": "Adaugă un avertisment",
+      "removeStrike": "Elimină avertismentul",
+      "confirmRemove": "Sigur vrei să ștergi acest avertisment?",
+      "playerTag": "Eticheta jucătorului",
+      "reason": "Motiv",
+      "weight": "Pondere",
+      "rolloverDays": "Zile până la expirare",
+      "createdAt": "Creat la",
+      "search": "Caută după eticheta jucătorului...",
+      "howItWorks": {
+        "title": "Cum funcționează avertismentele",
+        "description": "Avertismentele sunt acordate jucătorilor pentru încălcarea regulilor. Fiecare avertisment are o pondere, care indică gravitatea, și poate expira după un număr stabilit de zile. Ele te ajută să urmărești comportamentul jucătorilor înainte de a-i interzice."
+      },
+      "stats": {
+        "total": "Total avertismente",
+        "recent": "Avertismente recente (7 zile)",
+        "totalWeight": "Ponderea totală a avertismentelor",
+        "activeOnServer": "Avertismente active pe server",
+        "last7Days": "În ultimele 7 zile",
+        "cumulativeWeight": "Pondere cumulativă a avertismentelor",
+        "commonReason": "Cel mai frecvent motiv",
+        "commonReasonValue": "Spam"
+      },
+      "list": {
+        "title": "Avertismentele jucătorilor",
+        "count": "{count, plural, one {# avertisment emis} other {# avertismente emise}}",
+        "searchPlaceholder": "Caută după nume, etichetă sau motiv...",
+        "noStrikesFound": "Nu au fost găsite avertismente",
+        "noStrikes": "Niciun avertisment emis",
+        "adjustSearch": "Încearcă să modifici căutarea",
+        "getStarted": "Adaugă un avertisment pentru a începe urmărirea abaterilor jucătorilor",
+        "viewAll": "Toate avertismentele",
+        "viewGrouped": "După jucător"
+      },
+      "table": {
+        "player": "Jucător",
+        "reason": "Motiv",
+        "weight": "Pondere",
+        "addedBy": "Adăugat de",
+        "date": "Dată",
+        "expires": "Expiră",
+        "never": "Niciodată",
+        "noReason": "Nu a fost furnizat niciun motiv",
+        "daysAgo": "acum {days} zile",
+        "totalStrikes": "Total avertismente",
+        "totalWeight": "Pondere totală",
+        "lastStrike": "Ultimul avertisment"
+      },
+      "addDialog": {
+        "title": "Adaugă un avertisment",
+        "description": "Emite un avertisment unui jucător. Avertismentele pot avea ponderi și date de expirare diferite.",
+        "playerTagLabel": "Eticheta jucătorului",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Motiv",
+        "reasonPlaceholder": "Explică de ce este emis acest avertisment...",
+        "weightLabel": "Ponderea avertismentului",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Expiră în (zile)",
+        "rolloverPlaceholder": "Opțional",
+        "submit": "Adaugă avertismentul"
+      },
+      "guidelines": {
+        "title": "Recomandări pentru avertismente",
+        "weights": {
+          "title": "Folosește ponderile cu atenție:",
+          "desc": "Atribuie ponderi mai mari (2-3) abaterilor grave și ponderi mai mici (1) problemelor minore."
+        },
+        "expiration": {
+          "title": "Setează date de expirare:",
+          "desc": "Ia în calcul date de expirare pentru avertismente, astfel încât jucătorii să-și poată îmbunătăți comportamentul în timp."
+        },
+        "patterns": {
+          "title": "Urmărește tiparele:",
+          "desc": "Folosește avertismentele pentru a identifica abaterile repetate înainte de a aplica interdicții permanente."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Interdicția a fost adăugată",
+      "banRemoved": "Interdicția a fost eliminată",
+      "strikeAdded": "Avertismentul a fost adăugat",
+      "strikeRemoved": "Avertismentul a fost eliminat",
+      "errorLoadingBans": "Jucătorii interziși nu au putut fi încărcați",
+      "errorLoadingStrikes": "Avertismentele nu au putut fi încărcate",
+      "errorAddingBan": "Interdicția nu a putut fi adăugată",
+      "errorAddingStrike": "Avertismentul nu a putut fi adăugat",
+      "errorRemovingBan": "Interdicția nu a putut fi eliminată",
+      "errorRemovingStrike": "Avertismentul nu a putut fi eliminat"
+    }
+  },
+  "RostersPage": {
+    "title": "Liste și formații",
+    "description": "Gestionează listele de război, formațiile și repartizarea membrilor",
+    "stats": {
+      "totalRosters": "Total liste",
+      "totalMembers": "Total membri",
+      "clanRosters": "Liste de clan",
+      "familyRosters": "Liste de familie",
+      "members": "Membri",
+      "avgTh": "TH medie",
+      "avgHitrate": "Rată medie de reușită",
+      "distribution": "Distribuție",
+      "clan": "Clanul",
+      "family": "Familie",
+      "external": "Extern",
+      "thDistribution": "Distribuție de TH",
+      "capacity": "Capacitate"
+    },
+    "filters": {
+      "search": "Caută liste...",
+      "type": "Tip",
+      "all": "Toate",
+      "clan": "Clanul",
+      "family": "Familie",
+      "clear": "Golește"
+    },
+    "comparisonMode": {
+      "cancel": "Anulează",
+      "compare": "Compară",
+      "compareRosters": "Compară listele",
+      "selectRosters": "Selectează liste",
+      "selectRostersDesc": "Selectează cel puțin 2 liste pentru comparație",
+      "maxReached": "Ai atins limita",
+      "maxReachedDesc": "Poți compara cel mult 4 liste simultan"
+    },
+    "createDialog": {
+      "title": "Creează o listă nouă",
+      "description": "Configurează o listă nouă pentru clanul tău",
+      "aliasLabel": "Numele listei",
+      "aliasPlaceholder": "de ex., Lista CWL",
+      "typeLabel": "Tipul listei",
+      "typeClan": "Clanul",
+      "typeFamily": "Familie",
+      "signupScopeLabel": "Domeniul înscrierilor",
+      "scopeClanOnly": "Doar clanul",
+      "scopeFamilyWide": "Întreaga familie",
+      "clanLabel": "Clanul",
+      "clanPlaceholder": "Selectează un clan",
+      "descriptionLabel": "Descriere (opțional)",
+      "descriptionPlaceholder": "Descrierea listei...",
+      "cancel": "Anulează",
+      "creating": "Se creează...",
+      "create": "Creează lista"
+    },
+    "editDialog": {
+      "title": "Editează lista",
+      "description": "Modifică setările și configurația listei",
+      "aliasLabel": "Numele listei",
+      "descriptionLabel": "Descriere",
+      "descriptionPlaceholder": "Descrierea listei...",
+      "minThLabel": "Primărie minimă",
+      "minThPlaceholder": "de ex., 13",
+      "maxThLabel": "Primărie maximă",
+      "maxThPlaceholder": "de ex., 16",
+      "rosterSizeLabel": "Dimensiunea listei",
+      "rosterSizePlaceholder": "de ex., 50",
+      "columnsLabel": "Coloane afișate",
+      "columnsPlaceholder": "Selectează coloanele afișate",
+      "sortLabel": "Ordinea de sortare",
+      "sortPlaceholder": "Selectează câmpurile de sortare",
+      "cancel": "Anulează",
+      "saving": "Se salvează...",
+      "save": "Salvează modificări"
+    },
+    "addMembersDialog": {
+      "title": "Adaugă membri în listă",
+      "description": "Selectează membri din clan sau introdu etichetele jucătorilor",
+      "bulkTagsLabel": "Adăugare în masă după etichete",
+      "bulkTagsPlaceholder": "Introdu etichetele jucătorilor, câte una pe rând sau separate prin virgulă",
+      "searchLabel": "Caută membri",
+      "searchPlaceholder": "Caută după nume sau etichetă...",
+      "selectFromClan": "Selectează dintre membrii clanului",
+      "selectedCount": "Selectați",
+      "noMembers": "Nu sunt disponibili membri",
+      "noMembersSelected": "Nu ai selectat niciun membru",
+      "noMembersSelectedDesc": "Selectează membri sau introdu etichetele jucătorilor.",
+      "cancel": "Anulează",
+      "adding": "Se adaugă...",
+      "add": "Adaugă membri"
+    },
+    "detailsDialog": {
+      "title": "Detaliile listei",
+      "edit": "Editează",
+      "refresh": "Reîmprospătează",
+      "refreshing": "Se reîmprospătează...",
+      "delete": "Șterge",
+      "deleting": "Se șterge...",
+      "addMembers": "Adaugă membri",
+      "close": "Închide",
+      "noMembers": "Nu există membri în această listă",
+      "noMembersDesc": "Adaugă membri pentru a începe",
+      "memberCount": "Membri",
+      "thRestriction": "Nivelul Primăriei",
+      "avgTh": "TH medie",
+      "avgHitrate": "Rată medie de reușită",
+      "clan": "Clanul",
+      "family": "Familie",
+      "external": "Extern",
+      "substitute": "REZERVĂ",
+      "removeMember": "Șterge"
+    },
+    "rosterCard": {
+      "members": "Membri",
+      "thLevel": "Nivelul Primăriei",
+      "avgTh": "TH medie",
+      "avgHitrate": "Rată medie de reușită",
+      "clan": "Clanul",
+      "family": "Familie",
+      "external": "Extern",
+      "noRestriction": "Fără restricții",
+      "view": "Vezi",
+      "edit": "Editează",
+      "delete": "Șterge",
+      "noGroup": "Fără grup",
+      "moveToGroup": "Mută în grup",
+      "clone": "Clonează",
+      "allRosters": "Toate listele",
+      "manageRosters": "Gestionează listele și formațiile de război"
+    },
+    "memberColumns": {
+      "name": "Nume",
+      "townhall": "Primărie",
+      "tag": "Etichetă",
+      "hitrate": "Rată de reușită",
+      "current_clan": "Clanul actual",
+      "current_clan_tag": "Eticheta clanului",
+      "discord": "Discord",
+      "hero_lvs": "Eroi",
+      "war_pref": "Preferință de război",
+      "trophies": "Trofee",
+      "signup_group": "Grup de înscriere"
+    },
+    "columns": {
+      "configure": "Coloane",
+      "title": "Configurează coloanele",
+      "description": "Alege coloanele afișate și ordinea lor",
+      "selected": "Coloane selectate",
+      "available": "Coloane disponibile",
+      "save": "Salvează coloanele",
+      "reset": "Resetează coloanele"
+    },
+    "sortFields": {
+      "townhall": "Nivelul Primăriei",
+      "name": "Nume",
+      "tag": "Etichetă",
+      "heroLvs": "Eroi",
+      "trophies": "Trofee",
+      "hitrate": "Rată de reușită în ultimele 30 de zile",
+      "currentClanTag": "Eticheta clanului",
+      "addedAt": "Adăugat la"
+    },
+    "thRestrictions": {
+      "only": "Doar TH{th}",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "Fără restricții"
+    },
+    "emptyState": {
+      "noRosters": "Nu a fost creată încă nicio listă",
+      "noRostersDesc": "Creează prima listă pentru a începe",
+      "noMatch": "Nicio listă nu corespunde filtrelor",
+      "noMatchDesc": "Încearcă să modifici căutarea sau filtrele"
+    },
+    "toast": {
+      "errorTitle": "Eroare",
+      "successTitle": "Succes",
+      "errorLoadingRosters": "Nu s-au putut încărca liste. Încearcă din nou.",
+      "errorLoadingMembers": "Membrii clanului nu au putut fi încărcați.",
+      "rosterCreated": "Lista a fost creată!",
+      "errorCreatingRoster": "Lista nu a putut fi creată. Încearcă din nou.",
+      "rosterUpdated": "Lista a fost actualizată!",
+      "errorUpdatingRoster": "Lista nu a putut fi actualizată. Încearcă din nou.",
+      "rosterDeleted": "Lista a fost ștearsă!",
+      "errorDeletingRoster": "Lista nu a putut fi ștearsă. Încearcă din nou.",
+      "membersAdded": "Au fost adăugați {count} membri în listă!",
+      "errorAddingMembers": "Membrii nu au putut fi adăugați. Încearcă din nou.",
+      "memberRemoved": "Membrul a fost eliminat din listă!",
+      "errorRemovingMember": "Membrul nu a putut fi eliminat. Încearcă din nou.",
+      "substituteMarked": "Membrul a fost marcat drept rezervă!",
+      "substituteUnmarked": "Membrul nu mai este marcat drept rezervă!",
+      "errorUpdatingMember": "Membrul nu a putut fi actualizat. Încearcă din nou.",
+      "rosterRefreshed": "Datele listei au fost reîmprospătate!",
+      "errorRefreshingRoster": "Datele listei nu au putut fi reîmprospătate. Încearcă din nou.",
+      "memberTransferred": "Membrul a fost transferat între liste!",
+      "errorTransferringMember": "Membrul nu a putut fi transferat. Încearcă din nou.",
+      "rosterCloned": "Lista a fost clonată!",
+      "errorCloningRoster": "Lista nu a putut fi clonată. Încearcă din nou.",
+      "missingMembersAdded": "Au fost adăugați în listă {count} membri lipsă!",
+      "errorLoadingMissingMembers": "Membrii lipsă nu au putut fi încărcați."
+    },
+    "cloneDialog": {
+      "title": "Clonează lista",
+      "description": "Creează o copie a acestei liste",
+      "aliasLabel": "Numele listei noi",
+      "aliasPlaceholder": "Introdu numele listei clonate",
+      "copyMembers": "Copiază membrii în lista nouă",
+      "memberCount": "{count} membri",
+      "originalRoster": "Lista originală:",
+      "cancel": "Anulează",
+      "cloning": "Se clonează...",
+      "clone": "Clonează lista",
+      "copyMembersHint": "Membrii vor fi copiați din lista originală"
+    },
+    "missingMembers": {
+      "title": "Membri lipsă",
+      "description": "Membrii clanului nu sunt înregistrați în această listă",
+      "coverage": "Acoperirea listei",
+      "registered": "înregistrați",
+      "missing": "lipsă",
+      "total": "total",
+      "selectAll": "Selectează-i pe toți",
+      "selected": "selectați",
+      "addSelected": "Adaugă membri: {count}",
+      "button": "Membri lipsă",
+      "addAll": "Adaugă-i pe toți",
+      "adding": "Se adaugă...",
+      "close": "Închide",
+      "allCaughtUp": "Totul este la zi!",
+      "allCaughtUpDesc": "Toți membrii clanului sunt înregistrați în această listă",
+      "clanOnly": "Analiza membrilor lipsă este disponibilă doar pentru listele de clan",
+      "error": "Membrii lipsă nu au putut fi încărcați",
+      "thisRoster": "Această listă",
+      "wholeGroup": "Întregul grup"
+    },
+    "eventTime": {
+      "label": "Ora de începere a evenimentului",
+      "timezone": "Fusul tău orar",
+      "utc": "UTC",
+      "clear": "Golește"
+    },
+    "bulkValidation": {
+      "valid": "valide",
+      "invalid": "nevalide",
+      "invalidTags": "Nevalide"
+    },
+    "memberAutocomplete": {
+      "label": "Sau caută membrii serverului",
+      "placeholder": "Apasă pentru a căuta membri...",
+      "searchPlaceholder": "Caută după nume, etichetă sau clan...",
+      "loading": "Se încarcă membrii...",
+      "noResults": "Nu au fost găsiți membri",
+      "groupHeading": "Membrii serverului",
+      "selectedLabel": "Membri selectați",
+      "membersSelected": "membri selectați",
+      "selected": "Selectați",
+      "clanMembersLabel": "Sau selectează dintre membrii clanului"
+    },
+    "retry": "Reîncearcă",
+    "back": "Înapoi",
+    "refresh": "Reîmprospătează",
+    "createRoster": "Creează listă",
+    "searchPlaceholder": "Caută liste...",
+    "noRosters": "Nu există încă liste",
+    "noRostersHint": "Creează prima listă pentru a începe",
+    "noSearchResults": "Nu au fost găsite liste",
+    "noSearchResultsHint": "Încearcă alt termen de căutare",
+    "createFirstRoster": "Creează prima listă",
+    "deleteConfirm": "Sigur vrei să ștergi \"{name}\"?",
+    "deleteSuccess": "Lista a fost ștearsă",
+    "deleteSuccessDesc": "Lista \"{name}\" a fost ștearsă",
+    "deleteError": "Lista nu a putut fi ștearsă",
+    "createSuccess": "Lista a fost creată",
+    "createSuccessDesc": "Lista \"{name}\" a fost creată",
+    "createError": "Lista nu a putut fi creată",
+    "createErrorAlias": "Introdu numele listei",
+    "createErrorClan": "Selectează un clan",
+    "refreshSuccess": "Datele listei au fost reîmprospătate",
+    "refreshError": "Lista nu a putut fi reîmprospătată",
+    "saveSuccess": "Setările au fost salvate",
+    "saveError": "Configurația nu a putut fi salvată",
+    "columnsUpdated": "Coloane actualizate",
+    "columnsError": "Coloanele nu au putut fi actualizate",
+    "addMembersSuccess": "Membri adăugați",
+    "addMembersSuccessDesc": "Membri adăugați în listă: {count}",
+    "addMembersError": "Membrii nu au putut fi adăugați",
+    "removeMemberSuccess": "Membru șters",
+    "removeMemberError": "Membrul nu a putut fi eliminat",
+    "clearMembers": "Elimină membrii",
+    "clearMembersConfirm": "Elimini toți membrii din \"{name}\"? Această acțiune nu poate fi anulată.",
+    "clearMembersSuccess": "Toți membrii au fost eliminați",
+    "clearMembersError": "Membrii nu au putut fi eliminați",
+    "automationCreated": "Automatizare creată",
+    "automationUpdated": "Automatizare actualizată",
+    "automationDeleted": "Automatizare ștearsă",
+    "automationError": "Eroare de automatizare",
+    "groupCreated": "Grup creat",
+    "groupUpdated": "Grup actualizat",
+    "groupDeleted": "Grup șters",
+    "groupError": "Grupul nu a putut fi salvat",
+    "categoryCreated": "Categorie creată",
+    "categoryUpdated": "Categorie actualizată",
+    "categoryDeleted": "Categorie ștearsă",
+    "categoryError": "Categoria nu a putut fi salvată",
+    "common": {
+      "cancel": "Anulează",
+      "save": "Salvează",
+      "close": "Închide"
+    },
+    "tabs": {
+      "members": "Membri",
+      "automations": "Automatizări",
+      "groups": "Grupuri",
+      "categories": "Categorii",
+      "settings": "Setări"
+    },
+    "members": {
+      "count": "membri",
+      "noMembers": "Nu există membri în această listă",
+      "noMembersHint": "Adaugă membri pentru a începe",
+      "actions": "Acțiuni",
+      "viewList": "Vizualizare listă",
+      "viewGrouped": "Vizualizare după categoria de înscriere",
+      "unassigned": "Neatribuiți",
+      "dragHere": "Trage membrii aici",
+      "clickToGroup": "Apasă pentru a afișa după categorie",
+      "apiErrorTooltip": "Datele nu au putut fi preluate din API",
+      "staleDataTooltip": "Datele pot fi învechite; ultima actualizare:",
+      "refresh": "Reîmprospătează datele membrilor",
+      "alsoIn": "De asemenea în",
+      "addCategory": "Adaugă o categorie",
+      "removeCategory": "Șterge categoria"
+    },
+    "addMembers": {
+      "title": "Adaugă membri în listă",
+      "description": "Selectează membri din clanuri sau introdu etichetele jucătorilor",
+      "bulkTagsLabel": "Etichetele jucătorilor, câte una pe rând sau separate prin virgulă",
+      "adding": "Se adaugă...",
+      "submit": "Adaugă membri"
+    },
+    "compare": {
+      "enterMode": "Compară",
+      "modeTitle": "Mod de comparație",
+      "modeHint": "Apasă pe liste pentru a selecta între 2 și 4",
+      "exitMode": "Anulează",
+      "selected": "liste selectate",
+      "button": "Compară",
+      "title": "Compară listele",
+      "dragToMove": "Trage membrii între liste pentru a-i muta",
+      "loadError": "Nu s-au putut încărca liste",
+      "memberMoved": "Membrul a fost mutat",
+      "memberMovedDesc": "{name} a fost mutat din {from} în {to}",
+      "moveError": "Membrul nu a putut fi mutat",
+      "selectAtLeast2": "Selectează cel puțin 2 liste pentru comparație",
+      "moving": "Se mută membrul...",
+      "compareGroup": "Compară grupul",
+      "dragToMoveCategory": "Trage membrii între liste și categorii",
+      "categoryChanged": "Categoria a fost schimbată",
+      "categoryChangedDesc": "{name} a fost mutat în {category}",
+      "uncategorized": "Fără categorie"
+    },
+    "ungrouped": "Fără grup",
+    "automations": {
+      "description": "Programează acțiuni automate pentru această listă",
+      "create": "Creează o automatizare",
+      "empty": "Nu există automatizări",
+      "emptyHint": "Creează o automatizare pentru a programa acțiuni",
+      "active": "Activ",
+      "inactive": "Inactiv",
+      "executed": "Gata",
+      "missed": "Ratat",
+      "lastRun": "Ultima rulare",
+      "enable": "Activează",
+      "disable": "Dezactivează",
+      "createTitle": "Creează o automatizare",
+      "editTitle": "Editează automatizarea",
+      "createDesc": "Programează o acțiune automată",
+      "actionType": "Tipul acțiunii",
+      "offsetFromEvent": "Momentul față de eveniment",
+      "offsetBefore": "Înaintea evenimentului",
+      "offsetAfter": "După eveniment",
+      "offsetUnit_minutes": "minute",
+      "offsetUnit_hours": "ore",
+      "offsetUnit_days": "zile",
+      "offsetPreview": "Se va executa la: {date}",
+      "offsetNoEventDate": "Setează ora de începere a evenimentului pentru a previzualiza data executării",
+      "offsetAtStart": "La începerea evenimentului",
+      "pingType": "Tipul mementoului",
+      "pingType_signup_reminder": "Memento pentru înscriere",
+      "pingType_missing": "Lipsește din clan",
+      "pingType_sub_needed": "Este nevoie de o rezervă",
+      "channel": "Canal Discord",
+      "selectChannel": "Selectează un canal",
+      "channelHint": "Canalul în care acțiunea va fi publicată sau executată",
+      "activeLabel": "Activ",
+      "target": "Destinație",
+      "targetThisRoster": "această listă",
+      "targetGroups": "Grupuri",
+      "targetHint": "Aplică automatizarea doar acestei liste sau tuturor listelor unui grup",
+      "group": "Grup",
+      "groupAutomationHint": "Gestionează din fila Grupuri",
+      "targetRoster": "Listă",
+      "targetGroup": "Grup",
+      "willExecute": "Se va executa la ora programată",
+      "paused": "În pauză: nu va rula",
+      "actions": {
+        "ping": "Trimite un memento",
+        "post": "Publică lista",
+        "openSignup": "Deschide înscrierile",
+        "closeSignup": "Închide înscrierile",
+        "delete": "Șterge lista",
+        "clear": "Elimină membrii",
+        "archive": "Arhivează lista"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Trimite un memento membrilor care nu s-au înscris sau se află în clanul greșit",
+        "roster_post": "Publică lista finală în canalul selectat",
+        "roster_signup": "Deschide înscrierile pentru jucători",
+        "roster_signup_close": "Închide înscrierile și împiedică înregistrările noi",
+        "roster_delete": "Șterge definitiv lista și toate datele acesteia",
+        "roster_clear": "Elimină toți membrii din listă fără a o șterge",
+        "roster_archive": "Arhivează lista și o transformă în una doar pentru citire"
+      },
+      "infoBox": "Automatizările sunt activate în raport cu ora de începere a evenimentului. Stabilește un decalaj (de ex., cu 3 zile înainte), iar botul va executa automat acțiunea la momentul stabilit, inclusiv pentru evenimente recurente."
+    },
+    "groups": {
+      "title": "Grupuri de liste",
+      "description": "Organizează listele în grupuri pentru a le gestiona mai ușor",
+      "create": "Grup nou",
+      "noGroups": "Nu a fost creat încă niciun grup",
+      "rostersCount": "liste",
+      "createTitle": "Creează un grup",
+      "editTitle": "Editează grupul",
+      "nameLabel": "Numele grupului",
+      "namePlaceholder": "de ex., Grupuri CWL",
+      "infoBox": "Grupurile permit organizarea mai multor liste împreună, de exemplu toate listele CWL. Poți atribui o listă unui grup din fila Setări și poți aplica automatizări simultan tuturor listelor din grup.",
+      "manageAutomations": "Gestionează automatizări",
+      "automationsTitle": "Automatizările grupului",
+      "automationsDesc": "Aceste automatizări se aplică tuturor listelor din grup",
+      "noAutomations": "Nu există automatizări",
+      "noAutomationsHint": "Creează o automatizare pentru acest grup",
+      "addAutomation": "Adaugă o automatizare",
+      "deleteConfirm": "Ștergi grupul \"{name}\"? Listele sale vor rămâne fără grup.",
+      "emptyGroup": "Nu există încă liste în acest grup",
+      "rules": {
+        "title": "Regulile grupului",
+        "rulesHint": "Aceste reguli se aplică tuturor listelor din grup și sunt propagate imediat.",
+        "maxAccounts": "Număr maxim de conturi/utilizator",
+        "maxAccountsBadge": "Max. {count}/utilizator",
+        "rosterSize": "Dimensiunea listei",
+        "rosterSizeBadge": "Dimensiune {size}",
+        "minSignups": "Prag de completare",
+        "minSignupsBadge": "Prag {count}",
+        "categoriesTitle": "Categorii de înscriere",
+        "categoriesHint": "Selectează categoriile disponibile pentru acest grup. Modificarea se aplică imediat tuturor listelor.",
+        "categoriesBadge": "Categorii: {count}",
+        "noCategories": "Nu există încă nicio categorie.",
+        "newCategoryPlaceholder": "Numele categoriei noi…"
+      }
+    },
+    "categories": {
+      "title": "Categorii de înscriere",
+      "description": "Categorii pentru înscrierea jucătorilor și filtrarea listelor",
+      "manage": "Gestionează categoriile",
+      "create": "Categorie nouă",
+      "noCategories": "Nu a fost creată încă nicio categorie",
+      "createTitle": "Creează o categorie",
+      "editTitle": "Editează categoria",
+      "deleteConfirm": "Ștergi categoria \"{name}\"?",
+      "idLabel": "ID-ul categoriei",
+      "nameLabel": "Numele categoriei",
+      "infoBox": "Categoriile le permit jucătorilor să-și indice disponibilitatea sau rolul la înscriere, de exemplu «Disponibil», «Poate» ori «Doar dacă este nevoie». Categoriile sunt comune tuturor listelor de pe server. Pentru listele grupate, configurează categoriile din setările grupului."
+    },
+    "settings": {
+      "general": "Identitate și configurare",
+      "restrictions": "Restricții și limite",
+      "name": "Numele listei",
+      "rosterType": "Tipul listei",
+      "typeClan": "Clanul",
+      "typeFamily": "Familie",
+      "signupScope": "Domeniul înscrierilor",
+      "scopeClanOnly": "Doar clanul",
+      "scopeFamilyWide": "Întreaga familie",
+      "clan": "Clanul",
+      "selectClan": "Selectează un clan",
+      "description": "Descriere",
+      "descriptionPlaceholder": "Introdu o descriere pentru această listă...",
+      "typeAndScope": "Tip și domeniu",
+      "eventTime": "Ora de începere a evenimentului",
+      "eventTimeHint": "Momentul în care începe evenimentul, folosit pentru automatizări și numărătoarea inversă.",
+      "recurrenceDays": "Repetă la fiecare",
+      "recurrenceModeDays": "La fiecare N zile",
+      "recurrenceModeMonthly": "Ziua din lună",
+      "recurrenceDaysUnit": "zile",
+      "recurrenceDayOfMonthPrefix": "În ziua",
+      "recurrenceDayOfMonthSuffix": "a fiecărei luni",
+      "recurrenceDaysHint": "Lasă necompletat pentru un eveniment unic. Introdu numărul de zile dintre repetări, de exemplu 30 pentru o CWL lunară.",
+      "recurrenceDayOfMonthHint": "Se repetă în această zi a fiecărei luni, de exemplu 1 pentru prima zi.",
+      "group": "Grup",
+      "noGroup": "Fără grup",
+      "thRequirements": "Cerințe pentru Primărie",
+      "minTh": "TH minim",
+      "maxTh": "TH maxim",
+      "signupLimits": "Limitele înscrierilor",
+      "rosterSize": "Dimensiunea listei",
+      "rosterSizeHint": "Numărul maxim de membri",
+      "minSignups": "Număr minim de înscrieri",
+      "minSignupsHint": "Numărul minim de înscrieri necesar pentru completarea listei",
+      "maxAccountsPerUser": "Număr maxim de conturi per utilizator",
+      "maxAccountsHint": "Limitează conturile fiecărui utilizator Discord",
+      "allowedCategories": "Categorii de înscriere permise",
+      "allowedCategoriesHint": "Apasă pentru a comuta. Dacă nu este selectată nicio categorie, sunt permise toate.",
+      "defaultSignupCategory": "Categoria implicită de înscriere",
+      "defaultSignupCategoryNone": "Niciuna (fără valoare implicită)",
+      "defaultSignupCategoryHint": "Categoria preselectată la înscrierea unui membru.",
+      "categoriesManagedByGroup": "Categoriile de înscriere sunt gestionate la nivelul grupului. Deschide setările grupului din pagina Liste pentru a configura ce categorii sunt disponibile tuturor listelor din acest grup.",
+      "saving": "Se salvează...",
+      "save": "Salvează setările"
+    }
+  },
+  "LinksPage": {
+    "title": "Gestionarea legăturilor",
+    "description": "Gestionează legăturile conturilor membrilor Discord și verifică proprietatea jucătorilor",
+    "tabs": {
+      "overview": "Prezentare generală",
+      "pending": "În așteptare",
+      "bulk": "Acțiuni în masă",
+      "analytics": "Analize"
+    },
+    "stats": {
+      "totalMembers": "Total membri",
+      "membersWithLinks": "Membri cu legături",
+      "totalLinkedAccounts": "Total conturi conectate",
+      "verifiedAccounts": "Conturi verificate",
+      "ofTotal": "din total",
+      "avgPerMember": "Med.",
+      "perMember": "per membru",
+      "verified": "verificate"
+    },
+    "filters": {
+      "searchPlaceholder": "Caută după numele membrului, utilizator, jucător sau etichetă...",
+      "filterByStatus": "Filtrează după stare",
+      "allAccounts": "Toate conturile",
+      "verifiedOnly": "Doar verificate",
+      "unverifiedOnly": "Doar neverificate",
+      "minAccounts": "Număr minim de conturi",
+      "allMembers": "Toți membrii",
+      "oneOrMore": "Cel puțin 1 cont",
+      "twoOrMore": "Cel puțin 2 conturi",
+      "threeOrMore": "Cel puțin 3 conturi",
+      "fiveOrMore": "Cel puțin 5 conturi"
+    },
+    "overview": {
+      "title": "Legături de conturi",
+      "description": "Consultă și gestionează toate legăturile dintre conturile Discord și Clash of Clans",
+      "showingMembers": "Se afișează {count} {members}",
+      "member": "membru",
+      "members": "membri",
+      "noMembers": "Nu au fost găsiți membri",
+      "adjustFilters": "Încearcă să modifici căutarea sau filtrele.",
+      "noLinkedAccounts": "Niciun membru nu are conturi conectate.",
+      "exportCSV": "Exportă CSV",
+      "exportJSON": "Exportă JSON",
+      "account": "Cont",
+      "accounts": "Conturi",
+      "more": "încă",
+      "unknown": "Necunoscut"
+    },
+    "pending": {
+      "title": "Verificări în așteptare",
+      "description": "Conturi în așteptarea verificării: {count}",
+      "allVerified": "Toate conturile sunt verificate!",
+      "noPending": "Nu există verificări în așteptare în acest moment.",
+      "linked": "Conectat:"
+    },
+    "bulk": {
+      "title": "Acțiuni în masă",
+      "description": "Efectuează acțiuni simultan pentru mai mulți membri",
+      "selectAll": "Selectează tot ({count})",
+      "deselectAll": "Deselectează tot",
+      "unlinkSelected": "Deconectează selecția ({count})",
+      "linked": "Conectat",
+      "comingSoon": "Deconectarea în masă va fi disponibilă în curând!"
+    },
+    "analytics": {
+      "title": "Analiza legăturilor",
+      "description": "Prezentare generală a statisticilor și tendințelor de conectare",
+      "verificationRate": "Rată de verificare",
+      "verified": "Verificat",
+      "unverified": "Neverificat",
+      "accountDistribution": "Distribuția conturilor",
+      "oneAccount": "1 cont",
+      "twoToThreeAccounts": "2-3 conturi",
+      "fourPlusAccounts": "Cel puțin 4 conturi",
+      "townHallLevels": "Nivelurile Primăriei",
+      "other": "Altele",
+      "coverage": "Acoperire",
+      "linkedMembers": "Membri conectați",
+      "coverageRate": "Rată de acoperire",
+      "linkInsights": "Informații despre legături",
+      "avgAccountsPerMember": "Număr mediu de conturi per membru:",
+      "mostLinkedAccounts": "Cele mai multe conturi conectate:",
+      "membersWithoutLinks": "Membri fără legături:"
+    },
+    "actions": {
+      "unlinkAccount": "Deconectează contul"
+    },
+    "deleteDialog": {
+      "title": "Deconectează contul",
+      "description": "Sigur vrei să deconectezi contul lui {playerName}? Acțiunea nu poate fi anulată.",
+      "cancel": "Anulează",
+      "unlinking": "Se deconectează...",
+      "unlink": "Deconectează"
+    },
+    "bulkDialog": {
+      "title": "Deconectează conturile în bloc",
+      "description": "Sigur vrei să deconectezi toate conturile celor {count} membri selectați? Acțiunea nu poate fi anulată.",
+      "cancel": "Anulează",
+      "unlinkAll": "Deconectează-le pe toate"
+    },
+    "toast": {
+      "unlinkFailed": "Contul nu a putut fi deconectat. Încearcă din nou."
+    },
+    "badges": {
+      "verified": "Verificat",
+      "unverified": "Neverificat",
+      "pending": "În așteptare"
+    },
+    "pagination": {
+      "showing": "Se afișează {start}-{end} din {total} membri",
+      "page": "Pagina {current} din {total}",
+      "previous": "Înapoi",
+      "next": "Următorul"
+    }
+  },
+  "WarsPage": {
+    "title": "Statistici de război",
+    "description": "Urmărește performanța războaielor și analizează statisticile de luptă",
+    "actions": {
+      "exportData": "Exportă datele",
+      "resetFilters": "Resetează filtrele",
+      "applyFilters": "Aplică filtrele"
+    },
+    "filters": {
+      "title": "Filtre",
+      "description": "Filtrează statisticile de război după diferite criterii",
+      "clan": "Clanul",
+      "allClans": "Toate clanurile",
+      "townHall": "Primărie",
+      "townHallShort": "TH",
+      "allTownHalls": "Toate nivelurile TH",
+      "townHallLevel": "TH {level}",
+      "period": "Perioadă",
+      "last7Days": "Ultimele 7 zile",
+      "last30Days": "Ultimele 30 de zile",
+      "last90Days": "Ultimele 90 de zile",
+      "last6Months": "Ultimele 6 luni",
+      "lastYear": "Ultimul an",
+      "custom": "Personalizat",
+      "startDate": "Data de început",
+      "endDate": "Data de sfârșit",
+      "warTypes": "Tipuri de război"
+    },
+    "summaryStats": {
+      "totalWins": "Total victorii",
+      "totalWinsDesc": "Dintr-un total de {totalWars} războaie",
+      "totalLosses": "Total înfrângeri",
+      "totalLossesDesc": "Egalități: {totalDraws}",
+      "winRate": "Rată de victorie",
+      "winRateDesc": "Performanță generală",
+      "activeWars": "Războaie active",
+      "activeWarsDesc": "{activeCwl} în CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Performanța săptămânală în războaie",
+        "description": "Victorii, înfrângeri și egalități săptămânale în perioada selectată",
+        "wins": "Victorii",
+        "losses": "Pierderi",
+        "draws": "Egalități"
+      },
+      "thSuccessRate": {
+        "title": "Rată de reușită a atacurilor după nivelul Primăriei",
+        "description": "Rată de 3 stele pentru fiecare nivel TH",
+        "threeStarPercent": "% 3 stele",
+        "otherPercent": "% altele"
+      },
+      "warTypeDistribution": {
+        "title": "Distribuția tipurilor de război",
+        "description": "Defalcare după tipul războiului",
+        "cwl": "CWL",
+        "random": "Aleatoriu",
+        "friendly": "Amical"
+      },
+      "topPerformers": {
+        "title": "Cei mai buni atacatori",
+        "description": "Cei mai buni războinici după numărul total de stele",
+        "attacksAndStars": "{attacks} atacuri • {stars} stele",
+        "noData": "Nu sunt disponibile date despre jucători. Încearcă să modifici filtrele."
+      },
+      "missedAttacks": {
+        "title": "Atacuri ratate",
+        "description": "Jucători care nu și-au folosit toate atacurile",
+        "attacks": "atacuri ratate"
+      },
+      "topDefenders": {
+        "title": "Cei mai buni apărători",
+        "description": "Cei mai buni apărători după media stelelor cedate",
+        "defensesAndStars": "{defenses} apărări • {stars} stele cedate",
+        "noData": "Nu sunt disponibile date despre apărători. Încearcă să modifici filtrele."
+      },
+      "worstAttackers": {
+        "title": "Cei mai slabi atacatori",
+        "description": "Jucătorii cu cea mai mică medie de stele per atac (min. 3 atacuri)",
+        "attacksAndStars": "{attacks} atacuri • {stars} stele",
+        "noData": "Nu sunt disponibile date despre jucători. Încearcă să modifici filtrele."
+      },
+      "worstDefenders": {
+        "title": "Cei mai slabi apărători",
+        "description": "Jucătorii care au cedat cele mai multe stele în apărare (min. 3 apărări)",
+        "defensesAndStars": "{defenses} apărări • {stars} stele cedate",
+        "noData": "Nu sunt disponibile date despre apărători. Încearcă să modifici filtrele."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Statisticile de război ale clanurilor",
+      "description": "Statistici detaliate pentru fiecare clan",
+      "headers": {
+        "clan": "Clanul",
+        "status": "Stare",
+        "wars": "Războaie",
+        "record": "V/D/E",
+        "winRate": "Rată de victorie",
+        "avgDestruction": "Distrugere medie",
+        "avgStarsPerAttack": "Stele/atac",
+        "avgDefenseStars": "Stele/apărare"
+      },
+      "status": {
+        "inWar": "În război",
+        "cwl": "CWL",
+        "peace": "Pace"
+      },
+      "noData": "Nu sunt disponibile statistici ale clanurilor. Aplică filtre sau așteaptă încărcarea datelor."
+    },
+    "toast": {
+      "errorTitle": "Eroare",
+      "errorLoadingClans": "Clanurile nu au putut fi încărcate. Încearcă din nou.",
+      "errorLoadingWarData": "Datele de război nu au putut fi încărcate. Încearcă din nou.",
+      "errorNoClans": "Nu sunt disponibile clanuri",
+      "errorApplyingFilters": "Filtrele nu au putut fi aplicate. Încearcă din nou."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Clasamente",
+    "description": "Clasamente globale pentru Capitala Clanului și altele",
+    "comingSoon": "Această funcție va fi disponibilă în curând. Revino mai târziu!",
+    "stats": {
+      "totalEntries": "Total înregistrări",
+      "type": "Tip",
+      "league": "Ligă",
+      "weekend": "Sfârșit de săptămână"
+    },
+    "filters": {
+      "title": "Filtre",
+      "description": "Personalizează afișarea clasamentului",
+      "type": "Tip",
+      "metric": "Indicator",
+      "league": "Ligă",
+      "weekend": "Sfârșit de săptămână"
+    },
+    "types": {
+      "player": "Jucători",
+      "clan": "Clanuri"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Capitală jefuită"
+        },
+        "clan": {
+          "capitalTotalLoot": "Total pradă",
+          "raidsCompleted": "Raiduri finalizate",
+          "enemyDistrictsDestroyed": "Districte distruse",
+          "medals": "Medalii"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Toate",
+      "legendLeague": "Liga Legendelor",
+      "titanLeagueI": "Liga Titan I",
+      "titanLeagueII": "Liga Titan II",
+      "titanLeagueIII": "Liga Titan III"
+    },
+    "rankings": {
+      "title": "Clasamente",
+      "description": "Primii {count} {type} pentru {weekend}",
+      "players": "jucători",
+      "clans": "clanuri"
+    },
+    "empty": {
+      "title": "Nu sunt date disponibile.",
+      "description": "Încearcă să selectezi alt sfârșit de săptămână sau altă ligă"
+    }
+  },
+  "ClansPage": {
+    "title": "Gestionarea clanului",
+    "description": "Configurează clanurile și integrarea lor cu Discord",
+    "addClan": "Adaugă clan",
+    "addNewClan": "Adaugă un clan nou",
+    "addClanDescription": "Introdu eticheta clanului pentru a-l adăuga pe acest server",
+    "clanTag": "Eticheta clanului",
+    "totalClans": "Total clanuri",
+    "registeredClans": "Clanuri înregistrate",
+    "configured": "Configurat",
+    "withSettingsConfigured": "Cu setările configurate",
+    "totalMembers": "Total membri",
+    "acrossAllClans": "În toate clanurile",
+    "channels": "Canale",
+    "availableChannels": "Canale disponibile",
+    "noClansYet": "Nu există încă clanuri",
+    "getStartedAdding": "Adaugă primul clan pentru a începe",
+    "addFirstClan": "Adaugă primul clan",
+    "level": "Nivel",
+    "members": "Membri",
+    "status": "Stare",
+    "configuredBadge": "Configurat",
+    "setupRequired": "Configurare necesară",
+    "configure": "Configurează",
+    "sorting": {
+      "label": "Sortează clanurile",
+      "sortBy": "Sortează după",
+      "toggleDirection": "Inversează ordinea de sortare",
+      "added": "Adăugat",
+      "name": "Numele clanului",
+      "level": "Nivelul clanului",
+      "members": "Membri"
+    },
+    "configureClan": "Configurează {name} ({tag})",
+    "customizeIntegration": "Personalizează setările integrării Discord pentru acest clan",
+    "tabs": {
+      "basic": "Configurare Discord",
+      "war": "Război"
+    },
+    "memberRole": "Rolul membrilor",
+    "leaderRole": "Rolul liderului",
+    "selectRole": "Selectează rol",
+    "none": "Niciunul",
+    "clanAbbreviation": "Abrevierea clanului",
+    "warScoreCountdown": "Numărătoare inversă pentru scorul de război",
+    "warScoreCountdownDescription": "Creează un canal vocal care afișează scorul actual",
+    "warTimerCountdown": "Cronometru invers pentru război",
+    "warTimerCountdownDescription": "Creează un canal vocal care afișează timpul rămas",
+    "category": "Categorie",
+    "categoryOptions": {
+      "none": "Fără categorie",
+      "premade": "Categorii comune",
+      "usedByServer": "Folosite de alte clanuri",
+      "clanCount": "{count, plural, one {# clan} other {# clanuri}}"
+    },
+    "categories": {
+      "title": "Categorii de clanuri",
+      "description": "Creează și gestionează categoriile disponibile clanurilor serverului.",
+      "refresh": "Reîmprospătează",
+      "createLabel": "Categorie nouă",
+      "name": "Numele categoriei",
+      "namePlaceholder": "de ex., Competitiv",
+      "nameHelp": "{count}/{max} caractere după normalizarea spațiilor",
+      "create": "Creează categoria",
+      "empty": "Nu a fost creată nicio categorie de clan.",
+      "clanCount": "{count, plural, one {# clan} other {# clanuri}}",
+      "renameAction": "Redenumește {name}",
+      "deleteAction": "Șterge {name}",
+      "renameTitle": "Redenumește categoria clanului",
+      "renameDescription": "Numele normalizat va fi actualizat pentru fiecare clan atribuit.",
+      "saveRename": "Salvează numele",
+      "deleteTitle": "Ștergi categoria clanului?",
+      "deleteWarning": "Ștergi «{name}»? {count, plural, one {# clan va rămâne fără categorie} other {# clanuri vor rămâne fără categorie}}.",
+      "deleteCountMayChange": "Această previzualizare reflectă starea actuală. După ștergere va fi afișat numărul real de clanuri afectate.",
+      "confirmDelete": "Șterge categoria",
+      "deleteSuccessTitle": "Categoria {name} a fost ștearsă",
+      "deleteSuccessDescription": "{count, plural, =0 {Nu a fost modificat niciun clan.} one {# clan a rămas fără categorie.} other {# clanuri au rămas fără categorie.}}",
+      "created": "Categoria {name} a fost creată.",
+      "renamed": "Categoria a fost redenumită în {name}.",
+      "errors": {
+        "title": "Categoriile nu sunt disponibile",
+        "load": "Categoriile de clan nu au putut fi încărcate.",
+        "create": "Categoria de clan nu a putut fi creată.",
+        "rename": "Categoria de clan nu a putut fi redenumită.",
+        "preview": "Previzualizarea ștergerii nu a putut fi încărcată.",
+        "delete": "Categoria de clan nu a putut fi ștearsă.",
+        "refresh": "Categoria a fost modificată, dar starea actualizată nu a putut fi încărcată.",
+        "invalidName": "Folosește un nume de cel mult 64 de caractere, care nu este gol și nu conține caractere de control."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Afișează mai multe informații",
+      "memberRole": "Rolul pe care îl vor primi membrii acestui clan. Dacă botul gestionează rolurile pe serverul Discord, fiecare membru al clanului va primi acest rol. Este util pentru canalele dedicate clanului.",
+      "leaderRole": "Rolul pe care îl vor primi co-liderii și liderul clanului. Pe un server Discord obișnuit, este util pentru un canal dedicat conducerii unui clan sau pentru unul comun liderilor tuturor clanurilor.",
+      "clanAbbreviation": "Atribuie clanului o abreviere care poate fi inclusă în nume. Configurează formatul în <familySettingsLink>Configurarea familiei</familySettingsLink>.",
+      "category": "Aceasta permite organizarea clanurilor. Multe familii au cel puțin cinci clanuri, iar unele dintre ele pot fi dedicate exclusiv CWL sau evenimentelor."
+    },
+    "roleIdPlaceholder": "ID-ul rolului",
+    "abbreviationPlaceholder": "de ex., CK",
+    "categoryPlaceholder": "Numele categoriei",
+    "notAvailable": "Indisponibil",
+    "saving": "Se salvează...",
+    "saveChanges": "Salvează modificări",
+    "deleteConfirm": "Sigur vrei să ștergi {tag}? Vor fi șterse și mementourile și jurnalele asociate.",
+    "toast": {
+      "errorLoadingClans": "Clanurile nu au putut fi încărcate",
+      "errorLoadingSettings": "Setările clanului nu au putut fi încărcate",
+      "errorEmptyClanTag": "Introdu eticheta clanului",
+      "clanAdded": "Clan adăugat cu succes",
+      "errorAddingClan": "Clanul nu a putut fi adăugat",
+      "clanRemoved": "Clan eliminat cu succes",
+      "errorRemovingClan": "Clanul nu a putut fi eliminat",
+      "settingsSaved": "Configurare salvată cu succes",
+      "errorSavingSettings": "Setările nu au putut fi salvate",
+      "countdownEnabled": "Canal vocal cu numărătoare inversă creat",
+      "countdownDisabled": "Canal vocal cu numărătoare inversă șters",
+      "errorTogglingCountdown": "Numărătoarea inversă nu a putut fi comutată"
+    }
+  },
+  "RolesPage": {
+    "title": "Gestionarea rolurilor",
+    "description": "Configurează atribuirea automată a rolurilor pe baza statisticilor jucătorului",
+    "stats": {
+      "totalRoles": "Total roluri",
+      "totalRolesDesc": "Atribuiri de rol configurate",
+      "autoEvaluation": "Evaluare automată",
+      "autoEvaluationOn": "Activat",
+      "autoEvaluationOff": "Dezactivat",
+      "autoEvaluationActiveDesc": "Rolurile sunt atribuite automat",
+      "autoEvaluationInactiveDesc": "Doar atribuirea manuală a rolurilor",
+      "activeTypes": "Tipuri active",
+      "activeTypesDesc": "Tipuri de rol utilizate",
+      "discordRoles": "Roluri Discord",
+      "discordRolesDesc": "Disponibile pe server"
+    },
+    "settings": {
+      "title": "Setări de evaluare automată",
+      "description": "Configurează evaluarea și atribuirea automată a rolurilor",
+      "saveButton": "Salvează setările",
+      "saving": "Se salvează...",
+      "enableAutoEval": "Activează evaluarea automată",
+      "enableAutoEvalDesc": "Atribuie și elimină automat roluri pe baza statisticilor",
+      "autoNickname": "Actualizează automat poreclele",
+      "autoNicknameDesc": "Actualizează poreclele la evaluarea rolurilor"
+    },
+    "roleTypes": {
+      "townhall": "Primărie",
+      "league": "Ligă",
+      "builderhall": "Sala Constructorilor",
+      "builderLeague": "Liga Constructorilor",
+      "achievement": "Realizare",
+      "status": "Vechime pe Discord",
+      "familyPosition": "Poziție în familie"
+    },
+    "familyPositions": {
+      "member": "Membru",
+      "elder": "Veteran",
+      "coLeader": "Co-lider",
+      "leader": "Lider"
+    },
+    "leagues": {
+      "legend": "Legendă",
+      "electroDragon": "Dragon Electric",
+      "dragon": "Dragon",
+      "electroTitan": "Titan Electric",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Vrăjitoare",
+      "valkyrie": "Valkirie",
+      "wizard": "Vrăjitor",
+      "archer": "Arcașă",
+      "barbarian": "Barbar",
+      "skeleton": "Schelet"
+    },
+    "builderLeagues": {
+      "diamond": "Diamant",
+      "ruby": "Rubin",
+      "emerald": "Smarald",
+      "platinum": "Platină",
+      "titanium": "Titaniu",
+      "steel": "Oțel",
+      "iron": "Fier",
+      "brass": "Alamă",
+      "copper": "Cupru",
+      "stone": "Piatră",
+      "clay": "Lut",
+      "wood": "Lemn"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Păstrează-ți contul în siguranță!",
+      "biggerAndBetter": "Mai mare și mai bun",
+      "discoverNewTroops": "Descoperă trupe noi",
+      "biggerCoffers": "Cufere mai încăpătoare",
+      "goldGrab": "Goana după aur",
+      "elixirEscapade": "Escapadă cu elixir",
+      "heroicHeist": "Jaful eroic",
+      "wellSeasoned": "Bine călit",
+      "niceAndTidy": "Curat și ordonat",
+      "empireBuilder": "Constructor de imperii",
+      "clanWarWealth": "Bogății din războaiele clanurilor",
+      "friendInNeed": "Prieten la nevoie",
+      "sharingIsCaring": "Dăruind, îți arăți grija",
+      "siegeSharer": "Donator de mașini de asediu",
+      "warHero": "Erou de război",
+      "warLeagueLegend": "Legenda Ligii Războaielor",
+      "gamesChampion": "Campionul Jocurilor",
+      "unbreakable": "De neînfrânt",
+      "sweetVictory": "Dulcea victorie!",
+      "conqueror": "Cuceritor",
+      "leagueAllStar": "Vedetă a ligii",
+      "leagueFollower": "Adept al ligii",
+      "leagueEnthusiast": "Entuziast al ligii",
+      "leagueSuperfan": "Superfan al ligii",
+      "leagueFanatic": "Fanatic al ligii",
+      "leagueMaster": "Maestru al ligii",
+      "legendLeague": "Liga Legendelor",
+      "humiliator": "Umilitorul",
+      "notSoEasyThisTime": "Nu mai este chiar așa ușor",
+      "unionBuster": "Spărgătorul unirii",
+      "bustThis": "Dărâmă asta!",
+      "wallBuster": "Spărgător de ziduri",
+      "mortarMauler": "Distrugător de mortiere",
+      "xBowExterminator": "Exterminator de Arbalete-X",
+      "firefighter": "Pompier",
+      "antiArtillery": "Antiartilerie",
+      "shatteredAndScatter": "Sfărâmat și împrăștiat",
+      "counterspell": "Contravrajă",
+      "monolithMasher": "Distrugător de Monoliți",
+      "multiArcherTowerTerminator": "Terminator de Turnuri cu Arcașe Multiple",
+      "ricochetCannonCrusher": "Distrugător de Tunuri cu Ricoșeu",
+      "firespitterFinisher": "Nimicitor de Scuipătoare de Foc",
+      "multiGearTowerTrampler": "Zdrobitor de Turnuri cu Angrenaje Multiple",
+      "craftersNightmare": "Coșmarul meșteșugarului",
+      "getThoseGoblins": "Prinde Goblinii!",
+      "supercharger": "Supraalimentator",
+      "craftingConnoisseur": "Cunoscător al meșteșugului",
+      "getThoseOtherGoblins": "Prinde-i și pe ceilalți Goblini!",
+      "getEvenMoreGoblins": "Prinde și mai mulți Goblini!",
+      "dragonSlayer": "Ucigaș de Dragoni",
+      "ungratefulChild": "Copil nerecunoscător",
+      "superbWork": "Treabă excelentă",
+      "masterEngineering": "Maestru al ingineriei",
+      "hiddenTreasures": "Comori ascunse",
+      "highGear": "Treaptă superioară",
+      "nextGenerationModel": "Model de generație nouă",
+      "unBuildIt": "Dezconstruiește-l",
+      "championBuilder": "Constructor campion",
+      "aggressiveCapitalism": "Capitalism agresiv",
+      "mostValuableClanmate": "Cel mai valoros coleg de clan"
+    },
+    "configuredRoles": {
+      "title": "Roluri configurate",
+      "noRolesConfigured": "Nu este configurat niciun rol de tip {roleType}",
+      "addRoleToStart": "Fă clic pe „Adaugă rol” pentru a crea unul",
+      "discordRole": "Rol Discord",
+      "criteria": "Criterii",
+      "mode": "Mod",
+      "modeBoth": "Adaugă și elimină",
+      "modeAdd": "Doar adaugă",
+      "modeRemove": "Doar elimină",
+      "actions": "Acțiuni",
+      "unknownRole": "Rol necunoscut",
+      "remove": "Elimină",
+      "month": "lună",
+      "months": "luni"
+    },
+    "addRoleDialog": {
+      "title": "Adaugă un rol nou",
+      "description": "Configurează o regulă nouă de atribuire automată a rolurilor",
+      "roleType": "Tip de rol",
+      "mode": "Mod",
+      "discordRole": "Rol Discord",
+      "selectRole": "Selectează un rol",
+      "townHallLevel": "Nivelul Primăriei",
+      "selectThLevel": "Selectează nivelul TH",
+      "thPrefix": "TH",
+      "league": "Ligă",
+      "selectLeague": "Selectează liga",
+      "builderHallLevel": "Nivelul Sălii Constructorilor",
+      "selectBhLevel": "Selectează nivelul BH",
+      "bhPrefix": "BH",
+      "builderLeague": "Liga Constructorilor",
+      "selectBuilderLeague": "Selectează Liga Constructorilor",
+      "achievementName": "Realizare",
+      "selectAchievement": "Selectează realizarea",
+      "searchAchievement": "Caută realizări...",
+      "noAchievementFound": "Nu a fost găsită nicio realizare.",
+      "monthsInServer": "Luni pe server",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Poziție în familie",
+      "selectPosition": "Selectează poziția",
+      "cancel": "Anulează",
+      "addRole": "Adaugă rol",
+      "errorDuplicateExact": "Acest criteriu este deja asociat rolului.",
+      "errorDuplicateCriterion": "Acestui criteriu îi este deja atribuit un rol. Elimină mai întâi rolul existent."
+    },
+    "infoCard": {
+      "title": "💡 Cum funcționează rolurile automate",
+      "automaticEvaluation": "Evaluare automată:",
+      "automaticEvaluationDesc": "Când este activată, botul verifică periodic jucătorii și le atribuie sau elimină roluri în funcție de statisticile actuale.",
+      "rolePriority": "Prioritatea rolurilor:",
+      "rolePriorityDesc": "Dacă se potrivesc mai multe roluri, va fi atribuit cel mai înalt.",
+      "manualOverride": "Atribuire manuală:",
+      "manualOverrideDesc": "Administratorii pot atribui roluri manual, iar evaluarea automată nu le va elimina."
+    },
+    "categoryRoles": {
+      "title": "Roluri de categorie",
+      "description": "Atribuie un rol Discord fiecărei categorii. Membrii clanurilor din categorie vor primi automat rolul corespunzător.",
+      "addButton": "Adaugă o categorie",
+      "categoryName": "Categorie",
+      "categoryNamePlaceholder": "Numele categoriei",
+      "noCategoryRoles": "Nu este configurat niciun rol de categorie",
+      "noCategoryRolesDesc": "Fă clic pe „Adaugă categorie” pentru a crea una",
+      "addTitle": "Adaugă un rol de categorie",
+      "addConfirm": "Adaugă",
+      "errorCategoryRequired": "Numele categoriei este obligatoriu",
+      "errorRoleRequired": "Rolul Discord este obligatoriu",
+      "errorCategoryExists": "Această categorie are deja un rol configurat"
+    },
+    "toast": {
+      "changesSaved": "Modificările au fost salvate!",
+      "errorLoading": "Rolurile nu au putut fi încărcate",
+      "errorSaving": "Setările nu au putut fi salvate",
+      "errorAdding": "Rolul nu a putut fi adăugat",
+      "errorDeleting": "Rolul nu a putut fi șters"
+    }
+  },
+  "RemindersPage": {
+    "title": "Mementouri",
+    "description": "Configurează mementouri automate pentru războaie, raiduri, Jocurile Clanului și inactivitate",
+    "types": {
+      "war": "Mementouri de război",
+      "capital": "Capitala clanului",
+      "clanGames": "Jocurile clanului",
+      "inactivity": "Inactivitate"
+    },
+    "tabs": {
+      "war": "Război",
+      "capital": "Capitală",
+      "clanGames": "Jocurile clanului",
+      "inactivity": "Inactivitate"
+    },
+    "stats": {
+      "totalReminders": "Total mementouri",
+      "totalRemindersDesc": "Mementouri active configurate",
+      "warReminders": "Mementouri de război",
+      "warRemindersDesc": "Războaie obișnuite și CWL",
+      "capitalReminders": "Mementouri pentru Capitală",
+      "capitalRemindersDesc": "Atacuri din weekendul de raid",
+      "otherReminders": "Alte mementouri",
+      "otherRemindersDesc": "Jocuri și inactivitate"
+    },
+    "actions": {
+      "saving": "Se salvează...",
+      "saveChanges": "Salvează modificări",
+      "addReminder": "Adaugă un memento",
+      "addWarReminder": "Adaugă un memento de război",
+      "addCapitalReminder": "Adaugă un memento pentru Capitală",
+      "addClanGamesReminder": "Adaugă un memento pentru Jocurile Clanului",
+      "addInactivityReminder": "Adaugă un memento de inactivitate",
+      "retry": "Reîncearcă"
+    },
+    "clanSelector": {
+      "label": "Clanul",
+      "placeholder": "Selectează un clan",
+      "allClans": "Toate clanurile"
+    },
+    "empty": {
+      "noWarReminders": "Nu există mementouri de război",
+      "noCapitalReminders": "Nu există mementouri pentru Capitală",
+      "noClanGamesReminders": "Nu există mementouri pentru Jocurile Clanului",
+      "noInactivityReminders": "Nu există mementouri de inactivitate",
+      "getStarted": "Creează primul memento pentru a începe"
+    },
+    "card": {
+      "new": "Nou",
+      "before": "Înainte",
+      "timeBefore": "Timp rămas",
+      "timeBeforePlaceholder": "de ex., 6",
+      "timeInactive": "Inactivitate de",
+      "timeInactivePlaceholder": "de ex., 160",
+      "timeUnit": "ore",
+      "hoursRemaining": "ore rămase",
+      "channel": "Canal",
+      "channelPlaceholder": "Selectează un canal",
+      "threadOptional": "Fir (opțional)",
+      "threadPlaceholder": "Selectează un fir",
+      "noThread": "Publică direct pe canal",
+      "forumPost": "Postare pe forum",
+      "forumPostPlaceholder": "Selectează o postare pe forum",
+      "forumPostRequired": "Canalele de forum necesită o postare.",
+      "clan": "Clanul",
+      "clanPlaceholder": "Selectează un clan",
+      "customMessage": "Mesaj personalizat",
+      "customMessagePlaceholder": "Nu uita să-ți folosești atacurile!",
+      "customMessagePlaceholderClanGames": "Încearcă să obții mai multe puncte la Jocurile Clanului!",
+      "customMessagePlaceholderInactivity": "Nu ai mai fost activ în clan de ceva timp :(",
+      "warTypes": "Tipuri de război",
+      "random": "Aleatoriu",
+      "friendly": "Amical",
+      "cwl": "CWL",
+      "pointThreshold": "Prag de puncte",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Vor fi menționate persoanele cu mai puțin de {threshold} puncte.",
+      "attackThreshold": "Prag de atacuri",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Vor fi menționate persoanele care mai au cel puțin {threshold} atacuri.",
+      "notSet": "Nesetat"
+    },
+    "dialog": {
+      "addTitle": "Adaugă un memento nou",
+      "addDescription": "Configurează un memento nou pentru server",
+      "editTitle": "Editează mementoul",
+      "editDescription": "Actualizează setările mementoului",
+      "type": "Tipul mementoului",
+      "selectType": "Selectează tipul",
+      "cancel": "Anulează",
+      "saving": "Se salvează...",
+      "saveChanges": "Salvează modificări",
+      "addReminder": "Adaugă mementoul"
+    },
+    "toast": {
+      "errorTitle": "Eroare",
+      "errorLoadingReminders": "Mementourile nu au putut fi încărcate. Încearcă din nou.",
+      "reminderAdded": "Mementoul a fost adăugat",
+      "reminderAddedDesc": "A fost adăugat un memento nou de tip {type}. Nu uita să salvezi!",
+      "reminderUpdated": "Mementoul a fost actualizat",
+      "successTitle": "Succes",
+      "reminderDeleted": "Mementoul a fost șters",
+      "failedToDelete": "Mementoul nu a putut fi șters",
+      "allRemindersSaved": "Toate mementourile au fost salvate",
+      "failedToSave": "Mementourile nu au putut fi salvate",
+      "forumPostRequired": "Selectează o postare de forum înainte de a salva mementoul.",
+      "invalidDestination": "Firul selectat nu aparține acestui canal.",
+      "timeExceedsLimit": "Timpul rămas trebuie să fie între {min} și {max} ore",
+      "pointThresholdInvalid": "Pragul de puncte trebuie să fie între {min} și {max}",
+      "attackThresholdInvalid": "Pragul de atacuri trebuie să fie între {min} și {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Jurnale de activitate",
+    "description": "Configurează jurnalizarea automată a activităților clanului și jucătorilor",
+    "stats": {
+      "activeLogs": "Jurnale active",
+      "activeLogsDesc": "În toate clanurile familiei și jurnalele serverului",
+      "logChannels": "Canale de jurnal",
+      "logChannelsDesc": "Canale disponibile",
+      "trackedClans": "Clanuri urmărite",
+      "trackedClansDesc": "Clanuri configurate",
+      "issues": "Probleme",
+      "issuesDesc": "În întreaga familie"
+    },
+    "clanSelector": {
+      "label": "Clanul",
+      "placeholder": "Selectează un clan"
+    },
+    "tabs": {
+      "clan": "Clanul",
+      "war": "Război",
+      "capital": "Capitală",
+      "player": "Jucător",
+      "server": "Server"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Intrarea unui membru",
+        "description": "Urmărește membrii care intră în clan"
+      },
+      "leaveLog": {
+        "label": "Plecarea unui membru",
+        "description": "Urmărește membrii care părăsesc clanul"
+      },
+      "donationLog": {
+        "label": "Donațiile membrilor",
+        "description": "Urmărește donațiile de trupe și vrăji"
+      },
+      "clanAchievementLog": {
+        "label": "Realizările clanului",
+        "description": "Urmărește realizările obținute de clan"
+      },
+      "clanRequirementsLog": {
+        "label": "Cerințele clanului",
+        "description": "Urmărește modificările cerințelor clanului"
+      },
+      "clanDescriptionLog": {
+        "label": "Descrierea clanului",
+        "description": "Urmărește modificările descrierii clanului"
+      },
+      "banAlert": {
+        "label": "Alerte de interdicție",
+        "description": "Publică alerte când un jucător interzis intră în clan"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Flux Reddit",
+        "description": "Publică fluxul Reddit al serverului"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Jurnal de război",
+        "description": "Urmărește atacurile și rezultatele războaielor"
+      },
+      "warPanel": {
+        "label": "Panou de război",
+        "description": "Panou de război interactiv cu actualizări în timp real"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Modificarea formației CWL",
+        "description": "Urmărește modificările formației CWL"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Donații pentru Capitală",
+        "description": "Urmărește donațiile de aur pentru Capitală"
+      },
+      "capitalAttacks": {
+        "label": "Atacuri în Capitală",
+        "description": "Urmărește atacurile din weekendul de raid"
+      },
+      "raidPanel": {
+        "label": "Panoul Capitalei",
+        "description": "Panou de raid interactiv cu actualizări în timp real"
+      },
+      "capitalWeeklySummary": {
+        "label": "Rezumatul săptămânal al Capitalei",
+        "description": "Rezumat săptămânal al performanței Capitalei"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Modificarea rolului",
+        "description": "Urmărește modificările rolului jucătorilor în clan"
+      },
+      "troopUpgrade": {
+        "label": "Îmbunătățirea trupelor",
+        "description": "Înregistrează îmbunătățirile nivelurilor trupelor"
+      },
+      "superTroopBoostLog": {
+        "label": "Amplificări de Supertrupe",
+        "description": "Urmărește activarea Supertrupelor"
+      },
+      "thUpgrade": {
+        "label": "Îmbunătățirea Primăriei",
+        "description": "Urmărește îmbunătățirile Primăriei"
+      },
+      "leagueChange": {
+        "label": "Schimbarea ligii",
+        "description": "Urmărește schimbările nivelului ligii"
+      },
+      "spellUpgrade": {
+        "label": "Îmbunătățirea vrăjilor",
+        "description": "Înregistrează îmbunătățirile nivelurilor vrăjilor"
+      },
+      "heroUpgrade": {
+        "label": "Îmbunătățirea eroilor",
+        "description": "Înregistrează îmbunătățirile nivelurilor eroilor"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Îmbunătățirea echipamentului eroilor",
+        "description": "Urmărește îmbunătățirile echipamentului eroilor"
+      },
+      "nameChange": {
+        "label": "Schimbarea numelui",
+        "description": "Urmărește schimbările numelor jucătorilor"
+      },
+      "legendLogAttacks": {
+        "label": "Atacurile de legendă",
+        "description": "Urmărește atacurile din Liga Legendelor"
+      },
+      "legendLogDefenses": {
+        "label": "Apărări în Liga Legendelor",
+        "description": "Urmărește apărările din Liga Legendelor"
+      }
+    },
+    "logCard": {
+      "active": "Activ",
+      "issue": "Problemă",
+      "disabled": "Dezactivat",
+      "enable": "Activează",
+      "disable": "Dezactivează",
+      "channel": "Canal",
+      "channelPlaceholder": "Selectează un canal",
+      "thread": "Fir (opțional)",
+      "threadPlaceholder": "Selectează un fir",
+      "noThread": "Fără fir",
+      "forumPost": "Postare de forum",
+      "forumPostPlaceholder": "Selectează o postare de forum",
+      "forumPostRequired": "Selectează o postare de forum înainte de a salva jurnalul.",
+      "invalidThread": "Firul selectat nu aparține acestui canal.",
+      "saveDestination": "Salvează destinația",
+      "channelDeleted": "Acest canal nu mai există. Selectează altul sau dezactivează jurnalul.",
+      "enableToConfig": "Activează jurnalul pentru a-l configura",
+      "configuring": "Se configurează",
+      "on": "Activat",
+      "off": "Dezactivat",
+      "example": "exemplu"
+    }
+  },
+  "GeneralPage": {
+    "title": "Setări generale",
+    "description": "Configurează comportamentul și aspectul botului pe întregul server",
+    "loading": "Se încarcă setările...",
+    "reset": "Resetează",
+    "saving": "Se salvează...",
+    "saveChanges": "Salvează modificări",
+    "settingsSaved": "Setările au fost salvate!",
+    "infoBanner": {
+      "title": "Cauți mai multe setări?",
+      "description": "Rolurile familiei și setările poreclelor se află pe pagina **Setările familiei**. Gestionarea rolurilor se află pe pagina **Roluri**. Rolurile, abrevierile, categoriile și numărătorile de război ale clanurilor se află pe pagina **Clanuri**."
+    },
+    "nickname": {
+      "title": "Gestionarea poreclelor",
+      "description": "Controlează formatul poreclelor",
+      "automaticChanges": "Modificări automate",
+      "automaticChangesDesc": "Permite botului să actualizeze poreclele membrilor",
+      "familyFormat": "Format pentru membrii familiei",
+      "availablePlaceholders": "Substituenți disponibili",
+      "preview": "Previzualizare",
+      "nonFamilyFormat": "Format pentru membrii din afara familiei",
+      "placeholders": {
+        "discordName": "Nume de utilizator Discord",
+        "discordDisplayName": "Poreclă pe server",
+        "playerName": "Numele jucătorului CoC",
+        "playerTag": "Eticheta jucătorului",
+        "playerTownhall": "Nivel TH",
+        "playerTownhallSmall": "TH ca exponent",
+        "playerWarstars": "Stele de război",
+        "playerRole": "Rol în clan",
+        "playerClan": "Numele clanului",
+        "playerLeague": "Ligă",
+        "playerClanAbbr": "Abrevierea clanului"
+      }
+    },
+    "appearance": {
+      "title": "Aspect",
+      "description": "Personalizează mesajele încorporate ale botului",
+      "embedColor": "Culoarea încorporării",
+      "embedColorDesc": "Culoarea barei laterale a tuturor mesajelor încorporate ale botului pe Discord",
+      "embedColorDefault": "Implicit: **#D90709** (Roșu ClashKing)",
+      "embedPreview": "Previzualizarea încorporării",
+      "embedPreviewDesc": "Această bară colorată va apărea lângă toate mesajele încorporate ale botului",
+      "editColor": "Editează culoarea",
+      "resetToDefault": "Resetează la valoarea implicită",
+      "apply": "Aplică"
+    },
+    "security": {
+      "title": "Securitate și permisiuni",
+      "description": "Controlează accesul și verificarea",
+      "fullWhitelistRole": "Rol cu acces complet",
+      "fullWhitelistRoleDesc": "Rol Discord cu acces complet la toate comenzile botului, care ocolește toate verificările permisiunilor",
+      "noRole": "Niciun rol"
+    },
+    "familyRoles": {
+      "title": "Rolurile familiei",
+      "description": "Gestionează rolurile automate în funcție de apartenența și poziția în clanuri",
+      "selectRole": "Selectează un rol",
+      "addRole": "Adaugă un rol...",
+      "deletedRole": "Rol șters",
+      "noRolesConfigured": "Nu este configurat niciun rol",
+      "modes": {
+        "both": "Adaugă și elimină",
+        "add": "Doar adaugă",
+        "remove": "Doar elimină"
+      },
+      "types": {
+        "family": "Familie",
+        "notFamily": "Din afara familiei",
+        "elder": "Veteran",
+        "coLeader": "Co-lider",
+        "leader": "Lider"
+      },
+      "descriptions": {
+        "family": "Are cel puțin un cont într-un clan al familiei",
+        "notFamily": "Nu are conturi în clanurile familiei",
+        "elder": "Este veteran într-un clan al familiei",
+        "coLeader": "Este co-lider într-un clan al familiei",
+        "leader": "Este lider într-un clan al familiei"
+      }
+    },
+    "tenureRoles": {
+      "title": "Roluri de vechime pe Discord",
+      "description": "Atribuie automat roluri în funcție de vechimea membrilor pe server",
+      "addRole": "Adaugă rol de vechime",
+      "addDialogTitle": "Adaugă rol de vechime",
+      "addDialogDescription": "Atribuie un rol membrilor care se află pe server de un anumit număr de luni",
+      "monthsInServer": "Luni pe server",
+      "discordRole": "Rol Discord",
+      "selectRole": "Selectează un rol",
+      "noRolesConfigured": "Nu este configurat niciun rol de vechime",
+      "addRoleToStart": "Adaugă un rol de vechime pentru a începe",
+      "months": "luni",
+      "month": "lună",
+      "actions": "Acțiuni",
+      "remove": "Elimină",
+      "unknownRole": "Rol necunoscut"
+    },
+    "prefix": "Prefixul comenzilor",
+    "language": "Limbă",
+    "timezone": "Fus orar",
+    "theme": "Temă"
+  },
+  "FamilySettingsPage": {
+    "title": "Setările familiei",
+    "description": "Configurează rolurile familiei și formatul poreclelor membrilor clanului",
+    "loading": "Se încarcă setările...",
+    "reset": "Resetează",
+    "saving": "Se salvează...",
+    "saveChanges": "Salvează modificări",
+    "settingsSaved": "Setările au fost salvate!",
+    "nickname": {
+      "title": "Gestionarea poreclelor",
+      "description": "Controlează formatul poreclelor",
+      "automaticChanges": "Modificări automate",
+      "automaticChangesDesc": "Permite botului să actualizeze poreclele membrilor",
+      "familyFormat": "Format pentru membrii familiei",
+      "availablePlaceholders": "Substituenți disponibili",
+      "preview": "Previzualizare",
+      "nonFamilyFormat": "Format pentru membrii din afara familiei",
+      "placeholders": {
+        "discordName": "Nume de utilizator Discord",
+        "discordDisplayName": "Poreclă pe server",
+        "playerName": "Numele jucătorului CoC",
+        "playerTag": "Eticheta jucătorului",
+        "playerTownhall": "Nivel TH",
+        "playerTownhallSmall": "TH ca exponent",
+        "playerWarstars": "Stele de război",
+        "playerRole": "Rol în clan",
+        "playerClan": "Numele clanului",
+        "playerLeague": "Ligă",
+        "playerClanAbbr": "Abrevierea clanului"
+      }
+    },
+    "familyRoles": {
+      "title": "Rolurile familiei",
+      "description": "Gestionează rolurile automate în funcție de apartenența și poziția în clanuri",
+      "selectRole": "Selectează un rol",
+      "addRole": "Adaugă un rol...",
+      "deletedRole": "Rol șters",
+      "noRolesConfigured": "Nu este configurat niciun rol",
+      "modes": {
+        "both": "Adaugă și elimină",
+        "add": "Doar adaugă",
+        "remove": "Doar elimină"
+      },
+      "types": {
+        "family": "Familie",
+        "notFamily": "Din afara familiei",
+        "elder": "Veteran",
+        "coLeader": "Co-lider",
+        "leader": "Lider"
+      },
+      "descriptions": {
+        "family": "Are cel puțin un cont într-un clan al familiei",
+        "notFamily": "Nu are conturi în clanurile familiei",
+        "elder": "Este veteran într-un clan al familiei",
+        "coLeader": "Este co-lider într-un clan al familiei",
+        "leader": "Este lider într-un clan al familiei"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Limbă"
+  },
+  "ThemeSwitcher": {
+    "label": "Temă",
+    "light": "Luminoasă",
+    "dark": "Întunecată",
+    "system": "Sistem"
+  },
+  "AuthCallback": {
+    "authenticating": "Se autentifică...",
+    "authenticatingDescription": "Așteaptă autentificarea prin Discord",
+    "authenticationFailed": "Autentificarea a eșuat",
+    "tryAgain": "Încearcă din nou",
+    "backToHome": "Înapoi la pagina principală",
+    "errorCancelled": "Autentificarea pe Discord a fost anulată. Încearcă din nou când ești pregătit.",
+    "errorDiscordFailedWithReason": "Autentificarea prin Discord a eșuat: {reason}",
+    "errorNoAuthorizationCode": "Nu a fost primit niciun cod de autorizare de la Discord.",
+    "errorCodeVerifierMissing": "Verificatorul codului nu a fost găsit. Încearcă să te conectezi din nou.",
+    "errorAuthenticateFailed": "Autentificarea prin Discord a eșuat.",
+    "loadingVillages": "Se inițiază sesiunea prin Discord...",
+    "loadingClanData": "Se încarcă lista serverelor...",
+    "loadingWarStats": "Aproape gata..."
+  },
+  "LoginPage": {
+    "redirecting": "Se redirecționează către Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Funcții",
+      "subtitle": "Descoperă instrumentele puternice oferite de ClashKing pentru gestionarea și dezvoltarea clanului pe Discord, mobil și web."
+    },
+    "sections": {
+      "bot": {
+        "title": "Bot de ClashKing",
+        "description": "Botul ClashKing este singurul bot Discord de care ai nevoie pentru a-ți gestiona clanul și comunitatea Clash of Clans. Funcțiile sale unice te ajută să-ți menții clanul organizat, implicat și în continuă dezvoltare.",
+        "items": [
+          "Jurnale în timp real: urmărește războaiele, CWL, Jocurile Clanului, raidurile, donațiile și evenimentele membrilor.",
+          "Sistem de tichete: tichete de recrutare pe lângă tichetele obișnuite de asistență.",
+          "Roluri automate: atribuie automat roluri în funcție de starea în clan sau de gestionarea familiei.",
+          "Mementouri: trimite notificări pentru atacurile de război, Jocurile Clanului sau orice altceva.",
+          "Statistici detaliate: informații despre performanța jucătorilor și clanurilor, cu urmărirea activității.",
+          "Gestionarea listelor: organizează și optimizează cu ușurință listele de război."
+        ],
+        "ctaPrimary": "Invită bot",
+        "ctaSecondary": "Alătură-te comunității"
+      },
+      "app": {
+        "title": "Aplicația ClashKing (beta deschisă)",
+        "description": "Aplicația ClashKing completează botul cu instrumente și informații esențiale pe dispozitivul mobil. Rămâi conectat oriunde, chiar și fără Discord.",
+        "items": [
+          "Statistici în timp real: statistici detaliate pentru jucători și clanuri, sincronizate cu botul.",
+          "Urmărirea progresului clanului: monitorizează cu ușurință evoluția clanului în timp.",
+          "Gestionarea mai multor conturi: comută ușor între conturi și urmărește performanța.",
+          "Istoric integrat: consultă date istorice pentru a analiza tendințele și a îmbunătăți strategiile.",
+          "Gestionarea serverului Discord: (în curând) gestionează rolurile și tichetele din aplicație.",
+          "Notificări avansate: (în curând) personalizează alertele pentru evenimente importante."
+        ],
+        "ctaPrimary": "Beta pentru Android",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "API-ul ClashKing",
+        "description": "Creează propriile instrumente sau proiecte cu API-ul ClashKing. Este gratuit dacă menționezi proiectul ClashKing.",
+        "items": [],
+        "ctaPrimary": "Documentația API-ului",
+        "ctaSecondary": "API pe GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Ai nevoie de ajutor?",
+    "subtitle": "Fie că ai nevoie de documentație sau asistență directă, suntem aici pentru a te ajuta.",
+    "documentation": {
+      "title": "Documentație",
+      "description": "Consultă ghidurile și referințele comenzilor pentru a profita la maximum de ClashKing.",
+      "cta": "Vezi documentația"
+    },
+    "discord": {
+      "title": "Asistență pe Discord",
+      "description": "Ai nevoie de ajutor? Alătură-te comunității Discord pentru întrebări, raportarea erorilor sau discuții cu alți utilizatori.",
+      "cta": "Intră pe Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Un proiect cu sursă deschisă",
+    "subtitle": "ClashKing este un proiect complet gratuit și cu sursă deschisă, iar comunitatea îl poate face și mai bun. Atât botul, cât și API-ul au codul sursă disponibil, așa că poți contribui sau le poți folosi în propriile proiecte.",
+    "github": {
+      "title": "Organizația GitHub",
+      "description": "Explorează sursa, contribuie la bot sau descoperă celelalte instrumente cu sursă deschisă.",
+      "ctaPrimary": "Vezi organizația",
+      "repos": {
+        "bot": "Repozitoriul botului",
+        "app": "Repozitoriul aplicației",
+        "api": "Repozitoriul API-ului",
+        "assets": "Repozitoriul resurselor"
+      }
+    },
+    "api": {
+      "title": "Documentația API-ului",
+      "description": "Creează propriile instrumente sau proiecte cu API-ul ClashKing. Este gratuit dacă menționezi proiectul ClashKing.",
+      "cta": "Documentația API-ului"
+    },
+    "translation": {
+      "title": "Ajută-ne să traducem",
+      "description": "Ajută-ne să traducem ClashKing în limba ta! Poți contribui prin proiectele noastre Crowdin la traducerea site-ului, a botului și a tuturor textelor asociate.",
+      "app": "Tradu aplicația",
+      "bot": "Tradu botul"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Contribuie",
+        "description": "Ajută-ne să îmbunătățim proiectul corectând erori, adăugând funcții sau perfecționând ce există deja. Fiecare contribuție contează!"
+      },
+      "community": {
+        "title": "Comunitate",
+        "description": "Alătură-te comunității Discord pentru a discuta idei, a primi ajutor și a colabora cu alți dezvoltatori."
+      },
+      "learn": {
+        "title": "Învață",
+        "description": "Consultă documentația și exemplele pentru a învăța să folosești botul și API-ul."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Susține-ne",
+    "subtitle": "ClashKing este un proiect gratuit și cu sursă deschisă. Sprijinul tău ne ajută să menținem serverele și să dezvoltăm funcții noi.",
+    "patreon": {
+      "title": "Devino susținător",
+      "description": "Susține-ne lunar pe Patreon pentru beneficii exclusive, acces timpuriu și acoperirea costurilor de găzduire.",
+      "cta": "Susține-ne pe Patreon"
+    },
+    "creatorCode": {
+      "title": "Folosește codul de creator",
+      "description": "Susține-ne gratuit folosind codul de creator",
+      "descriptionSuffix": "în joc sau în magazinul Supercell.",
+      "ctaGame": "Folosește în joc",
+      "ctaStore": "Folosește în magazinul Supercell"
+    },
+    "whySupport": {
+      "title": "De ce să ne susții?",
+      "description": "Fiecare contribuție acoperă costurile serverelor și API-ului. Folosirea codului nostru nu te costă nimic și ne ajută foarte mult."
+    }
+  },
+  "ServersPage": {
+    "title": "Selectează un server",
+    "description": "Alege un server pentru a configura botul ClashKing. Trebuie să fii proprietarul sau administratorul serverului Discord.",
+    "backToHome": "Înapoi la pagina principală",
+    "backToLogin": "Înapoi la autentificare",
+    "error": "Eroare",
+    "configure": "Configurează",
+    "invite": "Invită",
+    "members": "Membri",
+    "server": "Server",
+    "roles": {
+      "owner": "Proprietar",
+      "administrator": "Administrator",
+      "manager": "Gestionar"
+    },
+    "noServers": {
+      "title": "Nu au fost găsite servere",
+      "description": "Nu a fost găsit niciun server Discord unde ești administrator sau proprietar."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Actualizează un panou activ sau trimite panouri noi conform programului",
+    "actions": {
+      "create": "Creează un panou automat",
+      "edit": "Editează panoul automat",
+      "delete": "Șterge panoul automat",
+      "save": "Salvează modificări",
+      "cancel": "Anulează",
+      "retry": "Reîncearcă"
+    },
+    "metrics": {
+      "total": "Configurat",
+      "refresh": "Actualizează panouri",
+      "send": "Trimiteri programate"
+    },
+    "filters": {
+      "all": "Toate"
+    },
+    "list": {
+      "title": "Panouri automate configurate",
+      "description": "Livrare, ținte, destinație și stare de execuție controlate de gestionari",
+      "empty": "Nu există panouri automate în această vizualizare",
+      "emptyDescription": "Vei putea crea unul când registrul API oferă un tip disponibil."
+    },
+    "registry": {
+      "emptyTitle": "Nu sunt disponibile tipuri de panou",
+      "emptyDescription": "Registrul API este gol. Panourile vor putea fi create când este activat un tip.",
+      "typeUnavailable": "Acest tip de panou nu mai este disponibil în registru și nu poate fi editat."
+    },
+    "dialog": {
+      "createTitle": "Creează autoboard",
+      "editTitle": "Editează autoboard",
+      "description": "Funcțiile și limitele provin din registrul activ de panouri."
+    },
+    "boardType": {
+      "label": "Tip de panou",
+      "description": "Tipurile disponibile provin direct din registrul API.",
+      "placeholder": "Selectează un tip de panou"
+    },
+    "targets": {
+      "kind": "Tip de țintă: {kind}",
+      "kindDescription": "Registrul stabilește cum este interpretată fiecare țintă.",
+      "scope": "Domeniul țintei",
+      "scopeDescription": "Domeniul familiei folosește toate clanurile configurate și nu are ținte explicite.",
+      "family": "Familie",
+      "custom": "Ținte personalizate",
+      "values": "Ținte",
+      "count": "Introdu între {min} și {max} ținte pentru acest tip de panou.",
+      "placeholder": "Introdu o țintă de tip {kind}",
+      "add": "Adaugă o țintă",
+      "remove": "Elimină ținta"
+    },
+    "modes": {
+      "label": "Mod de livrare",
+      "description": "Registrul controlează modurile de livrare compatibile.",
+      "refresh": "Reîmprospătează",
+      "send": "Trimitere programată"
+    },
+    "destination": {
+      "label": "Destinație",
+      "channel": "Canal principal",
+      "channelDescription": "Canalele text și de anunțuri permit livrarea directă; forumurile folosesc o postare secundară.",
+      "selectChannel": "Selectează un canal",
+      "thread": "Fir sau postare de forum",
+      "selectThread": "Selectează un fir",
+      "threadOptional": "Opțional pentru canalele text și de anunțuri.",
+      "forumRequired": "Această destinație necesită o postare de forum.",
+      "direct": "Trimite direct pe canal",
+      "deleted": "Canalul nu mai există"
+    },
+    "refresh": {
+      "interval": "Interval de actualizare (minute)",
+      "intervalDescription": "Interval permis: {minimum}-{maximum} minute."
+    },
+    "schedule": {
+      "label": "Programare",
+      "kind": "Model de programare",
+      "kindDescription": "Trimite zilnic, în zilele selectate sau o dată pe lună.",
+      "daily": "Zilnic",
+      "weekdays": "Zile selectate",
+      "dayOfMonth": "Ziua din lună",
+      "selectWeekdays": "Zilele săptămânii",
+      "monthDay": "Ziua din lună",
+      "monthDayDescription": "Folosește o valoare între 1 și 31.",
+      "timezone": "Fus orar",
+      "timeOfDay": "Ora din zi",
+      "nextRun": "Următoarea execuție"
+    },
+    "weekdays": {
+      "1": "Luni",
+      "2": "Marți",
+      "3": "Miercuri",
+      "4": "Joi",
+      "5": "Vineri",
+      "6": "Sâmbătă",
+      "7": "Duminică"
+    },
+    "status": {
+      "enabled": "Activat",
+      "disabled": "Dezactivat",
+      "enabledDescription": "Panourile dezactivate își păstrează configurația, dar nu se execută.",
+      "messageId": "ID-ul mesajului actualizat: {id}"
+    },
+    "delete": {
+      "title": "Ștergi acest panou automat?",
+      "description": "Aceasta șterge configurația și nu poate fi anulată."
+    },
+    "feedback": {
+      "created": "Panoul automat a fost creat",
+      "updated": "Panoul automat a fost actualizat",
+      "deleted": "Panoul automat a fost șters"
+    },
+    "validation": {
+      "boardType": "Selectează un tip de panou activ în registru.",
+      "targetScope": "Selectează un domeniu compatibil cu acest tip de panou.",
+      "familyTargets": "Domeniul familiei nu poate include ținte explicite.",
+      "targetCount": "Introdu între {min} și {max} ținte completate.",
+      "deliveryMode": "Selectează un mod de livrare compatibil cu acest tip de panou.",
+      "destination": "Selectează o destinație validă. Canalele de forum necesită o postare secundară.",
+      "refreshInterval": "Introdu un interval între {minimum} și {maximum} de minute.",
+      "timezone": "Introdu un fus orar IANA.",
+      "timeOfDay": "Introdu o oră validă.",
+      "weekdays": "Selectează cel puțin o zi a săptămânii.",
+      "dayOfMonth": "Introdu o zi între 1 și 31."
+    },
+    "errors": {
+      "title": "Panourile automate nu sunt disponibile",
+      "session": "Sesiunea ta a expirat.",
+      "request": "Solicitarea pentru panourile automate a eșuat.",
+      "load": "Panourile automate nu au putut fi încărcate.",
+      "save": "Panoul automat nu a putut fi salvat.",
+      "delete": "Panoul automat nu a putut fi șters."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Setările panourilor de tichete",
+    "description": "Configurează categoriile și canalele de jurnal pentru fiecare panou de tichete.",
+    "noPanels": "Nu au fost găsite panouri de tichete",
+    "noPanelsHint": "Creează primul panou cu butonul de mai sus.",
+    "createPanel": "Panou nou",
+    "createPanelTitle": "Creează un panou de tichete",
+    "createPanelDescription": "Atribuie panoului un nume unic. Vei putea configura butoanele și canalele după creare.",
+    "panelNameLabel": "Numele panoului",
+    "panelNamePlaceholder": "de ex., Solicitări",
+    "panelCreated": "Panou «{name}» creat.",
+    "confirmDeletePanel": "Ștergi panoul «{name}»?",
+    "confirmDeletePanelHint": "Panoul și toate setările butoanelor vor fi șterse definitiv.",
+    "panelDeleted": "Panou șters.",
+    "panelHint": "Apasă pentru a extinde și configura panoul.",
+    "panelEmbed": "Încorporarea panoului",
+    "panelEmbedHint": "Încorporarea folosită la publicarea panoului de tichete pe Discord.",
+    "panelEmbedInfoLine1": "Pentru a crea sau edita o încorporare, accesează pagina %s din {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Pentru a adăuga sau edita butoane, accesează %s pentru acest panou.",
+    "panelEmbedPreview": "Previzualizarea încorporării",
+    "panelEmbedPreviewEmpty": "Nu este disponibilă nicio previzualizare pentru mesajul selectat.",
+    "ticketOpenEmbed": "Încorporare la deschiderea tichetului",
+    "ticketOpenEmbedHint": "Mesaj personalizat opțional, trimis când acest buton deschide un tichet.",
+    "selectEmbed": "Selectează o încorporare",
+    "defaultEmbed": "Folosește încorporarea implicită",
+    "noCustomMessage": "Folosește mesajul implicit al tichetului",
+    "buttons": "Butoane",
+    "buttonList": "Butoane",
+    "categories": "Categorii",
+    "openCategory": "Categoria tichetelor deschise",
+    "open_category": "Categoria tichetelor deschise",
+    "sleepCategory": "Categoria tichetelor în așteptare",
+    "sleep_category": "Categoria tichetelor în așteptare",
+    "closedCategory": "Categoria tichetelor închise",
+    "closed_category": "Categoria tichetelor închise",
+    "selectCategory": "Selectează o categorie...",
+    "logChannels": "Canale de jurnal",
+    "statusChangeLog": "Jurnalul schimbărilor de stare",
+    "status_change_log": "Jurnalul schimbărilor de stare",
+    "buttonClickLog": "Jurnalul clicurilor pe butoane",
+    "ticket_button_click_log": "Jurnalul clicurilor pe butoane",
+    "closeLog": "Jurnalul închiderii tichetelor",
+    "ticket_close_log": "Jurnalul închiderii tichetelor",
+    "selectChannel": "Selectează un canal...",
+    "savedSuccess": "Panoul „{panel}” a fost salvat.",
+    "tabChannels": "Panou de tichete",
+    "tabSettings": "Setări",
+    "tabButtons": "Butoane",
+    "tabMessages": "Mesaje",
+    "autoSaveSaving": "Se salvează...",
+    "autoSaveSaved": "Salvat",
+    "autoSaveErrorTitle": "Salvarea automată a eșuat",
+    "autoSaveErrorDescription": "Setările tichetelor nu au putut fi salvate.",
+    "messages": "Mesaje",
+    "noButtons": "Nu există încă butoane. Adaugă unul pentru a începe.",
+    "addButton": "Adaugă un buton",
+    "addButtonTitle": "Adaugă un buton",
+    "addButtonDescription": "Configurează aspectul noului buton.",
+    "buttonLabel": "Textul butonului",
+    "buttonLabelPlaceholder": "de ex., Solicită",
+    "buttonStyle": "Culoarea butonului",
+    "buttonStyleBlue": "Albastru",
+    "buttonStyleGrey": "Gri",
+    "buttonStyleGreen": "Verde",
+    "buttonStyleRed": "Roșu",
+    "buttonAdded": "Buton adăugat.",
+    "buttonDeleted": "Buton șters.",
+    "editButtonTitle": "Editează setările butonului",
+    "editButtonDescription": "Configurează acest buton de tichet.",
+    "buttonAppearanceSaved": "Aspectul a fost salvat.",
+    "confirmDeleteButton": "Ștergi butonul «{label}»?",
+    "confirmDeleteButtonHint": "Aceasta va șterge butonul și întreaga lui configurație (roluri, întrebări etc.).",
+    "modRoles": "Rolurile echipei (menționate)",
+    "modRolesHint": "Aceste roluri sunt menționate la deschiderea unui tichet.",
+    "noPingRoles": "Rolurile echipei (nemenționate)",
+    "noPingRolesHint": "Aceste roluri pot vedea tichetele, dar nu sunt menționate.",
+    "questions": "Întrebări",
+    "questionsHint": "Până la 5 întrebări afișate într-o fereastră la deschiderea tichetului.",
+    "question": "Întrebare",
+    "privateThread": "Fir privat",
+    "privateThreadHint": "Creează un fir privat separat pentru echipă.",
+    "accountApply": "Solicită un cont CoC",
+    "accountApplyHint": "Utilizatorul trebuie să conecteze un cont Clash of Clans.",
+    "playerInfo": "Afișează informațiile jucătorului",
+    "playerInfoHint": "Afișează statisticile contului la deschiderea tichetului.",
+    "thMin": "Primărie min.",
+    "numApply": "Număr maxim de conturi",
+    "naming": "Formatul numelui",
+    "namingPlaceholders": "Substituenți pentru nume",
+    "namingVariables": "Variabile: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Buton «{label}» salvat.",
+    "badge": {
+      "accountApply": "CoC obligatoriu",
+      "privateThread": "Fir privat"
+    },
+    "approveMessages": "Mesaje de aprobare și respingere",
+    "approveMessagesHint": "Mesaje pregătite pe care echipa le poate trimite solicitanților (max. 25).",
+    "messagesMaxHint": "Poți adăuga cel mult 25 de mesaje.",
+    "editMessagesButton": "Editează mesajele",
+    "editMessagesTitle": "Editează mesajele pregătite",
+    "editMessagesDescription": "Adaugă, șterge și actualizează mesajele pregătite pentru tichete.",
+    "addMessage": "Adaugă un mesaj",
+    "noMessages": "Nu există încă mesaje. Adaugă unul pentru a începe.",
+    "messageName": "Numele mesajului",
+    "contentLabel": "Conținut",
+    "messageContent": "Conținutul mesajului...",
+    "messageNameRequired": "Toate mesajele trebuie să aibă un nume.",
+    "messagesSaved": "Mesajele de aprobare și respingere au fost salvate.",
+    "rolesToAdd": "Roluri care vor fi acordate",
+    "rolesToAddHint": "Roluri acordate automat utilizatorului la deschiderea unui tichet.",
+    "rolesToRemove": "Roluri care vor fi eliminate",
+    "rolesToRemoveHint": "Roluri eliminate automat de la utilizator la deschiderea unui tichet.",
+    "applyClans": "Clanuri permise",
+    "applyClansHint": "Doar membrii acestor clanuri pot deschide tichetul. Lasă câmpul gol pentru a permite tuturor.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Cerințe pentru Primărie",
+    "thRequirementsHint": "Nivelurile minime ale eroilor pentru fiecare nivel al Primăriei, necesare deschiderii tichetului.",
+    "thHeroLegend": "BK = Regele Barbar · AQ = Regina Arcașă · GW = Marele Gardian · RC = Campioana Regală · WARST = Stele de război",
+    "addThLevel": "Adaugă un nivel TH",
+    "thLevel": "TH",
+    "numApplyHint": "Numărul maxim de conturi CoC cu care poate aplica utilizatorul (1-25).",
+    "embeds": "Încorporări",
+    "embedsHint": "Încorporări Discord folosite în panouri sau la deschiderea tichetelor.",
+    "newEmbed": "Încorporare nouă",
+    "embedName": "Numele încorporării",
+    "embedNamePlaceholder": "incorporarea-mea",
+    "discohookUrl": "URL Discohook",
+    "embedDiscohookHint": "Creează mesajul în Discohook, copiază adresa paginii și insereaz-o aici.",
+    "openDiscohook": "Deschide Discohook",
+    "openInDiscohook": "Deschide în Discohook",
+    "copyDiscohookUrl": "Copiază URL-ul Discohook",
+    "copyDiscohookUrlDone": "URL copiat!",
+    "editEmbed": "Editează",
+    "deleteEmbed": "Șterge",
+    "confirmDeleteEmbed": "Ștergi încorporarea «{name}»?",
+    "confirmDeleteEmbedHint": "Aceasta o elimină doar din ClashKing și nu afectează mesajele deja publicate în Discord.",
+    "embedSaved": "Încorporarea «{name}» a fost salvată.",
+    "embedCreated": "Încorporarea «{name}» a fost creată.",
+    "embedDeleted": "Încorporare ștearsă.",
+    "noEmbeds": "Nu există încă încorporări.",
+    "noEmbedsHint": "Creează aici o încorporare, apoi atribuie-o unui panou sau unui buton.",
+    "legacyEmbed": "Creată de bot; lipește un URL Discohook pentru a o edita.",
+    "invalidDiscohookUrl": "URL nevalid. Lipește un URL Discohook (discohook.app/?data=... sau discohook.app/?share=...).",
+    "tabEmbeds": "Încorporări"
+  },
+  "EmbedsPage": {
+    "title": "Încorporări",
+    "description": "Creează și gestionează șabloane de încorporări Discord pentru panourile și butoanele tichetelor.",
+    "nameHint": "Atribuie un identificator unic încorporării. Conținutul poate fi schimbat ulterior."
+  },
+  "EmbedEditor": {
+    "importSection": "Importă din Discohook",
+    "addMessage": "Adaugă un mesaj",
+    "addMessageDialogTitle": "Adaugă un mesaj",
+    "addMessageDialogDescription": "Alege nivelul de complexitate al mesajului.",
+    "addMessageClassicTitle": "Clasic",
+    "addMessageClassicDescription": "Simplu și fiabil: text și încorporări. Alege această opțiune dacă nu ești sigur.",
+    "addMessageV2Title": "Componente V2",
+    "addMessageV2Description": "Aranjamente și componente interactive mai avansate, precum butoane, selectoare și secțiuni. Potrivit pentru configurații avansate.",
+    "betaTag": "Beta",
+    "importExport": "Import și export",
+    "importExportDescription": "Importă un mesaj din Discohook sau exportă-l acolo pe cel actual.",
+    "importFromDiscohook": "Importă din Discohook",
+    "copyDiscohookUrl": "Copiază URL-ul Discohook",
+    "openInDiscohook": "Deschide în Discohook",
+    "content": "Conținut",
+    "contentPlaceholder": "Conținut afișat deasupra încorporărilor...",
+    "profileSection": "Profil",
+    "profileName": "Nume",
+    "profileAvatarUrl": "URL-ul avatarului",
+    "profileUnsupportedWarning": "Avertisment: botul nu permite încă actualizarea acestui profil.",
+    "import": "Importă",
+    "importError": "URL Discohook nevalid. Lipește URL-ul unei pagini Discohook.",
+    "importMultipleMessagesWarning": "Acest link conține mai multe mesaje. A fost importat doar primul; botul acceptă un singur mesaj per încorporare.",
+    "colorSection": "Culoare",
+    "authorSection": "Autor",
+    "authorName": "Nume",
+    "authorIconUrl": "URL-ul pictogramei",
+    "authorUrl": "URL-ul autorului",
+    "bodySection": "Corp",
+    "title": "Titlu",
+    "titleUrl": "URL-ul titlului",
+    "sidebarColor": "Culoarea barei laterale",
+    "description": "Descriere",
+    "descriptionPlaceholder": "Descrierea încorporării...",
+    "fieldsSection": "Câmpuri",
+    "addField": "Adaugă un câmp",
+    "field": "Câmp",
+    "fieldName": "Nume",
+    "fieldValue": "Valoare",
+    "fieldInline": "Pe același rând",
+    "imagesSection": "Imagini",
+    "thumbnailUrl": "URL-ul miniaturii",
+    "imageUrl": "URL-ul imaginii",
+    "footerSection": "Subsol",
+    "footerText": "Textul din subsol",
+    "footerIconUrl": "URL-ul pictogramei din subsol",
+    "timestamp": "Include marcajul temporal",
+    "preview": "Previzualizare",
+    "previewEmpty": "Completează câmpurile pentru a vedea previzualizarea",
+    "modeToggleV1": "Clasic (V1)",
+    "modeToggleV2": "Componente (V2)",
+    "componentsSection": "Componente",
+    "addComponent": "Adaugă o componentă",
+    "containerLabel": "Container",
+    "textDisplayLabel": "Afișare de text",
+    "separatorLabel": "Separator",
+    "mediaGalleryLabel": "Galerie multimedia",
+    "sectionLabel": "Secțiune",
+    "dividerLine": "Afișează linia despărțitoare",
+    "spacing": "Spațiere",
+    "spacingSmall": "Mic",
+    "spacingLarge": "Mare",
+    "imageDescription": "Text alternativ",
+    "imageSpoiler": "Ascunde imaginea",
+    "addImage": "Adaugă o imagine",
+    "addTextBlock": "Adaugă bloc de text",
+    "accessory": "Accesoriu",
+    "accessoryNone": "Niciunul",
+    "accessoryThumbnail": "Miniatură",
+    "accessoryButton": "Buton",
+    "thumbnailAlt": "Textul alternativ al miniaturii",
+    "accentColor": "Culoare de accent",
+    "addContainer": "Adaugă o componentă secundară",
+    "containerSpoiler": "Container cu spoiler",
+    "stringSelectLabel": "Selector de text",
+    "userSelectLabel": "Selector de utilizatori",
+    "roleSelectLabel": "Selector de rol",
+    "mentionableSelectLabel": "Selector de elemente menționabile",
+    "channelSelectLabel": "Selector de canale",
+    "fileLabel": "Fișier",
+    "fileUrl": "URL-ul fișierului",
+    "fileUploadButton": "Încarcă",
+    "fileSpoiler": "Ascunde fișierul",
+    "selectCustomId": "ID personalizat",
+    "selectPlaceholder": "Text substituent",
+    "selectMinValues": "Număr minim de valori",
+    "selectMaxValues": "Număr maxim de valori",
+    "selectOptions": "Opțiuni",
+    "selectOption": "Opțiune",
+    "selectOptionLabel": "Etichetă",
+    "selectOptionValue": "Valoare",
+    "selectOptionDescription": "Descriere",
+    "selectOptionDefault": "Selectată implicit",
+    "addSelectOption": "Adaugă opțiune",
+    "selectDisabled": "Dezactivat",
+    "actionRowMode": "Tip de rând",
+    "actionRowModeButtons": "Butoane",
+    "actionRowLabel": "Rând de acțiuni",
+    "addButton": "Adaugă un buton",
+    "buttonLabel": "Etichetă",
+    "buttonStyle": "Stil",
+    "buttonStylePrimary": "Principal",
+    "buttonStyleSecondary": "Secundar",
+    "buttonStyleSuccess": "Succes",
+    "buttonStyleDanger": "Pericol",
+    "buttonStyleLink": "Legătură",
+    "tabMentions": "Mențiuni",
+    "tabTime": "Oră",
+    "tabEmojis": "Emojiuri",
+    "dateLabel": "Dată",
+    "timeLabel": "Oră",
+    "mentionsChannels": "Canale",
+    "mentionsSpecial": "Mențiuni speciale",
+    "mentionsChannelList": "Toate canalele",
+    "mentionsRoles": "Roluri",
+    "mentionsServerGuide": "Ghidul serverului",
+    "mentionsBrowseChannels": "Explorează canalele",
+    "mentionsChannelsAndRoles": "Canale și roluri",
+    "mentionsNoChannels": "Niciun canal nu corespunde căutării.",
+    "mentionsNoRoles": "Niciun rol nu corespunde căutării.",
+    "styleLabel": "Stil",
+    "timeRelativeNow": "acum 0 secunde",
+    "emojiSearchPlaceholder": "Găsește emojiul potrivit",
+    "emojiToneLabel": "Nuanța pielii pentru emoji",
+    "emojiCategory": {
+      "people": "Persoane",
+      "nature": "Natură",
+      "food": "Mâncare",
+      "activities": "Activități",
+      "travel": "Călătorii",
+      "objects": "Obiecte",
+      "symbols": "Simboluri",
+      "flags": "Steaguri"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Dezactivat",
+    "unknownComponent": "Componentă necunoscută",
+    "unknownComponentHint": "Acest tip de componentă nu poate fi editat aici, dar va fi păstrat la salvare."
+  },
+  "PanelsPage": {
+    "title": "Panouri",
+    "description": "Configurează panoul interactiv publicat pe server. Membrii își pot conecta conturile, actualiza rolurile și multe altele printr-un singur clic.",
+    "saved": "Setările panoului au fost salvate.",
+    "embedSection": "Încorporare",
+    "embedHint": "Mesaj opțional afișat deasupra butoanelor.",
+    "embedLabel": "Încorporare",
+    "noEmbed": "Fără încorporare (doar butoane)",
+    "buttonsSection": "Butoane",
+    "buttonsHint": "Selectează butoanele de acțiune. Ordinea urmează selecția ta.",
+    "colorSection": "Culoarea butoanelor",
+    "colorHint": "Se aplică tuturor butoanelor.",
+    "welcomeSection": "Canal de bun venit",
+    "welcomeHint": "După configurare, panoul este publicat automat când intră un membru nou.",
+    "welcomeChannel": "Canal",
+    "welcomeChannelPlaceholder": "Selectează un canal...",
+    "editPanelButton": "Editează panoul",
+    "editDialogTitle": "Editează panoul",
+    "editDialogDescription": "Actualizează mesajul, butoanele și culoarea, cu o previzualizare înainte de salvare.",
+    "welcomeAutosaveSuccess": "Canalul de bun venit a fost salvat.",
+    "welcomeAutosaveDisabled": "Canalul de bun venit a fost dezactivat.",
+    "previewSection": "Previzualizare",
+    "previewHint": "Aspectul panoului pe Discord.",
+    "previewNoEmbed": "Nu a fost selectată nicio încorporare",
+    "previewEmbedNoData": "Mesajul nu are date pentru previzualizare",
+    "previewNoButtons": "Nu a fost selectat niciun buton",
+    "color": {
+      "Blue": "Albastru",
+      "Green": "Verde",
+      "Grey": "Gri",
+      "Red": "Roșu"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Concursuri",
+    "description": "Creează, programează și gestionează concursurile serverului.",
+    "create": "Creează un concurs",
+    "listTitle": "Panoul concursurilor",
+    "listDescription": "Gestionează concursurile programate, active și încheiate dintr-un singur loc.",
+    "empty": "Nu există încă niciun concurs de afișat.",
+    "confirmDeleteTitle": "Șterge concursul",
+    "confirmDelete": "Sigur vrei să ștergi acest concurs?",
+    "discardTitle": "Renunți la modificări?",
+    "discardDescription": "Există modificări nesalvate. Dacă închizi acum, acestea se vor pierde.",
+    "discardConfirm": "Renunță",
+    "formTabs": {
+      "general": "General",
+      "messages": "Mesaje",
+      "restrictions": "Restricții",
+      "advanced": "Avansat"
+    },
+    "tabs": {
+      "ongoing": "În curs de desfășurare",
+      "upcoming": "În curând",
+      "ended": "Încheiate"
+    },
+    "stats": {
+      "total": "Total concursuri",
+      "totalEntries": "Total înscrieri",
+      "ongoing": "Concursuri în desfășurare",
+      "upcoming": "Concursuri viitoare",
+      "ended": "Concursuri încheiate"
+    },
+    "statsDescriptions": {
+      "total": "Toate concursurile configurate pe server.",
+      "totalEntries": "Înscrierile cumulate pentru toate concursurile.",
+      "ongoing": "Active și deschise înscrierilor.",
+      "upcoming": "Programate să înceapă mai târziu.",
+      "ended": "Concursuri deja încheiate."
+    },
+    "emptyTab": {
+      "title": "Nu există concursuri aici",
+      "ongoing": "Nu există concursuri în desfășurare.",
+      "upcoming": "Nu există concursuri programate. Creează unul pentru a începe.",
+      "ended": "Nu s-a încheiat încă niciun concurs."
+    },
+    "status": {
+      "scheduled": "Programat",
+      "ongoing": "În desfășurare",
+      "ended": "Încheiat"
+    },
+    "table": {
+      "giveaway": "Concurs",
+      "channel": "Canal",
+      "entries": "Înscrieri",
+      "timing": "Orar",
+      "start": "Începe",
+      "end": "Se termină",
+      "winnersHeader": "Câștigători",
+      "winners": "{count, plural, one {# câștigător} other {# câștigători}}",
+      "boosters": "{count, plural, one {# multiplicator} other {# multiplicatori}}",
+      "noChannel": "Fără canal",
+      "noChannelHelp": "Nu este atribuit niciun canal. Editează concursul pentru a corecta situația.",
+      "endsAt": "Se termină la",
+      "endedAt": "S-a terminat la",
+      "duplicate": "Duplică",
+      "showingEnded": "Se afișează {shown} din {total} concursuri încheiate",
+      "showMore": "Afișează încă {count}",
+      "pendingUpdate": "Actualizare în așteptare",
+      "pendingUpdateHelp": "Acest concurs are modificări în așteptare, pe care botul le va aplica în curând.",
+      "openInDiscord": "Deschide pe Discord",
+      "viewInDiscord": "Vezi pe Discord",
+      "reroll": "Extrage din nou câștigătorii",
+      "rerolledCount": "{count, plural, one {# extras din nou} other {# extrași din nou}}",
+      "viewEntries": "Vezi înscrierile"
+    },
+    "entries": {
+      "description": "Lista participanților și probabilitatea lor de câștig.",
+      "totalEntries": "Total înscrieri",
+      "uniqueUsers": "Utilizatori unici",
+      "noEntrants": "Nu există încă înscrieri.",
+      "userId": "ID utilizator",
+      "entryCount": "Înscrieri",
+      "winChance": "Probabilitate de câștig"
+    },
+    "dialog": {
+      "createTitle": "Creează un concurs",
+      "editTitle": "Editează concursul",
+      "description": "Configurează mesajul, programul și cerințele concursului.",
+      "create": "Creează concursul",
+      "saveChanges": "Salvează modificări"
+    },
+    "form": {
+      "prize": "Premiu",
+      "prizePlaceholder": "Exemplu: Permisul de Aur",
+      "channel": "Canal",
+      "channelPlaceholder": "Selectează un canal",
+      "startTime": "Ora de începere",
+      "startNow": "Începe imediat",
+      "endTime": "Ora de încheiere",
+      "winners": "Număr de câștigători",
+      "mentions": "Roluri menționate",
+      "roleRequirements": "Roluri obligatorii sau excluse",
+      "rolesMode": "Modul rolurilor",
+      "rolesModeOptions": {
+        "none": "Fără restricții de rol",
+        "allow": "Doar aceste roluri pot participa",
+        "deny": "Aceste roluri nu pot participa"
+      },
+      "rolesModeHelp": {
+        "none": "Toți utilizatorii pot participa.",
+        "allow": "Doar utilizatorii cu unul dintre rolurile selectate pot participa.",
+        "deny": "Utilizatorii cu oricare dintre rolurile selectate nu pot participa."
+      },
+      "textAboveEmbed": "Text deasupra încorporării",
+      "textEmbedDefault": "Apasă butonul pentru a participa.",
+      "textInEmbed": "Descrierea încorporării",
+      "textEndDefault": "Felicitări tuturor celor selectați! Vă vom contacta în curând.",
+      "textOnEnd": "Mesaj la încheierea concursului",
+      "image": "Imaginea concursului",
+      "removeImage": "Elimină imaginea actuală",
+      "imagePreviewAlt": "Previzualizarea concursului",
+      "previewGiveaway": "Previzualizarea concursului",
+      "previewEnd": "Previzualizarea mesajului final",
+      "boosters": "Multiplicatori de înscrieri",
+      "addBooster": "Adaugă un multiplicator",
+      "noBoosters": "Nu este configurat niciun multiplicator.",
+      "boosterLabel": "Multiplicator {index}",
+      "boostValue": "Multiplicator",
+      "boostRoles": "Roluri cu bonus",
+      "requirements": "Cerințe de înscriere",
+      "profilePictureRequired": "Solicită fotografie de profil Discord",
+      "cocAccountRequired": "Solicită un cont Clash of Clans conectat"
+    },
+    "validation": {
+      "prizeRequired": "Premiul este obligatoriu.",
+      "channelRequired": "Canalul este obligatoriu.",
+      "startTimeRequired": "Ora de începere este obligatorie dacă concursul nu începe acum.",
+      "endTimeRequired": "Ora de încheiere este obligatorie.",
+      "endAfterStart": "Ora de încheiere trebuie să fie ulterioară orei de începere.",
+      "imageTooLarge": "Imaginea trebuie să aibă mai puțin de 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Rezumat în timp real",
+      "discordPreview": "Previzualizare Discord",
+      "giveawayTitle": "Previzualizarea concursului",
+      "giveawayDescription": "Așa va arăta mesajul concursului activ.",
+      "endTitle": "Previzualizarea mesajului final",
+      "endDescription": "Acest mesaj este trimis la încheierea concursului.",
+      "winnerCount": "Câștigători",
+      "winnerWord": "{count, plural, one {Câștigător} other {Câștigători}}",
+      "mentionCount": "Roluri menționate",
+      "requirementCount": "Cerințe",
+      "boosterCount": "Multiplicatori",
+      "profileRequired": "Fotografie de profil obligatorie",
+      "accountRequired": "Cont CoC conectat obligatoriu",
+      "rolesAllow": "Limitat la rolurile selectate",
+      "rolesDeny": "Roluri selectate excluse",
+      "noChannel": "Nu a fost selectat încă niciun canal",
+      "noPrize": "Premiul va apărea aici",
+      "noEmbedText": "Adaugă text pentru a vedea corpul concursului.",
+      "noEndText": "Adaugă un mesaj final pentru câștigători.",
+      "startsAt": "Începe: {date}",
+      "endsAt": "Se termină: {date}",
+      "endsOn": "Se termină {date}",
+      "endsFooter": "Se termină",
+      "notScheduled": "Neprogramat",
+      "schedule": "Programare",
+      "endMessage": "Mesaj pentru câștigători",
+      "endSummary": "{winners, plural, one {Aici va fi anunțat # câștigător.} other {Aici vor fi anunțați # câștigători.}}",
+      "totalParticipants": "Total de participanți: {count}",
+      "participate": "Participă",
+      "buttonHint": "Butonul principal de acțiune de sub postarea Discord."
+    },
+    "toast": {
+      "errorTitle": "A apărut o eroare",
+      "successTitle": "Succes",
+      "loadError": "Concursurile nu au putut fi încărcate.",
+      "saveError": "Concursul nu a putut fi salvat.",
+      "deleteError": "Concursul nu a putut fi șters.",
+      "created": "Concurs creat cu succes.",
+      "updated": "Concurs actualizat cu succes.",
+      "deleted": "Concurs șters cu succes.",
+      "rerolled": "Câștigătorii au fost extrași din nou.",
+      "rerollError": "Câștigătorii nu au putut fi extrași din nou."
+    },
+    "reroll": {
+      "title": "Extrage din nou câștigătorii",
+      "description": "Selectează câștigătorii care vor fi înlocuiți. Vor fi aleși alții dintre participanții eligibili.",
+      "selectWinners": "Selectează câștigătorii care vor fi înlocuiți:",
+      "confirm": "{count, plural, one {Extrage din nou # câștigător} other {Extrage din nou # câștigători}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Prezentarea generală a panoului",
+    "description": "Consultă statisticile serverului și începe configurarea",
+    "stats": {
+      "linkedPlayers": "Jucători conectați",
+      "linkedPlayersDesc": "Jucători conectați pe acest server",
+      "clansConfigured": "Clanuri configurate",
+      "clansConfiguredDesc": "Clanuri urmărite pe acest server",
+      "activeRosters": "Liste active",
+      "activeRostersDesc": "Liste de război create",
+      "totalAccounts": "Conturi conectate",
+      "totalAccountsDesc": "Total conturi CoC conectate",
+      "playersTracked": "Jucători urmăriți",
+      "globalPlayers": "Total jucători în baza de date",
+      "clansTracked": "Clanuri urmărite",
+      "globalClans": "Total clanuri în baza de date",
+      "botStatus": "Stare bot",
+      "online": "Conectat",
+      "offline": "Deconectat",
+      "memoryUsage": "Memoria: {used} MB ({percent} %)",
+      "cpuUsage": "CPU: {percent} %"
+    },
+    "botSection": "Statistici bot",
+    "clans": {
+      "title": "Clanurile tale",
+      "description": "{count, plural, one {# clan configurat} other {# clanuri configurate}}",
+      "manage": "Gestionează clanurile",
+      "addFirst": "Adaugă primul clan"
+    },
+    "quickStart": {
+      "title": "Pornire rapidă",
+      "description": "Începe configurarea botului ClashKing",
+      "step1": {
+        "title": "Configurează setările generale",
+        "description": "Configurează formatele poreclelor, culorile și canalele de jurnal"
+      },
+      "step2": {
+        "title": "Adaugă clanurile",
+        "description": "Conectează clanurile Clash of Clans și configurează rolurile"
+      },
+      "step3": {
+        "title": "Configurează rolurile automate",
+        "description": "Configurează atribuirea automată a rolurilor după Primărie, trofee și altele"
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Statistici bot",
+    "description": "Statistici globale și starea sistemului ClashKing",
+    "about": {
+      "title": "Despre aceste statistici",
+      "description": "Acestea sunt statisticile globale ale întregii rețele ClashKing",
+      "globalStats": "Statistici globale",
+      "globalStatsDesc": "Valorile includ toate entitățile urmărite pe serverele Discord care folosesc ClashKing",
+      "systemHealth": "Starea sistemului",
+      "systemHealthDesc": "Utilizarea procesorului și memoriei indică sarcina actuală asupra infrastructurii API ClashKing"
+    }
+  },
+  "NotFound": {
+    "title": "404 - Pagina nu a fost găsită",
+    "description": "Pagina pe care o cauți nu există.",
+    "goHome": "Mergi la pagina principală"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Bot Discord, aplicație mobilă și panou pentru clan",
+      "description": "Gestionează războaie, liste, conturi, mementouri și clanuri cu ClashKing pe Discord, mobil și web.",
+      "openGraphTitle": "ClashKing | Gestionează-ți clanul"
+    },
+    "navigation": {
+      "ariaLabel": "Navigare ClashKing",
+      "homeLabel": "Pagina principală ClashKing",
+      "mobileApp": "Aplicație mobilă",
+      "discordBot": "Bot Discord",
+      "dashboard": "Panou"
+    },
+    "language": {
+      "label": "Limbă"
+    },
+    "appearance": {
+      "label": "Aspect",
+      "day": "Zi",
+      "sunset": "Apus"
+    },
+    "actions": {
+      "addToDiscord": "Adaugă pe Discord",
+      "addClashKing": "Adaugă ClashKing",
+      "openDashboard": "Deschide panoul",
+      "joinTestFlight": "Alătură-te pe TestFlight",
+      "getAndroidApp": "Descarcă aplicația Android"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Condu",
+          "second": "clanul",
+          "third": "tău."
+        },
+        "accounts": {
+          "first": "Gestionează",
+          "second": "Conturile",
+          "third": "tale."
+        },
+        "stats": {
+          "first": "Explorează",
+          "second": "statisticile",
+          "third": "clanului."
+        }
+      },
+      "rotatingLabel": "Gestionează-ți clanul și conturile. Explorează statisticile.",
+      "copy": "Războaie, liste, conturi și configurare pe Discord, mobil și web."
+    },
+    "app": {
+      "title": "Aplicație mobilă",
+      "intro": "Aplicația pentru conturile tale Clash.",
+      "stageLabel": "Ecrane de clan, îmbunătățiri și widgetul de război din aplicația mobilă ClashKing",
+      "images": {
+        "clanOverview": "Prezentarea clanului în aplicația mobilă ClashKing",
+        "upgradeStats": "Statisticile îmbunătățirilor Marelui Gardian în aplicația mobilă ClashKing",
+        "warWidget": "Widgetul rezultatului de război ClashKing"
+      },
+      "features": {
+        "widgets": {
+          "title": "Widgeturi",
+          "copy": "Consultă-ți războaiele dintr-o privire."
+        },
+        "notifications": {
+          "title": "Notificări",
+          "copy": "Primește notificări când este disponibil un atac sau se termină o îmbunătățire."
+        },
+        "accounts": {
+          "title": "Conturi conectate",
+          "copy": "Păstrează toate conturile Clash la un loc."
+        }
+      }
+    },
+    "bot": {
+      "title": "Bot Discord",
+      "intro": "Statistici și instrumente pentru clan în Discord.",
+      "imageLabel": "Comanda de clan ClashKing pe Discord",
+      "imageAlt": "Comanda ClashKing cu statisticile clanului ArcLine pe Discord",
+      "features": {
+        "rosters": {
+          "title": "Liste",
+          "copy": "Gestionează conturi pentru CWL sau evenimente."
+        },
+        "warTools": {
+          "title": "Instrumente de război",
+          "copy": "Consultă atacurile, formațiile și mementourile pe Discord."
+        },
+        "accounts": {
+          "title": "Conturi conectate",
+          "copy": "Păstrează toate conturile Clash la un loc."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Panou",
+      "intro": "Gestionează listele, mementourile și serverul dintr-un singur loc.",
+      "imageLabel": "Coliba Constructorului, care reprezintă instrumentele de gestionare",
+      "imageAlt": "Coliba Constructorului de nivel 8",
+      "features": {
+        "settings": {
+          "title": "Setări de clan",
+          "copy": "Configurează clanurile, rolurile și canalele."
+        },
+        "rosters": {
+          "title": "Liste",
+          "copy": "Gestionează conturi pentru CWL sau evenimente."
+        },
+        "automation": {
+          "title": "Automatizare",
+          "copy": "Programează mementouri și sarcini pentru server."
+        }
+      }
+    },
+    "resources": {
+      "title": "Creează cu ClashKing.",
+      "copy": "Ghiduri, sursă și date structurate pentru instrumente comunitare.",
+      "ariaLabel": "Resurse pentru dezvoltatori",
+      "documentation": "Documentație",
+      "publicApi": "API public"
+    },
+    "footer": {
+      "tagline": "Instrumente Clash of Clans pentru toți",
+      "docs": "Documentație",
+      "privacy": "Politica de confidențialitate",
+      "terms": "Termenii serviciului",
+      "legal": "Acest conținut nu este afiliat, aprobat, sponsorizat sau susținut în mod special de Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing pentru Discord, mobil și web",
+    "privacy": {
+      "title": "Politica de confidențialitate | ClashKing",
+      "openGraphTitle": "Politica de confidențialitate ClashKing",
+      "description": "Cum colectează, folosește, stochează și protejează ClashKing datele conturilor, jocurilor și aplicațiilor.",
+      "heading": "Politica de confidențialitate",
+      "eyebrow": "În vigoare din 17 iulie 2026"
+    },
+    "terms": {
+      "title": "Termenii serviciului | ClashKing",
+      "openGraphTitle": "Termenii serviciului ClashKing",
+      "description": "Condițiile aplicabile utilizării site-urilor, aplicațiilor, serviciilor și instrumentelor comunitare ClashKing.",
+      "heading": "Termenii serviciului",
+      "eyebrow": "Informații juridice ClashKing"
+    }
+  }
+}

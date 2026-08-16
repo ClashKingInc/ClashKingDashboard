@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "טוען...",
+    "save": "שמור",
+    "cancel": "בטל",
+    "delete": "מחק",
+    "edit": "עריכה",
+    "search": "חיפוש",
+    "filter": "סינון",
+    "add": "הוספה",
+    "remove": "הסרה",
+    "refresh": "רענן",
+    "close": "סגירה",
+    "openMenu": "פתיחת התפריט",
+    "submit": "שליחה",
+    "back": "חזרה",
+    "next": "הבא",
+    "previous": "הקודם",
+    "poweredBy": "מופעל באמצעות",
+    "noData": "אין נתונים זמינים.",
+    "noChannelFound": "לא נמצא ערוץ.",
+    "searchChannels": "חיפוש ערוצים...",
+    "searchClans": "חיפוש שבטים...",
+    "noClanFound": "לא נמצא שבט.",
+    "searchCategories": "חיפוש קטגוריות...",
+    "noRoleFound": "לא נמצא תפקיד.",
+    "searchRoles": "חיפוש תפקידים...",
+    "addRole": "הוספת תפקיד...",
+    "error": "אירעה שגיאה",
+    "success": "הצלחה",
+    "actions": "פעולות",
+    "details": "פרטים",
+    "view": "הצגה",
+    "unknown": "לא ידוע",
+    "confirm": "אישור",
+    "settings": "הגדרות",
+    "status": "מצב",
+    "retry": "נסה שוב",
+    "disabled": "מושבת",
+    "name": "שם",
+    "description": "תיאור",
+    "createdAt": "נוצר בתאריך",
+    "updatedAt": "עודכן בתאריך",
+    "dashboard": "לוח בקרה",
+    "loadError": "טעינת הנתונים נכשלה.",
+    "tryAgain": "נסה שוב",
+    "create": "יצירה",
+    "viewClashProfile": "הצגת פרופיל Clash",
+    "openInGame": "פתח במשחק",
+    "openChannelInDiscord": "פתיחת הערוץ הזה ב-Discord",
+    "playerProfile": {
+      "clan": "שבט",
+      "townHallLevel": "רמת בית העירייה",
+      "trophies": "גביעים",
+      "warPreference": "העדפת מלחמה",
+      "warPreferenceIn": "משתתף",
+      "warPreferenceOut": "לא משתתף",
+      "signupGroup": "קבוצת הרשמה",
+      "heroLevels": "רמות גיבורים",
+      "hitrate30d": "שיעור הצלחה ב-30 יום"
+    }
+  },
+  "Navigation": {
+    "features": "תכונות",
+    "openSource": "קוד פתוח",
+    "help": "צריכים עזרה?",
+    "support": "תמכו בנו",
+    "commands": "פקודות",
+    "premium": "פרימיום",
+    "documentation": "תיעוד",
+    "loginWithDiscord": "כניסה באמצעות Discord",
+    "addToDiscord": "הוספה ל-Discord",
+    "openDashboard": "פתיחת לוח הבקרה",
+    "dashboardSettings": "הגדרות לוח הבקרה",
+    "logout": "התנתקות",
+    "settings": "הגדרות",
+    "theme": "ערכת נושא",
+    "systemTheme": "לפי המערכת",
+    "lightTheme": "ערכת נושא בהירה",
+    "darkTheme": "ערכת נושא כהה",
+    "language": "שפה",
+    "browserLanguage": "שפת הדפדפן"
+  },
+  "HomePage": {
+    "badge": "יותר מ-{serverCount} שרתים כבר משתמשים ב-ClashKing",
+    "title": "בוט Clash of Clans",
+    "titleHighlight": "העוצמתי ביותר",
+    "subtitle": "הפכו את ניהול השבט לאוטומטי, עקבו אחר נתוני שחקנים, נהלו מלחמות ושמרו על קהילה פעילה.",
+    "cta": {
+      "heading": "מוכנים לשדרג את השבט שלכם?",
+      "description": "הצטרפו ליותר מ-{serverCount} שרתי Discord שכבר משתמשים ב-ClashKing כדי לשדרג את קהילת Clash of Clans שלהם. ההגדרה אורכת שתי דקות בלבד.",
+      "button": "הוספת ClashKing ל-Discord",
+      "trustBadge": "חינם לתמיד • ללא צורך בכרטיס אשראי • יותר מ-{serverCount} שרתים",
+      "addToDiscord": "הוספה ל-Discord",
+      "openDashboard": "פתיחת לוח הבקרה"
+    },
+    "stats": {
+      "servers": "שרתי Discord",
+      "users": "משתמשים פעילים",
+      "clans": "שבטים במעקב"
+    },
+    "features": {
+      "title": "כל מה שצריך לניהול השבט",
+      "subtitle": "תכונות עוצמתיות שתוכננו במיוחד לקהילות Clash of Clans",
+      "autoRoles": {
+        "title": "ניהול תפקידים אוטומטי",
+        "description": "הקצו תפקידים אוטומטית לפי מצב השחקן, המעמד בשבט והישגים, ושמרו על שרת מסודר בקלות."
+      },
+      "playerStats": {
+        "title": "סטטיסטיקות שחקן",
+        "description": "עקבו אחר נתוני שחקנים מפורטים, גרפי התקדמות והיסטוריית תקיפות. ראו מי משתפר ומי זקוק לעזרה."
+      },
+      "leaderboards": {
+        "title": "טבלאות מובילים",
+        "description": "צרו טבלאות מובילים תחרותיות לתרומות, גביעים, כוכבי מלחמה ומדדים מותאמים אישית."
+      },
+      "warTracking": {
+        "title": "מעקב מלחמות",
+        "description": "עקבו אחר הרכבי מלחמה ותקיפות בזמן אמת וקבלו ניתוחים לאחר המלחמה."
+      },
+      "smartReminders": {
+        "title": "תזכורות חכמות",
+        "description": "תזכורות אוטומטיות למשחקי שבט, תקיפות מלחמה, ליגת מלחמות השבטים ואירועים מותאמים אישית."
+      },
+      "customization": {
+        "title": "התאמה אישית מלאה",
+        "description": "התאימו פקודות, צבעי הודעות מוטמעות, כינויים והרשאות כדי להפוך את ClashKing לשלכם."
+      },
+      "familyManagement": {
+        "title": "ניהול משפחת שבטים",
+        "description": "נהלו מספר שבטים כמשפחה באמצעות נתונים משותפים, טבלאות מובילים ותפקידים מאוחדים."
+      },
+      "analytics": {
+        "title": "ניתוחים מתקדמים",
+        "description": "קבלו תובנות עמוקות על ביצועי השבט, דפוסי פעילות השחקנים ומגמות צמיחה."
+      },
+      "performance": {
+        "title": "מהיר כברק",
+        "description": "נבנה לביצועים עם תגובות מיידיות לפקודות ועדכונים בזמן אמת, ללא עיכובים."
+      },
+      "security": {
+        "title": "מאובטח ואמין",
+        "description": "זמינות של 99.9%, נתונים מוצפנים וגיבויים קבועים שומרים על נתוני השבט שלכם."
+      }
+    },
+    "footer": {
+      "tagline": "בוט Clash of Clans העוצמתי ביותר לקהילות Discord.",
+      "about": {
+        "title": "אודות",
+        "features": "תכונות",
+        "help": "צריכים עזרה?",
+        "openSource": "קוד פתוח",
+        "support": "תמכו בנו"
+      },
+      "bot": {
+        "title": "בוט",
+        "dashboard": "לוח בקרה",
+        "inviteBot": "הזמנת הבוט"
+      },
+      "resources": {
+        "title": "משאבים",
+        "documentation": "תיעוד",
+        "quickStart": "מדריך התחלה מהירה",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "קהילה",
+        "discord": "שרת Discord",
+        "twitter": "X (Twitter)",
+        "reportBug": "דיווח על תקלה",
+        "requestFeature": "הצעת תכונה"
+      },
+      "legal": {
+        "copyright": "ClashKing. כל הזכויות שמורות.",
+        "privacy": "מדיניות פרטיות",
+        "terms": "תנאי שימוש"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "לא בשרת",
+    "unknownUser": "משתמש לא ידוע",
+    "notLinked": "לא מקושר",
+    "status": {
+      "onServer": "בשרת",
+      "notOnServer": "לא בשרת"
+    },
+    "discordId": "מזהה Discord",
+    "viewProfile": "הצגת פרופיל Discord",
+    "idPrefix": "מזהה: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "סקירה כללית",
+      "description": "דף הבית של לוח הבקרה"
+    },
+    "general": {
+      "name": "הגדרות כלליות",
+      "description": "הגדרת השרת"
+    },
+    "dashboardAccess": {
+      "name": "גישה ללוח הבקרה",
+      "description": "האצלת חלקים בלוח הבקרה"
+    },
+    "familySettings": {
+      "name": "הגדרות המשפחה",
+      "description": "תפקידי משפחה וכינויים"
+    },
+    "clans": {
+      "name": "שבטים",
+      "description": "ניהול השבטים שלכם"
+    },
+    "logs": {
+      "name": "יומנים",
+      "description": "הגדרת Webhook"
+    },
+    "roles": {
+      "name": "תפקידים",
+      "description": "אוטומציית תפקידים"
+    },
+    "reminders": {
+      "name": "תזכורות",
+      "description": "כל סוגי התזכורות"
+    },
+    "rosters": {
+      "name": "סגלים",
+      "description": "ניהול סגלים"
+    },
+    "bases": {
+      "name": "בסיסים",
+      "description": "ספריית סידורים ופעילות"
+    },
+    "autoboards": {
+      "name": "לוחות אוטומטיים",
+      "description": "טבלאות מובילים אוטומטיות"
+    },
+    "giveaways": {
+      "name": "הגרלות",
+      "description": "ניהול מסעות הגרלות"
+    },
+    "panels": {
+      "name": "לוחות",
+      "description": "לוחות חברים אינטראקטיביים עם כפתורי פעולה"
+    },
+    "tickets": {
+      "name": "פניות",
+      "description": "פניות גיוס ותמיכה"
+    },
+    "embeds": {
+      "name": "הודעות מוטמעות",
+      "description": "תבניות הודעות מוטמעות של Discord"
+    },
+    "links": {
+      "name": "קישורים",
+      "description": "קישור שחקנים ל-Discord"
+    },
+    "bans": {
+      "name": "חסימות ואזהרות",
+      "description": "כלי ניהול קהילה"
+    },
+    "wars": {
+      "name": "מלחמות",
+      "description": "נתוני מלחמה"
+    },
+    "leaderboards": {
+      "name": "טבלאות מובילים",
+      "description": "דירוגים עולמיים"
+    },
+    "sections": {
+      "configuration": "הגדרות",
+      "clanManagement": "ניהול שבט",
+      "playerManagement": "ניהול שחקנים",
+      "automation": "אוטומציה",
+      "statistics": "סטטיסטיקות"
+    },
+    "switchServer": "החלפת שרת",
+    "goHome": "דף הבית"
+  },
+  "BasesPage": {
+    "eyebrow": "ניהול שבט",
+    "title": "בסיסים",
+    "description": "סקירת סידורים משותפים, היסטוריית שימוש והודעות המקור ב-Discord.",
+    "refresh": "רענן",
+    "create": "הוספת בסיס",
+    "retry": "נסה שוב",
+    "dismiss": "סגירה",
+    "cancel": "בטל",
+    "previous": "הקודם",
+    "next": "הבא",
+    "pagination": "עמוד {page} מתוך {total}",
+    "imageAlt": "תמונת סידור בסיס {index}",
+    "noDescription": "לא סופק תיאור.",
+    "openLayout": "פתיחת הסידור",
+    "openMessage": "הודעת Discord",
+    "summary": {
+      "total": "סך הבסיסים",
+      "page": "העמוד הנוכחי",
+      "visible": "מוצגים"
+    },
+    "counts": {
+      "downloads": "הורדות ייחודיות",
+      "upvotes": "הצבעות בעד",
+      "downvotes": "הצבעות נגד"
+    },
+    "history": {
+      "title": "היסטוריית הורדות ({count})",
+      "empty": "לא נרשמו מזהים של מורידים.",
+      "resolve": "איתור פרופיל"
+    },
+    "delete": {
+      "action": "מחק",
+      "confirmTitle": "למחוק את הבסיס הזה?",
+      "confirmDescription": "הפעולה תנסה תחילה למחוק את הודעת המקור ב-Discord ולאחר מכן תמחק לצמיתות את הרשומה ממסד הנתונים. לא ניתן לשחזר את הבסיס.",
+      "confirmAction": "מחיקת הבסיס",
+      "deleting": "מוחק…",
+      "baseId": "מזהה בסיס",
+      "discordSource": "מקור ב-Discord",
+      "successTitle": "הבסיס נמחק",
+      "successDeleted": "הרשומה במסד הנתונים והודעת Discord נמחקו.",
+      "successAlreadyMissing": "הרשומה במסד הנתונים נמחקה; הודעת Discord כבר לא הייתה קיימת.",
+      "cleanupFailedTitle": "הבסיס נשמר; הניקוי ב-Discord נכשל",
+      "cleanupCompleteTitle": "הניקוי ב-Discord הושלם; הבסיס נשמר",
+      "failureTitle": "הבסיס לא נמחק",
+      "failureFallback": "בקשת המחיקה נכשלה.",
+      "retryable": "ניתן לנסות שוב בבטחה",
+      "notRetryable": "לא ניתן לנסות שוב",
+      "cleanup": {
+        "deleted": "הודעת Discord נמחקה",
+        "alreadyMissing": "הודעת Discord כבר לא קיימת",
+        "failed": "הניקוי ב-Discord נכשל"
+      }
+    },
+    "empty": {
+      "title": "עדיין לא שותפו בסיסים",
+      "description": "הוסיפו את הסידור הראשון באמצעות בחירת ערוץ Discord וקישור לסידור ב-Clash of Clans."
+    },
+    "form": {
+      "title": "הוספת בסיס",
+      "description": "לא ניתן לערוך בסיסים לאחר יצירתם. בחרו היכן ClashKing יפרסם את הודעת Discord ואשרו את קישור הסידור.",
+      "channel": "ערוץ Discord",
+      "channelPlaceholder": "בחירת ערוץ",
+      "channelSearch": "חיפוש ערוצים…",
+      "channelsLoading": "טוען ערוצים…",
+      "baseLink": "קישור לסידור",
+      "descriptionLabel": "תיאור",
+      "images": "תמונות",
+      "chooseImages": "בחירת תמונות סידור",
+      "imageLimit": "עד ארבע תמונות; ההעלאה תסתיים לפני יצירת הבסיס.",
+      "submit": "יצירת בסיס",
+      "creating": "מעלה ויוצר…",
+      "createRejectedTitle": "הבסיס לא נוצר",
+      "createCleanupCompleteTitle": "הניקוי ב-Discord הושלם; הבסיס לא נוצר",
+      "createCleanupFailedTitle": "ייתכן שהודעת Discord נשארה; הבסיס לא נוצר",
+      "databaseNotInserted": "הרשומה לא נוספה למסד הנתונים",
+      "discordMessageCreated": "הודעת Discord נוצרה",
+      "discordMessageId": "מזהה הודעת Discord",
+      "retryable": "ניתן לנסות שוב בבטחה",
+      "notRetryable": "אין לנסות שוב אוטומטית",
+      "cleanup": {
+        "notNeeded": "אין צורך בניקוי ב-Discord",
+        "deleted": "הודעת Discord נמחקה",
+        "alreadyMissing": "הודעת Discord כבר לא קיימת",
+        "failed": "הניקוי ב-Discord נכשל"
+      }
+    },
+    "errors": {
+      "title": "הבסיסים אינם זמינים",
+      "load": "טעינת הבסיסים נכשלה.",
+      "create": "יצירת הבסיס נכשלה.",
+      "upload": "העלאת התמונה נכשלה.",
+      "downloader": "איתור המשתמש שהוריד נכשל.",
+      "channels": "טעינת ערוצי Discord נכשלה.",
+      "channelRequired": "בחרו ערוץ Discord.",
+      "linkRequired": "נדרש קישור לסידור.",
+      "descriptionTooLong": "התיאור חייב להכיל עד 1,000 תווים.",
+      "tooManyImages": "בחרו לכל היותר ארבע תמונות."
+    }
+  },
+  "BansPage": {
+    "title": "ניהול קהילה",
+    "description": "ניהול חסימות ואזהרות של שחקנים",
+    "viewClashProfile": "הצגת פרופיל Clash",
+    "tabs": {
+      "bans": "חסימות",
+      "strikes": "אזהרות"
+    },
+    "bans": {
+      "title": "שחקנים חסומים",
+      "noBans": "לא נמצאו שחקנים חסומים",
+      "addBan": "הוספת חסימה",
+      "removeBan": "הסרת חסימה",
+      "confirmRemove": "האם להסיר את החסימה הזו?",
+      "playerTag": "תג שחקן",
+      "playerName": "שם שחקן",
+      "reason": "סיבה",
+      "bannedAt": "מועד החסימה",
+      "search": "חיפוש לפי שם או תג...",
+      "howItWorks": {
+        "title": "כיצד חסימות פועלות",
+        "description": "אם שחקן חסום יצטרף לאחד השבטים שלכם, תישלח אזהרה לערוץ השבט שהגדרתם ב<clansTab>לשונית השבטים</clansTab>. הבוט אינו יכול למנוע הצטרפות לשבט, אלא רק להתריע."
+      },
+      "stats": {
+        "total": "סך החסימות",
+        "recent": "חסימות אחרונות (7 ימים)",
+        "commonReason": "הסיבה הנפוצה ביותר",
+        "activeOnServer": "חסימות פעילות בשרת",
+        "last7Days": "בשבעת הימים האחרונים",
+        "commonReasonValue": "הטרדה והתנהגות פוגענית",
+        "noBans": "עדיין אין חסימות",
+        "percentOfAll": "{percent}% מכל החסימות",
+        "percentOfAllLabel": "מכל החסימות"
+      },
+      "list": {
+        "title": "שחקנים חסומים",
+        "count": "{count, plural, one {שחקן אחד חסום} two {שני שחקנים חסומים} other {# שחקנים חסומים}}",
+        "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
+        "noBansFound": "לא נמצאו חסימות",
+        "noBans": "אין שחקנים חסומים",
+        "adjustSearch": "נסו לשנות את החיפוש",
+        "getStarted": "הוסיפו חסימה כדי להתחיל לנהל שחקנים"
+      },
+      "table": {
+        "player": "שחקן",
+        "reason": "סיבה",
+        "bannedBy": "נחסם על ידי",
+        "date": "תאריך",
+        "daysAgo": "לפני {days} ימים",
+        "noReason": "לא צוינה סיבה"
+      },
+      "addDialog": {
+        "title": "חסימת שחקן",
+        "description": "הוסיפו שחקן לרשימת החסימות. תקבלו אזהרה אם הוא יצטרף לשבט כלשהו בשרת הזה.",
+        "playerTagLabel": "תג שחקן",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "שם שחקן (אופציונלי)",
+        "playerNamePlaceholder": "הזנת שם שחקן",
+        "reasonLabel": "סיבת החסימה",
+        "reasonPlaceholder": "הסבירו מדוע השחקן נחסם...",
+        "submit": "חסימת השחקן"
+      },
+      "bestPractices": {
+        "title": "המלצות",
+        "document": {
+          "title": "תעדו בפירוט:",
+          "desc": "ציינו תמיד סיבה מפורטת לכל חסימה כדי שמנהלים אחרים יבינו את ההקשר."
+        },
+        "review": {
+          "title": "בדקו באופן קבוע:",
+          "desc": "בדקו מדי פעם את רשימת החסימות כדי לוודא שכל חסימה עדיין נחוצה ומוצדקת."
+        },
+        "consistent": {
+          "title": "שמרו על עקביות:",
+          "desc": "החילו חסימות באופן הוגן ועקבי על כל השחקנים כדי לשמור על קהילה בריאה."
+        }
+      }
+    },
+    "strikes": {
+      "title": "אזהרות שחקנים",
+      "noStrikes": "לא נמצאו אזהרות",
+      "addStrike": "הוספת אזהרה",
+      "removeStrike": "הסרת אזהרה",
+      "confirmRemove": "האם להסיר את האזהרה הזו?",
+      "playerTag": "תג שחקן",
+      "reason": "סיבה",
+      "weight": "משקל",
+      "rolloverDays": "ימי תוקף",
+      "createdAt": "נוצר בתאריך",
+      "search": "חיפוש לפי תג שחקן...",
+      "howItWorks": {
+        "title": "כיצד אזהרות פועלות",
+        "description": "אזהרות ניתנות לשחקנים בעקבות הפרת כללים. לכל אזהרה משקל (חומרה), ואפשר לקבוע שתפוג לאחר מספר ימים. הן עוזרות לעקוב אחר התנהגות לפני חסימה."
+      },
+      "stats": {
+        "total": "סך האזהרות",
+        "recent": "אזהרות אחרונות (7 ימים)",
+        "totalWeight": "משקל האזהרות הכולל",
+        "activeOnServer": "אזהרות פעילות בשרת",
+        "last7Days": "בשבעת הימים האחרונים",
+        "cumulativeWeight": "משקל אזהרות מצטבר",
+        "commonReason": "הסיבה הנפוצה ביותר",
+        "commonReasonValue": "שליחת ספאם"
+      },
+      "list": {
+        "title": "אזהרות שחקנים",
+        "count": "{count, plural, one {ניתנה אזהרה אחת} two {ניתנו שתי אזהרות} other {ניתנו # אזהרות}}",
+        "searchPlaceholder": "חיפוש לפי שם, תג או סיבה...",
+        "noStrikesFound": "לא נמצאו אזהרות",
+        "noStrikes": "לא ניתנו אזהרות",
+        "adjustSearch": "נסו לשנות את החיפוש",
+        "getStarted": "הוסיפו אזהרה כדי להתחיל לעקוב אחר הפרות שחקנים",
+        "viewAll": "כל האזהרות",
+        "viewGrouped": "לפי שחקן"
+      },
+      "table": {
+        "player": "שחקן",
+        "reason": "סיבה",
+        "weight": "משקל",
+        "addedBy": "נוסף על ידי",
+        "date": "תאריך",
+        "expires": "תפוגה",
+        "never": "אף פעם",
+        "noReason": "לא צוינה סיבה",
+        "daysAgo": "לפני {days} ימים",
+        "totalStrikes": "סך האזהרות",
+        "totalWeight": "משקל כולל",
+        "lastStrike": "אזהרה אחרונה"
+      },
+      "addDialog": {
+        "title": "הוספת אזהרה",
+        "description": "תנו אזהרה לשחקן. ניתן להגדיר משקל ותאריך תפוגה שונים לכל אזהרה.",
+        "playerTagLabel": "תג שחקן",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "סיבה",
+        "reasonPlaceholder": "הסבירו מדוע האזהרה ניתנת...",
+        "weightLabel": "משקל האזהרה",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "תפוגה בעוד (ימים)",
+        "rolloverPlaceholder": "אופציונלי",
+        "submit": "הוספת אזהרה"
+      },
+      "guidelines": {
+        "title": "הנחיות לאזהרות",
+        "weights": {
+          "title": "השתמשו במשקלים בתבונה:",
+          "desc": "הגדירו משקל גבוה (2–3) להפרות חמורות ומשקל נמוך (1) לבעיות קלות."
+        },
+        "expiration": {
+          "title": "הגדירו תאריכי תפוגה:",
+          "desc": "שקלו להגדיר תאריך תפוגה כדי לתת לשחקנים הזדמנות לשפר את התנהגותם לאורך זמן."
+        },
+        "patterns": {
+          "title": "עקבו אחר דפוסים:",
+          "desc": "השתמשו באזהרות כדי לזהות הפרות חוזרות לפני מעבר לחסימה קבועה."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "החסימה נוספה בהצלחה",
+      "banRemoved": "החסימה הוסרה בהצלחה",
+      "strikeAdded": "האזהרה נוספה בהצלחה",
+      "strikeRemoved": "האזהרה הוסרה בהצלחה",
+      "errorLoadingBans": "טעינת השחקנים החסומים נכשלה",
+      "errorLoadingStrikes": "טעינת האזהרות נכשלה",
+      "errorAddingBan": "הוספת החסימה נכשלה",
+      "errorAddingStrike": "הוספת האזהרה נכשלה",
+      "errorRemovingBan": "הסרת החסימה נכשלה",
+      "errorRemovingStrike": "הסרת האזהרה נכשלה"
+    }
+  },
+  "RostersPage": {
+    "title": "סגלים והרכבים",
+    "description": "ניהול סגלי מלחמה, הרכבים ושיוך חברים",
+    "stats": {
+      "totalRosters": "סך הסגלים",
+      "totalMembers": "סך החברים",
+      "clanRosters": "סגלי שבט",
+      "familyRosters": "סגלי משפחה",
+      "members": "חברים",
+      "avgTh": "ממוצע TH",
+      "avgHitrate": "שיעור הצלחה ממוצע",
+      "distribution": "התפלגות",
+      "clan": "שבט",
+      "family": "משפחה",
+      "external": "חיצוני",
+      "thDistribution": "התפלגות בתי עירייה",
+      "capacity": "קיבולת"
+    },
+    "filters": {
+      "search": "חיפוש סגלים...",
+      "type": "סוג",
+      "all": "הכול",
+      "clan": "שבט",
+      "family": "משפחה",
+      "clear": "ניקוי"
+    },
+    "comparisonMode": {
+      "cancel": "בטל",
+      "compare": "השוואה",
+      "compareRosters": "השוואת סגלים",
+      "selectRosters": "בחירת סגלים",
+      "selectRostersDesc": "בחרו לפחות שני סגלים להשוואה",
+      "maxReached": "הגעתם למגבלה",
+      "maxReachedDesc": "ניתן להשוות עד ארבעה סגלים בו-זמנית"
+    },
+    "createDialog": {
+      "title": "יצירת סגל חדש",
+      "description": "הגדירו סגל חדש לשבט",
+      "aliasLabel": "שם הסגל",
+      "aliasPlaceholder": "לדוגמה, סגל CWL",
+      "typeLabel": "סוג סגל",
+      "typeClan": "שבט",
+      "typeFamily": "משפחה",
+      "signupScopeLabel": "טווח ההרשמה",
+      "scopeClanOnly": "השבט בלבד",
+      "scopeFamilyWide": "כל המשפחה",
+      "clanLabel": "שבט",
+      "clanPlaceholder": "בחירת שבט",
+      "descriptionLabel": "תיאור (אופציונלי)",
+      "descriptionPlaceholder": "תיאור הסגל...",
+      "cancel": "בטל",
+      "creating": "יוצר...",
+      "create": "יצירת סגל"
+    },
+    "editDialog": {
+      "title": "עריכת סגל",
+      "description": "שינוי הגדרות הסגל",
+      "aliasLabel": "שם הסגל",
+      "descriptionLabel": "תיאור",
+      "descriptionPlaceholder": "תיאור הסגל...",
+      "minThLabel": "בית עירייה מינימלי",
+      "minThPlaceholder": "לדוגמה, 13",
+      "maxThLabel": "בית עירייה מרבי",
+      "maxThPlaceholder": "לדוגמה, 16",
+      "rosterSizeLabel": "גודל הסגל",
+      "rosterSizePlaceholder": "לדוגמה, 50",
+      "columnsLabel": "עמודות מוצגות",
+      "columnsPlaceholder": "בחירת עמודות להצגה",
+      "sortLabel": "סדר מיון",
+      "sortPlaceholder": "בחירת שדות מיון",
+      "cancel": "בטל",
+      "saving": "שומר...",
+      "save": "שמירת שינויים"
+    },
+    "addMembersDialog": {
+      "title": "הוספת חברים לסגל",
+      "description": "בחרו חברים מהשבט או הזינו תגי שחקנים",
+      "bulkTagsLabel": "הוספה מרובה לפי תגים",
+      "bulkTagsPlaceholder": "הזינו תגי שחקנים, אחד בכל שורה או מופרדים בפסיקים",
+      "searchLabel": "חיפוש חברים",
+      "searchPlaceholder": "חיפוש לפי שם או תג...",
+      "selectFromClan": "בחירה מחברי השבט",
+      "selectedCount": "נבחרו",
+      "noMembers": "אין חברים זמינים",
+      "noMembersSelected": "לא נבחרו חברים",
+      "noMembersSelectedDesc": "בחרו חברים או הזינו תגי שחקנים.",
+      "cancel": "בטל",
+      "adding": "מוסיף...",
+      "add": "הוספת חברים"
+    },
+    "detailsDialog": {
+      "title": "פרטי הסגל",
+      "edit": "עריכה",
+      "refresh": "רענן",
+      "refreshing": "מרענן...",
+      "delete": "מחק",
+      "deleting": "מוחק...",
+      "addMembers": "הוספת חברים",
+      "close": "סגירה",
+      "noMembers": "אין חברים בסגל הזה",
+      "noMembersDesc": "הוסיפו חברים כדי להתחיל",
+      "memberCount": "חברים",
+      "thRestriction": "רמת TH",
+      "avgTh": "ממוצע TH",
+      "avgHitrate": "שיעור הצלחה ממוצע",
+      "clan": "שבט",
+      "family": "משפחה",
+      "external": "חיצוני",
+      "substitute": "מחליף",
+      "removeMember": "הסרה"
+    },
+    "rosterCard": {
+      "members": "חברים",
+      "thLevel": "רמת TH",
+      "avgTh": "ממוצע TH",
+      "avgHitrate": "שיעור הצלחה ממוצע",
+      "clan": "שבט",
+      "family": "משפחה",
+      "external": "חיצוני",
+      "noRestriction": "ללא הגבלה",
+      "view": "הצגה",
+      "edit": "עריכה",
+      "delete": "מחק",
+      "noGroup": "ללא קבוצה",
+      "moveToGroup": "העברה לקבוצה",
+      "clone": "שכפול",
+      "allRosters": "כל הסגלים",
+      "manageRosters": "ניהול סגלי המלחמה וההרכבים"
+    },
+    "memberColumns": {
+      "name": "שם",
+      "townhall": "בית עירייה",
+      "tag": "תג",
+      "hitrate": "שיעור הצלחה",
+      "current_clan": "השבט הנוכחי",
+      "current_clan_tag": "תג השבט",
+      "discord": "Discord",
+      "hero_lvs": "גיבורים",
+      "war_pref": "העדפת מלחמה",
+      "trophies": "גביעים",
+      "signup_group": "קבוצת הרשמה"
+    },
+    "columns": {
+      "configure": "עמודות",
+      "title": "הגדרת עמודות",
+      "description": "בחרו אילו עמודות להציג ובאיזה סדר",
+      "selected": "עמודות שנבחרו",
+      "available": "עמודות זמינות",
+      "save": "שמירת עמודות",
+      "reset": "איפוס עמודות"
+    },
+    "sortFields": {
+      "townhall": "רמת בית עירייה",
+      "name": "שם",
+      "tag": "תג",
+      "heroLvs": "גיבורים",
+      "trophies": "גביעים",
+      "hitrate": "שיעור הצלחה ב-30 יום",
+      "currentClanTag": "תג השבט",
+      "addedAt": "מועד ההוספה"
+    },
+    "thRestrictions": {
+      "only": "בית עירייה {th} בלבד",
+      "range": "בית עירייה {min}–{max}",
+      "minimum": "בית עירייה {th} ומעלה",
+      "maximum": "בית עירייה 1–{th}",
+      "noRestriction": "ללא הגבלה"
+    },
+    "emptyState": {
+      "noRosters": "עדיין לא נוצרו סגלים",
+      "noRostersDesc": "צרו את הסגל הראשון כדי להתחיל",
+      "noMatch": "אין סגלים התואמים למסננים",
+      "noMatchDesc": "נסו לשנות את החיפוש או המסננים"
+    },
+    "toast": {
+      "errorTitle": "שגיאה",
+      "successTitle": "הצלחה",
+      "errorLoadingRosters": "טעינת הסגלים נכשלה. נסו שוב.",
+      "errorLoadingMembers": "טעינת חברי השבט נכשלה.",
+      "rosterCreated": "הסגל נוצר בהצלחה!",
+      "errorCreatingRoster": "יצירת הסגל נכשלה. נסו שוב.",
+      "rosterUpdated": "הסגל עודכן בהצלחה!",
+      "errorUpdatingRoster": "עדכון הסגל נכשל. נסו שוב.",
+      "rosterDeleted": "הסגל נמחק בהצלחה!",
+      "errorDeletingRoster": "מחיקת הסגל נכשלה. נסו שוב.",
+      "membersAdded": "נוספו {count} חברים לסגל!",
+      "errorAddingMembers": "הוספת החברים נכשלה. נסו שוב.",
+      "memberRemoved": "החבר הוסר מהסגל!",
+      "errorRemovingMember": "הסרת החבר נכשלה. נסו שוב.",
+      "substituteMarked": "החבר סומן כמחליף!",
+      "substituteUnmarked": "סימון החבר כמחליף בוטל!",
+      "errorUpdatingMember": "עדכון החבר נכשל. נסו שוב.",
+      "rosterRefreshed": "נתוני הסגל רועננו בהצלחה!",
+      "errorRefreshingRoster": "רענון נתוני הסגל נכשל. נסו שוב.",
+      "memberTransferred": "החבר הועבר בין הסגלים בהצלחה!",
+      "errorTransferringMember": "העברת החבר נכשלה. נסו שוב.",
+      "rosterCloned": "הסגל שוכפל בהצלחה!",
+      "errorCloningRoster": "שכפול הסגל נכשל. נסו שוב.",
+      "missingMembersAdded": "נוספו {count} חברים חסרים לסגל!",
+      "errorLoadingMissingMembers": "טעינת החברים החסרים נכשלה."
+    },
+    "cloneDialog": {
+      "title": "שכפול סגל",
+      "description": "יצירת עותק של הסגל הזה",
+      "aliasLabel": "שם הסגל החדש",
+      "aliasPlaceholder": "הזנת שם לסגל המשוכפל",
+      "copyMembers": "העתקת החברים לסגל החדש",
+      "memberCount": "{count} חברים",
+      "originalRoster": "הסגל המקורי:",
+      "cancel": "בטל",
+      "cloning": "משכפל...",
+      "clone": "שכפול סגל",
+      "copyMembersHint": "החברים יועתקו מהסגל המקורי"
+    },
+    "missingMembers": {
+      "title": "חברים חסרים",
+      "description": "חברי שבט שאינם רשומים בסגל הזה",
+      "coverage": "כיסוי הסגל",
+      "registered": "רשומים",
+      "missing": "חסרים",
+      "total": "סה״כ",
+      "selectAll": "בחירת הכול",
+      "selected": "נבחרו",
+      "addSelected": "הוספת {count} חברים",
+      "button": "חברים חסרים",
+      "addAll": "הוספת הכול",
+      "adding": "מוסיף...",
+      "close": "סגירה",
+      "allCaughtUp": "הכול מעודכן!",
+      "allCaughtUpDesc": "כל חברי השבט רשומים בסגל הזה",
+      "clanOnly": "ניתוח חברים חסרים זמין רק לסגלי שבט",
+      "error": "טעינת החברים החסרים נכשלה",
+      "thisRoster": "הסגל הזה",
+      "wholeGroup": "כל הקבוצה"
+    },
+    "eventTime": {
+      "label": "שעת התחלת האירוע",
+      "timezone": "אזור הזמן שלכם",
+      "utc": "UTC",
+      "clear": "ניקוי"
+    },
+    "bulkValidation": {
+      "valid": "תקין",
+      "invalid": "לא תקין",
+      "invalidTags": "לא תקין"
+    },
+    "memberAutocomplete": {
+      "label": "או חיפוש חברי השרת",
+      "placeholder": "לחצו לחיפוש חברים...",
+      "searchPlaceholder": "חיפוש לפי שם, תג או שבט...",
+      "loading": "טוען חברים...",
+      "noResults": "לא נמצאו חברים",
+      "groupHeading": "חברי השרת",
+      "selectedLabel": "חברים שנבחרו",
+      "membersSelected": "חברים נבחרו",
+      "selected": "נבחרו",
+      "clanMembersLabel": "או בחירה מחברי השבט"
+    },
+    "retry": "נסה שוב",
+    "back": "חזרה",
+    "refresh": "רענן",
+    "createRoster": "יצירת סגל",
+    "searchPlaceholder": "חיפוש סגלים...",
+    "noRosters": "עדיין אין סגלים",
+    "noRostersHint": "צרו את הסגל הראשון כדי להתחיל",
+    "noSearchResults": "לא נמצאו סגלים",
+    "noSearchResultsHint": "נסו מונח חיפוש אחר",
+    "createFirstRoster": "יצירת הסגל הראשון",
+    "deleteConfirm": "למחוק את „{name}”?",
+    "deleteSuccess": "הסגל נמחק",
+    "deleteSuccessDesc": "הסגל „{name}” נמחק",
+    "deleteError": "מחיקת הסגל נכשלה",
+    "createSuccess": "הסגל נוצר",
+    "createSuccessDesc": "הסגל „{name}” נוצר",
+    "createError": "יצירת הסגל נכשלה",
+    "createErrorAlias": "הזינו שם סגל",
+    "createErrorClan": "בחרו שבט",
+    "refreshSuccess": "נתוני הסגל רועננו",
+    "refreshError": "רענון הסגל נכשל",
+    "saveSuccess": "ההגדרות נשמרו",
+    "saveError": "שמירת ההגדרות נכשלה",
+    "columnsUpdated": "העמודות עודכנו",
+    "columnsError": "עדכון העמודות נכשל",
+    "addMembersSuccess": "החברים נוספו",
+    "addMembersSuccessDesc": "נוספו {count} חברים לסגל",
+    "addMembersError": "הוספת החברים נכשלה",
+    "removeMemberSuccess": "החבר הוסר",
+    "removeMemberError": "הסרת החבר נכשלה",
+    "clearMembers": "הסרת כל החברים",
+    "clearMembersConfirm": "להסיר את כל החברים מ-„{name}”? לא ניתן לבטל פעולה זו.",
+    "clearMembersSuccess": "כל החברים הוסרו",
+    "clearMembersError": "הסרת כל החברים נכשלה",
+    "automationCreated": "האוטומציה נוצרה",
+    "automationUpdated": "האוטומציה עודכנה",
+    "automationDeleted": "האוטומציה נמחקה",
+    "automationError": "שגיאת אוטומציה",
+    "groupCreated": "הקבוצה נוצרה",
+    "groupUpdated": "הקבוצה עודכנה",
+    "groupDeleted": "הקבוצה נמחקה",
+    "groupError": "שמירת הקבוצה נכשלה",
+    "categoryCreated": "הקטגוריה נוצרה",
+    "categoryUpdated": "הקטגוריה עודכנה",
+    "categoryDeleted": "הקטגוריה נמחקה",
+    "categoryError": "שמירת הקטגוריה נכשלה",
+    "common": {
+      "cancel": "בטל",
+      "save": "שמור",
+      "close": "סגירה"
+    },
+    "tabs": {
+      "members": "חברים",
+      "automations": "אוטומציות",
+      "groups": "קבוצות",
+      "categories": "קטגוריות",
+      "settings": "הגדרות"
+    },
+    "members": {
+      "count": "חברים",
+      "noMembers": "אין חברים בסגל הזה",
+      "noMembersHint": "הוסיפו חברים כדי להתחיל",
+      "actions": "פעולות",
+      "viewList": "תצוגת רשימה",
+      "viewGrouped": "הצגה לפי קטגוריית הרשמה",
+      "unassigned": "לא משויך",
+      "dragHere": "גררו חברים לכאן",
+      "clickToGroup": "לחצו להצגה לפי קטגוריה",
+      "apiErrorTooltip": "לא ניתן היה לקבל נתונים מה-API",
+      "staleDataTooltip": "ייתכן שהנתונים אינם עדכניים, עדכון אחרון:",
+      "refresh": "רענון נתוני חברים",
+      "alsoIn": "נמצא גם ב",
+      "addCategory": "הוספת קטגוריה",
+      "removeCategory": "הסרת קטגוריה"
+    },
+    "addMembers": {
+      "title": "הוספת חברים לסגל",
+      "description": "בחרו חברים מהשבטים או הזינו תגי שחקנים",
+      "bulkTagsLabel": "תגי שחקנים, אחד בכל שורה או מופרדים בפסיקים",
+      "adding": "מוסיף...",
+      "submit": "הוספת חברים"
+    },
+    "compare": {
+      "enterMode": "השוואה",
+      "modeTitle": "מצב השוואה",
+      "modeHint": "לחצו על סגלים כדי לבחור אותם (2 עד 4 סגלים)",
+      "exitMode": "בטל",
+      "selected": "סגלים נבחרו",
+      "button": "השוואה",
+      "title": "השוואת סגלים",
+      "dragToMove": "גררו חברים בין סגלים כדי להעביר אותם",
+      "loadError": "טעינת הסגלים נכשלה",
+      "memberMoved": "החבר הועבר",
+      "memberMovedDesc": "{name} הועבר מ-{from} אל {to}",
+      "moveError": "העברת החבר נכשלה",
+      "selectAtLeast2": "בחרו לפחות שני סגלים להשוואה",
+      "moving": "מעביר חבר...",
+      "compareGroup": "השוואת קבוצה",
+      "dragToMoveCategory": "גררו חברים בין סגלים וקטגוריות",
+      "categoryChanged": "הקטגוריה השתנתה",
+      "categoryChangedDesc": "{name} הועבר אל {category}",
+      "uncategorized": "ללא קטגוריה"
+    },
+    "ungrouped": "ללא קבוצה",
+    "automations": {
+      "description": "תזמון פעולות אוטומטיות לסגל",
+      "create": "יצירת אוטומציה",
+      "empty": "אין אוטומציות",
+      "emptyHint": "צרו אוטומציה כדי לתזמן פעולות",
+      "active": "פעילה",
+      "inactive": "לא פעילה",
+      "executed": "בוצעה",
+      "missed": "הוחמצה",
+      "lastRun": "הפעלה אחרונה",
+      "enable": "הפעלה",
+      "disable": "השבתה",
+      "createTitle": "יצירת אוטומציה",
+      "editTitle": "עריכת אוטומציה",
+      "createDesc": "תזמון פעולה אוטומטית",
+      "actionType": "סוג פעולה",
+      "offsetFromEvent": "תזמון ביחס לאירוע",
+      "offsetBefore": "לפני האירוע",
+      "offsetAfter": "אחרי האירוע",
+      "offsetUnit_minutes": "דקות",
+      "offsetUnit_hours": "שעות",
+      "offsetUnit_days": "ימים",
+      "offsetPreview": "תתבצע בתאריך: {date}",
+      "offsetNoEventDate": "הגדירו שעת התחלה לאירוע כדי לראות את מועד הביצוע",
+      "offsetAtStart": "בתחילת האירוע",
+      "pingType": "סוג תזכורת",
+      "pingType_signup_reminder": "תזכורת הרשמה",
+      "pingType_missing": "חסר בשבט",
+      "pingType_sub_needed": "נדרש מחליף",
+      "channel": "ערוץ Discord",
+      "selectChannel": "בחירת ערוץ",
+      "channelHint": "הערוץ שבו הפעולה תפורסם או תבוצע",
+      "activeLabel": "פעיל",
+      "target": "יעד",
+      "targetThisRoster": "הסגל הזה",
+      "targetGroups": "קבוצות",
+      "targetHint": "החלת האוטומציה על הסגל בלבד או על כל הסגלים בקבוצה",
+      "group": "קבוצה",
+      "groupAutomationHint": "ניהול דרך לשונית הקבוצות",
+      "targetRoster": "סגל",
+      "targetGroup": "קבוצה",
+      "willExecute": "תתבצע בזמן המתוזמן",
+      "paused": "מושהית - לא תתבצע",
+      "actions": {
+        "ping": "שליחת תזכורת",
+        "post": "פרסום הסגל",
+        "openSignup": "פתיחת הרשמה",
+        "closeSignup": "סגירת הרשמה",
+        "delete": "מחיקת הסגל",
+        "clear": "הסרת כל החברים",
+        "archive": "העברת הסגל לארכיון"
+      },
+      "actionDescriptions": {
+        "roster_ping": "שולחת תזכורת לחברים שלא נרשמו או נמצאים בשבט הלא נכון",
+        "roster_post": "מפרסמת את רשימת הסגל הסופית בערוץ שנבחר",
+        "roster_signup": "פותחת הרשמה כדי ששחקנים יוכלו להירשם",
+        "roster_signup_close": "סוגרת הרשמה ומונעת הרשמות חדשות",
+        "roster_delete": "מוחקת לצמיתות את הסגל ואת כל נתוניו",
+        "roster_clear": "מסירה את כל החברים מהסגל בלי למחוק אותו",
+        "roster_archive": "מעבירה את הסגל לארכיון והופכת אותו לקריאה בלבד"
+      },
+      "infoBox": "אוטומציות מופעלות ביחס לשעת התחלת האירוע. הגדירו הפרש זמן, למשל שלושה ימים לפני, והבוט יבצע את הפעולה אוטומטית גם באירועים חוזרים."
+    },
+    "groups": {
+      "title": "קבוצות סגלים",
+      "description": "ארגון סגלים בקבוצות לניהול נוח יותר",
+      "create": "קבוצה חדשה",
+      "noGroups": "עדיין לא נוצרו קבוצות",
+      "rostersCount": "סגלים",
+      "createTitle": "יצירת קבוצה",
+      "editTitle": "עריכת קבוצה",
+      "nameLabel": "שם הקבוצה",
+      "namePlaceholder": "לדוגמה, קבוצות CWL",
+      "infoBox": "קבוצות מאפשרות לארגן מספר סגלים יחד, למשל את כל סגלי CWL. ניתן לשייך סגל לקבוצה מלשונית ההגדרות ולהחיל אוטומציות על כל סגלי הקבוצה בבת אחת.",
+      "manageAutomations": "ניהול אוטומציות",
+      "automationsTitle": "אוטומציות קבוצה",
+      "automationsDesc": "האוטומציות חלות על כל הסגלים בקבוצה",
+      "noAutomations": "אין אוטומציות",
+      "noAutomationsHint": "יצירת אוטומציה לקבוצה",
+      "addAutomation": "הוספת אוטומציה",
+      "deleteConfirm": "למחוק את הקבוצה „{name}”? הסגלים בקבוצה יישארו ללא קבוצה.",
+      "emptyGroup": "עדיין אין סגלים בקבוצה",
+      "rules": {
+        "title": "כללי הקבוצה",
+        "rulesHint": "הכללים חלים על כל הסגלים בקבוצה ומתעדכנים מיד.",
+        "maxAccounts": "מספר חשבונות מרבי למשתמש",
+        "maxAccountsBadge": "עד {count} למשתמש",
+        "rosterSize": "גודל הסגל",
+        "rosterSizeBadge": "גודל {size}",
+        "minSignups": "סף מילוי",
+        "minSignupsBadge": "סף {count}",
+        "categoriesTitle": "קטגוריות הרשמה",
+        "categoriesHint": "בחרו אילו קטגוריות זמינות לקבוצה. הן יחולו מיד על כל הסגלים.",
+        "categoriesBadge": "{count} קטגוריות",
+        "noCategories": "עדיין אין קטגוריות.",
+        "newCategoryPlaceholder": "שם קטגוריה חדשה…"
+      }
+    },
+    "categories": {
+      "title": "קטגוריות הרשמה",
+      "description": "קטגוריות להרשמת שחקנים ולסינון סגלים",
+      "manage": "ניהול קטגוריות",
+      "create": "קטגוריה חדשה",
+      "noCategories": "עדיין לא נוצרו קטגוריות",
+      "createTitle": "יצירת קטגוריה",
+      "editTitle": "עריכת קטגוריה",
+      "deleteConfirm": "למחוק את הקטגוריה „{name}”?",
+      "idLabel": "מזהה קטגוריה",
+      "nameLabel": "שם קטגוריה",
+      "infoBox": "קטגוריות מאפשרות לשחקנים לציין זמינות או תפקיד בהרשמה, למשל „זמין”, „אולי” או „רק אם צריך”. הן משותפות לכל הסגלים בשרת. בסגלים מקובצים, הגדירו את הקטגוריות דרך הגדרות הקבוצה."
+    },
+    "settings": {
+      "general": "זהות והגדרות",
+      "restrictions": "הגבלות ומגבלות",
+      "name": "שם הסגל",
+      "rosterType": "סוג סגל",
+      "typeClan": "שבט",
+      "typeFamily": "משפחה",
+      "signupScope": "טווח ההרשמה",
+      "scopeClanOnly": "השבט בלבד",
+      "scopeFamilyWide": "כל המשפחה",
+      "clan": "שבט",
+      "selectClan": "בחירת שבט",
+      "description": "תיאור",
+      "descriptionPlaceholder": "הזנת תיאור לסגל...",
+      "typeAndScope": "סוג וטווח",
+      "eventTime": "שעת התחלת האירוע",
+      "eventTimeHint": "מועד התחלת האירוע. משמש לאוטומציות ולתצוגות ספירה לאחור.",
+      "recurrenceDays": "חזרה כל",
+      "recurrenceModeDays": "כל מספר ימים",
+      "recurrenceModeMonthly": "יום בחודש",
+      "recurrenceDaysUnit": "ימים",
+      "recurrenceDayOfMonthPrefix": "ביום",
+      "recurrenceDayOfMonthSuffix": "בכל חודש",
+      "recurrenceDaysHint": "השאירו ריק לאירוע חד-פעמי. הזינו את מספר הימים בין מופעים, למשל 30 ל-CWL חודשי.",
+      "recurrenceDayOfMonthHint": "חוזר ביום הזה בכל חודש, למשל 1 = היום הראשון.",
+      "group": "קבוצה",
+      "noGroup": "ללא קבוצה",
+      "thRequirements": "דרישות בית עירייה",
+      "minTh": "בית עירייה מינימלי",
+      "maxTh": "בית עירייה מרבי",
+      "signupLimits": "מגבלות הרשמה",
+      "rosterSize": "גודל הסגל",
+      "rosterSizeHint": "מספר החברים המרבי",
+      "minSignups": "מספר הרשמות מזערי",
+      "minSignupsHint": "מספר ההרשמות המזערי הנדרש למילוי הסגל",
+      "maxAccountsPerUser": "מספר חשבונות מרבי למשתמש",
+      "maxAccountsHint": "הגבלת חשבונות לכל משתמש Discord",
+      "allowedCategories": "קטגוריות הרשמה מותרות",
+      "allowedCategoriesHint": "לחצו כדי לשנות. אם לא נבחר דבר, כל הקטגוריות מותרות.",
+      "defaultSignupCategory": "קטגוריית הרשמה כברירת מחדל",
+      "defaultSignupCategoryNone": "ללא (אין ברירת מחדל)",
+      "defaultSignupCategoryHint": "הקטגוריה שנבחרת מראש כשחבר נרשם.",
+      "categoriesManagedByGroup": "קטגוריות ההרשמה מנוהלות ברמת הקבוצה. פתחו את הגדרות הקבוצה מדף הסגלים כדי לבחור אילו קטגוריות זמינות לכל סגלי הקבוצה.",
+      "saving": "שומר...",
+      "save": "שמירת הגדרות"
+    }
+  },
+  "LinksPage": {
+    "title": "ניהול קישורים",
+    "description": "ניהול קישורי החשבונות של חברי Discord ואימות בעלות על שחקנים",
+    "tabs": {
+      "overview": "סקירה כללית",
+      "pending": "בהמתנה",
+      "bulk": "פעולות מרובות",
+      "analytics": "ניתוח נתונים"
+    },
+    "stats": {
+      "totalMembers": "סך החברים",
+      "membersWithLinks": "חברים עם חשבונות מקושרים",
+      "totalLinkedAccounts": "סך החשבונות המקושרים",
+      "verifiedAccounts": "חשבונות מאומתים",
+      "ofTotal": "מתוך הסך הכולל",
+      "avgPerMember": "ממוצע",
+      "perMember": "לכל חבר",
+      "verified": "מאומת"
+    },
+    "filters": {
+      "searchPlaceholder": "חיפוש לפי שם חבר, שם משתמש, שם שחקן או תג...",
+      "filterByStatus": "סינון לפי מצב",
+      "allAccounts": "כל החשבונות",
+      "verifiedOnly": "מאומתים בלבד",
+      "unverifiedOnly": "לא מאומתים בלבד",
+      "minAccounts": "מספר חשבונות מזערי",
+      "allMembers": "כל החברים",
+      "oneOrMore": "חשבון אחד ומעלה",
+      "twoOrMore": "2 חשבונות ומעלה",
+      "threeOrMore": "3 חשבונות ומעלה",
+      "fiveOrMore": "5 חשבונות ומעלה"
+    },
+    "overview": {
+      "title": "קישורי חשבונות",
+      "description": "הצגה וניהול של כל קישורי החשבונות בין Discord ל-Clash of Clans",
+      "showingMembers": "מציג {count} {members}",
+      "member": "חבר",
+      "members": "חברים",
+      "noMembers": "לא נמצאו חברים",
+      "adjustFilters": "נסו לשנות את החיפוש או המסננים.",
+      "noLinkedAccounts": "אין חברים עם חשבונות מקושרים.",
+      "exportCSV": "ייצוא CSV",
+      "exportJSON": "ייצוא JSON",
+      "account": "חשבון",
+      "accounts": "חשבונות",
+      "more": "נוספים",
+      "unknown": "לא ידוע"
+    },
+    "pending": {
+      "title": "אימותים בהמתנה",
+      "description": "{count} חשבונות ממתינים לאימות",
+      "allVerified": "כל החשבונות אומתו!",
+      "noPending": "אין כעת אימותים בהמתנה.",
+      "linked": "מקושר"
+    },
+    "bulk": {
+      "title": "פעולות מרובות",
+      "description": "ביצוע פעולות על מספר חברים בבת אחת",
+      "selectAll": "בחירת הכול ({count})",
+      "deselectAll": "ביטול כל הבחירות",
+      "unlinkSelected": "ניתוק הנבחרים ({count})",
+      "linked": "מקושר",
+      "comingSoon": "ניתוק מרובה יתווסף בקרוב!"
+    },
+    "analytics": {
+      "title": "ניתוח קישורים",
+      "description": "סקירת נתונים ומגמות של קישור חשבונות",
+      "verificationRate": "שיעור אימות",
+      "verified": "מאומת",
+      "unverified": "לא מאומת",
+      "accountDistribution": "התפלגות חשבונות",
+      "oneAccount": "חשבון אחד",
+      "twoToThreeAccounts": "2–3 חשבונות",
+      "fourPlusAccounts": "4 חשבונות ומעלה",
+      "townHallLevels": "רמות בית עירייה",
+      "other": "אחר",
+      "coverage": "כיסוי",
+      "linkedMembers": "חברים מקושרים",
+      "coverageRate": "שיעור כיסוי",
+      "linkInsights": "תובנות קישור",
+      "avgAccountsPerMember": "ממוצע חשבונות לחבר:",
+      "mostLinkedAccounts": "מספר החשבונות המקושרים המרבי:",
+      "membersWithoutLinks": "חברים ללא קישורים:"
+    },
+    "actions": {
+      "unlinkAccount": "ניתוק חשבון"
+    },
+    "deleteDialog": {
+      "title": "ניתוק חשבון",
+      "description": "האם לנתק את {playerName}? לא ניתן לבטל פעולה זו.",
+      "cancel": "בטל",
+      "unlinking": "מנתק...",
+      "unlink": "ניתוק"
+    },
+    "bulkDialog": {
+      "title": "ניתוק חשבונות מרובה",
+      "description": "האם לנתק את כל החשבונות של {count} החברים שנבחרו? לא ניתן לבטל פעולה זו.",
+      "cancel": "בטל",
+      "unlinkAll": "ניתוק הכול"
+    },
+    "toast": {
+      "unlinkFailed": "ניתוק החשבון נכשל. נסו שוב."
+    },
+    "badges": {
+      "verified": "מאומת",
+      "unverified": "לא מאומת",
+      "pending": "בהמתנה"
+    },
+    "pagination": {
+      "showing": "מציג {start}–{end} מתוך {total} חברים",
+      "page": "עמוד {current} מתוך {total}",
+      "previous": "הקודם",
+      "next": "הבא"
+    }
+  },
+  "WarsPage": {
+    "title": "נתוני מלחמה",
+    "description": "מעקב אחר ביצועים במלחמות וניתוח נתוני קרבות",
+    "actions": {
+      "exportData": "ייצוא נתונים",
+      "resetFilters": "איפוס מסננים",
+      "applyFilters": "החל מסננים"
+    },
+    "filters": {
+      "title": "מסננים",
+      "description": "סינון נתוני מלחמה לפי קריטריונים שונים",
+      "clan": "שבט",
+      "allClans": "כל השבטים",
+      "townHall": "בית עירייה",
+      "townHallShort": "TH",
+      "allTownHalls": "כל רמות בית העירייה",
+      "townHallLevel": "בית עירייה {level}",
+      "period": "תקופה",
+      "last7Days": "7 הימים האחרונים",
+      "last30Days": "30 הימים האחרונים",
+      "last90Days": "90 הימים האחרונים",
+      "last6Months": "6 החודשים האחרונים",
+      "lastYear": "השנה האחרונה",
+      "custom": "מותאם אישית",
+      "startDate": "תאריך התחלה",
+      "endDate": "תאריך סיום",
+      "warTypes": "סוגי מלחמה"
+    },
+    "summaryStats": {
+      "totalWins": "סך הניצחונות",
+      "totalWinsDesc": "מתוך {totalWars} מלחמות",
+      "totalLosses": "סך ההפסדים",
+      "totalLossesDesc": "{totalDraws} תוצאות תיקו",
+      "winRate": "שיעור ניצחונות",
+      "winRateDesc": "ביצועים כוללים",
+      "activeWars": "מלחמות פעילות",
+      "activeWarsDesc": "{activeCwl} ב-CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "ביצועי מלחמה לפי שבוע",
+        "description": "ניצחונות, הפסדים ותוצאות תיקו שבועיים בתקופה שנבחרה",
+        "wins": "ניצחונות",
+        "losses": "הפסדים",
+        "draws": "תוצאות תיקו"
+      },
+      "thSuccessRate": {
+        "title": "שיעור הצלחת תקיפות לפי בית עירייה",
+        "description": "שיעור 3 כוכבים לכל רמת בית עירייה",
+        "threeStarPercent": "אחוז 3 כוכבים",
+        "otherPercent": "אחוז אחר"
+      },
+      "warTypeDistribution": {
+        "title": "התפלגות סוגי מלחמה",
+        "description": "פירוט לפי סוג מלחמה",
+        "cwl": "CWL",
+        "random": "אקראית",
+        "friendly": "ידידותית"
+      },
+      "topPerformers": {
+        "title": "המובילים בביצועים",
+        "description": "הלוחמים הטובים ביותר לפי סך הכוכבים",
+        "attacksAndStars": "{attacks} תקיפות • {stars} כוכבים",
+        "noData": "אין נתוני שחקנים זמינים. נסו לשנות את המסננים."
+      },
+      "missedAttacks": {
+        "title": "תקיפות שהוחמצו",
+        "description": "שחקנים שלא השתמשו בכל התקיפות שלהם",
+        "attacks": "תקיפות שלא נוצלו"
+      },
+      "topDefenders": {
+        "title": "המגינים המובילים",
+        "description": "המגינים הטובים ביותר לפי ממוצע הכוכבים שספגו",
+        "defensesAndStars": "{defenses} הגנות • {stars} כוכבים שנספגו",
+        "noData": "אין נתוני מגינים זמינים. נסו לשנות את המסננים."
+      },
+      "worstAttackers": {
+        "title": "התוקפים החלשים ביותר",
+        "description": "שחקנים עם ממוצע הכוכבים הנמוך ביותר לתקיפה (לפחות 3 תקיפות)",
+        "attacksAndStars": "{attacks} תקיפות • {stars} כוכבים",
+        "noData": "אין נתוני שחקנים זמינים. נסו לשנות את המסננים."
+      },
+      "worstDefenders": {
+        "title": "המגינים החלשים ביותר",
+        "description": "שחקנים שספגו הכי הרבה כוכבים בהגנה (לפחות 3 הגנות)",
+        "defensesAndStars": "{defenses} הגנות • {stars} כוכבים שנספגו",
+        "noData": "אין נתוני מגינים זמינים. נסו לשנות את המסננים."
+      }
+    },
+    "clanStatsTable": {
+      "title": "נתוני מלחמות שבטים",
+      "description": "נתונים מפורטים לכל שבט",
+      "headers": {
+        "clan": "שבט",
+        "status": "מצב",
+        "wars": "מלחמות",
+        "record": "נ/ה/ת",
+        "winRate": "שיעור ניצחונות",
+        "avgDestruction": "הרס ממוצע",
+        "avgStarsPerAttack": "כוכבים לתקיפה",
+        "avgDefenseStars": "כוכבים להגנה"
+      },
+      "status": {
+        "inWar": "במלחמה",
+        "cwl": "CWL",
+        "peace": "לא במלחמה"
+      },
+      "noData": "אין נתוני שבטים זמינים. נסו להחיל מסננים או המתינו לטעינת הנתונים."
+    },
+    "toast": {
+      "errorTitle": "שגיאה",
+      "errorLoadingClans": "טעינת השבטים נכשלה. נסו שוב.",
+      "errorLoadingWarData": "טעינת נתוני המלחמה נכשלה. נסו שוב.",
+      "errorNoClans": "אין שבטים זמינים",
+      "errorApplyingFilters": "החלת המסננים נכשלה. נסו שוב."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "טבלאות מובילים",
+    "description": "טבלאות מובילים עולמיות לבירת השבט ועוד",
+    "comingSoon": "התכונה הזו תגיע בקרוב. בדקו שוב בהמשך!",
+    "stats": {
+      "totalEntries": "סך הרשומות",
+      "type": "סוג",
+      "league": "ליגה",
+      "weekend": "סוף שבוע"
+    },
+    "filters": {
+      "title": "מסננים",
+      "description": "התאמת תצוגת טבלת המובילים",
+      "type": "סוג",
+      "metric": "מדד",
+      "league": "ליגה",
+      "weekend": "סוף שבוע"
+    },
+    "types": {
+      "player": "שחקנים",
+      "clan": "שבטים"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "שלל מבירת השבט"
+        },
+        "clan": {
+          "capitalTotalLoot": "סך השלל",
+          "raidsCompleted": "פשיטות שהושלמו",
+          "enemyDistrictsDestroyed": "מחוזות שנהרסו",
+          "medals": "מדליות"
+        }
+      }
+    },
+    "leagues": {
+      "all": "הכול",
+      "legendLeague": "ליגת האגדות",
+      "titanLeagueI": "ליגת טיטאן I",
+      "titanLeagueII": "ליגת טיטאן II",
+      "titanLeagueIII": "ליגת טיטאן III"
+    },
+    "rankings": {
+      "title": "דירוגים",
+      "description": "{count} ה-{type} המובילים בסוף השבוע {weekend}",
+      "players": "שחקנים",
+      "clans": "שבטים"
+    },
+    "empty": {
+      "title": "אין נתונים זמינים.",
+      "description": "נסו לבחור סוף שבוע או ליגה אחרים"
+    }
+  },
+  "ClansPage": {
+    "title": "ניהול שבטים",
+    "description": "הגדרת השבטים ושילובם עם Discord",
+    "addClan": "הוספת שבט",
+    "addNewClan": "הוספת שבט חדש",
+    "addClanDescription": "הזינו את תג השבט כדי להוסיף אותו לשרת",
+    "clanTag": "תג השבט",
+    "totalClans": "סך השבטים",
+    "registeredClans": "שבטים רשומים",
+    "configured": "מוגדר",
+    "withSettingsConfigured": "עם הגדרות שהושלמו",
+    "totalMembers": "סך החברים",
+    "acrossAllClans": "בכל השבטים",
+    "channels": "ערוצים",
+    "availableChannels": "ערוצים זמינים",
+    "noClansYet": "עדיין אין שבטים",
+    "getStartedAdding": "הוסיפו את השבט הראשון כדי להתחיל",
+    "addFirstClan": "הוספת השבט הראשון",
+    "level": "רמה",
+    "members": "חברים",
+    "status": "מצב",
+    "configuredBadge": "מוגדר",
+    "setupRequired": "נדרשת הגדרה",
+    "configure": "הגדרה",
+    "sorting": {
+      "label": "מיון שבטים",
+      "sortBy": "מיין לפי",
+      "toggleDirection": "החלפת כיוון המיון",
+      "added": "נוסף בתאריך",
+      "name": "שם השבט",
+      "level": "רמת שבט",
+      "members": "חברים"
+    },
+    "configureClan": "הגדרת {name} ({tag})",
+    "customizeIntegration": "התאמת הגדרות השילוב של השבט עם Discord",
+    "tabs": {
+      "basic": "הגדרת Discord",
+      "war": "מלחמה"
+    },
+    "memberRole": "תפקיד חבר",
+    "leaderRole": "תפקיד מנהיג",
+    "selectRole": "בחירת תפקיד",
+    "none": "ללא",
+    "clanAbbreviation": "קיצור השבט",
+    "warScoreCountdown": "תצוגת תוצאת המלחמה",
+    "warScoreCountdownDescription": "יוצר ערוץ קולי שמציג את תוצאת המלחמה הנוכחית",
+    "warTimerCountdown": "ספירה לאחור למלחמה",
+    "warTimerCountdownDescription": "יוצר ערוץ קולי שמציג את הזמן שנותר במלחמה",
+    "category": "קטגוריה",
+    "categoryOptions": {
+      "none": "ללא קטגוריה",
+      "premade": "קטגוריות נפוצות",
+      "usedByServer": "בשימוש שבטים אחרים",
+      "clanCount": "{count, plural, one {שבט אחד} two {שני שבטים} other {# שבטים}}"
+    },
+    "categories": {
+      "title": "קטגוריות שבטים",
+      "description": "יצירה וניהול של הקטגוריות הזמינות לשבטי השרת.",
+      "refresh": "רענן",
+      "createLabel": "קטגוריה חדשה",
+      "name": "שם הקטגוריה",
+      "namePlaceholder": "לדוגמה, תחרותי",
+      "nameHelp": "{count}/{max} תווים לאחר סידור הרווחים",
+      "create": "יצירת קטגוריה",
+      "empty": "לא נוצרו קטגוריות שבטים.",
+      "clanCount": "{count, plural, one {שבט אחד} two {שני שבטים} other {# שבטים}}",
+      "renameAction": "שינוי השם של {name}",
+      "deleteAction": "מחיקת {name}",
+      "renameTitle": "שינוי שם קטגוריית שבט",
+      "renameDescription": "השם האחיד יתעדכן בכל שבט משויך.",
+      "saveRename": "שמירת השם",
+      "deleteTitle": "למחוק את קטגוריית השבט?",
+      "deleteWarning": "מחיקת „{name}” תשאיר {count, plural, one {שבט אחד ללא קטגוריה} two {שני שבטים ללא קטגוריה} other {# שבטים ללא קטגוריה}}.",
+      "deleteCountMayChange": "התצוגה המקדימה משקפת את המצב הנוכחי. בסיום המחיקה יוצג מספר השבטים שהושפעו בפועל.",
+      "confirmDelete": "מחיקת קטגוריה",
+      "deleteSuccessTitle": "{name} נמחקה",
+      "deleteSuccessDescription": "{count, plural, =0 {לא השתנה אף שבט.} one {שבט אחד ללא קטגוריה כעת.} two {שני שבטים ללא קטגוריה כעת.} other {# שבטים ללא קטגוריה כעת.}}",
+      "created": "{name} נוצרה.",
+      "renamed": "שם הקטגוריה שונה ל-{name}.",
+      "errors": {
+        "title": "הקטגוריות אינן זמינות",
+        "load": "טעינת קטגוריות השבטים נכשלה.",
+        "create": "יצירת קטגוריית השבט נכשלה.",
+        "rename": "שינוי שם קטגוריית השבט נכשל.",
+        "preview": "טעינת תצוגת המחיקה נכשלה.",
+        "delete": "מחיקת קטגוריית השבט נכשלה.",
+        "refresh": "הקטגוריה השתנתה, אך לא ניתן היה לטעון את מצב הקטגוריה או השבט המעודכן.",
+        "invalidName": "הזינו שם שאינו ריק, בן עד 64 תווים וללא תווי בקרה."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "הצגת מידע נוסף",
+      "memberRole": "התפקיד שיקבלו חברי השבט. אם הבוט מנהל את התפקידים ב-Discord, כל חבר בשבט יקבל תפקיד זה. שימושי לערוצים ייעודיים לשבט.",
+      "leaderRole": "התפקיד שיקבלו המנהיג ומנהיגי המשנה. שימושי לצ'אט הנהגת שבט או לצ'אט מנהיגים משותף לכל השבטים.",
+      "clanAbbreviation": "הגדירו קיצור לשבט שניתן להוסיף לשמות החברים כאשר שינוי השמות פעיל. ניתן להגדיר את התבנית ב<familySettingsLink>הגדרות המשפחה</familySettingsLink>.",
+      "category": "דרך לארגון השבטים. למשפחות רבות יש חמישה שבטים ומעלה, ולעיתים חלקם מיועדים רק ל-CWL או לאירועים."
+    },
+    "roleIdPlaceholder": "מזהה תפקיד",
+    "abbreviationPlaceholder": "לדוגמה, CK",
+    "categoryPlaceholder": "שם הקטגוריה",
+    "notAvailable": "לא זמין",
+    "saving": "שומר...",
+    "saveChanges": "שמירת שינויים",
+    "deleteConfirm": "האם להסיר את {tag}? גם כל התזכורות והיומנים המשויכים יימחקו.",
+    "toast": {
+      "errorLoadingClans": "טעינת השבטים נכשלה",
+      "errorLoadingSettings": "טעינת הגדרות השבט נכשלה",
+      "errorEmptyClanTag": "הזינו תג שבט",
+      "clanAdded": "השבט נוסף בהצלחה",
+      "errorAddingClan": "הוספת השבט נכשלה",
+      "clanRemoved": "השבט הוסר בהצלחה",
+      "errorRemovingClan": "הסרת השבט נכשלה",
+      "settingsSaved": "ההגדרות נשמרו בהצלחה",
+      "errorSavingSettings": "שמירת ההגדרות נכשלה",
+      "countdownEnabled": "ערוץ הספירה לאחור נוצר",
+      "countdownDisabled": "ערוץ הספירה לאחור הוסר",
+      "errorTogglingCountdown": "שינוי הספירה לאחור נכשל"
+    }
+  },
+  "RolesPage": {
+    "title": "ניהול תפקידים",
+    "description": "הגדרת הקצאת תפקידים אוטומטית לפי נתוני שחקנים",
+    "stats": {
+      "totalRoles": "סך התפקידים",
+      "totalRolesDesc": "הקצאות תפקידים שהוגדרו",
+      "autoEvaluation": "הערכה אוטומטית",
+      "autoEvaluationOn": "פעיל",
+      "autoEvaluationOff": "כבוי",
+      "autoEvaluationActiveDesc": "מקצה תפקידים אוטומטית",
+      "autoEvaluationInactiveDesc": "הקצאת תפקידים ידנית בלבד",
+      "activeTypes": "סוגים פעילים",
+      "activeTypesDesc": "סוגי תפקידים בשימוש",
+      "discordRoles": "תפקידי Discord",
+      "discordRolesDesc": "זמינים בשרת"
+    },
+    "settings": {
+      "title": "הגדרות הערכה אוטומטית",
+      "description": "הגדרת הערכה והקצאה אוטומטית של תפקידים",
+      "saveButton": "שמירת הגדרות",
+      "saving": "שומר...",
+      "enableAutoEval": "הפעלת הערכה אוטומטית",
+      "enableAutoEvalDesc": "הקצאה והסרה אוטומטית של תפקידים לפי נתוני שחקנים",
+      "autoNickname": "עדכון כינויים אוטומטי",
+      "autoNicknameDesc": "עדכון כינויים בעת הערכת תפקידים"
+    },
+    "roleTypes": {
+      "townhall": "בית עירייה",
+      "league": "ליגה",
+      "builderhall": "היכל הבנאי",
+      "builderLeague": "ליגת הבנאים",
+      "achievement": "הישג",
+      "status": "ותק ב-Discord",
+      "familyPosition": "מעמד במשפחה"
+    },
+    "familyPositions": {
+      "member": "חבר",
+      "elder": "ותיק",
+      "coLeader": "סגן מנהיג",
+      "leader": "מנהיג"
+    },
+    "leagues": {
+      "legend": "אגדה",
+      "electroDragon": "דרקון חשמלי",
+      "dragon": "דרקון",
+      "electroTitan": "טיטאן חשמלי",
+      "pekka": "P.E.K.K.A",
+      "golem": "גולם",
+      "witch": "מכשפה",
+      "valkyrie": "ולקיריה",
+      "wizard": "קוסם",
+      "archer": "קשתית",
+      "barbarian": "ברברי",
+      "skeleton": "שלד"
+    },
+    "builderLeagues": {
+      "diamond": "יהלום",
+      "ruby": "אודם",
+      "emerald": "ברקת",
+      "platinum": "פלטינה",
+      "titanium": "טיטניום",
+      "steel": "פלדה",
+      "iron": "ברזל",
+      "brass": "פליז",
+      "copper": "נחושת",
+      "stone": "אבן",
+      "clay": "חימר",
+      "wood": "עץ"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "שמרו על החשבון שלכם!",
+      "biggerAndBetter": "גדול וטוב יותר",
+      "discoverNewTroops": "גלו חיילים חדשים",
+      "biggerCoffers": "קופות גדולות יותר",
+      "goldGrab": "הבהלה לזהב",
+      "elixirEscapade": "מסע האליקסיר",
+      "heroicHeist": "השוד ההרואי",
+      "wellSeasoned": "מנוסים היטב",
+      "niceAndTidy": "יפה ומסודר",
+      "empireBuilder": "בוני אימפריה",
+      "clanWarWealth": "עושר ממלחמות שבטים",
+      "friendInNeed": "חבר בעת צרה",
+      "sharingIsCaring": "טוב לחלוק",
+      "siegeSharer": "חולקים מכונות מצור",
+      "warHero": "גיבור מלחמה",
+      "warLeagueLegend": "אגדת ליגת המלחמות",
+      "gamesChampion": "אלוף משחקי השבט",
+      "unbreakable": "בלתי שביר",
+      "sweetVictory": "ניצחון מתוק!",
+      "conqueror": "כובש",
+      "leagueAllStar": "כוכב הליגה",
+      "leagueFollower": "עוקב הליגה",
+      "leagueEnthusiast": "חובב הליגה",
+      "leagueSuperfan": "מעריץ-על של הליגה",
+      "leagueFanatic": "קנאי הליגה",
+      "leagueMaster": "אמן הליגה",
+      "legendLeague": "ליגת האגדות",
+      "humiliator": "משפיל",
+      "notSoEasyThisTime": "הפעם זה לא כל כך קל",
+      "unionBuster": "מפרק האיחוד",
+      "bustThis": "נסו לפרק את זה!",
+      "wallBuster": "מפצח חומות",
+      "mortarMauler": "משמיד מרגמות",
+      "xBowExterminator": "מחסל קשתות X",
+      "firefighter": "כבאי",
+      "antiArtillery": "נגד ארטילריה",
+      "shatteredAndScatter": "מנופץ ומפוזר",
+      "counterspell": "לחש נגד",
+      "monolithMasher": "משמיד מונוליתים",
+      "multiArcherTowerTerminator": "מחסל מגדלי קשתיות מרובים",
+      "ricochetCannonCrusher": "מרסק תותחי ריקושט",
+      "firespitterFinisher": "מחסל יורקי אש",
+      "multiGearTowerTrampler": "דורס מגדלי גלגלי שיניים מרובים",
+      "craftersNightmare": "הסיוט של האומן",
+      "getThoseGoblins": "תפסו את הגובלינים האלה!",
+      "supercharger": "מטעין-על",
+      "craftingConnoisseur": "אנין מלאכה",
+      "getThoseOtherGoblins": "תפסו את הגובלינים האחרים!",
+      "getEvenMoreGoblins": "תפסו עוד יותר גובלינים!",
+      "dragonSlayer": "קוטל דרקונים",
+      "ungratefulChild": "ילד כפוי טובה",
+      "superbWork": "עבודה מעולה",
+      "masterEngineering": "הנדסת אומן",
+      "hiddenTreasures": "אוצרות נסתרים",
+      "highGear": "הילוך גבוה",
+      "nextGenerationModel": "דגם הדור הבא",
+      "unBuildIt": "פרקו את זה",
+      "championBuilder": "בנאי אלוף",
+      "aggressiveCapitalism": "קפיטליזם תוקפני",
+      "mostValuableClanmate": "חבר השבט המצטיין"
+    },
+    "configuredRoles": {
+      "title": "תפקידים שהוגדרו",
+      "noRolesConfigured": "לא הוגדרו תפקידים מסוג {roleType}",
+      "addRoleToStart": "לחצו על „הוספת תפקיד” כדי ליצור אחד",
+      "discordRole": "תפקיד Discord",
+      "criteria": "קריטריון",
+      "mode": "מצב",
+      "modeBoth": "הוספה והסרה",
+      "modeAdd": "הוספה בלבד",
+      "modeRemove": "הסרה בלבד",
+      "actions": "פעולות",
+      "unknownRole": "תפקיד לא ידוע",
+      "remove": "הסרה",
+      "month": "חודש",
+      "months": "חודשים"
+    },
+    "addRoleDialog": {
+      "title": "הוספת תפקיד חדש",
+      "description": "הגדרת כלל חדש להקצאת תפקיד אוטומטית",
+      "roleType": "סוג תפקיד",
+      "mode": "מצב",
+      "discordRole": "תפקיד Discord",
+      "selectRole": "בחירת תפקיד",
+      "townHallLevel": "רמת בית עירייה",
+      "selectThLevel": "בחירת רמת בית עירייה",
+      "thPrefix": "TH",
+      "league": "ליגה",
+      "selectLeague": "בחירת ליגה",
+      "builderHallLevel": "רמת היכל הבנאי",
+      "selectBhLevel": "בחירת רמת היכל הבנאי",
+      "bhPrefix": "BH",
+      "builderLeague": "ליגת הבנאים",
+      "selectBuilderLeague": "בחירת ליגת בנאים",
+      "achievementName": "הישג",
+      "selectAchievement": "בחירת הישג",
+      "searchAchievement": "חיפוש הישג...",
+      "noAchievementFound": "לא נמצא הישג.",
+      "monthsInServer": "חודשים בשרת",
+      "monthsPlaceholder": "6",
+      "familyPosition": "מעמד במשפחה",
+      "selectPosition": "בחירת מעמד",
+      "cancel": "בטל",
+      "addRole": "הוספת תפקיד",
+      "errorDuplicateExact": "הקריטריון הזה כבר מקושר לתפקיד.",
+      "errorDuplicateCriterion": "כבר הוקצה תפקיד לקריטריון הזה. הסירו תחילה את הקיים."
+    },
+    "infoCard": {
+      "title": "💡 כיצד תפקידים אוטומטיים פועלים",
+      "automaticEvaluation": "הערכה אוטומטית:",
+      "automaticEvaluationDesc": "כשהאפשרות פעילה, הבוט יבדוק שחקנים מעת לעת ויקצה או יסיר תפקידים לפי הנתונים הנוכחיים.",
+      "rolePriority": "עדיפות תפקידים:",
+      "rolePriorityDesc": "אם מספר תפקידים תואמים לנתוני השחקן, יוקצה התפקיד ברמה הגבוהה ביותר.",
+      "manualOverride": "עקיפה ידנית:",
+      "manualOverrideDesc": "מנהלי השרת יכולים להקצות תפקידים ידנית, וההערכה האוטומטית לא תסיר אותם."
+    },
+    "categoryRoles": {
+      "title": "תפקידי קטגוריה",
+      "description": "הקצו תפקיד Discord לכל קטגוריית שבטים. חברי שבטים בקטגוריה יקבלו את התפקיד המתאים אוטומטית.",
+      "addButton": "הוספת קטגוריה",
+      "categoryName": "קטגוריה",
+      "categoryNamePlaceholder": "שם הקטגוריה",
+      "noCategoryRoles": "לא הוגדרו תפקידי קטגוריה",
+      "noCategoryRolesDesc": "לחצו על „הוספת קטגוריה” כדי ליצור אחת",
+      "addTitle": "הוספת תפקיד קטגוריה",
+      "addConfirm": "הוספה",
+      "errorCategoryRequired": "נדרש שם קטגוריה",
+      "errorRoleRequired": "נדרש תפקיד Discord",
+      "errorCategoryExists": "כבר הוגדר תפקיד לקטגוריה הזו"
+    },
+    "toast": {
+      "changesSaved": "השינויים נשמרו בהצלחה!",
+      "errorLoading": "טעינת התפקידים נכשלה",
+      "errorSaving": "שמירת ההגדרות נכשלה",
+      "errorAdding": "הוספת התפקיד נכשלה",
+      "errorDeleting": "מחיקת התפקיד נכשלה"
+    }
+  },
+  "RemindersPage": {
+    "title": "תזכורות",
+    "description": "הגדרת תזכורות אוטומטיות למלחמות, פשיטות, משחקי שבט וחוסר פעילות",
+    "types": {
+      "war": "תזכורות מלחמה",
+      "capital": "בירת השבט",
+      "clanGames": "משחקי השבט",
+      "inactivity": "חוסר פעילות"
+    },
+    "tabs": {
+      "war": "מלחמה",
+      "capital": "בירת השבט",
+      "clanGames": "משחקי השבט",
+      "inactivity": "חוסר פעילות"
+    },
+    "stats": {
+      "totalReminders": "סך התזכורות",
+      "totalRemindersDesc": "תזכורות פעילות שהוגדרו",
+      "warReminders": "תזכורות מלחמה",
+      "warRemindersDesc": "מלחמות רגילות ו-CWL",
+      "capitalReminders": "תזכורות בירת השבט",
+      "capitalRemindersDesc": "תקיפות בסופי שבוע של פשיטות",
+      "otherReminders": "תזכורות אחרות",
+      "otherRemindersDesc": "משחקים וחוסר פעילות"
+    },
+    "actions": {
+      "saving": "שומר...",
+      "saveChanges": "שמירת שינויים",
+      "addReminder": "הוספת תזכורת",
+      "addWarReminder": "הוספת תזכורת מלחמה",
+      "addCapitalReminder": "הוספת תזכורת לבירת השבט",
+      "addClanGamesReminder": "הוספת תזכורת משחקי שבט",
+      "addInactivityReminder": "הוספת תזכורת חוסר פעילות",
+      "retry": "נסה שוב"
+    },
+    "clanSelector": {
+      "label": "שבט",
+      "placeholder": "בחירת שבט",
+      "allClans": "כל השבטים"
+    },
+    "empty": {
+      "noWarReminders": "אין תזכורות מלחמה",
+      "noCapitalReminders": "אין תזכורות לבירת השבט",
+      "noClanGamesReminders": "אין תזכורות משחקי שבט",
+      "noInactivityReminders": "אין תזכורות חוסר פעילות",
+      "getStarted": "צרו את התזכורת הראשונה כדי להתחיל"
+    },
+    "card": {
+      "new": "חדש",
+      "before": "לפני",
+      "timeBefore": "זמן שנותר",
+      "timeBeforePlaceholder": "לדוגמה, 6",
+      "timeInactive": "חוסר פעילות של",
+      "timeInactivePlaceholder": "לדוגמה, 160",
+      "timeUnit": "שעות",
+      "hoursRemaining": "שעות נותרו",
+      "channel": "ערוץ",
+      "channelPlaceholder": "בחירת ערוץ",
+      "threadOptional": "שרשור (אופציונלי)",
+      "threadPlaceholder": "בחירת שרשור",
+      "noThread": "פרסום ישירות בערוץ",
+      "forumPost": "פרסום בפורום",
+      "forumPostPlaceholder": "בחירת פרסום בפורום",
+      "forumPostRequired": "בערוצי פורום נדרש פרסום בפורום.",
+      "clan": "שבט",
+      "clanPlaceholder": "בחירת שבט",
+      "customMessage": "הודעה מותאמת אישית",
+      "customMessagePlaceholder": "אל תשכחו להשתמש בתקיפות שלכם!",
+      "customMessagePlaceholderClanGames": "נסו להשיג עוד נקודות במשחקי השבט!",
+      "customMessagePlaceholderInactivity": "לא הייתם פעילים בשבט כבר זמן מה :(",
+      "warTypes": "סוגי מלחמה",
+      "random": "אקראית",
+      "friendly": "ידידותית",
+      "cwl": "CWL",
+      "pointThreshold": "סף נקודות",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "יתייג אנשים עם פחות מ-{threshold} נקודות.",
+      "attackThreshold": "סף תקיפות",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "יתייג אנשים שנותרו להם לפחות {threshold} תקיפות.",
+      "notSet": "לא הוגדר"
+    },
+    "dialog": {
+      "addTitle": "הוספת תזכורת חדשה",
+      "addDescription": "הגדרת תזכורת חדשה לשרת",
+      "editTitle": "עריכת תזכורת",
+      "editDescription": "עדכון הגדרות התזכורת",
+      "type": "סוג תזכורת",
+      "selectType": "בחירת סוג",
+      "cancel": "בטל",
+      "saving": "שומר...",
+      "saveChanges": "שמירת שינויים",
+      "addReminder": "הוספת תזכורת"
+    },
+    "toast": {
+      "errorTitle": "שגיאה",
+      "errorLoadingReminders": "טעינת התזכורות נכשלה. נסו שוב.",
+      "reminderAdded": "התזכורת נוספה בהצלחה",
+      "reminderAddedDesc": "נוספה תזכורת חדשה מסוג {type}. אל תשכחו לשמור!",
+      "reminderUpdated": "התזכורת עודכנה בהצלחה",
+      "successTitle": "הצלחה",
+      "reminderDeleted": "התזכורת נמחקה בהצלחה",
+      "failedToDelete": "מחיקת התזכורת נכשלה",
+      "allRemindersSaved": "כל התזכורות נשמרו בהצלחה",
+      "failedToSave": "שמירת התזכורות נכשלה",
+      "forumPostRequired": "בחרו פרסום בפורום לפני שמירת התזכורת.",
+      "invalidDestination": "השרשור שנבחר אינו שייך לערוץ הזה.",
+      "timeExceedsLimit": "הזמן שנותר חייב להיות בין {min} ל-{max} שעות",
+      "pointThresholdInvalid": "סף הנקודות חייב להיות בין {min} ל-{max}",
+      "attackThresholdInvalid": "סף התקיפות חייב להיות בין {min} ל-{max}"
+    }
+  },
+  "LogsPage": {
+    "title": "יומני פעילות",
+    "description": "הגדרת רישום אוטומטי של פעילות שבטים ושחקנים",
+    "stats": {
+      "activeLogs": "יומנים פעילים",
+      "activeLogsDesc": "בכל שבטי המשפחה ויומני השרת",
+      "logChannels": "ערוצי יומן",
+      "logChannelsDesc": "ערוצים זמינים",
+      "trackedClans": "שבטים במעקב",
+      "trackedClansDesc": "שבטים שהוגדרו",
+      "issues": "בעיות",
+      "issuesDesc": "בכל המשפחה"
+    },
+    "clanSelector": {
+      "label": "שבט",
+      "placeholder": "בחירת שבט"
+    },
+    "tabs": {
+      "clan": "שבט",
+      "war": "מלחמה",
+      "capital": "בירת השבט",
+      "player": "שחקן",
+      "server": "שרת"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "הצטרפות חבר",
+        "description": "מעקב אחר חברים המצטרפים לשבט"
+      },
+      "leaveLog": {
+        "label": "עזיבת חבר",
+        "description": "מעקב אחר חברים העוזבים את השבט"
+      },
+      "donationLog": {
+        "label": "תרומות חבר",
+        "description": "מעקב אחר תרומות חיילים ולחשים"
+      },
+      "clanAchievementLog": {
+        "label": "הישגי שבט",
+        "description": "מעקב אחר הישגים שהשבט השיג"
+      },
+      "clanRequirementsLog": {
+        "label": "דרישות השבט",
+        "description": "מעקב אחר שינויים בדרישות השבט"
+      },
+      "clanDescriptionLog": {
+        "label": "תיאור השבט",
+        "description": "מעקב אחר שינויים בתיאור השבט"
+      },
+      "banAlert": {
+        "label": "התראות חסימה",
+        "description": "פרסום התראה כששחקן חסום מצטרף לשבט"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "עדכוני Reddit",
+        "description": "פרסום עדכוני Reddit של השרת"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "יומן מלחמה",
+        "description": "מעקב אחר תקיפות ותוצאות מלחמה"
+      },
+      "warPanel": {
+        "label": "לוח מלחמה",
+        "description": "לוח מלחמה אינטראקטיבי עם עדכונים בזמן אמת"
+      },
+      "cwlLineupChangeLog": {
+        "label": "שינוי הרכב CWL",
+        "description": "מעקב אחר שינויים בהרכב CWL"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "תרומות לבירת השבט",
+        "description": "מעקב אחר תרומות של זהב בירת השבט"
+      },
+      "capitalAttacks": {
+        "label": "תקיפות בבירת השבט",
+        "description": "מעקב אחר תקיפות בסופי שבוע של פשיטות"
+      },
+      "raidPanel": {
+        "label": "לוח בירת השבט",
+        "description": "לוח פשיטות אינטראקטיבי עם עדכונים בזמן אמת"
+      },
+      "capitalWeeklySummary": {
+        "label": "סיכום שבועי של בירת השבט",
+        "description": "סיכום שבועי של ביצועי בירת השבט"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "שינוי תפקיד",
+        "description": "מעקב אחר שינויי תפקיד שחקנים בשבט"
+      },
+      "troopUpgrade": {
+        "label": "שדרוג חייל",
+        "description": "מעקב אחר שדרוגי רמות חיילים"
+      },
+      "superTroopBoostLog": {
+        "label": "הפעלת חיילי על",
+        "description": "מעקב אחר הפעלת חיילי על"
+      },
+      "thUpgrade": {
+        "label": "שדרוג בית עירייה",
+        "description": "מעקב אחר שדרוגי בית עירייה"
+      },
+      "leagueChange": {
+        "label": "שינוי ליגה",
+        "description": "מעקב אחר שינויי דרגת ליגה"
+      },
+      "spellUpgrade": {
+        "label": "שדרוג לחש",
+        "description": "מעקב אחר שדרוגי רמות לחשים"
+      },
+      "heroUpgrade": {
+        "label": "שדרוג גיבור",
+        "description": "מעקב אחר שדרוגי רמות גיבורים"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "שדרוג ציוד גיבור",
+        "description": "מעקב אחר שדרוגי ציוד גיבורים"
+      },
+      "nameChange": {
+        "label": "שינוי שם",
+        "description": "מעקב אחר שינויי שמות שחקנים"
+      },
+      "legendLogAttacks": {
+        "label": "תקיפות בליגת האגדות",
+        "description": "מעקב אחר תקיפות בליגת האגדות"
+      },
+      "legendLogDefenses": {
+        "label": "הגנות בליגת האגדות",
+        "description": "מעקב אחר הגנות בליגת האגדות"
+      }
+    },
+    "logCard": {
+      "active": "פעיל",
+      "issue": "בעיה",
+      "disabled": "מושבת",
+      "enable": "הפעלה",
+      "disable": "השבתה",
+      "channel": "ערוץ",
+      "channelPlaceholder": "בחירת ערוץ",
+      "thread": "שרשור (אופציונלי)",
+      "threadPlaceholder": "בחירת שרשור",
+      "noThread": "ללא שרשור",
+      "forumPost": "פרסום בפורום",
+      "forumPostPlaceholder": "בחירת פרסום בפורום",
+      "forumPostRequired": "בחרו פרסום בפורום לפני שמירת היומן.",
+      "invalidThread": "השרשור שנבחר אינו שייך לערוץ הזה.",
+      "saveDestination": "שמירת יעד",
+      "channelDeleted": "הערוץ הזה אינו קיים עוד. בחרו ערוץ חדש או השביתו את היומן.",
+      "enableToConfig": "הפעילו את היומן כדי להגדיר אותו",
+      "configuring": "מגדיר",
+      "on": "פעיל",
+      "off": "כבוי",
+      "example": "דוגמה"
+    }
+  },
+  "GeneralPage": {
+    "title": "הגדרות כלליות",
+    "description": "הגדרת ההתנהגות והמראה של הבוט בכל השרת",
+    "loading": "טוען הגדרות...",
+    "reset": "איפוס",
+    "saving": "שומר...",
+    "saveChanges": "שמירת שינויים",
+    "settingsSaved": "ההגדרות נשמרו בהצלחה!",
+    "infoBanner": {
+      "title": "מחפשים הגדרות נוספות?",
+      "description": "תפקידי המשפחה והגדרות הכינויים נמצאים בדף **הגדרות המשפחה**. ניהול התפקידים נמצא בדף **תפקידים**, ותפקידי השבטים, הקיצורים, הקטגוריות והספירות לאחור למלחמה נמצאים בדף **שבטים**."
+    },
+    "nickname": {
+      "title": "ניהול כינויים",
+      "description": "שליטה באופן עיצוב הכינויים",
+      "automaticChanges": "שינויים אוטומטיים",
+      "automaticChangesDesc": "מתן הרשאה לבוט לעדכן כינויי חברים",
+      "familyFormat": "תבנית חברי משפחה",
+      "availablePlaceholders": "משתנים זמינים",
+      "preview": "תצוגה מקדימה",
+      "nonFamilyFormat": "תבנית חברים מחוץ למשפחה",
+      "placeholders": {
+        "discordName": "שם משתמש ב-Discord",
+        "discordDisplayName": "כינוי בשרת",
+        "playerName": "שם שחקן CoC",
+        "playerTag": "תג שחקן",
+        "playerTownhall": "רמת TH",
+        "playerTownhallSmall": "בית עירייה בכתב עילי",
+        "playerWarstars": "כוכבי מלחמה",
+        "playerRole": "תפקיד בשבט",
+        "playerClan": "שם השבט",
+        "playerLeague": "ליגה",
+        "playerClanAbbr": "קיצור השבט"
+      }
+    },
+    "appearance": {
+      "title": "מראה",
+      "description": "התאמת הודעות מוטמעות של הבוט",
+      "embedColor": "צבע הודעה מוטמעת",
+      "embedColorDesc": "צבע הסרגל הצדדי בכל ההודעות המוטמעות של הבוט ב-Discord",
+      "embedColorDefault": "ברירת מחדל: **#D90709** (אדום ClashKing)",
+      "embedPreview": "תצוגה מקדימה של ההודעה",
+      "embedPreviewDesc": "הסרגל הצבעוני הזה יופיע לצד כל ההודעות המוטמעות של הבוט",
+      "editColor": "עריכת צבע",
+      "resetToDefault": "איפוס לברירת המחדל",
+      "apply": "החל"
+    },
+    "security": {
+      "title": "אבטחה והרשאות",
+      "description": "שליטה בגישה ובאימות",
+      "fullWhitelistRole": "תפקיד גישה מלאה",
+      "fullWhitelistRoleDesc": "תפקיד Discord עם גישה מלאה לכל פקודות הבוט, ללא בדיקות הרשאה",
+      "noRole": "ללא תפקיד"
+    },
+    "familyRoles": {
+      "title": "תפקידי משפחה",
+      "description": "ניהול תפקידים אוטומטיים לפי חברות במשפחה ומעמד בשבט",
+      "selectRole": "בחירת תפקיד",
+      "addRole": "הוספת תפקיד...",
+      "deletedRole": "תפקיד שנמחק",
+      "noRolesConfigured": "לא הוגדרו תפקידים",
+      "modes": {
+        "both": "הוספה והסרה",
+        "add": "הוספה בלבד",
+        "remove": "הסרה בלבד"
+      },
+      "types": {
+        "family": "משפחה",
+        "notFamily": "מחוץ למשפחה",
+        "elder": "ותיק",
+        "coLeader": "סגן מנהיג",
+        "leader": "מנהיג"
+      },
+      "descriptions": {
+        "family": "יש לפחות חשבון אחד בשבטי המשפחה",
+        "notFamily": "אין חשבונות בשבטי המשפחה",
+        "elder": "בעל מעמד ותיק באחד משבטי המשפחה",
+        "coLeader": "בעל מעמד סגן מנהיג באחד משבטי המשפחה",
+        "leader": "בעל מעמד מנהיג באחד משבטי המשפחה"
+      }
+    },
+    "tenureRoles": {
+      "title": "תפקידים לפי ותק ב-Discord",
+      "description": "הקצאת תפקידים אוטומטית לפי משך החברות בשרת",
+      "addRole": "הוספת תפקיד ותק",
+      "addDialogTitle": "הוספת תפקיד ותק",
+      "addDialogDescription": "הקצאת תפקיד לחברים שנמצאים בשרת מספר חודשים מסוים",
+      "monthsInServer": "חודשים בשרת",
+      "discordRole": "תפקיד Discord",
+      "selectRole": "בחירת תפקיד",
+      "noRolesConfigured": "לא הוגדרו תפקידי ותק",
+      "addRoleToStart": "הוסיפו תפקיד ותק כדי להתחיל",
+      "months": "חודשים",
+      "month": "חודש",
+      "actions": "פעולות",
+      "remove": "הסרה",
+      "unknownRole": "תפקיד לא ידוע"
+    },
+    "prefix": "קידומת פקודה",
+    "language": "שפה",
+    "timezone": "אזור זמן",
+    "theme": "ערכת נושא"
+  },
+  "FamilySettingsPage": {
+    "title": "הגדרות המשפחה",
+    "description": "הגדרת תפקידי משפחה ותבנית כינויים לחברי שבט",
+    "loading": "טוען הגדרות...",
+    "reset": "איפוס",
+    "saving": "שומר...",
+    "saveChanges": "שמירת שינויים",
+    "settingsSaved": "ההגדרות נשמרו בהצלחה!",
+    "nickname": {
+      "title": "ניהול כינויים",
+      "description": "שליטה באופן עיצוב הכינויים",
+      "automaticChanges": "שינויים אוטומטיים",
+      "automaticChangesDesc": "מתן הרשאה לבוט לעדכן כינויי חברים",
+      "familyFormat": "תבנית חברי משפחה",
+      "availablePlaceholders": "משתנים זמינים",
+      "preview": "תצוגה מקדימה",
+      "nonFamilyFormat": "תבנית חברים מחוץ למשפחה",
+      "placeholders": {
+        "discordName": "שם משתמש ב-Discord",
+        "discordDisplayName": "כינוי בשרת",
+        "playerName": "שם שחקן CoC",
+        "playerTag": "תג שחקן",
+        "playerTownhall": "רמת TH",
+        "playerTownhallSmall": "בית עירייה בכתב עילי",
+        "playerWarstars": "כוכבי מלחמה",
+        "playerRole": "תפקיד בשבט",
+        "playerClan": "שם השבט",
+        "playerLeague": "ליגה",
+        "playerClanAbbr": "קיצור השבט"
+      }
+    },
+    "familyRoles": {
+      "title": "תפקידי משפחה",
+      "description": "ניהול תפקידים אוטומטיים לפי חברות במשפחה ומעמד בשבט",
+      "selectRole": "בחירת תפקיד",
+      "addRole": "הוספת תפקיד...",
+      "deletedRole": "תפקיד שנמחק",
+      "noRolesConfigured": "לא הוגדרו תפקידים",
+      "modes": {
+        "both": "הוספה והסרה",
+        "add": "הוספה בלבד",
+        "remove": "הסרה בלבד"
+      },
+      "types": {
+        "family": "משפחה",
+        "notFamily": "מחוץ למשפחה",
+        "elder": "ותיק",
+        "coLeader": "סגן מנהיג",
+        "leader": "מנהיג"
+      },
+      "descriptions": {
+        "family": "יש לפחות חשבון אחד בשבטי המשפחה",
+        "notFamily": "אין חשבונות בשבטי המשפחה",
+        "elder": "בעל מעמד ותיק באחד משבטי המשפחה",
+        "coLeader": "בעל מעמד סגן מנהיג באחד משבטי המשפחה",
+        "leader": "בעל מעמד מנהיג באחד משבטי המשפחה"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "שפה"
+  },
+  "ThemeSwitcher": {
+    "label": "ערכת נושא",
+    "light": "בהיר",
+    "dark": "כהה",
+    "system": "לפי המערכת"
+  },
+  "AuthCallback": {
+    "authenticating": "מאמת...",
+    "authenticatingDescription": "המתינו בזמן שאנו מחברים אתכם באמצעות Discord",
+    "authenticationFailed": "האימות נכשל",
+    "tryAgain": "נסה שוב",
+    "backToHome": "חזרה לדף הבית",
+    "errorCancelled": "הכניסה בוטלה ב-Discord. נסו שוב כשתהיו מוכנים.",
+    "errorDiscordFailedWithReason": "האימות ב-Discord נכשל: {reason}",
+    "errorNoAuthorizationCode": "לא התקבל קוד הרשאה מ-Discord.",
+    "errorCodeVerifierMissing": "מאמת הקוד לא נמצא. נסו להיכנס שוב.",
+    "errorAuthenticateFailed": "האימות באמצעות Discord נכשל.",
+    "loadingVillages": "מתחבר באמצעות Discord...",
+    "loadingClanData": "טוען את רשימת השרתים...",
+    "loadingWarStats": "כמעט מוכן..."
+  },
+  "LoginPage": {
+    "redirecting": "מעביר ל-Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "תכונות",
+      "subtitle": "גלו את הכלים העוצמתיים של ClashKing לניהול ולהגדלת השבט ב-Discord, בנייד ובאינטרנט."
+    },
+    "sections": {
+      "bot": {
+        "title": "בוט ClashKing",
+        "description": "בוט ClashKing הוא בוט Discord היחיד שתצטרכו לניהול שבט וקהילת Clash of Clans. הוא כולל תכונות ייחודיות לשמירה על שבט מסודר, פעיל וצומח.",
+        "items": [
+          "יומנים בזמן אמת: מעקב אחר מלחמות, CWL, משחקי שבט, פשיטות, תרומות ואירועי חברים.",
+          "מערכת פניות: פניות גיוס בנוסף לפניות תמיכה רגילות.",
+          "תפקידים אוטומטיים: הקצאת תפקידים אוטומטית לפי מצב בשבט או ניהול משפחה.",
+          "תזכורות: שליחת תיוגים לתקיפות מלחמה, משחקי שבט וכל אירוע אחר.",
+          "נתונים מפורטים: תובנות על ביצועי שחקנים ושבטים עם מעקב פעילות.",
+          "ניהול סגלים: ארגון ושיפור סגלי מלחמה בקלות."
+        ],
+        "ctaPrimary": "הזמנת הבוט",
+        "ctaSecondary": "הצטרפות לקהילה"
+      },
+      "app": {
+        "title": "אפליקציית ClashKing (בטא פתוחה)",
+        "description": "אפליקציית ClashKing משלימה את הבוט ומביאה כלים ותובנות חיוניים ישירות למכשיר הנייד, כדי שתישארו מחוברים בכל זמן ומקום גם ללא Discord.",
+        "items": [
+          "נתונים בזמן אמת: נתונים מפורטים לשחקנים ולשבטים המסונכרנים עם הבוט.",
+          "מעקב התקדמות השבט: מעקב פשוט אחר התקדמות השבט לאורך זמן.",
+          "ניהול מספר חשבונות: מעבר קל בין החשבונות ומעקב אחר ביצועים.",
+          "היסטוריה מובנית: גישה לנתוני עבר לניתוח מגמות ושיפור אסטרטגיות.",
+          "ניהול שרת Discord: (בקרוב) ניהול תפקידים ופניות מהאפליקציה.",
+          "התראות מתקדמות: (בקרוב) התאמת התראות לאירועים חשובים."
+        ],
+        "ctaPrimary": "גרסת בטא ל-Android",
+        "ctaSecondary": "גרסת iOS ב-TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "בנו כלים או פרויקטים משלכם באמצעות API של ClashKing. השימוש חינם בתנאי שתתנו קרדיט לפרויקט ClashKing.",
+        "items": [],
+        "ctaPrimary": "תיעוד API",
+        "ctaSecondary": "API ב-GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "צריכים עזרה?",
+    "subtitle": "בין אם אתם מחפשים תיעוד או תמיכה ישירה, אנחנו כאן בשבילכם.",
+    "documentation": {
+      "title": "תיעוד",
+      "description": "עיינו במדריכים המפורטים ובחומרי העזר לפקודות כדי להפיק את המרב מ-ClashKing.",
+      "cta": "הצגת התיעוד"
+    },
+    "discord": {
+      "title": "תמיכה ב-Discord",
+      "description": "צריכים עזרה נוספת? הצטרפו לקהילת Discord שלנו כדי לשאול שאלות, לדווח על תקלות או לשוחח עם משתמשים אחרים.",
+      "cta": "הצטרפות ל-Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "פרויקט בקוד פתוח",
+    "subtitle": "ClashKing הוא פרויקט חינמי ובקוד פתוח לחלוטין. הבוט וה-API פתוחים במלואם, כך שתוכלו לתרום או להשתמש בהם בפרויקטים משלכם.",
+    "github": {
+      "title": "ארגון GitHub",
+      "description": "עיינו בקוד המקור, תרמו לבוט או הכירו כלים נוספים שלנו בקוד פתוח.",
+      "ctaPrimary": "הצגת הארגון",
+      "repos": {
+        "bot": "מאגר הבוט",
+        "app": "מאגר האפליקציה",
+        "api": "מאגר ה-API",
+        "assets": "מאגר הנכסים"
+      }
+    },
+    "api": {
+      "title": "תיעוד API",
+      "description": "בנו כלים או פרויקטים משלכם באמצעות API של ClashKing. השימוש חינם בתנאי שתתנו קרדיט לפרויקט ClashKing.",
+      "cta": "תיעוד API"
+    },
+    "translation": {
+      "title": "עזרו לנו לתרגם",
+      "description": "עזרו לנו לתרגם את ClashKing לשפה שלכם! תוכלו לתרום לתרגום האתר, הבוט וכל הטקסטים הנלווים דרך פרויקטי Crowdin שלנו.",
+      "app": "תרגום האפליקציה",
+      "bot": "תרגום הבוט"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "תרומה",
+        "description": "עזרו לנו להשתפר באמצעות תיקון תקלות, הוספת תכונות או שיפור הקיימות. כל תרומה חשובה!"
+      },
+      "community": {
+        "title": "קהילה",
+        "description": "הצטרפו לקהילת Discord כדי לדון ברעיונות, לקבל עזרה ולשתף פעולה עם מפתחים אחרים."
+      },
+      "learn": {
+        "title": "לימוד",
+        "description": "עיינו בתיעוד ובדוגמאות כדי ללמוד להשתמש בבוט וב-API ביעילות."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "תמכו בנו",
+    "subtitle": "ClashKing הוא פרויקט חינמי בקוד פתוח. התמיכה שלכם עוזרת לנו להפעיל את השרתים ולהמשיך לפתח תכונות חדשות לקהילה.",
+    "patreon": {
+      "title": "הפכו לתומכים ב-Patreon",
+      "description": "תמכו בנו מדי חודש ב-Patreon כדי לקבל הטבות בלעדיות וגישה מוקדמת לתכונות ולעזור בעלויות האחסון.",
+      "cta": "תמיכה ב-Patreon"
+    },
+    "creatorCode": {
+      "title": "השתמשו בקוד יוצר",
+      "description": "תמכו בנו בחינם באמצעות קוד היוצר",
+      "descriptionSuffix": "במשחק או בחנות Supercell.",
+      "ctaGame": "שימוש במשחק",
+      "ctaStore": "שימוש בחנות Supercell"
+    },
+    "whySupport": {
+      "title": "למה לתמוך בנו?",
+      "description": "כל תרומה מופנית ישירות לעלויות השרת וה-API. השימוש בקוד היוצר שלנו לא עולה לכם דבר ועוזר לנו מאוד!"
+    }
+  },
+  "ServersPage": {
+    "title": "בחירת שרת",
+    "description": "בחרו שרת להגדרת בוט ClashKing. עליכם להיות הבעלים או מנהלים של שרת Discord.",
+    "backToHome": "חזרה לדף הבית",
+    "backToLogin": "חזרה להתחברות",
+    "error": "שגיאה",
+    "configure": "הגדרה",
+    "invite": "הזמנה",
+    "members": "חברים",
+    "server": "שרת",
+    "roles": {
+      "owner": "בעלים",
+      "administrator": "מנהל",
+      "manager": "מנהל מערכת"
+    },
+    "noServers": {
+      "title": "לא נמצאו שרתים",
+      "description": "לא נמצא שרת Discord שבו אתם מנהלים או הבעלים."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "רענון לוח פעיל או שליחת לוחות חדשים לפי לוח זמנים",
+    "actions": {
+      "create": "יצירת לוח אוטומטי",
+      "edit": "עריכת לוח אוטומטי",
+      "delete": "מחיקת לוח אוטומטי",
+      "save": "שמירת שינויים",
+      "cancel": "בטל",
+      "retry": "נסה שוב"
+    },
+    "metrics": {
+      "total": "מוגדר",
+      "refresh": "רענון לוחות",
+      "send": "שליחות מתוזמנות"
+    },
+    "filters": {
+      "all": "הכול"
+    },
+    "list": {
+      "title": "לוחות אוטומטיים שהוגדרו",
+      "description": "שליטה של המנהל בשליחה, ביעדים, במיקום ובמצב ההפעלה",
+      "empty": "אין לוחות אוטומטיים בתצוגה הזו",
+      "emptyDescription": "ניתן ליצור לוח כאשר מרשם ה-API יציע סוג לוח זמין."
+    },
+    "registry": {
+      "emptyTitle": "אין סוגי לוחות זמינים",
+      "emptyDescription": "מרשם ה-API ריק כעת. ניתן ליצור לוחות אוטומטיים לאחר שיופעל בו סוג לוח.",
+      "typeUnavailable": "סוג הלוח הזה אינו זמין עוד במרשם ולכן אי אפשר לערוך אותו."
+    },
+    "dialog": {
+      "createTitle": "יצירת לוח אוטומטי",
+      "editTitle": "עריכת לוח אוטומטי",
+      "description": "היכולות והמגבלות מגיעות ממרשם הלוחות הפעיל."
+    },
+    "boardType": {
+      "label": "סוג לוח",
+      "description": "הסוגים הזמינים מגיעים ישירות ממרשם ה-API.",
+      "placeholder": "בחירת סוג לוח"
+    },
+    "targets": {
+      "kind": "סוג יעד: {kind}",
+      "kindDescription": "המרשם מגדיר כיצד לפרש כל ערך יעד.",
+      "scope": "טווח היעד",
+      "scopeDescription": "טווח משפחה משתמש בכל שבטי המשפחה שהוגדרו ואינו כולל יעדים מפורשים.",
+      "family": "משפחה",
+      "custom": "יעדים מותאמים אישית",
+      "values": "יעדים",
+      "count": "הגדירו בין {min} ל-{max} יעדים לסוג הלוח הזה.",
+      "placeholder": "הזנת יעד מסוג {kind}",
+      "add": "הוספת יעד",
+      "remove": "הסרת יעד"
+    },
+    "modes": {
+      "label": "אופן שליחה",
+      "description": "המרשם קובע באילו אופני שליחה הלוח תומך.",
+      "refresh": "רענון",
+      "send": "שליחה מתוזמנת"
+    },
+    "destination": {
+      "label": "יעד",
+      "channel": "ערוץ אב",
+      "channelDescription": "ערוצי טקסט והכרזות יכולים לשלוח ישירות; פורומים משתמשים בפרסום משנה.",
+      "selectChannel": "בחירת ערוץ",
+      "thread": "שרשור או פרסום בפורום",
+      "selectThread": "בחירת שרשור",
+      "threadOptional": "אופציונלי בערוצי טקסט והכרזות.",
+      "forumRequired": "נדרש פרסום בפורום עבור היעד הזה.",
+      "direct": "שליחה ישירות לערוץ",
+      "deleted": "הערוץ אינו קיים עוד"
+    },
+    "refresh": {
+      "interval": "מרווח רענון (דקות)",
+      "intervalDescription": "טווח מותר: {minimum}–{maximum} דקות."
+    },
+    "schedule": {
+      "label": "לוח זמנים",
+      "kind": "דפוס תזמון",
+      "kindDescription": "שליחה יומית, בימים נבחרים בשבוע או פעם בחודש.",
+      "daily": "יומי",
+      "weekdays": "ימים נבחרים בשבוע",
+      "dayOfMonth": "יום בחודש",
+      "selectWeekdays": "ימי השבוע",
+      "monthDay": "יום בחודש",
+      "monthDayDescription": "השתמשו בערך בין 1 ל-31.",
+      "timezone": "אזור זמן",
+      "timeOfDay": "שעה ביום",
+      "nextRun": "ההפעלה הבאה"
+    },
+    "weekdays": {
+      "1": "יום שני",
+      "2": "יום שלישי",
+      "3": "יום רביעי",
+      "4": "יום חמישי",
+      "5": "יום שישי",
+      "6": "שבת",
+      "7": "יום ראשון"
+    },
+    "status": {
+      "enabled": "מופעל",
+      "disabled": "מושבת",
+      "enabledDescription": "לוחות מושבתים שומרים את ההגדרות אך אינם פועלים.",
+      "messageId": "הודעת הרענון הנוכחית: {id}"
+    },
+    "delete": {
+      "title": "למחוק את הלוח האוטומטי?",
+      "description": "הפעולה תסיר את ההגדרות ולא ניתן לבטלה."
+    },
+    "feedback": {
+      "created": "הלוח האוטומטי נוצר",
+      "updated": "הלוח האוטומטי עודכן",
+      "deleted": "הלוח האוטומטי נמחק"
+    },
+    "validation": {
+      "boardType": "בחרו סוג לוח מהמרשם הפעיל.",
+      "targetScope": "בחרו טווח יעד שסוג הלוח תומך בו.",
+      "familyTargets": "טווח משפחה אינו יכול לכלול יעדים מפורשים.",
+      "targetCount": "הזינו בין {min} ל-{max} יעדים שאינם ריקים.",
+      "deliveryMode": "בחרו אופן שליחה שסוג הלוח תומך בו.",
+      "destination": "בחרו יעד תקין. ערוצי פורום דורשים פרסום משנה.",
+      "refreshInterval": "הזינו מרווח רענון בין {minimum} ל-{maximum} דקות.",
+      "timezone": "הזינו אזור זמן של IANA.",
+      "timeOfDay": "הזינו שעה תקינה ביום.",
+      "weekdays": "בחרו לפחות יום אחד בשבוע.",
+      "dayOfMonth": "הזינו יום בין 1 ל-31."
+    },
+    "errors": {
+      "title": "הלוחות האוטומטיים אינם זמינים",
+      "session": "ההפעלה שלכם פגה.",
+      "request": "בקשת הלוחות האוטומטיים נכשלה.",
+      "load": "טעינת הלוחות האוטומטיים נכשלה.",
+      "save": "שמירת הלוח האוטומטי נכשלה.",
+      "delete": "מחיקת הלוח האוטומטי נכשלה."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "הגדרות לוח פניות",
+    "description": "הגדרת קטגוריות וערוצי יומן לכל לוח פניות.",
+    "noPanels": "לא נמצאו לוחות פניות",
+    "noPanelsHint": "צרו את הלוח הראשון באמצעות הכפתור למעלה.",
+    "createPanel": "לוח חדש",
+    "createPanelTitle": "יצירת לוח פניות",
+    "createPanelDescription": "תנו ללוח שם ייחודי. ניתן להגדיר כפתורים וערוצים לאחר יצירתו.",
+    "panelNameLabel": "שם הלוח",
+    "panelNamePlaceholder": "לדוגמה, בקשות הצטרפות",
+    "panelCreated": "הלוח „{name}” נוצר.",
+    "confirmDeletePanel": "למחוק את הלוח „{name}”?",
+    "confirmDeletePanelHint": "הפעולה תמחק לצמיתות את הלוח ואת כל הגדרות הכפתורים שלו.",
+    "panelDeleted": "הלוח נמחק.",
+    "panelHint": "לחצו כדי להרחיב ולהגדיר את הלוח.",
+    "panelEmbed": "הודעת הלוח",
+    "panelEmbedHint": "הודעה מוטמעת המשמשת בפרסום לוח הפניות ב-Discord.",
+    "panelEmbedInfoLine1": "כדי ליצור הודעה מוטמעת או לערוך קיימת, עברו לדף %s ב-{dashboardLabel}.",
+    "panelEmbedInfoLine2": "כדי להוסיף או לערוך כפתורים, עברו אל %s של הלוח הזה.",
+    "panelEmbedPreview": "תצוגה מקדימה של הודעה",
+    "panelEmbedPreviewEmpty": "אין תצוגה מקדימה להודעת הלוח שנבחרה.",
+    "ticketOpenEmbed": "הודעה לפתיחת פנייה",
+    "ticketOpenEmbedHint": "הודעה מותאמת ואופציונלית שנשלחת כשהכפתור פותח פנייה.",
+    "selectEmbed": "בחירת הודעה מוטמעת",
+    "defaultEmbed": "ללא החלפת הודעת הלוח",
+    "noCustomMessage": "שימוש בהודעת הפנייה המוגדרת כברירת מחדל",
+    "buttons": "כפתורים",
+    "buttonList": "כפתורים",
+    "categories": "קטגוריות",
+    "openCategory": "קטגוריית פניות פתוחות",
+    "open_category": "קטגוריית פניות פתוחות",
+    "sleepCategory": "קטגוריית פניות מושהות",
+    "sleep_category": "קטגוריית פניות מושהות",
+    "closedCategory": "קטגוריית פניות סגורות",
+    "closed_category": "קטגוריית פניות סגורות",
+    "selectCategory": "בחירת קטגוריה...",
+    "logChannels": "ערוצי יומן",
+    "statusChangeLog": "יומן שינויי מצב",
+    "status_change_log": "יומן שינויי מצב",
+    "buttonClickLog": "יומן לחיצות כפתורים",
+    "ticket_button_click_log": "יומן לחיצות כפתורים",
+    "closeLog": "יומן סגירת פניות",
+    "ticket_close_log": "יומן סגירת פניות",
+    "selectChannel": "בחירת ערוץ...",
+    "savedSuccess": "הלוח „{panel}” נשמר בהצלחה.",
+    "tabChannels": "לוח פניות",
+    "tabSettings": "הגדרות",
+    "tabButtons": "כפתורים",
+    "tabMessages": "הודעות",
+    "autoSaveSaving": "שומר...",
+    "autoSaveSaved": "נשמר",
+    "autoSaveErrorTitle": "השמירה האוטומטית נכשלה",
+    "autoSaveErrorDescription": "לא ניתן היה לשמור את הגדרות הפנייה.",
+    "messages": "הודעות",
+    "noButtons": "עדיין אין כפתורים. הוסיפו אחד כדי להתחיל.",
+    "addButton": "הוספת כפתור",
+    "addButtonTitle": "הוספת כפתור",
+    "addButtonDescription": "הגדירו את מראה הכפתור החדש.",
+    "buttonLabel": "טקסט הכפתור",
+    "buttonLabelPlaceholder": "לדוגמה, הגשת בקשה",
+    "buttonStyle": "צבע הכפתור",
+    "buttonStyleBlue": "כחול",
+    "buttonStyleGrey": "אפור",
+    "buttonStyleGreen": "ירוק",
+    "buttonStyleRed": "אדום",
+    "buttonAdded": "הכפתור נוסף.",
+    "buttonDeleted": "הכפתור נמחק.",
+    "editButtonTitle": "עריכת הגדרות כפתור",
+    "editButtonDescription": "הגדרת כפתור הפנייה.",
+    "buttonAppearanceSaved": "המראה נשמר.",
+    "confirmDeleteButton": "למחוק את הכפתור „{label}”?",
+    "confirmDeleteButtonHint": "הפעולה תמחק את הכפתור ואת כל הגדרותיו, כולל תפקידים ושאלות.",
+    "modRoles": "תפקידי צוות (מתויגים)",
+    "modRolesHint": "תפקידים אלה מתויגים כשפנייה נפתחת.",
+    "noPingRoles": "תפקידי צוות (ללא תיוג)",
+    "noPingRolesHint": "תפקידים אלה יכולים לראות פניות אך אינם מתויגים.",
+    "questions": "שאלות",
+    "questionsHint": "עד חמש שאלות יוצגו בחלון בעת פתיחת הפנייה.",
+    "question": "שאלה",
+    "privateThread": "שרשור פרטי",
+    "privateThreadHint": "יוצר שרשור פרטי נפרד לצוות.",
+    "accountApply": "דרישת חשבון CoC",
+    "accountApplyHint": "המשתמש חייב לקשר חשבון Clash of Clans.",
+    "playerInfo": "הצגת פרטי שחקן",
+    "playerInfoHint": "מציג נתוני חשבון בעת פתיחת הפנייה.",
+    "thMin": "בית עירייה מינימלי",
+    "numApply": "מספר חשבונות מרבי",
+    "naming": "תבנית שמות",
+    "namingPlaceholders": "משתני שם",
+    "namingVariables": "משתנים: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "הכפתור „{label}” נשמר.",
+    "badge": {
+      "accountApply": "נדרש CoC",
+      "privateThread": "שרשור פרטי"
+    },
+    "approveMessages": "הודעות אישור ודחייה",
+    "approveMessagesHint": "הודעות מוכנות מראש שהצוות יכול לשלוח למועמדים (עד 25).",
+    "messagesMaxHint": "ניתן להוסיף עד 25 הודעות.",
+    "editMessagesButton": "עריכת הודעות",
+    "editMessagesTitle": "עריכת הודעות מוכנות מראש",
+    "editMessagesDescription": "הוספה, הסרה ועדכון של הודעות פנייה מוכנות מראש.",
+    "addMessage": "הוספת הודעה",
+    "noMessages": "עדיין אין הודעות. הוסיפו אחת כדי להתחיל.",
+    "messageName": "שם ההודעה",
+    "contentLabel": "תוכן",
+    "messageContent": "תוכן ההודעה...",
+    "messageNameRequired": "לכל ההודעות חייב להיות שם.",
+    "messagesSaved": "הודעות האישור והדחייה נשמרו.",
+    "rolesToAdd": "תפקידים להענקה",
+    "rolesToAddHint": "תפקידים שיוענקו אוטומטית למשתמש בעת פתיחת פנייה.",
+    "rolesToRemove": "תפקידים להסרה",
+    "rolesToRemoveHint": "תפקידים שיוסרו אוטומטית מהמשתמש בעת פתיחת פנייה.",
+    "applyClans": "שבטים מורשים",
+    "applyClansHint": "רק חברי השבטים האלה יכולים לפתוח את הפנייה. השאירו ריק כדי לאפשר לכולם.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "דרישות בית עירייה",
+    "thRequirementsHint": "רמות הגיבורים המינימליות הנדרשות לכל רמת בית עירייה כדי לפתוח את הפנייה.",
+    "thHeroLegend": "BK = מלך הברברים · AQ = מלכת הקשתיות · GW = השומר הגדול · RC = האלופה המלכותית · WARST = כוכבי מלחמה",
+    "addThLevel": "הוספת רמת בית עירייה",
+    "thLevel": "TH",
+    "numApplyHint": "מספר חשבונות CoC המרבי שאיתם המשתמש יכול להגיש בקשה (1–25).",
+    "embeds": "הודעות מוטמעות",
+    "embedsHint": "הודעות Discord מוטמעות המשמשות כהודעות לוח או פתיחת פנייה.",
+    "newEmbed": "הודעה מוטמעת חדשה",
+    "embedName": "שם ההודעה המוטמעת",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "כתובת Discohook",
+    "embedDiscohookHint": "עצבו את ההודעה ב-Discohook, העתיקו את כתובת הדף והדביקו אותה כאן.",
+    "openDiscohook": "פתיחת Discohook",
+    "openInDiscohook": "פתיחה ב-Discohook",
+    "copyDiscohookUrl": "העתקת כתובת Discohook",
+    "copyDiscohookUrlDone": "הכתובת הועתקה!",
+    "editEmbed": "עריכה",
+    "deleteEmbed": "מחק",
+    "confirmDeleteEmbed": "למחוק את ההודעה „{name}”?",
+    "confirmDeleteEmbedHint": "הפעולה מסירה אותה רק מ-ClashKing ולא תשפיע על הודעות Discord שכבר פורסמו.",
+    "embedSaved": "ההודעה „{name}” נשמרה.",
+    "embedCreated": "ההודעה „{name}” נוצרה.",
+    "embedDeleted": "ההודעה נמחקה.",
+    "noEmbeds": "עדיין אין הודעות מוטמעות.",
+    "noEmbedsHint": "צרו כאן הודעה מוטמעת ולאחר מכן שייכו אותה ללוח או לכפתור.",
+    "legacyEmbed": "נוצר באמצעות הבוט — הדביקו כתובת Discohook כדי לאפשר עריכה.",
+    "invalidDiscohookUrl": "כתובת לא תקינה. הדביקו כתובת דף Discohook (discohook.app/?data=... או discohook.app/?share=...).",
+    "tabEmbeds": "הודעות מוטמעות"
+  },
+  "EmbedsPage": {
+    "title": "הודעות מוטמעות",
+    "description": "יצירה וניהול של תבניות הודעות Discord מוטמעות ללוחות ולכפתורי הפניות.",
+    "nameHint": "תנו להודעה המוטמעת מזהה ייחודי. ניתן לשנות את התוכן לאחר מכן."
+  },
+  "EmbedEditor": {
+    "importSection": "ייבוא מ-Discohook",
+    "addMessage": "הוספת הודעה",
+    "addMessageDialogTitle": "הוספת הודעה",
+    "addMessageDialogDescription": "בחרו את רמת המורכבות של ההודעה.",
+    "addMessageClassicTitle": "קלאסי",
+    "addMessageClassicDescription": "פשוט ואמין: טקסט והודעות מוטמעות. אם אינכם בטוחים, בחרו באפשרות הזו.",
+    "addMessageV2Title": "רכיבים v2",
+    "addMessageV2Description": "סידורים מתקדמים ורכיבים אינטראקטיביים כגון כפתורים, בחירות ומקטעים, להגדרות מורכבות.",
+    "betaTag": "בטא",
+    "importExport": "ייבוא וייצוא",
+    "importExportDescription": "ייבוא הודעה מ-Discohook או ייצוא ההודעה הנוכחית אליו.",
+    "importFromDiscohook": "ייבוא מ-Discohook",
+    "copyDiscohookUrl": "העתקת כתובת Discohook",
+    "openInDiscohook": "פתיחה ב-Discohook",
+    "content": "תוכן",
+    "contentPlaceholder": "תוכן ההודעה שמוצג מעל ההודעות המוטמעות...",
+    "profileSection": "פרופיל",
+    "profileName": "שם",
+    "profileAvatarUrl": "כתובת תמונת פרופיל",
+    "profileUnsupportedWarning": "אזהרה: הבוט אינו תומך כרגע בעדכון הפרופיל הזה.",
+    "import": "ייבוא",
+    "importError": "כתובת Discohook לא תקינה. הדביקו כתובת של דף Discohook.",
+    "importMultipleMessagesWarning": "הקישור מכיל מספר הודעות. רק הראשונה יובאה, מכיוון שהבוט תומך בהודעה אחת לכל הודעה מוטמעת.",
+    "colorSection": "צבע",
+    "authorSection": "מחבר",
+    "authorName": "שם",
+    "authorIconUrl": "כתובת סמל",
+    "authorUrl": "כתובת המחבר",
+    "bodySection": "גוף",
+    "title": "כותרת",
+    "titleUrl": "כתובת הכותרת",
+    "sidebarColor": "צבע סרגל צד",
+    "description": "תיאור",
+    "descriptionPlaceholder": "תיאור ההודעה המוטמעת...",
+    "fieldsSection": "שדות",
+    "addField": "הוספת שדה",
+    "field": "שדה",
+    "fieldName": "שם",
+    "fieldValue": "ערך",
+    "fieldInline": "בשורה",
+    "imagesSection": "תמונות",
+    "thumbnailUrl": "כתובת תמונה ממוזערת",
+    "imageUrl": "כתובת תמונה",
+    "footerSection": "כותרת תחתונה",
+    "footerText": "טקסט כותרת תחתונה",
+    "footerIconUrl": "כתובת סמל כותרת תחתונה",
+    "timestamp": "הוספת חותמת זמן",
+    "preview": "תצוגה מקדימה",
+    "previewEmpty": "מלאו שדות כדי לראות תצוגה מקדימה",
+    "modeToggleV1": "קלאסי (V1)",
+    "modeToggleV2": "רכיבים (V2)",
+    "componentsSection": "רכיבים",
+    "addComponent": "הוספת רכיב",
+    "containerLabel": "מכל",
+    "textDisplayLabel": "תצוגת טקסט",
+    "separatorLabel": "מפריד",
+    "mediaGalleryLabel": "גלריית מדיה",
+    "sectionLabel": "מקטע",
+    "dividerLine": "הצגת קו מפריד",
+    "spacing": "מרווח",
+    "spacingSmall": "קטן",
+    "spacingLarge": "גדול",
+    "imageDescription": "טקסט חלופי",
+    "imageSpoiler": "ספוילר",
+    "addImage": "הוספת תמונה",
+    "addTextBlock": "הוספת בלוק טקסט",
+    "accessory": "אביזר",
+    "accessoryNone": "ללא",
+    "accessoryThumbnail": "תמונה ממוזערת",
+    "accessoryButton": "כפתור",
+    "thumbnailAlt": "טקסט חלופי לתמונה הממוזערת",
+    "accentColor": "צבע הדגשה",
+    "addContainer": "הוספת רכיב משנה",
+    "containerSpoiler": "מכל ספוילר",
+    "stringSelectLabel": "בחירת טקסט",
+    "userSelectLabel": "בחירת משתמש",
+    "roleSelectLabel": "בחירת תפקיד",
+    "mentionableSelectLabel": "בחירת ישות לתיוג",
+    "channelSelectLabel": "בחירת ערוץ",
+    "fileLabel": "קובץ",
+    "fileUrl": "כתובת קובץ",
+    "fileUploadButton": "העלאה",
+    "fileSpoiler": "ספוילר",
+    "selectCustomId": "מזהה מותאם אישית",
+    "selectPlaceholder": "טקסט מציין מקום",
+    "selectMinValues": "מספר ערכים מזערי",
+    "selectMaxValues": "מספר ערכים מרבי",
+    "selectOptions": "אפשרויות",
+    "selectOption": "אפשרות",
+    "selectOptionLabel": "תווית",
+    "selectOptionValue": "ערך",
+    "selectOptionDescription": "תיאור",
+    "selectOptionDefault": "נבחר כברירת מחדל",
+    "addSelectOption": "הוספת אפשרות",
+    "selectDisabled": "מושבת",
+    "actionRowMode": "סוג שורה",
+    "actionRowModeButtons": "כפתורים",
+    "actionRowLabel": "שורת פעולות",
+    "addButton": "הוספת כפתור",
+    "buttonLabel": "תווית",
+    "buttonStyle": "סגנון",
+    "buttonStylePrimary": "ראשי",
+    "buttonStyleSecondary": "משני",
+    "buttonStyleSuccess": "הצלחה",
+    "buttonStyleDanger": "מסוכן",
+    "buttonStyleLink": "קישור",
+    "tabMentions": "תיוגים",
+    "tabTime": "זמן",
+    "tabEmojis": "אימוג'ים",
+    "dateLabel": "תאריך",
+    "timeLabel": "זמן",
+    "mentionsChannels": "ערוצים",
+    "mentionsSpecial": "מיוחד",
+    "mentionsChannelList": "כל הערוצים",
+    "mentionsRoles": "תפקידים",
+    "mentionsServerGuide": "מדריך השרת",
+    "mentionsBrowseChannels": "עיון בערוצים",
+    "mentionsChannelsAndRoles": "ערוצים ותפקידים",
+    "mentionsNoChannels": "אין ערוצים התואמים לחיפוש.",
+    "mentionsNoRoles": "אין תפקידים התואמים לחיפוש.",
+    "styleLabel": "סגנון",
+    "timeRelativeNow": "לפני 0 שניות",
+    "emojiSearchPlaceholder": "מציאת האימוג'י המתאים",
+    "emojiToneLabel": "גוון עור של האימוג'י",
+    "emojiCategory": {
+      "people": "אנשים",
+      "nature": "טבע",
+      "food": "אוכל",
+      "activities": "פעילויות",
+      "travel": "נסיעות",
+      "objects": "חפצים",
+      "symbols": "סמלים",
+      "flags": "דגלים"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "מושבת",
+    "unknownComponent": "רכיב לא ידוע",
+    "unknownComponentHint": "לא ניתן לערוך כאן את סוג הרכיב הזה, אך הוא יישמר."
+  },
+  "PanelsPage": {
+    "title": "לוחות",
+    "description": "הגדירו את לוח החברים האינטראקטיבי שמפורסם בשרת. חברים יכולים לקשר חשבון, לרענן תפקידים ועוד בלחיצה אחת.",
+    "saved": "הגדרות הלוח נשמרו.",
+    "embedSection": "הודעה מוטמעת",
+    "embedHint": "הודעה מוטמעת אופציונלית שמוצגת מעל הכפתורים.",
+    "embedLabel": "הודעה מוטמעת",
+    "noEmbed": "ללא הודעה מוטמעת (כפתורים בלבד)",
+    "buttonsSection": "כפתורים",
+    "buttonsHint": "בחרו את כפתורי הפעולה להצגה. הסדר יהיה לפי בחירתכם.",
+    "colorSection": "צבע הכפתור",
+    "colorHint": "חל על כל הכפתורים.",
+    "welcomeSection": "ערוץ קבלת פנים",
+    "welcomeHint": "כאשר מוגדר, הלוח מפורסם אוטומטית כשחבר חדש מצטרף.",
+    "welcomeChannel": "ערוץ",
+    "welcomeChannelPlaceholder": "בחירת ערוץ...",
+    "editPanelButton": "עריכת לוח",
+    "editDialogTitle": "עריכת לוח",
+    "editDialogDescription": "עדכנו את ההודעה, הכפתורים וצבעם עם תצוגה מקדימה בזמן אמת לפני השמירה.",
+    "welcomeAutosaveSuccess": "ערוץ קבלת הפנים נשמר.",
+    "welcomeAutosaveDisabled": "ערוץ קבלת הפנים הושבת.",
+    "previewSection": "תצוגה מקדימה",
+    "previewHint": "כך הלוח ייראה ב-Discord.",
+    "previewNoEmbed": "לא נבחרה הודעה מוטמעת",
+    "previewEmbedNoData": "להודעה המוטמעת אין נתוני תצוגה מקדימה",
+    "previewNoButtons": "לא נבחרו כפתורים",
+    "color": {
+      "Blue": "כחול",
+      "Green": "ירוק",
+      "Grey": "אפור",
+      "Red": "אדום"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "הגרלות",
+    "description": "יצירה, תזמון וניהול של הגרלות בשרת.",
+    "create": "יצירת הגרלה",
+    "listTitle": "לוח בקרת הגרלות",
+    "listDescription": "מעקב אחר הגרלות מתוזמנות, פעילות והגרלות שהסתיימו במקום אחד.",
+    "empty": "עדיין אין הגרלות להצגה.",
+    "confirmDeleteTitle": "מחיקת הגרלה",
+    "confirmDelete": "האם למחוק את ההגרלה הזו?",
+    "discardTitle": "לבטל את השינויים?",
+    "discardDescription": "יש שינויים שלא נשמרו. אם תסגרו כעת, הם יאבדו.",
+    "discardConfirm": "ביטול",
+    "formTabs": {
+      "general": "כללי",
+      "messages": "הודעות",
+      "restrictions": "הגבלות",
+      "advanced": "מתקדם"
+    },
+    "tabs": {
+      "ongoing": "פעילות",
+      "upcoming": "בקרוב",
+      "ended": "הסתיימו"
+    },
+    "stats": {
+      "total": "סך ההגרלות",
+      "totalEntries": "סך ההשתתפויות",
+      "ongoing": "הגרלות פעילות",
+      "upcoming": "הגרלות קרובות",
+      "ended": "הגרלות שהסתיימו"
+    },
+    "statsDescriptions": {
+      "total": "כל ההגרלות שהוגדרו בשרת.",
+      "totalEntries": "סך ההשתתפויות בכל ההגרלות.",
+      "ongoing": "פעילות כעת ומקבלות משתתפים.",
+      "upcoming": "מתוזמנות להתחיל בהמשך.",
+      "ended": "הגרלות שכבר הסתיימו."
+    },
+    "emptyTab": {
+      "title": "אין כאן הגרלות",
+      "ongoing": "אין כרגע הגרלות פעילות.",
+      "upcoming": "אין הגרלות מתוזמנות. צרו אחת כדי להתחיל.",
+      "ended": "עדיין לא הסתיימו הגרלות."
+    },
+    "status": {
+      "scheduled": "מתוזמנת",
+      "ongoing": "פעילה",
+      "ended": "הסתיימה"
+    },
+    "table": {
+      "giveaway": "הגרלה",
+      "channel": "ערוץ",
+      "entries": "השתתפויות",
+      "timing": "תזמון",
+      "start": "מתחילה",
+      "end": "מסתיימת",
+      "winnersHeader": "זוכים",
+      "winners": "{count, plural, one {זוכה אחד} two {שני זוכים} other {# זוכים}}",
+      "boosters": "{count, plural, one {מאיץ אחד} two {שני מאיצים} other {# מאיצים}}",
+      "noChannel": "ללא ערוץ",
+      "noChannelHelp": "לא הוקצה ערוץ. ערכו את ההגרלה כדי לתקן זאת.",
+      "endsAt": "מסתיימת בשעה",
+      "endedAt": "הסתיימה בשעה",
+      "duplicate": "שכפול",
+      "showingEnded": "מוצגות {shown} מתוך {total} הגרלות שהסתיימו",
+      "showMore": "הצגת {count} נוספות",
+      "pendingUpdate": "עדכון בהמתנה",
+      "pendingUpdateHelp": "להגרלה יש שינויים בהמתנה שהבוט יחיל בקרוב.",
+      "openInDiscord": "פתיחה ב-Discord",
+      "viewInDiscord": "הצגה ב-Discord",
+      "reroll": "הגרלה חוזרת של זוכים",
+      "rerolledCount": "{count, plural, one {זוכה אחד הוגרל מחדש} two {שני זוכים הוגרלו מחדש} other {# זוכים הוגרלו מחדש}}",
+      "viewEntries": "הצגת משתתפים"
+    },
+    "entries": {
+      "description": "רשימת המשתתפים וסיכויי הזכייה שלהם.",
+      "totalEntries": "סך ההשתתפויות",
+      "uniqueUsers": "משתמשים ייחודיים",
+      "noEntrants": "עדיין אין משתתפים.",
+      "userId": "מזהה משתמש",
+      "entryCount": "השתתפויות",
+      "winChance": "סיכוי לזכות"
+    },
+    "dialog": {
+      "createTitle": "יצירת הגרלה",
+      "editTitle": "עריכת הגרלה",
+      "description": "הגדרת הודעת ההגרלה, התזמון והדרישות.",
+      "create": "יצירת הגרלה",
+      "saveChanges": "שמירת שינויים"
+    },
+    "form": {
+      "prize": "פרס",
+      "prizePlaceholder": "לדוגמה: כרטיס הזהב",
+      "channel": "ערוץ",
+      "channelPlaceholder": "בחירת ערוץ",
+      "startTime": "שעת התחלה",
+      "startNow": "התחלה מיידית",
+      "endTime": "שעת סיום",
+      "winners": "מספר הזוכים",
+      "mentions": "תפקידים מתויגים",
+      "roleRequirements": "תפקידים נדרשים או מוחרגים",
+      "rolesMode": "מצב תפקידים",
+      "rolesModeOptions": {
+        "none": "ללא הגבלת תפקיד",
+        "allow": "רק התפקידים האלה יכולים להשתתף",
+        "deny": "התפקידים האלה אינם יכולים להשתתף"
+      },
+      "rolesModeHelp": {
+        "none": "כל המשתמשים יכולים להשתתף בהגרלה.",
+        "allow": "רק משתמשים בעלי אחד מהתפקידים שנבחרו יכולים להשתתף.",
+        "deny": "משתמשים בעלי אחד מהתפקידים שנבחרו אינם יכולים להשתתף."
+      },
+      "textAboveEmbed": "טקסט מעל ההודעה המוטמעת",
+      "textEmbedDefault": "לחצו על הכפתור למטה כדי להשתתף.",
+      "textInEmbed": "תיאור ההודעה המוטמעת",
+      "textEndDefault": "ברכות לכל הנבחרים! ניצור איתכם קשר בקרוב.",
+      "textOnEnd": "הודעה בסיום ההגרלה",
+      "image": "תמונת ההגרלה",
+      "removeImage": "הסרת התמונה הנוכחית",
+      "imagePreviewAlt": "תצוגה מקדימה של ההגרלה",
+      "previewGiveaway": "תצוגת ההגרלה",
+      "previewEnd": "תצוגת הודעת הסיום",
+      "boosters": "מאיצי השתתפות",
+      "addBooster": "הוספת מאיץ",
+      "noBoosters": "לא הוגדרו מאיצים.",
+      "boosterLabel": "מאיץ {index}",
+      "boostValue": "מכפיל",
+      "boostRoles": "תפקידים עם האצה",
+      "requirements": "דרישות השתתפות",
+      "profilePictureRequired": "דרישת תמונת פרופיל ב-Discord",
+      "cocAccountRequired": "דרישת חשבון Clash of Clans מקושר"
+    },
+    "validation": {
+      "prizeRequired": "נדרש פרס.",
+      "channelRequired": "נדרש ערוץ.",
+      "startTimeRequired": "נדרשת שעת התחלה אלא אם ההגרלה מתחילה עכשיו.",
+      "endTimeRequired": "נדרשת שעת סיום.",
+      "endAfterStart": "שעת הסיום חייבת להיות לאחר שעת ההתחלה.",
+      "imageTooLarge": "התמונה חייבת להיות קטנה מ-8MB."
+    },
+    "preview": {
+      "liveSummary": "סיכום בזמן אמת",
+      "discordPreview": "תצוגה מקדימה ב-Discord",
+      "giveawayTitle": "תצוגה מקדימה של ההגרלה",
+      "giveawayDescription": "כך תיראה הודעת ההגרלה הפעילה.",
+      "endTitle": "תצוגת הודעת הסיום",
+      "endDescription": "זו ההודעה שתישלח כשההגרלה תסתיים.",
+      "winnerCount": "זוכים",
+      "winnerWord": "{count, plural, one {זוכה} two {זוכים} other {זוכים}}",
+      "mentionCount": "תפקידים מתויגים",
+      "requirementCount": "דרישות",
+      "boosterCount": "מאיצים",
+      "profileRequired": "נדרשת תמונת פרופיל",
+      "accountRequired": "נדרש חשבון CoC מקושר",
+      "rolesAllow": "מוגבל לתפקידים שנבחרו",
+      "rolesDeny": "התפקידים שנבחרו מוחרגים",
+      "noChannel": "עדיין לא נבחר ערוץ",
+      "noPrize": "הפרס יופיע כאן",
+      "noEmbedText": "הוסיפו טקסט כדי לצפות בתוכן ההגרלה.",
+      "noEndText": "הוסיפו הודעת סיום לזוכים.",
+      "startsAt": "מתחילה: {date}",
+      "endsAt": "מסתיימת: {date}",
+      "endsOn": "מסתיימת בתאריך {date}",
+      "endsFooter": "מסתיימת",
+      "notScheduled": "לא מתוזמנת",
+      "schedule": "לוח זמנים",
+      "endMessage": "הודעת זכייה",
+      "endSummary": "{winners, plural, one {זוכה אחד יוכרז כאן.} two {שני זוכים יוכרזו כאן.} other {# זוכים יוכרזו כאן.}}",
+      "totalParticipants": "סך המשתתפים: {count}",
+      "participate": "השתתפות",
+      "buttonHint": "כפתור הפעולה הראשי שמוצג מתחת לפרסום ב-Discord."
+    },
+    "toast": {
+      "errorTitle": "משהו השתבש",
+      "successTitle": "הצלחה",
+      "loadError": "טעינת ההגרלות נכשלה.",
+      "saveError": "שמירת ההגרלה נכשלה.",
+      "deleteError": "מחיקת ההגרלה נכשלה.",
+      "created": "ההגרלה נוצרה בהצלחה.",
+      "updated": "ההגרלה עודכנה בהצלחה.",
+      "deleted": "ההגרלה נמחקה בהצלחה.",
+      "rerolled": "הזוכים הוגרלו מחדש בהצלחה.",
+      "rerollError": "הגרלת הזוכים מחדש נכשלה."
+    },
+    "reroll": {
+      "title": "הגרלה חוזרת של זוכים",
+      "description": "בחרו את הזוכים שיוחלפו. זוכים חדשים יוגרלו מבין המשתתפים הזכאים.",
+      "selectWinners": "בחירת זוכים להחלפה:",
+      "confirm": "{count, plural, one {הגרלה מחדש של זוכה אחד} two {הגרלה מחדש של שני זוכים} other {הגרלה מחדש של # זוכים}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "סקירת לוח הבקרה",
+    "description": "עקבו אחר נתוני השרת והתחילו בהגדרה",
+    "stats": {
+      "linkedPlayers": "שחקנים מקושרים",
+      "linkedPlayersDesc": "שחקנים המקושרים בשרת הזה",
+      "clansConfigured": "שבטים שהוגדרו",
+      "clansConfiguredDesc": "שבטים במעקב בשרת הזה",
+      "activeRosters": "סגלים פעילים",
+      "activeRostersDesc": "סגלי מלחמה שנוצרו",
+      "totalAccounts": "חשבונות מקושרים",
+      "totalAccountsDesc": "סך חשבונות CoC המקושרים",
+      "playersTracked": "שחקנים במעקב",
+      "globalPlayers": "סך השחקנים במסד הנתונים",
+      "clansTracked": "שבטים במעקב",
+      "globalClans": "סך השבטים במסד הנתונים",
+      "botStatus": "מצב הבוט",
+      "online": "מקוון",
+      "offline": "לא מקוון",
+      "memoryUsage": "זיכרון: {used}MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "נתוני הבוט",
+    "clans": {
+      "title": "השבטים שלכם",
+      "description": "{count, plural, one {שבט אחד הוגדר} two {שני שבטים הוגדרו} other {# שבטים הוגדרו}}",
+      "manage": "ניהול שבטים",
+      "addFirst": "הוספת השבט הראשון"
+    },
+    "quickStart": {
+      "title": "התחלה מהירה",
+      "description": "התחילו להגדיר את בוט ClashKing",
+      "step1": {
+        "title": "הגדרת הגדרות כלליות",
+        "description": "הגדירו כללי כינויים, צבעי הודעות מוטמעות וערוצי יומן"
+      },
+      "step2": {
+        "title": "הוספת השבטים שלכם",
+        "description": "חברו את שבטי Clash of Clans והגדירו תפקידים"
+      },
+      "step3": {
+        "title": "הגדרת תפקידים אוטומטיים",
+        "description": "הגדירו הקצאת תפקידים אוטומטית לפי בית עירייה, גביעים ועוד."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "נתוני הבוט",
+    "description": "נתוני בוט ClashKing העולמיים ותקינות המערכת",
+    "about": {
+      "title": "על הנתונים האלה",
+      "description": "אלה נתונים עולמיים של כל רשת בוט ClashKing",
+      "globalStats": "נתונים עולמיים",
+      "globalStatsDesc": "מספרי השחקנים והשבטים מייצגים את כל הישויות במעקב בכל שרתי Discord המשתמשים ב-ClashKing",
+      "systemHealth": "תקינות המערכת",
+      "systemHealthDesc": "השימוש במעבד ובזיכרון מציג את העומס הנוכחי על תשתית API של ClashKing"
+    }
+  },
+  "NotFound": {
+    "title": "404 - הדף לא נמצא",
+    "description": "הדף שחיפשתם אינו קיים.",
+    "goHome": "מעבר לדף הבית"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | בוט Discord, אפליקציה ולוח בקרת שבט",
+      "description": "נהלו מלחמות, סגלים, חשבונות, תזכורות והגדרות שבט באמצעות ClashKing ב-Discord, בנייד ובאינטרנט.",
+      "openGraphTitle": "ClashKing | נהלו את השבט"
+    },
+    "navigation": {
+      "ariaLabel": "ניווט ClashKing",
+      "homeLabel": "דף הבית של ClashKing",
+      "mobileApp": "אפליקציה לנייד",
+      "discordBot": "בוט Discord",
+      "dashboard": "לוח בקרה"
+    },
+    "language": {
+      "label": "שפה"
+    },
+    "appearance": {
+      "label": "מראה",
+      "day": "יום",
+      "sunset": "שקיעה"
+    },
+    "actions": {
+      "addToDiscord": "הוספה ל-Discord",
+      "addClashKing": "הוספת ClashKing",
+      "openDashboard": "פתיחת לוח הבקרה",
+      "joinTestFlight": "הצטרפות ל-TestFlight",
+      "getAndroidApp": "הורדת אפליקציית Android"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "נהלו",
+          "second": "את",
+          "third": "השבט."
+        },
+        "accounts": {
+          "first": "נהלו",
+          "second": "את",
+          "third": "החשבונות."
+        },
+        "stats": {
+          "first": "גלו",
+          "second": "את",
+          "third": "הנתונים."
+        }
+      },
+      "rotatingLabel": "נהלו את השבט. נהלו את החשבונות. גלו את הנתונים.",
+      "copy": "מלחמות, סגלים, חשבונות והגדרות שבט ב-Discord, בנייד ובאינטרנט."
+    },
+    "app": {
+      "title": "אפליקציה לנייד",
+      "intro": "האפליקציה שמלווה את חשבונות ה-Clash שלכם.",
+      "stageLabel": "מסכי השבט, השדרוגים ווידג'ט המלחמה באפליקציית ClashKing",
+      "images": {
+        "clanOverview": "סקירת שבט באפליקציית ClashKing",
+        "upgradeStats": "נתוני השדרוג של השומר הגדול באפליקציית ClashKing",
+        "warWidget": "וידג'ט תוצאות מלחמה של ClashKing"
+      },
+      "features": {
+        "widgets": {
+          "title": "וידג'טים",
+          "copy": "ראו את המלחמות במבט מהיר."
+        },
+        "notifications": {
+          "title": "התראות",
+          "copy": "קבלו התראה כשמתאפשרת תקיפה או כששדרוג מסתיים."
+        },
+        "accounts": {
+          "title": "חשבונות מקושרים",
+          "copy": "שמרו את כל חשבונות Clash במקום אחד."
+        }
+      }
+    },
+    "bot": {
+      "title": "בוט Discord",
+      "intro": "נתוני שבט וכלים ישירות בתוך Discord.",
+      "imageLabel": "פקודת השבט של ClashKing ב-Discord",
+      "imageAlt": "פקודת ClashKing המציגה את נתוני שבט ArcLine ב-Discord",
+      "features": {
+        "rosters": {
+          "title": "סגלים",
+          "copy": "נהלו חשבונות ל-CWL או לאירועים."
+        },
+        "warTools": {
+          "title": "כלי מלחמה",
+          "copy": "בדקו תקיפות, הרכבים ותזכורות ב-Discord."
+        },
+        "accounts": {
+          "title": "חשבונות מקושרים",
+          "copy": "שמרו את כל חשבונות Clash במקום אחד."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "לוח בקרה",
+      "intro": "נהלו סגלים, תזכורות והגדרות שרת במקום אחד.",
+      "imageLabel": "בקתת בנאי המייצגת כלי ניהול שבט",
+      "imageAlt": "בקתת בנאי ברמה 8",
+      "features": {
+        "settings": {
+          "title": "הגדרות שבט",
+          "copy": "הגדירו שבטים, תפקידים וערוצים."
+        },
+        "rosters": {
+          "title": "סגלים",
+          "copy": "נהלו חשבונות ל-CWL או לאירועים."
+        },
+        "automation": {
+          "title": "אוטומציה",
+          "copy": "תזמנו תזכורות ומשימות שרת."
+        }
+      }
+    },
+    "resources": {
+      "title": "בנו עם ClashKing.",
+      "copy": "מדריכים, קוד מקור ונתונים מובנים לכלי קהילה.",
+      "ariaLabel": "משאבים למפתחים",
+      "documentation": "תיעוד",
+      "publicApi": "API ציבורי"
+    },
+    "footer": {
+      "tagline": "כלי Clash of Clans לכולם",
+      "docs": "תיעוד",
+      "privacy": "מדיניות פרטיות",
+      "terms": "תנאי שימוש",
+      "legal": "תוכן זה אינו משויך, מאושר, ממומן או מאושר במפורש על ידי Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing ל-Discord, לנייד ולאינטרנט",
+    "privacy": {
+      "title": "מדיניות פרטיות | ClashKing",
+      "openGraphTitle": "מדיניות הפרטיות של ClashKing",
+      "description": "כיצד ClashKing אוסף, משתמש, מאחסן ומגן על נתוני חשבון, משחק ואפליקציה.",
+      "heading": "מדיניות פרטיות",
+      "eyebrow": "בתוקף מ-17 ביולי 2026"
+    },
+    "terms": {
+      "title": "תנאי שימוש | ClashKing",
+      "openGraphTitle": "תנאי השימוש של ClashKing",
+      "description": "התנאים החלים בעת שימוש באתרי, אפליקציות, שירותי וכלי הקהילה של ClashKing.",
+      "heading": "תנאי שימוש",
+      "eyebrow": "המידע המשפטי של ClashKing"
+    }
+  }
+}

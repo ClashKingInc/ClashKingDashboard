@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Yükleniyor...",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "search": "Ara",
+    "filter": "Filtre",
+    "add": "Ekle",
+    "remove": "Kaldır",
+    "refresh": "Yenile",
+    "close": "Kapat",
+    "openMenu": "Menüyü aç",
+    "submit": "Gönder",
+    "back": "Geri",
+    "next": "İleri",
+    "previous": "Önceki",
+    "poweredBy": "Destekleyen",
+    "noData": "Kullanılabilir veri yok",
+    "noChannelFound": "Kanal bulunamadı.",
+    "searchChannels": "Kanallarda ara...",
+    "searchClans": "Klanlarda ara...",
+    "noClanFound": "Klan bulunamadı.",
+    "searchCategories": "Kategorilerde ara...",
+    "noRoleFound": "Rol bulunamadı.",
+    "searchRoles": "Rollerde ara...",
+    "addRole": "Rol ekle...",
+    "error": "Bir hata oluştu",
+    "success": "Başarılı",
+    "actions": "İşlemler",
+    "details": "Ayrıntılar",
+    "view": "Görüntüle",
+    "unknown": "Bilinmeyen",
+    "confirm": "Onayla",
+    "settings": "Ayarlar",
+    "status": "Durum",
+    "retry": "Yeniden dene",
+    "disabled": "Devre dışı",
+    "name": "Ad",
+    "description": "Açıklama",
+    "createdAt": "Oluşturulma",
+    "updatedAt": "Güncellenme",
+    "dashboard": "Kontrol Paneli",
+    "loadError": "Veriler yüklenemedi.",
+    "tryAgain": "Tekrar dene",
+    "create": "Oluştur",
+    "viewClashProfile": "Clash profilini görüntüle",
+    "openInGame": "Oyunda aç",
+    "openChannelInDiscord": "Bu kanalı Discord'da aç",
+    "playerProfile": {
+      "clan": "Klan",
+      "townHallLevel": "Belediye Binası seviyesi",
+      "trophies": "Kupalar",
+      "warPreference": "Savaş tercihi",
+      "warPreferenceIn": "Savaşlara katılıyor",
+      "warPreferenceOut": "Savaşlara katılmıyor",
+      "signupGroup": "Kayıt grubu",
+      "heroLevels": "Kahraman seviyeleri",
+      "hitrate30d": "30 günlük isabet oranı"
+    }
+  },
+  "Navigation": {
+    "features": "Özellikler",
+    "openSource": "Açık Kaynak",
+    "help": "Yardıma mı ihtiyacınız var?",
+    "support": "Bizi destekleyin",
+    "commands": "Komutlar",
+    "premium": "Premium",
+    "documentation": "Belgeler",
+    "loginWithDiscord": "Discord ile giriş yap",
+    "addToDiscord": "Discord'a ekle",
+    "openDashboard": "Kontrol panelini aç",
+    "dashboardSettings": "Kontrol paneli ayarları",
+    "logout": "Çıkış yap",
+    "settings": "Ayarlar",
+    "theme": "Tema",
+    "systemTheme": "Sistem ayarını kullan",
+    "lightTheme": "Açık tema",
+    "darkTheme": "Koyu tema",
+    "language": "Dil",
+    "browserLanguage": "Tarayıcı dili"
+  },
+  "HomePage": {
+    "badge": "{serverCount}+ sunucu ClashKing kullanıyor",
+    "title": "En Güçlü",
+    "titleHighlight": "Clash of Clans Botu",
+    "subtitle": "Klan yönetimini otomatikleştirin, oyuncu istatistiklerini izleyin, savaşları yönetin ve topluluğunuzu aktif tutun.",
+    "cta": {
+      "heading": "Klanınızı dönüştürmeye hazır mısınız?",
+      "description": "Clash of Clans topluluklarını geliştirmek için ClashKing kullanan {serverCount}+ Discord sunucusuna katılın. Kurulum yalnızca 2 dakika sürer.",
+      "button": "ClashKing'i Discord'a ekle",
+      "trustBadge": "Daima ücretsiz • Kredi kartı gerekmez • {serverCount}+ sunucu",
+      "addToDiscord": "Discord'a ekle",
+      "openDashboard": "Kontrol panelini aç"
+    },
+    "stats": {
+      "servers": "Discord sunucusu",
+      "users": "Aktif kullanıcı",
+      "clans": "İzlenen klan"
+    },
+    "features": {
+      "title": "Klanınızı yönetmek için gereken her şey",
+      "subtitle": "Clash of Clans toplulukları için özel olarak tasarlanmış güçlü özellikler",
+      "autoRoles": {
+        "title": "Otomatik rol yönetimi",
+        "description": "Oyuncu durumuna, klan konumuna ve başarılara göre rolleri otomatik atayın. Sunucunuzu zahmetsizce düzenli tutun."
+      },
+      "playerStats": {
+        "title": "Oyuncu İstatistikleri",
+        "description": "Ayrıntılı oyuncu istatistiklerini, ilerleme grafiklerini ve saldırı geçmişini izleyin. Kimin geliştiğini, kimin yardıma ihtiyacı olduğunu görün."
+      },
+      "leaderboards": {
+        "title": "Liderlik Tabloları",
+        "description": "Bağışlar, kupalar, savaş yıldızları ve özel ölçütler için rekabetçi liderlik tabloları oluşturun. Katılımı artırın."
+      },
+      "warTracking": {
+        "title": "Savaş Takibi",
+        "description": "Savaş kadrolarını ve saldırıları gerçek zamanlı izleyin, savaş sonrası analizleri görüntüleyin. Hiçbir ayrıntıyı kaçırmayın."
+      },
+      "smartReminders": {
+        "title": "Akıllı Hatırlatıcılar",
+        "description": "Klan Oyunları, savaş saldırıları, Klan Savaşı Ligi ve özel etkinlikler için otomatik hatırlatıcılarla herkesi bilgilendirin."
+      },
+      "customization": {
+        "title": "Tam özelleştirme",
+        "description": "Komutları, embed renklerini, takma adları ve izinleri özelleştirin. ClashKing'i kendinize göre ayarlayın."
+      },
+      "familyManagement": {
+        "title": "Klan ailesi yönetimi",
+        "description": "Birden fazla klanı aile olarak yönetin. Klanlar arası istatistikleri, ortak liderlik tablolarını ve birleşik rolleri kullanın."
+      },
+      "analytics": {
+        "title": "Gelişmiş Analizler",
+        "description": "Klan performansı, oyuncu etkinliği ve büyüme eğilimleri hakkında ayrıntılı bilgi edinin. Veriye dayalı kararlar alın."
+      },
+      "performance": {
+        "title": "Yıldırım Hızlı",
+        "description": "Anlık komut yanıtları ve gerçek zamanlı güncellemeler için geliştirildi. Gecikme yaşamayın."
+      },
+      "security": {
+        "title": "Güvenli ve Güvenilir",
+        "description": "%99,9 çalışma süresi, şifreli veriler ve düzenli yedeklemelerle klan verileriniz güvende."
+      }
+    },
+    "footer": {
+      "tagline": "Discord toplulukları için en güçlü Clash of Clans botu.",
+      "about": {
+        "title": "Hakkında",
+        "features": "Özellikler",
+        "help": "Yardıma mı ihtiyacınız var?",
+        "openSource": "Açık Kaynak",
+        "support": "Bizi destekleyin"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Kontrol Paneli",
+        "inviteBot": "Botu davet et"
+      },
+      "resources": {
+        "title": "Kaynaklar",
+        "documentation": "Belgeler",
+        "quickStart": "Hızlı başlangıç rehberi",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Topluluk",
+        "discord": "Discord Sunucusu",
+        "twitter": "X (Twitter)",
+        "reportBug": "Hata bildir",
+        "requestFeature": "Özellik iste"
+      },
+      "legal": {
+        "copyright": "ClashKing. Tüm hakları saklıdır.",
+        "privacy": "Gizlilik Politikası",
+        "terms": "Hizmet Şartları"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Sunucuda değil",
+    "unknownUser": "Bilinmeyen kullanıcı",
+    "notLinked": "Bağlı değil",
+    "status": {
+      "onServer": "Sunucuda",
+      "notOnServer": "Sunucuda değil"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "Discord profilini görüntüle",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Genel Bakış",
+      "description": "Kontrol paneli ana sayfası"
+    },
+    "general": {
+      "name": "Genel Ayarlar",
+      "description": "Sunucu yapılandırması"
+    },
+    "dashboardAccess": {
+      "name": "Kontrol paneli erişimi",
+      "description": "Kontrol paneli bölümlerine yetki verin"
+    },
+    "familySettings": {
+      "name": "Aile ayarları",
+      "description": "Aile rolleri ve takma adlar"
+    },
+    "clans": {
+      "name": "Klanlar",
+      "description": "Klanlarınızı yönetin"
+    },
+    "logs": {
+      "name": "Kayıtlar",
+      "description": "Webhook yapılandırması"
+    },
+    "roles": {
+      "name": "Roller",
+      "description": "Rol otomasyonu"
+    },
+    "reminders": {
+      "name": "Hatırlatmalar",
+      "description": "Tüm hatırlatıcı türleri"
+    },
+    "rosters": {
+      "name": "Listeler",
+      "description": "Liste yönetimi"
+    },
+    "bases": {
+      "name": "Üsler",
+      "description": "Düzen arşivi ve etkileşim"
+    },
+    "autoboards": {
+      "name": "Otomatik tablolar",
+      "description": "Otomatik liderlik tabloları"
+    },
+    "giveaways": {
+      "name": "Çekilişler",
+      "description": "Çekiliş kampanyalarını yönetin"
+    },
+    "panels": {
+      "name": "Paneller",
+      "description": "İşlem düğmeli etkileşimli üye panelleri"
+    },
+    "tickets": {
+      "name": "Biletler",
+      "description": "Başvuru ve destek biletleri"
+    },
+    "embeds": {
+      "name": "Embedler",
+      "description": "Discord embed şablonları"
+    },
+    "links": {
+      "name": "Bağlantılar",
+      "description": "Oyuncu ve Discord hesabı bağlantıları"
+    },
+    "bans": {
+      "name": "Yasaklamalar ve Uyarılar",
+      "description": "Moderasyon araçları"
+    },
+    "wars": {
+      "name": "Savaşlar",
+      "description": "Savaş istatistikleri"
+    },
+    "leaderboards": {
+      "name": "Liderlik Tabloları",
+      "description": "Küresel sıralamalar"
+    },
+    "sections": {
+      "configuration": "Yapılandırma",
+      "clanManagement": "Klan Yönetimi",
+      "playerManagement": "Oyuncu Yönetimi",
+      "automation": "Otomasyon",
+      "statistics": "İstatistikler"
+    },
+    "switchServer": "Sunucu değiştir",
+    "goHome": "Ana sayfa"
+  },
+  "BasesPage": {
+    "eyebrow": "Klan Yönetimi",
+    "title": "Üsler",
+    "description": "Paylaşılan düzenleri, etkileşim geçmişini ve Discord kaynak mesajlarını inceleyin.",
+    "refresh": "Yenile",
+    "create": "Üs ekle",
+    "retry": "Tekrar dene",
+    "dismiss": "Kapat",
+    "cancel": "İptal",
+    "previous": "Önceki",
+    "next": "İleri",
+    "pagination": "Sayfa {page}/{total}",
+    "imageAlt": "Üs düzeni görseli {index}",
+    "noDescription": "Açıklama belirtilmedi.",
+    "openLayout": "Düzeni aç",
+    "openMessage": "Discord mesajı",
+    "summary": {
+      "total": "Toplam üs",
+      "page": "Geçerli sayfa",
+      "visible": "Görünür"
+    },
+    "counts": {
+      "downloads": "Benzersiz indirmeler",
+      "upvotes": "Olumlu oylar",
+      "downvotes": "Olumsuz oylar"
+    },
+    "history": {
+      "title": "İndirme geçmişi ({count})",
+      "empty": "Kaydedilmiş indirici kimliği yok.",
+      "resolve": "Profili bul"
+    },
+    "delete": {
+      "action": "Sil",
+      "confirmTitle": "Bu üs silinsin mi?",
+      "confirmDescription": "Önce Discord kaynak mesajı silinmeye çalışılır, ardından veritabanı kaydı kalıcı olarak kaldırılır. Üs geri yüklenemez.",
+      "confirmAction": "Üssü sil",
+      "deleting": "Siliniyor…",
+      "baseId": "Üs kimliği",
+      "discordSource": "Discord kaynağı",
+      "successTitle": "Üs silindi",
+      "successDeleted": "Veritabanı kaydı ve Discord mesajı silindi.",
+      "successAlreadyMissing": "Veritabanı kaydı silindi; Discord mesajı zaten yoktu.",
+      "cleanupFailedTitle": "Discord temizliği başarısız olduğu için üs korundu",
+      "cleanupCompleteTitle": "Discord temizliği tamamlandı; üs korundu",
+      "failureTitle": "Üs silinemedi",
+      "failureFallback": "Silme isteği başarısız oldu.",
+      "retryable": "Yeniden denenebilir",
+      "notRetryable": "Yeniden denenemez",
+      "cleanup": {
+        "deleted": "Discord mesajı silindi",
+        "alreadyMissing": "Discord mesajı zaten yoktu",
+        "failed": "Discord temizliği başarısız"
+      }
+    },
+    "empty": {
+      "title": "Henüz paylaşılmış üs yok",
+      "description": "Bir Discord kanalı seçip Clash of Clans düzen bağlantısını girerek ilk düzeninizi ekleyin."
+    },
+    "form": {
+      "title": "Üs ekle",
+      "description": "Üsler oluşturulduktan sonra düzenlenemez. ClashKing'in Discord mesajını göndereceği yeri seçip düzen bağlantısını doğrulayın.",
+      "channel": "Discord kanalı",
+      "channelPlaceholder": "Kanal seçin",
+      "channelSearch": "Kanallarda ara…",
+      "channelsLoading": "Kanallar yükleniyor…",
+      "baseLink": "Düzen bağlantısı",
+      "descriptionLabel": "Açıklama",
+      "images": "Görseller",
+      "chooseImages": "Düzen görsellerini seç",
+      "imageLimit": "En fazla dört görsel ekleyebilirsiniz. Üs oluşturulmadan önce yüklemeler tamamlanır.",
+      "submit": "Üs oluştur",
+      "creating": "Yükleniyor ve oluşturuluyor…",
+      "createRejectedTitle": "Üs oluşturulmadı",
+      "createCleanupCompleteTitle": "Discord temizliği tamamlandı; üs oluşturulmadı",
+      "createCleanupFailedTitle": "Discord mesajı kalmış olabilir; üs oluşturulmadı",
+      "databaseNotInserted": "Veritabanı kaydı eklenmedi",
+      "discordMessageCreated": "Discord mesajı oluşturuldu",
+      "discordMessageId": "Discord mesaj kimliği",
+      "retryable": "Yeniden denenebilir",
+      "notRetryable": "Otomatik olarak denemeyin",
+      "cleanup": {
+        "notNeeded": "Discord temizliği gerekmiyor",
+        "deleted": "Discord mesajı silindi",
+        "alreadyMissing": "Discord mesajı zaten yoktu",
+        "failed": "Discord temizliği başarısız"
+      }
+    },
+    "errors": {
+      "title": "Üsler kullanılamıyor",
+      "load": "Üsler yüklenemedi.",
+      "create": "Üs oluşturulamadı.",
+      "upload": "Görsel yüklenemedi.",
+      "downloader": "İndirici bulunamadı.",
+      "channels": "Discord kanalları yüklenemedi.",
+      "channelRequired": "Bir Discord kanalı seçin.",
+      "linkRequired": "Düzen bağlantısı gerekli.",
+      "descriptionTooLong": "Açıklama en fazla 1.000 karakter olabilir.",
+      "tooManyImages": "En fazla dört görsel seçin."
+    }
+  },
+  "BansPage": {
+    "title": "Moderasyon",
+    "description": "Oyuncu yasaklamalarını ve uyarılarını yönetin",
+    "viewClashProfile": "Clash profilini görüntüle",
+    "tabs": {
+      "bans": "Yasaklamalar",
+      "strikes": "Uyarılar"
+    },
+    "bans": {
+      "title": "Yasaklı oyuncular",
+      "noBans": "Yasaklı oyuncu bulunamadı",
+      "addBan": "Yasaklama ekle",
+      "removeBan": "Yasaklamayı kaldır",
+      "confirmRemove": "Bu yasaklamayı kaldırmak istediğinizden emin misiniz?",
+      "playerTag": "Oyuncu Etiketi",
+      "playerName": "Oyuncu Adı",
+      "reason": "Neden",
+      "bannedAt": "Yasaklanma tarihi",
+      "search": "Ad veya etiketle ara...",
+      "howItWorks": {
+        "title": "Yasaklamalar nasıl çalışır?",
+        "description": "Yasaklı bir oyuncu klanlarınızdan birine katılırsa <clansTab>Klanlar sekmesinde</clansTab> ayarladığınız klan kanalına uyarı gönderilir. Bot oyuncuların katılmasını engelleyemez, yalnızca uyarı gönderebilir."
+      },
+      "stats": {
+        "total": "Toplam yasaklama",
+        "recent": "Son yasaklamalar (7 gün)",
+        "commonReason": "En yaygın neden",
+        "activeOnServer": "Sunucudaki aktif yasaklamalar",
+        "last7Days": "Son 7 gün içinde",
+        "commonReasonValue": "Taciz ve Toksiklik",
+        "noBans": "Henüz yasaklama yok",
+        "percentOfAll": "Tüm yasaklamaların %{percent}'i",
+        "percentOfAllLabel": "tüm yasaklamaların yüzdesi"
+      },
+      "list": {
+        "title": "Yasaklı oyuncular",
+        "count": "{count} {count, plural, one {oyuncu} other {oyuncu}} yasaklandı",
+        "searchPlaceholder": "Ad, etiket veya nedenle ara...",
+        "noBansFound": "Yasaklama bulunamadı",
+        "noBans": "Yasaklı oyuncu yok",
+        "adjustSearch": "Arama ölçütlerini değiştirin",
+        "getStarted": "Oyuncu moderasyonuna başlamak için yasaklama ekleyin"
+      },
+      "table": {
+        "player": "Oyuncu",
+        "reason": "Neden",
+        "bannedBy": "Yasaklayan",
+        "date": "Tarih",
+        "daysAgo": "{days} gün önce",
+        "noReason": "Neden belirtilmedi"
+      },
+      "addDialog": {
+        "title": "Oyuncuyu yasakla",
+        "description": "Oyuncuyu yasaklama listesine ekleyin. Bu sunucudaki klanlardan birine katılırsa uyarı alırsınız.",
+        "playerTagLabel": "Oyuncu Etiketi",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Oyuncu Adı (isteğe bağlı)",
+        "playerNamePlaceholder": "Oyuncu adını girin",
+        "reasonLabel": "Yasaklama nedeni",
+        "reasonPlaceholder": "Bu oyuncunun neden yasaklandığını açıklayın...",
+        "submit": "Oyuncuyu yasakla"
+      },
+      "bestPractices": {
+        "title": "En iyi uygulamalar",
+        "document": {
+          "title": "Ayrıntılı belgeleyin:",
+          "desc": "Diğer moderatörlerin bağlamı anlayabilmesi için her yasaklamaya ayrıntılı bir neden ekleyin."
+        },
+        "review": {
+          "title": "Düzenli olarak inceleyin:",
+          "desc": "Tüm yasaklamaların hâlâ gerekli ve gerekçeli olduğundan emin olmak için listeyi düzenli olarak inceleyin."
+        },
+        "consistent": {
+          "title": "Tutarlı olun:",
+          "desc": "Sağlıklı bir topluluğu korumak için yasaklamaları tüm oyunculara adil ve tutarlı biçimde uygulayın."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Oyuncu uyarıları",
+      "noStrikes": "Uyarı bulunamadı",
+      "addStrike": "Uyarı ekle",
+      "removeStrike": "Uyarıyı kaldır",
+      "confirmRemove": "Bu uyarıyı kaldırmak istediğinizden emin misiniz?",
+      "playerTag": "Oyuncu Etiketi",
+      "reason": "Neden",
+      "weight": "Ağırlık",
+      "rolloverDays": "Sona erme süresi",
+      "createdAt": "Oluşturulma tarihi",
+      "search": "Oyuncu etiketiyle ara...",
+      "howItWorks": {
+        "title": "Uyarılar nasıl çalışır?",
+        "description": "Kural ihlalleri için oyunculara uyarı verilir. Her uyarının önemini belirten bir ağırlığı vardır ve belirli bir günün ardından sona erebilir. Uyarılar, yasaklama uygulanmadan önce oyuncu davranışını izlemeye yardımcı olur."
+      },
+      "stats": {
+        "total": "Toplam uyarı",
+        "recent": "Son uyarılar (7 gün)",
+        "totalWeight": "Toplam uyarı ağırlığı",
+        "activeOnServer": "Sunucudaki aktif uyarılar",
+        "last7Days": "Son 7 gün içinde",
+        "cumulativeWeight": "Toplam uyarı ağırlığı",
+        "commonReason": "En yaygın neden",
+        "commonReasonValue": "Spam"
+      },
+      "list": {
+        "title": "Oyuncu uyarıları",
+        "count": "{count} {count, plural, one {uyarı} other {uyarı}} verildi",
+        "searchPlaceholder": "Ad, etiket veya nedenle ara...",
+        "noStrikesFound": "Uyarı bulunamadı",
+        "noStrikes": "Henüz uyarı verilmedi",
+        "adjustSearch": "Arama ölçütlerini değiştirin",
+        "getStarted": "Oyuncu ihlallerini izlemek için bir uyarı ekleyin",
+        "viewAll": "Tüm uyarılar",
+        "viewGrouped": "Oyuncuya göre"
+      },
+      "table": {
+        "player": "Oyuncu",
+        "reason": "Neden",
+        "weight": "Ağırlık",
+        "addedBy": "Ekleyen",
+        "date": "Tarih",
+        "expires": "Süresi dolar",
+        "never": "Hiçbir zaman",
+        "noReason": "Neden belirtilmedi",
+        "daysAgo": "{days} gün önce",
+        "totalStrikes": "Toplam uyarı",
+        "totalWeight": "Toplam ağırlık",
+        "lastStrike": "Son uyarı"
+      },
+      "addDialog": {
+        "title": "Uyarı ekle",
+        "description": "Bir oyuncuya uyarı verin. Uyarıların farklı ağırlıkları ve sona erme tarihleri olabilir.",
+        "playerTagLabel": "Oyuncu Etiketi",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Neden",
+        "reasonPlaceholder": "Bu uyarının neden verildiğini açıklayın...",
+        "weightLabel": "Uyarı ağırlığı",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Sona erme süresi (gün)",
+        "rolloverPlaceholder": "İsteğe bağlı",
+        "submit": "Uyarı ekle"
+      },
+      "guidelines": {
+        "title": "Uyarı yönergeleri",
+        "weights": {
+          "title": "Ağırlıkları dikkatli kullanın:",
+          "desc": "Ciddi ihlaller için daha yüksek (2-3), küçük sorunlar için daha düşük (1) ağırlıklar atayın."
+        },
+        "expiration": {
+          "title": "Sona erme tarihi belirleyin:",
+          "desc": "Oyunculara davranışlarını zamanla düzeltme fırsatı vermek için uyarılara sona erme tarihi eklemeyi değerlendirin."
+        },
+        "patterns": {
+          "title": "Tekrarlanan davranışları izleyin:",
+          "desc": "Kalıcı yasaklamalara geçmeden önce tekrarlayan ihlalleri belirlemek için uyarıları kullanın."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Yasaklama başarıyla eklendi",
+      "banRemoved": "Yasaklama başarıyla kaldırıldı",
+      "strikeAdded": "Uyarı başarıyla eklendi",
+      "strikeRemoved": "Uyarı başarıyla kaldırıldı",
+      "errorLoadingBans": "Yasaklı oyuncular yüklenemedi",
+      "errorLoadingStrikes": "Uyarılar yüklenemedi",
+      "errorAddingBan": "Yasaklama eklenemedi",
+      "errorAddingStrike": "Uyarı eklenemedi",
+      "errorRemovingBan": "Yasaklama kaldırılamadı",
+      "errorRemovingStrike": "Uyarı kaldırılamadı"
+    }
+  },
+  "RostersPage": {
+    "title": "Listeler ve Kadrolar",
+    "description": "Savaş listelerini, kadroları ve üye atamalarını yönetin",
+    "stats": {
+      "totalRosters": "Toplam liste",
+      "totalMembers": "Toplam üye",
+      "clanRosters": "Klan listeleri",
+      "familyRosters": "Aile listeleri",
+      "members": "Üyeler",
+      "avgTh": "Ort. BB",
+      "avgHitrate": "Ort. isabet oranı",
+      "distribution": "Dağılım",
+      "clan": "Klan",
+      "family": "Aile",
+      "external": "Harici",
+      "thDistribution": "BB dağılımı",
+      "capacity": "Kapasite"
+    },
+    "filters": {
+      "search": "Listelerde ara...",
+      "type": "Tip",
+      "all": "Tümü",
+      "clan": "Klan",
+      "family": "Aile",
+      "clear": "Temizle"
+    },
+    "comparisonMode": {
+      "cancel": "İptal",
+      "compare": "Karşılaştır",
+      "compareRosters": "Listeleri karşılaştır",
+      "selectRosters": "Listeleri seçin",
+      "selectRostersDesc": "Karşılaştırmak için en az 2 liste seçin",
+      "maxReached": "Üst sınıra ulaşıldı",
+      "maxReachedDesc": "Aynı anda en fazla 4 listeyi karşılaştırabilirsiniz"
+    },
+    "createDialog": {
+      "title": "Yeni liste oluştur",
+      "description": "Klanınız için yeni bir liste yapılandırın",
+      "aliasLabel": "Liste adı",
+      "aliasPlaceholder": "Örn. KSL listesi",
+      "typeLabel": "Liste türü",
+      "typeClan": "Klan",
+      "typeFamily": "Aile",
+      "signupScopeLabel": "Kayıt kapsamı",
+      "scopeClanOnly": "Yalnızca klan",
+      "scopeFamilyWide": "Tüm aile",
+      "clanLabel": "Klan",
+      "clanPlaceholder": "Klan seçin",
+      "descriptionLabel": "Açıklama (isteğe bağlı)",
+      "descriptionPlaceholder": "Liste açıklaması...",
+      "cancel": "İptal",
+      "creating": "Oluşturuluyor...",
+      "create": "Liste oluştur"
+    },
+    "editDialog": {
+      "title": "Listeyi düzenle",
+      "description": "Liste ayarlarını ve yapılandırmasını değiştirin",
+      "aliasLabel": "Liste adı",
+      "descriptionLabel": "Açıklama",
+      "descriptionPlaceholder": "Liste açıklaması...",
+      "minThLabel": "Minimum Belediye Binası",
+      "minThPlaceholder": "Örn. 13",
+      "maxThLabel": "Maksimum Belediye Binası",
+      "maxThPlaceholder": "Örn. 16",
+      "rosterSizeLabel": "Liste boyutu",
+      "rosterSizePlaceholder": "Örn. 50",
+      "columnsLabel": "Gösterilecek sütunlar",
+      "columnsPlaceholder": "Gösterilecek sütunları seçin",
+      "sortLabel": "Sıralama düzeni",
+      "sortPlaceholder": "Sıralama alanlarını seçin",
+      "cancel": "İptal",
+      "saving": "Kaydediliyor...",
+      "save": "Değişiklikleri kaydet"
+    },
+    "addMembersDialog": {
+      "title": "Listeye üye ekle",
+      "description": "Klanınızdan üyeler seçin veya oyuncu etiketleri girin",
+      "bulkTagsLabel": "Etiketlerle toplu ekle",
+      "bulkTagsPlaceholder": "Oyuncu etiketlerini her satıra bir tane veya virgülle ayırarak girin",
+      "searchLabel": "Üyelerde ara",
+      "searchPlaceholder": "Ad veya etiketle ara...",
+      "selectFromClan": "Klan üyelerinden seçin",
+      "selectedCount": "Seçildi",
+      "noMembers": "Kullanılabilir üye yok",
+      "noMembersSelected": "Üye seçilmedi",
+      "noMembersSelectedDesc": "Lütfen üye seçin veya oyuncu etiketi girin.",
+      "cancel": "İptal",
+      "adding": "Ekleniyor...",
+      "add": "Üye ekle"
+    },
+    "detailsDialog": {
+      "title": "Liste ayrıntıları",
+      "edit": "Düzenle",
+      "refresh": "Yenile",
+      "refreshing": "Yenileniyor...",
+      "delete": "Sil",
+      "deleting": "Siliniyor...",
+      "addMembers": "Üye ekle",
+      "close": "Kapat",
+      "noMembers": "Bu listede üye yok",
+      "noMembersDesc": "Başlamak için üye ekleyin",
+      "memberCount": "Üyeler",
+      "thRestriction": "BB Seviyesi",
+      "avgTh": "Ort. BB",
+      "avgHitrate": "Ort. isabet oranı",
+      "clan": "Klan",
+      "family": "Aile",
+      "external": "Harici",
+      "substitute": "YEDEK",
+      "removeMember": "Kaldır"
+    },
+    "rosterCard": {
+      "members": "Üyeler",
+      "thLevel": "BB Seviyesi",
+      "avgTh": "Ort. BB",
+      "avgHitrate": "Ort. isabet oranı",
+      "clan": "Klan",
+      "family": "Aile",
+      "external": "Harici",
+      "noRestriction": "Kısıtlama yok",
+      "view": "Görüntüle",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "noGroup": "Grup yok",
+      "moveToGroup": "Gruba taşı",
+      "clone": "Kopyala",
+      "allRosters": "Tüm Listeler",
+      "manageRosters": "Savaş listelerinizi ve kadrolarınızı yönetin"
+    },
+    "memberColumns": {
+      "name": "Ad",
+      "townhall": "Belediye Binası",
+      "tag": "Etiket",
+      "hitrate": "İsabet oranı",
+      "current_clan": "Mevcut klan",
+      "current_clan_tag": "Klan etiketi",
+      "discord": "Discord",
+      "hero_lvs": "Kahramanlar",
+      "war_pref": "Savaş tercihi",
+      "trophies": "Kupalar",
+      "signup_group": "Kayıt kategorisi"
+    },
+    "columns": {
+      "configure": "Sütunlar",
+      "title": "Sütunları yapılandır",
+      "description": "Gösterilecek sütunları ve sıralarını seçin",
+      "selected": "Seçili sütunlar",
+      "available": "Kullanılabilir sütunlar",
+      "save": "Sütunları kaydet",
+      "reset": "Sütunları sıfırla"
+    },
+    "sortFields": {
+      "townhall": "Belediye Binası Seviyesi",
+      "name": "Ad",
+      "tag": "Etiket",
+      "heroLvs": "Kahramanlar",
+      "trophies": "Kupalar",
+      "hitrate": "30 günlük isabet oranı",
+      "currentClanTag": "Klan etiketi",
+      "addedAt": "Eklenme tarihi"
+    },
+    "thRestrictions": {
+      "only": "TH{th} yalnızca",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "Kısıtlama yok"
+    },
+    "emptyState": {
+      "noRosters": "Henüz liste oluşturulmadı",
+      "noRostersDesc": "Başlamak için ilk listenizi oluşturun",
+      "noMatch": "Filtrelerinizle eşleşen liste yok",
+      "noMatchDesc": "Arama veya filtre ölçütlerini değiştirin"
+    },
+    "toast": {
+      "errorTitle": "Hata",
+      "successTitle": "Başarılı",
+      "errorLoadingRosters": "Listeler yüklenemedi. Lütfen tekrar deneyin.",
+      "errorLoadingMembers": "Klan üyeleri yüklenemedi.",
+      "rosterCreated": "Liste başarıyla oluşturuldu!",
+      "errorCreatingRoster": "Liste oluşturulamadı. Lütfen tekrar deneyin.",
+      "rosterUpdated": "Liste başarıyla güncellendi!",
+      "errorUpdatingRoster": "Liste güncellenemedi. Lütfen tekrar deneyin.",
+      "rosterDeleted": "Liste başarıyla silindi!",
+      "errorDeletingRoster": "Liste silinemedi. Lütfen tekrar deneyin.",
+      "membersAdded": "Listeye {count} üye eklendi!",
+      "errorAddingMembers": "Üyeler eklenemedi. Lütfen tekrar deneyin.",
+      "memberRemoved": "Üye listeden kaldırıldı!",
+      "errorRemovingMember": "Üye kaldırılamadı. Lütfen tekrar deneyin.",
+      "substituteMarked": "Üye yedek olarak işaretlendi!",
+      "substituteUnmarked": "Üyenin yedek işareti kaldırıldı!",
+      "errorUpdatingMember": "Üye güncellenemedi. Lütfen tekrar deneyin.",
+      "rosterRefreshed": "Liste verileri başarıyla yenilendi!",
+      "errorRefreshingRoster": "Liste verileri yenilenemedi. Lütfen tekrar deneyin.",
+      "memberTransferred": "Üye listeler arasında başarıyla aktarıldı!",
+      "errorTransferringMember": "Üye aktarılamadı. Lütfen tekrar deneyin.",
+      "rosterCloned": "Liste başarıyla kopyalandı!",
+      "errorCloningRoster": "Liste kopyalanamadı. Lütfen tekrar deneyin.",
+      "missingMembersAdded": "Listeye {count} eksik üye eklendi!",
+      "errorLoadingMissingMembers": "Eksik üyeler yüklenemedi."
+    },
+    "cloneDialog": {
+      "title": "Listeyi kopyala",
+      "description": "Bu listenin bir kopyasını oluşturun",
+      "aliasLabel": "Yeni liste adı",
+      "aliasPlaceholder": "Kopyalanan liste için ad girin",
+      "copyMembers": "Üyeleri yeni listeye kopyala",
+      "memberCount": "{count} üye",
+      "originalRoster": "Orijinal liste:",
+      "cancel": "İptal",
+      "cloning": "Kopyalanıyor...",
+      "clone": "Listeyi kopyala",
+      "copyMembersHint": "Üyeler orijinal listeden kopyalanır"
+    },
+    "missingMembers": {
+      "title": "Eksik Üyeler",
+      "description": "Bu listede kayıtlı olmayan klan üyeleri",
+      "coverage": "Liste kapsamı",
+      "registered": "kayıtlı",
+      "missing": "eksik",
+      "total": "toplam",
+      "selectAll": "Tümünü seç",
+      "selected": "seçili",
+      "addSelected": "{count} üye ekle",
+      "button": "Eksik Üyeler",
+      "addAll": "Tümünü ekle",
+      "adding": "Ekleniyor...",
+      "close": "Kapat",
+      "allCaughtUp": "Eksik üye yok!",
+      "allCaughtUpDesc": "Tüm klan üyeleri bu listeye kayıtlı",
+      "clanOnly": "Eksik üye analizi yalnızca klan listelerinde kullanılabilir",
+      "error": "Eksik üyeler yüklenemedi",
+      "thisRoster": "Bu liste",
+      "wholeGroup": "Tüm grup"
+    },
+    "eventTime": {
+      "label": "Etkinlik Başlangıç Zamanı",
+      "timezone": "Saat diliminiz",
+      "utc": "UTC",
+      "clear": "Temizle"
+    },
+    "bulkValidation": {
+      "valid": "geçerli",
+      "invalid": "geçersiz",
+      "invalidTags": "Geçersiz"
+    },
+    "memberAutocomplete": {
+      "label": "Veya sunucu üyelerinde ara",
+      "placeholder": "Üye aramak için tıklayın...",
+      "searchPlaceholder": "Ad, etiket veya klanla ara...",
+      "loading": "Üyeler yükleniyor...",
+      "noResults": "Üye bulunamadı",
+      "groupHeading": "Sunucu üyeleri",
+      "selectedLabel": "Seçili üyeler",
+      "membersSelected": "üye seçildi",
+      "selected": "Seçildi",
+      "clanMembersLabel": "Veya Klan üyelerinden seçin"
+    },
+    "retry": "Yeniden dene",
+    "back": "Geri",
+    "refresh": "Yenile",
+    "createRoster": "Liste oluştur",
+    "searchPlaceholder": "Listelerde ara...",
+    "noRosters": "Henüz liste yok",
+    "noRostersHint": "Başlamak için ilk listenizi oluşturun",
+    "noSearchResults": "Liste bulunamadı",
+    "noSearchResultsHint": "Farklı bir arama terimi deneyin",
+    "createFirstRoster": "İlk listeyi oluştur",
+    "deleteConfirm": "\"{name}\" listesini silmek istediğinizden emin misiniz?",
+    "deleteSuccess": "Liste silindi",
+    "deleteSuccessDesc": "Liste \"{name}\" silindi",
+    "deleteError": "Liste silinemedi",
+    "createSuccess": "Liste oluşturuldu",
+    "createSuccessDesc": "Liste \"{name}\" oluşturuldu",
+    "createError": "Liste oluşturulamadı",
+    "createErrorAlias": "Lütfen bir liste adı girin",
+    "createErrorClan": "Lütfen bir klan seçin",
+    "refreshSuccess": "Liste verileri yenilendi",
+    "refreshError": "Liste yenilenemedi",
+    "saveSuccess": "Ayarlar kaydedildi",
+    "saveError": "Ayarlar kaydedilemedi",
+    "columnsUpdated": "Sütunlar güncellendi",
+    "columnsError": "Sütunlar güncellenemedi",
+    "addMembersSuccess": "Üyeler Eklendi",
+    "addMembersSuccessDesc": "Listeye {count} üye eklendi",
+    "addMembersError": "Üyeler eklenemedi",
+    "removeMemberSuccess": "Üye kaldırıldı",
+    "removeMemberError": "Üye kaldırılamadı",
+    "clearMembers": "Üyeleri temizle",
+    "clearMembersConfirm": "\"{name}\" listesindeki tüm üyeler kaldırılsın mı? Bu işlem geri alınamaz.",
+    "clearMembersSuccess": "Tüm üyeler kaldırıldı",
+    "clearMembersError": "Üyeler temizlenemedi",
+    "automationCreated": "Otomasyon oluşturuldu",
+    "automationUpdated": "Otomasyon güncellendi",
+    "automationDeleted": "Otomasyon silindi",
+    "automationError": "Otomasyon kaydedilemedi",
+    "groupCreated": "Grup oluşturuldu",
+    "groupUpdated": "Grup güncellendi",
+    "groupDeleted": "Grup silindi",
+    "groupError": "Grup kaydedilemedi",
+    "categoryCreated": "Kategori oluşturuldu",
+    "categoryUpdated": "Kategori güncellendi",
+    "categoryDeleted": "Kategori silindi",
+    "categoryError": "Kategori kaydedilemedi",
+    "common": {
+      "cancel": "İptal",
+      "save": "Kaydet",
+      "close": "Kapat"
+    },
+    "tabs": {
+      "members": "Üyeler",
+      "automations": "Otomasyonlar",
+      "groups": "Gruplar",
+      "categories": "Kategoriler",
+      "settings": "Ayarlar"
+    },
+    "members": {
+      "count": "üyeler",
+      "noMembers": "Bu listede üye yok",
+      "noMembersHint": "Başlamak için üye ekleyin",
+      "actions": "İşlemler",
+      "viewList": "Liste görüntüle",
+      "viewGrouped": "Kayıt kategorisine göre görüntüle",
+      "unassigned": "Atanmamış",
+      "dragHere": "Üyeleri buraya sürükleyin",
+      "clickToGroup": "Kategoriye göre görüntülemek için tıklayın",
+      "apiErrorTooltip": "Veriler API’den alınamadı",
+      "staleDataTooltip": "Veriler güncel olmayabilir. Son güncelleme:",
+      "refresh": "Üye verilerini yenile",
+      "alsoIn": "Ayrıca şurada:",
+      "addCategory": "Grup ekle",
+      "removeCategory": "Grubu kaldır"
+    },
+    "addMembers": {
+      "title": "Listeye üye ekle",
+      "description": "Klanlarınızdan üyeler seçin veya oyuncu etiketleri girin",
+      "bulkTagsLabel": "Oyuncu etiketleri (her satıra bir tane veya virgülle ayrılmış)",
+      "adding": "Ekleniyor...",
+      "submit": "Üye ekle"
+    },
+    "compare": {
+      "enterMode": "Karşılaştır",
+      "modeTitle": "Karşılaştırma modu",
+      "modeHint": "Seçmek için listelere tıklayın (2-4 liste)",
+      "exitMode": "İptal",
+      "selected": "liste seçildi",
+      "button": "Karşılaştır",
+      "title": "Listeleri karşılaştır",
+      "dragToMove": "Üyeleri taşımak için listeler arasında sürükleyip bırakın",
+      "loadError": "Listeler yüklenemedi",
+      "memberMoved": "Üye taşındı",
+      "memberMovedDesc": "{name}, {from} konumundan {to} konumuna taşındı",
+      "moveError": "Üye taşınamadı",
+      "selectAtLeast2": "Karşılaştırmak için en az 2 liste seçin",
+      "moving": "Üye taşınıyor...",
+      "compareGroup": "Grubu karşılaştır",
+      "dragToMoveCategory": "Üyeleri listeler ve kategoriler arasında sürükleyin",
+      "categoryChanged": "Kategori değiştirildi",
+      "categoryChangedDesc": "{name}, {category} kategorisine taşındı",
+      "uncategorized": "Kategorisiz"
+    },
+    "ungrouped": "Gruplandırılmamış",
+    "automations": {
+      "description": "Bu liste için otomatik işlemler planlayın",
+      "create": "Otomasyon oluştur",
+      "empty": "Henüz otomasyon yok",
+      "emptyHint": "İşlemleri planlamak için otomasyon oluşturun",
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "executed": "Bitti",
+      "missed": "Kaçırıldı",
+      "lastRun": "Son çalıştırma",
+      "enable": "Etkinleştir",
+      "disable": "Devre dışı bırak",
+      "createTitle": "Otomasyon oluştur",
+      "editTitle": "Otomasyonu düzenle",
+      "createDesc": "Otomatik bir işlem planlayın",
+      "actionType": "İşlem türü",
+      "offsetFromEvent": "Etkinliğe göre zamanlama",
+      "offsetBefore": "Etkinlikten önce",
+      "offsetAfter": "Etkinlikten sonra",
+      "offsetUnit_minutes": "dakika",
+      "offsetUnit_hours": "saat",
+      "offsetUnit_days": "gün",
+      "offsetPreview": "Çalıştırılacağı zaman: {date}",
+      "offsetNoEventDate": "Çalışma tarihini önizlemek için ayarlarda etkinlik başlangıç zamanını belirleyin",
+      "offsetAtStart": "Etkinlik başlangıcında",
+      "pingType": "Hatırlatıcı türü",
+      "pingType_signup_reminder": "Kayıt hatırlatıcısı",
+      "pingType_missing": "Eksik klan",
+      "pingType_sub_needed": "Yedek gerekli",
+      "channel": "Discord kanalı",
+      "selectChannel": "Bir kanal seçin",
+      "channelHint": "İşlemin yayımlanacağı veya yürütüleceği kanal",
+      "activeLabel": "Aktif",
+      "target": "Hedef",
+      "targetThisRoster": "Bu liste",
+      "targetGroups": "Gruplar",
+      "targetHint": "Otomasyonu yalnızca bu listeye veya gruptaki tüm listelere uygulayın",
+      "group": "Grup",
+      "groupAutomationHint": "Gruplar sekmesinden yönetin",
+      "targetRoster": "Liste",
+      "targetGroup": "Grup",
+      "willExecute": "Planlanan zamanda çalıştırılır",
+      "paused": "Duraklatıldı — çalışmayacak",
+      "actions": {
+        "ping": "Hatırlatıcı gönder",
+        "post": "Listeyi yayımla",
+        "openSignup": "Kayıtları aç",
+        "closeSignup": "Kayıtları kapat",
+        "delete": "Listeyi sil",
+        "clear": "Üyeleri temizle",
+        "archive": "Listeyi arşivle"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Henüz kaydolmamış veya yanlış klanda bulunan üyelere hatırlatıcı gönderir",
+        "roster_post": "Son listeyi seçilen kanalda yayımlar",
+        "roster_signup": "Oyuncuların kaydolabilmesi için kayıtları açar",
+        "roster_signup_close": "Kayıtları kapatır ve yeni kayıtları engeller",
+        "roster_delete": "Listeyi ve tüm verilerini kalıcı olarak siler",
+        "roster_clear": "Listeyi silmeden tüm üyeleri kaldırır",
+        "roster_archive": "Listeyi arşivleyip salt okunur hâle getirir"
+      },
+      "infoBox": "Otomasyonlar etkinliğin başlangıç zamanına göre tetiklenir. Bir zaman farkı belirlediğinizde (ör. 3 gün önce) bot, yinelenen etkinlikler de dâhil olmak üzere işlemi o anda otomatik olarak yürütür."
+    },
+    "groups": {
+      "title": "Liste grupları",
+      "description": "Daha kolay yönetmek için listeleri gruplara ayırın",
+      "create": "Yeni grup",
+      "noGroups": "Henüz grup oluşturulmadı",
+      "rostersCount": "listeler",
+      "createTitle": "Grup oluştur",
+      "editTitle": "Grubu düzenle",
+      "nameLabel": "Grup adı",
+      "namePlaceholder": "Örn. KSL grupları",
+      "infoBox": "Gruplar, birden fazla listeyi birlikte yönetmenizi sağlar (ör. tüm KSL listeleri). Ayarlar sekmesinden bir listeyi gruba atayabilir ve otomasyonları gruptaki tüm listelere tek seferde uygulayabilirsiniz.",
+      "manageAutomations": "Otomasyonları yönet",
+      "automationsTitle": "Grup otomasyonları",
+      "automationsDesc": "Bu otomasyonlar gruptaki tüm listelere uygulanır",
+      "noAutomations": "Henüz otomasyon yok",
+      "noAutomationsHint": "Bu grup için otomasyon oluşturun",
+      "addAutomation": "Otomasyon ekle",
+      "deleteConfirm": "\"{name}\" grubu silinsin mi? Bu gruptaki listeler grupsuz kalır.",
+      "emptyGroup": "Bu grupta liste yok",
+      "rules": {
+        "title": "Grup kuralları",
+        "rulesHint": "Bu kurallar gruptaki tüm listelere uygulanır ve değişiklikler hemen yansıtılır.",
+        "maxAccounts": "Kullanıcı başına en fazla hesap",
+        "maxAccountsBadge": "En fazla {count}/kullanıcı",
+        "rosterSize": "Liste boyutu",
+        "rosterSizeBadge": "Boyut {size}",
+        "minSignups": "Kayıt eşiği",
+        "minSignupsBadge": "Eşik {count}",
+        "categoriesTitle": "Kayıt kategorileri",
+        "categoriesHint": "Bu grupta kullanılabilecek kategorileri seçin. Değişiklikler tüm listelere hemen uygulanır.",
+        "categoriesBadge": "{count} kategori",
+        "noCategories": "Kategori yok.",
+        "newCategoryPlaceholder": "Yeni kategori ad…"
+      }
+    },
+    "categories": {
+      "title": "Kayıt kategorileri",
+      "description": "Oyuncu kayıtları ve liste filtreleme kategorileri",
+      "manage": "Kategorileri yönet",
+      "create": "Yeni Kategori",
+      "noCategories": "Henüz kategori oluşturulmadı",
+      "createTitle": "Kategori oluştur",
+      "editTitle": "Kategoriyi düzenle",
+      "deleteConfirm": "\"{name}\" kategorisi silinsin mi?",
+      "idLabel": "Kategori ID",
+      "nameLabel": "Kategori adı",
+      "infoBox": "Kategoriler, oyuncuların kayıt olurken uygunluklarını veya rollerini belirtmesini sağlar (ör. 'Uygun', 'Yedek', 'Yalnızca gerektiğinde'). Kategoriler bu sunucudaki tüm listeler arasında paylaşılır. Bir gruba bağlı listelerde kullanılacak kategorileri grup ayarlarından yapılandırın."
+    },
+    "settings": {
+      "general": "Kimlik ve yapılandırma",
+      "restrictions": "Kısıtlamalar ve sınırlar",
+      "name": "Liste adı",
+      "rosterType": "Liste türü",
+      "typeClan": "Klan",
+      "typeFamily": "Aile",
+      "signupScope": "Kayıt kapsamı",
+      "scopeClanOnly": "Yalnızca klan",
+      "scopeFamilyWide": "Tüm aile",
+      "clan": "Klan",
+      "selectClan": "Klan seçin",
+      "description": "Açıklama",
+      "descriptionPlaceholder": "Bu liste için açıklama girin...",
+      "typeAndScope": "Tür ve kapsam",
+      "eventTime": "Etkinlik Başlangıç Zamanı",
+      "eventTimeHint": "Etkinliğin başlangıç zamanı. Otomasyonlar ve geri sayımlar için kullanılır.",
+      "recurrenceDays": "Tekrarlama aralığı",
+      "recurrenceModeDays": "Belirli gün aralığı",
+      "recurrenceModeMonthly": "Ayın günü",
+      "recurrenceDaysUnit": "gün",
+      "recurrenceDayOfMonthPrefix": "Her ayın",
+      "recurrenceDayOfMonthSuffix": ". günü",
+      "recurrenceDaysHint": "Tek seferlik bir etkinlik için boş bırakın. Tekrarlar arasındaki gün sayısını girin (ör. aylık KSL için 30).",
+      "recurrenceDayOfMonthHint": "Her ayın bu gününde tekrarlanır (ör. ayın 1'i için 1).",
+      "group": "Grup",
+      "noGroup": "Grup yok",
+      "thRequirements": "Belediye Binası gereksinimleri",
+      "minTh": "Minimum BB",
+      "maxTh": "Maksimum BB",
+      "signupLimits": "Kayıt Sınırları",
+      "rosterSize": "Liste boyutu",
+      "rosterSizeHint": "En fazla üye sayısı",
+      "minSignups": "Minimum kayıt",
+      "minSignupsHint": "Listeyi doldurmak için gereken en az kayıt sayısı",
+      "maxAccountsPerUser": "Kullanıcı başına en fazla hesap",
+      "maxAccountsHint": "Discord kullanıcısı başına hesap sınırı",
+      "allowedCategories": "İzin verilen kayıt kategorileri",
+      "allowedCategoriesHint": "Değiştirmek için tıklayın. Hiçbiri seçilmezse tüm kategorilere izin verilir.",
+      "defaultSignupCategory": "Varsayılan kayıt kategorisi",
+      "defaultSignupCategoryNone": "Yok (varsayılan seçilmez)",
+      "defaultSignupCategoryHint": "Bir üye kaydolduğunda önceden seçili olacak kategori.",
+      "categoriesManagedByGroup": "Kayıt kategorileri grup düzeyinde yönetilir. Bu gruptaki tüm listelerde kullanılabilecek kategorileri yapılandırmak için Listeler sayfasındaki grup ayarlarını açın.",
+      "saving": "Kaydediliyor...",
+      "save": "Ayarları kaydet"
+    }
+  },
+  "LinksPage": {
+    "title": "Bağlantı yönetimi",
+    "description": "Discord üyelerinin hesap bağlantılarını yönetin ve oyuncu hesaplarının sahipliğini doğrulayın",
+    "tabs": {
+      "overview": "Genel bakış",
+      "pending": "Bekleyen",
+      "bulk": "Toplu işlemler",
+      "analytics": "Analizler"
+    },
+    "stats": {
+      "totalMembers": "Toplam üye",
+      "membersWithLinks": "Bağlı hesabı olan üyeler",
+      "totalLinkedAccounts": "Toplam bağlı hesap",
+      "verifiedAccounts": "Doğrulanmış hesaplar",
+      "ofTotal": "toplamın",
+      "avgPerMember": "Ort.:",
+      "perMember": "üye başına",
+      "verified": "doğrulanmış"
+    },
+    "filters": {
+      "searchPlaceholder": "Üye adı, kullanıcı adı, oyuncu adı veya etiketle ara...",
+      "filterByStatus": "Duruma göre filtrele",
+      "allAccounts": "Tüm hesaplar",
+      "verifiedOnly": "Yalnızca doğrulanmış",
+      "unverifiedOnly": "Yalnızca doğrulanmamış",
+      "minAccounts": "Minimum hesap sayısı",
+      "allMembers": "Tüm üyeler",
+      "oneOrMore": "1+ hesap",
+      "twoOrMore": "2+ hesap",
+      "threeOrMore": "3+ hesap",
+      "fiveOrMore": "5+ hesap"
+    },
+    "overview": {
+      "title": "Hesap bağlantıları",
+      "description": "Tüm Discord ve Clash of Clans hesap bağlantılarını görüntüleyip yönetin",
+      "showingMembers": "{count} {members} gösteriliyor",
+      "member": "üye",
+      "members": "üyeler",
+      "noMembers": "Üye bulunamadı",
+      "adjustFilters": "Arama veya filtreleri değiştirin.",
+      "noLinkedAccounts": "Bağlı hesabı olan üye yok.",
+      "exportCSV": "CSV olarak dışa aktar",
+      "exportJSON": "JSON olarak dışa aktar",
+      "account": "hesap",
+      "accounts": "hesaplar",
+      "more": "daha fazla",
+      "unknown": "Bilinmeyen"
+    },
+    "pending": {
+      "title": "Bekleyen doğrulamalar",
+      "description": "{count} hesap doğrulama bekliyor",
+      "allVerified": "Tüm hesaplar doğrulandı!",
+      "noPending": "Şu anda bekleyen doğrulama yok.",
+      "linked": "Bağlı:"
+    },
+    "bulk": {
+      "title": "Toplu işlemler",
+      "description": "Birden fazla üyeye aynı anda işlem uygulayın",
+      "selectAll": "Tümünü seç ({count})",
+      "deselectAll": "Tümünün seçimini kaldır",
+      "unlinkSelected": "Seçilenlerin bağlantısını kaldır ({count})",
+      "linked": "bağlı",
+      "comingSoon": "Toplu bağlantı kaldırma özellikleri yakında!"
+    },
+    "analytics": {
+      "title": "Bağlantı analizleri",
+      "description": "Bağlantı istatistiklerine ve eğilimlere genel bakış",
+      "verificationRate": "Doğrulama oranı",
+      "verified": "Doğrulanmış",
+      "unverified": "Doğrulanmamış",
+      "accountDistribution": "Hesap dağılımı",
+      "oneAccount": "1 hesap",
+      "twoToThreeAccounts": "2-3 hesap",
+      "fourPlusAccounts": "4+ hesap",
+      "townHallLevels": "Belediye Binası seviyeleri",
+      "other": "Diğer",
+      "coverage": "Kapsam",
+      "linkedMembers": "Bağlı üyeler",
+      "coverageRate": "Kapsam oran",
+      "linkInsights": "Bağlantı bilgileri",
+      "avgAccountsPerMember": "Üye başına ortalama hesap:",
+      "mostLinkedAccounts": "En fazla bağlı hesap:",
+      "membersWithoutLinks": "Bağlı hesabı olmayan üyeler:"
+    },
+    "actions": {
+      "unlinkAccount": "Hesap bağlantısını kaldır"
+    },
+    "deleteDialog": {
+      "title": "Hesap bağlantısını kaldır",
+      "description": "{playerName} bağlantısını kaldırmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "cancel": "İptal",
+      "unlinking": "Bağlantı kaldırılıyor...",
+      "unlink": "Bağlantıyı kaldır"
+    },
+    "bulkDialog": {
+      "title": "Hesap bağlantılarını topluca kaldır",
+      "description": "Seçilen {count} üyenin tüm hesap bağlantılarını kaldırmak istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "cancel": "İptal",
+      "unlinkAll": "Tüm bağlantıları kaldır"
+    },
+    "toast": {
+      "unlinkFailed": "Hesap bağlantısı kaldırılamadı. Lütfen tekrar deneyin."
+    },
+    "badges": {
+      "verified": "Doğrulandı",
+      "unverified": "Doğrulanmadı",
+      "pending": "Bekleyen"
+    },
+    "pagination": {
+      "showing": "Toplam {total} üyeden {start}-{end} arası gösteriliyor",
+      "page": "{total} sayfanın {current}. sayfası",
+      "previous": "Önceki",
+      "next": "İleri"
+    }
+  },
+  "WarsPage": {
+    "title": "Savaş istatistikleri",
+    "description": "Savaş performansını izleyin ve savaş istatistiklerini analiz edin",
+    "actions": {
+      "exportData": "Verileri dışa aktar",
+      "resetFilters": "Filtreleri sıfırla",
+      "applyFilters": "Filtreleri uygula"
+    },
+    "filters": {
+      "title": "Filtreler",
+      "description": "Savaş istatistiklerini farklı ölçütlere göre filtreleyin",
+      "clan": "Klan",
+      "allClans": "Tüm klanlar",
+      "townHall": "Belediye Binası",
+      "townHallShort": "TH",
+      "allTownHalls": "Tüm BB seviyeleri",
+      "townHallLevel": "TH {level}",
+      "period": "Dönem",
+      "last7Days": "Son 7 gün",
+      "last30Days": "Son 30 gün",
+      "last90Days": "Son 90 gün",
+      "last6Months": "Son 6 ay",
+      "lastYear": "Son yıl",
+      "custom": "Özel",
+      "startDate": "Başlangıç tarihi",
+      "endDate": "Bitiş tarihi",
+      "warTypes": "Savaş türleri"
+    },
+    "summaryStats": {
+      "totalWins": "Toplam galibiyet",
+      "totalWinsDesc": "Toplam {totalWars} savaşta",
+      "totalLosses": "Toplam mağlubiyet",
+      "totalLossesDesc": "{totalDraws} beraberlik",
+      "winRate": "Galibiyet oranı",
+      "winRateDesc": "Genel performans",
+      "activeWars": "Etkin savaşlar",
+      "activeWarsDesc": "{activeCwl} KSL'de"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Haftalık savaş performansı",
+        "description": "Seçilen dönemdeki haftalık galibiyet, mağlubiyet ve beraberlikler",
+        "wins": "galibiyet",
+        "losses": "mağlubiyet",
+        "draws": "beraberlik"
+      },
+      "thSuccessRate": {
+        "title": "Belediye Binasına göre saldırı başarı oranı",
+        "description": "BB seviyesine göre 3 yıldız oranı",
+        "threeStarPercent": "3 yıldız %",
+        "otherPercent": "Diğer %"
+      },
+      "warTypeDistribution": {
+        "title": "Savaş türü dağılımı",
+        "description": "Savaş türüne göre dağılım",
+        "cwl": "KSL",
+        "random": "Normal savaş",
+        "friendly": "Dostluk savaşı"
+      },
+      "topPerformers": {
+        "title": "En iyi oyuncular",
+        "description": "Toplam yıldıza göre en iyi savaşçılar",
+        "attacksAndStars": "{attacks} saldırı • {stars} yıldız",
+        "noData": "Oyuncu verisi yok. Filtrelerinizi değiştirmeyi deneyin."
+      },
+      "missedAttacks": {
+        "title": "Kaçırılan saldırılar",
+        "description": "Tüm saldırılarını kullanmayan oyuncular",
+        "attacks": "kaçırılan saldırı"
+      },
+      "topDefenders": {
+        "title": "En iyi savunmacılar",
+        "description": "Ortalama verilen yıldıza göre en iyi savunmacılar ",
+        "defensesAndStars": "{defenses} savunma • Verilen {stars} yıldız",
+        "noData": "Savunma verisi yok. Filtrelerinizi değiştirmeyi deneyin."
+      },
+      "worstAttackers": {
+        "title": "En kötü saldırganlar",
+        "description": "Saldırı başına ortalama yıldızı en düşük oyuncular (en az 3 saldırı)",
+        "attacksAndStars": "{attacks} saldırı • {stars} yıldız",
+        "noData": "Oyuncu verisi yok. Filtrelerinizi değiştirmeyi deneyin."
+      },
+      "worstDefenders": {
+        "title": "En kötü savunmacılar",
+        "description": "Savunmada ortalama en fazla yıldız veren oyuncular (en az 3 savunma)",
+        "defensesAndStars": "{defenses} savunma • Verilen {stars} yıldız",
+        "noData": "Savunma verisi yok. Filtrelerinizi değiştirmeyi deneyin."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Klan savaş istatistikleri",
+      "description": "Her klan için ayrıntılı istatistikler",
+      "headers": {
+        "clan": "Klan",
+        "status": "Durum",
+        "wars": "Savaşlar",
+        "record": "G/M/B",
+        "winRate": "Galibiyet oranı",
+        "avgDestruction": "Ort. yıkım",
+        "avgStarsPerAttack": "Saldırı başına yıldız",
+        "avgDefenseStars": "Savunma başına yıldız"
+      },
+      "status": {
+        "inWar": "Savaşta",
+        "cwl": "KSL",
+        "peace": "Barış"
+      },
+      "noData": "Klan istatistiği yok. Filtreleri yeniden uygulayın veya verilerin yüklenmesini bekleyin."
+    },
+    "toast": {
+      "errorTitle": "Hata",
+      "errorLoadingClans": "Klanlar yüklenemedi. Lütfen tekrar deneyin.",
+      "errorLoadingWarData": "Savaş verileri yüklenemedi. Lütfen tekrar deneyin.",
+      "errorNoClans": "Kullanılabilir klan yok",
+      "errorApplyingFilters": "Filtreler uygulanamadı. Lütfen tekrar deneyin."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Liderlik Tabloları",
+    "description": "Klan Başkenti ve daha fazlası için küresel liderlik tabloları",
+    "comingSoon": "Bu özellikler yakında geliyor. Daha sonra tekrar kontrol edin!",
+    "stats": {
+      "totalEntries": "Toplam Katılımlar",
+      "type": "Tip",
+      "league": "Lig",
+      "weekend": "Hafta sonu"
+    },
+    "filters": {
+      "title": "Filtreler",
+      "description": "Liderlik tablosu görünümünü özelleştirin",
+      "type": "Tip",
+      "metric": "Ölçüt",
+      "league": "Lig",
+      "weekend": "Hafta sonu"
+    },
+    "types": {
+      "player": "Oyuncular",
+      "clan": "Klanlar"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+      "capitalLooted": "Yağmalanan Başkent ganimeti"
+        },
+        "clan": {
+          "capitalTotalLoot": "Toplam Ganimet",
+          "raidsCompleted": "Tamamlanan baskınlar",
+          "enemyDistrictsDestroyed": "Yok edilen düşman bölgeleri",
+          "medals": "Madalyalar"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Tümü",
+      "legendLeague": "Efsane Ligi",
+      "titanLeagueI": "Titan Ligi I",
+      "titanLeagueII": "Titan Ligi II",
+      "titanLeagueIII": "Titan Ligi III"
+    },
+    "rankings": {
+      "title": "Sıralamalar",
+      "description": "{weekend} için en iyi {count} {type}",
+      "players": "oyuncular",
+      "clans": "klanlar"
+    },
+    "empty": {
+      "title": "Kullanılabilir veri yok",
+      "description": "Farklı bir hafta sonu veya lig seçin"
+    }
+  },
+  "ClansPage": {
+    "title": "Klan Yönetimi",
+    "description": "Klanlarınızı ve Discord entegrasyonu ayarlarını yapılandırın",
+    "addClan": "Klan ekle",
+    "addNewClan": "Yeni klan ekle",
+    "addClanDescription": "Klanı bu sunucuya eklemek için klan etiketini girin",
+    "clanTag": "Klan etiketi",
+    "totalClans": "Toplam klan",
+    "registeredClans": "Kayıtlı klanlar",
+    "configured": "Yapılandırılmış",
+    "withSettingsConfigured": "Ayarları yapılandırılmış",
+    "totalMembers": "Toplam üye",
+    "acrossAllClans": "Tüm klanlarda",
+    "channels": "Kanallar",
+    "availableChannels": "Kullanılabilir kanallar",
+    "noClansYet": "Henüz klan yok",
+    "getStartedAdding": "İlk klanınızı ekleyerek başlayın",
+    "addFirstClan": "İlk klanınızı ekleyin",
+    "level": "Seviye",
+    "members": "Üyeler",
+    "status": "Durum",
+    "configuredBadge": "Yapılandırılmış",
+    "setupRequired": "Kurulum gerekli",
+    "configure": "Yapılandır",
+    "sorting": {
+      "label": "Klanları sırala",
+      "sortBy": "Şuna göre sıralayın",
+      "toggleDirection": "Sıralama yönünü değiştir",
+      "added": "Eklenme tarihi",
+      "name": "Klan adı",
+      "level": "Klan seviyesi",
+      "members": "Üyeler"
+    },
+    "configureClan": "{name} ({tag}) klanını yapılandır",
+    "customizeIntegration": "Bu klanın Discord entegrasyonu ayarlarını özelleştirin",
+    "tabs": {
+      "basic": "Discord Kurulumu",
+      "war": "Savaş"
+    },
+    "memberRole": "Üye rolü",
+    "leaderRole": "Lider rolü",
+    "selectRole": "Rol seçin",
+    "none": "Hiçbiri",
+    "clanAbbreviation": "Klan kısaltması",
+    "warScoreCountdown": "Savaş puanı geri sayımı",
+    "warScoreCountdownDescription": "Mevcut savaş puanını gösteren bir ses kanalı oluşturur",
+    "warTimerCountdown": "Savaş süresi geri sayımı",
+    "warTimerCountdownDescription": "Savaşta kalan süreyi gösteren bir ses kanalı oluşturur",
+    "category": "Kategori",
+    "categoryOptions": {
+      "none": "Kategori yok",
+      "premade": "Yaygın kategoriler",
+      "usedByServer": "Diğer klanlar tarafından kullanılanlar",
+      "clanCount": "{count, plural, one {# klan} other {# klanlar}}"
+    },
+    "categories": {
+      "title": "Klan kategorileri",
+      "description": "Bu sunucunun klanları için kullanılabilir kategorileri oluşturup yönetin.",
+      "refresh": "Yenile",
+      "createLabel": "Yeni kategori",
+      "name": "Kategori adı",
+      "namePlaceholder": "Örn. Rekabetçi",
+      "nameHelp": "Boşluklar düzenlendikten sonra {count}/{max} karakter",
+      "create": "Kategori oluştur",
+      "empty": "Henüz klan kategorisi oluşturulmadı.",
+      "clanCount": "{count, plural, one {# klan} other {# klanlar}}",
+      "renameAction": "{name} adını değiştir",
+      "deleteAction": "{name} kategorisini sil",
+      "renameTitle": "Klan kategorisini yeniden adlandır",
+      "renameDescription": "Düzenlenen ad, atanmış tüm klanlarda güncellenir.",
+      "saveRename": "Adı kaydet",
+      "deleteTitle": "Klan kategorisi silinsin mi?",
+      "deleteWarning": "“{name}” silinirse {count, plural, one {# klan} other {# klan}} kategorisiz kalır.",
+      "deleteCountMayChange": "Bu önizleme mevcut durumu yansıtır. Silme tamamlandığında etkilenen gerçek klan sayısı bildirilir.",
+      "confirmDelete": "Kategoriyi sil",
+      "deleteSuccessTitle": "{name} silindi",
+      "deleteSuccessDescription": "{count, plural, =0 {Hiçbir klan değiştirilmedi.} one {# klan artık kategorisiz.} other {# klan artık kategorisiz.}}",
+      "created": "{name} oluşturuldu.",
+      "renamed": "Kategori adı {name} olarak değiştirildi.",
+      "errors": {
+        "title": "Kategoriler kullanılamıyor",
+        "load": "Klan kategorileri yüklenemedi.",
+        "create": "Klan kategorisi oluşturulamadı.",
+        "rename": "Klan kategorisinin adı değiştirilemedi.",
+        "preview": "Silme önizlemesi yüklenemedi.",
+        "delete": "Klan kategorisi silinemedi.",
+        "refresh": "Kategori değiştirildi, ancak güncel kategori veya klan durumu yüklenemedi.",
+        "invalidName": "Boş olmayan, en fazla 64 karakterlik ve denetim karakteri içermeyen bir ad kullanın."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Daha fazla bilgi göster",
+      "memberRole": "Bu klanın üyelerinin alacağı roldür. Bot rolleri yönetiyorsa bu klandaki herkese bu rol verilir; klana özel kanalları yönetmek için kullanışlıdır.",
+      "leaderRole": "Bu klanın lideri ve yardımcı liderlerinin alacağı roldür. Klan liderleri için özel veya tüm klanların liderleriyle ortak bir sohbet oluştururken kullanışlıdır.",
+      "clanAbbreviation": "Klanınıza, adlandırma etkinken üyelerin adına eklenebilecek bir kısaltma verin. Biçimi <familySettingsLink>Aile ayarları</familySettingsLink> bölümünde yapılandırabilirsiniz.",
+      "category": "Klanlarınızı düzenlemek için kategorileri kullanın. Özellikle çok sayıda klanı olan veya yalnızca KSL ve etkinlikler için kullanılan klanları bulunan ailelerde yararlıdır."
+    },
+    "roleIdPlaceholder": "Rol ID",
+    "abbreviationPlaceholder": "Örn. CK",
+    "categoryPlaceholder": "Kategori adı",
+    "notAvailable": "Mevcut değil",
+    "saving": "Kaydediliyor...",
+    "saveChanges": "Değişiklikleri kaydet",
+    "deleteConfirm": "{tag} klanını kaldırmak istediğinizden emin misiniz? İlişkili tüm hatırlatıcılar ve kayıtlar da silinir.",
+    "toast": {
+      "errorLoadingClans": "Klanlar yüklenemedi",
+      "errorLoadingSettings": "Klan ayarları yüklenemedi",
+      "errorEmptyClanTag": "Lütfen bir klan etiketi girin",
+      "clanAdded": "Klan başarıyla eklendi",
+      "errorAddingClan": "Klan eklenemedi",
+      "clanRemoved": "Klan başarıyla kaldırıldı",
+      "errorRemovingClan": "Klan kaldırılamadı",
+      "settingsSaved": "Ayarlar başarıyla kaydedildi",
+      "errorSavingSettings": "Ayarlar kaydedilemedi",
+      "countdownEnabled": "Geri sayım ses kanalı oluşturuldu",
+      "countdownDisabled": "Geri sayım ses kanalı kaldırıldı",
+      "errorTogglingCountdown": "Geri sayım değiştirilemedi"
+    }
+  },
+  "RolesPage": {
+    "title": "Rol yönetimi",
+    "description": "Oyuncu istatistiklerine göre otomatik rol atamalarını yapılandırın",
+    "stats": {
+      "totalRoles": "Toplam rol",
+      "totalRolesDesc": "Yapılandırılmış rol atamaları",
+      "autoEvaluation": "Otomatik değerlendirme",
+      "autoEvaluationOn": "Açık",
+      "autoEvaluationOff": "Kapalı",
+      "autoEvaluationActiveDesc": "Roller otomatik olarak atanır",
+      "autoEvaluationInactiveDesc": "Yalnızca elle rol ataması",
+      "activeTypes": "Etkin türler",
+      "activeTypesDesc": "Kullanılan rol türleri",
+      "discordRoles": "Discord rolleri",
+      "discordRolesDesc": "Sunucuda kullanılabilir"
+    },
+    "settings": {
+      "title": "Otomatik değerlendirme ayarları",
+      "description": "Otomatik rol değerlendirmesini ve atamasını yapılandırın",
+      "saveButton": "Ayarları kaydet",
+      "saving": "Kaydediliyor...",
+      "enableAutoEval": "Otomatik değerlendirmeyi etkinleştir",
+      "enableAutoEvalDesc": "Oyuncu istatistiklerine göre rolleri otomatik olarak atayın ve kaldırın",
+      "autoNickname": "Takma adları otomatik güncelle",
+      "autoNicknameDesc": "Roller değerlendirildiğinde takma adları güncelleyin"
+    },
+    "roleTypes": {
+      "townhall": "Belediye Binası",
+      "league": "Lig",
+      "builderhall": "İnşaatçı Üssü",
+      "builderLeague": "İnşaatçı Ligi",
+      "achievement": "Başarım",
+      "status": "Discord kıdem",
+      "familyPosition": "Aile konumu"
+    },
+    "familyPositions": {
+      "member": "Üye",
+      "elder": "Kıdemli",
+      "coLeader": "Yardımcı Lider",
+      "leader": "Lider"
+    },
+    "leagues": {
+      "legend": "Efsane",
+      "electroDragon": "Elektro Ejderha",
+      "dragon": "Ejderha",
+      "electroTitan": "Elektro Titan",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Cadı",
+      "valkyrie": "Valkür",
+      "wizard": "Büyücü",
+      "archer": "Okçu",
+      "barbarian": "Barbar",
+      "skeleton": "İskelet"
+    },
+    "builderLeagues": {
+      "diamond": "Elmas",
+      "ruby": "Yakut",
+      "emerald": "Zümrüt",
+      "platinum": "Platin",
+      "titanium": "Titanyum",
+      "steel": "Çelik",
+      "iron": "Demir",
+      "brass": "Pirinç",
+      "copper": "Bakır",
+      "stone": "Taş",
+      "clay": "Kil",
+      "wood": "Odun"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Hesabını Güvende Tut!",
+      "biggerAndBetter": "Daha Büyük ve Daha İyi",
+      "discoverNewTroops": "Yeni Birlikler Keşfet",
+      "biggerCoffers": "Daha Büyük Kasalar",
+      "goldGrab": "Altın Kapmaca",
+      "elixirEscapade": "İksir Macerası",
+      "heroicHeist": "Kahramanca Soygun",
+      "wellSeasoned": "Tecrübeli",
+      "niceAndTidy": "Temiz ve Düzenli",
+      "empireBuilder": "İmparatorluk Kurucusu",
+      "clanWarWealth": "Klan Savaşı Serveti",
+      "friendInNeed": "İyi Gün Dostu",
+      "sharingIsCaring": "Paylaşmak Güzeldir",
+      "siegeSharer": "Kuşatma Paylaşımcısı",
+      "warHero": "Savaş Kahramanı",
+      "warLeagueLegend": "Savaş Ligi Efsanesi",
+      "gamesChampion": "Oyunlar Şampiyonu",
+      "unbreakable": "Yıkılmaz",
+      "sweetVictory": "Tatlı Zafer!",
+      "conqueror": "Fatih",
+      "leagueAllStar": "Lig Yıldızı",
+      "leagueFollower": "Lig Takipçisi",
+      "leagueEnthusiast": "Lig Tutkunu",
+      "leagueSuperfan": "Lig Süper Hayranı",
+      "leagueFanatic": "Lig Fanatiği",
+      "leagueMaster": "Lig Ustası",
+      "legendLeague": "Efsane Ligi",
+      "humiliator": "Aşağılayıcı",
+      "notSoEasyThisTime": "Bu Sefer O Kadar Kolay Değil",
+      "unionBuster": "Birlik Bozan",
+      "bustThis": "Bunu Parçala!",
+      "wallBuster": "Duvar Yıkıcı",
+      "mortarMauler": "Havan Ezici",
+      "xBowExterminator": "X-Yayı Yok Edici",
+      "firefighter": "İtfaiyeci",
+      "antiArtillery": "Topçu Savar",
+      "shatteredAndScatter": "Paramparça",
+      "counterspell": "Karşı Büyü",
+      "monolithMasher": "Monolit Ezici",
+      "multiArcherTowerTerminator": "Çoklu Okçu Kulesi Yok Edici",
+      "ricochetCannonCrusher": "Sekmeli Top Ezici",
+      "firespitterFinisher": "Ateş Tükürücü Bitirici",
+      "multiGearTowerTrampler": "Çok Dişli Kule Ezici",
+      "craftersNightmare": "Zanaatkârın Kâbusu",
+      "getThoseGoblins": "Şu Goblinleri Yakala!",
+      "supercharger": "Süper Şarjcı",
+      "craftingConnoisseur": "Zanaat Uzmanı",
+      "getThoseOtherGoblins": "Diğer Goblinleri de Yakala!",
+      "getEvenMoreGoblins": "Daha Fazla Goblin Yakala!",
+      "dragonSlayer": "Ejderha Avcısı",
+      "ungratefulChild": "Nankör Çocuk",
+      "superbWork": "Harika İş",
+      "masterEngineering": "Usta Mühendislik",
+      "hiddenTreasures": "Gizli Hazineler",
+      "highGear": "Yüksek Vites",
+      "nextGenerationModel": "Yeni Nesil Model",
+      "unBuildIt": "Yaptığını Yık",
+      "championBuilder": "Şampiyon İnşaatçı",
+      "aggressiveCapitalism": "Agresif Kapitalizm",
+      "mostValuableClanmate": "En Değerli Klan Arkadaşı"
+    },
+    "configuredRoles": {
+      "title": "Yapılandırılmış roller",
+      "noRolesConfigured": "Yapılandırılmış {roleType} rolü yok",
+      "addRoleToStart": "Başlamak için \"Rol ekle\"ye tıklayın",
+      "discordRole": "Discord rolü",
+      "criteria": "Ölçütler",
+      "mode": "Mod",
+      "modeBoth": "Ekle ve kaldır",
+      "modeAdd": "Yalnızca ekle",
+      "modeRemove": "Yalnızca kaldır",
+      "actions": "İşlemler",
+      "unknownRole": "Bilinmeyen rol",
+      "remove": "Kaldır",
+      "month": "ay",
+      "months": "ay"
+    },
+    "addRoleDialog": {
+      "title": "Yeni rol ekle",
+      "description": "Yeni bir otomatik rol atama kuralı yapılandırın",
+      "roleType": "Rol türü",
+      "mode": "Mod",
+      "discordRole": "Discord rolü",
+      "selectRole": "Bir rol seçin",
+      "townHallLevel": "Belediye Binası seviyesi",
+      "selectThLevel": "BB seviyesi seçin",
+      "thPrefix": "TH",
+      "league": "Lig",
+      "selectLeague": "Lig seçin",
+      "builderHallLevel": "İnşaatçı Binası seviyesi",
+      "selectBhLevel": "BH seviyesi seçin",
+      "bhPrefix": "BH",
+      "builderLeague": "İnşaatçı Ligi",
+      "selectBuilderLeague": "İnşaatçı Ligi seçin",
+      "achievementName": "Başarım",
+      "selectAchievement": "Başarım seçin",
+      "searchAchievement": "Başarım ara...",
+      "noAchievementFound": "Başarım bulunamadı.",
+      "monthsInServer": "Sunucudaki ay sayısı",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Aile konumu",
+      "selectPosition": "Konum seçin",
+      "cancel": "İptal",
+      "addRole": "Rol ekle",
+      "errorDuplicateExact": "Bu ölçüt zaten bu role bağlı.",
+      "errorDuplicateCriterion": "Bu ölçüte zaten bir rol atanmış. Önce mevcut rolü kaldırın."
+    },
+    "infoCard": {
+      "title": "💡 Otomatik roller nasıl çalışır?",
+      "automaticEvaluation": "Otomatik değerlendirme:",
+      "automaticEvaluationDesc": "Etkinleştirildiğinde bot, oyuncuları düzenli olarak kontrol eder ve mevcut istatistiklerine göre rolleri atar veya kaldırır.",
+      "rolePriority": "Rol önceliği:",
+      "rolePriorityDesc": "Bir oyuncunun istatistikleri birden fazla rolle eşleşirse en yüksek seviyeli rol atanır.",
+      "manualOverride": "Elle geçersiz kılma:",
+      "manualOverrideDesc": "Sunucu yöneticilerinin elle atadığı roller otomatik değerlendirme tarafından kaldırılmaz."
+    },
+    "categoryRoles": {
+      "title": "Kategori rolleri",
+      "description": "Her klan kategorisine bir Discord rolü atayın. Bu kategorideki klanların üyeleri ilgili rolü otomatik olarak alır.",
+      "addButton": "Kategori ekle",
+      "categoryName": "Kategori",
+      "categoryNamePlaceholder": "Kategori adı",
+      "noCategoryRoles": "Yapılandırılmış kategori rolü yok",
+      "noCategoryRolesDesc": "Başlamak için \"Kategori ekle\"ye tıklayın",
+      "addTitle": "Kategori rolü ekle",
+      "addConfirm": "Ekle",
+      "errorCategoryRequired": "Kategori adı gerekli",
+      "errorRoleRequired": "Discord rolü gerekli",
+      "errorCategoryExists": "Bu kategori için zaten bir rol yapılandırılmış"
+    },
+    "toast": {
+      "changesSaved": "Değişiklikler başarıyla kaydedildi!",
+      "errorLoading": "Roller yüklenemedi",
+      "errorSaving": "Ayarlar kaydedilemedi",
+      "errorAdding": "Rol eklenemedi",
+      "errorDeleting": "Rol silinemedi"
+    }
+  },
+  "RemindersPage": {
+    "title": "Hatırlatmalar",
+    "description": "Savaşlar, baskınlar, Klan Oyunları ve etkin olmama durumu için otomatik hatırlatıcılar yapılandırın",
+    "types": {
+      "war": "Savaş Hatırlatıcıları",
+      "capital": "Klan Başkenti",
+      "clanGames": "Klan Oyunları",
+      "inactivity": "Etkinsizlik"
+    },
+    "tabs": {
+      "war": "Savaş",
+      "capital": "Başkent",
+      "clanGames": "Klan Oyunları",
+      "inactivity": "Etkinsizlik"
+    },
+    "stats": {
+      "totalReminders": "Toplam hatırlatıcı",
+      "totalRemindersDesc": "Yapılandırılmış etkin hatırlatıcılar",
+      "warReminders": "Savaş hatırlatıcıları",
+      "warRemindersDesc": "Normal savaşlar ve KSL",
+      "capitalReminders": "Başkent hatırlatıcıları",
+      "capitalRemindersDesc": "Baskın Hafta Sonu saldırıları",
+      "otherReminders": "Diğer hatırlatıcılar",
+      "otherRemindersDesc": "Klan Oyunları ve etkin olmama"
+    },
+    "actions": {
+      "saving": "Kaydediliyor...",
+      "saveChanges": "Değişiklikleri kaydet",
+      "addReminder": "Hatırlatıcı ekle",
+      "addWarReminder": "Savaş hatırlatıcısı ekle",
+      "addCapitalReminder": "Başkent hatırlatıcısı ekle",
+      "addClanGamesReminder": "Klan Oyunları hatırlatıcısı ekle",
+      "addInactivityReminder": "Etkin olmama hatırlatıcısı ekle",
+      "retry": "Yeniden dene"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Klan seçin",
+      "allClans": "Tüm klanlar"
+    },
+    "empty": {
+      "noWarReminders": "Savaş hatırlatıcısı yok",
+      "noCapitalReminders": "Başkent hatırlatıcısı yok",
+      "noClanGamesReminders": "Klan Oyunları hatırlatıcısı yok",
+      "noInactivityReminders": "Etkin olmama hatırlatıcısı yok",
+      "getStarted": "İlk hatırlatıcınızı oluşturarak başlayın"
+    },
+    "card": {
+      "new": "Yeni",
+      "before": "önce",
+      "timeBefore": "Kalan süre",
+      "timeBeforePlaceholder": "Örn. 6",
+      "timeInactive": "Etkinsizlik",
+      "timeInactivePlaceholder": "Örn. 160",
+      "timeUnit": "saat",
+      "hoursRemaining": "saat kaldı",
+      "channel": "Kanal",
+      "channelPlaceholder": "Kanal seçin",
+      "threadOptional": "İş parçacığı (isteğe bağlı)",
+      "threadPlaceholder": "İş parçacığı seçin",
+      "noThread": "Doğrudan kanalda yayımla",
+      "forumPost": "Forum gönderisi",
+      "forumPostPlaceholder": "Forum gönderisi seçin",
+      "forumPostRequired": "Forum kanalları için bir forum gönderisi gereklidir.",
+      "clan": "Klan",
+      "clanPlaceholder": "Klan seçin",
+      "customMessage": "Özel mesaj",
+      "customMessagePlaceholder": "Saldırılarınızı kullanmayı unutmayın!",
+      "customMessagePlaceholderClanGames": "Klan Oyunlarında daha fazla puan kazanmaya çalışın!",
+      "customMessagePlaceholderInactivity": "Bir süredir klan içinde etkin değilsiniz:(",
+      "warTypes": "Savaş türleri",
+      "random": "Normal savaş",
+      "friendly": "Dostluk savaşı",
+      "cwl": "KSL",
+      "pointThreshold": "Puan eşiği",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "{threshold} puandan az puanı olan kişileri etiketler.",
+      "attackThreshold": "Saldırı eşiği",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "{threshold} veya daha fazla saldırı hakkı kalan kişileri etiketler.",
+      "notSet": "Ayarlanmamış"
+    },
+    "dialog": {
+      "addTitle": "Yeni hatırlatıcı ekle",
+      "addDescription": "Sunucunuz için yeni bir hatırlatıcı yapılandırın",
+      "editTitle": "Hatırlatıcıyı düzenle",
+      "editDescription": "Hatırlatıcı ayarlarını güncelleyin",
+      "type": "Hatırlatıcı türü",
+      "selectType": "Tür seçin",
+      "cancel": "İptal",
+      "saving": "Kaydediliyor...",
+      "saveChanges": "Değişiklikleri kaydet",
+      "addReminder": "Hatırlatıcı ekle"
+    },
+    "toast": {
+      "errorTitle": "Hata",
+      "errorLoadingReminders": "Hatırlatıcılar yüklenemedi. Lütfen tekrar deneyin.",
+      "reminderAdded": "Hatırlatıcı başarıyla eklendi",
+      "reminderAddedDesc": "Yeni {type} hatırlatıcısı eklendi. Kaydetmeyi unutmayın!",
+      "reminderUpdated": "Hatırlatıcı başarıyla güncellendi",
+      "successTitle": "Başarılı",
+      "reminderDeleted": "Hatırlatıcı başarıyla silindi",
+      "failedToDelete": "Hatırlatıcı silinemedi",
+      "allRemindersSaved": "Tüm hatırlatıcılar başarıyla kaydedildi",
+      "failedToSave": "Hatırlatıcılar kaydedilemedi",
+      "forumPostRequired": "Bu hatırlatıcıyı kaydetmeden önce bir forum gönderisi seçin.",
+      "invalidDestination": "Seçilen iş parçacığı bu kanala ait değil.",
+      "timeExceedsLimit": "Kalan süre {min} ile {max} saat arasında olmalıdır",
+      "pointThresholdInvalid": "Puan eşiği {min} ile {max} arasında olmalıdır",
+      "attackThresholdInvalid": "Saldırı eşiği {min} ile {max} arasında olmalıdır"
+    }
+  },
+  "LogsPage": {
+    "title": "Etkinlik kayıtları",
+    "description": "Klan ve oyuncu etkinlikleri için otomatik kayıtları yapılandırın",
+    "stats": {
+      "activeLogs": "Etkin kayıtlar",
+      "activeLogsDesc": "Tüm aile klanlarındaki ve sunucudaki kayıtlar",
+      "logChannels": "Kayıt kanalları",
+      "logChannelsDesc": "Kullanılabilir kanallar",
+      "trackedClans": "İzlenen klanlar",
+      "trackedClansDesc": "Yapılandırılmış klanlar",
+      "issues": "Sorunlar",
+      "issuesDesc": "Tüm aile genelinde"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Klan seçin"
+    },
+    "tabs": {
+      "clan": "Klan",
+      "war": "Savaş",
+      "capital": "Başkent",
+      "player": "Oyuncu",
+      "server": "Sunucu"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Üye katılımı",
+        "description": "Klana katılan üyeleri izleyin"
+      },
+      "leaveLog": {
+        "label": "Üye ayrılışı",
+        "description": "Klandan ayrılan üyeleri izleyin"
+      },
+      "donationLog": {
+        "label": "Üye bağışları",
+        "description": "Birlik ve büyü bağışlarını izleyin"
+      },
+      "clanAchievementLog": {
+        "label": "Klan başarımları",
+        "description": "Kazanılan klan başarılarını izleyin"
+      },
+      "clanRequirementsLog": {
+        "label": "Klan gereksinimleri",
+        "description": "Klan gereksinimlerindeki değişiklikleri izleyin"
+      },
+      "clanDescriptionLog": {
+        "label": "Klan açıklaması",
+        "description": "Klan açıklamasındaki değişiklikleri izleyin"
+      },
+      "banAlert": {
+        "label": "Yasaklama uyarıları",
+        "description": "Yasaklı bir oyuncu klana katıldığında uyarı gönderin"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit akışı",
+        "description": "Sunucunun Reddit akışını yayımlayın"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Savaş günlüğü",
+        "description": "Savaş saldırılarını ve sonuçlarını izleyin"
+      },
+      "warPanel": {
+        "label": "Savaş paneli",
+        "description": "Canlı güncellenen etkileşimli savaş paneli"
+      },
+      "cwlLineupChangeLog": {
+        "label": "KSL kadro değişiklikleri",
+        "description": "KSL kadro değişikliklerini izleyin"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Başkent bağışları",
+        "description": "Başkent Altını bağışlarını izleyin"
+      },
+      "capitalAttacks": {
+        "label": "Başkent saldırıları",
+        "description": "Baskın Hafta Sonu saldırılarını izleyin"
+      },
+      "raidPanel": {
+        "label": "Başkent paneli",
+        "description": "Canlı güncellenen etkileşimli baskın paneli"
+      },
+      "capitalWeeklySummary": {
+        "label": "Haftalık Başkent özeti",
+        "description": "Haftalık başkent performansı özeti"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Rol değişikliği",
+        "description": "Klandaki oyuncu rolü değişikliklerini izleyin"
+      },
+      "troopUpgrade": {
+        "label": "Birlik yükseltmeleri",
+        "description": "Birlik seviyesi yükseltmelerini izleyin"
+      },
+      "superTroopBoostLog": {
+        "label": "Süper Birlik güçlendirmeleri",
+        "description": "Süper birlik etkinleştirmelerini izleyin"
+      },
+      "thUpgrade": {
+        "label": "Belediye Binası yükseltmeleri",
+        "description": "Belediye Binası yükseltmelerini izleyin"
+      },
+      "leagueChange": {
+        "label": "Lig değişiklikleri",
+        "description": "Lig kademesi değişikliklerini izleyin"
+      },
+      "spellUpgrade": {
+        "label": "Büyü yükseltmeleri",
+        "description": "Büyü seviyesi yükseltmelerini izleyin"
+      },
+      "heroUpgrade": {
+        "label": "Kahraman yükseltmeleri",
+        "description": "Kahraman seviyesi yükseltmelerini izleyin"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Kahraman ekipmanı yükseltmeleri",
+        "description": "Kahraman ekipmanı yükseltmelerini izleyin"
+      },
+      "nameChange": {
+        "label": "Ad değişiklikleri",
+        "description": "Oyuncu adı değişikliklerini izleyin"
+      },
+      "legendLogAttacks": {
+        "label": "Efsane Ligi saldırıları",
+        "description": "Efsane Ligi saldırılarını izleyin"
+      },
+      "legendLogDefenses": {
+        "label": "Efsane Ligi savunmaları",
+        "description": "Efsane Ligi savunmalarını izleyin"
+      }
+    },
+    "logCard": {
+      "active": "Aktif",
+      "issue": "Sorun",
+      "disabled": "Devre dışı",
+      "enable": "Etkinleştir",
+      "disable": "Devre dışı bırak",
+      "channel": "Kanal",
+      "channelPlaceholder": "Kanal seçin",
+      "thread": "İş parçacığı (isteğe bağlı)",
+      "threadPlaceholder": "İş parçacığı seçin",
+      "noThread": "İş parçacığı yok",
+      "forumPost": "Forum gönderisi",
+      "forumPostPlaceholder": "Forum gönderisi seçin",
+      "forumPostRequired": "Bu kaydı kaydetmeden önce bir forum gönderisi seçin.",
+      "invalidThread": "Seçilen iş parçacığı bu kanala ait değil.",
+      "saveDestination": "Hedefi kaydet",
+      "channelDeleted": "Bu kanal artık mevcut değil. Yeni bir kanal seçin veya kaydı devre dışı bırakın.",
+      "enableToConfig": "Yapılandırmak için kaydı etkinleştirin",
+      "configuring": "Yapılandırılıyor",
+      "on": "Açık",
+      "off": "Kapalı",
+      "example": "örnek"
+    }
+  },
+  "GeneralPage": {
+    "title": "Genel ayarlar",
+    "description": "Sunucu genelindeki bot davranışını ve görünümünü yapılandırın",
+    "loading": "Ayarlar yükleniyor...",
+    "reset": "Sıfırla",
+    "saving": "Kaydediliyor...",
+    "saveChanges": "Değişiklikleri kaydet",
+    "settingsSaved": "Ayarlar başarıyla kaydedildi!",
+    "infoBanner": {
+      "title": "Daha fazla ayar mı arıyorsunuz?",
+      "description": "Aile rolleri ve takma ad ayarları **Aile Ayarları** sayfasında, rol yönetimi ayarları ise **Roller** sayfasında bulunur. Klan rolleri, kısaltmalar, kategoriler ve savaş geri sayımları **Klanlar** sayfasındadır."
+    },
+    "nickname": {
+      "title": "Takma ad yönetimi",
+      "description": "Takma adların biçimlendirilmesini yönetin",
+      "automaticChanges": "Otomatik değişiklikler",
+      "automaticChangesDesc": "Botun üye takma adlarını güncellemesine izin verin",
+      "familyFormat": "Aile üyelerinin biçimi",
+      "availablePlaceholders": "Kullanılabilir yer tutucular",
+      "preview": "Önizleme:",
+      "nonFamilyFormat": "Aile dışındaki üyelerin biçimi",
+      "placeholders": {
+        "discordName": "Discord kullanıcı adı",
+        "discordDisplayName": "Sunucu görünen adı",
+        "playerName": "CoC oyuncu adı",
+        "playerTag": "Oyuncu etiketi",
+        "playerTownhall": "BB seviyesi",
+        "playerTownhallSmall": "BB üst simge",
+        "playerWarstars": "Savaş yıldızları",
+        "playerRole": "Klan rolü",
+        "playerClan": "Klan adı",
+        "playerLeague": "Lig",
+        "playerClanAbbr": "Klan kısaltması"
+      }
+    },
+    "appearance": {
+      "title": "Dış görünüş",
+      "description": "Botun embed mesajlarını özelleştirin",
+      "embedColor": "Embed rengi",
+      "embedColorDesc": "Discord'daki tüm bot embedlerinin yan çubuk rengi",
+      "embedColorDefault": "Varsayılan: **#D90709** (ClashKing Kırmızı)",
+      "embedPreview": "Embed önizlemesi",
+      "embedPreviewDesc": "Bu renkli çubuk tüm bot embedlerinin yanında görünür",
+      "editColor": "Rengi düzenle",
+      "resetToDefault": "Varsayılana sıfırla",
+      "apply": "Uygula"
+    },
+    "security": {
+      "title": "Güvenlik ve izinler",
+      "description": "Erişimi ve doğrulamayı yönetin",
+      "fullWhitelistRole": "Tam izinli rol",
+      "fullWhitelistRoleDesc": "Tüm izin denetimlerini atlayarak bot komutlarına tam erişim sağlayan Discord rolü",
+      "noRole": "Rol yok"
+    },
+    "familyRoles": {
+      "title": "Aile rolleri",
+      "description": "Aile üyeliğine ve klan konumuna göre otomatik rolleri yönetin",
+      "selectRole": "Bir rol seçin",
+      "addRole": "Rol ekle...",
+      "deletedRole": "Silinmiş rol",
+      "noRolesConfigured": "Yapılandırılmış rol yok",
+      "modes": {
+        "both": "Ekle ve kaldır",
+        "add": "Yalnızca ekle",
+        "remove": "Yalnızca kaldır"
+      },
+      "types": {
+        "family": "Aile",
+        "notFamily": "Aile dışı",
+        "elder": "Kıdemli",
+        "coLeader": "Yardımcı Lider",
+        "leader": "Lider"
+      },
+      "descriptions": {
+        "family": "Aile klanlarında en az bir hesabı var",
+        "notFamily": "Aile klanlarında hesabı yok",
+        "elder": "Bir aile klanında Kıdemli konumunda",
+        "coLeader": "Herhangi bir aile klanında Yardımcı Lider konumunda",
+        "leader": "Bir aile klanında Lider konumunda"
+      }
+    },
+    "tenureRoles": {
+      "title": "Discord kıdem rolleri",
+      "description": "Üyelerin sunucuda geçirdiği süreye göre rolleri otomatik atayın",
+      "addRole": "Kıdem rolü ekle",
+      "addDialogTitle": "Kıdem rolü ekle",
+      "addDialogDescription": "Sunucuda belirli sayıda ay geçiren üyelere rol atayın",
+      "monthsInServer": "Sunucudaki ay sayısı",
+      "discordRole": "Discord rolü",
+      "selectRole": "Bir rol seçin",
+      "noRolesConfigured": "Yapılandırılmış kıdem rolü yok",
+      "addRoleToStart": "Başlamak için kıdem rolü ekleyin",
+      "months": "Ay",
+      "month": "ay",
+      "actions": "İşlemler",
+      "remove": "Kaldır",
+      "unknownRole": "Bilinmeyen rol"
+    },
+    "prefix": "Komut öneki",
+    "language": "Dil",
+    "timezone": "Saat dilimi",
+    "theme": "Tema"
+  },
+  "FamilySettingsPage": {
+    "title": "Aile ayarları",
+    "description": "Klan üyeleri için aile rollerini ve takma ad biçimlendirmesini yapılandırın",
+    "loading": "Ayarlar yükleniyor...",
+    "reset": "Sıfırla",
+    "saving": "Kaydediliyor...",
+    "saveChanges": "Değişiklikleri kaydet",
+    "settingsSaved": "Ayarlar başarıyla kaydedildi!",
+    "nickname": {
+      "title": "Takma ad yönetimi",
+      "description": "Takma adların biçimlendirilmesini yönetin",
+      "automaticChanges": "Otomatik değişiklikler",
+      "automaticChangesDesc": "Botun üye takma adlarını güncellemesine izin verin",
+      "familyFormat": "Aile üyelerinin biçimi",
+      "availablePlaceholders": "Kullanılabilir yer tutucular",
+      "preview": "Önizleme:",
+      "nonFamilyFormat": "Aile dışındaki üyelerin biçimi",
+      "placeholders": {
+        "discordName": "Discord kullanıcı adı",
+        "discordDisplayName": "Sunucu görünen adı",
+        "playerName": "CoC oyuncu adı",
+        "playerTag": "Oyuncu etiketi",
+        "playerTownhall": "BB seviyesi",
+        "playerTownhallSmall": "BB üst simge",
+        "playerWarstars": "Savaş yıldızları",
+        "playerRole": "Klan rolü",
+        "playerClan": "Klan adı",
+        "playerLeague": "Lig",
+        "playerClanAbbr": "Klan kısaltması"
+      }
+    },
+    "familyRoles": {
+      "title": "Aile rolleri",
+      "description": "Aile üyeliğine ve klan konumuna göre otomatik rolleri yönetin",
+      "selectRole": "Bir rol seçin",
+      "addRole": "Rol ekle...",
+      "deletedRole": "Silinmiş rol",
+      "noRolesConfigured": "Yapılandırılmış rol yok",
+      "modes": {
+        "both": "Ekle ve kaldır",
+        "add": "Yalnızca ekle",
+        "remove": "Yalnızca kaldır"
+      },
+      "types": {
+        "family": "Aile",
+        "notFamily": "Aile dışı",
+        "elder": "Kıdemli",
+        "coLeader": "Yardımcı Lider",
+        "leader": "Lider"
+      },
+      "descriptions": {
+        "family": "Aile klanlarında en az bir hesabı var",
+        "notFamily": "Aile klanlarında hesabı yok",
+        "elder": "Bir aile klanında Kıdemli konumunda",
+        "coLeader": "Herhangi bir aile klanında Yardımcı Lider konumunda",
+        "leader": "Bir aile klanında Lider konumunda"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Dil"
+  },
+  "ThemeSwitcher": {
+    "label": "Tema",
+    "light": "Açık",
+    "dark": "Koyu",
+    "system": "Sistem"
+  },
+  "AuthCallback": {
+    "authenticating": "Kimlik doğrulanıyor...",
+    "authenticatingDescription": "Discord ile giriş yapılırken lütfen bekleyin",
+    "authenticationFailed": "Kimlik doğrulama başarısız",
+    "tryAgain": "Tekrar dene",
+    "backToHome": "Ana sayfaya dön",
+    "errorCancelled": "Discord girişi iptal edildi. Hazır olduğunuzda tekrar deneyin.",
+    "errorDiscordFailedWithReason": "Discord kimlik doğrulaması başarısız: {reason}",
+    "errorNoAuthorizationCode": "Discord’dan yetkilendirme kodu alınmadı.",
+    "errorCodeVerifierMissing": "Kod doğrulayıcı bulunamadı. Lütfen yeniden giriş yapın.",
+    "errorAuthenticateFailed": "Discord ile kimlik doğrulanamadı.",
+    "loadingVillages": "Discord ile giriş yapılıyor...",
+    "loadingClanData": "Sunucu listesi yükleniyor...",
+    "loadingWarStats": "Neredeyse hazır..."
+  },
+  "LoginPage": {
+    "redirecting": "Discord’a yönlendiriliyor..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Özellikler",
+      "subtitle": "Klanınızı Discord, mobil ve web üzerinden yönetip büyütmek için ClashKing’in sunduğu güçlü araçları keşfedin."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "ClashKing Bot, Clash of Clans klanınızı ve topluluğunuzu yönetmek için ihtiyacınız olan tek Discord botudur. Klanınızı düzenli, aktif ve gelişmeye devam eden bir topluluk hâlinde tutan benzersiz özelliklerle doludur.",
+        "items": [
+          "Gerçek zamanlı kayıtlar: Savaşları, KSL’yi, Klan Oyunlarını, baskınları, bağışları ve üye etkinliklerini izleyin.",
+          "Bilet sistemi: Standart destek biletlerinin yanında başvuru biletlerini yönetin.",
+          "Otomatik roller: Klan durumuna veya aile yönetimine göre rolleri otomatik atayın.",
+          "Hatırlatıcılar: Savaş saldırıları, Klan Oyunları ve diğer etkinlikler için bildirim gönderin.",
+          "Ayrıntılı istatistikler: Etkinlik takibiyle oyuncu ve klan performansını inceleyin.",
+          "Liste yönetimi: Savaş listelerinizi kolayca düzenleyip iyileştirin."
+        ],
+        "ctaPrimary": "Botu davet et",
+        "ctaSecondary": "Topluluğa katıl"
+      },
+      "app": {
+        "title": "ClashKing Uygulaması (Açık Beta)",
+        "description": "ClashKing Uygulaması, gerekli araçları ve bilgileri doğrudan mobil cihazınıza taşıyan kusursuz bir ClashKing Bot tamamlayıcısıdır. Discord olmadan da her zaman, her yerde bağlantıda kalın.",
+        "items": [
+          "Gerçek zamanlı istatistikler: Botla eşitlenen ayrıntılı oyuncu ve klan istatistiklerini görüntüleyin.",
+          "Klan ilerleme takibi: Klanınızın zaman içindeki gelişimini kolayca izleyin.",
+          "Çoklu hesap yönetimi: Hesaplarınız arasında kolayca geçiş yapıp performanslarını izleyin.",
+          "Yerleşik geçmiş: Eğilimleri analiz edip stratejileri geliştirmek için geçmiş verilere erişin.",
+          "Discord sunucusu yönetimi: (Yakında) Rolleri ve biletleri uygulamadan yönetin.",
+          "Gelişmiş bildirimler: (Yakında) Önemli etkinlik uyarılarını özelleştirin."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "ClashKing API ile kendi araçlarınızı veya projelerinizi oluşturun. ClashKing projesine atıfta bulunduğunuz sürece kullanımı ücretsizdir.",
+        "items": [],
+        "ctaPrimary": "API belgeleri",
+        "ctaSecondary": "GitHub’da API"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Yardıma mı ihtiyacınız var?",
+    "subtitle": "İster belge arayın ister doğrudan destek isteyin, size yardımcı olabiliriz.",
+    "documentation": {
+      "title": "Belgeler",
+      "description": "ClashKing’den en iyi şekilde yararlanmak için kapsamlı rehberlerimize ve komut başvurularımıza göz atın.",
+      "cta": "Belgeleri görüntüle"
+    },
+    "discord": {
+      "title": "Discord desteği",
+      "description": "Daha fazla yardıma mı ihtiyacınız var? Soru sormak, hata bildirmek veya diğer kullanıcılarla sohbet etmek için Discord topluluğumuza katılın.",
+      "cta": "Discord’a katıl"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Açık kaynaklı bir proje",
+    "subtitle": "ClashKing tamamen ücretsiz ve açık kaynaklı bir projedir. Topluluğun onu daha da geliştirebileceğine inanıyoruz. Bot ve API açık kaynaklıdır; katkıda bulunabilir veya kendi projelerinizde kullanabilirsiniz.",
+    "github": {
+      "title": "GitHub organizasyonu",
+      "description": "Kaynak kodumuzu inceleyin, bota katkıda bulunun veya diğer açık kaynak araçlarımıza göz atın.",
+      "ctaPrimary": "Organizasyonu görüntüle",
+      "repos": {
+        "bot": "Bot Deposu",
+        "app": "Uygulama deposu",
+        "api": "API deposu",
+        "assets": "Varlık deposu"
+      }
+    },
+    "api": {
+      "title": "API belgeleri",
+      "description": "ClashKing API ile kendi araçlarınızı veya projelerinizi oluşturun. ClashKing projesine atıfta bulunduğunuz sürece kullanımı ücretsizdir.",
+      "cta": "API belgeleri"
+    },
+    "translation": {
+      "title": "Çeviriye yardımcı olun",
+      "description": "ClashKing’i dilinize çevirmemize yardımcı olun! Web sitesi, bot ve ilgili tüm metinlerin çevirilerine Crowdin projelerimizden katkıda bulunabilirsiniz.",
+      "app": "Uygulamayı çevir",
+      "bot": "Botu çevir"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Katkıda bulun",
+        "description": "Hataları düzelterek, yeni özellikler ekleyerek veya mevcut özellikleri geliştirerek projeye katkıda bulunun. Her katkı önemlidir!"
+      },
+      "community": {
+        "title": "Topluluk",
+        "description": "Fikirleri tartışmak, yardım almak ve diğer geliştiricilerle çalışmak için Discord topluluğumuza katılın."
+      },
+      "learn": {
+        "title": "Öğren",
+        "description": "Botu ve API’yi etkili kullanmayı öğrenmek için belgelerimize ve örneklerimize göz atın."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Bizi destekleyin",
+    "subtitle": "ClashKing ücretsiz ve açık kaynaklı bir projedir. Desteğiniz sunucuları çalışır durumda tutmamıza ve topluluk için yeni özellikler geliştirmemize yardımcı olur.",
+    "patreon": {
+      "title": "Destekçi olun",
+      "description": "Özel avantajlar ve özelliklere erken erişim elde etmek, barındırma maliyetlerimize katkıda bulunmak için Patreon’dan aylık destek verin.",
+      "cta": "Patreon’da destekle"
+    },
+    "creatorCode": {
+      "title": "İçerik üreticisi kodunu kullan",
+      "description": "İçerik üreticisi kodumuzu kullanarak bizi ücretsiz destekleyin",
+      "descriptionSuffix": "oyunda veya Supercell Store’da.",
+      "ctaGame": "Oyunda kullan",
+      "ctaStore": "Supercell Store’da kullan"
+    },
+    "whySupport": {
+      "title": "Neden bizi desteklemelisiniz?",
+      "description": "Her katkı doğrudan sunucu maliyetlerine ve API ücretlerine gider. İçerik üreticisi kodumuzu kullanmak size ek ücret getirmez, bize büyük destek olur!"
+    }
+  },
+  "ServersPage": {
+    "title": "Sunucu seçin",
+    "description": "ClashKing bot ayarlarını yapılandırmak için bir sunucu seçin. Discord sunucusunun sahibi veya yöneticisi olmalısınız.",
+    "backToHome": "Ana sayfaya dön",
+    "backToLogin": "Giriş sayfasına dön",
+    "error": "Hata",
+    "configure": "Yapılandır",
+    "invite": "Davet et",
+    "members": "üyeler",
+    "server": "Sunucu",
+    "roles": {
+      "owner": "Sahip",
+      "administrator": "Yönetici",
+      "manager": "Yönetici"
+    },
+    "noServers": {
+      "title": "Sunucu bulunamadı",
+      "description": "Sahibi veya yöneticisi olduğunuz bir Discord sunucusu bulunamadı."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Canlı bir tabloyu yenileyin veya yeni tabloların gönderimini planlayın",
+    "actions": {
+      "create": "Otomatik tablo oluştur",
+      "edit": "Otomatik tabloyu düzenle",
+      "delete": "Otomatik tabloyu sil",
+      "save": "Değişiklikleri kaydet",
+      "cancel": "İptal",
+      "retry": "Yeniden dene"
+    },
+    "metrics": {
+      "total": "Yapılandırılmış",
+      "refresh": "Tabloları yenile",
+      "send": "Planlanmış gönderimler"
+    },
+    "filters": {
+      "all": "Tümü"
+    },
+    "list": {
+      "title": "Yapılandırılmış otomatik tablolar",
+      "description": "Yönetici denetimli gönderim, hedefler, varış noktası ve çalışma durumu",
+      "empty": "Bu görünümde otomatik tablo yok",
+      "emptyDescription": "API kayıt defterinde kullanılabilir bir tablo türü olduğunda tablo oluşturabilirsiniz."
+    },
+    "registry": {
+      "emptyTitle": "Kullanılabilir tablo türü yok",
+      "emptyDescription": "API kayıt defteri şu anda boş. Bir tablo türü etkinleştirildiğinde otomatik tablo oluşturabilirsiniz.",
+      "typeUnavailable": "Bu tablo türü artık kayıt defterinde bulunmadığından düzenlenemez."
+    },
+    "dialog": {
+      "createTitle": "Otomatik tablo oluştur",
+      "editTitle": "Otomatik tabloyu düzenle",
+      "description": "Seçenekler ve sınırlar etkin tablo kayıt defterinden alınır."
+    },
+    "boardType": {
+      "label": "Tablo türü",
+      "description": "Kullanılabilir türler doğrudan API kayıt defterinden alınır.",
+      "placeholder": "Tablo türü seçin"
+    },
+    "targets": {
+      "kind": "Hedef türü: {kind}",
+      "kindDescription": "Kayıt defteri her hedef değerinin nasıl yorumlanacağını belirler.",
+      "scope": "Hedef kapsamı",
+      "scopeDescription": "Aile kapsamı yapılandırılmış tüm aile klanlarını kullanır ve açık hedef içermez.",
+      "family": "Aile",
+      "custom": "Özel hedefler",
+      "values": "Hedefler",
+      "count": "Bu tablo türü için {min} ile {max} arasında hedef belirtin.",
+      "placeholder": "Bir {kind} hedefi girin",
+      "add": "Hedef ekle",
+      "remove": "Hedefi kaldır"
+    },
+    "modes": {
+      "label": "Gönderim modu",
+      "description": "Kayıt defteri tablonun desteklediği gönderim modlarını belirler.",
+      "refresh": "Yenile",
+      "send": "Planlanmış gönderim"
+    },
+    "destination": {
+      "label": "Hedef",
+      "channel": "Üst kanal",
+      "channelDescription": "Metin ve duyuru kanallarına doğrudan gönderilebilir; forumlarda bir alt gönderi kullanılır.",
+      "selectChannel": "Kanal seçin",
+      "thread": "İş parçacığı veya forum gönderisi",
+      "selectThread": "İş parçacığı seçin",
+      "threadOptional": "Metin ve duyuru kanalları için isteğe bağlıdır.",
+      "forumRequired": "Bu hedef için bir forum gönderisi gereklidir.",
+      "direct": "Doğrudan kanala gönder",
+      "deleted": "Kanal artık mevcut değil"
+    },
+    "refresh": {
+      "interval": "Yenileme aralığı (dakika)",
+      "intervalDescription": "İzin verilen aralık: {minimum}–{maximum} dakika."
+    },
+    "schedule": {
+      "label": "Zamanlama",
+      "kind": "Zamanlama düzeni",
+      "kindDescription": "Her gün, seçilen günlerde veya ayda bir gönderin.",
+      "daily": "Günlük",
+      "weekdays": "Seçilen günler",
+      "dayOfMonth": "Ayın günü",
+      "selectWeekdays": "Haftanın günleri",
+      "monthDay": "Ayın günü",
+      "monthDayDescription": "1 ile 31 arasında bir değer kullanın.",
+      "timezone": "Saat dilimi",
+      "timeOfDay": "Saat",
+      "nextRun": "Sonraki çalışma"
+    },
+    "weekdays": {
+      "1": "Pazartesi",
+      "2": "Salı",
+      "3": "Çarşamba",
+      "4": "Perşembe",
+      "5": "Cuma",
+      "6": "Cumartesi",
+      "7": "Pazar"
+    },
+    "status": {
+      "enabled": "Etkin",
+      "disabled": "Devre dışı",
+      "enabledDescription": "Devre dışı tablolar yapılandırmalarını korur ancak çalışmaz.",
+      "messageId": "Geçerli yenileme mesajı: {id}"
+    },
+    "delete": {
+      "title": "Bu otomatik tablo silinsin mi?",
+      "description": "Bu işlem yapılandırmayı kaldırır ve geri alınamaz."
+    },
+    "feedback": {
+      "created": "Otomatik tablo oluşturuldu",
+      "updated": "Otomatik tablo güncellendi",
+      "deleted": "Otomatik tablo silindi"
+    },
+    "validation": {
+      "boardType": "Etkin kayıt defterinden bir tablo türü seçin.",
+      "targetScope": "Tablo türünün desteklediği bir hedef kapsamı seçin.",
+      "familyTargets": "Aile kapsamı açık hedefler içeremez.",
+      "targetCount": "{min} ile {max} arasında boş olmayan hedef girin.",
+      "deliveryMode": "Tablo türünün desteklediği bir gönderim modu seçin.",
+      "destination": "Geçerli bir hedef seçin. Forum kanalları bir alt gönderi gerektirir.",
+      "refreshInterval": "{minimum} ile {maximum} dakika arasında bir yenileme aralığı girin.",
+      "timezone": "Geçerli bir IANA saat dilimi girin.",
+      "timeOfDay": "Geçerli bir saat girin.",
+      "weekdays": "En az bir gün seçin.",
+      "dayOfMonth": "1 ile 31 arasında bir gün girin."
+    },
+    "errors": {
+      "title": "AutoBoards kullanılamıyor",
+      "session": "Oturumunuzun süresi doldu.",
+      "request": "Otomatik tablo isteği başarısız oldu.",
+      "load": "Otomatik tablolar yüklenemedi.",
+      "save": "Otomatik tablo kaydedilemedi.",
+      "delete": "Otomatik tablo silinemedi."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Bilet paneli ayarları",
+    "description": "Her bilet paneli için kategorileri ve kayıt kanallarını yapılandırın.",
+    "noPanels": "Bilet paneli bulunamadı",
+    "noPanelsHint": "Yukarıdaki düğmeyi kullanarak ilk panelinizi oluşturun.",
+    "createPanel": "Yeni panel",
+    "createPanelTitle": "Bilet paneli oluştur",
+    "createPanelDescription": "Panele benzersiz bir ad verin. Oluşturduktan sonra düğmeleri ve kanalları yapılandırabilirsiniz.",
+    "panelNameLabel": "Panel adı",
+    "panelNamePlaceholder": "Örn. Başvurular",
+    "panelCreated": "Panel \"{name}\" oluşturuldu.",
+    "confirmDeletePanel": "\"{name}\" paneli silinsin mi?",
+    "confirmDeletePanelHint": "Bu işlem paneli ve tüm düğme yapılandırmalarını kalıcı olarak siler.",
+    "panelDeleted": "Panel silindi.",
+    "panelHint": "Paneli genişletip yapılandırmak için tıklayın.",
+    "panelEmbed": "Panel embedi",
+    "panelEmbedHint": "Bilet paneli Discord'da yayımlanırken kullanılan embed.",
+    "panelEmbedInfoLine1": "Yeni bir embed oluşturmak veya mevcut bir embedi düzenlemek için {dashboardLabel} içindeki %s sayfasına gidin.",
+    "panelEmbedInfoLine2": "Düğme eklemek veya düzenlemek için bu panelin %s bölümüne gidin.",
+    "panelEmbedPreview": "Embed önizlemesi",
+    "panelEmbedPreviewEmpty": "Seçilen panel embedi için önizleme yok.",
+    "ticketOpenEmbed": "Bilet açılış embedi",
+    "ticketOpenEmbedHint": "Bu düğmeyle bir bilet açıldığında gönderilen isteğe bağlı özel embed.",
+    "selectEmbed": "Embed seçin",
+    "defaultEmbed": "Panel embedini kullan",
+    "noCustomMessage": "Varsayılan bilet mesajını kullan",
+    "buttons": "Düğmeler",
+    "buttonList": "Düğmeler",
+    "categories": "Kategoriler",
+    "openCategory": "Açık biletler kategorisi",
+    "open_category": "Açık biletler kategorisi",
+    "sleepCategory": "Bekleyen biletler kategorisi",
+    "sleep_category": "Bekleyen biletler kategorisi",
+    "closedCategory": "Kapalı biletler kategorisi",
+    "closed_category": "Kapalı biletler kategorisi",
+    "selectCategory": "Bir kategori seçin...",
+    "logChannels": "Kayıt kanalları",
+    "statusChangeLog": "Durum değişikliği kaydı",
+    "status_change_log": "Durum değişikliği kaydı",
+    "buttonClickLog": "Düğme tıklama kaydı",
+    "ticket_button_click_log": "Düğme tıklama kaydı",
+    "closeLog": "Bilet kapatma kaydı",
+    "ticket_close_log": "Bilet kapatma kaydı",
+    "selectChannel": "Bir kanal seçin...",
+    "savedSuccess": "\"{panel}\" paneli başarıyla kaydedildi.",
+    "tabChannels": "Bilet paneli",
+    "tabSettings": "Ayarlar",
+    "tabButtons": "Düğmeler",
+    "tabMessages": "Mesajlar",
+    "autoSaveSaving": "Kaydediliyor...",
+    "autoSaveSaved": "Kaydedildi",
+    "autoSaveErrorTitle": "Otomatik kaydetme başarısız",
+    "autoSaveErrorDescription": "Bu bilet ayarları kaydedilemedi.",
+    "messages": "Mesajlar",
+    "noButtons": "Henüz düğme yok. Başlamak için bir düğme ekleyin.",
+    "addButton": "Düğme ekle",
+    "addButtonTitle": "Düğme ekle",
+    "addButtonDescription": "Yeni düğmenin görünümünü yapılandırın.",
+    "buttonLabel": "Düğme etiketi",
+    "buttonLabelPlaceholder": "Örn. Başvur",
+    "buttonStyle": "Düğme rengi",
+    "buttonStyleBlue": "Mavi",
+    "buttonStyleGrey": "Gri",
+    "buttonStyleGreen": "Yeşil",
+    "buttonStyleRed": "Kırmızı",
+    "buttonAdded": "Düğme eklendi.",
+    "buttonDeleted": "Düğme silindi.",
+    "editButtonTitle": "Düğme ayarlarını düzenle",
+    "editButtonDescription": "Bu bilet düğmesini yapılandırın.",
+    "buttonAppearanceSaved": "Görünüm kaydedildi.",
+    "confirmDeleteButton": "“{label}” düğmesi silinsin mi?",
+    "confirmDeleteButtonHint": "Bu işlem düğmeyi ve tüm yapılandırmasını (roller, sorular vb.) siler.",
+    "modRoles": "Ekip rolleri (etiketlenir)",
+    "modRolesHint": "Bir bilet açıldığında bu roller etiketlenir.",
+    "noPingRoles": "Ekip rolleri (sessiz)",
+    "noPingRolesHint": "Bu roller biletleri görebilir ancak etiketlenmez.",
+    "questions": "Sorular",
+    "questionsHint": "Bilet açılırken bir pencerede en fazla 5 soru gösterilir.",
+    "question": "Soru",
+    "privateThread": "Özel iş parçacığı",
+    "privateThreadHint": "Ekip için ayrı bir özel iş parçacığı oluşturur.",
+    "accountApply": "CoC hesabı zorunlu",
+    "accountApplyHint": "Kullanıcının bir Clash of Clans hesabı bağlaması gerekir.",
+    "playerInfo": "Oyuncu bilgilerini göster",
+    "playerInfoHint": "Bilet açıldığında hesap istatistiklerini gösterir.",
+    "thMin": "Min. Belediye Binası",
+    "numApply": "En fazla hesap",
+    "naming": "Adlandırma kuralı",
+    "namingPlaceholders": "Adlandırma yer tutucuları",
+    "namingVariables": "Değişkenler: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "“{label}” düğmesi kaydedildi.",
+    "badge": {
+      "accountApply": "CoC gerekli",
+      "privateThread": "Özel iş parçacığı"
+    },
+    "approveMessages": "Onay/red mesajları",
+    "approveMessagesHint": "Ekibin başvuranlara gönderebileceği önceden yazılmış mesajlar (en fazla 25).",
+    "messagesMaxHint": "En fazla 25 mesaj ekleyebilirsiniz.",
+    "editMessagesButton": "Mesajları düzenle",
+    "editMessagesTitle": "Hazır mesajları düzenle",
+    "editMessagesDescription": "Önceden yazılmış bilet mesajlarınızı ekleyin, kaldırın ve güncelleyin.",
+    "addMessage": "Mesaj ekle",
+    "noMessages": "Henüz mesaj yok. Başlamak için bir mesaj ekleyin.",
+    "messageName": "Mesaj adı",
+    "contentLabel": "İçerik",
+    "messageContent": "Mesaj içeriği...",
+    "messageNameRequired": "Tüm mesajların bir adı olmalıdır.",
+    "messagesSaved": "Onay ve ret mesajları kaydedildi.",
+    "rolesToAdd": "Verilecek roller",
+    "rolesToAddHint": "Bir bilet açıldığında kullanıcıya otomatik verilen roller.",
+    "rolesToRemove": "Kaldırılacak roller",
+    "rolesToRemoveHint": "Bir bilet açıldığında kullanıcıdan otomatik kaldırılan roller.",
+    "applyClans": "İzin verilen klanlar",
+    "applyClansHint": "Yalnızca bu klanların üyeleri bileti açabilir. Herkese izin vermek için boş bırakın.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Belediye Binası gereksinimleri",
+    "thRequirementsHint": "Bu bileti açmak için Belediye Binası seviyesine göre gereken minimum kahraman seviyeleri.",
+    "thHeroLegend": "BK = Barbar Kral · AQ = Okçu Kraliçe · GW = Büyük Koruyucu · RC = Kraliyet Şampiyonu · WARST = Savaş Yıldızları",
+    "addThLevel": "BB seviyesi ekle",
+    "thLevel": "TH",
+    "numApplyHint": "Kullanıcının başvurabileceği en fazla CoC hesabı sayısı (1-25).",
+    "embeds": "Embedler",
+    "embedsHint": "Panel mesajlarında veya bilet açılış mesajlarında kullanılan Discord embedleri.",
+    "newEmbed": "Yeni embed",
+    "embedName": "Embed adı",
+    "embedNamePlaceholder": "benim-embedim",
+    "discohookUrl": "Discohook URL",
+    "embedDiscohookHint": "Embedinizi Discohook’ta tasarlayın, sayfanın URL’sini kopyalayıp buraya yapıştırın.",
+    "openDiscohook": "Discohook’u aç",
+    "openInDiscohook": "Discohook’ta aç",
+    "copyDiscohookUrl": "Discohook URL'sini kopyala",
+    "copyDiscohookUrlDone": "URL kopyalandı!",
+    "editEmbed": "Düzenle",
+    "deleteEmbed": "Sil",
+    "confirmDeleteEmbed": "\"{name}\" embedi silinsin mi?",
+    "confirmDeleteEmbedHint": "Bu işlem embedi yalnızca ClashKing’den kaldırır; daha önce gönderilmiş Discord mesajlarını etkilemez.",
+    "embedSaved": "\"{name}\" embedi kaydedildi.",
+    "embedCreated": "\"{name}\" embedi oluşturuldu.",
+    "embedDeleted": "Embed silindi.",
+    "noEmbeds": "Henüz embed yok.",
+    "noEmbedsHint": "Burada bir embed oluşturup ardından bir panele veya düğmeye atayın.",
+    "legacyEmbed": "Bot üzerinden oluşturuldu — düzenlemeyi etkinleştirmek için bir Discohook URL'si yapıştırın.",
+    "invalidDiscohookUrl": "Geçersiz URL. Bir Discohook sayfa URL'si (discohook.app/?data=... veya discohook.app/?share=...) yapıştırın.",
+    "tabEmbeds": "Embedler"
+  },
+  "EmbedsPage": {
+    "title": "Embedler",
+    "description": "Bilet panelleriniz ve düğmeleriniz için Discord embed şablonları oluşturup yönetin.",
+    "nameHint": "Embedinize benzersiz bir kimlik verin. İçeriği daha sonra değiştirebilirsiniz."
+  },
+  "EmbedEditor": {
+    "importSection": "Discohook'tan içe aktar",
+    "addMessage": "Mesaj ekle",
+    "addMessageDialogTitle": "Mesaj ekle",
+    "addMessageDialogDescription": "Mesajınızın ne kadar gelişmiş olacağını seçin.",
+    "addMessageClassicTitle": "Klasik",
+    "addMessageClassicDescription": "Basit ve güvenilir: metin ve embedler. Emin değilseniz bunu seçin.",
+    "addMessageV2Title": "Bileşenler v2",
+    "addMessageV2Description": "Daha gelişmiş düzenler ve düğme, seçim, bölüm gibi etkileşimli bileşenler. Gelişmiş kurulumlar için idealdir.",
+    "betaTag": "Beta",
+    "importExport": "İçe ve dışa aktar",
+    "importExportDescription": "Discohook’tan bir embed içe aktarın veya mevcut embedinizi Discohook’a aktarın.",
+    "importFromDiscohook": "Discohook'tan içe aktar",
+    "copyDiscohookUrl": "Discohook URL'sini kopyala",
+    "openInDiscohook": "Discohook’ta aç",
+    "content": "İçerik",
+    "contentPlaceholder": "Embedlerin üstünde gösterilecek mesaj içeriği...",
+    "profileSection": "Profil",
+    "profileName": "Ad",
+    "profileAvatarUrl": "Avatar URL’si",
+    "profileUnsupportedWarning": "Uyarı: Bot henüz bu profili güncellemeyi desteklemiyor.",
+    "import": "İçe aktar",
+    "importError": "Geçersiz Discohook URL'si. Bir Discohook sayfa URL'si yapıştırın.",
+    "importMultipleMessagesWarning": "Bu bağlantıda birden fazla mesaj var. Bot her embed için tek mesaj desteklediğinden yalnızca ilk mesaj içe aktarıldı.",
+    "colorSection": "Renk",
+    "authorSection": "Yazar",
+    "authorName": "Ad",
+    "authorIconUrl": "Simge URL'si",
+    "authorUrl": "Yazar URL'si",
+    "bodySection": "Gövde",
+    "title": "Başlık",
+    "titleUrl": "Başlık URL'si",
+    "sidebarColor": "Kenar çubuğu rengi",
+    "description": "Açıklama",
+    "descriptionPlaceholder": "Embed açıklaması...",
+    "fieldsSection": "Alanlar",
+    "addField": "Alan ekle",
+    "field": "Alan",
+    "fieldName": "Ad",
+    "fieldValue": "Değer",
+    "fieldInline": "Satır içi",
+    "imagesSection": "Görseller",
+    "thumbnailUrl": "Küçük resim URL'si",
+    "imageUrl": "Görsel URL'si",
+    "footerSection": "Alt bilgi",
+    "footerText": "Alt bilgi metni",
+    "footerIconUrl": "Alt bilgi simgesi URL'si",
+    "timestamp": "Zaman damgasını ekle",
+    "preview": "Önizleme",
+    "previewEmpty": "Önizlemeyi görmek için alanları doldurun",
+    "modeToggleV1": "Klasik (V1)",
+    "modeToggleV2": "Bileşenler (V2)",
+    "componentsSection": "Bileşenler",
+    "addComponent": "Bileşen ekle",
+    "containerLabel": "Kapsayıcı",
+    "textDisplayLabel": "Metin gösterimi",
+    "separatorLabel": "Ayırıcı",
+    "mediaGalleryLabel": "Medya galerisi",
+    "sectionLabel": "Bölüm",
+    "dividerLine": "Ayırıcı çizgiyi göster",
+    "spacing": "Boşluk",
+    "spacingSmall": "Küçük",
+    "spacingLarge": "Büyük",
+    "imageDescription": "Alternatif metin",
+    "imageSpoiler": "Spoiler",
+    "addImage": "Görsel ekle",
+    "addTextBlock": "Metin bloğu ekle",
+    "accessory": "Aksesuar",
+    "accessoryNone": "Hiçbiri",
+    "accessoryThumbnail": "Küçük resim",
+    "accessoryButton": "Düğme",
+    "thumbnailAlt": "Küçük resim alternatif metni",
+    "accentColor": "Vurgu rengi",
+    "addContainer": "Alt bileşen ekle",
+    "containerSpoiler": "Spoiler kapsayıcı",
+    "stringSelectLabel": "Metin seçimi",
+    "userSelectLabel": "Kullanıcı seçimi",
+    "roleSelectLabel": "Rol seçimi",
+    "mentionableSelectLabel": "Etiketlenebilir öğe seçimi",
+    "channelSelectLabel": "Kanal seçimi",
+    "fileLabel": "Dosya",
+    "fileUrl": "Dosya URL'si",
+    "fileUploadButton": "Yükle",
+    "fileSpoiler": "Spoiler",
+    "selectCustomId": "Özel ID",
+    "selectPlaceholder": "Yer tutucu metin",
+    "selectMinValues": "Minimum değer",
+    "selectMaxValues": "Maksimum değer",
+    "selectOptions": "Seçenekler",
+    "selectOption": "Seçenek",
+    "selectOptionLabel": "Etiket",
+    "selectOptionValue": "Değer",
+    "selectOptionDescription": "Açıklama",
+    "selectOptionDefault": "Varsayılan seçili",
+    "addSelectOption": "Seçenek ekle",
+    "selectDisabled": "Devre dışı",
+    "actionRowMode": "Satır türü",
+    "actionRowModeButtons": "Düğmeler",
+    "actionRowLabel": "İşlem satırı",
+    "addButton": "Düğme ekle",
+    "buttonLabel": "Etiket",
+    "buttonStyle": "Stil",
+    "buttonStylePrimary": "Birincil",
+    "buttonStyleSecondary": "İkincil",
+    "buttonStyleSuccess": "Başarılı",
+    "buttonStyleDanger": "Tehlike",
+    "buttonStyleLink": "Bağlantı",
+    "tabMentions": "Bahsetmeler",
+    "tabTime": "Zaman",
+    "tabEmojis": "Emojiler",
+    "dateLabel": "Tarih",
+    "timeLabel": "Zaman",
+    "mentionsChannels": "Kanallar",
+    "mentionsSpecial": "Özel",
+    "mentionsChannelList": "Tüm kanallar",
+    "mentionsRoles": "Roller",
+    "mentionsServerGuide": "Sunucu rehberi",
+    "mentionsBrowseChannels": "Kanallara göz at",
+    "mentionsChannelsAndRoles": "Kanallar ve roller",
+    "mentionsNoChannels": "Aramanızla eşleşen kanal yok.",
+    "mentionsNoRoles": "Aramanızla eşleşen rol yok.",
+    "styleLabel": "Stil",
+    "timeRelativeNow": "0 saniye önce",
+    "emojiSearchPlaceholder": "Uygun emojiyi bul",
+    "emojiToneLabel": "Emoji cilt tonu",
+    "emojiCategory": {
+      "people": "İnsanlar",
+      "nature": "Doğa",
+      "food": "Yiyecek",
+      "activities": "Etkinlikler",
+      "travel": "Seyahat",
+      "objects": "Nesneler",
+      "symbols": "Semboller",
+      "flags": "Bayraklar"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Devre dışı",
+    "unknownComponent": "Bilinmeyen bileşen",
+    "unknownComponentHint": "Bu bileşen türü burada düzenlenemez, ancak kaydedildiğinde korunur."
+  },
+  "PanelsPage": {
+    "title": "Paneller",
+    "description": "Sunucunuzda yayımlanan etkileşimli üye panelini yapılandırın. Üyeler tek tıklamayla hesaplarını bağlayabilir, rollerini yenileyebilir ve daha fazlasını yapabilir.",
+    "saved": "Panel yapılandırması kaydedildi.",
+    "embedSection": "Embed",
+    "embedHint": "İsteğe bağlı embed düğmelerin üstünde gösterilir.",
+    "embedLabel": "Embed",
+    "noEmbed": "Embed yok (yalnızca düğmeler)",
+    "buttonsSection": "Düğmeler",
+    "buttonsHint": "Gösterilecek işlem düğmelerini seçin. Sıra, seçiminize göre belirlenir.",
+    "colorSection": "Düğme rengi",
+    "colorHint": "Tüm düğmelere uygulanır.",
+    "welcomeSection": "Karşılama kanalı",
+    "welcomeHint": "Ayarlanırsa yeni bir üye katıldığında panel otomatik olarak yayımlanır.",
+    "welcomeChannel": "Kanal",
+    "welcomeChannelPlaceholder": "Bir kanal seçin...",
+    "editPanelButton": "Paneli düzenle",
+    "editDialogTitle": "Paneli düzenle",
+    "editDialogDescription": "Kaydetmeden önce canlı önizlemeyle embedi, düğmeleri ve düğme rengini güncelleyin.",
+    "welcomeAutosaveSuccess": "Karşılama kanalı kaydedildi.",
+    "welcomeAutosaveDisabled": "Karşılama kanalı devre dışı bırakıldı.",
+    "previewSection": "Önizleme",
+    "previewHint": "Panelin Discord'da nasıl görüneceği.",
+    "previewNoEmbed": "Embed seçilmedi",
+    "previewEmbedNoData": "Embed için önizleme verisi yok",
+    "previewNoButtons": "Düğme seçilmedi",
+    "color": {
+      "Blue": "Mavi",
+      "Green": "Yeşil",
+      "Grey": "Gri",
+      "Red": "Kırmızı"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Çekilişler",
+    "description": "Sunucunuz için çekiliş kampanyaları oluşturun, planlayın ve yönetin.",
+    "create": "Çekiliş oluştur",
+    "listTitle": "Çekiliş kontrol paneli",
+    "listDescription": "Planlanmış, canlı ve sona ermiş çekilişleri tek yerden takip edin.",
+    "empty": "Gösterilecek çekiliş yok.",
+    "confirmDeleteTitle": "Çekilişi sil",
+    "confirmDelete": "Bu çekilişi silmek istediğinizden emin misiniz?",
+    "discardTitle": "Değişiklikleri iptal et?",
+    "discardDescription": "Kaydedilmemiş değişiklikleriniz var. Şimdi kapatırsanız değişiklikler kaybolur.",
+    "discardConfirm": "Vazgeç",
+    "formTabs": {
+      "general": "Genel",
+      "messages": "Mesajlar",
+      "restrictions": "Kısıtlamalar",
+      "advanced": "Gelişmiş"
+    },
+    "tabs": {
+      "ongoing": "Devam eden",
+      "upcoming": "Yaklaşan",
+      "ended": "Bitti"
+    },
+    "stats": {
+      "total": "Toplam çekiliş",
+      "totalEntries": "Toplam katılımlar",
+      "ongoing": "Devam eden çekilişler",
+      "upcoming": "Yaklaşan çekilişler",
+      "ended": "Sona ermiş çekilişler"
+    },
+    "statsDescriptions": {
+      "total": "Bu sunucuda yapılandırılmış tüm çekilişler.",
+      "totalEntries": "Tüm çekilişlerdeki toplam katılım sayısı.",
+      "ongoing": "Şu anda etkin olan ve katılım kabul edenler.",
+      "upcoming": "Daha sonra başlayacak şekilde planlananlar.",
+      "ended": "Tamamlanmış çekilişler."
+    },
+    "emptyTab": {
+      "title": "Burada çekiliş yok",
+      "ongoing": "Şu anda devam eden çekiliş yok.",
+      "upcoming": "Planlanmış çekiliş yok. Başlamak için bir tane oluşturun.",
+      "ended": "Henüz sona ermiş çekiliş yok."
+    },
+    "status": {
+      "scheduled": "Planlandı",
+      "ongoing": "Canlı",
+      "ended": "Bitti"
+    },
+    "table": {
+      "giveaway": "Çekiliş",
+      "channel": "Kanal",
+      "entries": "Katılımlar",
+      "timing": "Zamanlama",
+      "start": "Başlar",
+      "end": "Biter",
+      "winnersHeader": "Kazananlar",
+      "winners": "{count} kazanan{count, plural, one {} other {}}",
+      "boosters": "{count} çarpan{count, plural, one {} other {}}",
+      "noChannel": "Kanal yok",
+      "noChannelHelp": "Kanal atanmadı. Düzeltmek için çekilişi düzenleyin.",
+      "endsAt": "Bitiş:",
+      "endedAt": "Sona erdi:",
+      "duplicate": "Çoğalt",
+      "showingEnded": "Sona ermiş {total} çekilişten {shown} tanesi gösteriliyor",
+      "showMore": "{count} tane daha göster",
+      "pendingUpdate": "Bekleyen güncelleme",
+      "pendingUpdateHelp": "Bu çekilişte botun yakında uygulayacağı bekleyen değişiklikler var.",
+      "openInDiscord": "Discord’da aç",
+      "viewInDiscord": "Discord’da görüntüle",
+      "reroll": "Kazananları yeniden çek",
+      "rerolledCount": "{count, plural, one {# yeniden çekildi} other {# yeniden çekildi}}",
+      "viewEntries": "Katılımları görüntüle"
+    },
+    "entries": {
+      "description": "Katılımcıların ve kazanma olasılıklarının listesi.",
+      "totalEntries": "Toplam katılımlar",
+      "uniqueUsers": "Benzersiz kullanıcılar",
+      "noEntrants": "Henüz katılımcı yok.",
+      "userId": "Kullanıcı ID",
+      "entryCount": "Katılımlar",
+      "winChance": "Kazanma şansı"
+    },
+    "dialog": {
+      "createTitle": "Çekiliş oluştur",
+      "editTitle": "Çekilişi düzenle",
+      "description": "Çekiliş mesajını, zamanlamayı ve gereksinimleri yapılandırın.",
+      "create": "Çekiliş oluştur",
+      "saveChanges": "Değişiklikleri kaydet"
+    },
+    "form": {
+      "prize": "Ödül",
+      "prizePlaceholder": "Örnek: Altın Bileti",
+      "channel": "Kanal",
+      "channelPlaceholder": "Bir kanal seçin",
+      "startTime": "Başlangıç zamanı",
+      "startNow": "Hemen başlat",
+      "endTime": "Bitiş zamanı",
+      "winners": "Kazanan sayısı",
+      "mentions": "Bahsedilen roller",
+      "roleRequirements": "Gerekli veya hariç tutulan roller",
+      "rolesMode": "Rol modu",
+      "rolesModeOptions": {
+        "none": "Rol kısıtlaması yok",
+        "allow": "Yalnızca bu roller katılabilir",
+        "deny": "Bu roller katılamaz"
+      },
+      "rolesModeHelp": {
+        "none": "Tüm kullanıcılar bu çekilişe katılabilir.",
+        "allow": "Yalnızca seçilen rollerden birine sahip kullanıcılar katılabilir.",
+        "deny": "Seçilen rollerden herhangi birine sahip kullanıcılar katılamaz."
+      },
+      "textAboveEmbed": "Embedin üstündeki metin",
+      "textEmbedDefault": "Katılmak için aşağıdaki düğmeye tıklayın.",
+      "textInEmbed": "Embed açıklaması",
+      "textEndDefault": "Seçilen herkesi tebrik ederiz! Yakında sizinle iletişime geçeceğiz.",
+      "textOnEnd": "Çekiliş bitiş mesajı",
+      "image": "Çekiliş görseli",
+      "removeImage": "Mevcut görseli kaldır",
+      "imagePreviewAlt": "Çekiliş önizlemesi",
+      "previewGiveaway": "Çekilişi önizle",
+      "previewEnd": "Bitiş mesajını önizle",
+      "boosters": "Katılım çarpanları",
+      "addBooster": "Çarpan ekle",
+      "noBoosters": "Yapılandırılmış çarpan yok.",
+      "boosterLabel": "Çarpan {index}",
+      "boostValue": "Çarpan",
+      "boostRoles": "Güçlendirilmiş roller",
+      "requirements": "Katılım gereksinimleri",
+      "profilePictureRequired": "Discord profil resmi zorunlu",
+      "cocAccountRequired": "Bağlı Clash of Clans hesabı zorunlu"
+    },
+    "validation": {
+      "prizeRequired": "Ödül gerekli.",
+      "channelRequired": "Kanal gerekli.",
+      "startTimeRequired": "Çekiliş hemen başlamayacaksa başlangıç zamanı gereklidir.",
+      "endTimeRequired": "Bitiş zamanı gereklidir.",
+      "endAfterStart": "Bitiş zamanı başlangıç zamanından sonra olmalıdır.",
+      "imageTooLarge": "Görsel 8 MB'tan küçük olmalıdır."
+    },
+    "preview": {
+      "liveSummary": "Canlı özet",
+      "discordPreview": "Discord önizlemesi",
+      "giveawayTitle": "Çekiliş önizlemesi",
+      "giveawayDescription": "Etkin çekiliş mesajı böyle görünür.",
+      "endTitle": "Bitiş mesajı önizlemesi",
+      "endDescription": "Bu mesaj çekiliş bittiğinde gönderilir.",
+      "winnerCount": "Kazananlar",
+      "winnerWord": "{count, plural, one {kazanan} other {kazananlar}}",
+      "mentionCount": "Bahsedilen roller",
+      "requirementCount": "Gereksinimler",
+      "boosterCount": "Çarpanlar",
+      "profileRequired": "Profil resmi gerekli",
+      "accountRequired": "Bağlı CoC hesabı gerekli",
+      "rolesAllow": "Seçilen rollerle sınırlı",
+      "rolesDeny": "Seçili roller hariç tutuldu",
+      "noChannel": "Kanal seçilmedi",
+      "noPrize": "Ödülünüz burada görünür",
+      "noEmbedText": "Çekiliş içeriğini önizlemek için embed metni ekleyin.",
+      "noEndText": "Kazananlar için kapanış mesajı ekleyin.",
+      "startsAt": "Başlar: {date}",
+      "endsAt": "Biter: {date}",
+      "endsOn": "Bitiş: {date}",
+      "endsFooter": "Biter",
+      "notScheduled": "Planlanmadı",
+      "schedule": "Zamanlama",
+      "endMessage": "Kazanan mesajı",
+      "endSummary": "{winners} kazanan burada duyurulacak{winners, plural, one {} other {}}.",
+      "totalParticipants": "Toplam katılımcı: {count}",
+      "participate": "Katıl",
+      "buttonHint": "Discord gönderisinin altında gösterilen birincil işlem düğmesi."
+    },
+    "toast": {
+      "errorTitle": "Bir şeyler ters gitti",
+      "successTitle": "Başarılı",
+      "loadError": "Çekilişler yüklenemedi.",
+      "saveError": "Çekiliş kaydedilemedi.",
+      "deleteError": "Çekiliş silinemedi.",
+      "created": "Çekiliş başarıyla oluşturuldu.",
+      "updated": "Çekiliş başarıyla güncellendi.",
+      "deleted": "Çekiliş başarıyla silindi.",
+      "rerolled": "Kazananlar başarıyla yeniden çekildi.",
+      "rerollError": "Kazananlar yeniden seçilemedi."
+    },
+    "reroll": {
+      "title": "Kazananları yeniden çek",
+      "description": "Değiştirilecek kazananları seçin. Yeni kazananlar uygun katılımcılar arasından seçilir.",
+      "selectWinners": "Değiştirilecek kazananları seçin:",
+      "confirm": "Yeniden çek {count, plural, one {# kazanan} other {# kazananlar}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Kontrol paneline genel bakış",
+    "description": "Sunucu istatistiklerini izleyin ve kuruluma başlayın",
+    "stats": {
+      "linkedPlayers": "Bağlı oyuncular",
+      "linkedPlayersDesc": "Bu sunucuya bağlı oyuncular",
+      "clansConfigured": "Yapılandırılan klanlar",
+      "clansConfiguredDesc": "Bu sunucuda izlenen klanlar",
+      "activeRosters": "Aktif listeler",
+      "activeRostersDesc": "Oluşturulan savaş listeleri",
+      "totalAccounts": "Bağlı hesaplar",
+      "totalAccountsDesc": "Toplam bağlı CoC hesabı",
+      "playersTracked": "İzlenen oyuncular",
+      "globalPlayers": "Veritabanındaki toplam oyuncu",
+      "clansTracked": "İzlenen klanlar",
+      "globalClans": "Veritabanındaki toplam klan",
+      "botStatus": "Bot durumu",
+      "online": "Çevrimiçi",
+      "offline": "Çevrimdışı",
+      "memoryUsage": "Bellek: {used}MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Bot istatistikleri",
+    "clans": {
+      "title": "Klanlarınız",
+      "description": "{count, plural, one {# klan yapılandırılmış} other {# klanlar yapılandırılmış}}",
+      "manage": "Klanları yönet",
+      "addFirst": "İlk klanınızı ekleyin"
+    },
+    "quickStart": {
+      "title": "Hızlı Başlangıç",
+      "description": "ClashKing botunuzu yapılandırmaya başlayın",
+      "step1": {
+        "title": "Genel ayarları yapılandırın",
+        "description": "Takma ad kurallarını, embed renklerini ve kayıt kanallarını ayarlayın"
+      },
+      "step2": {
+        "title": "Klanlarınızı ekleyin",
+        "description": "Clash of Clans klanlarınızı bağlayıp rolleri yapılandırın"
+      },
+      "step3": {
+        "title": "Otomatik rolleri ayarlayın",
+        "description": "Belediye Binası seviyesi, kupa sayısı ve diğer ölçütlere göre otomatik rol atamasını yapılandırın"
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Bot istatistikleri",
+    "description": "Küresel ClashKing bot istatistikleri ve sistem durumu",
+    "about": {
+      "title": "Bu istatistikler hakkında",
+      "description": "Bunlar tüm ClashKing bot ağına ait küresel istatistiklerdir",
+      "globalStats": "Küresel istatistikler",
+      "globalStatsDesc": "Oyuncu ve klan sayıları, ClashKing kullanan tüm Discord sunucularında izlenen varlıkları kapsar",
+      "systemHealth": "Sistem durumu",
+      "systemHealthDesc": "CPU ve bellek kullanımı, ClashKing API altyapısındaki mevcut yükü gösterir"
+    }
+  },
+  "NotFound": {
+    "title": "404 - Sayfa bulunamadı",
+    "description": "Aradığınız sayfa mevcut değil.",
+    "goHome": "Ana sayfaya git"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord botu, mobil uygulama ve klan kontrol paneli",
+      "description": "Savaşları, listeleri, hesapları, hatırlatıcıları ve klan ayarlarını ClashKing ile Discord, mobil ve web üzerinden yönetin.",
+      "openGraphTitle": "ClashKing | Klanınızı yönetin"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing gezintisi",
+      "homeLabel": "ClashKing ana sayfası",
+      "mobileApp": "Mobil uygulama",
+      "discordBot": "Discord botu",
+      "dashboard": "Kontrol Paneli"
+    },
+    "language": {
+      "label": "Dil"
+    },
+    "appearance": {
+      "label": "Dış görünüş",
+      "day": "Gün",
+      "sunset": "Gün batımı"
+    },
+    "actions": {
+      "addToDiscord": "Discord’a ekle",
+      "addClashKing": "ClashKing’i ekle",
+      "openDashboard": "Kontrol panelini aç",
+      "joinTestFlight": "TestFlight’a katıl",
+      "getAndroidApp": "Android uygulamasını indir"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Klanınızı",
+          "second": "",
+          "third": "yönetin."
+        },
+        "accounts": {
+          "first": "Hesaplarınızı",
+          "second": "",
+          "third": "yönetin."
+        },
+        "stats": {
+          "first": "İstatistikleri",
+          "second": "",
+          "third": "keşfedin."
+        }
+      },
+      "rotatingLabel": "Klanınızı yönetin. Hesaplarınızı yönetin. İstatistikleri keşfedin.",
+      "copy": "Savaşlar, listeler, hesaplar ve klan ayarları Discord, mobil ve web’de."
+    },
+    "app": {
+      "title": "Mobil uygulama",
+      "intro": "Clash hesaplarınızın yardımcısı.",
+      "stageLabel": "ClashKing mobil uygulamasındaki klan, yükseltme ve savaş araçlarının ekran görüntüleri",
+      "images": {
+        "clanOverview": "ClashKing mobil uygulamasında klana genel bakış",
+        "upgradeStats": "ClashKing mobil uygulamasında Büyük Koruyucu yükseltme istatistikleri",
+        "warWidget": "ClashKing savaş sonucu aracı"
+      },
+      "features": {
+        "widgets": {
+          "title": "Araç takımları",
+          "copy": "Savaşlarınızı bir bakışta görün."
+        },
+        "notifications": {
+          "title": "Bildirimler",
+          "copy": "Bir saldırı hakkı kullanılabilir olduğunda veya bir yükseltme tamamlandığında bildirim alın."
+        },
+        "accounts": {
+          "title": "Bağlı hesaplar",
+          "copy": "Tüm Clash hesaplarınızı tek yerde tutun."
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord botu",
+      "intro": "Klan istatistikleri ve araçları doğrudan Discord’da.",
+      "imageLabel": "Discord’daki ClashKing klan komutu",
+      "imageAlt": "Discord’da ArcLine klan istatistiklerini gösteren ClashKing klan komutu",
+      "features": {
+        "rosters": {
+          "title": "Listeler",
+          "copy": "KSL veya etkinlik hesaplarını yönetin."
+        },
+        "warTools": {
+          "title": "Savaş araçları",
+          "copy": "Saldırıları, kadroları ve hatırlatıcıları Discord’da kontrol edin."
+        },
+        "accounts": {
+          "title": "Bağlı hesaplar",
+          "copy": "Tüm Clash hesaplarınızı tek yerde tutun."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Kontrol Paneli",
+      "intro": "Listeleri, hatırlatıcıları ve sunucu ayarlarını tek yerde yönetin.",
+      "imageLabel": "Klan yönetim araçlarını temsil eden İnşaatçı Kulübesi",
+      "imageAlt": "8. seviye İnşaatçı Kulübesi",
+      "features": {
+        "settings": {
+          "title": "Klan ayarları",
+          "copy": "Klanları, rolleri ve kanalları yapılandırın."
+        },
+        "rosters": {
+          "title": "Listeler",
+          "copy": "KSL veya etkinlik hesaplarını yönetin."
+        },
+        "automation": {
+          "title": "Otomasyon",
+          "copy": "Hatırlatıcıları ve sunucu görevlerini planlayın."
+        }
+      }
+    },
+    "resources": {
+      "title": "ClashKing ile geliştirin.",
+      "copy": "Topluluk araçları için rehberler, kaynak kodu ve yapılandırılmış veriler.",
+      "ariaLabel": "Geliştirici kaynakları",
+      "documentation": "Belgeler",
+      "publicApi": "Herkese açık API"
+    },
+    "footer": {
+      "tagline": "Herkes için Clash of Clans araçları",
+      "docs": "Belgeler",
+      "privacy": "Gizlilik Politikası",
+      "terms": "Hizmet Şartları",
+      "legal": "Bu içerik Supercell ile bağlantılı değildir; Supercell tarafından onaylanmamış veya desteklenmemiştir."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "Discord, mobil ve web için ClashKing",
+    "privacy": {
+      "title": "Gizlilik Politikası | ClashKing",
+      "openGraphTitle": "ClashKing Gizlilik Politikası",
+      "description": "ClashKing’in hesap, oyun ve uygulama verilerini nasıl topladığını, kullandığını, sakladığını ve koruduğunu öğrenin.",
+      "heading": "Gizlilik Politikası",
+      "eyebrow": "Yürürlükte 17 Temmuz 2026"
+    },
+    "terms": {
+      "title": "Hizmet Şartları | ClashKing",
+      "openGraphTitle": "ClashKing Hizmet Şartları",
+      "description": "ClashKing web sitelerini, uygulamalarını, hizmetlerini ve topluluk araçlarını kullanırken geçerli olan şartlar.",
+      "heading": "Hizmet Şartları",
+      "eyebrow": "ClashKing yasal bilgileri"
+    }
+  }
+}

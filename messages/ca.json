@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Carregant...",
+    "save": "Desa",
+    "cancel": "Cancel·lar",
+    "delete": "Suprimeix",
+    "edit": "Edita",
+    "search": "Cerca",
+    "filter": "Filtre",
+    "add": "Afegeix",
+    "remove": "Suprimeix",
+    "refresh": "Actualitza",
+    "close": "Tanca",
+    "openMenu": "Obre el menú",
+    "submit": "Envia",
+    "back": "Enrere",
+    "next": "Següent",
+    "previous": "Anterior",
+    "poweredBy": "amb la tecnologia de",
+    "noData": "No hi ha dades disponibles.",
+    "noChannelFound": "No s’ha trobat cap canal.",
+    "searchChannels": "Cerca canals...",
+    "searchClans": "Cerca clans...",
+    "noClanFound": "No s’ha trobat cap clan.",
+    "searchCategories": "Cerca categories...",
+    "noRoleFound": "No s’ha trobat cap rol.",
+    "searchRoles": "Cerca rols...",
+    "addRole": "Afegeix rol...",
+    "error": "S’ha produït un error",
+    "success": "Èxit",
+    "actions": "Accions",
+    "details": "Detalls",
+    "view": "Mostra",
+    "unknown": "Desconegut",
+    "confirm": "Confirma",
+    "settings": "Configuració",
+    "status": "Estat",
+    "retry": "Tornar a intentar",
+    "disabled": "Desactivat",
+    "name": "Nom",
+    "description": "Descripció",
+    "createdAt": "Creat el",
+    "updatedAt": "Actualitzat el",
+    "dashboard": "Tauler",
+    "loadError": "No s’han pogut carregar les dades.",
+    "tryAgain": "Torna-ho a provar",
+    "create": "Crea",
+    "viewClashProfile": "Mostra perfil de Clash",
+    "openInGame": "Obre al joc",
+    "openChannelInDiscord": "Obre aquest canal a Discord",
+    "playerProfile": {
+      "clan": "Clan",
+      "townHallLevel": "Nivell de l’Ajuntament",
+      "trophies": "Trofeus",
+      "warPreference": "Preferència de guerra",
+      "warPreferenceIn": "Participa",
+      "warPreferenceOut": "No participa",
+      "signupGroup": "Grup d’inscripció",
+      "heroLevels": "Nivells dels herois",
+      "hitrate30d": "Taxa d’encerts dels darrers 30 dies"
+    }
+  },
+  "Navigation": {
+    "features": "Funcions",
+    "openSource": "Codi obert",
+    "help": "Necessites ajuda?",
+    "support": "Dona’ns suport",
+    "commands": "Ordres",
+    "premium": "Premium",
+    "documentation": "Documentació",
+    "loginWithDiscord": "Inicia la sessió amb Discord",
+    "addToDiscord": "Afegeix a Discord",
+    "openDashboard": "Obre el tauler",
+    "dashboardSettings": "Configuració del tauler",
+    "logout": "Tanca la sessió",
+    "settings": "Configuració",
+    "theme": "Tema",
+    "systemTheme": "Fes servir el tema del sistema",
+    "lightTheme": "Tema clar",
+    "darkTheme": "Tema fosc",
+    "language": "Idioma",
+    "browserLanguage": "Idioma del navegador"
+  },
+  "HomePage": {
+    "badge": "Més de {serverCount} servidors ja fan servir ClashKing",
+    "title": "El més potent",
+    "titleHighlight": "bot de Clash of Clans",
+    "subtitle": "Automatitza la gestió del teu clan, consulta les estadístiques dels jugadors, gestiona guerres i mantén activa la teva comunitat.",
+    "cta": {
+      "heading": "A punt per transformar el teu clan?",
+      "description": "Uneix-te als més de {serverCount} servidors de Discord que ja fan servir ClashKing. La configuració només triga 2 minuts.",
+      "button": "Afegeix ClashKing a Discord",
+      "trustBadge": "Gratuït per sempre • No requereix targeta • Més de {serverCount} servidors",
+      "addToDiscord": "Afegeix a Discord",
+      "openDashboard": "Obre el tauler"
+    },
+    "stats": {
+      "servers": "Servidors de Discord",
+      "users": "Usuaris actius",
+      "clans": "Clans seguits"
+    },
+    "features": {
+      "title": "Tot el que necessites per gestionar el teu clan",
+      "subtitle": "Funcions potents dissenyades específicament per a comunitats de Clash of Clans",
+      "autoRoles": {
+        "title": "Gestió automàtica de rols",
+        "description": "Assigna rols automàticament segons l’estat, la posició al clan i els assoliments del jugador. Mantén el servidor organitzat sense esforç."
+      },
+      "playerStats": {
+        "title": "Estadístiques de jugador",
+        "description": "Consulta estadístiques detallades, gràfics de progrés i l’historial d’atacs. Descobreix qui millora i qui necessita ajuda."
+      },
+      "leaderboards": {
+        "title": "Classificacions",
+        "description": "Crea classificacions competitives de donacions, trofeus, estrelles de guerra i mètriques personalitzades. Augmenta la participació."
+      },
+      "warTracking": {
+        "title": "Seguiment de guerra",
+        "description": "Controla les alineacions de guerra, segueix els atacs en temps real i consulta les anàlisis posteriors. No et perdis cap detall."
+      },
+      "smartReminders": {
+        "title": "Recordatoris intel·ligents",
+        "description": "Recordatoris automàtics dels Jocs del Clan, atacs de guerra, la Lliga de Guerra de Clans i esdeveniments personalitzats. Mantén tothom informat."
+      },
+      "customization": {
+        "title": "Personalització completa",
+        "description": "Personalitza les ordres, els colors, els sobrenoms i els permisos. Adapta ClashKing a les teves necessitats."
+      },
+      "familyManagement": {
+        "title": "Gestió de famílies",
+        "description": "Gestiona diversos clans com una família, amb estadístiques comunes, classificacions compartides i rols unificats."
+      },
+      "analytics": {
+        "title": "Anàlisis avançades",
+        "description": "Obté informació detallada sobre el rendiment del clan, l’activitat dels jugadors i les tendències de creixement. Pren decisions basades en dades."
+      },
+      "performance": {
+        "title": "Ultraràpid",
+        "description": "Creat per oferir respostes instantànies i actualitzacions en temps real, sense retards."
+      },
+      "security": {
+        "title": "Segur i fiable",
+        "description": "99,9 % de disponibilitat, dades xifrades i còpies de seguretat periòdiques. Les dades del teu clan estan segures."
+      }
+    },
+    "footer": {
+      "tagline": "El bot de Clash of Clans més potent per a comunitats de Discord.",
+      "about": {
+        "title": "Sobre",
+        "features": "Funcions",
+        "help": "Necessites ajuda?",
+        "openSource": "Codi obert",
+        "support": "Dona’ns suport"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Tauler",
+        "inviteBot": "Convida bot"
+      },
+      "resources": {
+        "title": "Recursos",
+        "documentation": "Documentació",
+        "quickStart": "Guia d’inici ràpid",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Comunitat",
+        "discord": "Servidor de Discord",
+        "twitter": "X (Twitter)",
+        "reportBug": "Informa d’un error",
+        "requestFeature": "Sol·licita funció"
+      },
+      "legal": {
+        "copyright": "ClashKing. Tots els drets reservats.",
+        "privacy": "Política de privacitat",
+        "terms": "Termes del servei"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "No és al servidor",
+    "unknownUser": "Usuari desconegut",
+    "notLinked": "Sense enllaçar",
+    "status": {
+      "onServer": "Al servidor",
+      "notOnServer": "No és al servidor"
+    },
+    "discordId": "ID de Discord",
+    "viewProfile": "Mostra perfil de Discord",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Visió general",
+      "description": "Pàgina principal del tauler"
+    },
+    "general": {
+      "name": "Configuració general",
+      "description": "Configuració del servidor"
+    },
+    "dashboardAccess": {
+      "name": "Accés al tauler",
+      "description": "Delega seccions del tauler"
+    },
+    "familySettings": {
+      "name": "Configuració de la família",
+      "description": "Rols i sobrenoms de la família"
+    },
+    "clans": {
+      "name": "Clans",
+      "description": "Gestiona els teus clans"
+    },
+    "logs": {
+      "name": "Registres",
+      "description": "Configuració de webhooks"
+    },
+    "roles": {
+      "name": "Rols",
+      "description": "Automatització de rols"
+    },
+    "reminders": {
+      "name": "Recordatoris",
+      "description": "Tots els tipus de recordatori"
+    },
+    "rosters": {
+      "name": "Llistes",
+      "description": "Gestió de llistes"
+    },
+    "bases": {
+      "name": "Bases",
+      "description": "Biblioteca de dissenys i interacció"
+    },
+    "autoboards": {
+      "name": "Taulers automàtics",
+      "description": "Classificacions automatitzades"
+    },
+    "giveaways": {
+      "name": "Sorteigs",
+      "description": "Gestiona campanyes de sorteigs"
+    },
+    "panels": {
+      "name": "Taulers",
+      "description": "Taulers interactius per a membres amb botons d’acció"
+    },
+    "tickets": {
+      "name": "Tiquets",
+      "description": "Tiquets de reclutament i assistència"
+    },
+    "embeds": {
+      "name": "Incrustacions",
+      "description": "Llista d’incrustacions de Discord"
+    },
+    "links": {
+      "name": "Enllaços",
+      "description": "Vinculació entre jugadors i Discord"
+    },
+    "bans": {
+      "name": "Bandejaments i avisos",
+      "description": "Eines de moderació"
+    },
+    "wars": {
+      "name": "Guerres",
+      "description": "Estadístiques de guerra"
+    },
+    "leaderboards": {
+      "name": "Classificacions",
+      "description": "Classificacions globals"
+    },
+    "sections": {
+      "configuration": "Configuració",
+      "clanManagement": "Gestió del clan",
+      "playerManagement": "Gestió de jugadors",
+      "automation": "Automatització",
+      "statistics": "Estadístiques"
+    },
+    "switchServer": "Canvia de servidor",
+    "goHome": "Pàgina d’inici"
+  },
+  "BasesPage": {
+    "eyebrow": "Gestió del clan",
+    "title": "Bases",
+    "description": "Consulta els dissenys compartits, l’historial d’interaccions i els missatges d’origen de Discord.",
+    "refresh": "Actualitza",
+    "create": "Afegeix una base",
+    "retry": "Torna-ho a provar",
+    "dismiss": "Descarta",
+    "cancel": "Cancel·lar",
+    "previous": "Anterior",
+    "next": "Següent",
+    "pagination": "Pàgina {page} de {total}",
+    "imageAlt": "Imatge del disseny de la base {index}",
+    "noDescription": "No s’ha proporcionat cap descripció.",
+    "openLayout": "Obre el disseny",
+    "openMessage": "Missatge de Discord",
+    "summary": {
+      "total": "Total de bases",
+      "page": "Pàgina actual",
+      "visible": "Visibles"
+    },
+    "counts": {
+      "downloads": "Baixades úniques",
+      "upvotes": "Vots positius",
+      "downvotes": "Vots negatius"
+    },
+    "history": {
+      "title": "Historial de baixades ({count})",
+      "empty": "No s’ha registrat cap ID de baixada.",
+      "resolve": "Identifica el perfil"
+    },
+    "delete": {
+      "action": "Suprimeix",
+      "confirmTitle": "Vols suprimir aquesta base?",
+      "confirmDescription": "Això suprimeix permanentment el registre de la base de dades i primer intenta suprimir el missatge d’origen de Discord. La base no es pot restaurar.",
+      "confirmAction": "Suprimeix la base",
+      "deleting": "S’està suprimint…",
+      "baseId": "ID de la base",
+      "discordSource": "Origen de Discord",
+      "successTitle": "Base suprimida",
+      "successDeleted": "S’han suprimit el registre de la base de dades i el missatge de Discord.",
+      "successAlreadyMissing": "S’ha suprimit el registre de la base de dades; el missatge de Discord ja no existia.",
+      "cleanupFailedTitle": "S’ha conservat la base; ha fallat la neteja de Discord",
+      "cleanupCompleteTitle": "Neteja de Discord completada; s’ha conservat la base",
+      "failureTitle": "La base no s’ha suprimit",
+      "failureFallback": "La sol·licitud de supressió ha fallat.",
+      "retryable": "Pots tornar-ho a provar amb seguretat",
+      "notRetryable": "No ho tornis a provar",
+      "cleanup": {
+        "deleted": "Missatge de Discord suprimit",
+        "alreadyMissing": "El missatge de Discord ja no existeix",
+        "failed": "Ha fallat la neteja de Discord"
+      }
+    },
+    "empty": {
+      "title": "Encara no s’ha compartit cap base",
+      "description": "Afegeix el primer disseny triant el canal de Discord i l’enllaç de disseny de Clash of Clans."
+    },
+    "form": {
+      "title": "Afegeix una base",
+      "description": "Les bases no es poden editar després de crear-les. Tria on ha de publicar ClashKing el missatge de Discord i confirma l’enllaç del disseny.",
+      "channel": "Canal de Discord",
+      "channelPlaceholder": "Selecciona un canal",
+      "channelSearch": "Cerca canals…",
+      "channelsLoading": "S’estan carregant els canals…",
+      "baseLink": "Enllaç del disseny",
+      "descriptionLabel": "Descripció",
+      "images": "Imatges",
+      "chooseImages": "Tria les imatges del disseny",
+      "imageLimit": "Pots triar fins a quatre imatges; les pujades acabaran abans de crear la base.",
+      "submit": "Crea la base",
+      "creating": "S’està pujant i creant…",
+      "createRejectedTitle": "La base no s’ha creat",
+      "createCleanupCompleteTitle": "Neteja de Discord completada; la base no s’ha creat",
+      "createCleanupFailedTitle": "El missatge de Discord podria conservar-se; la base no s’ha creat",
+      "databaseNotInserted": "No s’ha inserit el registre a la base de dades",
+      "discordMessageCreated": "S’ha creat el missatge de Discord",
+      "discordMessageId": "ID del missatge de Discord",
+      "retryable": "Pots tornar-ho a provar amb seguretat",
+      "notRetryable": "No ho tornis a provar automàticament",
+      "cleanup": {
+        "notNeeded": "No cal fer la neteja de Discord",
+        "deleted": "Missatge de Discord suprimit",
+        "alreadyMissing": "El missatge de Discord ja no existeix",
+        "failed": "Ha fallat la neteja de Discord"
+      }
+    },
+    "errors": {
+      "title": "Bases no disponibles",
+      "load": "No s’han pogut carregar les bases.",
+      "create": "No s’ha pogut crear la base.",
+      "upload": "No s’ha pogut pujar la imatge.",
+      "downloader": "No s’ha pogut identificar aquest usuari.",
+      "channels": "No s’han pogut carregar els canals de Discord.",
+      "channelRequired": "Selecciona un canal de Discord.",
+      "linkRequired": "L’enllaç del disseny és obligatori.",
+      "descriptionTooLong": "La descripció pot tenir com a màxim 1.000 caràcters.",
+      "tooManyImages": "Tria com a màxim quatre imatges."
+    }
+  },
+  "BansPage": {
+    "title": "Moderació",
+    "description": "Gestiona els bandejaments i els avisos dels jugadors",
+    "viewClashProfile": "Mostra perfil de Clash",
+    "tabs": {
+      "bans": "Bandejaments",
+      "strikes": "Avisos"
+    },
+    "bans": {
+      "title": "Jugadors bandejats",
+      "noBans": "No s’han trobat jugadors bandejats",
+      "addBan": "Afegeix un bandejament",
+      "removeBan": "Suprimeix el bandejament",
+      "confirmRemove": "Segur que vols suprimir aquest bandejament?",
+      "playerTag": "Etiqueta del jugador",
+      "playerName": "Nom del jugador",
+      "reason": "Motiu",
+      "bannedAt": "Bandejat el",
+      "search": "Cerca per nom o etiqueta...",
+      "howItWorks": {
+        "title": "Com funcionen els bandejaments",
+        "description": "Si un jugador bandejat entra en un dels teus clans, s’enviarà un avís al canal configurat a la <clansTab>pestanya Clans</clansTab>. El bot només pot avisar, no impedir l’entrada."
+      },
+      "stats": {
+        "total": "Total de bandejaments",
+        "recent": "Bandejaments recents (7 dies)",
+        "commonReason": "Motiu més habitual",
+        "activeOnServer": "Bandejaments actius al servidor",
+        "last7Days": "En els darrers 7 dies",
+        "commonReasonValue": "Assetjament i toxicitat",
+        "noBans": "Encara no hi ha bandejaments",
+        "percentOfAll": "{percent}% de tots els bandejaments",
+        "percentOfAllLabel": "de tots els bandejaments"
+      },
+      "list": {
+        "title": "Jugadors bandejats",
+        "count": "{count} {count, plural, one {jugador bandejat} other {jugadors bandejats}}",
+        "searchPlaceholder": "Cerca per nom, etiqueta o motiu...",
+        "noBansFound": "No s’han trobat bandejaments",
+        "noBans": "No hi ha jugadors bandejats",
+        "adjustSearch": "Prova de canviar la cerca",
+        "getStarted": "Afegeix un bandejament per començar a moderar jugadors"
+      },
+      "table": {
+        "player": "Jugador",
+        "reason": "Motiu",
+        "bannedBy": "Bandejat per",
+        "date": "Data",
+        "daysAgo": "fa {days} dies",
+        "noReason": "No s’ha proporcionat cap motiu"
+      },
+      "addDialog": {
+        "title": "Bandeja un jugador",
+        "description": "Afegeix un jugador a la llista de bandejaments. Rebràs un avís si entra en qualsevol clan d’aquest servidor.",
+        "playerTagLabel": "Etiqueta del jugador",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Nom del jugador (opcional)",
+        "playerNamePlaceholder": "Introdueix el nom del jugador",
+        "reasonLabel": "Motiu del bandejament",
+        "reasonPlaceholder": "Explica per què es bandeja aquest jugador...",
+        "submit": "Bandeja el jugador"
+      },
+      "bestPractices": {
+        "title": "Bones pràctiques",
+        "document": {
+          "title": "Documenta tot amb detall:",
+          "desc": "Indica sempre un motiu detallat perquè els altres moderadors entenguin el context."
+        },
+        "review": {
+          "title": "Revisa periòdicament:",
+          "desc": "Revisa periòdicament la llista per comprovar que tots els bandejaments continuen sent necessaris i justificats."
+        },
+        "consistent": {
+          "title": "Sigues coherent:",
+          "desc": "Aplica els bandejaments de manera justa i coherent per mantenir una comunitat saludable."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Avisos de jugadors",
+      "noStrikes": "No s’han trobat avisos",
+      "addStrike": "Afegeix un avís",
+      "removeStrike": "Suprimeix l’avís",
+      "confirmRemove": "Segur que vols suprimir aquest avís?",
+      "playerTag": "Etiqueta del jugador",
+      "reason": "Motiu",
+      "weight": "Pes",
+      "rolloverDays": "Dies fins que caduqui",
+      "createdAt": "Creat el",
+      "search": "Cerca per etiqueta de jugador...",
+      "howItWorks": {
+        "title": "Com funcionen els avisos",
+        "description": "Els avisos serveixen per registrar infraccions de les normes. Cada avís té un pes i pot caducar després d’un nombre determinat de dies. Permeten seguir el comportament abans d’aplicar un bandejament."
+      },
+      "stats": {
+        "total": "Total d’avisos",
+        "recent": "Avisos recents (7 dies)",
+        "totalWeight": "Pes total dels avisos",
+        "activeOnServer": "Avisos actius al servidor",
+        "last7Days": "En els darrers 7 dies",
+        "cumulativeWeight": "Pes acumulat dels avisos",
+        "commonReason": "Motiu més habitual",
+        "commonReasonValue": "Spam"
+      },
+      "list": {
+        "title": "Avisos de jugadors",
+        "count": "{count} {count, plural, one {avís emès} other {avisos emesos}}",
+        "searchPlaceholder": "Cerca per nom, etiqueta o motiu...",
+        "noStrikesFound": "No s’han trobat avisos",
+        "noStrikes": "No s’ha emès cap avís",
+        "adjustSearch": "Prova de canviar la cerca",
+        "getStarted": "Afegeix un avís per començar a registrar infraccions",
+        "viewAll": "Tots els avisos",
+        "viewGrouped": "Per jugador"
+      },
+      "table": {
+        "player": "Jugador",
+        "reason": "Motiu",
+        "weight": "Pes",
+        "addedBy": "Afegit per",
+        "date": "Data",
+        "expires": "Caduca",
+        "never": "Mai",
+        "noReason": "No s’ha proporcionat cap motiu",
+        "daysAgo": "fa {days} dies",
+        "totalStrikes": "Total d’avisos",
+        "totalWeight": "Pes total",
+        "lastStrike": "Últim avís"
+      },
+      "addDialog": {
+        "title": "Afegeix un avís",
+        "description": "Emet un avís a un jugador. Els avisos poden tenir pesos diferents i dates de caducitat.",
+        "playerTagLabel": "Etiqueta del jugador",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Motiu",
+        "reasonPlaceholder": "Explica per què s’emet aquest avís...",
+        "weightLabel": "Pes de l’avís",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Caduca en (dies)",
+        "rolloverPlaceholder": "Opcional",
+        "submit": "Afegeix l’avís"
+      },
+      "guidelines": {
+        "title": "Directrius sobre els avisos",
+        "weights": {
+          "title": "Fes servir els pesos amb criteri:",
+          "desc": "Assigna pesos majors (2-3) a infraccions greus i menors (1) a infraccions lleus."
+        },
+        "expiration": {
+          "title": "Estableix dates de caducitat:",
+          "desc": "Considera establir dates de caducitat perquè els jugadors puguin millorar el seu comportament."
+        },
+        "patterns": {
+          "title": "Detecta patrons:",
+          "desc": "Fes servir els avisos per identificar reincidents abans d’aplicar bandejaments permanents."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Bandejament afegit correctament",
+      "banRemoved": "Bandejament suprimit correctament",
+      "strikeAdded": "Avís afegit correctament",
+      "strikeRemoved": "Avís suprimit correctament",
+      "errorLoadingBans": "No s’han pogut carregar els jugadors bandejats",
+      "errorLoadingStrikes": "No s’han pogut carregar els avisos",
+      "errorAddingBan": "No s’ha pogut afegir el bandejament",
+      "errorAddingStrike": "No s’ha pogut afegir l’avís",
+      "errorRemovingBan": "No s’ha pogut suprimir el bandejament",
+      "errorRemovingStrike": "No s’ha pogut suprimir l’avís"
+    }
+  },
+  "RostersPage": {
+    "title": "Llistes i alineacions",
+    "description": "Gestiona les llistes de guerra, les alineacions i les assignacions de membres",
+    "stats": {
+      "totalRosters": "Total de llistes",
+      "totalMembers": "Membres totals",
+      "clanRosters": "Llistes del clan",
+      "familyRosters": "Llistes de la família",
+      "members": "Membres",
+      "avgTh": "Mitjana TH",
+      "avgHitrate": "Taxa mitjana d’encerts",
+      "distribution": "Distribució",
+      "clan": "Clan",
+      "family": "Família",
+      "external": "Extern",
+      "thDistribution": "Distribució per TH",
+      "capacity": "Capacitat"
+    },
+    "filters": {
+      "search": "Cerca llistes...",
+      "type": "Tipus",
+      "all": "Tot",
+      "clan": "Clan",
+      "family": "Família",
+      "clear": "Neteja"
+    },
+    "comparisonMode": {
+      "cancel": "Cancel·lar",
+      "compare": "Compara",
+      "compareRosters": "Compara les llistes",
+      "selectRosters": "Selecciona llistes",
+      "selectRostersDesc": "Selecciona almenys 2 llistes per comparar-les",
+      "maxReached": "Màxim assolit",
+      "maxReachedDesc": "Pots comparar fins a 4 llistes alhora"
+    },
+    "createDialog": {
+      "title": "Crea una llista nova",
+      "description": "Configura una llista nova per al teu clan",
+      "aliasLabel": "Nom de la llista",
+      "aliasPlaceholder": "p. ex., llista de la CWL",
+      "typeLabel": "Tipus de llista",
+      "typeClan": "Clan",
+      "typeFamily": "Família",
+      "signupScopeLabel": "Àmbit d’inscripció",
+      "scopeClanOnly": "Només el clan",
+      "scopeFamilyWide": "Tota la família",
+      "clanLabel": "Clan",
+      "clanPlaceholder": "Selecciona un clan",
+      "descriptionLabel": "Descripció (opcional)",
+      "descriptionPlaceholder": "Descripció de la llista...",
+      "cancel": "Cancel·lar",
+      "creating": "S’està creant...",
+      "create": "Crea la llista"
+    },
+    "editDialog": {
+      "title": "Edita la llista",
+      "description": "Modifica els paràmetres i la configuració de la llista",
+      "aliasLabel": "Nom de la llista",
+      "descriptionLabel": "Descripció",
+      "descriptionPlaceholder": "Descripció de la llista...",
+      "minThLabel": "Ajuntament mínim",
+      "minThPlaceholder": "p. ex., 13",
+      "maxThLabel": "Ajuntament màxim",
+      "maxThPlaceholder": "p. ex., 16",
+      "rosterSizeLabel": "Mida de la llista",
+      "rosterSizePlaceholder": "p. ex., 50",
+      "columnsLabel": "Columnes visibles",
+      "columnsPlaceholder": "Selecciona les columnes que es mostraran",
+      "sortLabel": "Ordre de classificació",
+      "sortPlaceholder": "Selecciona els camps d’ordenació",
+      "cancel": "Cancel·lar",
+      "saving": "S’està desant...",
+      "save": "Desa canvis"
+    },
+    "addMembersDialog": {
+      "title": "Afegeix membres a la llista",
+      "description": "Selecciona membres del teu clan o introdueix etiquetes de jugador",
+      "bulkTagsLabel": "Afegeix diverses etiquetes",
+      "bulkTagsPlaceholder": "Introdueix etiquetes de jugador (una per línia o separades per comes)",
+      "searchLabel": "Cerca membres",
+      "searchPlaceholder": "Cerca per nom o etiqueta...",
+      "selectFromClan": "Selecciona membres del clan",
+      "selectedCount": "Seleccionats",
+      "noMembers": "No hi ha membres disponibles",
+      "noMembersSelected": "No has seleccionat cap membre",
+      "noMembersSelectedDesc": "Selecciona membres o introdueix etiquetes de jugador.",
+      "cancel": "Cancel·lar",
+      "adding": "S’està afegint...",
+      "add": "Afegeix membres"
+    },
+    "detailsDialog": {
+      "title": "Detalls de la llista",
+      "edit": "Edita",
+      "refresh": "Actualitza",
+      "refreshing": "S’està actualitzant...",
+      "delete": "Suprimeix",
+      "deleting": "S’està suprimint...",
+      "addMembers": "Afegeix membres",
+      "close": "Tanca",
+      "noMembers": "No hi ha membres en aquesta llista",
+      "noMembersDesc": "Afegeix membres per començar",
+      "memberCount": "Membres",
+      "thRestriction": "Nivell d'Ajuntament",
+      "avgTh": "Mitjana TH",
+      "avgHitrate": "Taxa mitjana d’encerts",
+      "clan": "Clan",
+      "family": "Família",
+      "external": "Extern",
+      "substitute": "SUPLENT",
+      "removeMember": "Suprimeix"
+    },
+    "rosterCard": {
+      "members": "Membres",
+      "thLevel": "Nivell d'Ajuntament",
+      "avgTh": "Mitjana TH",
+      "avgHitrate": "Taxa mitjana d’encerts",
+      "clan": "Clan",
+      "family": "Família",
+      "external": "Extern",
+      "noRestriction": "Sense restriccions",
+      "view": "Mostra",
+      "edit": "Edita",
+      "delete": "Suprimeix",
+      "noGroup": "Sense grup",
+      "moveToGroup": "Mou al grup",
+      "clone": "Clona",
+      "allRosters": "Totes les llistes",
+      "manageRosters": "Gestiona les teves llistes i alineacions de guerra"
+    },
+    "memberColumns": {
+      "name": "Nom",
+      "townhall": "Ajuntament",
+      "tag": "Etiqueta",
+      "hitrate": "Taxa d’encerts",
+      "current_clan": "Clan actual",
+      "current_clan_tag": "Etiqueta del clan",
+      "discord": "Discord",
+      "hero_lvs": "Herois",
+      "war_pref": "Preferència de guerra",
+      "trophies": "Trofeus",
+      "signup_group": "Grup d’inscripció"
+    },
+    "columns": {
+      "configure": "Columnes",
+      "title": "Configura columnes",
+      "description": "Tria les columnes que es mostraran i el seu ordre",
+      "selected": "Columnes seleccionades",
+      "available": "Columnes disponibles",
+      "save": "Desa columnes",
+      "reset": "Restableix columnes"
+    },
+    "sortFields": {
+      "townhall": "Nivell de l’Ajuntament",
+      "name": "Nom",
+      "tag": "Etiqueta",
+      "heroLvs": "Herois",
+      "trophies": "Trofeus",
+      "hitrate": "Taxa d’encerts dels darrers 30 dies",
+      "currentClanTag": "Etiqueta del clan",
+      "addedAt": "Afegit el"
+    },
+    "thRestrictions": {
+      "only": "Només TH{th}",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "Sense restriccions"
+    },
+    "emptyState": {
+      "noRosters": "Encara no s’ha creat cap llista",
+      "noRostersDesc": "Crea la teva primera llista per començar",
+      "noMatch": "Cap llista coincideix amb els teus filtres",
+      "noMatchDesc": "Prova de canviar la cerca o els filtres"
+    },
+    "toast": {
+      "errorTitle": "Error",
+      "successTitle": "Èxit",
+      "errorLoadingRosters": "No s’han pogut carregar les llistes. Torna-ho a provar.",
+      "errorLoadingMembers": "No s’han pogut carregar els membres del clan.",
+      "rosterCreated": "Llista creada correctament!",
+      "errorCreatingRoster": "No s’ha pogut crear la llista. Torna-ho a provar.",
+      "rosterUpdated": "Llista actualitzada correctament!",
+      "errorUpdatingRoster": "No s’ha pogut actualitzar la llista. Torna-ho a provar.",
+      "rosterDeleted": "Llista suprimida correctament!",
+      "errorDeletingRoster": "No s’ha pogut suprimir la llista. Torna-ho a provar.",
+      "membersAdded": "Membres afegits a la llista: {count}",
+      "errorAddingMembers": "No s’han pogut afegir els membres. Torna-ho a provar.",
+      "memberRemoved": "Membre suprimit de la llista!",
+      "errorRemovingMember": "No s’ha pogut suprimir el membre. Torna-ho a provar.",
+      "substituteMarked": "Membre marcat com a suplent!",
+      "substituteUnmarked": "El membre ja no està marcat com a suplent!",
+      "errorUpdatingMember": "No s’ha pogut actualitzar el membre. Torna-ho a provar.",
+      "rosterRefreshed": "Dades de la llista actualitzades correctament!",
+      "errorRefreshingRoster": "No s’han pogut actualitzar les dades de la llista. Torna-ho a provar.",
+      "memberTransferred": "Membre transferit correctament entre llistes!",
+      "errorTransferringMember": "No s’ha pogut transferir el membre. Torna-ho a provar.",
+      "rosterCloned": "Llista clonada correctament!",
+      "errorCloningRoster": "No s’ha pogut clonar la llista. Torna-ho a provar.",
+      "missingMembersAdded": "S’han afegit {count} membres que faltaven a la llista!",
+      "errorLoadingMissingMembers": "No s’han pogut carregar els membres que falten."
+    },
+    "cloneDialog": {
+      "title": "Clona la llista",
+      "description": "Crea una còpia d’aquesta llista",
+      "aliasLabel": "Nom de la llista nova",
+      "aliasPlaceholder": "Introdueix un nom per a la llista clonada",
+      "copyMembers": "Copia els membres a la llista nova",
+      "memberCount": "{count} membres",
+      "originalRoster": "Llista original:",
+      "cancel": "Cancel·lar",
+      "cloning": "Clonant...",
+      "clone": "Clona la llista",
+      "copyMembersHint": "Els membres es copiaran de la llista original"
+    },
+    "missingMembers": {
+      "title": "Membres que falten",
+      "description": "Membres del clan que no estan registrats en aquesta llista",
+      "coverage": "Cobertura de la llista",
+      "registered": "registrats",
+      "missing": "Pendents",
+      "total": "Total",
+      "selectAll": "Selecciona’ls tots",
+      "selected": "Seleccionats",
+      "addSelected": "Afegeix membres: {count}",
+      "button": "Membres que falten",
+      "addAll": "Afegeix-los tots",
+      "adding": "S’està afegint...",
+      "close": "Tanca",
+      "allCaughtUp": "Tot al dia!",
+      "allCaughtUpDesc": "Tots els membres del clan estan registrats en aquesta llista",
+      "clanOnly": "L’anàlisi dels membres que falten només està disponible per a llistes de clan",
+      "error": "No s’han pogut carregar els membres que falten",
+      "thisRoster": "Aquesta llista",
+      "wholeGroup": "Grup complet"
+    },
+    "eventTime": {
+      "label": "Hora d’inici de l’esdeveniment",
+      "timezone": "La teva zona horària",
+      "utc": "UTC",
+      "clear": "Neteja"
+    },
+    "bulkValidation": {
+      "valid": "vàlides",
+      "invalid": "no vàlides",
+      "invalidTags": "No vàlides"
+    },
+    "memberAutocomplete": {
+      "label": "O cerca membres del servidor",
+      "placeholder": "Fes clic per cercar membres...",
+      "searchPlaceholder": "Cerca per nom, etiqueta o clan...",
+      "loading": "S’estan carregant els membres...",
+      "noResults": "No s’han trobat membres",
+      "groupHeading": "Membres del servidor",
+      "selectedLabel": "Membres seleccionats",
+      "membersSelected": "membres seleccionats",
+      "selected": "Seleccionats",
+      "clanMembersLabel": "O selecciona membres del clan"
+    },
+    "retry": "Tornar a intentar",
+    "back": "Enrere",
+    "refresh": "Actualitza",
+    "createRoster": "Crea llista",
+    "searchPlaceholder": "Cerca llistes...",
+    "noRosters": "Encara no hi ha llistes",
+    "noRostersHint": "Crea la teva primera llista per començar",
+    "noSearchResults": "No s’han trobat llistes",
+    "noSearchResultsHint": "Prova amb un altre terme de cerca",
+    "createFirstRoster": "Crea la primera llista",
+    "deleteConfirm": "Segur que vols suprimir \"{name}\"?",
+    "deleteSuccess": "Llista suprimida",
+    "deleteSuccessDesc": "S’ha suprimit la llista \"{name}\"",
+    "deleteError": "No s’ha pogut suprimir la llista",
+    "createSuccess": "Llista creada",
+    "createSuccessDesc": "S’ha creat la llista \"{name}\"",
+    "createError": "No s’ha pogut crear la llista",
+    "createErrorAlias": "Introdueix un nom per a la llista",
+    "createErrorClan": "Selecciona un clan",
+    "refreshSuccess": "Dades de la llista actualitzades",
+    "refreshError": "No s’ha pogut actualitzar la llista",
+    "saveSuccess": "Configuració desada",
+    "saveError": "No s’ha pogut desar la configuració",
+    "columnsUpdated": "Columnes actualitzades",
+    "columnsError": "No s’han pogut actualitzar les columnes",
+    "addMembersSuccess": "Membres afegits",
+    "addMembersSuccessDesc": "Membres afegits a la llista: {count}",
+    "addMembersError": "No s’han pogut afegir els membres",
+    "removeMemberSuccess": "Membre suprimit",
+    "removeMemberError": "No s’ha pogut suprimir el membre",
+    "clearMembers": "Buida els membres",
+    "clearMembersConfirm": "Vols suprimir tots els membres de «{name}»? Aquesta acció no es pot desfer.",
+    "clearMembersSuccess": "S’han suprimit tots els membres",
+    "clearMembersError": "No s’han pogut suprimir els membres",
+    "automationCreated": "Automatització creada",
+    "automationUpdated": "Automatització actualitzada",
+    "automationDeleted": "Automatització suprimida",
+    "automationError": "Error d’automatització",
+    "groupCreated": "Grup creat",
+    "groupUpdated": "Grup actualitzat",
+    "groupDeleted": "Grup suprimit",
+    "groupError": "No s’ha pogut desar el grup",
+    "categoryCreated": "Categoria creada",
+    "categoryUpdated": "Categoria actualitzada",
+    "categoryDeleted": "Categoria suprimida",
+    "categoryError": "No s’ha pogut desar la categoria",
+    "common": {
+      "cancel": "Cancel·lar",
+      "save": "Desa",
+      "close": "Tanca"
+    },
+    "tabs": {
+      "members": "Membres",
+      "automations": "Automatitzacions",
+      "groups": "Grups",
+      "categories": "Categories",
+      "settings": "Configuració"
+    },
+    "members": {
+      "count": "membres",
+      "noMembers": "No hi ha membres en aquesta llista",
+      "noMembersHint": "Afegeix membres per començar",
+      "actions": "Accions",
+      "viewList": "Vista de llista",
+      "viewGrouped": "Mostra per categoria d’inscripció",
+      "unassigned": "Sense assignar",
+      "dragHere": "Arrossega membres aquí",
+      "clickToGroup": "Fes clic per veure-ho per categoria",
+      "apiErrorTooltip": "No s’han pogut obtenir les dades de l’API",
+      "staleDataTooltip": "Les dades poden estar desactualitzades; darrera actualització:",
+      "refresh": "Actualitza les dades dels membres",
+      "alsoIn": "També a",
+      "addCategory": "Afegeix una categoria",
+      "removeCategory": "Suprimeix la categoria"
+    },
+    "addMembers": {
+      "title": "Afegeix membres a la llista",
+      "description": "Selecciona membres dels teus clans o introdueix etiquetes de jugador",
+      "bulkTagsLabel": "Etiquetes de jugador (una per línia o separades per comes)",
+      "adding": "S’està afegint...",
+      "submit": "Afegeix membres"
+    },
+    "compare": {
+      "enterMode": "Compara",
+      "modeTitle": "Mode de comparació",
+      "modeHint": "Fes clic a les llistes per a seleccionar-les (de 2 a 4 llistes)",
+      "exitMode": "Cancel·lar",
+      "selected": "llistes seleccionades",
+      "button": "Compara",
+      "title": "Compara les llistes",
+      "dragToMove": "Arrossega membres entre les llistes per moure’ls",
+      "loadError": "No s’han pogut carregar les llistes",
+      "memberMoved": "Membre mogut",
+      "memberMovedDesc": "{name} s’ha mogut de {from} a {to}",
+      "moveError": "No s’ha pogut moure el membre",
+      "selectAtLeast2": "Selecciona almenys 2 llistes per comparar-les",
+      "moving": "S’està movent el membre...",
+      "compareGroup": "Compara el grup",
+      "dragToMoveCategory": "Arrossega membres entre llistes i categories",
+      "categoryChanged": "Categoria canviada",
+      "categoryChangedDesc": "{name} s’ha mogut a {category}",
+      "uncategorized": "Sense categoria"
+    },
+    "ungrouped": "Sense grup",
+    "automations": {
+      "description": "Programa accions automàtiques per a aquesta llista",
+      "create": "Crea una automatització",
+      "empty": "No hi ha automatitzacions",
+      "emptyHint": "Crea una automatització per programar accions",
+      "active": "Actiu",
+      "inactive": "Inactiu",
+      "executed": "Fet",
+      "missed": "Perdut",
+      "lastRun": "Última execució",
+      "enable": "Activa",
+      "disable": "Desactiva",
+      "createTitle": "Crea una automatització",
+      "editTitle": "Edita l’automatització",
+      "createDesc": "Programa una acció automàtica",
+      "actionType": "Tipus d’acció",
+      "offsetFromEvent": "Moment relatiu a l’esdeveniment",
+      "offsetBefore": "Abans de l’esdeveniment",
+      "offsetAfter": "Després de l’esdeveniment",
+      "offsetUnit_minutes": "minuts",
+      "offsetUnit_hours": "hores",
+      "offsetUnit_days": "dies",
+      "offsetPreview": "S’executarà el: {date}",
+      "offsetNoEventDate": "Defineix l’hora d’inici de l’esdeveniment a la configuració per previsualitzar la data d’execució",
+      "offsetAtStart": "A l’inici de l’esdeveniment",
+      "pingType": "Tipus de recordatori",
+      "pingType_signup_reminder": "Recordatori d’inscripció",
+      "pingType_missing": "No és al clan",
+      "pingType_sub_needed": "Cal un suplent",
+      "channel": "Canal de Discord",
+      "selectChannel": "Selecciona un canal",
+      "channelHint": "Canal on es publicarà o executarà l’acció",
+      "activeLabel": "Actiu",
+      "target": "Destinació",
+      "targetThisRoster": "aquesta llista",
+      "targetGroups": "Grups",
+      "targetHint": "Aplica l’automatització només a aquesta llista o a totes les llistes d’un grup",
+      "group": "Grup",
+      "groupAutomationHint": "Gestiona des de la pestanya Grups",
+      "targetRoster": "Llista",
+      "targetGroup": "Grup",
+      "willExecute": "S’executarà a l’hora programada",
+      "paused": "En pausa: no s’executarà",
+      "actions": {
+        "ping": "Envia un recordatori",
+        "post": "Publica la llista",
+        "openSignup": "Obre les inscripcions",
+        "closeSignup": "Tanca les inscripcions",
+        "delete": "Suprimeix la llista",
+        "clear": "Buida els membres",
+        "archive": "Arxiva la llista"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Envia un recordatori als membres que no s’han inscrit o són al clan equivocat",
+        "roster_post": "Publica la llista definitiva al canal seleccionat",
+        "roster_signup": "Obre les inscripcions perquè els jugadors puguin inscriure-s’hi",
+        "roster_signup_close": "Tanca les inscripcions i impedeix nous registres",
+        "roster_delete": "Elimina permanentment la llista i totes les seves dades",
+        "roster_clear": "Elimina tots els membres de la llista sense suprimir-la",
+        "roster_archive": "Arxiva la llista i la converteix en només lectura"
+      },
+      "infoBox": "Les automatitzacions s’activen en relació amb l’hora d’inici de l’esdeveniment. Defineix un interval i el bot executarà automàticament l’acció en el moment establert, també per als esdeveniments recurrents."
+    },
+    "groups": {
+      "title": "Grups de llistes",
+      "description": "Organitza les llistes en grups per gestionar-les millor",
+      "create": "Grup nou",
+      "noGroups": "Encara no s’ha creat cap grup",
+      "rostersCount": "llistes",
+      "createTitle": "Crea un grup",
+      "editTitle": "Edita el grup",
+      "nameLabel": "Nom del grup",
+      "namePlaceholder": "p. ex., Grups de la CWL",
+      "infoBox": "Els grups permeten organitzar diverses llistes, per exemple totes les llistes de la CWL. Pots assignar una llista a un grup des de la pestanya Configuració i aplicar automatitzacions a totes les llistes del grup alhora.",
+      "manageAutomations": "Gestiona automatitzacions",
+      "automationsTitle": "Automatitzacions del grup",
+      "automationsDesc": "Aquestes automatitzacions s’apliquen a totes les llistes d’aquest grup",
+      "noAutomations": "No hi ha automatitzacions",
+      "noAutomationsHint": "Crea una automatització per a aquest grup",
+      "addAutomation": "Afegeix una automatització",
+      "deleteConfirm": "Vols suprimir el grup «{name}»? Les llistes d’aquest grup quedaran sense grup.",
+      "emptyGroup": "Encara no hi ha llistes en aquest grup",
+      "rules": {
+        "title": "Regles del grup",
+        "rulesHint": "Aquestes regles s’apliquen a totes les llistes del grup i es propaguen immediatament.",
+        "maxAccounts": "Màxim de comptes per usuari",
+        "maxAccountsBadge": "Màx. {count}/usuari",
+        "rosterSize": "Mida de la llista",
+        "rosterSizeBadge": "Mida {size}",
+        "minSignups": "Llindar d’ocupació",
+        "minSignupsBadge": "Llindar {count}",
+        "categoriesTitle": "Categories d’inscripció",
+        "categoriesHint": "Selecciona les categories disponibles per a aquest grup. S’aplicaran immediatament a totes les llistes.",
+        "categoriesBadge": "{count} categories",
+        "noCategories": "Encara no hi ha categories.",
+        "newCategoryPlaceholder": "Nom de la categoria nova…"
+      }
+    },
+    "categories": {
+      "title": "Categories d’inscripció",
+      "description": "Categories per a les inscripcions dels jugadors i el filtratge de llistes",
+      "manage": "Gestiona les categories",
+      "create": "Categoria nova",
+      "noCategories": "Encara no s’ha creat cap categoria",
+      "createTitle": "Crea una categoria",
+      "editTitle": "Edita la categoria",
+      "deleteConfirm": "Vols suprimir la categoria «{name}»?",
+      "idLabel": "ID de categoria",
+      "nameLabel": "Nom de la categoria",
+      "infoBox": "Les categories permeten als jugadors indicar la disponibilitat o funció en inscriure’s. Es comparteixen entre totes les llistes del servidor; a les llistes agrupades, configura les categories des dels ajustos del grup."
+    },
+    "settings": {
+      "general": "Identitat i configuració",
+      "restrictions": "Restriccions i límits",
+      "name": "Nom de la llista",
+      "rosterType": "Tipus de llista",
+      "typeClan": "Clan",
+      "typeFamily": "Família",
+      "signupScope": "Àmbit d’inscripció",
+      "scopeClanOnly": "Només el clan",
+      "scopeFamilyWide": "Tota la família",
+      "clan": "Clan",
+      "selectClan": "Selecciona un clan",
+      "description": "Descripció",
+      "descriptionPlaceholder": "Introdueix una descripció per a aquesta llista...",
+      "typeAndScope": "Tipus i àmbit",
+      "eventTime": "Hora d’inici de l’esdeveniment",
+      "eventTimeHint": "Indica quan comença l’esdeveniment. Es fa servir per a les automatitzacions i els comptes enrere.",
+      "recurrenceDays": "Repeteix cada",
+      "recurrenceModeDays": "Cada N dies",
+      "recurrenceModeMonthly": "Dia del mes",
+      "recurrenceDaysUnit": "dies",
+      "recurrenceDayOfMonthPrefix": "El dia",
+      "recurrenceDayOfMonthSuffix": "de cada mes",
+      "recurrenceDaysHint": "Deixa-ho buit per a un esdeveniment únic. Introdueix el nombre de dies entre repeticions (p. ex., 30 per a una CWL mensual).",
+      "recurrenceDayOfMonthHint": "Es repeteix aquest dia de cada mes (p. ex., 1 = dia 1).",
+      "group": "Grup",
+      "noGroup": "Sense grup",
+      "thRequirements": "Requisits de l’Ajuntament",
+      "minTh": "TH mínim",
+      "maxTh": "TH màxim",
+      "signupLimits": "Límits d’inscripció",
+      "rosterSize": "Mida de la llista",
+      "rosterSizeHint": "Nombre màxim de membres",
+      "minSignups": "Inscripcions mínimes",
+      "minSignupsHint": "Nombre mínim d’inscripcions necessari per omplir la llista",
+      "maxAccountsPerUser": "Màxim de comptes per usuari",
+      "maxAccountsHint": "Limita els comptes de cada usuari de Discord",
+      "allowedCategories": "Categories d’inscripció permeses",
+      "allowedCategoriesHint": "Fes clic per alternar-les. Si no se’n selecciona cap, es permeten totes.",
+      "defaultSignupCategory": "Categoria d’inscripció predeterminada",
+      "defaultSignupCategoryNone": "Cap (sense predeterminada)",
+      "defaultSignupCategoryHint": "Categoria preseleccionada quan s’inscriu un membre.",
+      "categoriesManagedByGroup": "Les categories d’inscripció es gestionen al grup. Obre la configuració del grup des de la pàgina de llistes per configurar les categories disponibles per a totes les llistes d’aquest grup.",
+      "saving": "S’està desant...",
+      "save": "Desa la configuració"
+    }
+  },
+  "LinksPage": {
+    "title": "Gestió d’enllaços",
+    "description": "Gestiona els enllaços dels comptes dels membres de Discord i verifica la propietat dels jugadors",
+    "tabs": {
+      "overview": "Visió general",
+      "pending": "Pendent",
+      "bulk": "Accions massives",
+      "analytics": "Anàlisi"
+    },
+    "stats": {
+      "totalMembers": "Total de membres",
+      "membersWithLinks": "Membres amb enllaços",
+      "totalLinkedAccounts": "Total de comptes enllaçats",
+      "verifiedAccounts": "Comptes verificats",
+      "ofTotal": "del total",
+      "avgPerMember": "Mitj.",
+      "perMember": "per membre",
+      "verified": "verificats"
+    },
+    "filters": {
+      "searchPlaceholder": "Cerca per membre, usuari, jugador o etiqueta...",
+      "filterByStatus": "Filtra per estat",
+      "allAccounts": "Tots els comptes",
+      "verifiedOnly": "Només verificats",
+      "unverifiedOnly": "Només sense verificar",
+      "minAccounts": "Mínim de comptes",
+      "allMembers": "Tots els membres",
+      "oneOrMore": "1 compte o més",
+      "twoOrMore": "2 comptes o més",
+      "threeOrMore": "3 comptes o més",
+      "fiveOrMore": "5 comptes o més"
+    },
+    "overview": {
+      "title": "Enllaços de comptes",
+      "description": "Consulta i gestiona tots els enllaços entre Discord i Clash of Clans",
+      "showingMembers": "Es mostren {count} {members}",
+      "member": "membre",
+      "members": "membres",
+      "noMembers": "No s’han trobat membres",
+      "adjustFilters": "Prova de canviar la cerca o els filtres.",
+      "noLinkedAccounts": "No hi ha membres amb comptes enllaçats.",
+      "exportCSV": "Exporta CSV",
+      "exportJSON": "Exporta JSON",
+      "account": "Compte",
+      "accounts": "Comptes",
+      "more": "més",
+      "unknown": "Desconegut"
+    },
+    "pending": {
+      "title": "Verificacions pendents",
+      "description": "{count} comptes pendents de verificació",
+      "allVerified": "Tots els comptes estan verificats!",
+      "noPending": "No hi ha verificacions pendents en aquest moment.",
+      "linked": "Enllaçat"
+    },
+    "bulk": {
+      "title": "Accions massives",
+      "description": "Executa accions sobre diversos membres alhora",
+      "selectAll": "Selecciona tot ({count})",
+      "deselectAll": "Desselecciona tot",
+      "unlinkSelected": "Desvincula la selecció ({count})",
+      "linked": "Enllaçat",
+      "comingSoon": "La desvinculació massiva estarà disponible aviat!"
+    },
+    "analytics": {
+      "title": "Anàlisi d’enllaços",
+      "description": "Resum de les estadístiques i tendències de vinculació",
+      "verificationRate": "Taxa de verificació",
+      "verified": "Verificat",
+      "unverified": "Sense verificar",
+      "accountDistribution": "Distribució de comptes",
+      "oneAccount": "1 compte",
+      "twoToThreeAccounts": "2-3 comptes",
+      "fourPlusAccounts": "4 comptes o més",
+      "townHallLevels": "Nivells de l’Ajuntament",
+      "other": "Altres",
+      "coverage": "Cobertura",
+      "linkedMembers": "Membres vinculats",
+      "coverageRate": "Taxa de cobertura",
+      "linkInsights": "Informació sobre els enllaços",
+      "avgAccountsPerMember": "Mitjana de comptes per membre:",
+      "mostLinkedAccounts": "Nombre màxim de comptes enllaçats:",
+      "membersWithoutLinks": "Membres sense enllaços:"
+    },
+    "actions": {
+      "unlinkAccount": "Desvincula el compte"
+    },
+    "deleteDialog": {
+      "title": "Desvincula el compte",
+      "description": "Segur que vols desenllaçar {playerName}? Aquesta acció no es pot desfer.",
+      "cancel": "Cancel·lar",
+      "unlinking": "S’està desvinculant...",
+      "unlink": "Desvincula"
+    },
+    "bulkDialog": {
+      "title": "Desvincula comptes en massa",
+      "description": "Segur que vols desenllaçar tots els comptes dels {count} membres seleccionats? Aquesta acció no es pot desfer.",
+      "cancel": "Cancel·lar",
+      "unlinkAll": "Desvincula tot"
+    },
+    "toast": {
+      "unlinkFailed": "No s’ha pogut desenllaçar el compte. Torna-ho a provar."
+    },
+    "badges": {
+      "verified": "Verificat",
+      "unverified": "Sense verificar",
+      "pending": "Pendent"
+    },
+    "pagination": {
+      "showing": "Es mostren {start}-{end} de {total} membres",
+      "page": "Pàgina {current} de {total}",
+      "previous": "Anterior",
+      "next": "Següent"
+    }
+  },
+  "WarsPage": {
+    "title": "Estadístiques de guerra",
+    "description": "Consulta el rendiment en les guerres i analitza les estadístiques de batalla",
+    "actions": {
+      "exportData": "Exporta dades",
+      "resetFilters": "Restableix filtres",
+      "applyFilters": "Aplica els filtres"
+    },
+    "filters": {
+      "title": "Filtres",
+      "description": "Filtra les estadístiques de guerra segons diferents criteris",
+      "clan": "Clan",
+      "allClans": "Tots els clans",
+      "townHall": "Ajuntament",
+      "townHallShort": "TH",
+      "allTownHalls": "Tots els nivells de TH",
+      "townHallLevel": "TH {level}",
+      "period": "Període",
+      "last7Days": "Darrers 7 dies",
+      "last30Days": "Darrers 30 dies",
+      "last90Days": "Darrers 90 dies",
+      "last6Months": "Darrers 6 mesos",
+      "lastYear": "Darrer any",
+      "custom": "Personalitzat",
+      "startDate": "Data d'inici",
+      "endDate": "Data de finalització",
+      "warTypes": "Tipus de guerra"
+    },
+    "summaryStats": {
+      "totalWins": "Total de victòries",
+      "totalWinsDesc": "De {totalWars} guerres totals",
+      "totalLosses": "Total de derrotes",
+      "totalLossesDesc": "{totalDraws} empats",
+      "winRate": "Taxa de victòries",
+      "winRateDesc": "Rendiment general",
+      "activeWars": "Guerres actives",
+      "activeWarsDesc": "{activeCwl} en CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Rendiment setmanal en guerra",
+        "description": "Victòries, derrotes i empats setmanals durant el període seleccionat",
+        "wins": "Victòries",
+        "losses": "Pèrdues",
+        "draws": "Empats"
+      },
+      "thSuccessRate": {
+        "title": "Taxa d’èxit dels atacs per nivell de l’Ajuntament",
+        "description": "Taxa de 3 estrelles per nivell de TH",
+        "threeStarPercent": "% de 3 estrelles",
+        "otherPercent": "% d’altres resultats"
+      },
+      "warTypeDistribution": {
+        "title": "Distribució per tipus de guerra",
+        "description": "Desglossament per tipus de guerra",
+        "cwl": "CWL",
+        "random": "Aleatòria",
+        "friendly": "Amistosa"
+      },
+      "topPerformers": {
+        "title": "Millors atacants",
+        "description": "Millors guerrers per nombre total d’estrelles",
+        "attacksAndStars": "{attacks} atacs • {stars} estrelles",
+        "noData": "No hi ha dades de jugadors. Prova de canviar els filtres."
+      },
+      "missedAttacks": {
+        "title": "Atacs no fets",
+        "description": "Jugadors que no han fet servir tots els seus atacs",
+        "attacks": "atacs no fets"
+      },
+      "topDefenders": {
+        "title": "Millors defensors",
+        "description": "Millors defensors per mitjana d’estrelles concedides",
+        "defensesAndStars": "{defenses} defenses • {stars} estrelles concedides",
+        "noData": "No hi ha dades de defensors. Prova de canviar els filtres."
+      },
+      "worstAttackers": {
+        "title": "Pitjors atacants",
+        "description": "Jugadors amb la mitjana d’estrelles per atac més baixa (mín. 3 atacs)",
+        "attacksAndStars": "{attacks} atacs • {stars} estrelles",
+        "noData": "No hi ha dades de jugadors. Prova de canviar els filtres."
+      },
+      "worstDefenders": {
+        "title": "Pitjors defensors",
+        "description": "Jugadors que han concedit més estrelles en defensa (mín. 3 defenses)",
+        "defensesAndStars": "{defenses} defenses • {stars} estrelles concedides",
+        "noData": "No hi ha dades de defensors. Prova de canviar els filtres."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Estadístiques de guerra del clan",
+      "description": "Estadístiques detallades de cada clan",
+      "headers": {
+        "clan": "Clan",
+        "status": "Estat",
+        "wars": "Guerres",
+        "record": "V/D/E",
+        "winRate": "Taxa de victòries",
+        "avgDestruction": "Destrucció mitjana",
+        "avgStarsPerAttack": "Estrelles/atac",
+        "avgDefenseStars": "Estrelles/defensa"
+      },
+      "status": {
+        "inWar": "En guerra",
+        "cwl": "CWL",
+        "peace": "Pau"
+      },
+      "noData": "No hi ha estadístiques de clans. Aplica filtres o espera que es carreguin les dades."
+    },
+    "toast": {
+      "errorTitle": "Error",
+      "errorLoadingClans": "No s’han pogut carregar els clans. Torna-ho a provar.",
+      "errorLoadingWarData": "No s’han pogut carregar les dades de guerra. Torna-ho a provar.",
+      "errorNoClans": "No hi ha clans disponibles",
+      "errorApplyingFilters": "No s’han pogut aplicar els filtres. Torna-ho a provar."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Classificacions",
+    "description": "Classificacions globals de la Capital del Clan i altres categories",
+    "comingSoon": "Aquesta funció estarà disponible aviat. Torna més tard.",
+    "stats": {
+      "totalEntries": "Total d’entrades",
+      "type": "Tipus",
+      "league": "Lliga",
+      "weekend": "Cap de setmana"
+    },
+    "filters": {
+      "title": "Filtres",
+      "description": "Personalitza la vista de la classificació",
+      "type": "Tipus",
+      "metric": "Mètrica",
+      "league": "Lliga",
+      "weekend": "Cap de setmana"
+    },
+    "types": {
+      "player": "Jugadors",
+      "clan": "Clans"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Capital saquejada"
+        },
+        "clan": {
+          "capitalTotalLoot": "Botí total",
+          "raidsCompleted": "Incursions completades",
+          "enemyDistrictsDestroyed": "Districtes destruïts",
+          "medals": "Medalles"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Tot",
+      "legendLeague": "Lliga de Llegendes",
+      "titanLeagueI": "Lliga Tità I",
+      "titanLeagueII": "Lliga Tità II",
+      "titanLeagueIII": "Lliga Tità III"
+    },
+    "rankings": {
+      "title": "Classificacions",
+      "description": "Els {count} millors {type} de {weekend}",
+      "players": "jugadors",
+      "clans": "clans"
+    },
+    "empty": {
+      "title": "No hi ha dades disponibles.",
+      "description": "Prova de seleccionar un altre cap de setmana o una altra lliga"
+    }
+  },
+  "ClansPage": {
+    "title": "Gestió del clan",
+    "description": "Configura els teus clans i la seva integració amb Discord",
+    "addClan": "Afegeix clan",
+    "addNewClan": "Afegeix un clan nou",
+    "addClanDescription": "Introdueix l’etiqueta del clan per afegir-lo al servidor",
+    "clanTag": "Etiqueta del clan",
+    "totalClans": "Total de clans",
+    "registeredClans": "Clans registrats",
+    "configured": "Configurat",
+    "withSettingsConfigured": "Amb la configuració completada",
+    "totalMembers": "Total de membres",
+    "acrossAllClans": "En tots els clans",
+    "channels": "Canals",
+    "availableChannels": "Canals disponibles",
+    "noClansYet": "Encara no hi ha clans",
+    "getStartedAdding": "Comença afegint el teu primer clan",
+    "addFirstClan": "Afegeix el teu primer clan",
+    "level": "Nivell",
+    "members": "Membres",
+    "status": "Estat",
+    "configuredBadge": "Configurat",
+    "setupRequired": "Configuració necessària",
+    "configure": "Configura",
+    "sorting": {
+      "label": "Ordena els clans",
+      "sortBy": "Ordena per",
+      "toggleDirection": "Canvia la direcció d’ordenació",
+      "added": "Afegit el",
+      "name": "Nom del clan",
+      "level": "Nivell del clan",
+      "members": "Membres"
+    },
+    "configureClan": "Configura {name} ({tag})",
+    "customizeIntegration": "Personalitza la integració d’aquest clan amb Discord",
+    "tabs": {
+      "basic": "Configuració de Discord",
+      "war": "Guerra"
+    },
+    "memberRole": "Rol de membre",
+    "leaderRole": "Rol de líder",
+    "selectRole": "Selecciona un rol",
+    "none": "Cap",
+    "clanAbbreviation": "Abreviatura del clan",
+    "warScoreCountdown": "Compte enrere del marcador de guerra",
+    "warScoreCountdownDescription": "Crea un canal de veu que mostri el marcador actual",
+    "warTimerCountdown": "Compte enrere de la guerra",
+    "warTimerCountdownDescription": "Crea un canal de veu que mostri el temps restant",
+    "category": "Categoria",
+    "categoryOptions": {
+      "none": "Sense categoria",
+      "premade": "Categories comunes",
+      "usedByServer": "Utilitzades per altres clans",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}"
+    },
+    "categories": {
+      "title": "Categories de clans",
+      "description": "Crea i gestiona les categories disponibles per als clans del servidor.",
+      "refresh": "Actualitza",
+      "createLabel": "Categoria nova",
+      "name": "Nom de la categoria",
+      "namePlaceholder": "p. ex., Competitiu",
+      "nameHelp": "{count}/{max} caràcters després de normalitzar els espais",
+      "create": "Crea una categoria",
+      "empty": "No s’ha creat cap categoria de clan.",
+      "clanCount": "{count, plural, one {# clan} other {# clans}}",
+      "renameAction": "Canvia el nom {name}",
+      "deleteAction": "Suprimeix {name}",
+      "renameTitle": "Canvia el nom de la categoria del clan",
+      "renameDescription": "El nom normalitzat s’actualitzarà en cada clan assignat.",
+      "saveRename": "Desa el nom",
+      "deleteTitle": "Vols suprimir la categoria del clan?",
+      "deleteWarning": "En suprimir «{name}», {count, plural, one {# clan quedarà sense categoria} other {# clans quedaran sense categoria}}.",
+      "deleteCountMayChange": "Aquesta previsualització mostra l’estat actual. En acabar la supressió s’indicarà el nombre real de clans afectats.",
+      "confirmDelete": "Suprimeix la categoria",
+      "deleteSuccessTitle": "S’ha suprimit {name}",
+      "deleteSuccessDescription": "{count, plural, =0 {No s’ha modificat cap clan.} one {# clan ha quedat sense categoria.} other {# clans han quedat sense categoria.}}",
+      "created": "S’ha creat {name}.",
+      "renamed": "Categoria reanomenada a {name}.",
+      "errors": {
+        "title": "Categories no disponibles",
+        "load": "No s’han pogut carregar les categories de clans.",
+        "create": "No s’ha pogut crear la categoria del clan.",
+        "rename": "No s’ha pogut canviar el nom de la categoria del clan.",
+        "preview": "No s’ha pogut carregar la previsualització de supressió.",
+        "delete": "No s’ha pogut suprimir la categoria del clan.",
+        "refresh": "La categoria ha canviat, però no s’ha pogut carregar l’estat actualitzat.",
+        "invalidName": "Fes servir un nom no buit de fins a 64 caràcters i sense caràcters de control."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Mostra més informació",
+      "memberRole": "Rol que rebran els membres d’aquest clan. Si el bot gestiona els rols al servidor de Discord, tots els membres del clan rebran aquest rol. És útil per crear canals específics del clan.",
+      "leaderRole": "Rol que rebran els colíders i el líder d’aquest clan. En un servidor de Discord habitual, és útil per a un xat de líders del clan o un xat comú per als líders de tots els clans.",
+      "clanAbbreviation": "Assigna al clan una abreviatura que es pugui incloure als noms. Configura el format a <familySettingsLink>Configuració de la família</familySettingsLink>.",
+      "category": "Serveix per organitzar els clans. Moltes famílies en tenen cinc o més, i alguns poden dedicar-se a la CWL o a esdeveniments."
+    },
+    "roleIdPlaceholder": "ID del rol",
+    "abbreviationPlaceholder": "p. ex., CK",
+    "categoryPlaceholder": "Nom de la categoria",
+    "notAvailable": "No disponible",
+    "saving": "S’està desant...",
+    "saveChanges": "Desa canvis",
+    "deleteConfirm": "Segur que vols suprimir {tag}? També se suprimiran els recordatoris i registres associats.",
+    "toast": {
+      "errorLoadingClans": "No s’han pogut carregar els clans",
+      "errorLoadingSettings": "No s’ha pogut carregar la configuració del clan",
+      "errorEmptyClanTag": "Introdueix una etiqueta de clan",
+      "clanAdded": "Clan afegit correctament",
+      "errorAddingClan": "No s’ha pogut afegir el clan",
+      "clanRemoved": "Clan suprimit correctament",
+      "errorRemovingClan": "No s’ha pogut suprimir el clan",
+      "settingsSaved": "Configuració desada correctament",
+      "errorSavingSettings": "No s’ha pogut desar la configuració",
+      "countdownEnabled": "Canal de veu amb compte enrere creat",
+      "countdownDisabled": "Canal de veu amb compte enrere suprimit",
+      "errorTogglingCountdown": "No s’ha pogut canviar el compte enrere"
+    }
+  },
+  "RolesPage": {
+    "title": "Gestió de rols",
+    "description": "Configura l’assignació automàtica de rols segons les estadístiques del jugador",
+    "stats": {
+      "totalRoles": "Total de rols",
+      "totalRolesDesc": "Assignacions de rol configurades",
+      "autoEvaluation": "Avaluació automàtica",
+      "autoEvaluationOn": "Activat",
+      "autoEvaluationOff": "Desactivat",
+      "autoEvaluationActiveDesc": "Els rols s’assignen automàticament",
+      "autoEvaluationInactiveDesc": "Només assignació manual de rols",
+      "activeTypes": "Tipus actius",
+      "activeTypesDesc": "Tipus de rol en ús",
+      "discordRoles": "Rols de Discord",
+      "discordRolesDesc": "Disponibles al servidor"
+    },
+    "settings": {
+      "title": "Configuració de l’avaluació automàtica",
+      "description": "Configura l’avaluació i l’assignació automàtica de rols",
+      "saveButton": "Desa la configuració",
+      "saving": "S’està desant...",
+      "enableAutoEval": "Activa l’avaluació automàtica",
+      "enableAutoEvalDesc": "Assigna i elimina rols automàticament segons les estadístiques",
+      "autoNickname": "Actualitza els sobrenoms automàticament",
+      "autoNicknameDesc": "Actualitza els sobrenoms quan s’avaluen els rols"
+    },
+    "roleTypes": {
+      "townhall": "Ajuntament",
+      "league": "Lliga",
+      "builderhall": "Taller del constructor",
+      "builderLeague": "Lliga de constructors",
+      "achievement": "Assoliment",
+      "status": "Antiguitat a Discord",
+      "familyPosition": "Posició a la família"
+    },
+    "familyPositions": {
+      "member": "Membre",
+      "elder": "Veterà",
+      "coLeader": "Colíder",
+      "leader": "Líder"
+    },
+    "leagues": {
+      "legend": "Llegenda",
+      "electroDragon": "Drac elèctric",
+      "dragon": "Drac",
+      "electroTitan": "Tità elèctric",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Bruixa",
+      "valkyrie": "Valquíria",
+      "wizard": "Mag",
+      "archer": "Arquera",
+      "barbarian": "Bàrbar",
+      "skeleton": "Esquelet"
+    },
+    "builderLeagues": {
+      "diamond": "Diamant",
+      "ruby": "Robí",
+      "emerald": "Maragda",
+      "platinum": "Platí",
+      "titanium": "Titani",
+      "steel": "Acer",
+      "iron": "Ferro",
+      "brass": "Llautó",
+      "copper": "Coure",
+      "stone": "Pedra",
+      "clay": "Argila",
+      "wood": "Fusta"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Protegeix el teu compte!",
+      "biggerAndBetter": "Més gran i millor",
+      "discoverNewTroops": "Descobreix noves tropes",
+      "biggerCoffers": "Arques més grans",
+      "goldGrab": "Febre de l’or",
+      "elixirEscapade": "Escapada d’elixir",
+      "heroicHeist": "Cop heroic",
+      "wellSeasoned": "Ben experimentat",
+      "niceAndTidy": "Net i endreçat",
+      "empireBuilder": "Constructor d’imperis",
+      "clanWarWealth": "Riquesa de les guerres de clans",
+      "friendInNeed": "Un amic quan cal",
+      "sharingIsCaring": "Compartir és estimar",
+      "siegeSharer": "Donant de màquines de setge",
+      "warHero": "Heroi de guerra",
+      "warLeagueLegend": "Llegenda de la Lliga de Guerra",
+      "gamesChampion": "Campió dels Jocs",
+      "unbreakable": "Indestructible",
+      "sweetVictory": "Dolça victòria!",
+      "conqueror": "Conqueridor",
+      "leagueAllStar": "Estrella de la lliga",
+      "leagueFollower": "Seguidor de la lliga",
+      "leagueEnthusiast": "Entusiasta de la lliga",
+      "leagueSuperfan": "Superfan de la lliga",
+      "leagueFanatic": "Fanàtic de la lliga",
+      "leagueMaster": "Mestre de la lliga",
+      "legendLeague": "Lliga de Llegendes",
+      "humiliator": "Humiliador",
+      "notSoEasyThisTime": "Aquest cop no és tan fàcil",
+      "unionBuster": "Trencador d’unions",
+      "bustThis": "Destrossa això!",
+      "wallBuster": "Trencamurs",
+      "mortarMauler": "Destructor de morters",
+      "xBowExterminator": "Exterminador de ballestes X",
+      "firefighter": "Bomber",
+      "antiArtillery": "Antiaeri",
+      "shatteredAndScatter": "Trencat i escampat",
+      "counterspell": "Contraencanteri",
+      "monolithMasher": "Destructor de monòlits",
+      "multiArcherTowerTerminator": "Destructor de torres d’arqueres múltiples",
+      "ricochetCannonCrusher": "Destructor de canons de rebot",
+      "firespitterFinisher": "Destructor d’escopidors de foc",
+      "multiGearTowerTrampler": "Destructor de torres d’engranatges múltiples",
+      "craftersNightmare": "El malson de l’artesà",
+      "getThoseGoblins": "Atrapa aquests follets!",
+      "supercharger": "Supercarregador",
+      "craftingConnoisseur": "Expert en artesania",
+      "getThoseOtherGoblins": "Atrapa també els altres follets!",
+      "getEvenMoreGoblins": "Atrapa encara més follets!",
+      "dragonSlayer": "Matadracs",
+      "ungratefulChild": "Fill desagraït",
+      "superbWork": "Feina excel·lent",
+      "masterEngineering": "Mestre de l’enginyeria",
+      "hiddenTreasures": "Tresors amagats",
+      "highGear": "Marxa alta",
+      "nextGenerationModel": "Model de nova generació",
+      "unBuildIt": "Desconstrueix-ho",
+      "championBuilder": "Constructor campió",
+      "aggressiveCapitalism": "Capitalisme agressiu",
+      "mostValuableClanmate": "Company de clan més valuós"
+    },
+    "configuredRoles": {
+      "title": "Rols configurats",
+      "noRolesConfigured": "No hi ha rols de tipus {roleType} configurats",
+      "addRoleToStart": "Fes clic a «Afegeix rol» per crear-ne un",
+      "discordRole": "Rol de Discord",
+      "criteria": "Criteris",
+      "mode": "Modalitat",
+      "modeBoth": "Afegeix i suprimeix",
+      "modeAdd": "Només afegeix",
+      "modeRemove": "Només suprimeix",
+      "actions": "Accions",
+      "unknownRole": "Rol desconegut",
+      "remove": "Suprimeix",
+      "month": "mes",
+      "months": "mesos"
+    },
+    "addRoleDialog": {
+      "title": "Afegeix un rol nou",
+      "description": "Configura una regla nova d’assignació automàtica de rols",
+      "roleType": "Tipus de rol",
+      "mode": "Modalitat",
+      "discordRole": "Rol de Discord",
+      "selectRole": "Selecciona un rol",
+      "townHallLevel": "Nivell de l’Ajuntament",
+      "selectThLevel": "Selecciona el nivell de TH",
+      "thPrefix": "TH",
+      "league": "Lliga",
+      "selectLeague": "Selecciona una lliga",
+      "builderHallLevel": "Nivell del Taller del constructor",
+      "selectBhLevel": "Selecciona el nivell de BH",
+      "bhPrefix": "BH",
+      "builderLeague": "Lliga de constructors",
+      "selectBuilderLeague": "Selecciona una lliga de constructors",
+      "achievementName": "Assoliment",
+      "selectAchievement": "Selecciona un assoliment",
+      "searchAchievement": "Cerca assoliments...",
+      "noAchievementFound": "No s’ha trobat cap assoliment.",
+      "monthsInServer": "Mesos al servidor",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Posició a la família",
+      "selectPosition": "Selecciona una posició",
+      "cancel": "Cancel·lar",
+      "addRole": "Afegeix rol",
+      "errorDuplicateExact": "Aquest criteri ja està enllaçat al rol.",
+      "errorDuplicateCriterion": "Aquest criteri ja té un rol assignat. Elimina primer el rol actual."
+    },
+    "infoCard": {
+      "title": "💡 Com funcionen els rols automàtics",
+      "automaticEvaluation": "Avaluació automàtica:",
+      "automaticEvaluationDesc": "Quan s’activa, el bot comprova periòdicament els jugadors i assigna o elimina rols segons les seves estadístiques.",
+      "rolePriority": "Prioritat dels rols:",
+      "rolePriorityDesc": "Si coincideixen diversos rols, s’assignarà el de nivell més alt.",
+      "manualOverride": "Assignació manual:",
+      "manualOverrideDesc": "Els administradors poden assignar rols manualment i l’avaluació automàtica no els eliminarà."
+    },
+    "categoryRoles": {
+      "title": "Rols de categoria",
+      "description": "Assigna un rol de Discord a cada categoria. Els membres dels clans d’aquella categoria rebran el rol corresponent.",
+      "addButton": "Afegeix una categoria",
+      "categoryName": "Categoria",
+      "categoryNamePlaceholder": "Nom de la categoria",
+      "noCategoryRoles": "No hi ha rols de categoria configurats",
+      "noCategoryRolesDesc": "Fes clic a «Afegeix categoria» per crear-ne una",
+      "addTitle": "Afegeix un rol de categoria",
+      "addConfirm": "Afegeix",
+      "errorCategoryRequired": "El nom de la categoria és obligatori",
+      "errorRoleRequired": "El rol de Discord és obligatori",
+      "errorCategoryExists": "Aquesta categoria ja té un rol configurat"
+    },
+    "toast": {
+      "changesSaved": "Canvis desats correctament!",
+      "errorLoading": "No s’han pogut carregar els rols",
+      "errorSaving": "No s’ha pogut desar la configuració",
+      "errorAdding": "No s’ha pogut afegir el rol",
+      "errorDeleting": "No s’ha pogut suprimir el rol"
+    }
+  },
+  "RemindersPage": {
+    "title": "Recordatoris",
+    "description": "Configura recordatoris automàtics de guerres, incursions, Jocs del Clan i inactivitat",
+    "types": {
+      "war": "Recordatoris de guerra",
+      "capital": "Capital del clan",
+      "clanGames": "Jocs del clan",
+      "inactivity": "Inactivitat"
+    },
+    "tabs": {
+      "war": "Guerra",
+      "capital": "Capital del clan",
+      "clanGames": "Jocs del clan",
+      "inactivity": "Inactivitat"
+    },
+    "stats": {
+      "totalReminders": "Total de recordatoris",
+      "totalRemindersDesc": "Recordatoris actius configurats",
+      "warReminders": "Recordatoris de guerra",
+      "warRemindersDesc": "Guerres normals i de CWL",
+      "capitalReminders": "Recordatoris de la Capital",
+      "capitalRemindersDesc": "Atacs del cap de setmana d’incursions",
+      "otherReminders": "Altres recordatoris",
+      "otherRemindersDesc": "Jocs i inactivitat"
+    },
+    "actions": {
+      "saving": "S’està desant...",
+      "saveChanges": "Desa canvis",
+      "addReminder": "Afegeix un recordatori",
+      "addWarReminder": "Afegeix un recordatori de guerra",
+      "addCapitalReminder": "Afegeix un recordatori de la Capital",
+      "addClanGamesReminder": "Afegeix un recordatori dels Jocs del Clan",
+      "addInactivityReminder": "Afegeix un recordatori d’inactivitat",
+      "retry": "Tornar a intentar"
+    },
+    "clanSelector": {
+      "label": "Clan",
+      "placeholder": "Selecciona un clan",
+      "allClans": "Tots els clans"
+    },
+    "empty": {
+      "noWarReminders": "No hi ha recordatoris de guerra",
+      "noCapitalReminders": "No hi ha recordatoris de la Capital",
+      "noClanGamesReminders": "No hi ha recordatoris dels Jocs del Clan",
+      "noInactivityReminders": "No hi ha recordatoris d’inactivitat",
+      "getStarted": "Comença creant el teu primer recordatori"
+    },
+    "card": {
+      "new": "Nou",
+      "before": "Abans",
+      "timeBefore": "Temps restant",
+      "timeBeforePlaceholder": "p. ex., 6",
+      "timeInactive": "Inactivitat de",
+      "timeInactivePlaceholder": "p. ex., 160",
+      "timeUnit": "hores",
+      "hoursRemaining": "hores restants",
+      "channel": "Canal",
+      "channelPlaceholder": "Selecciona un canal",
+      "threadOptional": "Fil (opcional)",
+      "threadPlaceholder": "Selecciona un fil",
+      "noThread": "Publica directament al canal",
+      "forumPost": "Publicació del fòrum",
+      "forumPostPlaceholder": "Selecciona una publicació del fòrum",
+      "forumPostRequired": "Els canals de fòrum requereixen una publicació.",
+      "clan": "Clan",
+      "clanPlaceholder": "Selecciona un clan",
+      "customMessage": "Missatge personalitzat",
+      "customMessagePlaceholder": "No oblidis fer servir els teus atacs!",
+      "customMessagePlaceholderClanGames": "Prova d’aconseguir més punts als Jocs del Clan!",
+      "customMessagePlaceholderInactivity": "Fa temps que no tens activitat al clan :(",
+      "warTypes": "Tipus de guerra",
+      "random": "Aleatòria",
+      "friendly": "Amistosa",
+      "cwl": "CWL",
+      "pointThreshold": "Llindar de punts",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "S’esmentaran les persones que tinguin menys de {threshold} punts.",
+      "attackThreshold": "Llindar d’atacs",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "S’esmentaran les persones que tinguin {threshold} atacs pendents o més.",
+      "notSet": "No definit"
+    },
+    "dialog": {
+      "addTitle": "Afegeix un recordatori nou",
+      "addDescription": "Configura un recordatori nou per al teu servidor",
+      "editTitle": "Edita el recordatori",
+      "editDescription": "Actualitza la configuració del recordatori",
+      "type": "Tipus de recordatori",
+      "selectType": "Selecciona un tipus",
+      "cancel": "Cancel·lar",
+      "saving": "S’està desant...",
+      "saveChanges": "Desa canvis",
+      "addReminder": "Afegeix el recordatori"
+    },
+    "toast": {
+      "errorTitle": "Error",
+      "errorLoadingReminders": "No s’han pogut carregar els recordatoris. Torna-ho a provar.",
+      "reminderAdded": "Recordatori afegit correctament",
+      "reminderAddedDesc": "S’ha afegit un recordatori nou de {type}. No oblidis desar!",
+      "reminderUpdated": "Recordatori actualitzat correctament",
+      "successTitle": "Èxit",
+      "reminderDeleted": "Recordatori suprimit correctament",
+      "failedToDelete": "No s’ha pogut suprimir el recordatori",
+      "allRemindersSaved": "Tots els recordatoris s’han desat correctament",
+      "failedToSave": "No s’han pogut desar els recordatoris",
+      "forumPostRequired": "Selecciona una publicació del fòrum abans de desar el recordatori.",
+      "invalidDestination": "El fil seleccionat no pertany a aquest canal.",
+      "timeExceedsLimit": "El temps restant ha d’estar entre {min} i {max} hores",
+      "pointThresholdInvalid": "El llindar de punts ha d’estar entre {min} i {max}",
+      "attackThresholdInvalid": "El llindar d’atacs ha d’estar entre {min} i {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Registres d’activitat",
+    "description": "Configura registres automàtics de l’activitat del clan i dels jugadors",
+    "stats": {
+      "activeLogs": "Registres actius",
+      "activeLogsDesc": "A tots els clans de la família i als registres del servidor",
+      "logChannels": "Canals de registre",
+      "logChannelsDesc": "Canals disponibles",
+      "trackedClans": "Clans seguits",
+      "trackedClansDesc": "Clans configurats",
+      "issues": "Problemes",
+      "issuesDesc": "En tota la família"
+    },
+    "clanSelector": {
+      "label": "Clan",
+      "placeholder": "Selecciona un clan"
+    },
+    "tabs": {
+      "clan": "Clan",
+      "war": "Guerra",
+      "capital": "Capital del clan",
+      "player": "Jugador",
+      "server": "Servidor"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Entrada d’un membre",
+        "description": "Registra els membres que entren al clan"
+      },
+      "leaveLog": {
+        "label": "Sortida d’un membre",
+        "description": "Registra els membres que surten del clan"
+      },
+      "donationLog": {
+        "label": "Donacions dels membres",
+        "description": "Registra les donacions de tropes i encanteris"
+      },
+      "clanAchievementLog": {
+        "label": "Assoliments del clan",
+        "description": "Registra els assoliments obtinguts pel clan"
+      },
+      "clanRequirementsLog": {
+        "label": "Requisits del clan",
+        "description": "Registra els canvis en els requisits del clan"
+      },
+      "clanDescriptionLog": {
+        "label": "Descripció del clan",
+        "description": "Registra els canvis en la descripció del clan"
+      },
+      "banAlert": {
+        "label": "Alertes de bandejament",
+        "description": "Publica alertes quan un jugador bandejat entra al clan"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Canal de Reddit",
+        "description": "Publica el canal de Reddit del servidor"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Registre de guerra",
+        "description": "Registra els atacs i els resultats de guerra"
+      },
+      "warPanel": {
+        "label": "Tauler de guerra",
+        "description": "Tauler de guerra interactiu amb actualitzacions en directe"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Canvi d’alineació de la CWL",
+        "description": "Registra els canvis en l’alineació de la CWL"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Donacions de la Capital",
+        "description": "Registra les donacions d’or de la Capital"
+      },
+      "capitalAttacks": {
+        "label": "Atacs de la Capital",
+        "description": "Registra els atacs del cap de setmana d’incursions"
+      },
+      "raidPanel": {
+        "label": "Tauler de la Capital",
+        "description": "Tauler d’incursió interactiu amb actualitzacions en directe"
+      },
+      "capitalWeeklySummary": {
+        "label": "Resum setmanal de la Capital",
+        "description": "Resum setmanal del rendiment de la Capital"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Canvi de rol",
+        "description": "Registra els canvis de rol dels jugadors al clan"
+      },
+      "troopUpgrade": {
+        "label": "Millora de tropa",
+        "description": "Registra les millores de nivell de les tropes"
+      },
+      "superTroopBoostLog": {
+        "label": "Potenciacions de supertropes",
+        "description": "Registra activacions de supertropes"
+      },
+      "thUpgrade": {
+        "label": "Millora de l’Ajuntament",
+        "description": "Registra les millores de l’Ajuntament"
+      },
+      "leagueChange": {
+        "label": "Canvi de lliga",
+        "description": "Registra els canvis de nivell de lliga"
+      },
+      "spellUpgrade": {
+        "label": "Millora d’encanteri",
+        "description": "Registra les millores de nivell dels encanteris"
+      },
+      "heroUpgrade": {
+        "label": "Millora d’heroi",
+        "description": "Registra les millores de nivell dels herois"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Millora de l’equipament dels herois",
+        "description": "Registra les millores de l’equipament dels herois"
+      },
+      "nameChange": {
+        "label": "Canvi de nom",
+        "description": "Registra els canvis de nom dels jugadors"
+      },
+      "legendLogAttacks": {
+        "label": "Atacs de llegenda",
+        "description": "Registra els atacs de la Lliga de Llegendes"
+      },
+      "legendLogDefenses": {
+        "label": "Defenses de la Lliga de Llegendes",
+        "description": "Registra les defenses de la Lliga de Llegendes"
+      }
+    },
+    "logCard": {
+      "active": "Actiu",
+      "issue": "Problema",
+      "disabled": "Desactivat",
+      "enable": "Activa",
+      "disable": "Desactiva",
+      "channel": "Canal",
+      "channelPlaceholder": "Selecciona un canal",
+      "thread": "Fil (opcional)",
+      "threadPlaceholder": "Selecciona un fil",
+      "noThread": "Sense fil",
+      "forumPost": "Publicació del fòrum",
+      "forumPostPlaceholder": "Selecciona una publicació del fòrum",
+      "forumPostRequired": "Selecciona una publicació del fòrum abans de desar aquest registre.",
+      "invalidThread": "El fil seleccionat no pertany a aquest canal.",
+      "saveDestination": "Desa la destinació",
+      "channelDeleted": "Aquest canal ja no existeix. Selecciona’n un altre o desactiva el registre.",
+      "enableToConfig": "Activa aquest registre per configurar-lo",
+      "configuring": "S’està configurant",
+      "on": "Activat",
+      "off": "Desactivat",
+      "example": "exemple"
+    }
+  },
+  "GeneralPage": {
+    "title": "Configuració general",
+    "description": "Configura el comportament i l’aspecte del bot a tot el servidor",
+    "loading": "S’està carregant la configuració...",
+    "reset": "Restableix",
+    "saving": "S’està desant...",
+    "saveChanges": "Desa canvis",
+    "settingsSaved": "Configuració desada correctament!",
+    "infoBanner": {
+      "title": "Cerques més opcions?",
+      "description": "Els rols de la família i la configuració dels sobrenoms són a **Configuració de la família**; la gestió de rols és a **Rols**; i els rols, les abreviacions, les categories i els comptes enrere de guerra dels clans són a **Clans**."
+    },
+    "nickname": {
+      "title": "Gestió de sobrenoms",
+      "description": "Controla el format dels sobrenoms",
+      "automaticChanges": "Canvis automàtics",
+      "automaticChangesDesc": "Permet que el bot actualitzi els sobrenoms",
+      "familyFormat": "Format dels membres de la família",
+      "availablePlaceholders": "Marcadors disponibles",
+      "preview": "Previsualització",
+      "nonFamilyFormat": "Format dels membres externs",
+      "placeholders": {
+        "discordName": "Nom d’usuari de Discord",
+        "discordDisplayName": "Sobrenom del servidor",
+        "playerName": "Nom del jugador de CoC",
+        "playerTag": "Etiqueta del jugador",
+        "playerTownhall": "Nivell d'Ajuntament",
+        "playerTownhallSmall": "TH en superíndex",
+        "playerWarstars": "Estrelles de guerra",
+        "playerRole": "Rol del clan",
+        "playerClan": "Nom del clan",
+        "playerLeague": "Lliga",
+        "playerClanAbbr": "Abreviatura del clan"
+      }
+    },
+    "appearance": {
+      "title": "Aparença",
+      "description": "Personalitza les incrustacions del bot",
+      "embedColor": "Color de les incrustacions",
+      "embedColorDesc": "Color de la barra lateral de tots els missatges incrustats del bot a Discord",
+      "embedColorDefault": "Predeterminat: **#D90709** (Vermell ClashKing)",
+      "embedPreview": "Previsualització de la incrustació",
+      "embedPreviewDesc": "Aquesta barra de color apareixerà al costat de tots els missatges incrustats del bot",
+      "editColor": "Edita el color",
+      "resetToDefault": "Restableix el valor predeterminat",
+      "apply": "Aplica"
+    },
+    "security": {
+      "title": "Seguretat i permisos",
+      "description": "Controla l’accés i la verificació",
+      "fullWhitelistRole": "Rol amb accés complet",
+      "fullWhitelistRoleDesc": "Rol de Discord amb accés a totes les ordres del bot (omet totes les comprovacions de permisos)",
+      "noRole": "Sense rol"
+    },
+    "familyRoles": {
+      "title": "Rols de la família",
+      "description": "Gestiona rols automàtics segons la pertinença i la posició als clans",
+      "selectRole": "Selecciona un rol",
+      "addRole": "Afegeix un rol...",
+      "deletedRole": "Rol suprimit",
+      "noRolesConfigured": "No hi ha rols configurats",
+      "modes": {
+        "both": "Afegeix i suprimeix",
+        "add": "Només afegeix",
+        "remove": "Només suprimeix"
+      },
+      "types": {
+        "family": "Família",
+        "notFamily": "Fora de la família",
+        "elder": "Veterà",
+        "coLeader": "Colíder",
+        "leader": "Líder"
+      },
+      "descriptions": {
+        "family": "Té almenys un compte en un clan de la família",
+        "notFamily": "No té cap compte als clans de la família",
+        "elder": "És veterà en algun clan de la família",
+        "coLeader": "És colíder en algun clan de la família",
+        "leader": "És líder en algun clan de la família"
+      }
+    },
+    "tenureRoles": {
+      "title": "Rols per antiguitat en Discord",
+      "description": "Assigna rols automàticament segons el temps que els membres porten al servidor",
+      "addRole": "Afegeix rol per antiguitat",
+      "addDialogTitle": "Afegeix rol per antiguitat",
+      "addDialogDescription": "Assigna un rol als membres que porten un nombre concret de mesos al servidor",
+      "monthsInServer": "Mesos al servidor",
+      "discordRole": "Rol de Discord",
+      "selectRole": "Selecciona un rol",
+      "noRolesConfigured": "No hi ha rols per antiguitat configurats",
+      "addRoleToStart": "Afegeix un rol per antiguitat per començar",
+      "months": "mesos",
+      "month": "mes",
+      "actions": "Accions",
+      "remove": "Suprimeix",
+      "unknownRole": "Rol desconegut"
+    },
+    "prefix": "Prefix de les ordres",
+    "language": "Idioma",
+    "timezone": "Zona horària",
+    "theme": "Tema"
+  },
+  "FamilySettingsPage": {
+    "title": "Configuració de la família",
+    "description": "Configura els rols de família i el format dels sobrenoms dels membres",
+    "loading": "S’està carregant la configuració...",
+    "reset": "Restableix",
+    "saving": "S’està desant...",
+    "saveChanges": "Desa canvis",
+    "settingsSaved": "Configuració desada correctament!",
+    "nickname": {
+      "title": "Gestió de sobrenoms",
+      "description": "Controla el format dels sobrenoms",
+      "automaticChanges": "Canvis automàtics",
+      "automaticChangesDesc": "Permet que el bot actualitzi els sobrenoms",
+      "familyFormat": "Format dels membres de la família",
+      "availablePlaceholders": "Marcadors disponibles",
+      "preview": "Previsualització",
+      "nonFamilyFormat": "Format dels membres externs",
+      "placeholders": {
+        "discordName": "Nom d’usuari de Discord",
+        "discordDisplayName": "Sobrenom del servidor",
+        "playerName": "Nom del jugador de CoC",
+        "playerTag": "Etiqueta del jugador",
+        "playerTownhall": "Nivell d'Ajuntament",
+        "playerTownhallSmall": "TH en superíndex",
+        "playerWarstars": "Estrelles de guerra",
+        "playerRole": "Rol del clan",
+        "playerClan": "Nom del clan",
+        "playerLeague": "Lliga",
+        "playerClanAbbr": "Abreviatura del clan"
+      }
+    },
+    "familyRoles": {
+      "title": "Rols de la família",
+      "description": "Gestiona rols automàtics segons la pertinença i la posició als clans",
+      "selectRole": "Selecciona un rol",
+      "addRole": "Afegeix un rol...",
+      "deletedRole": "Rol suprimit",
+      "noRolesConfigured": "No hi ha rols configurats",
+      "modes": {
+        "both": "Afegeix i suprimeix",
+        "add": "Només afegeix",
+        "remove": "Només suprimeix"
+      },
+      "types": {
+        "family": "Família",
+        "notFamily": "Fora de la família",
+        "elder": "Veterà",
+        "coLeader": "Colíder",
+        "leader": "Líder"
+      },
+      "descriptions": {
+        "family": "Té almenys un compte en un clan de la família",
+        "notFamily": "No té cap compte als clans de la família",
+        "elder": "És veterà en algun clan de la família",
+        "coLeader": "És colíder en algun clan de la família",
+        "leader": "És líder en algun clan de la família"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Idioma"
+  },
+  "ThemeSwitcher": {
+    "label": "Tema",
+    "light": "Clar",
+    "dark": "Fosc",
+    "system": "Sistema"
+  },
+  "AuthCallback": {
+    "authenticating": "S’està autenticant...",
+    "authenticatingDescription": "Espera mentre iniciem sessió amb Discord",
+    "authenticationFailed": "Error d’autenticació",
+    "tryAgain": "Torna-ho a provar",
+    "backToHome": "Torna a l’inici",
+    "errorCancelled": "S’ha cancel·lat l’inici de sessió a Discord. Torna-ho a provar quan vulguis.",
+    "errorDiscordFailedWithReason": "Error d’autenticació de Discord: {reason}",
+    "errorNoAuthorizationCode": "No s’ha rebut cap codi d’autorització de Discord.",
+    "errorCodeVerifierMissing": "No s’ha trobat el verificador de codi. Prova d’iniciar la sessió de nou.",
+    "errorAuthenticateFailed": "No s’ha pogut autenticar amb Discord.",
+    "loadingVillages": "S’està iniciant la sessió amb Discord...",
+    "loadingClanData": "S’està carregant la llista de servidors...",
+    "loadingWarStats": "Gairebé a punt..."
+  },
+  "LoginPage": {
+    "redirecting": "S’està redirigint a Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Funcions",
+      "subtitle": "Descobreix les potents eines que ofereix ClashKing per gestionar i fer créixer el teu clan a Discord, al mòbil i al web."
+    },
+    "sections": {
+      "bot": {
+        "title": "Bot de ClashKing",
+        "description": "El bot de ClashKing té tot el que necessites per gestionar el teu clan i la comunitat de Clash of Clans a Discord. Inclou funcions úniques per mantenir el clan organitzat, actiu i en creixement.",
+        "items": [
+          "Registres en temps real: segueix les guerres, la CWL, els Jocs del Clan, les incursions, les donacions i els esdeveniments de membres.",
+          "Sistema de tiquets: sistema de tiquets de reclutament, a més dels tiquets d’assistència estàndard.",
+          "Rols automàtics: assigna rols automàticament segons l’estat del clan o la gestió de la família.",
+          "Recordatoris: envia avisos per als atacs de guerra, els Jocs del Clan o qualsevol altra cosa.",
+          "Estadístiques detallades: informació sobre el rendiment de jugadors i clans amb seguiment d’activitat.",
+          "Gestió de llistes: organitza i optimitza les llistes de guerra fàcilment."
+        ],
+        "ctaPrimary": "Convida el bot",
+        "ctaSecondary": "Uneix-te a la comunitat"
+      },
+      "app": {
+        "title": "Aplicació ClashKing (beta oberta)",
+        "description": "L’aplicació ClashKing complementa el bot amb eines i informació essencial al mòbil. Mantén-te connectat a qualsevol lloc, fins i tot sense Discord.",
+        "items": [
+          "Estadístiques en temps real: estadístiques detallades de jugadors i clans sincronitzades amb el bot.",
+          "Seguiment del progrés del clan: controla fàcilment el progrés del clan al llarg del temps.",
+          "Gestió de diversos comptes: canvia fàcilment entre els teus comptes i segueix-ne el rendiment.",
+          "Historial integrat: accedeix a dades històriques per analitzar tendències i millorar estratègies.",
+          "Gestió del servidor de Discord: (properament) gestiona rols i tiquets des de l’aplicació.",
+          "Notificacions avançades: (properament) personalitza alertes per a esdeveniments importants."
+        ],
+        "ctaPrimary": "Beta per a Android",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "API de ClashKing",
+        "description": "Crea les teves pròpies eines o projectes amb l’API de ClashKing. És gratuïta si reconeixes el projecte ClashKing.",
+        "items": [],
+        "ctaPrimary": "Documentació de l’API",
+        "ctaSecondary": "API a GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Necessites ajuda?",
+    "subtitle": "Tant si cerques documentació com ajuda directa, som aquí per ajudar-te.",
+    "documentation": {
+      "title": "Documentació",
+      "description": "Consulta les nostres guies i referències d’ordres per aprofitar ClashKing al màxim.",
+      "cta": "Mostra la documentació"
+    },
+    "discord": {
+      "title": "Assistència a Discord",
+      "description": "Necessites més ajuda? Uneix-te a la nostra comunitat de Discord per preguntar, informar d’errors o parlar amb altres usuaris.",
+      "cta": "Uneix-te a Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Un projecte de codi obert",
+    "subtitle": "ClashKing és un projecte completament gratuït i de codi obert. El bot i l’API són de codi obert, així que pots contribuir-hi o fer-los servir als teus projectes.",
+    "github": {
+      "title": "Organització de GitHub",
+      "description": "Explora el codi font, contribueix al bot o descobreix les nostres altres eines de codi obert.",
+      "ctaPrimary": "Mostra l’organització",
+      "repos": {
+        "bot": "Repositori del bot",
+        "app": "Repositori de l’aplicació",
+        "api": "Repositori de l’API",
+        "assets": "Repositori de recursos"
+      }
+    },
+    "api": {
+      "title": "Documentació de l’API",
+      "description": "Crea les teves pròpies eines o projectes amb l’API de ClashKing. És gratuïta si reconeixes el projecte ClashKing.",
+      "cta": "Documentació de l’API"
+    },
+    "translation": {
+      "title": "Ajuda’ns a traduir",
+      "description": "Ajuda’ns a traduir ClashKing al teu idioma! Pots col·laborar a Crowdin amb el lloc web, el bot i els textos relacionats.",
+      "app": "Tradueix l’aplicació",
+      "bot": "Tradueix el bot"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Contribueix",
+        "description": "Ajuda’ns a millorar corregint errors, afegint funcions o perfeccionant les existents. Tota contribució compta!"
+      },
+      "community": {
+        "title": "Comunitat",
+        "description": "Uneix-te a la nostra comunitat de Discord per debatre idees, rebre ajuda i col·laborar amb altres desenvolupadors."
+      },
+      "learn": {
+        "title": "Aprèn",
+        "description": "Consulta la documentació i els exemples per aprendre a fer servir el bot i l’API."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Dona’ns suport",
+    "subtitle": "ClashKing és un projecte gratuït i de codi obert. El teu suport ens ajuda a mantenir els servidors i desenvolupar funcions noves.",
+    "patreon": {
+      "title": "Fes-te mecenes a Patreon",
+      "description": "Dona’ns suport cada mes a Patreon per obtenir avantatges exclusius, accés anticipat i ajudar-nos amb l’allotjament.",
+      "cta": "Dona’ns suport a Patreon"
+    },
+    "creatorCode": {
+      "title": "Fes servir el codi de creador",
+      "description": "Dona’ns suport gratuït fent servir el codi de creador",
+      "descriptionSuffix": "al joc o a la botiga de Supercell.",
+      "ctaGame": "Fes-lo servir al joc",
+      "ctaStore": "Fes-lo servir a la botiga de Supercell"
+    },
+    "whySupport": {
+      "title": "Per què donar-nos suport?",
+      "description": "Cada contribució es destina al cost dels servidors i de l’API. Fer servir el nostre codi no et costa res i ens ajuda molt."
+    }
+  },
+  "ServersPage": {
+    "title": "Selecciona un servidor",
+    "description": "Tria un servidor per configurar el bot de ClashKing. Has de ser propietari o administrador del servidor de Discord.",
+    "backToHome": "Torna a l’inici",
+    "backToLogin": "Torna a l'inici de sessió",
+    "error": "Error",
+    "configure": "Configura",
+    "invite": "Convida",
+    "members": "Membres",
+    "server": "Servidor",
+    "roles": {
+      "owner": "Propietari",
+      "administrator": "Administrador",
+      "manager": "Gestor"
+    },
+    "noServers": {
+      "title": "No s’han trobat servidors",
+      "description": "No s’ha trobat cap servidor de Discord on siguis administrador o propietari."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Actualitza un tauler actiu o envia taulers nous segons una programació",
+    "actions": {
+      "create": "Crea un tauler automàtic",
+      "edit": "Edita el tauler automàtic",
+      "delete": "Suprimeix el tauler automàtic",
+      "save": "Desa canvis",
+      "cancel": "Cancel·lar",
+      "retry": "Tornar a intentar"
+    },
+    "metrics": {
+      "total": "Configurat",
+      "refresh": "Actualitza taulers",
+      "send": "Enviaments programats"
+    },
+    "filters": {
+      "all": "Tot"
+    },
+    "list": {
+      "title": "Taulers automàtics configurats",
+      "description": "Lliurament, objectius, destinació i estat d’execució controlats pels gestors",
+      "empty": "No hi ha taulers automàtics en aquesta vista",
+      "emptyDescription": "Podràs crear-ne un quan el registre de l’API ofereixi un tipus disponible."
+    },
+    "registry": {
+      "emptyTitle": "No hi ha tipus de tauler disponibles",
+      "emptyDescription": "El registre de l’API és buit. Es podran crear taulers quan s’hi habiliti algun tipus.",
+      "typeUnavailable": "Aquest tipus de tauler ja no està disponible al registre i no es pot editar."
+    },
+    "dialog": {
+      "createTitle": "Crea un tauler automàtic",
+      "editTitle": "Edita el tauler automàtic",
+      "description": "Les funcions i els límits provenen del registre actiu de taulers."
+    },
+    "boardType": {
+      "label": "Tipus de tauler",
+      "description": "Els tipus disponibles provenen directament del registre de l’API.",
+      "placeholder": "Selecciona un tipus de tauler"
+    },
+    "targets": {
+      "kind": "Tipus d’objectiu: {kind}",
+      "kindDescription": "El registre defineix com s’interpreta cada objectiu.",
+      "scope": "Àmbit de l’objectiu",
+      "scopeDescription": "L’àmbit familiar fa servir tots els clans configurats i no té objectius explícits.",
+      "family": "Família",
+      "custom": "Objectius personalitzats",
+      "values": "Objectius",
+      "count": "Indica entre {min} i {max} objectius per a aquest tipus de tauler.",
+      "placeholder": "Introdueix un objectiu de tipus {kind}",
+      "add": "Afegeix un objectiu",
+      "remove": "Suprimeix l’objectiu"
+    },
+    "modes": {
+      "label": "Mode de lliurament",
+      "description": "El registre controla els modes de lliurament compatibles.",
+      "refresh": "Actualitza",
+      "send": "Enviament programat"
+    },
+    "destination": {
+      "label": "Destinació",
+      "channel": "Canal principal",
+      "channelDescription": "Els canals de text i d’anuncis permeten el lliurament directe; els fòrums fan servir una publicació secundària.",
+      "selectChannel": "Selecciona un canal",
+      "thread": "Fil o publicació de fòrum",
+      "selectThread": "Selecciona un fil",
+      "threadOptional": "Opcional per als canals de text i d’anuncis.",
+      "forumRequired": "Aquesta destinació requereix una publicació de fòrum.",
+      "direct": "Envia directament al canal",
+      "deleted": "El canal ja no existeix"
+    },
+    "refresh": {
+      "interval": "Interval d’actualització (minuts)",
+      "intervalDescription": "Interval permès: {minimum}-{maximum} minuts."
+    },
+    "schedule": {
+      "label": "Programació",
+      "kind": "Patró de programació",
+      "kindDescription": "Envia cada dia, els dies seleccionats o una vegada al mes.",
+      "daily": "Diari",
+      "weekdays": "Dies seleccionats",
+      "dayOfMonth": "Dia del mes",
+      "selectWeekdays": "Dies de la setmana",
+      "monthDay": "Dia del mes",
+      "monthDayDescription": "Fes servir un valor de l’1 al 31.",
+      "timezone": "Zona horària",
+      "timeOfDay": "Hora del dia",
+      "nextRun": "Propera execució"
+    },
+    "weekdays": {
+      "1": "Dilluns",
+      "2": "Dimarts",
+      "3": "Dimecres",
+      "4": "Dijous",
+      "5": "Divendres",
+      "6": "Dissabte",
+      "7": "Diumenge"
+    },
+    "status": {
+      "enabled": "Activat",
+      "disabled": "Desactivat",
+      "enabledDescription": "Els taulers desactivats conserven la configuració, però no s’executen.",
+      "messageId": "ID del missatge actualitzat: {id}"
+    },
+    "delete": {
+      "title": "Vols suprimir aquest tauler automàtic?",
+      "description": "Això suprimeix la configuració i no es pot desfer."
+    },
+    "feedback": {
+      "created": "Tauler automàtic creat",
+      "updated": "Tauler automàtic actualitzat",
+      "deleted": "Tauler automàtic suprimit"
+    },
+    "validation": {
+      "boardType": "Selecciona un tipus de tauler del registre actiu.",
+      "targetScope": "Selecciona un àmbit compatible amb aquest tipus de tauler.",
+      "familyTargets": "L’àmbit familiar no pot incloure objectius explícits.",
+      "targetCount": "Introdueix entre {min} i {max} objectius no buits.",
+      "deliveryMode": "Selecciona un mode de lliurament compatible amb aquest tipus de tauler.",
+      "destination": "Selecciona una destinació vàlida. Els canals de fòrum requereixen una publicació secundària.",
+      "refreshInterval": "Introdueix un interval d’entre {minimum} i {maximum} minuts.",
+      "timezone": "Introdueix una zona horària IANA.",
+      "timeOfDay": "Introdueix una hora vàlida.",
+      "weekdays": "Selecciona almenys un dia de la setmana.",
+      "dayOfMonth": "Introdueix un dia de l’1 al 31."
+    },
+    "errors": {
+      "title": "Taulers automàtics no disponibles",
+      "session": "La teva sessió ha caducat.",
+      "request": "La sol·licitud de taulers automàtics ha fallat.",
+      "load": "No s’han pogut carregar els taulers automàtics.",
+      "save": "No s’ha pogut desar el tauler automàtic.",
+      "delete": "No s’ha pogut suprimir el tauler automàtic."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Configuració dels taulers de tiquets",
+    "description": "Configura les categories i els canals de registre de cada tauler de tiquets.",
+    "noPanels": "No s’han trobat taulers de tiquets",
+    "noPanelsHint": "Crea el teu primer tauler amb el botó de dalt.",
+    "createPanel": "Tauler nou",
+    "createPanelTitle": "Crea un tauler de tiquets",
+    "createPanelDescription": "Assigna un nom únic al tauler. Podràs configurar els botons i els canals després de crear-lo.",
+    "panelNameLabel": "Nom del tauler",
+    "panelNamePlaceholder": "p. ex., Sol·licituds",
+    "panelCreated": "Tauler «{name}» creat.",
+    "confirmDeletePanel": "Vols suprimir el tauler «{name}»?",
+    "confirmDeletePanelHint": "Això suprimirà permanentment el tauler i tota la configuració dels seus botons.",
+    "panelDeleted": "Tauler suprimit.",
+    "panelHint": "Fes clic per desplegar i configurar aquest tauler.",
+    "panelEmbed": "Incrustació del tauler",
+    "panelEmbedHint": "Incrustació en publicar el tauler de tiquets a Discord.",
+    "panelEmbedInfoLine1": "Per crear o editar una incrustació, ves a la pàgina %s de {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Per afegir o editar botons, ves a %s d’aquest panell.",
+    "panelEmbedPreview": "Previsualització de la incrustació",
+    "panelEmbedPreviewEmpty": "No hi ha cap previsualització disponible per al missatge seleccionat.",
+    "ticketOpenEmbed": "Incrustació en obrir el tiquet",
+    "ticketOpenEmbedHint": "Missatge personalitzat opcional que s’envia quan aquest botó obre un tiquet.",
+    "selectEmbed": "Selecciona una incrustació",
+    "defaultEmbed": "Fes servir la incrustació predeterminada",
+    "noCustomMessage": "Fes servir el missatge predeterminat del tiquet",
+    "buttons": "Botons",
+    "buttonList": "Botons",
+    "categories": "Categories",
+    "openCategory": "Categoria de tiquets oberts",
+    "open_category": "Categoria de tiquets oberts",
+    "sleepCategory": "Categoria de tiquets en espera",
+    "sleep_category": "Categoria de tiquets en espera",
+    "closedCategory": "Categoria de tiquets tancats",
+    "closed_category": "Categoria de tiquets tancats",
+    "selectCategory": "Selecciona una categoria...",
+    "logChannels": "Canals de registre",
+    "statusChangeLog": "Registre de canvis d’estat",
+    "status_change_log": "Registre de canvis d’estat",
+    "buttonClickLog": "Registre de clics als botons",
+    "ticket_button_click_log": "Registre de clics als botons",
+    "closeLog": "Registre de tancaments de tiquets",
+    "ticket_close_log": "Registre de tancaments de tiquets",
+    "selectChannel": "Selecciona un canal...",
+    "savedSuccess": "S’ha desat el tauler «{panel}».",
+    "tabChannels": "Tauler de tiquets",
+    "tabSettings": "Configuració",
+    "tabButtons": "Botons",
+    "tabMessages": "Missatges",
+    "autoSaveSaving": "S’està desant...",
+    "autoSaveSaved": "Desat",
+    "autoSaveErrorTitle": "Error de desament automàtic",
+    "autoSaveErrorDescription": "No s’ha pogut desar aquesta configuració de tiquets.",
+    "messages": "Missatges",
+    "noButtons": "Encara no hi ha botons. Afegeix-ne un per començar.",
+    "addButton": "Afegeix un botó",
+    "addButtonTitle": "Afegeix un botó",
+    "addButtonDescription": "Configura l’aspecte del botó nou.",
+    "buttonLabel": "Text del botó",
+    "buttonLabelPlaceholder": "p. ex., Sol·licita",
+    "buttonStyle": "Color del botó",
+    "buttonStyleBlue": "Blau",
+    "buttonStyleGrey": "Gris",
+    "buttonStyleGreen": "Verd",
+    "buttonStyleRed": "Vermell",
+    "buttonAdded": "Botó afegit.",
+    "buttonDeleted": "Botó suprimit.",
+    "editButtonTitle": "Edita la configuració del botó",
+    "editButtonDescription": "Configura aquest botó de tiquet.",
+    "buttonAppearanceSaved": "Aspecte desat.",
+    "confirmDeleteButton": "Vols suprimir el botó «{label}»?",
+    "confirmDeleteButtonHint": "Això suprimirà el botó i tota la seva configuració (rols, preguntes, etc.).",
+    "modRoles": "Rols de l’equip (esmentats)",
+    "modRolesHint": "Aquests rols s’esmenten en obrir un tiquet.",
+    "noPingRoles": "Rols de l’equip (silenciosos)",
+    "noPingRolesHint": "Aquests rols poden veure els tiquets, però no s’esmenten.",
+    "questions": "Preguntes",
+    "questionsHint": "Fins a 5 preguntes en una finestra en obrir el tiquet.",
+    "question": "Pregunta",
+    "privateThread": "Fil privat",
+    "privateThreadHint": "Crea un fil privat separat per a l’equip.",
+    "accountApply": "Requereix un compte de CoC",
+    "accountApplyHint": "L’usuari ha d’enllaçar un compte de Clash of Clans.",
+    "playerInfo": "Mostra informació del jugador",
+    "playerInfoHint": "Mostra les estadístiques del compte en obrir el tiquet.",
+    "thMin": "Ajuntament mín.",
+    "numApply": "Màxim de comptes",
+    "naming": "Format del nom",
+    "namingPlaceholders": "Marcadors del nom",
+    "namingVariables": "Variables: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Botó «{label}» desat.",
+    "badge": {
+      "accountApply": "CoC obligatori",
+      "privateThread": "Fil privat"
+    },
+    "approveMessages": "Missatges d’aprovació i rebuig",
+    "approveMessagesHint": "Missatges preparats que l’equip pot enviar als sol·licitants (màx. 25).",
+    "messagesMaxHint": "Pots afegir fins a 25 missatges.",
+    "editMessagesButton": "Edita els missatges",
+    "editMessagesTitle": "Edita els missatges preparats",
+    "editMessagesDescription": "Afegeix, elimina i actualitza els missatges preparats dels tiquets.",
+    "addMessage": "Afegeix un missatge",
+    "noMessages": "Encara no hi ha missatges. Afegeix-ne un per començar.",
+    "messageName": "Nom del missatge",
+    "contentLabel": "Contingut",
+    "messageContent": "Contingut del missatge...",
+    "messageNameRequired": "Tots els missatges han de tenir un nom.",
+    "messagesSaved": "S’han desat els missatges d’aprovació i denegació.",
+    "rolesToAdd": "Rols que es concediran",
+    "rolesToAddHint": "Rols concedits automàticament a l’usuari en obrir un tiquet.",
+    "rolesToRemove": "Rols que es retiraran",
+    "rolesToRemoveHint": "Rols retirats automàticament a l’usuari en obrir un tiquet.",
+    "applyClans": "Clans permesos",
+    "applyClansHint": "Només els membres d’aquests clans poden obrir el tiquet. Deixa-ho buit per permetre l’accés a tothom.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Requisits de l’Ajuntament",
+    "thRequirementsHint": "Nivells mínims dels herois per cada nivell d’Ajuntament necessaris per obrir el tiquet.",
+    "thHeroLegend": "BK = Rei Bàrbar · AQ = Reina Arquera · GW = Gran Guardià · RC = Campiona Reial · WARST = Estrelles de guerra",
+    "addThLevel": "Afegeix un nivell de TH",
+    "thLevel": "TH",
+    "numApplyHint": "Nombre màxim de comptes de CoC amb què pot presentar la sol·licitud l’usuari (1-25).",
+    "embeds": "Incrustacions",
+    "embedsHint": "Incrustacions de Discord utilitzades en taulers o en obrir tiquets.",
+    "newEmbed": "Incrustació nova",
+    "embedName": "Nom de la incrustació",
+    "embedNamePlaceholder": "la-meva-incrustacio",
+    "discohookUrl": "URL de Discohook",
+    "embedDiscohookHint": "Dissenya el missatge a Discohook, copia l’URL de la pàgina i enganxa’l aquí.",
+    "openDiscohook": "Obre Discohook",
+    "openInDiscohook": "Obre a Discohook",
+    "copyDiscohookUrl": "Copia l’URL de Discohook",
+    "copyDiscohookUrlDone": "URL copiat!",
+    "editEmbed": "Edita",
+    "deleteEmbed": "Suprimeix",
+    "confirmDeleteEmbed": "Vols suprimir la incrustació «{name}»?",
+    "confirmDeleteEmbedHint": "Només se suprimeix de ClashKing. No afecta els missatges ja publicats a Discord.",
+    "embedSaved": "Incrustació «{name}» desada.",
+    "embedCreated": "Incrustació «{name}» creada.",
+    "embedDeleted": "Incrustació suprimida.",
+    "noEmbeds": "Encara no hi ha incrustacions.",
+    "noEmbedsHint": "Crea una incrustació aquí i assigna-la a un tauler o botó.",
+    "legacyEmbed": "Creada pel bot; enganxa un URL de Discohook per editar-la.",
+    "invalidDiscohookUrl": "URL no vàlida. Enganxa una URL de Discohook (discohook.app/?data=... o discohook.app/?share=...).",
+    "tabEmbeds": "Incrustacions"
+  },
+  "EmbedsPage": {
+    "title": "Incrustacions",
+    "description": "Crea i gestiona plantilles d’incrustacions de Discord per als taulers i botons de tiquets.",
+    "nameHint": "Assigna un identificador únic a la incrustació. Podràs canviar-ne el contingut després."
+  },
+  "EmbedEditor": {
+    "importSection": "Importa des de Discohook",
+    "addMessage": "Afegeix un missatge",
+    "addMessageDialogTitle": "Afegeix un missatge",
+    "addMessageDialogDescription": "Tria el nivell de complexitat del missatge.",
+    "addMessageClassicTitle": "Clàssic",
+    "addMessageClassicDescription": "Senzill i fiable: text i incrustacions. Tria aquesta opció si tens dubtes.",
+    "addMessageV2Title": "Components V2",
+    "addMessageV2Description": "Dissenys i components interactius més avançats, com ara botons, selectors i seccions. Ideal per a configuracions avançades.",
+    "betaTag": "Beta",
+    "importExport": "Importa i exporta",
+    "importExportDescription": "Importa un missatge des de Discohook o exporta-hi l’actual.",
+    "importFromDiscohook": "Importa des de Discohook",
+    "copyDiscohookUrl": "Copia l’URL de Discohook",
+    "openInDiscohook": "Obre a Discohook",
+    "content": "Contingut",
+    "contentPlaceholder": "Contingut que apareix sobre les incrustacions...",
+    "profileSection": "Perfil",
+    "profileName": "Nom",
+    "profileAvatarUrl": "URL de l’avatar",
+    "profileUnsupportedWarning": "Avís: el bot encara no permet actualitzar aquest perfil.",
+    "import": "Importa",
+    "importError": "URL de Discohook no vàlida. Enganxa una URL d’una pàgina de Discohook.",
+    "importMultipleMessagesWarning": "Aquest enllaç conté diversos missatges. Només s’ha importat el primer; el bot n’admet un per incrustació.",
+    "colorSection": "Color",
+    "authorSection": "Autor",
+    "authorName": "Nom",
+    "authorIconUrl": "URL de la icona",
+    "authorUrl": "URL de l’autor",
+    "bodySection": "Cos",
+    "title": "Títol",
+    "titleUrl": "URL del títol",
+    "sidebarColor": "Color de la barra lateral",
+    "description": "Descripció",
+    "descriptionPlaceholder": "Descripció de la incrustació...",
+    "fieldsSection": "Camps",
+    "addField": "Afegeix un camp",
+    "field": "Camp",
+    "fieldName": "Nom",
+    "fieldValue": "Valor",
+    "fieldInline": "En línia",
+    "imagesSection": "Imatges",
+    "thumbnailUrl": "URL de la miniatura",
+    "imageUrl": "URL de la imatge",
+    "footerSection": "Peu",
+    "footerText": "Text del peu",
+    "footerIconUrl": "URL de la icona del peu",
+    "timestamp": "Inclou la marca de temps",
+    "preview": "Vista prèvia",
+    "previewEmpty": "Omple els camps per veure una previsualització",
+    "modeToggleV1": "Clàssic (V1)",
+    "modeToggleV2": "Components (V2)",
+    "componentsSection": "Components",
+    "addComponent": "Afegeix un component",
+    "containerLabel": "Contenidor",
+    "textDisplayLabel": "Visualització de text",
+    "separatorLabel": "Separador",
+    "mediaGalleryLabel": "Galeria multimèdia",
+    "sectionLabel": "Secció",
+    "dividerLine": "Mostra línia divisòria",
+    "spacing": "Espaiat",
+    "spacingSmall": "Petit",
+    "spacingLarge": "Gran",
+    "imageDescription": "Text alternatiu",
+    "imageSpoiler": "Amaga la imatge",
+    "addImage": "Afegeix una imatge",
+    "addTextBlock": "Afegeix bloc de text",
+    "accessory": "Accessori",
+    "accessoryNone": "Cap",
+    "accessoryThumbnail": "Miniatura",
+    "accessoryButton": "Botó",
+    "thumbnailAlt": "Text alternatiu de la miniatura",
+    "accentColor": "Color d’accent",
+    "addContainer": "Afegeix component fill",
+    "containerSpoiler": "Contenidor amb spoiler",
+    "stringSelectLabel": "Selector de text",
+    "userSelectLabel": "Selector d’usuaris",
+    "roleSelectLabel": "Selector de rol",
+    "mentionableSelectLabel": "Selector d’elements esmentables",
+    "channelSelectLabel": "Selector de canals",
+    "fileLabel": "Fitxer",
+    "fileUrl": "URL del fitxer",
+    "fileUploadButton": "Puja",
+    "fileSpoiler": "Amaga el fitxer",
+    "selectCustomId": "ID personalitzat",
+    "selectPlaceholder": "Text de marcador",
+    "selectMinValues": "Valors mínims",
+    "selectMaxValues": "Valors màxims",
+    "selectOptions": "Opcions",
+    "selectOption": "Opció",
+    "selectOptionLabel": "Etiqueta",
+    "selectOptionValue": "Valor",
+    "selectOptionDescription": "Descripció",
+    "selectOptionDefault": "Seleccionat per defecte",
+    "addSelectOption": "Afegeix opció",
+    "selectDisabled": "Desactivat",
+    "actionRowMode": "Tipus de fila",
+    "actionRowModeButtons": "Botons",
+    "actionRowLabel": "Fila d’accions",
+    "addButton": "Afegeix un botó",
+    "buttonLabel": "Etiqueta",
+    "buttonStyle": "Estil",
+    "buttonStylePrimary": "Principal",
+    "buttonStyleSecondary": "Secundari",
+    "buttonStyleSuccess": "Èxit",
+    "buttonStyleDanger": "Perill",
+    "buttonStyleLink": "Enllaç",
+    "tabMentions": "Mencions",
+    "tabTime": "Hora",
+    "tabEmojis": "Emojis",
+    "dateLabel": "Data",
+    "timeLabel": "Hora",
+    "mentionsChannels": "Canals",
+    "mentionsSpecial": "Mencions especials",
+    "mentionsChannelList": "Tots els canals",
+    "mentionsRoles": "Rols",
+    "mentionsServerGuide": "Guia del servidor",
+    "mentionsBrowseChannels": "Explora els canals",
+    "mentionsChannelsAndRoles": "Canals i rols",
+    "mentionsNoChannels": "Cap canal coincideix amb la cerca.",
+    "mentionsNoRoles": "Cap rol coincideix amb la cerca.",
+    "styleLabel": "Estil",
+    "timeRelativeNow": "fa 0 segons",
+    "emojiSearchPlaceholder": "Troba l’emoji perfecte",
+    "emojiToneLabel": "To de pell de l’emoji",
+    "emojiCategory": {
+      "people": "Persones",
+      "nature": "Natura",
+      "food": "Menjar",
+      "activities": "Activitats",
+      "travel": "Viatges",
+      "objects": "Objectes",
+      "symbols": "Símbols",
+      "flags": "Banderes"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Desactivat",
+    "unknownComponent": "Component desconegut",
+    "unknownComponentHint": "Aquest tipus de component no es pot editar aquí, però es conservarà en desar."
+  },
+  "PanelsPage": {
+    "title": "Taulers",
+    "description": "Configura el tauler interactiu publicat al servidor. Els membres poden enllaçar comptes, actualitzar rols i més amb un sol clic.",
+    "saved": "Configuració del tauler desada.",
+    "embedSection": "Incrustació",
+    "embedHint": "Missatge opcional mostrat sobre els botons.",
+    "embedLabel": "Incrustació",
+    "noEmbed": "Sense incrustació (només botons)",
+    "buttonsSection": "Botons",
+    "buttonsHint": "Selecciona els botons d’acció. L’ordre segueix la teva selecció.",
+    "colorSection": "Color dels botons",
+    "colorHint": "S’aplica a tots els botons.",
+    "welcomeSection": "Canal de benvinguda",
+    "welcomeHint": "Si es configura, el tauler es publica quan entra un membre nou.",
+    "welcomeChannel": "Canal",
+    "welcomeChannelPlaceholder": "Selecciona un canal...",
+    "editPanelButton": "Edita el tauler",
+    "editDialogTitle": "Edita el tauler",
+    "editDialogDescription": "Actualitza el missatge, els botons i el color amb una previsualització abans de desar.",
+    "welcomeAutosaveSuccess": "Canal de benvinguda desat.",
+    "welcomeAutosaveDisabled": "Canal de benvinguda desactivat.",
+    "previewSection": "Vista prèvia",
+    "previewHint": "Aspecte del tauler a Discord.",
+    "previewNoEmbed": "No s’ha seleccionat cap incrustació",
+    "previewEmbedNoData": "El missatge no té dades de previsualització",
+    "previewNoButtons": "No s’ha seleccionat cap botó",
+    "color": {
+      "Blue": "Blau",
+      "Green": "Verd",
+      "Grey": "Gris",
+      "Red": "Vermell"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Sorteigs",
+    "description": "Crea, programa i gestiona sorteigs per al teu servidor.",
+    "create": "Crea un sorteig",
+    "listTitle": "Tauler de sorteigs",
+    "listDescription": "Controla des d’un sol lloc els sorteigs programats, actius i finalitzats.",
+    "empty": "Encara no hi ha sorteigs per mostrar.",
+    "confirmDeleteTitle": "Suprimeix el sorteig",
+    "confirmDelete": "Segur que vols suprimir aquest sorteig?",
+    "discardTitle": "Vols descartar els canvis?",
+    "discardDescription": "Hi ha canvis sense desar. Si tanques ara, es perdran.",
+    "discardConfirm": "Descarta",
+    "formTabs": {
+      "general": "General",
+      "messages": "Missatges",
+      "restrictions": "Restriccions",
+      "advanced": "Avançat"
+    },
+    "tabs": {
+      "ongoing": "En curs",
+      "upcoming": "Pròximes",
+      "ended": "Finalitzats"
+    },
+    "stats": {
+      "total": "Total de sorteigs",
+      "totalEntries": "Total de participacions",
+      "ongoing": "Sorteigs en curs",
+      "upcoming": "Propers sorteigs",
+      "ended": "Sorteigs finalitzats"
+    },
+    "statsDescriptions": {
+      "total": "Tots els sorteigs configurats al servidor.",
+      "totalEntries": "Participacions combinades de tots els sorteigs.",
+      "ongoing": "Actius i oberts a participacions.",
+      "upcoming": "Programats per començar més endavant.",
+      "ended": "Sorteigs ja finalitzats."
+    },
+    "emptyTab": {
+      "title": "No hi ha sorteigs aquí",
+      "ongoing": "No hi ha sorteigs en curs.",
+      "upcoming": "No hi ha sorteigs programats. Crea’n un per començar.",
+      "ended": "Encara no ha acabat cap sorteig."
+    },
+    "status": {
+      "scheduled": "Programat",
+      "ongoing": "En curs",
+      "ended": "Finalitzat"
+    },
+    "table": {
+      "giveaway": "Sorteig",
+      "channel": "Canal",
+      "entries": "Participacions",
+      "timing": "Horari",
+      "start": "Comença",
+      "end": "Acaba",
+      "winnersHeader": "Guanyadors",
+      "winners": "{count, plural, one {# guanyador} other {# guanyadors}}",
+      "boosters": "{count, plural, one {# multiplicador} other {# multiplicadors}}",
+      "noChannel": "Sense canal",
+      "noChannelHelp": "No hi ha cap canal assignat. Edita el sorteig per corregir-ho.",
+      "endsAt": "Acaba a les",
+      "endedAt": "Ha acabat a les",
+      "duplicate": "Duplica",
+      "showingEnded": "Es mostren {shown} de {total} sorteigs finalitzats",
+      "showMore": "Mostra’n {count} més",
+      "pendingUpdate": "Actualització pendent",
+      "pendingUpdateHelp": "Aquest sorteig té canvis pendents que el bot aplicarà aviat.",
+      "openInDiscord": "Obre a Discord",
+      "viewInDiscord": "Mostra a Discord",
+      "reroll": "Torna a sortejar els guanyadors",
+      "rerolledCount": "{count, plural, one {# sortejat de nou} other {# sortejats de nou}}",
+      "viewEntries": "Mostra les participacions"
+    },
+    "entries": {
+      "description": "Llista de participants i la seva probabilitat de guanyar.",
+      "totalEntries": "Total de participacions",
+      "uniqueUsers": "Usuaris únics",
+      "noEntrants": "Encara no hi ha participacions.",
+      "userId": "ID d’usuari",
+      "entryCount": "Participacions",
+      "winChance": "Probabilitat de guanyar"
+    },
+    "dialog": {
+      "createTitle": "Crea un sorteig",
+      "editTitle": "Edita el sorteig",
+      "description": "Configura el missatge, l’horari i els requisits del sorteig.",
+      "create": "Crea el sorteig",
+      "saveChanges": "Desa canvis"
+    },
+    "form": {
+      "prize": "Premi",
+      "prizePlaceholder": "Exemple: Passi d’or",
+      "channel": "Canal",
+      "channelPlaceholder": "Selecciona un canal",
+      "startTime": "Hora d’inici",
+      "startNow": "Comença immediatament",
+      "endTime": "Hora de finalització",
+      "winners": "Nombre de guanyadors",
+      "mentions": "Rols esmentats",
+      "roleRequirements": "Rols obligatoris o exclosos",
+      "rolesMode": "Mode dels rols",
+      "rolesModeOptions": {
+        "none": "Sense restriccions de rols",
+        "allow": "Només poden participar aquests rols",
+        "deny": "Aquests rols no poden participar"
+      },
+      "rolesModeHelp": {
+        "none": "Tots els usuaris poden participar.",
+        "allow": "Només poden participar els usuaris amb un dels rols seleccionats.",
+        "deny": "Els usuaris amb qualsevol dels rols seleccionats no poden participar."
+      },
+      "textAboveEmbed": "Text sobre la incrustació",
+      "textEmbedDefault": "Fes clic al botó per participar.",
+      "textInEmbed": "Descripció de la incrustació",
+      "textEndDefault": "Enhorabona a tothom qui ha estat seleccionat! Ens posarem en contacte aviat.",
+      "textOnEnd": "Missatge en finalitzar el sorteig",
+      "image": "Imatge del sorteig",
+      "removeImage": "Suprimeix la imatge actual",
+      "imagePreviewAlt": "Previsualització del sorteig",
+      "previewGiveaway": "Previsualització del sorteig",
+      "previewEnd": "Previsualització del missatge final",
+      "boosters": "Multiplicadors de participacions",
+      "addBooster": "Afegeix un multiplicador",
+      "noBoosters": "No hi ha multiplicadors configurats.",
+      "boosterLabel": "Multiplicador {index}",
+      "boostValue": "Multiplicador",
+      "boostRoles": "Rols amb bonificació",
+      "requirements": "Requisits de participació",
+      "profilePictureRequired": "Requereix una foto de perfil de Discord",
+      "cocAccountRequired": "Requereix un compte enllaçat de Clash of Clans"
+    },
+    "validation": {
+      "prizeRequired": "El premi és obligatori.",
+      "channelRequired": "El canal és obligatori.",
+      "startTimeRequired": "L’hora d’inici és obligatòria, tret que el sorteig comenci ara.",
+      "endTimeRequired": "L’hora de finalització és obligatòria.",
+      "endAfterStart": "L’hora de finalització ha de ser posterior a la d’inici.",
+      "imageTooLarge": "La imatge ha d’ocupar menys de 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Resum en directe",
+      "discordPreview": "Previsualització de Discord",
+      "giveawayTitle": "Previsualització del sorteig",
+      "giveawayDescription": "Així es veurà el missatge del sorteig actiu.",
+      "endTitle": "Previsualització del missatge final",
+      "endDescription": "Aquest missatge s’envia en acabar el sorteig.",
+      "winnerCount": "Guanyadors",
+      "winnerWord": "{count, plural, one {Guanyador} other {Guanyadors}}",
+      "mentionCount": "Rols esmentats",
+      "requirementCount": "Requisits",
+      "boosterCount": "Multiplicadors",
+      "profileRequired": "Foto de perfil obligatòria",
+      "accountRequired": "Compte de CoC enllaçat obligatori",
+      "rolesAllow": "Restringit als rols seleccionats",
+      "rolesDeny": "Rols seleccionats exclosos",
+      "noChannel": "Encara no s’ha seleccionat cap canal",
+      "noPrize": "El teu premi apareixerà aquí",
+      "noEmbedText": "Afegeix text per veure el cos del sorteig.",
+      "noEndText": "Afegeix un missatge final per als guanyadors.",
+      "startsAt": "Comença: {date}",
+      "endsAt": "Acaba: {date}",
+      "endsOn": "Acaba el {date}",
+      "endsFooter": "Acaba",
+      "notScheduled": "Sense programar",
+      "schedule": "Programació",
+      "endMessage": "Missatge per als guanyadors",
+      "endSummary": "{winners, plural, one {Aquí s’anunciarà # guanyador.} other {Aquí s’anunciaran # guanyadors.}}",
+      "totalParticipants": "Total de participants: {count}",
+      "participate": "Participa",
+      "buttonHint": "Botó d’acció principal sota la publicació de Discord."
+    },
+    "toast": {
+      "errorTitle": "Alguna cosa ha sortit malament",
+      "successTitle": "Èxit",
+      "loadError": "No s’han pogut carregar els sorteigs.",
+      "saveError": "No s’ha pogut desar el sorteig.",
+      "deleteError": "No s’ha pogut suprimir el sorteig.",
+      "created": "Sorteig creat correctament.",
+      "updated": "Sorteig actualitzat correctament.",
+      "deleted": "Sorteig suprimit correctament.",
+      "rerolled": "Guanyadors sortejats de nou correctament.",
+      "rerollError": "No s’han pogut tornar a sortejar els guanyadors."
+    },
+    "reroll": {
+      "title": "Torna a sortejar els guanyadors",
+      "description": "Selecciona els guanyadors que se substituiran. Se’n triaran d’altres entre els participants aptes.",
+      "selectWinners": "Selecciona els guanyadors que se substituiran:",
+      "confirm": "Torna a sortejar {count, plural, one {# guanyador} other {# guanyadors}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Resum del tauler",
+    "description": "Consulta les estadístiques del teu servidor i comença a configurar-lo",
+    "stats": {
+      "linkedPlayers": "Jugadors vinculats",
+      "linkedPlayersDesc": "Jugadors vinculats en aquest servidor",
+      "clansConfigured": "Clans configurats",
+      "clansConfiguredDesc": "Clans seguits en aquest servidor",
+      "activeRosters": "Llistes actives",
+      "activeRostersDesc": "Llistes de guerra creades",
+      "totalAccounts": "Comptes enllaçats",
+      "totalAccountsDesc": "Total de comptes de CoC enllaçats",
+      "playersTracked": "Jugadors seguits",
+      "globalPlayers": "Total de jugadors a la base de dades",
+      "clansTracked": "Clans seguits",
+      "globalClans": "Total de clans a la base de dades",
+      "botStatus": "Estat del bot",
+      "online": "En línia",
+      "offline": "Desconnectat",
+      "memoryUsage": "Memòria: {used} MB ({percent} %)",
+      "cpuUsage": "CPU: {percent} %"
+    },
+    "botSection": "Estadístiques del bot",
+    "clans": {
+      "title": "Els teus clans",
+      "description": "{count, plural, one {# clan configurat} other {# clans configurats}}",
+      "manage": "Gestiona els clans",
+      "addFirst": "Afegeix el teu primer clan"
+    },
+    "quickStart": {
+      "title": "Inici ràpid",
+      "description": "Comença a configurar el bot de ClashKing",
+      "step1": {
+        "title": "Configura els paràmetres generals",
+        "description": "Configura els formats de sobrenom, els colors i els canals de registre"
+      },
+      "step2": {
+        "title": "Afegeix els teus clans",
+        "description": "Connecta els teus clans de Clash of Clans i configura els rols"
+      },
+      "step3": {
+        "title": "Configura els rols automàtics",
+        "description": "Configura rols automàtics segons l’Ajuntament, els trofeus, etc."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Estadístiques del bot",
+    "description": "Estadístiques globals i estat del sistema de ClashKing",
+    "about": {
+      "title": "Sobre aquestes estadístiques",
+      "description": "Aquestes són les estadístiques globals de tota la xarxa de ClashKing",
+      "globalStats": "Estadístiques globals",
+      "globalStatsDesc": "Els recomptes inclouen totes les entitats seguides als servidors de Discord que fan servir ClashKing",
+      "systemHealth": "Estat del sistema",
+      "systemHealthDesc": "L’ús de CPU i memòria indica la càrrega actual de la infraestructura de l’API de ClashKing"
+    }
+  },
+  "NotFound": {
+    "title": "404 - Pàgina no trobada",
+    "description": "La pàgina que cerques no existeix.",
+    "goHome": "Ves a l’inici"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Bot de Discord, aplicació mòbil i tauler per a clans",
+      "description": "Gestiona guerres, llistes, comptes, recordatoris i clans amb ClashKing a Discord, al mòbil i al web.",
+      "openGraphTitle": "ClashKing | Gestiona el teu clan"
+    },
+    "navigation": {
+      "ariaLabel": "Navegació de ClashKing",
+      "homeLabel": "Inici de ClashKing",
+      "mobileApp": "Aplicació mòbil",
+      "discordBot": "Bot de Discord",
+      "dashboard": "Tauler"
+    },
+    "language": {
+      "label": "Idioma"
+    },
+    "appearance": {
+      "label": "Aparença",
+      "day": "Dia",
+      "sunset": "Capvespre"
+    },
+    "actions": {
+      "addToDiscord": "Afegeix a Discord",
+      "addClashKing": "Afegeix ClashKing",
+      "openDashboard": "Obre el tauler",
+      "joinTestFlight": "Uneix-te a TestFlight",
+      "getAndroidApp": "Descarrega l’aplicació per a Android"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Gestiona",
+          "second": "el teu",
+          "third": "clan"
+        },
+        "accounts": {
+          "first": "Gestiona",
+          "second": "els teus",
+          "third": "comptes"
+        },
+        "stats": {
+          "first": "Explora",
+          "second": "les",
+          "third": "estadístiques"
+        }
+      },
+      "rotatingLabel": "Gestiona el teu clan i els teus comptes. Explora les estadístiques.",
+      "copy": "Guerres, llistes, comptes i configuració a Discord, al mòbil i al web."
+    },
+    "app": {
+      "title": "Aplicació mòbil",
+      "intro": "El company dels teus comptes de Clash.",
+      "stageLabel": "Pantalles de clan, millores i giny de guerra de l’aplicació mòbil ClashKing",
+      "images": {
+        "clanOverview": "Resum del clan a l’aplicació mòbil ClashKing",
+        "upgradeStats": "Estadístiques de millora del Gran Guardià a l’aplicació mòbil ClashKing",
+        "warWidget": "Giny del resultat de guerra de ClashKing"
+      },
+      "features": {
+        "widgets": {
+          "title": "Ginys",
+          "copy": "Consulta les teves guerres d’un cop d’ull."
+        },
+        "notifications": {
+          "title": "Notificacions",
+          "copy": "Rep avisos quan hi hagi un atac disponible o acabi una millora."
+        },
+        "accounts": {
+          "title": "Comptes enllaçats",
+          "copy": "Mantén junts tots els teus comptes de Clash."
+        }
+      }
+    },
+    "bot": {
+      "title": "Bot de Discord",
+      "intro": "Estadístiques i eines del clan dins de Discord.",
+      "imageLabel": "Ordre de clan de ClashKing a Discord",
+      "imageAlt": "Ordre de ClashKing amb estadístiques del clan ArcLine a Discord",
+      "features": {
+        "rosters": {
+          "title": "Llistes",
+          "copy": "Gestiona comptes per a la CWL o esdeveniments."
+        },
+        "warTools": {
+          "title": "Eines de guerra",
+          "copy": "Consulta atacs, alineacions i recordatoris a Discord."
+        },
+        "accounts": {
+          "title": "Comptes enllaçats",
+          "copy": "Mantén junts tots els teus comptes de Clash."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Tauler",
+      "intro": "Gestiona llistes, recordatoris i el servidor des d’un sol lloc.",
+      "imageLabel": "Cabana del constructor que representa les eines de gestió",
+      "imageAlt": "Cabana del constructor de nivell 8",
+      "features": {
+        "settings": {
+          "title": "Configuració del clan",
+          "copy": "Configura clans, rols i canals."
+        },
+        "rosters": {
+          "title": "Llistes",
+          "copy": "Gestiona comptes per a la CWL o esdeveniments."
+        },
+        "automation": {
+          "title": "Automatització",
+          "copy": "Programa recordatoris i tasques del servidor."
+        }
+      }
+    },
+    "resources": {
+      "title": "Crea amb ClashKing.",
+      "copy": "Guies, codi font i dades estructurades per a eines comunitàries.",
+      "ariaLabel": "Recursos per a desenvolupadors",
+      "documentation": "Documentació",
+      "publicApi": "API pública"
+    },
+    "footer": {
+      "tagline": "Eines de Clash of Clans per a tothom",
+      "docs": "Documentació",
+      "privacy": "Política de privacitat",
+      "terms": "Termes del servei",
+      "legal": "Aquest contingut no està afiliat, recolzat, patrocinat ni aprovat específicament per Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing per a Discord, mòbil i web",
+    "privacy": {
+      "title": "Política de privadesa | ClashKing",
+      "openGraphTitle": "Política de privadesa de ClashKing",
+      "description": "Com recull, utilitza, emmagatzema i protegeix ClashKing les dades dels comptes, els jocs i les aplicacions.",
+      "heading": "Política de privacitat",
+      "eyebrow": "En vigor des del 17 de juliol de 2026"
+    },
+    "terms": {
+      "title": "Termes del servei | ClashKing",
+      "openGraphTitle": "Termes del servei de ClashKing",
+      "description": "Condicions aplicables en fer servir els llocs, les aplicacions, els serveis i les eines comunitàries de ClashKing.",
+      "heading": "Termes del servei",
+      "eyebrow": "Informació legal de ClashKing"
+    }
+  }
+}

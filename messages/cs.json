@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Načítání...",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "edit": "Upravit",
+    "search": "Hledat",
+    "filter": "Filtr",
+    "add": "Přidat",
+    "remove": "Odebrat",
+    "refresh": "Aktualizovat",
+    "close": "Zavřít",
+    "openMenu": "Otevřít nabídku",
+    "submit": "Odeslat",
+    "back": "Zpět",
+    "next": "Další",
+    "previous": "Předchozí",
+    "poweredBy": "Využívá",
+    "noData": "Nejsou k dispozici žádná data",
+    "noChannelFound": "Nebyl nalezen žádný kanál.",
+    "searchChannels": "Hledat kanály...",
+    "searchClans": "Hledat klany...",
+    "noClanFound": "Nebyl nalezen žádný klan.",
+    "searchCategories": "Hledat kategorie...",
+    "noRoleFound": "Nebyla nalezena žádná role.",
+    "searchRoles": "Hledat role...",
+    "addRole": "Přidat roli...",
+    "error": "Došlo k chybě",
+    "success": "Úspěch",
+    "actions": "Akce",
+    "details": "Podrobnosti",
+    "view": "Zobrazit",
+    "unknown": "Neznámé",
+    "confirm": "Potvrdit",
+    "settings": "Nastavení",
+    "status": "Stav",
+    "retry": "Opakovat",
+    "disabled": "Vypnuto",
+    "name": "Jméno",
+    "description": "Popis",
+    "createdAt": "Vytvořeno",
+    "updatedAt": "Aktualizováno",
+    "dashboard": "Nástěnka",
+    "loadError": "Data se nepodařilo načíst.",
+    "tryAgain": "Zkusit znovu",
+    "create": "Vytvořit",
+    "viewClashProfile": "Zobrazit profil Clash",
+    "openInGame": "Otevřít ve hře",
+    "openChannelInDiscord": "Otevřít tento kanál v Discordu",
+    "playerProfile": {
+      "clan": "Klan",
+      "townHallLevel": "Úroveň radnice",
+      "trophies": "Trofeje",
+      "warPreference": "Účast ve válkách",
+      "warPreferenceIn": "Účastní se",
+      "warPreferenceOut": "Neúčastní se",
+      "signupGroup": "Skupina přihlášení",
+      "heroLevels": "Úrovně hrdinů",
+      "hitrate30d": "Úspěšnost za 30 dní"
+    }
+  },
+  "Navigation": {
+    "features": "Funkce",
+    "openSource": "Otevřený zdrojový kód",
+    "help": "Potřebujete pomoc?",
+    "support": "Podpořte nás",
+    "commands": "Příkazy",
+    "premium": "Premium",
+    "documentation": "Dokumentace",
+    "loginWithDiscord": "Přihlásit se přes Discord",
+    "addToDiscord": "Přidat do Discordu",
+    "openDashboard": "Otevřít ovládací panel",
+    "dashboardSettings": "Nastavení ovládacího panelu",
+    "logout": "Odhlásit se",
+    "settings": "Nastavení",
+    "theme": "Motiv",
+    "systemTheme": "Podle systému",
+    "lightTheme": "Světlý motiv",
+    "darkTheme": "Tmavý motiv",
+    "language": "Jazyk",
+    "browserLanguage": "Jazyk prohlížeče"
+  },
+  "HomePage": {
+    "badge": "ClashKing již používá více než {serverCount} serverů",
+    "title": "Nejvýkonnější",
+    "titleHighlight": "Bot pro Clash of Clans",
+    "subtitle": "Automatizujte správu klanu, sledujte statistiky hráčů, spravujte války a udržujte komunitu aktivní.",
+    "cta": {
+      "heading": "Jste připraveni změnit svůj klan?",
+      "description": "Přidejte se k více než {serverCount} serverům na Discordu, které pomocí ClashKing rozvíjejí svou komunitu Clash of Clans. Nastavení zabere jen 2 minuty.",
+      "button": "Přidat ClashKing do Discordu",
+      "trustBadge": "Navždy zdarma • Bez kreditní karty • Více než {serverCount} serverů",
+      "addToDiscord": "Přidat do Discordu",
+      "openDashboard": "Otevřít ovládací panel"
+    },
+    "stats": {
+      "servers": "Servery na Discordu",
+      "users": "Aktivní uživatelé",
+      "clans": "Sledované klany"
+    },
+    "features": {
+      "title": "Vše potřebné ke správě klanu",
+      "subtitle": "Výkonné funkce navržené pro komunity Clash of Clans",
+      "autoRoles": {
+        "title": "Automatická správa rolí",
+        "description": "Automaticky přidělujte role podle stavu hráče, pozice v klanu a úspěchů. Snadno udržujte server přehledný."
+      },
+      "playerStats": {
+        "title": "Statistiky hráče",
+        "description": "Sledujte podrobné statistiky hráčů, grafy postupu a historii útoků. Zjistěte, kdo se zlepšuje a kdo potřebuje pomoc."
+      },
+      "leaderboards": {
+        "title": "Žebříčky",
+        "description": "Vytvářejte soutěžní žebříčky darů, trofejí, válečných hvězd a vlastních ukazatelů. Zvyšte zapojení."
+      },
+      "warTracking": {
+        "title": "Sledování válek",
+        "description": "Sledujte válečné sestavy a útoky v reálném čase a získávejte poválečné analýzy. Neunikne vám žádný detail."
+      },
+      "smartReminders": {
+        "title": "Chytrá připomenutí",
+        "description": "Automatická připomenutí klanových her, válečných útoků, ligy klanových válek a vlastních událostí udrží všechny v obraze."
+      },
+      "customization": {
+        "title": "Úplné přizpůsobení",
+        "description": "Přizpůsobte příkazy, barvy embedů, přezdívky a oprávnění. Nastavte si ClashKing podle sebe."
+      },
+      "familyManagement": {
+        "title": "Správa rodiny",
+        "description": "Spravujte více klanů jako rodinu se společnými statistikami, žebříčky a sjednocenými rolemi."
+      },
+      "analytics": {
+        "title": "Pokročilé analýzy",
+        "description": "Získejte podrobný přehled o výkonu klanu, aktivitě hráčů a trendech růstu a rozhodujte se podle dat."
+      },
+      "performance": {
+        "title": "Bleskově rychlý",
+        "description": "Okamžité odpovědi na příkazy a aktualizace v reálném čase bez prodlev a zpoždění."
+      },
+      "security": {
+        "title": "Bezpečný a spolehlivý",
+        "description": "Dostupnost 99,9 %, šifrovaná data a pravidelné zálohy. Data vašeho klanu jsou u nás v bezpečí."
+      }
+    },
+    "footer": {
+      "tagline": "Nejvýkonnější bot Clash of Clans pro komunity na Discordu.",
+      "about": {
+        "title": "O",
+        "features": "Funkce",
+        "help": "Potřebujete pomoc?",
+        "openSource": "Otevřený zdrojový kód",
+        "support": "Podpořte nás"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Nástěnka",
+        "inviteBot": "Pozvat bota"
+      },
+      "resources": {
+        "title": "Zdroje",
+        "documentation": "Dokumentace",
+        "quickStart": "Průvodce rychlým startem",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Komunita",
+        "discord": "Server Discord",
+        "twitter": "X (Twitter)",
+        "reportBug": "Nahlásit chybu",
+        "requestFeature": "Navrhnout funkci"
+      },
+      "legal": {
+        "copyright": "ClashKing. Všechna práva vyhrazena.",
+        "privacy": "Zásady ochrany osobních údajů",
+        "terms": "Podmínky služby"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Není na serveru",
+    "unknownUser": "Neznámý uživatel",
+    "notLinked": "Nepropojeno",
+    "status": {
+      "onServer": "Na serveru",
+      "notOnServer": "Není na serveru"
+    },
+    "discordId": "ID Discordu",
+    "viewProfile": "Zobrazit profil na Discordu",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Přehled",
+      "description": "Domovská stránka panelu"
+    },
+    "general": {
+      "name": "Obecná nastavení",
+      "description": "Konfigurace serveru"
+    },
+    "dashboardAccess": {
+      "name": "Přístup k panelu",
+      "description": "Delegovat části panelu"
+    },
+    "familySettings": {
+      "name": "Nastavení rodiny",
+      "description": "Rodinné role a přezdívky"
+    },
+    "clans": {
+      "name": "Klany",
+      "description": "Spravovat klany"
+    },
+    "logs": {
+      "name": "Protokoly",
+      "description": "Konfigurace webhooků"
+    },
+    "roles": {
+      "name": "Role",
+      "description": "Automatizace rolí"
+    },
+    "reminders": {
+      "name": "Připomenutí",
+      "description": "Všechny typy připomenutí"
+    },
+    "rosters": {
+      "name": "Soupisky",
+      "description": "Správa soupisek"
+    },
+    "bases": {
+      "name": "Základny",
+      "description": "Knihovna rozložení a aktivita"
+    },
+    "autoboards": {
+      "name": "Automatické přehledy",
+      "description": "Automatizované žebříčky"
+    },
+    "giveaways": {
+      "name": "Soutěže",
+      "description": "Správa soutěžních kampaní"
+    },
+    "panels": {
+      "name": "Panely",
+      "description": "Interaktivní panely členů s tlačítky akcí"
+    },
+    "tickets": {
+      "name": "Tikety",
+      "description": "Náborové a podpůrné tikety"
+    },
+    "embeds": {
+      "name": "Embedy",
+      "description": "Šablony embedů pro Discord"
+    },
+    "links": {
+      "name": "Propojení",
+      "description": "Propojení hráčů s Discordem"
+    },
+    "bans": {
+      "name": "Bany a varování",
+      "description": "Nástroje moderování"
+    },
+    "wars": {
+      "name": "Války",
+      "description": "Válečné statistiky"
+    },
+    "leaderboards": {
+      "name": "Žebříčky",
+      "description": "Globální pořadí"
+    },
+    "sections": {
+      "configuration": "Konfigurace",
+      "clanManagement": "Správa klanu",
+      "playerManagement": "Správa hráčů",
+      "automation": "Automatizace",
+      "statistics": "Statistiky"
+    },
+    "switchServer": "Přepnout server",
+    "goHome": "Domovská stránka"
+  },
+  "BasesPage": {
+    "eyebrow": "Správa klanu",
+    "title": "Základny",
+    "description": "Prohlížejte sdílená rozložení, historii aktivity a zdrojové zprávy na Discordu.",
+    "refresh": "Aktualizovat",
+    "create": "Přidat základnu",
+    "retry": "Zkusit znovu",
+    "dismiss": "Zavřít",
+    "cancel": "Zrušit",
+    "previous": "Předchozí",
+    "next": "Další",
+    "pagination": "Strana {page} z {total}",
+    "imageAlt": "Obrázek rozložení základny {index}",
+    "noDescription": "Nebyl zadán žádný popis.",
+    "openLayout": "Otevřít rozložení",
+    "openMessage": "Zpráva na Discordu",
+    "summary": {
+      "total": "Celkem základen",
+      "page": "Aktuální stránka",
+      "visible": "Viditelné"
+    },
+    "counts": {
+      "downloads": "Jedinečná stažení",
+      "upvotes": "Hlasy pro",
+      "downvotes": "Hlasy proti"
+    },
+    "history": {
+      "title": "Historie stahování ({count})",
+      "empty": "Nebyla zaznamenána žádná ID stahujících.",
+      "resolve": "Vyhledat profil"
+    },
+    "delete": {
+      "action": "Smazat",
+      "confirmTitle": "Odstranit tuto základnu?",
+      "confirmDescription": "Tím se trvale odstraní záznam z databáze po předchozím pokusu odstranit zdrojovou zprávu na Discordu. Základnu nelze obnovit.",
+      "confirmAction": "Odstranit základnu",
+      "deleting": "Odstraňování…",
+      "baseId": "ID základny",
+      "discordSource": "Zdroj na Discordu",
+      "successTitle": "Základna odstraněna",
+      "successDeleted": "Záznam databáze a zpráva na Discordu byly odstraněny.",
+      "successAlreadyMissing": "Záznam databáze byl odstraněn; zpráva na Discordu již neexistovala.",
+      "cleanupFailedTitle": "Základna zachována; vyčištění Discordu selhalo",
+      "cleanupCompleteTitle": "Vyčištění Discordu dokončeno; základna zachována",
+      "failureTitle": "Základna nebyla odstraněna",
+      "failureFallback": "Požadavek na odstranění selhal.",
+      "retryable": "Opakování je bezpečné",
+      "notRetryable": "Nelze opakovat",
+      "cleanup": {
+        "deleted": "Zpráva na Discordu odstraněna",
+        "alreadyMissing": "Zpráva na Discordu již neexistuje",
+        "failed": "Vyčištění Discordu selhalo"
+      }
+    },
+    "empty": {
+      "title": "Dosud nebyly sdíleny žádné základny",
+      "description": "Přidejte první rozložení výběrem kanálu na Discordu a odkazu na rozložení Clash of Clans."
+    },
+    "form": {
+      "title": "Přidat základnu",
+      "description": "Základny nelze po vytvoření upravovat. Vyberte, kam má ClashKing odeslat zprávu na Discordu, a potvrďte odkaz na rozložení.",
+      "channel": "Kanál na Discordu",
+      "channelPlaceholder": "Vybrat kanál",
+      "channelSearch": "Hledat kanály…",
+      "channelsLoading": "Načítání kanálů…",
+      "baseLink": "Odkaz na rozložení",
+      "descriptionLabel": "Popis",
+      "images": "Obrázky",
+      "chooseImages": "Vybrat obrázky rozložení",
+      "imageLimit": "Až čtyři obrázky; nahrávání se dokončí před vytvořením základny.",
+      "submit": "Vytvořit základnu",
+      "creating": "Nahrávání a vytváření…",
+      "createRejectedTitle": "Základna nebyla vytvořena",
+      "createCleanupCompleteTitle": "Vyčištění Discordu dokončeno; základna nebyla vytvořena",
+      "createCleanupFailedTitle": "Zpráva na Discordu může zůstat; základna nebyla vytvořena",
+      "databaseNotInserted": "Záznam nebyl vložen do databáze",
+      "discordMessageCreated": "Zpráva na Discordu byla vytvořena",
+      "discordMessageId": "ID zprávy na Discordu",
+      "retryable": "Opakování je bezpečné",
+      "notRetryable": "Neopakovat automaticky",
+      "cleanup": {
+        "notNeeded": "Vyčištění Discordu není potřeba",
+        "deleted": "Zpráva na Discordu odstraněna",
+        "alreadyMissing": "Zpráva na Discordu již neexistuje",
+        "failed": "Vyčištění Discordu selhalo"
+      }
+    },
+    "errors": {
+      "title": "Základny nejsou dostupné",
+      "load": "Základny se nepodařilo načíst.",
+      "create": "Základnu se nepodařilo vytvořit.",
+      "upload": "Obrázek se nepodařilo nahrát.",
+      "downloader": "Profil stahujícího se nepodařilo vyhledat.",
+      "channels": "Kanály na Discordu se nepodařilo načíst.",
+      "channelRequired": "Vyberte kanál na Discordu.",
+      "linkRequired": "Odkaz na rozložení je povinný.",
+      "descriptionTooLong": "Popis může mít nejvýše 1 000 znaků.",
+      "tooManyImages": "Vyberte nejvýše čtyři obrázky."
+    }
+  },
+  "BansPage": {
+    "title": "Moderování",
+    "description": "Správa banů a varování hráčů",
+    "viewClashProfile": "Zobrazit profil Clash",
+    "tabs": {
+      "bans": "Bany",
+      "strikes": "Varování"
+    },
+    "bans": {
+      "title": "Zabanovaní hráči",
+      "noBans": "Nebyli nalezeni žádní zabanovaní hráči",
+      "addBan": "Přidat ban",
+      "removeBan": "Odebrat ban",
+      "confirmRemove": "Opravdu chcete tento ban odebrat?",
+      "playerTag": "Tag hráče",
+      "playerName": "Jméno hráče",
+      "reason": "Důvod",
+      "bannedAt": "Zabanován",
+      "search": "Hledat podle jména nebo tagu...",
+      "howItWorks": {
+        "title": "Jak fungují bany",
+        "description": "Pokud se zabanovaný hráč připojí k některému z vašich klanů, do kanálu nastaveného na <clansTab>kartě klanů</clansTab> bude odesláno varování. Bot nemůže připojení zabránit, pouze vás upozorní."
+      },
+      "stats": {
+        "total": "Celkem banů",
+        "recent": "Nedávné bany (7 dní)",
+        "commonReason": "Nejčastější důvod",
+        "activeOnServer": "Aktivní bany na serveru",
+        "last7Days": "Za posledních 7 dní",
+        "commonReasonValue": "Obtěžování a toxicita",
+        "noBans": "Zatím žádné bany",
+        "percentOfAll": "{percent} % všech banů",
+        "percentOfAllLabel": "všech banů"
+      },
+      "list": {
+        "title": "Zabanovaní hráči",
+        "count": "{count, plural, one {Zabanován # hráč} few {Zabanováni # hráči} other {Zabanováno # hráčů}}",
+        "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
+        "noBansFound": "Nebyly nalezeny žádné bany",
+        "noBans": "Žádní zabanovaní hráči",
+        "adjustSearch": "Zkuste upravit vyhledávání",
+        "getStarted": "Přidejte ban a začněte moderovat hráče"
+      },
+      "table": {
+        "player": "Hráč",
+        "reason": "Důvod",
+        "bannedBy": "Zabanoval",
+        "date": "Datum",
+        "daysAgo": "před {days} d",
+        "noReason": "Nebyl uveden důvod"
+      },
+      "addDialog": {
+        "title": "Zabanovat hráče",
+        "description": "Přidejte hráče na seznam banů. Pokud se připojí k některému klanu na tomto serveru, obdržíte varování.",
+        "playerTagLabel": "Tag hráče",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Jméno hráče (volitelné)",
+        "playerNamePlaceholder": "Zadejte jméno hráče",
+        "reasonLabel": "Důvod banu",
+        "reasonPlaceholder": "Vysvětlete, proč je tento hráč zabanován...",
+        "submit": "Zabanovat hráče"
+      },
+      "bestPractices": {
+        "title": "Doporučené postupy",
+        "document": {
+          "title": "Důkladně dokumentujte:",
+          "desc": "U každého banu uveďte podrobný důvod, aby ostatní moderátoři chápali souvislosti."
+        },
+        "review": {
+          "title": "Pravidelně kontrolujte:",
+          "desc": "Pravidelně kontrolujte seznam banů, aby všechny zůstávaly potřebné a oprávněné."
+        },
+        "consistent": {
+          "title": "Buďte důslední:",
+          "desc": "Udělujte bany spravedlivě a důsledně všem hráčům, abyste udrželi zdravou komunitu."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Varování hráčů",
+      "noStrikes": "Nebyla nalezena žádná varování",
+      "addStrike": "Přidat varování",
+      "removeStrike": "Odebrat varování",
+      "confirmRemove": "Opravdu chcete toto varování odebrat?",
+      "playerTag": "Tag hráče",
+      "reason": "Důvod",
+      "weight": "Váha",
+      "rolloverDays": "Dny do vypršení",
+      "createdAt": "Vytvořeno",
+      "search": "Hledat podle tagu hráče...",
+      "howItWorks": {
+        "title": "Jak fungují varování",
+        "description": "Varování jsou udělována hráčům za porušení pravidel. Každé má váhu určující závažnost a může po stanoveném počtu dní vypršet. Pomáhají sledovat chování hráčů před udělením banu."
+      },
+      "stats": {
+        "total": "Celkem varování",
+        "recent": "Nedávná varování (7 dní)",
+        "totalWeight": "Celková váha varování",
+        "activeOnServer": "Aktivní varování na serveru",
+        "last7Days": "Za posledních 7 dní",
+        "cumulativeWeight": "Souhrnná váha varování",
+        "commonReason": "Nejčastější důvod",
+        "commonReasonValue": "Spamování"
+      },
+      "list": {
+        "title": "Varování hráčů",
+        "count": "{count, plural, one {Uděleno # varování} few {Udělena # varování} other {Uděleno # varování}}",
+        "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
+        "noStrikesFound": "Nebyla nalezena žádná varování",
+        "noStrikes": "Nebyla udělena žádná varování",
+        "adjustSearch": "Zkuste upravit vyhledávání",
+        "getStarted": "Přidejte varování a začněte sledovat porušení pravidel",
+        "viewAll": "Všechna varování",
+        "viewGrouped": "Podle hráče"
+      },
+      "table": {
+        "player": "Hráč",
+        "reason": "Důvod",
+        "weight": "Váha",
+        "addedBy": "Přidal",
+        "date": "Datum",
+        "expires": "Vyprší",
+        "never": "Nikdy",
+        "noReason": "Nebyl uveden důvod",
+        "daysAgo": "před {days} d",
+        "totalStrikes": "Celkem varování",
+        "totalWeight": "Celková váha",
+        "lastStrike": "Poslední varování"
+      },
+      "addDialog": {
+        "title": "Přidat varování",
+        "description": "Udělujte hráčům varování s různou váhou a datem vypršení.",
+        "playerTagLabel": "Tag hráče",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Důvod",
+        "reasonPlaceholder": "Vysvětlete, proč je toto varování uděleno...",
+        "weightLabel": "Váha varování",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Vyprší za (dny)",
+        "rolloverPlaceholder": "Volitelné",
+        "submit": "Přidat varování"
+      },
+      "guidelines": {
+        "title": "Pravidla varování",
+        "weights": {
+          "title": "Používejte váhy rozumně:",
+          "desc": "Závažným porušením přiřaďte vyšší váhu (2–3), drobným problémům nižší (1)."
+        },
+        "expiration": {
+          "title": "Nastavujte data vypršení:",
+          "desc": "Nastavte varováním datum vypršení, aby hráči dostali možnost své chování zlepšit."
+        },
+        "patterns": {
+          "title": "Sledujte vzorce:",
+          "desc": "Pomocí varování odhalte opakované provinilce před udělením trvalého banu."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Ban byl úspěšně přidán",
+      "banRemoved": "Ban byl úspěšně odebrán",
+      "strikeAdded": "Varování bylo úspěšně přidáno",
+      "strikeRemoved": "Varování bylo úspěšně odebráno",
+      "errorLoadingBans": "Zabanované hráče se nepodařilo načíst",
+      "errorLoadingStrikes": "Varování se nepodařilo načíst",
+      "errorAddingBan": "Ban se nepodařilo přidat",
+      "errorAddingStrike": "Varování se nepodařilo přidat",
+      "errorRemovingBan": "Ban se nepodařilo odebrat",
+      "errorRemovingStrike": "Varování se nepodařilo odebrat"
+    }
+  },
+  "RostersPage": {
+    "title": "Soupisky a sestavy",
+    "description": "Správa válečných soupisek, sestav a přiřazení členů",
+    "stats": {
+      "totalRosters": "Celkem soupisek",
+      "totalMembers": "Celkem členů",
+      "clanRosters": "Klanové soupisky",
+      "familyRosters": "Rodinné soupisky",
+      "members": "Členové",
+      "avgTh": "Prům. TH",
+      "avgHitrate": "Průměrná úspěšnost",
+      "distribution": "Rozložení",
+      "clan": "Klan",
+      "family": "Rodina",
+      "external": "Externí",
+      "thDistribution": "Rozložení TH",
+      "capacity": "kapacita"
+    },
+    "filters": {
+      "search": "Hledat soupisky...",
+      "type": "Typ",
+      "all": "Vše",
+      "clan": "Klan",
+      "family": "Rodina",
+      "clear": "Vymazat"
+    },
+    "comparisonMode": {
+      "cancel": "Zrušit",
+      "compare": "Porovnat",
+      "compareRosters": "Porovnat soupisky",
+      "selectRosters": "Vybrat soupisky",
+      "selectRostersDesc": "Vyberte alespoň 2 soupisky k porovnání",
+      "maxReached": "Dosaženo maxima",
+      "maxReachedDesc": "Můžete porovnat až 4 soupisky současně"
+    },
+    "createDialog": {
+      "title": "Vytvořit novou soupisku",
+      "description": "Nastavte novou soupisku pro svůj klan",
+      "aliasLabel": "Název soupisky",
+      "aliasPlaceholder": "např. soupiska CWL",
+      "typeLabel": "Typ soupisky",
+      "typeClan": "Klan",
+      "typeFamily": "Rodina",
+      "signupScopeLabel": "Rozsah přihlášení",
+      "scopeClanOnly": "Pouze klan",
+      "scopeFamilyWide": "Celá rodina",
+      "clanLabel": "Klan",
+      "clanPlaceholder": "Vybrat klan",
+      "descriptionLabel": "Popis (volitelné)",
+      "descriptionPlaceholder": "Popis soupisky...",
+      "cancel": "Zrušit",
+      "creating": "Vytváření...",
+      "create": "Vytvořit soupisku"
+    },
+    "editDialog": {
+      "title": "Upravit soupisku",
+      "description": "Změnit nastavení a konfiguraci soupisky",
+      "aliasLabel": "Název soupisky",
+      "descriptionLabel": "Popis",
+      "descriptionPlaceholder": "Popis soupisky...",
+      "minThLabel": "Minimální radnice",
+      "minThPlaceholder": "např. 13",
+      "maxThLabel": "Maximální radnice",
+      "maxThPlaceholder": "např. 16",
+      "rosterSizeLabel": "Velikost soupisky",
+      "rosterSizePlaceholder": "např. 50",
+      "columnsLabel": "Zobrazené sloupce",
+      "columnsPlaceholder": "Vyberte zobrazené sloupce",
+      "sortLabel": "Pořadí řazení",
+      "sortPlaceholder": "Vyberte pole řazení",
+      "cancel": "Zrušit",
+      "saving": "Ukládání...",
+      "save": "Uložit změny"
+    },
+    "addMembersDialog": {
+      "title": "Přidat členy na soupisku",
+      "description": "Vyberte členy klanu nebo zadejte tagy hráčů",
+      "bulkTagsLabel": "Hromadné přidání podle tagů",
+      "bulkTagsPlaceholder": "Zadejte tagy hráčů (jeden na řádek nebo oddělené čárkami)",
+      "searchLabel": "Hledat členy",
+      "searchPlaceholder": "Hledat podle jména nebo tagu...",
+      "selectFromClan": "Vybrat z členů klanu",
+      "selectedCount": "Vybráno",
+      "noMembers": "Nejsou k dispozici žádní členové",
+      "noMembersSelected": "Nebyli vybráni žádní členové",
+      "noMembersSelectedDesc": "Vyberte členy nebo zadejte tagy hráčů.",
+      "cancel": "Zrušit",
+      "adding": "Přidávání...",
+      "add": "Přidat členy"
+    },
+    "detailsDialog": {
+      "title": "Podrobnosti soupisky",
+      "edit": "Upravit",
+      "refresh": "Aktualizovat",
+      "refreshing": "Obnovování...",
+      "delete": "Smazat",
+      "deleting": "Odstraňování...",
+      "addMembers": "Přidat členy",
+      "close": "Zavřít",
+      "noMembers": "Na této soupisce nejsou žádní členové",
+      "noMembersDesc": "Přidejte členy a začněte",
+      "memberCount": "Členové",
+      "thRestriction": "Úroveň TH",
+      "avgTh": "Prům. TH",
+      "avgHitrate": "Průměrná úspěšnost",
+      "clan": "Klan",
+      "family": "Rodina",
+      "external": "Externí",
+      "substitute": "NÁHR.",
+      "removeMember": "Odebrat"
+    },
+    "rosterCard": {
+      "members": "Členové",
+      "thLevel": "Úroveň TH",
+      "avgTh": "Prům. TH",
+      "avgHitrate": "Průměrná úspěšnost",
+      "clan": "Klan",
+      "family": "Rodina",
+      "external": "Externí",
+      "noRestriction": "Bez omezení",
+      "view": "Zobrazit",
+      "edit": "Upravit",
+      "delete": "Smazat",
+      "noGroup": "Bez skupiny",
+      "moveToGroup": "Přesunout do skupiny",
+      "clone": "Klonovat",
+      "allRosters": "Všechny soupisky",
+      "manageRosters": "Spravujte válečné soupisky a sestavy"
+    },
+    "memberColumns": {
+      "name": "Jméno",
+      "townhall": "Radnice",
+      "tag": "Tag",
+      "hitrate": "Úspěšnost",
+      "current_clan": "Aktuální klan",
+      "current_clan_tag": "Tag klanu",
+      "discord": "Discord",
+      "hero_lvs": "Hrdinové",
+      "war_pref": "Účast ve válce",
+      "trophies": "Trofeje",
+      "signup_group": "Skupina přihlášení"
+    },
+    "columns": {
+      "configure": "Sloupce",
+      "title": "Nastavit sloupce",
+      "description": "Vyberte zobrazené sloupce a jejich pořadí",
+      "selected": "Vybrané sloupce",
+      "available": "Dostupné sloupce",
+      "save": "Uložit sloupce",
+      "reset": "Obnovit sloupce"
+    },
+    "sortFields": {
+      "townhall": "Úroveň radnice",
+      "name": "Jméno",
+      "tag": "Tag",
+      "heroLvs": "Hrdinové",
+      "trophies": "Trofeje",
+      "hitrate": "Úspěšnost za 30 dní",
+      "currentClanTag": "Tag klanu",
+      "addedAt": "Přidáno"
+    },
+    "thRestrictions": {
+      "only": "Pouze TH{th}",
+      "range": "TH{min}–{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1–{th}",
+      "noRestriction": "Bez omezení"
+    },
+    "emptyState": {
+      "noRosters": "Zatím nebyly vytvořeny žádné soupisky",
+      "noRostersDesc": "Vytvořte první soupisku a začněte",
+      "noMatch": "Filtrům neodpovídá žádná soupiska",
+      "noMatchDesc": "Zkuste upravit vyhledávání nebo filtry"
+    },
+    "toast": {
+      "errorTitle": "Chyba",
+      "successTitle": "Úspěch",
+      "errorLoadingRosters": "Soupisky se nepodařilo načíst. Zkuste to znovu.",
+      "errorLoadingMembers": "Členy klanu se nepodařilo načíst.",
+      "rosterCreated": "Soupiska byla úspěšně vytvořena!",
+      "errorCreatingRoster": "Soupisku se nepodařilo vytvořit. Zkuste to znovu.",
+      "rosterUpdated": "Soupiska byla úspěšně aktualizována!",
+      "errorUpdatingRoster": "Soupisku se nepodařilo aktualizovat. Zkuste to znovu.",
+      "rosterDeleted": "Soupiska byla úspěšně odstraněna!",
+      "errorDeletingRoster": "Soupisku se nepodařilo odstranit. Zkuste to znovu.",
+      "membersAdded": "Počet členů přidaných na soupisku: {count}!",
+      "errorAddingMembers": "Členy se nepodařilo přidat. Zkuste to znovu.",
+      "memberRemoved": "Člen byl ze soupisky odebrán!",
+      "errorRemovingMember": "Člena se nepodařilo odebrat. Zkuste to znovu.",
+      "substituteMarked": "Člen byl označen jako náhradník!",
+      "substituteUnmarked": "Označení člena jako náhradníka bylo zrušeno!",
+      "errorUpdatingMember": "Člena se nepodařilo aktualizovat. Zkuste to znovu.",
+      "rosterRefreshed": "Data soupisky byla úspěšně obnovena!",
+      "errorRefreshingRoster": "Data soupisky se nepodařilo obnovit. Zkuste to znovu.",
+      "memberTransferred": "Člen byl úspěšně přesunut mezi soupiskami!",
+      "errorTransferringMember": "Člena se nepodařilo přesunout. Zkuste to znovu.",
+      "rosterCloned": "Soupiska byla úspěšně naklonována!",
+      "errorCloningRoster": "Soupisku se nepodařilo naklonovat. Zkuste to znovu.",
+      "missingMembersAdded": "Počet chybějících členů přidaných na soupisku: {count}!",
+      "errorLoadingMissingMembers": "Chybějící členy se nepodařilo načíst."
+    },
+    "cloneDialog": {
+      "title": "Klonovat soupisku",
+      "description": "Vytvořit kopii této soupisky",
+      "aliasLabel": "Název nové soupisky",
+      "aliasPlaceholder": "Zadejte název klonované soupisky",
+      "copyMembers": "Zkopírovat členy na novou soupisku",
+      "memberCount": "Počet členů: {count}",
+      "originalRoster": "Původní soupiska:",
+      "cancel": "Zrušit",
+      "cloning": "Klonování...",
+      "clone": "Klonovat soupisku",
+      "copyMembersHint": "Členové budou zkopírováni z původní soupisky"
+    },
+    "missingMembers": {
+      "title": "Chybějící členové",
+      "description": "Členové klanu nezaregistrovaní na této soupisce",
+      "coverage": "Pokrytí soupisky",
+      "registered": "zaregistrováno",
+      "missing": "chybí",
+      "total": "celkem",
+      "selectAll": "Vybrat vše",
+      "selected": "vybráno",
+      "addSelected": "Přidat vybrané: {count}",
+      "button": "Chybějící členové",
+      "addAll": "Přidat všechny",
+      "adding": "Přidávání...",
+      "close": "Zavřít",
+      "allCaughtUp": "Vše je hotovo!",
+      "allCaughtUpDesc": "Všichni členové klanu jsou na této soupisce zaregistrováni",
+      "clanOnly": "Analýza chybějících členů je dostupná pouze pro klanové soupisky",
+      "error": "Chybějící členy se nepodařilo načíst",
+      "thisRoster": "Tato soupiska",
+      "wholeGroup": "Celá skupina"
+    },
+    "eventTime": {
+      "label": "Čas zahájení události",
+      "timezone": "Vaše časové pásmo",
+      "utc": "UTC",
+      "clear": "Vymazat"
+    },
+    "bulkValidation": {
+      "valid": "platné",
+      "invalid": "neplatné",
+      "invalidTags": "Neplatné"
+    },
+    "memberAutocomplete": {
+      "label": "Nebo hledat členy serveru",
+      "placeholder": "Kliknutím vyhledejte členy...",
+      "searchPlaceholder": "Hledat podle jména, tagu nebo klanu...",
+      "loading": "Načítání členů...",
+      "noResults": "Nebyli nalezeni žádní členové",
+      "groupHeading": "Členové serveru",
+      "selectedLabel": "Vybraní členové",
+      "membersSelected": "vybraných členů",
+      "selected": "Vybráno",
+      "clanMembersLabel": "Nebo vybrat z členů klanu"
+    },
+    "retry": "Opakovat",
+    "back": "Zpět",
+    "refresh": "Aktualizovat",
+    "createRoster": "Vytvořit soupisku",
+    "searchPlaceholder": "Hledat soupisky...",
+    "noRosters": "Zatím žádné soupisky",
+    "noRostersHint": "Vytvořte první soupisku a začněte",
+    "noSearchResults": "Nebyly nalezeny žádné soupisky",
+    "noSearchResultsHint": "Zkuste jiný hledaný výraz",
+    "createFirstRoster": "Vytvořit první soupisku",
+    "deleteConfirm": "Opravdu chcete smazat „{name}“?",
+    "deleteSuccess": "Soupiska odstraněna",
+    "deleteSuccessDesc": "Soupiska „{name}“ byla odstraněna",
+    "deleteError": "Soupisku se nepodařilo odstranit",
+    "createSuccess": "Soupiska vytvořena",
+    "createSuccessDesc": "Soupiska „{name}“ byla vytvořena",
+    "createError": "Soupisku se nepodařilo vytvořit",
+    "createErrorAlias": "Zadejte název soupisky",
+    "createErrorClan": "Vyberte klan",
+    "refreshSuccess": "Data soupisky byla obnovena",
+    "refreshError": "Soupisku se nepodařilo obnovit",
+    "saveSuccess": "Nastavení uloženo",
+    "saveError": "Nastavení se nepodařilo uložit",
+    "columnsUpdated": "Sloupce byly aktualizovány",
+    "columnsError": "Sloupce se nepodařilo aktualizovat",
+    "addMembersSuccess": "Členové přidáni",
+    "addMembersSuccessDesc": "Počet členů přidaných na soupisku: {count}",
+    "addMembersError": "Členy se nepodařilo přidat",
+    "removeMemberSuccess": "Člen odebrán",
+    "removeMemberError": "Člena se nepodařilo odebrat",
+    "clearMembers": "Odebrat členy",
+    "clearMembersConfirm": "Odebrat všechny členy z „{name}“? Tuto akci nelze vrátit zpět.",
+    "clearMembersSuccess": "Všichni členové byli odebráni",
+    "clearMembersError": "Členy se nepodařilo odebrat",
+    "automationCreated": "Automatizace vytvořena",
+    "automationUpdated": "Automatizace aktualizována",
+    "automationDeleted": "Automatizace odstraněna",
+    "automationError": "Chyba automatizace",
+    "groupCreated": "Skupina vytvořena",
+    "groupUpdated": "Skupina aktualizována",
+    "groupDeleted": "Skupina odstraněna",
+    "groupError": "Skupinu se nepodařilo uložit",
+    "categoryCreated": "Kategorie vytvořena",
+    "categoryUpdated": "Kategorie aktualizována",
+    "categoryDeleted": "Kategorie odstraněna",
+    "categoryError": "Kategorii se nepodařilo uložit",
+    "common": {
+      "cancel": "Zrušit",
+      "save": "Uložit",
+      "close": "Zavřít"
+    },
+    "tabs": {
+      "members": "Členové",
+      "automations": "Automatizace",
+      "groups": "Skupiny",
+      "categories": "Kategorie",
+      "settings": "Nastavení"
+    },
+    "members": {
+      "count": "členové",
+      "noMembers": "Na této soupisce nejsou žádní členové",
+      "noMembersHint": "Přidejte členy a začněte",
+      "actions": "Akce",
+      "viewList": "Seznam",
+      "viewGrouped": "Zobrazit podle kategorie přihlášení",
+      "unassigned": "Nepřiřazeno",
+      "dragHere": "Přetáhněte členy sem",
+      "clickToGroup": "Kliknutím zobrazit podle kategorie",
+      "apiErrorTooltip": "Data se nepodařilo načíst z API",
+      "staleDataTooltip": "Data mohou být zastaralá, naposledy aktualizováno:",
+      "refresh": "Obnovit data členů",
+      "alsoIn": "Také v",
+      "addCategory": "Přidat skupinu",
+      "removeCategory": "Odebrat skupinu"
+    },
+    "addMembers": {
+      "title": "Přidat členy na soupisku",
+      "description": "Vyberte členy ze svých klanů nebo zadejte tagy hráčů",
+      "bulkTagsLabel": "Tagy hráčů (jeden na řádek nebo oddělené čárkami)",
+      "adding": "Přidávání...",
+      "submit": "Přidat členy"
+    },
+    "compare": {
+      "enterMode": "Porovnat",
+      "modeTitle": "Režim porovnání",
+      "modeHint": "Kliknutím vyberte soupisky (2 až 4 soupisky)",
+      "exitMode": "Zrušit",
+      "selected": "vybraných soupisek",
+      "button": "Porovnat",
+      "title": "Porovnat soupisky",
+      "dragToMove": "Přetahováním přesouvejte členy mezi soupiskami",
+      "loadError": "Soupisky se nepodařilo načíst",
+      "memberMoved": "Člen přesunut",
+      "memberMovedDesc": "Hráč {name} byl přesunut z {from} do {to}",
+      "moveError": "Člena se nepodařilo přesunout",
+      "selectAtLeast2": "Vyberte alespoň 2 soupisky k porovnání",
+      "moving": "Přesouvání člena...",
+      "compareGroup": "Porovnat skupinu",
+      "dragToMoveCategory": "Přetahujte členy mezi soupiskami a kategoriemi",
+      "categoryChanged": "Kategorie změněna",
+      "categoryChangedDesc": "Hráč {name} byl přesunut do {category}",
+      "uncategorized": "Bez kategorie"
+    },
+    "ungrouped": "Bez skupiny",
+    "automations": {
+      "description": "Naplánovat automatické akce pro tuto soupisku",
+      "create": "Vytvořit automatizaci",
+      "empty": "Žádné automatizace",
+      "emptyHint": "Vytvořte automatizaci pro plánování akcí",
+      "active": "Aktivní",
+      "inactive": "Neaktivní",
+      "executed": "Hotovo",
+      "missed": "Zmeškané",
+      "lastRun": "Poslední spuštění",
+      "enable": "Zapnout",
+      "disable": "Vypnout",
+      "createTitle": "Vytvořit automatizaci",
+      "editTitle": "Upravit automatizaci",
+      "createDesc": "Naplánovat automatickou akci",
+      "actionType": "Typ akce",
+      "offsetFromEvent": "Načasování vzhledem k události",
+      "offsetBefore": "Před událostí",
+      "offsetAfter": "Po události",
+      "offsetUnit_minutes": "minuty",
+      "offsetUnit_hours": "hodiny",
+      "offsetUnit_days": "dny",
+      "offsetPreview": "Provede se: {date}",
+      "offsetNoEventDate": "Nastavte čas zahájení události a zobrazte datum provedení",
+      "offsetAtStart": "Při začátku události",
+      "pingType": "Typ připomenutí",
+      "pingType_signup_reminder": "Připomenutí přihlášení",
+      "pingType_missing": "Chybí v klanu",
+      "pingType_sub_needed": "Je potřeba náhradník",
+      "channel": "Kanál na Discordu",
+      "selectChannel": "Vybrat kanál",
+      "channelHint": "Kanál, kde bude akce zveřejněna nebo provedena",
+      "activeLabel": "Aktivní",
+      "target": "Cíl",
+      "targetThisRoster": "Tato soupiska",
+      "targetGroups": "Skupiny",
+      "targetHint": "Použít automatizaci pouze na tuto soupisku nebo na všechny soupisky ve skupině",
+      "group": "Skupina",
+      "groupAutomationHint": "Spravovat na kartě Skupiny",
+      "targetRoster": "Soupiska",
+      "targetGroup": "Skupina",
+      "willExecute": "Provede se v naplánovaný čas",
+      "paused": "Pozastaveno – neprovede se",
+      "actions": {
+        "ping": "Odeslat připomenutí",
+        "post": "Zveřejnit soupisku",
+        "openSignup": "Otevřít přihlášení",
+        "closeSignup": "Zavřít přihlášení",
+        "delete": "Odstranit soupisku",
+        "clear": "Odebrat členy",
+        "archive": "Archivovat soupisku"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Odešle připomenutí členům, kteří se nepřihlásili nebo jsou v nesprávném klanu",
+        "roster_post": "Zveřejní konečnou soupisku ve vybraném kanálu",
+        "roster_signup": "Otevře přihlášení hráčů",
+        "roster_signup_close": "Zavře přihlášení a zabrání novým registracím",
+        "roster_delete": "Trvale odstraní soupisku a všechna její data",
+        "roster_clear": "Odebere všechny členy bez odstranění soupisky",
+        "roster_archive": "Archivuje soupisku a nastaví ji pouze pro čtení"
+      },
+      "infoBox": "Automatizace se spouštějí vzhledem k času zahájení události. Nastavte posun (např. 3 dny předem) a bot akci automaticky provede, a to i u opakovaných událostí."
+    },
+    "groups": {
+      "title": "Skupiny soupisek",
+      "description": "Uspořádejte soupisky do skupin pro snazší správu",
+      "create": "Nová skupina",
+      "noGroups": "Zatím nebyly vytvořeny žádné skupiny",
+      "rostersCount": "soupisky",
+      "createTitle": "Vytvořit skupinu",
+      "editTitle": "Upravit skupinu",
+      "nameLabel": "Název skupiny",
+      "namePlaceholder": "např. skupiny CWL",
+      "infoBox": "Skupiny umožňují společně uspořádat více soupisek (např. všechny soupisky CWL). Soupisku lze přiřadit ke skupině na kartě Nastavení a použít automatizace na všechny soupisky skupiny současně.",
+      "manageAutomations": "Spravovat automatizace",
+      "automationsTitle": "Automatizace skupiny",
+      "automationsDesc": "Tyto automatizace platí pro všechny soupisky v této skupině",
+      "noAutomations": "Žádné automatizace",
+      "noAutomationsHint": "Vytvořit automatizaci pro tuto skupinu",
+      "addAutomation": "Přidat automatizaci",
+      "deleteConfirm": "Odstranit skupinu „{name}“? Soupisky v této skupině zůstanou bez skupiny.",
+      "emptyGroup": "V této skupině zatím nejsou žádné soupisky",
+      "rules": {
+        "title": "Pravidla skupiny",
+        "rulesHint": "Tato pravidla platí pro všechny soupisky ve skupině a použijí se okamžitě.",
+        "maxAccounts": "Max. účtů/uživatel",
+        "maxAccountsBadge": "Max. {count}/uživatel",
+        "rosterSize": "Velikost soupisky",
+        "rosterSizeBadge": "Velikost {size}",
+        "minSignups": "Práh naplnění",
+        "minSignupsBadge": "Práh {count}",
+        "categoriesTitle": "Kategorie přihlášení",
+        "categoriesHint": "Vyberte kategorie dostupné této skupině. Okamžitě se použijí na všechny soupisky.",
+          "categoriesBadge": "Kategorie: {count}",
+        "noCategories": "Zatím žádné kategorie.",
+        "newCategoryPlaceholder": "Název nové kategorie…"
+      }
+    },
+    "categories": {
+      "title": "Kategorie přihlášení",
+      "description": "Kategorie přihlášení hráčů a filtrování soupisek",
+      "manage": "Spravovat kategorie",
+      "create": "Nová kategorie",
+      "noCategories": "Zatím nebyly vytvořeny žádné kategorie",
+      "createTitle": "Vytvořit kategorii",
+      "editTitle": "Upravit kategorii",
+      "deleteConfirm": "Odstranit kategorii „{name}“?",
+      "idLabel": "ID kategorie",
+      "nameLabel": "Název kategorie",
+      "infoBox": "Kategorie umožňují hráčům při přihlášení uvést dostupnost nebo roli (např. „Dostupný“, „Možná“, „Jen v případě potřeby“). Kategorie sdílejí všechny soupisky serveru. Pro skupinové soupisky nastavte platné kategorie v nastavení skupiny."
+    },
+    "settings": {
+      "general": "Identita a konfigurace",
+      "restrictions": "Omezení a limity",
+      "name": "Název soupisky",
+      "rosterType": "Typ soupisky",
+      "typeClan": "Klan",
+      "typeFamily": "Rodina",
+      "signupScope": "Rozsah přihlášení",
+      "scopeClanOnly": "Pouze klan",
+      "scopeFamilyWide": "Celá rodina",
+      "clan": "Klan",
+      "selectClan": "Vybrat klan",
+      "description": "Popis",
+      "descriptionPlaceholder": "Zadejte popis této soupisky...",
+      "typeAndScope": "Typ a rozsah",
+      "eventTime": "Čas zahájení události",
+      "eventTimeHint": "Čas začátku události. Používá se pro automatizace a odpočítávání.",
+      "recurrenceDays": "Opakovat každých",
+      "recurrenceModeDays": "Každých N dní",
+      "recurrenceModeMonthly": "Den v měsíci",
+      "recurrenceDaysUnit": "dny",
+      "recurrenceDayOfMonthPrefix": "V den",
+      "recurrenceDayOfMonthSuffix": "každého měsíce",
+      "recurrenceDaysHint": "Pro jednorázovou událost ponechte prázdné. Zadejte počet dní mezi opakováními (např. 30 pro měsíční CWL).",
+      "recurrenceDayOfMonthHint": "Opakuje se tento den každý měsíc (např. 1 = první den).",
+      "group": "Skupina",
+      "noGroup": "Bez skupiny",
+      "thRequirements": "Požadavky na radnici",
+      "minTh": "Minimální TH",
+      "maxTh": "Maximální TH",
+      "signupLimits": "Limity přihlášení",
+      "rosterSize": "Velikost soupisky",
+      "rosterSizeHint": "Maximální počet členů",
+      "minSignups": "Minimální počet přihlášení",
+      "minSignupsHint": "Minimální počet přihlášení potřebný k naplnění soupisky",
+      "maxAccountsPerUser": "Maximální počet účtů na uživatele",
+      "maxAccountsHint": "Omezit počet účtů na uživatele Discordu",
+      "allowedCategories": "Povolené kategorie přihlášení",
+      "allowedCategoriesHint": "Kliknutím přepněte. Pokud není vybrána žádná, jsou povoleny všechny.",
+      "defaultSignupCategory": "Výchozí kategorie přihlášení",
+      "defaultSignupCategoryNone": "Žádná (bez výchozí)",
+      "defaultSignupCategoryHint": "Předvolená kategorie při přihlášení člena.",
+      "categoriesManagedByGroup": "Kategorie přihlášení se spravují na úrovni skupiny. Na stránce Soupisky otevřete nastavení skupiny a určete kategorie dostupné všem soupiskám této skupiny.",
+      "saving": "Ukládání...",
+      "save": "Uložit nastavení"
+    }
+  },
+  "LinksPage": {
+    "title": "Správa propojení",
+    "description": "Spravujte propojení účtů členů na Discordu a ověřujte vlastnictví hráčských účtů",
+    "tabs": {
+      "overview": "Přehled",
+      "pending": "Čekající",
+      "bulk": "Hromadné akce",
+      "analytics": "Analýzy"
+    },
+    "stats": {
+      "totalMembers": "Celkem členů",
+      "membersWithLinks": "Členové s propojením",
+      "totalLinkedAccounts": "Celkem propojených účtů",
+      "verifiedAccounts": "Ověřené účty",
+      "ofTotal": "z celku",
+      "avgPerMember": "Prům.:",
+      "perMember": "na člena",
+      "verified": "ověřeno"
+    },
+    "filters": {
+      "searchPlaceholder": "Hledat podle jména člena, uživatelského jména, jména hráče nebo tagu...",
+      "filterByStatus": "Filtrovat podle stavu",
+      "allAccounts": "Všechny účty",
+      "verifiedOnly": "Pouze ověřené",
+      "unverifiedOnly": "Pouze neověřené",
+      "minAccounts": "Min. účtů",
+      "allMembers": "Všichni členové",
+      "oneOrMore": "1 a více účtů",
+      "twoOrMore": "2 a více účtů",
+      "threeOrMore": "3 a více účtů",
+      "fiveOrMore": "5 a více účtů"
+    },
+    "overview": {
+      "title": "Propojení účtů",
+      "description": "Zobrazujte a spravujte všechna propojení mezi účty na Discordu a účty Clash of Clans",
+      "showingMembers": "Zobrazeno {count} {members}",
+      "member": "člen",
+      "members": "členové",
+      "noMembers": "Nebyli nalezeni žádní členové",
+      "adjustFilters": "Zkuste upravit vyhledávání nebo filtry.",
+      "noLinkedAccounts": "Žádní členové s propojenými účty.",
+      "exportCSV": "Exportovat CSV",
+      "exportJSON": "Exportovat JSON",
+      "account": "účet",
+      "accounts": "účty",
+      "more": "další",
+      "unknown": "Neznámé"
+    },
+    "pending": {
+      "title": "Čekající ověření",
+      "description": "Účty čekající na ověření: {count}",
+      "allVerified": "Všechny účty jsou ověřené!",
+      "noPending": "Momentálně nečekají žádná ověření.",
+      "linked": "Propojeno:"
+    },
+    "bulk": {
+      "title": "Hromadné akce",
+      "description": "Provádějte akce u více členů současně",
+      "selectAll": "Vybrat vše ({count})",
+      "deselectAll": "Zrušit výběr",
+      "unlinkSelected": "Odpojit vybrané ({count})",
+      "linked": "propojeno",
+      "comingSoon": "Hromadné odpojování bude brzy dostupné!"
+    },
+    "analytics": {
+      "title": "Analýzy propojení",
+      "description": "Přehled statistik a trendů propojení",
+      "verificationRate": "Míra ověření",
+      "verified": "Ověřeno",
+      "unverified": "Neověřeno",
+      "accountDistribution": "Rozložení účtů",
+      "oneAccount": "1 účet",
+      "twoToThreeAccounts": "2–3 účty",
+      "fourPlusAccounts": "4 a více účtů",
+      "townHallLevels": "Úrovně radnice",
+      "other": "Ostatní",
+      "coverage": "Pokrytí",
+      "linkedMembers": "Propojení členové",
+      "coverageRate": "Míra pokrytí",
+      "linkInsights": "Přehled propojení",
+      "avgAccountsPerMember": "Průměr účtů na člena:",
+      "mostLinkedAccounts": "Nejvíce propojených účtů:",
+      "membersWithoutLinks": "Členové bez propojení:"
+    },
+    "actions": {
+      "unlinkAccount": "Odpojit účet"
+    },
+    "deleteDialog": {
+      "title": "Odpojit účet",
+      "description": "Opravdu chcete odpojit účet {playerName}? Tuto akci nelze vrátit zpět.",
+      "cancel": "Zrušit",
+      "unlinking": "Odpojování...",
+      "unlink": "Odpojit"
+    },
+    "bulkDialog": {
+      "title": "Hromadně odpojit účty",
+      "description": "Opravdu chcete odpojit všechny účty vybraných členů (celkem {count})? Tuto akci nelze vrátit zpět.",
+      "cancel": "Zrušit",
+      "unlinkAll": "Odpojit vše"
+    },
+    "toast": {
+      "unlinkFailed": "Účet se nepodařilo odpojit. Zkuste to znovu."
+    },
+    "badges": {
+      "verified": "Ověřeno",
+      "unverified": "Neověřeno",
+      "pending": "Čekající"
+    },
+    "pagination": {
+      "showing": "Zobrazeni členové {start}–{end} z {total}",
+      "page": "Strana {current} z {total}",
+      "previous": "Předchozí",
+      "next": "Další"
+    }
+  },
+  "WarsPage": {
+    "title": "Válečné statistiky",
+    "description": "Sledujte válečné výsledky a analyzujte bojové statistiky",
+    "actions": {
+      "exportData": "Exportovat data",
+      "resetFilters": "Obnovit filtry",
+      "applyFilters": "Použít filtry"
+    },
+    "filters": {
+      "title": "Filtry",
+      "description": "Filtrujte válečné statistiky podle různých kritérií",
+      "clan": "Klan",
+      "allClans": "Všechny klany",
+      "townHall": "Radnice",
+      "townHallShort": "TH",
+      "allTownHalls": "Všechny úrovně TH",
+      "townHallLevel": "TH {level}",
+      "period": "Období",
+      "last7Days": "Posledních 7 dní",
+      "last30Days": "Posledních 30 dní",
+      "last90Days": "Posledních 90 dní",
+      "last6Months": "Posledních 6 měsíců",
+      "lastYear": "Poslední rok",
+      "custom": "Vlastní",
+      "startDate": "Datum začátku",
+      "endDate": "Datum konce",
+      "warTypes": "Typy válek"
+    },
+    "summaryStats": {
+      "totalWins": "Celkem výher",
+      "totalWinsDesc": "Celkový počet válek: {totalWars}",
+      "totalLosses": "Celkem proher",
+      "totalLossesDesc": "Počet remíz: {totalDraws}",
+      "winRate": "Míra výher",
+      "winRateDesc": "Celkový výkon",
+      "activeWars": "Aktivní války",
+      "activeWarsDesc": "{activeCwl} v CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Válečný výkon podle týdnů",
+        "description": "Týdenní výhry, prohry a remízy ve vybraném období",
+        "wins": "Výhry",
+        "losses": "Prohry",
+        "draws": "Remízy"
+      },
+      "thSuccessRate": {
+        "title": "Úspěšnost útoků podle radnice",
+        "description": "Míra tříhvězdičkových útoků podle úrovně TH",
+        "threeStarPercent": "% 3 hvězd",
+        "otherPercent": "Ostatní %"
+      },
+      "warTypeDistribution": {
+        "title": "Rozložení typů válek",
+        "description": "Rozdělení podle typu války",
+        "cwl": "CWL",
+        "random": "Náhodný",
+        "friendly": "Přátelské"
+      },
+      "topPerformers": {
+        "title": "Nejlepší hráči",
+        "description": "Nejlepší válečníci podle celkového počtu hvězd",
+        "attacksAndStars": "Útoky: {attacks} • Hvězdy: {stars}",
+        "noData": "Nejsou dostupná data hráčů. Zkuste upravit filtry."
+      },
+      "missedAttacks": {
+        "title": "Zmeškané útoky",
+        "description": "Hráči, kteří nevyužili všechny útoky",
+        "attacks": "nevyužitých útoků"
+      },
+      "topDefenders": {
+        "title": "Nejlepší obránci",
+        "description": "Nejlepší obránci podle průměru odevzdaných hvězd",
+        "defensesAndStars": "Obrany: {defenses} • Odevzdané hvězdy: {stars}",
+        "noData": "Nejsou dostupná data obránců. Zkuste upravit filtry."
+      },
+      "worstAttackers": {
+        "title": "Nejhorší útočníci",
+        "description": "Hráči s nejnižším průměrem hvězd na útok (min. 3 útoky)",
+        "attacksAndStars": "Útoky: {attacks} • Hvězdy: {stars}",
+        "noData": "Nejsou dostupná data hráčů. Zkuste upravit filtry."
+      },
+      "worstDefenders": {
+        "title": "Nejhorší obránci",
+        "description": "Hráči, kteří při obraně odevzdali nejvíce hvězd (min. 3 obrany)",
+        "defensesAndStars": "Obrany: {defenses} • Odevzdané hvězdy: {stars}",
+        "noData": "Nejsou dostupná data obránců. Zkuste upravit filtry."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Statistiky klanových válek",
+      "description": "Podrobné statistiky každého klanu",
+      "headers": {
+        "clan": "Klan",
+        "status": "Stav",
+        "wars": "Války",
+        "record": "V/P/R",
+        "winRate": "Míra výher",
+        "avgDestruction": "Prům. zničení",
+        "avgStarsPerAttack": "Hvězdy/útok",
+        "avgDefenseStars": "Hvězdy/obrana"
+      },
+      "status": {
+        "inWar": "Ve válce",
+        "cwl": "CWL",
+        "peace": "Mír"
+      },
+      "noData": "Nejsou dostupné statistiky klanu. Použijte filtry nebo počkejte na načtení dat."
+    },
+    "toast": {
+      "errorTitle": "Chyba",
+      "errorLoadingClans": "Klany se nepodařilo načíst. Zkuste to znovu.",
+      "errorLoadingWarData": "Válečná data se nepodařilo načíst. Zkuste to znovu.",
+      "errorNoClans": "Nejsou dostupné žádné klany",
+      "errorApplyingFilters": "Filtry se nepodařilo použít. Zkuste to znovu."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Žebříčky",
+    "description": "Globální žebříčky klanového hlavního města a další",
+    "comingSoon": "Tato funkce bude brzy dostupná. Vraťte se později!",
+    "stats": {
+      "totalEntries": "Celkem záznamů",
+      "type": "Typ",
+      "league": "Liga",
+      "weekend": "Víkend"
+    },
+    "filters": {
+      "title": "Filtry",
+      "description": "Přizpůsobte zobrazení žebříčku",
+      "type": "Typ",
+      "metric": "Ukazatel",
+      "league": "Liga",
+      "weekend": "Víkend"
+    },
+    "types": {
+      "player": "Hráči",
+      "clan": "Klany"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Uloupené zlato hlavního města"
+        },
+        "clan": {
+          "capitalTotalLoot": "Celková kořist",
+          "raidsCompleted": "Dokončené nájezdy",
+          "enemyDistrictsDestroyed": "Zničené oblasti",
+          "medals": "Medaile"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Vše",
+      "legendLeague": "Legendární liga",
+      "titanLeagueI": "Titánská liga I",
+      "titanLeagueII": "Titánská liga II",
+      "titanLeagueIII": "Titánská liga III"
+    },
+    "rankings": {
+      "title": "Žebříčky",
+      "description": "Nejlepších {count} {type} za {weekend}",
+      "players": "hráčů",
+      "clans": "klanů"
+    },
+    "empty": {
+      "title": "Nejsou k dispozici žádná data",
+      "description": "Zkuste vybrat jiný víkend nebo ligu"
+    }
+  },
+  "ClansPage": {
+    "title": "Správa klanů",
+    "description": "Nastavte klany a jejich integraci s Discordem",
+    "addClan": "Přidat klan",
+    "addNewClan": "Přidat nový klan",
+    "addClanDescription": "Zadejte tag klanu a přidejte ho na tento server",
+    "clanTag": "Tag klanu",
+    "totalClans": "Celkem klanů",
+    "registeredClans": "Registrované klany",
+    "configured": "Nastaveno",
+    "withSettingsConfigured": "S dokončeným nastavením",
+    "totalMembers": "Celkem členů",
+    "acrossAllClans": "Ve všech klanech",
+    "channels": "Kanály",
+    "availableChannels": "Dostupné kanály",
+    "noClansYet": "Zatím žádné klany",
+    "getStartedAdding": "Přidejte první klan a začněte",
+    "addFirstClan": "Přidat první klan",
+    "level": "Úroveň",
+    "members": "Členové",
+    "status": "Stav",
+    "configuredBadge": "Nastaveno",
+    "setupRequired": "Vyžaduje nastavení",
+    "configure": "Nastavit",
+    "sorting": {
+      "label": "Seřadit klany",
+      "sortBy": "Seřadit podle",
+      "toggleDirection": "Přepnout směr řazení",
+      "added": "Přidáno",
+      "name": "Název klanu",
+      "level": "Úroveň klanu",
+      "members": "Členové"
+    },
+    "configureClan": "Nastavit {name} ({tag})",
+    "customizeIntegration": "Přizpůsobte nastavení integrace tohoto klanu s Discordem",
+    "tabs": {
+      "basic": "Nastavení Discordu",
+      "war": "Válka"
+    },
+    "memberRole": "Role člena",
+    "leaderRole": "Role vůdce",
+    "selectRole": "Vybrat roli",
+    "none": "Žádné",
+    "clanAbbreviation": "Zkratka klanu",
+    "warScoreCountdown": "Odpočet válečného skóre",
+    "warScoreCountdownDescription": "Vytvoří hlasový kanál zobrazující aktuální válečné skóre",
+    "warTimerCountdown": "Odpočet času války",
+    "warTimerCountdownDescription": "Vytvoří hlasový kanál zobrazující zbývající čas války",
+    "category": "Kategorie",
+    "categoryOptions": {
+      "none": "Bez kategorie",
+      "premade": "Běžné kategorie",
+      "usedByServer": "Používané jinými klany",
+      "clanCount": "{count, plural, one {# klan} few {# klany} other {# klanů}}"
+    },
+    "categories": {
+      "title": "Kategorie klanů",
+      "description": "Vytvářejte a spravujte kategorie dostupné klanům tohoto serveru.",
+      "refresh": "Aktualizovat",
+      "createLabel": "Nová kategorie",
+      "name": "Název kategorie",
+      "namePlaceholder": "např. Soutěžní",
+      "nameHelp": "{count}/{max} znaků po normalizaci mezer",
+      "create": "Vytvořit kategorii",
+      "empty": "Nebyly vytvořeny žádné kategorie klanů.",
+      "clanCount": "{count, plural, one {# klan} few {# klany} other {# klanů}}",
+      "renameAction": "Přejmenovat {name}",
+      "deleteAction": "Odstranit {name}",
+      "renameTitle": "Přejmenovat kategorii klanu",
+      "renameDescription": "Normalizovaný název se aktualizuje u všech přiřazených klanů.",
+      "saveRename": "Uložit název",
+      "deleteTitle": "Odstranit kategorii klanu?",
+      "deleteWarning": "Odstraněním kategorie „{name}“ zůstane {count, plural, one {# klan bez kategorie} few {# klany bez kategorie} other {# klanů bez kategorie}}.",
+      "deleteCountMayChange": "Tento náhled odpovídá současnému stavu. Po odstranění se zobrazí skutečný počet dotčených klanů.",
+      "confirmDelete": "Odstranit kategorii",
+      "deleteSuccessTitle": "Kategorie {name} odstraněna",
+      "deleteSuccessDescription": "{count, plural, =0 {Žádný klan nebyl změněn.} one {# klan je nyní bez kategorie.} few {# klany jsou nyní bez kategorie.} other {# klanů je nyní bez kategorie.}}",
+      "created": "Kategorie {name} vytvořena.",
+      "renamed": "Kategorie přejmenována na {name}.",
+      "errors": {
+        "title": "Kategorie nejsou dostupné",
+        "load": "Kategorie klanů se nepodařilo načíst.",
+        "create": "Kategorii klanu se nepodařilo vytvořit.",
+        "rename": "Kategorii klanu se nepodařilo přejmenovat.",
+        "preview": "Náhled odstranění se nepodařilo načíst.",
+        "delete": "Kategorii klanu se nepodařilo odstranit.",
+        "refresh": "Kategorie se změnila, ale aktualizovaný stav kategorie nebo klanu se nepodařilo načíst.",
+        "invalidName": "Použijte neprázdný název o délce nejvýše 64 znaků bez řídicích znaků."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Zobrazit další informace",
+      "memberRole": "Role, kterou mají dostat členové tohoto klanu. Pokud bot spravuje role na vašem Discordu, dostane ji každý člen klanu. Je užitečná pro kanály konkrétního klanu.",
+      "leaderRole": "Role pro zástupce a vůdce klanu. Hodí se pro chat vedení klanu nebo společný chat vůdců všech klanů.",
+      "clanAbbreviation": "Nastavte klanu zkratku, kterou mohou mít členové ve jméně při zapnutém přejmenování. Formát lze nastavit v <familySettingsLink>Nastavení rodiny</familySettingsLink>.",
+      "category": "Takto můžete uspořádat své klany. Mnoho klanových rodin má pět či více klanů a některé slouží pouze pro CWL nebo události."
+    },
+    "roleIdPlaceholder": "ID role",
+    "abbreviationPlaceholder": "např. CK",
+    "categoryPlaceholder": "Název kategorie",
+    "notAvailable": "Není k dispozici",
+    "saving": "Ukládání...",
+    "saveChanges": "Uložit změny",
+    "deleteConfirm": "Opravdu chcete odebrat {tag}? Odstraní se také všechna související připomenutí a protokoly.",
+    "toast": {
+      "errorLoadingClans": "Klany se nepodařilo načíst",
+      "errorLoadingSettings": "Nastavení klanu se nepodařilo načíst",
+      "errorEmptyClanTag": "Zadejte tag klanu",
+      "clanAdded": "Klan byl úspěšně přidán",
+      "errorAddingClan": "Klan se nepodařilo přidat",
+      "clanRemoved": "Klan byl úspěšně odebrán",
+      "errorRemovingClan": "Klan se nepodařilo odebrat",
+      "settingsSaved": "Nastavení bylo úspěšně uloženo",
+      "errorSavingSettings": "Nastavení se nepodařilo uložit",
+      "countdownEnabled": "Hlasový kanál s odpočtem byl vytvořen",
+      "countdownDisabled": "Hlasový kanál s odpočtem byl odebrán",
+      "errorTogglingCountdown": "Odpočet se nepodařilo přepnout"
+    }
+  },
+  "RolesPage": {
+    "title": "Správa rolí",
+    "description": "Nastavte automatické přidělování rolí podle statistik hráčů",
+    "stats": {
+      "totalRoles": "Celkem rolí",
+      "totalRolesDesc": "Nastavená přiřazení rolí",
+      "autoEvaluation": "Automatické vyhodnocení",
+      "autoEvaluationOn": "Zapnuto",
+      "autoEvaluationOff": "Vypnuto",
+      "autoEvaluationActiveDesc": "Automatické přidělování rolí",
+      "autoEvaluationInactiveDesc": "Pouze ruční přidělování rolí",
+      "activeTypes": "Aktivní typy",
+      "activeTypesDesc": "Používané typy rolí",
+      "discordRoles": "Role na Discordu",
+      "discordRolesDesc": "Dostupné na serveru"
+    },
+    "settings": {
+      "title": "Nastavení automatického vyhodnocení",
+      "description": "Nastavte automatické vyhodnocování a přidělování rolí",
+      "saveButton": "Uložit nastavení",
+      "saving": "Ukládání...",
+      "enableAutoEval": "Zapnout automatické vyhodnocení",
+      "enableAutoEvalDesc": "Automaticky přidělovat a odebírat role podle statistik hráčů",
+      "autoNickname": "Automaticky aktualizovat přezdívky",
+      "autoNicknameDesc": "Aktualizovat přezdívky při vyhodnocení rolí"
+    },
+    "roleTypes": {
+      "townhall": "Radnice",
+      "league": "Liga",
+      "builderhall": "Stavitelská radnice",
+      "builderLeague": "Stavitelská liga",
+      "achievement": "Úspěch",
+      "status": "Doba na Discordu",
+      "familyPosition": "Pozice v rodině"
+    },
+    "familyPositions": {
+      "member": "Člen",
+      "elder": "Starší",
+      "coLeader": "Spoluvůdce",
+      "leader": "Vůdce"
+    },
+    "leagues": {
+      "legend": "Legenda",
+      "electroDragon": "Elektrodrak",
+      "dragon": "Drak",
+      "electroTitan": "Elektrotitán",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Čarodějnice",
+      "valkyrie": "Valkýra",
+      "wizard": "Kouzelník",
+      "archer": "Lučištnice",
+      "barbarian": "Barbar",
+      "skeleton": "Kostlivec"
+    },
+    "builderLeagues": {
+      "diamond": "Diamant",
+      "ruby": "Rubín",
+      "emerald": "Smaragd",
+      "platinum": "Platina",
+      "titanium": "Titan",
+      "steel": "Ocel",
+      "iron": "Železo",
+      "brass": "Mosaz",
+      "copper": "Měď",
+      "stone": "Kámen",
+      "clay": "Hlína",
+      "wood": "Dřevo"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Chraňte svůj účet!",
+      "biggerAndBetter": "Větší a lepší",
+      "discoverNewTroops": "Objevujte nové jednotky",
+      "biggerCoffers": "Větší pokladnice",
+      "goldGrab": "Zlatá horečka",
+      "elixirEscapade": "Elixírové dobrodružství",
+      "heroicHeist": "Hrdinská loupež",
+      "wellSeasoned": "Ostřílený veterán",
+      "niceAndTidy": "Čisté a uklizené",
+      "empireBuilder": "Budovatel říše",
+      "clanWarWealth": "Bohatství z klanových válek",
+      "friendInNeed": "Přítel v nouzi",
+      "sharingIsCaring": "Sdílením dáváte najevo péči",
+      "siegeSharer": "Dárce obléhacích strojů",
+      "warHero": "Válečný hrdina",
+      "warLeagueLegend": "Legenda ligy klanových válek",
+      "gamesChampion": "Šampion klanových her",
+      "unbreakable": "Nezlomný",
+      "sweetVictory": "Sladké vítězství!",
+      "conqueror": "Dobyvatel",
+      "leagueAllStar": "Hvězda ligy",
+      "leagueFollower": "Stoupenec ligy",
+      "leagueEnthusiast": "Nadšenec do ligy",
+      "leagueSuperfan": "Superfanoušek ligy",
+      "leagueFanatic": "Fanatik ligy",
+      "leagueMaster": "Mistr ligy",
+      "legendLeague": "Legendární liga",
+      "humiliator": "Pokořitel",
+      "notSoEasyThisTime": "Tentokrát to tak snadné nebude",
+      "unionBuster": "Ničitel spojů",
+      "bustThis": "Zničte to!",
+      "wallBuster": "Bourák hradeb",
+      "mortarMauler": "Drtič minometů",
+      "xBowExterminator": "Likvidátor kuší",
+      "firefighter": "Hasič",
+      "antiArtillery": "Protidělostřelec",
+      "shatteredAndScatter": "Rozmetáno na kusy",
+      "counterspell": "Protizaklínadlo",
+      "monolithMasher": "Drtič monolitů",
+      "multiArcherTowerTerminator": "Likvidátor vícenásobných lučištnických věží",
+      "ricochetCannonCrusher": "Drtič odrazových děl",
+      "firespitterFinisher": "Likvidátor plivounů ohně",
+      "multiGearTowerTrampler": "Ničitel vícepřevodových věží",
+      "craftersNightmare": "Řemeslníkova noční můra",
+      "getThoseGoblins": "Dostaňte ty gobliny!",
+      "supercharger": "Supernabíječ",
+      "craftingConnoisseur": "Znalec řemesla",
+      "getThoseOtherGoblins": "Dostaňte i ty další gobliny!",
+      "getEvenMoreGoblins": "Dostaňte ještě více goblinů!",
+      "dragonSlayer": "Drakobijec",
+      "ungratefulChild": "Nevděčné dítě",
+      "superbWork": "Skvělá práce",
+      "masterEngineering": "Mistrovské inženýrství",
+      "hiddenTreasures": "Skryté poklady",
+      "highGear": "Vysoké otáčky",
+      "nextGenerationModel": "Model nové generace",
+      "unBuildIt": "Zbořte to",
+      "championBuilder": "Stavitelský šampion",
+      "aggressiveCapitalism": "Agresivní kapitalismus",
+      "mostValuableClanmate": "Nejcennější člen klanu"
+    },
+    "configuredRoles": {
+      "title": "Nastavené role",
+      "noRolesConfigured": "Nejsou nastaveny žádné role typu {roleType}",
+      "addRoleToStart": "Kliknutím na „Přidat roli“ ji vytvořte",
+      "discordRole": "Role na Discordu",
+      "criteria": "Kritéria",
+      "mode": "Režim",
+      "modeBoth": "Přidávat a odebírat",
+      "modeAdd": "Pouze přidávat",
+      "modeRemove": "Pouze odebírat",
+      "actions": "Akce",
+      "unknownRole": "Neznámá role",
+      "remove": "Odebrat",
+      "month": "měsíc",
+      "months": "měsíce"
+    },
+    "addRoleDialog": {
+      "title": "Přidat novou roli",
+      "description": "Nastavte nové pravidlo automatického přidělování rolí",
+      "roleType": "Typ role",
+      "mode": "Režim",
+      "discordRole": "Role na Discordu",
+      "selectRole": "Vybrat roli",
+      "townHallLevel": "Úroveň radnice",
+      "selectThLevel": "Vybrat úroveň TH",
+      "thPrefix": "TH",
+      "league": "Liga",
+      "selectLeague": "Vybrat ligu",
+      "builderHallLevel": "Úroveň stavitelské radnice",
+      "selectBhLevel": "Vybrat úroveň BH",
+      "bhPrefix": "BH",
+      "builderLeague": "Stavitelská liga",
+      "selectBuilderLeague": "Vybrat stavitelskou ligu",
+      "achievementName": "Úspěch",
+      "selectAchievement": "Vybrat úspěch",
+      "searchAchievement": "Hledat úspěch...",
+      "noAchievementFound": "Nebyl nalezen žádný úspěch.",
+      "monthsInServer": "Měsíce na serveru",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Pozice v rodině",
+      "selectPosition": "Vybrat pozici",
+      "cancel": "Zrušit",
+      "addRole": "Přidat roli",
+      "errorDuplicateExact": "Toto kritérium je již propojeno s touto rolí.",
+      "errorDuplicateCriterion": "Tomuto kritériu je již přiřazena role. Nejprve ji odeberte."
+    },
+    "infoCard": {
+      "title": "💡 Jak fungují automatické role",
+      "automaticEvaluation": "Automatické vyhodnocení:",
+      "automaticEvaluationDesc": "Po zapnutí bude bot pravidelně kontrolovat hráče a přidělovat nebo odebírat role podle jejich aktuálních statistik.",
+      "rolePriority": "Priorita rolí:",
+      "rolePriorityDesc": "Pokud statistikám hráče odpovídá více rolí, bude přidělena role nejvyšší úrovně.",
+      "manualOverride": "Ruční přepsání:",
+      "manualOverrideDesc": "Správci serveru mohou ručně přidělit role, které automatické vyhodnocení neodebere."
+    },
+    "categoryRoles": {
+      "title": "Role kategorií",
+      "description": "Přiřaďte každé kategorii klanů roli na Discordu. Členové klanů v dané kategorii automaticky dostanou odpovídající roli.",
+      "addButton": "Přidat kategorii",
+      "categoryName": "Kategorie",
+      "categoryNamePlaceholder": "Název kategorie",
+      "noCategoryRoles": "Nejsou nastaveny žádné role kategorií",
+      "noCategoryRolesDesc": "Kliknutím na „Přidat kategorii“ ji vytvořte",
+      "addTitle": "Přidat roli kategorie",
+      "addConfirm": "Přidat",
+      "errorCategoryRequired": "Název kategorie je povinný",
+      "errorRoleRequired": "Role na Discordu je povinná",
+      "errorCategoryExists": "Tato kategorie již má nastavenou roli"
+    },
+    "toast": {
+      "changesSaved": "Změny byly úspěšně uloženy!",
+      "errorLoading": "Role se nepodařilo načíst",
+      "errorSaving": "Nastavení se nepodařilo uložit",
+      "errorAdding": "Roli se nepodařilo přidat",
+      "errorDeleting": "Roli se nepodařilo odstranit"
+    }
+  },
+  "RemindersPage": {
+    "title": "Připomenutí",
+    "description": "Nastavte automatická připomenutí válek, nájezdů, klanových her a neaktivity",
+    "types": {
+      "war": "Válečná připomenutí",
+      "capital": "Hlavní město klanu",
+      "clanGames": "Klanové hry",
+      "inactivity": "Neaktivita"
+    },
+    "tabs": {
+      "war": "Válka",
+      "capital": "Hlavní město",
+      "clanGames": "Klanové hry",
+      "inactivity": "Neaktivita"
+    },
+    "stats": {
+      "totalReminders": "Celkem připomenutí",
+      "totalRemindersDesc": "Nastavená aktivní připomenutí",
+      "warReminders": "Válečná připomenutí",
+      "warRemindersDesc": "Běžné války a CWL",
+      "capitalReminders": "Připomenutí hlavního města",
+      "capitalRemindersDesc": "Útoky během nájezdového víkendu",
+      "otherReminders": "Ostatní připomenutí",
+      "otherRemindersDesc": "Hry a neaktivita"
+    },
+    "actions": {
+      "saving": "Ukládání...",
+      "saveChanges": "Uložit změny",
+      "addReminder": "Přidat připomenutí",
+      "addWarReminder": "Přidat válečné připomenutí",
+      "addCapitalReminder": "Přidat připomenutí hlavního města",
+      "addClanGamesReminder": "Přidat připomenutí klanových her",
+      "addInactivityReminder": "Přidat připomenutí neaktivity",
+      "retry": "Opakovat"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Vybrat klan",
+      "allClans": "Všechny klany"
+    },
+    "empty": {
+      "noWarReminders": "Žádná válečná připomenutí",
+      "noCapitalReminders": "Žádná připomenutí hlavního města",
+      "noClanGamesReminders": "Žádná připomenutí klanových her",
+      "noInactivityReminders": "Žádná připomenutí neaktivity",
+      "getStarted": "Vytvořte první připomenutí a začněte"
+    },
+    "card": {
+      "new": "Nové",
+      "before": "před",
+      "timeBefore": "Zbývající čas",
+      "timeBeforePlaceholder": "např. 6",
+      "timeInactive": "Neaktivita po dobu",
+      "timeInactivePlaceholder": "např. 160",
+      "timeUnit": "hodiny",
+      "hoursRemaining": "hod. zbývá",
+      "channel": "Kanál",
+      "channelPlaceholder": "Vybrat kanál",
+      "threadOptional": "Vlákno (volitelné)",
+      "threadPlaceholder": "Vybrat vlákno",
+      "noThread": "Odeslat přímo do kanálu",
+      "forumPost": "Příspěvek ve fóru",
+      "forumPostPlaceholder": "Vybrat příspěvek ve fóru",
+      "forumPostRequired": "Pro kanály fóra je vyžadován příspěvek.",
+      "clan": "Klan",
+      "clanPlaceholder": "Vybrat klan",
+      "customMessage": "Vlastní zpráva",
+      "customMessagePlaceholder": "Nezapomeňte využít své útoky!",
+      "customMessagePlaceholderClanGames": "Zkuste získat více bodů v klanových hrách!",
+      "customMessagePlaceholderInactivity": "Už nějakou dobu jste v klanu neaktivní :(",
+      "warTypes": "Typy válek",
+      "random": "Náhodný",
+      "friendly": "Přátelské",
+      "cwl": "CWL",
+      "pointThreshold": "Bodový práh",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Označí osoby s méně než {threshold} body.",
+      "attackThreshold": "Práh útoků",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Označí osoby, kterým zbývá alespoň {threshold} útoků.",
+      "notSet": "Nenastaveno"
+    },
+    "dialog": {
+      "addTitle": "Přidat nové připomenutí",
+      "addDescription": "Nastavte nové připomenutí pro server",
+      "editTitle": "Upravit připomenutí",
+      "editDescription": "Aktualizujte nastavení připomenutí",
+      "type": "Typ připomenutí",
+      "selectType": "Vybrat typ",
+      "cancel": "Zrušit",
+      "saving": "Ukládání...",
+      "saveChanges": "Uložit změny",
+      "addReminder": "Přidat připomenutí"
+    },
+    "toast": {
+      "errorTitle": "Chyba",
+      "errorLoadingReminders": "Připomenutí se nepodařilo načíst. Zkuste to znovu.",
+      "reminderAdded": "Připomenutí bylo úspěšně přidáno",
+      "reminderAddedDesc": "Bylo přidáno nové připomenutí typu {type}. Nezapomeňte uložit!",
+      "reminderUpdated": "Připomenutí bylo úspěšně aktualizováno",
+      "successTitle": "Úspěch",
+      "reminderDeleted": "Připomenutí bylo úspěšně odstraněno",
+      "failedToDelete": "Připomenutí se nepodařilo odstranit",
+      "allRemindersSaved": "Všechna připomenutí byla úspěšně uložena",
+      "failedToSave": "Připomenutí se nepodařilo uložit",
+      "forumPostRequired": "Před uložením připomenutí vyberte příspěvek ve fóru.",
+      "invalidDestination": "Vybrané vlákno nepatří do tohoto kanálu.",
+      "timeExceedsLimit": "Zbývající čas musí být mezi {min} a {max} hodinami",
+      "pointThresholdInvalid": "Bodový práh musí být mezi {min} a {max}",
+      "attackThresholdInvalid": "Práh útoků musí být mezi {min} a {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Protokoly aktivity",
+    "description": "Nastavte automatické zaznamenávání aktivity klanu a hráčů",
+    "stats": {
+      "activeLogs": "Aktivní protokoly",
+      "activeLogsDesc": "Ve všech rodinných klanech a protokolech serveru",
+      "logChannels": "Kanály protokolů",
+      "logChannelsDesc": "Dostupné kanály",
+      "trackedClans": "Sledované klany",
+      "trackedClansDesc": "Nastavené klany",
+      "issues": "Problémy",
+      "issuesDesc": "V celé rodině"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Vybrat klan"
+    },
+    "tabs": {
+      "clan": "Klan",
+      "war": "Válka",
+      "capital": "Hlavní město",
+      "player": "Hráč",
+      "server": "Server"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Připojení člena",
+        "description": "Sledovat členy připojující se ke klanu"
+      },
+      "leaveLog": {
+        "label": "Odchod člena",
+        "description": "Sledovat členy opouštějící klan"
+      },
+      "donationLog": {
+        "label": "Dary člena",
+        "description": "Sledovat dary jednotek a kouzel"
+      },
+      "clanAchievementLog": {
+        "label": "Úspěchy klanu",
+        "description": "Sledovat získané úspěchy klanu"
+      },
+      "clanRequirementsLog": {
+        "label": "Požadavky klanu",
+        "description": "Sledovat změny požadavků klanu"
+      },
+      "clanDescriptionLog": {
+        "label": "Popis klanu",
+        "description": "Sledovat změny popisu klanu"
+      },
+      "banAlert": {
+        "label": "Upozornění na bany",
+        "description": "Zveřejnit upozornění, když se zabanovaný hráč připojí ke klanu"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Kanál Redditu",
+        "description": "Zveřejňovat na serveru příspěvky z kanálu Redditu"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Válečný deník",
+        "description": "Sledovat válečné útoky a výsledky"
+      },
+      "warPanel": {
+        "label": "Válečný panel",
+        "description": "Interaktivní válečný panel s živými aktualizacemi"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Změna sestavy CWL",
+        "description": "Sledovat změny sestavy CWL"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Dary hlavnímu městu",
+        "description": "Sledovat dary zlata hlavnímu městu"
+      },
+      "capitalAttacks": {
+        "label": "Útoky na hlavní město",
+        "description": "Sledovat útoky během nájezdového víkendu"
+      },
+      "raidPanel": {
+        "label": "Panel hlavního města",
+        "description": "Interaktivní panel nájezdů s živými aktualizacemi"
+      },
+      "capitalWeeklySummary": {
+        "label": "Týdenní souhrn hlavního města",
+        "description": "Týdenní souhrn výkonu hlavního města"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Změna role",
+        "description": "Sledovat změny rolí hráčů v klanu"
+      },
+      "troopUpgrade": {
+        "label": "Vylepšení jednotky",
+        "description": "Sledovat vylepšení úrovní jednotek"
+      },
+      "superTroopBoostLog": {
+        "label": "Posílení superjednotek",
+        "description": "Sledovat aktivace superjednotek"
+      },
+      "thUpgrade": {
+        "label": "Vylepšení radnice",
+        "description": "Sledovat vylepšení radnice"
+      },
+      "leagueChange": {
+        "label": "Změna ligy",
+        "description": "Sledovat změny úrovně ligy"
+      },
+      "spellUpgrade": {
+        "label": "Vylepšení kouzla",
+        "description": "Sledovat vylepšení úrovní kouzel"
+      },
+      "heroUpgrade": {
+        "label": "Vylepšení hrdiny",
+        "description": "Sledovat vylepšení úrovní hrdinů"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Vylepšení vybavení hrdiny",
+        "description": "Sledovat vylepšení vybavení hrdinů"
+      },
+      "nameChange": {
+        "label": "Změna jména",
+        "description": "Sledovat změny jmen hráčů"
+      },
+      "legendLogAttacks": {
+        "label": "Útoky v legendární lize",
+        "description": "Sledovat útoky v legendární lize"
+      },
+      "legendLogDefenses": {
+        "label": "Obrany v legendární lize",
+        "description": "Sledovat obrany v legendární lize"
+      }
+    },
+    "logCard": {
+      "active": "Aktivní",
+      "issue": "Problém",
+      "disabled": "Vypnuto",
+      "enable": "Zapnout",
+      "disable": "Vypnout",
+      "channel": "Kanál",
+      "channelPlaceholder": "Vybrat kanál",
+      "thread": "Vlákno (volitelné)",
+      "threadPlaceholder": "Vybrat vlákno",
+      "noThread": "Bez vlákna",
+      "forumPost": "Příspěvek ve fóru",
+      "forumPostPlaceholder": "Vybrat příspěvek ve fóru",
+      "forumPostRequired": "Před uložením protokolu vyberte příspěvek ve fóru.",
+      "invalidThread": "Vybrané vlákno nepatří do tohoto kanálu.",
+      "saveDestination": "Uložit cíl",
+      "channelDeleted": "Tento kanál již neexistuje. Vyberte nový nebo protokol vypněte.",
+      "enableToConfig": "Zapněte tento protokol, abyste ho mohli nastavit",
+      "configuring": "Nastavování",
+      "on": "Zapnuto",
+      "off": "Vypnuto",
+      "example": "příklad"
+    }
+  },
+  "GeneralPage": {
+    "title": "Obecná nastavení",
+    "description": "Nastavte chování a vzhled bota pro celý server",
+    "loading": "Načítání nastavení...",
+    "reset": "Resetovat",
+    "saving": "Ukládání...",
+    "saveChanges": "Uložit změny",
+    "settingsSaved": "Nastavení bylo úspěšně uloženo!",
+    "infoBanner": {
+      "title": "Hledáte další nastavení?",
+      "description": "Rodinné role a nastavení přezdívek najdete na stránce **Nastavení rodiny**. Správa rolí je na stránce **Role**. Klanové role, zkratky, kategorie a válečné odpočty najdete na stránce **Klany**."
+    },
+    "nickname": {
+      "title": "Správa přezdívek",
+      "description": "Určete formát přezdívek",
+      "automaticChanges": "Automatické změny",
+      "automaticChangesDesc": "Povolit botovi aktualizovat přezdívky členů",
+      "familyFormat": "Formát členů rodiny",
+      "availablePlaceholders": "Dostupné zástupné symboly",
+      "preview": "Náhled:",
+      "nonFamilyFormat": "Formát členů mimo rodinu",
+      "placeholders": {
+        "discordName": "Uživatelské jméno na Discordu",
+        "discordDisplayName": "Přezdívka na serveru",
+        "playerName": "Jméno hráče CoC",
+        "playerTag": "Tag hráče",
+        "playerTownhall": "Úroveň TH",
+        "playerTownhallSmall": "TH v horním indexu",
+        "playerWarstars": "Válečné hvězdy",
+        "playerRole": "Role v klanu",
+        "playerClan": "Název klanu",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Zkratka klanu"
+      }
+    },
+    "appearance": {
+      "title": "Vzhled",
+      "description": "Přizpůsobte embedy ve zprávách bota",
+      "embedColor": "Barva embedu",
+      "embedColorDesc": "Barva postranního pruhu všech embedů bota na Discordu",
+      "embedColorDefault": "Výchozí: **#D90709** (červená ClashKing)",
+      "embedPreview": "Náhled embedu",
+      "embedPreviewDesc": "Tento barevný pruh se zobrazí vedle všech embedů bota",
+      "editColor": "Upravit barvu",
+      "resetToDefault": "Obnovit výchozí",
+      "apply": "Použít"
+    },
+    "security": {
+      "title": "Zabezpečení a oprávnění",
+      "description": "Řízení přístupu a ověřování",
+      "fullWhitelistRole": "Role s úplným přístupem",
+      "fullWhitelistRoleDesc": "Role na Discordu s úplným přístupem ke všem příkazům bota (obchází všechny kontroly oprávnění)",
+      "noRole": "Žádná role"
+    },
+    "familyRoles": {
+      "title": "Rodinné role",
+      "description": "Spravujte automatické role podle členství v rodině a pozice v klanu",
+      "selectRole": "Vybrat roli",
+      "addRole": "Přidat roli...",
+      "deletedRole": "Odstraněná role",
+      "noRolesConfigured": "Nejsou nastaveny žádné role",
+      "modes": {
+        "both": "Přidávat a odebírat",
+        "add": "Pouze přidávat",
+        "remove": "Pouze odebírat"
+      },
+      "types": {
+        "family": "Rodina",
+        "notFamily": "Mimo rodinu",
+        "elder": "Starší",
+        "coLeader": "Spoluvůdce",
+        "leader": "Vůdce"
+      },
+      "descriptions": {
+        "family": "Má alespoň jeden účet v rodinných klanech",
+        "notFamily": "Nemá žádný účet v rodinných klanech",
+        "elder": "Je starším v některém rodinném klanu",
+        "coLeader": "Je zástupcem vůdce v některém rodinném klanu",
+        "leader": "Je vůdcem v některém rodinném klanu"
+      }
+    },
+    "tenureRoles": {
+      "title": "Role podle působení na Discordu",
+      "description": "Automaticky přidělujte role podle délky členství na serveru",
+      "addRole": "Přidat roli podle působení",
+      "addDialogTitle": "Přidat roli podle působení",
+      "addDialogDescription": "Přidělte roli členům, kteří jsou na serveru určitý počet měsíců",
+      "monthsInServer": "Měsíce na serveru",
+      "discordRole": "Role na Discordu",
+      "selectRole": "Vybrat roli",
+      "noRolesConfigured": "Nejsou nastaveny žádné role podle působení",
+      "addRoleToStart": "Přidejte roli podle působení a začněte",
+      "months": "Měsíce",
+      "month": "měsíc",
+      "actions": "Akce",
+      "remove": "Odebrat",
+      "unknownRole": "Neznámá role"
+    },
+    "prefix": "Předpona příkazů",
+    "language": "Jazyk",
+    "timezone": "Časové pásmo",
+    "theme": "Motiv"
+  },
+  "FamilySettingsPage": {
+    "title": "Nastavení rodiny",
+    "description": "Nastavte rodinné role a formát přezdívek členů klanu",
+    "loading": "Načítání nastavení...",
+    "reset": "Resetovat",
+    "saving": "Ukládání...",
+    "saveChanges": "Uložit změny",
+    "settingsSaved": "Nastavení bylo úspěšně uloženo!",
+    "nickname": {
+      "title": "Správa přezdívek",
+      "description": "Určete formát přezdívek",
+      "automaticChanges": "Automatické změny",
+      "automaticChangesDesc": "Povolit botovi aktualizovat přezdívky členů",
+      "familyFormat": "Formát členů rodiny",
+      "availablePlaceholders": "Dostupné zástupné symboly",
+      "preview": "Náhled:",
+      "nonFamilyFormat": "Formát členů mimo rodinu",
+      "placeholders": {
+        "discordName": "Uživatelské jméno na Discordu",
+        "discordDisplayName": "Přezdívka na serveru",
+        "playerName": "Jméno hráče CoC",
+        "playerTag": "Tag hráče",
+        "playerTownhall": "Úroveň TH",
+        "playerTownhallSmall": "TH v horním indexu",
+        "playerWarstars": "Válečné hvězdy",
+        "playerRole": "Role v klanu",
+        "playerClan": "Název klanu",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Zkratka klanu"
+      }
+    },
+    "familyRoles": {
+      "title": "Rodinné role",
+      "description": "Spravujte automatické role podle členství v rodině a pozice v klanu",
+      "selectRole": "Vybrat roli",
+      "addRole": "Přidat roli...",
+      "deletedRole": "Odstraněná role",
+      "noRolesConfigured": "Nejsou nastaveny žádné role",
+      "modes": {
+        "both": "Přidávat a odebírat",
+        "add": "Pouze přidávat",
+        "remove": "Pouze odebírat"
+      },
+      "types": {
+        "family": "Rodina",
+        "notFamily": "Mimo rodinu",
+        "elder": "Starší",
+        "coLeader": "Spoluvůdce",
+        "leader": "Vůdce"
+      },
+      "descriptions": {
+        "family": "Má alespoň jeden účet v rodinných klanech",
+        "notFamily": "Nemá žádný účet v rodinných klanech",
+        "elder": "Je starším v některém rodinném klanu",
+        "coLeader": "Je zástupcem vůdce v některém rodinném klanu",
+        "leader": "Je vůdcem v některém rodinném klanu"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Jazyk"
+  },
+  "ThemeSwitcher": {
+    "label": "Motiv",
+    "light": "Světlý",
+    "dark": "Tmavý",
+    "system": "Systém"
+  },
+  "AuthCallback": {
+    "authenticating": "Ověřování...",
+    "authenticatingDescription": "Počkejte, než vás přihlásíme přes Discord",
+    "authenticationFailed": "Ověření selhalo",
+    "tryAgain": "Zkusit znovu",
+    "backToHome": "Zpět na domovskou stránku",
+    "errorCancelled": "Přihlášení bylo na Discordu zrušeno. Až budete připraveni, zkuste to znovu.",
+    "errorDiscordFailedWithReason": "Ověření přes Discord selhalo: {reason}",
+    "errorNoAuthorizationCode": "Z Discordu nebyl přijat autorizační kód.",
+    "errorCodeVerifierMissing": "Ověřovací kód nebyl nalezen. Zkuste se znovu přihlásit.",
+    "errorAuthenticateFailed": "Ověření přes Discord se nezdařilo.",
+    "loadingVillages": "Přihlašování přes Discord...",
+    "loadingClanData": "Načítání seznamu serverů...",
+    "loadingWarStats": "Téměř připraveno..."
+  },
+  "LoginPage": {
+    "redirecting": "Přesměrování na Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Funkce",
+      "subtitle": "Objevte výkonné nástroje ClashKing pro správu a rozvoj klanu na Discordu, mobilních zařízeních i webu."
+    },
+    "sections": {
+      "bot": {
+        "title": "Bot ClashKing",
+        "description": "Bot ClashKing je jediný bot pro Discord, kterého potřebujete ke správě klanu a komunity Clash of Clans. Nabízí jedinečné funkce pro organizaci, aktivitu a růst klanu.",
+        "items": [
+          "Protokoly v reálném čase: Sledujte války, CWL, klanové hry, nájezdy, dary a události členů.",
+          "Systém tiketů: Tikety pro nábor doplňují standardní tikety podpory.",
+          "Automatické role: Automaticky přidělujte role podle stavu klanu nebo správy rodiny.",
+          "Připomenutí: Odesílejte upozornění na válečné útoky, klanové hry nebo cokoli jiného.",
+          "Podrobné statistiky: Přehled výkonu hráčů a klanů se sledováním aktivity.",
+          "Správa soupisek: Snadno organizujte a optimalizujte válečné soupisky."
+        ],
+        "ctaPrimary": "Pozvat bota",
+        "ctaSecondary": "Připojit se ke komunitě"
+      },
+      "app": {
+        "title": "Aplikace ClashKing (otevřená beta)",
+        "description": "Aplikace ClashKing skvěle doplňuje bota a přináší důležité nástroje a přehledy přímo do mobilního zařízení. Zůstanete ve spojení kdykoli a kdekoli, i bez Discordu.",
+        "items": [
+          "Statistiky v reálném čase: Podrobné statistiky hráčů a klanů synchronizované s botem.",
+          "Sledování postupu klanu: Plynule sledujte vývoj svého klanu v čase.",
+          "Správa více účtů: Snadno přepínejte mezi účty a sledujte jejich výkon.",
+          "Vestavěná historie: Využijte historická data k analýze trendů a zlepšení strategií.",
+          "Správa serveru na Discordu: (Již brzy) Spravujte role a tikety z aplikace.",
+          "Pokročilá oznámení: (Již brzy) Přizpůsobte si upozornění na důležité události."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Vytvářejte vlastní nástroje a projekty s API ClashKing. Používání je zdarma, pokud uvedete projekt ClashKing.",
+        "items": [],
+        "ctaPrimary": "Dokumentace API",
+        "ctaSecondary": "API na GitHubu"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Potřebujete pomoc?",
+    "subtitle": "Ať už hledáte dokumentaci nebo přímou podporu, rádi vám pomůžeme.",
+    "documentation": {
+      "title": "Dokumentace",
+      "description": "Prohlédněte si podrobné průvodce a přehledy příkazů a využijte ClashKing naplno.",
+      "cta": "Zobrazit dokumentaci"
+    },
+    "discord": {
+      "title": "Podpora na Discordu",
+      "description": "Potřebujete další pomoc? Připojte se k naší komunitě na Discordu, pokládejte otázky, hlaste chyby nebo si povídejte s ostatními.",
+      "cta": "Připojit se k Discordu"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Open-source projekt",
+    "subtitle": "ClashKing je zcela bezplatný open-source projekt. Věříme, že ho komunita může dále zlepšovat. Bot i API mají otevřený zdrojový kód, takže můžete přispívat nebo je využít ve vlastních projektech.",
+    "github": {
+      "title": "Organizace GitHub",
+      "description": "Prozkoumejte zdrojový kód, přispějte k botovi nebo si prohlédněte další open-source nástroje.",
+      "ctaPrimary": "Zobrazit organizaci",
+      "repos": {
+        "bot": "Repozitář bota",
+        "app": "Repozitář aplikace",
+        "api": "Repozitář API",
+        "assets": "Repozitář prostředků"
+      }
+    },
+    "api": {
+      "title": "Dokumentace API",
+      "description": "Vytvářejte vlastní nástroje a projekty s API ClashKing. Používání je zdarma, pokud uvedete projekt ClashKing.",
+      "cta": "Dokumentace API"
+    },
+    "translation": {
+      "title": "Pomozte nám překládat",
+      "description": "Pomozte nám přeložit ClashKing do svého jazyka! Prostřednictvím projektů Crowdin můžete překládat web, bota i související texty.",
+      "app": "Přeložit aplikaci",
+      "bot": "Přeložit bota"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Přispět",
+        "description": "Pomozte nám opravovat chyby, přidávat nové funkce a vylepšovat stávající. Každý příspěvek se počítá!"
+      },
+      "community": {
+        "title": "Komunita",
+        "description": "Připojte se ke komunitě na Discordu, diskutujte o nápadech, získejte pomoc a spolupracujte s dalšími vývojáři."
+      },
+      "learn": {
+        "title": "Učit se",
+        "description": "V dokumentaci a příkladech zjistíte, jak efektivně používat bota a API."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Podpořte nás",
+    "subtitle": "ClashKing je bezplatný open-source projekt. Vaše podpora nám pomáhá provozovat servery a vyvíjet nové funkce pro komunitu.",
+    "patreon": {
+      "title": "Staňte se podporovatelem",
+      "description": "Podporujte nás měsíčně na Patreonu, získejte exkluzivní výhody a přednostní přístup k funkcím a pomozte hradit hosting.",
+      "cta": "Podpořit na Patreonu"
+    },
+    "creatorCode": {
+      "title": "Použít kód tvůrce",
+      "description": "Podpořte nás zdarma použitím kódu tvůrce",
+      "descriptionSuffix": "ve hře nebo v obchodě Supercell.",
+      "ctaGame": "Použít ve hře",
+      "ctaStore": "Použít v obchodě Supercell"
+    },
+    "whySupport": {
+      "title": "Proč nás podpořit?",
+      "description": "Každý příspěvek pomáhá hradit servery a poplatky API. Použití našeho kódu tvůrce vás nic nestojí, ale nám výrazně pomáhá!"
+    }
+  },
+  "ServersPage": {
+    "title": "Vybrat server",
+    "description": "Vyberte server, na kterém chcete nastavit bota ClashKing. Musíte být vlastníkem nebo správcem serveru na Discordu.",
+    "backToHome": "Zpět na domovskou stránku",
+    "backToLogin": "Zpět na přihlášení",
+    "error": "Chyba",
+    "configure": "Nastavit",
+    "invite": "Pozvat",
+    "members": "členové",
+    "server": "Server",
+    "roles": {
+      "owner": "Vlastník",
+      "administrator": "Správce",
+      "manager": "Manažer"
+    },
+    "noServers": {
+      "title": "Nebyly nalezeny žádné servery",
+      "description": "Nebyl nalezen žádný server na Discordu, kde jste správcem nebo vlastníkem."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "Automatické přehledy",
+    "description": "Obnovujte živý přehled nebo odesílejte nové přehledy podle provozního plánu",
+    "actions": {
+      "create": "Vytvořit automatický přehled",
+      "edit": "Upravit automatický přehled",
+      "delete": "Odstranit automatický přehled",
+      "save": "Uložit změny",
+      "cancel": "Zrušit",
+      "retry": "Opakovat"
+    },
+    "metrics": {
+      "total": "Nastaveno",
+      "refresh": "Obnovované přehledy",
+      "send": "Plánovaná odeslání"
+    },
+    "filters": {
+      "all": "Vše"
+    },
+    "list": {
+      "title": "Nastavené automatické přehledy",
+      "description": "Doručování, cíle, umístění a provozní stav řízené správcem",
+      "empty": "V tomto zobrazení nejsou žádné automatické přehledy",
+      "emptyDescription": "Vytvořit jej můžete, až registr API zpřístupní některý typ přehledu."
+    },
+    "registry": {
+      "emptyTitle": "Nejsou dostupné žádné typy přehledů",
+      "emptyDescription": "Registr API je nyní prázdný. Automatické přehledy bude možné vytvořit, až v něm bude povolen některý typ přehledu.",
+      "typeUnavailable": "Tento typ přehledu již není v registru dostupný, takže jej nelze upravit."
+    },
+    "dialog": {
+      "createTitle": "Vytvořit automatický přehled",
+      "editTitle": "Upravit automatický přehled",
+      "description": "Možnosti a omezení vycházejí z aktuálního registru přehledů."
+    },
+    "boardType": {
+      "label": "Typ přehledu",
+      "description": "Dostupné typy pocházejí přímo z registru API.",
+      "placeholder": "Vybrat typ přehledu"
+    },
+    "targets": {
+      "kind": "Typ cíle: {kind}",
+      "kindDescription": "Registr určuje, jak se mají jednotlivé hodnoty cílů vykládat.",
+      "scope": "Rozsah cílů",
+      "scopeDescription": "Rozsah rodiny používá všechny nastavené rodinné klany a nemá žádné výslovné cíle.",
+      "family": "Rodina",
+      "custom": "Vlastní cíle",
+      "values": "Cíle",
+      "count": "Pro tento typ přehledu zadejte {min} až {max} cílů.",
+      "placeholder": "Zadejte cíl typu {kind}",
+      "add": "Přidat cíl",
+      "remove": "Odebrat cíl"
+    },
+    "modes": {
+      "label": "Režim doručování",
+      "description": "Registr určuje, které režimy doručování tento přehled podporuje.",
+      "refresh": "Aktualizovat",
+      "send": "Plánované odeslání"
+    },
+    "destination": {
+      "label": "Cíl odeslání",
+      "channel": "Nadřazený kanál",
+      "channelDescription": "Textové a oznamovací kanály mohou doručovat přímo; fóra používají podřízený příspěvek.",
+      "selectChannel": "Vybrat kanál",
+      "thread": "Vlákno nebo příspěvek ve fóru",
+      "selectThread": "Vybrat vlákno",
+      "threadOptional": "Volitelné pro textové a oznamovací kanály.",
+      "forumRequired": "Pro tento cíl je vyžadován příspěvek ve fóru.",
+      "direct": "Odeslat přímo do kanálu",
+      "deleted": "Kanál již neexistuje"
+    },
+    "refresh": {
+      "interval": "Interval obnovení (minuty)",
+      "intervalDescription": "Povolený rozsah: {minimum}–{maximum} minut."
+    },
+    "schedule": {
+      "label": "Plán",
+      "kind": "Způsob plánování",
+      "kindDescription": "Odesílejte denně, ve vybrané dny týdne nebo jednou měsíčně.",
+      "daily": "Denně",
+      "weekdays": "Vybrané dny týdne",
+      "dayOfMonth": "Den v měsíci",
+      "selectWeekdays": "Dny týdne",
+      "monthDay": "Den v měsíci",
+      "monthDayDescription": "Použijte hodnotu od 1 do 31.",
+      "timezone": "Časové pásmo",
+      "timeOfDay": "Čas během dne",
+      "nextRun": "Příští spuštění"
+    },
+    "weekdays": {
+      "1": "Pondělí",
+      "2": "Úterý",
+      "3": "Středa",
+      "4": "Čtvrtek",
+      "5": "Pátek",
+      "6": "Sobota",
+      "7": "Neděle"
+    },
+    "status": {
+      "enabled": "Zapnuto",
+      "disabled": "Vypnuto",
+      "enabledDescription": "Vypnuté přehledy si zachovají nastavení, ale nespouštějí se.",
+      "messageId": "Aktuální obnovovaná zpráva: {id}"
+    },
+    "delete": {
+      "title": "Odstranit tento automatický přehled?",
+      "description": "Tím se nastavení odstraní a akci nelze vrátit zpět."
+    },
+    "feedback": {
+      "created": "Automatický přehled vytvořen",
+      "updated": "Automatický přehled aktualizován",
+      "deleted": "Automatický přehled odstraněn"
+    },
+    "validation": {
+      "boardType": "Vyberte typ přehledu z aktuálního registru.",
+      "targetScope": "Vyberte rozsah cílů podporovaný tímto typem přehledu.",
+      "familyTargets": "Rozsah rodiny nemůže obsahovat výslovné cíle.",
+      "targetCount": "Zadejte {min} až {max} neprázdných cílů.",
+      "deliveryMode": "Vyberte režim doručování podporovaný tímto typem přehledu.",
+      "destination": "Vyberte platný cíl. Kanály fóra vyžadují podřízený příspěvek.",
+      "refreshInterval": "Zadejte interval obnovení od {minimum} do {maximum} minut.",
+      "timezone": "Zadejte časové pásmo IANA.",
+      "timeOfDay": "Zadejte platný čas během dne.",
+      "weekdays": "Vyberte alespoň jeden den v týdnu.",
+      "dayOfMonth": "Zadejte den od 1 do 31."
+    },
+    "errors": {
+      "title": "Automatické přehledy nejsou dostupné",
+      "session": "Platnost relace vypršela.",
+      "request": "Požadavek automatických přehledů selhal.",
+      "load": "Automatické přehledy se nepodařilo načíst.",
+      "save": "Automatický přehled se nepodařilo uložit.",
+      "delete": "Automatický přehled se nepodařilo odstranit."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Nastavení panelů tiketů",
+    "description": "Nastavte kategorie a kanály protokolů pro jednotlivé panely tiketů.",
+    "noPanels": "Nebyly nalezeny žádné panely tiketů",
+    "noPanelsHint": "Pomocí tlačítka výše vytvořte první panel.",
+    "createPanel": "Nový panel",
+    "createPanelTitle": "Vytvořit panel tiketů",
+    "createPanelDescription": "Dejte panelu jedinečný název. Po vytvoření můžete nastavit tlačítka a kanály.",
+    "panelNameLabel": "Název panelu",
+    "panelNamePlaceholder": "např. Přihlášky",
+    "panelCreated": "Panel „{name}“ byl vytvořen.",
+    "confirmDeletePanel": "Odstranit panel „{name}“?",
+    "confirmDeletePanelHint": "Tím se trvale odstraní panel i všechna nastavení jeho tlačítek.",
+    "panelDeleted": "Panel byl odstraněn.",
+    "panelHint": "Kliknutím panel rozbalíte a nastavíte.",
+    "panelEmbed": "Embed panelu",
+    "panelEmbedHint": "Embed použitý při zveřejnění panelu tiketů v Discordu.",
+    "panelEmbedInfoLine1": "Chcete-li vytvořit nový embed nebo upravit stávající, přejděte na stránku %s v části {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Chcete-li přidat nebo upravit tlačítka, přejděte v tomto panelu na %s.",
+    "panelEmbedPreview": "Náhled embedu",
+    "panelEmbedPreviewEmpty": "Pro vybraný embed panelu není k dispozici náhled.",
+    "ticketOpenEmbed": "Úvodní embed tiketu",
+    "ticketOpenEmbedHint": "Volitelný vlastní embed odeslaný, když toto tlačítko otevře tiket.",
+    "selectEmbed": "Vybrat embed",
+    "defaultEmbed": "Bez vlastního embedu panelu",
+    "noCustomMessage": "Použít výchozí zprávu tiketu",
+    "buttons": "tlačítka",
+    "buttonList": "Tlačítka",
+    "categories": "Kategorie",
+    "openCategory": "Kategorie otevřených tiketů",
+    "open_category": "Kategorie otevřených tiketů",
+    "sleepCategory": "Kategorie odložených tiketů",
+    "sleep_category": "Kategorie odložených tiketů",
+    "closedCategory": "Kategorie uzavřených tiketů",
+    "closed_category": "Kategorie uzavřených tiketů",
+    "selectCategory": "Vybrat kategorii...",
+    "logChannels": "Kanály protokolů",
+    "statusChangeLog": "Protokol změn stavu",
+    "status_change_log": "Protokol změn stavu",
+    "buttonClickLog": "Protokol kliknutí na tlačítko",
+    "ticket_button_click_log": "Protokol kliknutí na tlačítko",
+    "closeLog": "Protokol uzavření tiketu",
+    "ticket_close_log": "Protokol uzavření tiketu",
+    "selectChannel": "Vybrat kanál...",
+    "savedSuccess": "Panel „{panel}“ byl úspěšně uložen.",
+    "tabChannels": "Panel tiketů",
+    "tabSettings": "Nastavení",
+    "tabButtons": "Tlačítka",
+    "tabMessages": "Zprávy",
+    "autoSaveSaving": "Ukládání...",
+    "autoSaveSaved": "Uloženo",
+    "autoSaveErrorTitle": "Automatické uložení selhalo",
+    "autoSaveErrorDescription": "Tato nastavení tiketů se nepodařilo uložit.",
+    "messages": "zprávy",
+    "noButtons": "Zatím nejsou žádná tlačítka. Začněte přidáním prvního.",
+    "addButton": "Přidat tlačítko",
+    "addButtonTitle": "Přidat tlačítko",
+    "addButtonDescription": "Nastavte vzhled nového tlačítka.",
+    "buttonLabel": "Text tlačítka",
+    "buttonLabelPlaceholder": "např. Přihlásit se",
+    "buttonStyle": "Barva tlačítka",
+    "buttonStyleBlue": "Modrá",
+    "buttonStyleGrey": "Šedá",
+    "buttonStyleGreen": "Zelená",
+    "buttonStyleRed": "Červená",
+    "buttonAdded": "Tlačítko bylo přidáno.",
+    "buttonDeleted": "Tlačítko bylo odstraněno.",
+    "editButtonTitle": "Upravit nastavení tlačítka",
+    "editButtonDescription": "Nastavte toto tlačítko tiketu.",
+    "buttonAppearanceSaved": "Vzhled byl uložen.",
+    "confirmDeleteButton": "Odstranit tlačítko „{label}“?",
+    "confirmDeleteButtonHint": "Tím se odstraní tlačítko i všechna jeho nastavení (role, otázky atd.).",
+    "modRoles": "Role personálu (upozorněné)",
+    "modRolesHint": "Tyto role budou zmíněny při otevření tiketu.",
+    "noPingRoles": "Role personálu (bez upozornění)",
+    "noPingRolesHint": "Tyto role tikety uvidí, ale nebudou upozorněny.",
+    "questions": "Otázky",
+    "questionsHint": "Až 5 otázek zobrazených v dialogu při otevření tiketu.",
+    "question": "Otázka",
+    "privateThread": "Soukromé vlákno",
+    "privateThreadHint": "Vytvoří samostatné soukromé vlákno pro personál.",
+    "accountApply": "Vyžadovat účet CoC",
+    "accountApplyHint": "Uživatel musí propojit účet Clash of Clans.",
+    "playerInfo": "Zobrazit informace o hráči",
+    "playerInfoHint": "Při otevření tiketu zobrazí statistiky účtu.",
+    "thMin": "Min. radnice",
+    "numApply": "Maximum účtů",
+    "naming": "Formát názvu",
+    "namingPlaceholders": "Zástupné symboly názvu",
+    "namingVariables": "Proměnné: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Tlačítko „{label}“ bylo uloženo.",
+    "badge": {
+      "accountApply": "Vyžadováno CoC",
+      "privateThread": "Soukromé vlákno"
+    },
+    "approveMessages": "Zprávy o schválení / zamítnutí",
+    "approveMessagesHint": "Předpřipravené zprávy, které může personál posílat žadatelům (max. 25).",
+    "messagesMaxHint": "Můžete přidat až 25 zpráv.",
+    "editMessagesButton": "Upravit zprávy",
+    "editMessagesTitle": "Upravit předpřipravené zprávy",
+    "editMessagesDescription": "Přidávejte, odebírejte a upravujte předpřipravené zprávy tiketů.",
+    "addMessage": "Přidat zprávu",
+    "noMessages": "Zatím nejsou žádné zprávy. Začněte přidáním první.",
+    "messageName": "Název zprávy",
+    "contentLabel": "Obsah",
+    "messageContent": "Obsah zprávy...",
+    "messageNameRequired": "Všechny zprávy musí mít název.",
+    "messagesSaved": "Zprávy o schválení i zamítnutí byly uloženy.",
+    "rolesToAdd": "Role k přidělení",
+    "rolesToAddHint": "Role automaticky přidělené uživateli při otevření tiketu.",
+    "rolesToRemove": "Role k odebrání",
+    "rolesToRemoveHint": "Role automaticky odebrané uživateli při otevření tiketu.",
+    "applyClans": "Povolené klany",
+    "applyClansHint": "Tento tiket mohou otevřít pouze členové těchto klanů. Ponecháním prázdné hodnoty jej povolíte všem.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Požadavky na radnici",
+    "thRequirementsHint": "Minimální úrovně hrdinů požadované pro jednotlivé úrovně radnice k otevření tohoto tiketu.",
+    "thHeroLegend": "BK = Král barbarů · AQ = Královna lučištnic · GW = Velký strážce · RC = Královský šampion · WARST = Válečné hvězdy",
+    "addThLevel": "Přidat úroveň TH",
+    "thLevel": "TH",
+    "numApplyHint": "Maximální počet účtů CoC, se kterými se uživatel může přihlásit (1–25).",
+    "embeds": "Embedy",
+    "embedsHint": "Embedy Discordu používané jako zprávy panelu nebo zprávy při otevření tiketu.",
+    "newEmbed": "Nový embed",
+    "embedName": "Název embedu",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "URL Discohook",
+    "embedDiscohookHint": "Navrhněte embed na Discohooku, zkopírujte URL stránky a vložte ji sem.",
+    "openDiscohook": "Otevřít Discohook",
+    "openInDiscohook": "Otevřít v Discohooku",
+    "copyDiscohookUrl": "Kopírovat URL Discohook",
+    "copyDiscohookUrlDone": "URL zkopírována!",
+    "editEmbed": "Upravit",
+    "deleteEmbed": "Smazat",
+    "confirmDeleteEmbed": "Odstranit embed „{name}“?",
+    "confirmDeleteEmbedHint": "Tím se odstraní pouze z ClashKing. Již zveřejněné zprávy Discord to neovlivní.",
+    "embedSaved": "Embed „{name}“ byl uložen.",
+    "embedCreated": "Embed „{name}“ byl vytvořen.",
+    "embedDeleted": "Embed byl odstraněn.",
+    "noEmbeds": "Zatím nejsou žádné embedy.",
+    "noEmbedsHint": "Zde vytvořte embed a poté jej přiřaďte panelu nebo tlačítku.",
+    "legacyEmbed": "Vytvořeno botem — vložením URL Discohook povolíte úpravy.",
+    "invalidDiscohookUrl": "Neplatná URL. Vložte URL stránky Discohook (discohook.app/?data=... nebo discohook.app/?share=...).",
+    "tabEmbeds": "Embedy"
+  },
+  "EmbedsPage": {
+    "title": "Embedy",
+    "description": "Vytvářejte a spravujte šablony embedů Discord pro panely tiketů a tlačítka.",
+    "nameHint": "Dejte embedu jedinečný identifikátor. Obsah můžete později změnit."
+  },
+  "EmbedEditor": {
+    "importSection": "Importovat z Discohooku",
+    "addMessage": "Přidat zprávu",
+    "addMessageDialogTitle": "Přidat zprávu",
+    "addMessageDialogDescription": "Zvolte požadovanou úroveň zprávy.",
+    "addMessageClassicTitle": "Klasická",
+    "addMessageClassicDescription": "Jednoduchá a spolehlivá: text a embedy. Pokud si nejste jistí, zvolte tuto možnost.",
+    "addMessageV2Title": "Komponenty v2",
+    "addMessageV2Description": "Pokročilejší rozložení a interaktivní komponenty (tlačítka, výběry, sekce). Nejlepší pro pokročilá nastavení.",
+    "betaTag": "Beta",
+    "importExport": "Import a export",
+    "importExportDescription": "Importujte embed z Discohooku nebo exportujte aktuální embed do Discohooku.",
+    "importFromDiscohook": "Importovat z Discohooku",
+    "copyDiscohookUrl": "Kopírovat URL Discohook",
+    "openInDiscohook": "Otevřít v Discohooku",
+    "content": "Obsah",
+    "contentPlaceholder": "Obsah zprávy zobrazený nad embedy...",
+    "profileSection": "Profil",
+    "profileName": "Jméno",
+    "profileAvatarUrl": "URL avatara",
+    "profileUnsupportedWarning": "Upozornění: bot nyní nepodporuje aktualizaci tohoto profilu.",
+    "import": "Importovat",
+    "importError": "Neplatná URL Discohook. Vložte URL stránky Discohook.",
+    "importMultipleMessagesWarning": "Tento odkaz obsahuje více zpráv. Byla importována pouze první — bot podporuje jednu zprávu na embed.",
+    "colorSection": "Barva",
+    "authorSection": "Autor",
+    "authorName": "Jméno",
+    "authorIconUrl": "URL ikony",
+    "authorUrl": "URL autora",
+    "bodySection": "Tělo",
+    "title": "Název",
+    "titleUrl": "URL názvu",
+    "sidebarColor": "Barva postranního pruhu",
+    "description": "Popis",
+    "descriptionPlaceholder": "Popis embedu...",
+    "fieldsSection": "Pole",
+    "addField": "Přidat pole",
+    "field": "Pole",
+    "fieldName": "Jméno",
+    "fieldValue": "Hodnota",
+    "fieldInline": "V řádku",
+    "imagesSection": "Obrázky",
+    "thumbnailUrl": "URL miniatury",
+    "imageUrl": "URL obrázku",
+    "footerSection": "Zápatí",
+    "footerText": "Text zápatí",
+    "footerIconUrl": "URL ikony zápatí",
+    "timestamp": "Zahrnout časové razítko",
+    "preview": "Náhled",
+    "previewEmpty": "Vyplňte pole a zobrazí se náhled",
+    "modeToggleV1": "Klasická (V1)",
+    "modeToggleV2": "Komponenty (V2)",
+    "componentsSection": "Komponenty",
+    "addComponent": "Přidat komponentu",
+    "containerLabel": "Kontejner",
+    "textDisplayLabel": "Textové zobrazení",
+    "separatorLabel": "Oddělovač",
+    "mediaGalleryLabel": "Galerie médií",
+    "sectionLabel": "Sekce",
+    "dividerLine": "Zobrazit oddělovací čáru",
+    "spacing": "Mezery",
+    "spacingSmall": "Malé",
+    "spacingLarge": "Velké",
+    "imageDescription": "Alternativní text",
+    "imageSpoiler": "Spoiler",
+    "addImage": "Přidat obrázek",
+    "addTextBlock": "Přidat textový blok",
+    "accessory": "Doplněk",
+    "accessoryNone": "Žádné",
+    "accessoryThumbnail": "Miniatura",
+    "accessoryButton": "Tlačítko",
+    "thumbnailAlt": "Alternativní text miniatury",
+    "accentColor": "Barva zvýraznění",
+    "addContainer": "Přidat podřízenou komponentu",
+    "containerSpoiler": "Kontejner se spoilerem",
+    "stringSelectLabel": "Výběr textu",
+    "userSelectLabel": "Výběr uživatele",
+    "roleSelectLabel": "Výběr role",
+    "mentionableSelectLabel": "Výběr zmínitelné položky",
+    "channelSelectLabel": "Výběr kanálu",
+    "fileLabel": "Soubor",
+    "fileUrl": "URL souboru",
+    "fileUploadButton": "Nahrát",
+    "fileSpoiler": "Spoiler",
+    "selectCustomId": "Vlastní ID",
+    "selectPlaceholder": "Zástupný text",
+    "selectMinValues": "Minimum hodnot",
+    "selectMaxValues": "Maximum hodnot",
+    "selectOptions": "Možnosti",
+    "selectOption": "Možnost",
+    "selectOptionLabel": "Popisek",
+    "selectOptionValue": "Hodnota",
+    "selectOptionDescription": "Popis",
+    "selectOptionDefault": "Vybráno ve výchozím nastavení",
+    "addSelectOption": "Přidat možnost",
+    "selectDisabled": "Vypnuto",
+    "actionRowMode": "Typ řádku",
+    "actionRowModeButtons": "Tlačítka",
+    "actionRowLabel": "Řádek akcí",
+    "addButton": "Přidat tlačítko",
+    "buttonLabel": "Popisek",
+    "buttonStyle": "Styl",
+    "buttonStylePrimary": "Primární",
+    "buttonStyleSecondary": "Sekundární",
+    "buttonStyleSuccess": "Úspěch",
+    "buttonStyleDanger": "Nebezpečné",
+    "buttonStyleLink": "Odkaz",
+    "tabMentions": "Zmínky",
+    "tabTime": "Čas",
+    "tabEmojis": "Emodži",
+    "dateLabel": "Datum",
+    "timeLabel": "Čas",
+    "mentionsChannels": "Kanály",
+    "mentionsSpecial": "Speciální",
+    "mentionsChannelList": "Všechny kanály",
+    "mentionsRoles": "Role",
+    "mentionsServerGuide": "Průvodce serverem",
+    "mentionsBrowseChannels": "Procházet kanály",
+    "mentionsChannelsAndRoles": "Kanály a role",
+    "mentionsNoChannels": "Nebyly nalezeny žádné odpovídající kanály.",
+    "mentionsNoRoles": "Nebyly nalezeny žádné odpovídající role.",
+    "styleLabel": "Styl",
+    "timeRelativeNow": "před 0 sekundami",
+    "emojiSearchPlaceholder": "Najděte správné emodži",
+    "emojiToneLabel": "Odstín pleti emodži",
+    "emojiCategory": {
+      "people": "Lidé",
+      "nature": "Příroda",
+      "food": "Jídlo",
+      "activities": "Aktivity",
+      "travel": "Cestování",
+      "objects": "Předměty",
+      "symbols": "Symboly",
+      "flags": "Vlajky"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Vypnuto",
+    "unknownComponent": "Neznámá komponenta",
+    "unknownComponentHint": "Tento typ komponenty zde nelze upravit, ale při uložení bude zachován."
+  },
+  "PanelsPage": {
+    "title": "Panely",
+    "description": "Nastavte interaktivní panel členů zveřejněný na serveru. Členové mohou jediným kliknutím propojit účet, obnovit role a provést další akce.",
+    "saved": "Nastavení panelu bylo uloženo.",
+    "embedSection": "Embed",
+    "embedHint": "Volitelný embed zobrazený nad tlačítky.",
+    "embedLabel": "Embed",
+    "noEmbed": "Bez embedu (pouze tlačítka)",
+    "buttonsSection": "Tlačítka",
+    "buttonsHint": "Vyberte akční tlačítka, která se mají zobrazit. Pořadí odpovídá vašemu výběru.",
+    "colorSection": "Barva tlačítek",
+    "colorHint": "Použije se na všechna tlačítka.",
+    "welcomeSection": "Uvítací kanál",
+    "welcomeHint": "Po nastavení se panel automaticky zveřejní, když se připojí nový člen.",
+    "welcomeChannel": "Kanál",
+    "welcomeChannelPlaceholder": "Vybrat kanál...",
+    "editPanelButton": "Upravit panel",
+    "editDialogTitle": "Upravit panel",
+    "editDialogDescription": "Před uložením upravte embed, tlačítka a jejich barvu s živým náhledem.",
+    "welcomeAutosaveSuccess": "Uvítací kanál uložen.",
+    "welcomeAutosaveDisabled": "Uvítací kanál vypnut.",
+    "previewSection": "Náhled",
+    "previewHint": "Jak bude panel vypadat na Discordu.",
+    "previewNoEmbed": "Není vybrán žádný embed",
+    "previewEmbedNoData": "Embed nemá data náhledu",
+    "previewNoButtons": "Nejsou vybrána žádná tlačítka",
+    "color": {
+      "Blue": "Modrá",
+      "Green": "Zelená",
+      "Grey": "Šedá",
+      "Red": "Červená"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Soutěže",
+    "description": "Vytvářejte, plánujte a spravujte soutěže na svém serveru.",
+    "create": "Vytvořit soutěž",
+    "listTitle": "Přehled soutěží",
+    "listDescription": "Sledujte plánované, probíhající a ukončené soutěže na jednom místě.",
+    "empty": "Zatím nejsou žádné soutěže k zobrazení.",
+    "confirmDeleteTitle": "Odstranit soutěž",
+    "confirmDelete": "Opravdu chcete tuto soutěž odstranit?",
+    "discardTitle": "Zahodit změny?",
+    "discardDescription": "Máte neuložené změny. Pokud nyní zavřete okno, změny se ztratí.",
+    "discardConfirm": "Zahodit",
+    "formTabs": {
+      "general": "Obecné",
+      "messages": "Zprávy",
+      "restrictions": "Omezení",
+      "advanced": "Pokročilé"
+    },
+    "tabs": {
+      "ongoing": "Probíhající",
+      "upcoming": "Nadcházející",
+      "ended": "Ukončeno"
+    },
+    "stats": {
+      "total": "Celkem soutěží",
+      "totalEntries": "Celkem účastí",
+      "ongoing": "Probíhající soutěže",
+      "upcoming": "Nadcházející soutěže",
+      "ended": "Ukončené soutěže"
+    },
+    "statsDescriptions": {
+      "total": "Všechny soutěže nastavené na tomto serveru.",
+      "totalEntries": "Součet účastí ve všech soutěžích.",
+      "ongoing": "Právě probíhají a přijímají účastníky.",
+      "upcoming": "Naplánovány na pozdější spuštění.",
+      "ended": "Již dokončené soutěže."
+    },
+    "emptyTab": {
+      "title": "Zde nejsou žádné soutěže",
+      "ongoing": "Nyní neprobíhají žádné soutěže.",
+      "upcoming": "Nejsou naplánovány žádné soutěže. Začněte vytvořením první.",
+      "ended": "Zatím nebyly ukončeny žádné soutěže."
+    },
+    "status": {
+      "scheduled": "Naplánováno",
+      "ongoing": "Probíhá",
+      "ended": "Ukončeno"
+    },
+    "table": {
+      "giveaway": "Soutěž",
+      "channel": "Kanál",
+      "entries": "Účasti",
+      "timing": "Časování",
+      "start": "Začíná",
+      "end": "Končí",
+      "winnersHeader": "Výherci",
+      "winners": "{count, plural, one {# výherce} few {# výherci} other {# výherců}}",
+      "boosters": "{count, plural, one {# zvýhodnění} few {# zvýhodnění} other {# zvýhodnění}}",
+      "noChannel": "Žádný kanál",
+      "noChannelHelp": "Není přiřazen žádný kanál. Opravte to úpravou soutěže.",
+      "endsAt": "Končí",
+      "endedAt": "Ukončeno",
+      "duplicate": "Duplikovat",
+      "showingEnded": "Zobrazeno {shown} z celkového počtu {total}",
+      "showMore": "Zobrazit další položky: {count}",
+      "pendingUpdate": "Čekající aktualizace",
+      "pendingUpdateHelp": "Tato soutěž má čekající změny, které bot brzy použije.",
+      "openInDiscord": "Otevřít v Discordu",
+      "viewInDiscord": "Zobrazit v Discordu",
+      "reroll": "Znovu vylosovat výherce",
+      "rerolledCount": "{count, plural, one {# výherce byl znovu vylosován} few {# výherci byli znovu vylosováni} other {# výherců bylo znovu vylosováno}}",
+      "viewEntries": "Zobrazit účasti"
+    },
+    "entries": {
+      "description": "Seznam účastníků a jejich pravděpodobnost výhry.",
+      "totalEntries": "Celkem účastí",
+      "uniqueUsers": "Jedineční uživatelé",
+      "noEntrants": "Zatím nejsou žádné účasti.",
+      "userId": "ID uživatele",
+      "entryCount": "Účasti",
+      "winChance": "Šance na výhru"
+    },
+    "dialog": {
+      "createTitle": "Vytvořit soutěž",
+      "editTitle": "Upravit soutěž",
+      "description": "Nastavte zprávu, časování a požadavky soutěže.",
+      "create": "Vytvořit soutěž",
+      "saveChanges": "Uložit změny"
+    },
+    "form": {
+      "prize": "Výhra",
+      "prizePlaceholder": "Příklad: Zlatý pas",
+      "channel": "Kanál",
+      "channelPlaceholder": "Vybrat kanál",
+      "startTime": "Čas zahájení",
+      "startNow": "Zahájit okamžitě",
+      "endTime": "Čas ukončení",
+      "winners": "Počet výherců",
+      "mentions": "Zmíněné role",
+      "roleRequirements": "Požadované nebo vyloučené role",
+      "rolesMode": "Režim rolí",
+      "rolesModeOptions": {
+        "none": "Bez omezení rolí",
+        "allow": "Zúčastnit se mohou pouze tyto role",
+        "deny": "Tyto role se nemohou zúčastnit"
+      },
+      "rolesModeHelp": {
+        "none": "Této soutěže se mohou zúčastnit všichni uživatelé.",
+        "allow": "Zúčastnit se mohou pouze uživatelé s některou z vybraných rolí.",
+        "deny": "Uživatelé s některou z vybraných rolí se nemohou zúčastnit."
+      },
+      "textAboveEmbed": "Text nad embedem",
+      "textEmbedDefault": "Kliknutím na tlačítko níže se zúčastníte.",
+      "textInEmbed": "Popis embedu",
+      "textEndDefault": "Gratulujeme všem vybraným! Brzy vás budeme kontaktovat.",
+      "textOnEnd": "Zpráva při ukončení soutěže",
+      "image": "Obrázek soutěže",
+      "removeImage": "Odebrat aktuální obrázek",
+      "imagePreviewAlt": "Náhled soutěže",
+      "previewGiveaway": "Náhled soutěže",
+      "previewEnd": "Náhled závěrečné zprávy",
+      "boosters": "Zvýhodnění účasti",
+      "addBooster": "Přidat zvýhodnění",
+      "noBoosters": "Nejsou nastavena žádná zvýhodnění.",
+      "boosterLabel": "Zvýhodnění {index}",
+      "boostValue": "Násobitel",
+      "boostRoles": "Zvýhodněné role",
+      "requirements": "Požadavky na účast",
+      "profilePictureRequired": "Vyžadovat profilový obrázek na Discordu",
+      "cocAccountRequired": "Vyžadovat propojený účet Clash of Clans"
+    },
+    "validation": {
+      "prizeRequired": "Výhra je povinná.",
+      "channelRequired": "Kanál je povinný.",
+      "startTimeRequired": "Čas zahájení je povinný, pokud soutěž nezačíná ihned.",
+      "endTimeRequired": "Čas ukončení je povinný.",
+      "endAfterStart": "Čas ukončení musí být pozdější než čas zahájení.",
+      "imageTooLarge": "Obrázek musí mít méně než 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Aktuální souhrn",
+      "discordPreview": "Náhled v Discordu",
+      "giveawayTitle": "Náhled soutěže",
+      "giveawayDescription": "Takto bude vypadat zpráva probíhající soutěže.",
+      "endTitle": "Náhled závěrečné zprávy",
+      "endDescription": "Tato zpráva se odešle po skončení soutěže.",
+      "winnerCount": "Výherci",
+      "winnerWord": "{count, plural, one {výherce} few {výherci} other {výherců}}",
+      "mentionCount": "Zmíněné role",
+      "requirementCount": "Požadavky",
+      "boosterCount": "Zvýhodnění",
+      "profileRequired": "Vyžadován profilový obrázek",
+      "accountRequired": "Vyžadován propojený účet CoC",
+      "rolesAllow": "Omezeno na vybrané role",
+      "rolesDeny": "Vybrané role jsou vyloučeny",
+      "noChannel": "Zatím není vybrán žádný kanál",
+      "noPrize": "Zde se zobrazí vaše výhra",
+      "noEmbedText": "Přidáním textu embedu zobrazíte náhled těla soutěže.",
+      "noEndText": "Přidejte závěrečnou zprávu pro výherce.",
+      "startsAt": "Začíná: {date}",
+      "endsAt": "Končí: {date}",
+      "endsOn": "Končí {date}",
+      "endsFooter": "Končí",
+      "notScheduled": "Nenaplánováno",
+      "schedule": "Plán",
+      "endMessage": "Zpráva pro výherce",
+      "endSummary": "{winners, plural, one {Zde bude oznámen # výherce.} few {Zde budou oznámeni # výherci.} other {Zde bude oznámeno # výherců.}}",
+      "totalParticipants": "Celkem účastníků: {count}",
+      "participate": "Zúčastnit se",
+      "buttonHint": "Hlavní akční tlačítko zobrazené pod příspěvkem na Discordu."
+    },
+    "toast": {
+      "errorTitle": "Něco se pokazilo",
+      "successTitle": "Úspěch",
+      "loadError": "Soutěže se nepodařilo načíst.",
+      "saveError": "Soutěž se nepodařilo uložit.",
+      "deleteError": "Soutěž se nepodařilo odstranit.",
+      "created": "Soutěž byla úspěšně vytvořena.",
+      "updated": "Soutěž byla úspěšně aktualizována.",
+      "deleted": "Soutěž byla úspěšně odstraněna.",
+      "rerolled": "Výherci byli úspěšně znovu vylosováni.",
+      "rerollError": "Výherce se nepodařilo znovu vylosovat."
+    },
+    "reroll": {
+      "title": "Znovu vylosovat výherce",
+      "description": "Vyberte výherce, které chcete nahradit. Noví výherci budou vylosováni ze způsobilých účastníků.",
+      "selectWinners": "Vyberte výherce k nahrazení:",
+      "confirm": "{count, plural, one {Znovu vylosovat # výherce} few {Znovu vylosovat # výherce} other {Znovu vylosovat # výherců}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Přehled ovládacího panelu",
+    "description": "Sledujte statistiky serveru a dokončete základní nastavení",
+    "stats": {
+      "linkedPlayers": "Propojení hráči",
+      "linkedPlayersDesc": "Hráči propojení na tomto serveru",
+      "clansConfigured": "Nastavené klany",
+      "clansConfiguredDesc": "Klany sledované na tomto serveru",
+      "activeRosters": "Aktivní soupisky",
+      "activeRostersDesc": "Vytvořené válečné soupisky",
+      "totalAccounts": "Propojené účty",
+      "totalAccountsDesc": "Celkem propojených účtů CoC",
+      "playersTracked": "Sledovaní hráči",
+      "globalPlayers": "Celkem hráčů v databázi",
+      "clansTracked": "Sledované klany",
+      "globalClans": "Celkem klanů v databázi",
+      "botStatus": "Stav bota",
+      "online": "Online",
+      "offline": "Offline",
+      "memoryUsage": "Paměť: {used} MB ({percent} %)",
+      "cpuUsage": "CPU: {percent} %"
+    },
+    "botSection": "Statistiky bota",
+    "clans": {
+      "title": "Vaše klany",
+      "description": "{count, plural, one {Nastaven # klan} few {Nastaveny # klany} other {Nastaveno # klanů}}",
+      "manage": "Spravovat klany",
+      "addFirst": "Přidat první klan"
+    },
+    "quickStart": {
+      "title": "Rychlý start",
+      "description": "Začněte s nastavením bota ClashKing",
+      "step1": {
+        "title": "Obecná nastavení",
+        "description": "Nastavte formát přezdívek, barvy embedů a kanály protokolů"
+      },
+      "step2": {
+        "title": "Přidat klany",
+        "description": "Propojte klany Clash of Clans a nastavte role"
+      },
+      "step3": {
+        "title": "Nastavit automatické role",
+        "description": "Nastavte automatické přidělování rolí podle radnice, trofejí a dalších kritérií."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Statistiky bota",
+    "description": "Globální statistiky bota ClashKing a stav systému",
+    "about": {
+      "title": "O těchto statistikách",
+      "description": "Toto jsou globální statistiky celé sítě bota ClashKing",
+      "globalStats": "Globální statistiky",
+      "globalStatsDesc": "Počty hráčů a klanů zahrnují všechny sledované položky na serverech na Discordu používajících ClashKing",
+      "systemHealth": "Stav systému",
+      "systemHealthDesc": "Využití CPU a paměti ukazuje aktuální zatížení infrastruktury API ClashKing"
+    }
+  },
+  "NotFound": {
+    "title": "404 – Stránka nenalezena",
+    "description": "Hledaná stránka neexistuje.",
+    "goHome": "Přejít na domovskou stránku"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Bot pro Discord, mobilní aplikace a ovládací panel klanu",
+      "description": "Spravujte s ClashKing války, soupisky, účty, připomenutí a nastavení klanu na Discordu, mobilních zařízeních i webu.",
+      "openGraphTitle": "ClashKing | Veďte svůj klan"
+    },
+    "navigation": {
+      "ariaLabel": "Navigace ClashKing",
+      "homeLabel": "Domovská stránka ClashKing",
+      "mobileApp": "Mobilní aplikace",
+      "discordBot": "Bot pro Discord",
+      "dashboard": "Nástěnka"
+    },
+    "language": {
+      "label": "Jazyk"
+    },
+    "appearance": {
+      "label": "Vzhled",
+      "day": "Den",
+      "sunset": "Soumrak"
+    },
+    "actions": {
+      "addToDiscord": "Přidat do Discordu",
+      "addClashKing": "Přidat ClashKing",
+      "openDashboard": "Otevřít ovládací panel",
+      "joinTestFlight": "Připojit se k TestFlight",
+      "getAndroidApp": "Získat aplikaci pro Android"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Veďte",
+          "second": "svůj",
+          "third": "klan."
+        },
+        "accounts": {
+          "first": "Spravujte",
+          "second": "své",
+          "third": "účty."
+        },
+        "stats": {
+          "first": "Prozkoumejte",
+          "second": "herní",
+          "third": "statistiky."
+        }
+      },
+      "rotatingLabel": "Veďte svůj klan. Spravujte své účty. Prozkoumejte herní statistiky.",
+      "copy": "Války, soupisky, účty a nastavení klanu na Discordu, mobilních zařízeních i webu."
+    },
+    "app": {
+      "title": "Mobilní aplikace",
+      "intro": "Váš pomocník pro účty Clash.",
+      "stageLabel": "Obrazovky klanu, vylepšení a válečného widgetu mobilní aplikace ClashKing",
+      "images": {
+        "clanOverview": "Přehled klanu v mobilní aplikaci ClashKing",
+        "upgradeStats": "Statistiky vylepšení Velkého strážce v mobilní aplikaci ClashKing",
+        "warWidget": "Widget ClashKing s výsledkem války"
+      },
+      "features": {
+        "widgets": {
+          "title": "Widgety",
+          "copy": "Mějte své války na očích."
+        },
+        "notifications": {
+          "title": "Oznámení",
+          "copy": "Nechte se upozornit, když je k dispozici útok nebo se dokončí vylepšení."
+        },
+        "accounts": {
+          "title": "Propojené účty",
+          "copy": "Mějte všechny své účty Clash pohromadě."
+        }
+      }
+    },
+    "bot": {
+      "title": "Bot pro Discord",
+      "intro": "Statistiky a nástroje klanu přímo v Discordu.",
+      "imageLabel": "Klanový příkaz ClashKing v Discordu",
+      "imageAlt": "Klanový příkaz ClashKing zobrazující statistiky klanu ArcLine v Discordu",
+      "features": {
+        "rosters": {
+          "title": "Soupisky",
+          "copy": "Spravujte účty pro CWL nebo události."
+        },
+        "warTools": {
+          "title": "Válečné nástroje",
+          "copy": "Kontrolujte útoky, sestavy a připomenutí v Discordu."
+        },
+        "accounts": {
+          "title": "Propojené účty",
+          "copy": "Mějte všechny své účty Clash pohromadě."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Nástěnka",
+      "intro": "Spravujte soupisky, připomenutí a nastavení serveru na jednom místě.",
+      "imageLabel": "Stavitelská bouda představující nástroje pro správu klanu",
+      "imageAlt": "Stavitelská bouda 8. úrovně",
+      "features": {
+        "settings": {
+          "title": "Nastavení klanu",
+          "copy": "Nastavujte klany, role a kanály."
+        },
+        "rosters": {
+          "title": "Soupisky",
+          "copy": "Spravujte účty pro CWL nebo události."
+        },
+        "automation": {
+          "title": "Automatizace",
+          "copy": "Plánujte připomenutí a úlohy serveru."
+        }
+      }
+    },
+    "resources": {
+      "title": "Tvořte s ClashKing.",
+      "copy": "Průvodci, zdrojový kód a strukturovaná data pro komunitní nástroje.",
+      "ariaLabel": "Zdroje pro vývojáře",
+      "documentation": "Dokumentace",
+      "publicApi": "Veřejné API"
+    },
+    "footer": {
+      "tagline": "Nástroje Clash of Clans pro každého",
+      "docs": "Dokumentace",
+      "privacy": "Zásady ochrany osobních údajů",
+      "terms": "Podmínky služby",
+      "legal": "Tento obsah není přidružen k Supercell, podporován ani sponzorován společností Supercell a nebyl jí výslovně schválen."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing pro Discord, mobilní zařízení a web",
+    "privacy": {
+      "title": "Zásady ochrany osobních údajů | ClashKing",
+      "openGraphTitle": "Zásady ochrany osobních údajů ClashKing",
+      "description": "Jak ClashKing shromažďuje, používá, ukládá a chrání data účtů, hry a aplikace.",
+      "heading": "Zásady ochrany osobních údajů",
+      "eyebrow": "Platné od 17. července 2026"
+    },
+    "terms": {
+      "title": "Podmínky služby | ClashKing",
+      "openGraphTitle": "Podmínky služby ClashKing",
+      "description": "Podmínky platné při používání webů, aplikací, služeb a komunitních nástrojů ClashKing.",
+      "heading": "Podmínky služby",
+      "eyebrow": "Právní informace ClashKing"
+    }
+  }
+}

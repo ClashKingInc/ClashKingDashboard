@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "लोड हो रहा है...",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएँ",
+    "edit": "संपादित करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "add": "जोड़ें",
+    "remove": "हटाएँ",
+    "refresh": "रीफ़्रेश",
+    "close": "बंद करें",
+    "openMenu": "मेनू खोलें",
+    "submit": "सबमिट करें",
+    "back": "वापस",
+    "next": "अगला",
+    "previous": "पिछला",
+    "poweredBy": "द्वारा संचालित",
+    "noData": "कोई डेटा उपलब्ध नहीं है।",
+    "noChannelFound": "कोई चैनल नहीं मिला।",
+    "searchChannels": "चैनल खोजें...",
+    "searchClans": "क्लैन खोजें...",
+    "noClanFound": "कोई क्लैन नहीं मिला।",
+    "searchCategories": "श्रेणियाँ खोजें...",
+    "noRoleFound": "कोई भूमिका नहीं मिली।",
+    "searchRoles": "भूमिकाएँ खोजें...",
+    "addRole": "भूमिका जोड़ें...",
+    "error": "एक त्रुटि हुई",
+    "success": "सफलता",
+    "actions": "कार्रवाइयाँ",
+    "details": "विवरण",
+    "view": "देखें",
+    "unknown": "अज्ञात",
+    "confirm": "पुष्टि करें",
+    "settings": "सेटिंग्स",
+    "status": "स्थिति",
+    "retry": "पुनः प्रयास करें",
+    "disabled": "अक्षम",
+    "name": "नाम",
+    "description": "विवरण",
+    "createdAt": "बनाया गया",
+    "updatedAt": "अंतिम अपडेट",
+    "dashboard": "डैशबोर्ड",
+    "loadError": "डेटा लोड नहीं हो सका।",
+    "tryAgain": "फिर से कोशिश करें",
+    "create": "बनाएँ",
+    "viewClashProfile": "Clash प्रोफ़ाइल देखें",
+    "openInGame": "गेम में खोलें",
+    "openChannelInDiscord": "इस चैनल को Discord में खोलें",
+    "playerProfile": {
+      "clan": "क्लैन",
+      "townHallLevel": "टाउन हॉल स्तर",
+      "trophies": "ट्राफी",
+      "warPreference": "वॉर में भागीदारी",
+      "warPreferenceIn": "भाग लेगा",
+      "warPreferenceOut": "भाग नहीं लेगा",
+      "signupGroup": "साइनअप ग्रुप",
+      "heroLevels": "हीरो स्तर",
+      "hitrate30d": "30 दिन का हिट रेट"
+    }
+  },
+  "Navigation": {
+    "features": "सुविधाएँ",
+    "openSource": "ओपन सोर्स",
+    "help": "मदद चाहिए?",
+    "support": "हमें सहयोग दें",
+    "commands": "कमांड",
+    "premium": "प्रीमियम",
+    "documentation": "दस्तावेज़",
+    "loginWithDiscord": "Discord से लॉग इन करें",
+    "addToDiscord": "Discord में जोड़ें",
+    "openDashboard": "डैशबोर्ड खोलें",
+    "dashboardSettings": "डैशबोर्ड सेटिंग्स",
+    "logout": "लॉग आउट",
+    "settings": "सेटिंग्स",
+    "theme": "थीम",
+    "systemTheme": "सिस्टम का अनुसरण करें",
+    "lightTheme": "लाइट थीम",
+    "darkTheme": "डार्क थीम",
+    "language": "भाषा",
+    "browserLanguage": "ब्राउज़र भाषा"
+  },
+  "HomePage": {
+    "badge": "{serverCount}+ सर्वर पहले से ClashKing का उपयोग कर रहे हैं",
+    "title": "सबसे शक्तिशाली",
+    "titleHighlight": "Clash of Clans बॉट",
+    "subtitle": "अपने क्लैन प्रबंधन को स्वचालित करें, खिलाड़ी आँकड़े ट्रैक करें, वॉर प्रबंधित करें और समुदाय को सक्रिय रखें।",
+    "cta": {
+      "heading": "अपने क्लैन को बेहतर बनाने के लिए तैयार हैं?",
+      "description": "ClashKing का उपयोग कर रहे {serverCount}+ Discord सर्वरों से जुड़ें और अपने Clash of Clans समुदाय को बेहतर बनाएँ। सेटअप में केवल 2 मिनट लगते हैं।",
+      "button": "ClashKing को Discord में जोड़ें",
+      "trustBadge": "हमेशा मुफ़्त • क्रेडिट कार्ड की ज़रूरत नहीं • {serverCount}+ सर्वर",
+      "addToDiscord": "Discord में जोड़ें",
+      "openDashboard": "डैशबोर्ड खोलें"
+    },
+    "stats": {
+      "servers": "Discord सर्वर",
+      "users": "सक्रिय उपयोगकर्ता",
+      "clans": "ट्रैक किए गए क्लैन"
+    },
+    "features": {
+      "title": "क्लैन प्रबंधित करने के लिए सब कुछ",
+      "subtitle": "Clash of Clans समुदायों के लिए विशेष रूप से बनी शक्तिशाली सुविधाएँ",
+      "autoRoles": {
+        "title": "स्वचालित भूमिका प्रबंधन",
+        "description": "खिलाड़ी की स्थिति, क्लैन पद और उपलब्धियों के आधार पर भूमिकाएँ स्वचालित रूप से दें और सर्वर को व्यवस्थित रखें।"
+      },
+      "playerStats": {
+        "title": "खिलाड़ी आँकड़े",
+        "description": "विस्तृत खिलाड़ी आँकड़े, प्रगति ग्राफ़ और अटैक इतिहास ट्रैक करें। देखें कौन सुधर रहा है और किसे मदद चाहिए।"
+      },
+      "leaderboards": {
+        "title": "लीडरबोर्ड",
+        "description": "दान, ट्रॉफ़ी, वॉर स्टार और कस्टम मापदंडों के लिए प्रतिस्पर्धी लीडरबोर्ड बनाएँ।"
+      },
+      "warTracking": {
+        "title": "वॉर पर नज़र",
+        "description": "वॉर लाइनअप पर नज़र रखें, रियल-टाइम में अटैक ट्रैक करें और वॉर के बाद विश्लेषण पाएँ।"
+      },
+      "smartReminders": {
+        "title": "स्मार्ट रिमाइंडर",
+        "description": "क्लैन गेम्स, वॉर अटैक, क्लैन वॉर लीग और कस्टम इवेंट के लिए स्वचालित रिमाइंडर भेजें।"
+      },
+      "customization": {
+        "title": "पूरा अनुकूलन",
+        "description": "कमांड, एम्बेड रंग, निकनेम और अनुमतियाँ अपने अनुसार बदलें।"
+      },
+      "familyManagement": {
+        "title": "क्लैन फ़ैमिली प्रबंधन",
+        "description": "कई क्लैनों को एक फ़ैमिली के रूप में प्रबंधित करें। क्रॉस-क्लैन आँकड़े, साझा लीडरबोर्ड और एकीकृत भूमिकाएँ पाएँ।"
+      },
+      "analytics": {
+        "title": "उन्नत विश्लेषण",
+        "description": "क्लैन प्रदर्शन, खिलाड़ी गतिविधि और विकास रुझानों का गहरा विश्लेषण।"
+      },
+      "performance": {
+        "title": "बेहद तेज़",
+        "description": "तुरंत कमांड जवाब और रियल-टाइम अपडेट के साथ तेज़ प्रदर्शन। कोई लैग या देरी नहीं।"
+      },
+      "security": {
+        "title": "सुरक्षित और विश्वसनीय",
+        "description": "99.9% अपटाइम, एन्क्रिप्टेड डेटा और नियमित बैकअप से आपका क्लैन डेटा सुरक्षित रहता है।"
+      }
+    },
+    "footer": {
+      "tagline": "Discord समुदायों के लिए सबसे शक्तिशाली Clash of Clans बॉट।",
+      "about": {
+        "title": "परिचय",
+        "features": "सुविधाएँ",
+        "help": "मदद चाहिए?",
+        "openSource": "ओपन सोर्स",
+        "support": "सहयोग दें"
+      },
+      "bot": {
+        "title": "बॉट",
+        "dashboard": "डैशबोर्ड",
+        "inviteBot": "बॉट को आमंत्रित करें"
+      },
+      "resources": {
+        "title": "संसाधन",
+        "documentation": "दस्तावेज़",
+        "quickStart": "त्वरित शुरुआत गाइड",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "समुदाय",
+        "discord": "Discord सर्वर",
+        "twitter": "X (Twitter)",
+        "reportBug": "बग रिपोर्ट करें",
+        "requestFeature": "सुविधा का अनुरोध करें"
+      },
+      "legal": {
+        "copyright": "ClashKing। सर्वाधिकार सुरक्षित।",
+        "privacy": "गोपनीयता नीति",
+        "terms": "सेवा की शर्तें"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "सर्वर पर नहीं",
+    "unknownUser": "अज्ञात उपयोगकर्ता",
+    "notLinked": "लिंक नहीं है",
+    "status": {
+      "onServer": "सर्वर पर",
+      "notOnServer": "सर्वर पर नहीं"
+    },
+    "discordId": "Discord ID",
+    "viewProfile": "Discord प्रोफ़ाइल देखें",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "सिंहावलोकन",
+      "description": "डैशबोर्ड होम"
+    },
+    "general": {
+      "name": "सामान्य सेटिंग्स",
+      "description": "सर्वर कॉन्फ़िगरेशन"
+    },
+    "dashboardAccess": {
+      "name": "डैशबोर्ड एक्सेस",
+      "description": "डैशबोर्ड अनुभाग सौंपें"
+    },
+    "familySettings": {
+      "name": "फ़ैमिली सेटिंग्स",
+      "description": "फ़ैमिली भूमिकाएँ और निकनेम"
+    },
+    "clans": {
+      "name": "क्लैन",
+      "description": "अपने क्लैन प्रबंधित करें"
+    },
+    "logs": {
+      "name": "लॉग",
+      "description": "Webhook कॉन्फ़िगरेशन"
+    },
+    "roles": {
+      "name": "भूमिकाएँ",
+      "description": "भूमिका ऑटोमेशन"
+    },
+    "reminders": {
+      "name": "रिमाइंडर",
+      "description": "सभी रिमाइंडर प्रकार"
+    },
+    "rosters": {
+      "name": "रोस्टर",
+      "description": "रोस्टर प्रबंधन"
+    },
+    "bases": {
+      "name": "बेस",
+      "description": "लेआउट लाइब्रेरी और सहभागिता"
+    },
+    "autoboards": {
+      "name": "AutoBoards",
+      "description": "स्वचालित लीडरबोर्ड"
+    },
+    "giveaways": {
+      "name": "गिवअवे",
+      "description": "गिवअवे अभियान प्रबंधित करें"
+    },
+    "panels": {
+      "name": "पैनल",
+      "description": "कार्रवाई बटन वाले इंटरैक्टिव सदस्य पैनल"
+    },
+    "tickets": {
+      "name": "टिकट",
+      "description": "भर्ती और सहायता टिकट"
+    },
+    "embeds": {
+      "name": "एम्बेड",
+      "description": "Discord एम्बेड टेम्पलेट"
+    },
+    "links": {
+      "name": "लिंक",
+      "description": "खिलाड़ी-Discord लिंकिंग"
+    },
+    "bans": {
+      "name": "बैन और स्ट्राइक",
+      "description": "मॉडरेशन टूल"
+    },
+    "wars": {
+      "name": "वॉर",
+      "description": "वॉर आँकड़े"
+    },
+    "leaderboards": {
+      "name": "लीडरबोर्ड",
+      "description": "वैश्विक रैंकिंग"
+    },
+    "sections": {
+      "configuration": "कॉन्फ़िगरेशन",
+      "clanManagement": "क्लैन प्रबंधन",
+      "playerManagement": "खिलाड़ी प्रबंधन",
+      "automation": "ऑटोमेशन",
+      "statistics": "आँकड़े"
+    },
+    "switchServer": "सर्वर बदलें",
+    "goHome": "होमपेज"
+  },
+  "BasesPage": {
+    "eyebrow": "क्लैन प्रबंधन",
+    "title": "बेस",
+    "description": "साझा किए गए लेआउट, सहभागिता इतिहास और Discord स्रोत संदेशों की समीक्षा करें।",
+    "refresh": "रीफ़्रेश",
+    "create": "बेस जोड़ें",
+    "retry": "फिर से कोशिश करें",
+    "dismiss": "बंद करें",
+    "cancel": "रद्द करें",
+    "previous": "पिछला",
+    "next": "अगला",
+    "pagination": "पेज {page} / {total}",
+    "imageAlt": "बेस लेआउट चित्र {index}",
+    "noDescription": "कोई विवरण नहीं दिया गया।",
+    "openLayout": "लेआउट खोलें",
+    "openMessage": "Discord संदेश",
+    "summary": {
+      "total": "कुल बेस",
+      "page": "मौजूदा पेज",
+      "visible": "दिखाई देने वाले"
+    },
+    "counts": {
+      "downloads": "विशिष्ट डाउनलोड",
+      "upvotes": "अपवोट",
+      "downvotes": "डाउनवोट"
+    },
+    "history": {
+      "title": "डाउनलोडकर्ता इतिहास ({count})",
+      "empty": "किसी डाउनलोडकर्ता की आईडी दर्ज नहीं की गई है।",
+      "resolve": "प्रोफ़ाइल देखें"
+    },
+    "delete": {
+      "action": "हटाएँ",
+      "confirmTitle": "यह बेस हटाएँ?",
+      "confirmDescription": "इससे डेटाबेस रिकॉर्ड स्थायी रूप से हट जाएगा और पहले उसका Discord स्रोत संदेश हटाने का प्रयास किया जाएगा। बेस को पुनर्स्थापित नहीं किया जा सकता।",
+      "confirmAction": "बेस हटाएँ",
+      "deleting": "हटाया जा रहा है…",
+      "baseId": "बेस ID",
+      "discordSource": "Discord स्रोत",
+      "successTitle": "बेस हटाया गया",
+      "successDeleted": "डेटाबेस रिकॉर्ड और Discord संदेश हटा दिए गए।",
+      "successAlreadyMissing": "डेटाबेस रिकॉर्ड हटा दिया गया; Discord संदेश पहले से मौजूद नहीं था।",
+      "cleanupFailedTitle": "बेस रखा गया; Discord सफ़ाई विफल",
+      "cleanupCompleteTitle": "Discord की सफ़ाई पूरी हुई; बेस रखा गया",
+      "failureTitle": "बेस नहीं हटाया गया",
+      "failureFallback": "हटाने का अनुरोध विफल रहा।",
+      "retryable": "दोबारा प्रयास करना सुरक्षित है",
+      "notRetryable": "पुनः प्रयास नहीं किया जा सकता",
+      "cleanup": {
+        "deleted": "Discord संदेश हटाया गया",
+        "alreadyMissing": "Discord संदेश पहले से अनुपस्थित",
+        "failed": "Discord की सफ़ाई विफल रही"
+      }
+    },
+    "empty": {
+      "title": "अभी कोई बेस साझा नहीं है।",
+      "description": "Discord चैनल और Clash of Clans लेआउट लिंक चुनकर पहला लेआउट जोड़ें।"
+    },
+    "form": {
+      "title": "एक बेस जोड़ें",
+      "description": "बेस बनाने के बाद उसे संपादित नहीं किया जा सकता। चुनें कि ClashKing Discord संदेश कहाँ पोस्ट करे और लेआउट लिंक की पुष्टि करें।",
+      "channel": "Discord चैनल",
+      "channelPlaceholder": "चैनल चुनें",
+      "channelSearch": "चैनल खोजें…",
+      "channelsLoading": "चैनल लोड हो रहे हैं…",
+      "baseLink": "लेआउट लिंक",
+      "descriptionLabel": "विवरण",
+      "images": "चित्र",
+      "chooseImages": "लेआउट के चित्र चुनें",
+      "imageLimit": "अधिकतम चार चित्र; बेस बनने से पहले अपलोड पूरे हो जाते हैं।",
+      "submit": "बेस बनाएँ",
+      "creating": "अपलोड हो रहा है और बनाया जा रहा है…",
+      "createRejectedTitle": "बेस नहीं बनाया गया",
+      "createCleanupCompleteTitle": "Discord की सफ़ाई पूरी हुई; बेस नहीं बनाया गया",
+      "createCleanupFailedTitle": "Discord संदेश मौजूद रह सकता है; बेस नहीं बनाया गया",
+      "databaseNotInserted": "डेटाबेस रिकॉर्ड नहीं जोड़ा गया",
+      "discordMessageCreated": "Discord संदेश बनाया गया",
+      "discordMessageId": "Discord संदेश ID",
+      "retryable": "दोबारा प्रयास करना सुरक्षित है",
+      "notRetryable": "अपने आप दोबारा प्रयास न करें",
+      "cleanup": {
+        "notNeeded": "Discord की सफ़ाई आवश्यक नहीं है",
+        "deleted": "Discord संदेश हटाया गया",
+        "alreadyMissing": "Discord संदेश पहले से अनुपस्थित",
+        "failed": "Discord की सफ़ाई विफल रही"
+      }
+    },
+    "errors": {
+      "title": "बेस अनुपलब्ध",
+      "load": "बेस लोड नहीं हो सका।",
+      "create": "बेस नहीं बनाया जा सका।",
+      "upload": "चित्र अपलोड नहीं हो सका।",
+      "downloader": "इस डाउनलोडकर्ता की प्रोफ़ाइल नहीं मिल सकी।",
+      "channels": "Discord चैनल लोड नहीं हो सका।",
+      "channelRequired": "Discord चैनल चुनें।",
+      "linkRequired": "लेआउट लिंक आवश्यक है।",
+      "descriptionTooLong": "विवरण 1,000 या उससे कम अक्षरों का होना चाहिए।",
+      "tooManyImages": "अधिकतम चार चित्र चुनें।"
+    }
+  },
+  "BansPage": {
+    "title": "मॉडरेशन",
+    "description": "खिलाड़ी प्रतिबंध और स्ट्राइक प्रबंधित करें",
+    "viewClashProfile": "Clash प्रोफ़ाइल देखें",
+    "tabs": {
+      "bans": "प्रतिबंध",
+      "strikes": "स्ट्राइक"
+    },
+    "bans": {
+      "title": "प्रतिबंधित खिलाड़ी",
+      "noBans": "कोई प्रतिबंधित खिलाड़ी नहीं मिला।",
+      "addBan": "प्रतिबंध जोड़ें",
+      "removeBan": "प्रतिबंध हटाएँ",
+      "confirmRemove": "क्या आप वाकई यह प्रतिबंध हटाना चाहते हैं?",
+      "playerTag": "खिलाड़ी टैग",
+      "playerName": "खिलाड़ी नाम",
+      "reason": "कारण",
+      "bannedAt": "प्रतिबंध का समय",
+      "search": "नाम या टैग से खोजें...",
+      "howItWorks": {
+        "title": "प्रतिबंध कैसे काम करते हैं",
+        "description": "यदि कोई प्रतिबंधित खिलाड़ी आपके किसी क्लैन में शामिल होता है, तो <clansTab>क्लैन टैब</clansTab> में सेट किए गए क्लैन चैनल पर चेतावनी भेजी जाएगी। बॉट किसी को क्लैन में शामिल होने से रोक नहीं सकता, केवल चेतावनी दे सकता है।"
+      },
+      "stats": {
+        "total": "कुल प्रतिबंध",
+        "recent": "हाल के प्रतिबंध (7 दिन)",
+        "commonReason": "सबसे सामान्य कारण",
+        "activeOnServer": "सर्वर पर सक्रिय प्रतिबंध",
+        "last7Days": "पिछले 7 दिनों में",
+        "commonReasonValue": "उत्पीड़न और विषाक्त व्यवहार",
+        "noBans": "अभी कोई प्रतिबंध नहीं है",
+        "percentOfAll": "सभी प्रतिबंधों का {percent}%",
+        "percentOfAllLabel": "सभी प्रतिबंधों में से"
+      },
+      "list": {
+        "title": "प्रतिबंधित खिलाड़ी",
+        "count": "{count, plural, one {# खिलाड़ी प्रतिबंधित} other {# खिलाड़ी प्रतिबंधित}}",
+        "searchPlaceholder": "नाम, टैग या कारण से खोजें...",
+        "noBansFound": "कोई प्रतिबंध नहीं मिला।",
+        "noBans": "कोई प्रतिबंधित खिलाड़ी",
+        "adjustSearch": "अपनी खोज क्वेरी बदलकर देखें",
+        "getStarted": "खिलाड़ी मॉडरेशन शुरू करने के लिए प्रतिबंध जोड़ें"
+      },
+      "table": {
+        "player": "खिलाड़ी",
+        "reason": "कारण",
+        "bannedBy": "प्रतिबंध लगाने वाला",
+        "date": "तारीख",
+        "daysAgo": "{days} दिन पहले",
+        "noReason": "कोई कारण दिया गया"
+      },
+      "addDialog": {
+        "title": "खिलाड़ी पर प्रतिबंध लगाएँ",
+        "description": "खिलाड़ी को प्रतिबंध सूची में जोड़ें। उसके इस सर्वर के किसी भी क्लैन में शामिल होने पर आपको चेतावनी मिलेगी।",
+        "playerTagLabel": "खिलाड़ी टैग",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "खिलाड़ी नाम (वैकल्पिक)",
+        "playerNamePlaceholder": "खिलाड़ी का नाम दर्ज करें",
+        "reasonLabel": "प्रतिबंध का कारण",
+        "reasonPlaceholder": "बताएँ कि इस खिलाड़ी पर प्रतिबंध क्यों लगाया जा रहा है...",
+        "submit": "खिलाड़ी पर प्रतिबंध लगाएँ"
+      },
+      "bestPractices": {
+        "title": "सर्वोत्तम तरीके",
+        "document": {
+          "title": "विस्तृत जानकारी दें:",
+          "desc": "हर प्रतिबंध का विस्तृत कारण दें, ताकि अन्य मॉडरेटर संदर्भ समझ सकें।"
+        },
+        "review": {
+          "title": "नियमित समीक्षा करें:",
+          "desc": "समय-समय पर प्रतिबंध सूची की समीक्षा करें, ताकि हर प्रतिबंध आवश्यक और उचित रहे।"
+        },
+        "consistent": {
+          "title": "एक जैसा व्यवहार रखें:",
+          "desc": "स्वस्थ समुदाय बनाए रखने के लिए सभी खिलाड़ियों पर निष्पक्ष और समान रूप से प्रतिबंध लागू करें।"
+        }
+      }
+    },
+    "strikes": {
+      "title": "खिलाड़ी स्ट्राइक",
+      "noStrikes": "कोई स्ट्राइक नहीं मिली।",
+      "addStrike": "स्ट्राइक जोड़ें",
+      "removeStrike": "स्ट्राइक हटाएँ",
+      "confirmRemove": "क्या आप वाकई यह स्ट्राइक हटाना चाहते हैं?",
+      "playerTag": "खिलाड़ी टैग",
+      "reason": "कारण",
+      "weight": "भार",
+      "rolloverDays": "समाप्ति के दिन",
+      "createdAt": "बनाने का समय",
+      "search": "खिलाड़ी टैग से खोजें...",
+      "howItWorks": {
+        "title": "स्ट्राइक कैसे काम करती हैं",
+        "description": "स्ट्राइक नियम उल्लंघन पर खिलाड़ियों को दी जाने वाली चेतावनी है। हर स्ट्राइक का एक भार (गंभीरता) होता है और उसे तय दिनों बाद समाप्त किया जा सकता है। प्रतिबंध लगाने से पहले स्ट्राइक खिलाड़ी के व्यवहार को ट्रैक करने में मदद करती हैं।"
+      },
+      "stats": {
+        "total": "कुल स्ट्राइक",
+        "recent": "हाल के स्ट्राइक (7 दिन)",
+        "totalWeight": "कुल स्ट्राइक भार",
+        "activeOnServer": "सर्वर पर सक्रिय स्ट्राइक",
+        "last7Days": "पिछले 7 दिनों में",
+        "cumulativeWeight": "कुल स्ट्राइक भार",
+        "commonReason": "सबसे सामान्य कारण",
+        "commonReasonValue": "स्पैमिंग"
+      },
+      "list": {
+        "title": "खिलाड़ी स्ट्राइक",
+        "count": "{count, plural, one {# स्ट्राइक जारी} other {# स्ट्राइक जारी}}",
+        "searchPlaceholder": "नाम, टैग या कारण से खोजें...",
+        "noStrikesFound": "कोई स्ट्राइक नहीं मिली।",
+        "noStrikes": "अभी कोई स्ट्राइक जारी नहीं की गई",
+        "adjustSearch": "अपनी खोज बदलकर देखें",
+        "getStarted": "खिलाड़ी के उल्लंघनों को ट्रैक करने के लिए स्ट्राइक जोड़ें",
+        "viewAll": "सभी स्ट्राइक",
+        "viewGrouped": "खिलाड़ी के अनुसार"
+      },
+      "table": {
+        "player": "खिलाड़ी",
+        "reason": "कारण",
+        "weight": "भार",
+        "addedBy": "जोड़ने वाला",
+        "date": "तारीख",
+        "expires": "समाप्त होता है",
+        "never": "कभी नहीं",
+        "noReason": "कोई कारण दिया गया",
+        "daysAgo": "{days} दिन पहले",
+        "totalStrikes": "कुल स्ट्राइक",
+        "totalWeight": "कुल भार",
+        "lastStrike": "पिछली स्ट्राइक"
+      },
+      "addDialog": {
+        "title": "एक स्ट्राइक जोड़ें",
+        "description": "खिलाड़ी को स्ट्राइक दें। स्ट्राइक के अलग-अलग भार और समाप्ति तिथियाँ हो सकती हैं।",
+        "playerTagLabel": "खिलाड़ी टैग",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "कारण",
+        "reasonPlaceholder": "बताएँ कि यह स्ट्राइक क्यों दी जा रही है...",
+        "weightLabel": "स्ट्राइक भार",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "इतने दिनों में समाप्त होगी",
+        "rolloverPlaceholder": "वैकल्पिक",
+        "submit": "स्ट्राइक जोड़ें"
+      },
+      "guidelines": {
+        "title": "स्ट्राइक दिशानिर्देश",
+        "weights": {
+          "title": "भार समझदारी से चुनें:",
+          "desc": "गंभीर उल्लंघनों के लिए अधिक भार (2–3) और मामूली मामलों के लिए कम भार (1) दें।"
+        },
+        "expiration": {
+          "title": "समाप्ति तिथियाँ तय करें:",
+          "desc": "खिलाड़ियों को अपना व्यवहार सुधारने का अवसर देने के लिए स्ट्राइक की समाप्ति तिथि तय करने पर विचार करें।"
+        },
+        "patterns": {
+          "title": "रुझानों पर नज़र रखें:",
+          "desc": "स्थायी प्रतिबंध लगाने से पहले बार-बार उल्लंघन करने वालों की पहचान के लिए स्ट्राइक का उपयोग करें।"
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "प्रतिबंध सफलतापूर्वक जोड़ा गया",
+      "banRemoved": "प्रतिबंध सफलतापूर्वक हटाया गया",
+      "strikeAdded": "स्ट्राइक सफलतापूर्वक जोड़ी गई",
+      "strikeRemoved": "स्ट्राइक सफलतापूर्वक हटाई गई",
+      "errorLoadingBans": "प्रतिबंधित खिलाड़ी लोड नहीं हो सके।",
+      "errorLoadingStrikes": "स्ट्राइक लोड नहीं हो सकीं।",
+      "errorAddingBan": "प्रतिबंध जोड़ना विफल रहा।",
+      "errorAddingStrike": "स्ट्राइक जोड़ना विफल रहा।",
+      "errorRemovingBan": "प्रतिबंध हटाना विफल रहा।",
+      "errorRemovingStrike": "स्ट्राइक हटाना विफल रहा।"
+    }
+  },
+  "RostersPage": {
+    "title": "रोस्टर और लाइनअप",
+    "description": "वॉर रोस्टर, लाइनअप और सदस्य असाइनमेंट प्रबंधित करें",
+    "stats": {
+      "totalRosters": "कुल रोस्टर",
+      "totalMembers": "कुल सदस्य",
+      "clanRosters": "क्लैन रोस्टर",
+      "familyRosters": "फ़ैमिली रोस्टर",
+      "members": "सदस्य",
+      "avgTh": "औसत TH",
+      "avgHitrate": "औसत हिट रेट",
+      "distribution": "वितरण",
+      "clan": "क्लैन",
+      "family": "फ़ैमिली",
+      "external": "बाहरी",
+      "thDistribution": "TH वितरण",
+      "capacity": "क्षमता"
+    },
+    "filters": {
+      "search": "रोस्टर... खोजें",
+      "type": "प्रकार",
+      "all": "सभी",
+      "clan": "क्लैन",
+      "family": "फ़ैमिली",
+      "clear": "साफ़ करें"
+    },
+    "comparisonMode": {
+      "cancel": "रद्द करें",
+      "compare": "तुलना करें",
+      "compareRosters": "रोस्टरों की तुलना करें",
+      "selectRosters": "रोस्टर चुनें",
+      "selectRostersDesc": "तुलना के लिए कम से कम 2 रोस्टर चुनें",
+      "maxReached": "अधिकतम सीमा पूरी हुई",
+      "maxReachedDesc": "एक बार में अधिकतम 4 रोस्टरों की तुलना की जा सकती है"
+    },
+    "createDialog": {
+      "title": "नया रोस्टर बनाएँ",
+      "description": "अपने क्लैन के लिए नया रोस्टर सेट करें",
+      "aliasLabel": "रोस्टर नाम",
+      "aliasPlaceholder": "जैसे, CWL रोस्टर",
+      "typeLabel": "रोस्टर प्रकार",
+      "typeClan": "क्लैन",
+      "typeFamily": "फ़ैमिली",
+      "signupScopeLabel": "साइनअप दायरा",
+      "scopeClanOnly": "केवल क्लैन",
+      "scopeFamilyWide": "पूरी फ़ैमिली",
+      "clanLabel": "क्लैन",
+      "clanPlaceholder": "क्लैन चुनें",
+      "descriptionLabel": "विवरण (वैकल्पिक)",
+      "descriptionPlaceholder": "रोस्टर विवरण...",
+      "cancel": "रद्द करें",
+      "creating": "बनाया जा रहा है...",
+      "create": "रोस्टर बनाएँ"
+    },
+    "editDialog": {
+      "title": "रोस्टर संपादित करें",
+      "description": "रोस्टर सेटिंग्स और कॉन्फ़िगरेशन बदलें",
+      "aliasLabel": "रोस्टर नाम",
+      "descriptionLabel": "विवरण",
+      "descriptionPlaceholder": "रोस्टर विवरण...",
+      "minThLabel": "न्यूनतम टाउन हॉल",
+      "minThPlaceholder": "जैसे, 13",
+      "maxThLabel": "अधिकतम टाउन हॉल",
+      "maxThPlaceholder": "जैसे, 16",
+      "rosterSizeLabel": "रोस्टर आकार",
+      "rosterSizePlaceholder": "जैसे, 50",
+      "columnsLabel": "दिखाए जाने वाले कॉलम",
+      "columnsPlaceholder": "दिखाने के लिए कॉलम चुनें",
+      "sortLabel": "क्रमबद्ध करने का क्रम",
+      "sortPlaceholder": "क्रमबद्ध करने का फ़ील्ड चुनें",
+      "cancel": "रद्द करें",
+      "saving": "सहेजा जा रहा है...",
+      "save": "बदलाव सहेजें"
+    },
+    "addMembersDialog": {
+      "title": "रोस्टर में सदस्य जोड़ें",
+      "description": "अपने क्लैन से सदस्य चुनें या खिलाड़ी टैग दर्ज करें",
+      "bulkTagsLabel": "टैग से एक साथ जोड़ें",
+      "bulkTagsPlaceholder": "खिलाड़ी टैग दर्ज करें (हर पंक्ति में एक या कॉमा से अलग)",
+      "searchLabel": "सदस्यों को खोजें",
+      "searchPlaceholder": "नाम या टैग से खोजें...",
+      "selectFromClan": "क्लैन सदस्यों में से चुनें",
+      "selectedCount": "चयनित",
+      "noMembers": "अभी कोई सदस्य उपलब्ध नहीं है।",
+      "noMembersSelected": "कोई सदस्य चयनित नहीं",
+      "noMembersSelectedDesc": "सदस्य चुनें या खिलाड़ी टैग दर्ज करें।",
+      "cancel": "रद्द करें",
+      "adding": "जोड़ा जा रहा है...",
+      "add": "सदस्य जोड़ें"
+    },
+    "detailsDialog": {
+      "title": "रोस्टर विवरण",
+      "edit": "संपादित करें",
+      "refresh": "रीफ़्रेश",
+      "refreshing": "रीफ़्रेश हो रहा है...",
+      "delete": "हटाएँ",
+      "deleting": "हटाया जा रहा है...",
+      "addMembers": "सदस्य जोड़ें",
+      "close": "बंद करें",
+      "noMembers": "इस रोस्टर में कोई सदस्य नहीं है",
+      "noMembersDesc": "शुरू करने के लिए सदस्य जोड़ें",
+      "memberCount": "सदस्य",
+      "thRestriction": "TH स्तर",
+      "avgTh": "औसत TH",
+      "avgHitrate": "औसत हिट रेट",
+      "clan": "क्लैन",
+      "family": "फ़ैमिली",
+      "external": "बाहरी",
+      "substitute": "स्थानापन्न",
+      "removeMember": "हटाएँ"
+    },
+    "rosterCard": {
+      "members": "सदस्य",
+      "thLevel": "TH स्तर",
+      "avgTh": "औसत TH",
+      "avgHitrate": "औसत हिट रेट",
+      "clan": "क्लैन",
+      "family": "फ़ैमिली",
+      "external": "बाहरी",
+      "noRestriction": "कोई प्रतिबंध नहीं",
+      "view": "देखें",
+      "edit": "संपादित करें",
+      "delete": "हटाएँ",
+      "noGroup": "कोई ग्रुप नहीं",
+      "moveToGroup": "ग्रुप में ले जाएँ",
+      "clone": "क्लोन",
+      "allRosters": "सभी रोस्टर",
+      "manageRosters": "अपने वॉर रोस्टर और लाइनअप प्रबंधित करें"
+    },
+    "memberColumns": {
+      "name": "नाम",
+      "townhall": "टाउन हॉल",
+      "tag": "टैग",
+      "hitrate": "हिट रेट",
+      "current_clan": "मौजूदा क्लैन",
+      "current_clan_tag": "क्लैन टैग",
+      "discord": "Discord",
+      "hero_lvs": "हीरो स्तर",
+      "war_pref": "वॉर विकल्प",
+      "trophies": "ट्राफी",
+      "signup_group": "साइनअप ग्रुप"
+    },
+    "columns": {
+      "configure": "कॉलम",
+      "title": "कॉलम कॉन्फ़िगर करें",
+      "description": "दिखाए जाने वाले कॉलम और उनका क्रम चुनें",
+      "selected": "चुने गए कॉलम",
+      "available": "उपलब्ध कॉलम",
+      "save": "कॉलम सहेजें",
+      "reset": "कॉलम रीसेट करें"
+    },
+    "sortFields": {
+      "townhall": "टाउन हॉल स्तर",
+      "name": "नाम",
+      "tag": "टैग",
+      "heroLvs": "हीरो स्तर",
+      "trophies": "ट्राफी",
+      "hitrate": "30 दिन का हिट रेट",
+      "currentClanTag": "क्लैन टैग",
+      "addedAt": "जोड़ने का समय"
+    },
+    "thRestrictions": {
+      "only": "TH{th} केवल",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "कोई प्रतिबंध नहीं"
+    },
+    "emptyState": {
+      "noRosters": "अभी कोई रोस्टर नहीं बनाया गया है।",
+      "noRostersDesc": "शुरू करने के लिए अपना पहला रोस्टर बनाएँ",
+      "noMatch": "कोई रोस्टर आपके फ़िल्टर से मेल नहीं खाता",
+      "noMatchDesc": "खोज या फ़िल्टर बदलकर देखें"
+    },
+    "toast": {
+      "errorTitle": "त्रुटि",
+      "successTitle": "सफलता",
+      "errorLoadingRosters": "रोस्टर लोड नहीं हो सका।",
+      "errorLoadingMembers": "क्लैन सदस्य लोड नहीं हो सके।",
+      "rosterCreated": "रोस्टर सफलतापूर्वक बनाया गया!",
+      "errorCreatingRoster": "रोस्टर बनाना विफल रहा।",
+      "rosterUpdated": "रोस्टर सफलतापूर्वक अपडेट किया गया!",
+      "errorUpdatingRoster": "रोस्टर अपडेट करना विफल रहा।",
+      "rosterDeleted": "रोस्टर सफलतापूर्वक हटाया गया!",
+      "errorDeletingRoster": "रोस्टर हटाना विफल रहा।",
+      "membersAdded": "रोस्टर में {count} सदस्य जोड़े गए!",
+      "errorAddingMembers": "सदस्य जोड़ना विफल रहा।",
+      "memberRemoved": "सदस्य को रोस्टर से हटा दिया गया!",
+      "errorRemovingMember": "सदस्य हटाना विफल रहा।",
+      "substituteMarked": "सदस्य को स्थानापन्न के रूप में चिह्नित किया गया!",
+      "substituteUnmarked": "सदस्य का स्थानापन्न चिह्न हटा दिया गया!",
+      "errorUpdatingMember": "सदस्य अपडेट करना विफल रहा।",
+      "rosterRefreshed": "रोस्टर डेटा सफलतापूर्वक रीफ़्रेश किया गया!",
+      "errorRefreshingRoster": "रोस्टर डेटा रीफ़्रेश नहीं हो सका। फिर से प्रयास करें।",
+      "memberTransferred": "सदस्य को रोस्टरों के बीच सफलतापूर्वक स्थानांतरित किया गया!",
+      "errorTransferringMember": "सदस्य स्थानांतरित करना विफल रहा।",
+      "rosterCloned": "रोस्टर सफलतापूर्वक क्लोन किया गया!",
+      "errorCloningRoster": "रोस्टर क्लोन करना विफल रहा।",
+      "missingMembersAdded": "रोस्टर में {count} अनुपस्थित सदस्य जोड़े गए!",
+      "errorLoadingMissingMembers": "अनुपस्थित सदस्य लोड नहीं हो सके।"
+    },
+    "cloneDialog": {
+      "title": "रोस्टर क्लोन करें",
+      "description": "इस रोस्टर की कॉपी बनाएँ",
+      "aliasLabel": "नया रोस्टर नाम",
+      "aliasPlaceholder": "क्लोन किए गए रोस्टर का नाम दर्ज करें",
+      "copyMembers": "सदस्यों को नए रोस्टर में कॉपी करें",
+      "memberCount": "{count} सदस्य",
+      "originalRoster": "मूल रोस्टर:",
+      "cancel": "रद्द करें",
+      "cloning": "क्लोन किया जा रहा है...",
+      "clone": "रोस्टर क्लोन करें",
+      "copyMembersHint": "सदस्यों को मूल रोस्टर से कॉपी किया जाएगा"
+    },
+    "missingMembers": {
+      "title": "अनुपस्थित सदस्य",
+      "description": "वे क्लैन सदस्य जो इस रोस्टर में पंजीकृत नहीं हैं",
+      "coverage": "रोस्टर कवरेज",
+      "registered": "पंजीकृत",
+      "missing": "अनुपलब्ध",
+      "total": "कुल",
+      "selectAll": "सभी चुनें",
+      "selected": "चयनित",
+      "addSelected": "{count} सदस्य जोड़ें",
+      "button": "अनुपस्थित सदस्य",
+      "addAll": "सभी जोड़ें",
+      "adding": "जोड़ा जा रहा है...",
+      "close": "बंद करें",
+      "allCaughtUp": "सभी सदस्य शामिल हैं!",
+      "allCaughtUpDesc": "क्लैन के सभी सदस्य इस रोस्टर में पंजीकृत हैं",
+      "clanOnly": "अनुपस्थित सदस्यों का विश्लेषण केवल क्लैन रोस्टर के लिए उपलब्ध है",
+      "error": "अनुपस्थित सदस्य लोड नहीं हो सके।",
+      "thisRoster": "यह रोस्टर",
+      "wholeGroup": "पूरा ग्रुप"
+    },
+    "eventTime": {
+      "label": "इवेंट आरंभ समय",
+      "timezone": "आपका समय क्षेत्र",
+      "utc": "UTC",
+      "clear": "साफ़ करें"
+    },
+    "bulkValidation": {
+      "valid": "मान्य",
+      "invalid": "अमान्य",
+      "invalidTags": "अमान्य"
+    },
+    "memberAutocomplete": {
+      "label": "या सर्वर सदस्य खोजें",
+      "placeholder": "सदस्य खोजने के लिए क्लिक करें...",
+      "searchPlaceholder": "नाम, टैग या क्लैन से खोजें...",
+      "loading": "सदस्य लोड हो रहे हैं...",
+      "noResults": "कोई सदस्य नहीं मिला।",
+      "groupHeading": "सर्वर सदस्य",
+      "selectedLabel": "चुने गए सदस्य",
+      "membersSelected": "सदस्य चयनित",
+      "selected": "चयनित",
+      "clanMembersLabel": "या क्लैन सदस्यों में से चुनें"
+    },
+    "retry": "पुनः प्रयास करें",
+    "back": "वापस",
+    "refresh": "रीफ़्रेश",
+    "createRoster": "रोस्टर बनाएँ",
+    "searchPlaceholder": "रोस्टर... खोजें",
+    "noRosters": "अभी कोई रोस्टर नहीं है",
+    "noRostersHint": "शुरू करने के लिए अपना पहला रोस्टर बनाएँ",
+    "noSearchResults": "कोई रोस्टर नहीं मिला।",
+    "noSearchResultsHint": "कोई दूसरा खोज शब्द आज़माएँ",
+    "createFirstRoster": "पहला रोस्टर बनाएँ",
+    "deleteConfirm": "क्या आप वाकई \"{name}\" हटाना चाहते हैं?",
+    "deleteSuccess": "रोस्टर हटाया गया",
+    "deleteSuccessDesc": "रोस्टर \"{name}\" हटा दिया गया है",
+    "deleteError": "रोस्टर हटाना विफल रहा।",
+    "createSuccess": "रोस्टर बनाया गया",
+    "createSuccessDesc": "रोस्टर \"{name}\" बना दिया गया है",
+    "createError": "रोस्टर बनाना विफल रहा।",
+    "createErrorAlias": "रोस्टर का नाम दर्ज करें",
+    "createErrorClan": "क्लैन चुनें",
+    "refreshSuccess": "रोस्टर डेटा रीफ़्रेश किया गया",
+    "refreshError": "रोस्टर रीफ़्रेश करना विफल रहा।",
+    "saveSuccess": "सेटिंग्स सहेजी गईं",
+    "saveError": "सेटिंग्स सहेजी नहीं जा सकीं।",
+    "columnsUpdated": "कॉलम अपडेट किए गए",
+    "columnsError": "कॉलम अपडेट करना विफल रहा।",
+    "addMembersSuccess": "सदस्य जोड़े गए",
+    "addMembersSuccessDesc": "रोस्टर में {count} सदस्य जोड़े गए",
+    "addMembersError": "सदस्य जोड़ना विफल रहा।",
+    "removeMemberSuccess": "सदस्य हटाया गया",
+    "removeMemberError": "सदस्य हटाना विफल रहा।",
+    "clearMembers": "सदस्य हटाएँ",
+    "clearMembersConfirm": "“{name}” से सभी सदस्य हटाएँ? इसे वापस नहीं किया जा सकता।",
+    "clearMembersSuccess": "सभी सदस्य हटा दिए गए",
+    "clearMembersError": "सदस्य साफ़ करना विफल रहा।",
+    "automationCreated": "ऑटोमेशन बनाया गया",
+    "automationUpdated": "ऑटोमेशन अपडेट किया गया",
+    "automationDeleted": "ऑटोमेशन हटाया गया",
+    "automationError": "ऑटोमेशन त्रुटि",
+    "groupCreated": "ग्रुप बनाया गया",
+    "groupUpdated": "ग्रुप अपडेट किया गया",
+    "groupDeleted": "ग्रुप हटाया गया",
+    "groupError": "ग्रुप सहेजा नहीं जा सका।",
+    "categoryCreated": "श्रेणी बनाई गई",
+    "categoryUpdated": "श्रेणी अपडेट की गई",
+    "categoryDeleted": "श्रेणी हटाई गई",
+    "categoryError": "श्रेणी सहेजी नहीं जा सकी।",
+    "common": {
+      "cancel": "रद्द करें",
+      "save": "सहेजें",
+      "close": "बंद करें"
+    },
+    "tabs": {
+      "members": "सदस्य",
+      "automations": "ऑटोमेशन",
+      "groups": "ग्रुप",
+      "categories": "श्रेणियाँ",
+      "settings": "सेटिंग्स"
+    },
+    "members": {
+      "count": "सदस्य",
+      "noMembers": "इस रोस्टर में कोई सदस्य नहीं है",
+      "noMembersHint": "शुरू करने के लिए सदस्य जोड़ें",
+      "actions": "कार्रवाइयाँ",
+      "viewList": "सूची देखें",
+      "viewGrouped": "साइनअप श्रेणी के अनुसार देखें",
+      "unassigned": "असाइन नहीं किए गए",
+      "dragHere": "सदस्यों को यहाँ खींचें",
+      "clickToGroup": "श्रेणी के अनुसार देखने के लिए क्लिक करें",
+      "apiErrorTooltip": "API से डेटा प्राप्त नहीं किया जा सका",
+      "staleDataTooltip": "डेटा पुराना हो सकता है, पिछली बार अपडेट:",
+      "refresh": "सदस्य डेटा रीफ़्रेश करें",
+      "alsoIn": "यहाँ भी",
+      "addCategory": "ग्रुप जोड़ें",
+      "removeCategory": "ग्रुप हटाएँ"
+    },
+    "addMembers": {
+      "title": "रोस्टर में सदस्य जोड़ें",
+      "description": "अपने क्लैनों से सदस्य चुनें या खिलाड़ी टैग दर्ज करें",
+      "bulkTagsLabel": "खिलाड़ी टैग (एक प्रति पंक्ति या कॉमा से अलग)",
+      "adding": "जोड़ा जा रहा है...",
+      "submit": "सदस्य जोड़ें"
+    },
+    "compare": {
+      "enterMode": "तुलना करें",
+      "modeTitle": "तुलना मोड",
+      "modeHint": "रोस्टर चुनने के लिए उन पर क्लिक करें (2 से 4 रोस्टर)",
+      "exitMode": "रद्द करें",
+      "selected": "रोस्टर चुने गए",
+      "button": "तुलना करें",
+      "title": "रोस्टरों की तुलना करें",
+      "dragToMove": "सदस्यों को स्थानांतरित करने के लिए उन्हें रोस्टरों के बीच खींचकर छोड़ें",
+      "loadError": "रोस्टर लोड नहीं हो सका।",
+      "memberMoved": "सदस्य स्थानांतरित किया गया",
+      "memberMovedDesc": "{name} को {from} से {to} में ले जाया गया",
+      "moveError": "सदस्य स्थानांतरित करना विफल रहा।",
+      "selectAtLeast2": "तुलना के लिए कम से कम 2 रोस्टर चुनें",
+      "moving": "सदस्य स्थानांतरित किया जा रहा है...",
+      "compareGroup": "ग्रुप की तुलना करें",
+      "dragToMoveCategory": "सदस्यों को रोस्टर और श्रेणियों के बीच खींचें",
+      "categoryChanged": "श्रेणी बदली गई",
+      "categoryChangedDesc": "{name} को {category} में ले जाया गया",
+      "uncategorized": "बिना श्रेणी"
+    },
+    "ungrouped": "बिना ग्रुप",
+    "automations": {
+      "description": "इस रोस्टर के लिए स्वचालित कार्रवाइयाँ शेड्यूल करें",
+      "create": "ऑटोमेशन बनाएँ",
+      "empty": "कोई ऑटोमेशन नहीं",
+      "emptyHint": "कार्रवाइयाँ शेड्यूल करने के लिए ऑटोमेशन बनाएँ",
+      "active": "सक्रिय",
+      "inactive": "निष्क्रिय",
+      "executed": "पूर्ण",
+      "missed": "छूटा",
+      "lastRun": "पिछला निष्पादन",
+      "enable": "सक्षम करें",
+      "disable": "अक्षम करें",
+      "createTitle": "ऑटोमेशन बनाएँ",
+      "editTitle": "ऑटोमेशन संपादित करें",
+      "createDesc": "स्वचालित कार्रवाई शेड्यूल करें",
+      "actionType": "कार्रवाई प्रकार",
+      "offsetFromEvent": "इवेंट के सापेक्ष समय",
+      "offsetBefore": "इवेंट से पहले",
+      "offsetAfter": "इवेंट के बाद",
+      "offsetUnit_minutes": "मिनट",
+      "offsetUnit_hours": "घंटे",
+      "offsetUnit_days": "दिन",
+      "offsetPreview": "निष्पादन का समय: {date}",
+      "offsetNoEventDate": "निष्पादन तिथि का पूर्वावलोकन करने के लिए सेटिंग्स में इवेंट का आरंभ समय तय करें",
+      "offsetAtStart": "इवेंट शुरू होने पर",
+      "pingType": "रिमाइंडर प्रकार",
+      "pingType_signup_reminder": "साइनअप रिमाइंडर",
+      "pingType_missing": "क्लैन से अनुपस्थित",
+      "pingType_sub_needed": "स्थानापन्न आवश्यक",
+      "channel": "Discord चैनल",
+      "selectChannel": "चैनल चुनें",
+      "channelHint": "वह चैनल जहाँ कार्रवाई पोस्ट या निष्पादित की जाएगी",
+      "activeLabel": "सक्रिय",
+      "target": "लक्ष्य",
+      "targetThisRoster": "यह रोस्टर",
+      "targetGroups": "ग्रुप",
+      "targetHint": "ऑटोमेशन केवल इस रोस्टर या ग्रुप के सभी रोस्टरों पर लागू करें",
+      "group": "ग्रुप",
+      "groupAutomationHint": "ग्रुप टैब से प्रबंधित करें",
+      "targetRoster": "रोस्टर",
+      "targetGroup": "ग्रुप",
+      "willExecute": "निर्धारित समय पर निष्पादित होगा",
+      "paused": "रुका हुआ—निष्पादित नहीं होगा",
+      "actions": {
+        "ping": "रिमाइंडर भेजें",
+        "post": "रोस्टर पोस्ट करें",
+        "openSignup": "साइनअप खोलें",
+        "closeSignup": "साइनअप बंद करें",
+        "delete": "रोस्टर हटाएँ",
+        "clear": "सदस्य हटाएँ",
+        "archive": "रोस्टर संग्रहित करें"
+      },
+      "actionDescriptions": {
+        "roster_ping": "उन सदस्यों को रिमाइंडर भेजता है जिन्होंने साइन अप नहीं किया या जो गलत क्लैन में हैं",
+        "roster_post": "चुने गए चैनल में अंतिम रोस्टर सूची पोस्ट करता है",
+        "roster_signup": "साइनअप खोलता है, ताकि खिलाड़ी पंजीकरण कर सकें",
+        "roster_signup_close": "साइनअप बंद करता है और नए पंजीकरण रोकता है",
+        "roster_delete": "रोस्टर और उसका सारा डेटा स्थायी रूप से हटा देता है",
+        "roster_clear": "रोस्टर को हटाए बिना उसके सभी सदस्यों को निकाल देता है",
+        "roster_archive": "रोस्टर को केवल पढ़ने योग्य बनाकर संग्रहित करता है"
+      },
+      "infoBox": "ऑटोमेशन इवेंट के आरंभ समय के सापेक्ष ट्रिगर होते हैं। अंतराल तय करें (जैसे 3 दिन पहले), और बॉट उस समय कार्रवाई अपने आप करेगा—दोहराए जाने वाले इवेंट के लिए भी।"
+    },
+    "groups": {
+      "title": "रोस्टर ग्रुप",
+      "description": "बेहतर प्रबंधन के लिए रोस्टरों को ग्रुप में व्यवस्थित करें",
+      "create": "नया ग्रुप",
+      "noGroups": "अभी कोई ग्रुप नहीं बनाया गया है।",
+      "rostersCount": "रोस्टर",
+      "createTitle": "ग्रुप बनाएँ",
+      "editTitle": "ग्रुप संपादित करें",
+      "nameLabel": "ग्रुप नाम",
+      "namePlaceholder": "जैसे, CWL ग्रुप",
+      "infoBox": "ग्रुप कई रोस्टरों को साथ व्यवस्थित करने देते हैं (जैसे सभी CWL रोस्टर)। सेटिंग्स टैब से रोस्टर को ग्रुप में जोड़ें और ग्रुप के सभी रोस्टरों पर एक साथ ऑटोमेशन लागू करें।",
+      "manageAutomations": "ऑटोमेशन प्रबंधित करें",
+      "automationsTitle": "ग्रुप ऑटोमेशन",
+      "automationsDesc": "ये ऑटोमेशन इस ग्रुप के सभी रोस्टरों पर लागू होते हैं",
+      "noAutomations": "कोई ऑटोमेशन नहीं",
+      "noAutomationsHint": "इस ग्रुप के लिए ऑटोमेशन बनाएँ",
+      "addAutomation": "ऑटोमेशन जोड़ें",
+      "deleteConfirm": "ग्रुप “{name}” हटाएँ? इस ग्रुप के रोस्टर बिना ग्रुप के हो जाएँगे।",
+      "emptyGroup": "इस ग्रुप में अभी कोई रोस्टर नहीं है।",
+      "rules": {
+        "title": "ग्रुप नियम",
+        "rulesHint": "ये नियम ग्रुप के सभी रोस्टरों पर लागू होते हैं और तुरंत प्रसारित किए जाते हैं।",
+        "maxAccounts": "अधिकतम खाते/उपयोगकर्ता",
+        "maxAccountsBadge": "अधिकतम {count}/उपयोगकर्ता",
+        "rosterSize": "रोस्टर आकार",
+        "rosterSizeBadge": "आकार {size}",
+        "minSignups": "भराव सीमा",
+        "minSignupsBadge": "सीमा {count}",
+        "categoriesTitle": "साइनअप श्रेणियाँ",
+        "categoriesHint": "इस ग्रुप के लिए उपलब्ध श्रेणियाँ चुनें। ये तुरंत सभी रोस्टरों पर लागू होंगी।",
+        "categoriesBadge": "{count} श्रेणियाँ",
+        "noCategories": "अभी कोई श्रेणी नहीं है।",
+        "newCategoryPlaceholder": "नई श्रेणी का नाम…"
+      }
+    },
+    "categories": {
+      "title": "साइनअप श्रेणियाँ",
+      "description": "खिलाड़ी साइनअप और रोस्टर फ़िल्टरिंग की श्रेणियाँ",
+      "manage": "श्रेणियाँ प्रबंधित करें",
+      "create": "नई श्रेणी",
+      "noCategories": "अभी कोई श्रेणी नहीं बनाई गई है।",
+      "createTitle": "श्रेणी बनाएँ",
+      "editTitle": "श्रेणी संपादित करें",
+      "deleteConfirm": "श्रेणी \"{name}\" हटाएँ?",
+      "idLabel": "श्रेणी ID",
+      "nameLabel": "श्रेणी नाम",
+      "infoBox": "श्रेणियाँ खिलाड़ियों को साइन अप करते समय अपनी उपलब्धता या भूमिका बताने देती हैं (जैसे “उपलब्ध”, “अनिश्चित”, “केवल आवश्यकता होने पर”)। श्रेणियाँ इस सर्वर के सभी रोस्टरों में साझा होती हैं। ग्रुप किए गए रोस्टरों के लिए लागू श्रेणियाँ ग्रुप सेटिंग्स में चुनें।"
+    },
+    "settings": {
+      "general": "पहचान और कॉन्फ़िगरेशन",
+      "restrictions": "प्रतिबंध और सीमाएँ",
+      "name": "रोस्टर नाम",
+      "rosterType": "रोस्टर प्रकार",
+      "typeClan": "क्लैन",
+      "typeFamily": "फ़ैमिली",
+      "signupScope": "साइनअप दायरा",
+      "scopeClanOnly": "केवल क्लैन",
+      "scopeFamilyWide": "पूरी फ़ैमिली",
+      "clan": "क्लैन",
+      "selectClan": "क्लैन चुनें",
+      "description": "विवरण",
+      "descriptionPlaceholder": "इस रोस्टर का विवरण दर्ज करें...",
+      "typeAndScope": "प्रकार और दायरा",
+      "eventTime": "इवेंट आरंभ समय",
+      "eventTimeHint": "इवेंट शुरू होने का समय। इसका उपयोग ऑटोमेशन और काउंटडाउन में होता है।",
+      "recurrenceDays": "हर इतने दिन में दोहराएँ",
+      "recurrenceModeDays": "हर N दिन",
+      "recurrenceModeMonthly": "महीने का दिन",
+      "recurrenceDaysUnit": "दिन",
+      "recurrenceDayOfMonthPrefix": "हर महीने की तारीख",
+      "recurrenceDayOfMonthSuffix": "",
+      "recurrenceDaysHint": "एक बार के इवेंट के लिए खाली छोड़ें। दो अवसरों के बीच दिनों की संख्या दर्ज करें (जैसे मासिक CWL के लिए 30)।",
+      "recurrenceDayOfMonthHint": "हर महीने इसी तारीख को दोहराता है (जैसे 1 = पहली तारीख)।",
+      "group": "ग्रुप",
+      "noGroup": "कोई ग्रुप नहीं",
+      "thRequirements": "टाउन हॉल आवश्यकताएँ",
+      "minTh": "न्यूनतम TH",
+      "maxTh": "अधिकतम TH",
+      "signupLimits": "साइनअप सीमाएँ",
+      "rosterSize": "रोस्टर आकार",
+      "rosterSizeHint": "सदस्यों की अधिकतम संख्या",
+      "minSignups": "न्यूनतम साइनअप",
+      "minSignupsHint": "रोस्टर भरने के लिए आवश्यक न्यूनतम साइनअप संख्या",
+      "maxAccountsPerUser": "अधिकतम खाते प्रति उपयोगकर्ता",
+      "maxAccountsHint": "प्रति Discord उपयोगकर्ता खातों की संख्या सीमित करें",
+      "allowedCategories": "अनुमत साइनअप श्रेणियाँ",
+      "allowedCategoriesHint": "चालू या बंद करने के लिए क्लिक करें। कोई श्रेणी न चुनी हो तो सभी श्रेणियाँ अनुमत हैं।",
+      "defaultSignupCategory": "डिफ़ॉल्ट साइनअप श्रेणी",
+      "defaultSignupCategoryNone": "कोई नहीं (कोई डिफ़ॉल्ट)",
+      "defaultSignupCategoryHint": "सदस्य के साइन अप करने पर पहले से चुनी गई श्रेणी।",
+      "categoriesManagedByGroup": "साइनअप श्रेणियाँ ग्रुप स्तर पर प्रबंधित होती हैं। इस ग्रुप के सभी रोस्टरों के लिए उपलब्ध श्रेणियाँ तय करने हेतु रोस्टर पेज से ग्रुप सेटिंग्स खोलें।",
+      "saving": "सहेजा जा रहा है...",
+      "save": "सेटिंग्स सहेजें"
+    }
+  },
+  "LinksPage": {
+    "title": "लिंक प्रबंधन",
+    "description": "Discord सदस्यों के खाता लिंक प्रबंधित करें और खिलाड़ी के स्वामित्व की पुष्टि करें",
+    "tabs": {
+      "overview": "सिंहावलोकन",
+      "pending": "लंबित",
+      "bulk": "एक साथ कार्रवाइयाँ",
+      "analytics": "विश्लेषण"
+    },
+    "stats": {
+      "totalMembers": "कुल सदस्य",
+      "membersWithLinks": "लिंक वाले सदस्य",
+      "totalLinkedAccounts": "कुल लिंक किए गए खाते",
+      "verifiedAccounts": "सत्यापित खाते",
+      "ofTotal": "कुल में से",
+      "avgPerMember": "औसत",
+      "perMember": "प्रति सदस्य",
+      "verified": "सत्यापित"
+    },
+    "filters": {
+      "searchPlaceholder": "सदस्य नाम, उपयोगकर्ता नाम, खिलाड़ी नाम या टैग से खोजें...",
+      "filterByStatus": "स्थिति के अनुसार फ़िल्टर करें",
+      "allAccounts": "सभी खाते",
+      "verifiedOnly": "केवल सत्यापित",
+      "unverifiedOnly": "केवल असत्यापित",
+      "minAccounts": "न्यूनतम खाते",
+      "allMembers": "सभी सदस्य",
+      "oneOrMore": "1+ खाते",
+      "twoOrMore": "2+ खाते",
+      "threeOrMore": "3+ खाते",
+      "fiveOrMore": "5+ खाते"
+    },
+    "overview": {
+      "title": "खाता लिंक",
+      "description": "सभी Discord–Clash of Clans खाता लिंक देखें और प्रबंधित करें",
+      "showingMembers": "दिखाए जा रहे {count} {members}",
+      "member": "सदस्य",
+      "members": "सदस्य",
+      "noMembers": "कोई सदस्य नहीं मिला।",
+      "adjustFilters": "अपनी खोज या फ़िल्टर बदलकर देखें।",
+      "noLinkedAccounts": "लिंक किए गए खातों वाला कोई सदस्य नहीं है।",
+      "exportCSV": "CSV निर्यात करें",
+      "exportJSON": "JSON निर्यात करें",
+      "account": "खाता",
+      "accounts": "खाते",
+      "more": "अधिक",
+      "unknown": "अज्ञात"
+    },
+    "pending": {
+      "title": "लंबित सत्यापन",
+      "description": "{count} खाते सत्यापन की प्रतीक्षा में हैं",
+      "allVerified": "सभी खाते सत्यापित!",
+      "noPending": "इस समय कोई सत्यापन लंबित नहीं है।",
+      "linked": "जुड़ा हुआ"
+    },
+    "bulk": {
+      "title": "एक साथ कार्रवाइयाँ",
+      "description": "कई सदस्यों पर एक साथ कार्रवाई करें",
+      "selectAll": "सभी ({count}) चुनें",
+      "deselectAll": "सभी का चयन हटाएँ",
+      "unlinkSelected": "चयनित खाते अनलिंक करें ({count})",
+      "linked": "जुड़ा हुआ",
+      "comingSoon": "एक साथ अनलिंक करने की सुविधा जल्द आ रही है!"
+    },
+    "analytics": {
+      "title": "लिंक विश्लेषण",
+      "description": "लिंकिंग के आँकड़ों और रुझानों का अवलोकन",
+      "verificationRate": "सत्यापन दर",
+      "verified": "सत्यापित",
+      "unverified": "असत्यापित",
+      "accountDistribution": "खाता वितरण",
+      "oneAccount": "1 खाता",
+      "twoToThreeAccounts": "2-3 खाते",
+      "fourPlusAccounts": "4+ खाते",
+      "townHallLevels": "टाउन हॉल स्तर",
+      "other": "अन्य",
+      "coverage": "कवरेज",
+      "linkedMembers": "लिंक किए गए सदस्य",
+      "coverageRate": "कवरेज दर",
+      "linkInsights": "लिंक जानकारी",
+      "avgAccountsPerMember": "औसत खाते प्रति सदस्य:",
+      "mostLinkedAccounts": "सबसे लिंक किए गए खाते:",
+      "membersWithoutLinks": "बिना लिंक वाले सदस्य:"
+    },
+    "actions": {
+      "unlinkAccount": "खाता अनलिंक करें"
+    },
+    "deleteDialog": {
+      "title": "खाता अनलिंक करें",
+      "description": "क्या आप वाकई {playerName} को अनलिंक करना चाहते हैं? इसे वापस नहीं किया जा सकता।",
+      "cancel": "रद्द करें",
+      "unlinking": "अनलिंक किया जा रहा है...",
+      "unlink": "अनलिंक करें"
+    },
+    "bulkDialog": {
+      "title": "खाते एक साथ अनलिंक करें",
+      "description": "क्या आप चुने गए {count} सदस्यों के सभी खाते अनलिंक करना चाहते हैं? इसे वापस नहीं किया जा सकता।",
+      "cancel": "रद्द करें",
+      "unlinkAll": "सभी अनलिंक करें"
+    },
+    "toast": {
+      "unlinkFailed": "खाता अनलिंक करना विफल रहा।"
+    },
+    "badges": {
+      "verified": "सत्यापित",
+      "unverified": "असत्यापित",
+      "pending": "लंबित"
+    },
+    "pagination": {
+      "showing": "कुल {total} सदस्यों में से {start}–{end} दिखाए जा रहे हैं",
+      "page": "पेज {current} / {total}",
+      "previous": "पिछला",
+      "next": "अगला"
+    }
+  },
+  "WarsPage": {
+    "title": "वॉर आँकड़े",
+    "description": "वॉर प्रदर्शन ट्रैक करें और लड़ाई के आँकड़ों का विश्लेषण करें",
+    "actions": {
+      "exportData": "डेटा निर्यात करें",
+      "resetFilters": "फ़िल्टर रीसेट करें",
+      "applyFilters": "फ़िल्टर लागू करें"
+    },
+    "filters": {
+      "title": "फ़िल्टर",
+      "description": "विभिन्न मानदंडों से वॉर आँकड़े फ़िल्टर करें",
+      "clan": "क्लैन",
+      "allClans": "सभी क्लैन",
+      "townHall": "टाउन हॉल",
+      "townHallShort": "TH",
+      "allTownHalls": "सभी TH स्तर",
+      "townHallLevel": "टाउन हॉल {level}",
+      "period": "अवधि",
+      "last7Days": "पिछले 7 दिन",
+      "last30Days": "पिछले 30 दिन",
+      "last90Days": "पिछले 90 दिन",
+      "last6Months": "पिछले 6 महीने",
+      "lastYear": "पिछला वर्ष",
+      "custom": "कस्टम",
+      "startDate": "आरंभ तिथि",
+      "endDate": "समाप्ति तिथि",
+      "warTypes": "वॉर प्रकार"
+    },
+    "summaryStats": {
+      "totalWins": "कुल जीत",
+      "totalWinsDesc": "कुल {totalWars} वॉर में से",
+      "totalLosses": "कुल हार",
+      "totalLossesDesc": "{totalDraws} ड्रॉ",
+      "winRate": "जीत दर",
+      "winRateDesc": "समग्र प्रदर्शन",
+      "activeWars": "सक्रिय वॉर",
+      "activeWarsDesc": "CWL में {activeCwl}"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "सप्ताह के अनुसार वॉर प्रदर्शन",
+        "description": "चुनी गई अवधि में साप्ताहिक जीत, हार और ड्रॉ",
+        "wins": "जीत",
+        "losses": "हार",
+        "draws": "ड्रॉ"
+      },
+      "thSuccessRate": {
+        "title": "टाउन हॉल के अनुसार अटैक सफलता दर",
+        "description": "3-स्टार दर प्रति TH स्तर",
+        "threeStarPercent": "3-स्टार %",
+        "otherPercent": "अन्य %"
+      },
+      "warTypeDistribution": {
+        "title": "वॉर प्रकार वितरण",
+        "description": "वॉर प्रकार के अनुसार विवरण",
+        "cwl": "CWL",
+        "random": "यादृच्छिक",
+        "friendly": "दोस्ताना"
+      },
+      "topPerformers": {
+        "title": "शीर्ष प्रदर्शनकर्ता",
+        "description": "कुल स्टार के आधार पर सर्वश्रेष्ठ योद्धा",
+        "attacksAndStars": "{attacks} अटैक • {stars} स्टार",
+        "noData": "खिलाड़ी डेटा उपलब्ध नहीं है। फ़िल्टर बदलकर देखें।"
+      },
+      "missedAttacks": {
+        "title": "छूटे हुए अटैक",
+        "description": "वे खिलाड़ी जिन्होंने अपने सभी अटैक उपयोग नहीं किए",
+        "attacks": "अटैक छूटे"
+      },
+      "topDefenders": {
+        "title": "शीर्ष डिफ़ेंडर",
+        "description": "औसतन सबसे कम स्टार देने वाले सर्वश्रेष्ठ डिफ़ेंडर",
+        "defensesAndStars": "{defenses} डिफ़ेंस • {stars} स्टार दिए",
+        "noData": "डिफ़ेंडर डेटा उपलब्ध नहीं है। फ़िल्टर बदलकर देखें।"
+      },
+      "worstAttackers": {
+        "title": "सबसे कमजोर अटैकर",
+        "description": "प्रति अटैक सबसे कम औसत स्टार वाले खिलाड़ी (कम से कम 3 अटैक)",
+        "attacksAndStars": "{attacks} अटैक • {stars} स्टार",
+        "noData": "खिलाड़ी डेटा उपलब्ध नहीं है। फ़िल्टर बदलकर देखें।"
+      },
+      "worstDefenders": {
+        "title": "सबसे कमजोर डिफ़ेंडर",
+        "description": "डिफ़ेंस में सबसे अधिक स्टार देने वाले खिलाड़ी (कम से कम 3 डिफ़ेंस)",
+        "defensesAndStars": "{defenses} डिफ़ेंस • {stars} स्टार दिए",
+        "noData": "डिफ़ेंडर डेटा उपलब्ध नहीं है। फ़िल्टर बदलकर देखें।"
+      }
+    },
+    "clanStatsTable": {
+      "title": "क्लैन वॉर आँकड़े",
+      "description": "हर क्लैन के विस्तृत आँकड़े",
+      "headers": {
+        "clan": "क्लैन",
+        "status": "स्थिति",
+        "wars": "वॉर",
+        "record": "जी/हा/ब",
+        "winRate": "जीत दर",
+        "avgDestruction": "औसत विनाश",
+        "avgStarsPerAttack": "स्टार / अटैक",
+        "avgDefenseStars": "स्टार/डिफ़ेंस"
+      },
+      "status": {
+        "inWar": "वॉर में",
+        "cwl": "CWL",
+        "peace": "वॉर में नहीं"
+      },
+      "noData": "क्लैन आँकड़े उपलब्ध नहीं हैं। फ़िल्टर लागू करें या डेटा लोड होने की प्रतीक्षा करें।"
+    },
+    "toast": {
+      "errorTitle": "त्रुटि",
+      "errorLoadingClans": "क्लैन लोड नहीं हो सका।",
+      "errorLoadingWarData": "वॉर डेटा लोड नहीं हो सका।",
+      "errorNoClans": "अभी कोई क्लैन उपलब्ध नहीं है।",
+      "errorApplyingFilters": "फ़िल्टर लागू करना विफल रहा।"
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "लीडरबोर्ड",
+    "description": "क्लैन कैपिटल और अन्य के वैश्विक लीडरबोर्ड",
+    "comingSoon": "यह सुविधा जल्द आ रही है। बाद में फिर देखें!",
+    "stats": {
+      "totalEntries": "कुल प्रविष्टियाँ",
+      "type": "प्रकार",
+      "league": "लीग",
+      "weekend": "सप्ताहांत"
+    },
+    "filters": {
+      "title": "फ़िल्टर",
+      "description": "लीडरबोर्ड दृश्य अनुकूलित करें",
+      "type": "प्रकार",
+      "metric": "मापदंड",
+      "league": "लीग",
+      "weekend": "सप्ताहांत"
+    },
+    "types": {
+      "player": "खिलाड़ी",
+      "clan": "क्लैन"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "कैपिटल लूटा गया"
+        },
+        "clan": {
+          "capitalTotalLoot": "कुल लूट",
+          "raidsCompleted": "छापे पूरे हुए",
+          "enemyDistrictsDestroyed": "नष्ट हुए जिले",
+          "medals": "पदक"
+        }
+      }
+    },
+    "leagues": {
+      "all": "सभी",
+      "legendLeague": "लीजेंड लीग",
+      "titanLeagueI": "टाइटन लीग I",
+      "titanLeagueII": "टाइटन लीग II",
+      "titanLeagueIII": "टाइटन लीग III"
+    },
+    "rankings": {
+      "title": "रैंकिंग",
+      "description": "{weekend} के शीर्ष {count} {type}",
+      "players": "खिलाड़ी",
+      "clans": "क्लैन"
+    },
+    "empty": {
+      "title": "कोई डेटा उपलब्ध नहीं है।",
+      "description": "कोई दूसरा सप्ताहांत या लीग चुनकर देखें"
+    }
+  },
+  "ClansPage": {
+    "title": "क्लैन प्रबंधन",
+    "description": "अपने क्लैन और उनकी Discord इंटीग्रेशन सेटिंग्स कॉन्फ़िगर करें",
+    "addClan": "क्लैन जोड़ें",
+    "addNewClan": "नया क्लैन जोड़ें",
+    "addClanDescription": "क्लैन टैग दर्ज करके उसे इस सर्वर में जोड़ें",
+    "clanTag": "क्लैन टैग",
+    "totalClans": "कुल क्लैन",
+    "registeredClans": "पंजीकृत क्लैन",
+    "configured": "कॉन्फ़िगर किया गया",
+    "withSettingsConfigured": "जिनकी सेटिंग्स कॉन्फ़िगर हैं",
+    "totalMembers": "कुल सदस्य",
+    "acrossAllClans": "सभी क्लैनों में",
+    "channels": "चैनल",
+    "availableChannels": "उपलब्ध चैनल",
+    "noClansYet": "अभी कोई क्लैन नहीं है।",
+    "getStartedAdding": "अपना पहला क्लैन जोड़कर शुरू करें",
+    "addFirstClan": "अपना पहला क्लैन जोड़ें",
+    "level": "स्तर",
+    "members": "सदस्य",
+    "status": "स्थिति",
+    "configuredBadge": "कॉन्फ़िगर किया गया",
+    "setupRequired": "सेटअप आवश्यक",
+    "configure": "कॉन्फ़िगर करें",
+    "sorting": {
+      "label": "क्लैन क्रमबद्ध करें",
+      "sortBy": "क्रमबद्ध करें",
+      "toggleDirection": "क्रमबद्ध करने की दिशा बदलें",
+      "added": "जोड़ने की तारीख",
+      "name": "क्लैन नाम",
+      "level": "क्लैन स्तर",
+      "members": "सदस्य"
+    },
+    "configureClan": "{name} ({tag}) कॉन्फ़िगर करें",
+    "customizeIntegration": "इस क्लैन की Discord इंटीग्रेशन सेटिंग्स अनुकूलित करें",
+    "tabs": {
+      "basic": "Discord सेटअप",
+      "war": "वॉर"
+    },
+    "memberRole": "सदस्य भूमिका",
+    "leaderRole": "लीडर भूमिका",
+    "selectRole": "भूमिका चुनें",
+    "none": "कोई नहीं",
+    "clanAbbreviation": "क्लैन संक्षिप्त नाम",
+    "warScoreCountdown": "वॉर स्कोर काउंटडाउन",
+    "warScoreCountdownDescription": "मौजूदा वॉर स्कोर दिखाने वाला वॉइस चैनल बनाता है",
+    "warTimerCountdown": "वॉर टाइमर काउंटडाउन",
+    "warTimerCountdownDescription": "वॉर में बचा समय दिखाने वाला वॉइस चैनल बनाता है",
+    "category": "श्रेणी",
+    "categoryOptions": {
+      "none": "कोई श्रेणी",
+      "premade": "सामान्य श्रेणियाँ",
+      "usedByServer": "अन्य क्लैन द्वारा उपयोग में",
+      "clanCount": "{count, plural, one {# क्लैन} other {# क्लैन}}"
+    },
+    "categories": {
+      "title": "क्लैन श्रेणियाँ",
+      "description": "इस सर्वर के क्लैन के लिए उपलब्ध श्रेणियाँ बनाएँ और प्रबंधित करें।",
+      "refresh": "रीफ़्रेश",
+      "createLabel": "नई श्रेणी",
+      "name": "श्रेणी नाम",
+      "namePlaceholder": "जैसे, प्रतिस्पर्धी",
+      "nameHelp": "खाली स्थान सामान्य करने के बाद {count}/{max} अक्षर",
+      "create": "श्रेणी बनाएँ",
+      "empty": "कोई क्लैन श्रेणी नहीं बनाई गई है।",
+      "clanCount": "{count, plural, one {# क्लैन} other {# क्लैन}}",
+      "renameAction": "{name} का नाम बदलें",
+      "deleteAction": "{name} हटाएँ",
+      "renameTitle": "क्लैन श्रेणी का नाम बदलें",
+      "renameDescription": "सामान्य किया गया नाम हर असाइन किए गए क्लैन में अपडेट होगा।",
+      "saveRename": "नाम सहेजें",
+      "deleteTitle": "क्लैन श्रेणी हटाएँ?",
+      "deleteWarning": "“{name}” हटाने पर {count, plural, one {# क्लैन} other {# क्लैन}} बिना श्रेणी के हो जाएँगे।",
+      "deleteCountMayChange": "यह पूर्वावलोकन वर्तमान स्थिति दिखाता है। हटाने की प्रक्रिया पूरी होने पर वास्तव में प्रभावित क्लैनों की संख्या दिखाई जाएगी।",
+      "confirmDelete": "श्रेणी हटाएँ",
+      "deleteSuccessTitle": "{name} हटाई गई",
+      "deleteSuccessDescription": "{count, plural, =0 {कोई क्लैन नहीं बदला।} one {# क्लैन अब बिना श्रेणी का है।} other {# क्लैन अब बिना श्रेणी के हैं।}}",
+      "created": "{name} बनाई गई।",
+      "renamed": "श्रेणी का नाम बदलकर {name} किया गया।",
+      "errors": {
+        "title": "श्रेणियाँ अनुपलब्ध",
+        "load": "क्लैन श्रेणियाँ लोड नहीं हो सकीं।",
+        "create": "क्लैन श्रेणी बनाना विफल रहा।",
+        "rename": "क्लैन श्रेणी का नाम नहीं बदला जा सका।",
+        "preview": "हटाने का पूर्वावलोकन लोड नहीं हो सका।",
+        "delete": "क्लैन श्रेणी हटाना विफल रहा।",
+        "refresh": "श्रेणी बदल गई, लेकिन अपडेट की गई श्रेणी या क्लैन स्थिति लोड नहीं हो सकी।",
+        "invalidName": "ऐसा नाम दें जो खाली न हो, अधिकतम 64 अक्षरों का हो और जिसमें कंट्रोल अक्षर न हों।"
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "अधिक जानकारी दिखाएँ",
+      "memberRole": "इस क्लैन के सदस्यों को मिलने वाली भूमिका। यदि बॉट आपके Discord पर भूमिकाएँ प्रबंधित करता है, तो क्लैन के हर सदस्य को यह भूमिका मिलेगी। क्लैन-विशिष्ट चैनल बनाने में यह उपयोगी है।",
+      "leaderRole": "इस क्लैन के को-लीडर और लीडर को मिलने वाली भूमिका। Discord सर्वर में यह क्लैन लीडर चैट या सभी क्लैनों की साझा लीडर चैट के लिए उपयोगी है।",
+      "clanAbbreviation": "क्लैन का संक्षिप्त नाम दें, ताकि नाम बदलना सक्षम होने पर सदस्य उसे अपने नाम में रख सकें। फ़ॉर्मेट <familySettingsLink>फ़ैमिली सेटिंग्स</familySettingsLink> में कॉन्फ़िगर करें।",
+      "category": "यह क्लैन व्यवस्थित करने का तरीका है। कई क्लैन फ़ैमिली में 5 या अधिक क्लैन होते हैं और कुछ केवल CWL या इवेंट के लिए होते हैं।"
+    },
+    "roleIdPlaceholder": "भूमिका ID",
+    "abbreviationPlaceholder": "जैसे, CK",
+    "categoryPlaceholder": "श्रेणी नाम",
+    "notAvailable": "लागू नहीं",
+    "saving": "सहेजा जा रहा है...",
+    "saveChanges": "बदलाव सहेजें",
+    "deleteConfirm": "क्या आप वाकई {tag} हटाना चाहते हैं? इससे जुड़े सभी रिमाइंडर और लॉग भी हट जाएँगे।",
+    "toast": {
+      "errorLoadingClans": "क्लैन लोड नहीं हो सके।",
+      "errorLoadingSettings": "क्लैन सेटिंग्स लोड नहीं हो सकीं।",
+      "errorEmptyClanTag": "क्लैन टैग दर्ज करें",
+      "clanAdded": "क्लैन सफलतापूर्वक जोड़ा गया",
+      "errorAddingClan": "क्लैन जोड़ना विफल रहा।",
+      "clanRemoved": "क्लैन सफलतापूर्वक हटाया गया",
+      "errorRemovingClan": "क्लैन हटाना विफल रहा।",
+      "settingsSaved": "सेटिंग्स सफलतापूर्वक सहेजी गईं",
+      "errorSavingSettings": "सेटिंग्स सहेजी नहीं जा सकीं।",
+      "countdownEnabled": "काउंटडाउन वॉइस चैनल बनाया गया",
+      "countdownDisabled": "काउंटडाउन वॉइस चैनल हटाया गया",
+      "errorTogglingCountdown": "काउंटडाउन बदलना विफल रहा।"
+    }
+  },
+  "RolesPage": {
+    "title": "भूमिका प्रबंधन",
+    "description": "खिलाड़ी के आँकड़ों के आधार पर स्वचालित भूमिका असाइनमेंट कॉन्फ़िगर करें",
+    "stats": {
+      "totalRoles": "कुल भूमिकाएँ",
+      "totalRolesDesc": "कॉन्फ़िगर किए गए भूमिका असाइनमेंट",
+      "autoEvaluation": "स्वचालित मूल्यांकन",
+      "autoEvaluationOn": "चालू",
+      "autoEvaluationOff": "बंद",
+      "autoEvaluationActiveDesc": "भूमिकाएँ अपने आप असाइन की जा रही हैं",
+      "autoEvaluationInactiveDesc": "केवल मैन्युअल भूमिका असाइनमेंट",
+      "activeTypes": "सक्रिय प्रकार",
+      "activeTypesDesc": "उपयोग में भूमिका प्रकार",
+      "discordRoles": "Discord भूमिकाएँ",
+      "discordRolesDesc": "सर्वर पर उपलब्ध"
+    },
+    "settings": {
+      "title": "स्वचालित मूल्यांकन सेटिंग्स",
+      "description": "स्वचालित भूमिका मूल्यांकन और असाइनमेंट कॉन्फ़िगर करें",
+      "saveButton": "सेटिंग्स सहेजें",
+      "saving": "सहेजा जा रहा है...",
+      "enableAutoEval": "स्वचालित मूल्यांकन सक्षम करें",
+      "enableAutoEvalDesc": "खिलाड़ी के आँकड़ों के आधार पर भूमिकाएँ अपने आप असाइन करें और हटाएँ",
+      "autoNickname": "निकनेम अपने आप अपडेट करें",
+      "autoNicknameDesc": "भूमिकाओं के मूल्यांकन पर निकनेम अपडेट करें"
+    },
+    "roleTypes": {
+      "townhall": "टाउन हॉल",
+      "league": "लीग",
+      "builderhall": "बिल्डर हॉल",
+      "builderLeague": "बिल्डर लीग",
+      "achievement": "उपलब्धि",
+      "status": "Discord सदस्यता अवधि",
+      "familyPosition": "फ़ैमिली पद"
+    },
+    "familyPositions": {
+      "member": "सदस्य",
+      "elder": "एल्डर",
+      "coLeader": "को-लीडर",
+      "leader": "लीडर"
+    },
+    "leagues": {
+      "legend": "लीजेंड",
+      "electroDragon": "इलेक्ट्रो ड्रैगन",
+      "dragon": "ड्रैगन",
+      "electroTitan": "इलेक्ट्रो टाइटन",
+      "pekka": "P.E.K.K.A",
+      "golem": "गोलेम",
+      "witch": "विच",
+      "valkyrie": "वल्किरी",
+      "wizard": "विज़ार्ड",
+      "archer": "आर्चर",
+      "barbarian": "बार्बेरियन",
+      "skeleton": "स्केलेटन"
+    },
+    "builderLeagues": {
+      "diamond": "हीरा",
+      "ruby": "माणिक",
+      "emerald": "पन्ना",
+      "platinum": "प्लैटिनम",
+      "titanium": "टाइटेनियम",
+      "steel": "इस्पात",
+      "iron": "लोहा",
+      "brass": "पीतल",
+      "copper": "तांबा",
+      "stone": "पत्थर",
+      "clay": "मिट्टी",
+      "wood": "लकड़ी"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "अपना अकाउंट सुरक्षित रखें!",
+      "biggerAndBetter": "बड़ा और बेहतर",
+      "discoverNewTroops": "नए सैनिक खोजें",
+      "biggerCoffers": "बड़े खज़ाने",
+      "goldGrab": "सोने की लूट",
+      "elixirEscapade": "एलिक्सिर अभियान",
+      "heroicHeist": "वीरतापूर्ण डकैती",
+      "wellSeasoned": "अनुभवी योद्धा",
+      "niceAndTidy": "साफ़-सुथरा",
+      "empireBuilder": "साम्राज्य निर्माता",
+      "clanWarWealth": "क्लैन वॉर की दौलत",
+      "friendInNeed": "मुसीबत में दोस्त",
+      "sharingIsCaring": "बाँटने में ही खुशी है",
+      "siegeSharer": "सीज मशीन बाँटने वाला",
+      "warHero": "वॉर हीरो",
+      "warLeagueLegend": "वॉर लीग लीजेंड",
+      "gamesChampion": "क्लैन गेम्स चैंपियन",
+      "unbreakable": "अटूट",
+      "sweetVictory": "शानदार जीत!",
+      "conqueror": "विजेता",
+      "leagueAllStar": "लीग का सितारा",
+      "leagueFollower": "लीग अनुयायी",
+      "leagueEnthusiast": "लीग प्रेमी",
+      "leagueSuperfan": "लीग सुपरफ़ैन",
+      "leagueFanatic": "लीग का कट्टर समर्थक",
+      "leagueMaster": "लीग मास्टर",
+      "legendLeague": "लीजेंड लीग",
+      "humiliator": "धूल चटाने वाला",
+      "notSoEasyThisTime": "इस बार इतना आसान नहीं",
+      "unionBuster": "संघ तोड़ने वाला",
+      "bustThis": "इसे तोड़कर दिखाओ!",
+      "wallBuster": "दीवार तोड़ने वाला",
+      "mortarMauler": "मॉर्टार विध्वंसक",
+      "xBowExterminator": "एक्स-बो संहारक",
+      "firefighter": "अग्निशामक",
+      "antiArtillery": "तोपख़ाना-विरोधी",
+      "shatteredAndScatter": "चकनाचूर और तितर-बितर",
+      "counterspell": "जवाबी जादू",
+      "monolithMasher": "मोनोलिथ विध्वंसक",
+      "multiArcherTowerTerminator": "मल्टी-आर्चर टावर संहारक",
+      "ricochetCannonCrusher": "रिकोशे कैनन विध्वंसक",
+      "firespitterFinisher": "फायरस्पिटर संहारक",
+      "multiGearTowerTrampler": "मल्टी-गियर टावर विध्वंसक",
+      "craftersNightmare": "कारीगर का दुःस्वप्न",
+      "getThoseGoblins": "उन गॉब्लिनों को पकड़ो!",
+      "supercharger": "सुपरचार्जर",
+      "craftingConnoisseur": "शिल्प विशेषज्ञ",
+      "getThoseOtherGoblins": "उन दूसरे गॉब्लिनों को पकड़ो!",
+      "getEvenMoreGoblins": "और भी गॉब्लिनों को पकड़ो!",
+      "dragonSlayer": "ड्रैगन संहारक",
+      "ungratefulChild": "नाशुक्रा बच्चा",
+      "superbWork": "शानदार काम",
+      "masterEngineering": "उत्कृष्ट अभियांत्रिकी",
+      "hiddenTreasures": "छिपे खज़ाने",
+      "highGear": "तेज़ रफ़्तार",
+      "nextGenerationModel": "अगली पीढ़ी का मॉडल",
+      "unBuildIt": "इसे उखाड़ दो",
+      "championBuilder": "चैंपियन बिल्डर",
+      "aggressiveCapitalism": "आक्रामक पूँजीवाद",
+      "mostValuableClanmate": "सबसे मूल्यवान क्लैन साथी"
+    },
+    "configuredRoles": {
+      "title": "कॉन्फ़िगर की गई भूमिकाएँ",
+      "noRolesConfigured": "अभी कोई {roleType} भूमिका कॉन्फ़िगर नहीं है।",
+      "addRoleToStart": "भूमिका बनाने के लिए \"भूमिका जोड़ें\" पर क्लिक करें",
+      "discordRole": "Discord भूमिका",
+      "criteria": "मानदंड",
+      "mode": "मोड",
+      "modeBoth": "जोड़ें और हटाएँ",
+      "modeAdd": "केवल जोड़ें",
+      "modeRemove": "केवल हटाएँ",
+      "actions": "कार्रवाइयाँ",
+      "unknownRole": "अज्ञात भूमिका",
+      "remove": "हटाएँ",
+      "month": "माह",
+      "months": "महीने"
+    },
+    "addRoleDialog": {
+      "title": "नई भूमिका जोड़ें",
+      "description": "नई स्वचालित भूमिका असाइनमेंट नीति कॉन्फ़िगर करें",
+      "roleType": "भूमिका प्रकार",
+      "mode": "मोड",
+      "discordRole": "Discord भूमिका",
+      "selectRole": "भूमिका चुनें",
+      "townHallLevel": "टाउन हॉल स्तर",
+      "selectThLevel": "TH स्तर चुनें",
+      "thPrefix": "TH",
+      "league": "लीग",
+      "selectLeague": "लीग चुनें",
+      "builderHallLevel": "बिल्डर हॉल स्तर",
+      "selectBhLevel": "BH स्तर चुनें",
+      "bhPrefix": "BH",
+      "builderLeague": "बिल्डर लीग",
+      "selectBuilderLeague": "बिल्डर लीग चुनें",
+      "achievementName": "उपलब्धि",
+      "selectAchievement": "उपलब्धि चुनें",
+      "searchAchievement": "उपलब्धि खोजें...",
+      "noAchievementFound": "कोई उपलब्धि नहीं मिली।",
+      "monthsInServer": "सर्वर में महीने",
+      "monthsPlaceholder": "6",
+      "familyPosition": "फ़ैमिली पद",
+      "selectPosition": "पद चुनें",
+      "cancel": "रद्द करें",
+      "addRole": "भूमिका जोड़ें",
+      "errorDuplicateExact": "यह मानदंड पहले से इस भूमिका से जुड़ा है।",
+      "errorDuplicateCriterion": "इस मानदंड को पहले से भूमिका दी गई है। पहले मौजूदा भूमिका हटाएँ।"
+    },
+    "infoCard": {
+      "title": "💡 स्वचालित भूमिकाएँ कैसे काम करती हैं",
+      "automaticEvaluation": "स्वचालित मूल्यांकन:",
+      "automaticEvaluationDesc": "सक्षम होने पर बॉट समय-समय पर खिलाड़ियों की जाँच करेगा और मौजूदा आँकड़ों के आधार पर भूमिकाएँ असाइन या हटाएगा।",
+      "rolePriority": "भूमिका प्राथमिकता:",
+      "rolePriorityDesc": "यदि खिलाड़ी के आँकड़ों से कई भूमिकाएँ मेल खाती हैं, तो सबसे ऊँचे स्तर की भूमिका असाइन होगी।",
+      "manualOverride": "मैन्युअल ओवरराइड:",
+      "manualOverrideDesc": "सर्वर एडमिन भूमिकाएँ मैन्युअल रूप से असाइन कर सकते हैं; स्वचालित मूल्यांकन उन्हें नहीं हटाएगा।"
+    },
+    "categoryRoles": {
+      "title": "श्रेणी भूमिकाएँ",
+      "description": "हर क्लैन श्रेणी को Discord भूमिका दें। उस श्रेणी के क्लैन सदस्यों को संबंधित भूमिका अपने आप मिलेगी।",
+      "addButton": "श्रेणी जोड़ें",
+      "categoryName": "श्रेणी",
+      "categoryNamePlaceholder": "श्रेणी नाम",
+      "noCategoryRoles": "अभी कोई श्रेणी भूमिका कॉन्फ़िगर नहीं है।",
+      "noCategoryRolesDesc": "भूमिका बनाने के लिए \"श्रेणी जोड़ें\" पर क्लिक करें",
+      "addTitle": "श्रेणी भूमिका जोड़ें",
+      "addConfirm": "जोड़ें",
+      "errorCategoryRequired": "श्रेणी का नाम आवश्यक है",
+      "errorRoleRequired": "Discord भूमिका आवश्यक है",
+      "errorCategoryExists": "इस श्रेणी के लिए भूमिका पहले से कॉन्फ़िगर है"
+    },
+    "toast": {
+      "changesSaved": "बदलाव सफलतापूर्वक सहेजे गए!",
+      "errorLoading": "भूमिकाएँ लोड नहीं हो सकीं।",
+      "errorSaving": "सेटिंग्स सहेजी नहीं जा सकीं।",
+      "errorAdding": "भूमिका जोड़ना विफल रहा।",
+      "errorDeleting": "भूमिका हटाना विफल रहा।"
+    }
+  },
+  "RemindersPage": {
+    "title": "रिमाइंडर",
+    "description": "वॉर, रेड, क्लैन गेम्स और निष्क्रियता के लिए स्वचालित रिमाइंडर कॉन्फ़िगर करें",
+    "types": {
+      "war": "वॉर रिमाइंडर",
+      "capital": "क्लैन कैपिटल",
+      "clanGames": "क्लैन गेम्स",
+      "inactivity": "निष्क्रियता"
+    },
+    "tabs": {
+      "war": "वॉर",
+      "capital": "कैपिटल",
+      "clanGames": "क्लैन गेम्स",
+      "inactivity": "निष्क्रियता"
+    },
+    "stats": {
+      "totalReminders": "कुल रिमाइंडर",
+      "totalRemindersDesc": "कॉन्फ़िगर किए गए सक्रिय रिमाइंडर",
+      "warReminders": "वॉर रिमाइंडर",
+      "warRemindersDesc": "सामान्य और CWL वॉर",
+      "capitalReminders": "कैपिटल रिमाइंडर",
+      "capitalRemindersDesc": "रेड सप्ताहांत के अटैक",
+      "otherReminders": "अन्य रिमाइंडर",
+      "otherRemindersDesc": "गेम्स और निष्क्रियता"
+    },
+    "actions": {
+      "saving": "सहेजा जा रहा है...",
+      "saveChanges": "बदलाव सहेजें",
+      "addReminder": "रिमाइंडर जोड़ें",
+      "addWarReminder": "वॉर रिमाइंडर जोड़ें",
+      "addCapitalReminder": "कैपिटल रिमाइंडर जोड़ें",
+      "addClanGamesReminder": "क्लैन गेम्स रिमाइंडर जोड़ें",
+      "addInactivityReminder": "निष्क्रियता रिमाइंडर जोड़ें",
+      "retry": "पुनः प्रयास करें"
+    },
+    "clanSelector": {
+      "label": "क्लैन",
+      "placeholder": "क्लैन चुनें",
+      "allClans": "सभी क्लैन"
+    },
+    "empty": {
+      "noWarReminders": "कोई वॉर रिमाइंडर नहीं",
+      "noCapitalReminders": "कोई कैपिटल रिमाइंडर नहीं",
+      "noClanGamesReminders": "कोई क्लैन गेम्स रिमाइंडर नहीं",
+      "noInactivityReminders": "कोई निष्क्रियता रिमाइंडर नहीं",
+      "getStarted": "अपना पहला रिमाइंडर बनाकर शुरू करें"
+    },
+    "card": {
+      "new": "नया",
+      "before": "पहले",
+      "timeBefore": "बाकी समय",
+      "timeBeforePlaceholder": "जैसे, 6",
+      "timeInactive": "निष्क्रियता अवधि",
+      "timeInactivePlaceholder": "जैसे, 160",
+      "timeUnit": "घंटे",
+      "hoursRemaining": "घंटे बाकी",
+      "channel": "चैनल",
+      "channelPlaceholder": "चैनल चुनें",
+      "threadOptional": "थ्रेड (वैकल्पिक)",
+      "threadPlaceholder": "थ्रेड चुनें",
+      "noThread": "सीधे चैनल में पोस्ट करें",
+      "forumPost": "फ़ोरम पोस्ट",
+      "forumPostPlaceholder": "फ़ोरम पोस्ट चुनें",
+      "forumPostRequired": "फ़ोरम चैनल के लिए फ़ोरम पोस्ट आवश्यक है।",
+      "clan": "क्लैन",
+      "clanPlaceholder": "क्लैन चुनें",
+      "customMessage": "कस्टम संदेश",
+      "customMessagePlaceholder": "अपने अटैक इस्तेमाल करना न भूलें!",
+      "customMessagePlaceholderClanGames": "क्लैन गेम्स में अधिक अंक पाने का प्रयास करें!",
+      "customMessagePlaceholderInactivity": "आप कुछ समय से क्लैन में निष्क्रिय हैं :(",
+      "warTypes": "वॉर प्रकार",
+      "random": "यादृच्छिक",
+      "friendly": "दोस्ताना",
+      "cwl": "CWL",
+      "pointThreshold": "अंक सीमा",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "उन लोगों को पिंग करेगा जिनके {threshold} से कम अंक हैं।",
+      "attackThreshold": "अटैक सीमा",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "जिनके {threshold} या अधिक अटैक बाकी हैं, उन्हें पिंग करेगा।",
+      "notSet": "सेट नहीं"
+    },
+    "dialog": {
+      "addTitle": "नया रिमाइंडर जोड़ें",
+      "addDescription": "सर्वर के लिए नया रिमाइंडर कॉन्फ़िगर करें",
+      "editTitle": "रिमाइंडर संपादित करें",
+      "editDescription": "रिमाइंडर सेटिंग्स अपडेट करें",
+      "type": "रिमाइंडर प्रकार",
+      "selectType": "प्रकार चुनें",
+      "cancel": "रद्द करें",
+      "saving": "सहेजा जा रहा है...",
+      "saveChanges": "बदलाव सहेजें",
+      "addReminder": "रिमाइंडर जोड़ें"
+    },
+    "toast": {
+      "errorTitle": "त्रुटि",
+      "errorLoadingReminders": "रिमाइंडर लोड नहीं हो सके।",
+      "reminderAdded": "रिमाइंडर सफलतापूर्वक जोड़ा गया",
+      "reminderAddedDesc": "नया {type} रिमाइंडर जोड़ दिया गया। सहेजना न भूलें!",
+      "reminderUpdated": "रिमाइंडर सफलतापूर्वक अपडेट किया गया",
+      "successTitle": "सफलता",
+      "reminderDeleted": "रिमाइंडर सफलतापूर्वक हटाया गया",
+      "failedToDelete": "रिमाइंडर हटाना विफल रहा।",
+      "allRemindersSaved": "सभी रिमाइंडर सफलतापूर्वक सहेजे गए",
+      "failedToSave": "रिमाइंडर सहेजा नहीं जा सका।",
+      "forumPostRequired": "रिमाइंडर सहेजने से पहले फ़ोरम पोस्ट चुनें।",
+      "invalidDestination": "चुना गया थ्रेड इस चैनल का नहीं है।",
+      "timeExceedsLimit": "बचा समय {min} से {max} घंटे के बीच होना चाहिए",
+      "pointThresholdInvalid": "अंक सीमा {min} से {max} के बीच होनी चाहिए",
+      "attackThresholdInvalid": "अटैक सीमा {min} से {max} के बीच होनी चाहिए"
+    }
+  },
+  "LogsPage": {
+    "title": "गतिविधि लॉग",
+    "description": "क्लैन और खिलाड़ी गतिविधियों के लिए स्वचालित लॉगिंग कॉन्फ़िगर करें",
+    "stats": {
+      "activeLogs": "सक्रिय लॉग",
+      "activeLogsDesc": "सभी फ़ैमिली क्लैन और सर्वर लॉग में",
+      "logChannels": "लॉग चैनल",
+      "logChannelsDesc": "उपलब्ध चैनल",
+      "trackedClans": "ट्रैक किए गए क्लैन",
+      "trackedClansDesc": "कॉन्फ़िगर किए गए क्लैन",
+      "issues": "समस्याएँ",
+      "issuesDesc": "पूरी फ़ैमिली में"
+    },
+    "clanSelector": {
+      "label": "क्लैन",
+      "placeholder": "क्लैन चुनें"
+    },
+    "tabs": {
+      "clan": "क्लैन",
+      "war": "वॉर",
+      "capital": "कैपिटल",
+      "player": "खिलाड़ी",
+      "server": "सर्वर"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "सदस्य शामिल होना",
+        "description": "क्लैन में शामिल होने वाले सदस्यों को ट्रैक करें"
+      },
+      "leaveLog": {
+        "label": "सदस्य छोड़ना",
+        "description": "क्लैन छोड़ने वाले सदस्यों को ट्रैक करें"
+      },
+      "donationLog": {
+        "label": "सदस्य दान",
+        "description": "ट्रूप और स्पेल दान ट्रैक करें"
+      },
+      "clanAchievementLog": {
+        "label": "क्लैन उपलब्धियाँ",
+        "description": "अर्जित क्लैन उपलब्धियाँ ट्रैक करें"
+      },
+      "clanRequirementsLog": {
+        "label": "क्लैन आवश्यकताएँ",
+        "description": "क्लैन आवश्यकताओं में बदलाव ट्रैक करें"
+      },
+      "clanDescriptionLog": {
+        "label": "क्लैन विवरण",
+        "description": "क्लैन विवरण में बदलाव ट्रैक करें"
+      },
+      "banAlert": {
+        "label": "प्रतिबंध अलर्ट",
+        "description": "प्रतिबंधित खिलाड़ी के इस क्लैन में शामिल होने पर अलर्ट प्रकाशित करें"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit फ़ीड",
+        "description": "सर्वर की Reddit फ़ीड प्रकाशित करें"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "वॉर लॉग",
+        "description": "वॉर अटैक और परिणाम ट्रैक करें"
+      },
+      "warPanel": {
+        "label": "वॉर पैनल",
+        "description": "इंटरैक्टिव वॉर पैनल के साथ लाइव अपडेट"
+      },
+      "cwlLineupChangeLog": {
+        "label": "CWL लाइनअप बदलाव",
+        "description": "CWL लाइनअप में बदलाव ट्रैक करें"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "कैपिटल दान",
+        "description": "कैपिटल गोल्ड दान ट्रैक करें"
+      },
+      "capitalAttacks": {
+        "label": "कैपिटल अटैक",
+        "description": "रेड सप्ताहांत अटैक ट्रैक करें"
+      },
+      "raidPanel": {
+        "label": "कैपिटल पैनल",
+        "description": "इंटरैक्टिव रेड पैनल के साथ लाइव अपडेट"
+      },
+      "capitalWeeklySummary": {
+        "label": "कैपिटल साप्ताहिक सारांश",
+        "description": "कैपिटल प्रदर्शन का साप्ताहिक सारांश"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "भूमिका बदलाव",
+        "description": "क्लैन में खिलाड़ी की भूमिका के बदलाव ट्रैक करें"
+      },
+      "troopUpgrade": {
+        "label": "ट्रूप अपग्रेड",
+        "description": "ट्रूप स्तर के अपग्रेड ट्रैक करें"
+      },
+      "superTroopBoostLog": {
+        "label": "सुपर ट्रूप बूस्ट",
+        "description": "सुपर ट्रूप के सक्रिय किए जाने को ट्रैक करें"
+      },
+      "thUpgrade": {
+        "label": "टाउन हॉल अपग्रेड",
+        "description": "टाउन हॉल अपग्रेड ट्रैक करें"
+      },
+      "leagueChange": {
+        "label": "लीग बदलाव",
+        "description": "लीग स्तर में बदलाव ट्रैक करें"
+      },
+      "spellUpgrade": {
+        "label": "स्पेल अपग्रेड",
+        "description": "स्पेल स्तर के अपग्रेड ट्रैक करें"
+      },
+      "heroUpgrade": {
+        "label": "हीरो अपग्रेड",
+        "description": "हीरो स्तर के अपग्रेड ट्रैक करें"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "हीरो उपकरण अपग्रेड",
+        "description": "हीरो उपकरण अपग्रेड ट्रैक करें"
+      },
+      "nameChange": {
+        "label": "नाम बदलाव",
+        "description": "खिलाड़ी के नाम में बदलाव ट्रैक करें"
+      },
+      "legendLogAttacks": {
+        "label": "लीजेंड अटैक",
+        "description": "लीजेंड लीग अटैक ट्रैक करें"
+      },
+      "legendLogDefenses": {
+        "label": "लीजेंड डिफ़ेंस",
+        "description": "लीजेंड लीग डिफ़ेंस ट्रैक करें"
+      }
+    },
+    "logCard": {
+      "active": "सक्रिय",
+      "issue": "समस्या",
+      "disabled": "अक्षम",
+      "enable": "सक्षम करें",
+      "disable": "अक्षम करें",
+      "channel": "चैनल",
+      "channelPlaceholder": "चैनल चुनें",
+      "thread": "थ्रेड (वैकल्पिक)",
+      "threadPlaceholder": "थ्रेड चुनें",
+      "noThread": "कोई थ्रेड नहीं",
+      "forumPost": "फ़ोरम पोस्ट",
+      "forumPostPlaceholder": "फ़ोरम पोस्ट चुनें",
+      "forumPostRequired": "इस लॉग को सहेजने से पहले फ़ोरम पोस्ट चुनें।",
+      "invalidThread": "चुना गया थ्रेड इस चैनल का नहीं है।",
+      "saveDestination": "गंतव्य सहेजें",
+      "channelDeleted": "यह चैनल अब मौजूद नहीं है। नया चैनल चुनें या लॉग अक्षम करें।",
+      "enableToConfig": "कॉन्फ़िगर करने के लिए यह लॉग सक्षम करें",
+      "configuring": "कॉन्फ़िगर किया जा रहा है",
+      "on": "चालू",
+      "off": "बंद",
+      "example": "उदाहरण"
+    }
+  },
+  "GeneralPage": {
+    "title": "सामान्य सेटिंग्स",
+    "description": "पूरे सर्वर के लिए बॉट का व्यवहार और रूप कॉन्फ़िगर करें",
+    "loading": "सेटिंग्स लोड हो रही हैं...",
+    "reset": "रीसेट करें",
+    "saving": "सहेजा जा रहा है...",
+    "saveChanges": "बदलाव सहेजें",
+    "settingsSaved": "सेटिंग्स सफलतापूर्वक सहेजी गईं!",
+    "infoBanner": {
+      "title": "और सेटिंग्स खोज रहे हैं?",
+      "description": "फ़ैमिली भूमिकाएँ और निकनेम सेटिंग्स **फ़ैमिली सेटिंग्स** पेज में हैं। भूमिका प्रबंधन **भूमिकाएँ** पेज में है। क्लैन की भूमिकाएँ, संक्षिप्त नाम, श्रेणियाँ और वॉर काउंटडाउन **क्लैन** पेज में हैं।"
+    },
+    "nickname": {
+      "title": "निकनेम प्रबंधन",
+      "description": "निकनेम के फ़ॉर्मेट को नियंत्रित करें",
+      "automaticChanges": "स्वचालित बदलाव",
+      "automaticChangesDesc": "बॉट को सदस्यों के निकनेम अपडेट करने दें",
+      "familyFormat": "फ़ैमिली सदस्य फ़ॉर्मेट",
+      "availablePlaceholders": "उपलब्ध प्लेसहोल्डर",
+      "preview": "पूर्वावलोकन:",
+      "nonFamilyFormat": "गैर-फ़ैमिली सदस्य फ़ॉर्मेट",
+      "placeholders": {
+        "discordName": "Discord उपयोगकर्ता नाम",
+        "discordDisplayName": "सर्वर निकनेम",
+        "playerName": "CoC खिलाड़ी नाम",
+        "playerTag": "खिलाड़ी टैग",
+        "playerTownhall": "TH स्तर",
+        "playerTownhallSmall": "TH सुपरस्क्रिप्ट",
+        "playerWarstars": "युद्ध सितारे",
+        "playerRole": "क्लैन भूमिका",
+        "playerClan": "क्लैन नाम",
+        "playerLeague": "लीग",
+        "playerClanAbbr": "क्लैन संक्षिप्त नाम"
+      }
+    },
+    "appearance": {
+      "title": "उपस्थिति",
+      "description": "बॉट के एम्बेड संदेश अनुकूलित करें",
+      "embedColor": "एम्बेड रंग",
+      "embedColorDesc": "Discord में बॉट के सभी एम्बेड संदेशों की साइड बार का रंग",
+      "embedColorDefault": "डिफ़ॉल्ट: **#D90709** (ClashKing लाल)",
+      "embedPreview": "एम्बेड पूर्वावलोकन",
+      "embedPreviewDesc": "यह रंगीन बार बॉट के सभी एम्बेड संदेशों के पास दिखाई देगा",
+      "editColor": "रंग संपादित करें",
+      "resetToDefault": "डिफ़ॉल्ट पर रीसेट करें",
+      "apply": "लागू करें"
+    },
+    "security": {
+      "title": "सुरक्षा और अनुमतियाँ",
+      "description": "पहुँच और सत्यापन नियंत्रित करें",
+      "fullWhitelistRole": "पूर्ण श्वेतसूची भूमिका",
+      "fullWhitelistRoleDesc": "सभी बॉट कमांड की पूरी पहुँच वाली Discord भूमिका (सभी अनुमति जाँचों को छोड़ देती है)",
+      "noRole": "कोई भूमिका"
+    },
+    "familyRoles": {
+      "title": "फ़ैमिली भूमिकाएँ",
+      "description": "फ़ैमिली सदस्यता और क्लैन पदों के आधार पर स्वचालित भूमिकाएँ प्रबंधित करें",
+      "selectRole": "भूमिका चुनें",
+      "addRole": "भूमिका जोड़ें...",
+      "deletedRole": "हटाई गई भूमिका",
+      "noRolesConfigured": "अभी कोई भूमिका कॉन्फ़िगर नहीं है।",
+      "modes": {
+        "both": "जोड़ें और हटाएँ",
+        "add": "केवल जोड़ें",
+        "remove": "केवल हटाएँ"
+      },
+      "types": {
+        "family": "फ़ैमिली",
+        "notFamily": "गैर-फ़ैमिली",
+        "elder": "एल्डर",
+        "coLeader": "को-लीडर",
+        "leader": "लीडर"
+      },
+      "descriptions": {
+        "family": "फ़ैमिली क्लैन में कम से कम एक खाता है",
+        "notFamily": "फ़ैमिली क्लैन में कोई खाता नहीं है",
+        "elder": "किसी फ़ैमिली क्लैन में एल्डर पद है",
+        "coLeader": "किसी फ़ैमिली क्लैन में को-लीडर पद है",
+        "leader": "किसी फ़ैमिली क्लैन में लीडर पद है"
+      }
+    },
+    "tenureRoles": {
+    "title": "Discord सदस्यता अवधि की भूमिकाएँ",
+      "description": "सदस्य कितने समय से सर्वर में हैं, उसके आधार पर भूमिकाएँ अपने आप असाइन करें",
+    "addRole": "सदस्यता अवधि की भूमिका जोड़ें",
+    "addDialogTitle": "सदस्यता अवधि की भूमिका जोड़ें",
+      "addDialogDescription": "तय महीनों से सर्वर में मौजूद सदस्यों को भूमिका असाइन करें",
+      "monthsInServer": "सर्वर में महीने",
+      "discordRole": "Discord भूमिका",
+      "selectRole": "भूमिका चुनें",
+    "noRolesConfigured": "अभी सदस्यता अवधि की कोई भूमिका कॉन्फ़िगर नहीं है।",
+    "addRoleToStart": "शुरू करने के लिए सदस्यता अवधि की भूमिका जोड़ें",
+      "months": "महीने",
+      "month": "माह",
+      "actions": "कार्रवाइयाँ",
+      "remove": "हटाएँ",
+      "unknownRole": "अज्ञात भूमिका"
+    },
+    "prefix": "कमांड प्रीफ़िक्स",
+    "language": "भाषा",
+    "timezone": "समय क्षेत्र",
+    "theme": "थीम"
+  },
+  "FamilySettingsPage": {
+    "title": "फ़ैमिली सेटिंग्स",
+    "description": "क्लैन सदस्यों के लिए फ़ैमिली भूमिकाएँ और निकनेम फ़ॉर्मेटिंग कॉन्फ़िगर करें",
+    "loading": "सेटिंग्स लोड हो रही हैं...",
+    "reset": "रीसेट करें",
+    "saving": "सहेजा जा रहा है...",
+    "saveChanges": "बदलाव सहेजें",
+    "settingsSaved": "सेटिंग्स सफलतापूर्वक सहेजी गईं!",
+    "nickname": {
+      "title": "निकनेम प्रबंधन",
+      "description": "निकनेम के फ़ॉर्मेट को नियंत्रित करें",
+      "automaticChanges": "स्वचालित बदलाव",
+      "automaticChangesDesc": "बॉट को सदस्यों के निकनेम अपडेट करने दें",
+      "familyFormat": "फ़ैमिली सदस्य फ़ॉर्मेट",
+      "availablePlaceholders": "उपलब्ध प्लेसहोल्डर",
+      "preview": "पूर्वावलोकन:",
+      "nonFamilyFormat": "गैर-फ़ैमिली सदस्य फ़ॉर्मेट",
+      "placeholders": {
+        "discordName": "Discord उपयोगकर्ता नाम",
+        "discordDisplayName": "सर्वर निकनेम",
+        "playerName": "CoC खिलाड़ी नाम",
+        "playerTag": "खिलाड़ी टैग",
+        "playerTownhall": "TH स्तर",
+        "playerTownhallSmall": "TH सुपरस्क्रिप्ट",
+        "playerWarstars": "युद्ध सितारे",
+        "playerRole": "क्लैन भूमिका",
+        "playerClan": "क्लैन नाम",
+        "playerLeague": "लीग",
+        "playerClanAbbr": "क्लैन संक्षिप्त नाम"
+      }
+    },
+    "familyRoles": {
+      "title": "फ़ैमिली भूमिकाएँ",
+      "description": "फ़ैमिली सदस्यता और क्लैन पदों के आधार पर स्वचालित भूमिकाएँ प्रबंधित करें",
+      "selectRole": "भूमिका चुनें",
+      "addRole": "भूमिका जोड़ें...",
+      "deletedRole": "हटाई गई भूमिका",
+      "noRolesConfigured": "अभी कोई भूमिका कॉन्फ़िगर नहीं है।",
+      "modes": {
+        "both": "जोड़ें और हटाएँ",
+        "add": "केवल जोड़ें",
+        "remove": "केवल हटाएँ"
+      },
+      "types": {
+        "family": "फ़ैमिली",
+        "notFamily": "गैर-फ़ैमिली",
+        "elder": "एल्डर",
+        "coLeader": "को-लीडर",
+        "leader": "लीडर"
+      },
+      "descriptions": {
+        "family": "फ़ैमिली क्लैन में कम से कम एक खाता है",
+        "notFamily": "फ़ैमिली क्लैन में कोई खाता नहीं है",
+        "elder": "किसी फ़ैमिली क्लैन में एल्डर पद है",
+        "coLeader": "किसी फ़ैमिली क्लैन में को-लीडर पद है",
+        "leader": "किसी फ़ैमिली क्लैन में लीडर पद है"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "भाषा"
+  },
+  "ThemeSwitcher": {
+    "label": "थीम",
+    "light": "हल्की",
+    "dark": "गहरी",
+    "system": "सिस्टम के अनुसार"
+  },
+  "AuthCallback": {
+    "authenticating": "प्रमाणित कर रहे हैं...",
+    "authenticatingDescription": "Discord से लॉग इन करते समय कृपया प्रतीक्षा करें",
+    "authenticationFailed": "प्रमाणीकरण विफल",
+    "tryAgain": "फिर से कोशिश करें",
+    "backToHome": "होम पर वापस",
+    "errorCancelled": "Discord में लॉगिन रद्द कर दिया गया। तैयार होने पर फिर प्रयास करें।",
+    "errorDiscordFailedWithReason": "Discord प्रमाणीकरण विफल: {reason}",
+  "errorNoAuthorizationCode": "Discord से कोई प्राधिकरण कोड नहीं मिला।",
+    "errorCodeVerifierMissing": "कोड सत्यापक नहीं मिला। कृपया दोबारा लॉग इन करें।",
+    "errorAuthenticateFailed": "Discord से प्रमाणित नहीं हो सका।",
+    "loadingVillages": "Discord से लॉग इन कर रहे हैं...",
+    "loadingClanData": "सर्वर सूची लोड हो रही है...",
+    "loadingWarStats": "लगभग तैयार..."
+  },
+  "LoginPage": {
+    "redirecting": "Discord पर भेजा जा रहा है..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "सुविधाएँ",
+      "subtitle": "Discord, मोबाइल और वेब पर क्लैन प्रबंधित करने और बढ़ाने में मदद करने वाले ClashKing के शक्तिशाली टूल देखें।"
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing बॉट",
+        "description": "ClashKing बॉट आपके Clash of Clans क्लैन और समुदाय को प्रबंधित करने के लिए ज़रूरी एकमात्र Discord बॉट है। इसमें क्लैन को व्यवस्थित, सक्रिय और बढ़ता रखने के लिए अनूठी सुविधाएँ हैं।",
+        "items": [
+          "रियल-टाइम लॉग: वॉर, CWL, क्लैन गेम्स, रेड, दान और सदस्य घटनाएँ ट्रैक करें।",
+          "टिकट सिस्टम: सामान्य सहायता टिकट के साथ भर्ती टिकट सिस्टम।",
+          "स्वचालित भूमिकाएँ: क्लैन स्थिति या फ़ैमिली प्रबंधन के आधार पर भूमिकाएँ अपने आप दें।",
+          "रिमाइंडर: वॉर अटैक, क्लैन गेम्स और अन्य इवेंट के लिए पिंग भेजें।",
+          "विस्तृत आँकड़े: गतिविधि ट्रैकिंग के साथ खिलाड़ी और क्लैन प्रदर्शन की जानकारी।",
+          "रोस्टर प्रबंधन: अपने वॉर रोस्टर को आसानी से व्यवस्थित और बेहतर करें।"
+        ],
+        "ctaPrimary": "बॉट को आमंत्रित करें",
+        "ctaSecondary": "समुदाय से जुड़ें"
+      },
+      "app": {
+        "title": "ClashKing ऐप (ओपन बीटा)",
+        "description": "ClashKing ऐप, ClashKing बॉट का बेहतरीन विस्तार है, जो ज़रूरी टूल और जानकारी सीधे मोबाइल पर लाता है। Discord के बिना भी कभी भी, कहीं भी जुड़े रहें।",
+        "items": [
+          "रियल-टाइम आँकड़े: बॉट के साथ सिंक किए गए खिलाड़ियों और क्लैनों के विस्तृत आँकड़े।",
+          "क्लैन प्रगति ट्रैकिंग: समय के साथ क्लैन की प्रगति पर नज़र रखें।",
+          "कई अकाउंट का प्रबंधन: अकाउंट के बीच आसानी से बदलें और प्रदर्शन ट्रैक करें।",
+          "बिल्ट-इन इतिहास: रुझानों का विश्लेषण करने और रणनीति सुधारने के लिए पुराने आँकड़े देखें।",
+          "Discord सर्वर प्रबंधन: (जल्द आ रहा है) ऐप से भूमिकाएँ और टिकट प्रबंधित करें।",
+          "उन्नत सूचनाएँ: (जल्द आ रही हैं) महत्वपूर्ण घटनाओं के लिए अलर्ट अनुकूलित करें।"
+        ],
+        "ctaPrimary": "Android बीटा",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "ClashKing API से अपने टूल या प्रोजेक्ट बनाएँ। ClashKing प्रोजेक्ट को श्रेय देने पर इसका उपयोग मुफ़्त है।",
+        "items": [],
+        "ctaPrimary": "API दस्तावेज़",
+        "ctaSecondary": "GitHub पर API"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "मदद चाहिए?",
+    "subtitle": "चाहे आप दस्तावेज़ ढूँढ रहे हों या सीधी मदद, हम आपके साथ हैं।",
+    "documentation": {
+      "title": "दस्तावेज़",
+      "description": "ClashKing का पूरा लाभ उठाने के लिए विस्तृत गाइड और कमांड संदर्भ देखें।",
+      "cta": "दस्तावेज़ देखें"
+    },
+    "discord": {
+      "title": "Discord सहायता",
+      "description": "और मदद चाहिए? सवाल पूछने, बग रिपोर्ट करने या अन्य उपयोगकर्ताओं से बात करने के लिए Discord समुदाय से जुड़ें।",
+      "cta": "Discord से जुड़ें"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "एक ओपन सोर्स प्रोजेक्ट",
+    "subtitle": "ClashKing पूरी तरह मुफ़्त और ओपन सोर्स है। बॉट और API दोनों का कोड खुला है, इसलिए आप योगदान दे सकते हैं या उसे अपने प्रोजेक्ट में इस्तेमाल कर सकते हैं।",
+    "github": {
+      "title": "GitHub संगठन",
+      "description": "हमारा सोर्स कोड देखें, बॉट में योगदान दें या हमारे अन्य ओपन-सोर्स टूल देखें।",
+      "ctaPrimary": "संगठन देखें",
+      "repos": {
+        "bot": "बॉट रिपॉज़िटरी",
+        "app": "ऐप रिपॉज़िटरी",
+        "api": "API रिपॉज़िटरी",
+        "assets": "एसेट रिपॉज़िटरी"
+      }
+    },
+    "api": {
+      "title": "API दस्तावेज़",
+      "description": "ClashKing API से अपने टूल या प्रोजेक्ट बनाएँ। ClashKing को श्रेय देने पर इसका उपयोग मुफ़्त है।",
+      "cta": "API दस्तावेज़"
+    },
+    "translation": {
+      "title": "अनुवाद करने में हमारी मदद करें",
+      "description": "ClashKing को अपनी भाषा में अनुवाद करने में हमारी मदद करें! Crowdin पर वेबसाइट, बॉट और संबंधित पाठ का अनुवाद करें।",
+      "app": "ऐप का अनुवाद",
+      "bot": "बॉट का अनुवाद"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "योगदान",
+        "description": "बग ठीक करके, नई सुविधाएँ जोड़कर या मौजूदा सुविधाओं को बेहतर करके हमारी मदद करें।"
+      },
+      "community": {
+        "title": "समुदाय",
+        "description": "विचारों पर चर्चा, मदद और अन्य डेवलपरों के साथ सहयोग के लिए Discord समुदाय से जुड़ें।"
+      },
+      "learn": {
+        "title": "सीखें",
+        "description": "बॉट और API का सही इस्तेमाल सीखने के लिए दस्तावेज़ और उदाहरण देखें।"
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "हमें सहयोग दें",
+    "subtitle": "ClashKing एक मुफ़्त ओपन-सोर्स प्रोजेक्ट है। आपका सहयोग सर्वर चलाने और नई सुविधाएँ बनाने में मदद करता है।",
+    "patreon": {
+      "title": "Patreon समर्थक बनें",
+      "description": "विशेष लाभ, सुविधाओं तक जल्द पहुँच और होस्टिंग खर्च में मदद के लिए Patreon पर मासिक सहयोग दें।",
+      "cta": "Patreon पर सहयोग"
+    },
+    "creatorCode": {
+      "title": "क्रिएटर कोड इस्तेमाल करें",
+      "description": "क्रिएटर कोड का उपयोग करके मुफ़्त सहयोग दें",
+      "descriptionSuffix": "गेम या Supercell Store में।",
+      "ctaGame": "गेम में उपयोग",
+      "ctaStore": "Supercell Store में उपयोग"
+    },
+    "whySupport": {
+      "title": "हमें सहयोग क्यों दें?",
+      "description": "हर योगदान सीधे सर्वर और API खर्च पर जाता है। क्रिएटर कोड से आपको कोई अतिरिक्त खर्च नहीं होता, लेकिन हमें बहुत मदद मिलती है।"
+    }
+  },
+  "ServersPage": {
+    "title": "सर्वर चुनें",
+    "description": "ClashKing बॉट की सेटिंग्स कॉन्फ़िगर करने के लिए सर्वर चुनें। आपको Discord सर्वर का मालिक या प्रशासक होना चाहिए।",
+    "backToHome": "होम पर वापस",
+    "backToLogin": "लॉगिन पर वापस जाएँ",
+    "error": "त्रुटि",
+    "configure": "कॉन्फ़िगर करें",
+    "invite": "आमंत्रित करें",
+    "members": "सदस्य",
+    "server": "सर्वर",
+    "roles": {
+      "owner": "मालिक",
+      "administrator": "प्रशासक",
+      "manager": "प्रबंधक"
+    },
+    "noServers": {
+      "title": "कोई सर्वर नहीं मिला",
+      "description": "ऐसा कोई Discord सर्वर नहीं मिला जिसके आप प्रशासक या मालिक हैं।"
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "लाइव बोर्ड रीफ़्रेश करें या तय शेड्यूल पर नए बोर्ड भेजें",
+    "actions": {
+      "create": "AutoBoard बनाएँ",
+      "edit": "AutoBoard संपादित करें",
+      "delete": "AutoBoard हटाएँ",
+      "save": "बदलाव सहेजें",
+      "cancel": "रद्द करें",
+      "retry": "पुनः प्रयास करें"
+    },
+    "metrics": {
+      "total": "कॉन्फ़िगर किया गया",
+      "refresh": "बोर्ड रीफ़्रेश करें",
+      "send": "तय समय पर भेजना"
+    },
+    "filters": {
+      "all": "सभी"
+    },
+    "list": {
+      "title": "कॉन्फ़िगर किए गए AutoBoards",
+      "description": "प्रबंधक-नियंत्रित डिलीवरी, लक्ष्य, गंतव्य और रनटाइम स्थिति",
+      "empty": "इस दृश्य में कोई AutoBoard नहीं है",
+      "emptyDescription": "API रजिस्ट्री में उपलब्ध बोर्ड प्रकार चुनकर पहला बोर्ड बनाएँ।"
+    },
+    "registry": {
+      "emptyTitle": "कोई बोर्ड प्रकार उपलब्ध नहीं है",
+      "emptyDescription": "API रजिस्ट्री अभी खाली है। बोर्ड प्रकार उपलब्ध होने पर AutoBoard बनाया जा सकेगा।",
+      "typeUnavailable": "यह बोर्ड प्रकार अब रजिस्ट्री में उपलब्ध नहीं है, इसलिए इसे संपादित नहीं किया जा सकता।"
+    },
+    "dialog": {
+      "createTitle": "AutoBoard बनाएँ",
+      "editTitle": "AutoBoard संपादित करें",
+      "description": "क्षमताएँ और सीमाएँ लाइव बोर्ड रजिस्ट्री से आती हैं।"
+    },
+    "boardType": {
+      "label": "बोर्ड प्रकार",
+      "description": "उपलब्ध प्रकार सीधे API रजिस्ट्री से आते हैं।",
+      "placeholder": "बोर्ड प्रकार चुनें"
+    },
+    "targets": {
+      "kind": "लक्ष्य प्रकार: {kind}",
+      "kindDescription": "रजिस्ट्री तय करती है कि हर लक्ष्य मान का अर्थ कैसे निकाला जाए।",
+      "scope": "लक्ष्य का दायरा",
+      "scopeDescription": "फ़ैमिली दायरे में सभी कॉन्फ़िगर किए गए फ़ैमिली क्लैन शामिल होते हैं और अलग लक्ष्य नहीं होते।",
+      "family": "फ़ैमिली",
+      "custom": "कस्टम लक्ष्य",
+      "values": "लक्ष्य",
+      "count": "इस बोर्ड प्रकार के लिए {min} से {max} लक्ष्य दें।",
+      "placeholder": "{kind} लक्ष्य दर्ज करें",
+      "add": "लक्ष्य जोड़ें",
+      "remove": "लक्ष्य हटाएँ"
+    },
+    "modes": {
+      "label": "डिलीवरी मोड",
+      "description": "रजिस्ट्री तय करती है कि यह बोर्ड किन वितरण मोड का समर्थन करता है।",
+      "refresh": "रीफ़्रेश",
+      "send": "तय समय पर भेजना"
+    },
+    "destination": {
+      "label": "गंतव्य",
+      "channel": "पैरेंट चैनल",
+      "channelDescription": "टेक्स्ट और घोषणा चैनल सीधे भेज सकते हैं; फ़ोरम में चाइल्ड पोस्ट का उपयोग होता है।",
+      "selectChannel": "चैनल चुनें",
+      "thread": "थ्रेड या फ़ोरम पोस्ट",
+      "selectThread": "थ्रेड चुनें",
+      "threadOptional": "टेक्स्ट और घोषणा चैनलों के लिए वैकल्पिक।",
+      "forumRequired": "इस गंतव्य के लिए फ़ोरम पोस्ट आवश्यक है।",
+      "direct": "सीधे चैनल में भेजें",
+      "deleted": "चैनल अब मौजूद नहीं है"
+    },
+    "refresh": {
+      "interval": "रीफ़्रेश अंतराल (मिनट)",
+      "intervalDescription": "मान्य सीमा: {minimum}–{maximum} मिनट।"
+    },
+    "schedule": {
+      "label": "शेड्यूल",
+      "kind": "शेड्यूल पैटर्न",
+      "kindDescription": "रोज़, सप्ताह के चुने हुए दिनों पर या महीने में एक बार भेजें।",
+      "daily": "प्रतिदिन",
+      "weekdays": "चुने गए दिन",
+      "dayOfMonth": "महीने का दिन",
+      "selectWeekdays": "सप्ताह के दिन",
+      "monthDay": "महीने का दिन",
+      "monthDayDescription": "1 से 31 तक का मान चुनें।",
+      "timezone": "समय क्षेत्र",
+      "timeOfDay": "दिन का समय",
+      "nextRun": "अगला रन"
+    },
+    "weekdays": {
+      "1": "सोमवार",
+      "2": "मंगलवार",
+      "3": "बुधवार",
+      "4": "गुरुवार",
+      "5": "शुक्रवार",
+      "6": "शनिवार",
+      "7": "रविवार"
+    },
+    "status": {
+      "enabled": "सक्षम",
+      "disabled": "अक्षम",
+      "enabledDescription": "अक्षम बोर्ड अपनी कॉन्फ़िगरेशन रखते हैं, लेकिन चलते नहीं हैं।",
+      "messageId": "वर्तमान रीफ़्रेश संदेश: {id}"
+    },
+    "delete": {
+      "title": "यह AutoBoard हटाएँ?",
+      "description": "इससे कॉन्फ़िगरेशन हट जाएगा और इसे वापस नहीं किया जा सकता।"
+    },
+    "feedback": {
+      "created": "AutoBoard बनाया गया",
+      "updated": "AutoBoard अपडेट किया गया",
+      "deleted": "AutoBoard हटाया गया"
+    },
+    "validation": {
+      "boardType": "लाइव रजिस्ट्री से बोर्ड प्रकार चुनें।",
+      "targetScope": "इस बोर्ड प्रकार द्वारा समर्थित लक्ष्य दायरा चुनें।",
+      "familyTargets": "फ़ैमिली दायरे में स्पष्ट लक्ष्य शामिल नहीं किए जा सकते।",
+      "targetCount": "{min} से {max} तक खाली न होने वाले लक्ष्य दर्ज करें।",
+      "deliveryMode": "इस बोर्ड प्रकार द्वारा समर्थित वितरण मोड चुनें।",
+      "destination": "मान्य गंतव्य चुनें। फ़ोरम चैनलों के लिए चाइल्ड पोस्ट आवश्यक है।",
+      "refreshInterval": "{minimum} से {maximum} मिनट के बीच रीफ़्रेश अंतराल दर्ज करें।",
+      "timezone": "IANA समय क्षेत्र दर्ज करें।",
+      "timeOfDay": "दिन का मान्य समय दर्ज करें।",
+      "weekdays": "सप्ताह का कम से कम एक दिन चुनें।",
+      "dayOfMonth": "1 से 31 तक कोई दिन दर्ज करें।"
+    },
+    "errors": {
+      "title": "AutoBoards उपलब्ध नहीं हैं",
+      "session": "आपका सत्र समाप्त हो गया है।",
+      "request": "AutoBoards अनुरोध विफल रहा।",
+      "load": "AutoBoards लोड नहीं हो सके।",
+      "save": "AutoBoard सहेजा नहीं जा सका।",
+      "delete": "AutoBoard हटाया नहीं जा सका।"
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "टिकट पैनल सेटिंग्स",
+    "description": "हर टिकट पैनल के लिए श्रेणियाँ और लॉग चैनल कॉन्फ़िगर करें।",
+    "noPanels": "कोई टिकट पैनल नहीं मिला",
+    "noPanelsHint": "ऊपर दिए बटन से अपना पहला पैनल बनाएँ।",
+    "createPanel": "नया पैनल",
+    "createPanelTitle": "टिकट पैनल बनाएँ",
+    "createPanelDescription": "अपने पैनल को एक विशिष्ट नाम दें। बनाने के बाद बटन और चैनल कॉन्फ़िगर किए जा सकते हैं।",
+    "panelNameLabel": "पैनल का नाम",
+    "panelNamePlaceholder": "जैसे: आवेदन",
+    "panelCreated": "पैनल “{name}” बनाया गया।",
+    "confirmDeletePanel": "पैनल “{name}” हटाएँ?",
+    "confirmDeletePanelHint": "इससे पैनल और उसके सभी बटन कॉन्फ़िगरेशन स्थायी रूप से हट जाएँगे।",
+    "panelDeleted": "पैनल हटाया गया।",
+    "panelHint": "इस पैनल को खोलने और कॉन्फ़िगर करने के लिए क्लिक करें।",
+    "panelEmbed": "पैनल एम्बेड",
+    "panelEmbedHint": "Discord में टिकट पैनल पोस्ट करते समय उपयोग होने वाला एम्बेड।",
+    "panelEmbedInfoLine1": "नया एम्बेड बनाने या मौजूदा एम्बेड संपादित करने के लिए {dashboardLabel} के %s पेज पर जाएँ।",
+    "panelEmbedInfoLine2": "बटन जोड़ने या संपादित करने के लिए इस पैनल के %s पर जाएँ।",
+    "panelEmbedPreview": "एम्बेड पूर्वावलोकन",
+    "panelEmbedPreviewEmpty": "चुने गए पैनल एम्बेड का पूर्वावलोकन उपलब्ध नहीं है।",
+    "ticketOpenEmbed": "टिकट खुलने का एम्बेड",
+    "ticketOpenEmbedHint": "इस बटन से टिकट खुलने पर भेजा जाने वाला वैकल्पिक कस्टम एम्बेड।",
+    "selectEmbed": "एम्बेड चुनें",
+    "defaultEmbed": "पैनल एम्बेड का उपयोग करें",
+    "noCustomMessage": "डिफ़ॉल्ट टिकट संदेश का उपयोग करें",
+    "buttons": "बटन",
+    "buttonList": "बटन",
+    "categories": "श्रेणियाँ",
+    "openCategory": "खुले टिकट की श्रेणी",
+    "open_category": "खुले टिकट की श्रेणी",
+    "sleepCategory": "रुके हुए टिकट की श्रेणी",
+    "sleep_category": "रुके हुए टिकट की श्रेणी",
+    "closedCategory": "बंद टिकट की श्रेणी",
+    "closed_category": "बंद टिकट की श्रेणी",
+    "selectCategory": "श्रेणी चुनें...",
+    "logChannels": "लॉग चैनल",
+    "statusChangeLog": "स्थिति बदलाव लॉग",
+    "status_change_log": "स्थिति बदलाव लॉग",
+    "buttonClickLog": "बटन क्लिक लॉग",
+    "ticket_button_click_log": "बटन क्लिक लॉग",
+    "closeLog": "टिकट बंद होने का लॉग",
+    "ticket_close_log": "टिकट बंद होने का लॉग",
+    "selectChannel": "चैनल चुनें...",
+    "savedSuccess": "पैनल “{panel}” सफलतापूर्वक सहेजा गया।",
+    "tabChannels": "टिकट पैनल",
+    "tabSettings": "सेटिंग्स",
+    "tabButtons": "बटन",
+    "tabMessages": "संदेश",
+    "autoSaveSaving": "सहेजा जा रहा है...",
+    "autoSaveSaved": "सहेजा गया",
+    "autoSaveErrorTitle": "ऑटो-सेव विफल रहा",
+    "autoSaveErrorDescription": "ये टिकट सेटिंग्स सहेजी नहीं जा सकीं।",
+    "messages": "संदेश",
+    "noButtons": "अभी कोई बटन नहीं है। शुरू करने के लिए एक बटन जोड़ें।",
+    "addButton": "बटन जोड़ें",
+    "addButtonTitle": "बटन जोड़ें",
+    "addButtonDescription": "नए बटन का रूप कॉन्फ़िगर करें।",
+    "buttonLabel": "बटन टेक्स्ट लेबल",
+    "buttonLabelPlaceholder": "जैसे: आवेदन करें",
+    "buttonStyle": "बटन का रंग",
+    "buttonStyleBlue": "नीला",
+    "buttonStyleGrey": "स्लेटी",
+    "buttonStyleGreen": "हरा",
+    "buttonStyleRed": "लाल",
+    "buttonAdded": "बटन जोड़ा गया।",
+    "buttonDeleted": "बटन हटाया गया।",
+    "editButtonTitle": "बटन सेटिंग्स संपादित करें",
+    "editButtonDescription": "इस टिकट बटन को कॉन्फ़िगर करें।",
+    "buttonAppearanceSaved": "रूप सहेजा गया।",
+    "confirmDeleteButton": "बटन “{label}” हटाएँ?",
+    "confirmDeleteButtonHint": "इससे बटन और उसकी पूरी कॉन्फ़िगरेशन (भूमिकाएँ, सवाल आदि) हट जाएगी।",
+    "modRoles": "स्टाफ़ भूमिकाएँ (पिंग की जाएँगी)",
+    "modRolesHint": "टिकट खुलने पर इन भूमिकाओं को मेंशन किया जाता है।",
+    "noPingRoles": "स्टाफ़ भूमिकाएँ (बिना पिंग)",
+    "noPingRolesHint": "ये भूमिकाएँ टिकट देख सकती हैं, लेकिन इन्हें पिंग नहीं किया जाता।",
+    "questions": "सवाल",
+    "questionsHint": "टिकट खुलने पर मोडल में अधिकतम 5 सवाल दिखाए जाएँगे।",
+    "question": "सवाल",
+    "privateThread": "निजी थ्रेड",
+    "privateThreadHint": "स्टाफ़ के लिए एक अलग निजी थ्रेड बनाता है।",
+    "accountApply": "CoC खाता आवश्यक करें",
+    "accountApplyHint": "उपयोगकर्ता को Clash of Clans खाता लिंक करना होगा।",
+    "playerInfo": "खिलाड़ी की जानकारी दिखाएँ",
+    "playerInfoHint": "टिकट खुलने पर खाते के आँकड़े दिखाता है।",
+    "thMin": "न्यूनतम टाउन हॉल",
+    "numApply": "अधिकतम खाते",
+    "naming": "नामकरण नियम",
+    "namingPlaceholders": "नामकरण प्लेसहोल्डर",
+    "namingVariables": "वेरिएबल: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "बटन \"{label}\" सहेजा गया।",
+    "badge": {
+      "accountApply": "CoC आवश्यक",
+      "privateThread": "निजी थ्रेड"
+    },
+    "approveMessages": "स्वीकृति / अस्वीकृति संदेश",
+    "approveMessagesHint": "पहले से लिखे संदेश जिन्हें स्टाफ़ आवेदकों को भेज सकता है (अधिकतम 25)।",
+    "messagesMaxHint": "आप अधिकतम 25 संदेश जोड़ सकते हैं।",
+    "editMessagesButton": "संदेश संपादित करें",
+    "editMessagesTitle": "पहले से लिखे संदेश संपादित करें",
+    "editMessagesDescription": "टिकट के पहले से लिखे संदेश जोड़ें, हटाएँ और अपडेट करें।",
+    "addMessage": "संदेश जोड़ें",
+    "noMessages": "अभी कोई संदेश नहीं है। शुरू करने के लिए एक संदेश जोड़ें।",
+    "messageName": "संदेश का नाम",
+    "contentLabel": "सामग्री",
+    "messageContent": "संदेश की सामग्री...",
+    "messageNameRequired": "सभी संदेशों का नाम होना आवश्यक है।",
+    "messagesSaved": "स्वीकृति और अस्वीकृति संदेश सहेजे गए।",
+    "rolesToAdd": "दी जाने वाली भूमिकाएँ",
+    "rolesToAddHint": "टिकट खुलने पर उपयोगकर्ता को अपने आप दी जाने वाली भूमिकाएँ।",
+    "rolesToRemove": "हटाई जाने वाली भूमिकाएँ",
+    "rolesToRemoveHint": "टिकट खुलने पर उपयोगकर्ता से अपने आप हटाई जाने वाली भूमिकाएँ।",
+    "applyClans": "अनुमत क्लैन",
+    "applyClansHint": "केवल इन क्लैनों के सदस्य यह टिकट खोल सकते हैं। सभी को अनुमति देने के लिए खाली छोड़ें।",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "टाउन हॉल आवश्यकताएँ",
+    "thRequirementsHint": "यह टिकट खोलने के लिए हर टाउन हॉल स्तर पर आवश्यक न्यूनतम हीरो स्तर।",
+    "thHeroLegend": "BK = बार्बेरियन किंग · AQ = आर्चर क्वीन · GW = ग्रैंड वार्डन · RC = रॉयल चैंपियन · WARST = वॉर स्टार",
+    "addThLevel": "TH स्तर जोड़ें",
+    "thLevel": "TH",
+    "numApplyHint": "उपयोगकर्ता जितने CoC खातों से आवेदन कर सकता है, उनकी अधिकतम संख्या (1–25)।",
+    "embeds": "एम्बेड",
+    "embedsHint": "पैनल संदेश या टिकट खुलने के संदेश के रूप में उपयोग किए जाने वाले Discord एम्बेड।",
+    "newEmbed": "नया एम्बेड",
+    "embedName": "एम्बेड का नाम",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "Discohook URL",
+    "embedDiscohookHint": "Discohook पर एम्बेड डिज़ाइन करें, पेज का URL कॉपी करें और यहाँ चिपकाएँ।",
+    "openDiscohook": "Discohook खोलें",
+    "openInDiscohook": "Discohook में खोलें",
+    "copyDiscohookUrl": "Discohook URL कॉपी करें",
+    "copyDiscohookUrlDone": "URL कॉपी किया गया!",
+    "editEmbed": "संपादित करें",
+    "deleteEmbed": "हटाएँ",
+    "confirmDeleteEmbed": "एम्बेड \"{name}\" हटाएँ?",
+    "confirmDeleteEmbedHint": "यह केवल ClashKing से हटेगा और पहले पोस्ट किए गए Discord संदेशों पर असर नहीं पड़ेगा।",
+    "embedSaved": "एम्बेड \"{name}\" सहेजा गया।",
+    "embedCreated": "एम्बेड \"{name}\" बनाया गया।",
+    "embedDeleted": "एम्बेड हटाया गया।",
+    "noEmbeds": "अभी कोई एम्बेड नहीं है।",
+    "noEmbedsHint": "यहाँ एम्बेड बनाएँ, फिर उसे किसी पैनल या बटन को असाइन करें।",
+    "legacyEmbed": "बॉट से बनाया गया — संपादन सक्षम करने के लिए Discohook URL चिपकाएँ।",
+    "invalidDiscohookUrl": "अमान्य URL। Discohook पेज URL (discohook.app/?data=... या discohook.app/?share=...) चिपकाएँ।",
+    "tabEmbeds": "एम्बेड"
+  },
+  "EmbedsPage": {
+    "title": "एम्बेड",
+    "description": "अपने टिकट पैनल और बटन के लिए Discord एम्बेड टेम्पलेट बनाएँ और प्रबंधित करें।",
+    "nameHint": "अपने एम्बेड को एक विशिष्ट पहचान दें। सामग्री बाद में बदली जा सकती है।"
+  },
+  "EmbedEditor": {
+    "importSection": "Discohook से आयात करें",
+    "addMessage": "संदेश जोड़ें",
+    "addMessageDialogTitle": "संदेश जोड़ें",
+    "addMessageDialogDescription": "चुनें कि आपका संदेश कितना उन्नत होना चाहिए।",
+    "addMessageClassicTitle": "क्लासिक",
+    "addMessageClassicDescription": "सरल और भरोसेमंद: टेक्स्ट + एम्बेड। यदि चयन को लेकर निश्चित नहीं हैं, तो इसे चुनें।",
+    "addMessageV2Title": "कंपोनेंट v2",
+    "addMessageV2Description": "अधिक उन्नत लेआउट और इंटरैक्टिव कंपोनेंट (बटन, चयन, सेक्शन)। उन्नत सेटअप के लिए सर्वोत्तम।",
+    "betaTag": "बीटा",
+    "importExport": "आयात और निर्यात",
+    "importExportDescription": "Discohook से एम्बेड आयात करें या वर्तमान एम्बेड को Discohook में निर्यात करें।",
+    "importFromDiscohook": "Discohook से आयात करें",
+    "copyDiscohookUrl": "Discohook URL कॉपी करें",
+    "openInDiscohook": "Discohook में खोलें",
+    "content": "सामग्री",
+    "contentPlaceholder": "एम्बेड के ऊपर दिखने वाली संदेश सामग्री...",
+    "profileSection": "प्रोफ़ाइल",
+    "profileName": "नाम",
+    "profileAvatarUrl": "अवतार URL",
+    "profileUnsupportedWarning": "चेतावनी: बॉट अभी इस प्रोफ़ाइल को अपडेट करने का समर्थन नहीं करता।",
+    "import": "आयात",
+    "importError": "अमान्य Discohook URL। Discohook पेज URL चिपकाएँ।",
+    "importMultipleMessagesWarning": "इस लिंक में कई संदेश हैं। केवल पहला संदेश आयात किया गया—बॉट हर एम्बेड के लिए एक संदेश का समर्थन करता है।",
+    "colorSection": "रंग",
+    "authorSection": "लेखक",
+    "authorName": "नाम",
+    "authorIconUrl": "आइकन URL",
+    "authorUrl": "लेखक URL",
+    "bodySection": "मुख्य भाग",
+    "title": "शीर्षक",
+    "titleUrl": "शीर्षक URL",
+    "sidebarColor": "साइडबार का रंग",
+    "description": "विवरण",
+    "descriptionPlaceholder": "एम्बेड विवरण...",
+    "fieldsSection": "फ़ील्ड",
+    "addField": "फ़ील्ड जोड़ें",
+    "field": "फ़ील्ड",
+    "fieldName": "नाम",
+    "fieldValue": "मान",
+    "fieldInline": "इनलाइन",
+    "imagesSection": "चित्र",
+    "thumbnailUrl": "थंबनेल URL",
+    "imageUrl": "चित्र URL",
+    "footerSection": "फ़ुटर",
+    "footerText": "फ़ुटर टेक्स्ट",
+    "footerIconUrl": "फ़ुटर आइकन URL",
+    "timestamp": "टाइमस्टैम्प शामिल करें",
+    "preview": "पूर्वावलोकन",
+    "previewEmpty": "पूर्वावलोकन देखने के लिए फ़ील्ड भरें",
+    "modeToggleV1": "क्लासिक (V1)",
+    "modeToggleV2": "कंपोनेंट (V2)",
+    "componentsSection": "कंपोनेंट",
+    "addComponent": "कंपोनेंट जोड़ें",
+    "containerLabel": "कंटेनर",
+    "textDisplayLabel": "टेक्स्ट डिस्प्ले",
+    "separatorLabel": "विभाजक",
+    "mediaGalleryLabel": "मीडिया गैलरी",
+    "sectionLabel": "सेक्शन",
+    "dividerLine": "विभाजन रेखा दिखाएँ",
+    "spacing": "अंतर",
+    "spacingSmall": "छोटा",
+    "spacingLarge": "बड़ा",
+    "imageDescription": "वैकल्पिक टेक्स्ट",
+    "imageSpoiler": "स्पॉइलर",
+    "addImage": "चित्र जोड़ें",
+    "addTextBlock": "टेक्स्ट ब्लॉक जोड़ें",
+    "accessory": "एक्सेसरी",
+    "accessoryNone": "कोई नहीं",
+    "accessoryThumbnail": "थंबनेल",
+    "accessoryButton": "बटन",
+    "thumbnailAlt": "थंबनेल वैकल्पिक टेक्स्ट",
+    "accentColor": "एक्सेंट रंग",
+    "addContainer": "चाइल्ड कंपोनेंट जोड़ें",
+    "containerSpoiler": "स्पॉइलर कंटेनर",
+    "stringSelectLabel": "स्ट्रिंग चयन",
+    "userSelectLabel": "उपयोगकर्ता चयन",
+    "roleSelectLabel": "भूमिका चयन",
+    "mentionableSelectLabel": "मेंशन योग्य चयन",
+    "channelSelectLabel": "चैनल चयन",
+    "fileLabel": "फ़ाइल",
+    "fileUrl": "फ़ाइल URL",
+    "fileUploadButton": "अपलोड",
+    "fileSpoiler": "स्पॉइलर",
+    "selectCustomId": "कस्टम ID",
+    "selectPlaceholder": "प्लेसहोल्डर टेक्स्ट",
+    "selectMinValues": "न्यूनतम मान",
+    "selectMaxValues": "अधिकतम मान",
+    "selectOptions": "विकल्प",
+    "selectOption": "विकल्प",
+    "selectOptionLabel": "लेबल",
+    "selectOptionValue": "मान",
+    "selectOptionDescription": "विवरण",
+    "selectOptionDefault": "डिफ़ॉल्ट रूप से चयनित",
+    "addSelectOption": "विकल्प जोड़ें",
+    "selectDisabled": "अक्षम",
+    "actionRowMode": "पंक्ति प्रकार",
+    "actionRowModeButtons": "बटन",
+    "actionRowLabel": "एक्शन पंक्ति",
+    "addButton": "बटन जोड़ें",
+    "buttonLabel": "लेबल",
+    "buttonStyle": "शैली",
+    "buttonStylePrimary": "प्राथमिक",
+    "buttonStyleSecondary": "द्वितीयक",
+    "buttonStyleSuccess": "सफलता",
+    "buttonStyleDanger": "ख़तरा",
+    "buttonStyleLink": "लिंक",
+    "tabMentions": "मेंशन",
+    "tabTime": "समय",
+    "tabEmojis": "इमोजी",
+    "dateLabel": "तारीख",
+    "timeLabel": "समय",
+    "mentionsChannels": "चैनल",
+    "mentionsSpecial": "विशेष",
+    "mentionsChannelList": "सभी चैनल",
+    "mentionsRoles": "भूमिकाएँ",
+    "mentionsServerGuide": "सर्वर गाइड",
+    "mentionsBrowseChannels": "चैनल ब्राउज़ करें",
+    "mentionsChannelsAndRoles": "चैनल और भूमिकाएँ",
+    "mentionsNoChannels": "आपकी खोज से कोई चैनल मेल नहीं खाता।",
+    "mentionsNoRoles": "आपकी खोज से कोई भूमिका मेल नहीं खाती।",
+    "styleLabel": "शैली",
+    "timeRelativeNow": "0 सेकंड पहले",
+    "emojiSearchPlaceholder": "सही इमोजी खोजें",
+    "emojiToneLabel": "इमोजी त्वचा रंग",
+    "emojiCategory": {
+      "people": "लोग",
+      "nature": "प्रकृति",
+      "food": "खाना",
+      "activities": "गतिविधियाँ",
+      "travel": "यात्रा",
+      "objects": "वस्तुएँ",
+      "symbols": "चिह्न",
+      "flags": "झंडे"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "अक्षम",
+    "unknownComponent": "अज्ञात कंपोनेंट",
+    "unknownComponentHint": "इस कंपोनेंट प्रकार को यहाँ संपादित नहीं किया जा सकता, लेकिन सहेजते समय इसे बनाए रखा जाएगा।"
+  },
+  "PanelsPage": {
+    "title": "पैनल",
+    "description": "अपने सर्वर में पोस्ट होने वाले इंटरैक्टिव सदस्य पैनल को कॉन्फ़िगर करें। सदस्य एक क्लिक में खाता लिंक कर सकते हैं, भूमिकाएँ रीफ़्रेश कर सकते हैं और अन्य काम कर सकते हैं।",
+    "saved": "पैनल कॉन्फ़िगरेशन सहेजा गया।",
+    "embedSection": "एम्बेड",
+    "embedHint": "बटन के ऊपर दिखने वाला वैकल्पिक एम्बेड।",
+    "embedLabel": "एम्बेड",
+    "noEmbed": "कोई एम्बेड नहीं (केवल बटन)",
+    "buttonsSection": "बटन",
+    "buttonsHint": "दिखाने के लिए कार्रवाई बटन चुनें। क्रम आपके चयन के अनुसार होगा।",
+    "colorSection": "बटन का रंग",
+    "colorHint": "सभी बटनों पर लागू होता है।",
+    "welcomeSection": "स्वागत चैनल",
+    "welcomeHint": "सेट होने पर नए सदस्य के शामिल होते ही पैनल अपने आप पोस्ट हो जाता है।",
+    "welcomeChannel": "चैनल",
+    "welcomeChannelPlaceholder": "चैनल चुनें...",
+    "editPanelButton": "पैनल संपादित करें",
+    "editDialogTitle": "पैनल संपादित करें",
+    "editDialogDescription": "सहेजने से पहले लाइव पूर्वावलोकन के साथ एम्बेड, बटन और बटन का रंग अपडेट करें।",
+    "welcomeAutosaveSuccess": "स्वागत चैनल सहेजा गया।",
+    "welcomeAutosaveDisabled": "स्वागत चैनल अक्षम किया गया।",
+    "previewSection": "पूर्वावलोकन",
+    "previewHint": "Discord में पैनल ऐसा दिखेगा।",
+    "previewNoEmbed": "कोई एम्बेड चयनित नहीं",
+    "previewEmbedNoData": "एम्बेड में पूर्वावलोकन डेटा नहीं है",
+    "previewNoButtons": "कोई बटन चयनित नहीं",
+    "color": {
+      "Blue": "नीला",
+      "Green": "हरा",
+      "Grey": "स्लेटी",
+      "Red": "लाल"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "इनामी आयोजन",
+    "description": "अपने सर्वर के इनामी आयोजन बनाएँ, शेड्यूल करें और प्रबंधित करें।",
+    "create": "इनामी आयोजन बनाएँ",
+    "listTitle": "इनामी आयोजनों का डैशबोर्ड",
+    "listDescription": "शेड्यूल किए गए, चल रहे और पूरे हुए इनामी आयोजन एक जगह ट्रैक करें।",
+    "empty": "अभी दिखाने के लिए कोई इनामी आयोजन नहीं है।",
+    "confirmDeleteTitle": "इनामी आयोजन हटाएँ",
+    "confirmDelete": "क्या आप वाकई इस इनामी आयोजन को हटाना चाहते हैं?",
+    "discardTitle": "बदलाव छोड़ें?",
+    "discardDescription": "आपके बदलाव सहेजे नहीं गए हैं। अभी बंद करने पर वे खो जाएँगे।",
+    "discardConfirm": "छोड़ें",
+    "formTabs": {
+      "general": "सामान्य",
+      "messages": "संदेश",
+      "restrictions": "प्रतिबंध",
+      "advanced": "उन्नत"
+    },
+    "tabs": {
+      "ongoing": "चल रहे",
+      "upcoming": "आगामी",
+      "ended": "समाप्त"
+    },
+    "stats": {
+      "total": "कुल इनामी आयोजन",
+      "totalEntries": "कुल प्रविष्टियाँ",
+      "ongoing": "जारी इनामी आयोजन",
+      "upcoming": "आगामी इनामी आयोजन",
+      "ended": "समाप्त इनामी आयोजन"
+    },
+    "statsDescriptions": {
+      "total": "इस सर्वर पर कॉन्फ़िगर किए गए सभी इनामी आयोजन।",
+      "totalEntries": "सभी इनामी आयोजनों की कुल प्रविष्टियाँ।",
+      "ongoing": "अभी सक्रिय और प्रविष्टियाँ स्वीकार कर रहे हैं।",
+      "upcoming": "बाद में शुरू होने के लिए शेड्यूल किए गए।",
+      "ended": "पहले ही पूरे हो चुके इनामी आयोजन।"
+    },
+    "emptyTab": {
+      "title": "यहाँ कोई इनामी आयोजन नहीं है",
+      "ongoing": "अभी कोई इनामी आयोजन नहीं चल रहा है।",
+      "upcoming": "कोई इनामी आयोजन शेड्यूल नहीं है। शुरू करने के लिए एक बनाएँ।",
+      "ended": "अभी कोई इनामी आयोजन समाप्त नहीं हुआ है।"
+    },
+    "status": {
+      "scheduled": "निर्धारित",
+      "ongoing": "जारी",
+      "ended": "समाप्त"
+    },
+    "table": {
+      "giveaway": "इनामी आयोजन",
+      "channel": "चैनल",
+      "entries": "प्रविष्टियाँ",
+      "timing": "समय",
+      "start": "शुरू",
+      "end": "समाप्त",
+      "winnersHeader": "विजेता",
+      "winners": "{count, plural, one {# विजेता} other {# विजेता}}",
+      "boosters": "{count, plural, one {# बूस्टर} other {# बूस्टर}}",
+      "noChannel": "कोई चैनल नहीं",
+      "noChannelHelp": "कोई चैनल असाइन नहीं है। इसे ठीक करने के लिए इनामी आयोजन संपादित करें।",
+      "endsAt": "समाप्ति समय",
+      "endedAt": "समाप्त हुआ",
+      "duplicate": "डुप्लिकेट",
+      "showingEnded": "समाप्त हुए {total} इनामी आयोजनों में से {shown} दिखाए जा रहे हैं",
+      "showMore": "{count} और दिखाएँ",
+      "pendingUpdate": "अपडेट लंबित",
+      "pendingUpdateHelp": "इस इनामी आयोजन में बदलाव लंबित हैं, जिन्हें बॉट जल्द लागू करेगा।",
+      "openInDiscord": "Discord में खोलें",
+      "viewInDiscord": "Discord में देखें",
+      "reroll": "विजेताओं को फिर चुनें",
+      "rerolledCount": "{count, plural, one {# विजेता फिर चुना गया} other {# विजेता फिर चुने गए}}",
+      "viewEntries": "प्रविष्टियाँ देखें"
+    },
+    "entries": {
+      "description": "प्रतिभागियों और उनके जीतने की संभावना की सूची।",
+      "totalEntries": "कुल प्रविष्टियाँ",
+      "uniqueUsers": "विशिष्ट उपयोगकर्ता",
+      "noEntrants": "अभी कोई प्रविष्टि नहीं है।",
+      "userId": "उपयोगकर्ता ID",
+      "entryCount": "प्रविष्टियाँ",
+      "winChance": "जीतने की संभावना"
+    },
+    "dialog": {
+      "createTitle": "इनामी आयोजन बनाएँ",
+      "editTitle": "इनामी आयोजन संपादित करें",
+      "description": "इनामी आयोजन का संदेश, समय और आवश्यकताएँ कॉन्फ़िगर करें।",
+      "create": "इनामी आयोजन बनाएँ",
+      "saveChanges": "बदलाव सहेजें"
+    },
+    "form": {
+      "prize": "पुरस्कार",
+      "prizePlaceholder": "उदाहरण: गोल्ड पास",
+      "channel": "चैनल",
+      "channelPlaceholder": "चैनल चुनें",
+      "startTime": "शुरुआत का समय",
+      "startNow": "तुरंत शुरू करें",
+      "endTime": "समाप्ति समय",
+      "winners": "विजेताओं की संख्या",
+      "mentions": "मेंशन की गई भूमिकाएँ",
+      "roleRequirements": "आवश्यक या प्रतिबंधित भूमिकाएँ",
+      "rolesMode": "भूमिका मोड",
+      "rolesModeOptions": {
+        "none": "भूमिका से जुड़ा कोई प्रतिबंध नहीं",
+        "allow": "केवल इन भूमिकाओं वाले सदस्य भाग ले सकते हैं",
+        "deny": "इन भूमिकाओं वाले सदस्य भाग नहीं ले सकते"
+      },
+      "rolesModeHelp": {
+        "none": "सभी उपयोगकर्ता इस इनामी आयोजन में भाग ले सकते हैं।",
+        "allow": "केवल चुनी गई भूमिकाओं में से कोई भूमिका रखने वाले उपयोगकर्ता भाग ले सकते हैं।",
+        "deny": "चुनी गई भूमिकाओं में से कोई भूमिका रखने वाले उपयोगकर्ता भाग नहीं ले सकते।"
+      },
+      "textAboveEmbed": "एम्बेड के ऊपर टेक्स्ट",
+      "textEmbedDefault": "भाग लेने के लिए नीचे दिए बटन पर क्लिक करें।",
+      "textInEmbed": "एम्बेड विवरण",
+      "textEndDefault": "चुने गए सभी लोगों को बधाई! हम जल्द आपसे संपर्क करेंगे।",
+      "textOnEnd": "इनामी आयोजन समाप्त होने का संदेश",
+      "image": "इनामी आयोजन का चित्र",
+      "removeImage": "वर्तमान चित्र हटाएँ",
+      "imagePreviewAlt": "इनामी आयोजन पूर्वावलोकन",
+      "previewGiveaway": "इनामी आयोजन का पूर्वावलोकन",
+      "previewEnd": "समाप्ति संदेश का पूर्वावलोकन",
+      "boosters": "प्रविष्टि बूस्टर",
+      "addBooster": "बूस्टर जोड़ें",
+      "noBoosters": "कोई बूस्टर कॉन्फ़िगर नहीं है।",
+      "boosterLabel": "बूस्टर {index}",
+      "boostValue": "गुणक",
+      "boostRoles": "बूस्ट की गई भूमिकाएँ",
+      "requirements": "भागीदारी आवश्यकताएँ",
+      "profilePictureRequired": "Discord प्रोफ़ाइल चित्र आवश्यक करें",
+      "cocAccountRequired": "लिंक किया हुआ Clash of Clans खाता आवश्यक करें"
+    },
+    "validation": {
+      "prizeRequired": "पुरस्कार आवश्यक है।",
+      "channelRequired": "चैनल आवश्यक है।",
+      "startTimeRequired": "यदि इनामी आयोजन अभी शुरू नहीं होता, तो आरंभ समय आवश्यक है।",
+      "endTimeRequired": "समाप्ति समय आवश्यक है।",
+      "endAfterStart": "समाप्ति समय शुरुआत के बाद होना चाहिए।",
+      "imageTooLarge": "चित्र 8 MB से कम होना चाहिए।"
+    },
+    "preview": {
+      "liveSummary": "लाइव सारांश",
+      "discordPreview": "Discord पूर्वावलोकन",
+      "giveawayTitle": "इनामी आयोजन पूर्वावलोकन",
+      "giveawayDescription": "सक्रिय इनामी आयोजन का संदेश ऐसा दिखाई देगा।",
+      "endTitle": "समाप्ति संदेश पूर्वावलोकन",
+      "endDescription": "इनामी आयोजन समाप्त होने पर यह संदेश भेजा जाएगा।",
+      "winnerCount": "विजेता",
+      "winnerWord": "{count, plural, one {विजेता} other {विजेता}}",
+      "mentionCount": "मेंशन की गई भूमिकाएँ",
+      "requirementCount": "आवश्यकताएँ",
+      "boosterCount": "बूस्टर",
+      "profileRequired": "प्रोफ़ाइल चित्र आवश्यक",
+      "accountRequired": "लिंक किया CoC खाता आवश्यक",
+      "rolesAllow": "केवल चुनी गई भूमिकाओं के लिए",
+      "rolesDeny": "चुनी गई भूमिकाएँ शामिल नहीं हैं",
+      "noChannel": "अभी कोई चैनल चयनित नहीं है",
+      "noPrize": "आपका पुरस्कार यहाँ दिखाई देगा",
+      "noEmbedText": "इनामी आयोजन की सामग्री का पूर्वावलोकन करने के लिए एम्बेड टेक्स्ट जोड़ें।",
+      "noEndText": "विजेताओं के लिए समापन संदेश जोड़ें।",
+      "startsAt": "शुरू: {date}",
+      "endsAt": "समाप्त: {date}",
+      "endsOn": "{date} को समाप्त",
+      "endsFooter": "समाप्त",
+      "notScheduled": "निर्धारित नहीं",
+      "schedule": "शेड्यूल",
+      "endMessage": "विजेता संदेश",
+      "endSummary": "{winners, plural, one {यहाँ # विजेता की घोषणा होगी।} other {यहाँ # विजेताओं की घोषणा होगी।}}",
+      "totalParticipants": "कुल प्रतिभागी: {count}",
+      "participate": "भाग लें",
+      "buttonHint": "Discord पोस्ट के नीचे दिखने वाला मुख्य कार्रवाई बटन।"
+    },
+    "toast": {
+      "errorTitle": "कुछ गड़बड़ हुई",
+      "successTitle": "सफलता",
+      "loadError": "इनामी आयोजन लोड नहीं हो सके।",
+      "saveError": "इनामी आयोजन सहेजा नहीं जा सका।",
+      "deleteError": "इनामी आयोजन हटाया नहीं जा सका।",
+      "created": "इनामी आयोजन सफलतापूर्वक बनाया गया।",
+      "updated": "इनामी आयोजन सफलतापूर्वक अपडेट किया गया।",
+      "deleted": "इनामी आयोजन सफलतापूर्वक हटाया गया।",
+      "rerolled": "विजेताओं को सफलतापूर्वक फिर चुना गया।",
+      "rerollError": "विजेताओं का पुनः चयन विफल रहा।"
+    },
+    "reroll": {
+      "title": "विजेताओं को फिर चुनें",
+      "description": "बदलने के लिए विजेता चुनें। योग्य प्रतिभागियों में से नए विजेता चुने जाएँगे।",
+      "selectWinners": "बदलने के लिए विजेता चुनें:",
+      "confirm": "{count, plural, one {# विजेता फिर चुनें} other {# विजेता फिर चुनें}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "डैशबोर्ड अवलोकन",
+    "description": "अपने सर्वर के आँकड़े देखें और शुरुआत करें",
+    "stats": {
+      "linkedPlayers": "लिंक किए गए खिलाड़ी",
+      "linkedPlayersDesc": "इस सर्वर में लिंक किए गए खिलाड़ी",
+      "clansConfigured": "कॉन्फ़िगर किए गए क्लैन",
+      "clansConfiguredDesc": "इस सर्वर के लिए ट्रैक किए गए क्लैन",
+      "activeRosters": "सक्रिय रोस्टर",
+      "activeRostersDesc": "बनाए गए वॉर रोस्टर",
+      "totalAccounts": "लिंक किए गए खाते",
+      "totalAccountsDesc": "कुल लिंक किए गए CoC खाते",
+      "playersTracked": "ट्रैक किए गए खिलाड़ी",
+      "globalPlayers": "डेटाबेस में कुल खिलाड़ी",
+      "clansTracked": "ट्रैक किए गए क्लैन",
+      "globalClans": "डेटाबेस में कुल क्लैन",
+      "botStatus": "बॉट स्थिति",
+      "online": "ऑनलाइन",
+      "offline": "ऑफ़लाइन",
+      "memoryUsage": "मेमोरी: {used}MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "बॉट आँकड़े",
+    "clans": {
+      "title": "आपके क्लैन",
+      "description": "{count, plural, one {# क्लैन कॉन्फ़िगर} other {# क्लैन कॉन्फ़िगर}}",
+      "manage": "क्लैन प्रबंधित करें",
+      "addFirst": "अपना पहला क्लैन जोड़ें"
+    },
+    "quickStart": {
+      "title": "त्वरित शुरुआत",
+      "description": "ClashKing बॉट कॉन्फ़िगर करना शुरू करें",
+      "step1": {
+        "title": "सामान्य सेटिंग्स कॉन्फ़िगर करें",
+        "description": "निकनेम नियम, एम्बेड रंग और लॉगिंग चैनल सेट करें"
+      },
+      "step2": {
+        "title": "अपने क्लैन जोड़ें",
+        "description": "अपने Clash of Clans क्लैन जोड़ें और भूमिकाएँ कॉन्फ़िगर करें"
+      },
+      "step3": {
+        "title": "स्वचालित भूमिकाएँ सेट करें",
+        "description": "टाउन हॉल, ट्रॉफ़ी आदि के आधार पर स्वचालित भूमिका असाइनमेंट कॉन्फ़िगर करें"
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "बॉट आँकड़े",
+    "description": "वैश्विक ClashKing बॉट आँकड़े और सिस्टम की स्थिति",
+    "about": {
+      "title": "इन आँकड़ों के बारे में",
+      "description": "ये पूरे ClashKing बॉट नेटवर्क के वैश्विक आँकड़े हैं",
+      "globalStats": "वैश्विक आँकड़े",
+      "globalStatsDesc": "खिलाड़ियों और क्लैनों की संख्या ClashKing का उपयोग करने वाले सभी Discord सर्वरों पर ट्रैक किए गए डेटा को दर्शाती है",
+      "systemHealth": "सिस्टम स्वास्थ्य",
+      "systemHealthDesc": "CPU और मेमोरी उपयोग ClashKing API इंफ्रास्ट्रक्चर पर वर्तमान लोड बताता है"
+    }
+  },
+  "NotFound": {
+    "title": "404 - पेज नहीं मिला",
+    "description": "जिस पेज को आप खोज रहे हैं वह मौजूद नहीं है।",
+    "goHome": "होम पर जाएँ"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord बॉट, मोबाइल ऐप और क्लैन डैशबोर्ड",
+      "description": "ClashKing से Discord, मोबाइल और वेब पर वॉर, रोस्टर, खाते, रिमाइंडर और क्लैन सेटिंग्स प्रबंधित करें।",
+      "openGraphTitle": "ClashKing | अपना क्लैन चलाएँ"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing नेविगेशन",
+      "homeLabel": "ClashKing होम",
+      "mobileApp": "मोबाइल ऐप",
+      "discordBot": "Discord बॉट",
+      "dashboard": "डैशबोर्ड"
+    },
+    "language": {
+      "label": "भाषा"
+    },
+    "appearance": {
+      "label": "उपस्थिति",
+      "day": "दिन",
+      "sunset": "सूर्यास्त"
+    },
+    "actions": {
+      "addToDiscord": "Discord में जोड़ें",
+      "addClashKing": "ClashKing जोड़ें",
+      "openDashboard": "डैशबोर्ड खोलें",
+      "joinTestFlight": "TestFlight से जुड़ें",
+      "getAndroidApp": "Android ऐप पाएँ"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "अपना",
+          "second": "क्लैन",
+          "third": "चलाएँ।"
+        },
+        "accounts": {
+          "first": "अपने",
+          "second": "खाते",
+          "third": "प्रबंधित करें।"
+        },
+        "stats": {
+          "first": "अपने",
+          "second": "आँकड़े",
+          "third": "देखें।"
+        }
+      },
+      "rotatingLabel": "अपना क्लैन चलाएँ। खाते प्रबंधित करें। आँकड़े देखें।",
+      "copy": "Discord, मोबाइल और वेब पर वॉर, रोस्टर, खाते और क्लैन सेटिंग्स।"
+    },
+    "app": {
+      "title": "मोबाइल ऐप",
+      "intro": "आपके Clash खाते का साथी।",
+      "stageLabel": "ClashKing मोबाइल ऐप में क्लैन, अपग्रेड और वॉर विजेट की स्क्रीनें",
+      "images": {
+        "clanOverview": "ClashKing मोबाइल ऐप में क्लैन का अवलोकन",
+        "upgradeStats": "ClashKing मोबाइल ऐप में ग्रैंड वॉर्डन अपग्रेड के आँकड़े",
+        "warWidget": "ClashKing वॉर परिणाम विजेट"
+      },
+      "features": {
+        "widgets": {
+          "title": "विजेट",
+          "copy": "अपने वॉर एक नज़र में देखें।"
+        },
+        "notifications": {
+          "title": "सूचनाएँ",
+          "copy": "अटैक उपलब्ध होने या अपग्रेड पूरा होने पर सूचना पाएँ।"
+        },
+        "accounts": {
+          "title": "लिंक किए गए खाते",
+          "copy": "अपने सभी Clash खाते एक साथ रखें।"
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord बॉट",
+      "intro": "क्लैन आँकड़े और टूल सीधे Discord में।",
+      "imageLabel": "Discord में ClashKing क्लैन कमांड",
+      "imageAlt": "Discord में ArcLine क्लैन के आँकड़े दिखाता ClashKing क्लैन कमांड",
+      "features": {
+        "rosters": {
+          "title": "रोस्टर",
+          "copy": "CWL या इवेंट के लिए खाते प्रबंधित करें।"
+        },
+        "warTools": {
+          "title": "वॉर टूल",
+          "copy": "Discord में अटैक, लाइनअप और रिमाइंडर देखें।"
+        },
+        "accounts": {
+          "title": "लिंक किए गए खाते",
+          "copy": "अपने सभी Clash खाते एक साथ रखें।"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "डैशबोर्ड",
+      "intro": "रोस्टर, रिमाइंडर और सर्वर सेटिंग्स एक जगह प्रबंधित करें।",
+      "imageLabel": "क्लैन प्रबंधन टूल दर्शाता बिल्डर हट",
+      "imageAlt": "स्तर 8 बिल्डर हट",
+      "features": {
+        "settings": {
+          "title": "क्लैन सेटिंग्स",
+          "copy": "क्लैन, भूमिकाएँ और चैनल कॉन्फ़िगर करें।"
+        },
+        "rosters": {
+          "title": "रोस्टर",
+          "copy": "CWL या इवेंट के लिए खाते प्रबंधित करें।"
+        },
+        "automation": {
+          "title": "ऑटोमेशन",
+          "copy": "रिमाइंडर और सर्वर टास्क शेड्यूल करें।"
+        }
+      }
+    },
+    "resources": {
+      "title": "ClashKing के साथ बनाएँ।",
+      "copy": "समुदाय टूल के लिए गाइड, सोर्स और संरचित डेटा।",
+      "ariaLabel": "डेवलपर संसाधन",
+      "documentation": "दस्तावेज़",
+      "publicApi": "सार्वजनिक API"
+    },
+    "footer": {
+      "tagline": "सभी के लिए Clash of Clans टूल",
+      "docs": "दस्तावेज़",
+      "privacy": "गोपनीयता नीति",
+      "terms": "सेवा की शर्तें",
+      "legal": "यह सामग्री Supercell से संबद्ध, समर्थित, प्रायोजित या विशेष रूप से अनुमोदित नहीं है।"
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "Discord, मोबाइल और वेब के लिए ClashKing",
+    "privacy": {
+      "title": "गोपनीयता नीति | ClashKing",
+      "openGraphTitle": "ClashKing गोपनीयता नीति",
+      "description": "ClashKing खाता, गेम और ऐप डेटा को कैसे एकत्र, उपयोग, संग्रहीत और सुरक्षित करता है।",
+      "heading": "गोपनीयता नीति",
+      "eyebrow": "17 जुलाई 2026 से प्रभावी"
+    },
+    "terms": {
+      "title": "सेवा की शर्तें | ClashKing",
+      "openGraphTitle": "ClashKing सेवा की शर्तें",
+      "description": "ClashKing वेबसाइट, ऐप, सेवाओं और समुदाय टूल के उपयोग पर लागू शर्तें।",
+      "heading": "सेवा की शर्तें",
+      "eyebrow": "ClashKing कानूनी जानकारी"
+    }
+  }
+}

@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Indlæser...",
+    "save": "Gem",
+    "cancel": "Annuller",
+    "delete": "Slet",
+    "edit": "Rediger",
+    "search": "Søg",
+    "filter": "Filtrer",
+    "add": "Tilføj",
+    "remove": "Fjern",
+    "refresh": "Opdater",
+    "close": "Luk",
+    "openMenu": "Åbn menu",
+    "submit": "Indsend",
+    "back": "Tilbage",
+    "next": "Næste",
+    "previous": "Forrige",
+    "poweredBy": "Leveret af",
+    "noData": "Ingen tilgængelige data",
+    "noChannelFound": "Ingen kanal fundet.",
+    "searchChannels": "Søg i kanaler...",
+    "searchClans": "Søg i klaner...",
+    "noClanFound": "Ingen klan fundet.",
+    "searchCategories": "Søg i kategorier...",
+    "noRoleFound": "Ingen rolle fundet.",
+    "searchRoles": "Søg i roller...",
+    "addRole": "Tilføj rolle...",
+    "error": "Der opstod en fejl",
+    "success": "Succes",
+    "actions": "Handlinger",
+    "details": "Detaljer",
+    "view": "Vis",
+    "unknown": "Ukendt",
+    "confirm": "Bekræft",
+    "settings": "Indstillinger",
+    "status": "Status",
+    "retry": "Prøv igen",
+    "disabled": "Deaktiveret",
+    "name": "Navn",
+    "description": "Beskrivelse",
+    "createdAt": "Oprettet",
+    "updatedAt": "Opdateret",
+    "dashboard": "Dashboard",
+    "loadError": "Kunne ikke indlæse data.",
+    "tryAgain": "Prøv igen",
+    "create": "Opret",
+    "viewClashProfile": "Vis Clash-profil",
+    "openInGame": "Åbn i spillet",
+    "openChannelInDiscord": "Åbn denne kanal i Discord",
+    "playerProfile": {
+      "clan": "Klan",
+      "townHallLevel": "Rådhusniveau",
+      "trophies": "Trofæer",
+      "warPreference": "Krigspræference",
+      "warPreferenceIn": "Deltager",
+      "warPreferenceOut": "Deltager ikke",
+      "signupGroup": "Tilmeldingsgruppe",
+      "heroLevels": "Helteniveauer",
+      "hitrate30d": "Træfprocent over 30 dage"
+    }
+  },
+  "Navigation": {
+    "features": "Funktioner",
+    "openSource": "Open source",
+    "help": "Brug for hjælp?",
+    "support": "Støt os",
+    "commands": "Kommandoer",
+    "premium": "Premium",
+    "documentation": "Dokumentation",
+    "loginWithDiscord": "Log ind med Discord",
+    "addToDiscord": "Føj til Discord",
+    "openDashboard": "Åbn dashboard",
+    "dashboardSettings": "Dashboardindstillinger",
+    "logout": "Log ud",
+    "settings": "Indstillinger",
+    "theme": "Tema",
+    "systemTheme": "Følg systemet",
+    "lightTheme": "Lyst tema",
+    "darkTheme": "Mørkt tema",
+    "language": "Sprog",
+    "browserLanguage": "Browsersprog"
+  },
+  "HomePage": {
+    "badge": "{serverCount}+ servere bruger allerede ClashKing",
+    "title": "Den mest effektive",
+    "titleHighlight": "Clash of Clans-bot",
+    "subtitle": "Automatiser klanadministrationen, følg spillerstatistik, administrer krige og hold fællesskabet engageret.",
+    "cta": {
+      "heading": "Klar til at forvandle din klan?",
+      "description": "Bliv en del af de mere end {serverCount} Discord-servere, der allerede bruger ClashKing til deres Clash of Clans-fællesskab. Opsætningen tager kun 2 minutter.",
+      "button": "Tilføj ClashKing til Discord",
+      "trustBadge": "Gratis for altid • Intet kreditkort påkrævet • {serverCount}+ servere",
+      "addToDiscord": "Føj til Discord",
+      "openDashboard": "Åbn dashboard"
+    },
+    "stats": {
+      "servers": "Discord-servere",
+      "users": "Aktive brugere",
+      "clans": "Klaner fulgt"
+    },
+    "features": {
+      "title": "Alt, hvad du behøver for at administrere din klan",
+      "subtitle": "Effektive funktioner, der er udviklet specifikt til Clash of Clans-fællesskaber",
+      "autoRoles": {
+        "title": "Automatisk rolleadministration",
+        "description": "Tildel automatisk roller ud fra spillerstatus, klanposition og præstationer. Hold nemt orden på din server."
+      },
+      "playerStats": {
+        "title": "Spillerstatistik",
+        "description": "Følg detaljerede spillerstatistikker, fremskridtsgrafer og angrebshistorik. Se, hvem der forbedrer sig, og hvem der har brug for hjælp."
+      },
+      "leaderboards": {
+        "title": "Ranglister",
+        "description": "Opret konkurrencelister for donationer, trofæer, krigsstjerner og tilpassede målinger. Øg engagementet."
+      },
+      "warTracking": {
+        "title": "Krigssporing",
+        "description": "Overvåg krigsopstillinger, følg angreb i realtid og få analyser efter krigen. Gå aldrig glip af en detalje."
+      },
+      "smartReminders": {
+        "title": "Smarte påmindelser",
+        "description": "Automatiske påmindelser om klanspil, krigsangreb, klanligaen og tilpassede begivenheder holder alle orienteret."
+      },
+      "customization": {
+        "title": "Fuld tilpasning",
+        "description": "Tilpas kommandoer, embedfarver, kaldenavne og tilladelser. Gør ClashKing til dit eget."
+      },
+      "familyManagement": {
+        "title": "Familieadministration",
+        "description": "Administrer flere klaner som én familie med statistik på tværs af klanerne, fælles ranglister og samordnede roller."
+      },
+      "analytics": {
+        "title": "Avanceret analyse",
+        "description": "Få dyb indsigt i klanens præstationer, spillernes aktivitetsmønstre og væksttendenser. Træf beslutninger på baggrund af data."
+      },
+      "performance": {
+        "title": "Lynhurtig",
+        "description": "Bygget til hurtige kommandosvar og opdateringer i realtid uden forsinkelser."
+      },
+      "security": {
+        "title": "Sikker og pålidelig",
+        "description": "99,9 % oppetid, krypterede data og regelmæssige sikkerhedskopier holder dine klanoplysninger sikre."
+      }
+    },
+    "footer": {
+      "tagline": "Den mest effektive Clash of Clans-bot til Discord-fællesskaber.",
+      "about": {
+        "title": "Om",
+        "features": "Funktioner",
+        "help": "Brug for hjælp?",
+        "openSource": "Open source",
+        "support": "Støt os"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Dashboard",
+        "inviteBot": "Inviter botten"
+      },
+      "resources": {
+        "title": "Ressourcer",
+        "documentation": "Dokumentation",
+        "quickStart": "Kom godt i gang",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Fællesskab",
+        "discord": "Discord-server",
+        "twitter": "X (Twitter)",
+        "reportBug": "Rapportér en fejl",
+        "requestFeature": "Foreslå en funktion"
+      },
+      "legal": {
+        "copyright": "ClashKing. Alle rettigheder forbeholdes.",
+        "privacy": "Privatlivspolitik",
+        "terms": "Servicevilkår"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Ikke på serveren",
+    "unknownUser": "Ukendt bruger",
+    "notLinked": "Ikke tilknyttet",
+    "status": {
+      "onServer": "På serveren",
+      "notOnServer": "Ikke på serveren"
+    },
+    "discordId": "Discord-id",
+    "viewProfile": "Vis Discord-profil",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Oversigt",
+      "description": "Dashboardets startside"
+    },
+    "general": {
+      "name": "Generelle indstillinger",
+      "description": "Serverkonfiguration"
+    },
+    "dashboardAccess": {
+      "name": "Dashboardadgang",
+      "description": "Uddelegér dashboardsektioner"
+    },
+    "familySettings": {
+      "name": "Familieindstillinger",
+      "description": "Familieroller og kaldenavne"
+    },
+    "clans": {
+      "name": "Klaner",
+      "description": "Administrer dine klaner"
+    },
+    "logs": {
+      "name": "Logfiler",
+      "description": "Webhookkonfiguration"
+    },
+    "roles": {
+      "name": "Roller",
+      "description": "Rolleautomatisering"
+    },
+    "reminders": {
+      "name": "Påmindelser",
+      "description": "Alle påmindelsestyper"
+    },
+    "rosters": {
+      "name": "Trupplaner",
+      "description": "Administrer trupplaner"
+    },
+    "bases": {
+      "name": "Baser",
+      "description": "Layoutbibliotek og engagement"
+    },
+    "autoboards": {
+      "name": "Automatiske ranglister",
+      "description": "Automatiske ranglister"
+    },
+    "giveaways": {
+      "name": "Giveaways",
+      "description": "Administrer giveaway-kampagner"
+    },
+    "panels": {
+      "name": "Paneler",
+      "description": "Interaktive medlemspaneler med handlingsknapper"
+    },
+    "tickets": {
+      "name": "Tickets",
+      "description": "Rekrutterings- og supporttickets"
+    },
+    "embeds": {
+      "name": "Embeds",
+      "description": "Skabeloner til Discord-embeds"
+    },
+    "links": {
+      "name": "Tilknytninger",
+      "description": "Tilknytning mellem spiller og Discord"
+    },
+    "bans": {
+      "name": "Udelukkelser og advarsler",
+      "description": "Moderationsværktøjer"
+    },
+    "wars": {
+      "name": "Krige",
+      "description": "Krigsstatistik"
+    },
+    "leaderboards": {
+      "name": "Ranglister",
+      "description": "Globale ranglister"
+    },
+    "sections": {
+      "configuration": "Konfiguration",
+      "clanManagement": "Klanstyring",
+      "playerManagement": "Spilleradministration",
+      "automation": "Automatisering",
+      "statistics": "Statistik"
+    },
+    "switchServer": "Skift server",
+    "goHome": "Startside"
+  },
+  "BasesPage": {
+    "eyebrow": "Klanstyring",
+    "title": "Baser",
+    "description": "Gennemgå delte layouts, aktivitetshistorik og kildebeskeder fra Discord.",
+    "refresh": "Opdater",
+    "create": "Tilføj base",
+    "retry": "Prøv igen",
+    "dismiss": "Luk",
+    "cancel": "Annuller",
+    "previous": "Forrige",
+    "next": "Næste",
+    "pagination": "Side {page} af {total}",
+    "imageAlt": "Billede af baselayout {index}",
+    "noDescription": "Ingen beskrivelse angivet.",
+    "openLayout": "Åbn layout",
+    "openMessage": "Discord-besked",
+    "summary": {
+      "total": "Baser i alt",
+      "page": "Aktuel side",
+      "visible": "Synlige"
+    },
+    "counts": {
+      "downloads": "Unikke downloads",
+      "upvotes": "Stemmer for",
+      "downvotes": "Stemmer imod"
+    },
+    "history": {
+      "title": "Downloadhistorik ({count})",
+      "empty": "Der er ikke registreret nogen downloader-id’er.",
+      "resolve": "Find profil"
+    },
+    "delete": {
+      "action": "Slet",
+      "confirmTitle": "Vil du slette denne base?",
+      "confirmDescription": "Dette fjerner databaseposten permanent og forsøger først at slette kildebeskeden på Discord. Basen kan ikke gendannes.",
+      "confirmAction": "Slet base",
+      "deleting": "Sletter…",
+      "baseId": "Base-id",
+      "discordSource": "Discord-kilde",
+      "successTitle": "Base slettet",
+      "successDeleted": "Databaseposten og Discord-beskeden blev slettet.",
+      "successAlreadyMissing": "Databaseposten blev slettet, og Discord-beskeden manglede allerede.",
+      "cleanupFailedTitle": "Basen blev bevaret, fordi Discord-oprydningen mislykkedes",
+      "cleanupCompleteTitle": "Discord-oprydningen er fuldført, og basen er bevaret",
+      "failureTitle": "Base blev ikke slettet",
+      "failureFallback": "Anmodningen om sletning mislykkedes.",
+      "retryable": "Det er sikkert at prøve igen",
+      "notRetryable": "Kan ikke prøves igen",
+      "cleanup": {
+        "deleted": "Discord-besked slettet",
+        "alreadyMissing": "Discord-besked manglede allerede",
+        "failed": "Discord-oprydning mislykkedes"
+      }
+    },
+    "empty": {
+      "title": "Ingen baser delt endnu",
+      "description": "Tilføj det første layout ved at vælge Discord-kanalen og angive et Clash of Clans-layoutlink."
+    },
+    "form": {
+      "title": "Tilføj en base",
+      "description": "Baser kan ikke redigeres efter oprettelsen. Vælg, hvor ClashKing skal sende Discord-beskeden, og bekræft derefter layoutlinket.",
+      "channel": "Discord-kanal",
+      "channelPlaceholder": "Vælg en kanal",
+      "channelSearch": "Søg i kanaler…",
+      "channelsLoading": "Indlæser kanaler…",
+      "baseLink": "Layoutlink",
+      "descriptionLabel": "Beskrivelse",
+      "images": "Billeder",
+      "chooseImages": "Vælg layoutbilleder",
+      "imageLimit": "Højst fire billeder. Uploads afsluttes, før basen oprettes.",
+      "submit": "Opret base",
+      "creating": "Uploader og opretter…",
+      "createRejectedTitle": "Base blev ikke oprettet",
+      "createCleanupCompleteTitle": "Discord-oprydning fuldført; base blev ikke oprettet",
+      "createCleanupFailedTitle": "Discord-besked kan blive stående; base blev ikke oprettet",
+      "databaseNotInserted": "Databasepost ikke indsat",
+      "discordMessageCreated": "Discord-besked blev oprettet",
+      "discordMessageId": "Discord-besked-id",
+      "retryable": "Det er sikkert at prøve igen",
+      "notRetryable": "Prøv ikke automatisk igen",
+      "cleanup": {
+        "notNeeded": "Discord-oprydning ikke nødvendig",
+        "deleted": "Discord-besked slettet",
+        "alreadyMissing": "Discord-besked manglede allerede",
+        "failed": "Discord-oprydning mislykkedes"
+      }
+    },
+    "errors": {
+      "title": "Baserne er ikke tilgængelige",
+      "load": "Kunne ikke indlæse baser.",
+      "create": "Kunne ikke oprette basen.",
+      "upload": "Kunne ikke uploade et billede.",
+      "downloader": "Kunne ikke finde denne downloader.",
+      "channels": "Kunne ikke indlæse Discord-kanaler.",
+      "channelRequired": "Vælg en Discord-kanal.",
+      "linkRequired": "Layoutlink er påkrævet.",
+      "descriptionTooLong": "Beskrivelsen må højst være på 1.000 tegn.",
+      "tooManyImages": "Vælg højst fire billeder."
+    }
+  },
+  "BansPage": {
+    "title": "Moderation",
+    "description": "Administrer spillerudelukkelser og advarsler",
+    "viewClashProfile": "Vis Clash-profil",
+    "tabs": {
+      "bans": "Udelukkelser",
+      "strikes": "Advarsler"
+    },
+    "bans": {
+      "title": "Udelukkede spillere",
+      "noBans": "Ingen udelukkede spillere fundet",
+      "addBan": "Tilføj udelukkelse",
+      "removeBan": "Fjern udelukkelse",
+      "confirmRemove": "Er du sikker på, at du vil fjerne denne udelukkelse?",
+      "playerTag": "Spillertag",
+      "playerName": "Spillernavn",
+      "reason": "Årsag",
+      "bannedAt": "Udelukket den",
+      "search": "Søg efter navn eller tag...",
+      "howItWorks": {
+        "title": "Sådan fungerer udelukkelser",
+        "description": "Hvis en udelukket spiller slutter sig til en af dine klaner, sendes der en advarsel til den klankanal, du har konfigureret på <clansTab>fanen Klaner</clansTab>. Botten kan ikke forhindre personer i at slutte sig til klanen, men den kan advare dig."
+      },
+      "stats": {
+        "total": "Udelukkelser i alt",
+        "recent": "Seneste udelukkelser (7 dage)",
+        "commonReason": "Hyppigste årsag",
+        "activeOnServer": "Aktive udelukkelser på serveren",
+        "last7Days": "I de seneste 7 dage",
+        "commonReasonValue": "Chikane og giftig adfærd",
+        "noBans": "Ingen udelukkelser endnu",
+        "percentOfAll": "{percent}% af alle udelukkelser",
+        "percentOfAllLabel": "af alle udelukkelser"
+      },
+      "list": {
+        "title": "Udelukkede spillere",
+        "count": "{count, plural, one {# spiller udelukket} other {# spillere udelukket}}",
+        "searchPlaceholder": "Søg efter navn, tag eller årsag...",
+        "noBansFound": "Ingen udelukkelser fundet",
+        "noBans": "Ingen udelukkede spillere",
+        "adjustSearch": "Prøv at ændre din søgning",
+        "getStarted": "Tilføj en udelukkelse for at komme i gang med spillermoderation"
+      },
+      "table": {
+        "player": "Spiller",
+        "reason": "Årsag",
+        "bannedBy": "Udelukket af",
+        "date": "Dato",
+        "daysAgo": "{days} dage siden",
+        "noReason": "Ingen årsag angivet"
+      },
+      "addDialog": {
+        "title": "Udeluk en spiller",
+        "description": "Føj en spiller til udelukkelseslisten. Du modtager en advarsel, hvis spilleren slutter sig til en klan på denne server.",
+        "playerTagLabel": "Spillertag",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Spillernavn (valgfrit)",
+        "playerNamePlaceholder": "Indtast spillernavn",
+        "reasonLabel": "Årsag til udelukkelse",
+        "reasonPlaceholder": "Forklar, hvorfor spilleren udelukkes...",
+        "submit": "Udeluk spiller"
+      },
+      "bestPractices": {
+        "title": "Bedste praksis",
+        "document": {
+          "title": "Dokumentér grundigt:",
+          "desc": "Angiv altid en detaljeret årsag til hver udelukkelse, så andre moderatorer kan forstå sammenhængen."
+        },
+        "review": {
+          "title": "Gennemgå regelmæssigt:",
+          "desc": "Gennemgå regelmæssigt listen for at sikre, at alle udelukkelser stadig er nødvendige og berettigede."
+        },
+        "consistent": {
+          "title": "Vær konsekvent:",
+          "desc": "Anvend udelukkelser retfærdigt og konsekvent på alle spillere for at bevare et sundt fællesskab."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Spilleradvarsler",
+      "noStrikes": "Ingen advarsler fundet",
+      "addStrike": "Tilføj advarsel",
+      "removeStrike": "Fjern advarsel",
+      "confirmRemove": "Er du sikker på, at du vil fjerne denne advarsel?",
+      "playerTag": "Spillertag",
+      "reason": "Årsag",
+      "weight": "Vægt",
+      "rolloverDays": "Dage til udløb",
+      "createdAt": "Oprettet",
+      "search": "Søg efter spillertag...",
+      "howItWorks": {
+        "title": "Sådan fungerer advarsler",
+        "description": "Advarsler gives til spillere, der overtræder reglerne. Hver advarsel har en vægt, som angiver alvoren, og kan udløbe efter et bestemt antal dage. De hjælper med at følge spilleradfærd, før der udstedes udelukkelser."
+      },
+      "stats": {
+        "total": "Advarsler i alt",
+        "recent": "Seneste advarsler (7 dage)",
+        "totalWeight": "Samlet advarselsvægt",
+        "activeOnServer": "Aktive advarsler på serveren",
+        "last7Days": "I de seneste 7 dage",
+        "cumulativeWeight": "Samlet advarselsvægt",
+        "commonReason": "Hyppigste årsag",
+        "commonReasonValue": "Spam"
+      },
+      "list": {
+        "title": "Spilleradvarsler",
+        "count": "{count, plural, one {# advarsel udstedt} other {# advarsler udstedt}}",
+        "searchPlaceholder": "Søg efter navn, tag eller årsag...",
+        "noStrikesFound": "Ingen advarsler fundet",
+        "noStrikes": "Ingen advarsler udstedt",
+        "adjustSearch": "Prøv at ændre din søgning",
+        "getStarted": "Tilføj en advarsel for at begynde at registrere overtrædelser",
+        "viewAll": "Alle advarsler",
+        "viewGrouped": "Efter spiller"
+      },
+      "table": {
+        "player": "Spiller",
+        "reason": "Årsag",
+        "weight": "Vægt",
+        "addedBy": "Tilføjet af",
+        "date": "Dato",
+        "expires": "Udløber",
+        "never": "Aldrig",
+        "noReason": "Ingen årsag angivet",
+        "daysAgo": "{days} dage siden",
+        "totalStrikes": "Advarsler i alt",
+        "totalWeight": "Samlet vægt",
+        "lastStrike": "Seneste advarsel"
+      },
+      "addDialog": {
+        "title": "Tilføj en advarsel",
+        "description": "Udsted en advarsel til en spiller. Advarsler kan have forskellige vægte og udløbsdatoer.",
+        "playerTagLabel": "Spillertag",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Årsag",
+        "reasonPlaceholder": "Forklar, hvorfor denne advarsel udstedes...",
+        "weightLabel": "Advarselsvægt",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Udløber i (dage)",
+        "rolloverPlaceholder": "Valgfrit",
+        "submit": "Tilføj advarsel"
+      },
+      "guidelines": {
+        "title": "Retningslinjer for advarsler",
+        "weights": {
+          "title": "Brug vægte med omtanke:",
+          "desc": "Brug højere vægte (2-3) ved alvorlige overtrædelser og lavere vægte (1) ved mindre problemer."
+        },
+        "expiration": {
+          "title": "Angiv udløbsdatoer:",
+          "desc": "Overvej at angive en udløbsdato, så spillere får mulighed for at forbedre deres adfærd med tiden."
+        },
+        "patterns": {
+          "title": "Hold øje med mønstre:",
+          "desc": "Brug advarsler til at identificere gentagne overtrædere, før du eskalerer til permanente udelukkelser."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Udelukkelse tilføjet uden problemer",
+      "banRemoved": "Udelukkelse fjernet uden problemer",
+      "strikeAdded": "Advarsel tilføjet uden problemer",
+      "strikeRemoved": "Advarsel fjernet uden problemer",
+      "errorLoadingBans": "Kunne ikke indlæse udelukkede spillere",
+      "errorLoadingStrikes": "Kunne ikke indlæse advarsler",
+      "errorAddingBan": "Kunne ikke tilføje udelukkelse",
+      "errorAddingStrike": "Kunne ikke tilføje advarsel",
+      "errorRemovingBan": "Kunne ikke fjerne udelukkelse",
+      "errorRemovingStrike": "Kunne ikke fjerne advarsel"
+    }
+  },
+  "RostersPage": {
+    "title": "Trupplaner & opstillinger",
+    "description": "Administrer krigstrupplaner, opstillinger og medlemstildelinger",
+    "stats": {
+      "totalRosters": "Trupplaner i alt",
+      "totalMembers": "Medlemmer i alt",
+      "clanRosters": "Klantrupplaner",
+      "familyRosters": "Familietrupplaner",
+      "members": "Medlemmer",
+      "avgTh": "Gns. TH",
+      "avgHitrate": "Gennemsnitlig træfprocent",
+      "distribution": "Fordeling",
+      "clan": "Klan",
+      "family": "Familie",
+      "external": "Ekstern",
+      "thDistribution": "Rådhusfordeling",
+      "capacity": "kapacitet"
+    },
+    "filters": {
+      "search": "Søg trupplaner...",
+      "type": "Type",
+      "all": "Alle",
+      "clan": "Klan",
+      "family": "Familie",
+      "clear": "Ryd"
+    },
+    "comparisonMode": {
+      "cancel": "Annuller",
+      "compare": "Sammenlign",
+      "compareRosters": "Sammenlign trupplaner",
+      "selectRosters": "Vælg trupplaner",
+      "selectRostersDesc": "Vælg mindst 2 trupplaner for at sammenligne",
+      "maxReached": "Maksimum nået",
+      "maxReachedDesc": "Du kan sammenligne op til 4 trupplaner ad gangen"
+    },
+    "createDialog": {
+      "title": "Opret en ny trupplan",
+      "description": "Opsæt en ny trupplan for din klan",
+      "aliasLabel": "Trupplanens navn",
+      "aliasPlaceholder": "f.eks. CWL-trupplan",
+      "typeLabel": "Trupplantype",
+      "typeClan": "Klan",
+      "typeFamily": "Familie",
+      "signupScopeLabel": "Tilmeldingsomfang",
+      "scopeClanOnly": "Kun klanen",
+      "scopeFamilyWide": "Hele familien",
+      "clanLabel": "Klan",
+      "clanPlaceholder": "Vælg en klan",
+      "descriptionLabel": "Beskrivelse (valgfri)",
+      "descriptionPlaceholder": "Trupplanbeskrivelse...",
+      "cancel": "Annuller",
+      "creating": "Opretter...",
+      "create": "Opret trupplan"
+    },
+    "editDialog": {
+      "title": "Rediger trupplan",
+      "description": "Rediger trupplanens indstillinger og konfiguration",
+      "aliasLabel": "Trupplanens navn",
+      "descriptionLabel": "Beskrivelse",
+      "descriptionPlaceholder": "Trupplanbeskrivelse...",
+      "minThLabel": "Mindste rådhusniveau",
+      "minThPlaceholder": "f.eks. 13",
+      "maxThLabel": "Højeste rådhusniveau",
+      "maxThPlaceholder": "f.eks. 16",
+      "rosterSizeLabel": "Trupplanens størrelse",
+      "rosterSizePlaceholder": "f.eks. 50",
+      "columnsLabel": "Viste kolonner",
+      "columnsPlaceholder": "Vælg de kolonner, der skal vises",
+      "sortLabel": "Sorteringsrækkefølge",
+      "sortPlaceholder": "Vælg sorteringsfelter",
+      "cancel": "Annuller",
+      "saving": "Gemmer...",
+      "save": "Gem ændringer"
+    },
+    "addMembersDialog": {
+      "title": "Føj medlemmer til trupplanen",
+      "description": "Vælg medlemmer fra din klan eller indtast spillertags",
+      "bulkTagsLabel": "Tilføj flere tags",
+      "bulkTagsPlaceholder": "Indtast spillertags (ét pr. linje eller adskilt med komma)",
+      "searchLabel": "Søg efter medlemmer",
+      "searchPlaceholder": "Søg efter navn eller tag...",
+      "selectFromClan": "Vælg blandt klanmedlemmer",
+      "selectedCount": "Valgt",
+      "noMembers": "Ingen tilgængelige medlemmer",
+      "noMembersSelected": "Ingen medlemmer valgt",
+      "noMembersSelectedDesc": "Vælg medlemmer eller indtast spillertags.",
+      "cancel": "Annuller",
+      "adding": "Tilføjer...",
+      "add": "Tilføj medlemmer"
+    },
+    "detailsDialog": {
+      "title": "Oplysninger om trupplanen",
+      "edit": "Rediger",
+      "refresh": "Opdater",
+      "refreshing": "Opdaterer...",
+      "delete": "Slet",
+      "deleting": "Sletter...",
+      "addMembers": "Tilføj medlemmer",
+      "close": "Luk",
+      "noMembers": "Ingen medlemmer i denne trupplan",
+      "noMembersDesc": "Tilføj medlemmer for at komme i gang",
+      "memberCount": "Medlemmer",
+      "thRestriction": "TH-niveau",
+      "avgTh": "Gns. TH",
+      "avgHitrate": "Gennemsnitlig træfprocent",
+      "clan": "Klan",
+      "family": "Familie",
+      "external": "Ekstern",
+      "substitute": "SUB",
+      "removeMember": "Fjern"
+    },
+    "rosterCard": {
+      "members": "Medlemmer",
+      "thLevel": "TH-niveau",
+      "avgTh": "Gns. TH",
+      "avgHitrate": "Gennemsnitlig træfprocent",
+      "clan": "Klan",
+      "family": "Familie",
+      "external": "Ekstern",
+      "noRestriction": "Ingen begrænsning",
+      "view": "Vis",
+      "edit": "Rediger",
+      "delete": "Slet",
+      "noGroup": "Ingen gruppe",
+      "moveToGroup": "Flyt til gruppe",
+      "clone": "Klon",
+      "allRosters": "Alle trupplaner",
+      "manageRosters": "Administrer dine krigstrupplaner og opstillinger"
+    },
+    "memberColumns": {
+      "name": "Navn",
+      "townhall": "Rådhus",
+      "tag": "Tag",
+      "hitrate": "Træfprocent",
+      "current_clan": "Nuværende klan",
+      "current_clan_tag": "Klantag",
+      "discord": "Discord",
+      "hero_lvs": "Helte",
+      "war_pref": "Krigspræference",
+      "trophies": "Trofæer",
+      "signup_group": "Tilmeldingsgruppe"
+    },
+    "columns": {
+      "configure": "Kolonner",
+      "title": "Konfigurer kolonner",
+      "description": "Vælg, hvilke kolonner der skal vises, og deres rækkefølge",
+      "selected": "Valgte kolonner",
+      "available": "Tilgængelige kolonner",
+      "save": "Gem kolonner",
+      "reset": "Nulstil kolonner"
+    },
+    "sortFields": {
+      "townhall": "Rådhusniveau",
+      "name": "Navn",
+      "tag": "Tag",
+      "heroLvs": "Helte",
+      "trophies": "Trofæer",
+      "hitrate": "Træfprocent over 30 dage",
+      "currentClanTag": "Klantag",
+      "addedAt": "Tilføjet den"
+    },
+    "thRestrictions": {
+      "only": "Kun TH{th}",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "Ingen begrænsning"
+    },
+    "emptyState": {
+      "noRosters": "Ingen trupplaner oprettet endnu",
+      "noRostersDesc": "Opret din første trupplan for at komme i gang",
+      "noMatch": "Ingen trupplaner matcher filtrene",
+      "noMatchDesc": "Prøv at ændre søgningen eller filterkriterierne"
+    },
+    "toast": {
+      "errorTitle": "Fejl",
+      "successTitle": "Succes",
+      "errorLoadingRosters": "Kunne ikke indlæse trupplanerne. Prøv igen.",
+      "errorLoadingMembers": "Kunne ikke indlæse klanmedlemmer.",
+      "rosterCreated": "Trupplan oprettet uden problemer!",
+      "errorCreatingRoster": "Kunne ikke oprette trupplanen. Prøv igen.",
+      "rosterUpdated": "Trupplan opdateret uden problemer!",
+      "errorUpdatingRoster": "Kunne ikke opdatere trupplanen. Prøv igen.",
+      "rosterDeleted": "Trupplan slettet uden problemer!",
+      "errorDeletingRoster": "Kunne ikke slette trupplanen. Prøv igen.",
+      "membersAdded": "Føjede {count} medlem(mer) til trupplanen!",
+      "errorAddingMembers": "Kunne ikke tilføje medlemmerne. Prøv igen.",
+      "memberRemoved": "Medlem fjernet fra trupplan!",
+      "errorRemovingMember": "Kunne ikke fjerne medlemmet. Prøv igen.",
+      "substituteMarked": "Medlemmet er markeret som udskifter!",
+      "substituteUnmarked": "Medlemmet er ikke længere markeret som udskifter!",
+      "errorUpdatingMember": "Kunne ikke opdatere medlemmet. Prøv igen.",
+      "rosterRefreshed": "Trupplandataene er opdateret!",
+      "errorRefreshingRoster": "Kunne ikke opdatere trupplandataene. Prøv igen.",
+      "memberTransferred": "Medlemmet blev flyttet mellem trupplanerne!",
+      "errorTransferringMember": "Kunne ikke flytte medlemmet. Prøv igen.",
+      "rosterCloned": "Trupplanen er klonet!",
+      "errorCloningRoster": "Kunne ikke klone trupplanen. Prøv igen.",
+      "missingMembersAdded": "Føjede {count} manglende medlem(mer) til trupplanen!",
+      "errorLoadingMissingMembers": "Kunne ikke indlæse manglende medlemmer."
+    },
+    "cloneDialog": {
+      "title": "Klon trupplan",
+      "description": "Opret en kopi af denne trupplan",
+      "aliasLabel": "Navn på ny trupplan",
+      "aliasPlaceholder": "Indtast et navn til den klonede trupplan",
+      "copyMembers": "Kopiér medlemmer til den nye trupplan",
+      "memberCount": "{count} medlemmer",
+      "originalRoster": "Original trupplan:",
+      "cancel": "Annuller",
+      "cloning": "Kloner...",
+      "clone": "Klon trupplan",
+      "copyMembersHint": "Medlemmer bliver kopieret fra den oprindelige trupplan"
+    },
+    "missingMembers": {
+      "title": "Manglende medlemmer",
+      "description": "Klanmedlemmer, der ikke er registreret i denne trupplan",
+      "coverage": "Dækning af trupplanen",
+      "registered": "registreret",
+      "missing": "Mangler",
+      "total": "samlet",
+      "selectAll": "Vælg alle",
+      "selected": "valgt",
+      "addSelected": "Tilføj {count} medlem(mer)",
+      "button": "Manglende medlemmer",
+      "addAll": "Tilføj alle",
+      "adding": "Tilføjer...",
+      "close": "Luk",
+      "allCaughtUp": "Alt er opdateret!",
+      "allCaughtUpDesc": "Alle klanmedlemmer er registreret i denne trupplan",
+      "clanOnly": "Analyse af manglende medlemmer er kun tilgængelig for klantrupplaner",
+      "error": "Kunne ikke indlæse manglende medlemmer",
+      "thisRoster": "Denne trupplan",
+      "wholeGroup": "Hele gruppen"
+    },
+    "eventTime": {
+      "label": "Begivenhedens starttidspunkt",
+      "timezone": "Din tidszone",
+      "utc": "UTC",
+      "clear": "Ryd"
+    },
+    "bulkValidation": {
+      "valid": "gyldig",
+      "invalid": "ugyldig",
+      "invalidTags": "Ugyldige tags"
+    },
+    "memberAutocomplete": {
+      "label": "Eller søg blandt servermedlemmer",
+      "placeholder": "Klik for at søge efter medlemmer...",
+      "searchPlaceholder": "Søg efter navn, tag eller klan...",
+      "loading": "Indlæser medlemmer...",
+      "noResults": "Ingen medlemmer fundet",
+      "groupHeading": "Servermedlemmer",
+      "selectedLabel": "Valgte medlemmer",
+      "membersSelected": "valgte medlemmer",
+      "selected": "Valgt",
+      "clanMembersLabel": "Eller vælg blandt klanmedlemmer"
+    },
+    "retry": "Prøv igen",
+    "back": "Tilbage",
+    "refresh": "Opdater",
+    "createRoster": "Opret trupplan",
+    "searchPlaceholder": "Søg trupplaner...",
+    "noRosters": "Ingen trupplaner endnu",
+    "noRostersHint": "Opret din første trupplan for at komme i gang",
+    "noSearchResults": "Ingen trupplaner fundet",
+    "noSearchResultsHint": "Prøv et andet søgeord",
+    "createFirstRoster": "Opret den første trupplan",
+    "deleteConfirm": "Er du sikker på, at du vil slette \"{name}\"?",
+    "deleteSuccess": "Trupplan slettet",
+    "deleteSuccessDesc": "Trupplan \"{name}\" er blevet slettet",
+    "deleteError": "Kunne ikke slette trupplan",
+    "createSuccess": "Trupplan oprettet",
+    "createSuccessDesc": "Trupplan \"{name}\" er blevet oprettet",
+    "createError": "Kunne ikke oprette trupplan",
+    "createErrorAlias": "Indtast et navn til trupplanen",
+    "createErrorClan": "Vælg en klan",
+    "refreshSuccess": "Trupplandataene er opdateret",
+    "refreshError": "Kunne ikke opdatere trupplanen",
+    "saveSuccess": "Indstillinger gemt",
+    "saveError": "Kunne ikke gemme indstillinger",
+    "columnsUpdated": "Kolonner opdateret",
+    "columnsError": "Kunne ikke opdatere kolonnerne",
+    "addMembersSuccess": "Medlemmer tilføjet",
+    "addMembersSuccessDesc": "Føjede {count} medlem(mer) til trupplanen",
+    "addMembersError": "Kunne ikke tilføje medlemmer",
+    "removeMemberSuccess": "Medlem fjernet",
+    "removeMemberError": "Kunne ikke fjerne medlem",
+    "clearMembers": "Ryd medlemmer",
+    "clearMembersConfirm": "Fjern alle medlemmer fra \"{name}\"? Dette kan ikke fortrydes.",
+    "clearMembersSuccess": "Alle medlemmer fjernet",
+    "clearMembersError": "Kunne ikke rydde medlemmerne",
+    "automationCreated": "Automatisering oprettet",
+    "automationUpdated": "Automatisering opdateret",
+    "automationDeleted": "Automatisering slettet",
+    "automationError": "Fejl i automatiseringen",
+    "groupCreated": "Gruppe oprettet",
+    "groupUpdated": "Gruppe opdateret",
+    "groupDeleted": "Gruppe slettet",
+    "groupError": "Kunne ikke gemme gruppe",
+    "categoryCreated": "Kategori oprettet",
+    "categoryUpdated": "Kategori opdateret",
+    "categoryDeleted": "Kategori slettet",
+    "categoryError": "Kunne ikke gemme kategori",
+    "common": {
+      "cancel": "Annuller",
+      "save": "Gem",
+      "close": "Luk"
+    },
+    "tabs": {
+      "members": "Medlemmer",
+      "automations": "Automatiseringer",
+      "groups": "Grupper",
+      "categories": "Kategorier",
+      "settings": "Indstillinger"
+    },
+    "members": {
+      "count": "medlemmer",
+      "noMembers": "Ingen medlemmer i denne trupplan",
+      "noMembersHint": "Tilføj medlemmer for at komme i gang",
+      "actions": "Handlinger",
+      "viewList": "Listevisning",
+      "viewGrouped": "Vis efter tilmeldingskategori",
+      "unassigned": "Ikke tildelt",
+      "dragHere": "Træk medlemmer hertil",
+      "clickToGroup": "Klik for at vise efter kategori",
+      "apiErrorTooltip": "Dataene kunne ikke hentes fra API'et",
+      "staleDataTooltip": "Dataene kan være forældede. Senest opdateret:",
+      "refresh": "Opdater medlemsdata",
+      "alsoIn": "Også i",
+      "addCategory": "Tilføj gruppe",
+      "removeCategory": "Fjern gruppe"
+    },
+    "addMembers": {
+      "title": "Føj medlemmer til trupplanen",
+      "description": "Vælg medlemmer fra dine klaner eller indtast spillertags",
+      "bulkTagsLabel": "Spillertags (ét pr. linje eller adskilt med komma)",
+      "adding": "Tilføjer...",
+      "submit": "Tilføj medlemmer"
+    },
+    "compare": {
+      "enterMode": "Sammenlign",
+      "modeTitle": "Sammenligningstilstand",
+      "modeHint": "Klik på trupplanerne for at vælge dem (2 til 4 trupplaner)",
+      "exitMode": "Annuller",
+      "selected": "trupplan(er) valgt",
+      "button": "Sammenlign",
+      "title": "Sammenlign trupplaner",
+      "dragToMove": "Træk og slip medlemmer mellem trupplaner for at flytte dem",
+      "loadError": "Kunne ikke indlæse trupplaner",
+      "memberMoved": "Medlem flyttet",
+      "memberMovedDesc": "{name} flyttet fra {from} til {to}",
+      "moveError": "Kunne ikke flytte medlemmet",
+      "selectAtLeast2": "Vælg mindst 2 trupplaner for at sammenligne",
+      "moving": "Flytter medlem...",
+      "compareGroup": "Sammenlign gruppe",
+      "dragToMoveCategory": "Træk medlemmer mellem trupplaner og kategorier",
+      "categoryChanged": "Kategori ændret",
+      "categoryChangedDesc": "{name} flyttet til {category}",
+      "uncategorized": "Uden kategori"
+    },
+    "ungrouped": "Ikke grupperet",
+    "automations": {
+      "description": "Planlæg automatiserede handlinger for denne trupplan",
+      "create": "Opret automatisering",
+      "empty": "Ingen automatiseringer",
+      "emptyHint": "Opret en automatisering for at planlægge handlinger",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "executed": "Færdig",
+      "missed": "Ikke udført",
+      "lastRun": "Seneste kørsel",
+      "enable": "Aktivér",
+      "disable": "Deaktiver",
+      "createTitle": "Opret automatisering",
+      "editTitle": "Rediger automatisering",
+      "createDesc": "Planlæg en automatiseret handling",
+      "actionType": "Handlingstype",
+      "offsetFromEvent": "Tid i forhold til begivenheden",
+      "offsetBefore": "Før begivenheden",
+      "offsetAfter": "Efter begivenheden",
+      "offsetUnit_minutes": "minutter",
+      "offsetUnit_hours": "timer",
+      "offsetUnit_days": "dage",
+      "offsetPreview": "Udføres: {date}",
+      "offsetNoEventDate": "Angiv et starttidspunkt for begivenheden i indstillingerne for at se udførelsesdatoen",
+      "offsetAtStart": "Ved begivenhedens start",
+      "pingType": "Påmindelsestype",
+      "pingType_signup_reminder": "Tilmeldingspåmindelse",
+      "pingType_missing": "Mangler i klanen",
+      "pingType_sub_needed": "Udskifter søges",
+      "channel": "Discord-kanal",
+      "selectChannel": "Vælg en kanal",
+      "channelHint": "Den kanal, hvor handlingen bliver sendt eller udført",
+      "activeLabel": "Aktiv",
+      "target": "Mål",
+      "targetThisRoster": "Denne trupplan",
+      "targetGroups": "Grupper",
+      "targetHint": "Anvend kun automatiseringen på denne trupplan eller på alle trupplaner i en gruppe",
+      "group": "Gruppe",
+      "groupAutomationHint": "Administrer via fanen Grupper",
+      "targetRoster": "Trupplan",
+      "targetGroup": "Gruppe",
+      "willExecute": "Udføres på det planlagte tidspunkt",
+      "paused": "Sat på pause – udføres ikke",
+      "actions": {
+        "ping": "Send påmindelse",
+        "post": "Send trupplan",
+        "openSignup": "Åbn tilmeldinger",
+        "closeSignup": "Luk tilmeldinger",
+        "delete": "Slet trupplan",
+        "clear": "Ryd medlemmer",
+        "archive": "Arkivér trupplan"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Sender en påmindelse til medlemmer, der ikke har tilmeldt sig eller er i den forkerte klan",
+        "roster_post": "Sender den endelige trupplan i den valgte kanal",
+        "roster_signup": "Åbner tilmeldinger, så spillere kan registrere sig",
+        "roster_signup_close": "Lukker tilmeldinger og forhindrer nye registreringer",
+        "roster_delete": "Sletter trupplanen og alle dens data permanent",
+        "roster_clear": "Fjerner alle medlemmer fra trupplanen uden at slette den",
+        "roster_archive": "Arkiverer trupplanen og gør den skrivebeskyttet"
+      },
+      "infoBox": "Automatiseringer udløses i forhold til begivenhedens starttidspunkt. Angiv en forskydning, f.eks. 3 dage før, så udfører botten automatisk handlingen på det tidspunkt – også ved gentagne begivenheder."
+    },
+    "groups": {
+      "title": "Trupplangrupper",
+      "description": "Organiser trupplaner i grupper for at gøre dem nemmere at administrere",
+      "create": "Ny gruppe",
+      "noGroups": "Ingen grupper oprettet endnu",
+      "rostersCount": "trupplaner",
+      "createTitle": "Opret gruppe",
+      "editTitle": "Rediger gruppe",
+      "nameLabel": "Gruppenavn",
+      "namePlaceholder": "f.eks. CWL-grupper",
+      "infoBox": "Grupper samler flere trupplaner, f.eks. alle CWL-trupplaner. Du kan tildele en trupplan til en gruppe på fanen Indstillinger og anvende automatiseringer på alle gruppens trupplaner på én gang.",
+      "manageAutomations": "Administrer automatiseringer",
+      "automationsTitle": "Gruppeautomatiseringer",
+      "automationsDesc": "Disse automatiseringer gælder for alle trupplaner i gruppen",
+      "noAutomations": "Ingen automatiseringer",
+      "noAutomationsHint": "Opret en automatisering for denne gruppe",
+      "addAutomation": "Tilføj automatisering",
+      "deleteConfirm": "Vil du slette gruppen \"{name}\"? Trupplanerne fjernes fra gruppen.",
+      "emptyGroup": "Ingen trupplaner i denne gruppe endnu",
+      "rules": {
+        "title": "Grupperegler",
+        "rulesHint": "Disse regler anvendes straks på alle trupplaner i gruppen.",
+        "maxAccounts": "Maks. antal konti pr. bruger",
+        "maxAccountsBadge": "Maks. {count} pr. bruger",
+        "rosterSize": "Trupplanens størrelse",
+        "rosterSizeBadge": "Størrelse {size}",
+        "minSignups": "Fyldningsgrænse",
+        "minSignupsBadge": "Grænse {count}",
+        "categoriesTitle": "Tilmeldingskategorier",
+        "categoriesHint": "Vælg de kategorier, der skal være tilgængelige for gruppen. Valget anvendes straks på alle trupplaner.",
+        "categoriesBadge": "{count} kategorier",
+        "noCategories": "Ingen kategorier endnu.",
+        "newCategoryPlaceholder": "Navn på ny kategori…"
+      }
+    },
+    "categories": {
+      "title": "Tilmeldingskategorier",
+      "description": "Kategorier til spillertilmeldinger og filtrering af trupplaner",
+      "manage": "Administrer kategorier",
+      "create": "Ny kategori",
+      "noCategories": "Ingen kategorier oprettet endnu",
+      "createTitle": "Opret kategori",
+      "editTitle": "Rediger kategori",
+      "deleteConfirm": "Slet kategori \"{name}\"?",
+      "idLabel": "Kategori-id",
+      "nameLabel": "Kategorinavn",
+      "infoBox": "Kategorier lader spillere angive deres tilgængelighed eller rolle ved tilmelding, f.eks. \"Tilgængelig\", \"Måske\" eller \"Kun hvis nødvendigt\". De deles af alle serverens trupplaner. For grupperede trupplaner vælger du de gældende kategorier i gruppeindstillingerne."
+    },
+    "settings": {
+      "general": "Identitet og konfiguration",
+      "restrictions": "Begrænsninger og grænser",
+      "name": "Trupplanens navn",
+      "rosterType": "Trupplantype",
+      "typeClan": "Klan",
+      "typeFamily": "Familie",
+      "signupScope": "Tilmeldingsomfang",
+      "scopeClanOnly": "Kun klanen",
+      "scopeFamilyWide": "Hele familien",
+      "clan": "Klan",
+      "selectClan": "Vælg en klan",
+      "description": "Beskrivelse",
+      "descriptionPlaceholder": "Indtast en beskrivelse for denne trupplan...",
+      "typeAndScope": "Type og omfang",
+      "eventTime": "Begivenhedens starttidspunkt",
+      "eventTimeHint": "Tidspunktet, hvor begivenheden starter. Bruges til automatiseringer og nedtællinger.",
+      "recurrenceDays": "Gentag hver",
+      "recurrenceModeDays": "hver N dage",
+      "recurrenceModeMonthly": "Dag af måned",
+      "recurrenceDaysUnit": "dage",
+      "recurrenceDayOfMonthPrefix": "Den",
+      "recurrenceDayOfMonthSuffix": "i hver måned",
+      "recurrenceDaysHint": "Lad feltet stå tomt ved en engangsbegivenhed. Indtast antallet af dage mellem gentagelserne, f.eks. 30 ved månedlig CWL.",
+      "recurrenceDayOfMonthHint": "Gentages på denne dag hver måned, f.eks. 1 = den 1.",
+      "group": "Gruppe",
+      "noGroup": "Ingen gruppe",
+      "thRequirements": "Krav til rådhus",
+      "minTh": "Mindste rådhusniveau",
+      "maxTh": "Højeste rådhusniveau",
+      "signupLimits": "Tilmeldingsgrænser",
+      "rosterSize": "Trupplanens størrelse",
+      "rosterSizeHint": "Højeste antal medlemmer",
+      "minSignups": "Mindste antal tilmeldinger",
+      "minSignupsHint": "Minimumantal tilmeldinger, der kræves for at fylde trupplanen",
+      "maxAccountsPerUser": "Maks. antal konti pr. bruger",
+      "maxAccountsHint": "Begræns antallet af konti pr. Discord-bruger",
+      "allowedCategories": "Tilladte tilmeldingskategorier",
+      "allowedCategoriesHint": "Klik for at skifte. Hvis ingen er valgt, er alle kategorier tilladt.",
+      "defaultSignupCategory": "Standardkategori ved tilmelding",
+      "defaultSignupCategoryNone": "Ingen (ingen standard)",
+      "defaultSignupCategoryHint": "Den kategori, der er valgt på forhånd, når et medlem tilmelder sig.",
+      "categoriesManagedByGroup": "Tilmeldingskategorierne administreres på gruppeniveau. Åbn gruppeindstillingerne fra siden Trupplaner for at vælge de kategorier, der er tilgængelige for alle trupplaner i gruppen.",
+      "saving": "Gemmer...",
+      "save": "Gem indstillinger"
+    }
+  },
+  "LinksPage": {
+    "title": "Administration af tilknytninger",
+    "description": "Administrer Discord-medlemmers kontotilknytninger og bekræft ejerskabet af spillerkonti",
+    "tabs": {
+      "overview": "Oversigt",
+      "pending": "Afventer",
+      "bulk": "Massehandlinger",
+      "analytics": "Analyse"
+    },
+    "stats": {
+      "totalMembers": "Medlemmer i alt",
+      "membersWithLinks": "Medlemmer med tilknytninger",
+      "totalLinkedAccounts": "Tilknyttede konti i alt",
+      "verifiedAccounts": "Bekræftede konti",
+      "ofTotal": "af samlet",
+      "avgPerMember": "Gns.:",
+      "perMember": "per medlem",
+      "verified": "bekræftet"
+    },
+    "filters": {
+      "searchPlaceholder": "Søg efter medlemsnavn, brugernavn, spillernavn eller tag...",
+      "filterByStatus": "Filtrer efter status",
+      "allAccounts": "Alle konti",
+      "verifiedOnly": "Kun bekræftede",
+      "unverifiedOnly": "Kun ubekræftede",
+      "minAccounts": "Mindste antal konti",
+      "allMembers": "Alle medlemmer",
+      "oneOrMore": "1+ konti",
+      "twoOrMore": "2+ konti",
+      "threeOrMore": "3+ konti",
+      "fiveOrMore": "5+ konti"
+    },
+    "overview": {
+      "title": "Kontotilknytninger",
+      "description": "Vis og administrer alle kontotilknytninger mellem Discord og Clash of Clans",
+      "showingMembers": "Viser {count} {members}",
+      "member": "medlem",
+      "members": "medlemmer",
+      "noMembers": "Ingen medlemmer fundet",
+      "adjustFilters": "Prøv at ændre søgningen eller filtrene.",
+      "noLinkedAccounts": "Ingen medlemmer med tilknyttede konti.",
+      "exportCSV": "Eksportér CSV",
+      "exportJSON": "Eksportér JSON",
+      "account": "konto",
+      "accounts": "konti",
+      "more": "flere",
+      "unknown": "Ukendt"
+    },
+    "pending": {
+      "title": "Afventende bekræftelser",
+      "description": "{count} konti afventer bekræftelse",
+      "allVerified": "Alle konti er bekræftet!",
+      "noPending": "Der er ingen afventende bekræftelser lige nu.",
+      "linked": "Tilknyttet:"
+    },
+    "bulk": {
+      "title": "Massehandlinger",
+      "description": "Udfør handlinger på flere medlemmer ad gangen",
+      "selectAll": "Vælg alle ({count})",
+      "deselectAll": "Fravælg alle",
+      "unlinkSelected": "Fjern tilknytning for valgte ({count})",
+      "linked": "tilknyttet",
+      "comingSoon": "Massefjernelse af tilknytninger kommer snart!"
+    },
+    "analytics": {
+      "title": "Tilknytningsanalyse",
+      "description": "Oversigt over tilknytningsstatistik og tendenser",
+      "verificationRate": "Bekræftelsesgrad",
+      "verified": "Bekræftet",
+      "unverified": "Ubekræftet",
+      "accountDistribution": "Kontofordeling",
+      "oneAccount": "1 konto",
+      "twoToThreeAccounts": "2-3 konti",
+      "fourPlusAccounts": "4+ konti",
+      "townHallLevels": "Rådhusniveauer",
+      "other": "Andet",
+      "coverage": "Dækning",
+      "linkedMembers": "Tilknyttede medlemmer",
+      "coverageRate": "Dækningsgrad",
+      "linkInsights": "Indsigt i tilknytninger",
+      "avgAccountsPerMember": "Gennemsnitligt antal konti pr. medlem:",
+      "mostLinkedAccounts": "flest tilknyttede konti:",
+      "membersWithoutLinks": "Medlemmer uden links:"
+    },
+    "actions": {
+      "unlinkAccount": "Fjern kontotilknytning"
+    },
+    "deleteDialog": {
+      "title": "Fjern kontotilknytning",
+      "description": "Er du sikker på, at du vil fjerne tilknytningen til {playerName}? Handlingen kan ikke fortrydes.",
+      "cancel": "Annuller",
+      "unlinking": "Fjerner tilknytning...",
+      "unlink": "Fjern tilknytning"
+    },
+    "bulkDialog": {
+      "title": "Fjern flere kontotilknytninger",
+      "description": "Er du sikker på, at du vil fjerne alle kontotilknytninger for {count} valgte medlemmer? Handlingen kan ikke fortrydes.",
+      "cancel": "Annuller",
+      "unlinkAll": "Fjern alle tilknytninger"
+    },
+    "toast": {
+      "unlinkFailed": "Kunne ikke fjerne kontotilknytningen. Prøv igen."
+    },
+    "badges": {
+      "verified": "Bekræftet",
+      "unverified": "Ubekræftet",
+      "pending": "Afventer"
+    },
+    "pagination": {
+      "showing": "Viser {start}-{end} af {total} medlemmer",
+      "page": "Side {current} af {total}",
+      "previous": "Forrige",
+      "next": "Næste"
+    }
+  },
+  "WarsPage": {
+    "title": "Krigsstatistik",
+    "description": "Følg krigspræstationer og analysér kampstatistik",
+    "actions": {
+      "exportData": "Eksportér data",
+      "resetFilters": "Nulstil filtre",
+      "applyFilters": "Anvend filtre"
+    },
+    "filters": {
+      "title": "Filtre",
+      "description": "Filtrer krigsstatistik efter forskellige kriterier",
+      "clan": "Klan",
+      "allClans": "Alle klaner",
+      "townHall": "Rådhus",
+      "townHallShort": "TH",
+      "allTownHalls": "Alle rådhusniveauer",
+      "townHallLevel": "Rådhus {level}",
+      "period": "Periode",
+      "last7Days": "Seneste 7 dage",
+      "last30Days": "Seneste 30 dage",
+      "last90Days": "Seneste 90 dage",
+      "last6Months": "Seneste 6 måneder",
+      "lastYear": "Seneste år",
+      "custom": "Brugerdefineret",
+      "startDate": "Startdato",
+      "endDate": "Slutdato",
+      "warTypes": "Krigstyper"
+    },
+    "summaryStats": {
+      "totalWins": "Sejre i alt",
+      "totalWinsDesc": "Ud af {totalWars} krige i alt",
+      "totalLosses": "Nederlag i alt",
+      "totalLossesDesc": "{totalDraws} uafgjorte",
+      "winRate": "Sejrsprocent",
+      "winRateDesc": "Samlet præstation",
+      "activeWars": "Aktive krige",
+      "activeWarsDesc": "{activeCwl} i CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Krigspræstation pr. uge",
+        "description": "Ugentlige sejre, nederlag og uafgjorte i den valgte periode",
+        "wins": "Sejre",
+        "losses": "Tab",
+        "draws": "Uafgjorte"
+      },
+      "thSuccessRate": {
+        "title": "Angrebenes succesrate efter rådhus",
+        "description": "Andelen af trestjernede angreb pr. rådhusniveau",
+        "threeStarPercent": "3-stjernet %",
+        "otherPercent": "Andet %"
+      },
+      "warTypeDistribution": {
+        "title": "Fordeling af krigstyper",
+        "description": "Fordeling efter krigstype",
+        "cwl": "CWL",
+        "random": "Almindelig krig",
+        "friendly": "Venskabskrig"
+      },
+      "topPerformers": {
+        "title": "Bedste præstationer",
+        "description": "Bedste krigere efter antal stjerner",
+        "attacksAndStars": "{attacks} angreb • {stars} stjerner",
+        "noData": "Ingen spillerdata tilgængelige. Prøv at ændre filtrene."
+      },
+      "missedAttacks": {
+        "title": "Ubrugte angreb",
+        "description": "Spillere, der ikke brugte alle deres angreb",
+        "attacks": "manglende angreb"
+      },
+      "topDefenders": {
+        "title": "Bedste forsvarere",
+        "description": "Bedste forsvarere efter gennemsnitligt afgivne stjerner",
+        "defensesAndStars": "{defenses} forsvar • {stars} afgivne stjerner",
+        "noData": "Ingen forsvarsdata tilgængelige. Prøv at ændre filtrene."
+      },
+      "worstAttackers": {
+        "title": "Dårligste angribere",
+        "description": "Spillere med det laveste gennemsnitlige antal stjerner pr. angreb (mindst 3 angreb)",
+        "attacksAndStars": "{attacks} angreb • {stars} stjerner",
+        "noData": "Ingen spillerdata tilgængelige. Prøv at ændre filtrene."
+      },
+      "worstDefenders": {
+        "title": "Dårligste forsvarere",
+        "description": "Spillere, der i gennemsnit afgav flest stjerner i forsvar (mindst 3 forsvar)",
+        "defensesAndStars": "{defenses} forsvar • {stars} afgivne stjerner",
+        "noData": "Ingen forsvarsdata tilgængelige. Prøv at ændre filtrene."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Klanernes krigsstatistik",
+      "description": "Detaljeret statistik for hver klan",
+      "headers": {
+        "clan": "Klan",
+        "status": "Status",
+        "wars": "Krige",
+        "record": "S/T/U",
+        "winRate": "Sejrsprocent",
+        "avgDestruction": "Gns. ødelæggelse",
+        "avgStarsPerAttack": "Stjerner/angreb",
+        "avgDefenseStars": "Stjerner/forsvar"
+      },
+      "status": {
+        "inWar": "I krig",
+        "cwl": "CWL",
+        "peace": "Fred"
+      },
+      "noData": "Ingen klanstatistik tilgængelig. Prøv at anvende filtre eller vent på, at dataene indlæses."
+    },
+    "toast": {
+      "errorTitle": "Fejl",
+      "errorLoadingClans": "Kunne ikke indlæse klanerne. Prøv igen.",
+      "errorLoadingWarData": "Kunne ikke indlæse krigsdataene. Prøv igen.",
+      "errorNoClans": "Ingen klaner tilgængelige",
+      "errorApplyingFilters": "Kunne ikke anvende filtrene. Prøv igen."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Ranglister",
+    "description": "Globale ranglister for klanhovedstaden med mere",
+    "comingSoon": "Denne funktion kommer snart. Kig forbi igen senere!",
+    "stats": {
+      "totalEntries": "Deltagelser i alt",
+      "type": "Type",
+      "league": "Liga",
+      "weekend": "Weekend"
+    },
+    "filters": {
+      "title": "Filtre",
+      "description": "Tilpas ranglistevisningen",
+      "type": "Type",
+      "metric": "Måling",
+      "league": "Liga",
+      "weekend": "Weekend"
+    },
+    "types": {
+      "player": "Spillere",
+      "clan": "Klaner"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Hovedstadsbytte"
+        },
+        "clan": {
+          "capitalTotalLoot": "Samlet bytte",
+          "raidsCompleted": "Gennemførte raids",
+          "enemyDistrictsDestroyed": "Ødelagte distrikter",
+          "medals": "Medaljer"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Alle",
+      "legendLeague": "Legendeligaen",
+      "titanLeagueI": "Titanliga I",
+      "titanLeagueII": "Titanliga II",
+      "titanLeagueIII": "Titanliga III"
+    },
+    "rankings": {
+      "title": "Placeringer",
+      "description": "De {count} bedste {type} i weekenden {weekend}",
+      "players": "spillere",
+      "clans": "klaner"
+    },
+    "empty": {
+      "title": "Ingen tilgængelige data",
+      "description": "Prøv at vælge en anden weekend eller liga"
+    }
+  },
+  "ClansPage": {
+    "title": "Klanstyring",
+    "description": "Konfigurer dine klaner og deres indstillinger til Discord-integration",
+    "addClan": "Tilføj klan",
+    "addNewClan": "Tilføj ny klan",
+    "addClanDescription": "Indtast dit klantag for at føje klanen til serveren",
+    "clanTag": "Klantag",
+    "totalClans": "Klaner i alt",
+    "registeredClans": "Registrerede klaner",
+    "configured": "Konfigureret",
+    "withSettingsConfigured": "Med konfigurerede indstillinger",
+    "totalMembers": "Medlemmer i alt",
+    "acrossAllClans": "På tværs af alle klaner",
+    "channels": "Kanaler",
+    "availableChannels": "Tilgængelige kanaler",
+    "noClansYet": "Ingen klaner endnu",
+    "getStartedAdding": "Kom i gang ved at tilføje din første klan",
+    "addFirstClan": "Tilføj din første klan",
+    "level": "Niveau",
+    "members": "Medlemmer",
+    "status": "Status",
+    "configuredBadge": "Konfigureret",
+    "setupRequired": "Opsætning påkrævet",
+    "configure": "Konfigurer",
+    "sorting": {
+      "label": "Sortér klaner",
+      "sortBy": "Sortér efter",
+      "toggleDirection": "Skift sorteringsretning",
+      "added": "Tilføjet den",
+      "name": "Klannavn",
+      "level": "Klanniveau",
+      "members": "Medlemmer"
+    },
+    "configureClan": "Konfigurer {name} ({tag})",
+    "customizeIntegration": "Tilpas indstillingerne for klanens Discord-integration",
+    "tabs": {
+      "basic": "Discord-opsætning",
+      "war": "Krig"
+    },
+    "memberRole": "Medlemsrolle",
+    "leaderRole": "Lederrolle",
+    "selectRole": "Vælg rolle",
+    "none": "Ingen",
+    "clanAbbreviation": "Klanforkortelse",
+    "warScoreCountdown": "Nedtælling med krigsresultat",
+    "warScoreCountdownDescription": "Opretter en talekanal, der viser det aktuelle krigsresultat",
+    "warTimerCountdown": "Nedtælling til krigens afslutning",
+    "warTimerCountdownDescription": "Opretter en talekanal, der viser den resterende krigstid",
+    "category": "Kategori",
+    "categoryOptions": {
+      "none": "Ingen kategori",
+      "premade": "Almindelige kategorier",
+      "usedByServer": "Bruges af andre klaner",
+      "clanCount": "{count, plural, one {# klan} other {# klaner}}"
+    },
+    "categories": {
+      "title": "Klankategorier",
+      "description": "Opret og vedligehold de kategorier, der er tilgængelige for serverens klaner.",
+      "refresh": "Opdater",
+      "createLabel": "Ny kategori",
+      "name": "Kategorinavn",
+      "namePlaceholder": "f.eks. Konkurrence",
+      "nameHelp": "{count}/{max} tegn efter normalisering af mellemrum",
+      "create": "Opret kategori",
+      "empty": "Der er ikke oprettet nogen klankategorier.",
+      "clanCount": "{count, plural, one {# klan} other {# klaner}}",
+      "renameAction": "Omdøb {name}",
+      "deleteAction": "Slet {name}",
+      "renameTitle": "Omdøb klankategori",
+      "renameDescription": "Det normaliserede navn opdateres for alle tildelte klaner.",
+      "saveRename": "Gem navn",
+      "deleteTitle": "Vil du slette klankategorien?",
+      "deleteWarning": "Hvis “{name}” slettes, bliver {count, plural, one {# klan} other {# klaner}} uden kategori.",
+      "deleteCountMayChange": "Denne forhåndsvisning afspejler den aktuelle tilstand. Efter sletningen vises det faktiske antal berørte klaner.",
+      "confirmDelete": "Slet kategori",
+      "deleteSuccessTitle": "Slettet {name}",
+      "deleteSuccessDescription": "{count, plural, =0 {Ingen klaner blev ændret.} one {# klan er nu uden kategori.} other {# klaner er nu uden kategori.}}",
+      "created": "Oprettet {name}.",
+      "renamed": "Kategorien blev omdøbt til {name}.",
+      "errors": {
+        "title": "Kategorier er ikke tilgængelige",
+        "load": "Kunne ikke indlæse klankategorierne.",
+        "create": "Kunne ikke oprette klankategorien.",
+        "rename": "Kunne ikke omdøbe klankategorien.",
+        "preview": "Kunne ikke indlæse forhåndsvisningen af sletningen.",
+        "delete": "Kunne ikke slette klankategorien.",
+        "refresh": "Kategorien blev ændret, men de opdaterede kategori- eller klanoplysninger kunne ikke indlæses.",
+        "invalidName": "Brug et navn på højst 64 tegn, som ikke kun består af mellemrum og ikke indeholder kontroltegn."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Vis flere oplysninger",
+      "memberRole": "Den rolle, som medlemmer af denne klan skal modtage. Hvis botten administrerer rollerne på din Discord-server, får alle personer i klanen denne rolle. Det er nyttigt til klanspecifikke kanaler.",
+      "leaderRole": "Den rolle, som medledere og lederen af denne klan modtager. På en typisk Discord-server er den nyttig til en klanlederchat eller én fælles lederchat på tværs af alle klaner.",
+      "clanAbbreviation": "Giv klanen en forkortelse, som kan indgå i medlemmernes navne, når omdøbning er aktiveret. Formatet konfigureres under <familySettingsLink>Familieindstillinger</familySettingsLink>.",
+      "category": "Brug kategorier til at organisere dine klaner. Mange klanfamilier har fem eller flere klaner, og nogle bruges kun til CWL eller begivenheder."
+    },
+    "roleIdPlaceholder": "Rolle-id",
+    "abbreviationPlaceholder": "f.eks. CK",
+    "categoryPlaceholder": "Kategorinavn",
+    "notAvailable": "N/A",
+    "saving": "Gemmer...",
+    "saveChanges": "Gem ændringer",
+    "deleteConfirm": "Er du sikker på, at du vil fjerne {tag}? Dette sletter også alle tilknyttede påmindelser og logfiler.",
+    "toast": {
+      "errorLoadingClans": "Kunne ikke indlæse klaner",
+      "errorLoadingSettings": "Kunne ikke indlæse klanindstillinger",
+      "errorEmptyClanTag": "Indtast et klantag",
+      "clanAdded": "Klanen blev tilføjet",
+      "errorAddingClan": "Kunne ikke tilføje klanen",
+      "clanRemoved": "Klanen blev fjernet",
+      "errorRemovingClan": "Kunne ikke fjerne klanen",
+      "settingsSaved": "Indstillinger gemt uden problemer",
+      "errorSavingSettings": "Kunne ikke gemme indstillinger",
+      "countdownEnabled": "Talekanal med nedtælling oprettet",
+      "countdownDisabled": "Talekanal med nedtælling fjernet",
+      "errorTogglingCountdown": "Kunne ikke skifte nedtællingen"
+    }
+  },
+  "RolesPage": {
+    "title": "Rolleadministration",
+    "description": "Konfigurer automatisk rolletildeling ud fra spillerstatistik",
+    "stats": {
+      "totalRoles": "Roller i alt",
+      "totalRolesDesc": "Konfigurerede rolletildelinger",
+      "autoEvaluation": "Automatisk evaluering",
+      "autoEvaluationOn": "Til",
+      "autoEvaluationOff": "Fra",
+      "autoEvaluationActiveDesc": "Tildeler roller automatisk",
+      "autoEvaluationInactiveDesc": "Kun manuel rolletildeling",
+      "activeTypes": "Aktive typer",
+      "activeTypesDesc": "Anvendte rolletyper",
+      "discordRoles": "Discord-roller",
+      "discordRolesDesc": "Tilgængelige på serveren"
+    },
+    "settings": {
+      "title": "Indstillinger for automatisk evaluering",
+      "description": "Konfigurer automatisk evaluering og tildeling af roller",
+      "saveButton": "Gem indstillinger",
+      "saving": "Gemmer...",
+      "enableAutoEval": "Aktivér automatisk evaluering",
+      "enableAutoEvalDesc": "Tildel og fjern automatisk roller ud fra spillerstatistik",
+      "autoNickname": "Opdater kaldenavne automatisk",
+      "autoNicknameDesc": "Opdater kaldenavne, når roller evalueres"
+    },
+    "roleTypes": {
+      "townhall": "Rådhus",
+      "league": "Liga",
+      "builderhall": "Bygmesterhal",
+      "builderLeague": "Bygmesterliga",
+      "achievement": "Præstation",
+      "status": "Tid på Discord-serveren",
+      "familyPosition": "Familieposition"
+    },
+    "familyPositions": {
+      "member": "Medlem",
+      "elder": "Ældste",
+      "coLeader": "Medleder",
+      "leader": "Leder"
+    },
+    "leagues": {
+      "legend": "Legende",
+      "electroDragon": "Elektrodrage",
+      "dragon": "Drage",
+      "electroTitan": "Elektrotitan",
+      "pekka": "P.E.K.K.A",
+      "golem": "Golem",
+      "witch": "Heks",
+      "valkyrie": "Valkyrie",
+      "wizard": "Troldmand",
+      "archer": "Bueskytte",
+      "barbarian": "Barbar",
+      "skeleton": "Skelet"
+    },
+    "builderLeagues": {
+      "diamond": "Diamant",
+      "ruby": "Rubin",
+      "emerald": "Smaragd",
+      "platinum": "Platin",
+      "titanium": "Titan",
+      "steel": "Stål",
+      "iron": "Jern",
+      "brass": "Messing",
+      "copper": "Kobber",
+      "stone": "Sten",
+      "clay": "Ler",
+      "wood": "Træ"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Beskyt din konto!",
+      "biggerAndBetter": "Større og bedre",
+      "discoverNewTroops": "Opdag nye tropper",
+      "biggerCoffers": "Større pengekasser",
+      "goldGrab": "Guldrov",
+      "elixirEscapade": "Eliksireventyr",
+      "heroicHeist": "Heltemodigt kup",
+      "wellSeasoned": "Rutineret",
+      "niceAndTidy": "Pænt og ryddeligt",
+      "empireBuilder": "Imperiebygger",
+      "clanWarWealth": "Rigdom fra klankrige",
+      "friendInNeed": "En ven i nød",
+      "sharingIsCaring": "Det er godt at dele",
+      "siegeSharer": "Belejringsdeling",
+      "warHero": "Krigshelt",
+      "warLeagueLegend": "Krigsliga-legende",
+      "gamesChampion": "Mester i klanspil",
+      "unbreakable": "Ubrydelig",
+      "sweetVictory": "Sød sejr!",
+      "conqueror": "Erobrer",
+      "leagueAllStar": "Ligaens stjerne",
+      "leagueFollower": "Ligafølger",
+      "leagueEnthusiast": "Ligaentusiast",
+      "leagueSuperfan": "Ligasuperfan",
+      "leagueFanatic": "Ligafanatiker",
+      "leagueMaster": "Ligamester",
+      "legendLeague": "Legendeligaen",
+      "humiliator": "Ydmygeren",
+      "notSoEasyThisTime": "Ikke så nemt denne gang",
+      "unionBuster": "Forbundsknuser",
+      "bustThis": "Knus den!",
+      "wallBuster": "Murknuser",
+      "mortarMauler": "Morterknuser",
+      "xBowExterminator": "X-bue-udrydder",
+      "firefighter": "Brandmand",
+      "antiArtillery": "Antiartilleri",
+      "shatteredAndScatter": "Knust og spredt",
+      "counterspell": "Modbesværgelse",
+      "monolithMasher": "Monolitknuser",
+      "multiArcherTowerTerminator": "Multibueskyttetårns-terminator",
+      "ricochetCannonCrusher": "Rikoschettkanonknuser",
+      "firespitterFinisher": "Ildspyderbetvinger",
+      "multiGearTowerTrampler": "Multigearstårnstramper",
+      "craftersNightmare": "Håndværkerens mareridt",
+      "getThoseGoblins": "Fang de gobliner!",
+      "supercharger": "Superoplader",
+      "craftingConnoisseur": "Håndværkskender",
+      "getThoseOtherGoblins": "Fang de andre gobliner!",
+      "getEvenMoreGoblins": "Fang endnu flere gobliner!",
+      "dragonSlayer": "Dragedræber",
+      "ungratefulChild": "Utaknemmeligt barn",
+      "superbWork": "Fremragende arbejde",
+      "masterEngineering": "Ingeniørkunst på mesterniveau",
+      "hiddenTreasures": "Skjulte skatte",
+      "highGear": "I højt gear",
+      "nextGenerationModel": "Næste generations model",
+      "unBuildIt": "Byg det ned",
+      "championBuilder": "Mesterbygger",
+      "aggressiveCapitalism": "Aggressiv kapitalisme",
+      "mostValuableClanmate": "Klanens mest værdifulde medlem"
+    },
+    "configuredRoles": {
+      "title": "Konfigurerede roller",
+      "noRolesConfigured": "Ingen {roleType}-roller konfigureret",
+      "addRoleToStart": "Klik på \"Tilføj rolle\" for at oprette en",
+      "discordRole": "Discord-rolle",
+      "criteria": "Kriterier",
+      "mode": "Tilstand",
+      "modeBoth": "Tilføj og fjern",
+      "modeAdd": "Tilføj kun",
+      "modeRemove": "Fjern kun",
+      "actions": "Handlinger",
+      "unknownRole": "Ukendt rolle",
+      "remove": "Fjern",
+      "month": "måned",
+      "months": "måneder"
+    },
+    "addRoleDialog": {
+      "title": "Tilføj en ny rolle",
+      "description": "Konfigurer en ny regel for automatisk rolletildeling",
+      "roleType": "Rolletype",
+      "mode": "Tilstand",
+      "discordRole": "Discord-rolle",
+      "selectRole": "Vælg en rolle",
+      "townHallLevel": "Rådhusniveau",
+      "selectThLevel": "Vælg rådhusniveau",
+      "thPrefix": "TH",
+      "league": "Liga",
+      "selectLeague": "Vælg liga",
+      "builderHallLevel": "Bygmesterhalniveau",
+      "selectBhLevel": "Vælg bygmesterhalniveau",
+      "bhPrefix": "BH",
+      "builderLeague": "Bygmesterliga",
+      "selectBuilderLeague": "Vælg bygmesterliga",
+      "achievementName": "Præstation",
+      "selectAchievement": "Vælg præstation",
+      "searchAchievement": "Søg efter præstation...",
+      "noAchievementFound": "Ingen præstation fundet.",
+      "monthsInServer": "Måneder på serveren",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Familieposition",
+      "selectPosition": "Vælg position",
+      "cancel": "Annuller",
+      "addRole": "Tilføj rolle",
+      "errorDuplicateExact": "Dette kriterium er allerede tilknyttet rollen.",
+      "errorDuplicateCriterion": "Dette kriterium har allerede en tildelt rolle. Fjern først den eksisterende."
+    },
+    "infoCard": {
+      "title": "💡 Sådan fungerer automatiske roller",
+      "automaticEvaluation": "Automatisk evaluering:",
+      "automaticEvaluationDesc": "Når funktionen er aktiveret, kontrollerer botten regelmæssigt spillerne og tildeler eller fjerner roller ud fra deres aktuelle statistik.",
+      "rolePriority": "Rolleprioritet:",
+      "rolePriorityDesc": "Hvis flere roller matcher spillerens statistik, tildeles rollen på det højeste niveau.",
+      "manualOverride": "Manuel tilsidesættelse:",
+      "manualOverrideDesc": "Serveradministratorer kan tildele roller manuelt, og de fjernes ikke af den automatiske evaluering."
+    },
+    "categoryRoles": {
+      "title": "Kategoriroller",
+      "description": "Tildel hver klankategori en Discord-rolle. Medlemmer af klaner i kategorien modtager automatisk den tilsvarende rolle.",
+      "addButton": "Tilføj kategori",
+      "categoryName": "Kategori",
+      "categoryNamePlaceholder": "Kategorinavn",
+      "noCategoryRoles": "Ingen kategoriroller konfigureret",
+      "noCategoryRolesDesc": "Klik på \"Tilføj kategori\" for at oprette en",
+      "addTitle": "Tilføj kategorirolle",
+      "addConfirm": "Tilføj",
+      "errorCategoryRequired": "Kategorinavn er påkrævet",
+      "errorRoleRequired": "Discord-rolle er påkrævet",
+      "errorCategoryExists": "Denne kategori har allerede en konfigureret rolle"
+    },
+    "toast": {
+      "changesSaved": "Ændringerne er gemt!",
+      "errorLoading": "Kunne ikke indlæse roller",
+      "errorSaving": "Kunne ikke gemme indstillinger",
+      "errorAdding": "Kunne ikke tilføje rolle",
+      "errorDeleting": "Kunne ikke slette rolle"
+    }
+  },
+  "RemindersPage": {
+    "title": "Påmindelser",
+    "description": "Konfigurer automatiske påmindelser om krige, raids, klanspil og inaktivitet",
+    "types": {
+      "war": "Krigspåmindelser",
+      "capital": "Klanhovedstad",
+      "clanGames": "Klanspil",
+      "inactivity": "Inaktivitet"
+    },
+    "tabs": {
+      "war": "Krig",
+      "capital": "Klanhovedstad",
+      "clanGames": "Klanspil",
+      "inactivity": "Inaktivitet"
+    },
+    "stats": {
+      "totalReminders": "Påmindelser i alt",
+      "totalRemindersDesc": "Konfigurerede aktive påmindelser",
+      "warReminders": "Krigspåmindelser",
+      "warRemindersDesc": "Almindelige krige og CWL",
+      "capitalReminders": "Hovedstadspåmindelser",
+      "capitalRemindersDesc": "Angreb i raidweekenden",
+      "otherReminders": "Andre påmindelser",
+      "otherRemindersDesc": "Klanspil og inaktivitet"
+    },
+    "actions": {
+      "saving": "Gemmer...",
+      "saveChanges": "Gem ændringer",
+      "addReminder": "Tilføj påmindelse",
+      "addWarReminder": "Tilføj krigspåmindelse",
+      "addCapitalReminder": "Tilføj hovedstadspåmindelse",
+      "addClanGamesReminder": "Tilføj påmindelse om klanspil",
+      "addInactivityReminder": "Tilføj inaktivitetspåmindelse",
+      "retry": "Prøv igen"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Vælg en klan",
+      "allClans": "Alle klaner"
+    },
+    "empty": {
+      "noWarReminders": "Ingen krigspåmindelser",
+      "noCapitalReminders": "Ingen hovedstadspåmindelser",
+      "noClanGamesReminders": "Ingen påmindelser om klanspil",
+      "noInactivityReminders": "Ingen inaktivitetspåmindelser",
+      "getStarted": "Kom i gang ved at oprette din første påmindelse"
+    },
+    "card": {
+      "new": "Ny",
+      "before": "før",
+      "timeBefore": "Tid før begivenheden",
+      "timeBeforePlaceholder": "f.eks. 6",
+      "timeInactive": "Inaktiv i",
+      "timeInactivePlaceholder": "f.eks. 160",
+      "timeUnit": "timer",
+      "hoursRemaining": "timer tilbage",
+      "channel": "Kanal",
+      "channelPlaceholder": "Vælg kanal",
+      "threadOptional": "Tråd (valgfri)",
+      "threadPlaceholder": "Vælg en tråd",
+      "noThread": "Send direkte i kanalen",
+      "forumPost": "Forumindlæg",
+      "forumPostPlaceholder": "Vælg et forumindlæg",
+      "forumPostRequired": "Der kræves et forumindlæg til forumkanaler.",
+      "clan": "Klan",
+      "clanPlaceholder": "Vælg klan",
+      "customMessage": "Tilpasset besked",
+      "customMessagePlaceholder": "Husk at bruge dine angreb!",
+      "customMessagePlaceholderClanGames": "Prøv at få flere point i klanspil!",
+      "customMessagePlaceholderInactivity": "Du har været inaktiv i klanen i et stykke tid :(",
+      "warTypes": "Krigstyper",
+      "random": "Almindelig krig",
+      "friendly": "Venskabskrig",
+      "cwl": "CWL",
+      "pointThreshold": "Pointgrænse",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Pinger personer, der har færre end {threshold} point.",
+      "attackThreshold": "Angrebsgrænse",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Pinger personer, hvis de har mindst {threshold} angreb tilbage.",
+      "notSet": "Ikke angivet"
+    },
+    "dialog": {
+      "addTitle": "Tilføj en ny påmindelse",
+      "addDescription": "Konfigurer en ny påmindelse for din server",
+      "editTitle": "Rediger påmindelse",
+      "editDescription": "Opdater påmindelsens indstillinger",
+      "type": "Påmindelsestype",
+      "selectType": "Vælg type",
+      "cancel": "Annuller",
+      "saving": "Gemmer...",
+      "saveChanges": "Gem ændringer",
+      "addReminder": "Tilføj påmindelse"
+    },
+    "toast": {
+      "errorTitle": "Fejl",
+      "errorLoadingReminders": "Kunne ikke indlæse påmindelserne. Prøv igen.",
+      "reminderAdded": "Påmindelse tilføjet uden problemer",
+      "reminderAddedDesc": "En ny {type}-påmindelse er tilføjet. Husk at gemme!",
+      "reminderUpdated": "Påmindelse opdateret uden problemer",
+      "successTitle": "Succes",
+      "reminderDeleted": "Påmindelse slettet uden problemer",
+      "failedToDelete": "Kunne ikke slette påmindelse",
+      "allRemindersSaved": "Alle påmindelser blev gemt",
+      "failedToSave": "Kunne ikke gemme påmindelser",
+      "forumPostRequired": "Vælg et forumindlæg, før påmindelsen gemmes.",
+      "invalidDestination": "Den valgte tråd tilhører ikke denne kanal.",
+      "timeExceedsLimit": "Den resterende tid skal være mellem {min} og {max} timer",
+      "pointThresholdInvalid": "Pointgrænsen skal være mellem {min} og {max}",
+      "attackThresholdInvalid": "Angrebsgrænsen skal være mellem {min} og {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Aktivitetslogfiler",
+    "description": "Konfigurer automatisk logføring af klan- og spilleraktiviteter",
+    "stats": {
+      "activeLogs": "Aktive logfiler",
+      "activeLogsDesc": "På tværs af alle familieklaner og serverlogfiler",
+      "logChannels": "Logkanaler",
+      "logChannelsDesc": "Tilgængelige kanaler",
+      "trackedClans": "Klaner, der følges",
+      "trackedClansDesc": "Konfigurerede klaner",
+      "issues": "Problemer",
+      "issuesDesc": "På tværs af hele familien"
+    },
+    "clanSelector": {
+      "label": "Klan:",
+      "placeholder": "Vælg en klan"
+    },
+    "tabs": {
+      "clan": "Klan",
+      "war": "Krig",
+      "capital": "Kapital",
+      "player": "Spiller",
+      "server": "Server"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Medlem tilslutter sig",
+        "description": "Følg medlemmer, der slutter sig til klanen"
+      },
+      "leaveLog": {
+        "label": "Medlem forlader klanen",
+        "description": "Følg medlemmer, der forlader klanen"
+      },
+      "donationLog": {
+        "label": "Medlemsdonationer",
+        "description": "Følg donationer af tropper og besværgelser"
+      },
+      "clanAchievementLog": {
+        "label": "Klanpræstationer",
+        "description": "Følg klanpræstationer, efterhånden som de opnås"
+      },
+      "clanRequirementsLog": {
+        "label": "Klankrav",
+        "description": "Følg ændringer af klankrav"
+      },
+      "clanDescriptionLog": {
+        "label": "Klanbeskrivelse",
+        "description": "Følg ændringer af klanbeskrivelsen"
+      },
+      "banAlert": {
+        "label": "Udelukkelsesadvarsler",
+        "description": "Send en advarsel, når en udelukket spiller slutter sig til klanen"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Reddit-feed",
+        "description": "Udgiv serverens Reddit-feed"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Krigslog",
+        "description": "Følg krigsangreb og resultater"
+      },
+      "warPanel": {
+        "label": "Krigspanel",
+        "description": "Interaktivt krigspanel med løbende opdateringer"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Ændring af CWL-opstilling",
+        "description": "Følg ændringer i CWL-opstillingen"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Hovedstadsdonationer",
+        "description": "Følg donationer af hovedstadsguld"
+      },
+      "capitalAttacks": {
+        "label": "Hovedstadsangreb",
+        "description": "Følg angreb i raidweekenden"
+      },
+      "raidPanel": {
+        "label": "Hovedstadspanel",
+        "description": "Interaktivt raidpanel med løbende opdateringer"
+      },
+      "capitalWeeklySummary": {
+        "label": "Ugentlig hovedstadsoversigt",
+        "description": "Ugentlig oversigt over hovedstadspræstationer"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Rolleændring",
+        "description": "Følg ændringer af spillerroller i klanen"
+      },
+      "troopUpgrade": {
+        "label": "Troppeopgradering",
+        "description": "Følg opgraderinger af troppeniveauer"
+      },
+      "superTroopBoostLog": {
+        "label": "Super-troppeboosts",
+        "description": "Følg aktiveringer af supertropper"
+      },
+      "thUpgrade": {
+        "label": "Rådhusopgradering",
+        "description": "Følg rådhusopgraderinger"
+      },
+      "leagueChange": {
+        "label": "Ligaændring",
+        "description": "Følg ændringer af liganiveau"
+      },
+      "spellUpgrade": {
+        "label": "Besværgelsesopgradering",
+        "description": "Følg opgraderinger af besværgelsesniveauer"
+      },
+      "heroUpgrade": {
+        "label": "Helteopgradering",
+        "description": "Følg opgraderinger af helteniveauer"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Opgradering af helteudstyr",
+        "description": "Følg opgraderinger af helteudstyr"
+      },
+      "nameChange": {
+        "label": "Navneændring",
+        "description": "Følg ændringer af spillernavne"
+      },
+      "legendLogAttacks": {
+        "label": "Legendeangreb",
+        "description": "Følg angreb i legendeligaen"
+      },
+      "legendLogDefenses": {
+        "label": "Legendeforsvar",
+        "description": "Følg forsvar i legendeligaen"
+      }
+    },
+    "logCard": {
+      "active": "Aktiv",
+      "issue": "Problem",
+      "disabled": "Deaktiveret",
+      "enable": "Aktivér",
+      "disable": "Deaktiver",
+      "channel": "Kanal",
+      "channelPlaceholder": "Vælg kanal",
+      "thread": "Tråd (valgfri)",
+      "threadPlaceholder": "Vælg en tråd",
+      "noThread": "Ingen tråd",
+      "forumPost": "Forumindlæg",
+      "forumPostPlaceholder": "Vælg et forumindlæg",
+      "forumPostRequired": "Vælg et forumindlæg, før loggen gemmes.",
+      "invalidThread": "Den valgte tråd tilhører ikke denne kanal.",
+      "saveDestination": "Gem destination",
+      "channelDeleted": "Denne kanal findes ikke længere. Vælg en ny eller deaktiver loggen.",
+      "enableToConfig": "Aktivér loggen for at konfigurere den",
+      "configuring": "Konfigurerer",
+      "on": "Til",
+      "off": "Fra",
+      "example": "eksempel"
+    }
+  },
+  "GeneralPage": {
+    "title": "Generelle indstillinger",
+    "description": "Konfigurer botadfærd og udseende for hele serveren",
+    "loading": "Indlæser indstillinger...",
+    "reset": "Nulstil",
+    "saving": "Gemmer...",
+    "saveChanges": "Gem ændringer",
+    "settingsSaved": "Indstillinger gemt uden problemer!",
+    "infoBanner": {
+      "title": "Leder du efter flere indstillinger?",
+      "description": "Familieroller og kaldenavne findes under **Familieindstillinger**. Rolleadministration findes under **Roller**. Klanroller, forkortelser, kategorier og krigsnedtællinger findes under **Klaner**."
+    },
+    "nickname": {
+      "title": "Administration af kaldenavne",
+      "description": "Styr formateringen af kaldenavne",
+      "automaticChanges": "Automatiske ændringer",
+      "automaticChangesDesc": "Tillad botten at opdatere medlemmernes kaldenavne",
+      "familyFormat": "Format for familiemedlemmer",
+      "availablePlaceholders": "Tilgængelige pladsholdere",
+      "preview": "Forhåndsvisning:",
+      "nonFamilyFormat": "Format for medlemmer uden for familien",
+      "placeholders": {
+        "discordName": "Discord-brugernavn",
+        "discordDisplayName": "Serverkaldenavn",
+        "playerName": "CoC-spillernavn",
+        "playerTag": "Spillertag",
+        "playerTownhall": "Rådhusniveau",
+        "playerTownhallSmall": "Rådhus i hævet skrift",
+        "playerWarstars": "Krigsstjerner",
+        "playerRole": "Klanrolle",
+        "playerClan": "Klannavn",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Klanforkortelse"
+      }
+    },
+    "appearance": {
+      "title": "Udseende",
+      "description": "Tilpas bottens embedbeskeder",
+      "embedColor": "Embedfarve",
+      "embedColorDesc": "Farven på sidebjælken i alle bottens embedbeskeder på Discord",
+      "embedColorDefault": "Standard: **#D90709** (ClashKing-rød)",
+      "embedPreview": "Forhåndsvisning af embed",
+      "embedPreviewDesc": "Denne farvede bjælke vises ved siden af alle bottens embedbeskeder",
+      "editColor": "Rediger farve",
+      "resetToDefault": "Nulstil til standard",
+      "apply": "Anvend"
+    },
+    "security": {
+      "title": "Sikkerhed og tilladelser",
+      "description": "Styr adgang og bekræftelse",
+      "fullWhitelistRole": "Rolle med fuld hvidlisteadgang",
+      "fullWhitelistRoleDesc": "Discord-rolle med fuld adgang til alle botkommandoer, som springer alle tilladelseskontroller over",
+      "noRole": "Ingen rolle"
+    },
+    "familyRoles": {
+      "title": "Familieroller",
+      "description": "Administrer automatiske roller ud fra familiemedlemskab og klanpositioner",
+      "selectRole": "Vælg en rolle",
+      "addRole": "Tilføj en rolle...",
+      "deletedRole": "Slettet rolle",
+      "noRolesConfigured": "Ingen roller konfigureret",
+      "modes": {
+        "both": "Tilføj og fjern",
+        "add": "Tilføj kun",
+        "remove": "Fjern kun"
+      },
+      "types": {
+        "family": "Familie",
+        "notFamily": "Ikke familie",
+        "elder": "Ældste",
+        "coLeader": "Medleder",
+        "leader": "Leder"
+      },
+      "descriptions": {
+        "family": "Har mindst én konto i familieklaner",
+        "notFamily": "Har ingen konti i familieklaner",
+        "elder": "Har positionen ældste i en familieklan",
+        "coLeader": "Har positionen medleder i en familieklan",
+        "leader": "Har positionen leder i en familieklan"
+      }
+    },
+    "tenureRoles": {
+      "title": "Roller efter tid på Discord-serveren",
+      "description": "Tildel automatisk roller ud fra, hvor længe medlemmer har været på serveren",
+      "addRole": "Tilføj anciennitetsrolle",
+      "addDialogTitle": "Tilføj anciennitetsrolle",
+      "addDialogDescription": "Tildel en rolle til medlemmer, der har været på serveren i et bestemt antal måneder",
+      "monthsInServer": "Måneder på serveren",
+      "discordRole": "Discord-rolle",
+      "selectRole": "Vælg en rolle",
+      "noRolesConfigured": "Ingen anciennitetsroller konfigureret",
+      "addRoleToStart": "Tilføj en anciennitetsrolle for at komme i gang",
+      "months": "Måneder",
+      "month": "måned",
+      "actions": "Handlinger",
+      "remove": "Fjern",
+      "unknownRole": "Ukendt rolle"
+    },
+    "prefix": "Kommandopræfiks",
+    "language": "Sprog",
+    "timezone": "Tidszone",
+    "theme": "Tema"
+  },
+  "FamilySettingsPage": {
+    "title": "Familieindstillinger",
+    "description": "Konfigurer familieroller og formatering af kaldenavne for klanmedlemmer",
+    "loading": "Indlæser indstillinger...",
+    "reset": "Nulstil",
+    "saving": "Gemmer...",
+    "saveChanges": "Gem ændringer",
+    "settingsSaved": "Indstillinger gemt uden problemer!",
+    "nickname": {
+      "title": "Administration af kaldenavne",
+      "description": "Styr formateringen af kaldenavne",
+      "automaticChanges": "Automatiske ændringer",
+      "automaticChangesDesc": "Tillad botten at opdatere medlemmernes kaldenavne",
+      "familyFormat": "Format for familiemedlemmer",
+      "availablePlaceholders": "Tilgængelige pladsholdere",
+      "preview": "Forhåndsvisning:",
+      "nonFamilyFormat": "Format for medlemmer uden for familien",
+      "placeholders": {
+        "discordName": "Discord-brugernavn",
+        "discordDisplayName": "Serverkaldenavn",
+        "playerName": "CoC-spillernavn",
+        "playerTag": "Spillertag",
+        "playerTownhall": "Rådhusniveau",
+        "playerTownhallSmall": "Rådhus i hævet skrift",
+        "playerWarstars": "Krigsstjerner",
+        "playerRole": "Klanrolle",
+        "playerClan": "Klannavn",
+        "playerLeague": "Liga",
+        "playerClanAbbr": "Klanforkortelse"
+      }
+    },
+    "familyRoles": {
+      "title": "Familieroller",
+      "description": "Administrer automatiske roller ud fra familiemedlemskab og klanpositioner",
+      "selectRole": "Vælg en rolle",
+      "addRole": "Tilføj en rolle...",
+      "deletedRole": "Slettet rolle",
+      "noRolesConfigured": "Ingen roller konfigureret",
+      "modes": {
+        "both": "Tilføj og fjern",
+        "add": "Tilføj kun",
+        "remove": "Fjern kun"
+      },
+      "types": {
+        "family": "Familie",
+        "notFamily": "Ikke familie",
+        "elder": "Ældste",
+        "coLeader": "Medleder",
+        "leader": "Leder"
+      },
+      "descriptions": {
+        "family": "Har mindst én konto i familieklaner",
+        "notFamily": "Har ingen konti i familieklaner",
+        "elder": "Har positionen ældste i en familieklan",
+        "coLeader": "Har positionen medleder i en familieklan",
+        "leader": "Har positionen leder i en familieklan"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Sprog"
+  },
+  "ThemeSwitcher": {
+    "label": "Tema",
+    "light": "Lys",
+    "dark": "Mørk",
+    "system": "Systemstandard"
+  },
+  "AuthCallback": {
+    "authenticating": "Godkender...",
+    "authenticatingDescription": "Vent, mens vi logger dig ind med Discord",
+    "authenticationFailed": "Godkendelsen mislykkedes",
+    "tryAgain": "Prøv igen",
+    "backToHome": "Tilbage til startsiden",
+    "errorCancelled": "Login blev annulleret i Discord. Prøv igen, når du er klar.",
+    "errorDiscordFailedWithReason": "Discord-godkendelsen mislykkedes: {reason}",
+    "errorNoAuthorizationCode": "Ingen godkendelseskode modtaget fra Discord.",
+    "errorCodeVerifierMissing": "Kodeverifikatoren blev ikke fundet. Prøv at logge ind igen.",
+    "errorAuthenticateFailed": "Godkendelsen med Discord mislykkedes.",
+    "loadingVillages": "Logger ind med Discord...",
+    "loadingClanData": "Indlæser serverliste...",
+    "loadingWarStats": "Næsten klar..."
+  },
+  "LoginPage": {
+    "redirecting": "Sender dig videre til Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Funktioner",
+      "subtitle": "Opdag de effektive værktøjer, ClashKing tilbyder til at administrere og udvikle din klan på Discord, mobil og web."
+    },
+    "sections": {
+      "bot": {
+        "title": "ClashKing Bot",
+        "description": "ClashKing-botten er den eneste Discord-bot, du behøver til at administrere din Clash of Clans-klan og dit fællesskab. Den har unikke funktioner, der holder klanen organiseret, engageret og i vækst.",
+        "items": [
+          "Logfiler i realtid: Følg krige, CWL, klanspil, raids, donationer og medlemshændelser.",
+          "Ticketsystem: Rekrutteringstickets ud over almindelige supporttickets.",
+          "Automatiske roller: Tildel automatisk roller ud fra klanstatus eller familieadministration.",
+          "Påmindelser: Send notifikationer om krigsangreb, klanspil eller andre begivenheder.",
+          "Detaljeret statistik: Indsigt i spilleres og klaners præstationer med aktivitetssporing.",
+          "Administration af trupplaner: Organiser og optimer nemt dine krigstrupplaner."
+        ],
+        "ctaPrimary": "Inviter botten",
+        "ctaSecondary": "Deltag i fællesskabet"
+      },
+      "app": {
+        "title": "ClashKing-app (åben beta)",
+        "description": "ClashKing-appen udvider ClashKing-botten med vigtige værktøjer og indsigter direkte på din mobilenhed, så du kan holde forbindelsen når som helst og hvor som helst, også uden Discord.",
+        "items": [
+          "Statistik i realtid: Detaljeret statistik for spillere og klaner, synkroniseret med botten.",
+          "Følg klanens fremskridt: Overvåg nemt klanens udvikling over tid.",
+          "Administration af flere konti: Skift nemt mellem dine konti og følg deres præstationer.",
+          "Indbygget historik: Brug historiske data til at analysere tendenser og forbedre strategier.",
+          "Administration af Discord-serveren: (Kommer snart) Administrer roller og tickets fra appen.",
+          "Avancerede notifikationer: (Kommer snart) Tilpas advarsler om vigtige begivenheder."
+        ],
+        "ctaPrimary": "Android Beta",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "ClashKing API",
+        "description": "Byg dine egne værktøjer eller projekter med ClashKing API. Det er gratis at bruge, så længe du krediterer ClashKing-projektet.",
+        "items": [],
+        "ctaPrimary": "API-dokumentation",
+        "ctaSecondary": "API på GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Brug for hjælp?",
+    "subtitle": "Uanset om du leder efter dokumentation eller direkte support, kan vi hjælpe.",
+    "documentation": {
+      "title": "Dokumentation",
+      "description": "Se vores omfattende vejledninger og kommandoreferencer for at få mest muligt ud af ClashKing.",
+      "cta": "Vis dokumentation"
+    },
+    "discord": {
+      "title": "Discord-support",
+      "description": "Brug for mere hjælp? Deltag i vores Discord-fællesskab for at stille spørgsmål, rapportere fejl eller chatte med andre brugere.",
+      "cta": "Deltag på Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Et open source-projekt",
+    "subtitle": "ClashKing er et helt gratis open source-projekt. Vi tror på, at fællesskabet kan gøre det endnu bedre. Både botten og API’et er open source, så du frit kan bidrage eller bruge dem i dine egne projekter.",
+    "github": {
+      "title": "GitHub-organisation",
+      "description": "Udforsk vores kildekode, bidrag til botten eller se vores andre open source-værktøjer.",
+      "ctaPrimary": "Vis organisation",
+      "repos": {
+        "bot": "Botlager",
+        "app": "Applager",
+        "api": "API-lager",
+        "assets": "Ressourcelager"
+      }
+    },
+    "api": {
+      "title": "API-dokumentation",
+      "description": "Byg dine egne værktøjer eller projekter med ClashKing API. Det er gratis at bruge, så længe du krediterer ClashKing-projektet.",
+      "cta": "API-dokumentation"
+    },
+    "translation": {
+      "title": "Hjælp os med at oversætte",
+      "description": "Hjælp os med at oversætte ClashKing til dit sprog! Du kan bidrage til oversættelsen af webstedet, botten og alle relaterede tekster gennem vores Crowdin-projekter.",
+      "app": "Oversæt appen",
+      "bot": "Oversæt botten"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Bidrag",
+        "description": "Hjælp os med at forbedre projektet ved at rette fejl, tilføje funktioner eller forbedre de eksisterende. Alle bidrag tæller!"
+      },
+      "community": {
+        "title": "Fællesskab",
+        "description": "Deltag i vores Discord-fællesskab for at diskutere idéer, få hjælp og samarbejde med andre udviklere."
+      },
+      "learn": {
+        "title": "Lær",
+        "description": "Se dokumentationen og eksemplerne for at lære at bruge botten og API’et effektivt."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Støt os",
+    "subtitle": "ClashKing er et gratis open source-projekt. Din støtte hjælper os med at holde serverne kørende og udvikle nye funktioner til fællesskabet.",
+    "patreon": {
+      "title": "Bliv Patreon-støtte",
+      "description": "Støt os månedligt på Patreon for at få særlige fordele, tidlig adgang til funktioner og hjælpe med vores hostingomkostninger.",
+      "cta": "Støt på Patreon"
+    },
+    "creatorCode": {
+      "title": "Brug skaberkode",
+      "description": "Støt os gratis ved at bruge skaberkoden",
+      "descriptionSuffix": "i spillet eller i Supercell Store.",
+      "ctaGame": "Brug i spillet",
+      "ctaStore": "Brug i Supercell Store"
+    },
+    "whySupport": {
+      "title": "Hvorfor støtte os?",
+      "description": "Alle bidrag går direkte til serveromkostninger og API-gebyrer. Det koster dig ikke ekstra at bruge vores skaberkode, men det hjælper os meget!"
+    }
+  },
+  "ServersPage": {
+    "title": "Vælg en server",
+    "description": "Vælg en server for at konfigurere ClashKing-botten. Du skal eje Discord-serveren eller være administrator.",
+    "backToHome": "Tilbage til startsiden",
+    "backToLogin": "Tilbage til login",
+    "error": "Fejl",
+    "configure": "Konfigurer",
+    "invite": "Inviter",
+    "members": "medlemmer",
+    "server": "Server",
+    "roles": {
+      "owner": "Ejer",
+      "administrator": "Administrator",
+      "manager": "Administrator"
+    },
+    "noServers": {
+      "title": "Ingen servere fundet",
+      "description": "Der blev ikke fundet nogen Discord-server, hvor du er administrator eller ejer."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "AutoBoards",
+    "description": "Opdater en aktiv rangliste eller planlæg udsendelsen af nye ranglister",
+    "actions": {
+      "create": "Opret automatisk rangliste",
+      "edit": "Rediger AutoBoard",
+      "delete": "Slet AutoBoard",
+      "save": "Gem ændringer",
+      "cancel": "Annuller",
+      "retry": "Prøv igen"
+    },
+    "metrics": {
+      "total": "Konfigureret",
+      "refresh": "Opdater ranglister",
+      "send": "Planlagte udsendelser"
+    },
+    "filters": {
+      "all": "Alle"
+    },
+    "list": {
+      "title": "Konfigurerede automatiske ranglister",
+      "description": "Levering, mål, destination og kørselsstatus styret af administratoren",
+      "empty": "Ingen automatiske ranglister i denne visning",
+      "emptyDescription": "Opret en, når API-registeret indeholder en tilgængelig ranglistetype."
+    },
+    "registry": {
+      "emptyTitle": "Ingen ranglistetyper tilgængelige",
+      "emptyDescription": "API-registeret er tomt. Automatiske ranglister kan oprettes, når en ranglistetype aktiveres.",
+      "typeUnavailable": "Denne ranglistetype findes ikke længere i registeret og kan derfor ikke redigeres."
+    },
+    "dialog": {
+      "createTitle": "Opret automatisk rangliste",
+      "editTitle": "Rediger AutoBoard",
+      "description": "Muligheder og grænser kommer fra det aktive ranglisteregister."
+    },
+    "boardType": {
+      "label": "Ranglistetype",
+      "description": "De tilgængelige typer kommer direkte fra API-registeret.",
+      "placeholder": "Vælg en ranglistetype"
+    },
+    "targets": {
+      "kind": "Måltype: {kind}",
+      "kindDescription": "Registeret definerer, hvordan hver målværdi fortolkes.",
+      "scope": "Målomfang",
+      "scopeDescription": "Familieomfanget bruger alle konfigurerede familieklaner og har ingen eksplicitte mål.",
+      "family": "Familie",
+      "custom": "Tilpassede mål",
+      "values": "Mål",
+      "count": "Angiv mellem {min} og {max} mål for denne ranglistetype.",
+      "placeholder": "Indtast et {kind}-mål",
+      "add": "Tilføj mål",
+      "remove": "Fjern mål"
+    },
+    "modes": {
+      "label": "Leveringstilstand",
+      "description": "Registeret styrer, hvilke leveringstilstande ranglisten understøtter.",
+      "refresh": "Opdater",
+      "send": "Planlagt udsendelse"
+    },
+    "destination": {
+      "label": "Destination",
+      "channel": "Overordnet kanal",
+      "channelDescription": "Tekst- og annonceringskanaler kan modtage direkte, mens fora bruger et underindlæg.",
+      "selectChannel": "Vælg en kanal",
+      "thread": "Tråd eller forumindlæg",
+      "selectThread": "Vælg en tråd",
+      "threadOptional": "Valgfrit for tekst- og annonceringskanaler.",
+      "forumRequired": "Der kræves et forumindlæg til denne destination.",
+      "direct": "Send direkte til den kanal",
+      "deleted": "Kanal findes ikke længere"
+    },
+    "refresh": {
+      "interval": "Opdateringsinterval (minutter)",
+      "intervalDescription": "Tilladt interval: {minimum}-{maximum} minutter."
+    },
+    "schedule": {
+      "label": "Tidsplan",
+      "kind": "Tidsplansmønster",
+      "kindDescription": "Send dagligt, på valgte ugedage eller én gang om måneden.",
+      "daily": "Dagligt",
+      "weekdays": "Valgte ugedage",
+      "dayOfMonth": "Dag af måned",
+      "selectWeekdays": "Ugedage",
+      "monthDay": "Dag af måned",
+      "monthDayDescription": "Brug en værdi fra 1 til 31.",
+      "timezone": "Tidszone",
+      "timeOfDay": "Klokkeslæt",
+      "nextRun": "Næste kørsel"
+    },
+    "weekdays": {
+      "1": "Mandag",
+      "2": "Tirsdag",
+      "3": "Onsdag",
+      "4": "Torsdag",
+      "5": "Fredag",
+      "6": "Lørdag",
+      "7": "Søndag"
+    },
+    "status": {
+      "enabled": "Aktiveret",
+      "disabled": "Deaktiveret",
+      "enabledDescription": "Deaktiverede ranglister beholder deres konfiguration, men kører ikke.",
+      "messageId": "Aktuel opdateringsbesked: {id}"
+    },
+    "delete": {
+      "title": "Vil du slette denne automatiske rangliste?",
+      "description": "Dette fjerner konfigurationen og kan ikke fortrydes."
+    },
+    "feedback": {
+      "created": "AutoBoard oprettet",
+      "updated": "AutoBoard opdateret",
+      "deleted": "AutoBoard slettet"
+    },
+    "validation": {
+      "boardType": "Vælg en ranglistetype fra det aktive register.",
+      "targetScope": "Vælg et målomfang, som ranglistetypen understøtter.",
+      "familyTargets": "Familieomfanget kan ikke indeholde eksplicitte mål.",
+      "targetCount": "Indtast mellem {min} og {max} ikke-tomme mål.",
+      "deliveryMode": "Vælg en leveringstilstand, som ranglistetypen understøtter.",
+      "destination": "Vælg en gyldig destination. Forumkanaler kræver et underindlæg.",
+      "refreshInterval": "Indtast et opdateringsinterval mellem {minimum} og {maximum} minutter.",
+      "timezone": "Indtast en gyldig IANA-tidszone.",
+      "timeOfDay": "Indtast et gyldigt klokkeslæt.",
+      "weekdays": "Vælg mindst én ugedag.",
+      "dayOfMonth": "Indtast en dag fra 1 til 31."
+    },
+    "errors": {
+      "title": "Automatiske ranglister er ikke tilgængelige",
+      "session": "Din session er udløbet.",
+      "request": "Anmodningen til automatiske ranglister mislykkedes.",
+      "load": "Kunne ikke indlæse AutoBoards.",
+      "save": "Kunne ikke gemme den automatiske rangliste.",
+      "delete": "Kunne ikke slette den automatiske rangliste."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Indstillinger for ticketpaneler",
+    "description": "Konfigurer kategorier og logkanaler for hvert ticketpanel.",
+    "noPanels": "Ingen ticketpaneler fundet",
+    "noPanelsHint": "Opret dit første panel med knappen ovenfor.",
+    "createPanel": "Nyt panel",
+    "createPanelTitle": "Opret ticketpanel",
+    "createPanelDescription": "Giv panelet et unikt navn. Du kan konfigurere knapper og kanaler efter oprettelsen.",
+    "panelNameLabel": "Panelnavn",
+    "panelNamePlaceholder": "f.eks. Ansøgninger",
+    "panelCreated": "Panel \"{name}\" oprettet.",
+    "confirmDeletePanel": "Slet panel \"{name}\"?",
+    "confirmDeletePanelHint": "Dette sletter panelet og alle dets knapkonfigurationer permanent.",
+    "panelDeleted": "Panel slettet.",
+    "panelHint": "Klik for at udvide og konfigurere panelet.",
+    "panelEmbed": "Panel-embed",
+    "panelEmbedHint": "Embed, der bruges, når ticketpanelet sendes i Discord.",
+    "panelEmbedInfoLine1": "Gå til siden %s under {dashboardLabel} for at oprette et nyt embed eller redigere et eksisterende.",
+    "panelEmbedInfoLine2": "Gå til %s for dette panel for at tilføje eller redigere knapper.",
+    "panelEmbedPreview": "Forhåndsvisning af embed",
+    "panelEmbedPreviewEmpty": "Der er ingen forhåndsvisning af det valgte panelembed.",
+    "ticketOpenEmbed": "Embed ved åbning af ticket",
+    "ticketOpenEmbedHint": "Et valgfrit, tilpasset embed, der sendes, når denne knap åbner en ticket.",
+    "selectEmbed": "Vælg et embed",
+    "defaultEmbed": "Ingen tilsidesættelse af panel-embed",
+    "noCustomMessage": "Brug standardbeskeden til tickets",
+    "buttons": "knapper",
+    "buttonList": "Knapper",
+    "categories": "Kategorier",
+    "openCategory": "Kategori for åbne tickets",
+    "open_category": "Kategori for åbne tickets",
+    "sleepCategory": "Kategori for tickets i dvale",
+    "sleep_category": "Kategori for tickets i dvale",
+    "closedCategory": "Kategori for lukkede tickets",
+    "closed_category": "Kategori for lukkede tickets",
+    "selectCategory": "Vælg en kategori...",
+    "logChannels": "Logkanaler",
+    "statusChangeLog": "Log over statusændringer",
+    "status_change_log": "Log over statusændringer",
+    "buttonClickLog": "Log over knapklik",
+    "ticket_button_click_log": "Log over knapklik",
+    "closeLog": "Log over lukkede tickets",
+    "ticket_close_log": "Log over lukkede tickets",
+    "selectChannel": "Vælg en kanal...",
+    "savedSuccess": "Panel \"{panel}\" gemt uden problemer.",
+    "tabChannels": "Ticketpanel",
+    "tabSettings": "Indstillinger",
+    "tabButtons": "Knapper",
+    "tabMessages": "Beskeder",
+    "autoSaveSaving": "Gemmer...",
+    "autoSaveSaved": "Gemt",
+    "autoSaveErrorTitle": "Automatisk lagring mislykkedes",
+    "autoSaveErrorDescription": "Kunne ikke gemme disse ticketindstillinger.",
+    "messages": "beskeder",
+    "noButtons": "Ingen knapper endnu. Tilføj en for at komme i gang.",
+    "addButton": "Tilføj knap",
+    "addButtonTitle": "Tilføj knap",
+    "addButtonDescription": "Konfigurer den nye knaps udseende.",
+    "buttonLabel": "Knappens tekstetiket",
+    "buttonLabelPlaceholder": "f.eks. Ansøg",
+    "buttonStyle": "Knapfarve",
+    "buttonStyleBlue": "Blå",
+    "buttonStyleGrey": "Grå",
+    "buttonStyleGreen": "Grøn",
+    "buttonStyleRed": "Rød",
+    "buttonAdded": "Knap tilføjet.",
+    "buttonDeleted": "Knap slettet.",
+    "editButtonTitle": "Rediger knapindstillinger",
+    "editButtonDescription": "Konfigurer denne ticketknap.",
+    "buttonAppearanceSaved": "Udseendet er gemt.",
+    "confirmDeleteButton": "Slet knap \"{label}\"?",
+    "confirmDeleteButtonHint": "Dette sletter knappen og hele dens konfiguration, herunder roller og spørgsmål.",
+    "modRoles": "Personalets roller (med omtale)",
+    "modRolesHint": "Disse roller omtales, når en ticket åbnes.",
+    "noPingRoles": "Personalets roller (uden omtale)",
+    "noPingRolesHint": "Disse roller kan se tickets, men bliver ikke omtalt.",
+    "questions": "Spørgsmål",
+    "questionsHint": "Op til 5 spørgsmål vises i en dialog, når ticketen åbnes.",
+    "question": "Spørgsmål",
+    "privateThread": "Privat tråd",
+    "privateThreadHint": "Opretter en separat privat tråd til personalet.",
+    "accountApply": "Kræv CoC-konto",
+    "accountApplyHint": "Brugeren skal tilknytte en Clash of Clans-konto.",
+    "playerInfo": "Vis spilleroplysninger",
+    "playerInfoHint": "Viser kontostatistik, når ticketen åbnes.",
+    "thMin": "Min. rådhus",
+    "numApply": "Maks. antal konti",
+    "naming": "Navngivningsformat",
+    "namingPlaceholders": "Pladsholdere til navngivning",
+    "namingVariables": "Variabler: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Knap \"{label}\" gemt.",
+    "badge": {
+      "accountApply": "CoC påkrævet",
+      "privateThread": "Privat tråd"
+    },
+    "approveMessages": "Beskeder om godkendelse eller afvisning",
+    "approveMessagesHint": "Forudskrevne beskeder, som personalet kan sende til ansøgere (højst 25).",
+    "messagesMaxHint": "Du kan tilføje op til 25 beskeder.",
+    "editMessagesButton": "Rediger beskeder",
+    "editMessagesTitle": "Rediger forudskrevne beskeder",
+    "editMessagesDescription": "Tilføj, fjern og opdater dine forudskrevne ticketbeskeder.",
+    "addMessage": "Tilføj besked",
+    "noMessages": "Ingen beskeder endnu. Tilføj en for at komme i gang.",
+    "messageName": "Beskednavn",
+    "contentLabel": "Indhold",
+    "messageContent": "Beskedindhold...",
+    "messageNameRequired": "Alle beskeder skal have et navn.",
+    "messagesSaved": "Godkendelses- og afvisningsbeskederne blev gemt.",
+    "rolesToAdd": "Roller der skal tildeles",
+    "rolesToAddHint": "Roller, der automatisk tildeles brugeren, når en ticket åbnes.",
+    "rolesToRemove": "Roller der skal fjernes",
+    "rolesToRemoveHint": "Roller, der automatisk fjernes fra brugeren, når en ticket åbnes.",
+    "applyClans": "Tilladte klaner",
+    "applyClansHint": "Kun medlemmer af disse klaner kan åbne denne ticket. Lad feltet stå tomt for at tillade alle.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Rådhuskrav",
+    "thRequirementsHint": "Mindste krævede helteniveauer pr. rådhusniveau for at åbne denne ticket.",
+    "thHeroLegend": "BK = Barbarkonge · AQ = Bueskyttedronning · GW = Storvogter · RC = Kongelig mester · WARST = Krigsstjerner",
+    "addThLevel": "Tilføj rådhusniveau",
+    "thLevel": "TH",
+    "numApplyHint": "Det højeste antal CoC-konti, brugeren kan ansøge med (1-25).",
+    "embeds": "Embeds",
+    "embedsHint": "Discord-embeds, der bruges som panelbeskeder eller beskeder ved åbning af tickets.",
+    "newEmbed": "Nyt embed",
+    "embedName": "Embednavn",
+    "embedNamePlaceholder": "my-embed",
+    "discohookUrl": "Discohook-URL",
+    "embedDiscohookHint": "Design dit embed på Discohook, kopiér sidens URL og indsæt den her.",
+    "openDiscohook": "Åbn Discohook",
+    "openInDiscohook": "Åbn i Discohook",
+    "copyDiscohookUrl": "Kopiér Discohook-URL",
+    "copyDiscohookUrlDone": "URL kopieret!",
+    "editEmbed": "Rediger",
+    "deleteEmbed": "Slet",
+    "confirmDeleteEmbed": "Slet embed \"{name}\"?",
+    "confirmDeleteEmbedHint": "Dette fjerner kun embeddet fra ClashKing og påvirker ikke Discord-beskeder, der allerede er sendt.",
+    "embedSaved": "Embed \"{name}\" gemt.",
+    "embedCreated": "Embed \"{name}\" oprettet.",
+    "embedDeleted": "Embed slettet.",
+    "noEmbeds": "Ingen embeds endnu.",
+    "noEmbedsHint": "Opret et embed her, og tildel det derefter til et panel eller en knap.",
+    "legacyEmbed": "Oprettet via botten – indsæt en Discohook-URL for at aktivere redigering.",
+    "invalidDiscohookUrl": "Ugyldig URL. Indsæt en Discohook-sideadresse (discohook.app/?data=... eller discohook.app/?share=...).",
+    "tabEmbeds": "Embeds"
+  },
+  "EmbedsPage": {
+    "title": "Embeds",
+    "description": "Opret og administrer Discord-embedskabeloner til dine ticketpaneler og knapper.",
+    "nameHint": "Giv embeddet et unikt id. Indholdet kan ændres bagefter."
+  },
+  "EmbedEditor": {
+    "importSection": "Import fra Discohook",
+    "addMessage": "Tilføj besked",
+    "addMessageDialogTitle": "Tilføj besked",
+    "addMessageDialogDescription": "Vælg, hvor avanceret din besked skal være.",
+    "addMessageClassicTitle": "Klassisk",
+    "addMessageClassicDescription": "Enkel og pålidelig: tekst og embeds. Vælg denne, hvis du er i tvivl.",
+    "addMessageV2Title": "Komponenter v2",
+    "addMessageV2Description": "Mere avancerede layouts og interaktive komponenter som knapper, valg og sektioner. Bedst til avancerede opsætninger.",
+    "betaTag": "Beta",
+    "importExport": "Import og eksport",
+    "importExportDescription": "Importér et embed fra Discohook eller eksportér dit aktuelle embed til Discohook.",
+    "importFromDiscohook": "Import fra Discohook",
+    "copyDiscohookUrl": "Kopiér Discohook-URL",
+    "openInDiscohook": "Åbn i Discohook",
+    "content": "Indhold",
+    "contentPlaceholder": "Beskedindhold, der vises over embeds...",
+    "profileSection": "Profil",
+    "profileName": "Navn",
+    "profileAvatarUrl": "Avatar-URL",
+    "profileUnsupportedWarning": "Advarsel: Botten understøtter ikke opdatering af denne profil endnu.",
+    "import": "Importér",
+    "importError": "Ugyldig Discohook-URL. Indsæt en Discohook-sideadresse.",
+    "importMultipleMessagesWarning": "Dette link indeholder flere beskeder. Kun den første besked blev importeret – botten understøtter én besked pr. embed.",
+    "colorSection": "Farve",
+    "authorSection": "Forfatter",
+    "authorName": "Navn",
+    "authorIconUrl": "Ikon-URL",
+    "authorUrl": "Forfatter-URL",
+    "bodySection": "Brødtekst",
+    "title": "Titel",
+    "titleUrl": "Titel-URL",
+    "sidebarColor": "Sidepanelens farve",
+    "description": "Beskrivelse",
+    "descriptionPlaceholder": "Embedbeskrivelse...",
+    "fieldsSection": "Felter",
+    "addField": "Tilføj felt",
+    "field": "Felt",
+    "fieldName": "Navn",
+    "fieldValue": "Værdi",
+    "fieldInline": "Indlejret",
+    "imagesSection": "Billeder",
+    "thumbnailUrl": "Miniature-URL",
+    "imageUrl": "Billed-URL",
+    "footerSection": "Sidefod",
+    "footerText": "Sidefodstekst",
+    "footerIconUrl": "URL til sidefodsikon",
+    "timestamp": "Medtag tidsstempel",
+    "preview": "Forhåndsvisning",
+    "previewEmpty": "Udfyld felterne for at se en forhåndsvisning",
+    "modeToggleV1": "Klassisk (V1)",
+    "modeToggleV2": "Komponenter (V2)",
+    "componentsSection": "Komponenter",
+    "addComponent": "Tilføj komponent",
+    "containerLabel": "Beholder",
+    "textDisplayLabel": "Tekstvisning",
+    "separatorLabel": "Skillelinje",
+    "mediaGalleryLabel": "Mediegalleri",
+    "sectionLabel": "Sektion",
+    "dividerLine": "Vis skillelinje",
+    "spacing": "Afstand",
+    "spacingSmall": "Lille",
+    "spacingLarge": "Stor",
+    "imageDescription": "Alternativ tekst",
+    "imageSpoiler": "Spoiler",
+    "addImage": "Tilføj billede",
+    "addTextBlock": "Tilføj tekstblok",
+    "accessory": "Tilbehør",
+    "accessoryNone": "Ingen",
+    "accessoryThumbnail": "Miniature",
+    "accessoryButton": "Knap",
+    "thumbnailAlt": "Alternativ tekst til miniature",
+    "accentColor": "Accentfarve",
+    "addContainer": "Tilføj underkomponent",
+    "containerSpoiler": "Spoilerbeholder",
+    "stringSelectLabel": "Tekstvalg",
+    "userSelectLabel": "Brugervalg",
+    "roleSelectLabel": "Rollevalg",
+    "mentionableSelectLabel": "Valg af omtale",
+    "channelSelectLabel": "Kanalvalg",
+    "fileLabel": "Fil",
+    "fileUrl": "Fil-URL",
+    "fileUploadButton": "Upload",
+    "fileSpoiler": "Spoiler",
+    "selectCustomId": "Tilpasset id",
+    "selectPlaceholder": "Pladsholdertekst",
+    "selectMinValues": "Mindste antal værdier",
+    "selectMaxValues": "Højeste antal værdier",
+    "selectOptions": "Valgmuligheder",
+    "selectOption": "Valgmulighed",
+    "selectOptionLabel": "Etiket",
+    "selectOptionValue": "Værdi",
+    "selectOptionDescription": "Beskrivelse",
+    "selectOptionDefault": "Valgt som standard",
+    "addSelectOption": "Tilføj valgmulighed",
+    "selectDisabled": "Deaktiveret",
+    "actionRowMode": "Rækketype",
+    "actionRowModeButtons": "Knapper",
+    "actionRowLabel": "Handlingsrække",
+    "addButton": "Tilføj knap",
+    "buttonLabel": "Etiket",
+    "buttonStyle": "Stil",
+    "buttonStylePrimary": "Primær",
+    "buttonStyleSecondary": "Sekundær",
+    "buttonStyleSuccess": "Succes",
+    "buttonStyleDanger": "Fare",
+    "buttonStyleLink": "Link",
+    "tabMentions": "Omtaler",
+    "tabTime": "Tid",
+    "tabEmojis": "Emoji",
+    "dateLabel": "Dato",
+    "timeLabel": "Tid",
+    "mentionsChannels": "Kanaler",
+    "mentionsSpecial": "Særlige",
+    "mentionsChannelList": "Alle kanaler",
+    "mentionsRoles": "Roller",
+    "mentionsServerGuide": "Servervejledning",
+    "mentionsBrowseChannels": "Gennemse kanaler",
+    "mentionsChannelsAndRoles": "Kanaler og roller",
+    "mentionsNoChannels": "Ingen kanaler matcher søgningen.",
+    "mentionsNoRoles": "Ingen roller matcher søgningen.",
+    "styleLabel": "Stil",
+    "timeRelativeNow": "for 0 sekunder siden",
+    "emojiSearchPlaceholder": "Find den perfekte emoji",
+    "emojiToneLabel": "Emoji-hudfarve",
+    "emojiCategory": {
+      "people": "Personer",
+      "nature": "Natur",
+      "food": "Mad",
+      "activities": "Aktiviteter",
+      "travel": "Rejser",
+      "objects": "Genstande",
+      "symbols": "Symboler",
+      "flags": "Flag"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Deaktiveret",
+    "unknownComponent": "Ukendt komponent",
+    "unknownComponentHint": "Denne komponenttype kan ikke redigeres her, men bevares, når der gemmes."
+  },
+  "PanelsPage": {
+    "title": "Paneler",
+    "description": "Konfigurer det interaktive medlemspanel, der sendes på serveren. Medlemmer kan tilknytte deres konto, opdatere rollerne og meget mere med et enkelt klik.",
+    "saved": "Panelkonfigurationen blev gemt.",
+    "embedSection": "Embed",
+    "embedHint": "Valgfrit embed, der vises over knapperne.",
+    "embedLabel": "Embed",
+    "noEmbed": "Intet embed (kun knapper)",
+    "buttonsSection": "Knapper",
+    "buttonsHint": "Vælg de handlingsknapper, der skal vises. Rækkefølgen følger dit valg.",
+    "colorSection": "Knapfarve",
+    "colorHint": "Gælder for alle knapper.",
+    "welcomeSection": "Velkomstkanal",
+    "welcomeHint": "Når den er angivet, sendes panelet automatisk, når et nyt medlem tilmelder sig.",
+    "welcomeChannel": "Kanal",
+    "welcomeChannelPlaceholder": "Vælg en kanal...",
+    "editPanelButton": "Rediger panel",
+    "editDialogTitle": "Rediger panel",
+    "editDialogDescription": "Opdater embed, knapper og knapfarve med en aktiv forhåndsvisning, før du gemmer.",
+    "welcomeAutosaveSuccess": "Velkomstkanalen er gemt.",
+    "welcomeAutosaveDisabled": "Velkomstkanalen er deaktiveret.",
+    "previewSection": "Forhåndsvisning",
+    "previewHint": "Sådan ser panelet ud i Discord.",
+    "previewNoEmbed": "Intet embed valgt",
+    "previewEmbedNoData": "Embeddet har ingen forhåndsvisningsdata",
+    "previewNoButtons": "Ingen knapper valgt",
+    "color": {
+      "Blue": "Blå",
+      "Green": "Grøn",
+      "Grey": "Grå",
+      "Red": "Rød"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Giveaways",
+    "description": "Opret, planlæg og administrer giveawaykampagner på din server.",
+    "create": "Opret giveaway",
+    "listTitle": "Giveaway-dashboard",
+    "listDescription": "Følg planlagte, aktive og afsluttede giveaways samlet ét sted.",
+    "empty": "Ingen giveaways til visning endnu.",
+    "confirmDeleteTitle": "Slet giveaway",
+    "confirmDelete": "Er du sikker på, at du vil slette denne giveaway?",
+    "discardTitle": "Kassér ændringer?",
+    "discardDescription": "Du har ikke-gemte ændringer. Hvis du lukker nu, går ændringerne tabt.",
+    "discardConfirm": "Kassér",
+    "formTabs": {
+      "general": "Generelt",
+      "messages": "Beskeder",
+      "restrictions": "Begrænsninger",
+      "advanced": "Avanceret"
+    },
+    "tabs": {
+      "ongoing": "Løbende",
+      "upcoming": "Kommende",
+      "ended": "Afsluttet"
+    },
+    "stats": {
+      "total": "Giveaways i alt",
+      "totalEntries": "Deltagelser i alt",
+      "ongoing": "Igangværende giveaways",
+      "upcoming": "Kommende giveaways",
+      "ended": "Afsluttede giveaways"
+    },
+    "statsDescriptions": {
+      "total": "Alle giveaways, der er konfigureret på serveren.",
+      "totalEntries": "Samlet antal deltagelser på tværs af alle giveaways.",
+      "ongoing": "Aktive giveaways, der modtager deltagelser.",
+      "upcoming": "Planlagt til at starte senere.",
+      "ended": "Giveaways, der allerede er afsluttet."
+    },
+    "emptyTab": {
+      "title": "Ingen giveaways her",
+      "ongoing": "Der kører ingen giveaways lige nu.",
+      "upcoming": "Ingen giveaways er planlagt. Opret en for at komme i gang.",
+      "ended": "Ingen giveaways er afsluttet endnu."
+    },
+    "status": {
+      "scheduled": "Planlagt",
+      "ongoing": "I gang",
+      "ended": "Afsluttet"
+    },
+    "table": {
+      "giveaway": "Giveaway",
+      "channel": "Kanal",
+      "entries": "Deltagelser",
+      "timing": "Tidspunkt",
+      "start": "Starter",
+      "end": "Slutter",
+      "winnersHeader": "Vindere",
+      "winners": "{count, plural, one {# vinder} other {# vindere}}",
+      "boosters": "{count, plural, one {# booster} other {# boostere}}",
+      "noChannel": "Ingen kanal",
+      "noChannelHelp": "Ingen kanal tildelt. Rediger giveawayen for at rette det.",
+      "endsAt": "Slutter kl.",
+      "endedAt": "Sluttede kl.",
+      "duplicate": "Dupliker",
+      "showingEnded": "Viser {shown} af {total} afsluttede giveaways",
+      "showMore": "Vis {count} flere",
+      "pendingUpdate": "Afventende opdatering",
+      "pendingUpdateHelp": "Denne giveaway har afventende ændringer, som botten anvender snart.",
+      "openInDiscord": "Åbn i Discord",
+      "viewInDiscord": "Vis i Discord",
+      "reroll": "Træk vindere igen",
+      "rerolledCount": "{count, plural, one {# vinder trukket igen} other {# vindere trukket igen}}",
+      "viewEntries": "Vis deltagelser"
+    },
+    "entries": {
+      "description": "Liste over deltagere og deres vinderchance.",
+      "totalEntries": "Deltagelser i alt",
+      "uniqueUsers": "unikke brugere",
+      "noEntrants": "Ingen deltagelser endnu.",
+      "userId": "Bruger-id",
+      "entryCount": "Deltagelser",
+      "winChance": "Vinderchance"
+    },
+    "dialog": {
+      "createTitle": "Opret giveaway",
+      "editTitle": "Rediger giveaway",
+      "description": "Konfigurer giveawaybeskeden, tidspunktet og kravene.",
+      "create": "Opret giveaway",
+      "saveChanges": "Gem ændringer"
+    },
+    "form": {
+      "prize": "Præmie",
+      "prizePlaceholder": "Eksempel: Guldpas",
+      "channel": "Kanal",
+      "channelPlaceholder": "Vælg en kanal",
+      "startTime": "Starttidspunkt",
+      "startNow": "Start med det samme",
+      "endTime": "Sluttidspunkt",
+      "winners": "Antal vindere",
+      "mentions": "Omtalte roller",
+      "roleRequirements": "Påkrævede eller udelukkede roller",
+      "rolesMode": "Rolletilstand",
+      "rolesModeOptions": {
+        "none": "Ingen rollebegrænsning",
+        "allow": "Kun disse roller kan deltage",
+        "deny": "Disse roller kan ikke deltage"
+      },
+      "rolesModeHelp": {
+        "none": "Alle brugere kan deltage i denne giveaway.",
+        "allow": "Kun brugere med en af de valgte roller kan deltage.",
+        "deny": "Brugere med en af de valgte roller kan ikke deltage."
+      },
+      "textAboveEmbed": "Tekst over embed",
+      "textEmbedDefault": "Klik på knappen nedenfor for at deltage.",
+      "textInEmbed": "Embedbeskrivelse",
+      "textEndDefault": "Tillykke til alle de udvalgte! Vi kontakter jer snart.",
+      "textOnEnd": "Besked ved giveawayens afslutning",
+      "image": "Giveawaybillede",
+      "removeImage": "Fjern aktuelt billede",
+      "imagePreviewAlt": "Forhåndsvisning af giveaway",
+      "previewGiveaway": "Forhåndsvis giveaway",
+      "previewEnd": "Forhåndsvis afslutningsbesked",
+      "boosters": "Deltagelsesboostere",
+      "addBooster": "Tilføj booster",
+      "noBoosters": "Ingen boostere konfigureret.",
+      "boosterLabel": "Booster {index}",
+      "boostValue": "Multiplikator",
+      "boostRoles": "Boostede roller",
+      "requirements": "Deltagelseskrav",
+      "profilePictureRequired": "Kræv et Discord-profilbillede",
+      "cocAccountRequired": "Kræv en tilknyttet Clash of Clans-konto"
+    },
+    "validation": {
+      "prizeRequired": "Præmie er påkrævet.",
+      "channelRequired": "Kanal er påkrævet.",
+      "startTimeRequired": "Et starttidspunkt er påkrævet, medmindre giveawayen starter nu.",
+      "endTimeRequired": "Sluttidspunkt er påkrævet.",
+      "endAfterStart": "Sluttidspunktet skal ligge efter starttidspunktet.",
+      "imageTooLarge": "Billede skal være mindre end 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Aktuel oversigt",
+      "discordPreview": "Forhåndsvisning i Discord",
+      "giveawayTitle": "Forhåndsvisning af giveaway",
+      "giveawayDescription": "Sådan ser beskeden om den aktive giveaway ud.",
+      "endTitle": "Forhåndsvisning af afslutningsbesked",
+      "endDescription": "Dette er den besked, der sendes, når giveawayen afsluttes.",
+      "winnerCount": "Vindere",
+      "winnerWord": "{count, plural, one {vinder} other {vindere}}",
+      "mentionCount": "Omtalte roller",
+      "requirementCount": "Krav",
+      "boosterCount": "Boostere",
+      "profileRequired": "Profilbillede påkrævet",
+      "accountRequired": "Tilknyttet CoC-konto påkrævet",
+      "rolesAllow": "Begrænset til valgte roller",
+      "rolesDeny": "Valgte roller er udelukket",
+      "noChannel": "Ingen kanal valgt endnu",
+      "noPrize": "Din præmie vises her",
+      "noEmbedText": "Tilføj embedteksten for at forhåndsvise giveawayens indhold.",
+      "noEndText": "Tilføj en afslutningsbesked til vinderne.",
+      "startsAt": "Starter: {date}",
+      "endsAt": "Slutter: {date}",
+      "endsOn": "Slutter {date}",
+      "endsFooter": "Slutter",
+      "notScheduled": "Ikke planlagt",
+      "schedule": "Tidsplan",
+      "endMessage": "Vinderbesked",
+      "endSummary": "{winners, plural, one {# vinder bliver annonceret her.} other {# vindere bliver annonceret her.}}",
+      "totalParticipants": "Deltagere i alt: {count}",
+      "participate": "Deltag",
+      "buttonHint": "Den primære handlingsknap vises under Discord-indlægget."
+    },
+    "toast": {
+      "errorTitle": "Noget gik galt",
+      "successTitle": "Succes",
+      "loadError": "Kunne ikke indlæse giveaways.",
+      "saveError": "Kunne ikke gemme giveawayen.",
+      "deleteError": "Kunne ikke slette giveawayen.",
+      "created": "Giveaway oprettet uden problemer.",
+      "updated": "Giveaway opdateret uden problemer.",
+      "deleted": "Giveaway slettet uden problemer.",
+      "rerolled": "Der blev trukket nye vindere.",
+      "rerollError": "Kunne ikke trække vinderne igen."
+    },
+    "reroll": {
+      "title": "Træk vindere igen",
+      "description": "Vælg de vindere, der skal erstattes. Nye vindere trækkes blandt de kvalificerede deltagere.",
+      "selectWinners": "Vælg vindere der skal erstattes:",
+      "confirm": "Træk {count, plural, one {# vinder} other {# vindere}} igen"
+    }
+  },
+  "OverviewPage": {
+    "title": "Dashboardoversigt",
+    "description": "Overvåg serverstatistik og kom i gang",
+    "stats": {
+      "linkedPlayers": "Tilknyttede spillere",
+      "linkedPlayersDesc": "Spillere, der er tilknyttet på denne server",
+      "clansConfigured": "Konfigurerede klaner",
+      "clansConfiguredDesc": "Klaner, der følges på denne server",
+      "activeRosters": "Aktive trupplaner",
+      "activeRostersDesc": "Oprettede krigstrupplaner",
+      "totalAccounts": "Tilknyttede konti",
+      "totalAccountsDesc": "Tilknyttede CoC-konti i alt",
+      "playersTracked": "Spillere, der følges",
+      "globalPlayers": "Spillere i databasen i alt",
+      "clansTracked": "Klaner, der følges",
+      "globalClans": "Klaner i databasen i alt",
+      "botStatus": "Botstatus",
+      "online": "Online",
+      "offline": "Offline",
+      "memoryUsage": "Hukommelse: {used} MB ({percent} %)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Botstatistik",
+    "clans": {
+      "title": "Dine klaner",
+      "description": "{count, plural, one {# klan konfigureret} other {# klaner konfigureret}}",
+      "manage": "Administrer klaner",
+      "addFirst": "Tilføj din første klan"
+    },
+    "quickStart": {
+      "title": "Kom godt i gang",
+      "description": "Kom i gang med at konfigurere ClashKing-botten",
+      "step1": {
+        "title": "Konfigurer generelle indstillinger",
+        "description": "Opsæt navngivningsregler, embedfarver og logkanaler"
+      },
+      "step2": {
+        "title": "Tilføj dine klaner",
+        "description": "Tilknyt dine Clash of Clans-klaner og konfigurer roller"
+      },
+      "step3": {
+        "title": "Opsæt automatiske roller",
+        "description": "Konfigurer automatisk rolletildeling ud fra rådhusniveau, trofæer med mere"
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Botstatistik",
+    "description": "Global statistik og systemstatus for ClashKing-botten",
+    "about": {
+      "title": "Om denne statistik",
+      "description": "Dette er global statistik for hele ClashKing-botnetværket",
+      "globalStats": "Global statistik",
+      "globalStatsDesc": "Antallet af spillere og klaner omfatter alle fulgte enheder på alle Discord-servere, der bruger ClashKing",
+      "systemHealth": "Systemstatus",
+      "systemHealthDesc": "CPU- og hukommelsesforbrug viser den aktuelle belastning på ClashKing API-infrastrukturen"
+    }
+  },
+  "NotFound": {
+    "title": "404 – Siden blev ikke fundet",
+    "description": "Den side, du leder efter, findes ikke.",
+    "goHome": "Gå til startsiden"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Discord-bot, mobilapp og klandashboard",
+      "description": "Administrer krige, trupplaner, konti, påmindelser og klanindstillinger med ClashKing på Discord, mobil og web.",
+      "openGraphTitle": "ClashKing | Administrer din klan"
+    },
+    "navigation": {
+      "ariaLabel": "ClashKing-navigation",
+      "homeLabel": "ClashKing-startside",
+      "mobileApp": "Mobilapp",
+      "discordBot": "Discord-bot",
+      "dashboard": "Dashboard"
+    },
+    "language": {
+      "label": "Sprog"
+    },
+    "appearance": {
+      "label": "Udseende",
+      "day": "Dag",
+      "sunset": "Solnedgang"
+    },
+    "actions": {
+      "addToDiscord": "Føj til Discord",
+      "addClashKing": "Tilføj ClashKing",
+      "openDashboard": "Åbn dashboard",
+      "joinTestFlight": "Tilmeld TestFlight",
+      "getAndroidApp": "Hent Android-appen"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Administrer",
+          "second": "dine",
+          "third": "klan."
+        },
+        "accounts": {
+          "first": "Administrer",
+          "second": "dine",
+          "third": "konti."
+        },
+        "stats": {
+          "first": "Udforsk",
+          "second": "dine",
+          "third": "statistik."
+        }
+      },
+      "rotatingLabel": "Administrer din klan. Administrer dine konti. Udforsk statistikken.",
+      "copy": "Krige, trupplaner, konti og klanindstillinger på Discord, mobil og web."
+    },
+    "app": {
+      "title": "Mobilapp",
+      "intro": "Din ledsager til Clash-konti.",
+      "stageLabel": "Skærmbilleder af klan-, opgraderings- og krigswidgets i ClashKings mobilapp",
+      "images": {
+        "clanOverview": "Klanoversigt i ClashKings mobilapp",
+        "upgradeStats": "Opgraderingsstatistik for Storvogteren i ClashKings mobilapp",
+        "warWidget": "ClashKing-widget med krigsresultat"
+      },
+      "features": {
+        "widgets": {
+          "title": "Widgets",
+          "copy": "Se dine krige med et blik."
+        },
+        "notifications": {
+          "title": "Meddelelser",
+          "copy": "Få besked, når et angreb er tilgængeligt, eller en opgradering bliver færdig."
+        },
+        "accounts": {
+          "title": "Tilknyttede konti",
+          "copy": "Saml alle dine Clash-konti ét sted."
+        }
+      }
+    },
+    "bot": {
+      "title": "Discord-bot",
+      "intro": "Klanstatistik og værktøjer direkte i Discord.",
+      "imageLabel": "ClashKings klankommando i Discord",
+      "imageAlt": "ClashKing-klankommando, der viser ArcLine-klanstatistik i Discord",
+      "features": {
+        "rosters": {
+          "title": "Trupplaner",
+          "copy": "Administrer konti for CWL eller begivenheder."
+        },
+        "warTools": {
+          "title": "Krigsværktøjer",
+          "copy": "Tjek angreb, opstillinger og påmindelser i Discord."
+        },
+        "accounts": {
+          "title": "Tilknyttede konti",
+          "copy": "Saml alle dine Clash-konti ét sted."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "intro": "Administrer trupplaner, påmindelser og serverindstillinger samlet ét sted.",
+      "imageLabel": "Bygmesterhytte, der repræsenterer værktøjer til klanadministration",
+      "imageAlt": "Bygmesterhytte niveau 8",
+      "features": {
+        "settings": {
+          "title": "Klanindstillinger",
+          "copy": "Konfigurer klaner, roller og kanaler."
+        },
+        "rosters": {
+          "title": "Trupplaner",
+          "copy": "Administrer konti for CWL eller begivenheder."
+        },
+        "automation": {
+          "title": "Automatisering",
+          "copy": "Planlæg påmindelser og serveropgaver."
+        }
+      }
+    },
+    "resources": {
+      "title": "Byg med ClashKing.",
+      "copy": "Vejledninger, kildekode og strukturerede data til fællesskabsværktøjer.",
+      "ariaLabel": "Udviklerressourcer",
+      "documentation": "Dokumentation",
+      "publicApi": "Offentlig API"
+    },
+    "footer": {
+      "tagline": "Clash of Clans-værktøjer til alle",
+      "docs": "Dokumentation",
+      "privacy": "Privatlivspolitik",
+      "terms": "Servicevilkår",
+      "legal": "Dette indhold er ikke tilknyttet, godkendt eller sponsoreret af Supercell."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing til Discord, mobil og web",
+    "privacy": {
+      "title": "Privatlivspolitik | ClashKing",
+      "openGraphTitle": "ClashKings privatlivspolitik",
+      "description": "Sådan indsamler, bruger, gemmer og beskytter ClashKing konto-, spil- og appdata.",
+      "heading": "Privatlivspolitik",
+      "eyebrow": "Gældende fra 17. juli 2026"
+    },
+    "terms": {
+      "title": "Servicevilkår | ClashKing",
+      "openGraphTitle": "ClashKings servicevilkår",
+      "description": "De vilkår, der gælder, når du bruger ClashKings websteder, apps, tjenester og fællesskabsværktøjer.",
+      "heading": "Servicevilkår",
+      "eyebrow": "Juridisk om ClashKing"
+    }
+  }
+}

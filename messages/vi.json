@@ -1,0 +1,3138 @@
+{
+  "Common": {
+    "loading": "Đang tải...",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "search": "Tìm kiếm",
+    "filter": "Bộ lọc",
+    "add": "Thêm",
+    "remove": "Xóa",
+    "refresh": "Làm mới",
+    "close": "Đóng",
+    "openMenu": "Mở trình đơn",
+    "submit": "Gửi",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "poweredBy": "Được cung cấp bởi",
+    "noData": "Không có dữ liệu.",
+    "noChannelFound": "Không tìm thấy kênh.",
+    "searchChannels": "Tìm kênh...",
+    "searchClans": "Tìm bang hội...",
+    "noClanFound": "Không tìm thấy bang hội.",
+    "searchCategories": "Tìm danh mục...",
+    "noRoleFound": "Không tìm thấy vai trò.",
+    "searchRoles": "Tìm vai trò...",
+    "addRole": "Thêm vai trò...",
+    "error": "Đã xảy ra lỗi",
+    "success": "Thành công",
+    "actions": "Thao tác",
+    "details": "Chi tiết",
+    "view": "Xem",
+    "unknown": "Không rõ",
+    "confirm": "Xác nhận",
+    "settings": "Cài đặt",
+    "status": "Trạng thái",
+    "retry": "Thử lại",
+    "disabled": "Đã tắt",
+    "name": "Tên",
+    "description": "Mô tả",
+    "createdAt": "Thời gian tạo",
+    "updatedAt": "Thời gian cập nhật",
+    "dashboard": "Bảng điều khiển",
+    "loadError": "Không thể tải dữ liệu.",
+    "tryAgain": "Thử lại",
+    "create": "Tạo",
+    "viewClashProfile": "Xem hồ sơ Clash",
+    "openInGame": "Mở trong trò chơi",
+    "openChannelInDiscord": "Mở kênh này trong Discord",
+    "playerProfile": {
+      "clan": "Bang hội",
+      "townHallLevel": "Cấp Nhà Chính",
+      "trophies": "Cúp",
+      "warPreference": "Tùy chọn tham chiến",
+      "warPreferenceIn": "Tham gia",
+      "warPreferenceOut": "Không tham gia",
+      "signupGroup": "Nhóm đăng ký",
+      "heroLevels": "Cấp Tướng",
+      "hitrate30d": "Tỷ lệ tấn công thành công trong 30 ngày"
+    }
+  },
+  "Navigation": {
+    "features": "Tính năng",
+    "openSource": "Mã nguồn mở",
+    "help": "Cần trợ giúp?",
+    "support": "Ủng hộ chúng tôi",
+    "commands": "Lệnh",
+    "premium": "Cao cấp",
+    "documentation": "Tài liệu",
+    "loginWithDiscord": "Đăng nhập bằng Discord",
+    "addToDiscord": "Thêm vào Discord",
+    "openDashboard": "Mở bảng điều khiển",
+    "dashboardSettings": "Cài đặt bảng điều khiển",
+    "logout": "Đăng xuất",
+    "settings": "Cài đặt",
+    "theme": "Giao diện",
+    "systemTheme": "Theo hệ thống",
+    "lightTheme": "Giao diện sáng",
+    "darkTheme": "Giao diện tối",
+    "language": "Ngôn ngữ",
+    "browserLanguage": "Ngôn ngữ trình duyệt"
+  },
+  "HomePage": {
+    "badge": "Hơn {serverCount} máy chủ đang sử dụng ClashKing",
+    "title": "Bot mạnh mẽ nhất",
+    "titleHighlight": "dành cho Clash of Clans",
+    "subtitle": "Tự động hóa việc quản lý bang hội, theo dõi thống kê người chơi, quản lý hội chiến và duy trì sự gắn kết của cộng đồng.",
+    "cta": {
+      "heading": "Sẵn sàng thay đổi bang hội của bạn?",
+      "description": "Tham gia cùng hơn {serverCount} máy chủ Discord đang dùng ClashKing để nâng tầm cộng đồng Clash of Clans. Chỉ mất 2 phút để thiết lập.",
+      "button": "Thêm ClashKing vào Discord",
+      "trustBadge": "Miễn phí mãi mãi • Không cần thẻ tín dụng • Hơn {serverCount} máy chủ",
+      "addToDiscord": "Thêm vào Discord",
+      "openDashboard": "Mở bảng điều khiển"
+    },
+    "stats": {
+      "servers": "Máy chủ Discord",
+      "users": "Người dùng hoạt động",
+      "clans": "Bang hội được theo dõi"
+    },
+    "features": {
+      "title": "Mọi thứ bạn cần để quản lý bang hội",
+      "subtitle": "Các tính năng mạnh mẽ được thiết kế riêng cho cộng đồng Clash of Clans",
+      "autoRoles": {
+        "title": "Quản lý vai trò tự động",
+        "description": "Tự động gán vai trò theo trạng thái, vị trí trong bang hội và thành tích của người chơi, giúp máy chủ luôn ngăn nắp."
+      },
+      "playerStats": {
+        "title": "Thống kê người chơi",
+        "description": "Theo dõi thống kê chi tiết, biểu đồ tiến trình và lịch sử tấn công. Biết ai đang tiến bộ và ai cần trợ giúp."
+      },
+      "leaderboards": {
+        "title": "Bảng xếp hạng",
+        "description": "Tạo bảng xếp hạng thi đua về quyên góp, cúp, sao hội chiến và chỉ số tùy chỉnh để tăng tương tác."
+      },
+      "warTracking": {
+        "title": "Theo dõi hội chiến",
+        "description": "Theo dõi đội hình hội chiến, các lượt tấn công theo thời gian thực và phân tích sau trận, không bỏ sót chi tiết nào."
+      },
+      "smartReminders": {
+        "title": "Nhắc nhở thông minh",
+        "description": "Tự động nhắc về Trò Chơi Bang Hội, lượt tấn công, Giải Đấu Hội Chiến và sự kiện tùy chỉnh để mọi người luôn nắm rõ."
+      },
+      "customization": {
+        "title": "Tùy chỉnh toàn diện",
+        "description": "Tùy chỉnh lệnh, màu nội dung nhúng, biệt danh và quyền để ClashKing thực sự phù hợp với bạn."
+      },
+      "familyManagement": {
+        "title": "Quản lý hệ thống bang hội",
+        "description": "Quản lý nhiều bang hội trong cùng một hệ thống, với thống kê liên bang hội, bảng xếp hạng chung và vai trò thống nhất."
+      },
+      "analytics": {
+        "title": "Phân tích nâng cao",
+        "description": "Thông tin chuyên sâu về hiệu suất bang hội, mẫu hoạt động của người chơi và xu hướng phát triển để ra quyết định dựa trên dữ liệu."
+      },
+      "performance": {
+        "title": "Nhanh như chớp",
+        "description": "Tối ưu hiệu suất với phản hồi lệnh tức thì và cập nhật theo thời gian thực, không giật lag hay trì hoãn."
+      },
+      "security": {
+        "title": "An toàn và đáng tin cậy",
+        "description": "Thời gian hoạt động 99,9%, dữ liệu được mã hóa và sao lưu thường xuyên, giúp dữ liệu bang hội luôn an toàn."
+      }
+    },
+    "footer": {
+      "tagline": "Bot Clash of Clans mạnh mẽ nhất dành cho cộng đồng Discord.",
+      "about": {
+        "title": "Giới thiệu",
+        "features": "Tính năng",
+        "help": "Cần trợ giúp?",
+        "openSource": "Mã nguồn mở",
+        "support": "Ủng hộ chúng tôi"
+      },
+      "bot": {
+        "title": "Bot",
+        "dashboard": "Bảng điều khiển",
+        "inviteBot": "Mời bot"
+      },
+      "resources": {
+        "title": "Tài nguyên",
+        "documentation": "Tài liệu",
+        "quickStart": "Hướng dẫn bắt đầu nhanh",
+        "github": "GitHub"
+      },
+      "community": {
+        "title": "Cộng đồng",
+        "discord": "Máy chủ Discord",
+        "twitter": "X (Twitter)",
+        "reportBug": "Báo lỗi",
+        "requestFeature": "Đề xuất tính năng"
+      },
+      "legal": {
+        "copyright": "ClashKing. Bảo lưu mọi quyền.",
+        "privacy": "Chính sách quyền riêng tư",
+        "terms": "Điều khoản dịch vụ"
+      }
+    }
+  },
+  "DiscordUserDisplay": {
+    "unknownUserShort": "Không ở trong máy chủ",
+    "unknownUser": "Người dùng không xác định",
+    "notLinked": "Chưa liên kết",
+    "status": {
+      "onServer": "Ở trong máy chủ",
+      "notOnServer": "Không ở trong máy chủ"
+    },
+    "discordId": "ID Discord",
+    "viewProfile": "Xem hồ sơ Discord",
+    "idPrefix": "ID: {id}"
+  },
+  "Sidebar": {
+    "overview": {
+      "name": "Tổng quan",
+      "description": "Trang chủ bảng điều khiển"
+    },
+    "general": {
+      "name": "Cài đặt chung",
+      "description": "Cấu hình máy chủ"
+    },
+    "dashboardAccess": {
+      "name": "Quyền truy cập bảng điều khiển",
+      "description": "Phân quyền cho từng phần của bảng điều khiển"
+    },
+    "familySettings": {
+      "name": "Cài đặt hệ thống bang hội",
+      "description": "Vai trò và biệt danh trong hệ thống bang hội"
+    },
+    "clans": {
+      "name": "Bang hội",
+      "description": "Quản lý bang hội"
+    },
+    "logs": {
+      "name": "Nhật ký",
+      "description": "Cấu hình webhook"
+    },
+    "roles": {
+      "name": "Vai trò",
+      "description": "Tự động hóa vai trò"
+    },
+    "reminders": {
+      "name": "Nhắc nhở",
+      "description": "Tất cả loại nhắc nhở"
+    },
+    "rosters": {
+      "name": "Danh sách thi đấu",
+      "description": "Quản lý danh sách thi đấu"
+    },
+    "bases": {
+      "name": "Mẫu căn cứ",
+      "description": "Thư viện bố cục và tương tác"
+    },
+    "autoboards": {
+      "name": "Bảng tự động",
+      "description": "Bảng xếp hạng tự động"
+    },
+    "giveaways": {
+      "name": "Quà tặng",
+      "description": "Quản lý các chương trình quà tặng"
+    },
+    "panels": {
+      "name": "Bảng tương tác",
+      "description": "Bảng thành viên tương tác có các nút hành động"
+    },
+    "tickets": {
+      "name": "Phiếu hỗ trợ",
+      "description": "Phiếu tuyển thành viên và hỗ trợ"
+    },
+    "embeds": {
+      "name": "Nội dung nhúng",
+      "description": "Mẫu nội dung nhúng Discord"
+    },
+    "links": {
+      "name": "Liên kết",
+      "description": "Liên kết người chơi với Discord"
+    },
+    "bans": {
+      "name": "Cấm và cảnh cáo",
+      "description": "Công cụ kiểm duyệt"
+    },
+    "wars": {
+      "name": "Hội chiến",
+      "description": "Thống kê hội chiến"
+    },
+    "leaderboards": {
+      "name": "Bảng xếp hạng",
+      "description": "Xếp hạng toàn cầu"
+    },
+    "sections": {
+      "configuration": "Cấu hình",
+      "clanManagement": "Quản lý bang hội",
+      "playerManagement": "Quản lý người chơi",
+      "automation": "Tự động hóa",
+      "statistics": "Thống kê"
+    },
+    "switchServer": "Chuyển máy chủ",
+    "goHome": "Trang chủ"
+  },
+  "BasesPage": {
+    "eyebrow": "Quản lý bang hội",
+    "title": "Căn cứ",
+    "description": "Xem lại các bố trí đã chia sẻ, lịch sử tương tác và tin nhắn nguồn trên Discord.",
+    "refresh": "Làm mới",
+    "create": "Thêm căn cứ",
+    "retry": "Thử lại",
+    "dismiss": "Bỏ qua",
+    "cancel": "Hủy",
+    "previous": "Trước đó",
+    "next": "Tiếp theo",
+    "pagination": "Trang {page}/{total}",
+    "imageAlt": "Ảnh bố trí căn cứ {index}",
+    "noDescription": "Chưa có mô tả.",
+    "openLayout": "Mở bố trí",
+    "openMessage": "Tin nhắn Discord",
+    "summary": {
+      "total": "Tổng số căn cứ",
+      "page": "Trang hiện tại",
+      "visible": "Đang hiển thị"
+    },
+    "counts": {
+      "downloads": "Lượt tải riêng biệt",
+      "upvotes": "Lượt tán thành",
+      "downvotes": "Lượt phản đối"
+    },
+    "history": {
+      "title": "Lịch sử người tải ({count})",
+      "empty": "Chưa ghi nhận ID người tải nào.",
+      "resolve": "Tìm hồ sơ"
+    },
+    "delete": {
+      "action": "Xóa",
+      "confirmTitle": "Xóa căn cứ này?",
+      "confirmDescription": "Thao tác này sẽ cố xóa tin nhắn nguồn trên Discord trước, sau đó xóa vĩnh viễn bản ghi cơ sở dữ liệu. Không thể khôi phục căn cứ.",
+      "confirmAction": "Xóa căn cứ",
+      "deleting": "Đang xóa…",
+      "baseId": "ID căn cứ",
+      "discordSource": "Nguồn Discord",
+      "successTitle": "Đã xóa căn cứ",
+      "successDeleted": "Đã xóa bản ghi cơ sở dữ liệu và tin nhắn Discord.",
+      "successAlreadyMissing": "Đã xóa bản ghi cơ sở dữ liệu; tin nhắn Discord đã không còn.",
+      "cleanupFailedTitle": "Đã giữ lại căn cứ; dọn dẹp Discord thất bại",
+      "cleanupCompleteTitle": "Đã dọn dẹp Discord; căn cứ được giữ lại",
+      "failureTitle": "Chưa xóa căn cứ",
+      "failureFallback": "Yêu cầu xóa thất bại.",
+      "retryable": "Có thể thử lại an toàn",
+      "notRetryable": "Không thể thử lại",
+      "cleanup": {
+        "deleted": "Đã xóa tin nhắn Discord",
+        "alreadyMissing": "Tin nhắn Discord đã không còn",
+        "failed": "Dọn dẹp Discord thất bại"
+      }
+    },
+    "empty": {
+      "title": "Chưa có căn cứ nào được chia sẻ",
+      "description": "Thêm bố trí đầu tiên bằng cách chọn kênh Discord và liên kết bố trí Clash of Clans."
+    },
+    "form": {
+      "title": "Thêm căn cứ",
+      "description": "Không thể chỉnh sửa căn cứ sau khi tạo. Hãy chọn nơi ClashKing đăng tin nhắn Discord và xác nhận liên kết bố trí.",
+      "channel": "Kênh Discord",
+      "channelPlaceholder": "Chọn kênh",
+      "channelSearch": "Tìm kiếm kênh…",
+      "channelsLoading": "Đang tải kênh…",
+      "baseLink": "Liên kết bố trí",
+      "descriptionLabel": "Mô tả",
+      "images": "Hình ảnh",
+      "chooseImages": "Chọn ảnh bố trí",
+      "imageLimit": "Tối đa bốn ảnh; quá trình tải lên hoàn tất trước khi tạo căn cứ.",
+      "submit": "Tạo căn cứ",
+      "creating": "Đang tải lên và tạo…",
+      "createRejectedTitle": "Chưa tạo căn cứ",
+      "createCleanupCompleteTitle": "Đã dọn dẹp Discord; chưa tạo căn cứ",
+      "createCleanupFailedTitle": "Tin nhắn Discord có thể vẫn còn; chưa tạo căn cứ",
+      "databaseNotInserted": "Chưa thêm bản ghi cơ sở dữ liệu",
+      "discordMessageCreated": "Đã tạo tin nhắn Discord",
+      "discordMessageId": "ID tin nhắn Discord",
+      "retryable": "Có thể thử lại an toàn",
+      "notRetryable": "Không tự động thử lại",
+      "cleanup": {
+        "notNeeded": "Không cần dọn dẹp Discord",
+        "deleted": "Đã xóa tin nhắn Discord",
+        "alreadyMissing": "Tin nhắn Discord đã không còn",
+        "failed": "Dọn dẹp Discord thất bại"
+      }
+    },
+    "errors": {
+      "title": "Căn cứ không khả dụng",
+      "load": "Không thể tải căn cứ.",
+      "create": "Không thể tạo căn cứ.",
+      "upload": "Không thể tải ảnh lên.",
+      "downloader": "Không thể tìm người tải này.",
+      "channels": "Không thể tải kênh Discord.",
+      "channelRequired": "Chọn một kênh Discord.",
+      "linkRequired": "Bắt buộc phải có liên kết bố trí.",
+      "descriptionTooLong": "Mô tả không được vượt quá 1.000 ký tự.",
+      "tooManyImages": "Chọn tối đa bốn ảnh."
+    }
+  },
+  "BansPage": {
+    "title": "Kiểm duyệt",
+    "description": "Quản lý lệnh cấm và cảnh cáo người chơi",
+    "viewClashProfile": "Xem hồ sơ Clash",
+    "tabs": {
+      "bans": "Lệnh cấm",
+      "strikes": "Cảnh cáo"
+    },
+    "bans": {
+      "title": "Người chơi bị cấm",
+      "noBans": "Không tìm thấy người chơi bị cấm",
+      "addBan": "Thêm lệnh cấm",
+      "removeBan": "Xóa lệnh cấm",
+      "confirmRemove": "Bạn có chắc muốn xóa lệnh cấm này không?",
+      "playerTag": "Mã người chơi",
+      "playerName": "Tên người chơi",
+      "reason": "Lý do",
+      "bannedAt": "Thời điểm bị cấm",
+      "search": "Tìm theo tên hoặc mã...",
+      "howItWorks": {
+        "title": "Cách hoạt động của lệnh cấm",
+        "description": "Nếu người chơi bị cấm gia nhập một bang hội của bạn, cảnh báo sẽ được gửi đến kênh đã thiết lập trong <clansTab>thẻ Bang hội</clansTab>. Bot không thể ngăn người chơi gia nhập mà chỉ có thể gửi cảnh báo."
+      },
+      "stats": {
+        "total": "Tổng số lệnh cấm",
+        "recent": "Lệnh cấm gần đây (7 ngày)",
+        "commonReason": "Lý do phổ biến nhất",
+        "activeOnServer": "Lệnh cấm đang hoạt động trên máy chủ",
+        "last7Days": "Trong 7 ngày qua",
+        "commonReasonValue": "Quấy rối và hành vi độc hại",
+        "noBans": "Chưa có lệnh cấm",
+        "percentOfAll": "{percent}% tổng số lệnh cấm",
+        "percentOfAllLabel": "trong tổng số lệnh cấm"
+      },
+      "list": {
+        "title": "Người chơi bị cấm",
+        "count": "{count, plural, one {# người chơi bị cấm} other {# người chơi bị cấm}}",
+        "searchPlaceholder": "Tìm theo tên, mã hoặc lý do...",
+        "noBansFound": "Không tìm thấy lệnh cấm",
+        "noBans": "Không có người chơi bị cấm",
+        "adjustSearch": "Hãy thử thay đổi nội dung tìm kiếm",
+        "getStarted": "Thêm lệnh cấm để bắt đầu kiểm duyệt người chơi"
+      },
+      "table": {
+        "player": "Người chơi",
+        "reason": "Lý do",
+        "bannedBy": "Người cấm",
+        "date": "Ngày",
+        "daysAgo": "{days} ngày trước",
+        "noReason": "Chưa nêu lý do"
+      },
+      "addDialog": {
+        "title": "Cấm người chơi",
+        "description": "Thêm người chơi vào danh sách cấm. Bạn sẽ nhận được cảnh báo nếu họ gia nhập bất kỳ bang hội nào trên máy chủ này.",
+        "playerTagLabel": "Mã người chơi",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "playerNameLabel": "Tên người chơi (không bắt buộc)",
+        "playerNamePlaceholder": "Nhập tên người chơi",
+        "reasonLabel": "Lý do cấm",
+        "reasonPlaceholder": "Giải thích lý do cấm người chơi này...",
+        "submit": "Cấm người chơi"
+      },
+      "bestPractices": {
+        "title": "Thông lệ tốt nhất",
+        "document": {
+          "title": "Ghi chép đầy đủ:",
+          "desc": "Luôn nêu lý do chi tiết cho mỗi lệnh cấm để các kiểm duyệt viên khác hiểu bối cảnh."
+        },
+        "review": {
+          "title": "Xem xét thường xuyên:",
+          "desc": "Định kỳ xem lại danh sách cấm để bảo đảm mọi lệnh cấm vẫn cần thiết và hợp lý."
+        },
+        "consistent": {
+          "title": "Hãy nhất quán:",
+          "desc": "Áp dụng lệnh cấm công bằng và nhất quán cho mọi người chơi để duy trì cộng đồng lành mạnh."
+        }
+      }
+    },
+    "strikes": {
+      "title": "Cảnh cáo người chơi",
+      "noStrikes": "Không tìm thấy cảnh cáo",
+      "addStrike": "Thêm cảnh cáo",
+      "removeStrike": "Xóa cảnh cáo",
+      "confirmRemove": "Bạn có chắc muốn xóa cảnh cáo này không?",
+      "playerTag": "Mã người chơi",
+      "reason": "Lý do",
+      "weight": "Mức độ",
+      "rolloverDays": "Số ngày hiệu lực",
+      "createdAt": "Được tạo lúc",
+      "search": "Tìm theo mã người chơi...",
+      "howItWorks": {
+        "title": "Cách hoạt động của cảnh cáo",
+        "description": "Cảnh cáo được trao cho người chơi vi phạm quy tắc. Mỗi cảnh cáo có mức độ nghiêm trọng và có thể hết hạn sau số ngày đã đặt. Cảnh cáo giúp theo dõi hành vi trước khi ban hành lệnh cấm."
+      },
+      "stats": {
+        "total": "Tổng số cảnh cáo",
+        "recent": "Cảnh cáo gần đây (7 ngày)",
+        "totalWeight": "Tổng mức cảnh cáo",
+        "activeOnServer": "Cảnh cáo đang hoạt động trên máy chủ",
+        "last7Days": "Trong 7 ngày qua",
+        "cumulativeWeight": "Mức cảnh cáo tích lũy",
+        "commonReason": "Lý do phổ biến nhất",
+        "commonReasonValue": "Gửi tin rác"
+      },
+      "list": {
+        "title": "Cảnh cáo người chơi",
+        "count": "{count, plural, one {# cảnh cáo đã được đưa ra} other {# cảnh cáo đã được đưa ra}}",
+        "searchPlaceholder": "Tìm theo tên, mã hoặc lý do...",
+        "noStrikesFound": "Không tìm thấy cảnh cáo",
+        "noStrikes": "Chưa ban hành cảnh cáo",
+        "adjustSearch": "Hãy thử thay đổi nội dung tìm kiếm",
+        "getStarted": "Thêm cảnh cáo để bắt đầu theo dõi vi phạm của người chơi",
+        "viewAll": "Tất cả cảnh cáo",
+        "viewGrouped": "Theo người chơi"
+      },
+      "table": {
+        "player": "Người chơi",
+        "reason": "Lý do",
+        "weight": "Mức độ",
+        "addedBy": "Người thêm",
+        "date": "Ngày",
+        "expires": "Hết hạn",
+        "never": "Không bao giờ",
+        "noReason": "Chưa nêu lý do",
+        "daysAgo": "{days} ngày trước",
+        "totalStrikes": "Tổng số cảnh cáo",
+        "totalWeight": "Tổng mức độ",
+        "lastStrike": "Cảnh cáo gần nhất"
+      },
+      "addDialog": {
+        "title": "Thêm cảnh cáo",
+        "description": "Cảnh cáo người chơi. Các cảnh cáo có thể có mức độ và ngày hết hạn khác nhau.",
+        "playerTagLabel": "Mã người chơi",
+        "playerTagPlaceholder": "#ABC123DEF",
+        "reasonLabel": "Lý do",
+        "reasonPlaceholder": "Giải thích lý do ban hành cảnh cáo này...",
+        "weightLabel": "Mức cảnh cáo",
+        "weightPlaceholder": "1",
+        "rolloverLabel": "Hết hạn sau (ngày)",
+        "rolloverPlaceholder": "Không bắt buộc",
+        "submit": "Thêm cảnh cáo"
+      },
+      "guidelines": {
+        "title": "Hướng dẫn cảnh cáo",
+        "weights": {
+          "title": "Dùng mức độ hợp lý:",
+          "desc": "Gán mức cao hơn (2–3) cho vi phạm nghiêm trọng và mức thấp hơn (1) cho lỗi nhỏ."
+        },
+        "expiration": {
+          "title": "Đặt ngày hết hạn:",
+          "desc": "Cân nhắc đặt ngày hết hạn để người chơi có cơ hội cải thiện hành vi theo thời gian."
+        },
+        "patterns": {
+          "title": "Theo dõi xu hướng:",
+          "desc": "Dùng cảnh cáo để nhận diện người tái phạm trước khi nâng lên lệnh cấm vĩnh viễn."
+        }
+      }
+    },
+    "toast": {
+      "banAdded": "Đã thêm lệnh cấm",
+      "banRemoved": "Đã xóa lệnh cấm",
+      "strikeAdded": "Đã thêm cảnh cáo",
+      "strikeRemoved": "Đã xóa cảnh cáo",
+      "errorLoadingBans": "Không thể tải người chơi bị cấm",
+      "errorLoadingStrikes": "Không thể tải cảnh cáo",
+      "errorAddingBan": "Không thể thêm lệnh cấm",
+      "errorAddingStrike": "Không thể thêm cảnh cáo",
+      "errorRemovingBan": "Không thể xóa lệnh cấm",
+      "errorRemovingStrike": "Không thể xóa cảnh cáo"
+    }
+  },
+  "RostersPage": {
+    "title": "Danh sách thi đấu và đội hình",
+    "description": "Quản lý danh sách thi đấu, đội hình hội chiến và phân công thành viên",
+    "stats": {
+      "totalRosters": "Tổng số danh sách",
+      "totalMembers": "Tổng số thành viên",
+      "clanRosters": "Danh sách của bang hội",
+      "familyRosters": "Danh sách của hệ thống bang hội",
+      "members": "Thành viên",
+      "avgTh": "TH trung bình",
+      "avgHitrate": "Tỷ lệ tấn công thành công trung bình",
+      "distribution": "Phân bố",
+      "clan": "Bang hội",
+      "family": "Hệ thống bang hội",
+      "external": "Bên ngoài",
+      "thDistribution": "Phân bố cấp Nhà Chính",
+      "capacity": "Sức chứa"
+    },
+    "filters": {
+      "search": "Tìm danh sách...",
+      "type": "Kiểu",
+      "all": "Tất cả",
+      "clan": "Bang hội",
+      "family": "Hệ thống bang hội",
+      "clear": "Xóa bộ lọc"
+    },
+    "comparisonMode": {
+      "cancel": "Hủy",
+      "compare": "So sánh",
+      "compareRosters": "So sánh danh sách",
+      "selectRosters": "Chọn danh sách",
+      "selectRostersDesc": "Vui lòng chọn ít nhất 2 danh sách để so sánh",
+      "maxReached": "Đã đạt giới hạn",
+      "maxReachedDesc": "Bạn có thể so sánh tối đa 4 danh sách cùng lúc"
+    },
+    "createDialog": {
+      "title": "Tạo danh sách mới",
+      "description": "Thiết lập danh sách mới cho bang hội",
+      "aliasLabel": "Tên danh sách",
+      "aliasPlaceholder": "VD: Danh sách CWL",
+      "typeLabel": "Loại danh sách",
+      "typeClan": "Bang hội",
+      "typeFamily": "Hệ thống bang hội",
+      "signupScopeLabel": "Phạm vi đăng ký",
+      "scopeClanOnly": "Chỉ bang hội",
+      "scopeFamilyWide": "Toàn hệ thống bang hội",
+      "clanLabel": "Bang hội",
+      "clanPlaceholder": "Chọn bang hội",
+      "descriptionLabel": "Mô tả (không bắt buộc)",
+      "descriptionPlaceholder": "Mô tả danh sách...",
+      "cancel": "Hủy",
+      "creating": "Đang tạo...",
+      "create": "Tạo danh sách"
+    },
+    "editDialog": {
+      "title": "Chỉnh sửa danh sách",
+      "description": "Thay đổi cài đặt và cấu hình danh sách",
+      "aliasLabel": "Tên danh sách",
+      "descriptionLabel": "Mô tả",
+      "descriptionPlaceholder": "Mô tả danh sách...",
+      "minThLabel": "Nhà Chính tối thiểu",
+      "minThPlaceholder": "ví dụ: 13",
+      "maxThLabel": "Nhà Chính tối đa",
+      "maxThPlaceholder": "ví dụ: 16",
+      "rosterSizeLabel": "Quy mô danh sách",
+      "rosterSizePlaceholder": "ví dụ: 50",
+      "columnsLabel": "Các cột hiển thị",
+      "columnsPlaceholder": "Chọn các cột cần hiển thị",
+      "sortLabel": "Thứ tự sắp xếp",
+      "sortPlaceholder": "Chọn trường sắp xếp",
+      "cancel": "Hủy",
+      "saving": "Đang lưu…",
+      "save": "Lưu thay đổi"
+    },
+    "addMembersDialog": {
+      "title": "Thêm thành viên vào danh sách",
+      "description": "Chọn thành viên trong bang hội hoặc nhập thẻ người chơi",
+      "bulkTagsLabel": "Thêm hàng loạt bằng thẻ",
+      "bulkTagsPlaceholder": "Nhập thẻ người chơi (mỗi dòng một thẻ hoặc phân cách bằng dấu phẩy)",
+      "searchLabel": "Tìm kiếm thành viên",
+      "searchPlaceholder": "Tìm theo tên hoặc mã...",
+      "selectFromClan": "Chọn từ thành viên bang hội",
+      "selectedCount": "Đã chọn",
+      "noMembers": "Không có thành viên phù hợp",
+      "noMembersSelected": "Chưa chọn thành viên",
+      "noMembersSelectedDesc": "Vui lòng chọn thành viên hoặc nhập thẻ người chơi.",
+      "cancel": "Hủy",
+      "adding": "Đang thêm...",
+      "add": "Thêm thành viên"
+    },
+    "detailsDialog": {
+      "title": "Chi tiết danh sách",
+      "edit": "Chỉnh sửa",
+      "refresh": "Làm mới",
+      "refreshing": "Đang làm mới...",
+      "delete": "Xóa",
+      "deleting": "Đang xóa...",
+      "addMembers": "Thêm thành viên",
+      "close": "Đóng",
+      "noMembers": "Danh sách này chưa có thành viên",
+      "noMembersDesc": "Hãy thêm thành viên để bắt đầu",
+      "memberCount": "Thành viên",
+      "thRestriction": "Cấp TH",
+      "avgTh": "TH trung bình",
+      "avgHitrate": "Tỷ lệ tấn công thành công trung bình",
+      "clan": "Bang hội",
+      "family": "Hệ thống bang hội",
+      "external": "Bên ngoài",
+      "substitute": "Dự bị",
+      "removeMember": "Xóa"
+    },
+    "rosterCard": {
+      "members": "Thành viên",
+      "thLevel": "Cấp TH",
+      "avgTh": "TH trung bình",
+      "avgHitrate": "Tỷ lệ tấn công thành công trung bình",
+      "clan": "Bang hội",
+      "family": "Hệ thống bang hội",
+      "external": "Bên ngoài",
+      "noRestriction": "Không hạn chế",
+      "view": "Xem",
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa",
+      "noGroup": "Không có nhóm",
+      "moveToGroup": "Chuyển vào nhóm",
+      "clone": "Nhân bản",
+      "allRosters": "Tất cả danh sách",
+      "manageRosters": "Quản lý danh sách và đội hình hội chiến"
+    },
+    "memberColumns": {
+      "name": "Tên",
+      "townhall": "Nhà Chính",
+      "tag": "Mã",
+      "hitrate": "Tỷ lệ tấn công thành công",
+      "current_clan": "Bang hội hiện tại",
+      "current_clan_tag": "Mã bang hội",
+      "discord": "Discord",
+      "hero_lvs": "Tướng",
+      "war_pref": "Tùy chọn tham chiến",
+      "trophies": "Cúp",
+      "signup_group": "Nhóm đăng ký"
+    },
+    "columns": {
+      "configure": "Cột",
+      "title": "Cấu hình cột",
+      "description": "Chọn các cột cần hiển thị và thứ tự của chúng",
+      "selected": "Cột đã chọn",
+      "available": "Cột có sẵn",
+      "save": "Lưu cột",
+      "reset": "Đặt lại cột"
+    },
+    "sortFields": {
+      "townhall": "Cấp Nhà Chính",
+      "name": "Tên",
+      "tag": "Mã",
+      "heroLvs": "Tướng",
+      "trophies": "Cúp",
+      "hitrate": "Tỷ lệ tấn công thành công trong 30 ngày",
+      "currentClanTag": "Mã bang hội",
+      "addedAt": "Thời gian thêm"
+    },
+    "thRestrictions": {
+      "only": "Chỉ TH{th}",
+      "range": "TH{min}-{max}",
+      "minimum": "TH{th}+",
+      "maximum": "TH1-{th}",
+      "noRestriction": "Không hạn chế"
+    },
+    "emptyState": {
+      "noRosters": "Chưa tạo danh sách nào",
+      "noRostersDesc": "Hãy tạo danh sách đầu tiên để bắt đầu",
+      "noMatch": "Không có danh sách nào khớp với bộ lọc",
+      "noMatchDesc": "Hãy thử điều chỉnh tiêu chí tìm kiếm hoặc bộ lọc"
+    },
+    "toast": {
+      "errorTitle": "Lỗi",
+      "successTitle": "Thành công",
+      "errorLoadingRosters": "Không thể tải danh sách. Vui lòng thử lại.",
+      "errorLoadingMembers": "Không thể tải thành viên bang hội.",
+      "rosterCreated": "Đã tạo danh sách!",
+      "errorCreatingRoster": "Không thể tạo danh sách. Vui lòng thử lại.",
+      "rosterUpdated": "Đã cập nhật danh sách!",
+      "errorUpdatingRoster": "Không thể cập nhật danh sách. Vui lòng thử lại.",
+      "rosterDeleted": "Đã xóa danh sách!",
+      "errorDeletingRoster": "Không thể xóa danh sách. Vui lòng thử lại.",
+      "membersAdded": "Đã thêm {count} thành viên vào danh sách!",
+      "errorAddingMembers": "Không thể thêm thành viên. Vui lòng thử lại.",
+      "memberRemoved": "Đã xóa thành viên khỏi danh sách!",
+      "errorRemovingMember": "Không thể xóa thành viên. Vui lòng thử lại.",
+      "substituteMarked": "Đã đánh dấu thành viên là người dự bị!",
+      "substituteUnmarked": "Đã bỏ đánh dấu thành viên dự bị!",
+      "errorUpdatingMember": "Không thể cập nhật thành viên. Vui lòng thử lại.",
+      "rosterRefreshed": "Đã làm mới dữ liệu danh sách!",
+      "errorRefreshingRoster": "Không thể làm mới dữ liệu danh sách. Vui lòng thử lại.",
+      "memberTransferred": "Đã chuyển thành viên giữa các danh sách!",
+      "errorTransferringMember": "Không thể chuyển thành viên. Vui lòng thử lại.",
+      "rosterCloned": "Đã nhân bản danh sách!",
+      "errorCloningRoster": "Không thể nhân bản danh sách. Vui lòng thử lại.",
+      "missingMembersAdded": "Đã thêm {count} thành viên còn thiếu vào danh sách!",
+      "errorLoadingMissingMembers": "Không thể tải thành viên còn thiếu."
+    },
+    "cloneDialog": {
+      "title": "Nhân bản danh sách",
+      "description": "Tạo một bản sao của danh sách này",
+      "aliasLabel": "Tên danh sách mới",
+      "aliasPlaceholder": "Nhập tên cho danh sách được nhân bản",
+      "copyMembers": "Sao chép thành viên sang danh sách mới",
+      "memberCount": "{count} thành viên",
+      "originalRoster": "Danh sách gốc:",
+      "cancel": "Hủy",
+      "cloning": "Đang nhân bản...",
+      "clone": "Nhân bản danh sách",
+      "copyMembersHint": "Thành viên sẽ được sao chép từ danh sách gốc"
+    },
+    "missingMembers": {
+      "title": "Thành viên còn thiếu",
+      "description": "Thành viên bang hội chưa đăng ký vào danh sách này",
+      "coverage": "Mức độ bao phủ của danh sách",
+      "registered": "Đã đăng ký",
+      "missing": "Còn thiếu",
+      "total": "Tổng",
+      "selectAll": "Chọn tất cả",
+      "selected": "Đã chọn",
+      "addSelected": "Thêm {count} thành viên",
+      "button": "Thành viên còn thiếu",
+      "addAll": "Thêm tất cả",
+      "adding": "Đang thêm...",
+      "close": "Đóng",
+      "allCaughtUp": "Đã đầy đủ!",
+      "allCaughtUpDesc": "Tất cả thành viên bang hội đã đăng ký vào danh sách này",
+      "clanOnly": "Phân tích thành viên còn thiếu chỉ khả dụng với danh sách bang hội",
+      "error": "Không thể tải thành viên còn thiếu.",
+      "thisRoster": "Danh sách này",
+      "wholeGroup": "Toàn bộ nhóm"
+    },
+    "eventTime": {
+      "label": "Thời gian bắt đầu sự kiện",
+      "timezone": "Múi giờ của bạn",
+      "utc": "UTC",
+      "clear": "Xóa"
+    },
+    "bulkValidation": {
+      "valid": "Hợp lệ",
+      "invalid": "Không hợp lệ",
+      "invalidTags": "Không hợp lệ"
+    },
+    "memberAutocomplete": {
+      "label": "Hoặc tìm thành viên máy chủ",
+      "placeholder": "Nhấp để tìm thành viên...",
+      "searchPlaceholder": "Tìm theo tên, thẻ hoặc bang hội...",
+      "loading": "Đang tải thành viên...",
+      "noResults": "Không tìm thấy thành viên",
+      "groupHeading": "Thành viên máy chủ",
+      "selectedLabel": "Thành viên đã chọn",
+      "membersSelected": "Thành viên đã chọn",
+      "selected": "Đã chọn",
+      "clanMembersLabel": "Hoặc chọn từ thành viên bang hội"
+    },
+    "retry": "Thử lại",
+    "back": "Quay lại",
+    "refresh": "Làm mới",
+    "createRoster": "Tạo danh sách",
+    "searchPlaceholder": "Tìm danh sách...",
+    "noRosters": "Chưa có danh sách",
+    "noRostersHint": "Hãy tạo danh sách đầu tiên để bắt đầu",
+    "noSearchResults": "Không tìm thấy danh sách",
+    "noSearchResultsHint": "Hãy thử từ khóa tìm kiếm khác",
+    "createFirstRoster": "Tạo danh sách đầu tiên",
+    "deleteConfirm": "Bạn có chắc muốn xóa \"{name}\" không?",
+    "deleteSuccess": "Đã xóa danh sách",
+    "deleteSuccessDesc": "Đã xóa danh sách “{name}”",
+    "deleteError": "Không thể xóa danh sách.",
+    "createSuccess": "Đã tạo danh sách",
+    "createSuccessDesc": "Đã tạo danh sách “{name}”",
+    "createError": "Không thể tạo danh sách.",
+    "createErrorAlias": "Vui lòng nhập tên danh sách",
+    "createErrorClan": "Vui lòng chọn một bang hội",
+    "refreshSuccess": "Đã làm mới dữ liệu danh sách",
+    "refreshError": "Không thể làm mới danh sách.",
+    "saveSuccess": "Đã lưu cài đặt",
+    "saveError": "Không thể lưu cài đặt",
+    "columnsUpdated": "Đã cập nhật các cột",
+    "columnsError": "Không thể cập nhật các cột.",
+    "addMembersSuccess": "Đã thêm thành viên",
+    "addMembersSuccessDesc": "Đã thêm {count} thành viên vào danh sách",
+    "addMembersError": "Không thể thêm thành viên.",
+    "removeMemberSuccess": "Đã xóa thành viên",
+    "removeMemberError": "Không thể xóa thành viên.",
+    "clearMembers": "Xóa toàn bộ thành viên",
+    "clearMembersConfirm": "Xóa toàn bộ thành viên khỏi “{name}”? Bạn không thể hoàn tác thao tác này.",
+    "clearMembersSuccess": "Đã xóa toàn bộ thành viên",
+    "clearMembersError": "Không thể xóa thành viên.",
+    "automationCreated": "Đã tạo tự động hóa",
+    "automationUpdated": "Đã cập nhật tự động hóa",
+    "automationDeleted": "Đã xóa tự động hóa",
+    "automationError": "Lỗi tự động hóa",
+    "groupCreated": "Đã tạo nhóm",
+    "groupUpdated": "Đã cập nhật nhóm",
+    "groupDeleted": "Đã xóa nhóm",
+    "groupError": "Không thể lưu nhóm.",
+    "categoryCreated": "Đã tạo danh mục",
+    "categoryUpdated": "Đã cập nhật danh mục",
+    "categoryDeleted": "Đã xóa danh mục",
+    "categoryError": "Không thể lưu danh mục.",
+    "common": {
+      "cancel": "Hủy",
+      "save": "Lưu",
+      "close": "Đóng"
+    },
+    "tabs": {
+      "members": "Thành viên",
+      "automations": "Tự động hóa",
+      "groups": "Nhóm",
+      "categories": "Danh mục",
+      "settings": "Cài đặt"
+    },
+    "members": {
+      "count": "Thành viên",
+      "noMembers": "Danh sách này chưa có thành viên",
+      "noMembersHint": "Hãy thêm thành viên để bắt đầu",
+      "actions": "Thao tác",
+      "viewList": "Chế độ xem danh sách",
+      "viewGrouped": "Xem theo danh mục đăng ký",
+      "unassigned": "Chưa phân công",
+      "dragHere": "Kéo thành viên vào đây",
+      "clickToGroup": "Nhấp để xem theo danh mục",
+      "apiErrorTooltip": "Không thể lấy dữ liệu từ API",
+      "staleDataTooltip": "Dữ liệu có thể đã cũ, cập nhật lần cuối:",
+      "refresh": "Làm mới dữ liệu thành viên",
+      "alsoIn": "Cũng có trong",
+      "addCategory": "Thêm nhóm",
+      "removeCategory": "Xóa nhóm"
+    },
+    "addMembers": {
+      "title": "Thêm thành viên vào danh sách",
+      "description": "Chọn thành viên trong các bang hội hoặc nhập thẻ người chơi",
+      "bulkTagsLabel": "Thẻ người chơi (mỗi dòng một thẻ hoặc phân cách bằng dấu phẩy)",
+      "adding": "Đang thêm...",
+      "submit": "Thêm thành viên"
+    },
+    "compare": {
+      "enterMode": "So sánh",
+      "modeTitle": "Chế độ so sánh",
+      "modeHint": "Nhấp vào danh sách để chọn (từ 2 đến 4 danh sách)",
+      "exitMode": "Hủy",
+      "selected": "Danh sách đã chọn",
+      "button": "So sánh",
+      "title": "So sánh danh sách",
+      "dragToMove": "Kéo thả thành viên giữa các danh sách để di chuyển",
+      "loadError": "Không thể tải danh sách.",
+      "memberMoved": "Đã di chuyển thành viên",
+      "memberMovedDesc": "Đã chuyển {name} từ {from} sang {to}",
+      "moveError": "Không thể di chuyển thành viên.",
+      "selectAtLeast2": "Chọn ít nhất 2 danh sách để so sánh",
+      "moving": "Đang di chuyển thành viên...",
+      "compareGroup": "So sánh nhóm",
+      "dragToMoveCategory": "Kéo thành viên giữa các danh sách và danh mục",
+      "categoryChanged": "Đã đổi danh mục",
+      "categoryChangedDesc": "Đã chuyển {name} vào {category}",
+      "uncategorized": "Chưa phân loại"
+    },
+    "ungrouped": "Chưa phân nhóm",
+    "automations": {
+      "description": "Lên lịch các thao tác tự động cho danh sách này",
+      "create": "Tạo tự động hóa",
+      "empty": "Không có tự động hóa",
+      "emptyHint": "Tạo một quy trình tự động để lên lịch thao tác",
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động",
+      "executed": "Xong",
+      "missed": "Bỏ lỡ",
+      "lastRun": "Lần chạy gần nhất",
+      "enable": "Bật",
+      "disable": "Tắt",
+      "createTitle": "Tạo tự động hóa",
+      "editTitle": "Chỉnh sửa tự động hóa",
+      "createDesc": "Lên lịch một thao tác tự động",
+      "actionType": "Loại thao tác",
+      "offsetFromEvent": "Thời điểm so với sự kiện",
+      "offsetBefore": "Trước sự kiện",
+      "offsetAfter": "Sau sự kiện",
+      "offsetUnit_minutes": "phút",
+      "offsetUnit_hours": "giờ",
+      "offsetUnit_days": "ngày",
+      "offsetPreview": "Sẽ thực hiện lúc: {date}",
+      "offsetNoEventDate": "Đặt thời gian bắt đầu sự kiện trong phần cài đặt để xem trước ngày thực hiện",
+      "offsetAtStart": "Khi sự kiện bắt đầu",
+      "pingType": "Loại lời nhắc",
+      "pingType_signup_reminder": "Nhắc đăng ký",
+      "pingType_missing": "Không có trong bang hội",
+      "pingType_sub_needed": "Cần người dự bị",
+      "channel": "Kênh Discord",
+      "selectChannel": "Chọn kênh",
+      "channelHint": "Kênh nơi thao tác sẽ được đăng hoặc thực hiện",
+      "activeLabel": "Đang hoạt động",
+      "target": "Mục tiêu",
+      "targetThisRoster": "Danh sách này",
+      "targetGroups": "Nhóm",
+      "targetHint": "Chỉ áp dụng tự động hóa cho danh sách này hoặc cho mọi danh sách trong nhóm",
+      "group": "Nhóm",
+      "groupAutomationHint": "Quản lý trong thẻ Nhóm",
+      "targetRoster": "Danh sách",
+      "targetGroup": "Nhóm",
+      "willExecute": "Sẽ thực hiện vào thời gian đã lên lịch",
+      "paused": "Đã tạm dừng – sẽ không thực hiện",
+      "actions": {
+        "ping": "Gửi lời nhắc",
+        "post": "Đăng danh sách",
+        "openSignup": "Mở đăng ký",
+        "closeSignup": "Đóng đăng ký",
+        "delete": "Xóa danh sách",
+        "clear": "Xóa toàn bộ thành viên",
+        "archive": "Lưu trữ danh sách"
+      },
+      "actionDescriptions": {
+        "roster_ping": "Gửi lời nhắc đến thành viên chưa đăng ký hoặc đang ở sai bang hội",
+        "roster_post": "Đăng danh sách cuối cùng vào kênh đã chọn",
+        "roster_signup": "Mở đăng ký để người chơi tham gia",
+        "roster_signup_close": "Đóng đăng ký và ngăn lượt đăng ký mới",
+        "roster_delete": "Xóa vĩnh viễn danh sách cùng toàn bộ dữ liệu",
+        "roster_clear": "Xóa toàn bộ thành viên nhưng vẫn giữ danh sách",
+        "roster_archive": "Lưu trữ danh sách và chuyển sang chế độ chỉ đọc"
+      },
+      "infoBox": "Tự động hóa được kích hoạt theo thời gian bắt đầu sự kiện. Hãy đặt khoảng chênh lệch (VD: trước 3 ngày), bot sẽ tự động thực hiện thao tác vào thời điểm đó, kể cả với sự kiện lặp lại."
+    },
+    "groups": {
+      "title": "Nhóm danh sách",
+      "description": "Sắp xếp danh sách thành nhóm để quản lý hiệu quả hơn",
+      "create": "Nhóm mới",
+      "noGroups": "Chưa tạo nhóm nào",
+      "rostersCount": "Danh sách",
+      "createTitle": "Tạo nhóm",
+      "editTitle": "Chỉnh sửa nhóm",
+      "nameLabel": "Tên nhóm",
+      "namePlaceholder": "VD: Nhóm CWL",
+      "infoBox": "Nhóm giúp bạn sắp xếp nhiều danh sách cùng nhau (VD: toàn bộ danh sách CWL). Bạn có thể gán danh sách vào nhóm trong thẻ Cài đặt và áp dụng tự động hóa cho mọi danh sách trong nhóm cùng lúc.",
+      "manageAutomations": "Quản lý tự động hóa",
+      "automationsTitle": "Tự động hóa của nhóm",
+      "automationsDesc": "Các tự động hóa này áp dụng cho mọi danh sách trong nhóm",
+      "noAutomations": "Không có tự động hóa",
+      "noAutomationsHint": "Tạo tự động hóa cho nhóm này",
+      "addAutomation": "Thêm tự động hóa",
+      "deleteConfirm": "Xóa nhóm “{name}”? Các danh sách trong nhóm sẽ trở thành chưa phân nhóm.",
+      "emptyGroup": "Nhóm này chưa có danh sách",
+      "rules": {
+        "title": "Quy tắc nhóm",
+        "rulesHint": "Các quy tắc này áp dụng ngay cho mọi danh sách trong nhóm.",
+        "maxAccounts": "Số tài khoản tối đa/người dùng",
+        "maxAccountsBadge": "Tối đa {count}/người dùng",
+        "rosterSize": "Quy mô danh sách",
+        "rosterSizeBadge": "Quy mô {size}",
+        "minSignups": "Ngưỡng lấp đầy",
+        "minSignupsBadge": "Ngưỡng {count}",
+        "categoriesTitle": "Danh mục đăng ký",
+        "categoriesHint": "Chọn các danh mục khả dụng cho nhóm này. Thay đổi sẽ áp dụng ngay cho mọi danh sách.",
+        "categoriesBadge": "{count} danh mục",
+        "noCategories": "Chưa có danh mục.",
+        "newCategoryPlaceholder": "Tên danh mục mới…"
+      }
+    },
+    "categories": {
+      "title": "Danh mục đăng ký",
+      "description": "Các danh mục dùng để đăng ký người chơi và lọc danh sách",
+      "manage": "Quản lý danh mục",
+      "create": "Danh mục mới",
+      "noCategories": "Chưa tạo danh mục nào",
+      "createTitle": "Tạo danh mục",
+      "editTitle": "Chỉnh sửa danh mục",
+      "deleteConfirm": "Xóa danh mục “{name}”?",
+      "idLabel": "ID danh mục",
+      "nameLabel": "Tên danh mục",
+      "infoBox": "Danh mục cho phép người chơi cho biết mức độ sẵn sàng hoặc vai trò khi đăng ký (VD: “Sẵn sàng”, “Chưa chắc”, “Chỉ khi cần”). Danh mục được dùng chung cho mọi danh sách trên máy chủ. Với danh sách theo nhóm, hãy chọn danh mục áp dụng trong cài đặt nhóm."
+    },
+    "settings": {
+      "general": "Danh tính và cấu hình",
+      "restrictions": "Hạn chế và giới hạn",
+      "name": "Tên danh sách",
+      "rosterType": "Loại danh sách",
+      "typeClan": "Bang hội",
+      "typeFamily": "Hệ thống bang hội",
+      "signupScope": "Phạm vi đăng ký",
+      "scopeClanOnly": "Chỉ bang hội",
+      "scopeFamilyWide": "Toàn hệ thống bang hội",
+      "clan": "Bang hội",
+      "selectClan": "Chọn bang hội",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả cho danh sách...",
+      "typeAndScope": "Loại và phạm vi",
+      "eventTime": "Thời gian bắt đầu sự kiện",
+      "eventTimeHint": "Thời điểm sự kiện bắt đầu, được dùng cho tự động hóa và đồng hồ đếm ngược.",
+      "recurrenceDays": "Lặp lại mỗi",
+      "recurrenceModeDays": "Mỗi N ngày",
+      "recurrenceModeMonthly": "Ngày trong tháng",
+      "recurrenceDaysUnit": "ngày",
+      "recurrenceDayOfMonthPrefix": "Vào ngày",
+      "recurrenceDayOfMonthSuffix": "hằng tháng",
+      "recurrenceDaysHint": "Để trống nếu sự kiện chỉ diễn ra một lần. Nhập số ngày giữa các lần lặp lại (VD: 30 cho CWL hằng tháng).",
+      "recurrenceDayOfMonthHint": "Lặp lại vào ngày này hằng tháng (VD: 1 = ngày đầu tháng).",
+      "group": "Nhóm",
+      "noGroup": "Không có nhóm",
+      "thRequirements": "Yêu cầu Nhà Chính",
+      "minTh": "TH tối thiểu",
+      "maxTh": "TH tối đa",
+      "signupLimits": "Giới hạn đăng ký",
+      "rosterSize": "Quy mô danh sách",
+      "rosterSizeHint": "Số thành viên tối đa",
+      "minSignups": "Số lượng đăng ký tối thiểu",
+      "minSignupsHint": "Số lượt đăng ký tối thiểu cần có để lấp đầy danh sách",
+      "maxAccountsPerUser": "Số tài khoản tối đa mỗi người dùng",
+      "maxAccountsHint": "Giới hạn tài khoản cho mỗi người dùng Discord",
+      "allowedCategories": "Danh mục đăng ký được phép",
+      "allowedCategoriesHint": "Nhấp để bật hoặc tắt. Nếu không chọn mục nào, mọi danh mục đều được phép.",
+      "defaultSignupCategory": "Danh mục đăng ký mặc định",
+      "defaultSignupCategoryNone": "Không có (không đặt mặc định)",
+      "defaultSignupCategoryHint": "Danh mục được chọn sẵn khi thành viên đăng ký.",
+      "categoriesManagedByGroup": "Danh mục đăng ký được quản lý ở cấp nhóm. Mở cài đặt nhóm từ trang Danh sách để chọn các danh mục khả dụng cho mọi danh sách trong nhóm.",
+      "saving": "Đang lưu…",
+      "save": "Lưu cài đặt"
+    }
+  },
+  "LinksPage": {
+    "title": "Quản lý liên kết",
+    "description": "Quản lý liên kết tài khoản của thành viên Discord và xác minh quyền sở hữu",
+    "tabs": {
+      "overview": "Tổng quan",
+      "pending": "Đang chờ",
+      "bulk": "Thao tác hàng loạt",
+      "analytics": "Phân tích"
+    },
+    "stats": {
+      "totalMembers": "Tổng số thành viên",
+      "membersWithLinks": "Thành viên có liên kết",
+      "totalLinkedAccounts": "Tổng tài khoản đã liên kết",
+      "verifiedAccounts": "Tài khoản đã xác minh",
+      "ofTotal": "trên tổng số",
+      "avgPerMember": "TB",
+      "perMember": "mỗi thành viên",
+      "verified": "Đã xác minh"
+    },
+    "filters": {
+      "searchPlaceholder": "Tìm theo tên thành viên, tên người dùng, tên hoặc mã người chơi...",
+      "filterByStatus": "Lọc theo trạng thái",
+      "allAccounts": "Tất cả tài khoản",
+      "verifiedOnly": "Chỉ đã xác minh",
+      "unverifiedOnly": "Chỉ chưa xác minh",
+      "minAccounts": "Số tài khoản tối thiểu",
+      "allMembers": "Tất cả thành viên",
+      "oneOrMore": "Từ 1 tài khoản",
+      "twoOrMore": "Từ 2 tài khoản",
+      "threeOrMore": "Từ 3 tài khoản",
+      "fiveOrMore": "Từ 5 tài khoản"
+    },
+    "overview": {
+      "title": "Liên kết tài khoản",
+      "description": "Xem và quản lý tất cả liên kết tài khoản giữa Discord và Clash of Clans",
+      "showingMembers": "Đang hiển thị {count} {members}",
+      "member": "Thành viên",
+      "members": "Thành viên",
+      "noMembers": "Không tìm thấy thành viên",
+      "adjustFilters": "Hãy thử thay đổi tìm kiếm hoặc bộ lọc.",
+      "noLinkedAccounts": "Không có thành viên nào có tài khoản đã liên kết.",
+      "exportCSV": "Xuất CSV",
+      "exportJSON": "Xuất JSON",
+      "account": "Tài khoản",
+      "accounts": "Tài khoản",
+      "more": "Khác",
+      "unknown": "Không rõ"
+    },
+    "pending": {
+      "title": "Xác minh đang chờ",
+      "description": "{count} tài khoản đang chờ xác minh",
+      "allVerified": "Tất cả tài khoản đã được xác minh!",
+      "noPending": "Hiện không có xác minh nào đang chờ.",
+      "linked": "Đã liên kết"
+    },
+    "bulk": {
+      "title": "Thao tác hàng loạt",
+      "description": "Thực hiện thao tác với nhiều thành viên cùng lúc",
+      "selectAll": "Chọn tất cả ({count})",
+      "deselectAll": "Bỏ chọn tất cả",
+      "unlinkSelected": "Hủy liên kết mục đã chọn ({count})",
+      "linked": "Đã liên kết",
+      "comingSoon": "Tính năng hủy liên kết hàng loạt sắp ra mắt!"
+    },
+    "analytics": {
+      "title": "Phân tích liên kết",
+      "description": "Tổng quan thống kê và xu hướng liên kết",
+      "verificationRate": "Tỷ lệ xác minh",
+      "verified": "Đã xác minh",
+      "unverified": "Chưa xác minh",
+      "accountDistribution": "Phân bố tài khoản",
+      "oneAccount": "1 tài khoản",
+      "twoToThreeAccounts": "2–3 tài khoản",
+      "fourPlusAccounts": "Từ 4 tài khoản",
+      "townHallLevels": "Cấp Nhà Chính",
+      "other": "Khác",
+      "coverage": "Mức bao phủ",
+      "linkedMembers": "Thành viên đã liên kết",
+      "coverageRate": "Tỷ lệ bao phủ",
+      "linkInsights": "Thông tin liên kết",
+      "avgAccountsPerMember": "Số tài khoản trung bình mỗi thành viên:",
+      "mostLinkedAccounts": "Nhiều tài khoản liên kết nhất:",
+      "membersWithoutLinks": "Thành viên chưa liên kết:"
+    },
+    "actions": {
+      "unlinkAccount": "Hủy liên kết tài khoản"
+    },
+    "deleteDialog": {
+      "title": "Hủy liên kết tài khoản",
+      "description": "Bạn có chắc muốn hủy liên kết của {playerName} không? Không thể hoàn tác thao tác này.",
+      "cancel": "Hủy",
+      "unlinking": "Đang hủy liên kết...",
+      "unlink": "Hủy liên kết"
+    },
+    "bulkDialog": {
+      "title": "Hủy liên kết hàng loạt",
+      "description": "Bạn có chắc muốn hủy liên kết tất cả tài khoản của {count} thành viên đã chọn không? Không thể hoàn tác.",
+      "cancel": "Hủy",
+      "unlinkAll": "Hủy tất cả liên kết"
+    },
+    "toast": {
+      "unlinkFailed": "Không thể hủy liên kết tài khoản. Vui lòng thử lại."
+    },
+    "badges": {
+      "verified": "Đã xác minh",
+      "unverified": "Chưa xác minh",
+      "pending": "Đang chờ"
+    },
+    "pagination": {
+      "showing": "Đang hiển thị {start}–{end} trong số {total} thành viên",
+      "page": "Trang {current}/{total}",
+      "previous": "Trước đó",
+      "next": "Tiếp theo"
+    }
+  },
+  "WarsPage": {
+    "title": "Thống kê hội chiến",
+    "description": "Theo dõi thành tích hội chiến và phân tích số liệu tấn công",
+    "actions": {
+      "exportData": "Xuất dữ liệu",
+      "resetFilters": "Đặt lại bộ lọc",
+      "applyFilters": "Áp dụng bộ lọc"
+    },
+    "filters": {
+      "title": "Bộ lọc",
+      "description": "Lọc thống kê hội chiến theo nhiều tiêu chí",
+      "clan": "Bang hội",
+      "allClans": "Tất cả bang hội",
+      "townHall": "Nhà Chính",
+      "townHallShort": "TH",
+      "allTownHalls": "Tất cả cấp Nhà Chính",
+      "townHallLevel": "Nhà Chính {level}",
+      "period": "Khoảng thời gian",
+      "last7Days": "7 ngày qua",
+      "last30Days": "30 ngày gần nhất",
+      "last90Days": "90 ngày qua",
+      "last6Months": "6 tháng qua",
+      "lastYear": "Năm qua",
+      "custom": "Tùy chỉnh",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "warTypes": "Loại hội chiến"
+    },
+    "summaryStats": {
+      "totalWins": "Tổng số trận thắng",
+      "totalWinsDesc": "Trong tổng số {totalWars} trận hội chiến",
+      "totalLosses": "Tổng số trận thua",
+      "totalLossesDesc": "{totalDraws} trận hòa",
+      "winRate": "Tỷ lệ thắng",
+      "winRateDesc": "Hiệu suất tổng thể",
+      "activeWars": "Hội chiến đang diễn ra",
+      "activeWarsDesc": "{activeCwl} trong CWL"
+    },
+    "charts": {
+      "dailyPerformance": {
+        "title": "Thành tích hội chiến theo tuần",
+        "description": "Số trận thắng, thua và hòa hàng tuần trong khoảng thời gian đã chọn",
+        "wins": "Thắng",
+        "losses": "Thua",
+        "draws": "Hòa"
+      },
+      "thSuccessRate": {
+        "title": "Tỷ lệ tấn công thành công theo Nhà Chính",
+        "description": "Tỷ lệ 3 sao theo cấp Nhà Chính",
+        "threeStarPercent": "3 sao %",
+        "otherPercent": "Khác %"
+      },
+      "warTypeDistribution": {
+        "title": "Phân bố loại hội chiến",
+        "description": "Phân tích theo từng loại hội chiến",
+        "cwl": "CWL",
+        "random": "Ngẫu nhiên",
+        "friendly": "Giao hữu"
+      },
+      "topPerformers": {
+        "title": "Người chơi xuất sắc nhất",
+        "description": "Người chơi dẫn đầu theo tổng số sao",
+        "attacksAndStars": "{attacks} lượt tấn công • {stars} sao",
+        "noData": "Không có dữ liệu người chơi. Hãy thử thay đổi bộ lọc."
+      },
+      "missedAttacks": {
+        "title": "Lượt tấn công bỏ lỡ",
+        "description": "Người chơi chưa dùng hết lượt tấn công",
+        "attacks": "Lượt tấn công chưa dùng"
+      },
+      "topDefenders": {
+        "title": "Người phòng thủ tốt nhất",
+        "description": "Người phòng thủ tốt nhất theo số sao mất trung bình",
+        "defensesAndStars": "{defenses} lượt phòng thủ • mất {stars} sao",
+        "noData": "Không có dữ liệu phòng thủ. Hãy thử thay đổi bộ lọc."
+      },
+      "worstAttackers": {
+        "title": "Người tấn công kém nhất",
+        "description": "Người chơi có số sao trung bình mỗi lượt tấn công thấp nhất (tối thiểu 3 lượt)",
+        "attacksAndStars": "{attacks} lượt tấn công • {stars} sao",
+        "noData": "Không có dữ liệu người chơi. Hãy thử thay đổi bộ lọc."
+      },
+      "worstDefenders": {
+        "title": "Người phòng thủ kém nhất",
+        "description": "Người chơi để mất nhiều sao nhất khi phòng thủ (tối thiểu 3 lượt)",
+        "defensesAndStars": "{defenses} lượt phòng thủ • mất {stars} sao",
+        "noData": "Không có dữ liệu phòng thủ. Hãy thử thay đổi bộ lọc."
+      }
+    },
+    "clanStatsTable": {
+      "title": "Thống kê hội chiến bang hội",
+      "description": "Thống kê chi tiết của từng bang hội",
+      "headers": {
+        "clan": "Bang hội",
+        "status": "Trạng thái",
+        "wars": "Hội chiến",
+        "record": "T/B/H",
+        "winRate": "Tỷ lệ thắng",
+        "avgDestruction": "Phá hủy trung bình",
+        "avgStarsPerAttack": "Sao/lượt tấn công",
+        "avgDefenseStars": "Sao/lượt phòng thủ"
+      },
+      "status": {
+        "inWar": "Đang hội chiến",
+        "cwl": "CWL",
+        "peace": "Không tham chiến"
+      },
+      "noData": "Không có thống kê bang hội. Hãy thử áp dụng bộ lọc hoặc chờ tải dữ liệu."
+    },
+    "toast": {
+      "errorTitle": "Lỗi",
+      "errorLoadingClans": "Không thể tải bang hội. Vui lòng thử lại.",
+      "errorLoadingWarData": "Không thể tải dữ liệu hội chiến. Vui lòng thử lại.",
+      "errorNoClans": "Không có bang hội khả dụng",
+      "errorApplyingFilters": "Không thể áp dụng bộ lọc. Vui lòng thử lại."
+    }
+  },
+  "LeaderboardsPage": {
+    "title": "Bảng xếp hạng",
+    "description": "Bảng xếp hạng toàn cầu cho Thủ Đô Bang Hội và nhiều nội dung khác",
+    "comingSoon": "Tính năng này sắp ra mắt. Hãy quay lại sau!",
+    "stats": {
+      "totalEntries": "Tổng số mục",
+      "type": "Kiểu",
+      "league": "Giải đấu",
+      "weekend": "Cuối tuần"
+    },
+    "filters": {
+      "title": "Bộ lọc",
+      "description": "Tùy chỉnh chế độ xem bảng xếp hạng",
+      "type": "Kiểu",
+      "metric": "Chỉ số",
+      "league": "Giải đấu",
+      "weekend": "Cuối tuần"
+    },
+    "types": {
+      "player": "Người chơi",
+      "clan": "Bang hội"
+    },
+    "metrics": {
+      "capital": {
+        "player": {
+          "capitalLooted": "Tài nguyên Thủ Đô đã cướp"
+        },
+        "clan": {
+          "capitalTotalLoot": "Tổng chiến lợi phẩm",
+          "raidsCompleted": "Đột kích đã hoàn thành",
+          "enemyDistrictsDestroyed": "Quận đã phá hủy",
+          "medals": "Huy chương"
+        }
+      }
+    },
+    "leagues": {
+      "all": "Tất cả",
+      "legendLeague": "Giải Huyền Thoại",
+      "titanLeagueI": "Giải Titan I",
+      "titanLeagueII": "Giải Titan II",
+      "titanLeagueIII": "Giải Titan III"
+    },
+    "rankings": {
+      "title": "Xếp hạng",
+      "description": "{count} {type} hàng đầu cho {weekend}",
+      "players": "Người chơi",
+      "clans": "Bang hội"
+    },
+    "empty": {
+      "title": "Không có dữ liệu.",
+      "description": "Hãy thử chọn cuối tuần hoặc giải đấu khác"
+    }
+  },
+  "ClansPage": {
+    "title": "Quản lý bang hội",
+    "description": "Cấu hình bang hội và thiết lập tích hợp Discord",
+    "addClan": "Thêm bang hội",
+    "addNewClan": "Thêm bang hội mới",
+    "addClanDescription": "Nhập mã bang hội để thêm vào máy chủ",
+    "clanTag": "Mã bang hội",
+    "totalClans": "Tổng số bang hội",
+    "registeredClans": "Bang hội đã đăng ký",
+    "configured": "Đã cấu hình",
+    "withSettingsConfigured": "Đã cấu hình thiết lập",
+    "totalMembers": "Tổng số thành viên",
+    "acrossAllClans": "Trên tất cả bang hội",
+    "channels": "Kênh",
+    "availableChannels": "Kênh khả dụng",
+    "noClansYet": "Chưa có bang hội",
+    "getStartedAdding": "Bắt đầu bằng cách thêm bang hội đầu tiên",
+    "addFirstClan": "Thêm bang hội đầu tiên",
+    "level": "Cấp",
+    "members": "Thành viên",
+    "status": "Trạng thái",
+    "configuredBadge": "Đã cấu hình",
+    "setupRequired": "Cần thiết lập",
+    "configure": "Cấu hình",
+    "sorting": {
+      "label": "Sắp xếp bang hội",
+      "sortBy": "Sắp xếp theo",
+      "toggleDirection": "Đổi hướng sắp xếp",
+      "added": "Được thêm vào",
+      "name": "Tên bang hội",
+      "level": "Cấp bang hội",
+      "members": "Thành viên"
+    },
+    "configureClan": "Cấu hình {name} ({tag})",
+    "customizeIntegration": "Tùy chỉnh thiết lập tích hợp Discord cho bang hội này",
+    "tabs": {
+      "basic": "Thiết lập Discord",
+      "war": "Hội chiến"
+    },
+    "memberRole": "Vai trò thành viên",
+    "leaderRole": "Vai trò thủ lĩnh",
+    "selectRole": "Chọn vai trò",
+    "none": "Không có",
+    "clanAbbreviation": "Tên viết tắt bang hội",
+    "warScoreCountdown": "Bảng điểm hội chiến",
+    "warScoreCountdownDescription": "Tạo kênh thoại hiển thị điểm hội chiến hiện tại",
+    "warTimerCountdown": "Đếm ngược hội chiến",
+    "warTimerCountdownDescription": "Tạo kênh thoại hiển thị thời gian hội chiến còn lại",
+    "category": "Danh mục",
+    "categoryOptions": {
+      "none": "Không có danh mục",
+      "premade": "Danh mục phổ biến",
+      "usedByServer": "Được bang hội khác sử dụng",
+      "clanCount": "{count, plural, one {# bang hội} other {# bang hội}}"
+    },
+    "categories": {
+      "title": "Danh mục bang hội",
+      "description": "Tạo và quản lý các danh mục dành cho bang hội trên máy chủ.",
+      "refresh": "Làm mới",
+      "createLabel": "Danh mục mới",
+      "name": "Tên danh mục",
+      "namePlaceholder": "ví dụ: Thi đấu",
+      "nameHelp": "{count}/{max} ký tự sau khi chuẩn hóa khoảng trắng",
+      "create": "Tạo danh mục",
+      "empty": "Chưa tạo danh mục bang hội nào.",
+      "clanCount": "{count, plural, one {# bang hội} other {# bang hội}}",
+      "renameAction": "Đổi tên {name}",
+      "deleteAction": "Xóa {name}",
+      "renameTitle": "Đổi tên danh mục bang hội",
+      "renameDescription": "Tên đã chuẩn hóa sẽ cập nhật cho mọi bang hội được gán.",
+      "saveRename": "Lưu tên",
+      "deleteTitle": "Xóa danh mục bang hội?",
+      "deleteWarning": "Xóa “{name}” sẽ khiến {count, plural, one {# bang hội} other {# bang hội}} không còn thuộc danh mục nào.",
+      "deleteCountMayChange": "Bản xem trước hiện đang cập nhật. Kết quả xóa sẽ báo số bang hội thực tế bị ảnh hưởng.",
+      "confirmDelete": "Xóa danh mục",
+      "deleteSuccessTitle": "Đã xóa {name}",
+      "deleteSuccessDescription": "{count, plural, =0 {Không có bang hội nào thay đổi.} one {# bang hội hiện không thuộc danh mục nào.} other {# bang hội hiện không thuộc danh mục nào.}}",
+      "created": "Đã tạo {name}.",
+      "renamed": "Đã đổi tên danh mục thành {name}.",
+      "errors": {
+        "title": "Danh mục không khả dụng",
+        "load": "Không thể tải danh mục bang hội.",
+        "create": "Không thể tạo danh mục bang hội.",
+        "rename": "Không thể đổi tên danh mục bang hội.",
+        "preview": "Không thể tải bản xem trước thao tác xóa.",
+        "delete": "Không thể xóa danh mục bang hội.",
+        "refresh": "Danh mục đã thay đổi nhưng không thể tải trạng thái danh mục hoặc bang hội mới.",
+        "invalidName": "Dùng tên không trống, tối đa 64 ký tự và không chứa ký tự điều khiển."
+      }
+    },
+    "fieldHelp": {
+      "infoButtonLabel": "Hiển thị thêm thông tin",
+      "memberRole": "Vai trò dành cho thành viên bang hội. Nếu bot quản lý vai trò trên Discord, mọi người trong bang hội sẽ nhận vai trò này. Hữu ích khi tạo kênh riêng cho bang hội.",
+      "leaderRole": "Vai trò dành cho đồng thủ lĩnh và thủ lĩnh bang hội. Hữu ích cho kênh trò chuyện thủ lĩnh riêng hoặc dùng chung giữa các bang hội.",
+      "clanAbbreviation": "Đặt tên viết tắt để thành viên có thể dùng trong tên khi bật đổi tên. Bạn có thể cấu hình định dạng trong <familySettingsLink>Cài đặt hệ thống bang hội</familySettingsLink>.",
+      "category": "Đây là cách tổ chức các bang hội. Nhiều hệ thống có từ năm bang hội trở lên, trong đó một số chỉ dành cho CWL hoặc sự kiện."
+    },
+    "roleIdPlaceholder": "ID vai trò",
+    "abbreviationPlaceholder": "ví dụ: CK",
+    "categoryPlaceholder": "Tên danh mục",
+    "notAvailable": "Không có",
+    "saving": "Đang lưu…",
+    "saveChanges": "Lưu thay đổi",
+    "deleteConfirm": "Bạn có chắc muốn xóa {tag} không? Mọi lời nhắc và nhật ký liên quan cũng sẽ bị xóa.",
+    "toast": {
+      "errorLoadingClans": "Không thể tải bang hội",
+      "errorLoadingSettings": "Không thể tải cài đặt bang hội",
+      "errorEmptyClanTag": "Vui lòng nhập mã bang hội",
+      "clanAdded": "Đã thêm bang hội",
+      "errorAddingClan": "Không thể thêm bang hội",
+      "clanRemoved": "Đã xóa bang hội",
+      "errorRemovingClan": "Không thể xóa bang hội",
+      "settingsSaved": "Đã lưu cài đặt",
+      "errorSavingSettings": "Không thể lưu cài đặt",
+      "countdownEnabled": "Đã tạo kênh thoại đếm ngược",
+      "countdownDisabled": "Đã xóa kênh thoại đếm ngược",
+      "errorTogglingCountdown": "Không thể chuyển trạng thái đếm ngược"
+    }
+  },
+  "RolesPage": {
+    "title": "Quản lý vai trò",
+    "description": "Cấu hình tự động gán vai trò dựa trên thống kê người chơi",
+    "stats": {
+      "totalRoles": "Tổng số vai trò",
+      "totalRolesDesc": "Vai trò đã được cấu hình",
+      "autoEvaluation": "Đánh giá tự động",
+      "autoEvaluationOn": "Bật",
+      "autoEvaluationOff": "Tắt",
+      "autoEvaluationActiveDesc": "Đang tự động gán vai trò",
+      "autoEvaluationInactiveDesc": "Chỉ gán vai trò thủ công",
+      "activeTypes": "Loại đang hoạt động",
+      "activeTypesDesc": "Các loại vai trò đang được sử dụng",
+      "discordRoles": "Vai trò Discord",
+      "discordRolesDesc": "Có sẵn trên máy chủ"
+    },
+    "settings": {
+      "title": "Cài đặt đánh giá tự động",
+      "description": "Cấu hình việc đánh giá và gán vai trò tự động",
+      "saveButton": "Lưu cài đặt",
+      "saving": "Đang lưu…",
+      "enableAutoEval": "Bật đánh giá tự động",
+      "enableAutoEvalDesc": "Tự động gán và xóa vai trò dựa trên thống kê người chơi",
+      "autoNickname": "Tự động cập nhật biệt danh",
+      "autoNicknameDesc": "Cập nhật biệt danh khi đánh giá vai trò"
+    },
+    "roleTypes": {
+      "townhall": "Nhà Chính",
+      "league": "Giải đấu",
+      "builderhall": "Nhà Thợ Xây",
+      "builderLeague": "Giải Nhà Thợ Xây",
+      "achievement": "Thành tích",
+      "status": "Thâm niên Discord",
+      "familyPosition": "Vị trí trong hệ thống bang hội"
+    },
+    "familyPositions": {
+      "member": "Thành viên",
+      "elder": "Trưởng lão",
+      "coLeader": "Đồng thủ lĩnh",
+      "leader": "Thủ lĩnh"
+    },
+    "leagues": {
+      "legend": "Huyền Thoại",
+      "electroDragon": "Rồng Điện",
+      "dragon": "Rồng",
+      "electroTitan": "Titan Điện",
+      "pekka": "P.E.K.K.A",
+      "golem": "Người Đá",
+      "witch": "Phù Thủy",
+      "valkyrie": "Nữ Chiến Binh",
+      "wizard": "Pháp Sư",
+      "archer": "Cung Thủ",
+      "barbarian": "Man Rợ",
+      "skeleton": "Bộ Xương"
+    },
+    "builderLeagues": {
+      "diamond": "Kim Cương",
+      "ruby": "Hồng Ngọc",
+      "emerald": "Ngọc Lục Bảo",
+      "platinum": "Bạch Kim",
+      "titanium": "Titan",
+      "steel": "Thép",
+      "iron": "Sắt",
+      "brass": "Đồng Thau",
+      "copper": "Đồng",
+      "stone": "Đá",
+      "clay": "Đất Sét",
+      "wood": "Gỗ"
+    },
+    "achievements": {
+      "keepYourAccountSafe": "Giữ an toàn cho tài khoản!",
+      "biggerAndBetter": "Lớn hơn và tốt hơn",
+      "discoverNewTroops": "Khám phá quân mới",
+      "biggerCoffers": "Kho chứa lớn hơn",
+      "goldGrab": "Săn Vàng",
+      "elixirEscapade": "Phiêu lưu cùng Elixir",
+      "heroicHeist": "Phi vụ anh hùng",
+      "wellSeasoned": "Dày dạn kinh nghiệm",
+      "niceAndTidy": "Sạch sẽ gọn gàng",
+      "empireBuilder": "Kiến tạo đế chế",
+      "clanWarWealth": "Làm giàu từ Hội Chiến",
+      "friendInNeed": "Bạn tốt lúc hoạn nạn",
+      "sharingIsCaring": "Chia sẻ là quan tâm",
+      "siegeSharer": "Chia sẻ Máy Công Thành",
+      "warHero": "Anh hùng Hội Chiến",
+      "warLeagueLegend": "Huyền thoại Giải Đấu Hội Chiến",
+      "gamesChampion": "Nhà vô địch Trò Chơi Bang Hội",
+      "unbreakable": "Bất khả xâm phạm",
+      "sweetVictory": "Chiến thắng ngọt ngào!",
+      "conqueror": "Nhà chinh phục",
+      "leagueAllStar": "Ngôi sao giải đấu",
+      "leagueFollower": "Người theo dõi giải đấu",
+      "leagueEnthusiast": "Người mê giải đấu",
+      "leagueSuperfan": "Siêu fan giải đấu",
+      "leagueFanatic": "Tín đồ giải đấu",
+      "leagueMaster": "Bậc thầy giải đấu",
+      "legendLeague": "Giải Huyền Thoại",
+      "humiliator": "Kẻ nghiền nát",
+      "notSoEasyThisTime": "Lần này không dễ đâu",
+      "unionBuster": "Kẻ phá công đoàn",
+      "bustThis": "Phá cái này đi!",
+      "wallBuster": "Kẻ phá Tường",
+      "mortarMauler": "Kẻ nghiền Pháo Cối",
+      "xBowExterminator": "Kẻ diệt Nỏ X",
+      "firefighter": "Lính cứu hỏa",
+      "antiArtillery": "Khắc tinh Pháo Đại Bàng",
+      "shatteredAndScatter": "Tan tành",
+      "counterspell": "Phản phép",
+      "monolithMasher": "Kẻ nghiền Khối Đá",
+      "multiArcherTowerTerminator": "Kẻ hủy Tháp Cung Đa Năng",
+      "ricochetCannonCrusher": "Kẻ nghiền Pháo Nảy",
+      "firespitterFinisher": "Kẻ diệt Pháo Phun Lửa",
+      "multiGearTowerTrampler": "Kẻ hủy Tháp Đa Bánh Răng",
+      "craftersNightmare": "Cơn ác mộng của thợ thủ công",
+      "getThoseGoblins": "Bắt lũ Yêu Tinh đó!",
+      "supercharger": "Siêu nạp",
+      "craftingConnoisseur": "Bậc thầy chế tác",
+      "getThoseOtherGoblins": "Bắt cả lũ Yêu Tinh kia!",
+      "getEvenMoreGoblins": "Bắt thêm Yêu Tinh nữa!",
+      "dragonSlayer": "Dũng sĩ diệt Rồng",
+      "ungratefulChild": "Đứa con vô ơn",
+      "superbWork": "Xuất sắc",
+      "masterEngineering": "Kỹ thuật bậc thầy",
+      "hiddenTreasures": "Kho báu ẩn giấu",
+      "highGear": "Hết công suất",
+      "nextGenerationModel": "Mẫu thế hệ mới",
+      "unBuildIt": "Tháo dỡ đi",
+      "championBuilder": "Thợ xây vô địch",
+      "aggressiveCapitalism": "Chủ nghĩa tư bản hiếu chiến",
+      "mostValuableClanmate": "Đồng đội bang hội xuất sắc nhất"
+    },
+    "configuredRoles": {
+      "title": "Vai trò đã cấu hình",
+      "noRolesConfigured": "Chưa cấu hình vai trò {roleType}",
+      "addRoleToStart": "Nhấp “Thêm vai trò” để tạo vai trò đầu tiên",
+      "discordRole": "Vai trò Discord",
+      "criteria": "Tiêu chí",
+      "mode": "Chế độ",
+      "modeBoth": "Thêm và xóa",
+      "modeAdd": "Chỉ thêm",
+      "modeRemove": "Chỉ xóa",
+      "actions": "Thao tác",
+      "unknownRole": "Vai trò không xác định",
+      "remove": "Xóa",
+      "month": "Tháng",
+      "months": "Tháng"
+    },
+    "addRoleDialog": {
+      "title": "Thêm vai trò mới",
+      "description": "Cấu hình quy tắc gán vai trò tự động mới",
+      "roleType": "Loại vai trò",
+      "mode": "Chế độ",
+      "discordRole": "Vai trò Discord",
+      "selectRole": "Chọn vai trò",
+      "townHallLevel": "Cấp Nhà Chính",
+      "selectThLevel": "Chọn cấp Nhà Chính",
+      "thPrefix": "TH",
+      "league": "Giải đấu",
+      "selectLeague": "Chọn giải đấu",
+      "builderHallLevel": "Cấp Nhà Thợ Xây",
+      "selectBhLevel": "Chọn cấp Nhà Thợ Xây",
+      "bhPrefix": "BH",
+      "builderLeague": "Giải Nhà Thợ Xây",
+      "selectBuilderLeague": "Chọn Giải Nhà Thợ Xây",
+      "achievementName": "Thành tích",
+      "selectAchievement": "Chọn thành tích",
+      "searchAchievement": "Tìm thành tích...",
+      "noAchievementFound": "Không tìm thấy thành tích.",
+      "monthsInServer": "Số tháng trong máy chủ",
+      "monthsPlaceholder": "6",
+      "familyPosition": "Vị trí trong hệ thống bang hội",
+      "selectPosition": "Chọn vị trí",
+      "cancel": "Hủy",
+      "addRole": "Thêm vai trò",
+      "errorDuplicateExact": "Tiêu chí này đã được liên kết với vai trò này.",
+      "errorDuplicateCriterion": "Tiêu chí này đã được gán một vai trò. Hãy xóa vai trò hiện có trước."
+    },
+    "infoCard": {
+      "title": "💡 Cách hoạt động của vai trò tự động",
+      "automaticEvaluation": "Đánh giá tự động:",
+      "automaticEvaluationDesc": "Khi bật, bot sẽ định kỳ kiểm tra người chơi và gán hoặc xóa vai trò theo thống kê hiện tại.",
+      "rolePriority": "Ưu tiên vai trò:",
+      "rolePriorityDesc": "Nếu nhiều vai trò khớp với thống kê của người chơi, vai trò có cấp cao nhất sẽ được gán.",
+      "manualOverride": "Ghi đè thủ công:",
+      "manualOverrideDesc": "Quản trị viên có thể gán vai trò thủ công và vai trò đó sẽ không bị đánh giá tự động xóa."
+    },
+    "categoryRoles": {
+      "title": "Vai trò theo danh mục",
+      "description": "Gán một vai trò Discord cho mỗi danh mục bang hội. Thành viên của các bang hội trong danh mục sẽ tự động nhận vai trò tương ứng.",
+      "addButton": "Thêm danh mục",
+      "categoryName": "Danh mục",
+      "categoryNamePlaceholder": "Tên danh mục",
+      "noCategoryRoles": "Chưa cấu hình vai trò theo danh mục",
+      "noCategoryRolesDesc": "Nhấp “Thêm danh mục” để tạo mới",
+      "addTitle": "Thêm vai trò theo danh mục",
+      "addConfirm": "Thêm",
+      "errorCategoryRequired": "Bắt buộc nhập tên danh mục",
+      "errorRoleRequired": "Bắt buộc chọn vai trò Discord",
+      "errorCategoryExists": "Danh mục này đã được cấu hình vai trò"
+    },
+    "toast": {
+      "changesSaved": "Đã lưu thay đổi!",
+      "errorLoading": "Không thể tải vai trò.",
+      "errorSaving": "Không thể lưu cài đặt",
+      "errorAdding": "Không thể thêm vai trò.",
+      "errorDeleting": "Không thể xóa vai trò."
+    }
+  },
+  "RemindersPage": {
+    "title": "Nhắc nhở",
+    "description": "Cấu hình lời nhắc tự động cho hội chiến, đột kích, Trò Chơi Bang Hội và tình trạng không hoạt động",
+    "types": {
+      "war": "Nhắc nhở hội chiến",
+      "capital": "Thủ Đô Bang Hội",
+      "clanGames": "Trò Chơi Bang Hội",
+      "inactivity": "Không hoạt động"
+    },
+    "tabs": {
+      "war": "Hội chiến",
+      "capital": "Thủ Đô Bang Hội",
+      "clanGames": "Trò Chơi Bang Hội",
+      "inactivity": "Không hoạt động"
+    },
+    "stats": {
+      "totalReminders": "Tổng số lời nhắc",
+      "totalRemindersDesc": "Lời nhắc đang hoạt động đã cấu hình",
+      "warReminders": "Nhắc nhở hội chiến",
+      "warRemindersDesc": "Hội chiến thường và CWL",
+      "capitalReminders": "Lời nhắc Thủ Đô",
+      "capitalRemindersDesc": "Lượt tấn công Cuối Tuần Đột Kích",
+      "otherReminders": "Lời nhắc khác",
+      "otherRemindersDesc": "Trò Chơi Bang Hội và tình trạng không hoạt động"
+    },
+    "actions": {
+      "saving": "Đang lưu…",
+      "saveChanges": "Lưu thay đổi",
+      "addReminder": "Thêm lời nhắc",
+      "addWarReminder": "Thêm lời nhắc hội chiến",
+      "addCapitalReminder": "Thêm lời nhắc Thủ Đô",
+      "addClanGamesReminder": "Thêm lời nhắc Trò Chơi Bang Hội",
+      "addInactivityReminder": "Thêm lời nhắc không hoạt động",
+      "retry": "Thử lại"
+    },
+    "clanSelector": {
+      "label": "Bang hội",
+      "placeholder": "Chọn bang hội",
+      "allClans": "Tất cả bang hội"
+    },
+    "empty": {
+      "noWarReminders": "Không có lời nhắc hội chiến",
+      "noCapitalReminders": "Không có lời nhắc Thủ Đô",
+      "noClanGamesReminders": "Không có lời nhắc Trò Chơi Bang Hội",
+      "noInactivityReminders": "Không có lời nhắc không hoạt động",
+      "getStarted": "Hãy tạo lời nhắc đầu tiên để bắt đầu"
+    },
+    "card": {
+      "new": "Mới",
+      "before": "trước",
+      "timeBefore": "Thời gian còn lại",
+      "timeBeforePlaceholder": "ví dụ: 6",
+      "timeInactive": "Không hoạt động trong",
+      "timeInactivePlaceholder": "ví dụ: 160",
+      "timeUnit": "giờ",
+      "hoursRemaining": "giờ còn lại",
+      "channel": "Kênh",
+      "channelPlaceholder": "Chọn kênh",
+      "threadOptional": "Luồng (không bắt buộc)",
+      "threadPlaceholder": "Chọn một luồng",
+      "noThread": "Đăng trực tiếp trong kênh",
+      "forumPost": "Bài đăng diễn đàn",
+      "forumPostPlaceholder": "Chọn bài đăng diễn đàn",
+      "forumPostRequired": "Kênh diễn đàn yêu cầu chọn bài đăng diễn đàn.",
+      "clan": "Bang hội",
+      "clanPlaceholder": "Chọn bang hội",
+      "customMessage": "Tin nhắn tùy chỉnh",
+      "customMessagePlaceholder": "Đừng quên sử dụng các lượt tấn công!",
+      "customMessagePlaceholderClanGames": "Hãy cố gắng kiếm thêm điểm trong Trò Chơi Bang Hội!",
+      "customMessagePlaceholderInactivity": "Bạn đã không hoạt động trong bang hội một thời gian :(",
+      "warTypes": "Loại hội chiến",
+      "random": "Ngẫu nhiên",
+      "friendly": "Giao hữu",
+      "cwl": "CWL",
+      "pointThreshold": "Ngưỡng điểm",
+      "pointThresholdPlaceholder": "4000",
+      "pointThresholdHelp": "Sẽ nhắc những người có ít hơn {threshold} điểm.",
+      "attackThreshold": "Ngưỡng lượt tấn công",
+      "attackThresholdPlaceholder": "1",
+      "attackThresholdHelp": "Sẽ nhắc những người còn từ {threshold} lượt tấn công trở lên.",
+      "notSet": "Chưa đặt"
+    },
+    "dialog": {
+      "addTitle": "Thêm lời nhắc mới",
+      "addDescription": "Cấu hình lời nhắc mới cho máy chủ",
+      "editTitle": "Chỉnh sửa lời nhắc",
+      "editDescription": "Cập nhật cài đặt lời nhắc",
+      "type": "Loại lời nhắc",
+      "selectType": "Chọn loại",
+      "cancel": "Hủy",
+      "saving": "Đang lưu…",
+      "saveChanges": "Lưu thay đổi",
+      "addReminder": "Thêm lời nhắc"
+    },
+    "toast": {
+      "errorTitle": "Lỗi",
+      "errorLoadingReminders": "Không thể tải lời nhắc. Vui lòng thử lại.",
+      "reminderAdded": "Đã thêm lời nhắc",
+      "reminderAddedDesc": "Đã thêm lời nhắc {type} mới. Đừng quên lưu!",
+      "reminderUpdated": "Đã cập nhật lời nhắc",
+      "successTitle": "Thành công",
+      "reminderDeleted": "Đã xóa lời nhắc",
+      "failedToDelete": "Không thể xóa lời nhắc.",
+      "allRemindersSaved": "Đã lưu tất cả lời nhắc",
+      "failedToSave": "Không thể lưu lời nhắc.",
+      "forumPostRequired": "Chọn một bài đăng diễn đàn trước khi lưu lời nhắc này.",
+      "invalidDestination": "Luồng đã chọn không thuộc kênh này.",
+      "timeExceedsLimit": "Thời gian còn lại phải nằm trong khoảng từ {min} đến {max} giờ",
+      "pointThresholdInvalid": "Ngưỡng điểm phải nằm trong khoảng từ {min} đến {max}",
+      "attackThresholdInvalid": "Ngưỡng tấn công phải nằm trong khoảng từ {min} đến {max}"
+    }
+  },
+  "LogsPage": {
+    "title": "Nhật ký hoạt động",
+    "description": "Cấu hình ghi nhật ký tự động cho hoạt động của bang hội và người chơi",
+    "stats": {
+      "activeLogs": "Nhật ký đang bật",
+      "activeLogsDesc": "Trên toàn bộ bang hội trong hệ thống và nhật ký máy chủ",
+      "logChannels": "Kênh nhật ký",
+      "logChannelsDesc": "Kênh khả dụng",
+      "trackedClans": "Bang hội được theo dõi",
+      "trackedClansDesc": "Bang hội đã cấu hình",
+      "issues": "Sự cố",
+      "issuesDesc": "Trên toàn bộ hệ thống bang hội"
+    },
+    "clanSelector": {
+      "label": "Bang hội",
+      "placeholder": "Chọn bang hội"
+    },
+    "tabs": {
+      "clan": "Bang hội",
+      "war": "Hội chiến",
+      "capital": "Thủ Đô",
+      "player": "Người chơi",
+      "server": "Máy chủ"
+    },
+    "clanLogs": {
+      "joinLog": {
+        "label": "Thành viên gia nhập",
+        "description": "Theo dõi thành viên gia nhập bang hội"
+      },
+      "leaveLog": {
+        "label": "Thành viên rời đi",
+        "description": "Theo dõi thành viên rời bang hội"
+      },
+      "donationLog": {
+        "label": "Quyên góp của thành viên",
+        "description": "Theo dõi việc quyên góp quân và phép"
+      },
+      "clanAchievementLog": {
+        "label": "Thành tích bang hội",
+        "description": "Theo dõi thành tích bang hội đạt được"
+      },
+      "clanRequirementsLog": {
+        "label": "Yêu cầu bang hội",
+        "description": "Theo dõi thay đổi yêu cầu bang hội"
+      },
+      "clanDescriptionLog": {
+        "label": "Mô tả bang hội",
+        "description": "Theo dõi thay đổi mô tả bang hội"
+      },
+      "banAlert": {
+        "label": "Cảnh báo cấm",
+        "description": "Đăng cảnh báo khi người chơi bị cấm gia nhập bang hội"
+      }
+    },
+    "serverLogs": {
+      "redditFeed": {
+        "label": "Bảng tin Reddit",
+        "description": "Đăng bảng tin Reddit của máy chủ"
+      }
+    },
+    "warLogs": {
+      "warLog": {
+        "label": "Nhật ký hội chiến",
+        "description": "Theo dõi lượt tấn công và kết quả hội chiến"
+      },
+      "warPanel": {
+        "label": "Bảng hội chiến",
+        "description": "Bảng hội chiến tương tác được cập nhật trực tiếp"
+      },
+      "cwlLineupChangeLog": {
+        "label": "Thay đổi đội hình CWL",
+        "description": "Theo dõi thay đổi đội hình CWL"
+      }
+    },
+    "capitalLogs": {
+      "capitalDonations": {
+        "label": "Quyên góp Thủ Đô",
+        "description": "Theo dõi quyên góp Vàng Thủ Đô"
+      },
+      "capitalAttacks": {
+        "label": "Tấn công Thủ Đô",
+        "description": "Theo dõi lượt tấn công Cuối Tuần Đột Kích"
+      },
+      "raidPanel": {
+        "label": "Bảng Thủ Đô",
+        "description": "Bảng đột kích tương tác được cập nhật trực tiếp"
+      },
+      "capitalWeeklySummary": {
+        "label": "Tổng kết Thủ Đô hằng tuần",
+        "description": "Tổng kết hiệu suất Thủ Đô hằng tuần"
+      }
+    },
+    "playerLogs": {
+      "roleChange": {
+        "label": "Thay đổi vai trò",
+        "description": "Theo dõi thay đổi vai trò của người chơi trong bang hội"
+      },
+      "troopUpgrade": {
+        "label": "Nâng cấp quân",
+        "description": "Theo dõi các lần nâng cấp quân"
+      },
+      "superTroopBoostLog": {
+        "label": "Cường hóa Siêu Quân",
+        "description": "Theo dõi việc kích hoạt Siêu Quân"
+      },
+      "thUpgrade": {
+        "label": "Nâng cấp Nhà Chính",
+        "description": "Theo dõi nâng cấp Nhà Chính"
+      },
+      "leagueChange": {
+        "label": "Thay đổi giải đấu",
+        "description": "Theo dõi thay đổi hạng giải đấu"
+      },
+      "spellUpgrade": {
+        "label": "Nâng cấp phép",
+        "description": "Theo dõi các lần nâng cấp phép"
+      },
+      "heroUpgrade": {
+        "label": "Nâng cấp Tướng",
+        "description": "Theo dõi các lần nâng cấp Tướng"
+      },
+      "heroEquipmentUpgrade": {
+        "label": "Nâng cấp Trang Bị Tướng",
+        "description": "Theo dõi nâng cấp Trang Bị Tướng"
+      },
+      "nameChange": {
+        "label": "Thay đổi tên",
+        "description": "Theo dõi thay đổi tên người chơi"
+      },
+      "legendLogAttacks": {
+        "label": "Tấn công Giải Huyền Thoại",
+        "description": "Theo dõi lượt tấn công Giải Huyền Thoại"
+      },
+      "legendLogDefenses": {
+        "label": "Phòng thủ Huyền Thoại",
+        "description": "Theo dõi lượt phòng thủ Giải Huyền Thoại"
+      }
+    },
+    "logCard": {
+      "active": "Đang hoạt động",
+      "issue": "Sự cố",
+      "disabled": "Đã tắt",
+      "enable": "Bật",
+      "disable": "Tắt",
+      "channel": "Kênh",
+      "channelPlaceholder": "Chọn kênh",
+      "thread": "Luồng (không bắt buộc)",
+      "threadPlaceholder": "Chọn luồng",
+      "noThread": "Không có luồng",
+      "forumPost": "Bài đăng diễn đàn",
+      "forumPostPlaceholder": "Chọn bài đăng diễn đàn",
+      "forumPostRequired": "Chọn bài đăng diễn đàn trước khi lưu nhật ký.",
+      "invalidThread": "Luồng đã chọn không thuộc kênh này.",
+      "saveDestination": "Lưu đích đến",
+      "channelDeleted": "Kênh này không còn tồn tại. Hãy chọn kênh mới hoặc tắt nhật ký.",
+      "enableToConfig": "Bật nhật ký này để cấu hình",
+      "configuring": "Đang cấu hình",
+      "on": "Bật",
+      "off": "Tắt",
+      "example": "Ví dụ"
+    }
+  },
+  "GeneralPage": {
+    "title": "Cài đặt chung",
+    "description": "Cấu hình hành vi và giao diện bot trên toàn máy chủ",
+    "loading": "Đang tải cài đặt...",
+    "reset": "Đặt lại",
+    "saving": "Đang lưu…",
+    "saveChanges": "Lưu thay đổi",
+    "settingsSaved": "Đã lưu cài đặt!",
+    "infoBanner": {
+      "title": "Bạn đang tìm thêm cài đặt?",
+      "description": "Vai trò hệ thống và cài đặt biệt danh nằm trong trang **Cài đặt hệ thống bang hội**, còn phần quản lý vai trò nằm trong trang **Vai trò**. Vai trò, tên viết tắt, danh mục và bộ đếm ngược hội chiến của từng bang hội nằm trong trang **Bang hội**."
+    },
+    "nickname": {
+      "title": "Quản lý biệt danh",
+      "description": "Kiểm soát định dạng biệt danh",
+      "automaticChanges": "Thay đổi tự động",
+      "automaticChangesDesc": "Cho phép bot cập nhật biệt danh thành viên",
+      "familyFormat": "Định dạng thành viên trong hệ thống",
+      "availablePlaceholders": "Biến thay thế khả dụng",
+      "preview": "Xem trước",
+      "nonFamilyFormat": "Định dạng thành viên ngoài hệ thống",
+      "placeholders": {
+        "discordName": "Tên người dùng Discord",
+        "discordDisplayName": "Biệt danh máy chủ",
+        "playerName": "Tên người chơi CoC",
+        "playerTag": "Mã người chơi",
+        "playerTownhall": "Cấp TH",
+        "playerTownhallSmall": "Cấp TH dạng chỉ số trên",
+        "playerWarstars": "Sao hội chiến",
+        "playerRole": "Vai trò bang hội",
+        "playerClan": "Tên bang hội",
+        "playerLeague": "Giải đấu",
+        "playerClanAbbr": "Tên viết tắt bang hội"
+      }
+    },
+    "appearance": {
+      "title": "Giao diện",
+      "description": "Tùy chỉnh tin nhắn nhúng của bot",
+      "embedColor": "Màu nội dung nhúng",
+      "embedColorDesc": "Màu thanh bên của tất cả nội dung nhúng từ bot trên Discord",
+      "embedColorDefault": "Mặc định: **#D90709** (Đỏ ClashKing)",
+      "embedPreview": "Xem trước nội dung nhúng",
+      "embedPreviewDesc": "Thanh màu này sẽ xuất hiện bên cạnh mọi nội dung nhúng của bot",
+      "editColor": "Chỉnh sửa màu",
+      "resetToDefault": "Khôi phục mặc định",
+      "apply": "Áp dụng"
+    },
+    "security": {
+      "title": "Bảo mật và quyền hạn",
+      "description": "Kiểm soát quyền truy cập và xác minh",
+      "fullWhitelistRole": "Vai trò toàn quyền",
+      "fullWhitelistRoleDesc": "Vai trò Discord có toàn quyền truy cập mọi lệnh bot và bỏ qua các bước kiểm tra quyền",
+      "noRole": "Không có vai trò"
+    },
+    "familyRoles": {
+      "title": "Vai trò hệ thống bang hội",
+      "description": "Quản lý vai trò tự động theo tư cách thành viên hệ thống và vị trí trong bang hội",
+      "selectRole": "Chọn vai trò",
+      "addRole": "Thêm vai trò...",
+      "deletedRole": "Vai trò đã xóa",
+      "noRolesConfigured": "Chưa cấu hình vai trò",
+      "modes": {
+        "both": "Thêm và xóa",
+        "add": "Chỉ thêm",
+        "remove": "Chỉ xóa"
+      },
+      "types": {
+        "family": "Trong hệ thống",
+        "notFamily": "Ngoài hệ thống",
+        "elder": "Trưởng lão",
+        "coLeader": "Đồng thủ lĩnh",
+        "leader": "Thủ lĩnh"
+      },
+      "descriptions": {
+        "family": "Có ít nhất một tài khoản trong bang hội thuộc hệ thống",
+        "notFamily": "Không có tài khoản trong bang hội thuộc hệ thống",
+        "elder": "Là Trưởng lão trong một bang hội thuộc hệ thống",
+        "coLeader": "Là Đồng thủ lĩnh trong một bang hội thuộc hệ thống",
+        "leader": "Là Thủ lĩnh trong một bang hội thuộc hệ thống"
+      }
+    },
+    "tenureRoles": {
+      "title": "Vai trò theo thời gian ở Discord",
+      "description": "Tự động gán vai trò theo thời gian thành viên ở trong máy chủ",
+      "addRole": "Thêm vai trò thâm niên",
+      "addDialogTitle": "Thêm vai trò thâm niên",
+      "addDialogDescription": "Gán vai trò cho thành viên đã ở trong máy chủ đủ số tháng cụ thể",
+      "monthsInServer": "Số tháng trong máy chủ",
+      "discordRole": "Vai trò Discord",
+      "selectRole": "Chọn vai trò",
+      "noRolesConfigured": "Chưa cấu hình vai trò thâm niên",
+      "addRoleToStart": "Thêm vai trò thâm niên để bắt đầu",
+      "months": "Tháng",
+      "month": "Tháng",
+      "actions": "Thao tác",
+      "remove": "Xóa",
+      "unknownRole": "Vai trò không xác định"
+    },
+    "prefix": "Tiền tố lệnh",
+    "language": "Ngôn ngữ",
+    "timezone": "Múi giờ",
+    "theme": "Giao diện"
+  },
+  "FamilySettingsPage": {
+    "title": "Cài đặt hệ thống bang hội",
+    "description": "Cấu hình vai trò hệ thống và định dạng biệt danh cho thành viên bang hội",
+    "loading": "Đang tải cài đặt...",
+    "reset": "Đặt lại",
+    "saving": "Đang lưu…",
+    "saveChanges": "Lưu thay đổi",
+    "settingsSaved": "Đã lưu cài đặt!",
+    "nickname": {
+      "title": "Quản lý biệt danh",
+      "description": "Kiểm soát định dạng biệt danh",
+      "automaticChanges": "Thay đổi tự động",
+      "automaticChangesDesc": "Cho phép bot cập nhật biệt danh thành viên",
+      "familyFormat": "Định dạng thành viên trong hệ thống",
+      "availablePlaceholders": "Biến thay thế khả dụng",
+      "preview": "Xem trước",
+      "nonFamilyFormat": "Định dạng thành viên ngoài hệ thống",
+      "placeholders": {
+        "discordName": "Tên người dùng Discord",
+        "discordDisplayName": "Biệt danh máy chủ",
+        "playerName": "Tên người chơi CoC",
+        "playerTag": "Mã người chơi",
+        "playerTownhall": "Cấp TH",
+        "playerTownhallSmall": "Cấp TH dạng chỉ số trên",
+        "playerWarstars": "Sao hội chiến",
+        "playerRole": "Vai trò bang hội",
+        "playerClan": "Tên bang hội",
+        "playerLeague": "Giải đấu",
+        "playerClanAbbr": "Tên viết tắt bang hội"
+      }
+    },
+    "familyRoles": {
+      "title": "Vai trò hệ thống bang hội",
+      "description": "Quản lý vai trò tự động theo tư cách thành viên hệ thống và vị trí trong bang hội",
+      "selectRole": "Chọn vai trò",
+      "addRole": "Thêm vai trò...",
+      "deletedRole": "Vai trò đã xóa",
+      "noRolesConfigured": "Chưa cấu hình vai trò",
+      "modes": {
+        "both": "Thêm và xóa",
+        "add": "Chỉ thêm",
+        "remove": "Chỉ xóa"
+      },
+      "types": {
+        "family": "Trong hệ thống",
+        "notFamily": "Ngoài hệ thống",
+        "elder": "Trưởng lão",
+        "coLeader": "Đồng thủ lĩnh",
+        "leader": "Thủ lĩnh"
+      },
+      "descriptions": {
+        "family": "Có ít nhất một tài khoản trong bang hội thuộc hệ thống",
+        "notFamily": "Không có tài khoản trong bang hội thuộc hệ thống",
+        "elder": "Là Trưởng lão trong một bang hội thuộc hệ thống",
+        "coLeader": "Là Đồng thủ lĩnh trong một bang hội thuộc hệ thống",
+        "leader": "Là Thủ lĩnh trong một bang hội thuộc hệ thống"
+      }
+    }
+  },
+  "LanguageSwitcher": {
+    "label": "Ngôn ngữ"
+  },
+  "ThemeSwitcher": {
+    "label": "Giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Hệ thống"
+  },
+  "AuthCallback": {
+    "authenticating": "Đang xác thực...",
+    "authenticatingDescription": "Vui lòng chờ trong khi chúng tôi đăng nhập bạn bằng Discord",
+    "authenticationFailed": "Xác thực không thành công",
+    "tryAgain": "Thử lại",
+    "backToHome": "Quay về trang chủ",
+    "errorCancelled": "Đăng nhập đã bị hủy trong Discord. Vui lòng thử lại khi bạn sẵn sàng.",
+    "errorDiscordFailedWithReason": "Xác thực Discord không thành công: {reason}",
+    "errorNoAuthorizationCode": "Không nhận được mã ủy quyền từ Discord.",
+    "errorCodeVerifierMissing": "Không tìm thấy mã xác minh. Vui lòng đăng nhập lại.",
+    "errorAuthenticateFailed": "Không thể xác thực bằng Discord.",
+    "loadingVillages": "Đang đăng nhập bằng Discord...",
+    "loadingClanData": "Đang tải danh sách máy chủ...",
+    "loadingWarStats": "Sắp xong rồi..."
+  },
+  "LoginPage": {
+    "redirecting": "Đang chuyển hướng đến Discord..."
+  },
+  "FeaturesPage": {
+    "hero": {
+      "title": "Tính năng",
+      "subtitle": "Khám phá các công cụ mạnh mẽ mà ClashKing cung cấp để giúp bạn quản lý và phát triển bang hội trên Discord, di động và web."
+    },
+    "sections": {
+      "bot": {
+        "title": "Bot ClashKing",
+        "description": "Bot ClashKing là bot Discord duy nhất bạn cần để quản lý bang hội và cộng đồng Clash of Clans. Bot có nhiều tính năng độc đáo giúp bang hội luôn ngăn nắp, gắn kết và phát triển.",
+        "items": [
+          "Nhật ký theo thời gian thực: Theo dõi hội chiến, CWL, Trò Chơi Bang Hội, đột kích, quyên góp và sự kiện thành viên.",
+          "Hệ thống phiếu hỗ trợ: Phiếu tuyển thành viên bên cạnh các phiếu hỗ trợ thông thường.",
+          "Vai trò tự động: Tự động gán vai trò theo trạng thái bang hội hoặc quy tắc quản lý hệ thống bang hội.",
+          "Nhắc nhở: Gửi thông báo về lượt tấn công, Trò Chơi Bang Hội hoặc bất cứ nội dung nào khác.",
+          "Thống kê chi tiết: Phân tích hiệu suất người chơi và bang hội kèm theo dõi hoạt động.",
+          "Quản lý danh sách thi đấu: Dễ dàng sắp xếp và tối ưu đội hình hội chiến."
+        ],
+        "ctaPrimary": "Mời bot",
+        "ctaSecondary": "Tham gia cộng đồng"
+      },
+      "app": {
+        "title": "Ứng dụng ClashKing (Beta công khai)",
+        "description": "Ứng dụng ClashKing là phần mở rộng hoàn hảo cho Bot ClashKing, mang các công cụ và thông tin thiết yếu đến thẳng thiết bị di động. Bạn luôn có thể kết nối mọi lúc, mọi nơi, ngay cả khi không có Discord.",
+        "items": [
+          "Thống kê theo thời gian thực: Thống kê chi tiết của người chơi và bang hội được đồng bộ với bot.",
+          "Theo dõi tiến trình bang hội: Theo dõi liên tục sự tiến bộ của bang hội theo thời gian.",
+          "Quản lý nhiều tài khoản: Dễ dàng chuyển đổi giữa các tài khoản và theo dõi hiệu suất.",
+          "Lịch sử tích hợp: Truy cập dữ liệu lịch sử để phân tích xu hướng và cải thiện chiến lược.",
+          "Quản lý máy chủ Discord: (Sắp ra mắt) Quản lý vai trò và phiếu hỗ trợ từ ứng dụng.",
+          "Thông báo nâng cao: (Sắp ra mắt) Tùy chỉnh cảnh báo cho các sự kiện quan trọng."
+        ],
+        "ctaPrimary": "Bản beta Android",
+        "ctaSecondary": "iOS TestFlight"
+      },
+      "api": {
+        "title": "API ClashKing",
+        "description": "Xây dựng công cụ hoặc dự án của riêng bạn bằng API ClashKing. Bạn được sử dụng miễn phí miễn là ghi nguồn dự án ClashKing.",
+        "items": [],
+        "ctaPrimary": "Tài liệu API",
+        "ctaSecondary": "API trên GitHub"
+      }
+    }
+  },
+  "HelpPage": {
+    "title": "Cần trợ giúp?",
+    "subtitle": "Dù bạn đang tìm tài liệu hay cần hỗ trợ trực tiếp, chúng tôi luôn sẵn sàng giúp đỡ.",
+    "documentation": {
+      "title": "Tài liệu",
+      "description": "Khám phá các hướng dẫn toàn diện và tài liệu tham khảo lệnh để tận dụng tối đa ClashKing.",
+      "cta": "Xem tài liệu"
+    },
+    "discord": {
+      "title": "Hỗ trợ qua Discord",
+      "description": "Cần thêm trợ giúp? Hãy tham gia cộng đồng Discord của chúng tôi để đặt câu hỏi, báo lỗi hoặc trò chuyện với những người dùng khác.",
+      "cta": "Tham gia Discord"
+    }
+  },
+  "OpenSourcePage": {
+    "title": "Một dự án mã nguồn mở",
+    "subtitle": "ClashKing là dự án hoàn toàn miễn phí và mã nguồn mở. Chúng tôi tin rằng sức mạnh của cộng đồng sẽ giúp dự án ngày càng tốt hơn. Cả bot lẫn API đều có mã nguồn mở hoàn toàn, cho phép bạn tự do đóng góp hoặc sử dụng trong dự án riêng.",
+    "github": {
+      "title": "Tổ chức GitHub",
+      "description": "Khám phá mã nguồn, đóng góp cho bot hoặc xem các công cụ mã nguồn mở khác của chúng tôi.",
+      "ctaPrimary": "Xem tổ chức",
+      "repos": {
+        "bot": "Kho mã bot",
+        "app": "Kho mã ứng dụng",
+        "api": "Kho mã API",
+        "assets": "Kho tài nguyên"
+      }
+    },
+    "api": {
+      "title": "Tài liệu API",
+      "description": "Xây dựng công cụ hoặc dự án của riêng bạn bằng API ClashKing. Bạn được sử dụng miễn phí miễn là ghi nguồn dự án ClashKing.",
+      "cta": "Tài liệu API"
+    },
+    "translation": {
+      "title": "Giúp chúng tôi dịch",
+      "description": "Hãy giúp chúng tôi dịch ClashKing sang ngôn ngữ của bạn! Bạn có thể đóng góp bản dịch cho trang web, bot và mọi nội dung liên quan qua các dự án Crowdin.",
+      "app": "Dịch ứng dụng",
+      "bot": "Dịch bot"
+    },
+    "pillars": {
+      "contribute": {
+        "title": "Đóng góp",
+        "description": "Giúp chúng tôi cải thiện bằng cách sửa lỗi, thêm tính năng mới hoặc nâng cấp tính năng hiện có. Mọi đóng góp đều đáng quý!"
+      },
+      "community": {
+        "title": "Cộng đồng",
+        "description": "Tham gia cộng đồng Discord để thảo luận ý tưởng, nhận trợ giúp và cộng tác với các nhà phát triển khác."
+      },
+      "learn": {
+        "title": "Tìm hiểu",
+        "description": "Xem tài liệu và ví dụ để học cách sử dụng bot và API hiệu quả."
+      }
+    }
+  },
+  "SupportPage": {
+    "title": "Ủng hộ chúng tôi",
+    "subtitle": "ClashKing là dự án mã nguồn mở miễn phí. Sự ủng hộ của bạn giúp chúng tôi duy trì máy chủ và tiếp tục phát triển tính năng mới cho cộng đồng.",
+    "patreon": {
+      "title": "Trở thành người bảo trợ",
+      "description": "Ủng hộ chúng tôi hàng tháng trên Patreon để nhận đặc quyền, truy cập sớm các tính năng và giúp trang trải chi phí lưu trữ.",
+      "cta": "Ủng hộ trên Patreon"
+    },
+    "creatorCode": {
+      "title": "Dùng mã nhà sáng tạo",
+      "description": "Ủng hộ chúng tôi miễn phí bằng cách dùng mã nhà sáng tạo",
+      "descriptionSuffix": "trong trò chơi hoặc Cửa hàng Supercell.",
+      "ctaGame": "Dùng trong trò chơi",
+      "ctaStore": "Dùng trong Cửa hàng Supercell"
+    },
+    "whySupport": {
+      "title": "Vì sao nên ủng hộ chúng tôi?",
+      "description": "Mọi khoản đóng góp, dù nhỏ, đều được dùng trực tiếp cho chi phí máy chủ và API. Dùng mã nhà sáng tạo không khiến bạn tốn thêm chi phí nhưng lại giúp chúng tôi rất nhiều!"
+    }
+  },
+  "ServersPage": {
+    "title": "Chọn máy chủ",
+    "description": "Chọn máy chủ để cấu hình Bot ClashKing. Bạn phải là chủ sở hữu hoặc quản trị viên của máy chủ Discord.",
+    "backToHome": "Quay về trang chủ",
+    "backToLogin": "Quay lại đăng nhập",
+    "error": "Lỗi",
+    "configure": "Cấu hình",
+    "invite": "Mời",
+    "members": "Thành viên",
+    "server": "Máy chủ",
+    "roles": {
+      "owner": "Chủ sở hữu",
+      "administrator": "Quản trị viên",
+      "manager": "Quản lý"
+    },
+    "noServers": {
+      "title": "Không tìm thấy máy chủ",
+      "description": "Không tìm thấy máy chủ Discord nào mà bạn là quản trị viên hoặc chủ sở hữu."
+    }
+  },
+  "AutoboardsPage": {
+    "title": "Bảng tự động",
+    "description": "Làm mới bảng trực tiếp hoặc gửi bảng mới theo lịch vận hành",
+    "actions": {
+      "create": "Tạo bảng tự động",
+      "edit": "Chỉnh sửa bảng tự động",
+      "delete": "Xóa bảng tự động",
+      "save": "Lưu thay đổi",
+      "cancel": "Hủy",
+      "retry": "Thử lại"
+    },
+    "metrics": {
+      "total": "Đã cấu hình",
+      "refresh": "Bảng làm mới",
+      "send": "Lượt gửi theo lịch"
+    },
+    "filters": {
+      "all": "Tất cả"
+    },
+    "list": {
+      "title": "Bảng tự động đã cấu hình",
+      "description": "Phân phối, mục tiêu, đích đến và trạng thái chạy do người quản lý kiểm soát",
+      "empty": "Không có bảng tự động trong chế độ xem này",
+      "emptyDescription": "Bạn có thể tạo bảng khi sổ đăng ký API cung cấp loại bảng khả dụng."
+    },
+    "registry": {
+      "emptyTitle": "Không có loại bảng nào khả dụng",
+      "emptyDescription": "Sổ đăng ký API hiện đang trống. Có thể tạo bảng tự động khi một loại bảng được bật tại đó.",
+      "typeUnavailable": "Loại bảng này không còn trong sổ đăng ký nên không thể chỉnh sửa."
+    },
+    "dialog": {
+      "createTitle": "Tạo bảng tự động",
+      "editTitle": "Chỉnh sửa bảng tự động",
+      "description": "Khả năng và giới hạn được lấy từ sổ đăng ký bảng hiện tại."
+    },
+    "boardType": {
+      "label": "Loại bảng",
+      "description": "Các loại khả dụng được lấy trực tiếp từ sổ đăng ký API.",
+      "placeholder": "Chọn loại bảng"
+    },
+    "targets": {
+      "kind": "Loại mục tiêu: {kind}",
+      "kindDescription": "Sổ đăng ký xác định cách diễn giải từng giá trị mục tiêu.",
+      "scope": "Phạm vi mục tiêu",
+      "scopeDescription": "Phạm vi hệ thống dùng mọi bang hội thuộc hệ thống đã cấu hình và không có mục tiêu cụ thể.",
+      "family": "Hệ thống bang hội",
+      "custom": "Mục tiêu tùy chỉnh",
+      "values": "Mục tiêu",
+      "count": "Cung cấp từ {min} đến {max} mục tiêu cho loại bảng này.",
+      "placeholder": "Nhập mục tiêu loại {kind}",
+      "add": "Thêm mục tiêu",
+      "remove": "Xóa mục tiêu"
+    },
+    "modes": {
+      "label": "Chế độ phân phối",
+      "description": "Sổ đăng ký kiểm soát các chế độ phân phối mà bảng hỗ trợ.",
+      "refresh": "Làm mới",
+      "send": "Gửi theo lịch"
+    },
+    "destination": {
+      "label": "Đích đến",
+      "channel": "Kênh mẹ",
+      "channelDescription": "Kênh văn bản và thông báo có thể gửi trực tiếp; diễn đàn sử dụng bài đăng con.",
+      "selectChannel": "Chọn kênh",
+      "thread": "Luồng hoặc bài đăng diễn đàn",
+      "selectThread": "Chọn một luồng",
+      "threadOptional": "Không bắt buộc đối với kênh văn bản và thông báo.",
+      "forumRequired": "Đích đến này yêu cầu bài đăng diễn đàn.",
+      "direct": "Gửi trực tiếp đến kênh",
+      "deleted": "Kênh không còn tồn tại"
+    },
+    "refresh": {
+      "interval": "Khoảng làm mới (phút)",
+      "intervalDescription": "Phạm vi cho phép: {minimum}–{maximum} phút."
+    },
+    "schedule": {
+      "label": "Lịch",
+      "kind": "Kiểu lịch",
+      "kindDescription": "Gửi hàng ngày, vào các ngày đã chọn hoặc mỗi tháng một lần.",
+      "daily": "Hằng ngày",
+      "weekdays": "Ngày trong tuần đã chọn",
+      "dayOfMonth": "Ngày trong tháng",
+      "selectWeekdays": "Các ngày trong tuần",
+      "monthDay": "Ngày trong tháng",
+      "monthDayDescription": "Dùng giá trị từ 1 đến 31.",
+      "timezone": "Múi giờ",
+      "timeOfDay": "Thời gian trong ngày",
+      "nextRun": "Lần chạy tiếp theo"
+    },
+    "weekdays": {
+      "1": "Thứ Hai",
+      "2": "Thứ Ba",
+      "3": "Thứ Tư",
+      "4": "Thứ Năm",
+      "5": "Thứ Sáu",
+      "6": "Thứ Bảy",
+      "7": "Chủ Nhật"
+    },
+    "status": {
+      "enabled": "Đã bật",
+      "disabled": "Đã tắt",
+      "enabledDescription": "Bảng đã tắt vẫn giữ cấu hình nhưng không chạy.",
+      "messageId": "Tin nhắn làm mới hiện tại: {id}"
+    },
+    "delete": {
+      "title": "Xóa bảng tự động này?",
+      "description": "Thao tác này xóa cấu hình và không thể hoàn tác."
+    },
+    "feedback": {
+      "created": "Đã tạo bảng tự động",
+      "updated": "Đã cập nhật bảng tự động",
+      "deleted": "Đã xóa bảng tự động"
+    },
+    "validation": {
+      "boardType": "Chọn loại bảng từ sổ đăng ký hiện tại.",
+      "targetScope": "Chọn phạm vi mục tiêu được loại bảng này hỗ trợ.",
+      "familyTargets": "Phạm vi hệ thống không thể chứa mục tiêu cụ thể.",
+      "targetCount": "Nhập từ {min} đến {max} mục tiêu không trống.",
+      "deliveryMode": "Chọn chế độ phân phối được loại bảng này hỗ trợ.",
+      "destination": "Chọn đích đến hợp lệ. Kênh diễn đàn yêu cầu bài đăng con.",
+      "refreshInterval": "Nhập khoảng làm mới từ {minimum} đến {maximum} phút.",
+      "timezone": "Nhập múi giờ IANA.",
+      "timeOfDay": "Nhập thời gian hợp lệ trong ngày.",
+      "weekdays": "Chọn ít nhất một ngày trong tuần.",
+      "dayOfMonth": "Nhập ngày từ 1 đến 31."
+    },
+    "errors": {
+      "title": "Bảng tự động không khả dụng",
+      "session": "Phiên của bạn đã hết hạn.",
+      "request": "Yêu cầu bảng tự động thất bại.",
+      "load": "Không thể tải bảng tự động.",
+      "save": "Không thể lưu bảng tự động.",
+      "delete": "Không thể xóa bảng tự động."
+    }
+  },
+  "TicketsSettingsPage": {
+    "title": "Cài đặt bảng phiếu hỗ trợ",
+    "description": "Cấu hình danh mục và kênh nhật ký cho từng bảng phiếu hỗ trợ.",
+    "noPanels": "Không tìm thấy bảng phiếu hỗ trợ",
+    "noPanelsHint": "Tạo bảng đầu tiên bằng nút phía trên.",
+    "createPanel": "Bảng mới",
+    "createPanelTitle": "Tạo bảng phiếu hỗ trợ",
+    "createPanelDescription": "Đặt tên riêng cho bảng. Bạn có thể cấu hình nút và kênh sau khi tạo.",
+    "panelNameLabel": "Tên bảng",
+    "panelNamePlaceholder": "ví dụ: Đơn đăng ký",
+    "panelCreated": "Đã tạo bảng “{name}”.",
+    "confirmDeletePanel": "Xóa bảng “{name}”?",
+    "confirmDeletePanelHint": "Thao tác này sẽ xóa vĩnh viễn bảng cùng mọi cấu hình nút.",
+    "panelDeleted": "Đã xóa bảng.",
+    "panelHint": "Nhấp để mở rộng và cấu hình bảng.",
+    "panelEmbed": "Nội dung nhúng của bảng",
+    "panelEmbedHint": "Nội dung nhúng dùng khi đăng bảng phiếu hỗ trợ lên Discord.",
+    "panelEmbedInfoLine1": "Để tạo hoặc chỉnh sửa nội dung nhúng, hãy đến trang %s trong {dashboardLabel}.",
+    "panelEmbedInfoLine2": "Để thêm hoặc chỉnh sửa nút, hãy đến %s của bảng này.",
+    "panelEmbedPreview": "Xem trước nội dung nhúng",
+    "panelEmbedPreviewEmpty": "Không có bản xem trước cho nội dung nhúng đã chọn.",
+    "ticketOpenEmbed": "Nội dung nhúng mở phiếu",
+    "ticketOpenEmbedHint": "Nội dung nhúng tùy chỉnh không bắt buộc, được gửi khi nút này mở phiếu.",
+    "selectEmbed": "Chọn nội dung nhúng",
+    "defaultEmbed": "Không ghi đè nội dung nhúng của bảng",
+    "noCustomMessage": "Dùng tin nhắn phiếu mặc định",
+    "buttons": "Nút",
+    "buttonList": "Nút",
+    "categories": "Danh mục",
+    "openCategory": "Danh mục phiếu đang mở",
+    "open_category": "Danh mục phiếu đang mở",
+    "sleepCategory": "Danh mục phiếu tạm nghỉ",
+    "sleep_category": "Danh mục phiếu tạm nghỉ",
+    "closedCategory": "Danh mục phiếu đã đóng",
+    "closed_category": "Danh mục phiếu đã đóng",
+    "selectCategory": "Chọn danh mục...",
+    "logChannels": "Kênh nhật ký",
+    "statusChangeLog": "Nhật ký thay đổi trạng thái",
+    "status_change_log": "Nhật ký thay đổi trạng thái",
+    "buttonClickLog": "Nhật ký nhấp nút",
+    "ticket_button_click_log": "Nhật ký nhấp nút",
+    "closeLog": "Nhật ký đóng phiếu",
+    "ticket_close_log": "Nhật ký đóng phiếu",
+    "selectChannel": "Chọn một kênh...",
+    "savedSuccess": "Đã lưu bảng “{panel}”.",
+    "tabChannels": "Bảng phiếu hỗ trợ",
+    "tabSettings": "Cài đặt",
+    "tabButtons": "Nút",
+    "tabMessages": "Tin nhắn",
+    "autoSaveSaving": "Đang lưu…",
+    "autoSaveSaved": "Đã lưu",
+    "autoSaveErrorTitle": "Tự động lưu thất bại",
+    "autoSaveErrorDescription": "Không thể lưu các cài đặt phiếu này.",
+    "messages": "Tin nhắn",
+    "noButtons": "Chưa có nút. Hãy thêm một nút để bắt đầu.",
+    "addButton": "Thêm nút",
+    "addButtonTitle": "Thêm nút",
+    "addButtonDescription": "Cấu hình giao diện của nút mới.",
+    "buttonLabel": "Nhãn văn bản của nút",
+    "buttonLabelPlaceholder": "ví dụ: Đăng ký",
+    "buttonStyle": "Màu nút",
+    "buttonStyleBlue": "Xanh dương",
+    "buttonStyleGrey": "Xám",
+    "buttonStyleGreen": "Xanh lá",
+    "buttonStyleRed": "Đỏ",
+    "buttonAdded": "Đã thêm nút.",
+    "buttonDeleted": "Đã xóa nút.",
+    "editButtonTitle": "Chỉnh sửa cài đặt nút",
+    "editButtonDescription": "Cấu hình nút phiếu hỗ trợ này.",
+    "buttonAppearanceSaved": "Đã lưu giao diện.",
+    "confirmDeleteButton": "Xóa nút “{label}”?",
+    "confirmDeleteButtonHint": "Thao tác này sẽ xóa nút cùng mọi cấu hình như vai trò và câu hỏi.",
+    "modRoles": "Vai trò nhân viên (được thông báo)",
+    "modRolesHint": "Các vai trò này được nhắc đến khi phiếu được mở.",
+    "noPingRoles": "Vai trò nhân viên (im lặng)",
+    "noPingRolesHint": "Các vai trò này có thể xem phiếu nhưng không được thông báo.",
+    "questions": "Câu hỏi",
+    "questionsHint": "Tối đa năm câu hỏi được hiển thị trong hộp thoại khi mở phiếu.",
+    "question": "Câu hỏi",
+    "privateThread": "Luồng riêng tư",
+    "privateThreadHint": "Tạo luồng riêng tư dành cho nhân viên.",
+    "accountApply": "Yêu cầu tài khoản CoC",
+    "accountApplyHint": "Người dùng phải liên kết tài khoản Clash of Clans.",
+    "playerInfo": "Hiển thị thông tin người chơi",
+    "playerInfoHint": "Hiển thị thống kê tài khoản khi mở phiếu.",
+    "thMin": "Nhà Chính tối thiểu",
+    "numApply": "Số tài khoản tối đa",
+    "naming": "Quy ước đặt tên",
+    "namingPlaceholders": "Phần giữ chỗ trong tên",
+    "namingVariables": "Biến: '{ticket_count}', '{user}', '{account_name}', '{account_th}', '{ticket_status}', '{emoji_status}'",
+    "buttonSaved": "Đã lưu nút “{label}”.",
+    "badge": {
+      "accountApply": "Yêu cầu CoC",
+      "privateThread": "Luồng riêng tư"
+    },
+    "approveMessages": "Tin nhắn chấp thuận/từ chối",
+    "approveMessagesHint": "Tin nhắn soạn sẵn để nhân viên gửi cho ứng viên (tối đa 25).",
+    "messagesMaxHint": "Bạn có thể thêm tối đa 25 tin nhắn.",
+    "editMessagesButton": "Chỉnh sửa tin nhắn",
+    "editMessagesTitle": "Chỉnh sửa tin nhắn soạn sẵn",
+    "editMessagesDescription": "Thêm, xóa và cập nhật tin nhắn phiếu soạn sẵn.",
+    "addMessage": "Thêm tin nhắn",
+    "noMessages": "Chưa có tin nhắn. Hãy thêm một tin nhắn để bắt đầu.",
+    "messageName": "Tên tin nhắn",
+    "contentLabel": "Nội dung",
+    "messageContent": "Nội dung tin nhắn...",
+    "messageNameRequired": "Mọi tin nhắn phải có tên.",
+    "messagesSaved": "Đã lưu tin nhắn chấp thuận và từ chối.",
+    "rolesToAdd": "Vai trò sẽ cấp",
+    "rolesToAddHint": "Vai trò tự động cấp cho người dùng khi mở phiếu.",
+    "rolesToRemove": "Vai trò sẽ thu hồi",
+    "rolesToRemoveHint": "Vai trò tự động bị xóa khỏi người dùng khi mở phiếu.",
+    "applyClans": "Bang hội được phép",
+    "applyClansHint": "Chỉ thành viên của các bang hội này có thể mở phiếu. Để trống để cho phép mọi người.",
+    "clanTagPlaceholder": "#CLANTAG",
+    "thRequirements": "Yêu cầu Nhà Chính",
+    "thRequirementsHint": "Cấp Anh Hùng tối thiểu theo từng cấp Nhà Chính để mở phiếu.",
+    "thHeroLegend": "BK = Vua Man Rợ · AQ = Nữ Hoàng Cung Thủ · GW = Đại Quản Giáo · RC = Nữ Tướng Hoàng Gia · WARST = Sao hội chiến",
+    "addThLevel": "Thêm cấp Nhà Chính",
+    "thLevel": "TH",
+    "numApplyHint": "Số tài khoản CoC tối đa người dùng có thể dùng để đăng ký (1–25).",
+    "embeds": "Nội dung nhúng",
+    "embedsHint": "Nội dung nhúng Discord dùng làm tin nhắn bảng hoặc tin nhắn mở phiếu.",
+    "newEmbed": "Nội dung nhúng mới",
+    "embedName": "Tên nội dung nhúng",
+    "embedNamePlaceholder": "embed-cua-toi",
+    "discohookUrl": "URL Discohook",
+    "embedDiscohookHint": "Thiết kế nội dung nhúng trên Discohook, sao chép URL trang rồi dán vào đây.",
+    "openDiscohook": "Mở Discohook",
+    "openInDiscohook": "Mở trong Discohook",
+    "copyDiscohookUrl": "Sao chép URL Discohook",
+    "copyDiscohookUrlDone": "Đã sao chép URL!",
+    "editEmbed": "Chỉnh sửa",
+    "deleteEmbed": "Xóa",
+    "confirmDeleteEmbed": "Xóa nội dung nhúng “{name}”?",
+    "confirmDeleteEmbedHint": "Thao tác này chỉ xóa khỏi ClashKing và không ảnh hưởng tin nhắn Discord đã đăng.",
+    "embedSaved": "Đã lưu nội dung nhúng “{name}”.",
+    "embedCreated": "Đã tạo nội dung nhúng “{name}”.",
+    "embedDeleted": "Đã xóa nội dung nhúng.",
+    "noEmbeds": "Chưa có nội dung nhúng.",
+    "noEmbedsHint": "Tạo nội dung nhúng tại đây rồi gán cho bảng hoặc nút.",
+    "legacyEmbed": "Được tạo qua bot — dán URL Discohook để bật chỉnh sửa.",
+    "invalidDiscohookUrl": "URL không hợp lệ. Dán URL trang Discohook (discohook.app/?data=... hoặc discohook.app/?share=...).",
+    "tabEmbeds": "Nội dung nhúng"
+  },
+  "EmbedsPage": {
+    "title": "Nội dung nhúng",
+    "description": "Tạo và quản lý các mẫu nội dung nhúng Discord cho bảng phiếu hỗ trợ và các nút.",
+    "nameHint": "Đặt mã nhận dạng riêng cho nội dung nhúng. Bạn có thể thay đổi nội dung sau."
+  },
+  "EmbedEditor": {
+    "importSection": "Nhập từ Discohook",
+    "addMessage": "Thêm tin nhắn",
+    "addMessageDialogTitle": "Thêm tin nhắn",
+    "addMessageDialogDescription": "Chọn mức độ nâng cao của tin nhắn.",
+    "addMessageClassicTitle": "Cổ điển",
+    "addMessageClassicDescription": "Đơn giản và ổn định: văn bản cùng nội dung nhúng. Hãy chọn mục này nếu bạn chưa chắc chắn.",
+    "addMessageV2Title": "Thành phần v2",
+    "addMessageV2Description": "Bố cục và thành phần tương tác nâng cao hơn như nút, trình chọn và phần nội dung.",
+    "betaTag": "Beta",
+    "importExport": "Nhập và xuất",
+    "importExportDescription": "Nhập nội dung nhúng từ Discohook hoặc xuất nội dung hiện tại sang Discohook.",
+    "importFromDiscohook": "Nhập từ Discohook",
+    "copyDiscohookUrl": "Sao chép URL Discohook",
+    "openInDiscohook": "Mở trong Discohook",
+    "content": "Nội dung",
+    "contentPlaceholder": "Nội dung tin nhắn hiển thị phía trên phần nhúng...",
+    "profileSection": "Hồ sơ",
+    "profileName": "Tên",
+    "profileAvatarUrl": "URL ảnh đại diện",
+    "profileUnsupportedWarning": "Cảnh báo: bot hiện chưa hỗ trợ cập nhật hồ sơ này.",
+    "import": "Nhập",
+    "importError": "URL Discohook không hợp lệ. Hãy dán URL trang Discohook.",
+    "importMultipleMessagesWarning": "Liên kết chứa nhiều tin nhắn. Chỉ tin nhắn đầu tiên được nhập vì bot hỗ trợ một tin nhắn cho mỗi nội dung nhúng.",
+    "colorSection": "Màu",
+    "authorSection": "Tác giả",
+    "authorName": "Tên",
+    "authorIconUrl": "URL biểu tượng",
+    "authorUrl": "URL tác giả",
+    "bodySection": "Nội dung",
+    "title": "Tiêu đề",
+    "titleUrl": "URL tiêu đề",
+    "sidebarColor": "Màu thanh bên",
+    "description": "Mô tả",
+    "descriptionPlaceholder": "Mô tả nội dung nhúng...",
+    "fieldsSection": "Trường",
+    "addField": "Thêm trường",
+    "field": "Trường",
+    "fieldName": "Tên",
+    "fieldValue": "Giá trị",
+    "fieldInline": "Nội tuyến",
+    "imagesSection": "Hình ảnh",
+    "thumbnailUrl": "URL ảnh thu nhỏ",
+    "imageUrl": "URL hình ảnh",
+    "footerSection": "Chân trang",
+    "footerText": "Văn bản chân trang",
+    "footerIconUrl": "URL biểu tượng chân trang",
+    "timestamp": "Bao gồm dấu thời gian",
+    "preview": "Xem trước",
+    "previewEmpty": "Điền các trường để xem trước",
+    "modeToggleV1": "Cổ điển (V1)",
+    "modeToggleV2": "Thành phần (V2)",
+    "componentsSection": "Thành phần",
+    "addComponent": "Thêm thành phần",
+    "containerLabel": "Vùng chứa",
+    "textDisplayLabel": "Hiển thị văn bản",
+    "separatorLabel": "Dấu phân cách",
+    "mediaGalleryLabel": "Bộ sưu tập phương tiện",
+    "sectionLabel": "Phần",
+    "dividerLine": "Hiển thị đường phân cách",
+    "spacing": "Khoảng cách",
+    "spacingSmall": "Nhỏ",
+    "spacingLarge": "Lớn",
+    "imageDescription": "Văn bản thay thế",
+    "imageSpoiler": "Nội dung ẩn",
+    "addImage": "Thêm hình ảnh",
+    "addTextBlock": "Thêm khối văn bản",
+    "accessory": "Phụ kiện",
+    "accessoryNone": "Không có",
+    "accessoryThumbnail": "Hình thu nhỏ",
+    "accessoryButton": "Nút",
+    "thumbnailAlt": "Văn bản thay thế của ảnh thu nhỏ",
+    "accentColor": "Màu nhấn",
+    "addContainer": "Thêm thành phần con",
+    "containerSpoiler": "Vùng chứa nội dung ẩn",
+    "stringSelectLabel": "Chọn chuỗi",
+    "userSelectLabel": "Chọn người dùng",
+    "roleSelectLabel": "Chọn vai trò",
+    "mentionableSelectLabel": "Chọn đối tượng có thể nhắc",
+    "channelSelectLabel": "Chọn kênh",
+    "fileLabel": "Tệp",
+    "fileUrl": "URL tệp",
+    "fileUploadButton": "Tải lên",
+    "fileSpoiler": "Nội dung ẩn",
+    "selectCustomId": "ID tùy chỉnh",
+    "selectPlaceholder": "Văn bản giữ chỗ",
+    "selectMinValues": "Giá trị tối thiểu",
+    "selectMaxValues": "Giá trị tối đa",
+    "selectOptions": "Tùy chọn",
+    "selectOption": "Tùy chọn",
+    "selectOptionLabel": "Nhãn",
+    "selectOptionValue": "Giá trị",
+    "selectOptionDescription": "Mô tả",
+    "selectOptionDefault": "Được chọn mặc định",
+    "addSelectOption": "Thêm tùy chọn",
+    "selectDisabled": "Đã tắt",
+    "actionRowMode": "Loại hàng",
+    "actionRowModeButtons": "Nút",
+    "actionRowLabel": "Hàng thao tác",
+    "addButton": "Thêm nút",
+    "buttonLabel": "Nhãn",
+    "buttonStyle": "Kiểu",
+    "buttonStylePrimary": "Chính",
+    "buttonStyleSecondary": "Phụ",
+    "buttonStyleSuccess": "Thành công",
+    "buttonStyleDanger": "Nguy hiểm",
+    "buttonStyleLink": "Liên kết",
+    "tabMentions": "Lượt nhắc",
+    "tabTime": "Thời gian",
+    "tabEmojis": "Biểu tượng cảm xúc",
+    "dateLabel": "Ngày",
+    "timeLabel": "Thời gian",
+    "mentionsChannels": "Kênh",
+    "mentionsSpecial": "Đặc biệt",
+    "mentionsChannelList": "Tất cả kênh",
+    "mentionsRoles": "Vai trò",
+    "mentionsServerGuide": "Hướng dẫn máy chủ",
+    "mentionsBrowseChannels": "Duyệt kênh",
+    "mentionsChannelsAndRoles": "Kênh và vai trò",
+    "mentionsNoChannels": "Không có kênh nào khớp tìm kiếm.",
+    "mentionsNoRoles": "Không có vai trò nào khớp tìm kiếm.",
+    "styleLabel": "Kiểu",
+    "timeRelativeNow": "0 giây trước",
+    "emojiSearchPlaceholder": "Tìm biểu tượng cảm xúc phù hợp",
+    "emojiToneLabel": "Tông da biểu tượng cảm xúc",
+    "emojiCategory": {
+      "people": "Con người",
+      "nature": "Thiên nhiên",
+      "food": "Đồ ăn",
+      "activities": "Hoạt động",
+      "travel": "Du lịch",
+      "objects": "Đồ vật",
+      "symbols": "Biểu tượng",
+      "flags": "Cờ"
+    },
+    "buttonUrl": "URL",
+    "buttonDisabled": "Đã tắt",
+    "unknownComponent": "Thành phần không xác định",
+    "unknownComponentHint": "Không thể chỉnh sửa loại thành phần này tại đây nhưng nó sẽ được giữ lại khi lưu."
+  },
+  "PanelsPage": {
+    "title": "Bảng tương tác",
+    "description": "Cấu hình bảng thành viên tương tác được đăng trên máy chủ. Thành viên có thể liên kết tài khoản, làm mới vai trò và thực hiện thêm thao tác chỉ với một lần nhấp.",
+    "saved": "Đã lưu cấu hình bảng.",
+    "embedSection": "Nội dung nhúng",
+    "embedHint": "Nội dung nhúng không bắt buộc hiển thị phía trên các nút.",
+    "embedLabel": "Nội dung nhúng",
+    "noEmbed": "Không có nội dung nhúng (chỉ nút)",
+    "buttonsSection": "Nút",
+    "buttonsHint": "Chọn các nút thao tác sẽ hiển thị. Thứ tự theo lựa chọn của bạn.",
+    "colorSection": "Màu nút",
+    "colorHint": "Áp dụng cho tất cả nút.",
+    "welcomeSection": "Kênh chào mừng",
+    "welcomeHint": "Khi được đặt, bảng sẽ tự động đăng khi thành viên mới gia nhập.",
+    "welcomeChannel": "Kênh",
+    "welcomeChannelPlaceholder": "Chọn một kênh...",
+    "editPanelButton": "Chỉnh sửa bảng",
+    "editDialogTitle": "Chỉnh sửa bảng",
+    "editDialogDescription": "Cập nhật nội dung nhúng, nút và màu nút với bản xem trước trực tiếp trước khi lưu.",
+    "welcomeAutosaveSuccess": "Đã lưu kênh chào mừng.",
+    "welcomeAutosaveDisabled": "Đã tắt kênh chào mừng.",
+    "previewSection": "Xem trước",
+    "previewHint": "Giao diện của bảng trong Discord.",
+    "previewNoEmbed": "Chưa chọn nội dung nhúng",
+    "previewEmbedNoData": "Nội dung nhúng không có dữ liệu xem trước",
+    "previewNoButtons": "Chưa chọn nút",
+    "color": {
+      "Blue": "Xanh dương",
+      "Green": "Xanh lá",
+      "Grey": "Xám",
+      "Red": "Đỏ"
+    }
+  },
+  "GiveawaysPage": {
+    "title": "Quà tặng",
+    "description": "Tạo, lên lịch và quản lý các chương trình quà tặng trên máy chủ.",
+    "create": "Tạo chương trình quà tặng",
+    "listTitle": "Tổng quan quà tặng",
+    "listDescription": "Theo dõi chương trình đã lên lịch, đang diễn ra và đã kết thúc tại một nơi.",
+    "empty": "Chưa có chương trình quà tặng để hiển thị.",
+    "confirmDeleteTitle": "Xóa chương trình quà tặng",
+    "confirmDelete": "Bạn có chắc muốn xóa chương trình này không?",
+    "discardTitle": "Hủy thay đổi?",
+    "discardDescription": "Bạn có thay đổi chưa lưu. Nếu đóng bây giờ, các thay đổi sẽ bị mất.",
+    "discardConfirm": "Bỏ thay đổi",
+    "formTabs": {
+      "general": "Chung",
+      "messages": "Tin nhắn",
+      "restrictions": "Hạn chế",
+      "advanced": "Nâng cao"
+    },
+    "tabs": {
+      "ongoing": "Đang thực hiện",
+      "upcoming": "Sắp tới",
+      "ended": "Đã kết thúc"
+    },
+    "stats": {
+      "total": "Tổng số chương trình",
+      "totalEntries": "Tổng số lượt tham gia",
+      "ongoing": "Chương trình đang diễn ra",
+      "upcoming": "Chương trình sắp tới",
+      "ended": "Chương trình đã kết thúc"
+    },
+    "statsDescriptions": {
+      "total": "Tất cả chương trình quà tặng đã cấu hình trên máy chủ.",
+      "totalEntries": "Tổng lượt tham gia của mọi chương trình.",
+      "ongoing": "Hiện đang hoạt động và nhận người tham gia.",
+      "upcoming": "Đã lên lịch và chưa bắt đầu.",
+      "ended": "Các chương trình đã hoàn tất."
+    },
+    "emptyTab": {
+      "title": "Không có chương trình quà tặng ở đây",
+      "ongoing": "Hiện không có chương trình nào đang diễn ra.",
+      "upcoming": "Chưa có chương trình nào được lên lịch. Hãy tạo một chương trình để bắt đầu.",
+      "ended": "Chưa có chương trình nào kết thúc."
+    },
+    "status": {
+      "scheduled": "Đã lên lịch",
+      "ongoing": "Đang diễn ra",
+      "ended": "Đã kết thúc"
+    },
+    "table": {
+      "giveaway": "Quà tặng",
+      "channel": "Kênh",
+      "entries": "Lượt tham gia",
+      "timing": "Thời gian",
+      "start": "Bắt đầu",
+      "end": "Kết thúc",
+      "winnersHeader": "Người trúng thưởng",
+      "winners": "{count, plural, one {# người trúng thưởng} other {# người trúng thưởng}}",
+      "boosters": "{count, plural, one {# hệ số tăng} other {# hệ số tăng}}",
+      "noChannel": "Không có kênh",
+      "noChannelHelp": "Chưa gán kênh. Hãy chỉnh sửa chương trình để khắc phục.",
+      "endsAt": "Kết thúc lúc",
+      "endedAt": "Đã kết thúc lúc",
+      "duplicate": "Nhân bản",
+      "showingEnded": "Đang hiển thị {shown}/{total} chương trình đã kết thúc",
+      "showMore": "Hiển thị thêm {count}",
+      "pendingUpdate": "Bản cập nhật đang chờ",
+      "pendingUpdateHelp": "Chương trình có thay đổi đang chờ và bot sẽ sớm áp dụng.",
+      "openInDiscord": "Mở trong Discord",
+      "viewInDiscord": "Xem trong Discord",
+      "reroll": "Bốc thăm lại",
+      "rerolledCount": "{count, plural, one {# người được bốc thăm lại} other {# người được bốc thăm lại}}",
+      "viewEntries": "Xem lượt tham gia"
+    },
+    "entries": {
+      "description": "Danh sách người tham gia và xác suất thắng.",
+      "totalEntries": "Tổng số lượt tham gia",
+      "uniqueUsers": "Người dùng duy nhất",
+      "noEntrants": "Chưa có lượt tham gia.",
+      "userId": "ID người dùng",
+      "entryCount": "Lượt tham gia",
+      "winChance": "Cơ hội thắng"
+    },
+    "dialog": {
+      "createTitle": "Tạo chương trình quà tặng",
+      "editTitle": "Chỉnh sửa chương trình",
+      "description": "Cấu hình tin nhắn, thời gian và yêu cầu của chương trình.",
+      "create": "Tạo chương trình quà tặng",
+      "saveChanges": "Lưu thay đổi"
+    },
+    "form": {
+      "prize": "Phần thưởng",
+      "prizePlaceholder": "Ví dụ: Thẻ Vàng",
+      "channel": "Kênh",
+      "channelPlaceholder": "Chọn kênh",
+      "startTime": "Thời gian bắt đầu",
+      "startNow": "Bắt đầu ngay",
+      "endTime": "Thời gian kết thúc",
+      "winners": "Số người trúng thưởng",
+      "mentions": "Vai trò được nhắc",
+      "roleRequirements": "Vai trò bắt buộc hoặc bị loại",
+      "rolesMode": "Chế độ vai trò",
+      "rolesModeOptions": {
+        "none": "Không hạn chế vai trò",
+        "allow": "Chỉ các vai trò này được tham gia",
+        "deny": "Các vai trò này không được tham gia"
+      },
+      "rolesModeHelp": {
+        "none": "Mọi người dùng đều có thể tham gia.",
+        "allow": "Chỉ người dùng có một trong các vai trò đã chọn mới được tham gia.",
+        "deny": "Người dùng có bất kỳ vai trò đã chọn nào đều không được tham gia."
+      },
+      "textAboveEmbed": "Văn bản phía trên nội dung nhúng",
+      "textEmbedDefault": "Nhấp nút bên dưới để tham gia.",
+      "textInEmbed": "Mô tả nội dung nhúng",
+      "textEndDefault": "Chúc mừng tất cả những người được chọn! Chúng tôi sẽ sớm liên hệ với bạn.",
+      "textOnEnd": "Tin nhắn khi chương trình kết thúc",
+      "image": "Ảnh chương trình",
+      "removeImage": "Xóa ảnh hiện tại",
+      "imagePreviewAlt": "Xem trước chương trình",
+      "previewGiveaway": "Xem trước chương trình",
+      "previewEnd": "Xem trước tin nhắn kết thúc",
+      "boosters": "Hệ số tăng lượt tham gia",
+      "addBooster": "Thêm hệ số tăng",
+      "noBoosters": "Chưa cấu hình hệ số tăng.",
+      "boosterLabel": "Hệ số tăng {index}",
+      "boostValue": "Hệ số",
+      "boostRoles": "Vai trò được tăng",
+      "requirements": "Yêu cầu tham gia",
+      "profilePictureRequired": "Yêu cầu ảnh đại diện Discord",
+      "cocAccountRequired": "Yêu cầu tài khoản Clash of Clans đã liên kết"
+    },
+    "validation": {
+      "prizeRequired": "Bắt buộc phải có phần thưởng.",
+      "channelRequired": "Bắt buộc phải có kênh.",
+      "startTimeRequired": "Bắt buộc có thời gian bắt đầu trừ khi chương trình bắt đầu ngay.",
+      "endTimeRequired": "Bắt buộc phải có thời gian kết thúc.",
+      "endAfterStart": "Thời gian kết thúc phải sau thời gian bắt đầu.",
+      "imageTooLarge": "Ảnh phải nhỏ hơn 8 MB."
+    },
+    "preview": {
+      "liveSummary": "Tổng quan hiện tại",
+      "discordPreview": "Xem trước trên Discord",
+      "giveawayTitle": "Xem trước chương trình",
+      "giveawayDescription": "Đây là giao diện tin nhắn của chương trình đang hoạt động.",
+      "endTitle": "Xem trước tin nhắn kết thúc",
+      "endDescription": "Đây là tin nhắn được gửi khi chương trình kết thúc.",
+      "winnerCount": "Người trúng thưởng",
+      "winnerWord": "{count, plural, one {người trúng thưởng} other {người trúng thưởng}}",
+      "mentionCount": "Vai trò được nhắc",
+      "requirementCount": "Yêu cầu",
+      "boosterCount": "Hệ số tăng",
+      "profileRequired": "Yêu cầu ảnh đại diện",
+      "accountRequired": "Yêu cầu tài khoản CoC đã liên kết",
+      "rolesAllow": "Giới hạn ở các vai trò đã chọn",
+      "rolesDeny": "Loại trừ các vai trò đã chọn",
+      "noChannel": "Chưa chọn kênh",
+      "noPrize": "Phần thưởng sẽ xuất hiện ở đây",
+      "noEmbedText": "Thêm văn bản nhúng để xem trước nội dung chương trình.",
+      "noEndText": "Thêm tin nhắn kết thúc dành cho người trúng thưởng.",
+      "startsAt": "Bắt đầu: {date}",
+      "endsAt": "Kết thúc: {date}",
+      "endsOn": "Kết thúc vào {date}",
+      "endsFooter": "Kết thúc",
+      "notScheduled": "Chưa lên lịch",
+      "schedule": "Lịch",
+      "endMessage": "Tin nhắn cho người trúng thưởng",
+      "endSummary": "{winners, plural, one {# người trúng thưởng} other {# người trúng thưởng}} sẽ được công bố tại đây.",
+      "totalParticipants": "Tổng người tham gia: {count}",
+      "participate": "Tham gia",
+      "buttonHint": "Nút thao tác chính hiển thị dưới bài đăng Discord."
+    },
+    "toast": {
+      "errorTitle": "Đã xảy ra lỗi",
+      "successTitle": "Thành công",
+      "loadError": "Không thể tải chương trình quà tặng.",
+      "saveError": "Không thể lưu chương trình.",
+      "deleteError": "Không thể xóa chương trình.",
+      "created": "Đã tạo chương trình.",
+      "updated": "Đã cập nhật chương trình.",
+      "deleted": "Đã xóa chương trình.",
+      "rerolled": "Đã bốc thăm lại người trúng thưởng.",
+      "rerollError": "Không thể bốc thăm lại người trúng thưởng."
+    },
+    "reroll": {
+      "title": "Bốc thăm lại người trúng thưởng",
+      "description": "Chọn người trúng thưởng cần thay thế. Người mới sẽ được bốc thăm từ những người tham gia đủ điều kiện.",
+      "selectWinners": "Chọn người trúng thưởng cần thay thế:",
+      "confirm": "Bốc thăm lại {count, plural, one {# người trúng thưởng} other {# người trúng thưởng}}"
+    }
+  },
+  "OverviewPage": {
+    "title": "Tổng quan bảng điều khiển",
+    "description": "Theo dõi thống kê máy chủ và bắt đầu",
+    "stats": {
+      "linkedPlayers": "Người chơi đã liên kết",
+      "linkedPlayersDesc": "Người chơi đã liên kết trên máy chủ",
+      "clansConfigured": "Bang hội đã cấu hình",
+      "clansConfiguredDesc": "Bang hội được theo dõi trên máy chủ",
+      "activeRosters": "Đội hình đang hoạt động",
+      "activeRostersDesc": "Đội hình hội chiến đã tạo",
+      "totalAccounts": "Tài khoản được liên kết",
+      "totalAccountsDesc": "Tổng tài khoản CoC đã liên kết",
+      "playersTracked": "Người chơi được theo dõi",
+      "globalPlayers": "Tổng người chơi trong cơ sở dữ liệu",
+      "clansTracked": "Bang hội được theo dõi",
+      "globalClans": "Tổng bang hội trong cơ sở dữ liệu",
+      "botStatus": "Trạng thái bot",
+      "online": "Trực tuyến",
+      "offline": "Ngoại tuyến",
+      "memoryUsage": "Bộ nhớ: {used} MB ({percent}%)",
+      "cpuUsage": "CPU: {percent}%"
+    },
+    "botSection": "Thống kê bot",
+    "clans": {
+      "title": "Bang hội của bạn",
+      "description": "{count, plural, one {# bang hội đã cấu hình} other {# bang hội đã cấu hình}}",
+      "manage": "Quản lý bang hội",
+      "addFirst": "Thêm bang hội đầu tiên"
+    },
+    "quickStart": {
+      "title": "Bắt đầu nhanh",
+      "description": "Bắt đầu cấu hình bot ClashKing",
+      "step1": {
+        "title": "Cấu hình cài đặt chung",
+        "description": "Thiết lập định dạng biệt danh, màu nội dung nhúng và kênh nhật ký"
+      },
+      "step2": {
+        "title": "Thêm bang hội của bạn",
+        "description": "Kết nối bang hội Clash of Clans và cấu hình vai trò"
+      },
+      "step3": {
+        "title": "Thiết lập vai trò tự động",
+        "description": "Cấu hình tự động gán vai trò theo Nhà Chính, cúp và các tiêu chí khác."
+      }
+    }
+  },
+  "BotStatsPage": {
+    "title": "Thống kê bot",
+    "description": "Thống kê toàn cầu và tình trạng hệ thống của bot ClashKing",
+    "about": {
+      "title": "Giới thiệu về các thống kê này",
+      "description": "Đây là thống kê toàn cầu cho toàn bộ mạng lưới bot ClashKing",
+      "globalStats": "Thống kê toàn cầu",
+      "globalStatsDesc": "Số lượng người chơi và bang hội thể hiện tất cả đối tượng được theo dõi trên mọi máy chủ Discord sử dụng ClashKing",
+      "systemHealth": "Tình trạng hệ thống",
+      "systemHealthDesc": "Mức sử dụng CPU và bộ nhớ cho biết tải hiện tại trên hạ tầng API ClashKing"
+    }
+  },
+  "NotFound": {
+    "title": "404 - Không tìm thấy trang",
+    "description": "Trang bạn đang tìm không tồn tại.",
+    "goHome": "Về trang chủ"
+  },
+  "ClanSignal": {
+    "metadata": {
+      "title": "ClashKing | Bot Discord, ứng dụng di động và bảng điều khiển bang hội",
+      "description": "Quản lý hội chiến, đội hình, tài khoản, lời nhắc và cài đặt bang hội bằng ClashKing trên Discord, di động và web.",
+      "openGraphTitle": "ClashKing | Điều hành bang hội"
+    },
+    "navigation": {
+      "ariaLabel": "Điều hướng ClashKing",
+      "homeLabel": "Trang chủ ClashKing",
+      "mobileApp": "Ứng dụng di động",
+      "discordBot": "Bot Discord",
+      "dashboard": "Bảng điều khiển"
+    },
+    "language": {
+      "label": "Ngôn ngữ"
+    },
+    "appearance": {
+      "label": "Giao diện",
+      "day": "Ban ngày",
+      "sunset": "Hoàng hôn"
+    },
+    "actions": {
+      "addToDiscord": "Thêm vào Discord",
+      "addClashKing": "Thêm ClashKing",
+      "openDashboard": "Mở bảng điều khiển",
+      "joinTestFlight": "Tham gia TestFlight",
+      "getAndroidApp": "Tải ứng dụng Android"
+    },
+    "hero": {
+      "phrases": {
+        "run": {
+          "first": "Điều hành",
+          "second": "",
+          "third": "bang hội."
+        },
+        "accounts": {
+          "first": "Quản lý",
+          "second": "",
+          "third": "tài khoản."
+        },
+        "stats": {
+          "first": "Khám phá",
+          "second": "",
+          "third": "thống kê."
+        }
+      },
+      "rotatingLabel": "Điều hành bang hội. Quản lý tài khoản. Khám phá thống kê.",
+      "copy": "Hội chiến, đội hình, tài khoản và cài đặt bang hội trên Discord, di động và web."
+    },
+    "app": {
+      "title": "Ứng dụng di động",
+      "intro": "Trợ lý cho tài khoản Clash của bạn.",
+      "stageLabel": "Các màn hình bang hội, nâng cấp và tiện ích hội chiến của ứng dụng ClashKing",
+      "images": {
+        "clanOverview": "Tổng quan bang hội trong ứng dụng ClashKing",
+        "upgradeStats": "Thống kê nâng cấp Đại Quản Giáo trong ứng dụng ClashKing",
+        "warWidget": "Tiện ích kết quả hội chiến ClashKing"
+      },
+      "features": {
+        "widgets": {
+          "title": "Tiện ích",
+          "copy": "Xem nhanh các trận hội chiến."
+        },
+        "notifications": {
+          "title": "Thông báo",
+          "copy": "Nhận thông báo khi có lượt tấn công khả dụng hoặc khi nâng cấp hoàn tất."
+        },
+        "accounts": {
+          "title": "Tài khoản được liên kết",
+          "copy": "Quản lý mọi tài khoản Clash tại một nơi."
+        }
+      }
+    },
+    "bot": {
+      "title": "Bot Discord",
+      "intro": "Thống kê và công cụ bang hội ngay trong Discord.",
+      "imageLabel": "Lệnh bang hội ClashKing trong Discord",
+      "imageAlt": "Lệnh ClashKing hiển thị thống kê bang hội ArcLine trong Discord",
+      "features": {
+        "rosters": {
+          "title": "Đội hình",
+          "copy": "Quản lý tài khoản cho CWL hoặc sự kiện."
+        },
+        "warTools": {
+          "title": "Công cụ hội chiến",
+          "copy": "Kiểm tra lượt tấn công, đội hình và lời nhắc trong Discord."
+        },
+        "accounts": {
+          "title": "Tài khoản được liên kết",
+          "copy": "Quản lý mọi tài khoản Clash tại một nơi."
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Bảng điều khiển",
+      "intro": "Quản lý đội hình, lời nhắc và cài đặt máy chủ tại một nơi.",
+      "imageLabel": "Nhà Thợ Xây đại diện cho công cụ quản lý bang hội",
+      "imageAlt": "Nhà Thợ Xây cấp 8",
+      "features": {
+        "settings": {
+          "title": "Cài đặt bang hội",
+          "copy": "Cấu hình bang hội, vai trò và kênh."
+        },
+        "rosters": {
+          "title": "Đội hình",
+          "copy": "Quản lý tài khoản cho CWL hoặc sự kiện."
+        },
+        "automation": {
+          "title": "Tự động hóa",
+          "copy": "Lên lịch lời nhắc và tác vụ máy chủ."
+        }
+      }
+    },
+    "resources": {
+      "title": "Xây dựng với ClashKing.",
+      "copy": "Hướng dẫn, mã nguồn và dữ liệu có cấu trúc cho công cụ cộng đồng.",
+      "ariaLabel": "Tài nguyên nhà phát triển",
+      "documentation": "Tài liệu",
+      "publicApi": "API công khai"
+    },
+    "footer": {
+      "tagline": "Công cụ Clash of Clans dành cho mọi người",
+      "docs": "Tài liệu",
+      "privacy": "Chính sách quyền riêng tư",
+      "terms": "Điều khoản dịch vụ",
+      "legal": "Nội dung này không liên kết với Supercell và cũng không được Supercell chứng thực, tài trợ hay phê duyệt cụ thể."
+    }
+  },
+  "PublicSeo": {
+    "imageAlt": "ClashKing cho Discord, thiết bị di động và web",
+    "privacy": {
+      "title": "Chính sách quyền riêng tư | ClashKing",
+      "openGraphTitle": "Chính sách quyền riêng tư của ClashKing",
+      "description": "Cách ClashKing thu thập, sử dụng, lưu trữ và bảo vệ dữ liệu tài khoản, trò chơi và ứng dụng.",
+      "heading": "Chính sách quyền riêng tư",
+      "eyebrow": "Có hiệu lực từ ngày 17 tháng 7 năm 2026"
+    },
+    "terms": {
+      "title": "Điều khoản dịch vụ | ClashKing",
+      "openGraphTitle": "Điều khoản dịch vụ của ClashKing",
+      "description": "Các điều khoản áp dụng khi bạn sử dụng trang web, ứng dụng, dịch vụ và công cụ cộng đồng của ClashKing.",
+      "heading": "Điều khoản dịch vụ",
+      "eyebrow": "Pháp lý ClashKing"
+    }
+  }
+}
