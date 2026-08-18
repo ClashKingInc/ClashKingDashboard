@@ -372,11 +372,11 @@ export default function RostersPage() { // NOSONAR — React page component: com
   const [createAutomationDialogOpen, setCreateAutomationDialogOpen] = useState(false);
   const [editAutomationDialogOpen, setEditAutomationDialogOpen] = useState(false);
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation>>(() => ({
     action_type: "roster_ping",
     scheduled_at: new Date(Date.now() + 86400000).toISOString(),
     active: true,
-  });
+  }));
   const [savingAutomation, setSavingAutomation] = useState(false);
   const [channels, setChannels] = useState<DiscordChannel[]>([]);
   const groupsRequestIdRef = useRef(0);

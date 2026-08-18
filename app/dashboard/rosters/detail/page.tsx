@@ -185,12 +185,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
     group_id: "",
   });
 
-  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string }>({
+  const [newAutomation, setNewAutomation] = useState<Partial<RosterAutomation> & { target_type?: 'roster' | 'group'; target_group_id?: string }>(() => ({
     action_type: "roster_ping",
     scheduled_at: new Date(Date.now() + 86400000).toISOString(),
     active: true,
     target_type: 'roster',
-  });
+  }));
 
   const [editingAutomation, setEditingAutomation] = useState<RosterAutomation | null>(null);
 
