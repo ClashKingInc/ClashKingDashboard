@@ -1393,7 +1393,13 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 			  <Input
 				type="datetime-local"
 				value={newAutomation.scheduled_at ? unixToDatetimeLocal(Math.floor(new Date(newAutomation.scheduled_at).getTime() / 1000)) : ""}
-				onChange={(e) => setNewAutomation({ ...newAutomation, scheduled_at: new Date(datetimeLocalToUnix(e.target.value) * 1000).toISOString() })}
+				onChange={(e) => {
+				  const scheduledAt = datetimeLocalToUnix(e.target.value);
+				  setNewAutomation({
+					...newAutomation,
+					scheduled_at: scheduledAt === null ? undefined : new Date(scheduledAt * 1000).toISOString(),
+				  });
+				}}
 				className="bg-muted/55 border-0 shadow-sm shadow-black/5"
 			  />
 			  <p className="text-xs text-muted-foreground">{t("automations.scheduledAtHint")}</p>
@@ -1541,7 +1547,12 @@ export default function RosterDetailPage() { // NOSONAR — React page component
 				<Input
 				  type="datetime-local"
 				  value={unixToDatetimeLocal(Math.floor(new Date(editingAutomation.scheduled_at).getTime() / 1000))}
-				  onChange={(e) => setEditingAutomation(prev => prev ? { ...prev, scheduled_at: new Date(datetimeLocalToUnix(e.target.value) * 1000).toISOString() } : null)}
+				  onChange={(e) => {
+					const scheduledAt = datetimeLocalToUnix(e.target.value);
+					setEditingAutomation(prev => prev && scheduledAt !== null
+					  ? { ...prev, scheduled_at: new Date(scheduledAt * 1000).toISOString() }
+					  : prev);
+				  }}
 				  className="bg-muted/55 border-0 shadow-sm shadow-black/5"
 				/>
 			  )}
