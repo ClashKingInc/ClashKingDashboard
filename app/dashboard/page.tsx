@@ -1,35 +1,51 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { ServerStats } from "@/components/dashboard/server-stats";
-import { ClansSummary } from "@/components/dashboard/clans-summary";
-import { DashboardIcon } from "@radix-ui/react-icons";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { dashboardHref, useGuildId } from "@/lib/dashboard-route";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
-import { useGuildId } from "@/lib/dashboard-route";
+function hasNoConfiguredClans(payload: unknown): boolean {
+  if (Array.isArray(payload)) return payload.length === 0;
+  if (!payload || typeof payload !== "object") return false;
 
-export default function OverviewPage() {
+  const collection = payload as { items?: unknown; clans?: unknown; data?: unknown };
+  const nestedClans = collection.items ?? collection.clans ?? collection.data;
+  return Array.isArray(nestedClans) && nestedClans.length === 0;
+}
+
+export default function DashboardEntryPage() {
   const guildId = useGuildId();
-  const t = useTranslations("OverviewPage");
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!guildId) return;
+
+    let active = true;
+
+    void queryClient.fetchQuery(dashboardQueryOptions.clans(guildId))
+      .then((clans) => {
+        if (!active) return;
+
+        const destination = hasNoConfiguredClans(clans) ? "clans" : "general";
+        router.replace(dashboardHref(destination, guildId));
+      })
+      .catch(() => {
+        if (active) router.replace(dashboardHref("general", guildId));
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [guildId, queryClient, router]);
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-start gap-3">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-            <DashboardIcon className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("title")}</h1>
-            <p className="text-muted-foreground mt-1">{t("description")}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <ServerStats guildId={guildId} />
-        </div>
-
-        <ClansSummary guildId={guildId} />
-      </div>
+    <div className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground" role="status">
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+      Opening server settings…
     </div>
   );
 }

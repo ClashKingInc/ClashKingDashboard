@@ -8,8 +8,8 @@ import type { ServerSettings, ServerSettingsUpdate, ServerSettingsResponse, Clan
 import type { BotGuildProfile, BotGuildProfileUpdate, DashboardAccessConfig, DashboardAccessGrant, DashboardCapabilities } from '../types/dashboard-access';
 
 export class ServerClient extends BaseApiClient {
-  async getDashboardCapabilities(serverId: string | number): Promise<ApiResponse<DashboardCapabilities>> {
-    return this.request(`/v2/server/${serverId}/dashboard-capabilities`, { method: 'GET' });
+  async getDashboardCapabilities(serverId: string | number, signal?: AbortSignal): Promise<ApiResponse<DashboardCapabilities>> {
+    return this.request(`/v2/server/${serverId}/dashboard-capabilities`, { method: 'GET', signal });
   }
 
   async getDashboardAccess(serverId: string | number): Promise<ApiResponse<DashboardAccessConfig>> {
@@ -31,24 +31,28 @@ export class ServerClient extends BaseApiClient {
    * GET /v2/guilds
    * Get all guilds the authenticated user has access to
    */
-  async getGuilds(): Promise<ApiResponse<GuildInfo[]>> {
-    return this.request('/v2/guilds', { method: 'GET' });
+  async getGuilds(signal?: AbortSignal): Promise<ApiResponse<GuildInfo[]>> {
+    return this.request('/v2/guilds', { method: 'GET', signal });
   }
 
   /**
    * GET /v2/guild/{guild_id}
    * Get information for a specific guild
    */
-  async getGuild(guildId: string): Promise<ApiResponse<GuildInfo>> {
-    return this.request(`/v2/guild/${guildId}`, { method: 'GET' });
+  async getGuild(guildId: string, signal?: AbortSignal): Promise<ApiResponse<GuildInfo>> {
+    return this.request(`/v2/guild/${guildId}`, { method: 'GET', signal });
+  }
+
+  async reactivateServer(serverId: string | number): Promise<ApiResponse<{ message: string }>> {
+    return this.request(`/v2/server/${serverId}/reactivate`, { method: 'POST' });
   }
 
   /**
    * GET /v2/server/{server_id}/settings
    */
-  async getSettings(serverId: string | number, clanSettings = false): Promise<ApiResponse<ServerSettings>> {
+  async getSettings(serverId: string | number, clanSettings = false, signal?: AbortSignal): Promise<ApiResponse<ServerSettings>> {
     const query = this.buildQueryString({ clan_settings: clanSettings });
-    return this.request(`/v2/server/${serverId}/settings${query}`, { method: 'GET' });
+    return this.request(`/v2/server/${serverId}/settings${query}`, { method: 'GET', signal });
   }
 
   /**
@@ -82,8 +86,8 @@ export class ServerClient extends BaseApiClient {
   /**
    * GET /v2/server/{server_id}/clans
    */
-  async getServerClans(serverId: string | number): Promise<ApiResponse<ServerClanListItem[]>> {
-    return this.request(`/v2/server/${serverId}/clans`, { method: 'GET' });
+  async getServerClans(serverId: string | number, signal?: AbortSignal): Promise<ApiResponse<ServerClanListItem[]>> {
+    return this.request(`/v2/server/${serverId}/clans`, { method: 'GET', signal });
   }
 
   /**
@@ -151,8 +155,15 @@ export class ServerClient extends BaseApiClient {
   /**
    * GET /v2/server/{server_id}/channels
    */
-  async getChannels(serverId: string | number): Promise<ApiResponse<any>> {
-    return this.request(`/v2/server/${serverId}/channels`, { method: 'GET' });
+  async getChannels(serverId: string | number, signal?: AbortSignal): Promise<ApiResponse<any>> {
+    return this.request(`/v2/server/${serverId}/channels`, { method: 'GET', signal });
+  }
+
+  /**
+   * GET /v2/server/{server_id}/threads
+   */
+  async getThreads(serverId: string | number, signal?: AbortSignal): Promise<ApiResponse<any>> {
+    return this.request(`/v2/server/${serverId}/threads`, { method: 'GET', signal });
   }
 
   /**

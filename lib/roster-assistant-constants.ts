@@ -1,0 +1,3 @@
+export const ROSTER_ASSISTANT_MODEL = "gpt-5.6-luna";
+export const ROSTER_ASSISTANT_COMPACTION_THRESHOLD = 230_000;
+

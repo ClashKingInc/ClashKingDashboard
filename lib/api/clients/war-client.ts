@@ -4,9 +4,20 @@
 
 import { BaseApiClient } from '../core/base-client';
 import type { ApiResponse, PaginatedResponse } from '../types/common';
-import type { PreviousWarsOptions, ClanWarStatsOptions, PlayerWarhitsFilter } from '../types/war';
+import type {
+  PreviousWarsOptions,
+  ClanWarStatsOptions,
+  PlayerWarhitsFilter,
+  CwlBonusRecipient,
+  CwlGroupResponse,
+  CwlSeasonItem,
+} from '../types/war';
 
 export class WarClient extends BaseApiClient {
+  async getCurrentWar(clanTag: string): Promise<ApiResponse<Record<string, unknown>>> {
+    return this.request(`/proxy/v1/clans/${encodeURIComponent(clanTag)}/currentwar`, { method: 'GET' });
+  }
+
   /**
    * GET /v2/war/{clan_tag}/previous
    */
@@ -27,6 +38,37 @@ export class WarClient extends BaseApiClient {
    */
   async getCwlLeagueThresholds(): Promise<ApiResponse<PaginatedResponse<any>>> {
     return this.request('/v2/cwl/league-thresholds', { method: 'GET' });
+  }
+
+  async getCwlSeasons(clanTag: string): Promise<ApiResponse<{ items: CwlSeasonItem[] }>> {
+    return this.request(`/v2/cwl/${encodeURIComponent(clanTag)}/seasons`, { method: 'GET' });
+  }
+
+  async getStoredCwl(clanTag: string, season?: string): Promise<ApiResponse<CwlGroupResponse>> {
+    const query = this.buildQueryString({ season });
+    return this.request(`/v2/cwl/${encodeURIComponent(clanTag)}${query}`, { method: 'GET' });
+  }
+
+  async getCwlBonusRecipients(
+    serverId: string | number,
+    clanTag: string,
+    season: string,
+  ): Promise<ApiResponse<{ items: CwlBonusRecipient[] }>> {
+    const query = this.buildQueryString({ season });
+    return this.request(`/v2/server/${serverId}/cwl/${encodeURIComponent(clanTag)}/bonus-recipients${query}`, { method: 'GET' });
+  }
+
+  async replaceCwlBonusRecipients(
+    serverId: string | number,
+    clanTag: string,
+    season: string,
+    recipients: CwlBonusRecipient[],
+  ): Promise<ApiResponse<{ items: CwlBonusRecipient[] }>> {
+    const query = this.buildQueryString({ season });
+    return this.request(`/v2/server/${serverId}/cwl/${encodeURIComponent(clanTag)}/bonus-recipients${query}`, {
+      method: 'PUT',
+      body: JSON.stringify({ recipients }),
+    });
   }
 
   /**

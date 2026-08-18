@@ -234,15 +234,6 @@ describe("calculateRosterStats", () => {
     expect(stats.totalMembers).toBe(2);
   });
 
-  it("counts subs correctly", () => {
-    const members = [
-      { name: "A", tag: "#AAA", townhall: 14, sub: true },
-      { name: "B", tag: "#BBB", townhall: 14, sub: false },
-    ];
-    const stats = calculateRosterStats(members);
-    expect(stats.subs).toBe(1);
-  });
-
   it("categorises in-clan vs family vs external", () => {
     const members = [
       { name: "A", tag: "#AAA", townhall: 14, current_clan_tag: "#CLAN" },

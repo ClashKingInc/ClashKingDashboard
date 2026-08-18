@@ -1,5 +1,7 @@
 // Roster Types - Centralized type definitions for the rosters module
 
+import type { RosterSignupQuestion } from "@/lib/api/types/roster";
+
 export interface RosterMember {
   name: string;
   tag: string;
@@ -12,8 +14,7 @@ export interface RosterMember {
   current_clan_tag?: string;
   war_pref?: boolean;
   trophies?: number;
-  sub?: boolean;
-  signup_group?: string | null;
+  signup_answers?: Record<string, unknown>;
   hitrate?: number | null;
   last_online?: number | null;
   current_league?: string | null;
@@ -25,7 +26,8 @@ export interface RosterMember {
 }
 
 export interface Roster {
-  custom_id: string;
+  id: string;
+  revision?: number;
   server_id: string | number;
   alias: string;
   description?: string | null;
@@ -38,14 +40,13 @@ export interface Roster {
   members?: RosterMember[];
   min_th?: number | null;
   max_th?: number | null;
-  roster_size?: number | null;
   min_signups?: number | null;
   max_accounts_per_user?: number | null;
-  th_restriction?: string;
-  allowed_signup_categories?: string[];
-  default_signup_category?: string | null;
+  signup_questions?: RosterSignupQuestion[];
   columns?: string[];
-  sort?: string[];
+  sort?: Array<{ columnId: string; direction: "asc" | "desc" }>;
+  webhook_id?: string | null;
+  message_id?: string | null;
   image?: string | null;
   event_start_time?: number | null;
   recurrence_days?: number | null;
@@ -66,14 +67,14 @@ export interface RosterAutomation {
   roster_id?: string;
   group_id?: string;
   action_type: AutomationActionType;
-  offset_seconds: number;
+  scheduled_at: string;
   discord_channel_id?: string;
   options?: RosterAutomationOptions;
   active: boolean;
   executed: boolean;
   executed_at?: number | null;
   last_triggered_at?: number | null;
-  execution_status?: 'triggered' | 'missed';
+  execution_status?: 'pending' | 'processing' | 'completed' | 'failed' | 'missed';
   last_missed_at?: number | null;
   created_at?: number;
   updated_at?: number;
@@ -97,26 +98,16 @@ export interface RosterGroup {
   description?: string;
   server_id: string | number;
   max_accounts_per_user?: number | null;
-  roster_size?: number | null;
   min_signups?: number | null;
-  allowed_signup_categories?: string[];
-  default_signup_category?: string | null;
   roster_count?: number;
   rosters?: Array<{
-    custom_id: string;
+    id: string;
     alias: string;
     clan_name?: string;
     updated_at?: string;
   }>;
   created_at?: number;
   updated_at?: number;
-}
-
-export interface SignupCategory {
-  custom_id: string;
-  alias: string;
-  server_id: string | number;
-  created_at?: number;
 }
 
 export interface Clan {
@@ -191,18 +182,16 @@ export interface EditRosterFormData {
   clan_tag: string;
   min_th: string;
   max_th: string;
-  roster_size: string;
   min_signups: string;
   max_accounts_per_user: string;
   event_start_time: string;
   recurrence_days: string;
   recurrence_day_of_month: string;
   recurrence_mode: 'days' | 'day_of_month';
-  default_signup_category: string;
+  signup_questions: RosterSignupQuestion[];
   columns: string[];
   sort: string[];
   group_id: string;
-  allowed_signup_categories: string[];
 }
 
 export interface CloneRosterFormData {
@@ -218,7 +207,6 @@ export interface RosterStats {
   inClan: number;
   inFamily: number;
   external: number;
-  subs: number;
   thDistribution: Record<number, number>;
 }
 
@@ -234,7 +222,6 @@ export const ROSTER_COLUMNS = [
   { value: "hero_lvs", label: "Hero Levels" },
   { value: "trophies", label: "Trophies" },
   { value: "war_pref", label: "War Preference" },
-  { value: "signup_group", label: "Signup Group" },
 ] as const;
 
 export const SORT_OPTIONS = [

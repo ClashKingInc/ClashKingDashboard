@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLocale } from "next-intl";
 import { useGuildId } from "@/lib/dashboard-route";
 import { apiFetch } from "@/lib/api/fetch";
@@ -7,6 +8,7 @@ import { apiFetch } from "@/lib/api/fetch";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
   CalendarClock,
@@ -31,9 +33,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -55,7 +55,8 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/tabs";
+import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
 import { useToast } from "@/components/ui/use-toast";
 import {
   destinationNeedsThread,
@@ -67,6 +68,7 @@ import {
 } from "@/lib/discord-destinations";
 import {
   buildAutoboardRequest,
+  autoboardArtworkUrl,
   createEditAutoboardForm,
   createInitialAutoboardForm,
   extractApiError,
@@ -79,6 +81,11 @@ import {
   type AutoboardsResponse,
   type AutoboardTargetScope,
 } from "./autoboards";
+import {
+  AUTOBOARD_FREE_LIMIT,
+  AUTOBOARD_SUBSCRIBER_LIMIT,
+} from "@/lib/subscription-entitlements";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
 
 type BoardFilter = "all" | AutoboardDeliveryMode;
 
@@ -105,12 +112,12 @@ function formatSchedule(item: AutoboardItem, weekdayLabels: string[]): string {
   if (!item.schedule) return "—";
   if (item.schedule.kind === "weekdays") {
     const days = (item.schedule.weekdays ?? []).map((day) => weekdayLabels[day - 1]).join(", ");
-    return `${days} · ${item.schedule.timeOfDay} · ${item.schedule.timezone}`;
+    return `${days} · ${item.schedule.timeOfDay} UTC`;
   }
   if (item.schedule.kind === "day_of_month") {
-    return `${item.schedule.dayOfMonth} · ${item.schedule.timeOfDay} · ${item.schedule.timezone}`;
+    return `${item.schedule.dayOfMonth} · ${item.schedule.timeOfDay} UTC`;
   }
-  return `${item.schedule.timeOfDay} · ${item.schedule.timezone}`;
+  return `${item.schedule.timeOfDay} UTC`;
 }
 
 export default function AutoboardsPage() {
@@ -118,6 +125,7 @@ export default function AutoboardsPage() {
   const locale = useLocale();
   const t = useTranslations("AutoboardsPage");
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -127,6 +135,7 @@ export default function AutoboardsPage() {
   const [capabilities, setCapabilities] = useState<AutoboardBoardTypeCapability[]>([]);
   const [channels, setChannels] = useState<DiscordDestinationChannel[]>([]);
   const [threads, setThreads] = useState<DiscordDestinationThread[]>([]);
+  const [destinationsLoading, setDestinationsLoading] = useState(true);
   const [filter, setFilter] = useState<BoardFilter>("all");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<AutoboardItem | null>(null);
@@ -134,10 +143,6 @@ export default function AutoboardsPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AutoboardItem | null>(null);
 
-  const timezone = useMemo(
-    () => Intl.DateTimeFormat().resolvedOptions().timeZone,
-    [],
-  );
   const weekdayLabels = useMemo(
     () => ISO_WEEKDAYS.map((day) => t(`weekdays.${day}` as never)),
     [t],
@@ -174,16 +179,12 @@ export default function AutoboardsPage() {
     setLoading(true);
     setError(null);
     try {
-      const [boardsPayload, capabilityPayload, channelsPayload, threadsPayload] = await Promise.all([
+      const [boardsPayload, capabilityPayload] = await Promise.all([
         request(`/v2/server/${guildId}/autoboards`),
         request(`/v2/server/${guildId}/autoboards/capabilities`),
-        request(`/v2/server/${guildId}/channels`),
-        request(`/v2/server/${guildId}/threads`),
       ]);
       setData(boardsPayload as AutoboardsResponse);
       setCapabilities(parseAutoboardCapabilities(capabilityPayload).boardTypes);
-      setChannels(normalizeDestinationChannels(channelsPayload));
-      setThreads(normalizeDestinationThreads(threadsPayload));
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : t("errors.load"));
     } finally {
@@ -191,12 +192,33 @@ export default function AutoboardsPage() {
     }
   }, [guildId, request, t]);
 
+  const loadDestinations = useCallback(async () => {
+    setDestinationsLoading(true);
+    try {
+      const [channelsPayload, threadsPayload] = await Promise.all([
+        queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
+        queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)),
+      ]);
+      setChannels(normalizeDestinationChannels(channelsPayload));
+      setThreads(normalizeDestinationThreads(threadsPayload));
+    } catch (destinationError) {
+      console.error("Failed to load Discord destinations:", destinationError);
+    } finally {
+      setDestinationsLoading(false);
+    }
+  }, [guildId, queryClient]);
+
   useEffect(() => {
     void load();
   }, [load]);
 
+  useEffect(() => {
+    if (loading || !data) return;
+    void loadDestinations();
+  }, [data, loadDestinations, loading]);
+
   const openCreate = () => {
-    const nextForm = createInitialAutoboardForm(capabilities[0], timezone);
+    const nextForm = createInitialAutoboardForm(capabilities[0]);
     setEditing(null);
     setForm(nextForm);
     setFormError(null);
@@ -212,7 +234,7 @@ export default function AutoboardsPage() {
 
   const changeBoardType = (boardType: string) => {
     const capability = capabilities.find((candidate) => candidate.boardType === boardType);
-    const next = createInitialAutoboardForm(capability, timezone);
+    const next = createInitialAutoboardForm(capability);
     setForm((current) => ({
       ...next,
       channelId: current?.channelId ?? "",
@@ -337,29 +359,34 @@ export default function AutoboardsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-        <div className="mx-auto max-w-7xl space-y-6">
+        <div className="mx-auto max-w-6xl space-y-7">
           <div className="space-y-2">
             <Skeleton className="h-9 w-52" />
             <Skeleton className="h-4 w-full max-w-lg" />
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[0, 1, 2].map((value) => <Skeleton key={value} className="h-24 rounded-xl" />)}
+          <Skeleton className="h-36 rounded-3xl" />
+          <div className="grid gap-4 xl:grid-cols-2">
+            {[0, 1, 2, 3].map((value) => <Skeleton key={value} className="h-48 rounded-3xl" />)}
           </div>
-          <Skeleton className="h-72 rounded-xl" />
         </div>
       </div>
     );
   }
 
+  const total = data?.total ?? 0;
+  const limit = data?.limit ?? AUTOBOARD_FREE_LIMIT;
+  const remaining = Math.max(0, limit - total);
+  const usagePercent = limit > 0 ? Math.min(100, (total / limit) * 100) : 0;
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl space-y-6">
+      <div className="mx-auto max-w-6xl space-y-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t("title")}</h1>
-            <p className="mt-1 max-w-2xl text-sm text-muted-foreground sm:text-base">{t("description")}</p>
+            <h1 className="text-2xl font-bold sm:text-3xl">{t("title")}</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">{t("description")}</p>
           </div>
-          <Button className="shrink-0 self-start" onClick={openCreate} disabled={capabilities.length === 0}>
+          <Button className="shrink-0 self-start rounded-xl" onClick={openCreate} disabled={capabilities.length === 0 || total >= limit}>
             <Plus className="mr-2 h-4 w-4" />
             {t("actions.create")}
           </Button>
@@ -387,116 +414,110 @@ export default function AutoboardsPage() {
           </Alert>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <MetricCard icon={CalendarClock} label={t("metrics.total")} value={`${data?.total ?? 0} / ${data?.limit ?? 0}`} />
-          <MetricCard icon={RefreshCw} label={t("metrics.refresh")} value={data?.refreshCount ?? 0} />
-          <MetricCard icon={Send} label={t("metrics.send")} value={data?.sendCount ?? 0} />
-        </div>
-
-        <Card>
-          <CardHeader className="gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <CardTitle>{t("list.title")}</CardTitle>
-              <CardDescription>{t("list.description")}</CardDescription>
+        <section className="rounded-3xl bg-card p-5 shadow-sm shadow-black/5 sm:p-6" aria-labelledby="autoboard-usage-title">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+            <div className="flex min-w-0 items-center gap-4">
+              <div className="relative h-16 w-16 shrink-0">
+                <Image src="https://assets.clashk.ing/bot/icons/clock.png" alt="" fill sizes="64px" className="object-contain drop-shadow-md" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h2 id="autoboard-usage-title" className="font-semibold">{t("metrics.total")}</h2>
+                  <p className="text-sm font-semibold tabular-nums">{total} / {limit}</p>
+                </div>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuemin={0} aria-valuemax={limit} aria-valuenow={total}>
+                  <div className="h-full rounded-full bg-primary transition-[width] duration-150" style={{ width: `${usagePercent}%` }} />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">{remaining} {t("metrics.remaining")} · {t("entitlement.current", { limit })}</p>
+              </div>
             </div>
-            <Tabs value={filter} onValueChange={(value) => setFilter(value as BoardFilter)}>
-              <TabsList>
-                <TabsTrigger value="all">{t("filters.all")}</TabsTrigger>
-                <TabsTrigger value="refresh">{t("modes.refresh")}</TabsTrigger>
-                <TabsTrigger value="send">{t("modes.send")}</TabsTrigger>
-              </TabsList>
+            <div className="flex flex-wrap gap-2 lg:justify-end">
+              <MetricPill icon={RefreshCw} label={t("metrics.refresh")} value={data?.refreshCount ?? 0} />
+              <MetricPill icon={Send} label={t("metrics.send")} value={data?.sendCount ?? 0} />
+            </div>
+          </div>
+          <div className="mt-5 rounded-2xl bg-muted/45 px-4 py-3 text-sm text-muted-foreground">
+            <p className="font-medium text-foreground">{t("entitlement.title", { freeLimit: AUTOBOARD_FREE_LIMIT })}</p>
+            <p className="mt-1 leading-6">{t("entitlement.description", { paidLimit: AUTOBOARD_SUBSCRIBER_LIMIT })}</p>
+          </div>
+        </section>
+
+        <section aria-labelledby="autoboard-list-title">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 id="autoboard-list-title" className="text-xl font-semibold">{t("list.title")}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t("list.description")}</p>
+            </div>
+            <Tabs className="w-full sm:w-auto" value={filter} onValueChange={(value) => setFilter(value as BoardFilter)}>
+              <DashboardTabsList className="grid-cols-3 sm:w-[360px]">
+                <DashboardTabTrigger value="all" count={data?.total ?? 0}>{t("filters.all")}</DashboardTabTrigger>
+                <DashboardTabTrigger value="refresh" count={data?.refreshCount ?? 0}>{t("modes.refresh")}</DashboardTabTrigger>
+                <DashboardTabTrigger value="send" count={data?.sendCount ?? 0}>{t("modes.send")}</DashboardTabTrigger>
+              </DashboardTabsList>
             </Tabs>
-          </CardHeader>
-          <CardContent>
+          </div>
+
           {filteredItems.length === 0 ? (
-            <div className="flex min-h-48 flex-col items-center justify-center rounded-lg border border-dashed px-6 py-12 text-center">
-              <CalendarClock className="mx-auto mb-3 h-9 w-9 text-muted-foreground" />
-              <p className="font-medium">{t("list.empty")}</p>
-              <p className="text-sm text-muted-foreground">{t("list.emptyDescription")}</p>
+            <div className="mt-5 flex min-h-44 items-center gap-4 rounded-3xl bg-muted/45 px-6 py-10 shadow-sm shadow-black/5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-background/70 text-muted-foreground">
+                <CalendarClock className="h-6 w-6" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="font-semibold">{t("list.empty")}</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">{t("list.emptyDescription")}</p>
+              </div>
             </div>
           ) : (
-            <div className="grid gap-4 xl:grid-cols-2">
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
               {filteredItems.map((item) => {
                 const channel = channels.find((candidate) => candidate.id === item.channelId);
                 const thread = threads.find((candidate) => candidate.id === item.threadId);
-                const capabilityAvailable = capabilities.some(
-                  (capability) => capability.boardType === item.boardType,
-                );
+                const capability = capabilities.find((candidate) => candidate.boardType === item.boardType);
+                const capabilityAvailable = Boolean(capability);
                 return (
-                  <div key={item.id} className="rounded-lg border bg-card p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
+                  <article key={item.id} className="rounded-3xl bg-card p-5 shadow-sm shadow-black/5">
+                    <div className="flex items-start gap-3">
+                      <div className="relative h-12 w-12 shrink-0 rounded-2xl bg-muted/55 p-1.5">
+                        <Image src={autoboardArtworkUrl(item.boardType, item.targetKind)} alt="" fill sizes="48px" className="object-contain p-1.5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="truncate font-semibold">{item.boardType}</h3>
-                          <Badge variant={item.deliveryMode === "refresh" ? "secondary" : "outline"}>
-                            {t(`modes.${item.deliveryMode}`)}
-                          </Badge>
-                          {!item.enabled && <Badge variant="destructive">{t("status.disabled")}</Badge>}
+                          <h3 className="truncate font-semibold">{capability?.label ?? formatTargetKind(item.boardType)}</h3>
+                          <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">{t(`modes.${item.deliveryMode}`)}</span>
+                          <span className={item.enabled ? "rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300" : "rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-medium text-destructive"}>
+                            {t(`status.${item.enabled ? "enabled" : "disabled"}`)}
+                          </span>
                         </div>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {t("targets.kind", { kind: formatTargetKind(item.targetKind) })}
-                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">{t("targets.kind", { kind: formatTargetKind(item.targetKind) })}</p>
                       </div>
                       <div className="flex shrink-0 gap-1">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          aria-label={t("actions.edit")}
-                          disabled={!capabilityAvailable}
-                          onClick={() => openEdit(item)}
-                        >
+                        <Button size="icon" variant="ghost" className="rounded-xl" aria-label={t("actions.edit")} disabled={!capabilityAvailable} onClick={() => openEdit(item)}>
                           <Edit2 className="h-4 w-4" />
                         </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          aria-label={t("actions.delete")}
-                          onClick={() => setDeleteTarget(item)}
-                        >
+                        <Button size="icon" variant="ghost" className="rounded-xl" aria-label={t("actions.delete")} onClick={() => setDeleteTarget(item)}>
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
                     </div>
 
-                    <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-                      <Detail icon={Target} label={t("targets.scope")}>
-                        {item.targetScope === "family"
-                          ? t("targets.family")
-                          : item.targets.join(", ")}
-                      </Detail>
-                      <Detail icon={Hash} label={t("destination.label")}>
-                        {item.channelDeleted || !channel
-                          ? t("destination.deleted")
-                          : `#${channel.name}${thread ? ` / ${thread.name}` : ""}`}
-                      </Detail>
-                      <Detail icon={Clock3} label={t("schedule.label")}>
-                        {formatSchedule(item, weekdayLabels)}
-                      </Detail>
-                      <Detail icon={CalendarClock} label={t("schedule.nextRun")}>
-                        {formatDate(item.nextRunAt, locale)}
-                      </Detail>
+                    <dl className="mt-4 grid gap-x-4 gap-y-3 rounded-2xl bg-muted/45 p-4 text-sm sm:grid-cols-2">
+                      <Detail icon={Target} label={t("targets.scope")}>{item.targetScope === "family" ? t("targets.family") : item.targets.join(", ")}</Detail>
+                      <Detail icon={Hash} label={t("destination.label")}>{destinationsLoading ? "—" : item.channelDeleted || !channel ? t("destination.deleted") : `#${channel.name}${thread ? ` / ${thread.name}` : ""}`}</Detail>
+                      <Detail icon={Clock3} label={t("schedule.label")}>{formatSchedule(item, weekdayLabels)}</Detail>
+                      <Detail icon={CalendarClock} label={t("schedule.nextRun")}>{formatDate(item.nextRunAt, locale)}</Detail>
                     </dl>
 
-                    {item.deliveryMode === "refresh" && item.messageId && (
-                      <div className="mt-3 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
-                        {t("status.messageId", { id: item.messageId })}
-                      </div>
-                    )}
-                    {!capabilityAvailable && (
-                      <p className="mt-3 text-xs text-amber-600 dark:text-amber-400">
-                        {t("registry.typeUnavailable")}
-                      </p>
-                    )}
-                  </div>
+                    {item.deliveryMode === "refresh" && item.messageId && <p className="mt-3 truncate px-1 text-xs text-muted-foreground">{t("status.messageId", { id: item.messageId })}</p>}
+                    {!capabilityAvailable && <p className="mt-3 px-1 text-xs text-amber-600 dark:text-amber-400">{t("registry.typeUnavailable")}</p>}
+                  </article>
                 );
               })}
             </div>
           )}
-          </CardContent>
-        </Card>
+        </section>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+        <DialogContent variant="form" className="sm:max-w-2xl">
           <DialogHeader>
             <DialogTitle>{editing ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
             <DialogDescription>{t("dialog.description")}</DialogDescription>
@@ -529,7 +550,7 @@ export default function AutoboardsPage() {
                   })}
                   description={t("targets.kindDescription")}
                 >
-                  <div className="flex h-10 items-center rounded-md border bg-muted/40 px-3 text-sm">
+                  <div className="flex h-10 items-center rounded-xl bg-muted/55 px-3 text-sm shadow-sm shadow-black/5">
                     {formatTargetKind(selectedCapability?.targetKind ?? "—")}
                   </div>
                 </Field>
@@ -569,7 +590,7 @@ export default function AutoboardsPage() {
                         />
                         <Button
                           type="button"
-                          variant="outline"
+                          variant="secondary"
                           size="icon"
                           aria-label={t("targets.remove")}
                           disabled={form.targets.length <= selectedCapability.minTargets}
@@ -581,7 +602,7 @@ export default function AutoboardsPage() {
                     ))}
                     <Button
                       type="button"
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       disabled={form.targets.length >= selectedCapability.maxTargets}
                       onClick={addTarget}
@@ -607,7 +628,12 @@ export default function AutoboardsPage() {
                 </Select>
               </Field>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              {destinationsLoading ? (
+                <div className="grid gap-4 sm:grid-cols-2" aria-busy="true">
+                  <Skeleton className="h-20 rounded-2xl" />
+                  <Skeleton className="h-20 rounded-2xl" />
+                </div>
+              ) : <div className="grid gap-4 sm:grid-cols-2">
                 <Field label={t("destination.channel")} description={t("destination.channelDescription")}>
                   <ChannelCombobox
                     channels={channels}
@@ -640,7 +666,7 @@ export default function AutoboardsPage() {
                     </SelectContent>
                   </Select>
                 </Field>
-              </div>
+              </div>}
 
               {form.deliveryMode === "refresh" && selectedCapability?.refreshInterval && (
                 <Field
@@ -661,7 +687,7 @@ export default function AutoboardsPage() {
               )}
 
               {form.deliveryMode === "send" && (
-                <div className="space-y-4 rounded-lg border p-4">
+                <div className="space-y-4 rounded-2xl bg-muted/45 p-4">
                   <Field label={t("schedule.kind")} description={t("schedule.kindDescription")}>
                     <Select
                       value={form.scheduleKind}
@@ -683,7 +709,7 @@ export default function AutoboardsPage() {
                     <Field label={t("schedule.selectWeekdays")}>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                         {ISO_WEEKDAYS.map((day, index) => (
-                          <label key={day} className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm">
+                          <label key={day} className="flex items-center gap-2 rounded-xl bg-background/70 px-3 py-2 text-sm shadow-sm shadow-black/5">
                             <Checkbox
                               checked={form.weekdays.includes(day)}
                               onCheckedChange={(checked) => setForm({
@@ -713,14 +739,7 @@ export default function AutoboardsPage() {
                   )}
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <Field label={t("schedule.timezone")}>
-                      <Input
-                        value={form.timezone}
-                        onChange={(event) => setForm({ ...form, timezone: event.target.value })}
-                        placeholder="America/Chicago"
-                      />
-                    </Field>
-                    <Field label={t("schedule.timeOfDay")}>
+                    <Field label={`${t("schedule.timeOfDay")} (UTC)`}>
                       <Input
                         type="time"
                         value={form.timeOfDay}
@@ -731,7 +750,7 @@ export default function AutoboardsPage() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between rounded-lg border p-4">
+              <div className="flex items-center justify-between rounded-2xl bg-muted/45 p-4">
                 <div>
                   <Label htmlFor="autoboard-enabled">{t("status.enabled")}</Label>
                   <p className="text-sm text-muted-foreground">{t("status.enabledDescription")}</p>
@@ -745,7 +764,7 @@ export default function AutoboardsPage() {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>{t("actions.cancel")}</Button>
+            <Button variant="secondary" onClick={() => setDialogOpen(false)}>{t("actions.cancel")}</Button>
             <Button onClick={() => void save()} disabled={saving}>
               {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editing ? t("actions.save") : t("actions.create")}
@@ -774,7 +793,7 @@ export default function AutoboardsPage() {
   );
 }
 
-function MetricCard({
+function MetricPill({
   icon: Icon,
   label,
   value,
@@ -784,15 +803,11 @@ function MetricCard({
   value: string | number;
 }) {
   return (
-    <Card>
-      <div className="flex min-h-24 items-center justify-between gap-4 p-5">
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="mt-1 text-2xl font-semibold">{value}</p>
-        </div>
-        <div className="rounded-lg bg-primary/10 p-3 text-primary"><Icon className="h-5 w-5" /></div>
-      </div>
-    </Card>
+    <div className="flex items-center gap-2 rounded-full bg-muted/65 px-3 py-2 text-sm shadow-sm shadow-black/5">
+      <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-semibold tabular-nums text-foreground">{value}</span>
+    </div>
   );
 }
 

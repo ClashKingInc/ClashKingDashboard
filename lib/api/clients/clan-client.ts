@@ -13,6 +13,10 @@ import type {
 } from '../types/clan';
 
 export class ClanClient extends BaseApiClient {
+  async getClanInfo(clanTag: string): Promise<ApiResponse<Record<string, unknown>>> {
+    return this.request(`/proxy/v1/clans/${encodeURIComponent(clanTag)}`, { method: 'GET' });
+  }
+
   /**
    * GET /v2/clan/{clan_tag}/ranking
    */

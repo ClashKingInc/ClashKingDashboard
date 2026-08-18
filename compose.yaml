@@ -4,12 +4,14 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://go.api.clashk.ing}
-        NEXT_PUBLIC_DISCORD_CLIENT_ID: ${NEXT_PUBLIC_DISCORD_CLIENT_ID:-824653933347209227}
+        NEXT_PUBLIC_CLASHKING_API_ORIGIN: ${CLASHKING_API_ORIGIN:-https://v2-api.clashk.ing}
+        NEXT_PUBLIC_CLASHKING_AI_ORIGIN: ${CLASHKING_AI_ORIGIN:-https://ai.clashk.ing}
+        NEXT_PUBLIC_DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID:-824653933347209227}
     ports:
       - "${PORT:-3000}:3000"
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://go.api.clashk.ing}
-      NEXT_PUBLIC_DISCORD_CLIENT_ID: ${NEXT_PUBLIC_DISCORD_CLIENT_ID:-824653933347209227}
+      NEXT_PUBLIC_CLASHKING_API_ORIGIN: ${CLASHKING_API_ORIGIN:-https://v2-api.clashk.ing}
+      NEXT_PUBLIC_CLASHKING_AI_ORIGIN: ${CLASHKING_AI_ORIGIN:-https://ai.clashk.ing}
+      NEXT_PUBLIC_DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID:-824653933347209227}
     restart: unless-stopped

@@ -7,13 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { PlayerProfilePopover } from "@/components/ui/player-profile-popover";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Trash2, AlertCircle, Clock, RefreshCw, Plus, X, ChevronUp, ChevronDown, ChevronsUpDown, Copy } from "lucide-react";
-import type { RosterMember, Clan, SignupCategory } from "../_lib/types";
+import { Trash2, AlertCircle, Clock, RefreshCw, AtSign, ChevronUp, ChevronDown, ChevronsUpDown, Copy } from "lucide-react";
+import type { RosterMember, Clan } from "../_lib/types";
 import { townHallImageUrl } from "@/lib/theme";
 
 const STALE_THRESHOLD_SECONDS = 2 * 24 * 60 * 60; // 2 days
@@ -23,13 +18,11 @@ interface MembersTableProps {
   readonly columns: string[];
   readonly rosterClanTag?: string | null;
   readonly familyClans: Clan[];
-  readonly categories?: SignupCategory[];
   readonly groupDuplicateMap?: Record<string, string[]>;
   readonly onRemoveMember: (tag: string) => void;
   readonly removingMember?: string | null;
-  readonly onCategoryClick?: () => void;
-  readonly onUpdateMemberCategory?: (tag: string, categoryId: string | null) => Promise<void>;
   readonly onRefreshMember?: (tag: string) => Promise<void>;
+  readonly onRefreshDiscordIdentity?: (tag: string) => Promise<void>;
   readonly t: (key: string) => string;
 }
 
@@ -38,13 +31,11 @@ export function MembersTable({
   columns,
   rosterClanTag,
   familyClans,
-  categories = [],
   groupDuplicateMap = {},
   onRemoveMember,
   removingMember,
-  onCategoryClick,
-  onUpdateMemberCategory,
   onRefreshMember,
+  onRefreshDiscordIdentity,
   t,
 }: MembersTableProps) {
   const familyClanTags = new Set(familyClans.map(c => c.tag));
@@ -54,8 +45,7 @@ export function MembersTable({
     return clan?.badge_url || clan?.badge || null;
   };
   const [refreshingMember, setRefreshingMember] = useState<string | null>(null);
-  const [categoryPopoverTag, setCategoryPopoverTag] = useState<string | null>(null);
-  const [updatingCategory, setUpdatingCategory] = useState<string | null>(null);
+  const [refreshingDiscordMember, setRefreshingDiscordMember] = useState<string | null>(null);
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0);
@@ -85,7 +75,6 @@ export function MembersTable({
       case 'discord': return member.discord_username?.toLowerCase() ?? '';
       case 'hero_lvs': return member.hero_lvs ?? '';
       case 'war_pref': return member.war_pref ? 1 : 0;
-      case 'signup_group': return member.signup_group?.toLowerCase() ?? '';
       default: return '';
     }
   };
@@ -114,15 +103,14 @@ export function MembersTable({
     }
   };
 
-  const handleSetCategory = async (tag: string, categoryId: string | null) => {
-    if (!onUpdateMemberCategory) return;
-    setUpdatingCategory(tag);
-    setCategoryPopoverTag(null);
-    try {
-      await onUpdateMemberCategory(tag, categoryId);
-    } finally {
-      setUpdatingCategory(null);
-    }
+  const handleDiscordRefresh = async (tag: string) => {
+	if (!onRefreshDiscordIdentity) return;
+	setRefreshingDiscordMember(tag);
+	try {
+		await onRefreshDiscordIdentity(tag);
+	} finally {
+		setRefreshingDiscordMember(null);
+	}
   };
 
   const withPlayerPopover = (member: RosterMember, content: React.ReactNode) => (
@@ -133,7 +121,6 @@ export function MembersTable({
       townhallLevel={member.townhall}
       trophies={member.trophies}
       warPreference={member.war_pref}
-      signupGroup={member.signup_group}
       heroLevels={member.hero_lvs}
       hitrate={member.hitrate}
       showTagInTrigger={false}
@@ -280,68 +267,6 @@ export function MembersTable({
           )
         );
 
-      case 'signup_group': {
-        const isUpdating = updatingCategory === member.tag;
-
-        if (member.signup_group) {
-          return (
-            <div className="flex items-center gap-1 group">
-              <Badge
-                variant="outline"
-                className="text-xs cursor-pointer hover:bg-purple-500/20 hover:border-purple-500 transition-colors"
-                onClick={(e) => { e.stopPropagation(); onCategoryClick?.(); }}
-                title={t("members.clickToGroup")}
-              >
-                {member.signup_group}
-              </Badge>
-              {onUpdateMemberCategory && (
-                <button
-                  className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
-                  onClick={(e) => { e.stopPropagation(); handleSetCategory(member.tag, null); }}
-                  title={t("members.removeCategory")}
-                  disabled={isUpdating}
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              )}
-            </div>
-          );
-        }
-
-        if (!onUpdateMemberCategory || categories.length === 0) {
-          return <span className="text-muted-foreground">-</span>;
-        }
-
-        return (
-          <Popover
-            open={categoryPopoverTag === member.tag}
-            onOpenChange={(open) => setCategoryPopoverTag(open ? member.tag : null)}
-          >
-            <PopoverTrigger asChild>
-              <button
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-                onClick={(e) => e.stopPropagation()}
-                disabled={isUpdating}
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span className="text-xs">{t("members.addCategory")}</span>
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-48 p-1" align="start">
-              {categories.map((cat) => (
-                <button
-                  key={cat.custom_id}
-                  className="w-full text-left px-3 py-1.5 text-sm rounded hover:bg-secondary transition-colors"
-                  onClick={() => handleSetCategory(member.tag, cat.custom_id)}
-                >
-                  {cat.alias}
-                </button>
-              ))}
-            </PopoverContent>
-          </Popover>
-        );
-      }
-
       default:
         return <span className="text-muted-foreground">-</span>;
     }
@@ -357,7 +282,40 @@ export function MembersTable({
   }
 
   return (
-    <div className="overflow-x-auto">
+    <>
+    <div className="space-y-2 md:hidden">
+      {sortedMembers.map((member, index) => (
+        <article key={member.tag} className="rounded-2xl bg-muted/35 p-4">
+          <div className="flex items-start gap-3">
+            <span className="pt-0.5 text-xs font-medium text-muted-foreground">{index + 1}</span>
+            <div className="min-w-0 flex-1 space-y-3">
+              {columns.map((col) => (
+                <div key={col} className="grid grid-cols-[minmax(5.5rem,0.7fr)_minmax(0,1.3fr)] items-start gap-3">
+                  <span className="text-xs text-muted-foreground">{t(`memberColumns.${col}`)}</span>
+                  <div className="min-w-0 text-sm">{renderCell(member, col)}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-3 flex items-center justify-end gap-1 border-t border-border/60 pt-2">
+            {onRefreshMember && (
+              <Button variant="ghost" size="touch-icon" onClick={() => handleRefresh(member.tag)} disabled={refreshingMember === member.tag} aria-label={t("members.refresh")}>
+                <RefreshCw className={`h-4 w-4 ${refreshingMember === member.tag ? 'animate-spin' : ''}`} />
+              </Button>
+            )}
+            {onRefreshDiscordIdentity && member.discord && (
+              <Button variant="ghost" size="touch-icon" onClick={() => handleDiscordRefresh(member.tag)} disabled={refreshingDiscordMember === member.tag} aria-label="Refresh Discord username and avatar">
+                <AtSign className={`h-4 w-4 ${refreshingDiscordMember === member.tag ? "animate-pulse" : ""}`} />
+              </Button>
+            )}
+            <Button variant="ghost" size="touch-icon" onClick={() => onRemoveMember(member.tag)} disabled={removingMember === member.tag} className="text-destructive hover:bg-destructive/10 hover:text-destructive" aria-label={t("members.actions")}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div className="hidden overflow-x-auto md:block">
       <table className="w-full">
         <thead>
           <tr className="border-b border-border">
@@ -416,6 +374,18 @@ export function MembersTable({
                       <RefreshCw className={`w-4 h-4 ${refreshingMember === member.tag ? 'animate-spin' : ''}`} />
                     </Button>
                   )}
+				  {onRefreshDiscordIdentity && member.discord && (
+					<Button
+					  variant="ghost"
+					  size="sm"
+					  onClick={() => handleDiscordRefresh(member.tag)}
+					  disabled={refreshingDiscordMember === member.tag}
+					  className="text-muted-foreground hover:text-foreground"
+					  title="Refresh Discord username and avatar"
+					>
+					  <AtSign className={`w-4 h-4 ${refreshingDiscordMember === member.tag ? "animate-pulse" : ""}`} />
+					</Button>
+				  )}
                   <Button
                     variant="ghost"
                     size="sm"
@@ -432,5 +402,6 @@ export function MembersTable({
         </tbody>
       </table>
     </div>
+    </>
   );
 }

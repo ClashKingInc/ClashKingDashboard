@@ -6,6 +6,7 @@ export interface UserInfo {
   user_id: string;
   username: string;
   avatar_url: string;
+  auth_methods?: string[];
   is_admin?: boolean;
 }
 

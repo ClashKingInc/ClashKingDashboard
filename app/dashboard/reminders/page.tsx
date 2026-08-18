@@ -5,10 +5,14 @@ import { getAccessToken } from "@/lib/auth/session";
 import { apiFetch } from "@/lib/api/fetch";
 
 
+import Image from "next/image";
 import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { apiCache } from "@/lib/api-cache";
-import { apiClient } from "@/lib/api/client";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getDefaultBaseUrl } from "@/lib/api/client";
+import { dashboardQueryKeys } from "@/lib/dashboard-query";
+import { dashboardQueryOptions } from "@/lib/dashboard-query-options";
+import { clashKingAssets } from "@/lib/theme";
 import {
   destinationNeedsThread,
   isDestinationValid,
@@ -17,14 +21,21 @@ import {
   type DiscordDestinationChannel,
   type DiscordDestinationThread,
 } from "@/lib/discord-destinations";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { DashboardTabsList, DashboardTabTrigger } from "@/components/ui/dashboard-tabs";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ChannelCombobox } from "@/components/ui/channel-combobox";
 import { DiscordOpenPopover } from "@/components/ui/discord-open-popover";
 import { ClanProfilePopover } from "@/components/ui/clan-profile-popover";
@@ -38,21 +49,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  Bell,
-  Target,
-  Calendar,
   Clock,
   Plus,
   Trash2,
   Save,
   AlertCircle,
   Loader2,
-  Castle,
   UserX,
-  Activity,
-  Edit2
+  Edit2,
+  Copy,
+  ChevronDown,
+  Ellipsis,
 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { getStandaloneImageUrl, getStandaloneTenorUrl } from "./reminder-utils";
 
 // API types based on ClashKingAPI reminders endpoints
 type ReminderType = "War" | "Clan Capital" | "Clan Games" | "Inactivity";
@@ -119,6 +129,13 @@ const TAB_TO_REMINDER_KEY: Record<string, keyof ServerRemindersResponse> = {
   inactivity: "inactivity_reminders",
 };
 
+const REMINDER_TYPE_TO_TAB: Record<ReminderType, string> = {
+  War: "war",
+  "Clan Capital": "capital",
+  "Clan Games": "games",
+  Inactivity: "inactivity",
+};
+
 const TYPE_TIME_LIMIT: Record<string, number> = {
   War: 48,
   "Clan Games": 336,
@@ -138,17 +155,35 @@ function getTimeLimit(type: string | undefined): number {
   return TYPE_TIME_LIMIT[type ?? ""] ?? 24;
 }
 
+function getClanBadgeUrl(clanTag: string | undefined): string | null {
+  if (!clanTag) return null;
+  return `${getDefaultBaseUrl()}/v2/clan/${encodeURIComponent(clanTag)}/badge`;
+}
+
 export default function RemindersPage() { // NOSONAR — React page component: complexity is aggregate state/handler management, not a single logic unit
   const guildId = useGuildId();
   const locale = useLocale();
   const { toast } = useToast();
   const t = useTranslations("RemindersPage");
   const tCommon = useTranslations("Common");
+  const queryClient = useQueryClient();
+  const guildQuery = useQuery({
+    ...dashboardQueryOptions.guild(guildId),
+    enabled: Boolean(guildId),
+  });
+  const guildIcon = guildQuery.data?.icon?.startsWith("https") ? guildQuery.data.icon : null;
+  const guildFallback = (guildQuery.data?.name ?? "Server")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0))
+    .join("")
+    .toUpperCase();
   const reminderTypes = [
-    { value: "War", label: t('types.war'), icon: Target, color: "text-red-500", tabIcon: Target },
-    { value: "Clan Capital", label: t('types.capital'), icon: Castle, color: "text-purple-500", tabIcon: Castle },
-    { value: "Clan Games", label: t('types.clanGames'), icon: Calendar, color: "text-green-500", tabIcon: Calendar },
-    { value: "Inactivity", label: t('types.inactivity'), icon: UserX, color: "text-orange-500", tabIcon: UserX },
+    { value: "War", label: t('types.war') },
+    { value: "Clan Capital", label: t('types.capital') },
+    { value: "Clan Games", label: t('types.clanGames') },
+    { value: "Inactivity", label: t('types.inactivity') },
   ];
 
   const [reminders, setReminders] = useState<ServerRemindersResponse>({
@@ -166,8 +201,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("war");
   const newReminderRef = useRef<HTMLDivElement>(null);
-  const channelsCacheKey = `reminders-channels-${guildId}`;
-  const clansCacheKey = `reminders-clans-${guildId}`;
 
   // Dialog state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -175,6 +208,8 @@ export default function RemindersPage() { // NOSONAR — React page component: c
   const [dialogReminder, setDialogReminder] = useState<Partial<ReminderConfig>>({});
   const [pointThresholdTouched, setPointThresholdTouched] = useState(false);
   const [attackThresholdTouched, setAttackThresholdTouched] = useState(false);
+  const [cloningReminder, setCloningReminder] = useState<ReminderConfig | null>(null);
+  const [cloneClanTag, setCloneClanTag] = useState("");
 
   // Fetch clans and reminders from API
   useEffect(() => {
@@ -182,59 +217,34 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       try {
         const accessToken = getAccessToken() ?? "";
 
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-        if (!apiUrl) {
-          throw new Error("API URL is not configured");
-        }
-
-        const clansPromise = apiCache
-          .get(clansCacheKey, async () => {
-            const response = await apiClient.servers.getServerClans(guildId);
-            if (response.error) {
-              throw new Error(response.error || 'Failed to fetch clans');
-            }
-            return response.data ?? [];
-          })
+        const clansPromise = queryClient
+          .fetchQuery(dashboardQueryOptions.clans(guildId))
           .catch((clanError) => {
             // Keep reminders usable even if clan metadata is temporarily unavailable.
             console.warn("Failed to fetch clans for reminders page:", clanError);
             return [] as Clan[];
           });
 
-        // Fetch clans, channels, and reminders in parallel
+        // Shared metadata queries deduplicate these requests across dashboard routes.
         const [clansRes, channelsRes, threadsRes, remindersRes] = await Promise.all([
           clansPromise,
-          apiCache.get(channelsCacheKey, async () => {
-            const res = await apiFetch(`/v2/server/${guildId}/channels`, {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!res.ok) throw new Error('Failed to fetch channels');
-            return res.json();
-          }),
-          apiCache.get(`reminders-threads-${guildId}`, async () => {
-            const res = await apiFetch(`/v2/server/${guildId}/threads`, {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-              },
-            });
-            if (!res.ok) throw new Error('Failed to fetch threads');
-            return res.json();
-          }),
-          apiFetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
+          queryClient.fetchQuery(dashboardQueryOptions.channels(guildId)),
+          queryClient.fetchQuery(dashboardQueryOptions.threads(guildId)),
+          queryClient.fetchQuery({
+            queryKey: dashboardQueryKeys.route("reminders", guildId),
+            queryFn: async ({ signal }) => {
+              const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
+                signal,
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (!response.ok) throw new Error(`Failed to fetch reminders: ${response.statusText}`);
+              return response.json() as Promise<ServerRemindersResponse>;
             },
           }),
         ]);
-
-        if (!remindersRes.ok) {
-          throw new Error(`Failed to fetch reminders: ${remindersRes.statusText}`);
-        }
 
         // Parse clans
         setClans(clansRes || []);
@@ -244,7 +254,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
         setThreads(normalizeDestinationThreads(threadsRes));
 
         // Parse reminders
-        const remindersData: ServerRemindersResponse = await remindersRes.json();
+        const remindersData = remindersRes;
         setReminders({
           war_reminders: remindersData.war_reminders || [],
           capital_reminders: remindersData.capital_reminders || [],
@@ -267,7 +277,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     if (guildId) {
       fetchReminders();
     }
-  }, [channelsCacheKey, clansCacheKey, guildId, locale, t, toast]);
+  }, [guildId, locale, queryClient, t, toast]);
 
   // Get reminders for current tab
   const getCurrentReminders = (): ReminderConfig[] => {
@@ -363,6 +373,85 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     setIsDialogOpen(true);
   };
 
+  const openCloneDialog = (reminder: ReminderConfig) => {
+    const firstDifferentClan = clans.find((clan) => clan.tag !== reminder.clan_tag);
+    setCloningReminder(reminder);
+    setCloneClanTag(firstDifferentClan?.tag ?? "");
+  };
+
+  const closeCloneDialog = () => {
+    if (saving) return;
+    setCloningReminder(null);
+    setCloneClanTag("");
+  };
+
+  const cloneReminder = async () => {
+    if (!cloningReminder || !cloneClanTag || cloneClanTag === cloningReminder.clan_tag) return;
+
+    try {
+      setSaving(true);
+      const accessToken = getAccessToken();
+      const createRequest: CreateReminderRequest = {
+        type: cloningReminder.type,
+        clan_tag: cloneClanTag,
+        channel_id: cloningReminder.channel_id || "",
+        thread_id: cloningReminder.thread_id || null,
+        time: cloningReminder.time,
+        custom_text: cloningReminder.custom_text,
+        townhall_filter: cloningReminder.townhall_filter,
+        roles: cloningReminder.roles,
+        war_types: cloningReminder.war_types,
+        point_threshold: cloningReminder.point_threshold,
+        attack_threshold: cloningReminder.attack_threshold,
+        roster_id: cloningReminder.roster_id,
+        ping_type: cloningReminder.ping_type,
+      };
+
+      const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(createRequest),
+      });
+      if (!response.ok) throw new Error(`Failed to clone reminder: ${response.statusText}`);
+
+      const refreshedResponse = await apiFetch(`/v2/server/${guildId}/reminders`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (refreshedResponse.ok) {
+        const data: ServerRemindersResponse = await refreshedResponse.json();
+        queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
+        setReminders({
+          war_reminders: data.war_reminders || [],
+          capital_reminders: data.capital_reminders || [],
+          clan_games_reminders: data.clan_games_reminders || [],
+          inactivity_reminders: data.inactivity_reminders || [],
+        });
+      }
+
+      toast({
+        title: t('toast.successTitle'),
+        description: t('toast.reminderCloned'),
+      });
+      setCloningReminder(null);
+      setCloneClanTag("");
+    } catch (err) {
+      console.error("Error cloning reminder:", err);
+      toast({
+        title: t('toast.errorTitle'),
+        description: t('toast.failedToClone'),
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   // Update dialog reminder field
   const updateDialogField = (field: keyof ReminderConfig, value: any) => {
     setDialogReminder(prev => {
@@ -454,9 +543,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       try {
         setSaving(true);
         const accessToken = getAccessToken();
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-        const response = await apiFetch(`${apiUrl}/v2/server/${guildId}/reminders/${reminder.id}`, {
+        const response = await apiFetch(`/v2/server/${guildId}/reminders/${reminder.id}`, {
           method: 'DELETE',
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -491,6 +578,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     const key = TAB_TO_REMINDER_KEY[activeTab] ?? "war_reminders";
     updatedReminders[key] = updatedReminders[key].filter(r => r.id !== reminder.id);
     setReminders(updatedReminders);
+    queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), updatedReminders);
   };
 
   // Save a single reminder from dialog
@@ -568,12 +656,6 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
       setSaving(true);
       const accessToken = getAccessToken();
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-      if (!apiUrl) {
-        throw new Error("API URL is not configured");
-      }
-
       // Add " hr" suffix to time before sending to API
       const timeWithUnit = `${dialogReminder.time} hr`;
 
@@ -597,7 +679,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           ping_type: dialogReminder.ping_type,
         };
 
-        const response = await apiFetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
+        const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -630,7 +712,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
           ping_type: dialogReminder.ping_type,
         };
 
-        const response = await apiFetch(`${apiUrl}/v2/server/${guildId}/reminders/${editingReminder.id}`, {
+        const response = await apiFetch(`/v2/server/${guildId}/reminders/${editingReminder.id}`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -650,7 +732,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
       }
 
       // Refresh reminders from API
-      const response = await apiFetch(`${apiUrl}/v2/server/${guildId}/reminders`, {
+      const response = await apiFetch(`/v2/server/${guildId}/reminders`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
@@ -659,6 +741,7 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
       if (response.ok) {
         const data: ServerRemindersResponse = await response.json();
+        queryClient.setQueryData(dashboardQueryKeys.route("reminders", guildId), data);
         setReminders({
           war_reminders: data.war_reminders || [],
           capital_reminders: data.capital_reminders || [],
@@ -685,25 +768,18 @@ export default function RemindersPage() { // NOSONAR — React page component: c
 
   if (error) {
     return (
-        <div className="min-h-screen bg-background flex items-center justify-center p-6">
-          <Card className="max-w-md border-destructive">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-destructive" />
-                <CardTitle className="text-destructive">{t('toast.errorTitle')}</CardTitle>
-              </div>
-              <CardDescription>{error}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button
-                  onClick={() => globalThis.window.location.reload()}
-                  className="w-full"
-              >
-                {t('actions.retry')}
-              </Button>
-            </CardContent>
-          </Card>
+      <div className="flex min-h-screen items-center justify-center bg-background p-6">
+        <div className="w-full max-w-md rounded-[20px] bg-destructive/10 p-6 shadow-sm shadow-black/5">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-destructive" />
+            <h1 className="font-semibold text-destructive">{t('toast.errorTitle')}</h1>
+          </div>
+          <p className="mt-2 text-sm text-muted-foreground">{error}</p>
+          <Button onClick={() => globalThis.window.location.reload()} className="mt-5 w-full">
+            {t('actions.retry')}
+          </Button>
         </div>
+      </div>
     );
   }
 
@@ -725,235 +801,195 @@ export default function RemindersPage() { // NOSONAR — React page component: c
     channels,
     threads,
   );
+  const allReminders = [
+    ...reminders.war_reminders,
+    ...reminders.capital_reminders,
+    ...reminders.clan_games_reminders,
+    ...reminders.inactivity_reminders,
+  ];
+  const remindersWithIssues = allReminders.filter((reminder) => !isDestinationValid(
+    reminder.channel_id,
+    reminder.thread_id ?? undefined,
+    channels,
+    threads,
+  ));
+  const tabDefinitions: Array<{
+    value: string;
+    label: string;
+    count: number;
+    artwork: ReactNode;
+  }> = [
+    {
+      value: "war",
+      label: t('tabs.war'),
+      count: warReminderCount,
+      artwork: <Image src={clashKingAssets.icons.dc.war} alt="" width={22} height={22} unoptimized />,
+    },
+    {
+      value: "capital",
+      label: t('tabs.capital'),
+      count: capitalReminderCount,
+      artwork: <Image src={clashKingAssets.resources.capitalGold} alt="" width={22} height={22} unoptimized />,
+    },
+    {
+      value: "games",
+      label: t('tabs.clanGames'),
+      count: gamesReminderCount,
+      artwork: <Image src={clashKingAssets.icons.hv.clanGames} alt="" width={22} height={22} unoptimized />,
+    },
+    {
+      value: "inactivity",
+      label: t('tabs.inactivity'),
+      count: inactivityReminderCount,
+      artwork: <UserX />,
+    },
+  ];
 
   return (
-      <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div className="min-h-[calc(100vh+1px)] bg-background p-4 md:p-6">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <header>
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t('title')}</h1>
+          <p className="mt-1 text-muted-foreground">{t('description')}</p>
+        </header>
+
+        {!loading && remindersWithIssues.length > 0 && (
+          <Collapsible>
+            <section className="rounded-[20px] bg-orange-500/10 p-4 shadow-sm shadow-black/5 md:px-5" aria-labelledby="reminder-issues-title">
+              <CollapsibleTrigger asChild>
+                <button type="button" className="group flex w-full items-center gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/35">
+                  <AlertCircle className="h-5 w-5 shrink-0 text-orange-600" />
+                  <h2 id="reminder-issues-title" className="min-w-0 flex-1 font-semibold text-foreground">
+                    {t('issues.title', { count: remindersWithIssues.length })}
+                  </h2>
+                  <span className="text-xs font-medium text-muted-foreground group-data-[state=open]:hidden">{t('issues.showDetails')}</span>
+                  <span className="hidden text-xs font-medium text-muted-foreground group-data-[state=open]:inline">{t('issues.hideDetails')}</span>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-150 group-data-[state=open]:rotate-180" />
+                </button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="pl-8 pt-3">
+                  <p className="text-sm text-muted-foreground">{t('issues.description')}</p>
+                  <div className="mt-4 space-y-2">
+                    {remindersWithIssues.map((reminder) => {
+                      const clan = clans.find((item) => item.tag === reminder.clan_tag);
+                      const channelExists = channels.some((channel) => channel.id === reminder.channel_id);
+                      const typeLabel = reminderTypes.find((type) => type.value === reminder.type)?.label ?? reminder.type;
+                      return (
+                        <div key={reminder.id} className="flex flex-col gap-2 rounded-2xl bg-background/65 px-3 py-2.5 sm:flex-row sm:items-center">
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-foreground">{typeLabel}</p>
+                            <p className="truncate text-xs text-muted-foreground">
+                              {clan?.name ?? reminder.clan_tag ?? t('card.notSet')}
+                              {" · "}
+                              {channelExists ? t('issues.threadMissing') : t('issues.channelMissing', { channelId: reminder.channel_id ?? "—" })}
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted"
+                            onClick={() => {
+                              setActiveTab(REMINDER_TYPE_TO_TAB[reminder.type]);
+                              if (reminder.clan_tag) setSelectedClan(reminder.clan_tag);
+                              editReminder(reminder);
+                            }}
+                          >
+                            {t('issues.review')}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </section>
+          </Collapsible>
+        )}
+
+        <section className="space-y-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <div className="flex items-start gap-3">
-                <div className="p-3 rounded-lg bg-primary/10 border border-primary/30">
-                  <Bell className="h-8 w-8 text-primary" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
-                  <p className="text-muted-foreground mt-1">
-                    {t('description')}
-                  </p>
-                </div>
-              </div>
+              <h2 className="text-lg font-semibold text-foreground">{t('section.title')}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t('section.description')}</p>
             </div>
-          </div>
-
-          {/* Statistics Overview */}
-          <div className="grid grid-cols-2 gap-6 lg:grid-cols-4 mb-8">
-            <Card className="bg-card border-blue-500/30 bg-blue-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.totalReminders')}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[84px] flex flex-col justify-between">
-                <div className="flex h-10 items-center justify-between">
-                  {loading ? (
-                    <Skeleton className="h-8 w-16 animate-pulse" />
-                  ) : (
-                    <div className="flex h-8 items-center text-3xl font-bold text-blue-500">
-                      {reminders.war_reminders.length +
-                          reminders.capital_reminders.length +
-                          reminders.clan_games_reminders.length +
-                          reminders.inactivity_reminders.length}
-                    </div>
-                  )}
-                  <Activity className="h-8 w-8 shrink-0 text-blue-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {t('stats.totalRemindersDesc')}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-green-500/30 bg-green-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.warReminders')}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[84px] flex flex-col justify-between">
-                <div className="flex h-10 items-center justify-between">
-                  {loading ? (
-                    <Skeleton className="h-8 w-12 animate-pulse" />
-                  ) : (
-                    <div className="flex h-8 items-center text-3xl font-bold text-green-500">{reminders.war_reminders.length}</div>
-                  )}
-                  <Target className="h-8 w-8 shrink-0 text-green-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {t('stats.warRemindersDesc')}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-purple-500/30 bg-purple-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.capitalReminders')}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[84px] flex flex-col justify-between">
-                <div className="flex h-10 items-center justify-between">
-                  {loading ? (
-                    <Skeleton className="h-8 w-12 animate-pulse" />
-                  ) : (
-                    <div className="flex h-8 items-center text-3xl font-bold text-purple-500">{reminders.capital_reminders.length}</div>
-                  )}
-                  <Castle className="h-8 w-8 shrink-0 text-purple-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {t('stats.capitalRemindersDesc')}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card border-yellow-500/30 bg-yellow-500/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{t('stats.otherReminders')}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[84px] flex flex-col justify-between">
-                <div className="flex h-10 items-center justify-between">
-                  {loading ? (
-                    <Skeleton className="h-8 w-12 animate-pulse" />
-                  ) : (
-                    <div className="flex h-8 items-center text-3xl font-bold text-yellow-500">
-                      {reminders.clan_games_reminders.length + reminders.inactivity_reminders.length}
-                    </div>
-                  )}
-                  <Bell className="h-8 w-8 shrink-0 text-yellow-500/50" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  {t('stats.otherRemindersDesc')}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Clan Selector and Add Button */}
-          <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:items-end">
             {(loading || clans.length > 0) && (
-              <div className="flex w-full items-center gap-2 md:w-auto">
+              <div className="w-full sm:w-[300px]">
                 {loading ? (
-                  <>
-                    <Skeleton className="h-3.5 w-24" />
-                    <Skeleton className="h-9 w-full md:w-[250px]" />
-                  </>
+                  <Skeleton className="h-12 w-full rounded-xl" />
                 ) : (
                   <>
-                    <Label className="whitespace-nowrap text-sm text-muted-foreground">{t('clanSelector.label')}</Label>
+                    <Label htmlFor="reminders-clan" className="mb-1.5 block text-xs font-medium text-muted-foreground">{t('clanSelector.label')}</Label>
                     <ClanCombobox
+                      id="reminders-clan"
                       clans={clans}
                       value={selectedClan}
                       onValueChange={setSelectedClan}
                       placeholder={t('clanSelector.placeholder')}
-                      specialOptions={[{ value: "all", label: t('clanSelector.allClans') }]}
-                      className="md:w-[250px]"
+                      specialOptions={[{
+                        value: "all",
+                        label: t('clanSelector.allClans'),
+                        imageUrl: guildIcon,
+                        fallback: guildFallback,
+                      }]}
+                      className="border-0 bg-muted/55 shadow-sm shadow-black/5 focus-visible:ring-ring/35"
                     />
                   </>
                 )}
               </div>
             )}
-            <Button onClick={addReminder} className="w-full gap-2 md:w-auto md:shrink-0">
+            <Button onClick={addReminder} className="h-12 w-full gap-2 sm:w-auto sm:shrink-0">
               <Plus className="h-4 w-4" />
               {t('actions.addReminder')}
             </Button>
           </div>
+          </div>
 
-          {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded-lg border border-border bg-muted p-1 sm:grid-cols-2 lg:grid-cols-4 sm:gap-0">
-              <TabsTrigger value="war" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                <Target className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{t('tabs.war')}</span>
-                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-red-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : warReminderCount}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="capital" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                <Castle className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{t('tabs.capital')}</span>
-                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-purple-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : capitalReminderCount}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="games" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{t('tabs.clanGames')}</span>
-                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-green-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : gamesReminderCount}
-                </span>
-              </TabsTrigger>
-              <TabsTrigger value="inactivity" className="h-9 justify-center gap-2 px-3 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm sm:text-sm">
-                <UserX className="h-3.5 w-3.5 shrink-0" />
-                <span className="truncate">{t('tabs.inactivity')}</span>
-                <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-[4px] bg-orange-600 px-1 text-[11px] font-semibold leading-none text-white shadow-sm">
-                  {loading ? <Skeleton className="h-2.5 w-2.5 rounded-[2px]" /> : inactivityReminderCount}
-                </span>
-              </TabsTrigger>
-            </TabsList>
+            <DashboardTabsList className="grid-cols-2 lg:grid-cols-4">
+              {tabDefinitions.map((tab) => (
+                <DashboardTabTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  artwork={tab.artwork}
+                  count={loading ? <Skeleton className="h-2.5 w-2.5 rounded-full" /> : tab.count}
+                >
+                  {tab.label}
+                </DashboardTabTrigger>
+              ))}
+            </DashboardTabsList>
 
             {["war", "capital", "games", "inactivity"].map((tab) => (
-                <TabsContent key={tab} value={tab}>
-                  {/* Reminders List */}
-                  {loading ? (
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {[1, 2].map((i) => (
-                            <Card key={i} className="bg-card border-border">
-                              <CardHeader>
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-3">
-                                    <Skeleton className="h-12 w-12 rounded-lg animate-pulse" />
-                                    <div className="space-y-2">
-                                      <Skeleton className="h-5 w-32 animate-pulse" />
-                                      <Skeleton className="h-4 w-24 animate-pulse" />
-                                    </div>
-                                  </div>
-                                  <div className="flex gap-2">
-                                    <Skeleton className="h-8 w-8 animate-pulse" />
-                                    <Skeleton className="h-8 w-8 animate-pulse" />
-                                  </div>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="space-y-4">
-                                <div className="grid gap-4 md:grid-cols-2">
-                                  <div className="space-y-1">
-                                    <Skeleton className="h-4 w-16 animate-pulse" />
-                                    <Skeleton className="h-5 w-28 animate-pulse" />
-                                  </div>
-                                  <div className="space-y-1">
-                                    <Skeleton className="h-4 w-12 animate-pulse" />
-                                    <Skeleton className="h-5 w-32 animate-pulse" />
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                        ))}
+              <TabsContent key={tab} value={tab} className="mt-0">
+                {loading ? (
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    {[1, 2, 3].map((item) => (
+                      <div key={item} className="flex min-h-44 items-start gap-4 rounded-[22px] bg-card p-4 shadow-sm shadow-black/5">
+                        <Skeleton className="h-14 w-14 shrink-0 rounded-2xl" />
+                        <div className="min-w-0 flex-1 space-y-2">
+                          <Skeleton className="h-5 w-40" />
+                          <Skeleton className="h-4 w-full" />
+                          <Skeleton className="h-7 w-28 rounded-full" />
+                        </div>
                       </div>
-                  ) : currentReminders.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
-                      <Card className="bg-card border-border">
-                        <CardContent className="py-12 text-center">
-                          <Bell className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                          <h3 className="text-lg font-semibold text-foreground mb-2">
-                            {getEmptyStateTitle(tab)}
-                          </h3>
-                          <p className="text-muted-foreground mb-4">
-                            {t('empty.getStarted')}
-                          </p>
-                          <Button onClick={addReminder} className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            {t('actions.addReminder')}
-                          </Button>
-                        </CardContent>
-                      </Card>
-                  ) : (
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    ))}
+                  </div>
+                ) : currentReminders.length === 0 ? ( // NOSONAR — JSX nested ternary for multi-branch display state
+                  <div className="rounded-[20px] bg-muted/45 px-5 py-10 text-center shadow-sm shadow-black/5">
+                    <h3 className="text-lg font-semibold text-foreground">{getEmptyStateTitle(tab)}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{t('empty.getStarted')}</p>
+                    <Button onClick={addReminder} className="mt-5 gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('actions.addReminder')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                         {currentReminders.map((reminder, index) => {
                           const isNew = reminder.id.startsWith('temp-');
                           const typeInfo = reminderTypes.find(t => t.value === reminder.type);
-                          const TypeIcon = typeInfo?.icon || Bell;
                           const selectedChannel = channels.find(c => c.id === reminder.channel_id);
                           const selectedThread = threads.find(
                             (thread) => thread.id === reminder.thread_id
@@ -965,6 +1001,9 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                             : parentLabel;
                           const clan = clans.find(c => c.tag === reminder.clan_tag);
                           const clanName = clan?.name;
+                          const clanBadgeUrl = getClanBadgeUrl(reminder.clan_tag);
+                          const customMessageImageUrl = getStandaloneImageUrl(reminder.custom_text);
+                          const customMessageTenorUrl = getStandaloneTenorUrl(reminder.custom_text);
 
                           let channelValueNode: ReactNode;
                           if (channelLabel && reminder.channel_id) {
@@ -991,134 +1030,170 @@ export default function RemindersPage() { // NOSONAR — React page component: c
                           }
 
                           return (
-                              <Card
-                                  key={reminder.id}
-                                  className={`bg-card border-border ${isNew ? 'ring-2 ring-primary animate-pulse' : ''}`}
-                                  ref={isNew ? newReminderRef : null}
-                              >
-                                <CardHeader>
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                      <div className={`p-2 rounded-lg bg-secondary ${typeInfo?.color}`}>
-                                        <TypeIcon className="h-5 w-5" />
-                                      </div>
-                                      <div>
-                                        <CardTitle className="text-lg flex items-center gap-2">
-                                          {typeInfo?.label || reminder.type}
-                                          {isNew && (
-                                              <Badge className="bg-primary text-primary-foreground">{t('card.new')}</Badge>
-                                          )}
-                                        </CardTitle>
-                                        <CardDescription>
-                                          <Badge variant="secondary" className="bg-blue-500/20 text-blue-500 border-blue-500/30">
-                                            {extractHours(reminder.time)}{t('card.hoursRemaining')}
-                                          </Badge>
-                                        </CardDescription>
-                                      </div>
+                            <article
+                              key={reminder.id}
+                              className={`relative scroll-mt-24 rounded-[22px] bg-card p-4 shadow-sm shadow-black/5 md:p-5 ${isNew ? 'ring-2 ring-primary' : ''}`}
+                              ref={isNew ? newReminderRef : null}
+                            >
+                              <div className="absolute right-3 top-3">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button type="button" variant="ghost" size="icon" className="h-8 w-8" aria-label={t('actions.more')} disabled={saving}>
+                                      <Ellipsis className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end" className="w-44 rounded-xl">
+                                    <DropdownMenuItem className="gap-2 rounded-lg" onSelect={() => openCloneDialog(reminder)}>
+                                      <Copy className="h-4 w-4" />
+                                      {t('actions.clone')}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="gap-2 rounded-lg" onSelect={() => editReminder(reminder)}>
+                                      <Edit2 className="h-4 w-4" />
+                                      {t('actions.edit')}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="gap-2 rounded-lg text-destructive focus:bg-destructive/10 focus:text-destructive" onSelect={() => deleteReminder(index)}>
+                                      <Trash2 className="h-4 w-4" />
+                                      {t('actions.delete')}
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                              <div className="flex h-full flex-col gap-4">
+                                <div className="flex min-w-0 flex-1 items-start gap-3.5 pr-7">
+                                  {reminder.clan_tag && clanBadgeUrl ? (
+                                    <ClanProfilePopover
+                                      clanName={clanName || reminder.clan_tag}
+                                      clanTag={reminder.clan_tag}
+                                      clanBadgeUrl={clanBadgeUrl}
+                                      showTagInTrigger={false}
+                                      triggerClassName="shrink-0 cursor-pointer rounded-2xl transition-transform hover:scale-[1.03]"
+                                    >
+                                      <Image
+                                        src={clanBadgeUrl}
+                                        alt={clanName ? `${clanName} clan badge` : `${reminder.clan_tag} clan badge`}
+                                        width={56}
+                                        height={56}
+                                        unoptimized
+                                        className="h-14 w-14 object-contain"
+                                      />
+                                    </ClanProfilePopover>
+                                  ) : (
+                                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-muted/55 text-sm text-muted-foreground">—</div>
+                                  )}
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <h3 className="font-semibold text-foreground">{typeInfo?.label || reminder.type}</h3>
+                                      <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+                                        {extractHours(reminder.time)} {t('card.hoursRemaining')}
+                                      </span>
+                                      {isNew && <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">{t('card.new')}</span>}
                                     </div>
-                                    <div className="flex gap-2">
-                                      <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          onClick={() => editReminder(reminder)}
-                                          disabled={saving}
-                                      >
-                                        <Edit2 className="h-4 w-4" />
-                                      </Button>
-                                      <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          onClick={() => deleteReminder(index)}
-                                          disabled={saving}
-                                      >
-                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                      </Button>
+                                    <p className="mt-1 truncate text-sm text-muted-foreground">
+                                      {clanName ? `${clanName} · ${reminder.clan_tag}` : reminder.clan_tag ?? t('card.notSet')}
+                                    </p>
+                                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                                      <span className="rounded-full bg-muted/65 px-2.5 py-1 text-xs text-muted-foreground">{channelValueNode}</span>
+                                      {reminder.type === "War" && reminder.war_types?.map((warType) => (
+                                        <span key={warType} className="rounded-full bg-muted/65 px-2.5 py-1 text-xs text-muted-foreground">
+                                          {warType === "Random" ? t('card.random') : warType === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
+                                        </span>
+                                      ))}
+                                      {reminder.type === "Clan Games" && reminder.point_threshold !== undefined && (
+                                        <span className="rounded-full bg-muted/65 px-2.5 py-1 text-xs text-muted-foreground">
+                                          {t('card.pointsValue', { count: reminder.point_threshold })}
+                                        </span>
+                                      )}
+                                      {reminder.type === "Clan Capital" && reminder.attack_threshold !== undefined && (
+                                        <span className="rounded-full bg-muted/65 px-2.5 py-1 text-xs text-muted-foreground">
+                                          {t('card.attacksValue', { count: reminder.attack_threshold })}
+                                        </span>
+                                      )}
                                     </div>
+                                    {customMessageImageUrl ? (
+                                      <div className="mt-3 overflow-hidden rounded-2xl bg-muted/45">
+                                        <Image
+                                          src={customMessageImageUrl}
+                                          alt={t('card.customImageAlt')}
+                                          width={640}
+                                          height={360}
+                                          unoptimized
+                                          className="max-h-48 h-auto w-full object-contain"
+                                        />
+                                      </div>
+                                    ) : customMessageTenorUrl ? (
+                                      <div className="mt-3 overflow-hidden rounded-2xl bg-muted/45">
+                                        <Image
+                                          src={`/api/tenor-media?url=${encodeURIComponent(customMessageTenorUrl)}`}
+                                          alt={t('card.customGifTitle')}
+                                          width={640}
+                                          height={360}
+                                          unoptimized
+                                          className="max-h-48 h-auto w-full object-contain"
+                                        />
+                                      </div>
+                                    ) : reminder.custom_text ? (
+                                      <p className="mt-3 rounded-2xl bg-muted/45 px-3 py-2 text-sm text-foreground">{reminder.custom_text}</p>
+                                    ) : null}
                                   </div>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                  <div className="grid gap-4 md:grid-cols-2">
-                                    <div className="space-y-1">
-                                      <Label className="block text-sm text-muted-foreground">{t('card.channel')}</Label>
-                                      <div className="pt-0.5">
-                                        {channelValueNode}
-                                      </div>
-                                    </div>
-
-                                    <div className="space-y-1">
-                                      <Label className="block text-sm text-muted-foreground">{t('card.clan')}</Label>
-                                      <div className="pt-0.5">
-                                        {reminder.clan_tag ? (
-                                          <ClanProfilePopover
-                                            clanName={clanName || reminder.clan_tag}
-                                            clanTag={reminder.clan_tag}
-                                            clanBadgeUrl={
-                                              clan?.badge_url
-                                              ?? clan?.clan_badge_url
-                                              ?? clan?.badge
-                                              ?? null
-                                            }
-                                            showTagInTrigger={false}
-                                            triggerClassName="text-left cursor-pointer transition-opacity hover:opacity-80"
-                                          >
-                                            <span className="text-sm font-medium text-foreground underline-offset-2 hover:underline">
-                                              {clanName ? `${clanName} (${reminder.clan_tag})` : reminder.clan_tag}
-                                            </span>
-                                          </ClanProfilePopover>
-                                        ) : (
-                                          <span className="text-sm font-medium text-muted-foreground">{t('card.notSet')}</span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {reminder.custom_text && (
-                                      <div className="space-y-1">
-                                        <Label className="text-sm text-muted-foreground">{t('card.customMessage')}</Label>
-                                        <p className="text-sm font-medium">{reminder.custom_text}</p>
-                                      </div>
-                                  )}
-
-                                  {/* Type-specific fields */}
-                                  {reminder.type === "War" && reminder.war_types && reminder.war_types.length > 0 && (
-                                      <div className="space-y-1">
-                                        <Label className="text-sm text-muted-foreground">{t('card.warTypes')}</Label>
-                                        <div className="flex gap-2 flex-wrap">
-                                          {reminder.war_types.map((type) => (
-                                              <Badge key={type} variant="secondary">
-                                                {type === "Random" ? t('card.random') : type === "Friendly" ? t('card.friendly') : t('card.cwl') /* NOSONAR — JSX nested ternary for multi-branch display state */}
-                                              </Badge>
-                                          ))}
-                                        </div>
-                                      </div>
-                                  )}
-
-                                  {reminder.type === "Clan Games" && reminder.point_threshold && (
-                                      <div className="space-y-1">
-                                        <Label className="text-sm text-muted-foreground">{t('card.pointThreshold')} <span className="text-destructive">*</span></Label>
-                                        <p className="text-sm font-medium">{reminder.point_threshold}</p>
-                                      </div>
-                                  )}
-
-                                  {reminder.type === "Clan Capital" && reminder.attack_threshold && (
-                                      <div className="space-y-1">
-                                        <Label className="text-sm text-muted-foreground">{t('card.attackThreshold')} <span className="text-destructive">*</span></Label>
-                                        <p className="text-sm font-medium">{reminder.attack_threshold}</p>
-                                      </div>
-                                  )}
-                                </CardContent>
-                              </Card>
+                                </div>
+                              </div>
+                            </article>
                           );
                         })}
-                      </div>
-                  )}
-                </TabsContent>
+                  </div>
+                )}
+              </TabsContent>
             ))}
           </Tabs>
+        </section>
+
+          <Dialog open={Boolean(cloningReminder)} onOpenChange={(open) => { if (!open) closeCloneDialog(); }}>
+            <DialogContent variant="form" className="sm:max-w-[480px]">
+              <DialogHeader>
+                <DialogTitle>{t('clone.title')}</DialogTitle>
+                <DialogDescription>{t('clone.description')}</DialogDescription>
+              </DialogHeader>
+              {cloningReminder && (
+                <div className="space-y-5 py-2">
+                  <div className="rounded-2xl bg-muted/45 px-4 py-3">
+                    <p className="text-sm font-medium text-foreground">
+                      {reminderTypes.find((type) => type.value === cloningReminder.type)?.label ?? cloningReminder.type}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {extractHours(cloningReminder.time)} {t('card.hoursRemaining')} · {formatChannelLabel(channels.find((channel) => channel.id === cloningReminder.channel_id)) ?? cloningReminder.channel_id ?? t('card.notSet')}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="clone-clan">{t('clone.targetClan')}</Label>
+                    <ClanCombobox
+                      id="clone-clan"
+                      clans={clans.filter((clan) => clan.tag !== cloningReminder.clan_tag)}
+                      value={cloneClanTag}
+                      onValueChange={setCloneClanTag}
+                      placeholder={t('clone.selectClan')}
+                      className="border-0 bg-muted/55 shadow-sm shadow-black/5 focus-visible:ring-ring/35"
+                    />
+                    {clans.every((clan) => clan.tag === cloningReminder.clan_tag) && (
+                      <p className="text-xs text-muted-foreground">{t('clone.noOtherClans')}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              <DialogFooter>
+                <Button type="button" variant="secondary" className="border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted" onClick={closeCloneDialog} disabled={saving}>
+                  {t('dialog.cancel')}
+                </Button>
+                <Button type="button" onClick={cloneReminder} disabled={saving || !cloneClanTag}>
+                  {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Copy className="mr-2 h-4 w-4" />}
+                  {saving ? t('clone.cloning') : t('clone.action')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           {/* Add/Edit Reminder Dialog */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+            <DialogContent variant="form" className="sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle>
                   {editingReminder ? t('dialog.editTitle') : t('dialog.addTitle')}

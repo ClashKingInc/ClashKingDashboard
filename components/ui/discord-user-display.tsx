@@ -19,6 +19,8 @@ export interface DiscordUserDisplayProps {
   username?: string | null;
   /** Avatar URL if available */
   avatarUrl?: string | null;
+  /** Explicit current server membership when the caller has authoritative data */
+  isOnServer?: boolean;
   /** Raw discord value (e.g., "<@123456>") - used to extract ID if userId not provided */
   rawDiscordValue?: string | null;
   /** Size variant */
@@ -56,6 +58,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
   userId,
   username,
   avatarUrl,
+  isOnServer: isOnServerOverride,
   rawDiscordValue,
   size = "sm",
   showPopover = true,
@@ -68,8 +71,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
   // Extract user ID from raw value if not provided directly
   const resolvedUserId = userId || extractUserId(rawDiscordValue);
 
-  // Determine if user is on server (has username)
-  const isOnServer = !!username;
+  const isOnServer = isOnServerOverride ?? !!username;
 
   // If no user ID and no username, player has no Discord link
   if (!resolvedUserId && !username) {
@@ -136,7 +138,7 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
           (resolvedUserId ? t("idPrefix", { id: resolvedUserId }) : undefined)
         }
       >
-        {isOnServer ? username : t("unknownUserShort")}
+          {username || t("unknownUserShort")}
       </span>
     </div>
   );
@@ -169,25 +171,13 @@ export function DiscordUserDisplay({ // NOSONAR — complexity comes from multi-
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              {isOnServer ? (
-                <>
-                  <p className="font-medium text-foreground truncate">{username}</p>
-                  <p className="text-xs text-green-500 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
-                    {t("status.onServer")}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="font-medium text-muted-foreground">
-                    {t("unknownUser")}
-                  </p>
-                  <p className="text-xs text-orange-400 flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-orange-400" />
-                    {t("status.notOnServer")}
-                  </p>
-                </>
-              )}
+              <p className={cn("font-medium truncate", isOnServer ? "text-foreground" : "text-muted-foreground")}>
+                {username || t("unknownUser")}
+              </p>
+              <p className={cn("text-xs flex items-center gap-1", isOnServer ? "text-green-500" : "text-orange-400")}>
+                <span className={cn("h-2 w-2 rounded-full", isOnServer ? "bg-green-500" : "bg-orange-400")} />
+                {isOnServer ? t("status.onServer") : t("status.notOnServer")}
+              </p>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildAutoboardRequest,
+  autoboardArtworkUrl,
   createInitialAutoboardForm,
   parseAutoboardCapabilities,
   validateAutoboardForm,
@@ -24,6 +25,13 @@ const capability: AutoboardBoardTypeCapability = {
 };
 
 describe("autoboard contract helpers", () => {
+  it("maps board concepts to verified Clash artwork", () => {
+    expect(autoboardArtworkUrl("donations", "clan")).toContain("clan_labels/donations.webp");
+    expect(autoboardArtworkUrl("legend-leaderboard", "player")).toContain("Icon_HV_League_Legend_3_No_Padding.png");
+    expect(autoboardArtworkUrl("clan-info", "clan")).toContain("Clan_Badge_Border_2.png");
+    expect(autoboardArtworkUrl("scheduled-summary", "custom")).toContain("bot/icons/clock.png");
+  });
+
   it("parses the exact capability contract and permits an empty registry", () => {
     expect(parseAutoboardCapabilities({ boardTypes: [] })).toEqual({ boardTypes: [] });
     expect(parseAutoboardCapabilities({ boardTypes: [capability] }).boardTypes[0]).toEqual(capability);
@@ -31,7 +39,7 @@ describe("autoboard contract helpers", () => {
   });
 
   it("builds a family refresh request with no targets and no send schedule", () => {
-    const form = createInitialAutoboardForm(capability, "America/Chicago");
+    const form = createInitialAutoboardForm(capability);
     form.channelId = "123";
     expect(buildAutoboardRequest(form)).toEqual({
       boardType: "registry-board",
@@ -47,7 +55,7 @@ describe("autoboard contract helpers", () => {
   });
 
   it("builds typed send schedules without a refresh interval or message id", () => {
-    const form = createInitialAutoboardForm(capability, "America/Chicago");
+    const form = createInitialAutoboardForm(capability);
     Object.assign(form, {
       targetScope: "custom",
       targets: [" location:32000007 "],
@@ -68,7 +76,6 @@ describe("autoboard contract helpers", () => {
         kind: "weekdays",
         weekdays: [1, 5],
         dayOfMonth: null,
-        timezone: "America/Chicago",
         timeOfDay: "09:00",
       },
     });
@@ -76,7 +83,7 @@ describe("autoboard contract helpers", () => {
   });
 
   it("enforces registry target cardinality, refresh bounds, and typed schedule selectors", () => {
-    const form = createInitialAutoboardForm(capability, "America/Chicago");
+    const form = createInitialAutoboardForm(capability);
     form.targetScope = "custom";
     form.targets = [];
     form.channelId = "123";

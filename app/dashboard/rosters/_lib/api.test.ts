@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { fetchClanMembers, fetchRosters } from "./api";
+import { fetchClanMembers, fetchRoster, fetchRosters } from "./api";
 import { clearSession, setAccessToken } from "@/lib/auth/session";
 import { getDefaultBaseUrl } from "@/lib/api/client";
 
@@ -80,9 +80,11 @@ describe("fetchClanMembers", () => {
 
   beforeEach(() => {
     vi.stubGlobal("fetch", fetchMock);
+    setAccessToken("token_123", false);
   });
 
   afterEach(() => {
+    clearSession(false);
     vi.unstubAllGlobals();
     fetchMock.mockReset();
   });
@@ -107,5 +109,31 @@ describe("fetchClanMembers", () => {
   it("returns empty array when neither items nor members exist", async () => {
     fetchMock.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({}) });
     await expect(fetchClanMembers("#ABC")).resolves.toEqual([]);
+  });
+});
+
+describe("fetchRoster", () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(() => {
+    vi.stubGlobal("fetch", fetchMock);
+    setAccessToken("token_123", false);
+  });
+
+  afterEach(() => {
+    clearSession(false);
+    vi.unstubAllGlobals();
+    fetchMock.mockReset();
+  });
+
+  it("uses the canonical roster UUID", async () => {
+    const roster = { id: "019c1e4a-5be7-7a6d-82a3-81d014eb21d7", alias: "alpha" };
+    fetchMock.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({ roster }) });
+
+    await expect(fetchRoster(roster.id, "server-1")).resolves.toEqual(roster);
+
+    expect(fetchMock.mock.calls[0]?.[0]).toBe(
+      `${getDefaultBaseUrl()}/v2/roster/019c1e4a-5be7-7a6d-82a3-81d014eb21d7?server_id=server-1`,
+    );
   });
 });

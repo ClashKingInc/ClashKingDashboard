@@ -2,6 +2,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse, TYPE } from "@formatjs/icu-messageformat-parser";
+import ts from "typescript";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const messagesDirectory = resolve(projectRoot, "messages");
@@ -39,6 +40,181 @@ function flatten(value, prefix = "", output = new Map()) {
     flatten(child, prefix ? `${prefix}.${key}` : key, output);
   }
   return output;
+}
+
+function messageAtPath(messages, key) {
+  let value = messages;
+  for (const segment of key.split(".")) {
+    if (
+      value === null ||
+      typeof value !== "object" ||
+      !Object.hasOwn(value, segment)
+    ) {
+      return { exists: false, value: undefined };
+    }
+    value = value[segment];
+  }
+  return { exists: true, value };
+}
+
+async function sourceFiles(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    if (["node_modules", ".git", ".next", "dist"].includes(entry.name)) continue;
+    const path = resolve(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...await sourceFiles(path));
+    } else if (
+      /\.[jt]sx?$/.test(entry.name) &&
+      !/\.(?:test|spec)\.[jt]sx?$/.test(entry.name)
+    ) {
+      files.push(path);
+    }
+  }
+  return files;
+}
+
+function stringLiteralValue(node) {
+  return node && ts.isStringLiteralLike(node) ? node.text : undefined;
+}
+
+function translationNamespace(call, sourceFile) {
+  const argument = call.arguments[0];
+  const directNamespace = stringLiteralValue(argument);
+  if (directNamespace !== undefined) return directNamespace;
+  if (!argument || !ts.isObjectLiteralExpression(argument)) return "";
+
+  const namespaceProperty = argument.properties.find(
+    (property) =>
+      ts.isPropertyAssignment(property) &&
+      property.name.getText(sourceFile) === "namespace",
+  );
+  if (
+    !namespaceProperty ||
+    !ts.isPropertyAssignment(namespaceProperty)
+  ) {
+    return "";
+  }
+  return stringLiteralValue(namespaceProperty.initializer) ?? "";
+}
+
+function translationDeclaration(node, sourceFile) {
+  if (
+    !ts.isVariableDeclaration(node) ||
+    !ts.isIdentifier(node.name) ||
+    !node.initializer
+  ) {
+    return undefined;
+  }
+
+  const initializer = ts.isAwaitExpression(node.initializer)
+    ? node.initializer.expression
+    : node.initializer;
+  if (
+    !ts.isCallExpression(initializer) ||
+    !ts.isIdentifier(initializer.expression) ||
+    !["getTranslations", "useTranslations"].includes(initializer.expression.text)
+  ) {
+    return undefined;
+  }
+
+  return {
+    name: node.name.text,
+    namespace: translationNamespace(initializer, sourceFile),
+  };
+}
+
+function unambiguousFileTranslators(sourceFile) {
+  const candidates = new Map();
+  const visit = (node) => {
+    const declaration = translationDeclaration(node, sourceFile);
+    if (declaration) {
+      const namespaces = candidates.get(declaration.name) ?? new Set();
+      namespaces.add(declaration.namespace);
+      candidates.set(declaration.name, namespaces);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+
+  return new Map(
+    [...candidates.entries()]
+      .filter(([, namespaces]) => namespaces.size === 1)
+      .map(([name, namespaces]) => [name, [...namespaces][0]]),
+  );
+}
+
+async function collectStaticTranslationCalls() {
+  const files = (
+    await Promise.all(
+      ["app", "components", "i18n", "lib"].map((directory) =>
+        sourceFiles(resolve(projectRoot, directory)),
+      ),
+    )
+  ).flat();
+  const calls = [];
+
+  for (const filename of files) {
+    const source = await readFile(filename, "utf8");
+    const sourceFile = ts.createSourceFile(
+      filename,
+      source,
+      ts.ScriptTarget.Latest,
+      true,
+      filename.endsWith("x") ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
+    );
+
+    const visit = (node, inheritedTranslators = new Map()) => {
+      const translators =
+        ts.isSourceFile(node) || ts.isFunctionLike(node) || ts.isBlock(node)
+          ? new Map(inheritedTranslators)
+          : inheritedTranslators;
+
+      const declaration = translationDeclaration(node, sourceFile);
+      if (declaration) {
+        translators.set(declaration.name, declaration.namespace);
+      }
+
+      if (ts.isCallExpression(node)) {
+        let translatorName;
+        let method = "call";
+        if (ts.isIdentifier(node.expression)) {
+          translatorName = node.expression.text;
+        } else if (
+          ts.isPropertyAccessExpression(node.expression) &&
+          ts.isIdentifier(node.expression.expression)
+        ) {
+          translatorName = node.expression.expression.text;
+          method = node.expression.name.text;
+        }
+
+        if (
+          translatorName &&
+          translators.has(translatorName) &&
+          ["call", "markup", "raw", "rich"].includes(method)
+        ) {
+          const key = stringLiteralValue(node.arguments[0]);
+          if (key !== undefined) {
+            const namespace = translators.get(translatorName);
+            const fullKey = namespace ? `${namespace}.${key}` : key;
+            const { line } = sourceFile.getLineAndCharacterOfPosition(node.getStart());
+            calls.push({
+              key: fullKey,
+              method,
+              location: `${filename.slice(projectRoot.length + 1)}:${line + 1}`,
+            });
+          }
+        }
+      }
+
+      ts.forEachChild(node, (child) => visit(child, translators));
+    };
+
+    visit(sourceFile, unambiguousFileTranslators(sourceFile));
+  }
+
+  return calls;
 }
 
 function placeholders(value) {
@@ -173,6 +349,29 @@ for (const locale of locales) {
 
 const english = flatten(parsed.en);
 let failed = false;
+
+const staticTranslationCalls = await collectStaticTranslationCalls();
+const missingEnglishCalls = staticTranslationCalls.filter(({ key, method }) => {
+  const message = messageAtPath(parsed.en, key);
+  if (!message.exists) return true;
+  return method !== "raw" && typeof message.value !== "string";
+});
+const uniqueMissingEnglishCalls = [
+  ...new Map(
+    missingEnglishCalls.map((call) => [`${call.key}:${call.location}`, call]),
+  ).values(),
+];
+
+if (uniqueMissingEnglishCalls.length > 0) {
+  failed = true;
+  console.error("messages/en.json does not cover static translation calls");
+  for (const call of uniqueMissingEnglishCalls) {
+    console.error(`  ${call.key} (${call.location})`);
+  }
+} else {
+  const uniqueStaticKeys = new Set(staticTranslationCalls.map(({ key }) => key));
+  console.log(`messages/en.json: ${uniqueStaticKeys.size} static translation keys resolve`);
+}
 
 for (const locale of locales.filter((locale) => locale !== "en")) {
   const translated = flatten(parsed[locale]);

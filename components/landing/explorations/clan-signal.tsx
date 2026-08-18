@@ -8,6 +8,8 @@ import { ClanSignalWordmark } from "./clan-signal/brand";
 import { ClanSignalFooter } from "./clan-signal/footer";
 import { LandingLanguageSwitcher } from "./clan-signal/language-switcher";
 import { RotatingHeadline } from "./clan-signal/rotating-headline";
+import { LandingSessionAction } from "./clan-signal/session-action";
+import { HeroActions } from "./clan-signal/hero-actions";
 import { isPublicLocale, publicPath, type SupportedLocale } from "@/lib/locale-preference";
 import "../../../app/explorations/clan-signal.css";
 
@@ -106,9 +108,7 @@ export function ClanSignal() {
               sunsetLabel={t("appearance.sunset")}
               initialTheme={landingTheme}
             />
-            <a className="cs-button cs-button-small" href="https://invite.clashk.ing/" target="_blank" rel="noreferrer">
-              {t("actions.addToDiscord")} <ArrowAsset />
-            </a>
+            <LandingSessionAction loginLabel={t("actions.login")} dashboardLabel={t("actions.dashboard")} />
           </div>
         </nav>
       </header>
@@ -122,14 +122,12 @@ export function ClanSignal() {
         <div className="cs-hero-copy cs-enter">
           <RotatingHeadline phrases={headlinePhrases} label={t("hero.rotatingLabel")} />
           <p>{t("hero.copy")}</p>
-          <div className="cs-actions">
-            <a className="cs-button" href="https://invite.clashk.ing/" target="_blank" rel="noreferrer">
-              {t("actions.addClashKing")} <ArrowAsset />
-            </a>
-            <button className="cs-text-link cs-disabled" type="button" disabled>
-              {t("actions.openDashboard")} <ArrowAsset />
-            </button>
-          </div>
+          <HeroActions
+            mobileAppLabel={t("navigation.mobileApp")}
+            iosLabel={t("actions.iosApp")}
+            androidLabel={t("actions.androidApp")}
+            discordLabel={t("actions.addDiscordBot")}
+          />
         </div>
         <div className="cs-hero-visual cs-enter cs-enter-late">
           <ClanSignalHeroModel />

@@ -12,8 +12,8 @@ import type {
 } from '../types/roles';
 
 export class RolesClient extends BaseApiClient {
-  async getDiscordRoles(serverId: string | number): Promise<ApiResponse<DiscordRolesResponse>> {
-    return this.request(`/v2/server/${serverId}/discord-roles`, { method: 'GET' });
+  async getDiscordRoles(serverId: string | number, signal?: AbortSignal): Promise<ApiResponse<DiscordRolesResponse>> {
+    return this.request(`/v2/server/${serverId}/discord-roles`, { method: 'GET', signal });
   }
 
   async getRoleSettings(serverId: string | number): Promise<ApiResponse<RoleSettings>> {

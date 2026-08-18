@@ -63,7 +63,7 @@ export function CloneDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-border">
+      <DialogContent variant="form" className="bg-card">
         <DialogHeader>
           <DialogTitle className="text-foreground flex items-center gap-2">
             <Copy className="w-5 h-5" />

@@ -1,58 +1,71 @@
 "use client";
 
-import { useGuildId } from "@/lib/dashboard-route";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
-  DndContext,
-  DragOverlay,
   closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragOverEvent,
+  DragStartEvent,
   KeyboardSensor,
   PointerSensor,
+  useDroppable,
   useSensor,
   useSensors,
-  DragStartEvent,
-  DragEndEvent,
-  DragOverEvent,
-  useDroppable,
 } from "@dnd-kit/core";
 import {
-  SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  SortableContext,
   useSortable,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Copy, GripVertical, Loader2, Users } from "lucide-react";
+
+import { DiscordUserDisplay } from "@/components/ui/discord-user-display";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  ArrowLeft,
-  Users,
-  GripVertical,
-  RefreshCw,
-  Loader2,
-  GitCompare,
-  Tag,
-  Copy,
-} from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { getDefaultBaseUrl } from "@/lib/api/client";
+import { useGuildId } from "@/lib/dashboard-route";
+import { townHallImageUrl } from "@/lib/theme";
 import { cn } from "@/lib/utils";
-
 import * as api from "../_lib/api";
-import type { Roster, RosterMember, SignupCategory } from "../_lib/types";
+import type { Roster, RosterMember } from "../_lib/types";
 
-// Draggable member item
+type MemberPlacement = "clan" | "family" | "external";
+
+function normalizeTag(tag?: string | null): string {
+  return tag?.replace(/^#/, "").toUpperCase() ?? "";
+}
+
+function memberPlacement(member: RosterMember, roster: Roster): MemberPlacement {
+  const currentClanTag = normalizeTag(member.current_clan_tag);
+  const rosterClanTag = normalizeTag(roster.clan_tag);
+  if (currentClanTag && rosterClanTag && currentClanTag === rosterClanTag) return "clan";
+  if (member.is_in_family) return "family";
+  return "external";
+}
+
+function rosterBadgeUrl(roster: Roster): string | undefined {
+  if (roster.clan_tag) {
+    return `${getDefaultBaseUrl()}/v2/clan/${encodeURIComponent(roster.clan_tag)}/badge`;
+  }
+  return roster.clan_badge ?? undefined;
+}
+
 interface DraggableMemberProps {
   readonly member: RosterMember;
-  readonly rosterId: string;
+  readonly roster: Roster;
   readonly isDuplicate?: boolean;
 }
 
-function DraggableMember({ member, rosterId, isDuplicate }: DraggableMemberProps) {
+function DraggableMember({ member, roster, isDuplicate }: DraggableMemberProps) {
+  const t = useTranslations("RostersPage.compare");
   const {
     attributes,
     listeners,
@@ -60,261 +73,125 @@ function DraggableMember({ member, rosterId, isDuplicate }: DraggableMemberProps
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: `${rosterId}:${member.tag}` });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  } = useSortable({ id: `${roster.id}:${member.tag}` });
+  const placement = memberPlacement(member, roster);
+  const currentClan = member.current_clan || member.current_clan_tag;
 
   return (
     <div
       ref={setNodeRef}
-      style={style}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
       className={cn(
-        "flex items-center gap-2 p-2 bg-background rounded-lg border transition-all",
-        isDragging && "opacity-50 shadow-lg scale-105",
-        isDuplicate
-          ? "border-yellow-500/60 bg-yellow-500/5 hover:border-yellow-500 hover:shadow-sm"
-          : "border-border/50 hover:border-border hover:shadow-sm"
+        "flex min-h-[86px] items-center gap-2.5 rounded-[20px] bg-card p-3 shadow-sm shadow-black/5 transition-[opacity,transform,box-shadow]",
+        isDragging && "scale-[1.02] opacity-45 shadow-lg",
+        isDuplicate && "ring-2 ring-amber-500/35",
       )}
     >
       <button
+        type="button"
         {...attributes}
         {...listeners}
-        className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground touch-none"
+        className="touch-none cursor-grab rounded-lg p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 active:cursor-grabbing"
+        aria-label={t("dragPlayer", { name: member.name })}
       >
-        <GripVertical className="w-4 h-4" />
+        <GripVertical className="h-4 w-4" />
       </button>
 
-      <span className="text-orange-400 font-medium text-sm w-8">
-        TH{member.townhall}
-      </span>
+      <Image
+        src={townHallImageUrl(member.townhall)}
+        alt={t("townHallAlt", { level: member.townhall })}
+        width={44}
+        height={44}
+        unoptimized
+        className="h-11 w-11 shrink-0 object-contain"
+      />
 
-      <div className="flex-1 min-w-0">
-        <span className="font-medium text-foreground truncate flex items-center gap-1 text-sm">
-          {member.name}
-          {isDuplicate && (
-            <Copy className="w-3 h-3 text-yellow-500 shrink-0" />
+      <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <span className="truncate text-sm font-semibold text-foreground">{member.name}</span>
+          {isDuplicate && <Copy className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-label={t("duplicate")} />}
+        </div>
+        <span className="mt-0.5 block truncate font-mono text-[10px] text-muted-foreground">{member.tag}</span>
+
+        <div className="mt-2 flex min-w-0 flex-wrap items-center gap-1.5">
+          <span className={cn(
+            "inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium",
+            placement === "clan" && "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+            placement === "family" && "bg-amber-500/10 text-amber-700 dark:text-amber-300",
+            placement === "external" && "bg-rose-500/10 text-rose-700 dark:text-rose-300",
+          )}>
+            {t(`status.${placement}`)}
+          </span>
+          {currentClan && <span className="max-w-28 truncate text-[10px] text-muted-foreground" title={currentClan}>{currentClan}</span>}
+          {(member.discord || member.discord_username) && (
+            <DiscordUserDisplay
+              rawDiscordValue={member.discord}
+              username={member.discord_username}
+              avatarUrl={member.discord_avatar_url}
+              size="sm"
+              showPopover={false}
+              className="max-w-32"
+            />
           )}
-        </span>
-        <span className="text-xs text-muted-foreground font-mono">
-          {member.tag}
-        </span>
+        </div>
       </div>
     </div>
   );
 }
 
-// Category drop zone within a roster
-interface CategoryDropZoneProps {
-  readonly rosterId: string;
-  readonly categoryId: string | null;
-  readonly categoryName: string;
+interface RosterColumnProps {
+  readonly roster: Roster;
   readonly members: RosterMember[];
   readonly isOver: boolean;
-  readonly color?: string;
-  readonly duplicateTags?: Set<string>;
+  readonly duplicateTags: Set<string>;
 }
 
-function CategoryDropZone({
-  rosterId,
-  categoryId,
-  categoryName,
-  members,
-  isOver,
-  color,
-  duplicateTags,
-}: CategoryDropZoneProps) {
-  const dropId = `${rosterId}:category:${categoryId || "uncategorized"}`;
-  const { setNodeRef } = useDroppable({ id: dropId });
+function RosterColumn({ roster, members, isOver, duplicateTags }: RosterColumnProps) {
+  const t = useTranslations("RostersPage.compare");
+  const { setNodeRef } = useDroppable({ id: roster.id });
+  const badgeUrl = rosterBadgeUrl(roster);
 
   return (
-    <div
+    <section
       ref={setNodeRef}
       className={cn(
-        "rounded-lg border-2 border-dashed p-2 transition-all min-h-[60px]",
-        isOver
-          ? "border-primary bg-primary/10"
-          : "border-border/50 bg-muted/30"
+        "flex h-full min-w-0 snap-start flex-col rounded-[28px] bg-muted/30 p-3 transition-[background-color,box-shadow]",
+        isOver && "bg-primary/8 ring-2 ring-primary/45",
       )}
     >
-      <div className="flex items-center gap-2 mb-2">
-        <Tag className="w-3 h-3 text-muted-foreground" />
-        <span
-          className="text-xs font-medium"
-          style={{ color: color || "inherit" }}
-        >
-          {categoryName}
+      <header className="flex items-center gap-3 px-1 pb-3">
+        {badgeUrl ? (
+          <Image src={badgeUrl} alt={roster.clan_name ? `${roster.clan_name} badge` : ""} width={48} height={48} unoptimized className="h-12 w-12 shrink-0 object-contain" />
+        ) : (
+          <Users className="h-10 w-10 shrink-0 text-muted-foreground/60" aria-hidden="true" />
+        )}
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate text-base font-semibold text-foreground">{roster.alias}</h2>
+          {roster.clan_name && <p className="mt-0.5 truncate text-xs text-muted-foreground">{roster.clan_name}</p>}
+        </div>
+        <span className="shrink-0 rounded-full bg-card px-2.5 py-1 text-xs font-semibold text-foreground shadow-sm shadow-black/5">
+          {t("memberCount", { count: members.length })}
         </span>
-        <Badge variant="outline" className="text-xs ml-auto">
-          {members.length}
-        </Badge>
-      </div>
+      </header>
 
-      <SortableContext
-        items={members.map((m) => `${rosterId}:${m.tag}`)}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="space-y-1">
+      <SortableContext items={members.map((member) => `${roster.id}:${member.tag}`)} strategy={verticalListSortingStrategy}>
+        <div className="min-h-28 flex-1 space-y-2 overflow-y-auto pr-1">
           {members.map((member) => (
             <DraggableMember
               key={member.tag}
               member={member}
-              rosterId={rosterId}
-              isDuplicate={duplicateTags?.has(member.tag)}
+              roster={roster}
+              isDuplicate={duplicateTags.has(member.tag)}
             />
           ))}
-        </div>
-      </SortableContext>
-    </div>
-  );
-}
-
-// Roster column with categories
-interface RosterColumnProps {
-  readonly roster: Roster;
-  readonly members: RosterMember[];
-  readonly categories: SignupCategory[];
-  readonly overCategoryId: string | null;
-  readonly isLoading: boolean;
-  readonly duplicateTags?: Set<string>;
-  readonly t: (key: string) => string;
-}
-
-function RosterColumn({
-  roster,
-  members,
-  categories,
-  overCategoryId,
-  isLoading,
-  duplicateTags,
-  t,
-}: RosterColumnProps) {
-  const { setNodeRef } = useDroppable({
-    id: roster.custom_id,
-  });
-
-  const avgTh =
-    members.length > 0
-      ? (
-          members.reduce((sum, m) => sum + (m.townhall || 0), 0) / members.length
-        ).toFixed(1)
-      : "-";
-
-  // Group members by category
-  const membersByCategory = useMemo(() => {
-    const grouped: Record<string, RosterMember[]> = {
-      uncategorized: [],
-    };
-
-    // Initialize all categories
-    categories.forEach((cat) => {
-      grouped[cat.custom_id] = [];
-    });
-
-    // Group members
-    members.forEach((member) => {
-      const catId = member.signup_group || "uncategorized";
-      if (grouped[catId]) {
-        grouped[catId].push(member);
-      } else {
-        grouped.uncategorized.push(member);
-      }
-    });
-
-    return grouped;
-  }, [members, categories]);
-
-  // Get categories that have members or are allowed for this roster
-  const relevantCategories = useMemo(() => {
-    const allowedIds = new Set(roster.allowed_signup_categories || []);
-    return categories.filter(
-      (cat) =>
-        membersByCategory[cat.custom_id]?.length > 0 ||
-        allowedIds.size === 0 ||
-        allowedIds.has(cat.custom_id)
-    );
-  }, [categories, membersByCategory, roster.allowed_signup_categories]);
-
-  return (
-    <Card ref={setNodeRef} className="flex flex-col h-full transition-all">
-      <CardHeader className="pb-2 flex-shrink-0">
-        <div className="flex items-center gap-3">
-          {roster.clan_badge ? (
-            <Avatar className="h-10 w-10">
-              <AvatarImage
-                src={roster.clan_badge}
-                alt={roster.clan_name || ""}
-              />
-              <AvatarFallback>{roster.alias.charAt(0)}</AvatarFallback>
-            </Avatar>
-          ) : (
-            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Users className="h-5 w-5 text-primary" />
+          {members.length === 0 && (
+            <div className="flex min-h-28 items-center justify-center rounded-[20px] bg-card/60 px-4 text-center text-sm text-muted-foreground">
+              {t("dropHere")}
             </div>
           )}
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-base truncate">{roster.alias}</CardTitle>
-            {roster.clan_name && (
-              <p className="text-xs text-muted-foreground truncate">
-                {roster.clan_name}
-              </p>
-            )}
-          </div>
         </div>
-        <div className="flex items-center gap-4 mt-2 text-sm">
-          <div className="flex items-center gap-1">
-            <Users className="w-4 h-4 text-muted-foreground" />
-            <span className="font-medium">{members.length}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-muted-foreground">Avg TH:</span>
-            <span className="font-medium text-orange-400">{avgTh}</span>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="flex-1 overflow-hidden p-2">
-        {isLoading ? (
-          <div className="flex items-center justify-center h-full">
-            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-          </div>
-        ) : (
-          <div className="h-full overflow-y-auto space-y-3 pr-2">
-            {/* Categories with members */}
-            {relevantCategories.map((category) => (
-              <CategoryDropZone
-                key={category.custom_id}
-                rosterId={roster.custom_id}
-                categoryId={category.custom_id}
-                categoryName={category.alias}
-                members={membersByCategory[category.custom_id] || []}
-                isOver={
-                  overCategoryId ===
-                  `${roster.custom_id}:category:${category.custom_id}`
-                }
-                duplicateTags={duplicateTags}
-              />
-            ))}
-
-            {/* Uncategorized members */}
-            <CategoryDropZone
-              rosterId={roster.custom_id}
-              categoryId={null}
-              categoryName={t("compare.uncategorized")}
-              members={membersByCategory.uncategorized || []}
-              isOver={
-                overCategoryId ===
-                `${roster.custom_id}:category:uncategorized`
-              }
-              color="#888"
-              duplicateTags={duplicateTags}
-            />
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      </SortableContext>
+    </section>
   );
 }
 
@@ -323,313 +200,156 @@ export default function CompareRostersPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
+  const t = useTranslations("RostersPage.compare");
 
-  const t = useTranslations("RostersPage");
-
-  // Parse roster IDs or group ID from URL
   const rosterIdsFromUrl = useMemo(() => {
     const ids = searchParams.get("ids");
     return ids ? ids.split(",").filter(Boolean) : [];
   }, [searchParams]);
-
   const groupId = searchParams.get("groupId");
 
-  // State
   const [rosters, setRosters] = useState<Record<string, Roster>>({});
   const [rosterIds, setRosterIds] = useState<string[]>([]);
-  const [categories, setCategories] = useState<SignupCategory[]>([]);
   const [groupName, setGroupName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [moving, setMoving] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [overCategoryId, setOverCategoryId] = useState<string | null>(null);
+  const [overRosterId, setOverRosterId] = useState<string | null>(null);
 
-  // Sensors for drag & drop
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
-  // Load rosters and categories
   const loadRosters = useCallback(async () => {
     setLoading(true);
     try {
       let loadedRosters: Roster[] = [];
-
-      // Fetch categories first
-      const loadedCategories = await api.fetchCategories(guildId);
-      setCategories(loadedCategories);
-
       if (groupId) {
-        // Load all rosters in the group
         loadedRosters = await api.fetchRosters(guildId, groupId);
-        if (loadedRosters.length > 0 && loadedRosters[0].group_id) {
+        if (loadedRosters[0]?.group_id) {
           const groups = await api.fetchGroups(guildId);
-          const group = groups.find((g) => g.group_id === groupId);
-          setGroupName(group?.alias || null);
+          setGroupName(groups.find((group) => group.group_id === groupId)?.alias || null);
         }
       } else if (rosterIdsFromUrl.length > 0) {
-        const rosterPromises = rosterIdsFromUrl.map((id) =>
-          api.fetchRoster(id, guildId)
-        );
-        loadedRosters = await Promise.all(rosterPromises);
+        loadedRosters = await Promise.all(rosterIdsFromUrl.map((id) => api.fetchRoster(id, guildId)));
       } else {
         setLoading(false);
         return;
       }
 
-      const rostersMap: Record<string, Roster> = {};
-      const ids: string[] = [];
-      loadedRosters.forEach((roster) => {
-        rostersMap[roster.custom_id] = roster;
-        ids.push(roster.custom_id);
-      });
-      setRosters(rostersMap);
-      setRosterIds(ids);
-    } catch (err) {
+      setRosters(Object.fromEntries(loadedRosters.map((roster) => [roster.id, roster])));
+      setRosterIds(loadedRosters.map((roster) => roster.id));
+    } catch (error) {
       toast({
-        title: t("compare.loadError"),
-        description: err instanceof Error ? err.message : "Unknown error",
+        title: t("loadError"),
+        description: error instanceof Error ? error.message : t("unknownError"),
         variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
-  }, [groupId, rosterIdsFromUrl, guildId, toast, t]);
+  }, [groupId, guildId, rosterIdsFromUrl, t, toast]);
 
   useEffect(() => {
-    loadRosters();
+    void loadRosters();
   }, [loadRosters]);
 
-  // Compute tags that appear in more than one roster
   const duplicateTags = useMemo(() => {
-    const tagCount: Record<string, number> = {};
-    for (const rosterId of rosterIds) {
-      for (const member of rosters[rosterId]?.members ?? []) {
-        tagCount[member.tag] = (tagCount[member.tag] ?? 0) + 1;
-      }
-    }
-    return new Set(Object.keys(tagCount).filter((tag) => tagCount[tag] > 1));
+    const counts = new Map<string, number>();
+    rosterIds.forEach((rosterId) => rosters[rosterId]?.members?.forEach((member) => {
+      counts.set(member.tag, (counts.get(member.tag) ?? 0) + 1);
+    }));
+    return new Set([...counts].filter(([, count]) => count > 1).map(([tag]) => tag));
   }, [rosterIds, rosters]);
 
-  // Get active member for drag overlay
   const activeMember = useMemo(() => {
     if (!activeId) return null;
     const [rosterId, memberTag] = activeId.split(":");
-    const roster = rosters[rosterId];
-    return roster?.members?.find((m) => m.tag === memberTag) || null;
+    return rosters[rosterId]?.members?.find((member) => member.tag === memberTag) ?? null;
   }, [activeId, rosters]);
 
-  // Drag handlers
-  const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
+  const targetRosterId = (overId: string): string | null => {
+    if (rosterIds.includes(overId)) return overId;
+    const [candidate] = overId.split(":");
+    return rosterIds.includes(candidate) ? candidate : null;
   };
+
+  const handleDragStart = (event: DragStartEvent) => setActiveId(event.active.id as string);
 
   const handleDragOver = (event: DragOverEvent) => {
-    const { over } = event;
-    if (over) {
-      const overId = over.id as string;
-      // Check if over a category drop zone
-      if (overId.includes(":category:")) {
-        setOverCategoryId(overId);
-      } else if (rosterIds.includes(overId)) {
-        // Over a roster directly (not a category)
-        setOverCategoryId(`${overId}:category:uncategorized`);
-      } else if (overId.includes(":")) {
-        // Over a member, get their roster
-        const [targetRosterId] = overId.split(":");
-        setOverCategoryId(`${targetRosterId}:category:uncategorized`);
-      }
-    } else {
-      setOverCategoryId(null);
-    }
+    setOverRosterId(event.over ? targetRosterId(event.over.id as string) : null);
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => { // NOSONAR — dnd-kit drag handler, structural complexity from framework pattern
+  const handleDragEnd = async (event: DragEndEvent) => { // NOSONAR — dnd-kit handler branches on framework identifiers
     const { active, over } = event;
     setActiveId(null);
-    setOverCategoryId(null);
-
+    setOverRosterId(null);
     if (!over) return;
 
-    const activeIdStr = active.id as string;
-    const overIdStr = over.id as string;
+    const [sourceRosterId, memberTag] = (active.id as string).split(":");
+    const destinationRosterId = targetRosterId(over.id as string);
+    if (!sourceRosterId || !memberTag || !destinationRosterId || sourceRosterId === destinationRosterId) return;
 
-    // Parse source roster and member
-    const [sourceRosterId, memberTag] = activeIdStr.split(":");
-    if (!sourceRosterId || !memberTag) return;
-
-    // Determine target roster and category
-    let targetRosterId: string;
-    let targetCategoryId: string | null = null;
-
-    if (overIdStr.includes(":category:")) {
-      // Dropping on a category
-      const parts = overIdStr.split(":category:");
-      targetRosterId = parts[0];
-      targetCategoryId = parts[1] === "uncategorized" ? null : parts[1];
-    } else if (rosterIds.includes(overIdStr)) {
-      targetRosterId = overIdStr;
-    } else if (overIdStr.includes(":")) {
-      [targetRosterId] = overIdStr.split(":");
-    } else {
-      return;
-    }
-
-    // Get member data
-    const sourceMember = rosters[sourceRosterId]?.members?.find(
-      (m) => m.tag === memberTag
-    );
+    const sourceMember = rosters[sourceRosterId]?.members?.find((member) => member.tag === memberTag);
     if (!sourceMember) return;
-
-    const sameRoster = sourceRosterId === targetRosterId;
-    const sameCategory = sourceMember.signup_group === targetCategoryId;
-
-    // No change needed
-    if (sameRoster && sameCategory) return;
 
     setMoving(true);
     try {
-      if (sameRoster) {
-        // Just update category within the same roster
-        await api.updateMemberCategory(
-          sourceRosterId,
-          guildId,
-          memberTag,
-          targetCategoryId
-        );
-
-        // Update local state
-        setRosters((prev) => {
-          const newState = { ...prev };
-          const members = [...(newState[sourceRosterId].members || [])];
-          const memberIndex = members.findIndex((m) => m.tag === memberTag);
-          if (memberIndex !== -1) {
-            members[memberIndex] = {
-              ...members[memberIndex],
-              signup_group: targetCategoryId,
-            };
-          }
-          newState[sourceRosterId] = {
-            ...newState[sourceRosterId],
-            members,
-          };
-          return newState;
-        });
-
-        const categoryName =
-          categories.find((c) => c.custom_id === targetCategoryId)?.alias ||
-          t("compare.uncategorized");
-        toast({
-          title: t("compare.categoryChanged"),
-          description: t("compare.categoryChangedDesc", {
-            name: sourceMember.name,
-            category: categoryName,
-          }),
-        });
-      } else {
-        // Move to different roster
-        await api.removeRosterMember(sourceRosterId, guildId, memberTag);
-        await api.addRosterMembers(targetRosterId, guildId, [memberTag]);
-
-        // Update category if specified
-        if (targetCategoryId !== null) {
-          await api.updateMemberCategory(
-            targetRosterId,
-            guildId,
-            memberTag,
-            targetCategoryId
-          );
-        }
-
-        // Update local state
-        setRosters((prev) => {
-          const newState = { ...prev };
-
-          // Remove from source
-          if (newState[sourceRosterId]?.members) {
-            newState[sourceRosterId] = {
-              ...newState[sourceRosterId],
-              members: newState[sourceRosterId].members!.filter(
-                (m) => m.tag !== memberTag
-              ),
-            };
-          }
-
-          // Add to target with new category
-          if (newState[targetRosterId]) {
-            const updatedMember = {
-              ...sourceMember,
-              signup_group: targetCategoryId,
-            };
-            newState[targetRosterId] = {
-              ...newState[targetRosterId],
-              members: [
-                ...(newState[targetRosterId].members || []),
-                updatedMember,
-              ],
-            };
-          }
-
-          return newState;
-        });
-
-        toast({
-          title: t("compare.memberMoved"),
-          description: t("compare.memberMovedDesc", {
-            name: sourceMember.name,
-            from: rosters[sourceRosterId]?.alias || sourceRosterId,
-            to: rosters[targetRosterId]?.alias || targetRosterId,
-          }),
-        });
-      }
-    } catch (err) {
+      await api.removeRosterMember(sourceRosterId, guildId, memberTag);
+      await api.addRosterMembers(destinationRosterId, guildId, [memberTag]);
+      setRosters((current) => ({
+        ...current,
+        [sourceRosterId]: {
+          ...current[sourceRosterId],
+          members: current[sourceRosterId]?.members?.filter((member) => member.tag !== memberTag) ?? [],
+        },
+        [destinationRosterId]: {
+          ...current[destinationRosterId],
+          members: [...(current[destinationRosterId]?.members ?? []), sourceMember],
+        },
+      }));
       toast({
-        title: t("compare.moveError"),
-        description: err instanceof Error ? err.message : "Unknown error",
+        title: t("memberMoved"),
+        description: t("memberMovedDesc", {
+          name: sourceMember.name,
+          from: rosters[sourceRosterId]?.alias || sourceRosterId,
+          to: rosters[destinationRosterId]?.alias || destinationRosterId,
+        }),
+      });
+    } catch (error) {
+      toast({
+        title: t("moveError"),
+        description: error instanceof Error ? error.message : t("unknownError"),
         variant: "destructive",
       });
-      loadRosters();
+      void loadRosters();
     } finally {
       setMoving(false);
     }
   };
 
-  // Loading state
   if (loading) {
+    const count = Math.max(rosterIdsFromUrl.length, 2);
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
-        <div className="max-w-full mx-auto space-y-6">
-          <Skeleton className="h-8 w-64" />
-          <div
-            className="grid gap-4"
-            style={{
-              gridTemplateColumns: `repeat(${Math.max(rosterIdsFromUrl.length, 2)}, 1fr)`,
-            }}
-          >
-            {Array.from({ length: Math.max(rosterIdsFromUrl.length, 2) }).map((_, i) => (
-              <Skeleton key={i} className="h-[600px]" /> // NOSONAR — index is the only stable key for these items (skeleton/static list)
-            ))}
+        <div className="mx-auto max-w-full space-y-5">
+          <Skeleton className="h-9 w-64 rounded-xl" />
+          <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${count}, minmax(290px, 1fr))` }}>
+            {Array.from({ length: count }).map((_, index) => <Skeleton key={index} className="h-[620px] rounded-[28px]" />)}
           </div>
         </div>
       </div>
     );
   }
 
-  // No rosters selected
   if (rosterIds.length < 2) {
     return (
       <div className="min-h-screen bg-background p-4 md:p-6">
-        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center h-64 gap-4">
-          <p className="text-muted-foreground">{t("compare.selectAtLeast2")}</p>
-          <Button onClick={() => router.back()} variant="outline">
-            <ArrowLeft className="w-4 h-4 mr-2" />
+        <div className="mx-auto flex h-64 max-w-7xl flex-col items-center justify-center gap-4 rounded-[24px] bg-muted/35">
+          <p className="text-muted-foreground">{t("selectAtLeast2")}</p>
+          <Button onClick={() => router.back()} variant="secondary" className="rounded-xl border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted">
+            <ArrowLeft className="mr-2 h-4 w-4" />
             {t("back")}
           </Button>
         </div>
@@ -639,50 +359,25 @@ export default function CompareRostersPage() {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
-      <div className="max-w-full mx-auto space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.back()}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <GitCompare className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">
-                  {groupName
-                    ? `${t("compare.title")} - ${groupName}`
-                    : t("compare.title")}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {t("compare.dragToMoveCategory")}
-                </p>
-              </div>
-            </div>
-          </div>
-          <Button
-            onClick={loadRosters}
-            variant="outline"
-            disabled={loading || moving}
-          >
-            <RefreshCw
-              className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
-            />
-            {t("refresh")}
+      <div className="mx-auto max-w-full space-y-4">
+        <header className="flex items-start gap-3">
+          <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 rounded-xl" aria-label={t("back")} onClick={() => router.back()}>
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-        </div>
-
-        {/* Moving indicator */}
-        {moving && (
-          <div className="flex items-center justify-center gap-2 py-2 bg-primary/10 rounded-lg text-primary">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="text-sm font-medium">{t("compare.moving")}</span>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-semibold text-foreground md:text-3xl">
+              {groupName ? `${t("title")} — ${groupName}` : t("title")}
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
           </div>
-        )}
+          {moving && (
+            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {t("moving")}
+            </span>
+          )}
+        </header>
 
-        {/* Roster columns */}
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -691,11 +386,8 @@ export default function CompareRostersPage() {
           onDragEnd={handleDragEnd}
         >
           <div
-            className="grid gap-4"
-            style={{
-              gridTemplateColumns: `repeat(${rosterIds.length}, 1fr)`,
-              height: "calc(100vh - 180px)",
-            }}
+            className="scrollbar-custom grid h-[calc(100dvh-14rem)] min-h-[28rem] snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain pb-2 md:h-[calc(100dvh-10rem)] md:min-h-[32rem]"
+            style={{ gridTemplateColumns: `repeat(${rosterIds.length}, minmax(290px, 1fr))` }}
           >
             {rosterIds.map((rosterId) => {
               const roster = rosters[rosterId];
@@ -704,29 +396,23 @@ export default function CompareRostersPage() {
                 <RosterColumn
                   key={rosterId}
                   roster={roster}
-                  members={roster.members || []}
-                  categories={categories}
-                  overCategoryId={overCategoryId}
-                  isLoading={false}
+                  members={roster.members ?? []}
+                  isOver={overRosterId === rosterId}
                   duplicateTags={duplicateTags}
-                  t={t}
                 />
               );
             })}
           </div>
 
-          {/* Drag Overlay */}
           <DragOverlay>
             {activeMember && (
-              <div className="flex items-center gap-2 p-2 bg-background rounded-lg border border-primary shadow-xl">
-                <GripVertical className="w-4 h-4 text-muted-foreground" />
-                <span className="text-orange-400 font-medium text-sm">
-                  TH{activeMember.townhall}
-                </span>
-                <span className="font-medium text-sm">{activeMember.name}</span>
-                <span className="text-xs text-muted-foreground font-mono">
-                  {activeMember.tag}
-                </span>
+              <div className="flex items-center gap-2.5 rounded-[20px] bg-card p-3 shadow-xl ring-2 ring-primary/45">
+                <GripVertical className="h-4 w-4 text-muted-foreground" />
+                <Image src={townHallImageUrl(activeMember.townhall)} alt="" width={38} height={38} unoptimized className="h-9 w-9 object-contain" />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">{activeMember.name}</p>
+                  <p className="font-mono text-[10px] text-muted-foreground">{activeMember.tag}</p>
+                </div>
               </div>
             )}
           </DragOverlay>
