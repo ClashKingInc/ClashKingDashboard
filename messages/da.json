@@ -41,7 +41,7 @@
     "description": "Beskrivelse",
     "createdAt": "Oprettet",
     "updatedAt": "Opdateret",
-    "dashboard": "Dashboard",
+    "dashboard": "Instrumentbræt",
     "loadError": "Kunne ikke indlæse data.",
     "tryAgain": "Prøv igen",
     "create": "Opret",
@@ -154,7 +154,7 @@
       },
       "bot": {
         "title": "Bot",
-        "dashboard": "Dashboard",
+        "dashboard": "Instrumentbræt",
         "inviteBot": "Inviter botten"
       },
       "resources": {
@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Udelukkede spillere",
-        "count": "{count, plural, one {# spiller udelukket} other {# spillere udelukket}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Søg efter navn, tag eller årsag...",
         "noBansFound": "Ingen udelukkelser fundet",
         "noBans": "Ingen udelukkede spillere",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Spilleradvarsler",
-        "count": "{count, plural, one {# advarsel udstedt} other {# advarsler udstedt}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Søg efter navn, tag eller årsag...",
         "noStrikesFound": "Ingen advarsler fundet",
         "noStrikes": "Ingen advarsler udstedt",
@@ -567,7 +567,7 @@
     },
     "filters": {
       "search": "Søg trupplaner...",
-      "type": "Type",
+      "type": "Klantype",
       "all": "Alle",
       "clan": "Klan",
       "family": "Familie",
@@ -683,7 +683,7 @@
       "hitrate": "Træfprocent",
       "current_clan": "Nuværende klan",
       "current_clan_tag": "Klantag",
-      "discord": "Discord",
+      "discord": "Uenighed",
       "hero_lvs": "Helte",
       "war_pref": "Krigspræference",
       "trophies": "Trofæer",
@@ -1305,14 +1305,14 @@
     "comingSoon": "Denne funktion kommer snart. Kig forbi igen senere!",
     "stats": {
       "totalEntries": "Deltagelser i alt",
-      "type": "Type",
+      "type": "Klantype",
       "league": "Liga",
       "weekend": "Weekend"
     },
     "filters": {
       "title": "Filtre",
       "description": "Tilpas ranglistevisningen",
-      "type": "Type",
+      "type": "Klantype",
       "metric": "Måling",
       "league": "Liga",
       "weekend": "Weekend"
@@ -2793,8 +2793,8 @@
       "start": "Starter",
       "end": "Slutter",
       "winnersHeader": "Vindere",
-      "winners": "{count, plural, one {# vinder} other {# vindere}}",
-      "boosters": "{count, plural, one {# booster} other {# boostere}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Ingen kanal",
       "noChannelHelp": "Ingen kanal tildelt. Rediger giveawayen for at rette det.",
       "endsAt": "Slutter kl.",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Ikke planlagt",
       "schedule": "Tidsplan",
       "endMessage": "Vinderbesked",
-      "endSummary": "{winners, plural, one {# vinder bliver annonceret her.} other {# vindere bliver annonceret her.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Deltagere i alt: {count}",
       "participate": "Deltag",
       "buttonHint": "Den primære handlingsknap vises under Discord-indlægget."
@@ -3001,7 +3001,7 @@
       "homeLabel": "ClashKing-startside",
       "mobileApp": "Mobilapp",
       "discordBot": "Discord-bot",
-      "dashboard": "Dashboard"
+      "dashboard": "Instrumentbræt"
     },
     "language": {
       "label": "Sprog"
@@ -3084,7 +3084,7 @@
       }
     },
     "dashboard": {
-      "title": "Dashboard",
+      "title": "Instrumentbræt",
       "intro": "Administrer trupplaner, påmindelser og serverindstillinger samlet ét sted.",
       "imageLabel": "Bygmesterhytte, der repræsenterer værktøjer til klanadministration",
       "imageAlt": "Bygmesterhytte niveau 8",
