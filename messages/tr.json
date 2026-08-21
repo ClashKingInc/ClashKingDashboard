@@ -1324,7 +1324,7 @@
     "metrics": {
       "capital": {
         "player": {
-      "capitalLooted": "Yağmalanan Başkent ganimeti"
+          "capitalLooted": "Yağmalanan Başkent ganimeti"
         },
         "clan": {
           "capitalTotalLoot": "Toplam Ganimet",
@@ -3022,17 +3022,17 @@
       "phrases": {
         "run": {
           "first": "Klanınızı",
-          "second": "",
+          "second": "your",
           "third": "yönetin."
         },
         "accounts": {
           "first": "Hesaplarınızı",
-          "second": "",
+          "second": "your",
           "third": "yönetin."
         },
         "stats": {
           "first": "İstatistikleri",
-          "second": "",
+          "second": "the",
           "third": "keşfedin."
         }
       },
