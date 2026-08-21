@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Zabanovaní hráči",
-        "count": "{count, plural, one {Zabanován # hráč} few {Zabanováni # hráči} other {Zabanováno # hráčů}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
         "noBansFound": "Nebyly nalezeny žádné bany",
         "noBans": "Žádní zabanovaní hráči",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Varování hráčů",
-        "count": "{count, plural, one {Uděleno # varování} few {Udělena # varování} other {Uděleno # varování}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Hledat podle jména, tagu nebo důvodu...",
         "noStrikesFound": "Nebyla nalezena žádná varování",
         "noStrikes": "Nebyla udělena žádná varování",
@@ -1002,7 +1002,7 @@
         "minSignupsBadge": "Práh {count}",
         "categoriesTitle": "Kategorie přihlášení",
         "categoriesHint": "Vyberte kategorie dostupné této skupině. Okamžitě se použijí na všechny soupisky.",
-          "categoriesBadge": "Kategorie: {count}",
+        "categoriesBadge": "Kategorie: {count}",
         "noCategories": "Zatím žádné kategorie.",
         "newCategoryPlaceholder": "Název nové kategorie…"
       }
@@ -2793,8 +2793,8 @@
       "start": "Začíná",
       "end": "Končí",
       "winnersHeader": "Výherci",
-      "winners": "{count, plural, one {# výherce} few {# výherci} other {# výherců}}",
-      "boosters": "{count, plural, one {# zvýhodnění} few {# zvýhodnění} other {# zvýhodnění}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Žádný kanál",
       "noChannelHelp": "Není přiřazen žádný kanál. Opravte to úpravou soutěže.",
       "endsAt": "Končí",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Nenaplánováno",
       "schedule": "Plán",
       "endMessage": "Zpráva pro výherce",
-      "endSummary": "{winners, plural, one {Zde bude oznámen # výherce.} few {Zde budou oznámeni # výherci.} other {Zde bude oznámeno # výherců.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Celkem účastníků: {count}",
       "participate": "Zúčastnit se",
       "buttonHint": "Hlavní akční tlačítko zobrazené pod příspěvkem na Discordu."
