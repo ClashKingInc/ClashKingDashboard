@@ -29,7 +29,7 @@
     "error": "Er is een fout opgetreden",
     "success": "Succes",
     "actions": "Acties",
-    "details": "Details",
+    "details": "Detailscherm",
     "view": "Bekijken",
     "unknown": "Onbekend",
     "confirm": "Bevestigen",
@@ -207,7 +207,7 @@
       "description": "Clanfamilierollen en bijnamen"
     },
     "clans": {
-      "name": "Clans",
+      "name": "Clans zoeken",
       "description": "Beheer je clans"
     },
     "logs": {
@@ -227,11 +227,11 @@
       "description": "Rosterbeheer"
     },
     "bases": {
-      "name": "Bases",
+      "name": "Basissen",
       "description": "Lay-outbibliotheek en betrokkenheid"
     },
     "autoboards": {
-      "name": "Autoboards",
+      "name": "AutoBoards",
       "description": "Geautomatiseerde ranglijsten"
     },
     "giveaways": {
@@ -278,7 +278,7 @@
   },
   "BasesPage": {
     "eyebrow": "Clanbeheer",
-    "title": "Bases",
+    "title": "Basissen",
     "description": "Bekijk gedeelde lay-outs, gebruiksgeschiedenis en oorspronkelijke Discord-berichten.",
     "refresh": "Vernieuwen",
     "create": "Base toevoegen",
@@ -559,7 +559,7 @@
       "avgTh": "Gem. TH",
       "avgHitrate": "Gem. trefferpercentage",
       "distribution": "Verdeling",
-      "clan": "Clan",
+      "clan": "De clan",
       "family": "Clanfamilie",
       "external": "Extern",
       "thDistribution": "Verdeling per stadhuisniveau",
@@ -569,7 +569,7 @@
       "search": "Rosters zoeken...",
       "type": "Clantype",
       "all": "Alle",
-      "clan": "Clan",
+      "clan": "De clan",
       "family": "Clanfamilie",
       "clear": "Wissen"
     },
@@ -588,12 +588,12 @@
       "aliasLabel": "Rosternaam",
       "aliasPlaceholder": "bijv. CWL-roster",
       "typeLabel": "Rostertype",
-      "typeClan": "Clan",
+      "typeClan": "De clan",
       "typeFamily": "Clanfamilie",
       "signupScopeLabel": "Inschrijfbereik",
       "scopeClanOnly": "Alleen de clan",
       "scopeFamilyWide": "Hele clanfamilie",
-      "clanLabel": "Clan",
+      "clanLabel": "De clan",
       "clanPlaceholder": "Selecteer een clan",
       "descriptionLabel": "Beschrijving (optioneel)",
       "descriptionPlaceholder": "Beschrijving van het roster...",
@@ -652,7 +652,7 @@
       "thRestriction": "Stadhuisniveau",
       "avgTh": "Gem. TH",
       "avgHitrate": "Gem. trefferpercentage",
-      "clan": "Clan",
+      "clan": "De clan",
       "family": "Clanfamilie",
       "external": "Extern",
       "substitute": "Vervanger",
@@ -663,7 +663,7 @@
       "thLevel": "Stadhuisniveau",
       "avgTh": "Gem. TH",
       "avgHitrate": "Gem. trefferpercentage",
-      "clan": "Clan",
+      "clan": "De clan",
       "family": "Clanfamilie",
       "external": "Extern",
       "noRestriction": "Geen beperking",
@@ -679,7 +679,7 @@
     "memberColumns": {
       "name": "Naam",
       "townhall": "Stadhuis",
-      "tag": "Tag",
+      "tag": "Label",
       "hitrate": "Trefferpercentage over 30 dagen",
       "current_clan": "Huidige clan",
       "current_clan_tag": "Clantag",
@@ -701,7 +701,7 @@
     "sortFields": {
       "townhall": "Stadhuisniveau",
       "name": "Naam",
-      "tag": "Tag",
+      "tag": "Label",
       "heroLvs": "Helden",
       "trophies": "Trofeeën",
       "hitrate": "Trefferpercentage over 30 dagen",
@@ -1025,12 +1025,12 @@
       "restrictions": "Beperkingen en limieten",
       "name": "Rosternaam",
       "rosterType": "Rostertype",
-      "typeClan": "Clan",
+      "typeClan": "De clan",
       "typeFamily": "Clanfamilie",
       "signupScope": "Inschrijfbereik",
       "scopeClanOnly": "Alleen de clan",
       "scopeFamilyWide": "Hele clanfamilie",
-      "clan": "Clan",
+      "clan": "De clan",
       "selectClan": "Selecteer een clan",
       "description": "Beschrijving",
       "descriptionPlaceholder": "Voer een beschrijving voor dit roster in...",
@@ -1193,10 +1193,10 @@
     "filters": {
       "title": "Filteropties",
       "description": "Filter oorlogsstatistieken op verschillende criteria",
-      "clan": "Clan",
+      "clan": "De clan",
       "allClans": "Alle clans",
       "townHall": "Stadhuis",
-      "townHallShort": "TH",
+      "townHallShort": "SH",
       "allTownHalls": "Alle stadhuisniveaus",
       "townHallLevel": "TH {level}",
       "period": "Periode",
@@ -1275,7 +1275,7 @@
       "title": "Clanoorlogsstatistieken",
       "description": "Gedetailleerde statistieken voor elke clan",
       "headers": {
-        "clan": "Clan",
+        "clan": "De clan",
         "status": "Status",
         "wars": "Oorlogen",
         "record": "W/G/V",
@@ -1319,7 +1319,7 @@
     },
     "types": {
       "player": "Spelers",
-      "clan": "Clans"
+      "clan": "Clans zoeken"
     },
     "metrics": {
       "capital": {
@@ -1531,7 +1531,7 @@
       "ruby": "Robijn",
       "emerald": "Smaragd",
       "platinum": "Platina",
-      "titanium": "Titanium",
+      "titanium": "Titaan",
       "steel": "Staal",
       "iron": "IJzer",
       "brass": "Messing",
@@ -1627,7 +1627,7 @@
       "selectRole": "Selecteer een rol",
       "townHallLevel": "Stadhuisniveau",
       "selectThLevel": "Selecteer een stadhuisniveau",
-      "thPrefix": "TH",
+      "thPrefix": "SH",
       "league": "Competitie",
       "selectLeague": "Selecteer een divisie",
       "builderHallLevel": "Bouwershalniveau",
@@ -1743,7 +1743,7 @@
       "forumPost": "Forumbericht",
       "forumPostPlaceholder": "Selecteer een forumbericht",
       "forumPostRequired": "Een forumbericht is verplicht voor forumkanalen.",
-      "clan": "Clan",
+      "clan": "De clan",
       "clanPlaceholder": "Selecteer clan",
       "customMessage": "Aangepast bericht",
       "customMessagePlaceholder": "Vergeet niet je aanvallen te gebruiken!",
@@ -1809,7 +1809,7 @@
       "placeholder": "Selecteer een clan"
     },
     "tabs": {
-      "clan": "Clan",
+      "clan": "De clan",
       "war": "Oorlog",
       "capital": "Hoofdstad",
       "player": "Speler",
@@ -2528,12 +2528,12 @@
     "rolesToRemoveHint": "Rollen die automatisch worden verwijderd van de gebruiker bij het openen van een ticket.",
     "applyClans": "Toegestane clans",
     "applyClansHint": "Alleen leden van deze clans kunnen dit ticket openen. Laat leeg om iedereen toe te staan.",
-    "clanTagPlaceholder": "#CLANTAG",
+    "clanTagPlaceholder": "#CLANLABEL",
     "thRequirements": "Vereisten per stadhuisniveau",
     "thRequirementsHint": "Minimale heldenniveaus per stadhuisniveau om dit ticket te kunnen openen.",
     "thHeroLegend": "BK = Barbaarse Koning · AQ = Boogschutter Koningin · GW = Grote Wachter · RC = Koninklijke Kampioene · WARST = Oorlogsterren",
     "addThLevel": "Stadhuisniveau toevoegen",
-    "thLevel": "TH",
+    "thLevel": "SH",
     "numApplyHint": "Maximaal aantal CoC-accounts waarmee de gebruiker kan solliciteren (1–25).",
     "embeds": "Embeds",
     "embedsHint": "Discord-embeds die als paneelbericht of als bericht bij het openen van een ticket worden gebruikt.",
@@ -2782,7 +2782,7 @@
     },
     "status": {
       "scheduled": "Gepland",
-      "ongoing": "Live",
+      "ongoing": "Actief",
       "ended": "Afgelopen"
     },
     "table": {

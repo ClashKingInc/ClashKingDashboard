@@ -1196,7 +1196,7 @@
       "clan": "Клан",
       "allClans": "Усі клани",
       "townHall": "Ратуша",
-      "townHallShort": "TH",
+      "townHallShort": "ТХ",
       "allTownHalls": "Усі рівні ратуші",
       "townHallLevel": "TH {level}",
       "period": "Період",
@@ -1237,7 +1237,7 @@
       "warTypeDistribution": {
         "title": "Розподіл за типом війни",
         "description": "Розподіл за типами воєн",
-        "cwl": "CWL",
+        "cwl": "ЛВК",
         "random": "Звичайна",
         "friendly": "Дружня"
       },
@@ -1286,7 +1286,7 @@
       },
       "status": {
         "inWar": "На війні",
-        "cwl": "CWL",
+        "cwl": "ЛВК",
         "peace": "Мир"
       },
       "noData": "Статистика кланів відсутня. Застосуйте фільтри або дочекайтеся завантаження даних."
@@ -1627,7 +1627,7 @@
       "selectRole": "Виберіть роль",
       "townHallLevel": "Рівень ратуші",
       "selectThLevel": "Виберіть рівень ратуші",
-      "thPrefix": "TH",
+      "thPrefix": "ТХ",
       "league": "Ліга",
       "selectLeague": "Виберіть лігу",
       "builderHallLevel": "Рівень Дому будівельника",
@@ -1752,7 +1752,7 @@
       "warTypes": "Типи воєн",
       "random": "Звичайна",
       "friendly": "Дружня",
-      "cwl": "CWL",
+      "cwl": "ЛВК",
       "pointThreshold": "Поріг очок",
       "pointThresholdPlaceholder": "4000",
       "pointThresholdHelp": "Буде згадано гравців із менш ніж {threshold} очками.",
@@ -2533,7 +2533,7 @@
     "thRequirementsHint": "Мінімальні рівні героїв за рівнем ратуші, необхідні для відкриття тікета.",
     "thHeroLegend": "BK = Король варварів · AQ = Королева лучниць · GW = Великий хранитель · RC = Королівська чемпіонка · WARST = зірки війни",
     "addThLevel": "Додати рівень TH",
-    "thLevel": "TH",
+    "thLevel": "ТХ",
     "numApplyHint": "Максимальна кількість облікових записів CoC для заявки користувача (1–25).",
     "embeds": "Вбудовані повідомлення",
     "embedsHint": "Вбудовані повідомлення Discord для панелей або відкриття тікетів.",

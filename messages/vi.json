@@ -412,7 +412,7 @@
       },
       "list": {
         "title": "Người chơi bị cấm",
-        "count": "{count, plural, one {# người chơi bị cấm} other {# người chơi bị cấm}}",
+        "count": "{count} player{count, plural, one {} other {s}} banned",
         "searchPlaceholder": "Tìm theo tên, mã hoặc lý do...",
         "noBansFound": "Không tìm thấy lệnh cấm",
         "noBans": "Không có người chơi bị cấm",
@@ -482,7 +482,7 @@
       },
       "list": {
         "title": "Cảnh cáo người chơi",
-        "count": "{count, plural, one {# cảnh cáo đã được đưa ra} other {# cảnh cáo đã được đưa ra}}",
+        "count": "{count} strike{count, plural, one {} other {s}} issued",
         "searchPlaceholder": "Tìm theo tên, mã hoặc lý do...",
         "noStrikesFound": "Không tìm thấy cảnh cáo",
         "noStrikes": "Chưa ban hành cảnh cáo",
@@ -2793,8 +2793,8 @@
       "start": "Bắt đầu",
       "end": "Kết thúc",
       "winnersHeader": "Người trúng thưởng",
-      "winners": "{count, plural, one {# người trúng thưởng} other {# người trúng thưởng}}",
-      "boosters": "{count, plural, one {# hệ số tăng} other {# hệ số tăng}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Không có kênh",
       "noChannelHelp": "Chưa gán kênh. Hãy chỉnh sửa chương trình để khắc phục.",
       "endsAt": "Kết thúc lúc",
@@ -2903,7 +2903,7 @@
       "notScheduled": "Chưa lên lịch",
       "schedule": "Lịch",
       "endMessage": "Tin nhắn cho người trúng thưởng",
-      "endSummary": "{winners, plural, one {# người trúng thưởng} other {# người trúng thưởng}} sẽ được công bố tại đây.",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Tổng người tham gia: {count}",
       "participate": "Tham gia",
       "buttonHint": "Nút thao tác chính hiển thị dưới bài đăng Discord."
@@ -3022,17 +3022,17 @@
       "phrases": {
         "run": {
           "first": "Điều hành",
-          "second": "",
+          "second": "your",
           "third": "bang hội."
         },
         "accounts": {
           "first": "Quản lý",
-          "second": "",
+          "second": "your",
           "third": "tài khoản."
         },
         "stats": {
           "first": "Khám phá",
-          "second": "",
+          "second": "the",
           "third": "thống kê."
         }
       },
