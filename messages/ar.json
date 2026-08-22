@@ -17,7 +17,7 @@
     "next": "التالي",
     "previous": "السابق",
     "poweredBy": "مُشغّل بواسطة",
-    "noData": "لا توجد بيانات متاحة.",
+    "noData": "لا تتوفر بيانات",
     "noChannelFound": "لم يتم العثور على قناة.",
     "searchChannels": "البحث عن قنوات...",
     "searchClans": "البحث عن قبائل...",
@@ -45,7 +45,7 @@
     "loadError": "تعذّر تحميل البيانات.",
     "tryAgain": "حاول مرة أخرى",
     "create": "إنشاء",
-    "viewClashProfile": "عرض ملف Clash",
+    "viewClashProfile": "عرض صفحة كلاش الشخصي",
     "openInGame": "فتح داخل اللعبة",
     "openChannelInDiscord": "فتح هذه القناة في Discord",
     "playerProfile": {
