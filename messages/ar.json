@@ -155,12 +155,12 @@
       "bot": {
         "title": "البوت",
         "dashboard": "لوحة التحكم",
-        "inviteBot": "دعوة البوت"
+        "inviteBot": "إضافة البوت"
       },
       "resources": {
         "title": "الموارد",
         "documentation": "الوثائق",
-        "quickStart": "دليل البدء السريع",
+        "quickStart": "دليل التشغيل السريع",
         "github": "جيت هاب"
       },
       "community": {
@@ -168,7 +168,7 @@
         "discord": "خادم Discord",
         "twitter": "إكس (تويتر)",
         "reportBug": "الإبلاغ عن خلل",
-        "requestFeature": "طلب ميزة"
+        "requestFeature": "طلب ميزه"
       },
       "legal": {
         "copyright": "ClashKing. جميع الحقوق محفوظة.",
@@ -192,7 +192,7 @@
   "Sidebar": {
     "overview": {
       "name": "ملخص",
-      "description": "الصفحة الرئيسية للوحة"
+      "description": "واجهة لوحة التحكم"
     },
     "general": {
       "name": "الإعدادات العامة",
@@ -216,11 +216,11 @@
     },
     "roles": {
       "name": "الرتب",
-      "description": "أتمتة الرتب"
+      "description": "إدارة الرتب التلقائية"
     },
     "reminders": {
-      "name": "التذكيرات",
-      "description": "جميع أنواع التذكيرات"
+      "name": "التنبيهات",
+      "description": "جميع أنواع التنبيهات"
     },
     "rosters": {
       "name": "قوائم اللاعبين",
@@ -235,19 +235,19 @@
       "description": "لوحات متصدرين آلية"
     },
     "giveaways": {
-      "name": "السحوبات",
-      "description": "إدارة حملات السحوبات"
+      "name": "الجوائز",
+      "description": "إدارة حملات الجوائز"
     },
     "panels": {
       "name": "اللوحات",
-      "description": "لوحات أعضاء تفاعلية بأزرار إجراء"
+      "description": "لوحات تفاعلية للأعضاء مع أزرار الإجراءات"
     },
     "tickets": {
       "name": "التذاكر",
-      "description": "تذاكر التوظيف والدعم"
+      "description": "تذاكر التقديم والدعم"
     },
     "embeds": {
-      "name": "التضمينات",
+      "name": "تنسيق الرسائل",
       "description": "قوالب تضمين Discord"
     },
     "links": {
@@ -270,11 +270,11 @@
       "configuration": "الإعداد",
       "clanManagement": "إدارة القبيلة",
       "playerManagement": "إدارة اللاعبين",
-      "automation": "الأتمتة",
-      "statistics": "الإحصاءات"
+      "automation": "المهام التلقائية",
+      "statistics": "الإحصائيات"
     },
     "switchServer": "تبديل الخادم",
-    "goHome": "الصفحة الرئيسية"
+    "goHome": "واجهة الموقع"
   },
   "BasesPage": {
     "eyebrow": "إدارة القبيلة",
@@ -317,8 +317,8 @@
       "discordSource": "مصدر Discord",
       "successTitle": "حُذفت القاعدة",
       "successDeleted": "حُذف سجل قاعدة البيانات ورسالة Discord.",
-      "successAlreadyMissing": "حُذف سجل قاعدة البيانات؛ كانت رسالة Discord مفقودة بالفعل.",
-      "cleanupFailedTitle": "احتُفظ بالقاعدة؛ فشل تنظيف Discord",
+      "successAlreadyMissing": "تم حذف السجل من قاعدة البيانات؛ رسالة Discord كانت مفقودة أصلا.",
+      "cleanupFailedTitle": "تم الاحتفاظ بالقاعدة؛ فشل تنظيف Discord",
       "cleanupCompleteTitle": "اكتمل تنظيف Discord؛ احتُفظ بالقاعدة",
       "failureTitle": "لم تُحذف القاعدة",
       "failureFallback": "فشل طلب الحذف.",
@@ -463,12 +463,12 @@
       "playerTag": "وسم اللاعب",
       "reason": "السبب",
       "weight": "الوزن",
-      "rolloverDays": "مدة الصلاحية بالأيام",
+      "rolloverDays": "أيام التجديد",
       "createdAt": "تاريخ الإنشاء",
       "search": "البحث بوسم اللاعب...",
       "howItWorks": {
         "title": "كيفية عمل المخالفات",
-        "description": "المخالفات تحذيرات تُعطى للاعبين عند خرق القواعد. لكل مخالفة وزن يعبّر عن خطورتها، ويمكن أن تنتهي بعد عدد محدد من الأيام. تساعد على تتبع السلوك قبل إصدار الحظر."
+        "description": "المخالفات هي إنذارات توَجَّه للاعبين لخرق القوانين، ولكل مخالفة درجة (شدة) محددة وقد تنتهي صلاحيتها بعد أيام معينة. تُستخدم هذه الإنذارات لمتابعة سلوك اللاعب قبل اتخاذ قرار الحظر."
       },
       "stats": {
         "total": "إجمالي المخالفات",
@@ -522,7 +522,7 @@
         "title": "إرشادات المخالفات",
         "weights": {
           "title": "استخدم الأوزان بحكمة:",
-          "desc": "حدّد وزنًا أعلى (2–3) للانتهاكات الخطيرة ووزنًا أقل (1) للمشكلات البسيطة."
+          "desc": "خصص درجات شدة أعلى (2-3) للمخالفات الشديدة ودرجات أقل (1) للمخالفات البسيطة."
         },
         "expiration": {
           "title": "حدّد تواريخ الانتهاء:",
@@ -578,9 +578,9 @@
       "compare": "مقارنة",
       "compareRosters": "مقارنة القوائم",
       "selectRosters": "اختر القوائم",
-      "selectRostersDesc": "اختر قائمتين على الأقل للمقارنة",
+      "selectRostersDesc": "يرجى تحديد تشكيلتين 2 كحد أدنى للمقارنة",
       "maxReached": "بلغت الحد الأقصى",
-      "maxReachedDesc": "يمكنك مقارنة أربع قوائم بحد أقصى في كل مرة"
+      "maxReachedDesc": "يمكنك مقارنة حتى 4 تشكيلات في المرة الواحدة"
     },
     "createDialog": {
       "title": "إنشاء قائمة جديدة",
@@ -592,7 +592,7 @@
       "typeFamily": "العائلة",
       "signupScopeLabel": "نطاق التسجيل",
       "scopeClanOnly": "القبيلة فقط",
-      "scopeFamilyWide": "العائلة بأكملها",
+      "scopeFamilyWide": "لكامل العائلة",
       "clanLabel": "القبيلة",
       "clanPlaceholder": "اختر قبيلة",
       "descriptionLabel": "الوصف (اختياري)",
