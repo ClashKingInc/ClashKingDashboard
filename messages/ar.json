@@ -161,7 +161,7 @@
         "title": "الموارد",
         "documentation": "الوثائق",
         "quickStart": "دليل التشغيل السريع",
-        "github": "جيت هاب"
+        "github": ""
       },
       "community": {
         "title": "المجتمع",
@@ -1237,7 +1237,7 @@
       "warTypeDistribution": {
         "title": "توزيع أنواع الحرب",
         "description": "تفصيل حسب نوع الحرب",
-        "cwl": "سي دبليو إل",
+        "cwl": "دوري حروب القبائل",
         "random": "عشوائية",
         "friendly": "ودية"
       },
@@ -1286,7 +1286,7 @@
       },
       "status": {
         "inWar": "في الحرب",
-        "cwl": "سي دبليو إل",
+        "cwl": "دوري حروب القبائل",
         "peace": "سلام"
       },
       "noData": "لا تتوفر إحصاءات قبائل. جرّب تطبيق عوامل التصفية أو انتظر تحميل البيانات."
@@ -1752,7 +1752,7 @@
       "warTypes": "أنواع الحرب",
       "random": "عشوائية",
       "friendly": "ودية",
-      "cwl": "سي دبليو إل",
+      "cwl": "دوري حروب القبائل",
       "pointThreshold": "حد النقاط",
       "pointThresholdPlaceholder": "4000",
       "pointThresholdHelp": "سيشير إلى من لديهم أقل من {threshold} نقطة.",
