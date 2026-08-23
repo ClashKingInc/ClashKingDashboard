@@ -49,7 +49,7 @@
     "openInGame": "Obre al joc",
     "openChannelInDiscord": "Obre aquest canal a Discord",
     "playerProfile": {
-      "clan": "Clan",
+      "clan": "El clan",
       "townHallLevel": "Nivell de l’Ajuntament",
       "trophies": "Trofeus",
       "warPreference": "Preferència de guerra",
@@ -208,7 +208,7 @@
       "description": "Rols i sobrenoms de la família"
     },
     "clans": {
-      "name": "Clans",
+      "name": "Cerca de clans",
       "description": "Gestiona els teus clans"
     },
     "logs": {
@@ -566,7 +566,7 @@
       "newest": "Newest first",
       "oldest": "Oldest first",
       "player": "Player name",
-      "reason": "Reason",
+      "reason": "Motiu",
       "moderator": "Moderator",
       "weight": "Highest weight",
       "count": "Most strikes",
@@ -585,7 +585,7 @@
       "avgTh": "Mitjana TH",
       "avgHitrate": "Taxa mitjana d’encerts",
       "distribution": "Distribució",
-      "clan": "Clan",
+      "clan": "El clan",
       "family": "Família",
       "external": "Extern",
       "thDistribution": "Distribució per TH",
@@ -595,7 +595,7 @@
       "search": "Cerca llistes...",
       "type": "Tipus",
       "all": "Tot",
-      "clan": "Clan",
+      "clan": "El clan",
       "family": "Família",
       "clear": "Neteja"
     },
@@ -614,12 +614,12 @@
       "aliasLabel": "Nom de la llista",
       "aliasPlaceholder": "p. ex., llista de la CWL",
       "typeLabel": "Tipus de llista",
-      "typeClan": "Clan",
+      "typeClan": "El clan",
       "typeFamily": "Família",
       "signupScopeLabel": "Àmbit d’inscripció",
       "scopeClanOnly": "Només el clan",
       "scopeFamilyWide": "Tota la família",
-      "clanLabel": "Clan",
+      "clanLabel": "El clan",
       "clanPlaceholder": "Selecciona un clan",
       "descriptionLabel": "Descripció (opcional)",
       "descriptionPlaceholder": "Descripció de la llista...",
@@ -678,7 +678,7 @@
       "thRestriction": "Nivell d'Ajuntament",
       "avgTh": "Mitjana TH",
       "avgHitrate": "Taxa mitjana d’encerts",
-      "clan": "Clan",
+      "clan": "El clan",
       "family": "Família",
       "external": "Extern",
       "substitute": "SUPLENT",
@@ -689,7 +689,7 @@
       "thLevel": "Nivell d'Ajuntament",
       "avgTh": "Mitjana TH",
       "avgHitrate": "Taxa mitjana d’encerts",
-      "clan": "Clan",
+      "clan": "El clan",
       "family": "Família",
       "external": "Extern",
       "noRestriction": "Sense restriccions",
@@ -701,7 +701,7 @@
       "clone": "Clona",
       "allRosters": "Totes les llistes",
       "manageRosters": "Gestiona les teves llistes i alineacions de guerra",
-      "rename": "Rename {name}",
+      "rename": "Canvia el nom {name}",
       "actions": "Actions for {name}",
       "renameInput": "Roster name",
       "renameSave": "Save roster name",
@@ -945,13 +945,13 @@
       "unknownError": "An unknown error occurred",
       "memberCount": "{count, plural, one {# member} other {# members}}",
       "dragPlayer": "Drag {name}",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Ajuntament {level}",
       "duplicate": "This player appears in multiple rosters",
       "dropHere": "Drop a player here",
       "status": {
-        "clan": "Clan",
-        "family": "Family",
-        "external": "External"
+        "clan": "El clan",
+        "family": "Família",
+        "external": "Extern"
       }
     },
     "ungrouped": "Sense grup",
@@ -971,6 +971,8 @@
       "editTitle": "Edita l’automatització",
       "createDesc": "Programa una acció automàtica",
       "actionType": "Tipus d’acció",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Moment relatiu a l’esdeveniment",
       "offsetBefore": "Abans de l’esdeveniment",
       "offsetAfter": "Després de l’esdeveniment",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Elimina tots els membres de la llista sense suprimir-la",
         "roster_archive": "Arxiva la llista i la converteix en només lectura"
       },
-      "infoBox": "Les automatitzacions s’activen en relació amb l’hora d’inici de l’esdeveniment. Defineix un interval i el bot executarà automàticament l’acció en el moment establert, també per als esdeveniments recurrents.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Les automatitzacions s’activen en relació amb l’hora d’inici de l’esdeveniment. Defineix un interval i el bot executarà automàticament l’acció en el moment establert, també per als esdeveniments recurrents."
     },
     "groups": {
       "title": "Grups de llistes",
@@ -1073,12 +1073,12 @@
       "restrictions": "Restriccions i límits",
       "name": "Nom de la llista",
       "rosterType": "Tipus de llista",
-      "typeClan": "Clan",
+      "typeClan": "El clan",
       "typeFamily": "Família",
       "signupScope": "Àmbit d’inscripció",
       "scopeClanOnly": "Només el clan",
       "scopeFamilyWide": "Tota la família",
-      "clan": "Clan",
+      "clan": "El clan",
       "selectClan": "Selecciona un clan",
       "description": "Descripció",
       "descriptionPlaceholder": "Introdueix una descripció per a aquesta llista...",
@@ -1116,7 +1116,7 @@
     },
     "aiBuilder": {
       "button": "Roster Assistant",
-      "new": "New",
+      "new": "Nou",
       "title": "Roster Assistant",
       "description": "Build and save reusable roster views with natural language."
     },
@@ -1125,11 +1125,11 @@
       "title": "CWL Bonuses",
       "description": "Calculate and assign the available seasonal bonus awards.",
       "back": "Back to rosters",
-      "clan": "Clan",
-      "selectClan": "Select a clan",
+      "clan": "El clan",
+      "selectClan": "Selecciona un clan",
       "searchClans": "Search clans",
       "noClanFound": "No clan found",
-      "season": "Season",
+      "season": "Temporada",
       "noStoredSeasons": "No stored seasons",
       "unknownLeague": "Unknown league",
       "unrankedLeague": "Unranked CWL league",
@@ -1137,8 +1137,8 @@
       "loadClansError": "Failed to load configured clans.",
       "loadMedalRulesError": "Failed to load CWL medal rules.",
       "loadDataError": "Failed to load CWL data.",
-      "league": "League",
-      "rank": "Rank",
+      "league": "Lliga",
+      "rank": "Classificació",
       "warsWon": "Wars won",
       "leagueMedals": "League medals",
       "bonusSlots": "Bonus slots",
@@ -1155,7 +1155,7 @@
       "chooseMore": "{count, plural, one {Choose # more recipient.} other {Choose # more recipients.}}",
       "save": "Save bonuses",
       "saved": "CWL bonus recipients saved",
-      "townHallAlt": "Town Hall {level}",
+      "townHallAlt": "Ajuntament {level}",
       "stars": "{count, plural, one {# star} other {# stars}}",
       "attacks": "{count, plural, one {# attack} other {# attacks}}",
       "noPlayers": "No players are available for this CWL season."
@@ -1287,7 +1287,7 @@
     "filters": {
       "title": "Filtres",
       "description": "Filtra les estadístiques de guerra segons diferents criteris",
-      "clan": "Clan",
+      "clan": "El clan",
       "allClans": "Tots els clans",
       "townHall": "Ajuntament",
       "townHallShort": "TH",
@@ -1369,7 +1369,7 @@
       "title": "Estadístiques de guerra del clan",
       "description": "Estadístiques detallades de cada clan",
       "headers": {
-        "clan": "Clan",
+        "clan": "El clan",
         "status": "Estat",
         "wars": "Guerres",
         "record": "V/D/E",
@@ -1413,7 +1413,7 @@
     },
     "types": {
       "player": "Jugadors",
-      "clan": "Clans"
+      "clan": "Cerca de clans"
     },
     "metrics": {
       "capital": {
@@ -1537,7 +1537,7 @@
         "reorder": "Failed to save the category order."
       },
       "manage": "Manage categories",
-      "uncategorized": "Uncategorized",
+      "uncategorized": "Sense categoria",
       "sectionCount": "{count, plural, one {# clan} other {# clans}}",
       "reorderAction": "Reorder {name}",
       "reordered": "Category order saved."
@@ -1860,7 +1860,7 @@
       "forumPost": "Publicació del fòrum",
       "forumPostPlaceholder": "Selecciona una publicació del fòrum",
       "forumPostRequired": "Els canals de fòrum requereixen una publicació.",
-      "clan": "Clan",
+      "clan": "El clan",
       "clanPlaceholder": "Selecciona un clan",
       "customMessage": "Missatge personalitzat",
       "customMessagePlaceholder": "No oblidis fer servir els teus atacs!",
@@ -1933,7 +1933,7 @@
       "selectClan": "Select a different clan",
       "noOtherClans": "Add another clan to this server before cloning this reminder.",
       "action": "Clone reminder",
-      "cloning": "Cloning..."
+      "cloning": "Clonant..."
     }
   },
   "LogsPage": {
@@ -1954,7 +1954,7 @@
       "placeholder": "Selecciona un clan"
     },
     "tabs": {
-      "clan": "Clan",
+      "clan": "El clan",
       "war": "Guerra",
       "capital": "Capital del clan",
       "player": "Jugador",
@@ -2108,8 +2108,8 @@
       "serverFallback": "This server"
     },
     "scope": {
-      "clan": "Clan",
-      "server": "Server",
+      "clan": "El clan",
+      "server": "Servidor",
       "serverTitle": "Server logs",
       "serverDescription": "These feeds apply to the whole Discord server and do not change with the selected clan."
     },
@@ -2125,7 +2125,7 @@
     },
     "emptyClans": "Add a clan to this server before configuring clan logs.",
     "serverTabs": {
-      "logs": "Logs",
+      "logs": "Registres",
       "countdowns": "Countdowns",
       "joinPanel": "Join panel"
     },
@@ -2136,15 +2136,15 @@
       "toggle": "Toggle {name}",
       "types": {
         "clan_games_timer": {
-          "label": "Clan Games",
+          "label": "Jocs del clan",
           "description": "Show the time remaining in Clan Games in a voice channel."
         },
         "cwl_timer": {
-          "label": "Clan War League",
+          "label": "Lliga de Guerra de Clans",
           "description": "Show the time remaining in Clan War League in a voice channel."
         },
         "raid_weekend_timer": {
-          "label": "Raid Weekend",
+          "label": "Cap de setmana de raid",
           "description": "Show the time remaining in Raid Weekend in a voice channel."
         },
         "season_end_timer": {
@@ -2223,19 +2223,19 @@
         "title": "Dashboard access",
         "description": "Give Discord roles view or management access to specific dashboard sections. Multiple roles combine.",
         "loadError": "Could not load dashboard access",
-        "retry": "Retry",
+        "retry": "Tornar a intentar",
         "selectRole": "Select a Discord role",
         "addRole": "Add role",
         "empty": "No dashboard roles have been added.",
         "removeRole": "Remove {role}",
         "levels": {
           "none": "No access",
-          "view": "View",
-          "manage": "Manage"
+          "view": "Mostra",
+          "manage": "Gestionar"
         },
         "status": {
           "saving": "Saving",
-          "saved": "Saved",
+          "saved": "Desat",
           "pending": "Pending changes",
           "error": "Not saved"
         }
@@ -2322,7 +2322,7 @@
       },
       "autocompleteHint": "Type an opening brace to insert a placeholder",
       "pending": "Waiting to save",
-      "saved": "Saved"
+      "saved": "Desat"
     },
     "familyRoles": {
       "title": "Rols de la família",
@@ -2378,11 +2378,11 @@
   },
   "LoginPage": {
     "redirecting": "S’està redirigint a Discord...",
-    "dashboardLabel": "Dashboard",
+    "dashboardLabel": "Tauler",
     "eyebrow": "ClashKing Dashboard",
     "title": "Welcome, Chief.",
     "subtitle": "Sign in to manage your Discord servers, configure ClashKing, and keep your clan running smoothly.",
-    "continueWithDiscord": "Continue with Discord",
+    "continueWithDiscord": "Continua amb Discord",
     "checkingSession": "Checking your session...",
     "openingDiscord": "Opening Discord...",
     "helper": "Discord confirms who you are. ClashKing never sees or stores your Discord password.",
@@ -2838,11 +2838,11 @@
     "legacyEmbed": "Creada pel bot; enganxa un URL de Discohook per editar-la.",
     "invalidDiscohookUrl": "URL no vàlida. Enganxa una URL de Discohook (discohook.app/?data=... o discohook.app/?share=...).",
     "tabEmbeds": "Incrustacions",
-    "configurePanel": "Configure",
+    "configurePanel": "Configura",
     "configurePanelDescription": "Manage the panel message, buttons, pre-written messages, categories, and logs.",
     "categoryCoverage": "{configured}/{total} categories",
     "logCoverage": "{configured}/{total} logs",
-    "panelPreview": "Discord preview",
+    "panelPreview": "Previsualització de Discord",
     "panelPreviewHint": "This combines the selected panel embed and ticket buttons so you can review what members will see before configuring it."
   },
   "EmbedsPage": {
@@ -3042,7 +3042,7 @@
       "messages": "Missatges",
       "restrictions": "Restriccions",
       "advanced": "Avançat",
-      "winners": "Winners"
+      "winners": "Guanyadors"
     },
     "tabs": {
       "ongoing": "En curs",
@@ -3082,8 +3082,8 @@
       "start": "Comença",
       "end": "Acaba",
       "winnersHeader": "Guanyadors",
-      "winners": "{count, plural, one {# guanyador} other {# guanyadors}}",
-      "boosters": "{count, plural, one {# multiplicador} other {# multiplicadors}}",
+      "winners": "{count} winner{count, plural, one {} other {s}}",
+      "boosters": "{count} booster{count, plural, one {} other {s}}",
       "noChannel": "Sense canal",
       "noChannelHelp": "No hi ha cap canal assignat. Edita el sorteig per corregir-ho.",
       "endsAt": "Acaba a les",
@@ -3099,7 +3099,7 @@
       "rerolledCount": "{count, plural, one {# sortejat de nou} other {# sortejats de nou}}",
       "viewEntries": "Mostra les participacions",
       "viewGiveaway": "View giveaway",
-      "editGiveaway": "Edit giveaway",
+      "editGiveaway": "Edita el sorteig",
       "moreActions": "More giveaway actions"
     },
     "entries": {
@@ -3195,7 +3195,7 @@
       "notScheduled": "Sense programar",
       "schedule": "Programació",
       "endMessage": "Missatge per als guanyadors",
-      "endSummary": "{winners, plural, one {Aquí s’anunciarà # guanyador.} other {Aquí s’anunciaran # guanyadors.}}",
+      "endSummary": "{winners} winner{winners, plural, one {} other {s}} will be announced here.",
       "totalParticipants": "Total de participants: {count}",
       "participate": "Participa",
       "buttonHint": "Botó d’acció principal sota la publicació de Discord."
@@ -3222,8 +3222,8 @@
       "description": "Select a winner to copy their Discord ID or open their Discord profile.",
       "current": "Current winners",
       "rerolled": "Rerolled winners",
-      "onServer": "On server",
-      "notOnServer": "Not on server",
+      "onServer": "Al servidor",
+      "notOnServer": "No és al servidor",
       "none": "No winners have been recorded."
     }
   },
@@ -3318,7 +3318,7 @@
       "joinTestFlight": "Uneix-te a TestFlight",
       "getAndroidApp": "Descarrega l’aplicació per a Android",
       "login": "Log in",
-      "dashboard": "Dashboard",
+      "dashboard": "Tauler",
       "iosApp": "iOS app",
       "androidApp": "Android app",
       "addDiscordBot": "Add Discord bot"
@@ -3443,9 +3443,9 @@
   "AccountSettings": {
     "title": "Account settings",
     "description": "Manage your ClashKing profile, preferences, usage, and subscription.",
-    "retry": "Retry",
+    "retry": "Tornar a intentar",
     "profile": {
-      "title": "Profile",
+      "title": "Perfil",
       "description": "The identity attached to your ClashKing account.",
       "discord": "Discord",
       "account": "ClashKing",
@@ -3455,13 +3455,13 @@
     "appearance": {
       "title": "Appearance & language",
       "description": "Choose how the dashboard looks and which language it uses.",
-      "theme": "Theme",
+      "theme": "Tema",
       "themes": {
-        "system": "System",
-        "light": "Light",
-        "dark": "Dark"
+        "system": "Sistema",
+        "light": "Llum",
+        "dark": "Fosc"
       },
-      "language": "Language",
+      "language": "Idioma",
       "browserLanguage": "Use browser language"
     },
     "usage": {
@@ -3480,7 +3480,7 @@
       "subscribers": "Credit from {count, plural, one {# subscription} other {# subscriptions}}"
     },
     "billing": {
-      "active": "Active",
+      "active": "Actiu",
       "free": "Free plan",
       "currentPlan": "ClashKing subscription",
       "supportTitle": "Support ClashKing ❤️",
