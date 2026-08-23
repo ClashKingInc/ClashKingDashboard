@@ -971,6 +971,8 @@
       "editTitle": "Muokkaa automaatiota",
       "createDesc": "Ajasta automaattinen toiminto",
       "actionType": "Toiminnon tyyppi",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Ajoitus suhteessa tapahtumaan",
       "offsetBefore": "Ennen tapahtumaa",
       "offsetAfter": "Tapahtuman jälkeen",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Poistaa kaikki jäsenet poistamatta kokoonpanoa",
         "roster_archive": "Arkistoi kokoonpanon kirjoitussuojattuun tilaan"
       },
-      "infoBox": "Automaatiot käynnistyvät suhteessa tapahtuman alkamisaikaan. Määritä siirtymä (esim. kolme päivää ennen), niin botti suorittaa toiminnon automaattisesti myös toistuvissa tapahtumissa.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automaatiot käynnistyvät suhteessa tapahtuman alkamisaikaan. Määritä siirtymä (esim. kolme päivää ennen), niin botti suorittaa toiminnon automaattisesti myös toistuvissa tapahtumissa."
     },
     "groups": {
       "title": "Kokoonpanoryhmät",
