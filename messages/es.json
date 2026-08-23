@@ -971,6 +971,8 @@
       "editTitle": "Editar automatización",
       "createDesc": "Programa una acción automática",
       "actionType": "Tipo de acción",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Momento relativo al evento",
       "offsetBefore": "Antes del evento",
       "offsetAfter": "Después del evento",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Elimina a todos los miembros de la lista sin borrarla",
         "roster_archive": "Archiva la lista y la convierte en solo lectura"
       },
-      "infoBox": "Las automatizaciones se activan en relación con la hora de inicio del evento. Define un intervalo (p. ej., 3 días antes) y el bot ejecutará la acción automáticamente en ese momento, también para los eventos recurrentes.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Las automatizaciones se activan en relación con la hora de inicio del evento. Define un intervalo (p. ej., 3 días antes) y el bot ejecutará la acción automáticamente en ese momento, también para los eventos recurrentes."
     },
     "groups": {
       "title": "Grupos de listas",
