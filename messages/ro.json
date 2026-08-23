@@ -2089,7 +2089,7 @@
       "forumPost": "Postare de forum",
       "forumPostPlaceholder": "Selectează o postare de forum",
       "forumPostRequired": "Selectează o postare de forum înainte de a salva jurnalul.",
-      "invalidThread": "Firul selectat nu aparține acestui canal.",
+      "invalidThread": "ClashKing nu găsește această postare printre postările active ale forumului. Dacă mai există, redeschide-o în Discord și actualizează această pagină. În caz contrar, creează sau selectează altă postare.",
       "saveDestination": "Salvează destinația",
       "channelDeleted": "Acest canal nu mai există. Selectează altul sau dezactivează jurnalul.",
       "enableToConfig": "Activează jurnalul pentru a-l configura",

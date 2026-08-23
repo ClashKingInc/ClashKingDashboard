@@ -2089,7 +2089,7 @@
       "forumPost": "Forum post",
       "forumPostPlaceholder": "Select a forum post",
       "forumPostRequired": "Select a forum post before saving this log.",
-      "invalidThread": "The selected thread does not belong to this channel.",
+      "invalidThread": "ClashKing can’t find this post among the forum’s active posts. If it still exists, reopen it in Discord and refresh this page. Otherwise, create or select another post.",
       "saveDestination": "Save destination",
       "channelDeleted": "This channel no longer exists. Select a new one or disable the log.",
       "enableToConfig": "Enable this log to configure it",

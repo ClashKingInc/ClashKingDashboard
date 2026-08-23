@@ -2089,7 +2089,7 @@
       "forumPost": "Post del forum",
       "forumPostPlaceholder": "Seleziona un post del forum",
       "forumPostRequired": "Seleziona un post del forum prima di salvare questo log.",
-      "invalidThread": "Il thread selezionato non appartiene a questo canale.",
+      "invalidThread": "ClashKing non trova questo post tra quelli attivi del forum. Se esiste ancora, riaprilo in Discord e aggiorna questa pagina. Altrimenti, crea o seleziona un altro post.",
       "saveDestination": "Salva destinazione",
       "channelDeleted": "Questo canale non esiste più. Selezionane uno nuovo o disabilita il log.",
       "enableToConfig": "Abilita questo log per configurarlo",

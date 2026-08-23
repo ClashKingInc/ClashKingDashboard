@@ -2089,7 +2089,7 @@
       "forumPost": "Forum gönderisi",
       "forumPostPlaceholder": "Forum gönderisi seçin",
       "forumPostRequired": "Bu kaydı kaydetmeden önce bir forum gönderisi seçin.",
-      "invalidThread": "Seçilen iş parçacığı bu kanala ait değil.",
+      "invalidThread": "ClashKing bu gönderiyi forumun etkin gönderileri arasında bulamıyor. Gönderi hâlâ mevcutsa Discord’da yeniden açın ve bu sayfayı yenileyin. Aksi takdirde başka bir gönderi oluşturun veya seçin.",
       "saveDestination": "Hedefi kaydet",
       "channelDeleted": "Bu kanal artık mevcut değil. Yeni bir kanal seçin veya kaydı devre dışı bırakın.",
       "enableToConfig": "Yapılandırmak için kaydı etkinleştirin",

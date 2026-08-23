@@ -2089,7 +2089,7 @@
       "forumPost": "Publicación del foro",
       "forumPostPlaceholder": "Selecciona una publicación del foro",
       "forumPostRequired": "Selecciona una publicación del foro antes de guardar este registro.",
-      "invalidThread": "El hilo seleccionado no pertenece a este canal.",
+      "invalidThread": "ClashKing no encuentra esta publicación entre las publicaciones activas del foro. Si todavía existe, vuelve a abrirla en Discord y actualiza esta página. De lo contrario, crea o selecciona otra publicación.",
       "saveDestination": "Guardar destino",
       "channelDeleted": "Este canal ya no existe. Selecciona otro o desactiva el registro.",
       "enableToConfig": "Activa este registro para configurarlo",
