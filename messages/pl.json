@@ -971,6 +971,8 @@
       "editTitle": "Edytuj automatyzację",
       "createDesc": "Zaplanuj automatyczne działanie",
       "actionType": "Typ działania",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "Czas względem wydarzenia",
       "offsetBefore": "Przed wydarzeniem",
       "offsetAfter": "Po wydarzeniu",
@@ -1016,9 +1018,7 @@
         "roster_clear": "Usuwa wszystkich członków ze składu bez usuwania samego składu",
         "roster_archive": "Archiwizuje skład i ustawia go jako tylko do odczytu"
       },
-      "infoBox": "Automatyzacje są uruchamiane względem czasu rozpoczęcia wydarzenia. Ustaw przesunięcie (np. 3 dni wcześniej), a bot automatycznie wykona działanie w tym czasie, także dla wydarzeń cyklicznych.",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "Automatyzacje są uruchamiane względem czasu rozpoczęcia wydarzenia. Ustaw przesunięcie (np. 3 dni wcześniej), a bot automatycznie wykona działanie w tym czasie, także dla wydarzeń cyklicznych."
     },
     "groups": {
       "title": "Grupy składów",
