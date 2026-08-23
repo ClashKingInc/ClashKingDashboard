@@ -366,16 +366,12 @@ export default function BasesPage() {
   };
 
   return (
-    <div className="min-h-screen min-w-0 overflow-x-clip bg-background p-4 md:p-6 lg:p-8">
-      <div className="mx-auto w-full min-w-0 max-w-7xl space-y-7">
-        <header className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-end sm:justify-between">
+    <div className="min-h-screen min-w-0 overflow-x-clip bg-background p-4 md:p-6">
+      <div className="mx-auto w-full min-w-0 max-w-7xl space-y-8">
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-primary">
-              <Map className="h-4 w-4" />
-              {t("eyebrow")}
-            </div>
-            <h1 className="mt-1 text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
-            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{t("description")}</p>
+            <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t("title")}</h1>
+            <p className="mt-1 max-w-2xl text-muted-foreground">{t("description")}</p>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:flex">
             <Button variant="outline" onClick={() => void loadBases()} disabled={loading}>

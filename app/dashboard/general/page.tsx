@@ -231,8 +231,8 @@ export default function GeneralSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen min-w-0 overflow-x-clip bg-background p-4 md:p-6 lg:p-8">
-      <div className="mx-auto w-full min-w-0 max-w-6xl space-y-10">
+    <div className="min-h-screen min-w-0 overflow-x-clip bg-background p-4 md:p-6">
+      <div className="mx-auto w-full min-w-0 max-w-7xl space-y-10">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">{t("title")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>

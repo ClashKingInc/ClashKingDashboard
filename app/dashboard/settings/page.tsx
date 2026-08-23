@@ -184,7 +184,7 @@ export default function AccountSettingsPage() {
   const checkoutUnavailable = !loading && subscription?.active !== true && subscription?.checkoutEnabled !== true;
 
   return (
-    <div className="mx-auto max-w-4xl space-y-7 p-4 pb-12 md:p-6 lg:p-8">
+    <div className="mx-auto max-w-4xl space-y-7 p-4 pb-12 md:p-6">
       <header>
         <h1 className="text-2xl font-bold md:text-3xl">{t("title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("description")}</p>
