@@ -971,6 +971,8 @@
       "editTitle": "编辑自动化操作",
       "createDesc": "计划自动操作",
       "actionType": "操作类型",
+      "scheduledAt": "Scheduled time",
+      "scheduledAtHint": "This automation runs at this exact date and time.",
       "offsetFromEvent": "相对于活动的时间",
       "offsetBefore": "之前活动",
       "offsetAfter": "之后活动",
@@ -1016,9 +1018,7 @@
         "roster_clear": "移除所有成员从阵容没有正在删除它",
         "roster_archive": "归档阵容并设为只读"
       },
-      "infoBox": "自动化操作会根据活动开始时间触发。设置时间偏移（例如提前3天），机器人便会在对应时间自动执行操作，重复活动也同样适用。",
-      "scheduledAt": "Scheduled time",
-      "scheduledAtHint": "This automation runs at this exact date and time."
+      "infoBox": "自动化操作会根据活动开始时间触发。设置时间偏移（例如提前3天），机器人便会在对应时间自动执行操作，重复活动也同样适用。"
     },
     "groups": {
       "title": "阵容分组",
@@ -3337,7 +3337,7 @@
         },
         "stats": {
           "first": "探索",
-          "second": "",
+          "second": "the",
           "third": "统计"
         }
       },
