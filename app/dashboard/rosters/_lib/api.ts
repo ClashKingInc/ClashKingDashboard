@@ -287,12 +287,15 @@ export async function fetchAutomations(
 export async function createAutomation(
   data: Omit<RosterAutomation, 'automation_id' | 'executed' | 'created_at' | 'updated_at'>
 ): Promise<RosterAutomation> {
-  const response = await apiFetch('/v2/roster-automation', {
+  const { server_id: serverId, ...payload } = data;
+  const response = await apiFetch(`/v2/roster-automation?server_id=${encodeURIComponent(String(serverId))}`, {
     method: 'POST',
     headers: getAuthHeaders(),
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
-  return handleResponse<RosterAutomation>(response);
+  const result = await handleResponse<{ rule?: RosterAutomation } | RosterAutomation>(response);
+  if ('rule' in result && result.rule) return result.rule;
+  return result as RosterAutomation;
 }
 
 export async function updateAutomation(

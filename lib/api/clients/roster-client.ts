@@ -146,9 +146,11 @@ export class RosterClient extends BaseApiClient {
   // ============================================================================
 
   async createAutomation(data: CreateRosterAutomationModel): Promise<ApiResponse<{ message: string; automation_id: string }>> {
-    return this.request('/v2/roster-automation', {
+    const { server_id: serverId, ...payload } = data;
+    const query = this.buildQueryString({ server_id: serverId });
+    return this.request(`/v2/roster-automation${query}`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
   }
 
