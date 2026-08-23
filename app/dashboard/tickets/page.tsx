@@ -10,7 +10,6 @@ import {
   ArrowUp,
   ChevronDown,
   ChevronUp,
-  Eye,
   Loader2,
   MessageSquare,
   Plus,
@@ -1574,7 +1573,7 @@ function PanelCard({
   const [newButtonStyle, setNewButtonStyle] = useState(2);
   const [isAddingButton, setIsAddingButton] = useState(false);
   const [activeConfigTab, setActiveConfigTab] = useState("ticket-panel");
-  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const STYLE_COLORS: Record<number, string> = { 1: "bg-[#5865F2]", 2: "bg-[#4f545c]", 3: "bg-[#57F287]", 4: "bg-[#ED4245]" };
   const selectedPanelEmbed = embeds.find((embed) => embed.name === panel.embed_name);
@@ -1777,35 +1776,33 @@ function PanelCard({
       </Dialog>
 
       <article className="rounded-[24px] bg-card p-4 shadow-sm shadow-black/5 sm:p-5">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="min-w-0 space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <h2 className="truncate text-lg font-semibold text-foreground">{panel.name}</h2>
-              <span className="rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                {panel.embed_name ?? t("defaultEmbed")}
-              </span>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <button
+            type="button"
+            className="group flex min-w-0 flex-1 items-start gap-3 rounded-2xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={() => setPreviewOpen((open) => !open)}
+            aria-expanded={previewOpen}
+          >
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="truncate text-lg font-semibold text-foreground">{panel.name}</h2>
+                <span className="rounded-full bg-muted/65 px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                  {panel.embed_name ?? t("defaultEmbed")}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:flex sm:flex-wrap">
+                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{components.length} {t("buttons")}</span>
+                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{panel.approve_messages.length} {t("messages")}</span>
+                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{t("categoryCoverage", { configured: configuredCategoryCount, total: 3 })}</span>
+                <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{t("logCoverage", { configured: configuredLogCount, total: 3 })}</span>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground sm:flex sm:flex-wrap">
-              <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{components.length} {t("buttons")}</span>
-              <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{panel.approve_messages.length} {t("messages")}</span>
-              <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{t("categoryCoverage", { configured: configuredCategoryCount, total: 3 })}</span>
-              <span className="rounded-full bg-muted/55 px-2.5 py-1 text-center">{t("logCoverage", { configured: configuredLogCount, total: 3 })}</span>
-            </div>
-          </div>
+            <ChevronDown className={cn("mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-150 group-hover:text-foreground", previewOpen && "rotate-180")} />
+          </button>
           <div className="flex w-full shrink-0 items-center gap-1.5 sm:w-auto">
             <Button variant="secondary" size="sm" className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:flex-none" onClick={() => { onConfigure(); setConfigOpen(true); }}>
               <Settings className="h-4 w-4" />
               {t("configurePanel")}
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="min-w-0 flex-1 border-0 bg-muted/65 shadow-sm shadow-black/5 hover:bg-muted sm:hidden"
-              onClick={() => setMobilePreviewOpen((open) => !open)}
-              aria-expanded={mobilePreviewOpen}
-            >
-              <Eye className="h-4 w-4" />
-              {t("panelPreview")}
             </Button>
             <Button
               variant="ghost"
@@ -1819,7 +1816,7 @@ function PanelCard({
           </div>
         </div>
 
-        <div className={cn("mt-4 rounded-[20px] bg-muted/35 p-4", !mobilePreviewOpen && "hidden sm:block")}>
+        {previewOpen && <div className="mt-4 rounded-[20px] bg-muted/35 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <p className="text-sm font-medium text-foreground">{t("panelPreview")}</p>
             <InfoPopover content={t("panelPreviewHint")} />
@@ -1844,7 +1841,7 @@ function PanelCard({
               ))}
             </div>
           ) : null}
-        </div>
+        </div>}
       </article>
     </>
   );
